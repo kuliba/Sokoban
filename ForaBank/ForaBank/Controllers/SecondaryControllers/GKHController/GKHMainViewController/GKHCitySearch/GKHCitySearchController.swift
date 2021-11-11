@@ -26,10 +26,10 @@ class GKHCitySearchController: UIViewController {
         didSet {
             DispatchQueue.main.async {
                 self.searchedOrganization.forEach{ op in
+                    self.tempArray.removeAll()
                     self.tempArray.append(op.region ?? "")
-                    
+                    self.tableView.reloadData()
                 }
-                self.tableView.reloadData()
             }
         }
     }
@@ -50,6 +50,7 @@ class GKHCitySearchController: UIViewController {
             tempArray.append(op.region ?? "")
             let r = tempArray.uniqued()
             tempArray = r
+            organization.append(op)
         }
         textField.delegate = self
     }
@@ -71,6 +72,7 @@ class GKHCitySearchController: UIViewController {
 
 extension GKHCitySearchController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    
         if let text = textField.text,
            let textRange = Range(range, in: text) {
             let updatedText = text.replacingCharacters(in: textRange, with: string)
@@ -78,9 +80,27 @@ extension GKHCitySearchController: UITextFieldDelegate {
             searchText = updatedText
             searching = true
         }
+        if string == "" {
+            tempArray.removeAll()
+            operatorsList?.forEach{ op in
+                tempArray.append(op.region ?? "")
+                let r = tempArray.uniqued()
+                tempArray = r
+//                organization.append(op)
+            }
+            let a = tempArray
+            tableView.reloadData()
+            
+        }
         return true
     }
-    
+
+}
+
+extension String {
+    var isReallyEmpty: Bool {
+        return self.trimmingCharacters(in: .whitespaces).isEmpty
+    }
 }
 
 extension Sequence where Element: Hashable {

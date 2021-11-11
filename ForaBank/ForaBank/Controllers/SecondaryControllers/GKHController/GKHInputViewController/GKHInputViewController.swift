@@ -92,10 +92,9 @@ class GKHInputViewController: BottomPopUpViewAdapter {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
- //       guard footerView = tableView.tableFooterView else {return}
         let size = footerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
         if footerView.frame.size.height != size.height {
-            footerView.frame.size.height = size.height
+            footerView.frame.size.height = size.height + 70
             tableView.tableFooterView = footerView
             tableView.layoutIfNeeded()
         }

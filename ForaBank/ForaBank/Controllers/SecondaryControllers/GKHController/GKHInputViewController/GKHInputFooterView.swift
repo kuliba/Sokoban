@@ -17,6 +17,7 @@ class GKHInputFooterView: UITableViewHeaderFooterView {
         super.init(reuseIdentifier: reuseIdentifier)
         self.setupUI()
         configureContents()
+        self.backgroundColor = .red
     }
     
     required init?(coder: NSCoder) {
@@ -35,7 +36,7 @@ class GKHInputFooterView: UITableViewHeaderFooterView {
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fillEqually
-        stackView.spacing = 12
+        stackView.spacing = 0
         stackView.isUserInteractionEnabled = true
         
         cardListView.isHidden = false
@@ -74,9 +75,11 @@ class GKHInputFooterView: UITableViewHeaderFooterView {
     func hideView(_ view: UIView, needHide: Bool) {
         DispatchQueue.main.async {
             UIView.animate(withDuration: 0.2) {
+                if view.isHidden == !needHide {
                 view.isHidden = needHide
                 view.alpha = needHide ? 0 : 1
                 self.stackView.layoutIfNeeded()
+                }
             }
         }
     }
@@ -88,7 +91,7 @@ class GKHInputFooterView: UITableViewHeaderFooterView {
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0)
         ])
     }
 }

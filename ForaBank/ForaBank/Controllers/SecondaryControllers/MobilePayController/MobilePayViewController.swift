@@ -33,8 +33,6 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //        addCloseButton()
-//        navigationController?.isNavigationBarHidden = false
         setupNavBar()
         phoneField.textField.delegate = self
         phoneField.rightButton.setImage(UIImage(imageLiteralResourceName: "user-plus"), for: .normal)
@@ -42,10 +40,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
             phoneField.text = selectNumber ?? ""
         }
         setupUI()
-        view.addSubview(bottomView)
         phoneField.didChooseButtonTapped = {() in
-//            self.dismiss(animated: true, completion: nil)
-            
             let contactPickerScene = EPContactsPicker(
                 delegate: self,
                 multiSelection: false,
@@ -97,8 +92,8 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
         if let textField = textField as? MaskedTextField {
             let text = textField.unmaskedText ?? ""
             bottomView.amountTextField.isEnabled = text.count < 11 ? false : true
-            bottomView.doneButton.isEnabled = text.count < 11 ? false : true
-            bottomView.doneButtonIsEnabled(text.count < 11 ? false : true)
+            bottomView.doneButton.isEnabled = text.count < 11 ? true : false
+            bottomView.doneButtonIsEnabled(text.count < 11 ? true : false)
         }
     }
     
@@ -138,13 +133,13 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = false
     }
     
     fileprivate func setupUI() {
+        view.addSubview(bottomView)
         phoneField.textField.maskString = "+7 (000) 000-00-00"
         view.backgroundColor = .white
         let saveAreaView = UIView()

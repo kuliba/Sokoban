@@ -272,10 +272,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9GB-Uu-AZ1" customClass="BottomInputView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="698" width="414" height="144"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                            </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="80" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="4Lk-8t-flG">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="698"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -294,8 +290,15 @@
                                     <outlet property="delegate" destination="aEQ-Qe-EY3" id="gKJ-8j-F62"/>
                                 </connections>
                             </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9GB-Uu-AZ1" customClass="BottomInputView" customModule="ForaBank" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="698" width="414" height="144"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="144" id="IaU-eZ-7EI"/>
+                                </constraints>
+                            </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ttR-ce-VXD">
-                                <rect key="frame" x="20" y="718" width="374" height="40"/>
+                                <rect key="frame" x="20" y="752" width="374" height="40"/>
                                 <color key="backgroundColor" name="redColorFora"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="1k5-mo-2oJ"/>
@@ -309,20 +312,18 @@
                                 </connections>
                             </button>
                         </subviews>
-                        <viewLayoutGuide key="safeArea" id="8AZ-W8-4gG"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="9GB-Uu-AZ1" firstAttribute="trailing" secondItem="8AZ-W8-4gG" secondAttribute="trailing" id="1LU-dH-CnO"/>
-                            <constraint firstItem="8AZ-W8-4gG" firstAttribute="bottom" secondItem="ttR-ce-VXD" secondAttribute="bottom" constant="50" id="EwW-yb-Bpc"/>
-                            <constraint firstItem="9GB-Uu-AZ1" firstAttribute="top" secondItem="4Lk-8t-flG" secondAttribute="bottom" id="IT7-Ab-aY4"/>
-                            <constraint firstItem="4Lk-8t-flG" firstAttribute="top" secondItem="8AZ-W8-4gG" secondAttribute="top" id="NpF-dN-KfS"/>
-                            <constraint firstItem="8AZ-W8-4gG" firstAttribute="trailing" secondItem="ttR-ce-VXD" secondAttribute="trailing" constant="20" id="Stc-vF-ejQ"/>
-                            <constraint firstItem="9GB-Uu-AZ1" firstAttribute="leading" secondItem="8AZ-W8-4gG" secondAttribute="leading" id="XT9-9s-c0a"/>
-                            <constraint firstItem="4Lk-8t-flG" firstAttribute="trailing" secondItem="8AZ-W8-4gG" secondAttribute="trailing" id="b9x-Ez-IvL"/>
-                            <constraint firstItem="4Lk-8t-flG" firstAttribute="leading" secondItem="8AZ-W8-4gG" secondAttribute="leading" id="c9O-vk-kRT"/>
-                            <constraint firstItem="ttR-ce-VXD" firstAttribute="leading" secondItem="8AZ-W8-4gG" secondAttribute="leading" constant="20" id="h6V-eE-ntB"/>
+                            <constraint firstItem="9GB-Uu-AZ1" firstAttribute="trailing" secondItem="PsL-H1-E18" secondAttribute="trailing" id="1LU-dH-CnO"/>
+                            <constraint firstAttribute="bottom" secondItem="ttR-ce-VXD" secondAttribute="bottom" constant="50" id="EwW-yb-Bpc"/>
+                            <constraint firstItem="4Lk-8t-flG" firstAttribute="top" secondItem="PsL-H1-E18" secondAttribute="top" id="NpF-dN-KfS"/>
+                            <constraint firstAttribute="trailing" secondItem="ttR-ce-VXD" secondAttribute="trailing" constant="20" id="Stc-vF-ejQ"/>
+                            <constraint firstItem="9GB-Uu-AZ1" firstAttribute="leading" secondItem="PsL-H1-E18" secondAttribute="leading" id="XT9-9s-c0a"/>
+                            <constraint firstItem="4Lk-8t-flG" firstAttribute="trailing" secondItem="PsL-H1-E18" secondAttribute="trailing" id="b9x-Ez-IvL"/>
+                            <constraint firstItem="4Lk-8t-flG" firstAttribute="leading" secondItem="PsL-H1-E18" secondAttribute="leading" id="c9O-vk-kRT"/>
+                            <constraint firstItem="ttR-ce-VXD" firstAttribute="leading" secondItem="PsL-H1-E18" secondAttribute="leading" constant="20" id="h6V-eE-ntB"/>
                             <constraint firstItem="9GB-Uu-AZ1" firstAttribute="bottom" secondItem="PsL-H1-E18" secondAttribute="bottom" id="hRQ-PF-3fE"/>
-                            <constraint firstItem="8AZ-W8-4gG" firstAttribute="bottom" secondItem="4Lk-8t-flG" secondAttribute="bottom" constant="110" id="r7Y-EB-Ntz"/>
+                            <constraint firstItem="9GB-Uu-AZ1" firstAttribute="top" secondItem="4Lk-8t-flG" secondAttribute="bottom" id="r7Y-EB-Ntz"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="RJ9-JY-dGF"/>
