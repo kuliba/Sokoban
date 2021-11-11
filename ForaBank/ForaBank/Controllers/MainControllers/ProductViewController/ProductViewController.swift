@@ -19,7 +19,7 @@ protocol CtoBDelegate : AnyObject{
     func sendMyDataBack(product: GetProductListDatum?)//pass in any arguments also
 }
 
-class ProductViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UITableViewDelegate, SkeletonTableViewDataSource, UIScrollViewDelegate, MTSlideToOpenDelegate, UITextFieldDelegate{
+class ProductViewController: UIViewController, UICollectionViewDelegate, UITableViewDelegate, SkeletonTableViewDataSource, UIScrollViewDelegate, MTSlideToOpenDelegate, UITextFieldDelegate{
     weak var delegate: FirstControllerDelegate!
 
     var halfScreen: Bool?
@@ -97,8 +97,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         }
     }
 //    var sortData = Array(Dictionary<Int, [GetCardStatementDatum]>)
-    var sorted: [Dictionary<Int?, [GetCardStatementDatum]>.Element] = []
-    var sortedAccount: [Dictionary<Int?, [GetAccountStatementDatum]>.Element] = []
+    var sorted: [Dictionary<String?, [GetCardStatementDatum]>.Element] = []
+    var sortedAccount: [Dictionary<String?, [GetAccountStatementDatum]>.Element] = []
     let headerView = UIStackView()
     let statusBarView = UIView()
     let statusBarLabel = UILabel()
@@ -279,15 +279,27 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         navigationController?.navigationBar.isHidden = false
     }
     
-
+    func startSkeleton(){
+//        self.isSkeletonable = true
+        
+        button.isSkeletonable = true
+        button.showAnimatedGradientSkeleton()
+        
+        filterButton.isSkeletonable = true
+        filterButton.showAnimatedGradientSkeleton()
+        
+        statusBarView.isSkeletonable = true
+        statusBarView.showAnimatedGradientSkeleton()
+        statusBarView.skeletonCornerRadius = 12
+        statusBarView.layer.cornerRadius = 8
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .white
 
-        filterButton.isSkeletonable = true
-        filterButton.showAnimatedGradientSkeleton()
-        
+        startSkeleton()
 
         
 //        statusBarView.isHidden = true
@@ -385,8 +397,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
 //        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 0  )
         button.sizeToFit()
     
-        button.isSkeletonable = true
-        button.showAnimatedGradientSkeleton()
+       
         button.addTarget(self, action: #selector(showAlert(sender:)), for: .touchUpInside)
 
         button2.setDimensions(height: 48, width: 164)
@@ -531,10 +542,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
         statusBarView.addSubview(amounPeriodLabel)
         statusBarView.anchor(left: headerView.leftAnchor, bottom: headerView.bottomAnchor, right: headerView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, height: 44)
         statusBarView.backgroundColor = UIColor(hexString: "BEC1DE")
-        statusBarView.isSkeletonable = true
-        statusBarView.showAnimatedGradientSkeleton()
-        statusBarView.skeletonCornerRadius = 12
-        statusBarView.layer.cornerRadius = 8
+    
 
         
         statusBarLabel.text = "Траты"
@@ -578,8 +586,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        tableView?.isSkeletonable = true
         
+        tableView?.isSkeletonable = true
         tableView?.showAnimatedGradientSkeleton()
         
         
@@ -605,7 +613,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
     }
     
     @objc func onCloseScreen(){
-//        delegate.sendData(data: products)
         self.dismiss(animated: true, completion: nil)
     }
     
@@ -619,9 +626,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
     
     
     @objc func customName(){
-        
-        
-        
         let alertController = UIAlertController(title: "Название карты", message: "", preferredStyle: UIAlertController.Style.alert)
         alertController.addTextField { (textField : UITextField!) -> Void in
                 textField.delegate = self
@@ -854,297 +858,15 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIColle
 
         if product?.productType == "ACCOUNT"{
             totalExpenses = 0.0
-            let body = ["id": product?.id
-                         ] as [String : AnyObject]
-            
-            NetworkManager<GetAccountStatementDecodableModel>.addRequest(.getAccountStatement, [:], body) { model, error in
-                if error != nil {
-                    print("DEBUG: Error: ", error ?? "")
-                }
-                guard let model = model else { return }
-                print("DEBUG: LatestPayment: ", model)
-                if model.statusCode == 0 {
-                    DispatchQueue.main.async {
-                        guard let lastPaymentsList  = model.data else { return }
-                        self.historyArrayAccount = lastPaymentsList
-                        self.historyArray.removeAll()
-                        self.historyArrayAccount.sort(by: { (a, b) -> Bool in
-                            if let timestamp1 = a.date, let timestamp2 = b.date {
-                                return timestamp1 > timestamp2
-                            } else {
-                                //At least one of your timestamps is nil.  You have to decide how to sort here.
-                                return true
-                            }
-                        })
-                        for i in self.historyArrayAccount{
-                            
-                            if let timeResult = (i.tranDate) {
-                                print(timeResult)
-                                let date = Date(timeIntervalSince1970: TimeInterval(timeResult/1000) )
-                                let dateFormatter = DateFormatter()
-                                dateFormatter.timeStyle = DateFormatter.Style.none //Set time style
-                                dateFormatter.dateStyle = DateFormatter.Style.medium //Set date style
-                                dateFormatter.timeZone = .current
-                                dateFormatter.locale = Locale(identifier: "ru_RU")
-                                let localDate = dateFormatter.string(from: date)
-                                print(localDate)
-                            }
-                        }
-                        
-                        
-                        self.groupByCategoryAccount = Dictionary(grouping: self.historyArrayAccount) { $0.tranDate ?? 0 }
-                        var unsortedCodeKeys = Array(self.groupByCategoryAccount.keys)
-                        let sortedCodeKeys = unsortedCodeKeys.sort(by: >)
-                            print(sortedCodeKeys)
-    //                    let dict = Dictionary(grouping: lastPaymentsList, by: { $0.tranDate ?? $0.date!/1000000 })
-                        let dict = Dictionary(grouping: lastPaymentsList) { (element) -> Int in
-                            
-                            guard let tranDate =  element.tranDate else {
-                                return Int(self.longIntToDateString(longInt: element.date!/1000)?.description.prefix(2) ?? "0") ?? 0
-                            }
-                            
-                            return  Int(self.longIntToDateString(longInt: tranDate/1000)?.description.prefix(2) ?? "0") ?? 0
-                                                }
-                        
-                        self.sortedAccount = dict.sorted(by:{ ($0.value[0].tranDate ?? $0.value[0].date) ?? 0 > $1.value[0].tranDate ?? $1.value[0].date ?? 0})
-                        
-                        self.tableView?.stopSkeletonAnimation()
-                        self.tableView?.hideSkeleton()
-                        self.statusBarView.stopSkeletonAnimation()
-                        self.statusBarView.hideSkeleton()
-                        self.filterButton.hideSkeleton()
-                        self.statusBarView.layer.cornerRadius = 8
-
-                        
-                        for i in lastPaymentsList{
-                            if i.operationType == "DEBIT"{
-                                self.totalExpenses  += Double(i.amount ?? 0.0)
-                            }
-                        }
-                    }
-    //                    self.dataUSD = lastPaymentsList
-                } else {
-                    print("DEBUG: Error: ", model.errorMessage ?? "")
-
-                }
-            }
+            accountHistory()
         } else {
-        totalExpenses = 0.0
-        let body = ["cardNumber": product?.number
-                     ] as [String : AnyObject]
-        
-        NetworkManager<GetCardStatementDecodableModel>.addRequest(.getCardStatement, [:], body) { model, error in
-            if error != nil {
-                print("DEBUG: Error: ", error ?? "")
-            }
-            guard let model = model else { return }
-            print("DEBUG: LatestPayment: ", model)
-            if model.statusCode == 0 {
-                DispatchQueue.main.async {
-                    guard let lastPaymentsList  = model.data else { return }
-                    self.historyArray = lastPaymentsList
-                    self.historyArrayAccount.removeAll()
-                    self.historyArray.sort(by: { (a, b) -> Bool in
-                        if let timestamp1 = a.date, let timestamp2 = b.date {
-                            return timestamp1 > timestamp2
-                        } else {
-                            //At least one of your timestamps is nil.  You have to decide how to sort here.
-                            return true
-                        }
-                    })
-                    for i in self.historyArray{
-                        
-                        if let timeResult = (i.tranDate) {
-                            print(timeResult)
-                            let date = Date(timeIntervalSince1970: TimeInterval(timeResult/1000) )
-                            let dateFormatter = DateFormatter()
-                            dateFormatter.timeStyle = DateFormatter.Style.none //Set time style
-                            dateFormatter.dateStyle = DateFormatter.Style.medium //Set date style
-                            dateFormatter.timeZone = .current
-                            dateFormatter.locale = Locale(identifier: "ru_RU")
-                            let localDate = dateFormatter.string(from: date)
-                            print(localDate)
-                        }
-                    }
-                    
-                    
-                    self.groupByCategory = Dictionary(grouping: self.historyArray) { $0.tranDate ?? 0 }
-                    var unsortedCodeKeys = Array(self.groupByCategory.keys)
-                    let sortedCodeKeys = unsortedCodeKeys.sort(by: >)
-                        print(sortedCodeKeys)
-//                    let dict = Dictionary(grouping: lastPaymentsList, by: { $0.tranDate ?? $0.date!/1000000 })
-                    let dict = Dictionary(grouping: lastPaymentsList) { (element) -> Int in
-                        
-                        guard let tranDate =  element.tranDate else {
-                            return Int(self.longIntToDateString(longInt: element.date!/1000)?.description.prefix(2) ?? "0") ?? 0
-                        }
-                        
-                        return  Int(self.longIntToDateString(longInt: tranDate/1000)?.description.prefix(2) ?? "0") ?? 0
-                                            }
-                    
-                    self.sorted = dict.sorted(by:{ ($0.value[0].tranDate ?? $0.value[0].date) ?? 0 > $1.value[0].tranDate ?? $1.value[0].date ?? 0})
-                    self.tableView?.stopSkeletonAnimation()
-                    self.tableView?.hideSkeleton()
-                    self.statusBarView.stopSkeletonAnimation()
-                    self.statusBarView.hideSkeleton()
-                    self.filterButton.hideSkeleton()
-                    self.statusBarView.layer.cornerRadius = 8
-
-//                    self.sorted = dict.sorted(by: { newItem1, newItem in
-//                        if newItem1.value[0].tranDate != nil{
-//                             newItem1.value[0].tranDate ?? 0 > newItem.value[0].tranDate ?? 0
-//                        } else {
-//                            newItem1.value[0].date ?? 0 > newItem.value[0].date ?? 0
-//                        }
-//                        return false
-//                    })
-
-
-//                    self.sortData = self.groupByCategory.sorted(by:{$0.key < $1.key})
-                    for (index, element) in self.groupByCategory.enumerated() {
-                        print("Index:", index, "Language:", element)
-                    }
-                    
-                    for i in lastPaymentsList{
-                        if i.operationType == "DEBIT"{
-                            self.totalExpenses  += Double(i.amount ?? 0.0)
-                        }
-                    }
-                    
-                }
-//                    self.dataUSD = lastPaymentsList
-            } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
-
-            }
+            totalExpenses = 0.0
+            cardHistory()
         }
-    }
     }
 }
 
-extension ProductViewController{
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return products.count + 1
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch indexPath.row {
-        case products.count:
-            let item = collectionView.dequeueReusableCell(withReuseIdentifier: "CardCollectionViewCell", for: indexPath) as? CardCollectionViewCell
-    //        item?.card = products[indexPath.item]
-            item?.cardImageView.image = UIImage(named: "cardMore")
-//            item?.backgroundColor = .gray
-//            item?.selectedView.isHidden = true
-            
-            item?.isSelected = false
 
-            return item ?? UICollectionViewCell()
-        default:
-            let item = collectionView.dequeueReusableCell(withReuseIdentifier: "CardCollectionViewCell", for: indexPath) as? CardCollectionViewCell
-    //        item?.card = products[indexPath.item]
-//            item?.selectedView.isHidden = true
-            item?.cardImageView.image = products[indexPath.row].smallDesign?.convertSVGStringToImage()
-            if firstTimeLoad{
-                item?.isSelected = false
-            }
-            return item ?? UICollectionViewCell()
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        tableView?.showAnimatedGradientSkeleton()
-        historyArray.removeAll()
-        historyArrayAccount.removeAll()
-        sorted.removeAll()
-        groupByCategory.removeAll()
-        tableView?.reloadInputViews()
-        tableView?.isSkeletonable = true
-        
-        statusBarView.showAnimatedGradientSkeleton()
-       
-        DispatchQueue.main.async {
-            self.tableView?.reloadData()
-        }
-        
-        if firstTimeLoad, products.count != 0{
-            firstTimeLoad = false
-            self.collectionView?.selectItem(at: IndexPath(item: indexItem ?? 0, section: 0), animated: true, scrollPosition: .bottom)
-            let cell = collectionView.cellForItem(at: IndexPath(item: indexItem ?? 0, section: 0)) as? CardCollectionViewCell
-            product = products[self.indexItem ?? 0]
-            cell?.showSelect()
-        } else {
-            if indexPath.item < products.count{
-                product = products[indexPath.item]
-                self.collectionView?.selectItem(at: indexPath, animated: true, scrollPosition: .bottom)
-//                guard let cell = collectionView.cellForItem(at: indexPath) as? CardCollectionViewCell else {return}
-//                cell.showSelect()
-            } else {
-                self.collectionView?.deselectItem(at: indexPath, animated: true)
-                let vc = ProductsViewController()
-                vc.addCloseButton()
-                vc.delegateProducts = self
-                present(vc, animated: true, completion: nil)
-            }
-        }
-        if product?.status == "Заблокирована банком" || product?.status == "Блокирована по решению Клиента" || product?.status == "BLOCKED_CREDIT" || product?.status == "BLOCKED_DEBET" || product?.status == "BLOCKED", product?.statusPC == "3" || product?.statusPC == "5" || product?.statusPC == "6"  || product?.statusPC == "7"  || product?.statusPC == "20"  || product?.statusPC == "21" ||  product?.statusPC == nil{
-            card.addSubview(blockView)
-            button.isEnabled = false
-            button.alpha = 0.4
-            button2.isEnabled = false
-            button2.alpha = 0.4
-            button4.setTitle("Разблокирова.", for: .normal)
-            button4.titleLabel?.font = UIFont.systemFont(ofSize: 14)
-            let btnImage4 = UIImage(named: "unlock")
-            button4.tintColor = .black
-            button4.setImage(btnImage4 , for: .normal)
-            blockView.isHidden = false
-            activateSlider.isHidden = true
-        } else if product?.status == "Действует" || product?.status == "Выдано клиенту", product?.statusPC == "17"{
-                button.isEnabled = false
-                button.alpha = 0.4
-                button2.isEnabled = false
-                button2.alpha = 0.4
-                button4.isEnabled = false
-                button4.alpha = 0.4
-                activateSlider.isHidden = false
-                blockView.isHidden = true
-        } else {
-            button.isEnabled = true
-            button.alpha = 1
-            button2.isEnabled = true
-            button2.alpha = 1
-            button4.setTitle("Блокировать", for: .normal)
-            button4.titleLabel?.font = UIFont.systemFont(ofSize: 14)
-            blockView.isHidden = true
-            activateSlider.isHidden = true
-            let btnImage4 = UIImage(named: "lock")
-            button4.tintColor = .black
-            button4.setImage(btnImage4 , for: .normal)
-        }
-    }
-    
-    
-    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as? CardCollectionViewCell
-        cell?.hideSelect()
-    }
-
-    
-    func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
-        if let cell = collectionView.cellForItem(at: indexPath) as? CardCollectionViewCell{
-            
-        }
-    }
-  
-    func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath) {
-        if let cell = collectionView.cellForItem(at: indexPath) as? CardCollectionViewCell{
-            
-        }
-    }
-
-    
-}
 
 extension ProductViewController{
 
@@ -1238,28 +960,6 @@ extension ProductViewController{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let vc = PaymentsDetailsSuccessViewController()
-//        vc.button.isHidden = true
-//        vc.addCloseButton_2()
-//        vc.confurmView.operatorImageView.isHidden = true
-//        vc.confurmView.statusImageView.isHidden = true
-//        vc.confurmView.statusLabel.text = historyArray[indexPath.row].comment
-//
-////        if historyArray[indexPath.row].operationType == "DEBIT"{
-////            vc.confurmView.summLabel.text = "+\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
-////        } else {
-////            vc.confurmView.summLabel.text = "-\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
-////        }
-//
-//        if historyArray[indexPath.row].operationType == "DEBIT"{
-////            vc.confurmView.summLabel.text = "-\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
-//        } else if historyArray[indexPath.row].operationType == "CREDIT"{
-//            vc.confurmView.summLabel.textColor = UIColor(hexString: "22C183")
-////            vc.confurmView.summLabel.text =  "+\(historyArray[indexPath.row].amount?.currencyFormatter(symbol: "RUB") ?? "")"
-//        }
-//
-//        present(vc, animated: true, completion: nil)
-        
         let vc = OperationDetailViewController()
         switch product?.productType {
         case "CARD":
@@ -1372,22 +1072,6 @@ extension ProductViewController{
             
         }
         
-//        if sorted.isEmpty == false{
-//            guard let tranDate = self.sorted[section].value[0].tranDate  else {
-//                label.text = longIntToDateString(longInt: self.sorted[section].value[0].date!/1000)
-//                label.font = .boldSystemFont(ofSize: 16)
-//
-//                label.textColor =  UIColor(hexString: "1C1C1C")
-//                headerView.addSubview(label)
-//                label.centerY(inView: headerView)
-//                headerView.hideSkeleton()
-//                headerView.stopSkeletonAnimation()
-//                return headerView
-//            }
-//
-//            label.text = longIntToDateString(longInt: tranDate/1000)
-//
-//        }
 
             label.font = .boldSystemFont(ofSize: 16)
             label.textColor =  UIColor(hexString: "1C1C1C")
@@ -1412,31 +1096,14 @@ extension ProductViewController{
             let dateFormatter = DateFormatter()
             dateFormatter.timeStyle = DateFormatter.Style.none//Set time style
             dateFormatter.dateStyle = DateFormatter.Style.long //Set date style
+            
+            dateFormatter.dateFormat =  "d MMMM, E"
             dateFormatter.timeZone = .current
             dateFormatter.locale = Locale(identifier: "ru_RU")
             let localDate = dateFormatter.string(from: date)
             print(localDate)
         
-        
-        
         return localDate
-    }
-    func getFastPaymentContractList(_ completion: @escaping (_ model: [FastPaymentContractFindListDatum]? ,_ error: String?) -> Void) {
-        NetworkManager<FastPaymentContractFindListDecodableModel>.addRequest(.fastPaymentContractFindList, [:], [:]) { model, error in
-            if error != nil {
-                print("DEBUG: Error: ", error ?? "")
-                completion(nil, error)
-            }
-            guard let model = model else { return }
-            print("DEBUG: fastPaymentContractFindList", model)
-            if model.statusCode == 0 {
-                completion(model.data, nil)
-            } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
-
-                completion(nil, model.errorMessage)
-            }
-        }
     }
 }
 
@@ -1484,17 +1151,6 @@ extension UINavigationItem {
     }
 }
 
-//extension UIView {
-//func addoverlay(color: UIColor = .black,alpha : CGFloat = 0.6) {
-//    let overlay = UIView()
-//    overlay.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-//    overlay.frame = bounds
-//    overlay.backgroundColor = color
-//    overlay.alpha = alpha
-//    addSubview(overlay)
-//    }
-//    //This function will add a layer on any `UIView` to make that `UIView` look darkened
-//}
 
 extension UIColor {
     private func makeColor(componentDelta: CGFloat) -> UIColor {
@@ -1557,24 +1213,6 @@ extension ProductViewController: UIViewControllerTransitioningDelegate {
         return presenter
     }
     
-    func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?,_ error: String?)->()) {
-        
-        let param = ["isCard": "true", "isAccount": "true", "isDeposit": "false", "isLoan": "false"]
-        
-        NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
-            if error != nil {
-                completion(nil, error)
-            }
-            guard let model = model else { return }
-            if model.statusCode == 0 {
-                guard let cardList = model.data else { return }
-                completion(cardList, nil)
-            } else {
-                guard let error = model.errorMessage else { return }
-                completion(nil, error)
-            }
-        }
-        
-    }
+
 }
 

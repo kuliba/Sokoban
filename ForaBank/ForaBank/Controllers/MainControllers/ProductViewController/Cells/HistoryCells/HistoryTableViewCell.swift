@@ -53,32 +53,24 @@ class HistoryTableViewCell: UITableViewCell {
     
     private func setupSkeleton() {
           
-        isSkeletonable = true
+//        isSkeletonable = true
         
           
-        titleLable.isSkeletonable = true
+//        titleLable.isSkeletonable = true
         titleLable.showAnimatedGradientSkeleton()
         titleLable.linesCornerRadius = 8
-        amountLabel.isSkeletonable = true
+//        amountLabel.isSkeletonable = true
         amountLabel.showAnimatedGradientSkeleton()
         amountLabel.linesCornerRadius = 8
-        subTitleLabel.isSkeletonable = true
+//        subTitleLabel.isSkeletonable = true
         subTitleLabel.showAnimatedGradientSkeleton()
         subTitleLabel.linesCornerRadius = 8
-        logoImageView.isSkeletonable = true
+//        logoImageView.isSkeletonable = true
         logoImageView.showAnimatedGradientSkeleton()
       }
     
     func configure(currency: String){
 //        self.isSkeletonable = false
-        titleLable.stopSkeletonAnimation()
-        subTitleLabel.stopSkeletonAnimation()
-        logoImageView.stopSkeletonAnimation()
-        amountLabel.stopSkeletonAnimation()
-        titleLable.hideSkeleton()
-        subTitleLabel.hideSkeleton()
-        logoImageView.hideSkeleton()
-        amountLabel.hideSkeleton()
         
         
         switch operation?.type {
