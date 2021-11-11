@@ -36,7 +36,10 @@ extension QRErrorCoordinator: QRErrorDelegate {
         let transferCoordinator = TransferByRequisitesCoordinator(router: router)
         addChild(transferCoordinator)
         transferCoordinator.start()
-        router.present(transferCoordinator.toPresentable(), animated: true)
+        router.push(transferCoordinator, animated: true) {
+            [weak self, weak transferCoordinator] in
+                self?.removeChild(transferCoordinator)
+        }
     }
     
     func goToGKHMainController() {

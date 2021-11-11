@@ -18,7 +18,7 @@ protocol QRProtocol: NSObject {
 final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate {
     
     weak var delegate: QRProtocol?
-    weak var qrCoordinatorDelegate: QRCoordinatorDelegate?
+//    weak var qrCoordinatorDelegate: QRCoordinatorDelegate?
     
     var qrCodeLayer = AVCaptureVideoPreviewLayer()
     let qrCodesession = AVCaptureSession()
@@ -114,7 +114,7 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate {
         })
         self.returnKey()
         } else {
-            qrCoordinatorDelegate?.goToQRError()
+//            qrCoordinatorDelegate?.goToQRError()
         }
         
     }
@@ -123,16 +123,18 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate {
         self.qrCodesession.stopRunning()
         self.qrView.layer.sublayers?.removeLast()
         if operators != nil {
-            self.navigationController?.popViewController(animated: true)
+//            self.qrCoordinatorDelegate?.goToExit()
             self.delegate?.setResultOfBusinessLogic(qrData, operators!)
+            self.navigationController?.popViewController(animated: true)
         } else {
-            qrCoordinatorDelegate?.goToQRError()
+ //           qrCoordinatorDelegate?.goToQRError()
         }
     }
     
     @IBAction func back(_ sender: UIButton) {
         self.qrCodesession.stopRunning()
         self.qrView.layer.sublayers?.removeLast()
+//        self.qrCoordinatorDelegate?.goToExit()
         self.navigationController?.popViewController(animated: true)
     }
     

@@ -42,9 +42,8 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
             phoneField.text = selectNumber ?? ""
         }
         setupUI()
-        
+        view.addSubview(bottomView)
         phoneField.didChooseButtonTapped = {() in
-            print("phoneField didChooseButtonTapped")
 //            self.dismiss(animated: true, completion: nil)
             
             let contactPickerScene = EPContactsPicker(
@@ -100,8 +99,6 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
             bottomView.amountTextField.isEnabled = text.count < 11 ? false : true
             bottomView.doneButton.isEnabled = text.count < 11 ? false : true
             bottomView.doneButtonIsEnabled(text.count < 11 ? false : true)
-            
-            view.addSubview(bottomView)
         }
     }
     
@@ -235,7 +232,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                         completion(error)
                     }
                     if data?.statusCode == 0 {
-                        var model = ConfirmViewControllerModel(type: .mobilePayment)
+                        let model = ConfirmViewControllerModel(type: .mobilePayment)
                         
                         model.cardFrom = self?.cardField.cardModel
                         

@@ -20,14 +20,11 @@ class MainTabBarCoordinator: Coordinator {
     
     override func start() {
     }
-    
-    deinit {
-        print("Deinit MainTabBarCoordinator")
-    }
+
 }
 
 extension MainTabBarCoordinator: MainViewControllerDelegate {
-   
+    
     func goProductViewController(productIndex: Int) {
         let productCoordinator = ProductCoordinator(router: router)
         productCoordinator.productViewController.indexItem = productIndex
@@ -50,11 +47,11 @@ extension MainTabBarCoordinator: PaymentsViewControllerDelegate {
         let gkhCoordinator = GKHCoordinator(router: router)
         addChild(gkhCoordinator)
         gkhCoordinator.start()
-        router.present(gkhCoordinator, animated: true)
-//        router.push(gkhCoordinator.toPresentable(), animated: true) {
-//            [weak self, weak gkhCoordinator] in
-//                self?.removeChild(gkhCoordinator)
-//        }
+ //       router.present(gkhCoordinator, animated: true)
+        router.push(gkhCoordinator.toPresentable(), animated: true) {
+            [weak self, weak gkhCoordinator] in
+                self?.removeChild(gkhCoordinator)
+        }
     }
     
     
@@ -62,10 +59,11 @@ extension MainTabBarCoordinator: PaymentsViewControllerDelegate {
         let qrCoordinator = QRCoordinator(router: router)
         addChild(qrCoordinator)
         qrCoordinator.start()
-        router.push(qrCoordinator.toPresentable(), animated: true) {
-            [weak self, weak qrCoordinator] in
-                self?.removeChild(qrCoordinator)
-        }
+        router.setRootModule(qrCoordinator, hideBar: false)
+//        router.push(qrCoordinator.toPresentable(), animated: true) {
+//            [weak self, weak qrCoordinator] in
+//                self?.removeChild(qrCoordinator)
+//        }
     }
     
     func toMobilePay(_ controller: UIViewController) {

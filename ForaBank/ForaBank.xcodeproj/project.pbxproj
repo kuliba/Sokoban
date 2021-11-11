@@ -89,6 +89,7 @@
 		0B8C1C51273B2E1C00BA5CAC /* QRErrorCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C1C50273B2E1C00BA5CAC /* QRErrorCoordinator.swift */; };
 		0B8C1C54273B393E00BA5CAC /* GKHCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C1C53273B393E00BA5CAC /* GKHCoordinator.swift */; };
 		0B8C1C56273B4F9F00BA5CAC /* GKHInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C1C55273B4F9F00BA5CAC /* GKHInfoView.swift */; };
+		0B8C1C58273C599A00BA5CAC /* GKHNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C1C57273C599A00BA5CAC /* GKHNavigationController.swift */; };
 		0B8CB0882680CAE3006A39C3 /* ExtensionNetworkHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8CB0872680CAE3006A39C3 /* ExtensionNetworkHelper.swift */; };
 		0B931B1426DCD59900CA8017 /* GKHLogotypeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B931B1326DCD59900CA8017 /* GKHLogotypeData.swift */; };
 		0B931B1626DCD5F100CA8017 /* GKHParametersModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B931B1526DCD5F100CA8017 /* GKHParametersModel.swift */; };
@@ -548,6 +549,7 @@
 		0B8C1C50273B2E1C00BA5CAC /* QRErrorCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRErrorCoordinator.swift; sourceTree = "<group>"; };
 		0B8C1C53273B393E00BA5CAC /* GKHCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHCoordinator.swift; sourceTree = "<group>"; };
 		0B8C1C55273B4F9F00BA5CAC /* GKHInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHInfoView.swift; sourceTree = "<group>"; };
+		0B8C1C57273C599A00BA5CAC /* GKHNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHNavigationController.swift; sourceTree = "<group>"; };
 		0B8CB0872680CAE3006A39C3 /* ExtensionNetworkHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionNetworkHelper.swift; sourceTree = "<group>"; };
 		0B931B1326DCD59900CA8017 /* GKHLogotypeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHLogotypeData.swift; sourceTree = "<group>"; };
 		0B931B1526DCD5F100CA8017 /* GKHParametersModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHParametersModel.swift; sourceTree = "<group>"; };
@@ -1279,6 +1281,7 @@
 				0BAC674226D418C4005AAD91 /* GKHCell */,
 				0B216FBF26D1B26A0023C878 /* GKHCitySearch */,
 				0BAC674526D4F138005AAD91 /* GKHMainController */,
+				0B8C1C57273C599A00BA5CAC /* GKHNavigationController.swift */,
 			);
 			path = GKHMainViewController;
 			sourceTree = "<group>";
@@ -1489,7 +1492,7 @@
 				0B8C1C4F273B2E0700BA5CAC /* QRErrorCoordinator */,
 				0B8C1C4C273B2B1F00BA5CAC /* TransferByRequisitesCoordinator */,
 				0B8C1C42273ADF5C00BA5CAC /* QRCoordinator */,
-				68D099D7273B5CC20017D777 /* PaymentsCoordinators */,
+				68D099D7273B5CC20017D777 /* PaymentByPhoneCoordinator */,
 				68D099D3273A78940017D777 /* ProductCoordinators */,
 				6833E0C3273920CD004C070F /* LoginCoordinators */,
 				6833E0C8273920CD004C070F /* MobilePayCoordinator.swift */,
@@ -1737,12 +1740,12 @@
 			path = ProductCoordinators;
 			sourceTree = "<group>";
 		};
-		68D099D7273B5CC20017D777 /* PaymentsCoordinators */ = {
+		68D099D7273B5CC20017D777 /* PaymentByPhoneCoordinator */ = {
 			isa = PBXGroup;
 			children = (
 				68D099D8273B5D110017D777 /* PaymentByPhoneCoordinator.swift */,
 			);
-			path = PaymentsCoordinators;
+			path = PaymentByPhoneCoordinator;
 			sourceTree = "<group>";
 		};
 		68E3461D27030F2A00D6FE37 /* ChatViewControllers */ = {
@@ -3347,6 +3350,7 @@
 				EDF6820D266F9EC800FD5C07 /* NetworkManager.swift in Sources */,
 				0B95C40026B6C99A00AA57E6 /* RoundedDoubleExtension.swift in Sources */,
 				0B283FBD26FBC9F100B5E925 /* Presentable.swift in Sources */,
+				0B8C1C58273C599A00BA5CAC /* GKHNavigationController.swift in Sources */,
 				68FFA5432682DC95002DADFA /* PhoneConfirmViewController.swift in Sources */,
 				0BAC674126D408DC005AAD91 /* CreateDirectTransferDecodableModel.swift in Sources */,
 				0BF348A1269E0CDA005138A8 /* LogoutDecodableModel.swift in Sources */,
@@ -3743,7 +3747,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8.1;
 				CURRENT_PROJECT_VERSION = 7;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
@@ -3753,7 +3756,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 7.6.1;
 				MARKETING_VERSION = 7.8;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3771,7 +3773,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8.1;
 				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
@@ -3780,7 +3781,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 7.6.1;
 				MARKETING_VERSION = 7.8;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
