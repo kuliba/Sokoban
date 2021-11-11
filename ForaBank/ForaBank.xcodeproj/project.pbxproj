@@ -183,6 +183,8 @@
 		0BF3486426943DFB005138A8 /* SuggestCompanyDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF3486326943DFB005138A8 /* SuggestCompanyDecodableModel.swift */; };
 		0BF34866269444D9005138A8 /* AllCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF34865269444D9005138A8 /* AllCardCell.swift */; };
 		0BF348A1269E0CDA005138A8 /* LogoutDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF348A0269E0CDA005138A8 /* LogoutDecodableModel.swift */; };
+		681E073D273D3FCF00551FAD /* ProductViewControllerRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E073C273D3FCF00551FAD /* ProductViewControllerRequest.swift */; };
+		681E073F273D478700551FAD /* ProductViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E073E273D478700551FAD /* ProductViewControllerDelegate.swift */; };
 		6822EFD226B935DB00125EEC /* BaseTableViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6822EFD126B935DB00125EEC /* BaseTableViewViewController.swift */; };
 		6822EFD626B935FF00125EEC /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6822EFD426B935FF00125EEC /* BaseTableViewCell.swift */; };
 		6822EFD726B935FF00125EEC /* BaseTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6822EFD526B935FF00125EEC /* BaseTableViewCell.xib */; };
@@ -641,6 +643,8 @@
 		0BF3486326943DFB005138A8 /* SuggestCompanyDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestCompanyDecodableModel.swift; sourceTree = "<group>"; };
 		0BF34865269444D9005138A8 /* AllCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllCardCell.swift; sourceTree = "<group>"; };
 		0BF348A0269E0CDA005138A8 /* LogoutDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutDecodableModel.swift; sourceTree = "<group>"; };
+		681E073C273D3FCF00551FAD /* ProductViewControllerRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductViewControllerRequest.swift; sourceTree = "<group>"; };
+		681E073E273D478700551FAD /* ProductViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductViewControllerDelegate.swift; sourceTree = "<group>"; };
 		6822EFD126B935DB00125EEC /* BaseTableViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewViewController.swift; sourceTree = "<group>"; };
 		6822EFD426B935FF00125EEC /* BaseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewCell.swift; sourceTree = "<group>"; };
 		6822EFD526B935FF00125EEC /* BaseTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BaseTableViewCell.xib; sourceTree = "<group>"; };
@@ -1444,6 +1448,15 @@
 			path = NetworkingLoginModel;
 			sourceTree = "<group>";
 		};
+		681E073A273D3F3E00551FAD /* DetailOperation */ = {
+			isa = PBXGroup;
+			children = (
+				68368BAD272FDAA200A435B1 /* OperationDetailViewController.swift */,
+				6833E0B12732B69E004C070F /* DetailOperationViewController.swift */,
+			);
+			path = DetailOperation;
+			sourceTree = "<group>";
+		};
 		6822EFD026B935A500125EEC /* DefaultTableView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1623,13 +1636,14 @@
 		688B9BAA26DE7D6300407A75 /* ProductViewController */ = {
 			isa = PBXGroup;
 			children = (
+				681E073A273D3F3E00551FAD /* DetailOperation */,
 				6833E0B32732B749004C070F /* DetailOperationCell */,
 				68C8D57526F1FEE30076246B /* RequisitsViewController */,
 				687FB23426F016FF004A479F /* Cells */,
 				688B9BAB26DE7D7E00407A75 /* ProductViewController.swift */,
 				687FB23526F0189B004A479F /* ProductViewControllerDataSource.swift */,
-				68368BAD272FDAA200A435B1 /* OperationDetailViewController.swift */,
-				6833E0B12732B69E004C070F /* DetailOperationViewController.swift */,
+				681E073C273D3FCF00551FAD /* ProductViewControllerRequest.swift */,
+				681E073E273D478700551FAD /* ProductViewControllerDelegate.swift */,
 			);
 			path = ProductViewController;
 			sourceTree = "<group>";
@@ -3224,6 +3238,7 @@
 				EDCF8A1026CE876600DC9F54 /* MeToMeSearchBanksViewController.swift in Sources */,
 				68C64626269DCBD800473DE7 /* QRScannerViewController.swift in Sources */,
 				EDFFCAF82683943A004EE095 /* UISwitch.swift in Sources */,
+				681E073D273D3FCF00551FAD /* ProductViewControllerRequest.swift in Sources */,
 				0BA09E3026ADEC300065D623 /* GHKCell.swift in Sources */,
 				0B2A8D2C26E8D9B600651BCB /* GetLatestPhonePayments.swift in Sources */,
 				ED2BE17F26A0498400647CB1 /* AllCardListViewController.swift in Sources */,
@@ -3538,6 +3553,7 @@
 				EDB1453E2666AF260028EF5A /* OrderProductsViewController FlowLayout.swift in Sources */,
 				0B931B1E26DCD83B00CA8017 /* GKHAdditionalListModel.swift in Sources */,
 				0BF34866269444D9005138A8 /* AllCardCell.swift in Sources */,
+				681E073F273D478700551FAD /* ProductViewControllerDelegate.swift in Sources */,
 				68D06F2426C3C0F300F9BE4C /* MainViewControllerLayout.swift in Sources */,
 				0B3FE8E12704DBEE00CBDB4E /* GetLatestMobilePaymentsDecodableModel.swift in Sources */,
 				0B8C1C51273B2E1C00BA5CAC /* QRErrorCoordinator.swift in Sources */,
@@ -3747,7 +3763,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
 				CURRENT_PROJECT_VERSION = 10;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
@@ -3774,7 +3789,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
 				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
