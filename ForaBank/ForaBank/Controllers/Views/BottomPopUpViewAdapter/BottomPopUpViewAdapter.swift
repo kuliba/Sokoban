@@ -61,6 +61,8 @@ class BottomPopUpViewAdapter: UIViewController {
     
     // MARK: - Layout
     
+    private let hight = UIScreen.main.bounds.height / 2
+    
     private var bottomConstraint = NSLayoutConstraint()
     
     private func layout() {
@@ -76,9 +78,9 @@ class BottomPopUpViewAdapter: UIViewController {
         view.addSubview(popupView)
         popupView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         popupView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        bottomConstraint = popupView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: view.bounds.height / 2)
+        bottomConstraint = popupView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: hight)
         bottomConstraint.isActive = true
-        popupView.heightAnchor.constraint(equalToConstant: view.bounds.height / 2).isActive = true
+        popupView.heightAnchor.constraint(equalToConstant: hight).isActive = true
         
     }
     
@@ -113,7 +115,7 @@ class BottomPopUpViewAdapter: UIViewController {
                 self.popupView.layer.cornerRadius = 20
                 self.overlayView.alpha = 0.3
             case .closed:
-                self.bottomConstraint.constant = self.view.bounds.height / 2
+                self.bottomConstraint.constant = self.hight
                 self.popupView.layer.cornerRadius = 0
                 self.overlayView.alpha = 0
             }
@@ -140,7 +142,7 @@ class BottomPopUpViewAdapter: UIViewController {
             case .open:
                 self.bottomConstraint.constant = 0
             case .closed:
-                self.bottomConstraint.constant = self.view.bounds.height / 2
+                self.bottomConstraint.constant = self.hight
             }
             
             // remove all running animators
@@ -173,7 +175,7 @@ class BottomPopUpViewAdapter: UIViewController {
             
             // variable setup
             let translation = recognizer.translation(in: popupView)
-            var fraction = -translation.y / (self.view.bounds.height / 2)
+            var fraction = -translation.y / self.hight
             
             // adjust the fraction for the current state and reversed state
             if currentState == .open { fraction *= -1 }

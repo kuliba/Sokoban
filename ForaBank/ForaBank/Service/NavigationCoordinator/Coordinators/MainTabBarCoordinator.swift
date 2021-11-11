@@ -43,28 +43,28 @@ extension MainTabBarCoordinator: MainViewControllerDelegate {
 
 extension MainTabBarCoordinator: PaymentsViewControllerDelegate {
     
-    func goToGKHController() {
-        let gkhCoordinator = GKHCoordinator(router: router)
-        addChild(gkhCoordinator)
-        gkhCoordinator.start()
- //       router.present(gkhCoordinator, animated: true)
-        router.push(gkhCoordinator.toPresentable(), animated: true) {
-            [weak self, weak gkhCoordinator] in
-                self?.removeChild(gkhCoordinator)
-        }
-    }
+//    func goToGKHController() {
+//        let gkhCoordinator = GKHCoordinator(router: router)
+//        addChild(gkhCoordinator)
+//        gkhCoordinator.start()
+// //       router.present(gkhCoordinator, animated: true)
+//        router.push(gkhCoordinator.toPresentable(), animated: true) {
+//            [weak self, weak gkhCoordinator] in
+//                self?.removeChild(gkhCoordinator)
+//        }
+//    }
     
     
-    func goToQRController() {
-        let qrCoordinator = QRCoordinator(router: router)
-        addChild(qrCoordinator)
-        qrCoordinator.start()
-        router.setRootModule(qrCoordinator, hideBar: false)
+//    func goToQRController() {
+//        let qrCoordinator = QRCoordinator(router: router)
+//        addChild(qrCoordinator)
+//        qrCoordinator.start()
+//        router.setRootModule(qrCoordinator, hideBar: false)
 //        router.push(qrCoordinator.toPresentable(), animated: true) {
 //            [weak self, weak qrCoordinator] in
 //                self?.removeChild(qrCoordinator)
 //        }
-    }
+//    }
     
     func toMobilePay(_ controller: UIViewController) {
         let mobilePay = MobilePayCoordinator(router: router)

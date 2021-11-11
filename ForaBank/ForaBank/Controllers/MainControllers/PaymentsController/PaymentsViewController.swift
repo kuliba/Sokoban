@@ -83,7 +83,7 @@ class PaymentsViewController: UIViewController {
         self.checkCameraAccess(isAllowed: {
                 if $0 {
                     DispatchQueue.main.async {
-                        self.delegate?.goToQRController()
+//                        self.delegate?.goToQRController()
                     }
                 } else {
                     guard self.alertController == nil else {

@@ -11,8 +11,8 @@ import UIKit
 protocol PaymentsViewControllerDelegate: AnyObject {
     func toMobilePay(_ controller: UIViewController)
     func goToCountryPayments()
-    func goToQRController()
-    func goToGKHController()
+//    func goToQRController()
+//    func goToGKHController()
     func goToPaymentByPhone()
 }
 
@@ -89,7 +89,11 @@ extension PaymentsViewController: UICollectionViewDelegate {
 
                 if indexPath.row == 2 {
                     // ЖКХ
-                    self.delegate?.goToGKHController()
+                   // self.delegate?.goToGKHController()
+                    let gkh = GKHMainViewController.storyboardInstance()!
+                    let nc = UINavigationController(rootViewController: gkh)
+                    nc.modalPresentationStyle = .fullScreen
+                    present(nc, animated: true)
                 } else if indexPath.row == 1 {
                     // Мобильная связь
                     delegate?.toMobilePay(viewController)

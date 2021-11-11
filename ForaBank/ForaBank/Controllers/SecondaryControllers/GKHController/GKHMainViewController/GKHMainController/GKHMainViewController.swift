@@ -11,11 +11,16 @@ import AVFoundation
 
 class GKHMainViewController: UIViewController, UITableViewDelegate {
     
+    public static func storyboardInstance() -> GKHMainViewController? {
+        let storyboard = UIStoryboard(name: "GKHStoryboard", bundle: nil)
+        return storyboard.instantiateViewController(withIdentifier: "GKHMain") as? GKHMainViewController
+    }
+    
     // QR data
     var qrData = [String: String]()
     var operators: GKHOperatorsModel? = nil
     var token: NotificationToken?
-    weak var delegate: GKHDelegate?
+//    weak var delegate: GKHDelegate?
     
     @IBOutlet weak var reqView: UIView!
     @IBOutlet weak var zayavka: UIView!

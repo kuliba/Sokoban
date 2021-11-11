@@ -79,7 +79,6 @@ class GKHInputViewController: BottomPopUpViewAdapter {
                     guard let error = error else { return }
                     self.showAlert(with: "Ошибка", and: error)
                 }
-                
             }
         }
         
@@ -98,8 +97,6 @@ class GKHInputViewController: BottomPopUpViewAdapter {
             tableView.tableFooterView = footerView
             tableView.layoutIfNeeded()
         }
-        
-        
     }
     
     @IBAction func goButton(_ sender: UIButton) {

@@ -43,13 +43,13 @@ extension QRErrorCoordinator: QRErrorDelegate {
     }
     
     func goToGKHMainController() {
-        let gkhCoordinator = GKHCoordinator(router: router)
-        addChild(gkhCoordinator)
-        gkhCoordinator.start()
-        router.push(gkhCoordinator.toPresentable(), animated: true) {
-            [weak self, weak gkhCoordinator] in
-                self?.removeChild(gkhCoordinator)
-        }
+//        let gkhCoordinator = GKHCoordinator(router: router)
+//        addChild(gkhCoordinator)
+//        gkhCoordinator.start()
+//        router.push(gkhCoordinator.toPresentable(), animated: true) {
+//            [weak self, weak gkhCoordinator] in
+//                self?.removeChild(gkhCoordinator)
+//        }
     }
     
 }

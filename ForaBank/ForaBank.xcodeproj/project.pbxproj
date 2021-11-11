@@ -90,6 +90,10 @@
 		0B8C1C54273B393E00BA5CAC /* GKHCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C1C53273B393E00BA5CAC /* GKHCoordinator.swift */; };
 		0B8C1C56273B4F9F00BA5CAC /* GKHInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C1C55273B4F9F00BA5CAC /* GKHInfoView.swift */; };
 		0B8C1C58273C599A00BA5CAC /* GKHNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C1C57273C599A00BA5CAC /* GKHNavigationController.swift */; };
+		0B8C1C5D273DCB1D00BA5CAC /* PushHistoryStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0B8C1C5C273DCB1D00BA5CAC /* PushHistoryStoryboard.storyboard */; };
+		0B8C1C60273DCB6200BA5CAC /* PushHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C1C5F273DCB6200BA5CAC /* PushHistoryViewController.swift */; };
+		0B8C1C62273DD0DF00BA5CAC /* PushHistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C1C61273DD0DF00BA5CAC /* PushHistoryCell.swift */; };
+		0B8C1C64273DD21300BA5CAC /* ExtensionPushHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8C1C63273DD21300BA5CAC /* ExtensionPushHistoryViewController.swift */; };
 		0B8CB0882680CAE3006A39C3 /* ExtensionNetworkHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8CB0872680CAE3006A39C3 /* ExtensionNetworkHelper.swift */; };
 		0B931B1426DCD59900CA8017 /* GKHLogotypeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B931B1326DCD59900CA8017 /* GKHLogotypeData.swift */; };
 		0B931B1626DCD5F100CA8017 /* GKHParametersModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B931B1526DCD5F100CA8017 /* GKHParametersModel.swift */; };
@@ -552,6 +556,10 @@
 		0B8C1C53273B393E00BA5CAC /* GKHCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHCoordinator.swift; sourceTree = "<group>"; };
 		0B8C1C55273B4F9F00BA5CAC /* GKHInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHInfoView.swift; sourceTree = "<group>"; };
 		0B8C1C57273C599A00BA5CAC /* GKHNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHNavigationController.swift; sourceTree = "<group>"; };
+		0B8C1C5C273DCB1D00BA5CAC /* PushHistoryStoryboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = PushHistoryStoryboard.storyboard; sourceTree = "<group>"; };
+		0B8C1C5F273DCB6200BA5CAC /* PushHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushHistoryViewController.swift; sourceTree = "<group>"; };
+		0B8C1C61273DD0DF00BA5CAC /* PushHistoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushHistoryCell.swift; sourceTree = "<group>"; };
+		0B8C1C63273DD21300BA5CAC /* ExtensionPushHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionPushHistoryViewController.swift; sourceTree = "<group>"; };
 		0B8CB0872680CAE3006A39C3 /* ExtensionNetworkHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionNetworkHelper.swift; sourceTree = "<group>"; };
 		0B931B1326DCD59900CA8017 /* GKHLogotypeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHLogotypeData.swift; sourceTree = "<group>"; };
 		0B931B1526DCD5F100CA8017 /* GKHParametersModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHParametersModel.swift; sourceTree = "<group>"; };
@@ -1087,6 +1095,7 @@
 				0B66E8E526CC658A00FD735D /* GKHStoryboard.storyboard */,
 				0BAC674626D4F471005AAD91 /* QRCodeStoryboard.storyboard */,
 				68E346232705C6FA00D6FE37 /* ProductStoryboard.storyboard */,
+				0B8C1C5C273DCB1D00BA5CAC /* PushHistoryStoryboard.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -1157,6 +1166,16 @@
 				0B8C1C53273B393E00BA5CAC /* GKHCoordinator.swift */,
 			);
 			path = GKHCoordinator;
+			sourceTree = "<group>";
+		};
+		0B8C1C5E273DCB3400BA5CAC /* PushHistoryController */ = {
+			isa = PBXGroup;
+			children = (
+				0B8C1C5F273DCB6200BA5CAC /* PushHistoryViewController.swift */,
+				0B8C1C63273DD21300BA5CAC /* ExtensionPushHistoryViewController.swift */,
+				0B8C1C61273DD0DF00BA5CAC /* PushHistoryCell.swift */,
+			);
+			path = PushHistoryController;
 			sourceTree = "<group>";
 		};
 		0B931B1926DCD66200CA8017 /* GetAnywayOretatorsList */ = {
@@ -2691,6 +2710,7 @@
 		EDB16593266A4317007E6030 /* SecondaryControllers */ = {
 			isa = PBXGroup;
 			children = (
+				0B8C1C5E273DCB3400BA5CAC /* PushHistoryController */,
 				ED5F2883273BE76D006A10BF /* AccountStatement */,
 				EDA0DCBF273951F80013F47E /* AccountDetails */,
 				0B283FB426FB7CCE00B5E925 /* MobilePayController */,
@@ -3174,6 +3194,7 @@
 				EDA0DCBD2735E8030013F47E /* AppLocker.storyboard in Resources */,
 				ED84995826A8831E005205C6 /* EPContactCell.xib in Resources */,
 				EDB145112664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf in Resources */,
+				0B8C1C5D273DCB1D00BA5CAC /* PushHistoryStoryboard.storyboard in Resources */,
 				ED8AB45D26C2B55E006F0D03 /* SuccessMeToMeController.xib in Resources */,
 				688B9BB626E03B3E00407A75 /* TotalMoneyView.xib in Resources */,
 				EDB143B5265FDE960028EF5A /* Assets.xcassets in Resources */,
@@ -3318,6 +3339,7 @@
 				0BB24ABA26F2884A00DDA4F6 /* ReturnAllCardList.swift in Sources */,
 				ED84995626A8831E005205C6 /* EPContactsPicker.swift in Sources */,
 				ED4FC602266C0AB50092B4AB /* ChooseCountryTableViewController.swift in Sources */,
+				0B8C1C62273DD0DF00BA5CAC /* PushHistoryCell.swift in Sources */,
 				6863EF6B2716D095008FD522 /* MTSlideToOpenControl.swift in Sources */,
 				0B931B4726DE2DF700CA8017 /* GKHHistoryCarusel.swift in Sources */,
 				EDF6821A266F9EC800FD5C07 /* RouterUrlList.swift in Sources */,
@@ -3482,6 +3504,7 @@
 				0BB24AB126F0C3DC00DDA4F6 /* GetCardStatementDecodableModel.swift in Sources */,
 				6833E0AB27303E8F004C070F /* GetOperationDetailDecodebleModel.swift in Sources */,
 				68E6A29326A033B700A1D9A1 /* CheckCardDecodableModel.swift in Sources */,
+				0B8C1C64273DD21300BA5CAC /* ExtensionPushHistoryViewController.swift in Sources */,
 				6880D32D26A70585008FBCB4 /* FaceTouchIdViewController.swift in Sources */,
 				0B95C40C26B72CB100AA57E6 /* ExtensionBottomViewWithSetup.swift in Sources */,
 				68FFA551268538CF002DADFA /* PhoneContactModel.swift in Sources */,
@@ -3561,6 +3584,7 @@
 				EDCF89E226CACC7300DC9F54 /* MeToMeSetupSwitchView.swift in Sources */,
 				0B8BE08F266FBE0500E96CAA /* CSRFDecodableModel.swift in Sources */,
 				EDB14535266671580028EF5A /* MockItems.swift in Sources */,
+				0B8C1C60273DCB6200BA5CAC /* PushHistoryViewController.swift in Sources */,
 				ED84994426A6F647005205C6 /* ChooseCountryHeaderCell.swift in Sources */,
 				EDBEEA1A26B1AEA200265683 /* FullBankInfoListViewModel.swift in Sources */,
 				0B7A18C92685BF700007CC75 /* GetPaymentSystemListDecodableModel.swift in Sources */,

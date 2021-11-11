@@ -124,8 +124,8 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate {
         self.qrView.layer.sublayers?.removeLast()
         if operators != nil {
 //            self.qrCoordinatorDelegate?.goToExit()
-            self.delegate?.setResultOfBusinessLogic(qrData, operators!)
             self.navigationController?.popViewController(animated: true)
+            self.delegate?.setResultOfBusinessLogic(qrData, operators!)
         } else {
  //           qrCoordinatorDelegate?.goToQRError()
         }
