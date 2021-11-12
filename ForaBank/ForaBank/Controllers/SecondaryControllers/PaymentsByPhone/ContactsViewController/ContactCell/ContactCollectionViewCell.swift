@@ -16,7 +16,6 @@ class ContactCollectionViewCell: UICollectionViewCell{
         didSet {
             guard let contact = contact else { return }
             setup(contact: contact)
-            print(checkOwner(number: contact.phoneNumber.first))
         }
     }
     

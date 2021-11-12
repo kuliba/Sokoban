@@ -123,15 +123,16 @@ class EPContactCell: UITableViewCell {
     
     func checkOwner(number: String?, completion: @escaping (Bool) -> () ) {
         guard let number = number else { return }
-        let body = [ "phoneNumber": number ] as [String: AnyObject]
+        let body = [ "phoneNumber": number.digits ] as [String: AnyObject]
         NetworkManager<GetOwnerPhoneNumberPhoneDecodableModel>.addRequest(.getOwnerPhoneNumber, [:], body) { model, error in
+            print(body)
             if error != nil {
                 completion(false)
                 print("DEBUG: Error: ", error ?? "")
             }
             guard let model = model else { return }
             if model.statusCode == 0 {
-                if model.data != nil {
+                if model.data != "" && model.data != nil {
                     completion(true)
                 } else {
                     completion(false)

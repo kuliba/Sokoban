@@ -82,10 +82,12 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
         banksList = Dict.shared.banks?.filter({$0.paymentSystemCodeList?.first == "SFP"}) ?? []
         print(banks)
         let viewLine = UIView()
- 
+        
         tableView.keyboardDismissMode = .interactive
         tableView.keyboardDismissMode = .onDrag
-
+        view.backgroundColor = .white
+        
+        
         self.delegate = self
         configureTableView()
         registerContactCell()
@@ -962,19 +964,8 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
         
         if banksActive{
            
-            //            let bank = orderedBanks.filter({$0.})
             let banks = orderedBanks[sortedContactKeys[indexPath.section]]
              
-//            if banks?[indexPath.row].svgImage == nil {
-//                cell.contactImageView.image = UIImage(imageLiteralResourceName: "bankDefault")
-//            } else {
-//                for item in banksList {
-//                    if item.memberID ==  banks?[indexPath.item].memberID{
-//                        cell.contact?.thumbnailProfileImage  = item.svgImage?.convertSVGStringToImage()
-//                        cell.contactImageView.image = item.svgImage?.convertSVGStringToImage()
-//                    }
-//                }
-//            }
             cell.contactImageView.image = UIImage(imageLiteralResourceName: "bankDefault")
             cell.banks = banks?[indexPath.item]
             cell.updateBankCell()
