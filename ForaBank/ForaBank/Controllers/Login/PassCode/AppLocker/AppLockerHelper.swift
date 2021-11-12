@@ -11,32 +11,34 @@ import RealmSwift
 struct AppLockerHelper {
     
     static func goVC(_ mode: ALMode) {
-        
-        guard let vc = UIApplication.getTopViewController() else {return}
-        DispatchQueue.main.async {
-            var options = ALOptions()
-            options.isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
-            options.onSuccessfulDismiss = { (mode: ALMode?, _) in
-                DispatchQueue.main.async {
-                    if mode != nil {
-                        let realm = try? Realm()
-                        try? realm?.write {
-                            let counter = realm?.objects(GetSessionTimeout.self)
-                            counter?.first?.mustCheckTimeOut = true
-                            realm?.add(counter!)
-                        }
-                        guard let vc_1 = UIApplication.getTopViewController() else {return}
-                        vc_1.dismiss(animated: true, completion: nil)
-                    } else {
-                        print("User Cancelled")
-                    }
-                }
-            }
+    print("TIMER")
+        let regisration = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
+        if regisration == true {
             
-            options.onFailedAttempt = { (mode: ALMode?) in
-                print("Failed to \(String(describing: mode))")
+            guard let topVc = UIApplication.getTopViewController() else {return}
+            DispatchQueue.main.async {
+                
+                let locker: AppLocker = AppLocker.loadFromStoryboard()
+                locker.mode = mode
+                locker.modalPresentationStyle = .fullScreen
+                topVc.present(locker, animated: true, completion: nil)
             }
-//            AppLocker.present(with: mode, and: options, over: vc)
         }
     }
 }
+
+
+//DispatchQueue.main.async {
+//    if mode != nil {
+//        let realm = try? Realm()
+//        try? realm?.write {
+//            let counter = realm?.objects(GetSessionTimeout.self)
+//            counter?.first?.mustCheckTimeOut = true
+//            realm?.add(counter!)
+//        }
+//        guard let vc_1 = UIApplication.getTopViewController() else {return}
+//        vc_1.dismiss(animated: true, completion: nil)
+//    } else {
+//        print("User Cancelled")
+//    }
+//}

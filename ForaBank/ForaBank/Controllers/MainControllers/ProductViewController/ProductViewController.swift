@@ -282,8 +282,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
     func startSkeleton(){
 //        self.isSkeletonable = true
         
-        button.isSkeletonable = true
-        button.showAnimatedGradientSkeleton()
         
         filterButton.isSkeletonable = true
         filterButton.showAnimatedGradientSkeleton()
@@ -292,6 +290,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
         statusBarView.showAnimatedGradientSkeleton()
         statusBarView.skeletonCornerRadius = 12
         statusBarView.layer.cornerRadius = 8
+        tableView?.showAnimatedGradientSkeleton()
     }
     
     override func viewDidLoad() {
@@ -397,7 +396,9 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
 //        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 0  )
         button.sizeToFit()
     
-       
+        button.isSkeletonable = true
+        button.showAnimatedGradientSkeleton()
+        
         button.addTarget(self, action: #selector(showAlert(sender:)), for: .touchUpInside)
 
         button2.setDimensions(height: 48, width: 164)

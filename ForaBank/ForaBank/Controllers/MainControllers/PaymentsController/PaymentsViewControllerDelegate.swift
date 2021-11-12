@@ -54,6 +54,8 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 popView.modalPresentationStyle = .custom
                 popView.transitioningDelegate = self
                 self.present(popView, animated: true, completion: nil)
+            } else if indexPath.row == 2 {
+                delegate?.goToCountryPayments()
                 
             } else if indexPath.row == 3 {
                 let popView = MemeDetailVC()

@@ -155,7 +155,6 @@ class FaceTouchIdViewController: UIViewController {
             
             if error != nil {
                 guard let error = error else { return }
-                print("DEBUG: setDeviceSetting" ,error)
                 self.dismissActivity()
             } else {
                 guard let statusCode = model?.statusCode else { return }
@@ -174,7 +173,7 @@ class FaceTouchIdViewController: UIViewController {
                                             // Обновление времени старта
                                             let realm = try? Realm()
                                             let timeOutObjects = returnRealmModel()
-                                            
+
                                             /// Сохраняем в REALM
                                             do {
                                                 let b = realm?.objects(GetSessionTimeout.self)
@@ -182,25 +181,21 @@ class FaceTouchIdViewController: UIViewController {
                                                 realm?.delete(b!)
                                                 realm?.add(timeOutObjects)
                                                 try realm?.commitWrite()
-                                                
+
                                             } catch {
                                                 print(error.localizedDescription)
                                             }
-                                            print("DEBUG: You are LOGGIN!!!")
                                             self.dismissActivity()
                                             self.delegate?.goToTabBar()
                                         }
                                     }
                                 }
                             } else {
-                                print("DEBUG: Error getCSRF: ", error!)
                                 self.dismissActivity()
                             }
                         }
                     }
                 } else {
-                    guard let error = model?.errorMessage else { return }
-                    print("DEBUG: setDeviceSetting" ,error)
                     self.dismissActivity()
                 }
             }

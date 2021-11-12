@@ -19,12 +19,7 @@ struct GetSessionTimeoutSaved: DownloadQueueProtocol {
             } else {
                 guard let statusCode = model?.statusCode else { return }
                 if statusCode == 0 {
-                    
-              //      guard let model = model else { return }
-             //       guard let m = model.data else { return }
-                    
-                    
-                    
+
                     let sessionTimeOutParameters = returnRealmModel()
                     sessionTimeOutParameters.maxTimeOut = StaticDefaultTimeOut.staticDefaultTimeOut
                     sessionTimeOutParameters.mustCheckTimeOut = true

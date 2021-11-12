@@ -51,7 +51,7 @@ extension LockerCoordinator: LockerViewControllerDelegate {
     }
     
     func goToTabBar() {
-        DispatchQueue.main.async { [self] in
+        DispatchQueue.main.async { 
             let mainTabBarCoordinator = MainTabBarCoordinator(router: self.router)
             self.addChild(mainTabBarCoordinator)
             mainTabBarCoordinator.start()
