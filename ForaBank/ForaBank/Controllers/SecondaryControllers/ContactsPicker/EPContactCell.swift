@@ -28,6 +28,7 @@ class EPContactCell: UITableViewCell {
         
         ownerImageView.layer.cornerRadius = ownerImageView.frame.size.width/2
         ownerImageView.clipsToBounds = true
+        ownerImageView.isHidden = true
         selectionStyle = UITableViewCell.SelectionStyle.none
         contactContainerView.layer.masksToBounds = true
         contactContainerView.layer.cornerRadius = contactContainerView.frame.size.width/2
@@ -80,8 +81,6 @@ class EPContactCell: UITableViewCell {
                     self?.ownerImageView.isHidden = !needShow
                 }
             }
-        } else {
-            ownerImageView.isHidden = true
         }
         
     }

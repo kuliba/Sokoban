@@ -13,9 +13,13 @@ class MainTabBarCoordinator: Coordinator {
 
     override init(router: RouterType) {
         super.init(router: router)
-        router.setRootModule(mainTabBarController, hideBar: true)
+        router.push(mainTabBarController, animated: true, completion: nil)
         mainTabBarController.paymentsVC.delegate = self
         mainTabBarController.mainVC.delegate = self
+    }
+    
+    deinit {
+        print("Deinit main coordinator")
     }
     
     override func start() {
