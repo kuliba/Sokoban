@@ -19,6 +19,7 @@ class MainCoordinator: Coordinator {
     }
     
     override func start() {
+        
         let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
         
         // Зарузка кэша

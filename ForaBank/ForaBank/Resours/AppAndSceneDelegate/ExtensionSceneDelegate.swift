@@ -17,8 +17,6 @@ extension SceneDelegate: UIGestureRecognizerDelegate {
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         
-        //        if AppDelegate.shared.isAuth ?? false {
-        
         lazy var realm = try? Realm()
         
         try? realm?.write {
