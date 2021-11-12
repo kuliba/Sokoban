@@ -23,7 +23,12 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
     }
     
     var onlyCard = false
-    
+    var allCardsFromRealm: [UserAllCardsModel]? {
+        didSet {
+            guard let allCardsFromRealm = allCardsFromRealm else { return }
+            updateCards(cards: allCardsFromRealm)
+        }
+    }
     var viewModel: ConfirmViewControllerModel! {
         didSet {
             checkModel(with: viewModel)
@@ -59,9 +64,10 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
     }
     
     final func checkModel(with model: ConfirmViewControllerModel) {
-        guard model.cardFromRealm != nil, model.cardToRealm != nil else { return }
+        guard let cardFrom = model.cardFromRealm else { return }
+        guard let cardTo = model.cardToRealm else { return }
 //        guard model.cardFrom != nil, model.cardTo != nil else { return }
-
+        print("Отображаем кнопку для переворачивания списка карт")
         /// Отображаем кнопку для переворачивания списка карт
         
         self.seporatorView.changeAccountButton.isHidden = false
@@ -73,5 +79,21 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
             self.bottomView.buttomLabel.text = "Возможна комиссия ℹ︎"
         }
     }
+    
+    func updateCards(cards: [UserAllCardsModel]) {
+        /// обновляем список карт с которой списываем
+        self.cardFromListView.cardList = cards
+        
+        /// обновляем предустановленную карту по молчанию счета списания
+        if cardFromField.model != nil { // } || cardFromField.model?.id == cards.first?.id {
+            self.cardFromField.model = cards.first
+            self.viewModel.cardFromRealm = cards.first
+        }
+        
+        /// обновляем список карт на которую списываем
+        
+        self.cardToListView.cardList = cards
+    }
+    
 }
 

@@ -86,16 +86,10 @@ extension CustomPopUpWithRateView {
             switch changes {
             case .initial:
                 print("REALM Initial")
-                self.cardFromListView.cardList = self.updateCardsList(with: object)
-                self.cardFromField.model = self.updateCardsList(with: object).first
-                self.viewModel.cardFromRealm = self.updateCardsList(with: object).first
-                self.cardToListView.cardList = self.updateCardsList(with: object)
+                self.allCardsFromRealm = self.updateCardsList(with: object)
             case .update:
                 print("REALM Update")
-                self.cardFromListView.cardList = self.updateCardsList(with: object)
-                self.cardFromField.model = self.updateCardsList(with: object).first
-                self.viewModel.cardFromRealm = self.updateCardsList(with: object).first
-                self.cardToListView.cardList = self.updateCardsList(with: object)
+                self.allCardsFromRealm = self.updateCardsList(with: object)
             case .error(let error):
                 print("DEBUG token fatalError:", error)
                 fatalError("\(error)")
