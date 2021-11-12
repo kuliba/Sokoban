@@ -15,6 +15,7 @@ class QRErrorViewController: UIViewController{
         super.viewDidLoad()
         self.navigationController?.isNavigationBarHidden = false
         self.navigationItem.title = "Сканировать QR-код"
+        self.navigationItem.setHidesBackButton(true, animated:true)
     }
     
 //    override func viewWillDisappear(_ animated: Bool) {
@@ -23,9 +24,13 @@ class QRErrorViewController: UIViewController{
 //    }
 
     @IBAction func goToTransfer(_ sender: UIButton) {
-        delegate?.goToGKHMainController()
+       // delegate?.goToGKHMainController()
     }
     @IBAction func goToGKH(_ sender: UIButton) {
-        delegate?.goToTransferByRequisites()
+     //   delegate?.goToTransferByRequisites()
+        
+        let vc = TransferByRequisitesViewController()
+        vc.modalPresentationStyle = .fullScreen
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }

@@ -198,6 +198,7 @@
                                         </buttonConfiguration>
                                         <connections>
                                             <action selector="goToTransfer:" destination="SQy-yt-Ubh" eventType="touchUpInside" id="S2q-NL-oOF"/>
+                                            <segue destination="AA5-n0-o3Z" kind="unwind" unwindAction="gkhMain:" id="Kem-ef-xhJ"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zW1-J8-cWf">
@@ -229,6 +230,7 @@
                     <navigationItem key="navigationItem" id="OJm-9w-O5K"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="I3h-JU-tnF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="AA5-n0-o3Z" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="4493" y="1557"/>
         </scene>

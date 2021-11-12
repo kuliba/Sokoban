@@ -114,6 +114,7 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate {
         })
         self.returnKey()
         } else {
+            performSegue(withIdentifier: "qrError", sender: nil)
 //            qrCoordinatorDelegate?.goToQRError()
         }
         
@@ -128,6 +129,7 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate {
             self.delegate?.setResultOfBusinessLogic(qrData, operators!)
         } else {
  //           qrCoordinatorDelegate?.goToQRError()
+            performSegue(withIdentifier: "qrError", sender: nil)
         }
     }
     
@@ -136,6 +138,10 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate {
         self.qrView.layer.sublayers?.removeLast()
 //        self.qrCoordinatorDelegate?.goToExit()
         self.navigationController?.popViewController(animated: true)
+    }
+    
+    deinit {
+        print("QR Deinit")
     }
     
 }
