@@ -18,8 +18,6 @@ class TimerTimeInit {
     
     func timeResult() {
         
-        //        if AppDelegate.shared.isAuth ?? false {
-        
         //Читаем данные из REALM
         let realm = try? Realm()
         let timeObject = realm?.objects(GetSessionTimeout.self).first
@@ -52,7 +50,7 @@ class TimerTimeInit {
                     realm?.add(counter!)
                 }
                 DispatchQueue.main.async {
-//                    AppLockerHelper.goVC(.validate)
+                    AppLockerHelper.goVC(.validate)
                 }
             } else {
                 if minSessionRenewTimeOutPassed  {

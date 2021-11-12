@@ -236,11 +236,16 @@ public class AppLocker: UIViewController {
             if let error = error {
                 print(error)
             } else {
-                
                 // свернуть и включить таймер
-                
-                self.dismiss(animated: true, completion: nil)
-//                self.lockerDelegate?.goToTabBar()
+                DispatchQueue.main.async {
+                        let realm = try? Realm()
+                        try? realm?.write {
+                            let counter = realm?.objects(GetSessionTimeout.self)
+                            counter?.first?.mustCheckTimeOut = true
+                            realm?.add(counter!)
+                        }
+                        self.dismiss(animated: true, completion: nil)
+                }
             }
         }
     }
@@ -342,15 +347,38 @@ public class AppLocker: UIViewController {
         }
     }
     
+    private func cleanAllData() {
+        UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
+        //TODO: - Написать очистку данных после выхода из приложения
+        
+    }
+    
     func exit() {
         clearView()
         
         //TODO: Подменить root Controller убрав present
-        UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
-        let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
-        navVC.modalPresentationStyle = .fullScreen
-        self.present(navVC, animated: true, completion: nil)
+//        UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
+//        let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
+//        navVC.modalPresentationStyle = .fullScreen
+//        self.present(navVC, animated: true, completion: nil)
         
+        NetworkManager<LogoutDecodableModel>.addRequest(.logout, [:], [:]) { _,_  in
+            DispatchQueue.main.async {
+                self.cleanAllData()
+                let mySceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate
+
+                let appNavigation = UINavigationController()
+                mySceneDelegate?.appNavigationController = appNavigation
+                let router = Router(navigationController: appNavigation)
+                mySceneDelegate?.appRouter = router
+                mySceneDelegate?.appCoordinator = MainCoordinator(router: router)
+                
+                mySceneDelegate?.window?.rootViewController = mySceneDelegate?.appCoordinator.toPresentable()
+                mySceneDelegate?.window?.makeKeyAndVisible()
+                mySceneDelegate?.appCoordinator.start()
+            }
+        }
+
     }
     
 }
