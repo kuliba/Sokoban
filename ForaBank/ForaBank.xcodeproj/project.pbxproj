@@ -136,6 +136,9 @@
 		0BAC674126D408DC005AAD91 /* CreateDirectTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAC674026D408DC005AAD91 /* CreateDirectTransferDecodableModel.swift */; };
 		0BAC674426D41C18005AAD91 /* ExtensionGKHSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAC674326D41C18005AAD91 /* ExtensionGKHSearch.swift */; };
 		0BAC674726D4F471005AAD91 /* QRCodeStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0BAC674626D4F471005AAD91 /* QRCodeStoryboard.storyboard */; };
+		0BAD4D33273EDA9B00FDF9B6 /* GetNotificationsDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAD4D32273EDA9B00FDF9B6 /* GetNotificationsDecodableModel.swift */; };
+		0BAD4D35273EDE8200FDF9B6 /* GetNotificationsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAD4D34273EDE8200FDF9B6 /* GetNotificationsModel.swift */; };
+		0BAD4D37273EDF3A00FDF9B6 /* GetNotificationsModelSaved.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAD4D36273EDF3A00FDF9B6 /* GetNotificationsModelSaved.swift */; };
 		0BB015D626C8892700E7A85B /* GKHMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB015D426C8892700E7A85B /* GKHMainViewController.swift */; };
 		0BB015DA26C9378200E7A85B /* GKHOperatorsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB015D926C9378200E7A85B /* GKHOperatorsModel.swift */; };
 		0BB015DC26C9BE3700E7A85B /* ExtensionGKHMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB015DB26C9BE3700E7A85B /* ExtensionGKHMain.swift */; };
@@ -600,6 +603,9 @@
 		0BAC674026D408DC005AAD91 /* CreateDirectTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateDirectTransferDecodableModel.swift; sourceTree = "<group>"; };
 		0BAC674326D41C18005AAD91 /* ExtensionGKHSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionGKHSearch.swift; sourceTree = "<group>"; };
 		0BAC674626D4F471005AAD91 /* QRCodeStoryboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = QRCodeStoryboard.storyboard; sourceTree = "<group>"; };
+		0BAD4D32273EDA9B00FDF9B6 /* GetNotificationsDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetNotificationsDecodableModel.swift; sourceTree = "<group>"; };
+		0BAD4D34273EDE8200FDF9B6 /* GetNotificationsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetNotificationsModel.swift; sourceTree = "<group>"; };
+		0BAD4D36273EDF3A00FDF9B6 /* GetNotificationsModelSaved.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetNotificationsModelSaved.swift; sourceTree = "<group>"; };
 		0BB015D426C8892700E7A85B /* GKHMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHMainViewController.swift; sourceTree = "<group>"; };
 		0BB015D926C9378200E7A85B /* GKHOperatorsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHOperatorsModel.swift; sourceTree = "<group>"; };
 		0BB015DB26C9BE3700E7A85B /* ExtensionGKHMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionGKHMain.swift; sourceTree = "<group>"; };
@@ -1290,6 +1296,15 @@
 			path = GKHMainController;
 			sourceTree = "<group>";
 		};
+		0BAD4D31273ED90C00FDF9B6 /* GetNotifications */ = {
+			isa = PBXGroup;
+			children = (
+				0BAD4D34273EDE8200FDF9B6 /* GetNotificationsModel.swift */,
+				0BAD4D36273EDF3A00FDF9B6 /* GetNotificationsModelSaved.swift */,
+			);
+			path = GetNotifications;
+			sourceTree = "<group>";
+		};
 		0BB015D826C9375C00E7A85B /* GKHModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -1361,6 +1376,7 @@
 		0BB24AAA26F003E300DDA4F6 /* AuthZoneRequest */ = {
 			isa = PBXGroup;
 			children = (
+				0BAD4D31273ED90C00FDF9B6 /* GetNotifications */,
 				0BDE453626E53AD500B64A0A /* GetAllCards */,
 				0B2A8D2A26E8D98700651BCB /* GetLatestPhonePayments */,
 				0BB24A9026EFC68100DDA4F6 /* GetProductTemplateList */,
@@ -2873,6 +2889,7 @@
 				0B3FE8E22705C86200CBDB4E /* GetMobileListDecodableModel.swift */,
 				0BA14E1B2715628A0098E422 /* GetAllLatestPaymentsDecodableModel.swift */,
 				6833E0AA27303E8F004C070F /* GetOperationDetailDecodebleModel.swift */,
+				0BAD4D32273EDA9B00FDF9B6 /* GetNotificationsDecodableModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -3279,6 +3296,7 @@
 				0B22AEA826CE72C200B11E7F /* GKHDataFilter.swift in Sources */,
 				0B95C40326B6CA3700AA57E6 /* CustomPopUpWithRateView.swift in Sources */,
 				68C8D57426F1FDB60076246B /* LargeCardCell.swift in Sources */,
+				0BAD4D35273EDE8200FDF9B6 /* GetNotificationsModel.swift in Sources */,
 				687FB23326E9E551004A479F /* PaymentMainCell.swift in Sources */,
 				0BA14E1A2712597D0098E422 /* StaticDefaultTimeOut.swift in Sources */,
 				ED0B4894267B50F50037EA06 /* Int.swift in Sources */,
@@ -3322,6 +3340,7 @@
 				0BD1CAA626E6D54A00CFE993 /* CreateIsOneTimeConsentMe2MePullDecodableModel.swift in Sources */,
 				EDB1657C2668C8D5007E6030 /* PayCell.swift in Sources */,
 				0BD1CAA426E6C7E400CFE993 /* CreateSFPTransferDecodableModel.swift in Sources */,
+				0BAD4D33273EDA9B00FDF9B6 /* GetNotificationsDecodableModel.swift in Sources */,
 				68673B5C26F4B84900F67A8C /* PayViewController.swift in Sources */,
 				0B283FBB26FBC9C800B5E925 /* Coordinator.swift in Sources */,
 				687FB23026E8D41A004A479F /* OfferCard.swift in Sources */,
@@ -3337,6 +3356,7 @@
 				0B8C1C56273B4F9F00BA5CAC /* GKHInfoView.swift in Sources */,
 				ED75CE0126E2AB3A0074F5D5 /* MeToMeReqestSwitchView.swift in Sources */,
 				0BB24ABA26F2884A00DDA4F6 /* ReturnAllCardList.swift in Sources */,
+				0BAD4D37273EDF3A00FDF9B6 /* GetNotificationsModelSaved.swift in Sources */,
 				ED84995626A8831E005205C6 /* EPContactsPicker.swift in Sources */,
 				ED4FC602266C0AB50092B4AB /* ChooseCountryTableViewController.swift in Sources */,
 				0B8C1C62273DD0DF00BA5CAC /* PushHistoryCell.swift in Sources */,
@@ -3787,7 +3807,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
@@ -3813,7 +3833,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

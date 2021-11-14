@@ -173,6 +173,13 @@ class MainViewController: UIViewController {
         let gesture = UITapGestureRecognizer(target: self, action: #selector(openSetting))
         searchBar.secondButton.addGestureRecognizer(gesture)
         searchBar.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, height: 48)
+        
+        searchBar.bellTapped = {
+            let pushHistory = PushHistoryViewController.storyboardInstance()!
+            let nc = UINavigationController(rootViewController: pushHistory)
+            nc.modalPresentationStyle = .fullScreen
+            self.present(nc, animated: true)
+        }
 
     }
     
