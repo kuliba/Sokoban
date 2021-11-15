@@ -436,6 +436,9 @@
 		EDCF8A1526CED86100DC9F54 /* BankTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCF8A1326CED86100DC9F54 /* BankTableViewCell.swift */; };
 		EDCF8A1626CED86100DC9F54 /* BankTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDCF8A1426CED86100DC9F54 /* BankTableViewCell.xib */; };
 		EDCF8A1826CEFF2100DC9F54 /* TextFieldWithPadding.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCF8A1726CEFF2100DC9F54 /* TextFieldWithPadding.swift */; };
+		EDE212F12742E7D6005D9821 /* ChooseCurrencyPaymentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDE212F02742E7D5005D9821 /* ChooseCurrencyPaymentController.swift */; };
+		EDE212F62742E91D005D9821 /* ChooseCurrencyTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDE212F52742E91D005D9821 /* ChooseCurrencyTableViewCell.xib */; };
+		EDE212F82742ED2B005D9821 /* ChooseCurrencyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDE212F72742ED2B005D9821 /* ChooseCurrencyTableViewCell.swift */; };
 		EDF6820D266F9EC800FD5C07 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF681F3266F9EC800FD5C07 /* NetworkManager.swift */; };
 		EDF6820E266F9EC800FD5C07 /* NetworkModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF681F6266F9EC800FD5C07 /* NetworkModelProtocol.swift */; };
 		EDF6820F266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF681F7266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift */; };
@@ -900,6 +903,9 @@
 		EDCF8A1326CED86100DC9F54 /* BankTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankTableViewCell.swift; sourceTree = "<group>"; };
 		EDCF8A1426CED86100DC9F54 /* BankTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BankTableViewCell.xib; sourceTree = "<group>"; };
 		EDCF8A1726CEFF2100DC9F54 /* TextFieldWithPadding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldWithPadding.swift; sourceTree = "<group>"; };
+		EDE212F02742E7D5005D9821 /* ChooseCurrencyPaymentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseCurrencyPaymentController.swift; sourceTree = "<group>"; };
+		EDE212F52742E91D005D9821 /* ChooseCurrencyTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChooseCurrencyTableViewCell.xib; sourceTree = "<group>"; };
+		EDE212F72742ED2B005D9821 /* ChooseCurrencyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseCurrencyTableViewCell.swift; sourceTree = "<group>"; };
 		EDF681F3266F9EC800FD5C07 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		EDF681F6266F9EC800FD5C07 /* NetworkModelProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkModelProtocol.swift; sourceTree = "<group>"; };
 		EDF681F7266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetDeviceSettingDecodbleModel.swift; sourceTree = "<group>"; };
@@ -1996,6 +2002,7 @@
 		ED46C165267A9C0C00D1A9A5 /* СountryInputPayments */ = {
 			isa = PBXGroup;
 			children = (
+				EDE212EF2742E755005D9821 /* View */,
 				EDB165642667A741007E6030 /* ContactInputViewController.swift */,
 				ED0B4895267B97C60037EA06 /* ContactInputViewController + UI.swift */,
 				EDFFCAFC2683C18B004EE095 /* ContactInputViewController API.swift */,
@@ -2788,6 +2795,24 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		EDE212EF2742E755005D9821 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				EDE212F22742E89C005D9821 /* cell */,
+				EDE212F02742E7D5005D9821 /* ChooseCurrencyPaymentController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		EDE212F22742E89C005D9821 /* cell */ = {
+			isa = PBXGroup;
+			children = (
+				EDE212F52742E91D005D9821 /* ChooseCurrencyTableViewCell.xib */,
+				EDE212F72742ED2B005D9821 /* ChooseCurrencyTableViewCell.swift */,
+			);
+			path = cell;
+			sourceTree = "<group>";
+		};
 		EDF681F0266F9EC800FD5C07 /* Service */ = {
 			isa = PBXGroup;
 			children = (
@@ -3199,6 +3224,7 @@
 				ED147D4C26BAD7E0002F66C8 /* BottomInputView.xib in Resources */,
 				EDA563B026F881D60093F0C8 /* BanksView.xib in Resources */,
 				EDB143CC265FDEC90028EF5A /* Roboto-BlackItalic.ttf in Resources */,
+				EDE212F62742E91D005D9821 /* ChooseCurrencyTableViewCell.xib in Resources */,
 				ED2BE18126A04A4300647CB1 /* CastomCardXIB.xib in Resources */,
 				0BA09E2E26ADEBF50065D623 /* GHKCell.xib in Resources */,
 				68FFA55C268586D3002DADFA /* HeaderBanksCollectionReusableView.xib in Resources */,
@@ -3367,6 +3393,7 @@
 				0BF3486426943DFB005138A8 /* SuggestCompanyDecodableModel.swift in Sources */,
 				EDB1452026661B030028EF5A /* StringMask.swift in Sources */,
 				EDB16586266A0883007E6030 /* NSDirectionalEdgeInsets.swift in Sources */,
+				EDE212F82742ED2B005D9821 /* ChooseCurrencyTableViewCell.swift in Sources */,
 				0B931B4F26DE334500CA8017 /* GKHHistoryHeaderView.swift in Sources */,
 				EDFFCAF32682461F004EE095 /* CardCell.swift in Sources */,
 				ED60A1E626DCEA01000F3208 /* MeToMeRequestController.swift in Sources */,
@@ -3556,6 +3583,7 @@
 				0BB24ABC26F370A300DDA4F6 /* GetProductDetailsDecodableModel.swift in Sources */,
 				EDB1657A2668C7F2007E6030 /* TransferCell.swift in Sources */,
 				EDB145382666770A0028EF5A /* OrderProductModel.swift in Sources */,
+				EDE212F12742E7D6005D9821 /* ChooseCurrencyPaymentController.swift in Sources */,
 				0B931B2026DCD87F00CA8017 /* GKHHistorySaveRealm.swift in Sources */,
 				0B8C1C47273B03EB00BA5CAC /* BottomPopUpViewAdapter.swift in Sources */,
 				68673B5326F2F3B900F67A8C /* RequisitsTableViewCell.swift in Sources */,

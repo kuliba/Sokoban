@@ -13,6 +13,7 @@
                 <outlet property="amountTextField" destination="Att-bb-GzQ" id="sGd-gc-LY8"/>
                 <outlet property="buttomLabel" destination="7JW-zV-QWE" id="6NA-2R-crO"/>
                 <outlet property="contentView" destination="iN0-l3-epB" id="LJ7-oI-254"/>
+                <outlet property="currencyButtonWidth" destination="w1H-ln-n2N" id="fpp-Kk-i3v"/>
                 <outlet property="currencySwitchButton" destination="ENw-6q-luf" id="dh1-L1-OHF"/>
                 <outlet property="doneButton" destination="MeI-1d-qwn" id="NlA-JC-U2O"/>
                 <outlet property="topLabel" destination="kdn-zp-JVN" id="uBb-fp-90P"/>
@@ -84,7 +85,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ls8-6I-Qxq">
-                    <rect key="frame" x="20" y="106.5" width="182" height="1"/>
+                    <rect key="frame" x="20" y="106.5" width="258" height="1"/>
                     <color key="backgroundColor" red="0.31372549019607843" green="0.31372549019607843" blue="0.34509803921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="1" id="b3B-MX-gWd"/>
@@ -106,7 +107,7 @@
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="7JW-zV-QWE" secondAttribute="trailing" constant="20" id="fUf-2p-93Y"/>
                 <constraint firstItem="7JW-zV-QWE" firstAttribute="top" secondItem="1bS-iQ-Fkx" secondAttribute="bottom" constant="4" id="gIf-6d-2Th"/>
                 <constraint firstItem="ls8-6I-Qxq" firstAttribute="leading" secondItem="Att-bb-GzQ" secondAttribute="leading" id="gcm-Nf-qSw"/>
-                <constraint firstItem="ls8-6I-Qxq" firstAttribute="trailing" secondItem="Att-bb-GzQ" secondAttribute="trailing" id="n1U-aK-LLL"/>
+                <constraint firstItem="ls8-6I-Qxq" firstAttribute="trailing" secondItem="MeI-1d-qwn" secondAttribute="leading" constant="-20" id="p1m-xk-KPj"/>
                 <constraint firstItem="1bS-iQ-Fkx" firstAttribute="top" secondItem="kdn-zp-JVN" secondAttribute="bottom" constant="4" id="uaQ-t5-DaW"/>
                 <constraint firstItem="7JW-zV-QWE" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="vp4-8H-Z6h"/>
                 <constraint firstItem="kdn-zp-JVN" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="vvE-jG-j7I"/>
