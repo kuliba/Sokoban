@@ -86,10 +86,12 @@ extension CustomPopUpWithRateView {
             switch changes {
             case .initial:
                 print("REALM Initial")
-                self.allCardsFromRealm = self.updateCardsList(with: object)
+//                let cards = self.updateCardsList(with: object)
+//                self.allCardsFromRealm = cards
             case .update:
                 print("REALM Update")
-                self.allCardsFromRealm = self.updateCardsList(with: object)
+                let cards = self.updateCardsList(with: object)
+                self.allCardsFromRealm = cards
             case .error(let error):
                 print("DEBUG token fatalError:", error)
                 fatalError("\(error)")
@@ -169,7 +171,7 @@ extension CustomPopUpWithRateView {
         cardFromListView = CardsScrollView(onlyMy: onlyMy)
         cardFromListView.didCardTapped = { (cardId) in
             DispatchQueue.main.async {
-                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
+                guard let cardList = self.allCardsFromRealm else { return }
                 cardList.forEach({ card in
                     if card.id == cardId {
                         self.viewModel.cardFromRealm = card
@@ -218,7 +220,7 @@ extension CustomPopUpWithRateView {
         cardToListView = CardsScrollView(onlyMy: onlyMy)
         cardToListView.didCardTapped = { (cardId) in
             DispatchQueue.main.async {
-                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
+                guard let cardList = self.allCardsFromRealm else { return }
                 cardList.forEach({ card in
                     if card.id == cardId {
                         self.viewModel.cardToRealm = card
