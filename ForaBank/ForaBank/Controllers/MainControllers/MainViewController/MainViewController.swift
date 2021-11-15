@@ -167,6 +167,7 @@ class MainViewController: UIViewController {
         self.view.addSubview(searchBar)
         searchBar.secondButton.image = UIImage(named: "Avatar")?.withRenderingMode(.alwaysTemplate)
         searchBar.bellIcon.tintColor = .black
+        
         searchBar.secondButton.tintColor = .black
         searchBar.secondButton.isUserInteractionEnabled = true
         searchBar.secondButton.alpha = 1

@@ -47,7 +47,7 @@
                                 <constraint firstAttribute="width" constant="24" id="qGx-cn-YnA"/>
                             </constraints>
                             <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <state key="normal" image="bellGray"/>
+                            <state key="normal" image="belliconsvg"/>
                             <connections>
                                 <action selector="bellButtonTapped:" destination="3bu-AX-FmJ" eventType="touchUpInside" id="Ljh-bC-PJf"/>
                             </connections>
@@ -82,7 +82,7 @@
         </view>
     </objects>
     <resources>
-        <image name="bellGray" width="24" height="24"/>
+        <image name="belliconsvg" width="24" height="24"/>
         <image name="qr_Icon" width="32" height="32"/>
         <image name="searchBarIcon" width="24" height="24"/>
         <image name="user-plus" width="23" height="23"/>
