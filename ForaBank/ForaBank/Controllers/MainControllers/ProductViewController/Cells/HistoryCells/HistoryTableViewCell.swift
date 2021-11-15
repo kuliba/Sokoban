@@ -53,7 +53,7 @@ class HistoryTableViewCell: UITableViewCell {
     
     private func setupSkeleton() {
           
-//        isSkeletonable = true
+        isSkeletonable = true
         
           
 //        titleLable.isSkeletonable = true
