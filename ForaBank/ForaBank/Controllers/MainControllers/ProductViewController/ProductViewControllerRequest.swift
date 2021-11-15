@@ -120,6 +120,11 @@ extension ProductViewController {
                 }
 //                    self.dataUSD = lastPaymentsList
             } else {
+                DispatchQueue.main.async {
+                    self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+                    self.tableView?.stopSkeletonAnimation()
+                    self.tableView?.hideSkeleton()
+                }
                 print("DEBUG: Error: ", model.errorMessage ?? "")
 
             }
@@ -199,6 +204,11 @@ extension ProductViewController {
 //                    self.dataUSD = lastPaymentsList
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
+                DispatchQueue.main.async {
+                    self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+                    self.tableView?.stopSkeletonAnimation()
+                    self.tableView?.hideSkeleton()
+                }
 
             }
         }

@@ -286,10 +286,11 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
         filterButton.isSkeletonable = true
         filterButton.showAnimatedGradientSkeleton()
         
-        statusBarView.isSkeletonable = true
-        statusBarView.showAnimatedGradientSkeleton()
+//        statusBarView.isSkeletonable = true
+//        statusBarView.showAnimatedGradientSkeleton()
         statusBarView.skeletonCornerRadius = 12
         statusBarView.layer.cornerRadius = 8
+        tableView?.isSkeletonable = true
         tableView?.showAnimatedGradientSkeleton()
     }
     
@@ -363,7 +364,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
         navigationController?.navigationBar.barTintColor = UIColor(hexString: product?.background[0] ?? "").darker()
         navigationController?.view.backgroundColor =  UIColor(hexString: "BBBBBB")
         navigationController?.navigationBar.backgroundColor = UIColor(hexString: "BBBBBB")
-        
+        navigationController?.navigationBar.barTintColor = UIColor(hexString: "BBBBBB")
+
 
         
         card.balanceLabel.isSkeletonable = true

@@ -112,6 +112,7 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
 //        navigationController?.navigationBar.isHidden = true
         navigationController?.navigationBar.backgroundColor = UIColor(hexString: "F8F8F8")
+        navigationController?.navigationBar.barTintColor = UIColor(hexString: "F8F8F8")
 
         view.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 1)
         
@@ -166,6 +167,7 @@ class MainViewController: UIViewController {
         self.view.addSubview(searchBar)
         searchBar.secondButton.image = UIImage(named: "Avatar")?.withRenderingMode(.alwaysTemplate)
         searchBar.bellIcon.tintColor = .black
+        
         searchBar.secondButton.tintColor = .black
         searchBar.secondButton.isUserInteractionEnabled = true
         searchBar.secondButton.alpha = 1
