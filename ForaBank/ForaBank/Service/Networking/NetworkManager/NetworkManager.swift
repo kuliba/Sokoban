@@ -24,7 +24,7 @@ final class NetworkManager<T: NetworkModelProtocol> {
         if let token = CSRFToken.token {
             request.allHTTPHeaderFields = ["X-XSRF-TOKEN": token]
         }
-        //   request.allHTTPHeaderFields = addHeader    +++++++++Singlton
+
         print("DEBUG: urlParametrs count",urlParametrs.count)
         if request.httpMethod != "GET" {
             /// URL Parameters
