@@ -21,7 +21,7 @@ final class PushHistoryCell: UITableViewCell {
     func setData(_ model: CellData) {
         pushTitle.text = model.title
         pushSubTitle.text = model.text
-        pushTimeLable.text = dateFormater(model.date ?? "", "hh:mm")
+        pushTimeLable.text = dateFormater(model.date ?? "", "HH:mm")
     }
     func dateFormater(_ string: String, _ formatter: String) -> String {
         
