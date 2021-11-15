@@ -191,10 +191,10 @@ class MainTabBarViewController: UITabBarController {
     /// Отправляем запрос на сервер, для получения истории пушей
     private func downloadPushArray() {
         let body = ["offset": "0",
-                    "limit" : "100",
-                    "notificationType" : "SMS,PUSH",
-                    "notificationState" : "ERROR, SENT, DELIVERED"
-                   ]
+                            "limit" : "100",
+                            "notificationType" : "PUSH",
+                            "notificationState" : "SENT"
+                           ]
         GetNotificationsModelSaved.add(body, [:]) {}
     }
 
