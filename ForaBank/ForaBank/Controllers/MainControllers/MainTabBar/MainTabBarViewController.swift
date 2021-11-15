@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 class MainTabBarViewController: UITabBarController {
     
@@ -197,4 +198,7 @@ class MainTabBarViewController: UITabBarController {
         GetNotificationsModelSaved.add(body, [:]) {}
     }
 
+
 }
+
+

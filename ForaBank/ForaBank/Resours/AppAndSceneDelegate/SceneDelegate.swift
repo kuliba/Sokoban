@@ -27,12 +27,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-
         window?.rootViewController = appCoordinator.toPresentable()
         window?.backgroundColor = .white
         window?.makeKeyAndVisible()
         
         appCoordinator.start()
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: nil)
+        tapGesture.delegate = self
+        window?.addGestureRecognizer(tapGesture)
         
         NetStatus.shared.netStatusChangeHandler = {
             DispatchQueue.main.async { [weak self] in
