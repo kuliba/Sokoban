@@ -85,10 +85,10 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
         self.cardFromListView.cardList = cards
         
         /// обновляем предустановленную карту по молчанию счета списания
-        if cardFromField.model != nil { // } || cardFromField.model?.id == cards.first?.id {
+//        if cardFromField.model != nil { // } || cardFromField.model?.id == cards.first?.id {
             self.cardFromField.model = cards.first
             self.viewModel.cardFromRealm = cards.first
-        }
+//        }
         
         /// обновляем список карт на которую списываем
         
