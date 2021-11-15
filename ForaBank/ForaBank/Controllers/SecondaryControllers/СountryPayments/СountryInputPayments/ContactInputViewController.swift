@@ -19,6 +19,12 @@ class ContactInputViewController: UIViewController {
     var cardIsSelect = false
     var selectedCardNumber = ""
     var puref = ""
+    var currency = "RUR" {
+        didSet {
+            guard let system = paymentSystem else { return }
+            setupCurrencyButton(system: system)
+        }
+    }
     var trnPickupPoint = ""
     var selectedBank: BanksList? {
         didSet {
@@ -246,6 +252,23 @@ class ContactInputViewController: UIViewController {
         cardListView.lastItemTap = {
             print("Открывать все карты доработать")
             
+            
+        }
+        bottomView.buttonIsTapped = {
+            var cur = self.country?.sendCurr?.components(separatedBy: ";").compactMap { $0 } ?? []
+            if cur.count  > 1  {
+                cur.removeLast()
+            }
+            
+            let controller = ChooseCurrencyPaymentController()
+            controller.elements = cur
+            controller.itemIsSelect = { currency in
+                self.currency = currency
+            }
+            let navController = UINavigationController(rootViewController: controller)
+            navController.modalPresentationStyle = .custom
+            navController.transitioningDelegate = self
+            self.present(navController, animated: true)
             
         }
         

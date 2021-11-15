@@ -124,27 +124,12 @@ extension ContactInputViewController {
 #endif
     }
     
-    private func setupCurrencyButton(system: PaymentSystemList) {
+    func setupCurrencyButton(system: PaymentSystemList) {
         bottomView.currencySwitchButton.isHidden = system.code == "CONTACT" ? false : true
-        bottomView.currencySwitchButton.setAttributedTitle(setupButtonTitle(title: "$"), for: .normal)
+        bottomView.currencySwitchButton.setAttributedTitle(setupButtonTitle(title: currency.getSymbol() ?? "₽"), for: .normal)
         bottomView.currencyButtonWidth.constant = 40
+        bottomView.currencySymbol = currency.getSymbol() ?? "₽"
         
-        bottomView.buttonIsTapped = {
-            
-            var cur = self.country?.sendCurr?.components(separatedBy: ";").compactMap { $0 } ?? []
-            if cur.count  > 1  {
-                cur.removeLast()
-            }
-            print("Валюта",cur)
-            
-            let controller = ChooseCurrencyPaymentController()
-            
-            let navController = UINavigationController(rootViewController: controller)
-            navController.modalPresentationStyle = .custom
-            navController.transitioningDelegate = self
-            self.present(navController, animated: true)
-            
-        }
     }
     
     func setupConstraint() {
@@ -252,7 +237,10 @@ extension ContactInputViewController: UIViewControllerTransitioningDelegate {
 
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         let presenter = PresentationController(presentedViewController: presented, presenting: presenting)
-        presenter.height = 220
+        var cur = self.country?.sendCurr?.components(separatedBy: ";").compactMap { $0 } ?? []
+        cur.removeLast()
+        
+        presenter.height = (cur.count * 40) + 160
         return presenter
     }
 }

@@ -37,17 +37,13 @@ extension String {
                 symbolArr?.removeFirst()
                 
                 symbolArr?.forEach { qqqq in
-                    if let charCode = UInt32(qqqq, radix: 16), let unicode = UnicodeScalar(charCode)
-                    {
+                    if let charCode = UInt32(qqqq, radix: 16), let unicode = UnicodeScalar(charCode) {
                         let str = String(unicode)
                         resultString.append(str)
-                    }
-                    else
-                    {
+                    } else {
                         print("invalid input")
                     }
                 }
-                
             }
         })
         

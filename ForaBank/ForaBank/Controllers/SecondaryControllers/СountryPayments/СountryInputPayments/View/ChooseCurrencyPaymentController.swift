@@ -10,8 +10,12 @@ import UIKit
 class ChooseCurrencyPaymentController: UIViewController {
 
     let cellReuse = "ChooseCurrencyTableViewCell"
-    
-    var elements: [String] = []
+    var itemIsSelect: ((String) -> Void)?
+    var elements: [String] = [] {
+        didSet {
+            tableView.reloadData()
+        }
+    }
     
     var tableView = UITableView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
     
@@ -56,18 +60,16 @@ extension ChooseCurrencyPaymentController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellReuse, for: indexPath) as? ChooseCurrencyTableViewCell else { return UITableViewCell() }
-//        switch indexPath.row {
-//        case 0:
-//            cell.titleLabel.text = "Реквизиты счета карты"
-//            cell.imageButton.image = UIImage(named: "file-text")?.withRenderingMode(.alwaysTemplate)
-//        case 1:
-//            cell.titleLabel.text = "Выписка по счету"
-//            cell.imageButton.image = UIImage(named: "accaunt")?.withRenderingMode(.alwaysTemplate)
-//        default:
-//            cell.titleLabel.text = "default"
-//            cell.imageButton.image = UIImage(named: "otherAccountButton")
-//        }
-//        cell.imageButton.tintColor = #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1)
+
+        cell.titleLabel.text = ""
+        let currArr = Dict.shared.currencyList
+        currArr?.forEach({ currency in
+            if currency.code == elements[indexPath.row] {
+                cell.titleLabel.text = currency.name
+            }
+        })
+
+        cell.currencyLabel.text = elements[indexPath.row].getSymbol()
         cell.selectionStyle = .none
         return cell
     }
@@ -77,15 +79,7 @@ extension ChooseCurrencyPaymentController: UITableViewDataSource {
 extension ChooseCurrencyPaymentController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch indexPath.row {
-        case 0:
-            print("первый")
-        case 1:
-            print("второй")
-            
-        default:
-            print("по умолчанию")
-//            self.dismiss(animated: true, completion: nil)
-        }
+        itemIsSelect?(elements[indexPath.row])
+        self.dismiss(animated: true, completion: nil)
     }
 }
