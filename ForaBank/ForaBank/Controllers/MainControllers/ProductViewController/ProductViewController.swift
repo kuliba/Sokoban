@@ -127,7 +127,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
         }
     }
     var mockItem: [PaymentsModel] = []
-    var firstTimeLoad = true
+    var firstTimeLoad = false
     var indexItem: Int?
     var scrollView = UIScrollView()
     var collectionView: UICollectionView?{
@@ -146,7 +146,10 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
     }
     var product: GetProductListDatum? {
         didSet{
+            
+            amounPeriodLabel.text = ""
             card.card = product
+            tableViewLabel.isSkeletonable = false
             tableViewLabel.hideSkeleton()
             addCloseColorButton(with: UIColor(hexString: product?.fontDesignColor ?? "000000"))
             if product?.productType == "ACCOUNT"{
@@ -185,7 +188,16 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
             }
             navigationController?.navigationBar.barTintColor = UIColor(hexString: product?.background[0] ?? "").darker()
 //            self.navigationItem.setTitle(title: (product?.customName ?? product?.mainField)!, subtitle: "· \(String(number.suffix(4)))", color: product?.fontDesignColor)
+            statusBarView.isSkeletonable = false
+            statusBarView.hideSkeleton()
+            statusBarLabel.isSkeletonable = false
+            statusBarLabel.hideSkeleton()
+            filterButton.hideSkeleton()
+            filterButton.isSkeletonable = false
+            tableViewLabel.isSkeletonable = false
+            tableViewLabel.hideSkeleton()
             collectionView?.reloadData()
+            
         }
         
     }
@@ -333,20 +345,23 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
                     self?.showAlert(with: "Ошибка", and: error!)
                 }
                 guard let data = data else { return }
-                self?.product = data[0]
+//                self?.product = data[0]
                 self?.products = data
                 self?.card.balanceLabel.hideSkeleton()
                 self?.button.hideSkeleton()
                 self?.button2.hideSkeleton()
                 self?.button3.hideSkeleton()
                 self?.button4.hideSkeleton()
-                self?.collectionView((self?.collectionView!)!, didSelectItemAt: IndexPath(row: self?.indexItem ?? 0, section: 0))
-
-                
-                self?.collectionView?.selectItem(at: IndexPath(item: self?.indexItem ?? 0, section: 0), animated: true, scrollPosition: .bottom)
-                let cell = self?.collectionView?.cellForItem(at: IndexPath(item: self?.indexItem ?? 0, section: 0)) as? CardCollectionViewCell
-                self?.product = self?.products[self?.indexItem ?? 0]
-                cell?.showSelect()
+                self?.filterButton.hideSkeleton()
+                self?.statusBarLabel.hideSkeleton()
+                if self?.firstTimeLoad == false {
+                    self?.collectionView((self?.collectionView!)!, didSelectItemAt: IndexPath(row: self?.indexItem ?? 0, section: 0))
+                    self?.collectionView?.selectItem(at: IndexPath(item: self?.indexItem ?? 0, section: 0), animated: true, scrollPosition: .bottom)
+                    let cell = self?.collectionView?.cellForItem(at: IndexPath(item: self?.indexItem ?? 0, section: 0)) as? CardCollectionViewCell
+                    self?.product = self?.products[self?.indexItem ?? 0]
+                    cell?.showSelect()
+                }
+        
 //                _ = CardViewModel(card: (self?.product!)!)
 
             }
@@ -361,11 +376,17 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
 //        loadHistoryForCard()
         view.backgroundColor = .white
 //        navigationController?.view.addoverlay(color: .black, alpha: 0.2)
-        navigationController?.navigationBar.barTintColor = UIColor(hexString: product?.background[0] ?? "").darker()
-        navigationController?.view.backgroundColor =  UIColor(hexString: "BBBBBB")
-        navigationController?.navigationBar.backgroundColor = UIColor(hexString: "BBBBBB")
-        navigationController?.navigationBar.barTintColor = UIColor(hexString: "BBBBBB")
+        if product != nil{
+            navigationController?.navigationBar.barTintColor = UIColor(hexString: product?.background[0] ?? "").darker()
+            navigationController?.view.backgroundColor =   UIColor(hexString: product?.background[0] ?? "").darker()
+            navigationController?.navigationBar.backgroundColor =  UIColor(hexString: product?.background[0] ?? "").darker()
 
+        } else {
+            navigationController?.view.backgroundColor =  UIColor(hexString: "BBBBBB")
+            navigationController?.navigationBar.backgroundColor = UIColor(hexString: "BBBBBB")
+            navigationController?.navigationBar.barTintColor = UIColor(hexString: "BBBBBB")
+            backgroundView.backgroundColor = UIColor(hexString: "BBBBBB")
+        }
 
         
         card.balanceLabel.isSkeletonable = true
@@ -375,11 +396,11 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
 
         card.backgroundImageView.backgroundColor = UIColor(red: 0.667, green: 0.667, blue: 0.667, alpha: 1)
         card.backgroundImageView.layer.cornerRadius = 12
-        backgroundView.backgroundColor = UIColor(hexString: "BBBBBB")
+      
         backgroundView.anchor(top: scrollView.topAnchor, left: view.leftAnchor, bottom: card.centerYAnchor, right: view.rightAnchor)
 //        backgroundView.backgroundColor = UIColor(hex: "#\(product?.background[0] ?? "")")
 //        view.backgroundColor = .red
-
+        
         
         //Add buttons
         button.setDimensions(height: 48, width: 164)

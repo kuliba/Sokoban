@@ -57,6 +57,7 @@ class MainTabBarViewController: UITabBarController {
         
     }
     
+    
     override func viewWillAppear(_ animated: Bool) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             if let userInfo = UserDefaults.standard.object(forKey: "ConsentMe2MePull") as? [AnyHashable : Any] {
@@ -118,6 +119,10 @@ class MainTabBarViewController: UITabBarController {
     }
 
     private func loadCatalog() {
+        
+        AppUpdater.shared.showUpdate(withConfirmation: true)
+
+        
         NetworkHelper.request(.getCountries) { model, error in
             if error != nil {
                 self.showAlert(with: "Ошибка", and: error!)
@@ -184,8 +189,11 @@ class MainTabBarViewController: UITabBarController {
 //            guard let cardList = cardList as? [GetProductListDatum] else { return }
 //            print("DEBUG: Load card list... Count is: ", cardList.count)
 //        }
-        
+      
     }
+    
+
+    
 // MARK: Загрузка истории пушей
     
     /// Отправляем запрос на сервер, для получения истории пушей
