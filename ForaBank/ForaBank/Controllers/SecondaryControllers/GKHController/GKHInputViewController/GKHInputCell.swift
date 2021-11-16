@@ -58,19 +58,18 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
             
             fieldvalue = textField.text ?? ""
         }
-    
-//    func textFieldDidBeginEditing(_ textField: UITextField) {
-//        textField.text = ""
-//    }
 
     func setupUI (_ index: Int, _ dataModel: Parameters, _ qrData: [String: String]) {
+        
         infoButon.isHidden = true
         self.fieldid = String(index + 1)
         fieldname = dataModel.id ?? ""
         let q = GKHDataSorted.a(dataModel.title ?? "")
+        
         DispatchQueue.main.async {
             self.operatorsIcon.image = UIImage(named: q.1)
         }
+        
         textField.placeholder = q.0
         placeholder = q.0
         
@@ -95,6 +94,7 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
             infoButon.isHidden = false
         }
     }
+    
     @IBAction func textField(_ sender: UITextField) {
         fieldvalue = textField.text ?? ""
         body.updateValue(fieldid, forKey: "fieldid")
@@ -103,16 +103,6 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
         tableViewDelegate?.responds(to: #selector(TableViewDelegate.afterClickingReturnInTextField(cell:)))
         tableViewDelegate?.afterClickingReturnInTextField(cell: self)
     }
-//
-//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-//
-//        if (string == " ") {
-//            return false
-//        } else {
-//
-//            return true
-//        }
-//    }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
 
@@ -122,12 +112,12 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
         return true
     }
     
-    
     @IBAction func payTapButton(_ sender: UIButton) {
     }
     
     @IBAction func showFIOButton(_ sender: UIButton) {
     }
+    
     @IBAction func showInfo(_ sender: UIButton) {
         showInfoView?(info)
     }

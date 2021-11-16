@@ -45,7 +45,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                 delegate: self,
                 multiSelection: false,
                 subtitleCellType: SubtitleCellValue.phoneNumber)
-//            contactPickerScene.addCloseButton()
+            //            contactPickerScene.addCloseButton()
             let navigationController = UINavigationController(rootViewController: contactPickerScene)
             self.present(navigationController, animated: true, completion: nil)
         }
@@ -188,9 +188,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
     func startContactPayment(with phone: String, amount: String, completion: @escaping (_ error: String?)->()) {
         showActivity()
         
-        let newBody = [
-            "phoneNumbersList" : [phone.digits]
-        ] as [String: AnyObject]
+        let newBody = [ "phoneNumbersList" : [phone.digits] ] as [String: AnyObject]
         
         NetworkManager<GetPhoneInfoDecodableModel>.addRequest(.getPhoneInfo, [:], newBody, completion: { [weak self] phoneData, error in
             
@@ -198,7 +196,9 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                 self?.dismissActivity()
                 completion(error)
             }
+            
             guard let data = phoneData else { return }
+            
             if phoneData?.statusCode == 0 {
                 UserDefaults.standard.set(data.data?.first?.svgImage, forKey: "MobilePhoneSVGImage")
                 let puref = data.data?.first?.puref ?? ""
@@ -238,7 +238,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                                 model.phone = list.fieldValue
                             }
                         }
-
+                        
                         model.summTransction = Double(data?.data?.amount ?? Double(0.0)).currencyFormatter(symbol: data?.data?.currencyAmount ?? "" )
                         model.taxTransction = Double(data?.data?.fee ?? Int(0.0)).currencyFormatter(symbol: data?.data?.currencyAmount ?? "")
                         
@@ -254,7 +254,6 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                             vc.currancyTransctionField.isHidden = true
                             vc.confurmVCModel = model
                             vc.addCloseButton()
-                            
                             vc.title = "Подтвердите реквизиты"
                             
                             let navController = UINavigationController(rootViewController: vc)
@@ -265,7 +264,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                     }
                 })
             } else {
-
+                
                 completion(data.errorMessage)
             }
             
@@ -288,11 +287,13 @@ extension MobilePayViewController: EPPickerDelegate {
             let mask = StringMask(mask: "+0 (000) 000-00-00")
             let maskPhone = mask.mask(string: numbers)
             phoneField.text = maskPhone ?? ""
+            selectNumber = maskPhone ?? ""
         } else if numbers?.first == "8" {
             numbers?.removeFirst()
             let mask = StringMask(mask: "+7 (000) 000-00-00")
             let maskPhone = mask.mask(string: numbers)
             phoneField.text = maskPhone ?? ""
+            selectNumber = maskPhone ?? ""
         } else {
             
         }
@@ -303,7 +304,6 @@ extension MobilePayViewController: EPPickerDelegate {
     }
     
     func epContactPicker(_: EPContactsPicker, didSelectMultipleContacts contacts: [EPContact]) {
-        print("The following contacts are selected")
         for contact in contacts {
             print("\(contact.displayName())")
         }
