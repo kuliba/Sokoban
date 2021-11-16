@@ -384,7 +384,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
     
     private func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?) ->() ) {
         
-        let param = ["isCard": "true", "isAccount": "true", "isDeposit": "false", "isLoan": "false"]
+        let param = ["isCard": "true", "isAccount": "true", "isDeposit": "true", "isLoan": "false"]
         
         NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
             if error != nil {

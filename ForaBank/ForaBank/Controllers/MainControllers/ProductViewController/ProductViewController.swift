@@ -178,6 +178,13 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
             activateSlider.textColor = UIColor(hexString: product?.fontDesignColor ?? "")
             activateSlider.sliderBackgroundColor = UIColor(hexString: product?.background[0] ?? "").darker()
             backgroundView.backgroundColor = UIColor(hexString: product?.background[0] ?? "").darker()
+            if product?.productType == "DEPOSIT"{
+                card.backgroundView?.backgroundColor = UIColor(hexString: "#999999")
+                card.anchor(top: collectionView?.bottomAnchor, paddingTop: 0,  paddingBottom: 30,  width: 228, height: 160)
+                
+            } else {
+                card.anchor(top: collectionView?.bottomAnchor, paddingTop: 0,  paddingBottom: 30,  width: 268, height: 160)
+            }
             navigationController?.view.backgroundColor =  UIColor(hexString: product?.background[0] ?? "").darker()
             navigationController?.navigationBar.backgroundColor = UIColor(hexString: product?.background[0] ?? "").darker()
             tableView?.reloadData()
@@ -397,7 +404,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
         card.backgroundImageView.backgroundColor = UIColor(red: 0.667, green: 0.667, blue: 0.667, alpha: 1)
         card.backgroundImageView.layer.cornerRadius = 12
       
-        backgroundView.anchor(top: scrollView.topAnchor, left: view.leftAnchor, bottom: card.centerYAnchor, right: view.rightAnchor)
+        backgroundView.anchor(top: self.view.topAnchor, left: view.leftAnchor, bottom: card.centerYAnchor, right: view.rightAnchor)
 //        backgroundView.backgroundColor = UIColor(hex: "#\(product?.background[0] ?? "")")
 //        view.backgroundColor = .red
         
@@ -537,6 +544,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
         card.centerX(inView: view)
         card.card = product
         card.backgroundImageView.image = product?.XLDesign?.convertSVGStringToImage()
+        card.backgroundImageView.sizeToFit()
       
         card.addSubview(activateSlider)
         activateSlider.isHidden = true

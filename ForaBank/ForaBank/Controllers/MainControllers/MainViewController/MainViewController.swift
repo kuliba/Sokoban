@@ -19,6 +19,8 @@ class MainViewController: UIViewController {
     var card: UserAllCardsModel?
     var sectionIndexCounter = 0
     
+    let changeCardButtonCollection = AllCardView()
+    
     var payments = [PaymentsModel]() {
         didSet {
             DispatchQueue.main.async {
@@ -137,14 +139,14 @@ class MainViewController: UIViewController {
             self.products.removeAll()
             DispatchQueue.main.async {
                 guard let listProducts = data else { return }
-                for i in listProducts.prefix(3) {
+                for i in listProducts {
                     self.products.append(PaymentsModel(productList: i))
                 }
-                if listProducts.prefix(3).count < 3 {
-                    self.products.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
-                } else if listProducts.prefix(3).count == 3 {
-                    self.products.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
-                }
+//                if listProducts.prefix(3).count < 3 {
+//                    self.products.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
+//                } else if listProducts.prefix(3).count == 3 {
+//                    self.products.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
+//                }
                 self.productList = data ?? []
                 self.reloadData(with: nil)
             }
@@ -187,7 +189,7 @@ class MainViewController: UIViewController {
     
     func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?) -> () ) {
         
-        let param = ["isCard": "true", "isAccount": "true", "isDeposit": "false", "isLoan": "false"]
+        let param = ["isCard": "true", "isAccount": "true", "isDeposit": "true", "isLoan": "false"]
         
         NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
             if error != nil {
@@ -214,14 +216,14 @@ class MainViewController: UIViewController {
             
             guard let listProducts = data else {return}
             
-            for i in listProducts.prefix(3) {
+            for i in listProducts {
                 self.products.append(PaymentsModel(productList: i))
             }
-            if listProducts.prefix(3).count < 3{
-                self.products.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
-            } else if listProducts.prefix(3).count == 3{
-                self.products.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
-            }
+//            if listProducts.prefix(3).count < 3{
+//                self.products.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
+//            } else if listProducts.prefix(3).count == 3{
+//                self.products.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
+//            }
             self.productList = data ?? []
         }
     }

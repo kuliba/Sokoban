@@ -134,6 +134,13 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
             logoImageView.alpha = 1
             backgroundImageView.alpha = 1
         }
+        
+        if card.productType == "DEPOSIT"{
+            balanceLabel.textColor = .black
+            cardNameLabel.textColor = UIColor(hexString: "#999999")
+            maskCardLabel.textColor = .black
+            
+        }
     }
     
     func setupUI() {
@@ -178,6 +185,7 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
 
         balanceLabel.anchor(left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor,
                             paddingLeft: 12, paddingBottom: 11, paddingRight: 30)
+        
 
     }
     
