@@ -137,8 +137,9 @@
 		0BAC674426D41C18005AAD91 /* ExtensionGKHSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAC674326D41C18005AAD91 /* ExtensionGKHSearch.swift */; };
 		0BAC674726D4F471005AAD91 /* QRCodeStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0BAC674626D4F471005AAD91 /* QRCodeStoryboard.storyboard */; };
 		0BAD4D33273EDA9B00FDF9B6 /* GetNotificationsDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAD4D32273EDA9B00FDF9B6 /* GetNotificationsDecodableModel.swift */; };
-		0BAD4D35273EDE8200FDF9B6 /* GetNotificationsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAD4D34273EDE8200FDF9B6 /* GetNotificationsModel.swift */; };
+		0BAD4D35273EDE8200FDF9B6 /* GetNotificationsSectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAD4D34273EDE8200FDF9B6 /* GetNotificationsSectionModel.swift */; };
 		0BAD4D37273EDF3A00FDF9B6 /* GetNotificationsModelSaved.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAD4D36273EDF3A00FDF9B6 /* GetNotificationsModelSaved.swift */; };
+		0BAD4D3B274417E700FDF9B6 /*  ExtensionPushHistoryNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAD4D3A274417E700FDF9B6 /*  ExtensionPushHistoryNav.swift */; };
 		0BB015D626C8892700E7A85B /* GKHMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB015D426C8892700E7A85B /* GKHMainViewController.swift */; };
 		0BB015DA26C9378200E7A85B /* GKHOperatorsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB015D926C9378200E7A85B /* GKHOperatorsModel.swift */; };
 		0BB015DC26C9BE3700E7A85B /* ExtensionGKHMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB015DB26C9BE3700E7A85B /* ExtensionGKHMain.swift */; };
@@ -604,8 +605,9 @@
 		0BAC674326D41C18005AAD91 /* ExtensionGKHSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionGKHSearch.swift; sourceTree = "<group>"; };
 		0BAC674626D4F471005AAD91 /* QRCodeStoryboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = QRCodeStoryboard.storyboard; sourceTree = "<group>"; };
 		0BAD4D32273EDA9B00FDF9B6 /* GetNotificationsDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetNotificationsDecodableModel.swift; sourceTree = "<group>"; };
-		0BAD4D34273EDE8200FDF9B6 /* GetNotificationsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetNotificationsModel.swift; sourceTree = "<group>"; };
+		0BAD4D34273EDE8200FDF9B6 /* GetNotificationsSectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetNotificationsSectionModel.swift; sourceTree = "<group>"; };
 		0BAD4D36273EDF3A00FDF9B6 /* GetNotificationsModelSaved.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetNotificationsModelSaved.swift; sourceTree = "<group>"; };
+		0BAD4D3A274417E700FDF9B6 /*  ExtensionPushHistoryNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = " ExtensionPushHistoryNav.swift"; sourceTree = "<group>"; };
 		0BB015D426C8892700E7A85B /* GKHMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHMainViewController.swift; sourceTree = "<group>"; };
 		0BB015D926C9378200E7A85B /* GKHOperatorsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHOperatorsModel.swift; sourceTree = "<group>"; };
 		0BB015DB26C9BE3700E7A85B /* ExtensionGKHMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionGKHMain.swift; sourceTree = "<group>"; };
@@ -1178,6 +1180,7 @@
 			isa = PBXGroup;
 			children = (
 				0B8C1C5F273DCB6200BA5CAC /* PushHistoryViewController.swift */,
+				0BAD4D3A274417E700FDF9B6 /*  ExtensionPushHistoryNav.swift */,
 				0B8C1C63273DD21300BA5CAC /* ExtensionPushHistoryViewController.swift */,
 				0B8C1C61273DD0DF00BA5CAC /* PushHistoryCell.swift */,
 			);
@@ -1299,7 +1302,7 @@
 		0BAD4D31273ED90C00FDF9B6 /* GetNotifications */ = {
 			isa = PBXGroup;
 			children = (
-				0BAD4D34273EDE8200FDF9B6 /* GetNotificationsModel.swift */,
+				0BAD4D34273EDE8200FDF9B6 /* GetNotificationsSectionModel.swift */,
 				0BAD4D36273EDF3A00FDF9B6 /* GetNotificationsModelSaved.swift */,
 			);
 			path = GetNotifications;
@@ -3296,7 +3299,7 @@
 				0B22AEA826CE72C200B11E7F /* GKHDataFilter.swift in Sources */,
 				0B95C40326B6CA3700AA57E6 /* CustomPopUpWithRateView.swift in Sources */,
 				68C8D57426F1FDB60076246B /* LargeCardCell.swift in Sources */,
-				0BAD4D35273EDE8200FDF9B6 /* GetNotificationsModel.swift in Sources */,
+				0BAD4D35273EDE8200FDF9B6 /* GetNotificationsSectionModel.swift in Sources */,
 				687FB23326E9E551004A479F /* PaymentMainCell.swift in Sources */,
 				0BA14E1A2712597D0098E422 /* StaticDefaultTimeOut.swift in Sources */,
 				ED0B4894267B50F50037EA06 /* Int.swift in Sources */,
@@ -3633,6 +3636,7 @@
 				68FFA561268DD2CF002DADFA /* CountriesCodeButton.swift in Sources */,
 				EDFFCACD2681F975004EE095 /* CardListView.swift in Sources */,
 				0BF3485D26931254005138A8 /* SuggestBankDecodableModel.swift in Sources */,
+				0BAD4D3B274417E700FDF9B6 /*  ExtensionPushHistoryNav.swift in Sources */,
 				0B95C40A26B6D88000AA57E6 /* BottomLableModel.swift in Sources */,
 				ED4FC61A266EA42E0092B4AB /* AppLocker.swift in Sources */,
 				688B9BA126DD0C2500407A75 /* ProductsViewController.swift in Sources */,

@@ -6,22 +6,23 @@
 //
 
 import UIKit
+import RealmSwift
 
 extension PushHistoryViewController: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-           return pushArray.count
+        return tempArray?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return pushArray[section].cellData?.count ?? 0
+        return tempArray?[section].getNotificationsCell.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! PushHistoryCell
-
-        cell.setData(pushArray[indexPath.section].cellData?[indexPath.row] ?? CellData())
+        guard tempArray?[indexPath.section].getNotificationsCell[indexPath.row] != nil else { return PushHistoryCell()}
+        cell.setData((tempArray?[indexPath.section].getNotificationsCell[indexPath.row]))
         
         return cell
     }
@@ -32,7 +33,7 @@ extension PushHistoryViewController: UITableViewDelegate, UITableViewDataSource 
         view.backgroundColor = .white
         let lbl = UILabel(frame: CGRect(x: 0, y: 0, width: view.frame.width - 15, height: 40))
         lbl.font = UIFont.systemFont(ofSize: 15)
-        lbl.text = dateFormater(pushArray[section].header ?? "", "dd MMMM, E")
+        lbl.text = dateFormater(tempArray?[section].date ?? "", "dd MMMM, E")
         view.addSubview(lbl)
         return view
         
@@ -42,6 +43,16 @@ extension PushHistoryViewController: UITableViewDelegate, UITableViewDataSource 
         return 40
     }
     
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.section == tableView.numberOfSections - 1 {
+            print("Последняя секция в истории пушей 🏁")
+            if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
+                self.offsetNumber += 1
+                self.downloadPushArray()
+                print("Последняя ячейка в истории пушей 🚩")
+            }
+        }
+    }
     
     func dateFormater(_ string: String, _ formatter: String) -> String {
         let dateFormatter = DateFormatter()
@@ -56,6 +67,41 @@ extension PushHistoryViewController: UITableViewDelegate, UITableViewDataSource 
         let stringDate = d.string(from: date)
         return stringDate
     }
-    //dd MMMM, E
+    
+    func observerRealm() {
+//        tempArray = realm?.objects(GetNotificationsSectionModel.self)
+        self.token = self.tempArray?.observe { [weak self] ( changes: RealmCollectionChange) in
+            guard (self?.tableView) != nil else {return}
+            switch changes {
+            case .initial:
+                self?.tableView.reloadData()
+            case .update(_, let deletions, let insertions, let modifications):
+                self?.tableView.beginUpdates()
+                self?.tableView.insertRows(at: insertions.map({ IndexPath(row: $0, section: 0) }), with: .automatic)
+                self?.tableView.deleteRows(at: deletions.map({ IndexPath(row: $0, section: 0) }), with: .automatic)
+                self?.tableView.reloadRows(at: modifications.map({ IndexPath(row: $0, section: 0) }), with: .automatic)
+                self?.tableView.endUpdates()
+            case .error(let error):
+                fatalError("\(error)")
+            }
+        }
+        
+    }
+    
+    /// Очищаем в REALM
+    final func clearPushRealmData() {
+        
+        let realm = try? Realm()
+        do {
+            let b = realm?.objects(GetNotificationsSectionModel.self)
+            let a = realm?.objects(GetNotificationsCellModel.self)
+            realm?.beginWrite()
+            realm?.delete(b!)
+            realm?.delete(a!)
+            try realm?.commitWrite()
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
     
 }

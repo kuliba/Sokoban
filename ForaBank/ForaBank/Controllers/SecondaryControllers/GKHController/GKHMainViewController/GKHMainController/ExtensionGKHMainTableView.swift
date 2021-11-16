@@ -59,12 +59,6 @@ extension GKHMainViewController: UITableViewDataSource {
             // Переход по QR
             if qrData.count != 0 {
                 let dc = segue.destination as! GKHInputViewController
-                
-                let a = operators
-                
-                let b = qrData
-                
-                
                 dc.operatorData = operators
                 dc.qrData = qrData
             }

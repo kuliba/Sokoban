@@ -8,16 +8,15 @@
 import Foundation
 
 struct BackgroundTimer {
+    
     // Ежесекундная проверка истечения времени обновления и вызов метода обновления сети
     let timer = TimerRepeat(timeInterval: 1)
     let time = TimerTimeInit()
     func repeatTimer() {
         timer.eventHandler = {
-            
-            let t = Date().localDate()
-            print(t)
-                time.timeResult()
+            time.timeResult()
         }
         timer.resume()
     }
+    
 }
