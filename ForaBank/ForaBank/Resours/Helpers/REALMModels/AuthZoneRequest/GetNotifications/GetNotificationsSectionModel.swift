@@ -9,12 +9,16 @@ import Foundation
 import RealmSwift
 
 //// MARK: - GetNotificationsModel
-class GetNotificationsModel: Object {
+class GetNotificationsSectionModel: Object {
     
+    @objc dynamic var date: String?
+    var getNotificationsCell = List<GetNotificationsCellModel>()
+}
+
+class GetNotificationsCellModel: Object {
     @objc dynamic var date: String?
     @objc dynamic var title: String?
     @objc dynamic var text: String?
     @objc dynamic var type: String?
     @objc dynamic var state: String?
-    
 }

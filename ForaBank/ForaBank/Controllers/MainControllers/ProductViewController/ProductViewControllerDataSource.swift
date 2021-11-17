@@ -56,7 +56,7 @@ extension ProductViewController: UICollectionViewDataSource {
         
         if firstTimeLoad, products.count != 0{
             firstTimeLoad = false
-            self.collectionView?.selectItem(at: IndexPath(item: indexItem ?? 0, section: 0), animated: true, scrollPosition: .bottom)
+//            self.collectionView?.selectItem(at: IndexPath(item: indexItem ?? 0, section: 0), animated: true, scrollPosition: .bottom)
             let cell = collectionView.cellForItem(at: IndexPath(item: indexItem ?? 0, section: 0)) as? CardCollectionViewCell
             product = products[self.indexItem ?? 0]
             cell?.showSelect()

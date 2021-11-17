@@ -18,11 +18,6 @@ class QRErrorViewController: UIViewController{
         self.navigationItem.setHidesBackButton(true, animated:true)
     }
     
-//    override func viewWillDisappear(_ animated: Bool) {
-//        super.viewWillDisappear(animated)
-//        self.navigationController?.isNavigationBarHidden = true
-//    }
-
     @IBAction func goToTransfer(_ sender: UIButton) {
        // delegate?.goToGKHMainController()
     }

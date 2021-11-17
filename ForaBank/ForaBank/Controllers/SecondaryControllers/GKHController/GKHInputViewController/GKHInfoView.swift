@@ -34,7 +34,6 @@ class GKHInfoView: UIView {
     
     let lable = UILabel()
     
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         

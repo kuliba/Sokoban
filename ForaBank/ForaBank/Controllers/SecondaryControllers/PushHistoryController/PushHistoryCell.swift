@@ -18,10 +18,10 @@ final class PushHistoryCell: UITableViewCell {
         super.awakeFromNib()
     }
     
-    func setData(_ model: CellData) {
-        pushTitle.text = model.title
-        pushSubTitle.text = model.text
-        pushTimeLable.text = dateFormater(model.date ?? "", "mm:ss")
+    func setData(_ model: GetNotificationsCellModel?) {
+        pushTitle.text = model?.title ?? ""
+        pushSubTitle.text = model?.text ?? ""
+        pushTimeLable.text = dateFormater(model?.date ?? "", "HH:mm")
     }
     func dateFormater(_ string: String, _ formatter: String) -> String {
         

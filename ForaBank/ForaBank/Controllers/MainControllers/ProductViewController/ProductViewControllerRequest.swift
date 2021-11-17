@@ -109,6 +109,9 @@ extension ProductViewController {
                     self.statusBarView.hideSkeleton()
                     self.filterButton.hideSkeleton()
                     self.statusBarView.layer.cornerRadius = 8
+                    self.tableViewLabel.stopSkeletonAnimation()
+                    self.tableViewLabel.isSkeletonable = false
+                    self.tableViewLabel.hideSkeleton()
                     self.view.hideSkeleton()
 
                     
@@ -121,9 +124,11 @@ extension ProductViewController {
 //                    self.dataUSD = lastPaymentsList
             } else {
                 DispatchQueue.main.async {
-                    self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+//                    self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+                    self.tableView?.isSkeletonable = false
                     self.tableView?.stopSkeletonAnimation()
                     self.tableView?.hideSkeleton()
+                    self.view.hideSkeleton()
                 }
                 print("DEBUG: Error: ", model.errorMessage ?? "")
 
@@ -194,10 +199,14 @@ extension ProductViewController {
                             self.totalExpenses  += Double(i.amount ?? 0.0)
                         }
                     }
-                    
+                    self.tableView?.isSkeletonable = false
+
                     self.tableView?.stopSkeletonAnimation()
                     self.tableView?.hideSkeleton()
-                  
+                    self.tableViewLabel.stopSkeletonAnimation()
+                    self.tableViewLabel.isSkeletonable = false
+                    self.tableViewLabel.hideSkeleton()
+                    self.view.hideSkeleton()
                     self.view.hideSkeleton()
                     
                 }
@@ -205,9 +214,16 @@ extension ProductViewController {
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
                 DispatchQueue.main.async {
-                    self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+//                    self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+                    self.tableView?.isSkeletonable = false
                     self.tableView?.stopSkeletonAnimation()
                     self.tableView?.hideSkeleton()
+                    self.tableViewLabel.stopSkeletonAnimation()
+                    self.tableViewLabel.isSkeletonable = false
+                    self.tableViewLabel.hideSkeleton()
+                    self.view.hideSkeleton()
+                    self.view.hideSkeleton()
+
                 }
 
             }

@@ -15,7 +15,6 @@ struct GetNotificationsDecodableModel: Codable, NetworkModelProtocol {
 }
 
 // MARK: GetNotificationsDecodableModel convenience initializers and mutators
-
 extension GetNotificationsDecodableModel {
     init(data: Data) throws {
         self = try newJSONDecoder().decode(GetNotificationsDecodableModel.self, from: data)
@@ -64,6 +63,7 @@ struct GetNotifications: Codable {
 // MARK: Datum convenience initializers and mutators
 
 extension GetNotifications {
+    
     init(data: Data) throws {
         self = try newJSONDecoder().decode(GetNotifications.self, from: data)
     }

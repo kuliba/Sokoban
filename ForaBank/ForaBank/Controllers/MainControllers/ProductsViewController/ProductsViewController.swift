@@ -207,12 +207,23 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if delegateProducts == nil {
             let viewController = ProductViewController()
-            viewController.product = products[indexPath.item]
-            viewController.products = products
-            viewController.indexItem = indexPath.item
+//            viewController.products = products
+//            viewController.indexItem = indexPath.item
+            viewController.firstTimeLoad = true
+            switch indexPath.section{
+                case 0:
+                viewController.product = self.notActivated[indexPath.row]
+                case 1:
+                viewController.product = self.activeProduct[indexPath.row]
+                case 6:
+                viewController.product = self.blocked[indexPath.row]
+            default:
+                print("default")
+            }
             let navVC = UINavigationController(rootViewController: viewController)
             navVC.modalPresentationStyle = .fullScreen
             present(navVC, animated: true)
+            
         } else {
             switch indexPath.section{
                 case 0:
