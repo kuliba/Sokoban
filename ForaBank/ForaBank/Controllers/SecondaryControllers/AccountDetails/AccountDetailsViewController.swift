@@ -124,7 +124,7 @@ extension AccountDetailsViewController: UITableViewDelegate {
         switch indexPath.row {
         case 0:
             presentRequisitsVc(product: product)
-#if DEBUG
+//#if DEBUG
         case 1:
             let controller = AccountStatementController()
             controller.modalPresentationStyle = .fullScreen
@@ -136,7 +136,7 @@ extension AccountDetailsViewController: UITableViewDelegate {
                 topvc?.present(navController, animated: true)
             }
             
-#endif
+//#endif
         default:
             self.dismiss(animated: true, completion: nil)
         }

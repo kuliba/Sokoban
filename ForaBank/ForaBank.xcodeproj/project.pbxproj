@@ -439,6 +439,8 @@
 		EDE212F12742E7D6005D9821 /* ChooseCurrencyPaymentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDE212F02742E7D5005D9821 /* ChooseCurrencyPaymentController.swift */; };
 		EDE212F62742E91D005D9821 /* ChooseCurrencyTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDE212F52742E91D005D9821 /* ChooseCurrencyTableViewCell.xib */; };
 		EDE212F82742ED2B005D9821 /* ChooseCurrencyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDE212F72742ED2B005D9821 /* ChooseCurrencyTableViewCell.swift */; };
+		EDE212FB27432651005D9821 /* DateChooseView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDE212FA27432651005D9821 /* DateChooseView.xib */; };
+		EDE212FD2743265C005D9821 /* DateChooseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDE212FC2743265C005D9821 /* DateChooseView.swift */; };
 		EDF6820D266F9EC800FD5C07 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF681F3266F9EC800FD5C07 /* NetworkManager.swift */; };
 		EDF6820E266F9EC800FD5C07 /* NetworkModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF681F6266F9EC800FD5C07 /* NetworkModelProtocol.swift */; };
 		EDF6820F266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF681F7266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift */; };
@@ -906,6 +908,8 @@
 		EDE212F02742E7D5005D9821 /* ChooseCurrencyPaymentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseCurrencyPaymentController.swift; sourceTree = "<group>"; };
 		EDE212F52742E91D005D9821 /* ChooseCurrencyTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChooseCurrencyTableViewCell.xib; sourceTree = "<group>"; };
 		EDE212F72742ED2B005D9821 /* ChooseCurrencyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseCurrencyTableViewCell.swift; sourceTree = "<group>"; };
+		EDE212FA27432651005D9821 /* DateChooseView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DateChooseView.xib; sourceTree = "<group>"; };
+		EDE212FC2743265C005D9821 /* DateChooseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateChooseView.swift; sourceTree = "<group>"; };
 		EDF681F3266F9EC800FD5C07 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		EDF681F6266F9EC800FD5C07 /* NetworkModelProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkModelProtocol.swift; sourceTree = "<group>"; };
 		EDF681F7266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetDeviceSettingDecodbleModel.swift; sourceTree = "<group>"; };
@@ -1514,13 +1518,6 @@
 				6822EFD526B935FF00125EEC /* BaseTableViewCell.xib */,
 			);
 			path = Cell;
-			sourceTree = "<group>";
-		};
-		6833E0AD27314B69004C070F /* ButtonWithBottomTitle */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = ButtonWithBottomTitle;
 			sourceTree = "<group>";
 		};
 		6833E0B32732B749004C070F /* DetailOperationCell */ = {
@@ -2243,6 +2240,7 @@
 		ED5F2883273BE76D006A10BF /* AccountStatement */ = {
 			isa = PBXGroup;
 			children = (
+				EDE212F927432633005D9821 /* View */,
 				ED5F2884273BE78F006A10BF /* AccountStatementController.swift */,
 			);
 			path = AccountStatement;
@@ -2463,7 +2461,6 @@
 			isa = PBXGroup;
 			children = (
 				0B8C1C45273B03D300BA5CAC /* BottomPopUpViewAdapter */,
-				6833E0AD27314B69004C070F /* ButtonWithBottomTitle */,
 				0B95C40626B6CD6600AA57E6 /* BottomInputViewWithRate */,
 				EDBEEA1526B1AE5500265683 /* FullBankInfoListView */,
 				ED84994626A6FD7C005205C6 /* CountryListView */,
@@ -2811,6 +2808,15 @@
 				EDE212F72742ED2B005D9821 /* ChooseCurrencyTableViewCell.swift */,
 			);
 			path = cell;
+			sourceTree = "<group>";
+		};
+		EDE212F927432633005D9821 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				EDE212FA27432651005D9821 /* DateChooseView.xib */,
+				EDE212FC2743265C005D9821 /* DateChooseView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		EDF681F0266F9EC800FD5C07 /* Service */ = {
@@ -3221,6 +3227,7 @@
 				EDB14518266526BD0028EF5A /* CreditCardEntryView.xib in Resources */,
 				EDB14526266624DC0028EF5A /* OrderCardView.xib in Resources */,
 				ED51D66E2688B27E005FD655 /* SeparatorView.xib in Resources */,
+				EDE212FB27432651005D9821 /* DateChooseView.xib in Resources */,
 				ED147D4C26BAD7E0002F66C8 /* BottomInputView.xib in Resources */,
 				EDA563B026F881D60093F0C8 /* BanksView.xib in Resources */,
 				EDB143CC265FDEC90028EF5A /* Roboto-BlackItalic.ttf in Resources */,
@@ -3611,6 +3618,7 @@
 				0B51D87626D959BB00FC7B6B /* ExtensionGKHInputNav.swift in Sources */,
 				ED0B48AC26812F450037EA06 /* LoginViewModel.swift in Sources */,
 				0B22AEA326CDB38500B11E7F /* ExtensionGKHInput.swift in Sources */,
+				EDE212FD2743265C005D9821 /* DateChooseView.swift in Sources */,
 				EDB16588266A14F9007E6030 /* String.swift in Sources */,
 				EDB165762668C5BE007E6030 /* PaymentsCell.swift in Sources */,
 				EDB14383265FDA410028EF5A /* SceneDelegate.swift in Sources */,
