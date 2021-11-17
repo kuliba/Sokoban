@@ -17,8 +17,16 @@ import RealmSwift
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var delegate: Encription?
-
-    var isAuth: Bool?
+    let timer = BackgroundTimer()
+    
+    var isAuth: Bool? {
+        didSet {
+            guard isAuth != nil else { return }
+            /// Запуск таймера
+            print("Запуск таймера")
+            timer.repeatTimer()
+        }
+    }
 
     static var shared: AppDelegate { return UIApplication.shared.delegate as! AppDelegate }
 
@@ -27,10 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         RealmConfiguration()
 
-        /// Запуск таймера
-        let timer = BackgroundTimer()
-        timer.repeatTimer()
-
+        
         /// FirebaseApp configure
         var filePath = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist")!
         #if DEBUG

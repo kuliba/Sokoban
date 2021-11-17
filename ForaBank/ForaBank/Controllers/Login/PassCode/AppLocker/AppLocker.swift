@@ -362,7 +362,7 @@ public class AppLocker: UIViewController {
     private func cleanAllData() {
         UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
         //TODO: - Написать очистку данных после выхода из приложения
-        
+        AppDelegate.shared.isAuth = false
     }
     
     func exit() {
