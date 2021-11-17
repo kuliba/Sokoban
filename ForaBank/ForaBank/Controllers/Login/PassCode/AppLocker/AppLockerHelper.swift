@@ -11,17 +11,17 @@ import RealmSwift
 struct AppLockerHelper {
     
     static func goVC(_ mode: ALMode) {
-    print("TIMER")
         let regisration = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
         if regisration == true {
-            
-            guard let topVc = UIApplication.getTopViewController() else {return}
-            DispatchQueue.main.async {
-                
-                let locker: AppLocker = AppLocker.loadFromStoryboard()
-                locker.mode = mode
-                locker.modalPresentationStyle = .fullScreen
-                topVc.present(locker, animated: true, completion: nil)
+            if AppDelegate.shared.isAuth ?? false {
+                guard let topVc = UIApplication.getTopViewController() else {return}
+                DispatchQueue.main.async {
+                    
+                    let locker: AppLocker = AppLocker.loadFromStoryboard()
+                    locker.mode = mode
+                    locker.modalPresentationStyle = .fullScreen
+                    topVc.present(locker, animated: true, completion: nil)
+                }
             }
         }
     }

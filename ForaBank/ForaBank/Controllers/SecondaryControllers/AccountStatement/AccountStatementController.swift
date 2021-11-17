@@ -191,7 +191,12 @@ class AccountStatementController: UIViewController {
     
     @objc private func generateButtonTapped() {
         print(#function)
-        
+        guard let card = cardFromField.model else { return }
+        let model = ResultAccountStatementModel(product: card, orderTime: Date())
+        let controller: ResultAccountStatementController = ResultAccountStatementController.loadFromStoryboard()
+        controller.model = model
+        controller.modalPresentationStyle = .fullScreen
+        self.present(controller, animated: true, completion: nil)
     }
     
     //MARK: - Animation

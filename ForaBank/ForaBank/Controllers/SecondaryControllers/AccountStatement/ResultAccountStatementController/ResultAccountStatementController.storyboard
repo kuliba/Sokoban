@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Inter-VariableFont_slnt,wght.ttf">
+            <string>Inter-Regular_Medium</string>
+        </array>
+    </customFonts>
+    <scenes>
+        <!--Result Account Statement Controller-->
+        <scene sceneID="s0d-6b-0kx">
+            <objects>
+                <viewController storyboardIdentifier="ResultAccountStatementController" id="Y6W-OH-hqX" customClass="ResultAccountStatementController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="OkOperators" translatesAutoresizingMaskIntoConstraints="NO" id="u1E-XT-25D">
+                                <rect key="frame" x="163" y="132" width="88" height="88"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="88" id="bzy-cw-QHZ"/>
+                                    <constraint firstAttribute="height" constant="88" id="su2-a7-Za9"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Документ сформирован" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4sa-UA-YNd">
+                                <rect key="frame" x="20" y="244" width="374" height="22"/>
+                                <fontDescription key="fontDescription" name="Inter-Regular_Medium" family="Inter" pointSize="18"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Tk-Os-3C8">
+                                <rect key="frame" x="20" y="794" width="374" height="48"/>
+                                <color key="backgroundColor" name="redColorFora"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="48" id="Q2v-An-qbo"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="На главный">
+                                    <fontDescription key="titleFontDescription" name="Inter-Regular_SemiBold" family="Inter" pointSize="16"/>
+                                </buttonConfiguration>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <integer key="value" value="8"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="goToMainButtonTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="3h2-WJ-wJs"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L1H-Y5-Doj">
+                                <rect key="frame" x="20" y="738" width="374" height="48"/>
+                                <color key="backgroundColor" red="0.96470588235294119" green="0.96470588235294119" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="48" id="bFb-s6-yaS"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="48" id="yde-0T-pZF"/>
+                                </constraints>
+                                <color key="tintColor" red="0.10980392156862745" green="0.10980392156862745" blue="0.10980392156862745" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Смотреть документ">
+                                    <fontDescription key="titleFontDescription" name="Inter-Regular_SemiBold" family="Inter" pointSize="16"/>
+                                </buttonConfiguration>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <integer key="value" value="8"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="watchDocumentButtonTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="Dc1-95-dMH"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="L1H-Y5-Doj" secondAttribute="trailing" constant="20" id="2gC-Vc-zcm"/>
+                            <constraint firstItem="5Tk-Os-3C8" firstAttribute="top" secondItem="L1H-Y5-Doj" secondAttribute="bottom" constant="8" id="5zl-Jn-hBj"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="4sa-UA-YNd" secondAttribute="trailing" constant="20" id="7F7-7J-RUJ"/>
+                            <constraint firstItem="u1E-XT-25D" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="En0-2W-foI"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="5Tk-Os-3C8" secondAttribute="trailing" constant="20" id="Sit-6X-x2r"/>
+                            <constraint firstItem="u1E-XT-25D" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" constant="88" id="VR0-Kc-fPd"/>
+                            <constraint firstItem="5Tk-Os-3C8" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="20" id="X1i-sD-RPT"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="5Tk-Os-3C8" secondAttribute="bottom" constant="20" id="egi-rG-5gx"/>
+                            <constraint firstItem="4sa-UA-YNd" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="f7w-Cy-SHd"/>
+                            <constraint firstItem="L1H-Y5-Doj" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="20" id="kZV-wG-Yym"/>
+                            <constraint firstItem="4sa-UA-YNd" firstAttribute="top" secondItem="u1E-XT-25D" secondAttribute="bottom" constant="24" id="l03-fX-lSy"/>
+                            <constraint firstItem="4sa-UA-YNd" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="20" id="qT1-8t-oMa"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="topImageView" destination="u1E-XT-25D" id="l95-sZ-a1X"/>
+                        <outlet property="topLabel" destination="4sa-UA-YNd" id="cRj-tc-ZfR"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-26.086956521739133" y="53.571428571428569"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="OkOperators" width="72" height="72"/>
+        <namedColor name="redColorFora">
+            <color red="1" green="0.21199999749660492" blue="0.21199999749660492" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

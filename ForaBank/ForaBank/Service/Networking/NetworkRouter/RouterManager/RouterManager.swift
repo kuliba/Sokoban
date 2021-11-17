@@ -83,6 +83,7 @@ enum RouterManager {
     case getAllLatestPayments
     case getOperationDetail
     case getNotifications
+    case getPrintFormForAccountStatement
 }
 
 extension RouterManager {
@@ -1210,6 +1211,21 @@ extension RouterManager {
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
             request.httpMethod = RequestMethod.get.rawValue
+            return request
+            
+        case .getPrintFormForAccountStatement:
+            let baseUrl = RouterUrlList.getPrintFormForAccountStatement.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
             return request
         }
     }

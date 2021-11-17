@@ -156,6 +156,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         NetworkManager<LogoutDecodableModel>.addRequest(.logout, [:], [:]) { _,_  in
             self.isAuth = false
+            
         }
     }
 }
@@ -345,7 +346,6 @@ extension DispatchQueue {
     }
 
 }
-
 
 
 enum VersionError: Error {
