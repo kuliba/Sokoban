@@ -281,6 +281,8 @@
 		68FFA563268DDFCB002DADFA /* SearchContactView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA562268DDFCA002DADFA /* SearchContactView.swift */; };
 		68FFA565269464FF002DADFA /* TransferByRequisitesConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA564269464FF002DADFA /* TransferByRequisitesConfirmViewController.swift */; };
 		68FFA5682695921E002DADFA /* QRScanner in Frameworks */ = {isa = PBXBuildFile; productRef = 68FFA5672695921E002DADFA /* QRScanner */; };
+		A55A52D92746FC3B00641DD0 /* InternetTV.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A55A52D82746FC3B00641DD0 /* InternetTV.storyboard */; };
+		A55A52DB2746FF1700641DD0 /* InternetTVMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55A52DA2746FF1700641DD0 /* InternetTVMainViewController.swift */; };
 		ED07DB9026EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED07DB8F26EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift */; };
 		ED0B4892267B4CDD0037EA06 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = ED0B4891267B4CDD0037EA06 /* IQKeyboardManagerSwift */; };
 		ED0B4894267B50F50037EA06 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B4893267B50F50037EA06 /* Int.swift */; };
@@ -753,6 +755,8 @@
 		68FFA560268DD2CE002DADFA /* CountriesCodeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountriesCodeButton.swift; sourceTree = "<group>"; };
 		68FFA562268DDFCA002DADFA /* SearchContactView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchContactView.swift; sourceTree = "<group>"; };
 		68FFA564269464FF002DADFA /* TransferByRequisitesConfirmViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferByRequisitesConfirmViewController.swift; sourceTree = "<group>"; };
+		A55A52D82746FC3B00641DD0 /* InternetTV.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = InternetTV.storyboard; sourceTree = "<group>"; };
+		A55A52DA2746FF1700641DD0 /* InternetTVMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVMainViewController.swift; sourceTree = "<group>"; };
 		ED07DB8F26EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMe2MeDebitConsentDecodableModel.swift; sourceTree = "<group>"; };
 		ED0B4893267B50F50037EA06 /* Int.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Int.swift; sourceTree = "<group>"; };
 		ED0B4895267B97C60037EA06 /* ContactInputViewController + UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContactInputViewController + UI.swift"; sourceTree = "<group>"; };
@@ -1120,6 +1124,7 @@
 				0BAC674626D4F471005AAD91 /* QRCodeStoryboard.storyboard */,
 				68E346232705C6FA00D6FE37 /* ProductStoryboard.storyboard */,
 				0B8C1C5C273DCB1D00BA5CAC /* PushHistoryStoryboard.storyboard */,
+				A55A52D82746FC3B00641DD0 /* InternetTV.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -1901,6 +1906,14 @@
 				68F6816E269E5E56008157CE /* SearchBanksViewController.swift */,
 			);
 			path = "TransferByRequisites ";
+			sourceTree = "<group>";
+		};
+		A55A52D72746F94200641DD0 /* InternetTVControllers */ = {
+			isa = PBXGroup;
+			children = (
+				A55A52DA2746FF1700641DD0 /* InternetTVMainViewController.swift */,
+			);
+			path = InternetTVControllers;
 			sourceTree = "<group>";
 		};
 		ED0B4897267CF9490037EA06 /* PaymentsDetailsSuccess */ = {
@@ -2758,6 +2771,7 @@
 		EDB16593266A4317007E6030 /* SecondaryControllers */ = {
 			isa = PBXGroup;
 			children = (
+				A55A52D72746F94200641DD0 /* InternetTVControllers */,
 				0B8C1C5E273DCB3400BA5CAC /* PushHistoryController */,
 				ED5F2883273BE76D006A10BF /* AccountStatement */,
 				EDA0DCBF273951F80013F47E /* AccountDetails */,
@@ -3195,17 +3209,17 @@
 			packageReferences = (
 				ED4FC61F266EA5CD0092B4AB /* XCRemoteSwiftPackageReference "Valet" */,
 				EDF6821B266FC37F00FD5C07 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				EDAA99B22674C38900435484 /* XCRemoteSwiftPackageReference "ProgressHUD" */,
-				ED0B4890267B4CDD0037EA06 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
+				EDAA99B22674C38900435484 /* XCRemoteSwiftPackageReference "ProgressHUD.git" */,
+				ED0B4890267B4CDD0037EA06 /* XCRemoteSwiftPackageReference "IQKeyboardManager.git" */,
 				0B7A18A92681CED70007CC75 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */,
-				ED39EC86268B308800158E46 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */,
-				ED39EC8F268C8FA700158E46 /* XCRemoteSwiftPackageReference "SVGKit" */,
+				ED39EC86268B308800158E46 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder.git" */,
+				ED39EC8F268C8FA700158E46 /* XCRemoteSwiftPackageReference "SVGKit.git" */,
 				68FFA5662695921D002DADFA /* XCRemoteSwiftPackageReference "QRScanner" */,
 				68E6A28326A02C1800A1D9A1 /* XCRemoteSwiftPackageReference "AnyFormatKit" */,
-				EDC8BA3226A5AA0D00EDB401 /* XCRemoteSwiftPackageReference "SDWebImagePDFCoder" */,
-				684AD35826B7D2510071C762 /* XCRemoteSwiftPackageReference "CryptoSwift" */,
-				0BA2524526C5DB5500AD087A /* XCRemoteSwiftPackageReference "realm-cocoa" */,
-				6833E0AE27322876004C070F /* XCRemoteSwiftPackageReference "SkeletonView" */,
+				EDC8BA3226A5AA0D00EDB401 /* XCRemoteSwiftPackageReference "SDWebImagePDFCoder.git" */,
+				684AD35826B7D2510071C762 /* XCRemoteSwiftPackageReference "CryptoSwift.git" */,
+				0BA2524526C5DB5500AD087A /* XCRemoteSwiftPackageReference "realm-cocoa.git" */,
+				6833E0AE27322876004C070F /* XCRemoteSwiftPackageReference "SkeletonView.git" */,
 			);
 			productRefGroup = EDB1437E265FDA410028EF5A /* Products */;
 			projectDirPath = "";
@@ -3244,6 +3258,7 @@
 				EDB143CA265FDEC90028EF5A /* Roboto-LightItalic.ttf in Resources */,
 				688B9BA626DD0DC600407A75 /* ProductTableViewCell.xib in Resources */,
 				EDB1654D26678E87007E6030 /* LaunchScreen.storyboard in Resources */,
+				A55A52D92746FC3B00641DD0 /* InternetTV.storyboard in Resources */,
 				ED75CDF926E245EE0074F5D5 /* GoogleService-Info-test.plist in Resources */,
 				ED75CE0926E2BA6F0074F5D5 /* TarifView.xib in Resources */,
 				68B6755D26BC8A9B004DECA4 /* GoogleService-Info.plist in Resources */,
@@ -3685,6 +3700,7 @@
 				0B747890267343B400C44F79 /* KeyExchangeDecodebleModel.swift in Sources */,
 				0B7A18C526852EFC0007CC75 /* MakeTransferDecodableModel.swift in Sources */,
 				ED8AB45B26C2A7C5006F0D03 /* SuccessMeToMeController.swift in Sources */,
+				A55A52DB2746FF1700641DD0 /* InternetTVMainViewController.swift in Sources */,
 				EDB14528266624EE0028EF5A /* OrderCardView.swift in Sources */,
 				ED4B54422703450800C87A1A /* CardsScrollView.swift in Sources */,
 				EDF68219266F9EC800FD5C07 /* RouterBaseUrlList.swift in Sources */,
@@ -4052,7 +4068,7 @@
 				minimumVersion = 1.2.7;
 			};
 		};
-		0BA2524526C5DB5500AD087A /* XCRemoteSwiftPackageReference "realm-cocoa" */ = {
+		0BA2524526C5DB5500AD087A /* XCRemoteSwiftPackageReference "realm-cocoa.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/realm-cocoa.git";
 			requirement = {
@@ -4060,7 +4076,7 @@
 				minimumVersion = 10.14.0;
 			};
 		};
-		6833E0AE27322876004C070F /* XCRemoteSwiftPackageReference "SkeletonView" */ = {
+		6833E0AE27322876004C070F /* XCRemoteSwiftPackageReference "SkeletonView.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Juanpe/SkeletonView.git";
 			requirement = {
@@ -4068,7 +4084,7 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		684AD35826B7D2510071C762 /* XCRemoteSwiftPackageReference "CryptoSwift" */ = {
+		684AD35826B7D2510071C762 /* XCRemoteSwiftPackageReference "CryptoSwift.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/krzyzanowskim/CryptoSwift.git";
 			requirement = {
@@ -4092,7 +4108,7 @@
 				minimumVersion = 1.8.0;
 			};
 		};
-		ED0B4890267B4CDD0037EA06 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
+		ED0B4890267B4CDD0037EA06 /* XCRemoteSwiftPackageReference "IQKeyboardManager.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
 			requirement = {
@@ -4100,7 +4116,7 @@
 				minimumVersion = 6.5.6;
 			};
 		};
-		ED39EC86268B308800158E46 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */ = {
+		ED39EC86268B308800158E46 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImageSVGCoder.git";
 			requirement = {
@@ -4108,7 +4124,7 @@
 				minimumVersion = 1.6.0;
 			};
 		};
-		ED39EC8F268C8FA700158E46 /* XCRemoteSwiftPackageReference "SVGKit" */ = {
+		ED39EC8F268C8FA700158E46 /* XCRemoteSwiftPackageReference "SVGKit.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SVGKit/SVGKit.git";
 			requirement = {
@@ -4124,7 +4140,7 @@
 				minimumVersion = 4.1.2;
 			};
 		};
-		EDAA99B22674C38900435484 /* XCRemoteSwiftPackageReference "ProgressHUD" */ = {
+		EDAA99B22674C38900435484 /* XCRemoteSwiftPackageReference "ProgressHUD.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/relatedcode/ProgressHUD.git";
 			requirement = {
@@ -4132,7 +4148,7 @@
 				kind = branch;
 			};
 		};
-		EDC8BA3226A5AA0D00EDB401 /* XCRemoteSwiftPackageReference "SDWebImagePDFCoder" */ = {
+		EDC8BA3226A5AA0D00EDB401 /* XCRemoteSwiftPackageReference "SDWebImagePDFCoder.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImagePDFCoder.git";
 			requirement = {
@@ -4158,22 +4174,22 @@
 		};
 		0BA2524626C5DB5600AD087A /* Realm */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0BA2524526C5DB5500AD087A /* XCRemoteSwiftPackageReference "realm-cocoa" */;
+			package = 0BA2524526C5DB5500AD087A /* XCRemoteSwiftPackageReference "realm-cocoa.git" */;
 			productName = Realm;
 		};
 		0BA2524826C5DB5600AD087A /* RealmSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0BA2524526C5DB5500AD087A /* XCRemoteSwiftPackageReference "realm-cocoa" */;
+			package = 0BA2524526C5DB5500AD087A /* XCRemoteSwiftPackageReference "realm-cocoa.git" */;
 			productName = RealmSwift;
 		};
 		6833E0AF27322878004C070F /* SkeletonView */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 6833E0AE27322876004C070F /* XCRemoteSwiftPackageReference "SkeletonView" */;
+			package = 6833E0AE27322876004C070F /* XCRemoteSwiftPackageReference "SkeletonView.git" */;
 			productName = SkeletonView;
 		};
 		684AD35926B7D2520071C762 /* CryptoSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 684AD35826B7D2510071C762 /* XCRemoteSwiftPackageReference "CryptoSwift" */;
+			package = 684AD35826B7D2510071C762 /* XCRemoteSwiftPackageReference "CryptoSwift.git" */;
 			productName = CryptoSwift;
 		};
 		68E6A28426A02C1800A1D9A1 /* AnyFormatKit */ = {
@@ -4188,7 +4204,7 @@
 		};
 		ED0B4891267B4CDD0037EA06 /* IQKeyboardManagerSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = ED0B4890267B4CDD0037EA06 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			package = ED0B4890267B4CDD0037EA06 /* XCRemoteSwiftPackageReference "IQKeyboardManager.git" */;
 			productName = IQKeyboardManagerSwift;
 		};
 		ED147D4E26BC1237002F66C8 /* FirebaseCrashlytics */ = {
@@ -4198,12 +4214,12 @@
 		};
 		ED39EC87268B308800158E46 /* SDWebImageSVGCoder */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = ED39EC86268B308800158E46 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */;
+			package = ED39EC86268B308800158E46 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder.git" */;
 			productName = SDWebImageSVGCoder;
 		};
 		ED39EC90268C8FA800158E46 /* SVGKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = ED39EC8F268C8FA700158E46 /* XCRemoteSwiftPackageReference "SVGKit" */;
+			package = ED39EC8F268C8FA700158E46 /* XCRemoteSwiftPackageReference "SVGKit.git" */;
 			productName = SVGKit;
 		};
 		ED4FC620266EA5CD0092B4AB /* Valet */ = {
@@ -4213,12 +4229,12 @@
 		};
 		EDAA99B32674C38900435484 /* ProgressHUD */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = EDAA99B22674C38900435484 /* XCRemoteSwiftPackageReference "ProgressHUD" */;
+			package = EDAA99B22674C38900435484 /* XCRemoteSwiftPackageReference "ProgressHUD.git" */;
 			productName = ProgressHUD;
 		};
 		EDC8BA3326A5AA0E00EDB401 /* SDWebImagePDFCoder */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = EDC8BA3226A5AA0D00EDB401 /* XCRemoteSwiftPackageReference "SDWebImagePDFCoder" */;
+			package = EDC8BA3226A5AA0D00EDB401 /* XCRemoteSwiftPackageReference "SDWebImagePDFCoder.git" */;
 			productName = SDWebImagePDFCoder;
 		};
 		EDF6821C266FC37F00FD5C07 /* FirebaseMessaging */ = {
