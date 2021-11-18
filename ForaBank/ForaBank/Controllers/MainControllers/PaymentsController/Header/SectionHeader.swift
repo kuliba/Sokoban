@@ -14,7 +14,8 @@ class SectionHeader: UICollectionReusableView {
     let title = UILabel()
     let arrowButton = UIButton()
     let seeAllButton = UIButton()
-    
+    let changeCardButtonCollection = AllCardView()
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         title.translatesAutoresizingMaskIntoConstraints = false
@@ -30,12 +31,23 @@ class SectionHeader: UICollectionReusableView {
         arrowButton.tintColor = .gray
         arrowButton.centerY(inView: self)
         seeAllButton.centerY(inView: self)
-        title.centerY(inView: self)
+//        title.centerY(inView: self)
         NSLayoutConstraint.activate([
             title.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            title.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             title.topAnchor.constraint(equalTo: self.topAnchor)
         ])
+        title.anchor(height: 24)
+        changeCardButtonCollection.complition = { (select) in
+            switch select {
+            case 1:
+                print("case 1")
+            case 2:
+                
+                print("case 2")
+            default: break
+                print("case default")
+            }
+        }
     }
     
     func configure(text: String, font: UIFont?, textColor: UIColor, expandingIsHidden: Bool, seeAllIsHidden: Bool) {
@@ -47,8 +59,17 @@ class SectionHeader: UICollectionReusableView {
         } else {
             title.alpha = 1
         }
+        title.centerY(inView: self)
         arrowButton.isHidden = expandingIsHidden
         seeAllButton.isHidden = seeAllIsHidden
+        if title.text == "Мои продукты"{
+//            self.addSubview(changeCardButtonCollection)
+//            title.anchor(top: self.topAnchor, height: 24)
+//            changeCardButtonCollection.anchor(top: title.bottomAnchor, left: self.leftAnchor, right: self.rightAnchor, height: 24)
+//            title.backgroundColor = .cyan   
+        } else {
+            changeCardButtonCollection.removeFromSuperview()
+        }
     }
     
     required init?(coder: NSCoder) {

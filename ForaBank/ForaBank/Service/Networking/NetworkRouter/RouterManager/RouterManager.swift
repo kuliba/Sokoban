@@ -68,6 +68,7 @@ enum RouterManager {
     case createMe2MePullDebitTransfer
     case getMe2MeDebitConsent
     case getCardStatement
+    case getDepositStatement
     case saveCardName
     case blockCard
     case unblockCard
@@ -83,6 +84,7 @@ enum RouterManager {
     case getAllLatestPayments
     case getOperationDetail
     case getNotifications
+    case getDepositInfo
 }
 
 extension RouterManager {
@@ -987,6 +989,21 @@ extension RouterManager {
             request.httpMethod = RequestMethod.post.rawValue
             return request
             
+        case .getDepositStatement:
+            let baseUrl = RouterUrlList.getDepositStatement.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
         case .saveCardName:
             let baseUrl = RouterUrlList.saveCardName.returnUrl()
             switch baseUrl {
@@ -1196,6 +1213,22 @@ extension RouterManager {
             var request = URLRequest(url: resultUrl!)
             request.httpMethod = RequestMethod.post.rawValue
             return request
+            
+        case .getDepositInfo:
+            let baseUrl = RouterUrlList.getDepositInfo.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
             
         case .getNotifications:
             let baseUrl = RouterUrlList.getNotifications.returnUrl()

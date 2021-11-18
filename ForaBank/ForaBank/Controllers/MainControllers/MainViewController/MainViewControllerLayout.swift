@@ -214,6 +214,20 @@ extension MainViewController {
         
         return sectionHeader
     }
+    func createSectionHeaderWithButtons() -> NSCollectionLayoutBoundarySupplementaryItem{
+       let sectionHeaderSize = NSCollectionLayoutSize(
+           widthDimension: .fractionalWidth(1),
+           heightDimension: .absolute(60))
+       
+       let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
+           layoutSize: sectionHeaderSize,
+           elementKind: UICollectionView.elementKindSectionHeader,
+           alignment: .top)
+        
+        sectionHeader.contentInsets = .init(top: 0, leading: 20, bottom: 0, trailing: 0)
+        
+       return sectionHeader
+   }
 
 }
 

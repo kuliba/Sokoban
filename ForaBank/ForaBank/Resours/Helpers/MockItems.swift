@@ -297,43 +297,92 @@ class MockItems {
             PaymentsModel(id: 1, name: "Получатель",
                           iconName: "PaymentsIconBarcode-scanner",
                           controllerName: "https://www.forabank.ru/private/cards/",
-                          description: "QR"),
+                          description: ""),
             
             PaymentsModel(id: 2, name: "Номер счета",
                           iconName: "promoBanner2",
                           controllerName: "https://www.forabank.ru/private/deposits/",
-                        description: "Что то"),
+                        description: ""),
             
             PaymentsModel(id: 5, name: "БИК",
                           iconName: "PaymentsIconCarancy",
                           controllerName: "https://www.forabank.ru/private/credits/",
-                          description: "Что то"),
+                          description: ""),
             
             PaymentsModel(id: 5, name: "Кореспондентский счет",
                           iconName: "PaymentsIconCarancy",
                           controllerName: "https://www.forabank.ru/business/credits/investitsii/?sphrase_id=26274",
-                          description: "Что то"),
+                          description: ""),
             
             PaymentsModel(id: 5, name: "ИНН",
                           iconName: "PaymentsIconCarancy",
                           controllerName: "https://www.forabank.ru/private/strakhovanie/",
-                          description: "Что то"),
+                          description: ""),
             PaymentsModel(id: 5, name: "КПП",
                           iconName: "PaymentsIconCarancy",
                           controllerName: "https://www.forabank.ru/private/strakhovanie/",
-                          description: "Что то"),
+                          description: ""),
             PaymentsModel(id: 5, name: "Держатель карты",
                           iconName: "PaymentsIconCarancy",
                           controllerName: "https://www.forabank.ru/private/strakhovanie/",
-                          description: "Что то"),
+                          description: ""),
             PaymentsModel(id: 5, name: "Номер карты",
                           iconName: "PaymentsIconCarancy",
                           controllerName: "https://www.forabank.ru/private/strakhovanie/",
-                          description: "Что то"),
+                          description: ""),
             PaymentsModel(id: 5, name: "Карта действует до",
                           iconName: "PaymentsIconCarancy",
                           controllerName: "https://www.forabank.ru/private/strakhovanie/",
-                          description: "Что то")
+                          description: "")
+        ]
+    }
+    
+    class func returnsDepositInfo() -> [PaymentsModel] {
+        return [
+            PaymentsModel(id: 1, name: "Сумма первоначального размещения",
+                          iconName: "PaymentsIconBarcode-scanner",
+                          controllerName: "https://www.forabank.ru/private/cards/",
+                          description: ""),
+            
+            PaymentsModel(id: 2, name: "Дата открытия ",
+                          iconName: "promoBanner2",
+                          controllerName: "https://www.forabank.ru/private/deposits/",
+                        description: ""),
+            
+            PaymentsModel(id: 5, name: "Дата закрытия",
+                          iconName: "PaymentsIconCarancy",
+                          controllerName: "https://www.forabank.ru/private/credits/",
+                          description: ""),
+            
+            PaymentsModel(id: 5, name: "Срок вклада",
+                          iconName: "PaymentsIconCarancy",
+                          controllerName: "https://www.forabank.ru/business/credits/investitsii/?sphrase_id=26274",
+                          description: ""),
+            
+            PaymentsModel(id: 5, name: "Ставка по вкладу",
+                          iconName: "PaymentsIconCarancy",
+                          controllerName: "https://www.forabank.ru/private/strakhovanie/",
+                          description: ""),
+            PaymentsModel(id: 5, name: "Дата следующего начисления процентов",
+                          iconName: "PaymentsIconCarancy",
+                          controllerName: "https://www.forabank.ru/private/strakhovanie/",
+                          description: ""),
+            PaymentsModel(id: 5, name: "Сумма выплаченных процентов всего",
+                          iconName: "PaymentsIconCarancy",
+                          controllerName: "https://www.forabank.ru/private/strakhovanie/",
+                          description: ""),
+            PaymentsModel(id: 5, name: "Суммы пополнений",
+                          iconName: "PaymentsIconCarancy",
+                          controllerName: "https://www.forabank.ru/private/strakhovanie/",
+                          description: ""),
+            PaymentsModel(id: 6, name: "Суммы списаний",
+                          iconName: "PaymentsIconCarancy",
+                          controllerName: "https://www.forabank.ru/private/strakhovanie/",
+                          description: ""),
+            PaymentsModel(id: 7, name: "Сумма начисленных процентов на дату",
+                          iconName: "PaymentsIconCarancy",
+                          controllerName: "https://www.forabank.ru/private/strakhovanie/",
+                          description: "")
         ]
     }
     

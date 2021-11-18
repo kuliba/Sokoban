@@ -99,6 +99,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
 //    var sortData = Array(Dictionary<Int, [GetCardStatementDatum]>)
     var sorted: [Dictionary<String?, [GetCardStatementDatum]>.Element] = []
     var sortedAccount: [Dictionary<String?, [GetAccountStatementDatum]>.Element] = []
+    var sortedDeposit: [Dictionary<String?, [GetDepositStatementDatum]>.Element] = []
     let headerView = UIStackView()
     let statusBarView = UIView()
     let statusBarLabel = UILabel()
@@ -112,14 +113,9 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
             
         }
     }
-    var groupByCategoryAccount: Dictionary<Int, [GetAccountStatementDatum]> = [:]{
-        didSet{
-//            let sortedKeys = groupByCategory.keys.sorted(by: { (firstKey, secondKey) -> Bool in
-//                return groupByCategory[firstKey] < groupByCategory[secondKey]
-//            })
-            
-        }
-    }
+    var groupByCategoryAccount: Dictionary<Int, [GetAccountStatementDatum]> = [:]
+    var groupByCategoryDeposit: Dictionary<Int, [GetDepositStatementDatum]> = [:]
+
     var card = LargeCardCell(){
         didSet{
             card.isSkeletonable = true
@@ -152,6 +148,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
             tableViewLabel.isSkeletonable = false
             tableViewLabel.hideSkeleton()
             addCloseColorButton(with: UIColor(hexString: product?.fontDesignColor ?? "000000"))
+            
+            
             if product?.productType == "ACCOUNT"{
                 button4.alpha = 0.4
                 button4.isUserInteractionEnabled = false
@@ -178,15 +176,52 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
             activateSlider.textColor = UIColor(hexString: product?.fontDesignColor ?? "")
             activateSlider.sliderBackgroundColor = UIColor(hexString: product?.background[0] ?? "").darker()
             backgroundView.backgroundColor = UIColor(hexString: product?.background[0] ?? "").darker()
+            
             if product?.productType == "DEPOSIT"{
+                guard let number = self.product?.number else { return }
+                addCloseColorButton(with: UIColor(hexString: "#ffffff"))
+
+                self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4)))", color: "#ffffff")
+                if product?.allowCredit == false{
+                    button.alpha = 0.4
+                    button.isUserInteractionEnabled = false
+                } else {
+                    button.alpha = 1
+                    button.isUserInteractionEnabled = true
+                }
+                button4.setTitle("Управление", for: .normal)
+                button4.setImage(UIImage(named: "server"), for: .normal)
                 card.backgroundView?.backgroundColor = UIColor(hexString: "#999999")
-                card.anchor(top: collectionView?.bottomAnchor, paddingTop: 0,  paddingBottom: 30,  width: 228, height: 160)
+                card.interestRate.isHidden = false
+                card.interestRate.text = "\(product?.interestRate ?? 0.0)%"
+                self.backgroundView.backgroundColor = UIColor(patternImage: product?.background[0]?.convertSVGStringToImage() ?? UIImage())
+                navigationController?.view.backgroundColor =  UIColor(patternImage: product?.background[0]?.convertSVGStringToImage() ?? UIImage())
+                navigationController?.navigationBar.backgroundColor = UIColor(patternImage: product?.background[0]?.convertSVGStringToImage() ?? UIImage())
+                button3.setTitle("Детали", for: .normal)
+                button3.setImage(UIImage(named: "infoBlack"), for: .normal)
+//                card.anchor(top: collectionView?.bottomAnchor, paddingTop: 0,  paddingBottom: 30,  width: 228, height: 160)
+    
+                
                 
             } else {
-                card.anchor(top: collectionView?.bottomAnchor, paddingTop: 0,  paddingBottom: 30,  width: 268, height: 160)
+                card.interestRate.isHidden = true
+                button.alpha = 1
+                button.isUserInteractionEnabled = true
+                button3.setTitle("Реквизиты\nи выписки", for: .normal)
+                button3.titleLabel?.lineBreakMode = .byWordWrapping
+                button3.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+                button3.titleLabel?.textAlignment = .center
+                let btnImage3 = UIImage(named: "file-text")?.withRenderingMode(.alwaysTemplate)
+                button3.tintColor = .black
+                button3.setImage(btnImage3 , for: .normal)
+                navigationController?.view.backgroundColor =  UIColor(hexString: product?.background[0] ?? "").darker()
+                navigationController?.navigationBar.backgroundColor = UIColor(hexString: product?.background[0] ?? "").darker()
+                button4.setTitle("Блокировать", for: .normal)
+                button4.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+                let btnImage4 = UIImage(named: "lock")
+                button4.tintColor = .black
+                button4.setImage(btnImage4 , for: .normal)
             }
-            navigationController?.view.backgroundColor =  UIColor(hexString: product?.background[0] ?? "").darker()
-            navigationController?.navigationBar.backgroundColor = UIColor(hexString: product?.background[0] ?? "").darker()
             tableView?.reloadData()
             card.reloadInputViews()
             loadHistoryForCard()
@@ -236,6 +271,16 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
         }
     }
     var historyArrayAccount = [GetAccountStatementDatum](){
+        didSet{
+            DispatchQueue.main.async {
+//                self.tableView?.stopSkeletonAnimation()
+//                self.view.hideSkeleton()
+                self.tableView?.reloadData()
+            }
+        }
+    }
+    
+    var historyArrayDeposit = [GetDepositStatementDatum](){
         didSet{
             DispatchQueue.main.async {
 //                self.tableView?.stopSkeletonAnimation()
@@ -317,7 +362,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
         super.viewDidLoad()
         
         view.backgroundColor = .white
-
+        addCloseColorButton(with: .white)
         startSkeleton()
 
         
@@ -466,7 +511,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
         button3.isSkeletonable = true
         button3.showAnimatedGradientSkeleton()
         button3.addAction(for: .touchUpInside) {
-            self.presentRequisitsVc(product: self.product!)
+            self.presentRequisitsVc(product: self.product!, false)
         }
         
 //        button3.addTarget(self, action: #selector(presentRequisitsVc(product: product!)), for: .touchUpInside)
@@ -475,15 +520,11 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
         button4.setDimensions(height: 48, width: 164)
         button4.setTitleColor(.black, for: UIControl.State.normal)
         button4.layer.cornerRadius = 10
-        button4.setTitle("Блокировать", for: .normal)
-        button4.titleLabel?.font = UIFont.systemFont(ofSize: 14)
-        let btnImage4 = UIImage(named: "lock")
-        button4.tintColor = .black
-        button4.setImage(btnImage4 , for: .normal)
         button4.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
         button4.imageEdgeInsets = UIEdgeInsets(top: 0, left: -15, bottom: 0, right: 10)
         button4.backgroundColor = UIColor(hexString: "F6F6F7")
         button4.translatesAutoresizingMaskIntoConstraints = false
+        button4.titleLabel?.font = UIFont.systemFont(ofSize: 14)
 //        button4.moveImageLeftTextCenter(imagePadding: 10)
 //        button4.contentVerticalAlignment = .center
         button4.isSkeletonable = true
@@ -619,8 +660,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        tableView?.isSkeletonable = true
-        tableView?.showAnimatedGradientSkeleton()
+//        tableView?.isSkeletonable = true
+//        tableView?.showAnimatedGradientSkeleton()
         
         
     }
@@ -715,11 +756,12 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
         present(vc, animated: true, completion: nil)
     }
     
-    func presentRequisitsVc(product: GetProductListDatum) {
+    func presentRequisitsVc(product: GetProductListDatum,_ openControlButtons: Bool?) {
         
         let viewController = AccountDetailsViewController()
 //        halfScreen = false
         viewController.product = product
+        viewController.openControlButtons = openControlButtons ?? false
 //        let navController = UINavigationController(rootViewController: viewController)
         viewController.modalPresentationStyle = .custom
         viewController.transitioningDelegate = self
@@ -739,11 +781,11 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
     
     @objc func blockProduct(){
         
-        guard let idCard = self.product?.cardID else { return }
-        guard let number = self.product?.number else { return }
+       
         
         if button4.titleLabel?.text == "Блокировать"{
-
+            guard let idCard = self.product?.cardID else { return }
+            guard let number = self.product?.number else { return }
             let alertController = UIAlertController(title: "Заблокировать карту?", message: "Карту можно будет разблокировать в приложении или в колл-центре", preferredStyle: UIAlertController.Style.alert)
             
             let saveAction = UIAlertAction(title: "Ок", style: UIAlertAction.Style.default, handler: { alert -> Void in
@@ -811,8 +853,11 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
             alertController.addAction(saveAction)
                
             self.present(alertController, animated: true, completion: nil)
+        } else if button4.titleLabel?.text == "Управление"{
+            presentRequisitsVc(product: product!, true)
         } else {
-     
+            guard let idCard = self.product?.cardID else { return }
+            guard let number = self.product?.number else { return }
                 
                 let alertController = UIAlertController(title: "Разблокировать карту?", message: "", preferredStyle: UIAlertController.Style.alert)
                 
@@ -891,6 +936,9 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
         if product?.productType == "ACCOUNT"{
             totalExpenses = 0.0
             accountHistory()
+        } else if product?.productType == "DEPOSIT"{
+            loadDeposit()
+            totalExpenses = 0.0
         } else {
             totalExpenses = 0.0
             cardHistory()
@@ -903,17 +951,20 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
 extension ProductViewController{
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        if product?.productType == "ACCOUNT"{
+        switch  product?.productType{
+        case "ACCOUNT":
             return sortedAccount.count
-        } else {
+        case "DEPOSIT":
+            return sortedDeposit.count
+        default:
             return sorted.count
-
         }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//            return groupByCategory[section].count
-        if product?.productType == "ACCOUNT"{
+
+        switch product?.productType {
+        case "ACCOUNT":
             var countSection = Array<Any>()
             
             sortedAccount.map({
@@ -923,7 +974,17 @@ extension ProductViewController{
             })
     //        sorted[section].value.count
             return sortedAccount[section].value.count
-        } else {
+        case "DEPOSIT":
+            var countSection = Array<Any>()
+            
+            sortedDeposit.map({
+                print(countSection.append(($0.value as AnyObject).count ?? 0))
+    //            countSection.append(($0.value as AnyObject).count ?? 0)
+                countSection.append(($0.value as AnyObject).count ?? 0)
+            })
+    //        sorted[section].value.count
+            return sortedDeposit[section].value.count
+        default:
             var countSection = Array<Any>()
             
             sorted.map({
@@ -943,6 +1004,23 @@ extension ProductViewController{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch product?.productType{
+        case "DEPOSIT":
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "HistoryTableViewCell", for: indexPath) as? HistoryTableViewCell else { return  UITableViewCell() }
+            
+            let data = Array(groupByCategoryDeposit.values)[indexPath.section]
+            print(data)
+//            cell.accountOperation = (data as! [GetAccountStatementDatum])[indexPath.row]
+//            groupByCategory[index].value[indexPath.row]
+            cell.titleLable.isSkeletonable = true
+//            cell.operation = sortedAccount
+//            let data = groupByCategory.forEach({$0.value[indexPath.row]})
+            let section = groupByCategoryDeposit[indexPath.section] as? Array<Any>
+//                let data = Array(groupByCategory.values)[indexPath.section]
+            //            sorted[indexPath.section].value[indexPath.item]
+            cell.depositOperation = sortedDeposit[indexPath.section].value[indexPath.row]
+            cell.configure(currency: product?.currency ?? "RUB")
+            cell.selectionStyle = .none
+            return cell
         case "ACCOUNT":
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "HistoryTableViewCell", for: indexPath) as? HistoryTableViewCell else { return  UITableViewCell() }
             
@@ -994,6 +1072,25 @@ extension ProductViewController{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let vc = OperationDetailViewController()
         switch product?.productType {
+        case "DEPOSIT":
+            vc.documentId = "\(sortedDeposit[indexPath.section].value[indexPath.row].documentID ?? 0)"
+            vc.categoryGroupLabel.text = sortedDeposit[indexPath.section].value[indexPath.row].groupName
+            vc.transferImage.image = sortedDeposit[indexPath.section].value[indexPath.row].svgImage?.convertSVGStringToImage()
+            if sortedDeposit[indexPath.section].value[indexPath.row].operationType == "DEBIT"{
+                vc.amount.textColor = UIColor(hexString: "1C1C1C")
+                vc.amount.text = "-\(Double(sortedDeposit[indexPath.section].value[indexPath.row].amount ?? 0.0).currencyFormatter(symbol:  product?.currency ?? "RUB"))"
+            } else if sortedDeposit[indexPath.section].value[indexPath.row].operationType == "CREDIT"{
+                vc.amount.textColor = UIColor(hexString: "1C1C1C")
+                vc.amount.text = "+\(Double(sortedDeposit[indexPath.section].value[indexPath.row].amount ?? 0.0).currencyFormatter(symbol:  product?.currency ?? "RUB"))"
+            }
+    //        vc.commissionLabel.text = sorted[indexPath.section].value[indexPath.row].comment
+            if sortedDeposit[indexPath.section].value[indexPath.row].merchantNameRus != nil{
+                vc.mainLabel.text = sortedDeposit[indexPath.section].value[indexPath.row].merchantNameRus
+            } else {
+                vc.mainLabel.text = sortedDeposit[indexPath.section].value[indexPath.row].merchantName
+            }
+            
+            vc.addCloseButton_xMark()
         case "CARD":
             vc.documentId = "\(sorted[indexPath.section].value[indexPath.row].documentID ?? 0)"
             vc.categoryGroupLabel.text = sorted[indexPath.section].value[indexPath.row].groupName
@@ -1071,6 +1168,22 @@ extension ProductViewController{
             if self.sortedAccount.count != 0{
                    guard let tranDate = self.sortedAccount[section].value[0].tranDate  else {
                        label.text = longIntToDateString(longInt: self.sortedAccount[section].value[0].date!/1000)
+                       label.font = .boldSystemFont(ofSize: 16)
+
+                       label.textColor =  UIColor(hexString: "1C1C1C")
+                       headerView.addSubview(label)
+                       label.centerY(inView: headerView)
+                       headerView.hideSkeleton()
+                       headerView.stopSkeletonAnimation()
+                       return headerView
+               }
+                label.text = longIntToDateString(longInt: tranDate/1000)
+
+            }
+        case "DEPOSIT":
+            if self.sortedDeposit.count != 0{
+                   guard let tranDate = self.sortedDeposit[section].value[0].tranDate  else {
+                       label.text = longIntToDateString(longInt: self.sortedDeposit[section].value[0].date!/1000)
                        label.font = .boldSystemFont(ofSize: 16)
 
                        label.textColor =  UIColor(hexString: "1C1C1C")

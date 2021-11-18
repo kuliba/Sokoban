@@ -58,6 +58,17 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
         label.text = ""
         return label
     }()
+    
+    public let interestRate: UILabel = {
+        let label = PaddingLabel(withInsets: 1, 1, 5, 5)
+        label.layer.masksToBounds = true
+        label.layer.cornerRadius = 8
+        label.font = UIFont(name: "Inter-Regular", size: 12)
+//        label.font = UIFont.boldSystemFont(ofSize: 11 )
+        label.textAlignment = .left
+        label.text = ""
+        return label
+    }()
 
     public let cardNameLabel: UILabel = {
         let label = UILabel()
@@ -132,6 +143,7 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
         addSubview(maskCardLabel)
         addSubview(cardNameLabel)
         addSubview(balanceLabel)
+        addSubview(interestRate)
 //        addSubview(customizeSlideToOpen)
 //
 //        customizeSlideToOpen.delegate = self
@@ -154,6 +166,11 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
         balanceLabel.font = UIFont.boldSystemFont(ofSize: 14)
         balanceLabel.anchor(left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor,
                             paddingLeft: 12, paddingBottom: 16, paddingRight: 30)
+        interestRate.anchor(bottom: self.bottomAnchor, right: self.rightAnchor,
+                            paddingLeft: 12, paddingBottom: 16, paddingRight: 10)
+        interestRate.backgroundColor = UIColor(hexString: "e1e1e2")
+        
+
     }
     
 }

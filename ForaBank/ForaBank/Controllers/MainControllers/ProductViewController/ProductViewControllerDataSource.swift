@@ -97,17 +97,9 @@ extension ProductViewController: UICollectionViewDataSource {
                 activateSlider.isHidden = false
                 blockView.isHidden = true
         } else {
-            button.isEnabled = true
-            button.alpha = 1
+        
             button2.isEnabled = true
             button2.alpha = 1
-            button4.setTitle("Блокировать", for: .normal)
-            button4.titleLabel?.font = UIFont.systemFont(ofSize: 14)
-            blockView.isHidden = true
-            activateSlider.isHidden = true
-            let btnImage4 = UIImage(named: "lock")
-            button4.tintColor = .black
-            button4.setImage(btnImage4 , for: .normal)
         }
     }
     
