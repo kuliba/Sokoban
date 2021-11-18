@@ -14,10 +14,19 @@ class AccountStatementPDFController: UIViewController, URLSessionDownloadDelegat
     
     var pdfView = PDFView()
     lazy var button = UIButton(title: "Сохранить или отправить")
-    var model: ResultAccountStatementModel?
+    var model: ResultAccountStatementModel
     var printFormType: String?
     var id: Int?
     var pdfURL: URL!
+    
+    required init?(model: ResultAccountStatementModel) {
+        self.model = model
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,24 +38,21 @@ class AccountStatementPDFController: UIViewController, URLSessionDownloadDelegat
         pdfView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0)
         self.view.addSubview(self.button)
         button.anchor(left: self.view.leftAnchor, bottom: self.view.safeAreaLayoutGuide.bottomAnchor, right: self.view.rightAnchor, paddingLeft: 20, paddingBottom: 20, paddingRight: 20, height: 48)
-        
-//        guard  let pdfId = id else {
-//            return
-//        }
-//        guard let pdfType = printFormType else {
-//            return
-//        }
-        
-        let body = [
-            "id" : 10004049735,
-            "accountNumber" : nil,
-            "startDate": "2021-01-01",
-            "endDate": "2021-11-08"
-        ] as [String: AnyObject]
-        
-        createPdfDocument(body)
         button.addTarget(self, action: #selector(sharePDF), for: .touchUpInside)
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        let body = [
+            "id" : model.product.accountID,
+            "accountNumber" : nil,
+            "startDate": "\(model.startDate)",
+            "endDate": "\(model.endDate)"
+        ] as [String: AnyObject]
+        
+        print(body)
+        createPdfDocument(body)
     }
     
     @objc func sharePDF(){

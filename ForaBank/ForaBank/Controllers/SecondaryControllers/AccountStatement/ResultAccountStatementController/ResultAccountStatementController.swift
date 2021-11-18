@@ -55,12 +55,10 @@ class ResultAccountStatementController: UIViewController {
     @IBAction func watchDocumentButtonTapped(_ sender: Any) {
         print(#function)
         
-        let vc = AccountStatementPDFController()
-//        vc.id = self?.id
-//        vc.printFormType = self?.printFormType
-        let navVC = UINavigationController(rootViewController: vc)
-        navVC.modalPresentationStyle = .fullScreen
-        self.present(navVC, animated: true, completion: nil)
+//        let vc = AccountStatementPDFController()
+//        let navVC = UINavigationController(rootViewController: vc)
+//        navVC.modalPresentationStyle = .fullScreen
+//        self.present(navVC, animated: true, completion: nil)
     }
     
     @IBAction func goToMainButtonTapped(_ sender: Any) {
@@ -93,9 +91,3 @@ class ResultAccountStatementController: UIViewController {
     
 }
 
-
-struct ResultAccountStatementModel {
-    
-    let product: UserAllCardsModel
-    let orderTime: Date
-}
