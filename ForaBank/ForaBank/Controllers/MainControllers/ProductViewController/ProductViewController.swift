@@ -611,8 +611,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        tableView?.isSkeletonable = true
-        tableView?.showAnimatedGradientSkeleton()
+       
         
         
     }
