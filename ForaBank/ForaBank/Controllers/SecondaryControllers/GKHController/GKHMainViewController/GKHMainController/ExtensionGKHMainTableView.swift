@@ -8,7 +8,6 @@
 import UIKit
 import RealmSwift
 
-
 extension GKHMainViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -30,20 +29,25 @@ extension GKHMainViewController: UITableViewDataSource {
         }
         return cell
     }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 64
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.searchController.searchBar.searchTextField.endEditing(true)
-        performSegue(withIdentifier: "input", sender: self)
+        defineOperatorType() { [weak self] value in
+            self?.operatorType = value
+            DispatchQueue.main.async {
+                self?.performSegue(withIdentifier: "input", sender: self)
+            }
+        }
     }
     
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let op: GKHOperatorsModel!
         switch segue.identifier {
-        
         case "input":
             // Если переход по нажатию на ячейку
             if self.tableView.indexPathForSelectedRow?.row != nil {
@@ -55,18 +59,20 @@ extension GKHMainViewController: UITableViewDataSource {
                 }
                 let dc = segue.destination as! GKHInputViewController
                 dc.operatorData = op
+                dc.operatorType = self.operatorType ?? true
             }
             // Переход по QR
-            if qrData.count != 0 {
+            if self.qrData.count != 0 {
                 let dc = segue.destination as! GKHInputViewController
-                dc.operatorData = operators
-                dc.qrData = qrData
+                dc.operatorData = self.operators
+                dc.qrData = self.qrData
+                dc.operatorType = self.operatorType ?? true
+                self.qrData.removeAll()
             }
-            qrData.removeAll()
+            // Переход при вызове окна ввода QR
         case "qr":
             let dc = segue.destination as! QRViewController
             dc.delegate = self
-            
         case .none:
             print()
         case .some(_):
@@ -74,7 +80,7 @@ extension GKHMainViewController: UITableViewDataSource {
         }
         
     }
-    
+
     func observerRealm() {
             operatorsList = realm?.objects(GKHOperatorsModel.self)
             self.token = self.operatorsList?.observe { [weak self] ( changes: RealmCollectionChange) in

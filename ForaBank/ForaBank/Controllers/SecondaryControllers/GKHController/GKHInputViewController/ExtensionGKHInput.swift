@@ -10,22 +10,31 @@ import UIKit
 extension GKHInputViewController: UITableViewDataSource, TableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return operatorData?.parameterList.count ?? 0
+        return dataArray.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: GKHInputCell.reuseId, for: indexPath) as! GKHInputCell
-        guard operatorData?.parameterList.count != 0 else { return cell }
         
-        cell.setupUI(indexPath.row, (operatorData?.parameterList[indexPath.row])!, qrData)
+        guard dataArray.count != 0 else { return cell }
+        
+        cell.setupUI(indexPath.row, dataArray[indexPath.row])
         cell.tableViewDelegate = (self as TableViewDelegate)
         
-        cell.showInfoView = { value in
+        cell.showInfoView = {[weak self] value in
             let infoView = GKHInfoView()
             infoView.lable.text = value
-            self.showAlert(infoView)
+            self?.showAlert(infoView)
         }
-        
+        cell.showGoButton = { [weak self] value in
+            if value == true {
+            self?.emptyArray.append(value)
+            self?.empty()
+            } else {
+                self?.emptyArray.removeLast()
+                self?.empty()
+            }
+        }
         return cell
         
     }

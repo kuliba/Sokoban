@@ -13,6 +13,8 @@ extension QRViewController: AVCaptureMetadataOutputObjectsDelegate, CALayerDeleg
 
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
         guard metadataObjects.count > 0 else { return }
+        
+        var tempInn = ""
         if let object = metadataObjects.first as? AVMetadataMachineReadableCodeObject {
             if object.type == AVMetadataObject.ObjectType.qr {
                 self.keyValue = object.stringValue ?? ""
@@ -21,19 +23,30 @@ extension QRViewController: AVCaptureMetadataOutputObjectsDelegate, CALayerDeleg
                 a.forEach { [weak self] v in
                     if v.contains("=") {
                         let tempArray = v.components(separatedBy: "=")
-                        var key = tempArray[0]
+                        var key = tempArray[0].lowercased()
                         let value = tempArray[1]
-                        if key == "persAcc" {
+                        if key == "persacc" {
                             key = "Лицевой счет"
+                            self?.qrData.updateValue(value, forKey: key)
                         }
-                        self?.qrData.updateValue(value, forKey: key)
+                        if key == "persacc" {
+                            self?.qrData.updateValue(value, forKey: key)
+                        }
+                        if key == "sum" {
+                            key = "Сумма"
+                            self?.qrData.updateValue(value, forKey: key)
+                        }
+                        if key == "payeeinn" {
+                            tempInn = value
+                        }
                     }
                 }
                 
-                let inn = qrData.filter { $0.key == "PayeeINN" }
+            //    let inn = qrData.filter { $0.key == "payeeinn" }
                 operatorsList?.forEach({ operators in
-                    if operators.synonymList.first == inn.values.first {
+                    if operators.synonymList.first == tempInn {
                         self.operators = operators
+                        
                     }
                 })
                 self.returnKey()

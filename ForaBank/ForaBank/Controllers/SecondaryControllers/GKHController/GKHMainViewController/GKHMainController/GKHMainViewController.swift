@@ -21,10 +21,11 @@ class GKHMainViewController: UIViewController, UITableViewDelegate {
     var operators: GKHOperatorsModel? = nil
     var token: NotificationToken?
 //    weak var delegate: GKHDelegate?
+    // Тип оператора (одношаговый или многошаговый)
+    var operatorType: Bool?
     
     @IBOutlet weak var reqView: UIView!
     @IBOutlet weak var zayavka: UIView!
-    
     @IBOutlet weak var historyView: UIView!
     
     var alertController: UIAlertController?

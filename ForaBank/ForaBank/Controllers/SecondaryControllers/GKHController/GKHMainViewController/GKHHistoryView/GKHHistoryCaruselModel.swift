@@ -40,8 +40,6 @@ struct GKHHistoryCaruselModel {
                         let dataDecoded : Data = Data(base64Encoded: tempImage, options: .ignoreUnknownCharacters)!
                         let decodedimage = UIImage(data: dataDecoded)
                         image = decodedimage
-                    } else {
-//                        image = UIImage(named: "GKH")
                     }
                     
                 }
