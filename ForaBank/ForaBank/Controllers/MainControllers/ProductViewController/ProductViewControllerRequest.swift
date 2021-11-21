@@ -49,6 +49,9 @@ extension ProductViewController {
     }
     
     func accountHistory(){
+        tableView?.isSkeletonable = true
+        tableView?.showAnimatedGradientSkeleton()
+        tableView?.skeletonCornerRadius = 10
         let body = ["id": product?.id
                      ] as [String : AnyObject]
         
@@ -138,7 +141,9 @@ extension ProductViewController {
     
     
     func cardHistory(){
-        
+        tableView?.isSkeletonable = true
+        tableView?.showAnimatedGradientSkeleton()
+        tableView?.skeletonCornerRadius = 10
         let body = ["cardNumber": product?.number
                      ] as [String : AnyObject]
         
