@@ -47,10 +47,10 @@ extension AppDelegate {
         UINavigationBar.appearance().isTranslucent = false
         
         // Убираем надписи у кнопок NavigationBar
-        UIBarButtonItem.appearance().setTitleTextAttributes(
-            [.foregroundColor: UIColor.clear], for: .normal)
-        UIBarButtonItem.appearance().setTitleTextAttributes(
-            [.foregroundColor: UIColor.clear], for: .highlighted)
+//        UIBarButtonItem.appearance().setTitleTextAttributes(
+//            [.foregroundColor: UIColor.clear], for: .normal)
+//        UIBarButtonItem.appearance().setTitleTextAttributes(
+//            [.foregroundColor: UIColor.clear], for: .highlighted)
         
         // Настройка TabBar
         UITabBarItem.appearance().setTitleTextAttributes(
