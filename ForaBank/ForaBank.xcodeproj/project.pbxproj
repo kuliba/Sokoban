@@ -312,6 +312,7 @@
 		ED3A96712690FADD00252857 /* BankListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3A96702690FADD00252857 /* BankListView.swift */; };
 		ED3A96742690FC8300252857 /* BankCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3A96732690FC8300252857 /* BankCell.swift */; };
 		ED3A96772690FCD700252857 /* BankViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3A96762690FCD700252857 /* BankViewModel.swift */; };
+		ED4603A62746B69300FE89B0 /* ResultAccountStatementModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4603A52746B69300FE89B0 /* ResultAccountStatementModel.swift */; };
 		ED4B54422703450800C87A1A /* CardsScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4B54412703450800C87A1A /* CardsScrollView.swift */; };
 		ED4B5444270345D400C87A1A /* CardsScrollCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4B5443270345D400C87A1A /* CardsScrollCell.swift */; };
 		ED4B54462703465200C87A1A /* CardsScrollModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4B54452703465200C87A1A /* CardsScrollModel.swift */; };
@@ -783,6 +784,7 @@
 		ED3A96702690FADD00252857 /* BankListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankListView.swift; sourceTree = "<group>"; };
 		ED3A96732690FC8300252857 /* BankCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankCell.swift; sourceTree = "<group>"; };
 		ED3A96762690FCD700252857 /* BankViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankViewModel.swift; sourceTree = "<group>"; };
+		ED4603A52746B69300FE89B0 /* ResultAccountStatementModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultAccountStatementModel.swift; sourceTree = "<group>"; };
 		ED4B54412703450800C87A1A /* CardsScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsScrollView.swift; sourceTree = "<group>"; };
 		ED4B5443270345D400C87A1A /* CardsScrollCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsScrollCell.swift; sourceTree = "<group>"; };
 		ED4B54452703465200C87A1A /* CardsScrollModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsScrollModel.swift; sourceTree = "<group>"; };
@@ -930,7 +932,7 @@
 		EDF681F8266F9EC800FD5C07 /* LoginDoCodableModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginDoCodableModel.swift; sourceTree = "<group>"; };
 		EDF681FC266F9EC800FD5C07 /* RequestError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestError.swift; sourceTree = "<group>"; };
 		EDF681FE266F9EC800FD5C07 /* RequestMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestMethod.swift; sourceTree = "<group>"; };
-		EDF68200266F9EC800FD5C07 /* URLHostType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLHostType.swift; sourceTree = "<group>"; };
+		EDF68200266F9EC800FD5C07 /* URLHostType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLHostType.swift; sourceTree = "<group>"; usesTabs = 0; };
 		EDF68201266F9EC800FD5C07 /* URLSchemeType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLSchemeType.swift; sourceTree = "<group>"; };
 		EDF68202266F9EC800FD5C07 /* URLConstruct.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLConstruct.swift; sourceTree = "<group>"; };
 		EDF68205266F9EC800FD5C07 /* RouterError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouterError.swift; sourceTree = "<group>"; };
@@ -2013,6 +2015,14 @@
 			path = BankViewModel;
 			sourceTree = "<group>";
 		};
+		ED4603A42746B68900FE89B0 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				ED4603A52746B69300FE89B0 /* ResultAccountStatementModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		ED46C165267A9C0C00D1A9A5 /* СountryInputPayments */ = {
 			isa = PBXGroup;
 			children = (
@@ -2257,6 +2267,7 @@
 		ED5F2883273BE76D006A10BF /* AccountStatement */ = {
 			isa = PBXGroup;
 			children = (
+				ED4603A42746B68900FE89B0 /* Model */,
 				ED664BB52745301C0050D1E0 /* AccountStatementPDFController */,
 				ED664BB0274512B80050D1E0 /* ResultAccountStatementController */,
 				EDE212F927432633005D9821 /* View */,
@@ -3370,6 +3381,7 @@
 				0BAD4D35273EDE8200FDF9B6 /* GetNotificationsSectionModel.swift in Sources */,
 				687FB23326E9E551004A479F /* PaymentMainCell.swift in Sources */,
 				0BA14E1A2712597D0098E422 /* StaticDefaultTimeOut.swift in Sources */,
+				ED4603A62746B69300FE89B0 /* ResultAccountStatementModel.swift in Sources */,
 				ED0B4894267B50F50037EA06 /* Int.swift in Sources */,
 				0B283FBF26FBCA0A00B5E925 /* Router.swift in Sources */,
 				0B22AEAC26CE8DD100B11E7F /* GKHDataSorted.swift in Sources */,

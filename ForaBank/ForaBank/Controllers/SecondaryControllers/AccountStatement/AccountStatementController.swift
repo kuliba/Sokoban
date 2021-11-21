@@ -11,7 +11,17 @@ import RealmSwift
 class AccountStatementController: UIViewController {
     var startProduct: GetProductListDatum?
     lazy var realm = try? Realm()
-
+    
+    var toolBar: UIToolbar?
+    var datePicker: UIDatePicker?
+    let titleButton = UIBarButtonItem(title: "Начало периода", style: .plain, target: nil, action: nil)
+    
+    var selectDate: Date?
+    var enterDate = false
+    
+    var startDate: Date?
+    var endDate: Date?
+    
     var dateField = ForaInput(
         viewModel: ForaInputModel(
             title: "Выберите период",
@@ -50,7 +60,8 @@ class AccountStatementController: UIViewController {
         addCloseButton()
         setupUI()
         setupActions()
-        setButtonEnabled(button: generateButton, isEnabled: true)
+        
+        setButtonEnabled(button: generateButton, isEnabled: false)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -61,8 +72,8 @@ class AccountStatementController: UIViewController {
     private func setButtonEnabled(button: UIButton, isEnabled: Bool) {
         button.isEnabled = isEnabled
         button.backgroundColor = !isEnabled
-            ? UIColor(red: 0.965, green: 0.965, blue: 0.969, alpha: 1)
-            : UIColor(red: 1, green: 0.212, blue: 0.212, alpha: 1)
+        ? UIColor(red: 0.965, green: 0.965, blue: 0.969, alpha: 1)
+        : UIColor(red: 1, green: 0.212, blue: 0.212, alpha: 1)
         
         button.setTitleColor(!isEnabled
                              ? UIColor(red: 0.827, green: 0.827, blue: 0.827, alpha: 1)
@@ -70,15 +81,6 @@ class AccountStatementController: UIViewController {
     }
     
     private func setupUI() {
-        navigationController?.navigationBar.backgroundColor = UIColor(red: 0.973, green: 0.973, blue: 0.973, alpha: 0.82)
-        let topView = UIView()
-        topView.backgroundColor = UIColor(red: 0.973, green: 0.973, blue: 0.973, alpha: 0.82)
-        
-        let segmentedControl = UISegmentedControl(items: ["Новая", "Готовые"])
-        segmentedControl.frame = CGRect(x: 0, y: 0, width: 224, height: 32)
-//        segmentedControl.addTarget(self, action: #selector(segmentAction(_:)), for: .valueChanged)
-        segmentedControl.selectedSegmentIndex = 0
-        segmentedControl.isEnabled = false
         
         let topLabel = UILabel(text: "Отражает подтвержденные оперции по счету за выбранный период.", font: .systemFont(ofSize: 12))
         topLabel.numberOfLines = 0
@@ -91,26 +93,12 @@ class AccountStatementController: UIViewController {
         stackView.spacing = 12
         stackView.isUserInteractionEnabled = true
         
-        view.addSubview(topView)
-        topView.anchor(
+        view.addSubview(topLabel)
+        topLabel.anchor(
             top: view.topAnchor,
             left: view.leftAnchor,
             right: view.rightAnchor,
-            height: 40)
-        
-        topView.addSubview(segmentedControl)
-        segmentedControl.setDimensions(height: 32, width: 224)
-        segmentedControl.centerX(
-            inView: topView,
-            topAnchor: topView.topAnchor,
-            paddingTop: 0)
-        
-        view.addSubview(topLabel)
-        topLabel.anchor(
-            top: topView.bottomAnchor,
-            left: view.leftAnchor,
-            right: view.rightAnchor,
-            paddingTop: 20,
+            paddingTop: 40,
             paddingLeft: 20,
             paddingRight: 20,
             height: 32)
@@ -164,13 +152,49 @@ class AccountStatementController: UIViewController {
         }
         
         dateView.buttonIsTapped = { button in
-            print(button.tag)
-            if self.cardListView.isHidden == false {
-                self.hideView(self.cardListView, needHide: true)
+            switch button.tag {
+            case 0:
+                let now = Date()
+                self.startDate = now
+                self.endDate = now
+                
+            case 1:
+                let now = Date()
+                self.endDate = now
+                guard let date = Date.date(now, addDays: -7) else { return }
+                self.startDate = date
+                
+            case 2:
+                let now = Date()
+                self.endDate = now
+                guard let date = Date.date(now, addMonths: -1) else { return }
+                self.startDate = date
+                
+            case 3:
+                let now = Date()
+                self.endDate = now
+                guard let date = Date.date(now, addMonths: -3) else { return }
+                self.startDate = date
+                
+            case 4:
+                let now = Date()
+                self.endDate = now
+                guard let date = Date.date(now, addMonths: -6) else { return }
+                self.startDate = date
+                
+            case 5:
+                let now = Date()
+                self.endDate = now
+                guard let date = Date.date(now, addYears: -1) else { return }
+                self.startDate = date
+                
+            case 6:
+//                break
+                self.showDatePicker()
+            default:
+                break
             }
-            if self.dateView.isHidden == false {
-                self.hideView(self.dateView, needHide: true)
-            }
+            self.setDate()
         }
         
         cardListView.didCardTapped = { cardId in
@@ -189,14 +213,115 @@ class AccountStatementController: UIViewController {
         
     }
     
+    func showDatePicker() {
+        if datePicker == nil {
+            generateButton.isHidden = true
+            datePicker = UIDatePicker.init()
+            datePicker!.backgroundColor = .white
+//            datePicker!.backgroundColor = UIColor.blueColor()
+            datePicker!.setValue(UIColor.black, forKeyPath: "textColor")
+            datePicker!.setValue(0.8, forKeyPath: "alpha")
+            datePicker!.autoresizingMask = .flexibleWidth
+            datePicker!.datePickerMode = .date
+            if #available(iOS 13.4, *) {
+                datePicker!.preferredDatePickerStyle = UIDatePickerStyle.wheels
+            }
+            datePicker!.maximumDate = Date()
+            datePicker!.addTarget(self, action: #selector(self.dateChanged(_:)), for: .valueChanged)
+            
+//            datePicker!.frame = CGRect(x: 0, y: 0, width: 0, height: 300)
+            self.view.addSubview(datePicker!)
+            datePicker!.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, height: 300)
+            
+            toolBar = UIToolbar()
+            toolBar!.barStyle = .default
+            toolBar!.tintColor = .black
+            let left = UIBarButtonItem(title: "Отмена", style: .done, target: self, action: #selector(self.onCancelButtonClick))
+            let flexible = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+            
+            titleButton.isEnabled = false
+            titleButton.setTitleTextAttributes([.foregroundColor : UIColor.black], for: .disabled)
+            
+            let right = UIBarButtonItem(title: "Далее", style: .done, target: self, action: #selector(self.onDoneButtonClick))
+            toolBar!.items = [left, flexible, titleButton, flexible, right]
+            toolBar!.sizeToFit()
+            self.view.addSubview(toolBar!)
+            toolBar!.anchor(left: view.leftAnchor, bottom: datePicker!.topAnchor, right: view.rightAnchor, height: 50)
+        }
+    }
+
+    @objc func dateChanged(_ sender: UIDatePicker?) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .long
+        dateFormatter.timeStyle = .none
+            
+        if let date = sender?.date {
+            selectDate = date
+            print("Picked the date \(dateFormatter.string(from: date))")
+        }
+    }
+
+    @objc func onCancelButtonClick() {
+        endDate = selectDate
+        toolBar?.removeFromSuperview()
+        datePicker?.removeFromSuperview()
+        toolBar = nil
+        datePicker = nil
+        
+        enterDate = false
+        startDate = nil
+        endDate = nil
+        generateButton.isHidden = false
+        self.setButtonEnabled(button: self.generateButton, isEnabled: false)
+    }
+    
+    @objc func onDoneButtonClick() {
+        if enterDate {
+            endDate = selectDate
+            toolBar?.removeFromSuperview()
+            datePicker?.removeFromSuperview()
+            toolBar = nil
+            datePicker = nil
+            enterDate = false
+            generateButton.isHidden = false
+            setDate()
+            
+        } else {
+            startDate = selectDate
+            enterDate = true
+            titleButton.title = "Конец периода"
+            
+        }
+        
+    }
+    
+    private func setDate() {
+        guard let startDate = self.startDate else { return }
+        guard let endDate = self.endDate else { return }
+        
+        let formatter = Date.dateFormatterSimpleDateConvenient()
+        
+        let start = formatter.string(from: startDate)
+        let end = formatter.string(from: endDate)
+        self.dateField.text = "\(start) - \(end)"
+        
+        self.setButtonEnabled(button: self.generateButton, isEnabled: true)
+        
+        if self.cardListView.isHidden == false {
+            self.hideView(self.cardListView, needHide: true)
+        }
+        if self.dateView.isHidden == false {
+            self.hideView(self.dateView, needHide: true)
+        }
+    }
+    
     @objc private func generateButtonTapped() {
         print(#function)
         guard let card = cardFromField.model else { return }
-        let model = ResultAccountStatementModel(product: card, orderTime: Date())
-        let controller: ResultAccountStatementController = ResultAccountStatementController.loadFromStoryboard()
-        controller.model = model
-        controller.modalPresentationStyle = .fullScreen
-        self.present(controller, animated: true, completion: nil)
+        
+        guard let model = ResultAccountStatementModel(product: card, statTime: self.startDate ?? Date(), endTime: self.endDate ?? Date()) else { return }
+        guard let vc = AccountStatementPDFController(model: model) else { return }
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     //MARK: - Animation
@@ -224,6 +349,4 @@ class AccountStatementController: UIViewController {
             }
         }
     }
-
-    
 }
