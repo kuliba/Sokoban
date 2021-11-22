@@ -10,107 +10,103 @@ import RealmSwift
 
 // MARK: - Save REALM
 struct AddOperatorsList: DownloadQueueProtocol {
-    
+
     func add(_ param: [String : String], _ body: [String: AnyObject], completion: @escaping () -> ()) {
-        
+
         /// Общая информация об поставщике услуг
-        var operatorsArray     = [GKHOperatorsModel]()
-        var tempOperators      = GKHOperatorsModel()
-        var tempOperatorsArray = [GKHOperatorsModel]()
-    
+        var operatorsArr = [GKHOperatorsModel]()
+
         /// Логотип и название поставщике услуг
         var listPositionArray = [LogotypeData]()
-        
+
         /// Поля для заполнения
         var synonymListArray  = [String]()
         var parametersArray   = [Parameters]()
-        
+
         NetworkManager<GetAnywayOperatorsListDecodableModel>.addRequest(.getAnywayOperatorsList, [:], [:]) { model, error in
-            
             if error != nil {
                 print("DEBUG: error", error!)
             } else {
                 guard let model = model else { return }
-                guard let lastPaymentsList = model.data?.operatorGroupList else { return }
-    
-                lastPaymentsList.forEach { d in
-                    if d.name == "Коммунальные услуги и ЖКХ" {
-                        d.operators?.forEach({ operators in
+                guard let allOperators = model.data?.operatorGroupList else { return }
+
+                allOperators.forEach { item in
+                    if item.code?.contains(GlobalModule.UTILITIES_CODE) ?? false ||
+                               item.code?.contains(GlobalModule.INTERNET_TV_CODE) ?? false {
+                        item.operators?.forEach({ item in
                             /// Общая информация об поставщике услуг
-                            let a     = GKHOperatorsModel()
-                            a.puref   = operators.code
-                            a.isGroup = operators.isGroup ?? false
-                            a.name    = operators.name
-                            a.region  = operators.region
+                            let ob = GKHOperatorsModel()
+                            ob.puref   = item.code
+                            ob.isGroup = item.isGroup ?? false
+                            ob.name    = item.name
+                            ob.region  = item.region
+                            ob.parentCode = item.parentCode
                             /// Логотип и название поставщике услуг
-                            operators.logotypeList?.forEach({ logotypeList in
+                            item.logotypeList?.forEach({ logotypeList in
                                 let l     = LogotypeData()
                                 l.content = logotypeList.content
                                 l.name    = logotypeList.name
-                                l.code    = operators.code
+                                l.code    = item.code
                                 listPositionArray.append(l)
                             })
                             /// ИНН
-                            operators.synonymList?.forEach({ synonym in
+                            item.synonymList?.forEach({ synonym in
                                 synonymListArray.append(synonym)
                             })
                             /// Поля для заполнения
-                            operators.parameterList?.forEach({ parameterList in
+                            item.parameterList?.forEach({ parameterList in
                                 if parameterList.viewType == "INPUT" {
-                                let p = Parameters()
-                                p.id        = parameterList.id
-                                p.order     = parameterList.order ?? 0
-                                p.title     = parameterList.title
-                                p.subTitle  = parameterList.subTitle
-                                p.viewType  = parameterList.viewType
-                                p.dataType  = parameterList.dataType
-                                p.type      = parameterList.type
-                                p.mask      = parameterList.mask
-                                p.regExp    = parameterList.regExp
-                                p.maxLength = parameterList.maxLength ?? 0
-                                p.minLength = parameterList.minLength ?? 0
-                                p.rawLength = parameterList.rawLength ?? 0
-                                
-                                parametersArray.append(p)
+                                let param = Parameters()
+                                param.id        = parameterList.id
+                                param.order     = parameterList.order ?? 0
+                                param.title     = parameterList.title
+                                param.subTitle  = parameterList.subTitle
+                                param.viewType  = parameterList.viewType
+                                param.dataType  = parameterList.dataType
+                                param.type      = parameterList.type
+                                param.mask      = parameterList.mask
+                                param.regExp    = parameterList.regExp
+                                param.maxLength = parameterList.maxLength ?? 0
+                                param.minLength = parameterList.minLength ?? 0
+                                param.rawLength = parameterList.rawLength ?? 0
+
+                                parametersArray.append(param)
                                 }
                             })
-                            
-                            tempOperators = a
                             listPositionArray.forEach { i in
-                                tempOperators.logotypeList.append(i)
+                                ob.logotypeList.append(i)
                             }
                             synonymListArray.forEach { i in
-                                tempOperators.synonymList.append(i)
+                                ob.synonymList.append(i)
                             }
                             parametersArray.forEach { i in
-                                tempOperators.parameterList.append(i)
+                                ob.parameterList.append(i)
                             }
-                            
-                            tempOperators.parameterList.sort(by: { (l, r) -> Bool in
+                            ob.parameterList.sort(by: { (l, r) -> Bool in
                                 return l.order < r.order
                             })
-                            
-                            tempOperatorsArray.append(tempOperators)
+
+                            operatorsArr.append(ob)
+
                             listPositionArray.removeAll()
                             synonymListArray.removeAll()
                             parametersArray.removeAll()
                         })
-                        operatorsArray = tempOperatorsArray
-                        /// Сохраняем в REALM
-                        let realm = try? Realm()
-                        do {
-                            let operators = realm?.objects(GKHOperatorsModel.self)
-//                            guard (operators != nil) else { return }
-                            realm?.beginWrite()
-                            realm?.delete(operators!)
-                            realm?.add(operatorsArray)
-                            try realm?.commitWrite()
-                            completion()
-                            print("REALM",realm?.configuration.fileURL?.absoluteString ?? "")
-                        } catch {
-                            print(error.localizedDescription)
-                        }
                     }
+                }
+
+                let realm = try? Realm()
+                do {
+                    let operators = realm?.objects(GKHOperatorsModel.self)
+//                            guard (operators != nil) else { return }
+                    realm?.beginWrite()
+                    realm?.delete(operators!)
+                    realm?.add(operatorsArr)
+                    try realm?.commitWrite()
+                    completion()
+                    print("REALM",realm?.configuration.fileURL?.absoluteString ?? "")
+                } catch {
+                    print(error.localizedDescription)
                 }
             }
         }
