@@ -49,10 +49,11 @@ final class NetworkManager<T: NetworkModelProtocol> {
             }
             
             /// Request Body
+            
             do {
                 let jsonAsData = try JSONSerialization.data(withJSONObject: requestBody, options: [])
                 request.httpBody = jsonAsData
-                
+                print("DEBUG: URLrequest:", jsonAsData)
                 if request.value(forHTTPHeaderField: "Content-Type") == nil {
                     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
                 }
