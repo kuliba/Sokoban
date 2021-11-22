@@ -39,7 +39,7 @@ final class NetworkManager<T: NetworkModelProtocol> {
                     urlComponents.queryItems?.append(queryItem)
                 })
                 
-                print("DEBUG: URLrequest:", urlComponents.url ?? "")
+                print("DEBUG: URLrequest:", urlComponents.query ?? "")
                 request.url = urlComponents.url
             }
             request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
@@ -79,6 +79,7 @@ final class NetworkManager<T: NetworkModelProtocol> {
             }
         }
         debugPrint("DEBUG: request url", request.url?.absoluteString ?? "")
+        
         let task = session.dataTask(with: request) { data, response, error in
             if error != nil {
                 completion(nil, "Пожалуйста, проверьте ваше сетевое соединение.")

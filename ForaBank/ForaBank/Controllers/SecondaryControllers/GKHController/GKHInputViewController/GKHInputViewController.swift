@@ -35,8 +35,6 @@ class GKHInputViewController: BottomPopUpViewAdapter {
             self.goButton.isHidden = true
         }
     }
-    
-    
     var qrData = [String: String]()
     
     @IBOutlet weak var tableView: UITableView!
@@ -146,14 +144,12 @@ class GKHInputViewController: BottomPopUpViewAdapter {
     
     @IBAction func goButton(_ sender: UIButton) {
         operatorStep()
-//        switch operatorType {
-//        case true:
-//        goButton.isHidden = true
-//        bottomInputView.isHidden = false
-//        case false:
-//            goButton.isHidden = true
-//            bottomInputView.isHidden = false
-//        }
+        switch operatorType {
+        case true:
+            break
+        case false:
+            operatorStep()
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {

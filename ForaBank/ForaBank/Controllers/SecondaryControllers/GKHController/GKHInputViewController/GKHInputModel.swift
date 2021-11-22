@@ -38,16 +38,16 @@ struct GKHInputModel {
         return tempArray
     }
     
-    mutating func stepData() -> [[String: String]] {
-        var tempArray = [[String: String]]()
-        var tempDic = [String: String]()
-        qrData.forEach{ param in
-            tempDic.updateValue(param["Лицевой счет"] ?? "", forKey: "title")
-            tempDic.updateValue(param["id"] ?? "", forKey: "id")
-            tempArray.append(tempDic)
-        }
-        return tempArray
-    }
+//    mutating func stepData() -> [[String: String]] {
+//        var tempArray = [[String: String]]()
+//        var tempDic = [String: String]()
+//        qrData.forEach{ param in
+//            tempDic.updateValue(param["Лицевой счет"] ?? "", forKey: "title")
+//            tempDic.updateValue(param["id"] ?? "", forKey: "id")
+//            tempArray.append(tempDic)
+//        }
+//        return tempArray
+//    }
     
     init?(_ data: [String: String]) {
         self.qrData.append(data)
