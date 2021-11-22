@@ -118,7 +118,6 @@ extension GKHInputViewController {
     /// Запрос по получения полей при многошаговом операторе
     final func operatorStep() {
         fieldid += 1
-        let a = self.bodyArray
         let body = [ "check" : false,
                      "amount" : nil,
                      "currencyAmount" : "RUB",
@@ -126,12 +125,7 @@ extension GKHInputViewController {
                                  "cardNumber" : nil,
                                  "accountId" : nil ],
                      "puref" : puref,
-                     "additional" : [
-                               "fieldid": String(fieldid),
-                               "fieldname": "a3_PERSONAL_ACCOUNT_1_1",
-                               "fieldvalue": self.personalAccount
-                         ]] as [String: AnyObject]
-        print(body)
+                     "additional" : bodyArray ] as [String: AnyObject]
         NetworkManager<CreateServiceTransferDecodableModel>.addRequest(.createServiceTransfer, [:], body) { model, error in
             if error != nil {
                 print(#function, "CreateServiceTransfer Error")
