@@ -7,6 +7,7 @@
 
 import UIKit
 import SkeletonView
+import SwiftSVG
 
 protocol ChildViewControllerDelegate{
     func childViewControllerResponse(productList: [GetProductListDatum])
@@ -194,15 +195,25 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
                 card.backgroundView?.backgroundColor = UIColor(hexString: "#999999")
                 card.interestRate.isHidden = false
                 card.interestRate.text = "\(product?.interestRate ?? 0.0)%"
-                self.backgroundView.backgroundColor = UIColor(patternImage: product?.background[0]?.convertSVGStringToImage() ?? UIImage())
-                navigationController?.view.backgroundColor =  UIColor(patternImage: product?.background[0]?.convertSVGStringToImage() ?? UIImage())
-                navigationController?.navigationBar.backgroundColor = UIColor(patternImage: product?.background[0]?.convertSVGStringToImage() ?? UIImage())
+                card.backgroundColor = .clear
+                card.backgroundImageView.fillSuperview()
+                card.backgroundImageView.contentMode = .scaleToFill
+//                self.card.reloadInputViews()
+                self.backgroundView.backgroundColor = UIColor(hexString:  product?.background[0] ?? "999999").darker()
+//                let imageView = UIImageView()
+//                backgroundView.addSubview(imageView)
+//                imageView.center(inView: backgroundView)
+//                imageView.anchor(top: backgroundView.topAnchor, left: backgroundView.leftAnchor, bottom: backgroundView.bottomAnchor, right: backgroundView.rightAnchor)
+//                imageView.image = product?.background[0]?.convertSVGStringToImage()
+            
+                navigationController?.view.backgroundColor =  UIColor(hexString: product?.background[0] ?? "999999").darker()
+                
+                
+                navigationController?.navigationBar.backgroundColor = UIColor(hexString: product?.background[0] ?? "999999").darker()
                 button3.setTitle("Детали", for: .normal)
                 button3.setImage(UIImage(named: "infoBlack"), for: .normal)
+
 //                card.anchor(top: collectionView?.bottomAnchor, paddingTop: 0,  paddingBottom: 30,  width: 228, height: 160)
-    
-                
-                
             } else {
                 card.interestRate.isHidden = true
                 button.alpha = 1
@@ -221,7 +232,19 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
                 let btnImage4 = UIImage(named: "lock")
                 button4.tintColor = .black
                 button4.setImage(btnImage4 , for: .normal)
+
+//                card.reloadInputViews()
+//                card.backgroundImageView.fillSuperview()
+                
+//                card.anchor(top: collectionView?.bottomAnchor, paddingTop: 0,  paddingBottom: 30,  width: 268, height: 160)
+//                card.setupUI()
+
+//                card.backgroundImageView.contentMode = .scaleAspectFill
+//                card.backgroundColor = .cyan
+
             }
+            
+            
             tableView?.reloadData()
             card.reloadInputViews()
             loadHistoryForCard()
@@ -407,11 +430,11 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
                 self?.filterButton.hideSkeleton()
                 self?.statusBarLabel.hideSkeleton()
                 if self?.firstTimeLoad == false {
-                    self?.collectionView((self?.collectionView!)!, didSelectItemAt: IndexPath(row: self?.indexItem ?? 0, section: 0))
-                    self?.collectionView?.selectItem(at: IndexPath(item: self?.indexItem ?? 0, section: 0), animated: true, scrollPosition: .bottom)
-                    let cell = self?.collectionView?.cellForItem(at: IndexPath(item: self?.indexItem ?? 0, section: 0)) as? CardCollectionViewCell
+//                    self?.collectionView((self?.collectionView!)!, didSelectItemAt: IndexPath(row: self?.indexItem ?? 0, section: 0))
+//                    self?.collectionView?.selectItem(at: IndexPath(item: self?.indexItem ?? 0, section: 0), animated: true, scrollPosition: .bottom)
+//                    let cell = self?.collectionView?.cellForItem(at: IndexPath(item: self?.indexItem ?? 0, section: 0)) as? CardCollectionViewCell
                     self?.product = self?.products[self?.indexItem ?? 0]
-                    cell?.showSelect()
+//                    cell?.showSelect()
                 }
         
 //                _ = CardViewModel(card: (self?.product!)!)
@@ -511,6 +534,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
         button3.isSkeletonable = true
         button3.showAnimatedGradientSkeleton()
         button3.addAction(for: .touchUpInside) {
+            self.halfScreen = true
             self.presentRequisitsVc(product: self.product!, false)
         }
         
@@ -1353,7 +1377,12 @@ extension ProductViewController: UIViewControllerTransitioningDelegate {
             presenter.height = 310
         }
         if presented is AccountDetailsViewController {
-            presenter.height = 220
+            if product?.productType == "DEPOSIT", self.halfScreen == true{
+                presenter.height = 560
+                self.halfScreen = false
+            } else {
+                presenter.height = 220
+            }
         }
         return presenter
     }

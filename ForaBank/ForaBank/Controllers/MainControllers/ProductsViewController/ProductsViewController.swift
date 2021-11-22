@@ -22,13 +22,12 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
             DispatchQueue.main.async {
                 self.totalMoney = 0.0
                 self.notActivated.removeAll()
+                self.blocked.removeAll()
+                self.activeProduct.removeAll()
+                self.notActivated.removeAll()
+                self.deposits.removeAll()
                 for i in self.products{
                     self.totalMoney += i.balance ?? 0.0
-                    self.blocked.removeAll()
-                    self.activeProduct.removeAll()
-                    self.notActivated.removeAll()
-                    self.deposits.removeAll()
-                    for i in self.products {
                         if i.statusPC == "17", i.status == "Действует" || i.status == "Выдано клиенту"{
                             self.notActivated.append(i)
                             continue
@@ -44,7 +43,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                         }
                         
                         
-                    }
+                    
                 }
                 
                 self.tableView?.reloadData()
@@ -90,6 +89,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
         getCardList { products, errorMessage in
             self.products = products ?? []
         }
+        
         sectionData = MockItems.returnSectionInProducts()
         
         // Do any additional setup after loading the view.

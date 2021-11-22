@@ -178,7 +178,7 @@ class HistoryTableViewCell: UITableViewCell {
         }
         
           if accountOperation != nil{
-              switch operation?.type {
+              switch accountOperation?.type {
               case "OUTSIDE":
                       logoImageView.alpha = 0.3
                       if accountOperation?.merchantNameRus != nil{
@@ -307,25 +307,25 @@ class HistoryTableViewCell: UITableViewCell {
           }
           
           if depositOperation != nil{
-              switch operation?.type {
+              switch depositOperation?.type {
               case "OUTSIDE":
                       logoImageView.alpha = 0.3
                       if depositOperation?.merchantNameRus != nil{
-                          titleLable.text = depositOperation?.merchantNameRus
+                          subTitleLabel.text = depositOperation?.merchantNameRus
                       } else {
-                          titleLable.text = accountOperation?.merchantName
+                          subTitleLabel.text = accountOperation?.merchantName
                       }
                   
                   if depositOperation?.merchantNameRus == ""{
-                      titleLable.text = accountOperation?.comment
+                      subTitleLabel.text = accountOperation?.comment
                   }
                   
                   
                   if depositOperation?.groupName != nil{
-                      subTitleLabel.isHidden = false
-                      subTitleLabel.text = depositOperation?.groupName
+                      titleLable.isHidden = false
+                      titleLable.text = depositOperation?.groupName
                   } else {
-                      subTitleLabel.isHidden = true
+                      titleLable.isHidden = true
                   }
 
                   if depositOperation?.operationType == "DEBIT"{
@@ -354,19 +354,19 @@ class HistoryTableViewCell: UITableViewCell {
 
               case "INSIDE":
                   logoImageView.alpha = 0.3
-                  titleLable.text = depositOperation?.merchantNameRus
+                  subTitleLabel.text = depositOperation?.merchantNameRus
                   
                   if depositOperation?.merchantNameRus != nil{
-                      titleLable.text = depositOperation?.merchantNameRus
+                      subTitleLabel.text = depositOperation?.merchantNameRus
                   } else {
-                      titleLable.text = depositOperation?.merchantName
+                      subTitleLabel.text = depositOperation?.merchantName
                   }
                   
                   subTitleLabel.isHidden = true
       //            logoImageView.image = UIImage()
       //            logoImageView.image = operation?.svgImage?.convertSVGStringToImage()
                   if accountOperation?.merchantNameRus == ""{
-                      titleLable.text = depositOperation?.comment
+                      subTitleLabel.text = depositOperation?.comment
                   }
                   
                   guard let sum = depositOperation?.amount else {
@@ -374,10 +374,10 @@ class HistoryTableViewCell: UITableViewCell {
                   }
                   
                   if depositOperation?.groupName != nil{
-                      subTitleLabel.isHidden = false
-                      subTitleLabel.text = depositOperation?.groupName
+                      titleLable.isHidden = false
+                      titleLable.text = depositOperation?.groupName
                   } else {
-                      subTitleLabel.isHidden = true
+                      titleLable.isHidden = true
                   }
                   
                   

@@ -12,7 +12,11 @@ import UIKit
 extension ProductViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return products.count + 1
+        if products.count > 3{
+            return 4
+        } else {
+            return products.count + 1
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -62,8 +66,13 @@ extension ProductViewController: UICollectionViewDataSource {
             cell?.showSelect()
         } else {
             if indexPath.item < products.count{
-                product = products[indexPath.item]
-                self.collectionView?.selectItem(at: indexPath, animated: true, scrollPosition: .bottom)
+                if indexItem ?? 0 < 3{
+                    product = products[indexPath.item]
+                    self.collectionView?.selectItem(at: indexPath, animated: true, scrollPosition: .bottom)
+                } else {
+                    product = products[indexPath.item]
+                    indexItem = 0
+                }
 //                guard let cell = collectionView.cellForItem(at: indexPath) as? CardCollectionViewCell else {return}
 //                cell.showSelect()
             } else {

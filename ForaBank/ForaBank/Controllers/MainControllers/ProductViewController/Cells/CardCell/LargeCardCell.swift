@@ -81,7 +81,7 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
     
     public let backgroundImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleToFill
         return imageView
     }()
     

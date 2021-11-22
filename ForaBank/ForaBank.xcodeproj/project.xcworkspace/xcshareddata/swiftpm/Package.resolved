@@ -254,6 +254,15 @@
         }
       },
       {
+        "package": "SwiftSVG",
+        "repositoryURL": "https://github.com/mchoe/SwiftSVG",
+        "state": {
+          "branch": null,
+          "revision": "c3a8866a25ace169ee8e5c037670ba14aa59606f",
+          "version": "2.3.2"
+        }
+      },
+      {
         "package": "Valet",
         "repositoryURL": "https://github.com/Square/Valet",
         "state": {
