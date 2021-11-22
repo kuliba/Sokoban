@@ -70,10 +70,6 @@ class GKHMainViewController: UIViewController, UITableViewDelegate {
         tableView.delegate = self
         tableView.dataSource = self
         
-        AddAllUserCardtList.add {
-            print("Rasd 1")
-        }
-        
         self.navigationController?.isNavigationBarHidden = false
         
         /// Загрузка истории операций
@@ -87,7 +83,7 @@ class GKHMainViewController: UIViewController, UITableViewDelegate {
         setupNavBar()
         observerRealm()
         operatorsList?.forEach({ op in
-            if !op.parameterList.isEmpty {
+            if !op.parameterList.isEmpty && op.parentCode?.contains(GlobalModule.UTILITIES_CODE) ?? false {
             organization.append(op)
             }
         })
