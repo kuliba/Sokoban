@@ -88,22 +88,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // Determine who sent the URL.
         let sendingAppID = options[.sourceApplication]
-        print("source application = \(sendingAppID ?? "Unknown")")
-        print("source", url)
         // Process the URL.
         guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true),
             let albumPath = components.path,
             let params = components.queryItems else {
-                print("Invalid URL or album path missing")
                 return false
         }
-        print("components", components)
-        
         if let photoIndex = params.first(where: { $0.name == "id" })?.value {
-            print("id = \(albumPath)")
             return true
         } else {
-            print("Photo index missing")
             return false
         }
     }
@@ -161,7 +154,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         NetworkManager<LogoutDecodableModel>.addRequest(.logout, [:], [:]) { _,_  in
             self.isAuth = false
-            
         }
     }
 }
@@ -173,44 +165,15 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let userInfo = notification.request.content.userInfo
-        
-        
-        // With swizzling disabled you must let Messaging know about the message, for Analytics
-        // Messaging.messaging().appDidReceiveMessage(userInfo)
-        
-        // ...
-        
-        // Print full message.
-        print(userInfo)
         if (userInfo["otp"] as? String) != nil {
-//            print(otpCode)
             NotificationCenter.default.post(name: Notification.Name("otpCode"), object: nil, userInfo: userInfo)
         }
-//        if otpCode.contains("СМС-код:") {
-//            print("СМС-код:")
-//        }
-//        print(otpCode.components(separatedBy:  otpCode))
-//        let newstring = otpCode.filter { "0"..."9" ~= $0 }
-//        print(newstring)
-        
-//        NotificationCenter.default.post(name: Notification.Name("otpCode"), object: nil, userInfo: userInfo)
-        
-        // Change this to your preferred presentation option
         completionHandler([[.alert, .sound]])
     }
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
-        
-        // ...
-        
-        // With swizzling disabled you must let Messaging know about the message, for Analytics
-        // Messaging.messaging().appDidReceiveMessage(userInfo)
-        
-        // Print full message.
-        print(userInfo)
-        
         if let type = userInfo["type"] as? String {
             if type == "сonsentMe2MePull" {
                 let meToMeReq = RequestMeToMeModel(userInfo: userInfo)
@@ -244,7 +207,6 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         
     }
     
-    
 }
 
 extension AppDelegate: MessagingDelegate {
@@ -255,13 +217,9 @@ extension AppDelegate: MessagingDelegate {
         
         let dataDict:[String: String] = ["token": fcmToken ?? ""]
         NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)
-        // TODO: If necessary send token to application server.
-        // Note: This callback is fired at each app startup and whenever a new token is generated.
     }
-    
-    // iOS9, called when presenting notification in foreground
+
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
-        //        NSLog("[RemoteNotification] applicationState: \(applicationStateString) didReceiveRemoteNotification for iOS9: \(userInfo)")
         if UIApplication.shared.applicationState == .active {
             //TODO: Handle foreground notification
         } else {
@@ -295,12 +253,10 @@ extension AppDelegate {
             _ = SecKeyCreateEncryptedData(KeyPair.publicKey!, .rsaEncryptionRaw, Data(base64Encoded: KeyFromServer.publicKey!)! as CFData, nil)
 
             _ = Encription().encryptWithRSAKey(Data(base64Encoded: KeyFromServer.publicKey!)!, rsaKeyRef: KeyPair.privateKey!, padding: .PKCS1)
-            
-            
+        
             CSRFToken.token = token
             
             let parameters = [
-    //            "cryptoVersion": "1.0",
                 "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
                 "pushFcmToken": "\(Messaging.messaging().fcmToken ?? "")",
                 "model": UIDevice().model,
@@ -333,7 +289,6 @@ extension AppDelegate {
             }
         }
     }
-    
     
 }
 

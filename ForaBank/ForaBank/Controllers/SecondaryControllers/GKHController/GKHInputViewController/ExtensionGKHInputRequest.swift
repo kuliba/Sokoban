@@ -133,7 +133,6 @@ extension GKHInputViewController {
             guard let respModel = model else { return }
             if respModel.statusCode == 0 {
                 guard let data = respModel.data else { return }
-                
                 var additionalListDic = [String: String]()
                 var parameterListForNextStepDic = [String: String]()
                 data.additionalList?.forEach{ additionalList in
