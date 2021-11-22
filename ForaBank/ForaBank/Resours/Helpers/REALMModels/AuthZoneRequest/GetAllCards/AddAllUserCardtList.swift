@@ -57,6 +57,18 @@ struct AddAllUserCardtList {
                     cards.paymentSystemImage = card.paymentSystemImage
                     cards.fontDesignColor    = card.fontDesignColor
                     cards.id                 = card.id ?? 0
+                    cards.openDate           = card.openDate ?? 0
+                    cards.branchId           = card.branchId ?? 0
+                    cards.accountID          = card.accountID ?? 0
+                    cards.expireDate         = card.expireDate
+                    cards.XLDesign           = card.XLDesign
+                    cards.statusPC           = card.statusPC
+                    
+                    card.background.forEach { color in
+                        let colors = UserAllCardsbackgroundModel()
+                        colors.color = color
+                        cards.background.append(colors)
+                    }
                     tempCard = cards
                     tempcardsArray.append(tempCard)
                 }

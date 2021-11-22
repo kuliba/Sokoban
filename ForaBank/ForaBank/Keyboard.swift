@@ -28,6 +28,7 @@ class A: UIViewController, UITextFieldDelegate {
 
     
     @objc func hideKeyboard() { self.scrollView?.endEditing(true) }
+    
     @objc func keyboardWasShown(notification: Notification) {
         let info = notification.userInfo! as NSDictionary
         let kbSize = (info.value(forKey: UIResponder.keyboardFrameEndUserInfoKey) as! NSValue).cgRectValue.size

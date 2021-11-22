@@ -119,7 +119,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     fileprivate func RealmConfiguration() {
         // Версия БД (изменить на большую если меняем БД)
-        let schemaVersion: UInt64 = 1
+        let schemaVersion: UInt64 = 2
         
         let config = Realm.Configuration(
             // Set the new schema version. This must be greater than the previously used

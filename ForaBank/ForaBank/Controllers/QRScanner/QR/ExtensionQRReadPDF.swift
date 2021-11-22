@@ -10,6 +10,7 @@ import UIKit
 extension QRViewController {
 /// Преобразуем PDF в Image
 func drawPDFfromURL(url: URL) -> UIImage? {
+    
         guard let document = CGPDFDocument(url as CFURL) else { return nil }
 
         var width: CGFloat = 0
@@ -17,7 +18,6 @@ func drawPDFfromURL(url: URL) -> UIImage? {
         
         // calculating overall page size
         for index in 1...document.numberOfPages {
-            print("index: \(index)")
             if let page = document.page(at: index) {
                 let pageRect = page.getBoxRect(.mediaBox)
                 width = max(width, pageRect.width)

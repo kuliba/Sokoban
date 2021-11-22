@@ -39,5 +39,16 @@ class UserAllCardsModel: Object {
     @objc dynamic var paymentSystemImage: String?
     @objc dynamic var fontDesignColor: String?
     @objc dynamic var id: Int = 0
+    var background = List<UserAllCardsbackgroundModel>()
+    @objc dynamic var openDate = 0
+    @objc dynamic var branchId = 0
+    @objc dynamic var accountID = 0
+    @objc dynamic var expireDate: String?
+    @objc dynamic var XLDesign: String?
+    @objc dynamic var statusPC: String?
     
+}
+
+class UserAllCardsbackgroundModel: Object {
+    @objc dynamic var color: String?
 }

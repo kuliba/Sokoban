@@ -96,16 +96,19 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate {
         a.forEach { [weak self] v in
             if v.contains("=") {
                 let tempArray = v.components(separatedBy: "=")
-                var key = tempArray[0]
+                var key = tempArray[0].lowercased()
                 let value = tempArray[1]
-                if key == "persAcc" {
+                if key == "persacc" {
                    key = "Лицевой счет"
+                }
+                if key == "sum" {
+                    key = "Сумма"
                 }
                 self?.qrData.updateValue(value, forKey: key)
             }
         }
        
-        let inn = qrData.filter { $0.key == "PayeeINN" }
+        let inn = qrData.filter { $0.key == "payeeinn" }
         if inn != [:] {
         operatorsList?.forEach({ operators in
             if operators.synonymList.first == inn.values.first {
