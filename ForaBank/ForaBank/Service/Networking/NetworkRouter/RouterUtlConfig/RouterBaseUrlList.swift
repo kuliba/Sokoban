@@ -68,6 +68,8 @@ enum RouterBaseUrlList: String {
     case logout                    = "/logout"
     
     case createServiceTransfer     = "/rest/transfer/createServiceTransfer"
+
+    case createInternetTransfer     = "/rest/transfer/createInternetTransfer"
     
     case antiFraud                 = "/rest/transfer/antiFraud"
     
@@ -145,6 +147,8 @@ enum RouterBaseUrlList: String {
     /// Обновление при заходе на экран
 
     case getLatestServicePayments  = "/rest/getLatestServicePayments"
+
+    case getLatestInternetTVPayments  = "/rest/getLatestInternetPayments"
 
     case getPaymentCountries       = "/rest/getPaymentCountries"
     // В процессе

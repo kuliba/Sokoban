@@ -10,16 +10,16 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--InternetTV Main View Controller-->
+        <!--InternetTV Main Controller-->
         <scene sceneID="a9K-UE-2Cv">
             <objects>
-                <viewController storyboardIdentifier="GKHMain" id="Tre-hq-1qV" customClass="InternetTVMainViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="InternetTVMain" id="Tre-hq-1qV" customClass="InternetTVMainController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="RV7-ht-0NX">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="846"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="792"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="zv0-hf-SG2">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="812"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="792"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="414" id="LFi-Bq-Qdv"/>
@@ -144,7 +144,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" largeTitleDisplayMode="never" id="Zel-pV-gac"/>
-                    <size key="freeformSize" width="414" height="900"/>
+                    <size key="freeformSize" width="414" height="846"/>
                     <connections>
                         <outlet property="historyView" destination="Wqc-6X-e0n" id="ueg-iE-yRT"/>
                         <outlet property="reqView" destination="ZGZ-d0-7gP" id="wBh-bA-uxW"/>
@@ -156,12 +156,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vzz-zY-d4f" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1839.1304347826087" y="96.428571428571431"/>
+            <point key="canvasLocation" x="1607" y="79"/>
         </scene>
-        <!--City Search Controller-->
+        <!--InternetTV City Search Controller-->
         <scene sceneID="7ka-TR-F5H">
             <objects>
-                <viewController id="38D-5V-I5d" customClass="GKHCitySearchController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="38D-5V-I5d" customClass="InternetTVCitySearchController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="oTM-tx-ja0">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -252,7 +252,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vdZ-LT-tTd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1834.7826086956522" y="827.67857142857144"/>
+            <point key="canvasLocation" x="1604" y="732"/>
         </scene>
         <!--qr-->
         <scene sceneID="kNr-n7-taO">
@@ -264,10 +264,10 @@
             </objects>
             <point key="canvasLocation" x="2341" y="256"/>
         </scene>
-        <!--Input View Controller-->
+        <!--InternetTV Details Form Controller-->
         <scene sceneID="bza-DT-N1m">
             <objects>
-                <viewController id="hxj-Pz-9K3" customClass="GKHInputViewController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="hxj-Pz-9K3" customClass="InternetTVDetailsFormController" customModule="ForaBank" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="mnL-wU-aGE">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -337,7 +337,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OZb-Kr-q5a" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="qr8-HD-W4b" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2747.826086956522" y="111.83035714285714"/>
+            <point key="canvasLocation" x="2294" y="96"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="mVp-7Q-cSm">

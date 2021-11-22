@@ -103,7 +103,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
                     break
                 case 3:
                     // Интернет ТВ
-                    let gkh = GKHMainViewController.storyboardInstance()!
+                    let gkh = InternetTVMainController.storyboardInstance()!
                     let nc = UINavigationController(rootViewController: gkh)
                     nc.modalPresentationStyle = .fullScreen
                     present(nc, animated: true)
