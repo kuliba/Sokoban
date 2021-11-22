@@ -238,13 +238,13 @@ public class AppLocker: UIViewController {
             } else {
                 // свернуть и включить таймер
                 DispatchQueue.main.async {
-                        let realm = try? Realm()
-                        try? realm?.write {
-                            let counter = realm?.objects(GetSessionTimeout.self)
-                            counter?.first?.mustCheckTimeOut = true
-                            realm?.add(counter!)
-                        }
-                        self.dismiss(animated: true, completion: nil)
+                    let realm = try? Realm()
+                    try? realm?.write {
+                        let counter = realm?.objects(GetSessionTimeout.self)
+                        counter?.first?.mustCheckTimeOut = true
+                        realm?.add(counter!)
+                    }
+                    self.dismiss(animated: true, completion: nil)
                 }
             }
         }
@@ -325,8 +325,20 @@ public class AppLocker: UIViewController {
                         print(error)
                         self.showAlert(with: "Ошибка", and: error)
                     } else {
-                        DispatchQueue.main.async {
-                            self.lockerDelegate?.goToTabBar()
+                        if self.mode == .validate {
+                            DispatchQueue.main.async {
+                                let realm = try? Realm()
+                                try? realm?.write {
+                                    let counter = realm?.objects(GetSessionTimeout.self)
+                                    counter?.first?.mustCheckTimeOut = true
+                                    realm?.add(counter!)
+                                }
+                                self.dismiss(animated: true, completion: nil)
+                            }
+                        } else if self.mode == .login {
+                            DispatchQueue.main.async {
+                                self.lockerDelegate?.goToTabBar()
+                            }
                         }
                     }
                 }
@@ -350,7 +362,7 @@ public class AppLocker: UIViewController {
     private func cleanAllData() {
         UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
         //TODO: - Написать очистку данных после выхода из приложения
-        
+        AppDelegate.shared.isAuth = false
     }
     
     func exit() {

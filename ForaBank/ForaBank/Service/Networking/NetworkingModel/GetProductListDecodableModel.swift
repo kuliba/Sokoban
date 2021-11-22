@@ -93,6 +93,10 @@ struct GetProductListDatum: Codable{
     let XLDesign: String?
     let statusPC: String?
     let interestRate: Double?
+    let openDate: Int?
+    let branchId: Int?
+    let expireDate: String?
+    
 }
 
 // MARK: GetProductListDatum convenience initializers and mutators
@@ -145,8 +149,7 @@ extension GetProductListDatum {
         id: Int?? = nil,
         background: [String]?? = nil,
         XLDesign: String?? = nil,
-        statusPC: String? = nil,
-        interestRate: Double? = nil
+        statusPC: String? = nil
     ) -> GetProductListDatum {
         return GetProductListDatum (
             number: number ?? self.number,
@@ -180,9 +183,7 @@ extension GetProductListDatum {
             id: id ?? self.id,
             background: (background ?? []) ?? self.background,
             XLDesign: XLDesign ?? self.XLDesign,
-            statusPC: statusPC ?? self.statusPC,
-            interestRate: interestRate ?? self.interestRate
-
+            statusPC: statusPC ?? self.statusPC
         )
     }
 

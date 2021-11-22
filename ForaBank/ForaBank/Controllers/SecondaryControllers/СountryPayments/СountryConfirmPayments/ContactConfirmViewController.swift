@@ -522,6 +522,10 @@ class ContactConfurmViewController: UIViewController {
             numberTransctionField.text = model.numberTransction
             nameField.text =  model.fullName ?? ""
             countryField.text = model.country?.name?.capitalizingFirstLetter() ?? ""
+            if !model.summInCurrency.isEmpty {
+                currTransctionField.isHidden = false
+            }
+            currTransctionField.text = model.summInCurrency
             currancyTransctionField.text = model.currancyTransction
             
             let customViewItem = UIBarButtonItem(customView: UIImageView(image: #imageLiteral(resourceName: "Vector")))

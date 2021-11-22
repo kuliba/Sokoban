@@ -18,73 +18,54 @@ class PushHistoryViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     lazy var realm = try? Realm()
+    var token: NotificationToken?
+    var tempArray: Results <GetNotificationsSectionModel>?
     
-    var pushArray = [PushData]()
-    
+    var offsetNumber = 0
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        tempArray = realm?.objects(GetNotificationsSectionModel.self)
         setupNavBar()
-        downloadData()
-        
+        downloadPushArray()
+//        observerRealm()
     }
     
-    private func downloadData() {
-        
-        let tempArray = realm?.objects(GetNotificationsModel.self)
-        var tempPushArray = [CellData]()
-        
-        tempArray?.forEach({ model in
-            tempPushArray.removeAll()
-            var cellData = CellData()
-            cellData.title = model.title ?? ""
-            cellData.text  = model.text ?? ""
-            cellData.date  = model.date ?? ""
-            cellData.state = model.state ?? ""
-            cellData.type  = model.type ?? ""
-            tempPushArray.append(cellData)
-            let push = PushData(model.date ?? "", data: tempPushArray)
-            pushArray.append(push)
-
-        })
+    // MARK: Загрузка истории пушей
+    /// Отправляем запрос на сервер, для получения истории пушей
+    func downloadPushArray() {
+        let tempOffset = String(offsetNumber)
+        let body = ["offset": tempOffset,
+                    "limit" : "100",
+                    "notificationType" : "PUSH",
+                    "notificationState" : "SENT"
+        ]
+        GetNotificationsModelSaved.add(body, [:]) {
+            DispatchQueue.main.async {
+            self.tableView.reloadData()
+            }
+        }
     }
     
-    func setupNavBar() {
-        
-        navigationItem.title = "Центр уведомлений"
-        
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "back_button") , style: .plain, target: self, action: #selector(backAction))
-        
-        self.navigationItem.leftBarButtonItem?.setTitleTextAttributes(
-            [.foregroundColor: UIColor.black], for: .normal)
-        self.navigationItem.leftBarButtonItem?.setTitleTextAttributes(
-            [.foregroundColor: UIColor.black], for: .highlighted)
-        
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        clearPushRealmData()
     }
     
-    @objc func backAction() {
-        dismiss(animated: true, completion: nil)
-        navigationController?.dismiss(animated: true, completion: nil)
-    }
-        
 }
 
-struct PushData {
-    var header: String?
-    var cellData: [CellData]?
-    
-    init(_ header: String, data: [CellData]) {
-        self.header = header
-        self.cellData = data
-    }
-}
 
-struct CellData {
-    
-    var title: String?
-    var text: String?
-    var type: String?
-    var state: String?
-    var date: String?
-    
-}
+
+/*
+ Всякий раз, когда размер содержимого превышает высоту прокрутки, он будет прокручиваться в соответствии с правильной позицией.
+ */
+//extension UIScrollView {
+//
+//    func scrollToBottom(animated: Bool) {
+//        var y: CGFloat = 0.0
+//        let HEIGHT = self.frame.size.height
+//        if self.contentSize.height > HEIGHT {
+//            y = self.contentSize.height - HEIGHT
+//        }
+//        self.setContentOffset(CGPointMake(0, y), animated: animated)
+//    }
+//}

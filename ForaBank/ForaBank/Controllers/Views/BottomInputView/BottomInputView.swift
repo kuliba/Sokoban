@@ -21,6 +21,7 @@ class BottomInputView: UIView {
         }
     }
     
+    @IBOutlet weak var currencyButtonWidth: NSLayoutConstraint!
     var currencyCode = "RUB"
     
     // MARK: - Formatters
@@ -28,7 +29,7 @@ class BottomInputView: UIView {
     
     //MARK: - Property
     let kContentXibName = "BottomInputView"
-    var switchIsChanged: ((UISwitch) -> Void)?
+    var buttonIsTapped: (() -> Void)?
     
     @IBOutlet var contentView: UIView!
     @IBOutlet weak var topLabel: UILabel! {
@@ -170,7 +171,7 @@ class BottomInputView: UIView {
     var tempArray = [GetExchangeCurrencyDataClass?]()
     
     @IBAction func currencyButtonTapped(_ sender: UIButton) {
-        
+        buttonIsTapped?()
         guard tempArray.count != 0 else { return }
         
         let (from, to) = (self.currencyFrom?.currencyName, self.currencyTo?.currencyName)

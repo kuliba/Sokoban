@@ -8,9 +8,7 @@
 import Foundation
 
 /// Перечисление, члены которого определяют выбор сервера адреса
-
 class URLHost {
-    
     
     func getHost() -> String {
         var host = "bg.forabank.ru/dbo/api/v4/f437e29a3a094bcfa73cea12366de95b"
@@ -20,22 +18,12 @@ class URLHost {
         return host
     }
     
-    
     enum URLHostType: String  {
         
         /// Для тестовых запросов используется этот хост
-
-        case release  = "git.briginvest.ru/dbo/api/v3" //  "bg.forabank.ru/dbo/api/v4/f437e29a3a094bcfa73cea12366de95b" "git.briginvest.ru/dbo/api/v3"
+        
+        case release  = "bg.forabank.ru/dbo/api/v4/f437e29a3a094bcfa73cea12366de95b" //  "bg.forabank.ru/dbo/api/v4/f437e29a3a094bcfa73cea12366de95b" "git.briginvest.ru/dbo/api/v3"
         /// Для релизных запросов используется этот хост
-        case qa = "bg.forabank.ru/dbo/api/v4/f437e29a3a094bcfa73cea12366de95b"
-
-        
-        
-
-//        case qa = "git.briginvest.ru/dbo/api/v3"//   "bg.forabank.ru/dbo/api/v4/f437e29a3a094bcfa73cea12366de95b"
-//        /// Для релизных запросов используется этот хост
-//        case release = "bg.forabank.ru/dbo/api/v4/f437e29a3a094bcfa73cea12366de95b"
-
-    
-}
+        case qa = "git.briginvest.ru/dbo/api/v3"
+    }
 }

@@ -22,27 +22,31 @@ struct GetNotificationsModelSaved {
                     guard let model = model else { return }
                     guard let m = model.data else { return }
                     
-                    var tempArray = [GetNotificationsModel]()
+                    var tempArray = [GetNotificationsSectionModel]()
                     
                     m.forEach { b in
-                        
-                        let a = GetNotificationsModel()
+                        let c = GetNotificationsSectionModel()
+                        let a = GetNotificationsCellModel()
                         a.date = b.date
                         a.title = b.title
                         a.text = b.text
                         a.type = b.type
                         a.state = b.state
                         
-                        tempArray.append(a)
+                        c.date = b.date
+                        c.getNotificationsCell.append(a)
+                        tempArray.append(c)
                         
                     }
                     
                     /// Сохраняем в REALM
                     let realm = try? Realm()
                     do {
-                        let b = realm?.objects(GetNotificationsModel.self)
+//                        let b = realm?.objects(GetNotificationsSectionModel.self)
+//                        let a = realm?.objects(GetNotificationsCellModel.self)
                         realm?.beginWrite()
-                        realm?.delete(b!)
+//                        realm?.delete(b!)
+//                        realm?.delete(a!)
                         realm?.add(tempArray)
                         try realm?.commitWrite()
                         print("REALM", realm?.configuration.fileURL?.absoluteString ?? "")

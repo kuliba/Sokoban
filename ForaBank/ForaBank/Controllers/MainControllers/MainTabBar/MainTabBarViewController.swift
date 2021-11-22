@@ -18,18 +18,13 @@ class MainTabBarViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Загрузка пушей
-        downloadPushArray()
-        
         tabBar.layer.backgroundColor = UIColor(red: 0.973, green: 0.973, blue: 0.973, alpha: 0.82).cgColor
 //        tabBar.tintColor = #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)
 //        tabBar.tintColor = .clear
         self.tabBar.layer.borderWidth = 0.50
         self.tabBar.layer.borderColor = UIColor.clear.cgColor
         self.tabBar.clipsToBounds = true
-     
-        
-        
+
         viewControllers = [
             generateNavController(rootViewController: mainVC,
                                   title: "Главный",
@@ -56,7 +51,6 @@ class MainTabBarViewController: UITabBarController {
         loadCatalog()
         
     }
-    
     
     override func viewWillAppear(_ animated: Bool) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
@@ -190,20 +184,6 @@ class MainTabBarViewController: UITabBarController {
 //            print("DEBUG: Load card list... Count is: ", cardList.count)
 //        }
       
-    }
-    
-
-    
-// MARK: Загрузка истории пушей
-    
-    /// Отправляем запрос на сервер, для получения истории пушей
-    private func downloadPushArray() {
-        let body = ["offset": "0",
-                            "limit" : "100",
-                            "notificationType" : "PUSH",
-                            "notificationState" : "SENT"
-                           ]
-        GetNotificationsModelSaved.add(body, [:]) {}
     }
 
 

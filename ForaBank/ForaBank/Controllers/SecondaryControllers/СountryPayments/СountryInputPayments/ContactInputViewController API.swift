@@ -54,7 +54,7 @@ extension ContactInputViewController {
                         ],
                         [  "fieldid": 5,
                            "fieldname": "CURR",
-                           "fieldvalue": "RUR"
+                           "fieldvalue": self.currency
                         ]
                     ] ] as [String: AnyObject]
         
@@ -69,11 +69,13 @@ extension ContactInputViewController {
             if respModel.statusCode == 0 {
                 guard let country = self.country else { return }
                 guard let data = respModel.data else { return }
+                print(data)
                 var model = ConfirmViewControllerModel(type: .contact)
                 model.country = country
                 model.cardFrom = self.cardFromField.cardModel
                 model.summTransction = data.debitAmount?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
                 model.taxTransction = data.fee?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
+                model.summInCurrency = data.amount?.currencyFormatter(symbol: data.currencyPayee ?? "RUB") ?? ""
                 model.fullName = data.payeeName ?? "Получатель не оперделен"
                 model.currancyTransction = "Наличные"
                 model.statusIsSuccses = true

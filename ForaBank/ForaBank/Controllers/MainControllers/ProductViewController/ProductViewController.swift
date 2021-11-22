@@ -381,6 +381,13 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
         tableView?.showAnimatedGradientSkeleton()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+//        navigationController?.navigationBar.barTintColor = UIColor(hexString: product?.background[0] ?? "").darker()
+//        navigationController?.view.backgroundColor =   UIColor(hexString: product?.background[0] ?? "").darker()
+//        navigationController?.navigationBar.backgroundColor =  UIColor(hexString: product?.background[0] ?? "").darker()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -681,21 +688,12 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
     }
     
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-//        tableView?.isSkeletonable = true
-//        tableView?.showAnimatedGradientSkeleton()
-        
-        
-    }
-    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.navigationController?.navigationBar.barTintColor = .white
+//        self.navigationController?.navigationBar.barTintColor = .white
 //        self.navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
-        self.navigationController?.navigationBar.shadowImage = nil
-        self.navigationController?.navigationBar.isTranslucent = false
+//        self.navigationController?.navigationBar.shadowImage = nil
+//        self.navigationController?.navigationBar.isTranslucent = false
 
     }
     
@@ -772,6 +770,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
         self.present(alertController, animated: true, completion: nil)
     }
     
+
     
     @objc func presentPaymentVC(){
         let vc = PaymentsViewController()

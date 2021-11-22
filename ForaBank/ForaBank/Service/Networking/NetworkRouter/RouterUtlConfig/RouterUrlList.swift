@@ -90,6 +90,8 @@ enum RouterUrlList: String {
     case getAllLatestPayments
     case getOperationDetail
     case getNotifications
+    case getPrintFormForAccountStatement
+    case isSingleService
     case getDepositInfo
     
     func returnUrl () -> URLValue {
@@ -930,7 +932,26 @@ enum RouterUrlList: String {
             
         case .getNotifications:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getNotifications.rawValue)
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
             
+        case .getPrintFormForAccountStatement:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getPrintFormForAccountStatement.rawValue)
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .isSingleService:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.isSingleService.rawValue)
             switch result {
             case .success(let url):
                 return .success(url.absoluteURL)

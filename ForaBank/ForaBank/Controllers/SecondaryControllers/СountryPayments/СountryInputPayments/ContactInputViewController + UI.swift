@@ -124,10 +124,12 @@ extension ContactInputViewController {
 #endif
     }
     
-    private func setupCurrencyButton(system: PaymentSystemList) {
+    func setupCurrencyButton(system: PaymentSystemList) {
         bottomView.currencySwitchButton.isHidden = system.code == "CONTACT" ? false : true
-        bottomView.currencySwitchButton.setTitle("$ ∨", for: .normal)
-//        bottomView.currencySwitchButton.setTitle((model.cardFrom?.currency?.getSymbol() ?? "") + " ⇆ " + (model.cardTo?.currency?.getSymbol() ?? ""), for: .normal)
+        bottomView.currencySwitchButton.setAttributedTitle(setupButtonTitle(title: currency.getSymbol() ?? "₽"), for: .normal)
+        bottomView.currencyButtonWidth.constant = 40
+        bottomView.currencySymbol = currency.getSymbol() ?? "₽"
+        
     }
     
     func setupConstraint() {
@@ -138,6 +140,21 @@ extension ContactInputViewController {
                          left: view.leftAnchor, right: view.rightAnchor,
                          paddingTop: 20)
         
+    }
+    
+    func setupButtonTitle(title:String) -> NSMutableAttributedString {
+        
+        let imageAttachment = NSTextAttachment()
+        imageAttachment.image = UIImage(systemName: "chevron.down")
+        imageAttachment.bounds = CGRect(x: 0, y: 0, width: 10, height: 10)
+
+        let attachmentString = NSAttributedString(attachment: imageAttachment)
+        let completeText = NSMutableAttributedString(string: "")
+        let text = NSAttributedString(string: title + " ", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14)])
+        completeText.append(text)
+        completeText.append(attachmentString)
+        
+        return completeText
     }
     
     func setTitle(title:String, subtitle:String) -> UIView {
@@ -213,4 +230,17 @@ extension ContactInputViewController {
 
     
     
+}
+
+
+extension ContactInputViewController: UIViewControllerTransitioningDelegate {
+
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        let presenter = PresentationController(presentedViewController: presented, presenting: presenting)
+        var cur = self.country?.sendCurr?.components(separatedBy: ";").compactMap { $0 } ?? []
+        cur.removeLast()
+        
+        presenter.height = (cur.count * 40) + 160
+        return presenter
+    }
 }

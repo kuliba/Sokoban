@@ -17,8 +17,16 @@ import RealmSwift
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var delegate: Encription?
-
-    var isAuth: Bool?
+    let timer = BackgroundTimer()
+    
+    var isAuth: Bool? {
+        didSet {
+            guard isAuth != nil else { return }
+            /// Запуск таймера
+            print("Запуск таймера")
+            timer.repeatTimer()
+        }
+    }
 
     static var shared: AppDelegate { return UIApplication.shared.delegate as! AppDelegate }
 
@@ -27,10 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         RealmConfiguration()
 
-        /// Запуск таймера
-        let timer = BackgroundTimer()
-        timer.repeatTimer()
-
+        
         /// FirebaseApp configure
         var filePath = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist")!
         #if DEBUG
@@ -114,7 +119,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     fileprivate func RealmConfiguration() {
         // Версия БД (изменить на большую если меняем БД)
-        let schemaVersion: UInt64 = 1
+        let schemaVersion: UInt64 = 2
         
         let config = Realm.Configuration(
             // Set the new schema version. This must be greater than the previously used
@@ -156,6 +161,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         NetworkManager<LogoutDecodableModel>.addRequest(.logout, [:], [:]) { _,_  in
             self.isAuth = false
+            
         }
     }
 }
@@ -347,7 +353,6 @@ extension DispatchQueue {
 }
 
 
-
 enum VersionError: Error {
     case invalidBundleInfo, invalidResponse
 }
@@ -379,7 +384,7 @@ class AppUpdater: NSObject {
                 if let appStoreAppVersion = info?.version{
                     if let error = error {
                         print("error getting app store version: ", error)
-                    } else if appStoreAppVersion >= currentVersion {
+                    } else if appStoreAppVersion <= currentVersion{
                         print("Already on the last app version: ",currentVersion)
                     } else {
                         print("Needs update: AppStore Version: \(appStoreAppVersion) > Current version: ",currentVersion)

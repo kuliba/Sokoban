@@ -53,7 +53,6 @@ enum RouterBaseUrlList: String {
     
     case makeCard2Card             = "/rest/makeCard2Card"
     
-    
     case getPrintForm              = "/rest/getPrintForm"
     
     case createTransfer            = "/rest/transfer/createTransfer"
@@ -100,8 +99,6 @@ enum RouterBaseUrlList: String {
     
     case getMe2MeDebitConsent       =  "/rest/getMe2MeDebitConsent"
     
-    
-    
     case getCardStatement           = "/rest/getCardStatement"
     
     case saveCardName               = "/rest/saveCardName"
@@ -136,6 +133,9 @@ enum RouterBaseUrlList: String {
     
     case getOperationDetail        = "/rest/getOperationDetail"
 
+    case getPrintFormForAccountStatement = "/rest/getPrintFormForAccountStatement"
+    
+    case isSingleService = "/rest/transfer/isSingleService"
     
     // MARK: - В не авторизованную зону.
     ///Обновление по serial
