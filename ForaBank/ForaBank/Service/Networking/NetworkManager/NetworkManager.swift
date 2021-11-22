@@ -53,7 +53,7 @@ final class NetworkManager<T: NetworkModelProtocol> {
             do {
                 let jsonAsData = try JSONSerialization.data(withJSONObject: requestBody, options: [])
                 request.httpBody = jsonAsData
-                print("DEBUG: URLrequest:", jsonAsData)
+                print("DEBUG: URLrequest: \(request.httpBody)")
                 if request.value(forHTTPHeaderField: "Content-Type") == nil {
                     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
                 }
@@ -85,6 +85,7 @@ final class NetworkManager<T: NetworkModelProtocol> {
             if error != nil {
                 completion(nil, "Пожалуйста, проверьте ваше сетевое соединение.")
             }
+            //print("test5555 \(response.request.content.body)")
             
             if let response = response as? HTTPURLResponse {
                 let result = handleNetworkResponse(response)
