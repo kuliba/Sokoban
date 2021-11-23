@@ -7,9 +7,9 @@ import Foundation
 
 // MARK: - GetAnywayOperatorsListDecodableModel
 struct GetAnywayOperatorsListDecodableModel: Codable, NetworkModelProtocol {
-    let statusCode: Int?
+    let data: GetAnywayOperatorsListDatum?
     let errorMessage: String?
-    let data: GetAnywayOperatorsDataClass?
+    let statusCode: Int?
 }
 
 // MARK: GetAnywayOperatorsListDecodableModel convenience initializers and mutators
@@ -31,14 +31,14 @@ extension GetAnywayOperatorsListDecodableModel {
     }
 
     func with(
-        statusCode: Int?? = nil,
+        data: GetAnywayOperatorsListDatum?? = nil,
         errorMessage: String?? = nil,
-        data: GetAnywayOperatorsDataClass?? = nil
+        statusCode: Int?? = nil
     ) -> GetAnywayOperatorsListDecodableModel {
         return GetAnywayOperatorsListDecodableModel(
-            statusCode: statusCode ?? self.statusCode,
+            data: data ?? self.data,
             errorMessage: errorMessage ?? self.errorMessage,
-            data: data ?? self.data
+            statusCode: statusCode ?? self.statusCode
         )
     }
 
@@ -51,64 +51,13 @@ extension GetAnywayOperatorsListDecodableModel {
     }
 }
 
-// MARK: - GetAnywayOperatorsDataClass
-struct GetAnywayOperatorsDataClass: Codable {
-    let operatorGroupList: [GetAnywayOperatorsListDatum]?
+// MARK: - DataClass
+struct GetAnywayOperatorsListDatum: Codable {
+    let operatorGroupList: [Operator]?
     let serial: String?
 }
 
-// MARK: GetAnywayOperatorsDataClass convenience initializers and mutators
-
-extension GetAnywayOperatorsDataClass {
-    init(data: Data) throws {
-        self = try newJSONDecoder().decode(GetAnywayOperatorsDataClass.self, from: data)
-    }
-
-    init(_ json: String, using encoding: String.Encoding = .utf8) throws {
-        guard let data = json.data(using: encoding) else {
-            throw NSError(domain: "JSONDecoding", code: 0, userInfo: nil)
-        }
-        try self.init(data: data)
-    }
-
-    init(fromURL url: URL) throws {
-        try self.init(data: try Data(contentsOf: url))
-    }
-
-    func with(
-        operatorGroupList: [GetAnywayOperatorsListDatum]?? = nil,
-        serial: String?? = nil
-    ) -> GetAnywayOperatorsDataClass {
-        return GetAnywayOperatorsDataClass(
-            operatorGroupList: operatorGroupList ?? self.operatorGroupList,
-            serial: serial ?? self.serial
-        )
-    }
-
-    func jsonData() throws -> Data {
-        return try newJSONEncoder().encode(self)
-    }
-
-    func jsonString(encoding: String.Encoding = .utf8) throws -> String? {
-        return String(data: try self.jsonData(), encoding: encoding)
-    }
-}
-
-
-// MARK: - GetAnywayOperatorsListDatum
-struct GetAnywayOperatorsListDatum: Codable {
-    let code, name: String?
-    let region: String?
-    let city: JSONNull?
-    let isGroup: Bool?
-    let synonymList: [String]?
-    let logotypeList: [LogotypeList]?
-    let operators: [GetAnywayOperatorsListDatum]?
-    let parentCode: String?
-    let parameterList: [ParameterList]?
-}
-
-// MARK: Datum convenience initializers and mutators
+// MARK: DataClass convenience initializers and mutators
 
 extension GetAnywayOperatorsListDatum {
     init(data: Data) throws {
@@ -127,28 +76,78 @@ extension GetAnywayOperatorsListDatum {
     }
 
     func with(
-        code: String?? = nil,
-        name: String?? = nil,
-        region: String?? = nil,
-        city: JSONNull?? = nil,
-        isGroup: Bool?? = nil,
-        synonymList: [String]?? = nil,
-        logotypeList: [LogotypeList]?? = nil,
-        operators: [GetAnywayOperatorsListDatum]?? = nil,
-        parentCode: String?? = nil,
-        parameterList: [ParameterList]?? = nil
+        operatorGroupList: [Operator]?? = nil,
+        serial: String?? = nil
     ) -> GetAnywayOperatorsListDatum {
-        return GetAnywayOperatorsListDatum (
-            code: code ?? self.code,
-            name: name ?? self.name,
-            region: region ?? self.region,
+        return GetAnywayOperatorsListDatum(
+            operatorGroupList: operatorGroupList ?? self.operatorGroupList,
+            serial: serial ?? self.serial
+        )
+    }
+
+    func jsonData() throws -> Data {
+        return try newJSONEncoder().encode(self)
+    }
+
+    func jsonString(encoding: String.Encoding = .utf8) throws -> String? {
+        return String(data: try self.jsonData(), encoding: encoding)
+    }
+}
+
+// MARK: - Operator
+struct Operator: Codable {
+    let city, code: String?
+    let isGroup: Bool?
+    let logotypeList: [LogotypeList]?
+    let name: String?
+    let operators: [Operator]?
+    let region: String?
+    let synonymList: [String]?
+    let parameterList: [ParameterList]?
+    let parentCode: String?
+}
+
+// MARK: Operator convenience initializers and mutators
+
+extension Operator {
+    init(data: Data) throws {
+        self = try newJSONDecoder().decode(Operator.self, from: data)
+    }
+
+    init(_ json: String, using encoding: String.Encoding = .utf8) throws {
+        guard let data = json.data(using: encoding) else {
+            throw NSError(domain: "JSONDecoding", code: 0, userInfo: nil)
+        }
+        try self.init(data: data)
+    }
+
+    init(fromURL url: URL) throws {
+        try self.init(data: try Data(contentsOf: url))
+    }
+
+    func with(
+        city: String?? = nil,
+        code: String?? = nil,
+        isGroup: Bool?? = nil,
+        logotypeList: [LogotypeList]?? = nil,
+        name: String?? = nil,
+        operators: [Operator]?? = nil,
+        region: String?? = nil,
+        synonymList: [String]?? = nil,
+        parameterList: [ParameterList]?? = nil,
+        parentCode: String?? = nil
+    ) -> Operator {
+        return Operator(
             city: city ?? self.city,
+            code: code ?? self.code,
             isGroup: isGroup ?? self.isGroup,
-            synonymList: synonymList ?? self.synonymList,
             logotypeList: logotypeList ?? self.logotypeList,
+            name: name ?? self.name,
             operators: operators ?? self.operators,
-            parentCode: parentCode ?? self.parentCode,
-            parameterList: parameterList ?? self.parameterList
+            region: region ?? self.region,
+            synonymList: synonymList ?? self.synonymList,
+            parameterList: parameterList ?? self.parameterList,
+            parentCode: parentCode ?? self.parentCode
         )
     }
 
@@ -163,9 +162,7 @@ extension GetAnywayOperatorsListDatum {
 
 // MARK: - LogotypeList
 struct LogotypeList: Codable {
-    let name: String?
-    let contentType: JSONNull?
-    let content: String?
+    let content, contentType, name, svgImage: String?
 }
 
 // MARK: LogotypeList convenience initializers and mutators
@@ -187,14 +184,16 @@ extension LogotypeList {
     }
 
     func with(
+        content: String?? = nil,
+        contentType: String?? = nil,
         name: String?? = nil,
-        contentType: JSONNull?? = nil,
-        content: String?? = nil
+        svgImage: String?? = nil
     ) -> LogotypeList {
         return LogotypeList(
-            name: name ?? self.name,
+            content: content ?? self.content,
             contentType: contentType ?? self.contentType,
-            content: content ?? self.content
+            name: name ?? self.name,
+            svgImage: svgImage ?? self.svgImage
         )
     }
 
@@ -209,17 +208,13 @@ extension LogotypeList {
 
 // MARK: - ParameterList
 struct ParameterList: Codable {
-    let id: String?
-    let order: Int?
-    let title: String?
-    let subTitle: String?
-    let viewType: String?
-    let dataType: String?
-    let type: String?
-    let mask, regExp: String?
-    let maxLength, minLength: Int?
-    let rawLength: Int?
+    let content, dataType, id: String?
     let isRequired: Bool?
+    let mask: String?
+    let maxLength, minLength, order, rawLength: Int?
+    let readOnly: Bool?
+    let regExp, subTitle, title, type: String?
+    let viewType: String?
 }
 
 // MARK: ParameterList convenience initializers and mutators
@@ -241,34 +236,38 @@ extension ParameterList {
     }
 
     func with(
-        id: String?? = nil,
-        order: Int?? = nil,
-        title: String?? = nil,
-        subTitle: String?? = nil,
-        viewType: String?? = nil,
+        content: String?? = nil,
         dataType: String?? = nil,
-        type: String?? = nil,
+        id: String?? = nil,
+        isRequired: Bool?? = nil,
         mask: String?? = nil,
-        regExp: String?? = nil,
         maxLength: Int?? = nil,
         minLength: Int?? = nil,
+        order: Int?? = nil,
         rawLength: Int?? = nil,
-        isRequired: Bool?? = nil
+        readOnly: Bool?? = nil,
+        regExp: String?? = nil,
+        subTitle: String?? = nil,
+        title: String?? = nil,
+        type: String?? = nil,
+        viewType: String?? = nil
     ) -> ParameterList {
         return ParameterList(
-            id: id ?? self.id,
-            order: order ?? self.order,
-            title: title ?? self.title,
-            subTitle: subTitle ?? self.subTitle,
-            viewType: viewType ?? self.viewType,
+            content: content ?? self.content,
             dataType: dataType ?? self.dataType,
-            type: type ?? self.type,
+            id: id ?? self.id,
+            isRequired: isRequired ?? self.isRequired,
             mask: mask ?? self.mask,
-            regExp: regExp ?? self.regExp,
             maxLength: maxLength ?? self.maxLength,
             minLength: minLength ?? self.minLength,
+            order: order ?? self.order,
             rawLength: rawLength ?? self.rawLength,
-            isRequired: isRequired ?? self.isRequired
+            readOnly: readOnly ?? self.readOnly,
+            regExp: regExp ?? self.regExp,
+            subTitle: subTitle ?? self.subTitle,
+            title: title ?? self.title,
+            type: type ?? self.type,
+            viewType: viewType ?? self.viewType
         )
     }
 
@@ -280,25 +279,3 @@ extension ParameterList {
         return String(data: try self.jsonData(), encoding: encoding)
     }
 }
-
-//enum DataType: String, Codable {
-//    case number      = "%Number"
-//    case numeric     = "%Numeric"
-//    case string      = "%String"
-//    case phoneNumber = "%Number_Phone"
-//    case integer     = "%Integer"
-//}
-
-//enum TypeEnums: String, Codable {
-//    case int      = "Int"
-//    case maskList = "MaskList"
-//    case string   = "String"
-//}
-
-
-//enum ViewType: String, Codable {
-//    case input    = "INPUT"
-//    case output   = "OUTPUT"
-//    case constant = "CONSTANT"
-//}
-

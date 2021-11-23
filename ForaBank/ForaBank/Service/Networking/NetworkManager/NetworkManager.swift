@@ -79,7 +79,9 @@ final class NetworkManager<T: NetworkModelProtocol> {
                 request.url = urlComponents.url
             }
         }
-        print("DEBUG: URLrequest:", requestBody)
+        
+        let a = String(data: request.httpBody ?? Data(), encoding: .utf8)
+        
         let task = session.dataTask(with: request) { data, response, error in
             if error != nil {
                 completion(nil, "Пожалуйста, проверьте ваше сетевое соединение.")
@@ -109,6 +111,7 @@ final class NetworkManager<T: NetworkModelProtocol> {
                     }
                     do {
                         let returnValue = try T (data: data!)
+                        
                         completion(returnValue, nil)
                     } catch {
                         print(error)

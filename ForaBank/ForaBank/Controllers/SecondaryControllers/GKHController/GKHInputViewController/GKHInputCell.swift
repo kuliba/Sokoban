@@ -58,7 +58,7 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
     // DataSetup
     func setupUI (_ index: Int, _ dataModel: [String: String]) {
         
-        if emptyCell() == false {
+ //       if emptyCell() == false {
             infoButon.isHidden = true
             self.fieldid = String(index + 1)
             fieldname = dataModel["id"] ?? ""
@@ -96,7 +96,7 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
                 isSelect = false
             }
         }
-    }
+//    }
     
     @IBAction func textField(_ sender: UITextField) {
         fieldvalue = textField.text ?? ""

@@ -69,6 +69,8 @@ struct AddOperatorsList: DownloadQueueProtocol {
                                 param.maxLength = parameterList.maxLength ?? 0
                                 param.minLength = parameterList.minLength ?? 0
                                 param.rawLength = parameterList.rawLength ?? 0
+                                param.readOnly  = parameterList.readOnly ?? true
+                                param.content    = parameterList.content
 
                                 parametersArray.append(param)
                                 }

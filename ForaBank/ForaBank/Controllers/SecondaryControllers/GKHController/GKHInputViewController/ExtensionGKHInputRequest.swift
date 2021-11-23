@@ -135,8 +135,11 @@ extension GKHInputViewController {
                 guard let data = respModel.data else { return }
                 var additionalListDic = [String: String]()
                 var parameterListForNextStepDic = [String: String]()
+                self.dataArray.removeAll()
+                
                 data.additionalList?.forEach{ additionalList in
                     additionalListDic.updateValue(additionalList.fieldValue ?? "", forKey: additionalList.fieldTitle ?? "")
+                    self.dataArray.append(additionalListDic)
                 }
                 data.parameterListForNextStep?.forEach{ parameterListForNextStep in
                     parameterListForNextStepDic.updateValue(parameterListForNextStep.title ?? "", forKey: "title")
@@ -152,15 +155,14 @@ extension GKHInputViewController {
                     parameterListForNextStepDic.updateValue(parameterListForNextStep.minLength ?? "", forKey: "minLength")
                     parameterListForNextStepDic.updateValue(String(parameterListForNextStep.rawLength ?? 0), forKey: "rawLength")
                     parameterListForNextStepDic.updateValue(String(parameterListForNextStep.isRequired ?? false), forKey: "isRequired")
+                    self.dataArray.append(parameterListForNextStepDic)
                 }
-                
-                self.dataArray.removeAll()
-                self.dataArray.append(additionalListDic)
-                self.dataArray.append(parameterListForNextStepDic)
                 
                 self.finalStep = data.finalStep ?? true
                 self.needSum = data.needSum ?? true
+                DispatchQueue.main.async {
                 self.tableView.reloadData()
+                }
             } else {
                 print(#function, respModel.errorMessage ?? "")
             }
