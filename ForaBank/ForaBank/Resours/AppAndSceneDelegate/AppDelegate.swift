@@ -124,7 +124,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             migrationBlock: { migration, oldSchemaVersion in
                 // We haven’t migrated anything yet, so oldSchemaVersion == 0
                 if (oldSchemaVersion < schemaVersion) {
-                    if schemaVersion == 3 {
+                    if oldSchemaVersion < 3 {
                         migration.deleteData(forType: "GKHOperatorsModel")
                     }
 
