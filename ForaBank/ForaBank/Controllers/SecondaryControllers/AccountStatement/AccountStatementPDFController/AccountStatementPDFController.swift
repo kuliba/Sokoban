@@ -44,8 +44,9 @@ class AccountStatementPDFController: UIViewController, URLSessionDownloadDelegat
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        let id = model.product.productType == "ACCOUNT" ? model.product.id : model.product.accountID
         let body = [
-            "id" : model.product.accountID,
+            "id" : id,
             "accountNumber" : nil,
             "startDate": "\(model.startDate)",
             "endDate": "\(model.endDate)"
