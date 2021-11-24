@@ -15,6 +15,7 @@ class GKHOperatorsModel: Object {
     @objc dynamic var isGroup = false
     @objc dynamic var name: String?
     @objc dynamic var region: String?
+    @objc dynamic var parentCode: String?
     
     var logotypeList  = List<LogotypeData>()
     let synonymList   = List<String>()

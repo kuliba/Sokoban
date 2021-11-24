@@ -23,5 +23,7 @@ class Parameters: Object {
     @objc dynamic var maxLength = 0
     @objc dynamic var minLength = 0
     @objc dynamic var rawLength = 0
+    @objc dynamic var readOnly = true
+    @objc dynamic var content: String?
     
 }

@@ -10,6 +10,7 @@ import UIKit
 class GKHHistoryHeaderView: UIView {
     
     private var caruselCollectionView = GKHCaruselCollectionView()
+    var cellData: (([String:String], GKHOperatorsModel) -> ())? = nil
     
     private var lineView: UIView = {
         let view = UIView()
@@ -23,6 +24,10 @@ class GKHHistoryHeaderView: UIView {
         configureContents()
         if caruselCollectionView.cells.isEmpty {
             self.isHidden = true
+        }
+        
+        caruselCollectionView.cellData = { value, model in
+            self.cellData?(value, model)
         }
     }
     

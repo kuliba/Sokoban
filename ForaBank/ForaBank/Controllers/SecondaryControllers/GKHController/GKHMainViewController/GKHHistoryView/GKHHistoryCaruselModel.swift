@@ -14,6 +14,7 @@ struct GKHHistoryCaruselModel {
     var mainImage: UIImage
     var banksName: String
     var inn: String
+    var operatorsModel: GKHOperatorsModel
     
     static func fetchModel() -> [GKHHistoryCaruselModel] {
         
@@ -22,17 +23,19 @@ struct GKHHistoryCaruselModel {
         var inn = ""
         var name = ""
         var image: UIImage!
+        var opModel: GKHOperatorsModel?
         
         let realm = try? Realm()
         var payModelArray: Results<GKHHistoryModel>?
         var operatorsArray: Results<GKHOperatorsModel>?
         payModelArray = realm?.objects(GKHHistoryModel.self)
         operatorsArray = realm?.objects(GKHOperatorsModel.self)
-        payModelArray?.forEach({ operation in
+        payModelArray?.forEach { operation in
             
             let puref = operation.puref
             operatorsArray?.forEach({ op in
                 if puref == op.puref {
+                    opModel = op
                     name = op.name?.capitalizingFirstLetter() ?? ""
                     let tempImage = op.logotypeList.first?.content ?? ""
                     inn = String(operation.amount) + " ₽"
@@ -40,17 +43,15 @@ struct GKHHistoryCaruselModel {
                         let dataDecoded : Data = Data(base64Encoded: tempImage, options: .ignoreUnknownCharacters)!
                         let decodedimage = UIImage(data: dataDecoded)
                         image = decodedimage
-                    } else {
-//                        image = UIImage(named: "GKH")
                     }
                     
                 }
             })
             if image != nil {
-            let temp = GKHHistoryCaruselModel(mainImage: image, banksName: name, inn: inn)
+                let temp = GKHHistoryCaruselModel(mainImage: image, banksName: name, inn: inn, operatorsModel: opModel!)
             tempArray.append(temp)
             }
-        })
+        }
         
         return tempArray
     }
