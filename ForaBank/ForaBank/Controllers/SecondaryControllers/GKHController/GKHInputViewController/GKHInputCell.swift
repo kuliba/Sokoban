@@ -17,7 +17,7 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
     
     var showInfoView: ((String) -> ())? = nil
     var showGoButton: ((Bool) -> ())? = nil
-    
+    var pesrAccaunt: ((String) -> ())? = nil
     weak var tableViewDelegate: TableViewDelegate?
     
     static let reuseId = "GKHInputCell"
@@ -26,7 +26,6 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
     var fieldname = ""
     var fieldvalue = ""
     var body = [String: String]()
-    var perAcc = ""
     var isSelect = true
     @IBOutlet weak var infoButon: UIButton!
     @IBOutlet weak var operatorsIcon: UIImageView!
@@ -57,12 +56,16 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
         fieldvalue = textField.text ?? ""
     }
     // DataSetup
-    func setupUI (_ index: Int, _ dataModel: [String: String]) {
-        if emptyCell() == false {
+    func setupUI (_ index: Int, _ dataModel: [[String: String]]) {
+        // Разблокировка ячеек
+        self.textField.isEnabled = true
+        isSelect = true
+        
+        //       if emptyCell() == false {
         infoButon.isHidden = true
         self.fieldid = String(index + 1)
-        fieldname = dataModel["id"] ?? ""
-        let q = GKHDataSorted.a(dataModel["title"] ?? "")
+        fieldname = dataModel[index]["id"] ?? ""
+        let q = GKHDataSorted.a(dataModel[index]["title"] ?? "")
         
         DispatchQueue.main.async {
             self.operatorsIcon.image = UIImage(named: q.1)
@@ -72,15 +75,14 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
         placeholder = q.0
         
         if q.0 == "Лицевой счет" {
-            let h = dataModel["Лицевой счет"]
-            perAcc = h ?? ""
+            let h = dataModel[index]["Лицевой счет"]
             if h != "" {
                 textField.text = h
             }
         }
         
         if q.0 == "" {
-            textField.placeholder = dataModel["title"] ?? ""
+            textField.placeholder = dataModel[index]["title"] ?? ""
         }
         if q.0 == "ФИО" {
             showFioButton.isHidden = false
@@ -88,24 +90,35 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
             showFioButton.isHidden = true
         }
         
-        if dataModel["subTitle"] != nil {
-            info = dataModel["subTitle"] ?? ""
+        if dataModel[index]["subTitle"] != nil {
+            info = dataModel[index]["subTitle"] ?? ""
             infoButon.isHidden = false
         }
-            if dataModel["viewType"] != "INPUT" {
-                self.textField.isEnabled = false
-                isSelect = false
-            }
+        if dataModel[index]["value"] != nil {
+            textField.text = dataModel[index]["value"] ?? ""
+            fieldvalue = textField.text ?? ""
+            body.updateValue(fieldid, forKey: "fieldid")
+            body.updateValue(fieldname, forKey: "fieldname")
+            body.updateValue(textField.text ?? "" , forKey: "fieldvalue")
+            var a = UserDefaults.standard.array(forKey: "body") as? [[String: String]] ?? [[:]]
+            a.append(body)
+            UserDefaults.standard.set(a, forKey: "body")
+        }
+        // Блокировка ячеек
+        if dataModel[index]["readOnly"] == "false" {
+            self.textField.isEnabled = true
+            isSelect = true
         }
     }
+    //    }
     
     @IBAction func textField(_ sender: UITextField) {
         fieldvalue = textField.text ?? ""
         body.updateValue(fieldid, forKey: "fieldid")
         body.updateValue(fieldname, forKey: "fieldname")
         body.updateValue(textField.text ?? "" , forKey: "fieldvalue")
-        self.perAcc = body["Лицевой счет"] ?? ""
         haveEmptyCell()
+        personalAccaunt()
         tableViewDelegate?.responds(to: #selector(TableViewDelegate.afterClickingReturnInTextField(cell:)))
         tableViewDelegate?.afterClickingReturnInTextField(cell: self)
     }
@@ -128,18 +141,20 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
         showInfoView?(info)
     }
     
+    /// Проверяем, если поле заполнено, то отправляем в замыкании  true, для отображения кнопки "Продолжить"
     final func haveEmptyCell() {
-        
-        if ( fieldvalue != "" && isSelect == true) {
-            showGoButton?(true)
-        } else if ( fieldvalue == "" && isSelect == false) {
-            showGoButton?(true)
-        }
-        if ( fieldvalue == "" && isSelect == true) {
-            showGoButton?(false)
+        if fieldvalue != "" {
+            if ( fieldvalue != "" && isSelect == true) {
+                showGoButton?(true)
+            } else if ( fieldvalue == "" && isSelect == false) {
+                showGoButton?(true)
+            }
+            if ( fieldvalue == "" && isSelect == true) {
+                showGoButton?(false)
+            }
         }
     }
-    
+    /// Проверяем, есть ли заполненные поля. Если да, то не обновляем ячейки
     final func emptyCell() -> Bool {
         
         var result = false
@@ -147,6 +162,12 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
             result = true
         }
         return result
+    }
+    /// Получаем значение Лицевого счета и отправляем в замыкании
+    final func personalAccaunt() {
+        if fieldname == "P1" {
+            pesrAccaunt?(fieldvalue)
+        }
     }
     
 }

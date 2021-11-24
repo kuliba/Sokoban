@@ -17,10 +17,8 @@ extension GKHInputViewController: UITableViewDataSource, TableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: GKHInputCell.reuseId, for: indexPath) as! GKHInputCell
         
         guard dataArray.count != 0 else { return cell }
-        
-        cell.setupUI(indexPath.row, dataArray[indexPath.row])
+        cell.setupUI(indexPath.row, dataArray)
         cell.tableViewDelegate = (self as TableViewDelegate)
-        
         cell.showInfoView = {[weak self] value in
             let infoView = GKHInfoView()
             infoView.lable.text = value
@@ -31,9 +29,13 @@ extension GKHInputViewController: UITableViewDataSource, TableViewDelegate {
             self?.emptyArray.append(value)
             self?.empty()
             } else {
+                guard self?.emptyArray.count ?? 0 > 0 else {return}
                 self?.emptyArray.removeLast()
                 self?.empty()
             }
+        }
+        cell.pesrAccaunt = { [weak self] value in
+            self?.personalAccount = value
         }
         return cell
         
@@ -43,15 +45,12 @@ extension GKHInputViewController: UITableViewDataSource, TableViewDelegate {
         let hight: CGFloat = 80.0
         return hight
     }
-    
 }
 
 extension GKHInputViewController {
-    
     func afterClickingReturnInTextField(cell: GKHInputCell) {
         bodyValue.removeAll()
         bodyValue = cell.body
         bodyArray.append(bodyValue)
-
     }
 }

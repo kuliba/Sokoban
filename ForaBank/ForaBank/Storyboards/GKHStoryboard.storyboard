@@ -312,6 +312,7 @@
                                 </connections>
                             </button>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="2bX-dH-Xft"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="9GB-Uu-AZ1" firstAttribute="trailing" secondItem="PsL-H1-E18" secondAttribute="trailing" id="1LU-dH-CnO"/>

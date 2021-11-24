@@ -1,24 +1,24 @@
 //
-//  CreateServiceTransferDecodableModel.swift
+//  NextStepServiceTransferDecodableModel.swift
 //  ForaBank
 //
-//  Created by Константин Савялов on 10.08.2021.
+//  Created by Константин Савялов on 23.11.2021.
 //
 
 import Foundation
 
-// MARK: - CreateServiceTransferDecodableModel
-struct CreateServiceTransferDecodableModel: Codable, NetworkModelProtocol {
+// MARK: - NextStepServiceTransferDecodableModel
+struct NextStepServiceTransferDecodableModel: Codable, NetworkModelProtocol {
     let statusCode: Int?
     let errorMessage: String?
-    let data: CreateServiceTransferDataClass?
+    let data: NextStepServiceTransferDataClass?
 }
 
-// MARK: CreateServiceTransferDecodableModel convenience initializers and mutators
+// MARK: NextStepServiceTransferDecodableModel convenience initializers and mutators
 
-extension CreateServiceTransferDecodableModel {
+extension NextStepServiceTransferDecodableModel {
     init(data: Data) throws {
-        self = try newJSONDecoder().decode(CreateServiceTransferDecodableModel.self, from: data)
+        self = try newJSONDecoder().decode(NextStepServiceTransferDecodableModel.self, from: data)
     }
 
     init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -35,9 +35,9 @@ extension CreateServiceTransferDecodableModel {
     func with(
         statusCode: Int?? = nil,
         errorMessage: String?? = nil,
-        data: CreateServiceTransferDataClass?? = nil
-    ) -> CreateServiceTransferDecodableModel {
-        return CreateServiceTransferDecodableModel(
+        data: NextStepServiceTransferDataClass?? = nil
+    ) -> NextStepServiceTransferDecodableModel {
+        return NextStepServiceTransferDecodableModel(
             statusCode: statusCode ?? self.statusCode,
             errorMessage: errorMessage ?? self.errorMessage,
             data: data ?? self.data
@@ -53,16 +53,17 @@ extension CreateServiceTransferDecodableModel {
     }
 }
 
-// MARK: - CreateServiceTransferDataClass
-struct CreateServiceTransferDataClass: Codable {
-    let needMake, needOTP: JSONNull?
-    let needSum: Bool?
-    let amount, creditAmount, fee, currencyAmount: JSONNull?
-    let currencyPayer, currencyPayee, currencyRate, debitAmount: JSONNull?
+// MARK: - NextStepServiceTransferDataClass
+struct NextStepServiceTransferDataClass: Codable {
+    let needMake, needOTP, needSum: Bool?
+    let amount: Double?
+    let creditAmount: JSONNull?
+    let fee: Int?
+    let currencyAmount, currencyPayer, currencyPayee, currencyRate: JSONNull?
+    let debitAmount: Double?
     let payeeName, paymentOperationDetailID, documentStatus: JSONNull?
-    let additionalList: [CreateServiceTransferAdditionalList]?
-    let parameterListForNextStep: [ParameterListForNextStep]?
-    /// Параметр, который указывает на то, есть ли еще запросы по оператору
+    let additionalList: [NextStepServiceTransferAdditionalList]?
+    let parameterListForNextStep: [JSONAny]?
     let finalStep: Bool?
 
     enum CodingKeys: String, CodingKey {
@@ -74,9 +75,9 @@ struct CreateServiceTransferDataClass: Codable {
 
 // MARK: DataClass convenience initializers and mutators
 
-extension CreateServiceTransferDataClass {
+extension NextStepServiceTransferDataClass {
     init(data: Data) throws {
-        self = try newJSONDecoder().decode(CreateServiceTransferDataClass.self, from: data)
+        self = try newJSONDecoder().decode(NextStepServiceTransferDataClass.self, from: data)
     }
 
     init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -91,25 +92,25 @@ extension CreateServiceTransferDataClass {
     }
 
     func with(
-        needMake: JSONNull?? = nil,
-        needOTP: JSONNull?? = nil,
+        needMake: Bool?? = nil,
+        needOTP: Bool?? = nil,
         needSum: Bool?? = nil,
-        amount: JSONNull?? = nil,
+        amount: Double?? = nil,
         creditAmount: JSONNull?? = nil,
-        fee: JSONNull?? = nil,
+        fee: Int?? = nil,
         currencyAmount: JSONNull?? = nil,
         currencyPayer: JSONNull?? = nil,
         currencyPayee: JSONNull?? = nil,
         currencyRate: JSONNull?? = nil,
-        debitAmount: JSONNull?? = nil,
+        debitAmount: Double?? = nil,
         payeeName: JSONNull?? = nil,
         paymentOperationDetailID: JSONNull?? = nil,
         documentStatus: JSONNull?? = nil,
-        additionalList: [CreateServiceTransferAdditionalList]?? = nil,
-        parameterListForNextStep: [ParameterListForNextStep]?? = nil,
+        additionalList: [NextStepServiceTransferAdditionalList]?? = nil,
+        parameterListForNextStep: [JSONAny]?? = nil,
         finalStep: Bool?? = nil
-    ) -> CreateServiceTransferDataClass {
-        return CreateServiceTransferDataClass(
+    ) -> NextStepServiceTransferDataClass {
+        return NextStepServiceTransferDataClass (
             needMake: needMake ?? self.needMake,
             needOTP: needOTP ?? self.needOTP,
             needSum: needSum ?? self.needSum,
@@ -139,16 +140,16 @@ extension CreateServiceTransferDataClass {
     }
 }
 
-// MARK: - CreateServiceTransferAdditionalList
-struct CreateServiceTransferAdditionalList: Codable {
+// MARK: - NextStepServiceTransferAdditionalList
+struct NextStepServiceTransferAdditionalList: Codable {
     let fieldName, fieldValue, fieldTitle: String?
 }
 
-// MARK: CreateServiceTransferAdditionalList convenience initializers and mutators
+// MARK: NextStepServiceTransferAdditionalList convenience initializers and mutators
 
-extension CreateServiceTransferAdditionalList {
+extension NextStepServiceTransferAdditionalList {
     init(data: Data) throws {
-        self = try newJSONDecoder().decode(CreateServiceTransferAdditionalList.self, from: data)
+        self = try newJSONDecoder().decode(NextStepServiceTransferAdditionalList.self, from: data)
     }
 
     init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -166,8 +167,8 @@ extension CreateServiceTransferAdditionalList {
         fieldName: String?? = nil,
         fieldValue: String?? = nil,
         fieldTitle: String?? = nil
-    ) -> CreateServiceTransferAdditionalList {
-        return CreateServiceTransferAdditionalList(
+    ) -> NextStepServiceTransferAdditionalList {
+        return NextStepServiceTransferAdditionalList (
             fieldName: fieldName ?? self.fieldName,
             fieldValue: fieldValue ?? self.fieldValue,
             fieldTitle: fieldTitle ?? self.fieldTitle
@@ -183,75 +184,3 @@ extension CreateServiceTransferAdditionalList {
     }
 }
 
-// MARK: - ParameterListForNextStep
-struct ParameterListForNextStep: Codable {
-    let id: String?
-    let order: Int?
-    let title: String?
-    let subTitle: String?
-    let viewType, dataType, type: String?
-    let mask: String?
-    let regExp: String?
-    let maxLength, minLength: String?
-    let rawLength: Int?
-    let isRequired: Bool?
-}
-
-// MARK: ParameterListForNextStep convenience initializers and mutators
-
-extension ParameterListForNextStep {
-    init(data: Data) throws {
-        self = try newJSONDecoder().decode(ParameterListForNextStep.self, from: data)
-    }
-
-    init(_ json: String, using encoding: String.Encoding = .utf8) throws {
-        guard let data = json.data(using: encoding) else {
-            throw NSError(domain: "JSONDecoding", code: 0, userInfo: nil)
-        }
-        try self.init(data: data)
-    }
-
-    init(fromURL url: URL) throws {
-        try self.init(data: try Data(contentsOf: url))
-    }
-
-    func with(
-        id: String?? = nil,
-        order: Int?? = nil,
-        title: String?? = nil,
-        subTitle: String?? = nil,
-        viewType: String?? = nil,
-        dataType: String?? = nil,
-        type: String?? = nil,
-        mask: String?? = nil,
-        regExp: String?? = nil,
-        maxLength: String?? = nil,
-        minLength: String?? = nil,
-        rawLength: Int?? = nil,
-        isRequired: Bool?? = nil
-    ) -> ParameterListForNextStep {
-        return ParameterListForNextStep(
-            id: id ?? self.id,
-            order: order ?? self.order,
-            title: title ?? self.title,
-            subTitle: subTitle ?? self.subTitle,
-            viewType: viewType ?? self.viewType,
-            dataType: dataType ?? self.dataType,
-            type: type ?? self.type,
-            mask: mask ?? self.mask,
-            regExp: regExp ?? self.regExp,
-            maxLength: maxLength ?? self.maxLength,
-            minLength: minLength ?? self.minLength,
-            rawLength: rawLength ?? self.rawLength,
-            isRequired: isRequired ?? self.isRequired
-        )
-    }
-
-    func jsonData() throws -> Data {
-        return try newJSONEncoder().encode(self)
-    }
-
-    func jsonString(encoding: String.Encoding = .utf8) throws -> String? {
-        return String(data: try self.jsonData(), encoding: encoding)
-    }
-}

@@ -11,7 +11,7 @@ import RealmSwift
 import PDFKit
 
 
-protocol QRProtocol: NSObject {
+protocol QRProtocol: AnyObject {
     func setResultOfBusinessLogic (_ qr: [String: String], _ model: GKHOperatorsModel )
 }
 

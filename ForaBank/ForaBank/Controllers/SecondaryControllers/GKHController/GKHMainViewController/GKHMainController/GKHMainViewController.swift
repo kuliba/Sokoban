@@ -70,10 +70,6 @@ class GKHMainViewController: UIViewController, UITableViewDelegate {
         tableView.delegate = self
         tableView.dataSource = self
         
-        AddAllUserCardtList.add {
-            print("Rasd 1")
-        }
-        
         self.navigationController?.isNavigationBarHidden = false
         
         /// Загрузка истории операций
@@ -87,7 +83,7 @@ class GKHMainViewController: UIViewController, UITableViewDelegate {
         setupNavBar()
         observerRealm()
         operatorsList?.forEach({ op in
-            if !op.parameterList.isEmpty {
+            if !op.parameterList.isEmpty && op.parentCode?.contains(GlobalModule.UTILITIES_CODE) ?? false {
             organization.append(op)
             }
         })
@@ -97,6 +93,17 @@ class GKHMainViewController: UIViewController, UITableViewDelegate {
             let k = value.userInfo?["key"] as? String ?? ""
             self?.searchedOrganization = (self?.organization.filter { $0.region?.lowercased().prefix(k.count) ?? "" == k.lowercased() })!
             self?.navigationItem.titleView = self?.setTitle(title: k, subtitle: "")
+        }
+        
+        history.cellData = { [weak self] _ , model in
+            self?.qrData = ["История": ""]
+            self?.operators = model
+            self?.defineOperatorType() { [weak self] value in
+                self?.operatorType = value
+                DispatchQueue.main.async {
+                self?.performSegue(withIdentifier: "input", sender: self)
+                }
+            }
         }
     }
     

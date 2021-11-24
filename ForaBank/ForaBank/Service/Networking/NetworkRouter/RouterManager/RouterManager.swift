@@ -52,6 +52,7 @@ enum RouterManager {
     case getAnywayOperatorsList
     case getFullBankInfoList
     case createServiceTransfer
+    case createInternetTransfer
     case antiFraud
     case createMe2MePullCreditTransfer
     case createFastPaymentContract
@@ -62,6 +63,7 @@ enum RouterManager {
     case getClientConsentMe2MePull
     case changeClientConsentMe2MePull
     case getLatestServicePayments
+    case getLatestInternetTVPayments
     case createSFPTransfer
     case createIsOneTimeConsentMe2MePull
     case createPermanentConsentMe2MePull
@@ -88,6 +90,7 @@ enum RouterManager {
     case getPrintFormForAccountStatement
     case isSingleService
     case getDepositInfo
+    case nextStepServiceTransfer
 }
 
 extension RouterManager {
@@ -738,7 +741,22 @@ extension RouterManager {
             var request = URLRequest(url: resultUrl!)
             request.httpMethod = RequestMethod.post.rawValue
             return request
-            
+
+        case .createInternetTransfer:
+            let baseUrl = RouterUrlList.createInternetTransfer.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+
         case .antiFraud:
             let baseUrl = RouterUrlList.antiFraud.returnUrl()
             switch baseUrl {
@@ -882,6 +900,21 @@ extension RouterManager {
                 debugPrint(error)
             }
             
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.get.rawValue
+            return request
+
+        case .getLatestInternetTVPayments:
+            let baseUrl = RouterUrlList.getLatestInternetTVPayments.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
             request.httpMethod = RequestMethod.get.rawValue
@@ -1265,6 +1298,21 @@ extension RouterManager {
             
         case .isSingleService:
             let baseUrl = RouterUrlList.isSingleService.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .nextStepServiceTransfer:
+            let baseUrl = RouterUrlList.nextStepServiceTransfer.returnUrl()
             switch baseUrl {
             case .success(let url):
                 resultUrl = url.absoluteURL
