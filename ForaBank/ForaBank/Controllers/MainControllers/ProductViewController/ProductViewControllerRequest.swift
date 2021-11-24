@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 
 extension ProductViewController {
@@ -116,8 +117,8 @@ extension ProductViewController {
                     self.tableViewLabel.isSkeletonable = false
                     self.tableViewLabel.hideSkeleton()
                     self.view.hideSkeleton()
-
                     
+                    self.scrollView.contentSize.height = UIScreen.main.bounds.height + CGFloat((self.historyArrayAccount.count * 80))
                     for i in lastPaymentsList{
                         if i.operationType == "DEBIT"{
                             self.totalExpenses  += Double(i.amount ?? 0.0)
@@ -158,6 +159,7 @@ extension ProductViewController {
                     guard let lastPaymentsList  = model.data else { return }
                     self.historyArray = lastPaymentsList
                     self.historyArrayAccount.removeAll()
+                    self.historyArrayDeposit.removeAll()
                     self.historyArray.sort(by: { (a, b) -> Bool in
                         if let timestamp1 = a.date, let timestamp2 = b.date {
                             return timestamp1 > timestamp2
@@ -213,7 +215,8 @@ extension ProductViewController {
                     self.tableViewLabel.hideSkeleton()
                     self.view.hideSkeleton()
                     self.view.hideSkeleton()
-                    
+                    self.scrollView.contentSize.height = UIScreen.main.bounds.height + CGFloat((self.historyArray.count * 80))
+
                 }
 //                    self.dataUSD = lastPaymentsList
             } else {
@@ -303,7 +306,8 @@ extension ProductViewController {
                     self.tableViewLabel.hideSkeleton()
                     self.view.hideSkeleton()
 
-                    
+                    self.scrollView.contentSize.height = UIScreen.main.bounds.height + CGFloat((self.historyArrayDeposit.count * 80))
+
                     for i in lastPaymentsList{
                         if i.operationType == "DEBIT"{
                             self.totalExpenses  += Double(i.amount ?? 0.0)

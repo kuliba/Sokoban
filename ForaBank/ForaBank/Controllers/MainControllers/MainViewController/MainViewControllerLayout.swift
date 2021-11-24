@@ -64,21 +64,27 @@ extension MainViewController {
 
         let item = NSCollectionLayoutItem.withEntireSize()
         let itemadd = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .absolute(114), heightDimension: .absolute(104)))
+        let topItem = NSCollectionLayoutItem(
+                    layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                   heightDimension: .fractionalHeight(0.3)))
+        topItem.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
         
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .absolute(164),
           heightDimension: .absolute(104))
 
         let group = NSCollectionLayoutGroup.horizontal(
-            layoutSize: groupSize,  subitems: [item, itemadd])
+            layoutSize: groupSize,  subitems: [item, itemadd, topItem])
+        
         let section = NSCollectionLayoutSection(group: group)
 
+   
         section.interGroupSpacing = 8
         section.contentInsets = .init(top: 16, leading: 20, bottom: 32, trailing: 20)
         
         section.orthogonalScrollingBehavior = .paging
         let sectionHeader = createSectionHeader()
-        sectionHeader.contentInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 0)
+        sectionHeader.contentInsets = .init(top: 20, leading: 0, bottom: 20, trailing: 0)
         section.boundarySupplementaryItems = [sectionHeader]
         
         return section

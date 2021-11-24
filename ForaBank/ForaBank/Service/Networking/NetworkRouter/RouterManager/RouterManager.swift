@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 enum RouterManager {
     case login
@@ -86,6 +87,7 @@ enum RouterManager {
     case getNotifications
     case getPrintFormForAccountStatement
     case isSingleService
+    case getDepositInfo
 }
 
 extension RouterManager {

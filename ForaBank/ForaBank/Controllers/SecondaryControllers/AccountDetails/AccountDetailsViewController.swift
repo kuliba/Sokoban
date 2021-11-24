@@ -48,7 +48,7 @@ class AccountDetailsViewController: UIViewController {
         if product?.productType == "ACCOUNT"{
             body = ["accountId": product?.id] as [String : AnyObject]
         } else if product?.productType == "DEPOSIT"{
-            body = ["accountId": product?.accountID] as [String : AnyObject]
+            body = ["depositId": product?.id] as [String : AnyObject]
 
         }
         NetworkManager<GetProductDetailsDecodableModel>.addRequest(.getProductDetails, [:], body) { model, error in
@@ -70,6 +70,9 @@ class AccountDetailsViewController: UIViewController {
                     self.mockItem[6].description = model.data?.holderName
                     self.mockItem[7].description = model.data?.maskCardNumber
                     self.mockItem[8].description = model.data?.expireDate
+                    if product?.productType == "DEPOSIT"{
+                        self.mockItem[8].name = "Вклад действует до"
+                    }
                     let newArray = self.mockItem.filter { $0.description != "" }
                     viewController.addCloseButton()
                     viewController.addCloseButton_3()
@@ -104,8 +107,11 @@ class AccountDetailsViewController: UIViewController {
             dateFormatter.dateFormat =  "d MMMM yyyy"
             dateFormatter.timeZone = .current
             dateFormatter.locale = Locale(identifier: "ru_RU")
-            let localDate = dateFormatter.string(from: date)
+            var localDate = dateFormatter.string(from: date)
             print(localDate)
+            if localDate == "1 января 1970"{
+                localDate = "-"
+            }
         
         return localDate
     }
@@ -250,7 +256,6 @@ extension AccountDetailsViewController: UITableViewDelegate {
         switch indexPath.row {
         case 0:
             presentRequisitsVc(product: product)
-#if DEBUG
         case 1:
             let controller = AccountStatementController()
             controller.modalPresentationStyle = .fullScreen
@@ -261,8 +266,6 @@ extension AccountDetailsViewController: UITableViewDelegate {
                 let topvc = UIApplication.topViewController()
                 topvc?.present(navController, animated: true)
             }
-            
-#endif
         case 2:
             presentToDepositInfo(product: product)
         default:

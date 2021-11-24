@@ -309,7 +309,7 @@ class MockItems {
                           controllerName: "https://www.forabank.ru/private/credits/",
                           description: ""),
             
-            PaymentsModel(id: 5, name: "Кореспондентский счет",
+            PaymentsModel(id: 5, name: "Корреспондентский счет",
                           iconName: "PaymentsIconCarancy",
                           controllerName: "https://www.forabank.ru/business/credits/investitsii/?sphrase_id=26274",
                           description: ""),

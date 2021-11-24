@@ -134,23 +134,23 @@ class MainViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.getCardList { data, errorMessage in
-            self.productList.removeAll()
-            self.products.removeAll()
-            DispatchQueue.main.async {
-                guard let listProducts = data else { return }
-                for i in listProducts {
-                    self.products.append(PaymentsModel(productList: i))
-                }
-//                if listProducts.prefix(3).count < 3 {
-//                    self.products.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
-//                } else if listProducts.prefix(3).count == 3 {
-//                    self.products.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
+//        self.getCardList { data, errorMessage in
+//            self.productList.removeAll()
+//            self.products.removeAll()
+//            DispatchQueue.main.async {
+//                guard let listProducts = data else { return }
+//                for i in listProducts {
+//                    self.products.append(PaymentsModel(productList: i))
 //                }
-                self.productList = data ?? []
-                self.reloadData(with: nil)
-            }
-        }
+////                if listProducts.prefix(3).count < 3 {
+////                    self.products.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
+////                } else if listProducts.prefix(3).count == 3 {
+////                    self.products.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
+////                }
+//                self.productList = data ?? []
+//                self.reloadData(with: nil)
+//            }
+//        }
     }
     
     

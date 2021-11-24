@@ -139,6 +139,10 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
             balanceLabel.textColor = .black
             cardNameLabel.textColor = UIColor(hexString: "#999999")
             maskCardLabel.textColor = .black
+            guard let number = card.accountNumber?.suffix(4) else {
+                return
+            }
+            maskCardLabel.text = number.description
             
         }
     }

@@ -360,9 +360,9 @@ class HistoryTableViewCell: UITableViewCell {
                       subTitleLabel.text = depositOperation?.merchantNameRus
                   } else {
                       subTitleLabel.text = depositOperation?.merchantName
+                      subTitleLabel.isHidden = true
                   }
                   
-                  subTitleLabel.isHidden = true
       //            logoImageView.image = UIImage()
       //            logoImageView.image = operation?.svgImage?.convertSVGStringToImage()
                   if accountOperation?.merchantNameRus == ""{

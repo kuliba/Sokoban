@@ -63,12 +63,13 @@ class SectionHeader: UICollectionReusableView {
         arrowButton.isHidden = expandingIsHidden
         seeAllButton.isHidden = seeAllIsHidden
         if title.text == "Мои продукты"{
-//            self.addSubview(changeCardButtonCollection)
-//            title.anchor(top: self.topAnchor, height: 24)
-//            changeCardButtonCollection.anchor(top: title.bottomAnchor, left: self.leftAnchor, right: self.rightAnchor, height: 24)
-//            title.backgroundColor = .cyan   
+            self.addSubview(changeCardButtonCollection)
+            title.anchor(top: self.topAnchor, height: 24)
+            changeCardButtonCollection.anchor(top: title.bottomAnchor, left: self.leftAnchor, right: self.rightAnchor, height: 24)
+            title.backgroundColor = .cyan
         } else {
             changeCardButtonCollection.removeFromSuperview()
+            title.backgroundColor = .white
         }
     }
     

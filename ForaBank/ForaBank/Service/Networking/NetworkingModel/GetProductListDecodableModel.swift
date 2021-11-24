@@ -149,7 +149,11 @@ extension GetProductListDatum {
         id: Int?? = nil,
         background: [String]?? = nil,
         XLDesign: String?? = nil,
-        statusPC: String? = nil
+        statusPC: String?? = nil,
+        interestRate: Double? = nil,
+        openDate: Int?? = nil,
+        branchId: Int?? = nil,
+        expireDate: String?? = nil
     ) -> GetProductListDatum {
         return GetProductListDatum (
             number: number ?? self.number,
@@ -183,7 +187,11 @@ extension GetProductListDatum {
             id: id ?? self.id,
             background: (background ?? []) ?? self.background,
             XLDesign: XLDesign ?? self.XLDesign,
-            statusPC: statusPC ?? self.statusPC
+            statusPC: statusPC ?? self.statusPC,
+            interestRate: interestRate ?? self.interestRate,
+            openDate: openDate ?? self.openDate,
+            branchId: branchId ?? self.branchId,
+            expireDate: expireDate ?? self.expireDate
         )
     }
 
