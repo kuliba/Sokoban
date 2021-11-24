@@ -94,6 +94,17 @@ class GKHMainViewController: UIViewController, UITableViewDelegate {
             self?.searchedOrganization = (self?.organization.filter { $0.region?.lowercased().prefix(k.count) ?? "" == k.lowercased() })!
             self?.navigationItem.titleView = self?.setTitle(title: k, subtitle: "")
         }
+        
+        history.cellData = { [weak self] _ , model in
+            self?.qrData = ["История": ""]
+            self?.operators = model
+            self?.defineOperatorType() { [weak self] value in
+                self?.operatorType = value
+                DispatchQueue.main.async {
+                self?.performSegue(withIdentifier: "input", sender: self)
+                }
+            }
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

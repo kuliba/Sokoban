@@ -16,8 +16,13 @@ struct AddHistoryList {
         /// Общая информация об поставщике услуг
         var additionalList          = GKHHistoryModel()
         var tempAdditionalListArray = [AdditionalListModel]()
+        let param = ["isPhonePayments": "false",
+                     "isCountriesPayments": "false",
+                     "isServicePayments": "true",
+                     "isMobilePayments": "false",
+                     "isInternetPayments": "false"]
         
-        NetworkManager<GetLatestServicePaymentsDecodableModel>.addRequest(.getLatestServicePayments, [:], [:]) { model, error in
+        NetworkManager<GetLatestServicePaymentsDecodableModel>.addRequest(.getLatestServicePayments, param, [:]) { model, error in
             if error != nil {
                 print("DEBUG: error", error!)
             } else {

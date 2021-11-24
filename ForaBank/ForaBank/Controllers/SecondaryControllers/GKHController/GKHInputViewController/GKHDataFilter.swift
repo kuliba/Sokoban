@@ -92,7 +92,8 @@ struct GKHDataFilter {
                                        "Рекомендуемая сумма",
                                        "Входящее сальдо, руб.:",
                                        "Сумма пени"]
-    static var dateArray            = ["Дата"]
+    static var dateArray            = ["Дата",
+                                      "на дату:"]
     
     static var transitonTypeArray   = ["Тип перевода",
                                             "Тип платежа",]

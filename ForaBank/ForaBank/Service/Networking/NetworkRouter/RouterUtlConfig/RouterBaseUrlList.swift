@@ -131,7 +131,9 @@ enum RouterBaseUrlList: String {
 
     case getPrintFormForAccountStatement = "/rest/getPrintFormForAccountStatement"
     
-    case isSingleService = "/rest/transfer/isSingleService"
+    case isSingleService           = "/rest/transfer/isSingleService"
+    
+    case nextStepServiceTransfer   = "/rest/transfer/nextStepServiceTransfer"
     
     // MARK: - В не авторизованную зону.
     ///Обновление по serial

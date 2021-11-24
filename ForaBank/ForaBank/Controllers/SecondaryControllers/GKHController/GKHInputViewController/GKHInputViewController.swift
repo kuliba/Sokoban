@@ -22,6 +22,8 @@ class GKHInputViewController: BottomPopUpViewAdapter {
     var fieldid = 0
     // Указывает, является данная итерация запросов последней
     var finalStep = true
+    /// Параметр, указывающий на то, то это последний шаг. Используеься для перехода к запросу nextStep
+    var endStep = true
     // Параметр, указывающий, надо ли отображать поле суммы
     var needSum = true
     // Массив, в котором копим значения, которые говорят о заполнении ячеек в таблице
@@ -30,9 +32,9 @@ class GKHInputViewController: BottomPopUpViewAdapter {
     func empty() {
         let dataCount = dataArray.count
         if emptyArray.count == dataCount {
-            self.goButton.isHidden = false
+            animationShow(goButton)
         } else {
-            self.goButton.isHidden = true
+            animationHidden(goButton)
         }
     }
     var qrData = [String: String]()
@@ -51,14 +53,7 @@ class GKHInputViewController: BottomPopUpViewAdapter {
     // Тип оператора (одношаговый или многошаговый)
     var operatorType: Bool = true {
         didSet {
-            switch operatorType {
-            case true:
-                goButton?.isEnabled = true
-              //  goButton.backgroundColor = .lightGray
-            case false:
-                goButton?.isEnabled = false
-                goButton?.backgroundColor = .lightGray
-            }
+            print("operatorType", operatorType)
         }
     }
     
@@ -81,8 +76,7 @@ class GKHInputViewController: BottomPopUpViewAdapter {
                 dataArray.append(value)
             })
         }
-        
-        bottomInputView?.isHidden = true
+
         setupNavBar()
         goButton.add_CornerRadius(5)
         puref = operatorData?.puref ?? ""
@@ -95,20 +89,23 @@ class GKHInputViewController: BottomPopUpViewAdapter {
         // amount значение выдает отформатированное значение для передачи в запрос
         bottomInputView.didDoneButtonTapped = { amount in
             self.showActivity()
-            // Запрос на платеж в ЖКХ : нужно добавить параметры в рапрос
-            self.paymentGKH(amount: amount) { model, error in
+            self.operatorNexStep(amount: amount) { model, error in
                 self.dismissActivity()
-                if error != nil {
-                    self.showAlert(with: "Ошибка", and: error!)
-                } else {
-                    guard let model = model else { return }
-                    // Переход на экран подтверждения
-                    self.goToConfurmVC(with: model)
-                }
-                // Функция настройки выбранной карты и список карт
-                self.setupCardList { error in
-                    guard let error = error else { return }
-                    self.showAlert(with: "Ошибка", and: error)
+                // Запрос на платеж в ЖКХ : нужно добавить параметры в рапрос
+                self.paymentGKH(amount: amount) { model, error in
+                    self.dismissActivity()
+                    if error != nil {
+                        self.showAlert(with: "Ошибка", and: error!)
+                    } else {
+                        guard let model = model else { return }
+                        // Переход на экран подтверждения
+                        self.goToConfurmVC(with: model)
+                    }
+                    // Функция настройки выбранной карты и список карт
+                    self.setupCardList { error in
+                        guard let error = error else { return }
+                        self.showAlert(with: "Ошибка", and: error)
+                    }
                 }
             }
         }
@@ -121,15 +118,24 @@ class GKHInputViewController: BottomPopUpViewAdapter {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.goButton.isHidden = true
-//        switch operatorType {
-//        case true:
-//            goButton.isHidden = false
-//            bottomInputView.isHidden = true
-//        case false:
-//            goButton.isHidden = false
-//            bottomInputView.isHidden = true
-//        }
+        switch operatorType {
+        case true:
+            if qrData.isEmpty == false {
+                animationShow (goButton)
+                animationHidden(bottomInputView)
+            } else {
+                animationHidden (goButton)
+                animationHidden(bottomInputView)
+            }
+        case false:
+            if qrData.isEmpty == false {
+                animationShow (goButton)
+                animationHidden(bottomInputView)
+            } else {
+                animationHidden (goButton)
+                animationHidden(bottomInputView)
+            }
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -143,18 +149,57 @@ class GKHInputViewController: BottomPopUpViewAdapter {
     }
     
     @IBAction func goButton(_ sender: UIButton) {
-        operatorStep()
         switch operatorType {
         case true:
-            break
+            animationHidden(goButton)
+            animationShow(bottomInputView)
         case false:
-            operatorStep()
+            if finalStep == true {
+                if endStep == true {
+                    animationHidden(goButton)
+                    animationShow(bottomInputView)
+                }
+            } else {
+                // Запрос по получения полей при многошаговом операторе
+                operatorStep()
+                animationHidden(goButton)
+                animationHidden(bottomInputView)
+            }
         }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
         qrData.removeAll()
+    }
+    
+    final func animationHidden (_ view: UIView) {
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.3) {
+                view.alpha = 0
+            }
+            view.isHidden = true
+        }
+    }
+    
+    final func animationShow (_ view: UIView) {
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.3) {
+                view.alpha = 1
+            }
+            view.isHidden = false
+        }
+    }
+    
+    final func animateQueue (_ view_1: UIView, _ view_2: UIView) {
+        UIView.animateKeyframes(withDuration: 0.3, delay: .zero, options: []) {
+            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.3) {
+                view_1.alpha = 1.0
+            }
+            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.3) {
+                view_2.alpha = 0.0
+            }
+        }
     }
     
     

@@ -82,13 +82,14 @@ extension GKHInputViewController {
         let body = [ "check" : false,
                      "amount" : amount,
                      "currencyAmount" : "RUB",
-                     "payer" : [ "cardId" : nil,
-                                 "cardNumber" : self.cardNumber,
+                     "payer" : [ "cardId" : self.cardId,
+                                 "cardNumber" : nil,
                                  "accountId" : nil ],
                      "puref" : puref,
                      "additional" : bodyArray] as [String: AnyObject]
         
         NetworkManager<CreateDirectTransferDecodableModel>.addRequest(.createServiceTransfer, [:], body) { respModel, error in
+            self.dismissActivity()
             if error != nil {
                 print("DEBUG: Error: ContaktPaymentBegin ", error ?? "")
                 completion(nil, error!)
@@ -117,6 +118,7 @@ extension GKHInputViewController {
     //CreateServiceTransferDecodableModel
     /// Запрос по получения полей при многошаговом операторе
     final func operatorStep() {
+        self.showActivity()
         fieldid += 1
         let body = [ "check" : false,
                      "amount" : nil,
@@ -127,6 +129,7 @@ extension GKHInputViewController {
                      "puref" : puref,
                      "additional" : bodyArray ] as [String: AnyObject]
         NetworkManager<CreateServiceTransferDecodableModel>.addRequest(.createServiceTransfer, [:], body) { model, error in
+            self.dismissActivity()
             if error != nil {
                 print(#function, "CreateServiceTransfer Error")
             }
@@ -138,7 +141,12 @@ extension GKHInputViewController {
                 self.dataArray.removeAll()
                 
                 data.additionalList?.forEach{ additionalList in
-                    additionalListDic.updateValue(additionalList.fieldValue ?? "", forKey: additionalList.fieldTitle ?? "")
+                    additionalListDic.updateValue(additionalList.fieldTitle ?? "", forKey: "title")
+                    additionalListDic.updateValue(additionalList.fieldName ?? "", forKey: "id")
+                    additionalListDic.updateValue(additionalList.fieldValue ?? "", forKey: "value")
+                    additionalListDic.updateValue(String(true), forKey: "readOnly")
+                    
+                    
                     self.dataArray.append(additionalListDic)
                 }
                 data.parameterListForNextStep?.forEach{ parameterListForNextStep in
@@ -155,10 +163,51 @@ extension GKHInputViewController {
                     parameterListForNextStepDic.updateValue(parameterListForNextStep.minLength ?? "", forKey: "minLength")
                     parameterListForNextStepDic.updateValue(String(parameterListForNextStep.rawLength ?? 0), forKey: "rawLength")
                     parameterListForNextStepDic.updateValue(String(parameterListForNextStep.isRequired ?? false), forKey: "isRequired")
+                    parameterListForNextStepDic.updateValue(String(false), forKey: "readOnly")
                     self.dataArray.append(parameterListForNextStepDic)
                 }
                 
                 self.finalStep = data.finalStep ?? true
+                self.needSum = data.needSum ?? true
+                DispatchQueue.main.async {
+                self.tableView.reloadData()
+                }
+            } else {
+                print(#function, respModel.errorMessage ?? "")
+            }
+        }
+    }
+    
+    //NextStepServiceTransferDecodableModel
+    /// Запрос по получения полей на последнем шаге в многошаговом операторе
+    final func operatorNexStep(amount: String ,completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
+        self.showActivity()
+        
+        let a = UserDefaults.standard.array(forKey: "body") as? [[String: String]] ?? [[:]]
+        let body = [ "amount" : amount,
+                     "additional" : a ] as [String: AnyObject]
+        
+        NetworkManager<NextStepServiceTransferDecodableModel>.addRequest(.nextStepServiceTransfer, [:], body) { model, error in
+            self.dismissActivity()
+            if error != nil {
+                print(#function, "CreateServiceTransfer Error")
+            }
+            guard let respModel = model else { return }
+            if respModel.statusCode == 0 {
+                guard let data = respModel.data else { return }
+                var additionalListDic = [String: String]()
+
+                self.dataArray.removeAll()
+                
+                data.additionalList?.forEach{ additionalList in
+                    additionalListDic.updateValue(additionalList.fieldTitle ?? "", forKey: "title")
+                    additionalListDic.updateValue(additionalList.fieldName ?? "", forKey: "id")
+                    additionalListDic.updateValue(additionalList.fieldValue ?? "", forKey: "value")
+                    additionalListDic.updateValue(String(true), forKey: "readOnly")
+                    self.dataArray.append(additionalListDic)
+                }
+                
+                self.endStep = data.finalStep ?? true
                 self.needSum = data.needSum ?? true
                 DispatchQueue.main.async {
                 self.tableView.reloadData()

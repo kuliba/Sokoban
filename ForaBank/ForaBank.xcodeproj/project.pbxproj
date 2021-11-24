@@ -171,6 +171,7 @@
 		0BDCF0082749A56300AAA1C3 /* ExtensionGKHInputRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDCF0072749A56300AAA1C3 /* ExtensionGKHInputRequest.swift */; };
 		0BDCF00A2749A5A900AAA1C3 /* GKHInputModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDCF0092749A5A900AAA1C3 /* GKHInputModel.swift */; };
 		0BDCF00D274A8B0F00AAA1C3 /* IsSingleServiceDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDCF00C274A8B0F00AAA1C3 /* IsSingleServiceDecodableModel.swift */; };
+		0BDCF00F274D56C500AAA1C3 /* NextStepServiceTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDCF00E274D56C500AAA1C3 /* NextStepServiceTransferDecodableModel.swift */; };
 		0BDE452D26E298F600B64A0A /* ExtensionQRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDE452C26E298F600B64A0A /* ExtensionQRViewController.swift */; };
 		0BDE452F26E2995700B64A0A /* ExtensionQRMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDE452E26E2995700B64A0A /* ExtensionQRMetaData.swift */; };
 		0BDE453126E2A8CB00B64A0A /* ExtensionGKHMainQR.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDE453026E2A8CB00B64A0A /* ExtensionGKHMainQR.swift */; };
@@ -660,6 +661,7 @@
 		0BDCF0072749A56300AAA1C3 /* ExtensionGKHInputRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionGKHInputRequest.swift; sourceTree = "<group>"; };
 		0BDCF0092749A5A900AAA1C3 /* GKHInputModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHInputModel.swift; sourceTree = "<group>"; };
 		0BDCF00C274A8B0F00AAA1C3 /* IsSingleServiceDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsSingleServiceDecodableModel.swift; sourceTree = "<group>"; };
+		0BDCF00E274D56C500AAA1C3 /* NextStepServiceTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextStepServiceTransferDecodableModel.swift; sourceTree = "<group>"; };
 		0BDE452C26E298F600B64A0A /* ExtensionQRViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionQRViewController.swift; sourceTree = "<group>"; };
 		0BDE452E26E2995700B64A0A /* ExtensionQRMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionQRMetaData.swift; sourceTree = "<group>"; };
 		0BDE453026E2A8CB00B64A0A /* ExtensionGKHMainQR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionGKHMainQR.swift; sourceTree = "<group>"; };
@@ -3004,6 +3006,7 @@
 				0BA14E1B2715628A0098E422 /* GetAllLatestPaymentsDecodableModel.swift */,
 				6833E0AA27303E8F004C070F /* GetOperationDetailDecodebleModel.swift */,
 				0BAD4D32273EDA9B00FDF9B6 /* GetNotificationsDecodableModel.swift */,
+				0BDCF00E274D56C500AAA1C3 /* NextStepServiceTransferDecodableModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -3440,6 +3443,7 @@
 				EDF68216266F9EC800FD5C07 /* RouterError.swift in Sources */,
 				0B216FC626D1E9EB0023C878 /* ExtensionNotificationName.swift in Sources */,
 				0BAC674426D41C18005AAD91 /* ExtensionGKHSearch.swift in Sources */,
+				0BDCF00F274D56C500AAA1C3 /* NextStepServiceTransferDecodableModel.swift in Sources */,
 				68D06F2626C3C11700F9BE4C /* MainViewControllerDataSource.swift in Sources */,
 				0BA251F126C26BE200AD087A /* СreateMe2MePullTransferDecodableModel.swift in Sources */,
 				68F6816F269E5E56008157CE /* SearchBanksViewController.swift in Sources */,

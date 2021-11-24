@@ -20,7 +20,8 @@ struct GKHInputModel {
             tempDic.updateValue(param.title ?? "", forKey: "title")
             tempDic.updateValue(param.subTitle ?? "", forKey: "subTitle")
             tempDic.updateValue(param.id ?? "", forKey: "id")
-            tempDic.updateValue(param.viewType ?? "", forKey: "viewType")
+            tempDic.updateValue(String(param.readOnly), forKey: "readOnly")
+            tempDic.updateValue(param.content ?? "", forKey: "content")
             tempArray.append(tempDic)
         })
         
@@ -32,22 +33,27 @@ struct GKHInputModel {
         var tempDic = [String: String]()
         qrData.forEach{ param in
             tempDic.updateValue(param["Лицевой счет"] ?? "", forKey: "title")
+            tempDic.updateValue(param["Лицевой счет"] ?? "", forKey: "value")
             tempDic.updateValue(param["id"] ?? "", forKey: "id")
             tempArray.append(tempDic)
         }
         return tempArray
     }
     
-//    mutating func stepData() -> [[String: String]] {
-//        var tempArray = [[String: String]]()
-//        var tempDic = [String: String]()
-//        qrData.forEach{ param in
-//            tempDic.updateValue(param["Лицевой счет"] ?? "", forKey: "title")
-//            tempDic.updateValue(param["id"] ?? "", forKey: "id")
-//            tempArray.append(tempDic)
-//        }
-//        return tempArray
-//    }
+    mutating func stepData() -> [[String: String]] {
+        var tempDic = [String: String]()
+        var tempArray = [[String: String]]()
+        inputData?.parameterList.forEach({ param in
+            tempDic.updateValue(param.title ?? "", forKey: "title")
+            tempDic.updateValue(param.subTitle ?? "", forKey: "subTitle")
+            tempDic.updateValue(param.id ?? "", forKey: "id")
+            tempDic.updateValue(String(param.readOnly), forKey: "readOnly")
+            tempDic.updateValue(param.content ?? "", forKey: "content")
+            tempArray.append(tempDic)
+        })
+        
+        return tempArray
+    }
     
     init?(_ data: [String: String]) {
         self.qrData.append(data)

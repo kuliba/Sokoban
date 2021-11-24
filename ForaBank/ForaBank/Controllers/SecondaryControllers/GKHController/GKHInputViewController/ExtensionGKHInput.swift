@@ -17,7 +17,7 @@ extension GKHInputViewController: UITableViewDataSource, TableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: GKHInputCell.reuseId, for: indexPath) as! GKHInputCell
         
         guard dataArray.count != 0 else { return cell }
-        cell.setupUI(indexPath.row, dataArray[indexPath.row])
+        cell.setupUI(indexPath.row, dataArray)
         cell.tableViewDelegate = (self as TableViewDelegate)
         cell.showInfoView = {[weak self] value in
             let infoView = GKHInfoView()

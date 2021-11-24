@@ -56,47 +56,61 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
         fieldvalue = textField.text ?? ""
     }
     // DataSetup
-    func setupUI (_ index: Int, _ dataModel: [String: String]) {
+    func setupUI (_ index: Int, _ dataModel: [[String: String]]) {
+        // Разблокировка ячеек
+        self.textField.isEnabled = true
+        isSelect = true
         
- //       if emptyCell() == false {
-            infoButon.isHidden = true
-            self.fieldid = String(index + 1)
-            fieldname = dataModel["id"] ?? ""
-            let q = GKHDataSorted.a(dataModel["title"] ?? "")
-            
-            DispatchQueue.main.async {
-                self.operatorsIcon.image = UIImage(named: q.1)
-            }
-            
-            textField.placeholder = q.0
-            placeholder = q.0
-            
-            if q.0 == "Лицевой счет" {
-                let h = dataModel["Лицевой счет"]
-                if h != "" {
-                    textField.text = h
-                }
-            }
-            
-            if q.0 == "" {
-                textField.placeholder = dataModel["title"] ?? ""
-            }
-            if q.0 == "ФИО" {
-                showFioButton.isHidden = false
-            } else {
-                showFioButton.isHidden = true
-            }
-            
-            if dataModel["subTitle"] != nil {
-                info = dataModel["subTitle"] ?? ""
-                infoButon.isHidden = false
-            }
-            if dataModel["viewType"] != "INPUT" {
-                self.textField.isEnabled = false
-                isSelect = false
+        //       if emptyCell() == false {
+        infoButon.isHidden = true
+        self.fieldid = String(index + 1)
+        fieldname = dataModel[index]["id"] ?? ""
+        let q = GKHDataSorted.a(dataModel[index]["title"] ?? "")
+        
+        DispatchQueue.main.async {
+            self.operatorsIcon.image = UIImage(named: q.1)
+        }
+        
+        textField.placeholder = q.0
+        placeholder = q.0
+        
+        if q.0 == "Лицевой счет" {
+            let h = dataModel[index]["Лицевой счет"]
+            if h != "" {
+                textField.text = h
             }
         }
-//    }
+        
+        if q.0 == "" {
+            textField.placeholder = dataModel[index]["title"] ?? ""
+        }
+        if q.0 == "ФИО" {
+            showFioButton.isHidden = false
+        } else {
+            showFioButton.isHidden = true
+        }
+        
+        if dataModel[index]["subTitle"] != nil {
+            info = dataModel[index]["subTitle"] ?? ""
+            infoButon.isHidden = false
+        }
+        if dataModel[index]["value"] != nil {
+            textField.text = dataModel[index]["value"] ?? ""
+            fieldvalue = textField.text ?? ""
+            body.updateValue(fieldid, forKey: "fieldid")
+            body.updateValue(fieldname, forKey: "fieldname")
+            body.updateValue(textField.text ?? "" , forKey: "fieldvalue")
+            var a = UserDefaults.standard.array(forKey: "body") as? [[String: String]] ?? [[:]]
+            a.append(body)
+            UserDefaults.standard.set(a, forKey: "body")
+        }
+        // Блокировка ячеек
+        if dataModel[index]["readOnly"] == "false" {
+            self.textField.isEnabled = true
+            isSelect = true
+        }
+    }
+    //    }
     
     @IBAction func textField(_ sender: UITextField) {
         fieldvalue = textField.text ?? ""

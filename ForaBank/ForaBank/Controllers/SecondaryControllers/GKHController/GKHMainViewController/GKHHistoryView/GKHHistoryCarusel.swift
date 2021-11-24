@@ -11,6 +11,8 @@ import UIKit
 class GKHCaruselCollectionView: UICollectionView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     var cells = [GKHHistoryCaruselModel]()
+    var cellModel = [String:String]()
+    var cellData: (([String:String], GKHOperatorsModel) -> ())? = nil
     
     init() {
         let layout = UICollectionViewFlowLayout()
@@ -57,4 +59,9 @@ class GKHCaruselCollectionView: UICollectionView, UICollectionViewDelegate, UICo
         fatalError("init(coder:) has not been implemented")
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let operatorsModel = cells[indexPath.row].operatorsModel
+        cellData?([:], operatorsModel)
+        print()
+    }
 }
