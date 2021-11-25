@@ -52,7 +52,6 @@ class AccountStatementPDFController: UIViewController, URLSessionDownloadDelegat
             "endDate": "\(model.endDate)"
         ] as [String: AnyObject]
         
-        print(body)
         createPdfDocument(body)
     }
     

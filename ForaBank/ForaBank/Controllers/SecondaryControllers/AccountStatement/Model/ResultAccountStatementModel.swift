@@ -9,7 +9,8 @@ import Foundation
 
 class ResultAccountStatementModel {
     
-    private let formatter = Date.dateLondonFormatterSimpleDate()
+    private let formatter = Date.dateFormatterDateConvenient()
+//    private let formatter = Date.dateLondonFormatterSimpleDate()
     let product: UserAllCardsModel
     var startDate: String
     var endDate: String
