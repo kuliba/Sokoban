@@ -1,7 +1,9 @@
 import UIKit
 import RealmSwift
 
-class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSource, InternetTableViewDelegate {
+class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSource, InternetTableViewDelegate, IMsg {
+    static var iMsg: IMsg? = nil
+    static let msgIsSingleService = 1
 
     var bodyValue = [String : String]()
     var bodyArray = [[String : String]]()
@@ -10,20 +12,38 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
     var puref = ""
     var cardNumber = ""
     var product: GetProductListDatum?
-
     var qrData = [String: String]()
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var bottomInputView: BottomInputView!
     @IBOutlet weak var goButton: UIButton!
-    
-    /// MARK - REALM
+
     lazy var realm = try? Realm()
     var cardList: Results<UserAllCardsModel>? = nil
     let footerView = GKHInputFooterView()
-    
+
+
+    func handleMsg(what: Int) {
+        switch (what) {
+        case InternetTVDetailsFormController.msgIsSingleService:
+            if !InternetTVApiRequests.isSingleService {
+                let alertController = UIAlertController(title: "Внимание!", message: "Временно нельзя провести оплату по этому поставщику", preferredStyle: UIAlertController.Style.alert)
+
+                let saveAction = UIAlertAction(title: "Ок", style: UIAlertAction.Style.default, handler: { alert -> Void in
+                    self.dismiss(animated: true)
+                })
+                alertController.addAction(saveAction)
+                present(alertController, animated: true, completion: nil)
+            }
+            break
+        default:
+            break
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        InternetTVDetailsFormController.iMsg = self
         cardList = realm?.objects(UserAllCardsModel.self)
         
         if !qrData.isEmpty {
@@ -37,6 +57,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
 //        goButton.backgroundColor = .lightGray
         goButton.add_CornerRadius(5)
         puref = operatorData?.puref ?? ""
+        InternetTVApiRequests.isSingleService(puref: puref)
         tableView.register(UINib(nibName: "InternetInputCell", bundle: nil), forCellReuseIdentifier: InternetTVInputCell.reuseId)
 //        tableView.register(GKHInputFooterView.self, forHeaderFooterViewReuseIdentifier: "sectionFooter")
         
@@ -75,7 +96,6 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
             guard let error = error else { return }
             self.showAlert(with: "Ошибка", and: error)
         }
-
     }
     
     override func viewDidLayoutSubviews() {
@@ -232,7 +252,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
         }
     }
 
-    //MARK: - API
+
     func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?)->()) {
         let param = ["isCard": "true", "isAccount": "true", "isDeposit": "false", "isLoan": "false"]
 
@@ -250,7 +270,48 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
             }
         }
     }
-    
+
+    func load() {
+        var latestOperations = [InternetTVLatestOperationsModel]()
+
+        NetworkManager<GetLatestServicePaymentsDecodableModel>.addRequest(.getLatestInternetTVPayments, [:], [:]) { model, error in
+            if error != nil {
+                print("DEBUG: error", error!)
+            } else {
+                guard let model = model else { return }
+                guard let additionalListData = model.data else { return }
+
+                additionalListData.forEach { list in
+                    let ob = InternetTVLatestOperationsModel()
+                    ob.amount    = list.amount ?? 0
+                    ob.paymentDate = list.paymentDate
+                    ob.puref    = list.puref
+
+                    list.additionalList?.forEach({ parameterList in
+                        let param = AdditionalListModel()
+                        param.fieldName       = parameterList.fieldName
+                        param.fieldValue     = parameterList.fieldValue
+                        ob.additionalList.append(param)
+                    })
+
+                    latestOperations.append(ob)
+                }
+
+                let realm = try? Realm()
+                do {
+                    let operators = realm?.objects(InternetTVLatestOperationsModel.self)
+                    realm?.beginWrite()
+                    realm?.delete(operators!)
+                    realm?.add(latestOperations)
+                    try realm?.commitWrite()
+                    print("REALM",realm?.configuration.fileURL?.absoluteString ?? "")
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+        }
+    }
+
     func paymentGKH(amount: String ,completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
         var body = [String: AnyObject]()
         if footerView.cardFromField.cardModel?.productType == "ACCOUNT" {
@@ -510,4 +571,36 @@ class InternetTVInputCell: UITableViewCell, UITextFieldDelegate {
 
 }
 
+import Foundation
+import RealmSwift
+
+
+struct InternetTVApiRequests {
+    static var isSingleService = true
+
+    static func isSingleService(puref: String) {
+        let body = ["puref" : puref] as [String: AnyObject]
+        NetworkManager<IsSingleServiceModel>.addRequest(.isSingleService, [:], body) { model, error in
+            if error != nil {
+                print("DEBUG: error", error!)
+            } else {
+                guard let model = model else { return }
+                guard let data = model.data else { return }
+                isSingleService = data
+                InternetTVDetailsFormController.iMsg?.handleMsg(what: InternetTVDetailsFormController.msgIsSingleService)
+            }
+        }
+    }
+
+    struct IsSingleServiceModel: Codable, NetworkModelProtocol {
+        let statusCode: Int?
+        let errorMessage: String?
+        let data: Bool?
+
+        init(data: Data) throws {
+            self = try newJSONDecoder().decode(IsSingleServiceModel.self, from: data)
+        }
+    }
+
+}
 
