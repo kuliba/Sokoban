@@ -13,7 +13,7 @@ extension GKHMainViewController: QRProtocol {
     func setResultOfBusinessLogic(_ qr: [String : String], _ model: GKHOperatorsModel) {
         self.qrData = qr
         self.operators = model
-        defineOperatorType() { [weak self] value in
+        defineOperatorType(self.operators?.puref ?? "") { [weak self] value in
             self?.operatorType = value
             DispatchQueue.main.async {
             self?.performSegue(withIdentifier: "input", sender: self)
@@ -23,9 +23,9 @@ extension GKHMainViewController: QRProtocol {
     
     /// Метод, возвращающий из запроса /rest/transfer/isSingleService значение false/true, в зависимости от того,
     /// одношаговый оператор или нет. False - многощаговый оператор, true - одношаговый
-    final func defineOperatorType(_ complition: @escaping (Bool) -> Void) {
+    final func defineOperatorType(_ puref: String, _ complition: @escaping (Bool) -> Void) {
         
-        let puref = self.operators?.puref ?? ""
+        let puref = puref
         let body = ["puref" : puref] as [String: AnyObject]
         NetworkManager<IsSingleServiceDecodableModel>.addRequest(.isSingleService, [:], body) { model, error in
             

@@ -96,6 +96,10 @@ class ConfirmViewControllerModel {
         }
     }
     
+    // ЖКХ
+    var gkhModel: GkhPaymentModel? = nil
+    
+    
     var cardToCardId = ""
     var cardToCardNumber = ""
     var cardToAccountNumber = ""
@@ -510,8 +514,16 @@ class ContactConfurmViewController: UIViewController {
             
             
         case .gkh:
-            print("Собрать экран под ЖКХ")
-            
+            self.dismissActivity()
+            cardFromField.cardModel = model.cardFrom
+            cardFromField.isHidden = false
+            cardFromField.choseButton.isHidden = true
+            cardFromField.balanceLabel.isHidden = true
+            cardFromField.titleLabel.text = "Счет списания"
+            cardFromField.leftTitleAncor.constant = 64
+//            paymentGKH() { error in
+//                print("ЖКХ", error ?? "")
+//            }
             
         case .contact:
             cardFromField.isHidden = true
@@ -684,6 +696,33 @@ class ContactConfurmViewController: UIViewController {
 
     }
     
+    // ЖКХ
+    func paymentGKH(completion: @escaping (_ error: String?) -> ()) {
+        let am = confurmVCModel?.gkhModel?.amount ?? ""
+        let pr = confurmVCModel?.gkhModel?.gkhPuref ?? ""
+        let bodyArr = confurmVCModel?.gkhModel?.bodyArray ?? [[:]]
+        let cardId = confurmVCModel?.cardFromCardId ?? ""
+        let cardAccuntId = confurmVCModel?.cardToAccountId ?? ""
+        
+        let body = [ "check" : false,
+                     "amount" : am,
+                     "currencyAmount" : "RUB",
+                     "payer" : [ "cardId" : cardId,
+                                 "cardNumber" : nil,
+                                 "accountId" : cardAccuntId ],
+                     "puref" : pr,
+                     "additional" : bodyArr] as [String: AnyObject]
+        
+        NetworkManager<CreateDirectTransferDecodableModel>.addRequest(.createServiceTransfer, [:], body) { respModel, error in
+//            self.dismissActivity()
+            if error != nil {
+                print("DEBUG: Error: ContaktPaymentBegin ", error ?? "")
+                completion(error!)
+            } else {
+                completion(nil)
+            }
+        }
+    }
 
 }
 

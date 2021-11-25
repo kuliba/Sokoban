@@ -9,6 +9,7 @@ import UIKit
 
 extension GKHInputViewController: UITableViewDataSource, TableViewDelegate {
     
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataArray.count
     }
@@ -18,6 +19,11 @@ extension GKHInputViewController: UITableViewDataSource, TableViewDelegate {
         
         guard dataArray.count != 0 else { return cell }
         cell.setupUI(indexPath.row, dataArray)
+        
+        if dataArray[indexPath.row]["value"] != nil {
+            self.emptyArray.append(true)
+        }
+        
         cell.tableViewDelegate = (self as TableViewDelegate)
         cell.showInfoView = {[weak self] value in
             let infoView = GKHInfoView()
@@ -26,8 +32,13 @@ extension GKHInputViewController: UITableViewDataSource, TableViewDelegate {
         }
         cell.showGoButton = { [weak self] value in
             if value == true {
+            
             self?.emptyArray.append(value)
+                if self?.emptyArray.count ?? 0 > self?.dataArray.count ?? 0 {
+                    self?.emptyArray.removeLast()
+                }
             self?.empty()
+                print("self?.emptyArray", self?.emptyArray.count ?? 0, value)
             } else {
                 guard self?.emptyArray.count ?? 0 > 0 else {return}
                 self?.emptyArray.removeLast()
@@ -48,9 +59,11 @@ extension GKHInputViewController: UITableViewDataSource, TableViewDelegate {
 }
 
 extension GKHInputViewController {
+    
     func afterClickingReturnInTextField(cell: GKHInputCell) {
         bodyValue.removeAll()
         bodyValue = cell.body
         bodyArray.append(bodyValue)
     }
+    
 }

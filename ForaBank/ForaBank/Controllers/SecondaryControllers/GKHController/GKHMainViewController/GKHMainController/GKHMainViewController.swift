@@ -85,6 +85,7 @@ class GKHMainViewController: UIViewController, UITableViewDelegate {
         operatorsList?.forEach({ op in
             if !op.parameterList.isEmpty && op.parentCode?.contains(GlobalModule.UTILITIES_CODE) ?? false {
             organization.append(op)
+                self.operators = op
             }
         })
         
@@ -98,7 +99,7 @@ class GKHMainViewController: UIViewController, UITableViewDelegate {
         history.cellData = { [weak self] _ , model in
             self?.qrData = ["История": ""]
             self?.operators = model
-            self?.defineOperatorType() { [weak self] value in
+            self?.defineOperatorType(self?.operators?.puref ?? "") { [weak self] value in
                 self?.operatorType = value
                 DispatchQueue.main.async {
                 self?.performSegue(withIdentifier: "input", sender: self)

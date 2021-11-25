@@ -78,7 +78,6 @@ extension GKHInputViewController {
     }
     
     func paymentGKH(amount: String ,completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
-    
         let body = [ "check" : false,
                      "amount" : amount,
                      "currencyAmount" : "RUB",
@@ -94,128 +93,146 @@ extension GKHInputViewController {
                 print("DEBUG: Error: ContaktPaymentBegin ", error ?? "")
                 completion(nil, error!)
             }
-            guard let respModel = respModel else { return }
-            if respModel.statusCode == 0 {
-                guard let data = respModel.data else { return }
+            if self.operatorType == true {
+                guard let respModel = respModel else { return }
+                if respModel.statusCode == 0 {
+                    guard let data = respModel.data else { return }
+                    let model = ConfirmViewControllerModel(type: .gkh)
+                    
+                    let r = Double(data.debitAmount ?? 0)
+                    
+                    model.summTransction = r.currencyFormatter(symbol: "RUB")
+                    
+                    let c = Double(data.fee ?? 0)
+                    model.taxTransction = c.currencyFormatter(symbol: "RUB")
+                    model.cardFromRealm = self.footerView.cardFromField.model
+                    completion(model, nil)
+                    
+                } else {
+                    print("DEBUG: Error: ContaktPaymentBegin ", respModel.errorMessage ?? "")
+                    completion(nil, respModel.errorMessage)
+                }
+            } else {
+                guard let data = self.nextStepModel?.data else { return }
                 let model = ConfirmViewControllerModel(type: .gkh)
-
+                
                 let r = Double(data.debitAmount ?? 0)
                 
                 model.summTransction = r.currencyFormatter(symbol: "RUB")
                 
                 let c = Double(data.fee ?? 0)
                 model.taxTransction = c.currencyFormatter(symbol: "RUB")
-                
                 completion(model, nil)
                 
-            } else {
-                print("DEBUG: Error: ContaktPaymentBegin ", respModel.errorMessage ?? "")
-                completion(nil, respModel.errorMessage)
             }
         }
     }
-    
-    //CreateServiceTransferDecodableModel
-    /// Запрос по получения полей при многошаговом операторе
-    final func operatorStep() {
-        self.showActivity()
-        fieldid += 1
-        let body = [ "check" : false,
-                     "amount" : nil,
-                     "currencyAmount" : "RUB",
-                     "payer" : [ "cardId" : self.cardId,
-                                 "cardNumber" : nil,
-                                 "accountId" : nil ],
-                     "puref" : puref,
-                     "additional" : bodyArray ] as [String: AnyObject]
-        NetworkManager<CreateServiceTransferDecodableModel>.addRequest(.createServiceTransfer, [:], body) { model, error in
-            self.dismissActivity()
-            if error != nil {
-                print(#function, "CreateServiceTransfer Error")
-            }
-            guard let respModel = model else { return }
-            if respModel.statusCode == 0 {
-                guard let data = respModel.data else { return }
-                var additionalListDic = [String: String]()
-                var parameterListForNextStepDic = [String: String]()
-                self.dataArray.removeAll()
-                
-                data.additionalList?.forEach{ additionalList in
-                    additionalListDic.updateValue(additionalList.fieldTitle ?? "", forKey: "title")
-                    additionalListDic.updateValue(additionalList.fieldName ?? "", forKey: "id")
-                    additionalListDic.updateValue(additionalList.fieldValue ?? "", forKey: "value")
-                    additionalListDic.updateValue(String(true), forKey: "readOnly")
-                    
-                    
-                    self.dataArray.append(additionalListDic)
-                }
-                data.parameterListForNextStep?.forEach{ parameterListForNextStep in
-                    parameterListForNextStepDic.updateValue(parameterListForNextStep.title ?? "", forKey: "title")
-                    parameterListForNextStepDic.updateValue(parameterListForNextStep.id ?? "", forKey: "id")
-                    parameterListForNextStepDic.updateValue(String(parameterListForNextStep.order ?? 0), forKey: "order")
-                    parameterListForNextStepDic.updateValue(parameterListForNextStep.subTitle ?? "", forKey: "subTitle")
-                    parameterListForNextStepDic.updateValue(parameterListForNextStep.viewType ?? "", forKey: "viewType")
-                    parameterListForNextStepDic.updateValue(parameterListForNextStep.dataType ?? "", forKey: "dataType")
-                    parameterListForNextStepDic.updateValue(parameterListForNextStep.type ?? "", forKey: "type")
-                    parameterListForNextStepDic.updateValue(parameterListForNextStep.mask ?? "", forKey: "mask")
-                    parameterListForNextStepDic.updateValue(parameterListForNextStep.regExp ?? "", forKey: "regExp")
-                    parameterListForNextStepDic.updateValue(parameterListForNextStep.maxLength ?? "", forKey: "maxLength")
-                    parameterListForNextStepDic.updateValue(parameterListForNextStep.minLength ?? "", forKey: "minLength")
-                    parameterListForNextStepDic.updateValue(String(parameterListForNextStep.rawLength ?? 0), forKey: "rawLength")
-                    parameterListForNextStepDic.updateValue(String(parameterListForNextStep.isRequired ?? false), forKey: "isRequired")
-                    parameterListForNextStepDic.updateValue(String(false), forKey: "readOnly")
-                    self.dataArray.append(parameterListForNextStepDic)
-                }
-                
-                self.finalStep = data.finalStep ?? true
-                self.needSum = data.needSum ?? true
-                DispatchQueue.main.async {
-                self.tableView.reloadData()
-                }
-            } else {
-                print(#function, respModel.errorMessage ?? "")
-            }
-        }
-    }
-    
-    //NextStepServiceTransferDecodableModel
-    /// Запрос по получения полей на последнем шаге в многошаговом операторе
-    final func operatorNexStep(amount: String ,completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
-        self.showActivity()
-        
-        let a = UserDefaults.standard.array(forKey: "body") as? [[String: String]] ?? [[:]]
-        let body = [ "amount" : amount,
-                     "additional" : a ] as [String: AnyObject]
-        
-        NetworkManager<NextStepServiceTransferDecodableModel>.addRequest(.nextStepServiceTransfer, [:], body) { model, error in
-            self.dismissActivity()
-            if error != nil {
-                print(#function, "CreateServiceTransfer Error")
-            }
-            guard let respModel = model else { return }
-            if respModel.statusCode == 0 {
-                guard let data = respModel.data else { return }
-                var additionalListDic = [String: String]()
 
-                self.dataArray.removeAll()
+//CreateServiceTransferDecodableModel
+/// Запрос по получения полей при многошаговом операторе
+final func operatorStep() {
+    self.showActivity()
+    fieldid += 1
+    let body = [ "check" : false,
+                 "amount" : nil,
+                 "currencyAmount" : "RUB",
+                 "payer" : [ "cardId" : self.cardId,
+                             "cardNumber" : nil,
+                             "accountId" : nil ],
+                 "puref" : puref,
+                 "additional" : bodyArray ] as [String: AnyObject]
+    NetworkManager<CreateServiceTransferDecodableModel>.addRequest(.createServiceTransfer, [:], body) { model, error in
+        self.dismissActivity()
+        if error != nil {
+            print(#function, "CreateServiceTransfer Error")
+        }
+        guard let respModel = model else { return }
+        if respModel.errorMessage != "" {
+            self.showAlert(with: "Ошибка", and: respModel.errorMessage ?? "")
+        }
+        if respModel.statusCode == 0 {
+            guard let data = respModel.data else { return }
+            var additionalListDic = [String: String]()
+            var parameterListForNextStepDic = [String: String]()
+            self.dataArray.removeAll()
+            
+            data.additionalList?.forEach{ additionalList in
+                additionalListDic.updateValue(additionalList.fieldTitle ?? "", forKey: "title")
+                additionalListDic.updateValue(additionalList.fieldName ?? "", forKey: "id")
+                additionalListDic.updateValue(additionalList.fieldValue ?? "", forKey: "value")
+                additionalListDic.updateValue(String(true), forKey: "readOnly")
                 
-                data.additionalList?.forEach{ additionalList in
-                    additionalListDic.updateValue(additionalList.fieldTitle ?? "", forKey: "title")
-                    additionalListDic.updateValue(additionalList.fieldName ?? "", forKey: "id")
-                    additionalListDic.updateValue(additionalList.fieldValue ?? "", forKey: "value")
-                    additionalListDic.updateValue(String(true), forKey: "readOnly")
-                    self.dataArray.append(additionalListDic)
-                }
-                
-                self.endStep = data.finalStep ?? true
-                self.needSum = data.needSum ?? true
-                DispatchQueue.main.async {
-                self.tableView.reloadData()
-                }
-            } else {
-                print(#function, respModel.errorMessage ?? "")
+                self.dataArray.append(additionalListDic)
             }
+            data.parameterListForNextStep?.forEach{ parameterListForNextStep in
+                parameterListForNextStepDic.updateValue(parameterListForNextStep.title ?? "", forKey: "title")
+                parameterListForNextStepDic.updateValue(parameterListForNextStep.id ?? "", forKey: "id")
+                parameterListForNextStepDic.updateValue(String(parameterListForNextStep.order ?? 0), forKey: "order")
+                parameterListForNextStepDic.updateValue(parameterListForNextStep.subTitle ?? "", forKey: "subTitle")
+                parameterListForNextStepDic.updateValue(parameterListForNextStep.viewType ?? "", forKey: "viewType")
+                parameterListForNextStepDic.updateValue(parameterListForNextStep.dataType ?? "", forKey: "dataType")
+                parameterListForNextStepDic.updateValue(parameterListForNextStep.type ?? "", forKey: "type")
+                parameterListForNextStepDic.updateValue(parameterListForNextStep.mask ?? "", forKey: "mask")
+                parameterListForNextStepDic.updateValue(parameterListForNextStep.regExp ?? "", forKey: "regExp")
+                parameterListForNextStepDic.updateValue(parameterListForNextStep.maxLength ?? "", forKey: "maxLength")
+                parameterListForNextStepDic.updateValue(parameterListForNextStep.minLength ?? "", forKey: "minLength")
+                parameterListForNextStepDic.updateValue(String(parameterListForNextStep.rawLength ?? 0), forKey: "rawLength")
+                parameterListForNextStepDic.updateValue(String(parameterListForNextStep.isRequired ?? false), forKey: "isRequired")
+                parameterListForNextStepDic.updateValue(String(false), forKey: "readOnly")
+                self.dataArray.append(parameterListForNextStepDic)
+            }
+            
+            self.finalStep = data.finalStep ?? true
+            self.needSum = data.needSum ?? true
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+                self.emptyArray.removeAll()
+            }
+        } else {
+            print(#function, respModel.errorMessage ?? "")
         }
     }
+}
+
+//NextStepServiceTransferDecodableModel
+/// Запрос по получения полей на последнем шаге в многошаговом операторе
+final func operatorNexStep(amount: String ,completion: @escaping (_ model: NextStepServiceTransferDecodableModel? ,_ error: String?) -> ()) {
+    self.showActivity()
     
+    let a = UserDefaults.standard.array(forKey: "body") as? [[String: String]] ?? [[:]]
+    let body = [ "amount" : amount,
+                 "additional" : a ] as [String: AnyObject]
+    
+    NetworkManager<NextStepServiceTransferDecodableModel>.addRequest(.nextStepServiceTransfer, [:], body) { model, error in
+        self.dismissActivity()
+        if error != nil {
+            print(#function, "CreateServiceTransfer Error")
+        }
+        guard let respModel = model else { return }
+        if respModel.statusCode == 0 {
+            guard let data = respModel.data else { return }
+            var additionalListDic = [String: String]()
+            
+            self.dataArray.removeAll()
+            
+            data.additionalList?.forEach{ additionalList in
+                additionalListDic.updateValue(additionalList.fieldTitle ?? "", forKey: "title")
+                additionalListDic.updateValue(additionalList.fieldName ?? "", forKey: "id")
+                additionalListDic.updateValue(additionalList.fieldValue ?? "", forKey: "value")
+                additionalListDic.updateValue(String(true), forKey: "readOnly")
+                self.dataArray.append(additionalListDic)
+            }
+            
+            self.endStep = data.finalStep ?? true
+            self.needSum = data.needSum ?? true
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+                completion(respModel, nil)
+            }
+        } else {
+            print(#function, respModel.errorMessage ?? "")
+        }
+    }
+}
+
 }

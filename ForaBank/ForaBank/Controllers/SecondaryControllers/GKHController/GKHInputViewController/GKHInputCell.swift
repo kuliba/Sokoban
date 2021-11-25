@@ -21,11 +21,11 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
     weak var tableViewDelegate: TableViewDelegate?
     
     static let reuseId = "GKHInputCell"
-    
     var fieldid = ""
     var fieldname = ""
     var fieldvalue = ""
     var body = [String: String]()
+    
     var isSelect = true
     @IBOutlet weak var infoButon: UIButton!
     @IBOutlet weak var operatorsIcon: UIImageView!
@@ -55,13 +55,13 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         fieldvalue = textField.text ?? ""
     }
+    
+
     // DataSetup
     func setupUI (_ index: Int, _ dataModel: [[String: String]]) {
         // Разблокировка ячеек
         self.textField.isEnabled = true
-        isSelect = true
-        
-        //       if emptyCell() == false {
+
         infoButon.isHidden = true
         self.fieldid = String(index + 1)
         fieldname = dataModel[index]["id"] ?? ""
@@ -101,30 +101,31 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
             body.updateValue(fieldname, forKey: "fieldname")
             body.updateValue(textField.text ?? "" , forKey: "fieldvalue")
             var a = UserDefaults.standard.array(forKey: "body") as? [[String: String]] ?? [[:]]
+            a.removeAll()
             a.append(body)
             UserDefaults.standard.set(a, forKey: "body")
         }
         // Блокировка ячеек
-        if dataModel[index]["readOnly"] == "false" {
-            self.textField.isEnabled = true
+        if dataModel[index]["readOnly"] == "true" {
+            self.textField.isEnabled = false
             isSelect = true
         }
+
     }
-    //    }
     
     @IBAction func textField(_ sender: UITextField) {
         fieldvalue = textField.text ?? ""
         body.updateValue(fieldid, forKey: "fieldid")
         body.updateValue(fieldname, forKey: "fieldname")
         body.updateValue(textField.text ?? "" , forKey: "fieldvalue")
-        haveEmptyCell()
         personalAccaunt()
+        haveEmptyCell()
         tableViewDelegate?.responds(to: #selector(TableViewDelegate.afterClickingReturnInTextField(cell:)))
         tableViewDelegate?.afterClickingReturnInTextField(cell: self)
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        
+        haveEmptyCell()
         //        let previousText:NSString = textField.text! as NSString
         //        let updatedText = previousText.replacingCharacters(in: range, with: string)
         //        print("updatedText > ", updatedText)
@@ -143,26 +144,19 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
     
     /// Проверяем, если поле заполнено, то отправляем в замыкании  true, для отображения кнопки "Продолжить"
     final func haveEmptyCell() {
+        
         if fieldvalue != "" {
             if ( fieldvalue != "" && isSelect == true) {
                 showGoButton?(true)
             } else if ( fieldvalue == "" && isSelect == false) {
                 showGoButton?(true)
-            }
-            if ( fieldvalue == "" && isSelect == true) {
+            } else {
                 showGoButton?(false)
             }
         }
-    }
-    /// Проверяем, есть ли заполненные поля. Если да, то не обновляем ячейки
-    final func emptyCell() -> Bool {
         
-        var result = false
-        if ( fieldid != "" || fieldname != "" || fieldvalue != "" ) {
-            result = true
-        }
-        return result
     }
+    
     /// Получаем значение Лицевого счета и отправляем в замыкании
     final func personalAccaunt() {
         if fieldname == "P1" {
@@ -171,4 +165,5 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
     }
     
 }
+
 

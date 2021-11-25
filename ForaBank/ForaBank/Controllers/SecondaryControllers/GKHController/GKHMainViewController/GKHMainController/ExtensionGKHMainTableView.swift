@@ -36,7 +36,13 @@ extension GKHMainViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.searchController.searchBar.searchTextField.endEditing(true)
-        defineOperatorType() { [weak self] value in
+        let op: GKHOperatorsModel!
+        if searching {
+            op = searchedOrganization[indexPath.row]
+        } else {
+            op = organization[indexPath.row]
+        }
+        defineOperatorType(op.puref ?? "") { [weak self] value in
             self?.operatorType = value
             DispatchQueue.main.async {
                 self?.performSegue(withIdentifier: "input", sender: self)
