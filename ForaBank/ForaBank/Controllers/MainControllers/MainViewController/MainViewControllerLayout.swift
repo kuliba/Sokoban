@@ -77,14 +77,21 @@ extension MainViewController {
             layoutSize: groupSize,  subitems: [item, itemadd, topItem])
         
         let section = NSCollectionLayoutSection(group: group)
-
+        
    
         section.interGroupSpacing = 8
         section.contentInsets = .init(top: 16, leading: 20, bottom: 32, trailing: 20)
-        
+//        group.contentInsets = .init(top: 100, leading: 0, bottom: 40, trailing: 0)
         section.orthogonalScrollingBehavior = .paging
-        let sectionHeader = createSectionHeader()
-        sectionHeader.contentInsets = .init(top: 20, leading: 0, bottom: 20, trailing: 0)
+        var sectionHeader = createSectionHeaderWithButtons()
+
+        if productsDeposits.count == 0{
+            sectionHeader = createSectionHeader()
+        } else {
+            sectionHeader = createSectionHeaderWithButtons()
+        }
+        sectionHeader.contentInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 0)
+
         section.boundarySupplementaryItems = [sectionHeader]
         
         return section

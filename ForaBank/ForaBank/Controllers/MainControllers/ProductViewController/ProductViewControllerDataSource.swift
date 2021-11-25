@@ -73,6 +73,7 @@ extension ProductViewController: UICollectionViewDataSource {
                     product = products[indexPath.item]
                     indexItem = 0
                 }
+                
 //                guard let cell = collectionView.cellForItem(at: indexPath) as? CardCollectionViewCell else {return}
 //                cell.showSelect()
             } else {

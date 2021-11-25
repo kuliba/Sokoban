@@ -137,7 +137,7 @@ class AccountDetailsViewController: UIViewController {
                     self.mockItemsDeposit[3].description = model.data?.termDay
                     self.mockItemsDeposit[4].description = String("\(model.data?.interestRate ?? 0.0) %")
                     
-                    self.mockItemsDeposit[5].description = model.data?.dateNext
+                    self.mockItemsDeposit[5].description = self.longIntToDateString(longInt:  model.data?.dateNext  ?? 0)
                     self.mockItemsDeposit[6].description = model.data?.sumPayInt?.currencyFormatter(symbol:  product?.currency ?? "RUB")
                     self.mockItemsDeposit[7].description = model.data?.sumCredit?.currencyFormatter(symbol:  product?.currency ?? "RUB")
                     self.mockItemsDeposit[8].description = model.data?.sumDebit?.currencyFormatter(symbol:  product?.currency ?? "RUB")
@@ -200,13 +200,18 @@ extension AccountDetailsViewController: UITableViewDataSource {
                 cell.titleLabel.text = "Лимиты на операции"
                 cell.imageButton.image = UIImage(named: "limitButton")
                 cell.alpha = 0.3
+                cell.isUserInteractionEnabled = false
             case 4:
                 cell.titleLabel.text = "Графиик выплаты % по вкладу"
                 cell.imageButton.image = UIImage(named: "scheduleButton")
                 cell.alpha = 0.3
+                cell.isUserInteractionEnabled = false
+
             case 5:
                 cell.titleLabel.text = "Условия по вкладу"
                 cell.imageButton.image = UIImage(named: "conditionButton")
+                cell.alpha = 0.3
+                cell.isUserInteractionEnabled = false
             default:
                 cell.titleLabel.text = "default"
                 cell.imageButton.image = UIImage(named: "otherAccountButton")

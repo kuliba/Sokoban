@@ -57,7 +57,7 @@ import Foundation
 
 // MARK: - DepositInfoData
 struct DepositInfoData: Codable {
-    let dateNext: String?
+    let dateNext: Int?
     let dateEnd: Int?
     let id: Int?
     let dateOpen: Int?
@@ -85,7 +85,7 @@ extension DepositInfoData {
 
     func with(
         dateEnd: Int?? = nil,
-        dateNext: String?? = nil,
+        dateNext: Int?? = nil,
         dateOpen: Int?? = nil,
         id: Int?? = nil,
         initialAmount: Double?? = nil,

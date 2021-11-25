@@ -8,6 +8,9 @@
 import UIKit
 import SkeletonView
 
+protocol ProductViewControllerDelegate: AnyObject {
+    func goPaymentsViewController()
+}
 
 protocol ChildViewControllerDelegate{
     func childViewControllerResponse(productList: [GetProductListDatum])
@@ -25,6 +28,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
 
     var halfScreen: Bool?
     
+    weak var delegatePaymentVc: ProductViewControllerDelegate?
 
     func mtSlideToOpenDelegateDidFinish(_ sender: MTSlideToOpenView) {
         activateSlider.thumnailImageView.image = #imageLiteral(resourceName: "successSliderButton").imageFlippedForRightToLeftLayoutDirection()
@@ -168,7 +172,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
                 guard let number = self.product?.number else { return }
 
                 self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4))) · Карта не активирована", color: self.product?.fontDesignColor)
-                
+                activateSlider.isHidden = false
             } else {
                 guard let number = self.product?.number else { return }
 
@@ -177,7 +181,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
             activateSlider.textColor = UIColor(hexString: product?.fontDesignColor ?? "")
             activateSlider.sliderBackgroundColor = UIColor(hexString: product?.background[0] ?? "").darker()
             backgroundView.backgroundColor = UIColor(hexString: product?.background[0] ?? "").darker()
-            
+
             if product?.productType == "DEPOSIT"{
                 guard let number = self.product?.accountNumber else { return }
                 addCloseColorButton(with: UIColor(hexString: "#ffffff"))
@@ -447,7 +451,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
 //                    self?.collectionView((self?.collectionView!)!, didSelectItemAt: IndexPath(row: self?.indexItem ?? 0, section: 0))
 //                    self?.collectionView?.selectItem(at: IndexPath(item: self?.indexItem ?? 0, section: 0), animated: true, scrollPosition: .bottom)
 //                    let cell = self?.collectionView?.cellForItem(at: IndexPath(item: self?.indexItem ?? 0, section: 0)) as? CardCollectionViewCell
-                    self?.product = self?.products[self?.indexItem ?? 0]
+//                    self?.product = self?.products[self?.indexItem ?? 0]
 //                    cell?.showSelect()
                 }
         
@@ -626,7 +630,11 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
         card.backgroundImageView.sizeToFit()
       
         card.addSubview(activateSlider)
-        activateSlider.isHidden = true
+        if  product?.statusPC == "17", product?.status == "Действует" || product?.status == "Выдано клиенту"{
+            activateSlider.isHidden = false
+        } else {
+            activateSlider.isHidden = true
+        }
         activateSlider.delegate = self
         activateSlider.center(inView: card)
         activateSlider.anchor(width: 167, height: 48)
@@ -783,10 +791,13 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
 
     
     @objc func presentPaymentVC(){
+        
         let vc = PaymentsViewController()
         vc.searchContact.isHidden = true
         vc.addCloseButton()
         present(vc, animated: true, completion: nil)
+        
+//        delegatePaymentVc?.goPaymentsViewController()
     }
     
     func presentRequisitsVc(product: GetProductListDatum,_ openControlButtons: Bool?) {

@@ -56,7 +56,7 @@ final public class Router: NSObject, RouterType, UINavigationControllerDelegate 
         guard controller is UINavigationController == false else {
             return
         }
-        
+
         if let completion = completion {
             completions[controller] = completion
         }

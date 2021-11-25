@@ -10,7 +10,8 @@ import RealmSwift
 
 protocol MainViewControllerDelegate: AnyObject {
     func goSettingViewController()
-    func goProductViewController(productIndex: Int)
+    func goProductViewController(productIndex: Int, product: GetProductListDatum)
+    func goPaymentsViewController()
 }
 
 class MainViewController: UIViewController {
@@ -29,24 +30,33 @@ class MainViewController: UIViewController {
         }
     }
     
-    var productList = [GetProductListDatum](){
-        didSet {
-            DispatchQueue.main.async {
-                self.reloadData(with: nil)
-            }
-        }
-    }
+    var productList = [GetProductListDatum]()
+    
+    var filterData = [GetProductListDatum]()
+    
     var products = [PaymentsModel](){
         didSet {
             DispatchQueue.main.async {
+//                var snapshot = NSDiffableDataSourceSnapshot<Section, PaymentsModel>()
+//
+//
+//                let itemsOfSection = snapshot.itemIdentifiers(inSection: .products)
+//                snapshot.deleteItems(itemsOfSection)
+//                snapshot.appendItems(self.products, toSection: .products)
+//                snapshot.reloadSections([.products])
+//                self.dataSource?.apply(snapshot, animatingDifferences: true)
                 self.reloadData(with: nil)
             }
         }
     }
+    var productsCardsAndAccounts = [GetProductListDatum]()
+    
+    var productsDeposits = [GetProductListDatum]()
+    
+    var isFiltered = false
     var pay = [PaymentsModel](){
         didSet {
             DispatchQueue.main.async {
-                self.reloadData(with: nil)
             }
         }
     }
@@ -115,7 +125,8 @@ class MainViewController: UIViewController {
 //        navigationController?.navigationBar.isHidden = true
         navigationController?.navigationBar.backgroundColor = UIColor(hexString: "F8F8F8")
         navigationController?.navigationBar.barTintColor = UIColor(hexString: "F8F8F8")
-
+      
+        
         view.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 1)
         
         setupSearchBar()
@@ -224,7 +235,14 @@ class MainViewController: UIViewController {
 //            } else if listProducts.prefix(3).count == 3{
 //                self.products.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
 //            }
+            
             self.productList = data ?? []
+            self.productsCardsAndAccounts = self.productList.filter({$0.productType == "CARD" || $0.productType == "ACCOUNT"})
+            self.productsDeposits = self.productList.filter({$0.productType == "DEPOSIT"})
+            self.products.removeAll()
+            for i in self.productsCardsAndAccounts {
+                self.products.append(PaymentsModel(productList: i))
+            }
         }
     }
         

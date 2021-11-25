@@ -1,38 +1,33 @@
 import UIKit
 
-class ProductCoordinator: Coordinator {
+class PaymentsViewCoordinator: Coordinator {
 
-    let productViewController: ProductViewController = ProductViewController()
+    let paymentsViewController: PaymentsViewController = PaymentsViewController()
 
     override init(router: RouterType) {
         super.init(router: router)
-        productViewController.delegatePaymentVc = self
         
     }
     
     override func start() {
-        productViewController.modalPresentationStyle = .fullScreen
+        paymentsViewController.modalPresentationStyle = .fullScreen
     }
     
     override func toPresentable() -> UIViewController {
-        let navVC = UINavigationController(rootViewController: productViewController)
+        let navVC = UINavigationController(rootViewController: paymentsViewController)
         navVC.modalPresentationStyle = .fullScreen
 //        navVC.addCloseButton()
         return navVC
     }
 }
 
-extension ProductCoordinator: ProductViewControllerDelegate{
-    
+extension PaymentsViewCoordinator: ProductViewControllerDelegate{
     func goPaymentsViewController() {
         let productCoordinator = PaymentsViewCoordinator(router: router)
         addChild(productCoordinator)
         productCoordinator.start()
-        router.present(productCoordinator, animated: true)
+        router.push(productCoordinator, animated: true, completion: nil)
     }
     
     
 }
-
-
-
