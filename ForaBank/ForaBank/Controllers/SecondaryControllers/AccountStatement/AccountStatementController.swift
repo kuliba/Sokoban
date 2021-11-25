@@ -142,6 +142,9 @@ class AccountStatementController: UIViewController {
         
         cardFromField.didChooseButtonTapped = { () in
             self.openOrHideView(self.cardListView)
+            if self.dateView.isHidden == false {
+                self.hideView(self.dateView, needHide: true)
+            }
         }
         
         dateField.didChooseButtonTapped = { () in
@@ -149,9 +152,18 @@ class AccountStatementController: UIViewController {
             if self.cardListView.isHidden == false {
                 self.hideView(self.cardListView, needHide: true)
             }
+            self.hideDatePicker()
+            
         }
         
         dateView.buttonIsTapped = { button in
+            if self.cardListView.isHidden == false {
+                self.hideView(self.cardListView, needHide: true)
+            }
+            if self.dateView.isHidden == false {
+                self.hideView(self.dateView, needHide: true)
+            }
+            
             switch button.tag {
             case 0:
                 let now = Date()
@@ -220,7 +232,7 @@ class AccountStatementController: UIViewController {
             datePicker!.backgroundColor = .white
 //            datePicker!.backgroundColor = UIColor.blueColor()
             datePicker!.setValue(UIColor.black, forKeyPath: "textColor")
-            datePicker!.setValue(0.8, forKeyPath: "alpha")
+            datePicker!.setValue(1, forKeyPath: "alpha")
             datePicker!.autoresizingMask = .flexibleWidth
             datePicker!.datePickerMode = .date
             if #available(iOS 13.4, *) {
@@ -229,7 +241,6 @@ class AccountStatementController: UIViewController {
             datePicker!.maximumDate = Date()
             datePicker!.addTarget(self, action: #selector(self.dateChanged(_:)), for: .valueChanged)
             
-//            datePicker!.frame = CGRect(x: 0, y: 0, width: 0, height: 300)
             self.view.addSubview(datePicker!)
             datePicker!.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, height: 300)
             
@@ -263,27 +274,17 @@ class AccountStatementController: UIViewController {
 
     @objc func onCancelButtonClick() {
         endDate = selectDate
-        toolBar?.removeFromSuperview()
-        datePicker?.removeFromSuperview()
-        toolBar = nil
-        datePicker = nil
-        
-        enterDate = false
+        hideDatePicker()
         startDate = nil
         endDate = nil
-        generateButton.isHidden = false
         self.setButtonEnabled(button: self.generateButton, isEnabled: false)
     }
+    
     
     @objc func onDoneButtonClick() {
         if enterDate {
             endDate = selectDate
-            toolBar?.removeFromSuperview()
-            datePicker?.removeFromSuperview()
-            toolBar = nil
-            datePicker = nil
-            enterDate = false
-            generateButton.isHidden = false
+            hideDatePicker()
             setDate()
             
         } else {
@@ -292,7 +293,15 @@ class AccountStatementController: UIViewController {
             titleButton.title = "Конец периода"
             
         }
-        
+    }
+    
+    func hideDatePicker() {
+        toolBar?.removeFromSuperview()
+        datePicker?.removeFromSuperview()
+        toolBar = nil
+        datePicker = nil
+        enterDate = false
+        generateButton.isHidden = false
     }
     
     private func setDate() {
@@ -307,12 +316,6 @@ class AccountStatementController: UIViewController {
         
         self.setButtonEnabled(button: self.generateButton, isEnabled: true)
         
-        if self.cardListView.isHidden == false {
-            self.hideView(self.cardListView, needHide: true)
-        }
-        if self.dateView.isHidden == false {
-            self.hideView(self.dateView, needHide: true)
-        }
     }
     
     @objc private func generateButtonTapped() {
