@@ -37,15 +37,19 @@ class MainViewController: UIViewController {
     var products = [PaymentsModel](){
         didSet {
             DispatchQueue.main.async {
-//                var snapshot = NSDiffableDataSourceSnapshot<Section, PaymentsModel>()
-//
-//
-//                let itemsOfSection = snapshot.itemIdentifiers(inSection: .products)
-//                snapshot.deleteItems(itemsOfSection)
-//                snapshot.appendItems(self.products, toSection: .products)
-//                snapshot.reloadSections([.products])
-//                self.dataSource?.apply(snapshot, animatingDifferences: true)
-                self.reloadData(with: nil)
+                var snapshot = self.dataSource?.snapshot()
+//                snapshot?.appendSections([.products])
+                let items = snapshot?.itemIdentifiers(inSection: .products)
+                snapshot?.deleteItems(items ?? [PaymentsModel]())
+                
+                snapshot?.appendItems(self.products, toSection: .products)
+//                snapshot?.sectionIdentifier(containingItem: self.products[0])
+                snapshot?.reloadItems(self.products)
+            
+//                snapshot?.deleteSections([.products])
+//                snapshot?.appendItems(self.products, toSection: .products)
+
+                self.dataSource?.apply(snapshot ?? NSDiffableDataSourceSnapshot<Section, PaymentsModel>())
             }
         }
     }
