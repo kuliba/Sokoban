@@ -41,6 +41,7 @@ extension UIViewController {
             }
             alertController.addAction(okAction)
             alertController.view.tintColor = .black
+            alertController.view.center = self.view.center
             self.present(alertController, animated: true, completion: nil)
         }
     }
@@ -55,6 +56,7 @@ extension UIViewController {
             alertController.addAction(cancel)
             alertController.addAction(okAction)
             alertController.view.tintColor = .black
+            alertController.view.center = self.view.center
             self.present(alertController, animated: true, completion: nil)
         }
     }

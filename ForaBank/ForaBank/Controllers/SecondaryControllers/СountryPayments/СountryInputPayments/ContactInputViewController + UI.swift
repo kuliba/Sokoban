@@ -119,9 +119,7 @@ extension ContactInputViewController {
         
         let customViewItem = UIBarButtonItem(customView: UIImageView(image: navImage))
         self.navigationItem.rightBarButtonItem = customViewItem
-#if DEBUG
         setupCurrencyButton(system: system)
-#endif
     }
     
     func setupCurrencyButton(system: PaymentSystemList) {

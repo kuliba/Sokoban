@@ -23,10 +23,10 @@
                     <rect key="frame" x="68" y="8" width="284" height="114"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="eUT-wJ-qhj">
-                            <rect key="frame" x="0.0" y="0.0" width="238.5" height="32"/>
+                            <rect key="frame" x="0.0" y="0.0" width="209.5" height="32"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0ID-SO-yvB">
-                                    <rect key="frame" x="0.0" y="0.0" width="80.5" height="32"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="69.5" height="32"/>
                                     <color key="backgroundColor" red="0.96470588235294119" green="0.96470588235294119" blue="0.96862745098039216" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="32" id="g4n-DE-4Es"/>
@@ -34,7 +34,7 @@
                                     <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <state key="normal" title="Button"/>
                                     <buttonConfiguration key="configuration" style="plain" title="Сегодня">
-                                        <fontDescription key="titleFontDescription" type="system" pointSize="14"/>
+                                        <fontDescription key="titleFontDescription" type="system" pointSize="11"/>
                                     </buttonConfiguration>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -46,7 +46,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3PX-sY-94s">
-                                    <rect key="frame" x="88.5" y="0.0" width="74" height="32"/>
+                                    <rect key="frame" x="77.5" y="0.0" width="64.5" height="32"/>
                                     <color key="backgroundColor" red="0.96470588235294119" green="0.96470588235294119" blue="0.96862745098039216" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="32" id="2ZC-5R-Wf7"/>
@@ -54,7 +54,7 @@
                                     <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <state key="normal" title="Button"/>
                                     <buttonConfiguration key="configuration" style="plain" title="Неделя">
-                                        <fontDescription key="titleFontDescription" type="system" pointSize="14"/>
+                                        <fontDescription key="titleFontDescription" type="system" pointSize="11"/>
                                     </buttonConfiguration>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -66,7 +66,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4bP-LM-qd7">
-                                    <rect key="frame" x="170.5" y="0.0" width="68" height="32"/>
+                                    <rect key="frame" x="150" y="0.0" width="59.5" height="32"/>
                                     <color key="backgroundColor" red="0.96470588235294119" green="0.96470588235294119" blue="0.96862745098039216" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="32" id="VFm-Nd-XRU"/>
@@ -74,7 +74,7 @@
                                     <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <state key="normal" title="Button"/>
                                     <buttonConfiguration key="configuration" style="plain" title="Месяц">
-                                        <fontDescription key="titleFontDescription" type="system" pointSize="14"/>
+                                        <fontDescription key="titleFontDescription" type="system" pointSize="11"/>
                                     </buttonConfiguration>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -86,12 +86,15 @@
                                     </connections>
                                 </button>
                             </subviews>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="32" id="RUS-bC-OLr"/>
+                            </constraints>
                         </stackView>
                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="wSC-80-Om3">
-                            <rect key="frame" x="0.0" y="41" width="247" height="32"/>
+                            <rect key="frame" x="0.0" y="41" width="216.5" height="32"/>
                             <subviews>
                                 <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="j9Q-XJ-Yp7">
-                                    <rect key="frame" x="0.0" y="0.0" width="102.5" height="32"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="87.5" height="32"/>
                                     <color key="backgroundColor" red="0.96470588239999999" green="0.96470588239999999" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="32" id="av1-tb-8La"/>
@@ -99,7 +102,7 @@
                                     <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <state key="normal" title="Button"/>
                                     <buttonConfiguration key="configuration" style="plain" title="Три месяца">
-                                        <fontDescription key="titleFontDescription" type="system" pointSize="14"/>
+                                        <fontDescription key="titleFontDescription" type="system" pointSize="11"/>
                                     </buttonConfiguration>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -111,7 +114,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0rO-ZE-bGp">
-                                    <rect key="frame" x="110.5" y="0.0" width="81" height="32"/>
+                                    <rect key="frame" x="95.5" y="0.0" width="70" height="32"/>
                                     <color key="backgroundColor" red="0.96470588239999999" green="0.96470588239999999" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="32" id="g6s-Dp-2pb"/>
@@ -119,7 +122,7 @@
                                     <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <state key="normal" title="Button"/>
                                     <buttonConfiguration key="configuration" style="plain" title="Полгода">
-                                        <fontDescription key="titleFontDescription" type="system" pointSize="14"/>
+                                        <fontDescription key="titleFontDescription" type="system" pointSize="11"/>
                                     </buttonConfiguration>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -131,7 +134,7 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ozV-W8-bZF">
-                                    <rect key="frame" x="199.5" y="0.0" width="47.5" height="32"/>
+                                    <rect key="frame" x="173.5" y="0.0" width="43" height="32"/>
                                     <color key="backgroundColor" red="0.96470588239999999" green="0.96470588239999999" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="32" id="hce-ce-Hih"/>
@@ -139,7 +142,7 @@
                                     <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <state key="normal" title="Button"/>
                                     <buttonConfiguration key="configuration" style="plain" title="Год">
-                                        <fontDescription key="titleFontDescription" type="system" pointSize="14"/>
+                                        <fontDescription key="titleFontDescription" type="system" pointSize="11"/>
                                     </buttonConfiguration>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -151,6 +154,9 @@
                                     </connections>
                                 </button>
                             </subviews>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="32" id="hhZ-su-NHT"/>
+                            </constraints>
                         </stackView>
                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="Q7z-Wa-9Mj">
                             <rect key="frame" x="0.0" y="82" width="160" height="32"/>
@@ -165,7 +171,7 @@
                                     <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <state key="normal" title="Button"/>
                                     <buttonConfiguration key="configuration" style="plain" title="Задать период">
-                                        <fontDescription key="titleFontDescription" type="system" pointSize="14"/>
+                                        <fontDescription key="titleFontDescription" type="system" pointSize="11"/>
                                     </buttonConfiguration>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -177,6 +183,9 @@
                                     </connections>
                                 </button>
                             </subviews>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="32" id="mW0-Xk-l2H"/>
+                            </constraints>
                         </stackView>
                     </subviews>
                     <constraints>

@@ -140,6 +140,12 @@ extension Date {
         return _dateFormatter
     }
     
+    static func dateFormatterDateConvenient() -> DateFormatter {
+        _dateFormatter.locale = _locale
+        _dateFormatter.dateFormat = kDefaultDateFormatSimpleDate
+        return _dateFormatter
+    }
+    
     static func dateFormatterSimpleDateConvenient() -> DateFormatter {
         _dateFormatter.locale = _locale
         _dateFormatter.dateFormat = kDefaultDateFormatSimpleDateConvenient
