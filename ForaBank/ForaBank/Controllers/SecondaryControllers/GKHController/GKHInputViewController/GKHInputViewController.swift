@@ -43,6 +43,8 @@ class GKHInputViewController: BottomPopUpViewAdapter {
     @IBOutlet weak var bottomInputView: BottomInputView!
     @IBOutlet weak var goButton: UIButton!
     
+    var nextStepModel: NextStepServiceTransferDecodableModel? = nil
+    
     /// MARK - REALM
     lazy var realm = try? Realm()
     var cardList: Results<UserAllCardsModel>? = nil
@@ -60,7 +62,7 @@ class GKHInputViewController: BottomPopUpViewAdapter {
     override func viewDidLoad() {
         super.viewDidLoad()
         cardList = realm?.objects(UserAllCardsModel.self)
-        
+
         if !qrData.isEmpty {
             summ = qrData.filter { $0.key == "Сумма"}.first?.value ?? ""
             bottomInputView.amountTextField.text = summ
@@ -89,9 +91,9 @@ class GKHInputViewController: BottomPopUpViewAdapter {
         // amount значение выдает отформатированное значение для передачи в запрос
         bottomInputView.didDoneButtonTapped = { amount in
             self.showActivity()
-            self.operatorNexStep(amount: amount) { model, error in
-                self.dismissActivity()
-                // Запрос на платеж в ЖКХ : нужно добавить параметры в рапрос
+            
+            if self.operatorType == true {
+                // Одношаг
                 self.paymentGKH(amount: amount) { model, error in
                     self.dismissActivity()
                     if error != nil {
@@ -107,6 +109,32 @@ class GKHInputViewController: BottomPopUpViewAdapter {
                         self.showAlert(with: "Ошибка", and: error)
                     }
                 }
+            } else {
+            
+            // Многошаг
+            self.operatorNexStep(amount: amount) { model, error in
+//                self.dismissActivity()
+                // Запрос на платеж в ЖКХ : нужно добавить параметры в рапрос
+               self.nextStepModel = model
+                let gkhModel = GkhPaymentModel(gkhModel: self.nextStepModel,
+                                               bodyArray: self.bodyArray,
+                                               gkhPuref: self.puref,
+                                               amount: amount)
+                guard let model = model else { return }
+                // Переход на экран подтверждения
+                let m = ConfirmViewControllerModel(type: .gkh)
+
+                let r = Double(model.data?.debitAmount ?? 0)
+
+                m.summTransction = r.currencyFormatter(symbol: "RUB")
+
+                let c = Double(model.data?.fee ?? 0)
+                m.taxTransction = c.currencyFormatter(symbol: "RUB")
+                m.cardFromRealm = self.footerView.cardFromField.model
+                m.cardFrom = self.footerView.cardFromField.cardModel
+                m.gkhModel = gkhModel
+                self.goToConfurmVC(with: m)
+            }
             }
         }
         
@@ -154,7 +182,7 @@ class GKHInputViewController: BottomPopUpViewAdapter {
             animationHidden(goButton)
             animationShow(bottomInputView)
         case false:
-            if finalStep == true {
+            if finalStep == false {
                 if endStep == true {
                     animationHidden(goButton)
                     animationShow(bottomInputView)
@@ -205,3 +233,10 @@ class GKHInputViewController: BottomPopUpViewAdapter {
     
 }
 
+
+struct GkhPaymentModel {
+    var gkhModel: NextStepServiceTransferDecodableModel? = nil
+    var bodyArray = [[String : String]]()
+    var gkhPuref = ""
+    var amount = ""
+}

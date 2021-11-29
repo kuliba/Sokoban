@@ -30,6 +30,7 @@ struct GKHHistoryCaruselModel {
         var operatorsArray: Results<GKHOperatorsModel>?
         payModelArray = realm?.objects(GKHHistoryModel.self)
         operatorsArray = realm?.objects(GKHOperatorsModel.self)
+        
         payModelArray?.forEach { operation in
             
             let puref = operation.puref
