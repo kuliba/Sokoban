@@ -70,7 +70,7 @@ extension MainViewController: UICollectionViewDelegate {
                 if let viewController = pay[indexPath.row].controllerName.getViewController() {
                     let navVC = UINavigationController(rootViewController: viewController)
                     present(navVC, animated: true)
-            }
+                }
             } else {
                 print("Pay")
             }

@@ -369,6 +369,7 @@
 		ED8AB45D26C2B55E006F0D03 /* SuccessMeToMeController.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED8AB45C26C2B55E006F0D03 /* SuccessMeToMeController.xib */; };
 		ED8AB46226C3EA2E006F0D03 /* MeToMeSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8AB46026C3EA2E006F0D03 /* MeToMeSettingViewController.swift */; };
 		ED92D3A226735A0A006D47B3 /* PaymentByPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED92D3A126735A0A006D47B3 /* PaymentByPhoneViewController.swift */; };
+		ED9D4D922750F937001AF471 /* OpenNewDepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED9D4D912750F937001AF471 /* OpenNewDepositViewController.swift */; };
 		EDA0DCBD2735E8030013F47E /* AppLocker.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EDA0DCBC2735E8030013F47E /* AppLocker.storyboard */; };
 		EDA0DCC22739523F0013F47E /* AccountDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA0DCC12739523F0013F47E /* AccountDetailsViewController.swift */; };
 		EDA0DCCE2739773A0013F47E /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA0DCC42739773A0013F47E /* MainCoordinator.swift */; };
@@ -850,6 +851,7 @@
 		ED8AB45C26C2B55E006F0D03 /* SuccessMeToMeController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SuccessMeToMeController.xib; sourceTree = "<group>"; };
 		ED8AB46026C3EA2E006F0D03 /* MeToMeSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeToMeSettingViewController.swift; sourceTree = "<group>"; };
 		ED92D3A126735A0A006D47B3 /* PaymentByPhoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentByPhoneViewController.swift; sourceTree = "<group>"; };
+		ED9D4D912750F937001AF471 /* OpenNewDepositViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenNewDepositViewController.swift; sourceTree = "<group>"; };
 		EDA0DCBC2735E8030013F47E /* AppLocker.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AppLocker.storyboard; sourceTree = "<group>"; };
 		EDA0DCC12739523F0013F47E /* AccountDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailsViewController.swift; sourceTree = "<group>"; };
 		EDA0DCC42739773A0013F47E /* MainCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
@@ -2506,6 +2508,22 @@
 			path = PaymentsByPhone;
 			sourceTree = "<group>";
 		};
+		ED9D4D8F2750F901001AF471 /* NewProduct */ = {
+			isa = PBXGroup;
+			children = (
+				ED9D4D902750F914001AF471 /* OpenNewDeposit */,
+			);
+			path = NewProduct;
+			sourceTree = "<group>";
+		};
+		ED9D4D902750F914001AF471 /* OpenNewDeposit */ = {
+			isa = PBXGroup;
+			children = (
+				ED9D4D912750F937001AF471 /* OpenNewDepositViewController.swift */,
+			);
+			path = OpenNewDeposit;
+			sourceTree = "<group>";
+		};
 		EDA0DCBF273951F80013F47E /* AccountDetails */ = {
 			isa = PBXGroup;
 			children = (
@@ -2813,6 +2831,7 @@
 		EDB16593266A4317007E6030 /* SecondaryControllers */ = {
 			isa = PBXGroup;
 			children = (
+				ED9D4D8F2750F901001AF471 /* NewProduct */,
 				A55A52D72746F94200641DD0 /* InternetTVControllers */,
 				0B8C1C5E273DCB3400BA5CAC /* PushHistoryController */,
 				ED5F2883273BE76D006A10BF /* AccountStatement */,
@@ -3598,6 +3617,7 @@
 				EDF68215266F9EC800FD5C07 /* URLConstruct.swift in Sources */,
 				68FFA5402682C6CF002DADFA /* LastPaymentsCollectionViewCell.swift in Sources */,
 				0BA251EF26C26AE700AD087A /* AntiFraudDecodableModel.swift in Sources */,
+				ED9D4D922750F937001AF471 /* OpenNewDepositViewController.swift in Sources */,
 				0B22AEB026CEB80100B11E7F /* Keyboard.swift in Sources */,
 				68D099D2273A73CA0017D777 /* SettingViewCoordinator.swift in Sources */,
 				0BEC893B2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift in Sources */,
