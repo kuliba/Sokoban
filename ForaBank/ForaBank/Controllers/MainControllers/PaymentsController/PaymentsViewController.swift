@@ -43,6 +43,12 @@ class PaymentsViewController: UIViewController {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        UITabBarItem.appearance().setTitleTextAttributes(
+            [.foregroundColor: UIColor.black ], for: .selected)
+    }
+    
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Section, PaymentsModel>?
     

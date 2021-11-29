@@ -22,6 +22,7 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
         logoImageView.image = viewModel.logoImage
     }
     
+    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterial))
     
     static var reuseId: String = "LargeCardCell"
     //MARK: - Properties
@@ -118,7 +119,16 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
         cardNameLabel.text = viewModel.cardName
         cardNameLabel.textColor = viewModel.colorText
         cardNameLabel.alpha = 0.5
-        maskCardLabel.text = viewModel.maskedcardNumber
+        if card.productType == "DEPOSIT"{
+            guard let number = viewModel.card.accountNumber else {
+                return
+            }
+            maskCardLabel.text = String(number.digits.suffix(4))
+        } else {
+            maskCardLabel.text = viewModel.maskedcardNumber
+
+        }
+        
         maskCardLabel.textColor = viewModel.colorText
         logoImageView.image = viewModel.logoImage
     }
@@ -171,6 +181,44 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
         interestRate.backgroundColor = UIColor(hexString: "e1e1e2")
         
 
+        if MyVariables.onBalanceLabel == true{
+          
+            blurView.frame = balanceLabel.bounds
+            balanceLabel.addSubview(blurView)
+            balanceLabel.sendSubviewToBack(blurView)
+            blurView.isHidden = false
+            blurView.alpha = 1
+        } else {
+            blurView.isHidden = true
+            blurView.alpha = 0
+//            balanceLabel.textColor = .white
+        }
+
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(handleMassage),
+                                               name: .deviceDidShakeNotification,
+                                               object: nil)
+        
     }
+    
+    @objc func handleMassage(notification: NSNotification) {
+        if MyVariables.onBalanceLabel == true{
+          
+            blurView.frame = balanceLabel.bounds
+            balanceLabel.addSubview(blurView)
+            balanceLabel.sendSubviewToBack(blurView)
+            blurView.isHidden = false
+            blurView.alpha = 1
+        } else {
+            blurView.removeFromSuperview()
+            blurView.isHidden = true
+            blurView.alpha = 0
+
+            
+//            balanceLabel.textColor = .white
+
+        }
+        
+        }
     
 }

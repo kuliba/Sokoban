@@ -76,9 +76,9 @@ class PaymentsDetailsView: UIView {
                 
                 let decodedimage = UIImage(data: dataDecoded)
                 operatorImageView.image = decodedimage
-                
+                UserDefaults.standard.removeObject(forKey: "OPERATOR_IMAGE")
             } else {
-//                operatorImageView.image = UIImage(named: "GKH")
+                operatorImageView.isHidden  = true
             }
             
         }

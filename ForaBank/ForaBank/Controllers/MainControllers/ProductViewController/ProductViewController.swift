@@ -187,13 +187,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
                 addCloseColorButton(with: UIColor(hexString: "#ffffff"))
 
                 self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4)))", color: "#ffffff")
-//                if product?.allowCredit == false{
-//                    button.alpha = 0.4
-//                    button.isUserInteractionEnabled = false
-//                } else {
-//                    button.alpha = 1
-//                    button.isUserInteractionEnabled = true
-//                }
                 button.alpha = 0.4
                 button.isUserInteractionEnabled = false
 
@@ -210,13 +203,9 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
                 card.backgroundColor = .clear
                 card.backgroundImageView.fillSuperview()
                 card.backgroundImageView.contentMode = .scaleToFill
-//                self.card.reloadInputViews()
+
                 self.backgroundView.backgroundColor = UIColor(hexString:  product?.background[0] ?? "999999").darker()
-//                let imageView = UIImageView()
-//                backgroundView.addSubview(imageView)
-//                imageView.center(inView: backgroundView)
-//                imageView.anchor(top: backgroundView.topAnchor, left: backgroundView.leftAnchor, bottom: backgroundView.bottomAnchor, right: backgroundView.rightAnchor)
-//                imageView.image = product?.background[0]?.convertSVGStringToImage()
+
             
                 navigationController?.view.backgroundColor =  UIColor(hexString: product?.background[0] ?? "999999").darker()
                 
@@ -245,14 +234,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
                 button4.tintColor = .black
                 button4.setImage(btnImage4 , for: .normal)
 
-//                card.reloadInputViews()
-//                card.backgroundImageView.fillSuperview()
-                
-//                card.anchor(top: collectionView?.bottomAnchor, paddingTop: 0,  paddingBottom: 30,  width: 268, height: 160)
-//                card.setupUI()
-
-//                card.backgroundImageView.contentMode = .scaleAspectFill
-//                card.backgroundColor = .cyan
 
             }
             
@@ -454,7 +435,61 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
 //                    self?.product = self?.products[self?.indexItem ?? 0]
 //                    cell?.showSelect()
                 }
-        
+                
+                if self?.product?.productType == "DEPOSIT"{
+                    guard let number = self?.product?.accountNumber else { return }
+                    self?.addCloseColorButton(with: UIColor(hexString: "#ffffff"))
+
+                    self?.navigationItem.setTitle(title: (self?.product?.customName ?? self?.product?.mainField)!, subtitle: "· \(String(number.suffix(4)))", color: "#ffffff")
+                    self?.button.alpha = 0.4
+                    self?.button.isUserInteractionEnabled = false
+
+                    self?.button2.alpha = 0.4
+                    self?.button2.isUserInteractionEnabled = false
+
+                    
+                    self?.button4.setTitle("Управление", for: .normal)
+                    self?.button4.setImage(UIImage(named: "server"), for: .normal)
+                    self?.card.backgroundView?.backgroundColor = UIColor(hexString: "#999999")
+                    self?.card.interestRate.isHidden = false
+                    self?.card.interestRate.text = "\(self?.product?.interestRate ?? 0.0)%"
+                    self?.card.maskCardLabel.text = "\(number.suffix(4))"
+                    self?.card.backgroundColor = .clear
+                    self?.card.backgroundImageView.fillSuperview()
+                    self?.card.backgroundImageView.contentMode = .scaleToFill
+
+                    self?.backgroundView.backgroundColor = UIColor(hexString:  self?.product?.background[0] ?? "999999").darker()
+
+                
+                    self?.navigationController?.view.backgroundColor =  UIColor(hexString: self?.product?.background[0] ?? "999999").darker()
+                    
+                    
+                    self?.navigationController?.navigationBar.backgroundColor = UIColor(hexString: self?.product?.background[0] ?? "999999").darker()
+                    self?.button3.setTitle("Детали", for: .normal)
+                    self?.button3.setImage(UIImage(named: "infoBlack"), for: .normal)
+
+    //                card.anchor(top: collectionView?.bottomAnchor, paddingTop: 0,  paddingBottom: 30,  width: 228, height: 160)
+                } else {
+                    self?.card.interestRate.isHidden = true
+                    self?.button.alpha = 1
+                    self?.button.isUserInteractionEnabled = true
+                    self?.button3.setTitle("Реквизиты\nи выписки", for: .normal)
+                    self?.button3.titleLabel?.lineBreakMode = .byWordWrapping
+                    self?.button3.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+                    self?.button3.titleLabel?.textAlignment = .center
+                    let btnImage3 = UIImage(named: "file-text")?.withRenderingMode(.alwaysTemplate)
+                    self?.button3.tintColor = .black
+                    self?.button3.setImage(btnImage3 , for: .normal)
+                    self?.navigationController?.view.backgroundColor =  UIColor(hexString: self?.product?.background[0] ?? "").darker()
+                    self?.navigationController?.navigationBar.backgroundColor = UIColor(hexString: self?.product?.background[0] ?? "").darker()
+                    self?.button4.setTitle("Блокировать", for: .normal)
+                    self?.button4.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+                    let btnImage4 = UIImage(named: "lock")
+                    self?.button4.tintColor = .black
+                    self?.button4.setImage(btnImage4 , for: .normal)
+
+
+                }
 //                _ = CardViewModel(card: (self?.product!)!)
 
             }
@@ -970,10 +1005,13 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
     func loadHistoryForCard(){
         historyArray.removeAll()
         historyArrayAccount.removeAll()
+        historyArrayDeposit.removeAll()
         sorted.removeAll()
         sortedDeposit.removeAll()
         sortedAccount.removeAll()
         groupByCategory.removeAll()
+        groupByCategoryAccount.removeAll()
+        groupByCategoryDeposit.removeAll()
         tableView?.reloadInputViews()
         statusBarView.showAnimatedGradientSkeleton()
         tableView?.reloadData()
@@ -1064,6 +1102,8 @@ extension ProductViewController{
             let section = groupByCategoryDeposit[indexPath.section] as? Array<Any>
 //                let data = Array(groupByCategory.values)[indexPath.section]
             //            sorted[indexPath.section].value[indexPath.item]
+            cell.operation = nil
+            cell.accountOperation = nil
             cell.depositOperation = sortedDeposit[indexPath.section].value[indexPath.row]
             cell.configure(currency: product?.currency ?? "RUB")
             cell.selectionStyle = .none
@@ -1081,6 +1121,8 @@ extension ProductViewController{
             let section = groupByCategoryAccount[indexPath.section] as? Array<Any>
 //                let data = Array(groupByCategory.values)[indexPath.section]
             //            sorted[indexPath.section].value[indexPath.item]
+            cell.operation = nil
+            cell.depositOperation = nil
             cell.accountOperation = sortedAccount[indexPath.section].value[indexPath.row]
             cell.configure(currency: product?.currency ?? "RUB")
             cell.selectionStyle = .none
@@ -1091,12 +1133,13 @@ extension ProductViewController{
     //        cell.titleLable.text = historyArray[indexPath.row].comment
       
             
-            let data = Array(groupByCategory.values)[indexPath.section]
-            print(data)
+//            let data = Array(groupByCategory.values)[indexPath.section]
+//            print(data)
 //            cell.accountOperation = (data as! [GetAccountStatementDatum])[indexPath.row]
 //            groupByCategory[index].value[indexPath.row]
             cell.titleLable.isSkeletonable = true
-
+            cell.depositOperation = nil
+            cell.accountOperation = nil
             let section = groupByCategory[indexPath.section] as? Array<Any>
             cell.operation = sorted[indexPath.section].value[indexPath.row]
             cell.configure(currency: product?.currency ?? "RUB")

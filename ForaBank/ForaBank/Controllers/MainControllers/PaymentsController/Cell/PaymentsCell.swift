@@ -61,14 +61,19 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
         } else if payment.iconName != "" && payment.lastPhonePayment == nil{
             iconImageView.image = UIImage(named: payment.iconName ?? "")
             self.titleLabel.text = "\(payment.name)"
+            titleLabel.alpha = 1
+            iconImageView.alpha = 1
+            self.alpha = 1
             
         } else {
             let mask = StringMask(mask: "+7 (000) 000-00-00")
             self.titleLabel.text = "\(payment.name)"
             guard let avatarImage = UIImage(named: "smartphonegray") else { return }
             self.iconImageView.image = avatarImage
-            
-            if let unMaskPhone = mask.unmask(string: payment.name) {
+            titleLabel.alpha = 1
+            iconImageView.alpha = 1
+            self.alpha = 1
+            if let unMaskPhone = mask.unmask(string: payment.name){
                 self.searchForContactUsingPhoneNumber(phoneNumber: unMaskPhone) { contact in
                     
                     self.titleLabel.text = "\(contact.givenName) \(contact.familyName)"
@@ -127,6 +132,7 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
             for i in banks{
                 if i.puref == payment.lastMobilePayment?.puref{
                     iconCountryImageView.image = i.svgImage?.convertSVGStringToImage()
+                    
                 }
             }
         } else if payment.lastPhonePayment?.bankID != nil {
@@ -153,10 +159,11 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
         
         initialsLabel.text = contactInitials(model: payment.lastCountryPayment)
         
-        guard let avatarImageName = payment.avatarImageName else { return }
-        guard let avatarImage = UIImage(named: avatarImageName) else { return }
-        iconImageView.image = avatarImage
-        avatarImageView.image = UIImage()
+//        guard let avatarImageName = payment.avatarImageName else { return }
+//        guard let avatarImage = UIImage(named: avatarImageName) else { return }
+//        iconImageView.image = avatarImage
+//        avatarImageView.image = UIImage()
+
         
     }
     
@@ -236,7 +243,8 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
                                     let phoneNumberString = phoneNumberStruct.stringValue
                                     let phoneNumberToCompare = phoneNumberString.components(
                                         separatedBy: NSCharacterSet.decimalDigits.inverted).joined(separator: "")
-                                    if phoneNumberToCompare == phoneNumberToCompareAgainst {
+                                    
+                                    if phoneNumberToCompare.dropFirst() == phoneNumberToCompareAgainst.dropFirst() {
                                         contacts.append(contact)
                                     }
                                 }
@@ -255,9 +263,10 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
                 if message != nil {
                     DispatchQueue.main.async {
                         print(message ?? "")
+                        guard let avatarImage = UIImage(named: "smartphonegray") else { return }
+                        self.iconImageView.image = avatarImage
                     }
-                }
-                else {
+                } else {
                     // Success
                     DispatchQueue.main.async {
                         

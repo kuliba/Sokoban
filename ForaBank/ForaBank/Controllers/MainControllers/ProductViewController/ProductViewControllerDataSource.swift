@@ -107,10 +107,17 @@ extension ProductViewController: UICollectionViewDataSource {
                 activateSlider.isHidden = false
                 blockView.isHidden = true
         } else {
-        
-            button2.isEnabled = true
-            button2.alpha = 1
+            if product?.productType == "DEPOSIT"{
+                button.isUserInteractionEnabled = false
+                button.alpha = 0.4
+                button2.isUserInteractionEnabled = false
+                button2.alpha = 0.4
+            } else {
+                button2.isEnabled = true
+                button2.alpha = 1
+            }
         }
+        
     }
     
     

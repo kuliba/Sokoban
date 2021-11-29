@@ -44,7 +44,7 @@ class MainViewController: UIViewController {
                 
                 snapshot?.appendItems(self.products, toSection: .products)
 //                snapshot?.sectionIdentifier(containingItem: self.products[0])
-                snapshot?.reloadItems(self.products)
+//                snapshot?.reloadItems(self.products)
             
 //                snapshot?.deleteSections([.products])
 //                snapshot?.appendItems(self.products, toSection: .products)
@@ -53,6 +53,7 @@ class MainViewController: UIViewController {
             }
         }
     }
+    
     var productsCardsAndAccounts = [GetProductListDatum]()
     
     var productsDeposits = [GetProductListDatum]()
@@ -144,6 +145,9 @@ class MainViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        UITabBarItem.appearance().setTitleTextAttributes(
+            [.foregroundColor: UIColor.black ], for: .selected)
+
         self.navigationController?.navigationBar.isHidden = true
     }
     
@@ -222,6 +226,7 @@ class MainViewController: UIViewController {
         
     }
 
+    
     func setupData() {
         offer = MockItems.returnBanner()
         currentsExchange = MockItems.returnCurrency()
