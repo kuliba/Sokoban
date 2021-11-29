@@ -13,7 +13,7 @@ class URLHost {
     func getHost() -> String {
         var host = "bg.forabank.ru/dbo/api/v4/f437e29a3a094bcfa73cea12366de95b"
         #if DEBUG
-        host = "bg.forabank.ru/dbo/api/v4/f437e29a3a094bcfa73cea12366de95b"
+        host = "git.briginvest.ru/dbo/api/v3"
         #endif
         return host
     }

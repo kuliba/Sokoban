@@ -107,6 +107,7 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
         if payment.lastCountryPayment != nil {
             iconCountryImageView.isHidden = false
             iconImageView.isHidden = true
+            
             if payment.lastCountryPayment?.phoneNumber != nil {
                 initialsLabel.isHidden = true
                 iconImageView.isHidden = false
