@@ -11,8 +11,8 @@ import RealmSwift
 struct AppLockerHelper {
     
     static func goVC(_ mode: ALMode) {
-        let regisration = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
-        if regisration == true {
+//        let regisration = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
+//        if regisration == true {
             if AppDelegate.shared.isAuth ?? false {
                 guard let topVc = UIApplication.getTopViewController() else {return}
                 DispatchQueue.main.async {
@@ -24,7 +24,7 @@ struct AppLockerHelper {
                 }
             }
         }
-    }
+//    }
 }
 
 

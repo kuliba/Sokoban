@@ -10,10 +10,7 @@ import Firebase
 import FirebaseMessaging
 import RealmSwift
 
-
-    
-
-    @main
+@main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var delegate: Encription?
@@ -54,7 +51,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Net Detect
         NetStatus.shared.startMonitoring()
         
-        initRealmTimerParameters()
+//        initRealmTimerParameters()
 
         return true
     }
