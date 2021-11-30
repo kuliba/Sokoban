@@ -293,6 +293,7 @@
 		A536C7CE274C0FDC002D5EAB /* InternetInputCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A536C7CD274C0FDC002D5EAB /* InternetInputCell.xib */; };
 		A55A52D92746FC3B00641DD0 /* InternetTV.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A55A52D82746FC3B00641DD0 /* InternetTV.storyboard */; };
 		A55A52DB2746FF1700641DD0 /* InternetTVMainController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55A52DA2746FF1700641DD0 /* InternetTVMainController.swift */; };
+		A5E8DEAD2756B12900E5EB34 /* CreateTransferAnswerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E8DEAC2756B12900E5EB34 /* CreateTransferAnswerModel.swift */; };
 		A5F15C0B27495F7C00DC91DA /* GlobalModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F15C0A27495F7B00DC91DA /* GlobalModule.swift */; };
 		A5F15C0D274972F900DC91DA /* InternetTVLatestOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F15C0C274972F900DC91DA /* InternetTVLatestOperations.swift */; };
 		A5F15C0F274980CB00DC91DA /* InternetTVLatestOperationRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F15C0E274980CB00DC91DA /* InternetTVLatestOperationRealm.swift */; };
@@ -782,6 +783,7 @@
 		A536C7CD274C0FDC002D5EAB /* InternetInputCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InternetInputCell.xib; sourceTree = "<group>"; };
 		A55A52D82746FC3B00641DD0 /* InternetTV.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = InternetTV.storyboard; sourceTree = "<group>"; };
 		A55A52DA2746FF1700641DD0 /* InternetTVMainController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVMainController.swift; sourceTree = "<group>"; };
+		A5E8DEAC2756B12900E5EB34 /* CreateTransferAnswerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTransferAnswerModel.swift; sourceTree = "<group>"; };
 		A5F15C0A27495F7B00DC91DA /* GlobalModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalModule.swift; sourceTree = "<group>"; };
 		A5F15C0C274972F900DC91DA /* InternetTVLatestOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVLatestOperations.swift; sourceTree = "<group>"; };
 		A5F15C0E274980CB00DC91DA /* InternetTVLatestOperationRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVLatestOperationRealm.swift; sourceTree = "<group>"; };
@@ -1951,6 +1953,7 @@
 				A51897892748079D00F7B2B4 /* InternetTVDetailsFormController.swift */,
 				A5F15C0C274972F900DC91DA /* InternetTVLatestOperations.swift */,
 				A5F15C10274985C900DC91DA /* InternetTVLatestOperationsModel.swift */,
+				A5E8DEAC2756B12900E5EB34 /* CreateTransferAnswerModel.swift */,
 			);
 			path = InternetTVControllers;
 			sourceTree = "<group>";
@@ -3529,6 +3532,7 @@
 				EDB16595266A4438007E6030 /* DevelopViewController.swift in Sources */,
 				6833E0B22732B69E004C070F /* DetailOperationViewController.swift in Sources */,
 				0B283FC72703815900B5E925 /* ExtensionSceneDelegate.swift in Sources */,
+				A5E8DEAD2756B12900E5EB34 /* CreateTransferAnswerModel.swift in Sources */,
 				68E6A29926A0340D00A1D9A1 /* GetCurrencyListDecodableModel.swift in Sources */,
 				EDB165652667A741007E6030 /* ContactConfirmViewController.swift in Sources */,
 				EDB16592266A19DA007E6030 /* PaymentsViewControllerSearchBarDelegate.swift in Sources */,

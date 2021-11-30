@@ -95,3 +95,4 @@ struct ParameterListForNextStep2: Codable {
         self.readOnly = readOnly
     }
 }
+
