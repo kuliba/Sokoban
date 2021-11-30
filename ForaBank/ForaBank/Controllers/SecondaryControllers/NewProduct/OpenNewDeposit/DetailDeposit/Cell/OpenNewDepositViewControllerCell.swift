@@ -10,6 +10,7 @@ import SDWebImage
 
 protocol OpenNewDepositDelegate: AnyObject {
     func openDetailController(indexPath: IndexPath)
+    func openCalculatorController(indexPath: IndexPath)
 }
 
 class OpenNewDepositViewControllerCell: UICollectionViewCell {
@@ -43,6 +44,7 @@ class OpenNewDepositViewControllerCell: UICollectionViewCell {
     
     @IBAction func openDepositButtonTapped(_ sender: Any) {
         print(#function)
+        delegate?.openCalculatorController(indexPath: index)
     }
     
     

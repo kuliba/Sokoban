@@ -53,10 +53,6 @@ class OpenNewDepositViewController: UICollectionViewController {
         return cell
     }
     
-    func openDetail() {
-        
-    }
-    
     //MARK: - API
     
     private func loadDeposit() {
@@ -68,15 +64,18 @@ class OpenNewDepositViewController: UICollectionViewController {
                 guard let product = model?.data else { return }
                 self.products = product
             }
-            
         }
-        
     }
-    
 }
 
 
 extension OpenNewDepositViewController: OpenNewDepositDelegate {
+    func openCalculatorController(indexPath: IndexPath) {
+        let controller = DepositCalculatorViewController()
+        controller.product = products[indexPath.row]
+        self.navigationController?.pushViewController(controller, animated: true)
+    }
+    
     func openDetailController(indexPath: IndexPath) {
         let controller = DetailInformationViewController()
         controller.elements = products[indexPath.row].detailedСonditions
