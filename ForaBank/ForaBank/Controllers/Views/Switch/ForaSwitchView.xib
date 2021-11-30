@@ -41,7 +41,7 @@
                                 <action selector="bankByPhoneSwitchTapped:" destination="-1" eventType="valueChanged" id="mQZ-e6-Icm"/>
                             </connections>
                         </switch>
-                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="smartphoneGrey" translatesAutoresizingMaskIntoConstraints="NO" id="QH2-Rg-8W7">
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="smartphoneGreen" translatesAutoresizingMaskIntoConstraints="NO" id="QH2-Rg-8W7">
                             <rect key="frame" x="16" y="27" width="24" height="24"/>
                             <constraints>
                                 <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="24" id="2lw-Vg-jRe"/>
@@ -87,6 +87,6 @@
         </view>
     </objects>
     <resources>
-        <image name="smartphoneGrey" width="24" height="24"/>
+        <image name="smartphoneGreen" width="24" height="24"/>
     </resources>
 </document>
