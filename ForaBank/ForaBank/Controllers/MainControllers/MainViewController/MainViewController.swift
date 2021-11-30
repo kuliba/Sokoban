@@ -95,8 +95,20 @@ class MainViewController: UIViewController {
     var services = [PaymentsModel]()
     
     
-    var dataEuro: GetExchangeCurrencyDataClass? = nil
-    var dataUSD: GetExchangeCurrencyDataClass? = nil
+    var dataEuro: GetExchangeCurrencyDataClass? = nil{
+        didSet {
+            DispatchQueue.main.async {
+                self.reloadData(with: nil)
+            }
+        }
+    }
+    var dataUSD: GetExchangeCurrencyDataClass? = nil{
+        didSet {
+            DispatchQueue.main.async {
+                self.reloadData(with: nil)
+            }
+        }
+    }
     
     lazy var searchBar: NavigationBarUIView = UIView.fromNib()
     
@@ -144,10 +156,10 @@ class MainViewController: UIViewController {
         getCurrency()
         setupData()
         reloadData(with: nil)
-        AddAllUserCardtList.add() {
-            print("REALM Add")
-        }
-        updateObjectWithNotification()
+//        AddAllUserCardtList.add() {
+//            print("REALM Add")
+//        }
+//        updateObjectWithNotification()
         
     }
     
@@ -234,37 +246,37 @@ class MainViewController: UIViewController {
         
     }
 
-    func updateObjectWithNotification() {
-        let object = realm?.objects(UserAllCardsModel.self)
-        token = object?.observe { ( changes: RealmCollectionChange) in
-            switch changes {
-            case .initial:
-                print("REALM Initial")
-                let cards = self.updateCardsList(with: object)
-//                self.allCardsFromRealm = cards
-            case .update:
-                print("REALM Update")
-                let cards = self.updateCardsList(with: object)
-//                self.allCardsFromRealm = cards
-            case .error(let error):
-                print("DEBUG token fatalError:", error)
-                fatalError("\(error)")
-            }
-        }
-    }
-    
-    private func updateCardsList(with result: Results<UserAllCardsModel>?) -> [UserAllCardsModel] {
-        var cardsArray = [UserAllCardsModel]()
-        let cards = result?.compactMap { $0 } ?? []
-        cards.forEach { card in
-            if card.productType == "CARD" {
-                cardsArray.append(card)
-            } else {
-                cardsArray.append(card)
-            }
-        }
-        return cardsArray
-    }
+//    func updateObjectWithNotification() {
+//        let object = realm?.objects(UserAllCardsModel.self)
+//        token = object?.observe { ( changes: RealmCollectionChange) in
+//            switch changes {
+//            case .initial:
+//                print("REALM Initial")
+//                let cards = self.updateCardsList(with: object)
+////                self.allCardsFromRealm = cards
+//            case .update:
+//                print("REALM Update")
+//                let cards = self.updateCardsList(with: object)
+////                self.allCardsFromRealm = cards
+//            case .error(let error):
+//                print("DEBUG token fatalError:", error)
+//                fatalError("\(error)")
+//            }
+//        }
+//    }
+//
+//    private func updateCardsList(with result: Results<UserAllCardsModel>?) -> [UserAllCardsModel] {
+//        var cardsArray = [UserAllCardsModel]()
+//        let cards = result?.compactMap { $0 } ?? []
+//        cards.forEach { card in
+//            if card.productType == "CARD" {
+//                cardsArray.append(card)
+//            } else {
+//                cardsArray.append(card)
+//            }
+//        }
+//        return cardsArray
+//    }
     
     
     func setupData() {
@@ -368,6 +380,7 @@ class MainViewController: UIViewController {
         
         NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], bodyEURO) { model, error in
             if error != nil {
+               
                 print("DEBUG: Error: ", error ?? "")
             }
             guard let model = model else { return }
