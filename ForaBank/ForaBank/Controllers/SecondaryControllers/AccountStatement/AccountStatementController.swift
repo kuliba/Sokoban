@@ -123,22 +123,22 @@ class AccountStatementController: UIViewController {
     }
     
     
-    private func readAndSetupCard() {
-        DispatchQueue.main.async {
-            let cards = ReturnAllCardList.cards()
-            self.cardListView.cardList = cards
-            if cards.count > 0 {
-                cards.forEach { card in
-                    if card.id == self.startProduct?.id {
-                        self.cardFromField.model = card
-                    }
-                }
-            }
-        }
-    }
+//    private func readAndSetupCard() {
+//        DispatchQueue.main.async {
+//            let cards = ReturnAllCardList.cards()
+//            self.cardListView.cardList = cards
+//            if cards.count > 0 {
+//                cards.forEach { card in
+//                    if card.id == self.startProduct?.id {
+//                        self.cardFromField.model = card
+//                    }
+//                }
+//            }
+//        }
+//    }
     
     private func setupActions() {
-        readAndSetupCard()
+//        readAndSetupCard()
         
         cardFromField.didChooseButtonTapped = { () in
             self.openOrHideView(self.cardListView)

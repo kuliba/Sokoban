@@ -11,9 +11,7 @@ import FirebaseMessaging
 import RealmSwift
 
 
-    
-
-    @main
+@main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var delegate: Encription?
