@@ -1,18 +1,25 @@
 import UIKit
 import RealmSwift
+import Foundation
+
 
 class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSource, InternetTableViewDelegate, IMsg {
     static var iMsg: IMsg? = nil
     static let msgIsSingleService = 1
 
     var bodyValue = [String : String]()
-    var bodyArray = [[String : String]]()
+    var additionalElement = [String : String]()
+    var additionalDic = [String : [String : String]]()
     var operatorData: GKHOperatorsModel?
+    var requisites = [Requisite]()
     var valueToPass : String?
     var puref = ""
     var cardNumber = ""
     var product: GetProductListDatum?
     var qrData = [String: String]()
+    var firstStep = true
+    var firstAdditional = [[String: String]]()
+    var stepsPayment = [[[String: String]]]()
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var bottomInputView: BottomInputView!
@@ -26,15 +33,15 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
     func handleMsg(what: Int) {
         switch (what) {
         case InternetTVDetailsFormController.msgIsSingleService:
-            if !InternetTVApiRequests.isSingleService {
-                let alertController = UIAlertController(title: "Внимание!", message: "Временно нельзя провести оплату по этому поставщику", preferredStyle: UIAlertController.Style.alert)
-
-                let saveAction = UIAlertAction(title: "Ок", style: UIAlertAction.Style.default, handler: { alert -> Void in
-                    self.dismiss(animated: true)
-                })
-                alertController.addAction(saveAction)
-                present(alertController, animated: true, completion: nil)
-            }
+//            if !InternetTVApiRequests.isSingleService {
+//                let alertController = UIAlertController(title: "Внимание!", message: "Временно нельзя провести оплату по этому поставщику", preferredStyle: UIAlertController.Style.alert)
+//
+//                let saveAction = UIAlertAction(title: "Ок", style: UIAlertAction.Style.default, handler: { alert -> Void in
+//                    self.dismiss(animated: true)
+//                })
+//                alertController.addAction(saveAction)
+//                present(alertController, animated: true, completion: nil)
+//            }
             break
         default:
             break
@@ -50,7 +57,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
             let a = qrData.filter { $0.key == "Sum"}
             bottomInputView.tempTextFieldValue = a.first?.value ?? ""
         }
-        
+
         bottomInputView?.isHidden = true
         setupNavBar()
 //        goButton.isEnabled = false
@@ -60,44 +67,195 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
         InternetTVApiRequests.isSingleService(puref: puref)
         tableView.register(UINib(nibName: "InternetInputCell", bundle: nil), forCellReuseIdentifier: InternetTVInputCell.reuseId)
 //        tableView.register(GKHInputFooterView.self, forHeaderFooterViewReuseIdentifier: "sectionFooter")
-        
-        // Изменения символа валюты
         bottomInputView.currencySymbol = "₽"
-        /// Загружаем карты
-        AddAllUserCardtList.add {
-            
-        }
-        // Замыкание которое срабатывает по нажатию на кнопку продолжить
-        // amount значение выдает отформатированное значение для передачи в запрос
+        AddAllUserCardtList.add {}
+
         bottomInputView.didDoneButtonTapped = { amount in
             self.showActivity()
-            
-            // Запрос на платеж в ЖКХ : нужно добавить параметры в рапрос
-            self.paymentGKH(amount: amount) { model, error in
-                self.dismissActivity()
-                
-                if error != nil {
-                    print("DEBUG: Error: endContactPayment ", error ?? "")
-                    self.showAlert(with: "Ошибка", and: error!)
-                } else {
-                    guard let model = model else { return }
-                    // Переход на экран подтверждения
-                    self.goToConfirmVC(with: model)
-                }
-                // Функция настройки выбранной карты и список карт
-                self.setupCardList { error in
-                    guard let error = error else { return }
-                    self.showAlert(with: "Ошибка", and: error)
+            if InternetTVApiRequests.isSingleService {
+                self.requestCreateInternetTransfer(amount: amount)
+            } else {
+                if !self.firstStep {
+                    self.retryPayment(amount: amount)
+                    //self.requestNextCreateInternetTransfer(amount: amount)
                 }
             }
         }
-        
         setupCardList { error in
             guard let error = error else { return }
             self.showAlert(with: "Ошибка", and: error)
         }
+
+        if let list = operatorData?.parameterList {
+            list.forEach { item in
+                let req = Requisite.convertParameter(item)
+                requisites.append(req)
+            }
+            tableView.reloadData()
+        }
     }
-    
+
+    func retryPayment(amount: String) {
+        let request = getCreateRequest(amount: amount, additionalArray: firstAdditional)
+        doCreateInternetTransfer(request: request) {  response, error in
+            self.dismissActivity()
+            if error != nil {
+                self.showAlert(with: "Ошибка", and: error!)
+            } else {
+                if let respUnw = response {
+                    if respUnw.data?.finalStep ?? false {
+                        self.doConfirmation(response: respUnw)
+                    } else {
+                        self.showActivity()
+                        self.continueRetry(amount: amount)
+                    }
+                }
+            }
+        }
+    }
+
+    func continueRetry(amount: String) {
+        var additionalArray = [[String: String]]()
+        additionalDic.forEach { item in
+            additionalArray.append(item.value)
+        }
+        var request = getNextStepRequest(amount: amount, additionalArray: additionalArray)
+        if stepsPayment.count > 0 {
+            request = getNextStepRequest(amount: amount, additionalArray: stepsPayment.removeFirst())
+        }
+        doNextStepServiceTransfer(request: request) { response, error in
+            self.dismissActivity()
+            self.animationShow(self.goButton)
+            if error != nil {
+                self.showAlert(with: "Ошибка", and: error!)
+            } else {
+                if let respUnw = response {
+                    if respUnw.data?.finalStep ?? false {
+                        self.doConfirmation(response: respUnw)
+                    } else {
+                        self.continueRetry(amount: amount)
+                    }
+                }
+            }
+        }
+    }
+
+    func showFinalStep() {
+        animationHidden(goButton)
+        animationShow(bottomInputView)
+    }
+
+    func requestCreateInternetTransfer(amount: String) {
+        showActivity()
+        var additionalArray = [[String: String]]()
+        additionalDic.forEach { item in
+            additionalArray.append(item.value)
+        }
+        firstAdditional = additionalArray
+        let request = getCreateRequest(amount: amount, additionalArray: additionalArray)
+        doCreateInternetTransfer(request: request) { response, error in
+            self.dismissActivity()
+            self.animationShow(self.goButton)
+            if error != nil {
+                self.showAlert(with: "Ошибка", and: error!)
+            } else {
+                if InternetTVApiRequests.isSingleService {
+                    self.doConfirmation(response: response)
+                } else {
+                    if let respUnw = response {
+                        if respUnw.data?.needSum ?? false {
+                            self.showFinalStep()
+                        } else {
+                            self.setupNextStep(respUnw)
+                        }
+                    }
+                }
+            }
+            self.setupCardList { error in
+                guard let error = error else { return }
+                self.showAlert(with: "Ошибка", and: error)
+            }
+        }
+    }
+
+    func requestNextCreateInternetTransfer(amount: String) {
+        showActivity()
+        var additionalArray = [[String: String]]()
+        additionalDic.forEach { item in
+            additionalArray.append(item.value)
+        }
+        stepsPayment.append(additionalArray)
+        let request = getNextStepRequest(amount: amount, additionalArray: additionalArray)
+        doNextStepServiceTransfer(request: request) { response, error in
+            self.dismissActivity()
+            self.animationShow(self.goButton)
+            if error != nil {
+                self.showAlert(with: "Ошибка", and: error!)
+            } else {
+                if let respUnw = response {
+                    if respUnw.data?.finalStep ?? false {
+                        self.doConfirmation(response: respUnw)
+                    } else {
+                        if respUnw.data?.needSum ?? false {
+                            self.showFinalStep()
+                        } else {
+                            self.setupNextStep(respUnw)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    func doConfirmation(response: CreateTransferAnswerModel?) {
+        let ob = ConfirmViewControllerModel(type: .gkh)
+        let sum = response?.data?.debitAmount ?? 0.0
+        ob.summTransction = sum.currencyFormatter(symbol: "RUB")
+        let tax = response?.data?.fee ?? 0.0
+        ob.taxTransction = tax.currencyFormatter(symbol: "RUB")
+
+        DispatchQueue.main.async {
+            let vc = ContactConfurmViewController()
+            vc.title = "Подтвердите реквизиты"
+            vc.confurmVCModel = ob
+            vc.countryField.isHidden = true
+            vc.phoneField.isHidden = true
+            vc.nameField.isHidden = true
+            vc.bankField.isHidden = true
+            vc.numberTransctionField.isHidden = true
+            vc.cardToField.isHidden = true
+            vc.summTransctionField.isHidden = false
+            vc.taxTransctionField.isHidden = false
+            vc.currTransctionField.isHidden = true
+            vc.currancyTransctionField.isHidden = true
+            vc.operatorView = self.operatorData?.logotypeList.first?.content ?? ""
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+
+    func setupNextStep(_ answer: CreateTransferAnswerModel) {
+        answer.data?.additionalList?.forEach { item in
+            let param = Requisite()
+            param.subTitle = ""
+            param.id = item.fieldName
+            param.title = item.fieldTitle
+            param.content = item.fieldValue
+            param.readOnly = true
+            if (requisites.first { requisite in requisite.id == param.id  } == nil) {
+                requisites.append(param)
+            }
+        }
+
+        answer.data?.parameterListForNextStep?.forEach { item in
+            let param = Requisite.convertParameter(item)
+            requisites.append(param)
+        }
+
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         let size = footerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
@@ -109,45 +267,78 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
     }
     
     @IBAction func goButton(_ sender: UIButton) {
-        goButton.isHidden = true
-        bottomInputView.isHidden = false
+        if InternetTVApiRequests.isSingleService {
+            animationHidden(goButton)
+            animationShow(bottomInputView)
+        } else {
+            animationHidden(goButton)
+            if firstStep {
+                firstStep = false
+                requestCreateInternetTransfer(amount: "null")
+            } else {
+                requestNextCreateInternetTransfer(amount: "null")
+            }
+        }
     }
-    
+
+    final func animationHidden (_ view: UIView) {
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.3) {
+                view.alpha = 0
+            }
+            view.isHidden = true
+        }
+    }
+
+    final func animationShow (_ view: UIView) {
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.3) {
+                view.alpha = 1
+            }
+            view.isHidden = false
+        }
+    }
+
+    final func animateQueue (_ view_1: UIView, _ view_2: UIView) {
+        UIView.animateKeyframes(withDuration: 0.3, delay: .zero, options: []) {
+            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.3) {
+                view_1.alpha = 1.0
+            }
+            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.3) {
+                view_2.alpha = 0.0
+            }
+        }
+    }
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
         qrData.removeAll()
     }
 
     func setupNavBar() {
-
         let operatorsName = operatorData?.name ?? ""
         let inn = operatorData?.synonymList.first ?? ""
-        self.navigationItem.titleView = set_Title(title: operatorsName, subtitle: "ИНН " +  inn )
+        navigationItem.titleView = setTitle(title: operatorsName, subtitle: "ИНН " +  inn )
 
         let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
         imageView.contentMode = .scaleAspectFit
 
         if operatorData?.logotypeList.first?.content != nil {
-
             UserDefaults.standard.set(operatorData?.logotypeList.first?.content ?? "", forKey: "OPERATOR_IMAGE")
-
             let dataDecoded : Data = Data(base64Encoded: operatorData?.logotypeList.first?.content ?? "", options: .ignoreUnknownCharacters)!
-
-            let decodedimage = UIImage(data: dataDecoded)
-            imageView.image = decodedimage
+            let decodedImage = UIImage(data: dataDecoded)
+            imageView.image = decodedImage
             imageView.setDimensions(height: 30, width: 30)
-            self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: imageView)
-
+            navigationItem.rightBarButtonItem = UIBarButtonItem(customView: imageView)
         } else {
             imageView.image = UIImage(named: "GKH")
-            self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: imageView)
+            navigationItem.rightBarButtonItem = UIBarButtonItem(customView: imageView)
         }
         navigationItem.hidesSearchBarWhenScrolling = false
         definesPresentationContext = true
-
     }
 
-    func set_Title(title:String, subtitle:String) -> UIView {
+    func setTitle(title:String, subtitle:String) -> UIView {
         let titleLabel = UILabel(frame: CGRect(x: 0, y: -2, width: 0, height: 0))
 
         titleLabel.backgroundColor = .clear
@@ -186,29 +377,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
         return titleView
     }
 
-    //MARK: - Helpers
-    func goToConfirmVC(with model: ConfirmViewControllerModel) {
-        DispatchQueue.main.async {
-            let vc = ContactConfurmViewController()
-            vc.title = "Подтвердите реквизиты"
-            vc.confurmVCModel = model
-            vc.countryField.isHidden = true
-            vc.phoneField.isHidden = true
-            vc.nameField.isHidden = true
-            vc.bankField.isHidden = true
-            vc.numberTransctionField.isHidden = true
-            vc.cardToField.isHidden = true
-            vc.summTransctionField.isHidden = false
-            vc.taxTransctionField.isHidden = false
-            vc.currTransctionField.isHidden = true
-            vc.currancyTransctionField.isHidden = true
-            vc.operatorView = self.operatorData?.logotypeList.first?.content ?? ""
-            self.navigationController?.pushViewController(vc, animated: true)
-        }
-    }
-    
     func setupCardList(completion: @escaping ( _ error: String?) ->() ) {
-        
 //        self.cardList?.forEach{ card in
 //            if (card.allowDebit && card.productType == "CARD") {
 //                var filterProduct: [UserAllCardsModel] = []
@@ -218,7 +387,6 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
 //                self.cardNumber  = filterProduct.first?.accountNumber ?? ""
 //            }
 //        }
-        
         getCardList { [weak self] data ,error in
             DispatchQueue.main.async { [self] in
                 if error != nil {
@@ -233,7 +401,6 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
                         }
                     }
                 }
-                
                 self?.footerView.cardListView.cardList = arrProducts
                 self?.footerView.cardFromField.cardModel = arrProducts.first
 
@@ -251,7 +418,6 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
             }
         }
     }
-
 
     func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?)->()) {
         let param = ["isCard": "true", "isAccount": "true", "isDeposit": "false", "isLoan": "false"]
@@ -271,104 +437,77 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
         }
     }
 
-    func load() {
-        var latestOperations = [InternetTVLatestOperationsModel]()
-
-        NetworkManager<GetLatestServicePaymentsDecodableModel>.addRequest(.getLatestInternetTVPayments, [:], [:]) { model, error in
-            if error != nil {
-                print("DEBUG: error", error!)
-            } else {
-                guard let model = model else { return }
-                guard let additionalListData = model.data else { return }
-
-                additionalListData.forEach { list in
-                    let ob = InternetTVLatestOperationsModel()
-                    ob.amount    = list.amount ?? 0
-                    ob.paymentDate = list.paymentDate
-                    ob.puref    = list.puref
-
-                    list.additionalList?.forEach({ parameterList in
-                        let param = AdditionalListModel()
-                        param.fieldName       = parameterList.fieldName
-                        param.fieldValue     = parameterList.fieldValue
-                        ob.additionalList.append(param)
-                    })
-
-                    latestOperations.append(ob)
-                }
-
-                let realm = try? Realm()
-                do {
-                    let operators = realm?.objects(InternetTVLatestOperationsModel.self)
-                    realm?.beginWrite()
-                    realm?.delete(operators!)
-                    realm?.add(latestOperations)
-                    try realm?.commitWrite()
-                    print("REALM",realm?.configuration.fileURL?.absoluteString ?? "")
-                } catch {
-                    print(error.localizedDescription)
-                }
-            }
-        }
-    }
-
-    func paymentGKH(amount: String ,completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
-        var body = [String: AnyObject]()
+    func getCreateRequest(amount: String, additionalArray: [[String: String]]) -> [String: AnyObject] {
+        var request = [String: AnyObject]()
         if footerView.cardFromField.cardModel?.productType == "ACCOUNT" {
             let id = footerView.cardFromField.cardModel?.id ?? -1
-            body = [ "check" : false,
-                     "amount" : amount,
-                     "currencyAmount" : "RUB",
-                     "payer" : [ "cardId" : nil,
-                                 "cardNumber" : nil,
-                                 "accountId" : id ],
-                     "puref" : puref,
-                     "additional" : bodyArray] as [String: AnyObject]
+            request = [ "check" : false,
+                        "amount" : amount,
+                        "currencyAmount" : "RUB",
+                        "payer" : [ "cardId" : nil,
+                                    "cardNumber" : nil,
+                                    "accountId" : id ],
+                        "puref" : puref,
+                        "additional" : additionalArray] as [String: AnyObject]
 
         } else if footerView.cardFromField.cardModel?.productType ==  "CARD" {
             let id = footerView.cardFromField.cardModel?.id ?? -1
-            body = [ "check" : false,
-                     "amount" : amount,
-                     "currencyAmount" : "RUB",
-                     "payer" : [ "cardId" : id,
-                                 "cardNumber" : nil,
-                                 "accountId" : nil ],
-                     "puref" : puref,
-                     "additional" : bodyArray] as [String: AnyObject]
+            request = [ "check" : false,
+                        "amount" : amount,
+                        "currencyAmount" : "RUB",
+                        "payer" : [ "cardId" : id,
+                                    "cardNumber" : nil,
+                                    "accountId" : nil ],
+                        "puref" : puref,
+                        "additional" : additionalArray] as [String: AnyObject]
         }
+        return request
+    }
 
-        print("DEBUG: GKHInputView" , body)
-        
-        NetworkManager<CreateDirectTransferDecodableModel>.addRequest(.createInternetTransfer, [:], body) { respModel, error in
+    func getNextStepRequest(amount: String, additionalArray: [[String: String]]) -> [String: AnyObject] {
+        var request = [String: AnyObject]()
+        request = [ "amount" : amount,
+                    "additional" : additionalArray] as [String: AnyObject]
+        return request
+    }
+
+    func doCreateInternetTransfer(request: [String: AnyObject], completion: @escaping (CreateTransferAnswerModel?, String?) -> ()) {
+        NetworkManager<CreateTransferAnswerModel>.addRequest(.createInternetTransfer, [:], request) { respModel, error in
             if error != nil {
-                print("DEBUG: Error: ContaktPaymentBegin ", error ?? "")
                 completion(nil, error!)
             }
             guard let respModel = respModel else { return }
             if respModel.statusCode == 0 {
-                guard let data = respModel.data else { return }
-                let model = ConfirmViewControllerModel(type: .gkh)
-                let r = Double(data.debitAmount ?? 0)
-                model.summTransction = r.currencyFormatter(symbol: "RUB")
-                let c = Double(data.fee ?? 0)
-                model.taxTransction = c.currencyFormatter(symbol: "RUB")
-                completion(model, nil)
+                completion(respModel, nil)
             } else {
-                print("DEBUG: Error: ContaktPaymentBegin ", respModel.errorMessage ?? "")
+                completion(nil, respModel.errorMessage)
+            }
+        }
+    }
+
+    func doNextStepServiceTransfer(request: [String: AnyObject], completion: @escaping (CreateTransferAnswerModel?, String?) -> ()) {
+        NetworkManager2<CreateTransferAnswerModel>.addRequest(.nextStepServiceTransfer, [:], request) { respModel, error in
+            if error != nil {
+                completion(nil, error!)
+            }
+            guard let respModel = respModel else { return }
+            if respModel.statusCode == 0 {
+                completion(respModel, nil)
+            } else {
                 completion(nil, respModel.errorMessage)
             }
         }
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return operatorData?.parameterList.count ?? 0
+        requisites.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: InternetTVInputCell.reuseId, for: indexPath) as! InternetTVInputCell
-        guard operatorData?.parameterList.count != 0 else { return cell }
+        guard requisites.count != 0 else { return cell }
 
-        cell.setupUI(indexPath.row, (operatorData?.parameterList[indexPath.row])!, qrData)
+        cell.setupUI(indexPath.row, (requisites[indexPath.row]), qrData)
         cell.tableViewDelegate = (self as InternetTableViewDelegate)
 
         cell.showInfoView = { value in
@@ -380,14 +519,21 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let hight: CGFloat = 80.0
-        return hight
+        let height: CGFloat = 80.0
+        return height
     }
 
-    func afterClickingReturnInTextField(cell: InternetTVInputCell) { //GKHInputCell
-        bodyValue.removeAll()
-        bodyValue = cell.body
-        bodyArray.append(bodyValue)
+    func afterClickingReturnInTextField(cell: InternetTVInputCell) {
+        let fieldId = cell.body["fieldid"]
+        let value = cell.body["fieldvalue"]
+        let fieldName = cell.body["fieldname"]
+        additionalElement["fieldid"] = fieldId
+        additionalElement["fieldname"] = fieldName
+        additionalElement["fieldvalue"] = value
+        additionalDic[fieldName ?? "-1"] = additionalElement
+        let item = requisites.first { requisite in requisite.id == fieldName }
+        item?.content = value
+        item?.readOnly = true
     }
 }
 
@@ -396,19 +542,17 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
 }
 
 class InternetTVInputCell: UITableViewCell, UITextFieldDelegate {
-
+    static let reuseId = "InternetTVInputCell"
     var info = ""
-
     var showInfoView: ((String) -> ())? = nil
     var showGoButton: ((Bool) -> ())? = nil
 
     weak var tableViewDelegate: InternetTableViewDelegate?
 
-    static let reuseId = "InternetTVInputCell"
-
-    var fieldid = ""
-    var fieldname = ""
-    var fieldvalue = ""
+    var fieldId = ""
+    var fieldName = ""
+    var fieldValue = ""
+    var item: Requisite?
     var body = [String: String]()
     var perAcc = ""
     var isSelect = true
@@ -438,103 +582,72 @@ class InternetTVInputCell: UITableViewCell, UITextFieldDelegate {
     }
 
     func textFieldDidEndEditing(_ textField: UITextField) {
-        fieldvalue = textField.text ?? ""
+        fieldValue = textField.text ?? ""
     }
-    // DataSetup
-//    func setupUI (_ index: Int, _ dataModel: [String: String]) {
-//        if emptyCell() == false {
-//            infoButon.isHidden = true
-//            self.fieldid = String(index + 1)
-//            fieldname = dataModel["id"] ?? ""
-//            let q = GKHDataSorted.a(dataModel["title"] ?? "")
-//
-//            DispatchQueue.main.async {
-//                self.operatorsIcon.image = UIImage(named: q.1)
-//            }
-//
-//            textField.placeholder = q.0
-//            placeholder = q.0
-//
-//            if q.0 == "Лицевой счет" {
-//                let h = dataModel["Лицевой счет"]
-//                perAcc = h ?? ""
-//                if h != "" {
-//                    textField.text = h
-//                }
-//            }
-//
-//            if q.0 == "" {
-//                textField.placeholder = dataModel["title"] ?? ""
-//            }
-//            if q.0 == "ФИО" {
-//                showFioButton.isHidden = false
-//            } else {
-//                showFioButton.isHidden = true
-//            }
-//
-//            if dataModel["subTitle"] != nil {
-//                info = dataModel["subTitle"] ?? ""
-//                infoButon.isHidden = false
-//            }
-//            if dataModel["viewType"] != "INPUT" {
-//                self.textField.isEnabled = false
-//                isSelect = false
-//            }
-//        }
-//    }
 
-    func setupUI (_ index: Int, _ dataModel: Parameters, _ qrData: [String: String]) {
-
+    func setupUI (_ index: Int, _ item: Requisite, _ qrData: [String: String]) {
         infoButon.isHidden = true
-        self.fieldid = String(index + 1)
-        fieldname = dataModel.id ?? ""
-        let q = GKHDataSorted.a(dataModel.title ?? "")
-
+        self.item = item
+        fieldId = String(index + 1)
+        fieldName = item.id ?? ""
+        let q = GKHDataSorted.a(item.title ?? "")
         DispatchQueue.main.async {
             self.operatorsIcon.image = UIImage(named: q.1)
         }
-
         textField.placeholder = q.0
         placeholder = q.0
-
+        textField.text = item.content
         if q.0 == "Лицевой счет" {
-            let h = qrData.filter { $0.key == "Лицевой счет"}
-            if h.first?.value != "" {
-                textField.text = h.values.first
+            let qr = qrData.filter { $0.key == "Лицевой счет"}
+            if let qrUnw = qr.first?.value, qrUnw != "" {
+                textField.text = qrUnw
             }
         }
-
         if q.0 == "" {
-            textField.placeholder = dataModel.title
+            textField.placeholder = item.title
         }
         if q.0 == "ФИО" {
             showFioButton.isHidden = false
         } else {
             showFioButton.isHidden = true
         }
-
-        if dataModel.subTitle != nil {
-            info = dataModel.subTitle ?? ""
+        if item.subTitle != nil {
+            info = item.subTitle ?? ""
             infoButon.isHidden = false
+        }
+        if item.readOnly {
+            textField.isEnabled = false
+        } else {
+            textField.isEnabled = true
         }
     }
 
     @IBAction func textField(_ sender: UITextField) {
-        fieldvalue = textField.text ?? ""
-        body.updateValue(fieldid, forKey: "fieldid")
-        body.updateValue(fieldname, forKey: "fieldname")
+        print("proc01 textField afterClickingReturnInTextField")
+        fieldValue = textField.text ?? ""
+        body.updateValue(fieldId, forKey: "fieldid")
+        body.updateValue(fieldName, forKey: "fieldname")
         body.updateValue(textField.text ?? "" , forKey: "fieldvalue")
-        self.perAcc = body["Лицевой счет"] ?? ""
+        perAcc = body["Лицевой счет"] ?? ""
         haveEmptyCell()
         tableViewDelegate?.responds(to: #selector(InternetTableViewDelegate.afterClickingReturnInTextField(cell:)))
         tableViewDelegate?.afterClickingReturnInTextField(cell: self)
     }
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let previousText:NSString = textField.text! as NSString
+        let updatedText = previousText.replacingCharacters(in: range, with: string)
 
-        //        let previousText:NSString = textField.text! as NSString
-        //        let updatedText = previousText.replacingCharacters(in: range, with: string)
-        //        print("updatedText > ", updatedText)
+        print("proc01 shouldChangeCharactersIn \(updatedText)")
+        fieldValue = updatedText
+        body.updateValue(fieldId, forKey: "fieldid")
+        body.updateValue(fieldName, forKey: "fieldname")
+        body.updateValue(fieldValue , forKey: "fieldvalue")
+        perAcc = body["Лицевой счет"] ?? ""
+        haveEmptyCell()
+        tableViewDelegate?.responds(to: #selector(InternetTableViewDelegate.afterClickingReturnInTextField(cell:)))
+        tableViewDelegate?.afterClickingReturnInTextField(cell: self)
+
         return true
     }
 
@@ -550,30 +663,24 @@ class InternetTVInputCell: UITableViewCell, UITextFieldDelegate {
 
     final func haveEmptyCell() {
 
-        if ( fieldvalue != "" && isSelect == true) {
+        if ( fieldValue != "" && isSelect == true) {
             showGoButton?(true)
-        } else if ( fieldvalue == "" && isSelect == false) {
+        } else if ( fieldValue == "" && isSelect == false) {
             showGoButton?(true)
         }
-        if ( fieldvalue == "" && isSelect == true) {
+        if ( fieldValue == "" && isSelect == true) {
             showGoButton?(false)
         }
     }
 
     final func emptyCell() -> Bool {
-
         var result = false
-        if ( fieldid != "" || fieldname != "" || fieldvalue != "" ) {
+        if ( fieldId != "" || fieldName != "" || fieldValue != "" ) {
             result = true
         }
         return result
     }
-
 }
-
-import Foundation
-import RealmSwift
-
 
 struct InternetTVApiRequests {
     static var isSingleService = true
@@ -604,3 +711,57 @@ struct InternetTVApiRequests {
 
 }
 
+class Requisite {
+    static func convertParameter(_ item: Parameters) -> Requisite {
+        let ob = Requisite()
+        ob.id = item.id
+        ob.order = item.order
+        ob.title = item.title
+        ob.subTitle = item.subTitle
+        ob.viewType = item.viewType
+        ob.dataType = item.dataType
+        ob.type = item.type
+        ob.mask = item.mask
+        ob.regExp = item.regExp
+        ob.maxLength = item.maxLength
+        ob.minLength = item.minLength
+        ob.rawLength = item.rawLength
+        ob.readOnly = item.readOnly
+        ob.content = item.content
+        return  ob
+    }
+
+    static func convertParameter(_ item: ParameterListForNextStep2) -> Requisite {
+        let ob = Requisite()
+        ob.id = item.id
+        ob.order = item.order ?? 0
+        ob.title = item.title
+        ob.subTitle = item.subTitle
+        ob.viewType = item.viewType
+        ob.dataType = item.dataType
+        ob.type = item.type
+        ob.mask = item.mask
+        ob.regExp = item.regExp
+        ob.maxLength = item.maxLength ?? 0
+        ob.minLength = item.minLength ?? 0
+        ob.rawLength = item.rawLength ?? 0
+        ob.readOnly = item.readOnly ?? false
+        ob.content = item.content
+        return  ob
+    }
+
+    var id: String?
+    var order = 0
+    var title: String?
+    var subTitle: String?
+    var viewType: String?
+    var dataType: String?
+    var type: String?
+    var mask: String?
+    var regExp: String?
+    var maxLength = 0
+    var minLength = 0
+    var rawLength = 0
+    var readOnly = true
+    var content: String?
+}
