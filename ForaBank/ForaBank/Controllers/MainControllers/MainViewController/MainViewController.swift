@@ -247,11 +247,17 @@ class MainViewController: UIViewController {
             
             self.productList = data ?? []
             self.productsCardsAndAccounts = self.productList.filter({$0.productType == "CARD" || $0.productType == "ACCOUNT"})
+//            if  self.productsCardsAndAccounts.count < 3{
+//                
+//            }
             self.productsDeposits = self.productList.filter({$0.productType == "DEPOSIT"})
             self.products.removeAll()
             for i in self.productsCardsAndAccounts {
                 self.products.append(PaymentsModel(productList: i))
             }
+            if self.productsCardsAndAccounts.count < 3 {
+                self.products.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
+            } 
         }
     }
         

@@ -130,6 +130,8 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
             guard let banks = Dict.shared.mobileSystem  else {
                 return
             }
+                
+                
             for i in banks{
                 if i.puref == payment.lastMobilePayment?.puref{
                     iconCountryImageView.image = i.svgImage?.convertSVGStringToImage()
@@ -160,10 +162,10 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
         
         initialsLabel.text = contactInitials(model: payment.lastCountryPayment)
         
-//        guard let avatarImageName = payment.avatarImageName else { return }
-//        guard let avatarImage = UIImage(named: avatarImageName) else { return }
-//        iconImageView.image = avatarImage
-//        avatarImageView.image = UIImage()
+        guard let avatarImageName = payment.avatarImageName else { return }
+        guard let avatarImage = UIImage(named: avatarImageName) else { return }
+        iconImageView.image = avatarImage
+        avatarImageView.image = UIImage()
 
         
     }
