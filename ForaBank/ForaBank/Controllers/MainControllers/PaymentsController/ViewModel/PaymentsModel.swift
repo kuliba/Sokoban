@@ -88,7 +88,7 @@ struct PaymentsModel: Hashable {
     init(lastGKHPayment: GetAllLatestPaymentsDatum) {
         self.lastGKHPayment = lastGKHPayment
         self.id = Int.random(in: 100 ... 10000)
-        self.name = "\(lastGKHPayment.amount ?? 0.0)"
+        self.name = "\(lastGKHPayment.amount ?? Amount.string(""))"
         self.controllerName = "GKHInputViewController"
         self.iconName = "GKH"
     }

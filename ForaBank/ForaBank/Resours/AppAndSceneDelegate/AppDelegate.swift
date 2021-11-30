@@ -51,7 +51,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Net Detect
         NetStatus.shared.startMonitoring()
         
-//        initRealmTimerParameters()
+        initRealmTimerParameters()
 
         return true
     }
@@ -422,4 +422,25 @@ extension Bundle {
             return ""
         }
     }
+}
+
+extension UIWindow {
+ open override func motionEnded(_ motion: UIEvent.EventSubtype, with event:   UIEvent?) {
+     if motion == .motionShake {
+        print("Device shaken")
+//        NotificationCenter.default.post(name: .deviceDidShakeNotification, object: event)
+//        UserDefaults.standard.set(MyVariables.onBalanceLabel.toggle(), forKey: "blurBalanceLabel")
+        MyVariables.onBalanceLabel = false
+        
+        NotificationCenter.default.post(name: .deviceDidShakeNotification, object: nil)
+    }
+  }
+}
+
+extension NSNotification.Name {
+    public static let deviceDidShakeNotification = NSNotification.Name("MyDeviceDidShakeNotification")
+}
+
+struct MyVariables {
+    static var onBalanceLabel = false
 }

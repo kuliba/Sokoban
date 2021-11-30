@@ -41,7 +41,7 @@ class TimerTimeInit {
         let minSessionRenewTimeOutPassed = -(nowReNewdateSecond - nowCurrentTimeStampSecond) > 0.9 * Double(( maxTimeOut))
         // 1.0
         let maxSessionRenewTimeOutNotPassed = -(nowReNewdateSecond - nowCurrentTimeStampSecond) <= Double(( maxTimeOut))
-        print()
+//        print()
         if mustCheckTimeOut {
             // mustCheckTimeOut = true
             if timeOutSecondsRemaining < 0 {
