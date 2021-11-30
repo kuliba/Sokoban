@@ -43,6 +43,12 @@ class PaymentsViewController: UIViewController {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        UITabBarItem.appearance().setTitleTextAttributes(
+            [.foregroundColor: UIColor.black ], for: .selected)
+    }
+    
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Section, PaymentsModel>?
     
@@ -69,7 +75,14 @@ class PaymentsViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         navigationController?.navigationBar.isHidden = true
+        loadAllLastMobilePayments()
+
     }
+    
+//    override func viewWillDisappear(_ animated: Bool) {
+//        super.viewWillDisappear(animated)
+//        loadAllLastMobilePayments()
+//    }
     
     func setupData() {
         payments = MockItems.returnPayments()
@@ -260,7 +273,7 @@ extension PaymentsViewController {
                 let payArr = lastPaymentsList.prefix(3)
                 payArr.forEach { lastPayment in
                     let payment = PaymentsModel(lastGKHPayment: lastPayment)
-                    self.payments.append(payment)
+//                    self.payments.append(payment)
                     
                 }
             } else {

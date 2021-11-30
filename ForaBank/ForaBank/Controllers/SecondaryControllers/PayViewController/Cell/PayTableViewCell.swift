@@ -27,7 +27,13 @@ class PayTableViewCell: UITableViewCell {
     }
     override func layoutSubviews() {
         super.layoutSubviews()
-
+        if titleLabel.text == "Лимиты на операции" || titleLabel.text == "Графиик выплаты % по вкладу" || titleLabel.text == "Закрыть вклад" || titleLabel.text == "Скрыть с главной" || titleLabel.text == "Заказать справку"{
+            self.alpha = 0.4
+            self.isUserInteractionEnabled = false
+        } else {
+            self.alpha = 1
+            self.isUserInteractionEnabled = true
+        }
         contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0))
     }
 }

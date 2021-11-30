@@ -48,7 +48,6 @@ extension Double {
         let currArr = Dict.shared.currencyList
         currArr?.forEach({ currency in
             if currency.code == symbol {
-                
                 var symbolArr = currency.cssCode?.components(separatedBy: "\\")
                 symbolArr?.removeFirst()
                 

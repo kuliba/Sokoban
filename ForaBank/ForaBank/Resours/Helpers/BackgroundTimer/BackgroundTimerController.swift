@@ -14,7 +14,10 @@ struct BackgroundTimer {
     let time = TimerTimeInit()
     func repeatTimer() {
         timer.eventHandler = {
-            time.timeResult()
+            
+//            let t = Date().localDate()
+            
+                time.timeResult()
         }
         timer.resume()
     }

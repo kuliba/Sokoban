@@ -92,6 +92,7 @@ struct GetProductListDatum: Codable{
     let background: [String?]
     let XLDesign: String?
     let statusPC: String?
+    let interestRate: Double?
     let openDate: Int?
     let branchId: Int?
     let expireDate: String?
@@ -149,6 +150,7 @@ extension GetProductListDatum {
         background: [String]?? = nil,
         XLDesign: String?? = nil,
         statusPC: String?? = nil,
+        interestRate: Double? = nil,
         openDate: Int?? = nil,
         branchId: Int?? = nil,
         expireDate: String?? = nil
@@ -186,6 +188,7 @@ extension GetProductListDatum {
             background: (background ?? []) ?? self.background,
             XLDesign: XLDesign ?? self.XLDesign,
             statusPC: statusPC ?? self.statusPC,
+            interestRate: interestRate ?? self.interestRate,
             openDate: openDate ?? self.openDate,
             branchId: branchId ?? self.branchId,
             expireDate: expireDate ?? self.expireDate

@@ -129,7 +129,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
 
         if operatorData?.logotypeList.first?.content != nil {
 
-            UserDefaults.standard.set(operatorData?.logotypeList.first?.content ?? "", forKey: "OPERATOR_IMAGE")
+//            UserDefaults.standard.set(operatorData?.logotypeList.first?.content ?? "", forKey: "OPERATOR_IMAGE")
 
             let dataDecoded : Data = Data(base64Encoded: operatorData?.logotypeList.first?.content ?? "", options: .ignoreUnknownCharacters)!
 
