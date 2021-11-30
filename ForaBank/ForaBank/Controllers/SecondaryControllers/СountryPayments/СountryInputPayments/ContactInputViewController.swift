@@ -117,6 +117,17 @@ class ContactInputViewController: UIViewController {
         setupActions()
         
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.view.backgroundColor = UIColor(red: 0.973, green: 0.973, blue: 0.973, alpha: 0.82)
+        navigationController?.navigationBar.backgroundColor = UIColor(red: 0.973, green: 0.973, blue: 0.973, alpha: 0.82)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationController?.view.backgroundColor = UIColor.white
+        navigationController?.navigationBar.backgroundColor = UIColor.white
+    }
 
     //MARK: - Actions
     @objc func titleDidTaped() {
