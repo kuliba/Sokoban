@@ -362,6 +362,10 @@ public class AppLocker: UIViewController {
     private func cleanAllData() {
         UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
         //TODO: - Написать очистку данных после выхода из приложения
+        lazy var realm = try? Realm()
+        try? realm?.write {
+          realm?.deleteAll()
+        }
         AppDelegate.shared.isAuth = false
     }
     
@@ -446,8 +450,7 @@ extension AppLocker {
                     "loginValue": encript(string: code.sha256() ),
                     "type": encript(string: type.rawValue)
                 ] as [String : AnyObject]
-                //        print(data)
-                print("DEBUG: Start login with body: ", data)
+                
                 NetworkManager<LoginDoCodableModel>.addRequest(.login, [:], data) { model, error in
                     if error != nil {
                         guard let error = error else { return }
@@ -460,7 +463,6 @@ extension AppLocker {
                                 "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
                                 "pushFcmToken": Messaging.messaging().fcmToken as String?
                             ] as [String : AnyObject]
-                            print("DEBUG: Start registerPushDeviceForUser with body: ", bodyRegisterPush)
                             NetworkManager<RegisterPushDeviceDecodebleModel>.addRequest(.registerPushDeviceForUser, [:], bodyRegisterPush) { modelPush, error in
                                 if error != nil {
                                     guard let error = error else { return }
@@ -525,11 +527,6 @@ extension AppLocker {
         
         let updatingTimeObject = GetSessionTimeout()
         
-        let realm = try? Realm()
-        guard let timeObject = realm?.objects(GetSessionTimeout.self).first else {return GetSessionTimeout()}
-        let lastActionTimestamp = timeObject.lastActionTimestamp
-        let maxTimeOut = timeObject.maxTimeOut
-        let mustCheckTimeOut = timeObject.mustCheckTimeOut
         let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
         if userIsRegister == true {
             // Сохраняем текущее время
