@@ -88,6 +88,7 @@ enum RouterManager {
     case getPrintFormForAccountStatement
     case isSingleService
     case nextStepServiceTransfer
+    case getDepositProductList
 }
 
 extension RouterManager {
@@ -1226,7 +1227,6 @@ extension RouterManager {
                 resultUrl = nil
                 debugPrint(error)
             }
-            
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
             request.httpMethod = RequestMethod.post.rawValue
@@ -1241,7 +1241,6 @@ extension RouterManager {
                 resultUrl = nil
                 debugPrint(error)
             }
-            
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
             request.httpMethod = RequestMethod.get.rawValue
@@ -1256,7 +1255,6 @@ extension RouterManager {
                 resultUrl = nil
                 debugPrint(error)
             }
-            
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
             request.httpMethod = RequestMethod.post.rawValue
@@ -1271,7 +1269,6 @@ extension RouterManager {
                 resultUrl = nil
                 debugPrint(error)
             }
-            
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
             request.httpMethod = RequestMethod.post.rawValue
@@ -1286,11 +1283,26 @@ extension RouterManager {
                 resultUrl = nil
                 debugPrint(error)
             }
-            
             guard resultUrl != nil else { return nil}
             var request = URLRequest(url: resultUrl!)
             request.httpMethod = RequestMethod.post.rawValue
             return request
+            
+        case .getDepositProductList:
+            let baseUrl = RouterUrlList.getDepositProductList.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.get.rawValue
+            return request
+            
+            
         }
     }
 }

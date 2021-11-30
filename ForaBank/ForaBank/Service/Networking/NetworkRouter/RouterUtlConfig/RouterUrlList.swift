@@ -94,6 +94,7 @@ enum RouterUrlList: String {
     case getPrintFormForAccountStatement
     case isSingleService
     case nextStepServiceTransfer
+    case getDepositProductList
     
     func returnUrl () -> URLValue {
         switch self {
@@ -967,6 +968,17 @@ enum RouterUrlList: String {
                 debugPrint(error)
                 return .failure(.urlError)
             }
+            
+        case .getDepositProductList:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getDepositProductList.rawValue)
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+
         }
     }
 

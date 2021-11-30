@@ -185,4 +185,6 @@ enum RouterBaseUrlList: String {
     case fastPaymentBanksList      = "/rest/fastPaymentBanksList"
     /// Не используется. И это уточнить
     case suggestBank               = "/rest/suggestBank"
+    
+    case getDepositProductList     = "/rest/getDepositProductList"
 }

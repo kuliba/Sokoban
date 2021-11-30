@@ -75,9 +75,16 @@ extension MainViewController: UICollectionViewDelegate {
                 print("Pay")
             }
         case .openProduct:
-            guard let url = URL(string: openProduct[indexPath.row].controllerName ) else { return  }
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
-            
+            if indexPath.row == 1{
+                let viewController = OpenNewDepositViewController()
+                let navVC = UINavigationController(rootViewController: viewController)
+                navVC.modalPresentationStyle = .fullScreen
+                present(navVC, animated: true)
+                
+            } else {
+                guard let url = URL(string: openProduct[indexPath.row].controllerName ) else { return  }
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
         case .branches: break
         case .investment: break
         case .services: break
