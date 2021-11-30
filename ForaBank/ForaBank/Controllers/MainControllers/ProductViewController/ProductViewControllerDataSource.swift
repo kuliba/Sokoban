@@ -29,7 +29,7 @@ extension ProductViewController: UICollectionViewDataSource {
 //            item?.selectedView.isHidden = true
             
 //            item?.isSelected = false
-            if products.count > 0, indexPath.item != 3, product?.number == products[indexPath.item].number {
+            if products.count > 0, indexPath.item > 3, product?.number == products[indexPath.row].number{
                 item?.showSelect()
                 item?.isSelected = true
                 item?.cardImageView.alpha = 1

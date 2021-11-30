@@ -20,6 +20,10 @@ class MainViewController: UIViewController {
     var card: UserAllCardsModel?
     var sectionIndexCounter = 0
     
+    
+    
+    var token: NotificationToken?
+    
     let changeCardButtonCollection = AllCardView()
     
     var payments = [PaymentsModel]() {
@@ -140,6 +144,10 @@ class MainViewController: UIViewController {
         getCurrency()
         setupData()
         reloadData(with: nil)
+        AddAllUserCardtList.add() {
+            print("REALM Add")
+        }
+        updateObjectWithNotification()
         
     }
     
@@ -226,6 +234,38 @@ class MainViewController: UIViewController {
         
     }
 
+    func updateObjectWithNotification() {
+        let object = realm?.objects(UserAllCardsModel.self)
+        token = object?.observe { ( changes: RealmCollectionChange) in
+            switch changes {
+            case .initial:
+                print("REALM Initial")
+                let cards = self.updateCardsList(with: object)
+//                self.allCardsFromRealm = cards
+            case .update:
+                print("REALM Update")
+                let cards = self.updateCardsList(with: object)
+//                self.allCardsFromRealm = cards
+            case .error(let error):
+                print("DEBUG token fatalError:", error)
+                fatalError("\(error)")
+            }
+        }
+    }
+    
+    private func updateCardsList(with result: Results<UserAllCardsModel>?) -> [UserAllCardsModel] {
+        var cardsArray = [UserAllCardsModel]()
+        let cards = result?.compactMap { $0 } ?? []
+        cards.forEach { card in
+            if card.productType == "CARD" {
+                cardsArray.append(card)
+            } else {
+                cardsArray.append(card)
+            }
+        }
+        return cardsArray
+    }
+    
     
     func setupData() {
         offer = MockItems.returnBanner()
@@ -368,7 +408,6 @@ extension MainViewController: FirstControllerDelegate {
 }
 
 extension MainViewController: ChildViewControllerDelegate {
-    
     func childViewControllerResponse(productList: [GetProductListDatum]) {
         showAlert(with: "ОБновляет", and:  "")
     }

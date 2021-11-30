@@ -51,7 +51,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Net Detect
         NetStatus.shared.startMonitoring()
         
-//        initRealmTimerParameters()
+        initRealmTimerParameters()
 
         return true
     }
@@ -430,7 +430,7 @@ extension UIWindow {
         print("Device shaken")
 //        NotificationCenter.default.post(name: .deviceDidShakeNotification, object: event)
 //        UserDefaults.standard.set(MyVariables.onBalanceLabel.toggle(), forKey: "blurBalanceLabel")
-        MyVariables.onBalanceLabel.toggle()
+        MyVariables.onBalanceLabel = false
         
         NotificationCenter.default.post(name: .deviceDidShakeNotification, object: nil)
     }
