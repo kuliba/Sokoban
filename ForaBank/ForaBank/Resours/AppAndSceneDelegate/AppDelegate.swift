@@ -20,7 +20,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         didSet {
             guard isAuth != nil else { return }
             /// Запуск таймера
-            print("Запуск таймера")
             timer.repeatTimer()
         }
     }
@@ -51,7 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Net Detect
         NetStatus.shared.startMonitoring()
         
-//        initRealmTimerParameters()
+        initRealmTimerParameters()
 
         return true
     }
@@ -60,21 +59,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let realm = try? Realm()
         // Сохраняем текущее время
         let updatingTimeObject = GetSessionTimeout()
-
         updatingTimeObject.maxTimeOut = StaticDefaultTimeOut.staticDefaultTimeOut
         updatingTimeObject.mustCheckTimeOut = true
-        
+
         do {
             let model = realm?.objects(GetSessionTimeout.self)
             realm?.beginWrite()
             realm?.delete(model!)
             realm?.add(updatingTimeObject)
             try realm?.commitWrite()
-            print("REALM File !!!",realm?.configuration.fileURL?.absoluteString ?? "")
+       
         } catch {
             print(error.localizedDescription)
         }
-        
+
     }
 
     
