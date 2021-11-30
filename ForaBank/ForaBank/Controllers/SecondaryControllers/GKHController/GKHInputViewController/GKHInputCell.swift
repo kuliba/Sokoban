@@ -56,12 +56,12 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
         fieldvalue = textField.text ?? ""
     }
     
-
+    
     // DataSetup
     func setupUI (_ index: Int, _ dataModel: [[String: String]]) {
         // Разблокировка ячеек
         self.textField.isEnabled = true
-
+        
         infoButon.isHidden = true
         self.fieldid = String(index + 1)
         fieldname = dataModel[index]["id"] ?? ""
@@ -110,7 +110,7 @@ class GKHInputCell: UITableViewCell, UITextFieldDelegate {
             self.textField.isEnabled = false
             isSelect = true
         }
-
+        
     }
     
     @IBAction func textField(_ sender: UITextField) {

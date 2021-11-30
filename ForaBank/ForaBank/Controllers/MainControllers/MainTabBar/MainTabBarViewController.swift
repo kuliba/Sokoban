@@ -15,9 +15,10 @@ class MainTabBarViewController: UITabBarController {
     let historyVC = DevelopViewController()
     let chatVC = ChatViewController()
     
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+     
         tabBar.layer.backgroundColor = UIColor(red: 0.973, green: 0.973, blue: 0.973, alpha: 0.82).cgColor
 //        tabBar.tintColor = #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)
 //        tabBar.tintColor = .clear
@@ -46,13 +47,14 @@ class MainTabBarViewController: UITabBarController {
                                   image: UIImage(named: "tabBar-chat")!,
                                   fillImage: UIImage(named: "tabBar-chat-fill")!),
         ]
-        selectedIndex = 0
         
         loadCatalog()
         
     }
     
+
     override func viewWillAppear(_ animated: Bool) {
+        UITabBar.appearance().tintColor = .black
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             if let userInfo = UserDefaults.standard.object(forKey: "ConsentMe2MePull") as? [AnyHashable : Any] {
                 let meToMeReq = RequestMeToMeModel(userInfo: userInfo)
@@ -102,6 +104,8 @@ class MainTabBarViewController: UITabBarController {
             }
             
         }
+        
+    
     }
     
     private func generateNavController(rootViewController: UIViewController, title: String, image: UIImage, fillImage: UIImage) -> UIViewController {

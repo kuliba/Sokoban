@@ -37,6 +37,8 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
         didSet { configure() }
     }
     
+    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterial))
+    
     private let logoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -134,6 +136,17 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
             logoImageView.alpha = 1
             backgroundImageView.alpha = 1
         }
+        
+        if card.productType == "DEPOSIT"{
+            balanceLabel.textColor = .black
+            cardNameLabel.textColor = UIColor(hexString: "#999999")
+            maskCardLabel.textColor = .black
+            guard let number = card.accountNumber?.suffix(4) else {
+                return
+            }
+            maskCardLabel.text = number.description
+            
+        }
     }
     
     func setupUI() {
@@ -178,7 +191,56 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
 
         balanceLabel.anchor(left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor,
                             paddingLeft: 12, paddingBottom: 11, paddingRight: 30)
+//        if NotificationCenter.default.post(name: .deviceDidShakeNotification, object: event){
+//
+//        }
+//        if NotificationCenter.default.addObserver(self,, name: .deviceDidShakeNotification, object: nil){
+//
+//        }
+    
+
+        if MyVariables.onBalanceLabel == true{
+          
+            blurView.frame = balanceLabel.bounds
+            balanceLabel.addSubview(blurView)
+            balanceLabel.sendSubviewToBack(blurView)
+            blurView.isHidden = false
+            blurView.alpha = 1
+        } else {
+            blurView.isHidden = true
+            blurView.alpha = 0
+//            balanceLabel.textColor = .white
+
+        }
+
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(handleMassage),
+                                               name: .deviceDidShakeNotification,
+                                               object: nil)
+
+
 
     }
-    
+            @objc func handleMassage(notification: NSNotification) {
+                
+                
+               
+
+                if MyVariables.onBalanceLabel == true{
+                  
+                    blurView.frame = balanceLabel.bounds
+                    balanceLabel.addSubview(blurView)
+                    balanceLabel.sendSubviewToBack(blurView)
+                    blurView.isHidden = false
+                    blurView.alpha = 1
+                } else {
+                    blurView.removeFromSuperview()
+                    blurView.isHidden = true
+                    blurView.alpha = 0
+
+                    
+        //            balanceLabel.textColor = .white
+
+                }
+                }
 }

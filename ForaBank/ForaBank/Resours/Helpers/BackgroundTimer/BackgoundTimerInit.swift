@@ -25,20 +25,23 @@ class TimerTimeInit {
         let maxTimeOut = timeObject?.maxTimeOut ?? 0
         let renewSessionTimeStamp = timeObject?.renewSessionTimeStamp ?? Date().localDate()
         let mustCheckTimeOut = timeObject?.mustCheckTimeOut ?? true
+        
         // Получаем и форматируем текущее время
         let currentTimeStamp = Date().localDate()
-        // timeOutSecondsRemaining - Расчитываем разницу по времени между последним нажатием или отправкой запроса
         
+        // timeOutSecondsRemaining - Расчитываем разницу по времени между последним нажатием или отправкой запроса
         let withTimeDistance = lastActionTimestamp.addingTimeInterval(TimeInterval(maxTimeOut))
         let timeOutSecondsRemaining = withTimeDistance.seconds(from: currentTimeStamp)
+        
         // Расчитываем остаток времени в границах между 0.9 и 1.0 от общего времени
         let nowReNewdateSecond = renewSessionTimeStamp.timeIntervalSince1970
         let nowCurrentTimeStampSecond = currentTimeStamp.timeIntervalSince1970
+        
         // 0.9
         let minSessionRenewTimeOutPassed = -(nowReNewdateSecond - nowCurrentTimeStampSecond) > 0.9 * Double(( maxTimeOut))
         // 1.0
         let maxSessionRenewTimeOutNotPassed = -(nowReNewdateSecond - nowCurrentTimeStampSecond) <= Double(( maxTimeOut))
-        
+//        print()
         if mustCheckTimeOut {
             // mustCheckTimeOut = true
             if timeOutSecondsRemaining < 0 {

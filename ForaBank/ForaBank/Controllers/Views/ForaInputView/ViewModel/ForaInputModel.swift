@@ -10,7 +10,7 @@ import UIKit
 /// Модель для управлением ForaInputView.
 class ForaInputModel {
     var title: String
-    var image: UIImage
+    var image: UIImage?
     var text: String {
         didSet {
 //            guard let text = self.text else { return }

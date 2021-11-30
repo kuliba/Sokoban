@@ -10,7 +10,8 @@ import RealmSwift
 
 protocol MainViewControllerDelegate: AnyObject {
     func goSettingViewController()
-    func goProductViewController(productIndex: Int)
+    func goProductViewController(productIndex: Int, product: GetProductListDatum)
+    func goPaymentsViewController()
 }
 
 class MainViewController: UIViewController {
@@ -18,6 +19,12 @@ class MainViewController: UIViewController {
     weak var delegate: MainViewControllerDelegate?
     var card: UserAllCardsModel?
     var sectionIndexCounter = 0
+    
+    
+    
+    var token: NotificationToken?
+    
+    let changeCardButtonCollection = AllCardView()
     
     var payments = [PaymentsModel]() {
         didSet {
@@ -27,24 +34,38 @@ class MainViewController: UIViewController {
         }
     }
     
-    var productList = [GetProductListDatum](){
-        didSet {
-            DispatchQueue.main.async {
-                self.reloadData(with: nil)
-            }
-        }
-    }
+    var productList = [GetProductListDatum]()
+    
+    var filterData = [GetProductListDatum]()
+    
     var products = [PaymentsModel](){
         didSet {
             DispatchQueue.main.async {
-                self.reloadData(with: nil)
+                var snapshot = self.dataSource?.snapshot()
+//                snapshot?.appendSections([.products])
+                let items = snapshot?.itemIdentifiers(inSection: .products)
+                snapshot?.deleteItems(items ?? [PaymentsModel]())
+                
+                snapshot?.appendItems(self.products, toSection: .products)
+//                snapshot?.sectionIdentifier(containingItem: self.products[0])
+//                snapshot?.reloadItems(self.products)
+            
+//                snapshot?.deleteSections([.products])
+//                snapshot?.appendItems(self.products, toSection: .products)
+
+                self.dataSource?.apply(snapshot ?? NSDiffableDataSourceSnapshot<Section, PaymentsModel>())
             }
         }
     }
+    
+    var productsCardsAndAccounts = [GetProductListDatum]()
+    
+    var productsDeposits = [GetProductListDatum]()
+    
+    var isFiltered = false
     var pay = [PaymentsModel](){
         didSet {
             DispatchQueue.main.async {
-                self.reloadData(with: nil)
             }
         }
     }
@@ -113,7 +134,8 @@ class MainViewController: UIViewController {
 //        navigationController?.navigationBar.isHidden = true
         navigationController?.navigationBar.backgroundColor = UIColor(hexString: "F8F8F8")
         navigationController?.navigationBar.barTintColor = UIColor(hexString: "F8F8F8")
-
+      
+        
         view.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 1)
         
         setupSearchBar()
@@ -122,33 +144,40 @@ class MainViewController: UIViewController {
         getCurrency()
         setupData()
         reloadData(with: nil)
+        AddAllUserCardtList.add() {
+            print("REALM Add")
+        }
+        updateObjectWithNotification()
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        UITabBarItem.appearance().setTitleTextAttributes(
+            [.foregroundColor: UIColor.black ], for: .selected)
+
         self.navigationController?.navigationBar.isHidden = true
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.getCardList { data, errorMessage in
-            self.productList.removeAll()
-            self.products.removeAll()
-            DispatchQueue.main.async {
-                guard let listProducts = data else { return }
-                for i in listProducts.prefix(3) {
-                    self.products.append(PaymentsModel(productList: i))
-                }
-                if listProducts.prefix(3).count < 3 {
-                    self.products.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
-                } else if listProducts.prefix(3).count == 3 {
-                    self.products.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
-                }
-                self.productList = data ?? []
-                self.reloadData(with: nil)
-            }
-        }
+//        self.getCardList { data, errorMessage in
+//            self.productList.removeAll()
+//            self.products.removeAll()
+//            DispatchQueue.main.async {
+//                guard let listProducts = data else { return }
+//                for i in listProducts {
+//                    self.products.append(PaymentsModel(productList: i))
+//                }
+////                if listProducts.prefix(3).count < 3 {
+////                    self.products.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
+////                } else if listProducts.prefix(3).count == 3 {
+////                    self.products.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
+////                }
+//                self.productList = data ?? []
+//                self.reloadData(with: nil)
+//            }
+//        }
     }
     
     
@@ -187,7 +216,7 @@ class MainViewController: UIViewController {
     
     func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?) -> () ) {
         
-        let param = ["isCard": "true", "isAccount": "true", "isDeposit": "false", "isLoan": "false"]
+        let param = ["isCard": "true", "isAccount": "true", "isDeposit": "true", "isLoan": "false"]
         
         NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
             if error != nil {
@@ -205,6 +234,39 @@ class MainViewController: UIViewController {
         
     }
 
+    func updateObjectWithNotification() {
+        let object = realm?.objects(UserAllCardsModel.self)
+        token = object?.observe { ( changes: RealmCollectionChange) in
+            switch changes {
+            case .initial:
+                print("REALM Initial")
+                let cards = self.updateCardsList(with: object)
+//                self.allCardsFromRealm = cards
+            case .update:
+                print("REALM Update")
+                let cards = self.updateCardsList(with: object)
+//                self.allCardsFromRealm = cards
+            case .error(let error):
+                print("DEBUG token fatalError:", error)
+                fatalError("\(error)")
+            }
+        }
+    }
+    
+    private func updateCardsList(with result: Results<UserAllCardsModel>?) -> [UserAllCardsModel] {
+        var cardsArray = [UserAllCardsModel]()
+        let cards = result?.compactMap { $0 } ?? []
+        cards.forEach { card in
+            if card.productType == "CARD" {
+                cardsArray.append(card)
+            } else {
+                cardsArray.append(card)
+            }
+        }
+        return cardsArray
+    }
+    
+    
     func setupData() {
         offer = MockItems.returnBanner()
         currentsExchange = MockItems.returnCurrency()
@@ -214,15 +276,28 @@ class MainViewController: UIViewController {
             
             guard let listProducts = data else {return}
             
-            for i in listProducts.prefix(3) {
+            for i in listProducts {
                 self.products.append(PaymentsModel(productList: i))
             }
-            if listProducts.prefix(3).count < 3{
-                self.products.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
-            } else if listProducts.prefix(3).count == 3{
-                self.products.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
-            }
+//            if listProducts.prefix(3).count < 3{
+//                self.products.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
+//            } else if listProducts.prefix(3).count == 3{
+//                self.products.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
+//            }
+            
             self.productList = data ?? []
+            self.productsCardsAndAccounts = self.productList.filter({$0.productType == "CARD" || $0.productType == "ACCOUNT"})
+//            if  self.productsCardsAndAccounts.count < 3{
+//                
+//            }
+            self.productsDeposits = self.productList.filter({$0.productType == "DEPOSIT"})
+            self.products.removeAll()
+            for i in self.productsCardsAndAccounts {
+                self.products.append(PaymentsModel(productList: i))
+            }
+            if self.productsCardsAndAccounts.count < 3 {
+                self.products.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
+            } 
         }
     }
         
@@ -333,7 +408,6 @@ extension MainViewController: FirstControllerDelegate {
 }
 
 extension MainViewController: ChildViewControllerDelegate {
-    
     func childViewControllerResponse(productList: [GetProductListDatum]) {
         showAlert(with: "ОБновляет", and:  "")
     }

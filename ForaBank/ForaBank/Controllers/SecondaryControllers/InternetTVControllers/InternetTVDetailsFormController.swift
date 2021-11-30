@@ -20,7 +20,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
     var firstStep = true
     var firstAdditional = [[String: String]]()
     var stepsPayment = [[[String: String]]]()
-    
+
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var bottomInputView: BottomInputView!
     @IBOutlet weak var goButton: UIButton!
