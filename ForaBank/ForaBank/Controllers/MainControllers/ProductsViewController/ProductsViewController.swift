@@ -22,12 +22,12 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
             DispatchQueue.main.async {
                 self.totalMoney = 0.0
                 self.notActivated.removeAll()
+                self.blocked.removeAll()
+                self.activeProduct.removeAll()
+                self.notActivated.removeAll()
+                self.deposits.removeAll()
                 for i in self.products{
                     self.totalMoney += i.balance ?? 0.0
-                    self.blocked.removeAll()
-                    self.activeProduct.removeAll()
-                    self.notActivated.removeAll()
-                    for i in self.products {
                         if i.statusPC == "17", i.status == "Действует" || i.status == "Выдано клиенту"{
                             self.notActivated.append(i)
                             continue
@@ -37,10 +37,13 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                         } else if  i.statusPC == "0" || i.statusPC == nil, i.status == "Действует" || i.status == "NOT_BLOCKED"{
                             self.activeProduct.append(i)
                             continue
+                        } else if i.productType == "DEPOSIT"{
+                            self.deposits.append(i)
+                            continue
                         }
                         
                         
-                    }
+                    
                 }
                 
                 self.tableView?.reloadData()
@@ -69,6 +72,13 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
             
         }
     }
+    
+    var deposits = [GetProductListDatum](){
+        didSet{
+            self.tableView?.reloadData()
+            
+        }
+    }
     let totalMoneyView: TotalMoneyView = UIView.fromNib()
 
     var tableView: UITableView!
@@ -79,6 +89,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
         getCardList { products, errorMessage in
             self.products = products ?? []
         }
+        
         sectionData = MockItems.returnSectionInProducts()
         
         // Do any additional setup after loading the view.
@@ -145,6 +156,8 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                 return notActivated.count
             case "Карты и счета":
                 return activeProduct.count
+            case "Вклады":
+                return deposits.count
             case "Заблокированные продукты":
                 return blocked.count
         default:
@@ -183,6 +196,19 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                     cell.cardTypeImage.isHidden = true
                 }
             }
+        case "Вклады":
+            if deposits.count > 0{
+                let str = deposits[indexPath.row].numberMasked ?? ""
+                cell.titleProductLabel.text = deposits[indexPath.row].customName ?? deposits[indexPath.row].mainField
+                cell.numberProductLabel.text = "\(str.suffix(4))"
+                cell.balanceLabel.text = "\(deposits[indexPath.row].balance?.currencyFormatter(symbol: deposits[indexPath.row].currency ?? "") ?? "")"
+                cell.coverpProductImage.image = deposits[indexPath.row].smallDesign?.convertSVGStringToImage()
+                cell.cardTypeImage.image = deposits[indexPath.row].paymentSystemImage?.convertSVGStringToImage()
+                cell.typeOfProduct.text = deposits[indexPath.row].additionalField
+                if deposits[indexPath.row].paymentSystemImage == nil{
+                    cell.cardTypeImage.isHidden = true
+                }
+            }
         case "Заблокированные продукты":
             if blocked.count > 0{
                 let str = blocked[indexPath.item].numberMasked ?? ""
@@ -215,6 +241,8 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                 viewController.product = self.notActivated[indexPath.row]
                 case 1:
                 viewController.product = self.activeProduct[indexPath.row]
+                case 2:
+                viewController.product = self.deposits[indexPath.row]
                 case 6:
                 viewController.product = self.blocked[indexPath.row]
             default:
@@ -230,6 +258,8 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                 delegateProducts?.sendMyDataBack(product: self.notActivated[indexPath.row])
                 case 1:
                 delegateProducts?.sendMyDataBack(product: self.activeProduct[indexPath.row])
+                case 2:
+                delegateProducts?.sendMyDataBack(product: self.deposits[indexPath.row])
                 case 6:
                 delegateProducts?.sendMyDataBack(product: self.blocked[indexPath.row])
             default:
@@ -345,6 +375,12 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                 } else {
                     label.alpha = 1
                 }
+            case "Вклады":
+                if deposits.count == 0 {
+                    label.alpha = 0.3
+                } else {
+                    label.alpha = 1
+                }
             case "Заблокированные продукты":
                 if blocked.count > 0 {
                     label.alpha = 1
@@ -384,7 +420,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
     
     private func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?) ->() ) {
         
-        let param = ["isCard": "true", "isAccount": "true", "isDeposit": "false", "isLoan": "false"]
+        let param = ["isCard": "true", "isAccount": "true", "isDeposit": "true", "isLoan": "false"]
         
         NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
             if error != nil {

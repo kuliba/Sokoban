@@ -6,6 +6,7 @@ class ProductCoordinator: Coordinator {
 
     override init(router: RouterType) {
         super.init(router: router)
+        productViewController.delegatePaymentVc = self
         
     }
     
@@ -20,5 +21,18 @@ class ProductCoordinator: Coordinator {
         return navVC
     }
 }
+
+extension ProductCoordinator: ProductViewControllerDelegate{
+    
+    func goPaymentsViewController() {
+        let productCoordinator = PaymentsViewCoordinator(router: router)
+        addChild(productCoordinator)
+        productCoordinator.start()
+        router.present(productCoordinator, animated: true)
+    }
+    
+    
+}
+
 
 

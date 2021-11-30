@@ -12,7 +12,11 @@ import UIKit
 extension ProductViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return products.count + 1
+        if products.count > 3{
+            return 4
+        } else {
+            return products.count + 1
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -24,17 +28,47 @@ extension ProductViewController: UICollectionViewDataSource {
 //            item?.backgroundColor = .gray
 //            item?.selectedView.isHidden = true
             
-            item?.isSelected = false
+//            item?.isSelected = false
+            if products.count > 0, indexPath.item > 3, product?.number == products[indexPath.row].number{
+                item?.showSelect()
+                item?.isSelected = true
+                item?.cardImageView.alpha = 1
+                item?.selectedView.isHidden = false
+                self.collectionView?.selectItem(at: indexPath, animated: true, scrollPosition: .bottom)
+                
+            } else {
+                item?.isSelected = false
+                item?.hideSelect()
+                item?.showSelect()
+                item?.cardImageView.alpha = 0.5
+                item?.selectedView.isHidden = true
+            }
 
+//            item?.showSelect()
             return item ?? UICollectionViewCell()
         default:
             let item = collectionView.dequeueReusableCell(withReuseIdentifier: "CardCollectionViewCell", for: indexPath) as? CardCollectionViewCell
     //        item?.card = products[indexPath.item]
 //            item?.selectedView.isHidden = true
             item?.cardImageView.image = products[indexPath.row].smallDesign?.convertSVGStringToImage()
-            if firstTimeLoad{
+//            if firstTimeLoad{
+//                item?.isSelected = false
+//            }
+            if products.count > 0, indexPath.item != 3, product?.number == products[indexPath.item].number {
+                self.collectionView?.selectItem(at: indexPath, animated: true, scrollPosition: .bottom)
+                item?.showSelect()
+                item?.isSelected = true
+                item?.cardImageView.alpha = 1
+                item?.selectedView.isHidden = false
+                
+            } else {
                 item?.isSelected = false
+                item?.hideSelect()
+                item?.showSelect()
+                item?.cardImageView.alpha = 0.5
+                item?.selectedView.isHidden = true
             }
+
             return item ?? UICollectionViewCell()
         }
     }
@@ -62,8 +96,14 @@ extension ProductViewController: UICollectionViewDataSource {
             cell?.showSelect()
         } else {
             if indexPath.item < products.count{
-                product = products[indexPath.item]
-                self.collectionView?.selectItem(at: indexPath, animated: true, scrollPosition: .bottom)
+                if indexItem ?? 0 < 3{
+                    product = products[indexPath.item]
+                    self.collectionView?.selectItem(at: indexPath, animated: true, scrollPosition: .bottom)
+                } else {
+                    product = products[indexPath.item]
+                    indexItem = 0
+                }
+                
 //                guard let cell = collectionView.cellForItem(at: indexPath) as? CardCollectionViewCell else {return}
 //                cell.showSelect()
             } else {
@@ -97,18 +137,17 @@ extension ProductViewController: UICollectionViewDataSource {
                 activateSlider.isHidden = false
                 blockView.isHidden = true
         } else {
-            button.isEnabled = true
-            button.alpha = 1
-            button2.isEnabled = true
-            button2.alpha = 1
-            button4.setTitle("Блокировать", for: .normal)
-            button4.titleLabel?.font = UIFont.systemFont(ofSize: 14)
-            blockView.isHidden = true
-            activateSlider.isHidden = true
-            let btnImage4 = UIImage(named: "lock")
-            button4.tintColor = .black
-            button4.setImage(btnImage4 , for: .normal)
+            if product?.productType == "DEPOSIT"{
+                button.isUserInteractionEnabled = false
+                button.alpha = 0.4
+                button2.isUserInteractionEnabled = false
+                button2.alpha = 0.4
+            } else {
+                button2.isEnabled = true
+                button2.alpha = 1
+            }
         }
+        
     }
     
     

@@ -47,8 +47,13 @@ extension MainViewController: UICollectionViewDelegate {
 //                let navVC = UINavigationController(rootViewController: viewController)
 //                navVC.modalPresentationStyle = .fullScreen
 //                present(navVC, animated: true)
-                
-                delegate?.goProductViewController(productIndex: indexPath.item)
+                if isFiltered{
+                    delegate?.goProductViewController(productIndex: indexPath.item, product: productsDeposits[indexPath.item])
+                } else {
+                    delegate?.goProductViewController(productIndex: indexPath.item, product: productsCardsAndAccounts[indexPath.item])
+
+                }
+//                delegate?.goProductViewController(productIndex: indexPath.item, product: productList[indexPath.item])
             }
         case .offer:
             guard let url = URL(string: offer[indexPath.row].controllerName ) else { return  }
