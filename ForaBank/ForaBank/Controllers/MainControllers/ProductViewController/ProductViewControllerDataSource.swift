@@ -34,6 +34,7 @@ extension ProductViewController: UICollectionViewDataSource {
                 item?.isSelected = true
                 item?.cardImageView.alpha = 1
                 item?.selectedView.isHidden = false
+                self.collectionView?.selectItem(at: indexPath, animated: true, scrollPosition: .bottom)
                 
             } else {
                 item?.isSelected = false
@@ -43,7 +44,7 @@ extension ProductViewController: UICollectionViewDataSource {
                 item?.selectedView.isHidden = true
             }
 
-            item?.showSelect()
+//            item?.showSelect()
             return item ?? UICollectionViewCell()
         default:
             let item = collectionView.dequeueReusableCell(withReuseIdentifier: "CardCollectionViewCell", for: indexPath) as? CardCollectionViewCell
@@ -54,6 +55,7 @@ extension ProductViewController: UICollectionViewDataSource {
 //                item?.isSelected = false
 //            }
             if products.count > 0, indexPath.item != 3, product?.number == products[indexPath.item].number {
+                self.collectionView?.selectItem(at: indexPath, animated: true, scrollPosition: .bottom)
                 item?.showSelect()
                 item?.isSelected = true
                 item?.cardImageView.alpha = 1
