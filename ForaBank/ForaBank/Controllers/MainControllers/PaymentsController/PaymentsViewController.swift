@@ -273,7 +273,7 @@ extension PaymentsViewController {
                 let payArr = lastPaymentsList.prefix(3)
                 payArr.forEach { lastPayment in
                     let payment = PaymentsModel(lastGKHPayment: lastPayment)
-                    self.payments.append(payment)
+//                    self.payments.append(payment)
                     
                 }
             } else {

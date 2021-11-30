@@ -28,17 +28,45 @@ extension ProductViewController: UICollectionViewDataSource {
 //            item?.backgroundColor = .gray
 //            item?.selectedView.isHidden = true
             
-            item?.isSelected = false
+//            item?.isSelected = false
+            if products.count > 0, indexPath.item != 3, product?.number == products[indexPath.item].number {
+                item?.showSelect()
+                item?.isSelected = true
+                item?.cardImageView.alpha = 1
+                item?.selectedView.isHidden = false
+                
+            } else {
+                item?.isSelected = false
+                item?.hideSelect()
+                item?.showSelect()
+                item?.cardImageView.alpha = 0.5
+                item?.selectedView.isHidden = true
+            }
 
+            item?.showSelect()
             return item ?? UICollectionViewCell()
         default:
             let item = collectionView.dequeueReusableCell(withReuseIdentifier: "CardCollectionViewCell", for: indexPath) as? CardCollectionViewCell
     //        item?.card = products[indexPath.item]
 //            item?.selectedView.isHidden = true
             item?.cardImageView.image = products[indexPath.row].smallDesign?.convertSVGStringToImage()
-            if firstTimeLoad{
+//            if firstTimeLoad{
+//                item?.isSelected = false
+//            }
+            if products.count > 0, indexPath.item != 3, product?.number == products[indexPath.item].number {
+                item?.showSelect()
+                item?.isSelected = true
+                item?.cardImageView.alpha = 1
+                item?.selectedView.isHidden = false
+                
+            } else {
                 item?.isSelected = false
+                item?.hideSelect()
+                item?.showSelect()
+                item?.cardImageView.alpha = 0.5
+                item?.selectedView.isHidden = true
             }
+
             return item ?? UICollectionViewCell()
         }
     }

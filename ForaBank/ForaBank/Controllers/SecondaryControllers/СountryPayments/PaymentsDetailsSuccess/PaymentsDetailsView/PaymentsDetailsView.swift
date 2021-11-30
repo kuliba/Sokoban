@@ -78,7 +78,7 @@ class PaymentsDetailsView: UIView {
                 operatorImageView.image = decodedimage
                 UserDefaults.standard.removeObject(forKey: "OPERATOR_IMAGE")
             } else {
-                operatorImageView.isHidden  = true
+//                operatorImageView.isHidden  = true
             }
             
         }
