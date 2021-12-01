@@ -24,6 +24,7 @@ extension DepositCalculatorViewController {
         case 1:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: calculatorDepositCell, for: indexPath) as! CalculatorDepositCollectionViewCell
             cell.viewModel = product
+            cell.delegate = self
             return cell
         case 2:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: detailDepositCell, for: indexPath) as! DetailInformationCollectionViewCell

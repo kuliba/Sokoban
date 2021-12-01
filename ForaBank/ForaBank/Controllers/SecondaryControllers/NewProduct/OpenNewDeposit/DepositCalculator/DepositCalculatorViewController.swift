@@ -64,3 +64,34 @@ class DepositCalculatorViewController: UICollectionViewController {
     
 }
 
+extension DepositCalculatorViewController: CalculatorDepositDelegate {
+    func openDetailController(with model: [TermRateSumTermRateList]?) {
+        print(#function)
+        let controller = SelectDepositPeriodViewController()
+        controller.elements = model
+        controller.itemIsSelect = { elem in
+            let calculator = self.collectionView.cellForItem(at: [0,1]) as! CalculatorDepositCollectionViewCell
+            calculator.choosenRate = elem
+        }
+        
+        let navController = UINavigationController(rootViewController: controller)
+        navController.modalPresentationStyle = .custom
+        navController.transitioningDelegate = self
+        self.present(navController, animated: true)
+    }
+}
+
+extension DepositCalculatorViewController: UIViewControllerTransitioningDelegate {
+
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        let presenter = PresentationController(presentedViewController: presented, presenting: presenting)
+        if let nav = presented as? UINavigationController {
+            if let controller = nav.viewControllers.first as? SelectDepositPeriodViewController {
+                presenter.height = ((controller.elements?.count ?? 1) * 56) + 80
+            }
+        } else {
+            presenter.height = (4 * 44) + 160
+        }
+        return presenter
+    }
+}

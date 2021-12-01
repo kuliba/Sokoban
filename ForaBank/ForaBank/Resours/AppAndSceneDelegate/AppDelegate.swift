@@ -11,8 +11,6 @@ import FirebaseMessaging
 import RealmSwift
 
 
-    
-
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     

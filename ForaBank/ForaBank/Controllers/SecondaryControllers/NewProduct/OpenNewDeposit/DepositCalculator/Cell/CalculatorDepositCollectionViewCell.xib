@@ -31,7 +31,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="pZN-7Z-R00">
-                        <rect key="frame" x="20" y="166" width="331" height="31"/>
+                        <rect key="frame" x="20" y="167" width="331" height="31"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="500 000 ₽" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1p5-cQ-g4A">
                                 <rect key="frame" x="0.0" y="0.0" width="222.5" height="31"/>
@@ -48,42 +48,53 @@
                         </subviews>
                     </stackView>
                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="gUS-vl-Nu0">
-                        <rect key="frame" x="20" y="68.5" width="331" height="42.5"/>
+                        <rect key="frame" x="20" y="68.5" width="331" height="43.5"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="zeg-ZN-FKU">
-                                <rect key="frame" x="0.0" y="0.0" width="155.5" height="42.5"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="zeg-ZN-FKU">
+                                <rect key="frame" x="0.0" y="2.5" width="155.5" height="38"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Срок вклада" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2cq-ky-K85">
-                                        <rect key="frame" x="0.0" y="0.0" width="155.5" height="15"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="155.5" height="10"/>
                                         <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
                                         <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1 год" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NUB-o4-jn9">
-                                        <rect key="frame" x="0.0" y="23" width="155.5" height="19.5"/>
-                                        <fontDescription key="fontDescription" name="Inter-Regular_Medium" family="Inter" pointSize="16"/>
-                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="izX-DR-tnN">
+                                        <rect key="frame" x="0.0" y="18" width="155.5" height="20"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="20" id="ILP-tf-FiM"/>
+                                        </constraints>
+                                        <color key="tintColor" red="1" green="1" blue="1" alpha="0.84705882352941175" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="1 год">
+                                            <fontDescription key="titleFontDescription" name="Inter-Regular_Medium" family="Inter" pointSize="16"/>
+                                        </buttonConfiguration>
+                                        <connections>
+                                            <action selector="dateButtonTapped:" destination="gTV-IL-0wX" eventType="touchUpInside" id="Hsk-TX-Zda"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="NUB-o4-jn9" firstAttribute="leading" secondItem="zeg-ZN-FKU" secondAttribute="leading" id="7RE-ar-xWv"/>
+                                    <constraint firstItem="izX-DR-tnN" firstAttribute="leading" secondItem="zeg-ZN-FKU" secondAttribute="leading" id="AmF-2p-Gfm"/>
+                                    <constraint firstAttribute="trailing" secondItem="izX-DR-tnN" secondAttribute="trailing" id="Jzq-Ou-klD"/>
                                     <constraint firstAttribute="trailing" secondItem="2cq-ky-K85" secondAttribute="trailing" id="MfC-v9-im3"/>
-                                    <constraint firstAttribute="trailing" secondItem="NUB-o4-jn9" secondAttribute="trailing" id="WUI-xp-IOi"/>
                                     <constraint firstItem="2cq-ky-K85" firstAttribute="leading" secondItem="zeg-ZN-FKU" secondAttribute="leading" id="gf7-mZ-3qw"/>
                                 </constraints>
                             </stackView>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="35X-Zu-GVV">
-                                <rect key="frame" x="175.5" y="0.0" width="155.5" height="42.5"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="35X-Zu-GVV">
+                                <rect key="frame" x="175.5" y="0.0" width="155.5" height="43.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Процентная ставка" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JCX-8g-2ZT">
-                                        <rect key="frame" x="0.0" y="0.0" width="155.5" height="15"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="155.5" height="15.5"/>
                                         <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
                                         <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="6.95%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rie-vM-Fxz">
-                                        <rect key="frame" x="0.0" y="23" width="155.5" height="19.5"/>
+                                        <rect key="frame" x="0.0" y="23.5" width="155.5" height="20"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="20" id="qBK-Mk-EIk"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" name="Inter-Regular_Medium" family="Inter" pointSize="16"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
@@ -99,7 +110,7 @@
                         </subviews>
                     </stackView>
                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="500000" minValue="5000" maxValue="5000000" translatesAutoresizingMaskIntoConstraints="NO" id="eFr-dn-3Kf">
-                        <rect key="frame" x="18" y="210" width="335" height="31"/>
+                        <rect key="frame" x="18" y="211" width="335" height="31"/>
                         <color key="tintColor" red="1" green="0.21176470588235294" blue="0.21176470588235294" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="thumbTintColor" red="1" green="0.21176470589999999" blue="0.21176470589999999" alpha="1" colorSpace="calibratedRGB"/>
                         <connections>
@@ -107,7 +118,7 @@
                         </connections>
                     </slider>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Сумма депозита" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aZp-sM-SXp">
-                        <rect key="frame" x="20" y="143" width="331" height="15"/>
+                        <rect key="frame" x="20" y="144" width="331" height="15"/>
                         <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
                         <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
@@ -218,7 +229,7 @@
             </userDefinedRuntimeAttributes>
             <connections>
                 <outlet property="bottomView" destination="xBc-4F-8U3" id="fp5-b8-L6a"/>
-                <outlet property="dateDepositLabel" destination="NUB-o4-jn9" id="fMy-UM-RqW"/>
+                <outlet property="dateDepositButton" destination="izX-DR-tnN" id="zBS-Fb-Vpv"/>
                 <outlet property="incomeLabel" destination="Mkw-Db-adk" id="9zP-bp-gUc"/>
                 <outlet property="mainSummLabel" destination="I0g-Nc-gth" id="9w1-2K-V0G"/>
                 <outlet property="minSummLabel" destination="BXN-YB-lNp" id="yOG-5Z-mRf"/>
