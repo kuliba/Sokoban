@@ -173,6 +173,7 @@
                 <outlet property="depositNameLabel" destination="wkV-bo-Cxd" id="v6L-eF-uz6"/>
                 <outlet property="depositSummFrom" destination="L8G-H0-Dyf" id="CTa-SV-yof"/>
                 <outlet property="detailLabel" destination="IEk-Um-Ww1" id="lvg-dU-C3j"/>
+                <outlet property="moreDetailButton" destination="vh2-vY-ui9" id="X0i-kk-uzK"/>
                 <outlet property="procentLabel" destination="2cK-jK-H2C" id="7Sm-2c-hac"/>
             </connections>
             <point key="canvasLocation" x="369.56521739130437" y="360.9375"/>

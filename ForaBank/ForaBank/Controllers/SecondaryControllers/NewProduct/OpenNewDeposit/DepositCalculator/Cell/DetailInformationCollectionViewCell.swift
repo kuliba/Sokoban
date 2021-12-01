@@ -10,9 +10,14 @@ import UIKit
 class DetailInformationCollectionViewCell: UICollectionViewCell {
     
     let cellReuse = "DetailInformationViewCell"
-    var elements: [DetailedСondition]? = [] {
+    private var elements: [DetailedСondition]? = [] {
         didSet {
             tableView.reloadData()
+        }
+    }
+    var viewModel: OpenDepositDatum? {
+        didSet {
+            configure()
         }
     }
     
@@ -56,6 +61,17 @@ class DetailInformationCollectionViewCell: UICollectionViewCell {
         tableView.rowHeight = 44
     }
     
+    //MARK: - Helpers
+    private func configure() {
+        guard let viewModel = viewModel else { return }
+        elements = viewModel.detailedСonditions
+
+        /// design
+        backgroundColor = UIColor(hexString: viewModel.generalСondition?.design?.background?.first ?? "")
+        tableView.backgroundColor = UIColor(hexString: viewModel.generalСondition?.design?.background?.first ?? "")
+        
+    }
+    
 }
 
 extension DetailInformationCollectionViewCell: UITableViewDataSource, UITableViewDelegate {
@@ -70,8 +86,14 @@ extension DetailInformationCollectionViewCell: UITableViewDataSource, UITableVie
             for: indexPath) as? DetailInformationViewCell else {
                 return UITableViewCell()
             }
-        cell.backgroundColor = UIColor(red: 0.965, green: 0.965, blue: 0.969, alpha: 1)
-        cell.viewModel = elements?[indexPath.row]
+        cell.backgroundColor = UIColor(hexString: viewModel?.generalСondition?.design?.background?.first ?? "")
+        let element = elements?[indexPath.row]
+        cell.viewModel = element
+        if element?.enable ?? false {
+            cell.detailLabel.textColor = UIColor(hexString: viewModel?.generalСondition?.design?.textColor?.first ?? "")
+        } else {
+            cell.detailLabel.textColor = UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
+        }
         
         return cell
     }

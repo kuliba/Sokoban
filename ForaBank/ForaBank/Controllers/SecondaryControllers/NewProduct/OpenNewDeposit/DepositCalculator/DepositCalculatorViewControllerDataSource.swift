@@ -19,13 +19,15 @@ extension DepositCalculatorViewController {
         switch indexPath.row {
         case 0:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: mainDepositCell, for: indexPath) as! MainDepositCollectionViewCell
+            cell.viewModel = product
             return cell
         case 1:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: calculatorDepositCell, for: indexPath) as! CalculatorDepositCollectionViewCell
+            cell.viewModel = product
             return cell
         case 2:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: detailDepositCell, for: indexPath) as! DetailInformationCollectionViewCell
-            cell.elements = product?.detailedСonditions
+            cell.viewModel = product
             return cell
         default:
             return UICollectionViewCell()

@@ -29,6 +29,7 @@ class OpenNewDepositViewControllerCell: UICollectionViewCell {
     @IBOutlet weak var depositDateFrom: UILabel!
     @IBOutlet weak var detailLabel: UILabel!
     @IBOutlet weak var depositImage: UIImageView!
+    @IBOutlet weak var moreDetailButton: UIButton!
     
     
     override func awakeFromNib() {
@@ -62,11 +63,13 @@ class OpenNewDepositViewControllerCell: UICollectionViewCell {
             }
             detailLabel.text = labelText
         }
+        /// design
         backgroundColor = UIColor(hexString: viewModel.generalСondition?.design?.background?.first ?? "")
         depositNameLabel.textColor = UIColor(hexString: viewModel.generalСondition?.design?.textColor?.first ?? "")
         depositSummFrom.textColor = UIColor(hexString: viewModel.generalСondition?.design?.textColor?.first ?? "")
         depositDateFrom.textColor = UIColor(hexString: viewModel.generalСondition?.design?.textColor?.first ?? "")
         detailLabel.textColor = UIColor(hexString: viewModel.generalСondition?.design?.textColor?.first ?? "")
+        moreDetailButton.tintColor = UIColor(hexString: viewModel.generalСondition?.design?.textColor?.first ?? "")
     }
     
 }

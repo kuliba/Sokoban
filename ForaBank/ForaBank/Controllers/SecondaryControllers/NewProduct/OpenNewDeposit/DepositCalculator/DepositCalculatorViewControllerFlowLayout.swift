@@ -38,7 +38,6 @@ extension DepositCalculatorViewController: UICollectionViewDelegateFlowLayout {
                 width: collectionView.bounds.width,
                 height: 52)
         }
-        
     }
     
 }
