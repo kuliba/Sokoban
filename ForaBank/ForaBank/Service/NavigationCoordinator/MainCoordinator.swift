@@ -22,9 +22,6 @@ class MainCoordinator: Coordinator {
         
         let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
         
-        // Зарузка кэша
-        DownloadQueue.download {}
-        
         if let userIsRegister = userIsRegister {
             if userIsRegister {
                 self.goToPinVC()

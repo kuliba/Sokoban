@@ -30,8 +30,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.rootViewController = appCoordinator.toPresentable()
         window?.backgroundColor = .white
         window?.makeKeyAndVisible()
-        
-        appCoordinator.start()
+        self.appCoordinator.start()
+        // Зарузка кэша
+        DownloadQueue.download {
+            
+        }
         
         let tapGesture = UITapGestureRecognizer(target: self, action: nil)
         tapGesture.delegate = self

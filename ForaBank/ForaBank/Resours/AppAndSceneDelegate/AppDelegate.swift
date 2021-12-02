@@ -31,7 +31,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         RealmConfiguration()
 
-        
         /// FirebaseApp configure
         var filePath = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist")!
         #if DEBUG
@@ -47,11 +46,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         requestNotificationAuthorization(application: application)
         customizeUiInApp()
         
+        self.initRealmTimerParameters()
         // Net Detect
         NetStatus.shared.startMonitoring()
-        
-        initRealmTimerParameters()
-
         return true
     }
     

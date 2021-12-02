@@ -26,6 +26,7 @@ struct AddOperatorsList: DownloadQueueProtocol {
         NetworkManager<GetAnywayOperatorsListDecodableModel>.addRequest(.getAnywayOperatorsList, [:], [:]) { model, error in
             if error != nil {
                 print("DEBUG: error", error!)
+                completion()
             } else {
                 guard let model = model else { return }
                 guard let allOperators = model.data?.operatorGroupList else { return }
@@ -97,16 +98,15 @@ struct AddOperatorsList: DownloadQueueProtocol {
                     }
                 }
 
-                let realm = try? Realm()
+
                 do {
+                    let realm = try? Realm()
                     let operators = realm?.objects(GKHOperatorsModel.self)
-//                            guard (operators != nil) else { return }
                     realm?.beginWrite()
                     realm?.delete(operators!)
                     realm?.add(operatorsArr)
                     try realm?.commitWrite()
                     completion()
-                    print("REALM",realm?.configuration.fileURL?.absoluteString ?? "")
                 } catch {
                     print(error.localizedDescription)
                 }

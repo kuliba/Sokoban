@@ -16,6 +16,7 @@ struct GetSessionTimeoutSaved: DownloadQueueProtocol {
             
             if error != nil {
                 print("DEBUG: error", error!)
+                completion()
             } else {
                 guard let statusCode = model?.statusCode else { return }
                 if statusCode == 0 {
@@ -25,8 +26,8 @@ struct GetSessionTimeoutSaved: DownloadQueueProtocol {
                     sessionTimeOutParameters.mustCheckTimeOut = true
                     
                     /// Сохраняем в REALM
-                    let realm = try? Realm()
                     do {
+                        let realm = try? Realm()
                         let b = realm?.objects(GetSessionTimeout.self)
                         realm?.beginWrite()
                         realm?.delete(b!)
