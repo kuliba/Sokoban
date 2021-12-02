@@ -58,6 +58,8 @@ struct DownloadQueue {
         
         let group = DispatchGroup()
         
+        
+        
         for (n, i) in downloadArray.enumerated() {
             group.enter()
             print(n, i)
