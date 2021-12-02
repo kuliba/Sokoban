@@ -265,13 +265,11 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
         performSegue(withIdentifier: "input", sender: self)
     }
 
-    // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let op: GKHOperatorsModel!
         switch segue.identifier {
 
         case "input":
-            // Если переход по нажатию на ячейку
             if self.tableView.indexPathForSelectedRow?.row != nil {
                 let index = (self.tableView.indexPathForSelectedRow?.row)!
                 if searching {
