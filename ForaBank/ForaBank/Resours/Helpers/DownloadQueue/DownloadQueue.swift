@@ -10,8 +10,23 @@ import RealmSwift
 
 struct DownloadQueue {
     
+    var downloadArray = [DownloadQueueProtocol]()
+    var paramArray = [[String: String]]()
+    
     /// Функция загрузки
-    static func download(_ completion: @escaping () -> ()) {
+    mutating func download(_ completion: @escaping () -> ()) {
+        setDownloadQueue()
+        
+        for (n, i) in self.downloadArray.enumerated() {
+            let semaphore = DispatchSemaphore(value: 0)
+                i.add(paramArray[n], [:]) {
+                    semaphore.signal()
+                }
+            semaphore.wait()
+        }
+    }
+    
+    private mutating func setDownloadQueue() {
         
         lazy var realm = try? Realm()
         
@@ -19,9 +34,9 @@ struct DownloadQueue {
         let withIdCountries = countries?.first?.serial ?? ""
         let countriesParam = ["serial" : withIdCountries ]
         
-        let paymentSystem = realm?.objects(GetPaymentSystemList.self)
-        let withIdPaymentSystem = paymentSystem?.first?.serial ?? ""
-        let paymentSystemParam = ["serial" : withIdPaymentSystem ]
+//        let paymentSystem = realm?.objects(GetPaymentSystemList.self)
+//        let withIdPaymentSystem = paymentSystem?.first?.serial ?? ""
+//        let paymentSystemParam = ["serial" : withIdPaymentSystem ]
         
         let currency = realm?.objects(GetCurrency.self)
         let withIdCurrency = currency?.first?.serial ?? ""
@@ -35,42 +50,22 @@ struct DownloadQueue {
         let withIdOperators = operators?.first?.serial ?? ""
         let countriesOperators = ["serial" : withIdOperators ]
         
-        var downloadArray = [DownloadQueueProtocol]()
-        var paramArray = [[String: String]]()
-        
         downloadArray.append(CountriesListSaved())
         paramArray.append(countriesParam)
         
-        downloadArray.append(GetPaymentSystemSaved())
-        paramArray.append(paymentSystemParam)
+        //        downloadArray.append(GetPaymentSystemSaved())
+        //        paramArray.append(paymentSystemParam)
         
         downloadArray.append(GetCurrencySaved())
         paramArray.append(currencyParam)
-
+        
         downloadArray.append(BanksListSaved())
         paramArray.append(countriesBank)
-
-        downloadArray.append(GetSessionTimeoutSaved())
-        paramArray.append(["serial": ""])
-
         downloadArray.append(AddOperatorsList())
         paramArray.append(countriesOperators)
         
-        let group = DispatchGroup()
-        
-        
-        
-        for (n, i) in downloadArray.enumerated() {
-            group.enter()
-            print(n, i)
-            i.add(paramArray[n], [:]) {
-                print(n, i)
-                group.leave()
-            }
-        }
-        group.notify(queue: .main) {
-            completion()
-        }
+        downloadArray.append(GetSessionTimeoutSaved())
+        paramArray.append(["serial": ""])
         
     }
 }

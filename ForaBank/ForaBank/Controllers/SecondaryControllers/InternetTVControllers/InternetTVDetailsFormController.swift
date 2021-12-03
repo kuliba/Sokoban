@@ -486,7 +486,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
     }
 
     func doNextStepServiceTransfer(request: [String: AnyObject], completion: @escaping (CreateTransferAnswerModel?, String?) -> ()) {
-        NetworkManager2<CreateTransferAnswerModel>.addRequest(.nextStepServiceTransfer, [:], request) { respModel, error in
+        NetworkManager<CreateTransferAnswerModel>.addRequest(.nextStepServiceTransfer, [:], request) { respModel, error in
             if error != nil {
                 completion(nil, error!)
             }
