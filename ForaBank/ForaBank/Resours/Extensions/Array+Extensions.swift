@@ -20,9 +20,9 @@ extension Array where Element: Equatable, Element: Identifiable {
         let removals = self.missing(in: result)
         let updated = self.contained(in: result)
         let updates = result.contained(in: updated)
-        let addeditions = result.missing(in: updates + removals)
+        let additions = result.missing(in: updates + removals)
         
-        return (updates, addeditions, removals)
+        return (updates, additions, removals)
     }
 }
 
