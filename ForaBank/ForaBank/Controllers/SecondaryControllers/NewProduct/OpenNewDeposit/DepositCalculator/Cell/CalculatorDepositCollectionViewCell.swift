@@ -48,8 +48,8 @@ class CalculatorDepositCollectionViewCell: UICollectionViewCell {
     }
     
     var currencyCode = "RUB"
-    let moneyInputController = TextFieldStartInputController()
     // MARK: - Formatters
+    let moneyInputController = TextFieldStartInputController()
     var moneyFormatter: SumTextInputFormatter?
     
     override func awakeFromNib() {

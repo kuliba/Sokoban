@@ -15,7 +15,7 @@ class DepositCalculatorViewController: UICollectionViewController {
     
     lazy var doneButton: UIButton = {
         let button = UIButton(title: "Открыть вклад")
-        
+        button.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -24,6 +24,8 @@ class DepositCalculatorViewController: UICollectionViewController {
             collectionView.reloadData()
         }
     }
+    
+    var choosenRate: TermRateSumTermRateList?
     
     //MARK: - Viewlifecicle
     override func viewDidLoad() {
@@ -38,6 +40,17 @@ class DepositCalculatorViewController: UICollectionViewController {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc func doneButtonTapped() {
+        let calculator = self.collectionView.cellForItem(at: [0,1]) as! CalculatorDepositCollectionViewCell
+        
+        let controller = ConfurmOpenDepositViewController()
+        controller.product = calculator.viewModel
+        controller.choosenRateList = calculator.choosenRateList
+        controller.choosenRate = calculator.choosenRate
+//        controller.bottomView.amountTextField.text = calculator.summTextField.text
+        navigationController?.pushViewController(controller, animated: true)
     }
     
     private func setupUI() {
@@ -72,6 +85,7 @@ extension DepositCalculatorViewController: CalculatorDepositDelegate {
         controller.itemIsSelect = { elem in
             let calculator = self.collectionView.cellForItem(at: [0,1]) as! CalculatorDepositCollectionViewCell
             calculator.choosenRate = elem
+            self.choosenRate = elem
         }
         
         let navController = UINavigationController(rootViewController: controller)

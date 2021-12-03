@@ -474,6 +474,8 @@
 		EDDFE3BD2757D88C00F57C71 /* SelectDepositPeriodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDFE3BC2757D88C00F57C71 /* SelectDepositPeriodViewController.swift */; };
 		EDDFE3C12757D8F800F57C71 /* SelectDepositPeriodViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDFE3BF2757D8F700F57C71 /* SelectDepositPeriodViewCell.swift */; };
 		EDDFE3C22757D8F800F57C71 /* SelectDepositPeriodViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDDFE3C02757D8F700F57C71 /* SelectDepositPeriodViewCell.xib */; };
+		EDDFE3C62759731B00F57C71 /* ConfurmOpenDepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDFE3C52759731B00F57C71 /* ConfurmOpenDepositViewController.swift */; };
+		EDDFE3C827597A7600F57C71 /* PaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDFE3C727597A7600F57C71 /* PaymentViewController.swift */; };
 		EDE212F12742E7D6005D9821 /* ChooseCurrencyPaymentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDE212F02742E7D5005D9821 /* ChooseCurrencyPaymentController.swift */; };
 		EDE212F62742E91D005D9821 /* ChooseCurrencyTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDE212F52742E91D005D9821 /* ChooseCurrencyTableViewCell.xib */; };
 		EDE212F82742ED2B005D9821 /* ChooseCurrencyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDE212F72742ED2B005D9821 /* ChooseCurrencyTableViewCell.swift */; };
@@ -981,6 +983,8 @@
 		EDDFE3BC2757D88C00F57C71 /* SelectDepositPeriodViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectDepositPeriodViewController.swift; sourceTree = "<group>"; };
 		EDDFE3BF2757D8F700F57C71 /* SelectDepositPeriodViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectDepositPeriodViewCell.swift; sourceTree = "<group>"; };
 		EDDFE3C02757D8F700F57C71 /* SelectDepositPeriodViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SelectDepositPeriodViewCell.xib; sourceTree = "<group>"; };
+		EDDFE3C52759731B00F57C71 /* ConfurmOpenDepositViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfurmOpenDepositViewController.swift; sourceTree = "<group>"; };
+		EDDFE3C727597A7600F57C71 /* PaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentViewController.swift; sourceTree = "<group>"; };
 		EDE212F02742E7D5005D9821 /* ChooseCurrencyPaymentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseCurrencyPaymentController.swift; sourceTree = "<group>"; };
 		EDE212F52742E91D005D9821 /* ChooseCurrencyTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChooseCurrencyTableViewCell.xib; sourceTree = "<group>"; };
 		EDE212F72742ED2B005D9821 /* ChooseCurrencyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseCurrencyTableViewCell.swift; sourceTree = "<group>"; };
@@ -2567,6 +2571,7 @@
 		ED9D4D902750F914001AF471 /* OpenNewDeposit */ = {
 			isa = PBXGroup;
 			children = (
+				EDDFE3C4275972F200F57C71 /* ConfurmOpenDeposit */,
 				EDDFE3A82756D34200F57C71 /* DetailDeposit */,
 				EDDFE3A92756D36600F57C71 /* DepositCalculator */,
 			);
@@ -3013,6 +3018,15 @@
 				EDDFE3C02757D8F700F57C71 /* SelectDepositPeriodViewCell.xib */,
 			);
 			path = Cell;
+			sourceTree = "<group>";
+		};
+		EDDFE3C4275972F200F57C71 /* ConfurmOpenDeposit */ = {
+			isa = PBXGroup;
+			children = (
+				EDDFE3C52759731B00F57C71 /* ConfurmOpenDepositViewController.swift */,
+				EDDFE3C727597A7600F57C71 /* PaymentViewController.swift */,
+			);
+			path = ConfurmOpenDeposit;
 			sourceTree = "<group>";
 		};
 		EDE212EF2742E755005D9821 /* View */ = {
@@ -3845,6 +3859,7 @@
 				0B95C3FE26B6C96F00AA57E6 /* DoubleInStringExtension.swift in Sources */,
 				0BA251F326C26FE000AD087A /* CreateFastPaymentContractDecodableModel.swift in Sources */,
 				A5F15C0F274980CB00DC91DA /* InternetTVLatestOperationRealm.swift in Sources */,
+				EDDFE3C62759731B00F57C71 /* ConfurmOpenDepositViewController.swift in Sources */,
 				ED4FC5EC266AD98E0092B4AB /* NSCollectionLayoutItem.swift in Sources */,
 				0BB24ABC26F370A300DDA4F6 /* GetProductDetailsDecodableModel.swift in Sources */,
 				EDB1657A2668C7F2007E6030 /* TransferCell.swift in Sources */,
@@ -3921,6 +3936,7 @@
 				68D06F3426C40DF500F9BE4C /* CurrencyExchangeCollectionViewCell.swift in Sources */,
 				68FFA563268DDFCB002DADFA /* SearchContactView.swift in Sources */,
 				0B22AEA126CDA9BC00B11E7F /* GKHInputViewController.swift in Sources */,
+				EDDFE3C827597A7600F57C71 /* PaymentViewController.swift in Sources */,
 				68FFA5452682F48C002DADFA /* SearchContact.swift in Sources */,
 				0B7A18C72685BD130007CC75 /* GetBanksDecodableModel.swift in Sources */,
 				0B8BE093266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift in Sources */,
