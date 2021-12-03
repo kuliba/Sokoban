@@ -19,7 +19,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     lazy var appNavigationController = UINavigationController()
     lazy var appRouter = Router(navigationController: self.appNavigationController)
     lazy var appCoordinator = MainCoordinator(router: self.appRouter)
-//    static var shared: SceneDelegate { return UIApplication.shared.delegate as? SceneDelegate }
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
@@ -31,11 +30,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.backgroundColor = .white
         window?.makeKeyAndVisible()
         self.appCoordinator.start()
-        // Зарузка кэша
-        DownloadQueue.download {
-            
-        }
-        
         let tapGesture = UITapGestureRecognizer(target: self, action: nil)
         tapGesture.delegate = self
         window?.addGestureRecognizer(tapGesture)

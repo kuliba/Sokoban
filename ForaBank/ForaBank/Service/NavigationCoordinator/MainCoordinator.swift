@@ -22,6 +22,12 @@ class MainCoordinator: Coordinator {
         
         let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
         
+        // Зарузка кэша
+        DispatchQueue.main.async(qos: .userInteractive) {
+        lazy var downloadCash = DownloadQueue()
+        downloadCash.download {}
+        }
+        
         if let userIsRegister = userIsRegister {
             if userIsRegister {
                 self.goToPinVC()

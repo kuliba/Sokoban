@@ -33,7 +33,7 @@ struct GetSessionTimeoutSaved: DownloadQueueProtocol {
                         realm?.delete(b!)
                         realm?.add(sessionTimeOutParameters)
                         try realm?.commitWrite()
-                        print("REALM", realm?.configuration.fileURL?.absoluteString ?? "")
+                        completion()
                     } catch {
                         print(error.localizedDescription)
                     }
