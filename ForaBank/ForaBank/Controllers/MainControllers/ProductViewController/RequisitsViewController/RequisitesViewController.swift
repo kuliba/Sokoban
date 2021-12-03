@@ -14,7 +14,7 @@ class RequisitesViewController: UIViewController, UITableViewDataSource, UITable
     var tableView = UITableView()
     var cardUnMask = false
     var mockItem: [PaymentsModel] = []
-    var product: GetProductListDatum? = nil {
+    var product: UserAllCardsModel? = nil {
         didSet{
             if product?.productType == "ACCOUNT"{
                 mockItem.removeLast(3)

@@ -83,6 +83,7 @@ struct AddAllUserCardtList {
                     realm?.beginWrite()
                     realm?.delete(operators!)
                     realm?.add(cardsArray)
+                    realm?.refresh()
                     try realm?.commitWrite()
                     completion()
                 } catch {

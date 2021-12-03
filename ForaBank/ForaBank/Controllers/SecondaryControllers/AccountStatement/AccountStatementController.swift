@@ -9,7 +9,7 @@ import UIKit
 import RealmSwift
 
 class AccountStatementController: UIViewController {
-    var startProduct: GetProductListDatum?
+    var startProduct: UserAllCardsModel?
     lazy var realm = try? Realm()
     
     var toolBar: UIToolbar?

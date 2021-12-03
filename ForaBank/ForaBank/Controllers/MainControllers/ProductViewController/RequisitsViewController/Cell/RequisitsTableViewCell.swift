@@ -12,7 +12,7 @@ class RequisitsTableViewCell: UITableViewCell {
     @IBOutlet weak var rightButton: UIButton!
     @IBOutlet weak var nameCellLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
-    var product: GetProductListDatum?
+    var product: UserAllCardsModel?
     var bRec = true
     override func awakeFromNib() {
         super.awakeFromNib()

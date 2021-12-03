@@ -20,7 +20,7 @@ protocol FirstControllerDelegate: AnyObject {
     func sendData(data: [GetProductListDatum])
 }
 protocol CtoBDelegate : AnyObject{
-    func sendMyDataBack(product: GetProductListDatum?)//pass in any arguments also
+    func sendMyDataBack(product: UserAllCardsModel?)//pass in any arguments also
 }
 
 class ProductViewController: UIViewController, UICollectionViewDelegate, UITableViewDelegate, SkeletonTableViewDataSource, UIScrollViewDelegate, MTSlideToOpenDelegate, UITextFieldDelegate{
@@ -145,7 +145,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
             }
         }
     }
-    var product: GetProductListDatum? {
+    var product: UserAllCardsModel? {
         didSet{
             
             amounPeriodLabel.text = ""
@@ -178,9 +178,9 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
 
                 self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4)))", color: self.product?.fontDesignColor)
             }
-            activateSlider.textColor = UIColor(hexString: product?.fontDesignColor ?? "")
-            activateSlider.sliderBackgroundColor = UIColor(hexString: product?.background[0] ?? "").darker()
-            backgroundView.backgroundColor = UIColor(hexString: product?.background[0] ?? "").darker()
+            activateSlider.textColor = UIColor(hexString: product?.fontDesignColor ?? "999999")
+            activateSlider.sliderBackgroundColor = UIColor(hexString: product?.background[0].color ?? "").darker()
+            backgroundView.backgroundColor = UIColor(hexString: product?.background[0].color ?? "999999").darker()
 
             if product?.productType == "DEPOSIT"{
                 guard let number = self.product?.accountNumber else { return }
@@ -198,19 +198,19 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
                 button4.setImage(UIImage(named: "server"), for: .normal)
                 card.backgroundView?.backgroundColor = UIColor(hexString: "#999999")
                 card.interestRate.isHidden = false
-                card.interestRate.text = "\(product?.interestRate ?? 0.0)%"
+                card.interestRate.text = "\(product?.interestRate ?? "0.0")%"
                 card.maskCardLabel.text = "\(number.suffix(4))"
                 card.backgroundColor = .clear
                 card.backgroundImageView.fillSuperview()
                 card.backgroundImageView.contentMode = .scaleToFill
-
-                self.backgroundView.backgroundColor = UIColor(hexString:  product?.background[0] ?? "999999").darker()
-
-            
-                navigationController?.view.backgroundColor =  UIColor(hexString: product?.background[0] ?? "999999").darker()
                 
                 
-                navigationController?.navigationBar.backgroundColor = UIColor(hexString: product?.background[0] ?? "999999").darker()
+                self.backgroundView.backgroundColor = UIColor(hexString:  product?.background[0].color ?? "999999").darker()
+
+                navigationController?.view.backgroundColor =  UIColor(hexString: product?.background[0].color ?? "999999").darker()
+                
+                
+                navigationController?.navigationBar.backgroundColor = UIColor(hexString: product?.background[0].color ?? "999999").darker()
                 button3.setTitle("Детали", for: .normal)
                 button3.setImage(UIImage(named: "infoBlack"), for: .normal)
 
@@ -226,8 +226,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
                 let btnImage3 = UIImage(named: "file-text")?.withRenderingMode(.alwaysTemplate)
                 button3.tintColor = .black
                 button3.setImage(btnImage3 , for: .normal)
-                navigationController?.view.backgroundColor =  UIColor(hexString: product?.background[0] ?? "").darker()
-                navigationController?.navigationBar.backgroundColor = UIColor(hexString: product?.background[0] ?? "").darker()
+                navigationController?.view.backgroundColor =  UIColor(hexString: product?.background[0].color ?? "999999").darker()
+                navigationController?.navigationBar.backgroundColor = UIColor(hexString: product?.background[0].color ?? "").darker()
                 button4.setTitle("Блокировать", for: .normal)
                 button4.titleLabel?.font = UIFont.systemFont(ofSize: 14)
                 let btnImage4 = UIImage(named: "lock")
@@ -244,7 +244,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
             guard let number = product?.numberMasked else {
                 return
             }
-            navigationController?.navigationBar.barTintColor = UIColor(hexString: product?.background[0] ?? "").darker()
+            navigationController?.navigationBar.barTintColor = UIColor(hexString: product?.background[0].color ?? "").darker()
 //            self.navigationItem.setTitle(title: (product?.customName ?? product?.mainField)!, subtitle: "· \(String(number.suffix(4)))", color: product?.fontDesignColor)
             statusBarView.isSkeletonable = false
             statusBarView.hideSkeleton()
@@ -452,19 +452,19 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
                     self?.button4.setImage(UIImage(named: "server"), for: .normal)
                     self?.card.backgroundView?.backgroundColor = UIColor(hexString: "#999999")
                     self?.card.interestRate.isHidden = false
-                    self?.card.interestRate.text = "\(self?.product?.interestRate ?? 0.0)%"
+                    self?.card.interestRate.text = "\(self?.product?.interestRate ?? "0.0")%"
                     self?.card.maskCardLabel.text = "\(number.suffix(4))"
                     self?.card.backgroundColor = .clear
                     self?.card.backgroundImageView.fillSuperview()
                     self?.card.backgroundImageView.contentMode = .scaleToFill
 
-                    self?.backgroundView.backgroundColor = UIColor(hexString:  self?.product?.background[0] ?? "999999").darker()
+                    self?.backgroundView.backgroundColor = UIColor(hexString:  self?.product?.background[0].color ?? "999999").darker()
 
                 
-                    self?.navigationController?.view.backgroundColor =  UIColor(hexString: self?.product?.background[0] ?? "999999").darker()
+                    self?.navigationController?.view.backgroundColor =  UIColor(hexString: self?.product?.background[0].color ?? "999999").darker()
                     
                     
-                    self?.navigationController?.navigationBar.backgroundColor = UIColor(hexString: self?.product?.background[0] ?? "999999").darker()
+                    self?.navigationController?.navigationBar.backgroundColor = UIColor(hexString: self?.product?.background[0].color ?? "999999").darker()
                     self?.button3.setTitle("Детали", for: .normal)
                     self?.button3.setImage(UIImage(named: "infoBlack"), for: .normal)
 
@@ -480,8 +480,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
                     let btnImage3 = UIImage(named: "file-text")?.withRenderingMode(.alwaysTemplate)
                     self?.button3.tintColor = .black
                     self?.button3.setImage(btnImage3 , for: .normal)
-                    self?.navigationController?.view.backgroundColor =  UIColor(hexString: self?.product?.background[0] ?? "").darker()
-                    self?.navigationController?.navigationBar.backgroundColor = UIColor(hexString: self?.product?.background[0] ?? "").darker()
+                    self?.navigationController?.view.backgroundColor =  UIColor(hexString: self?.product?.background[0].color ?? "").darker()
+                    self?.navigationController?.navigationBar.backgroundColor = UIColor(hexString: self?.product?.background[0].color ?? "").darker()
                     self?.button4.setTitle("Блокировать", for: .normal)
                     self?.button4.titleLabel?.font = UIFont.systemFont(ofSize: 14)
                     let btnImage4 = UIImage(named: "lock")
@@ -499,15 +499,15 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
 //            return
 //        }
         activateSlider.textColor = UIColor(hexString: product?.fontDesignColor ?? "")
-        activateSlider.sliderBackgroundColor = UIColor(hexString: product?.background[0] ?? "").darker()
+        activateSlider.sliderBackgroundColor = UIColor(hexString: product?.background[0].color ?? "").darker()
 //        self.navigationItem.setTitle(title: (product?.customName ?? product?.mainField)!, subtitle: "· \(String(number.suffix(4)))", color: product?.fontDesignColor)
 //        loadHistoryForCard()
         view.backgroundColor = .white
 //        navigationController?.view.addoverlay(color: .black, alpha: 0.2)
         if product != nil{
-            navigationController?.navigationBar.barTintColor = UIColor(hexString: product?.background[0] ?? "").darker()
-            navigationController?.view.backgroundColor =   UIColor(hexString: product?.background[0] ?? "").darker()
-            navigationController?.navigationBar.backgroundColor =  UIColor(hexString: product?.background[0] ?? "").darker()
+            navigationController?.navigationBar.barTintColor = UIColor(hexString: product?.background[0].color ?? "").darker()
+            navigationController?.view.backgroundColor =   UIColor(hexString: product?.background[0].color ?? "").darker()
+            navigationController?.navigationBar.backgroundColor =  UIColor(hexString: product?.background[0].color ?? "").darker()
 
         } else {
             navigationController?.view.backgroundColor =  UIColor(hexString: "BBBBBB")
@@ -835,7 +835,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
 //        delegatePaymentVc?.goPaymentsViewController()
     }
     
-    func presentRequisitsVc(product: GetProductListDatum,_ openControlButtons: Bool?) {
+    func presentRequisitsVc(product: UserAllCardsModel,_ openControlButtons: Bool?) {
         
         let viewController = AccountDetailsViewController()
 //        halfScreen = false
@@ -900,12 +900,12 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
                                 DispatchQueue.main.async {
                                 guard let listProducts = data else {return}
                                 self.products = listProducts
-                                for i in listProducts{
-                                    if self.product?.cardID == i.cardID{
-                                        self.product = i
-                                        break
-                                    }
-                                }
+//                                for i in listProducts{
+//                                    if self.product?.cardID == i.cardID{
+//                                        self.product = i
+//                                        break
+//                                    }
+//                                }
 
                             }
                         }
@@ -971,19 +971,9 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
                                 self.button2.alpha = 1
                                 self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4)))", color: self.product?.fontDesignColor)
                                 
-                                self.getCardList { data, errorMessage in
-                                    DispatchQueue.main.async {
-                                    guard let listProducts = data else {return}
-                                    self.products = listProducts
-                                    for i in listProducts {
-                                        if self.product?.cardID == i.cardID{
-                                            self.product = i
-                                            break
-                                        }
-                                    }
-
+                                AddAllUserCardtList.add() {
+                                    print("REALM Add")
                                 }
-                            }
 
                             }
                         } else {
@@ -1099,7 +1089,7 @@ extension ProductViewController{
             cell.titleLable.isSkeletonable = true
 //            cell.operation = sortedAccount
 //            let data = groupByCategory.forEach({$0.value[indexPath.row]})
-            let section = groupByCategoryDeposit[indexPath.section] as? Array<Any>
+            _ = groupByCategoryDeposit[indexPath.section]
 //                let data = Array(groupByCategory.values)[indexPath.section]
             //            sorted[indexPath.section].value[indexPath.item]
             cell.operation = nil
@@ -1118,7 +1108,7 @@ extension ProductViewController{
             cell.titleLable.isSkeletonable = true
 //            cell.operation = sortedAccount
 //            let data = groupByCategory.forEach({$0.value[indexPath.row]})
-            let section = groupByCategoryAccount[indexPath.section] as? Array<Any>
+            _ = groupByCategoryAccount[indexPath.section] as? Array<Any>
 //                let data = Array(groupByCategory.values)[indexPath.section]
             //            sorted[indexPath.section].value[indexPath.item]
             cell.operation = nil
@@ -1140,7 +1130,7 @@ extension ProductViewController{
             cell.titleLable.isSkeletonable = true
             cell.depositOperation = nil
             cell.accountOperation = nil
-            let section = groupByCategory[indexPath.section] as? Array<Any>
+            let section = groupByCategory[indexPath.section]
             cell.operation = sorted[indexPath.section].value[indexPath.row]
             cell.configure(currency: product?.currency ?? "RUB")
             cell.selectionStyle = .none
@@ -1345,7 +1335,7 @@ extension ProductViewController{
 
 
 extension ProductViewController: CtoBDelegate {
-    func sendMyDataBack(product: GetProductListDatum?) {
+    func sendMyDataBack(product: UserAllCardsModel?) {
         self.product = product
     }
     

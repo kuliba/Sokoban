@@ -15,9 +15,9 @@ extension MainViewController: UICollectionViewDelegate {
         }
         switch section {
         case .products:
-            switch products[indexPath.item].id {
+            switch productsFromRealm[indexPath.item].id {
             case 32:
-                if products[indexPath.item].name == "Cм.все"{
+                if productsFromRealm[indexPath.item].name == "Cм.все"{
                     let viewController = ProductsViewController()
                     viewController.addCloseButton()
                     let navVC = UINavigationController(rootViewController: viewController)
@@ -31,17 +31,17 @@ extension MainViewController: UICollectionViewDelegate {
                 let viewController = ProductViewController()
                 viewController.delegate = self
                 viewController.indexItem = indexPath.item
-                viewController.product = productList[indexPath.item]
+//                viewController.product = productList[indexPath.item]
                 
                 let first3Elements :  [GetProductListDatum] // An Array of up to the first 3 elements.
-                if productList.count >= 3 {
-                    first3Elements = Array(productList[0 ..< 3])
-                    viewController.products = first3Elements
-                } else {
-                    viewController.products = productList
-                    first3Elements = productList
-                    
-                }
+//                if productList.count >= 3 {
+//                    first3Elements = Array(productList[0 ..< 3])
+//                    viewController.products = first3Elements
+//                } else {
+//                    viewController.products = productList
+//                    first3Elements = productList
+//
+//                }
 //                viewController.products = productList
                 
 //                let navVC = UINavigationController(rootViewController: viewController)

@@ -17,7 +17,7 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
     func configure<U>(with value: U) where U : Hashable {
         guard let card = card else { return }
         
-        let viewModel = CardViewModel(card: card)
+        let viewModel = CardViewModelFromRealm(card: card)
         backgroundImageView.image =  card.largeDesign?.convertSVGStringToImage()
         balanceLabel.text = viewModel.balance
         balanceLabel.textColor = viewModel.colorText
@@ -33,9 +33,10 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
     
     static var reuseId: String = "ProductCell"
     //MARK: - Properties
-    var card: GetProductListDatum? {
+    var card: UserAllCardsModel? {
         didSet { configure() }
     }
+    
     
     private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterial))
     
@@ -102,7 +103,7 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
     func configure() {
         guard let card = card else { return }
         
-        let viewModel = CardViewModel(card: card)
+        let viewModel = CardViewModelFromRealm(card: card)
         
         backgroundImageView.image =  card.largeDesign?.convertSVGStringToImage()
 

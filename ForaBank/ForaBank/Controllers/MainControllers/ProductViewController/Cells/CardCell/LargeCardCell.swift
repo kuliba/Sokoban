@@ -16,7 +16,7 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
     func configure<U>(with value: U) where U : Hashable {
         guard let card = card else { return }
         
-        let viewModel = CardViewModel(card: card)
+        let viewModel = CardViewModelFromRealm(card: card)
         balanceLabel.text = viewModel.balance
         maskCardLabel.text = viewModel.maskedcardNumber
         logoImageView.image = viewModel.logoImage
@@ -26,7 +26,7 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
     
     static var reuseId: String = "LargeCardCell"
     //MARK: - Properties
-    var card: GetProductListDatum? {
+    var card: UserAllCardsModel? {
         didSet {
 //            backgroundUnlockColor = card?.background[0] ?? "ffffff"
             configure()
@@ -112,7 +112,7 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
     func configure() {
         guard let card = card else { return }
         
-        let viewModel = CardViewModel(card: card)
+        let viewModel = CardViewModelFromRealm(card: card)
         backgroundImageView.image = card.XLDesign?.convertSVGStringToImage()
         balanceLabel.text = viewModel.balance
         balanceLabel.textColor = viewModel.colorText

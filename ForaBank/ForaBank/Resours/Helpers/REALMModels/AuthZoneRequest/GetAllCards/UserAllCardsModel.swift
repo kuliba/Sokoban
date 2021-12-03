@@ -46,6 +46,8 @@ class UserAllCardsModel: Object {
     @objc dynamic var expireDate: String?
     @objc dynamic var XLDesign: String?
     @objc dynamic var statusPC: String?
+    @objc dynamic var interestRate: String?
+
     
 }
 
