@@ -104,7 +104,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     fileprivate func RealmConfiguration() {
         // Версия БД (изменить на большую если меняем БД)
-        let schemaVersion: UInt64 = 4
+        let schemaVersion: UInt64 = 5
         
         let config = Realm.Configuration(
             // Set the new schema version. This must be greater than the previously used
@@ -121,6 +121,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     }
                     if oldSchemaVersion < 4 {
                         migration.deleteData(forType: "Parameters")
+                    }
+                    if oldSchemaVersion < 5 {
+                        migration.deleteData(forType: "LogotypeData")
                     }
 
                     // Nothing to do!
