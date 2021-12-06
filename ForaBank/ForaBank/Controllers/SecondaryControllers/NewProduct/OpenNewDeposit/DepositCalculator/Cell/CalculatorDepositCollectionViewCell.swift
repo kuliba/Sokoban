@@ -146,7 +146,7 @@ class CalculatorDepositCollectionViewCell: UICollectionViewCell {
     private func chooseRate(from value: Float) {
         guard let mainRateList = self.viewModel?.termRateList else { return }
         mainRateList.forEach { termRateList in
-            if termRateList.сurrencyCode == "RUR" || termRateList.сurrencyCode == "RUB" {
+            if termRateList.сurrencyCode == "810" {
                 let termRateSumm = termRateList.termRateSum
                 termRateSumm?.forEach({ rateSum in
                     if value >= Float(rateSum.sum ?? 0) {

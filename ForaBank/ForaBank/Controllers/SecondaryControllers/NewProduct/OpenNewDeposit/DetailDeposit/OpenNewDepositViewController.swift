@@ -56,7 +56,7 @@ class OpenNewDepositViewController: UICollectionViewController {
     //MARK: - API
     
     private func loadDeposit() {
-        NetworkManager<OpenDepositDecodableModel>.addRequest(.getDepositProductList, [:], [:]) { model, error in
+        NetworkManager<GetDepositProductListDecodableModel>.addRequest(.getDepositProductList, [:], [:]) { model, error in
             
             if let error = error {
                 self.showAlert(with: "Error", and: error)
