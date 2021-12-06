@@ -82,7 +82,7 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
     
     func updateCards(cards: [UserAllCardsModel]) {
         /// обновляем список карт с которой списываем
-        self.cardFromListView.cardList = cards
+//        self.cardFromListView.cardList = cards
         
         /// обновляем предустановленную карту по молчанию счета списания
 //        if cardFromField.model != nil { // } || cardFromField.model?.id == cards.first?.id {
@@ -92,7 +92,7 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
         
         /// обновляем список карт на которую списываем
         
-        self.cardToListView.cardList = cards
+//        self.cardToListView.cardList = cards
     }
     
 }

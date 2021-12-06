@@ -10,6 +10,7 @@ import Firebase
 import FirebaseMessaging
 import RealmSwift
 
+
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
@@ -109,7 +110,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     fileprivate func RealmConfiguration() {
         // Версия БД (изменить на большую если меняем БД)
-        let schemaVersion: UInt64 = 4
+        let schemaVersion: UInt64 = 5
         
         let config = Realm.Configuration(
             // Set the new schema version. This must be greater than the previously used
@@ -127,6 +128,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     if oldSchemaVersion < 4 {
                         migration.deleteData(forType: "Parameters")
                     }
+                    if oldSchemaVersion < 5 {
+                        migration.deleteData(forType: "UserAllCardsModel")
+                    }
+                    
 
                     // Nothing to do!
                     // Realm will automatically detect new properties and removed properties
