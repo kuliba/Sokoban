@@ -13,7 +13,7 @@ class LoginViewModel {
 
     func csrf(){
         AppDelegate.shared.getCSRF() { errorMessage in
-            print(errorMessage)
+            print(errorMessage ?? "")
         }
     }
     

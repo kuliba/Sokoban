@@ -15,8 +15,12 @@ struct CountriesListSaved: DownloadQueueProtocol {
         NetworkManager<GetCountriesDecodebleModel>.addRequest(.getCountries, param, body) { model, error in
             if error != nil {
                 print("DEBUG: error", error!)
+                completion()
             } else {
-                guard let statusCode = model?.statusCode else { return }
+                guard let statusCode = model?.statusCode else {
+                    completion()
+                    return
+                }
                 if statusCode == 0 {
                     
                     guard let model = model else { return }
@@ -40,8 +44,8 @@ struct CountriesListSaved: DownloadQueueProtocol {
                     }
                     
                     /// Сохраняем в REALM
-                    let realm = try? Realm()
                     do {
+                        let realm = try? Realm()
                         let c = realm?.objects(GetCountries.self)
                         realm?.beginWrite()
                         realm?.delete(c!)
@@ -49,6 +53,7 @@ struct CountriesListSaved: DownloadQueueProtocol {
                         try realm?.commitWrite()
                         completion()
                     } catch {
+                        completion()
                         print(error.localizedDescription)
                     }
                 }
