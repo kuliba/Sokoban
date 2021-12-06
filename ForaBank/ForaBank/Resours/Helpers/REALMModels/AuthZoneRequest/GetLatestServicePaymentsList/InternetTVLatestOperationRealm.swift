@@ -37,14 +37,12 @@ struct InternetTVLatestOperationRealm {
                     realm?.delete(operators!)
                     realm?.add(latestOperations)
                     try realm?.commitWrite()
-                    print("REALM",realm?.configuration.fileURL?.absoluteString ?? "")
                 } catch {
                     print(error.localizedDescription)
                 }
             }
         }
     }
-
 }
 
 
