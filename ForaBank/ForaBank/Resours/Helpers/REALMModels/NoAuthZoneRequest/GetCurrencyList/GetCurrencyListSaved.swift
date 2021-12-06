@@ -17,11 +17,20 @@ struct GetCurrencySaved: DownloadQueueProtocol {
                 print("DEBUG: error", error!)
                 completion()
             } else {
-                guard let statusCode = model?.statusCode else { return }
+                guard let statusCode = model?.statusCode else {
+                    completion()
+                    return
+                }
                 if statusCode == 0 {
                     
-                    guard let model = model else { return }
-                    guard let m = model.data else { return }
+                    guard let model = model else {
+                        completion()
+                        return
+                    }
+                    guard let m = model.data else {
+                        completion()
+                        return
+                    }
                     
                     let currency = GetCurrency()
                     currency.serial = m.serial
@@ -50,6 +59,7 @@ struct GetCurrencySaved: DownloadQueueProtocol {
                         try realm?.commitWrite()
                         completion()
                     } catch {
+                        completion()
                         print(error.localizedDescription)
                     }
                 }

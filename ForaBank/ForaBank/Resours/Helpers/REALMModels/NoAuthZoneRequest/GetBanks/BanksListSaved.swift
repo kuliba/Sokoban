@@ -17,11 +17,20 @@ struct BanksListSaved: DownloadQueueProtocol {
                 print("DEBUG: error", error!)
                 completion()
             } else {
-                guard let statusCode = model?.statusCode else { return }
+                guard let statusCode = model?.statusCode else {
+                    completion()
+                    return
+                }
                 if statusCode == 0 {
                     
-                    guard let model = model else { return }
-                    guard let banks = model.data else { return }
+                    guard let model = model else {
+                        completion()
+                        return
+                    }
+                    guard let banks = model.data else {
+                        completion()
+                        return
+                    }
                     
                     let banksList = GetBankList()
                     banksList.serial = banks.serial
@@ -75,6 +84,7 @@ struct BanksListSaved: DownloadQueueProtocol {
                         try realm?.commitWrite()
                         completion()
                     } catch {
+                        completion()
                         print(error.localizedDescription)
                     }
                 }

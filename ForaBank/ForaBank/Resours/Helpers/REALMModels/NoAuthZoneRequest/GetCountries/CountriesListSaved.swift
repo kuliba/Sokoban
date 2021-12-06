@@ -17,7 +17,10 @@ struct CountriesListSaved: DownloadQueueProtocol {
                 print("DEBUG: error", error!)
                 completion()
             } else {
-                guard let statusCode = model?.statusCode else { return }
+                guard let statusCode = model?.statusCode else {
+                    completion()
+                    return
+                }
                 if statusCode == 0 {
                     
                     guard let model = model else { return }
@@ -50,6 +53,7 @@ struct CountriesListSaved: DownloadQueueProtocol {
                         try realm?.commitWrite()
                         completion()
                     } catch {
+                        completion()
                         print(error.localizedDescription)
                     }
                 }

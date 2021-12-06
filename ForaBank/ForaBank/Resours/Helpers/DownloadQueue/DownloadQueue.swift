@@ -8,25 +8,28 @@
 import Foundation
 import RealmSwift
 
-struct DownloadQueue {
+final class DownloadQueue {
     
     var downloadArray = [DownloadQueueProtocol]()
     var paramArray = [[String: String]]()
+    let semaphore = DispatchSemaphore(value: 1)
     
     /// Функция загрузки
-    mutating func download(_ completion: @escaping () -> ()) {
+    func download(_ completion: @escaping () -> ()) {
         setDownloadQueue()
         
         for (n, i) in self.downloadArray.enumerated() {
-            let semaphore = DispatchSemaphore(value: 0)
-                i.add(paramArray[n], [:]) {
-                    semaphore.signal()
+            DispatchQueue.global().async { [weak self] in
+                guard let self = self else { return }
+                self.semaphore.wait()
+                i.add(self.paramArray[n], [:]) {
+                    self.semaphore.signal()
                 }
-            semaphore.wait()
+            }
         }
     }
     
-    private mutating func setDownloadQueue() {
+    private func setDownloadQueue() {
         
         lazy var realm = try? Realm()
         
@@ -34,9 +37,9 @@ struct DownloadQueue {
         let withIdCountries = countries?.first?.serial ?? ""
         let countriesParam = ["serial" : withIdCountries ]
         
-//        let paymentSystem = realm?.objects(GetPaymentSystemList.self)
-//        let withIdPaymentSystem = paymentSystem?.first?.serial ?? ""
-//        let paymentSystemParam = ["serial" : withIdPaymentSystem ]
+        let paymentSystem = realm?.objects(GetPaymentSystemList.self)
+        let withIdPaymentSystem = paymentSystem?.first?.serial ?? ""
+        let paymentSystemParam = ["serial" : withIdPaymentSystem ]
         
         let currency = realm?.objects(GetCurrency.self)
         let withIdCurrency = currency?.first?.serial ?? ""
@@ -53,8 +56,8 @@ struct DownloadQueue {
         downloadArray.append(CountriesListSaved())
         paramArray.append(countriesParam)
         
-        //        downloadArray.append(GetPaymentSystemSaved())
-        //        paramArray.append(paymentSystemParam)
+        downloadArray.append(GetPaymentSystemSaved())
+        paramArray.append(paymentSystemParam)
         
         downloadArray.append(GetCurrencySaved())
         paramArray.append(currencyParam)

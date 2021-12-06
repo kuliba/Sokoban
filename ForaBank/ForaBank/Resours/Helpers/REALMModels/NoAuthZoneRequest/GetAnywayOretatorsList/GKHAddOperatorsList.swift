@@ -28,8 +28,14 @@ struct AddOperatorsList: DownloadQueueProtocol {
                 print("DEBUG: error", error!)
                 completion()
             } else {
-                guard let model = model else { return }
-                guard let allOperators = model.data?.operatorGroupList else { return }
+                guard let model = model else {
+                    completion()
+                    return
+                }
+                guard let allOperators = model.data?.operatorGroupList else {
+                    completion()
+                    return
+                }
 
                 allOperators.forEach { item in
                     if item.code?.contains(GlobalModule.UTILITIES_CODE) ?? false ||
@@ -99,7 +105,6 @@ struct AddOperatorsList: DownloadQueueProtocol {
                     }
                 }
 
-
                 do {
                     let realm = try? Realm()
                     let operators = realm?.objects(GKHOperatorsModel.self)
@@ -109,6 +114,7 @@ struct AddOperatorsList: DownloadQueueProtocol {
                     try realm?.commitWrite()
                     completion()
                 } catch {
+                    completion()
                     print(error.localizedDescription)
                 }
             }
