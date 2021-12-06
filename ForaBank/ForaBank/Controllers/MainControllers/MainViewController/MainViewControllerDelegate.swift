@@ -42,15 +42,15 @@ extension MainViewController: UICollectionViewDelegate {
 //                    first3Elements = productList
 //
 //                }
-//                viewController.products = productList
+                let allProducts =  productsCardsAndAccounts + productsDeposits
                 
 //                let navVC = UINavigationController(rootViewController: viewController)
 //                navVC.modalPresentationStyle = .fullScreen
 //                present(navVC, animated: true)
                 if isFiltered{
-                    delegate?.goProductViewController(productIndex: indexPath.item, product: productsDeposits[indexPath.item])
+                    delegate?.goProductViewController(productIndex: indexPath.item, product: productsDeposits[indexPath.item], products: allProducts)
                 } else {
-                    delegate?.goProductViewController(productIndex: indexPath.item, product: productsCardsAndAccounts[indexPath.item])
+                    delegate?.goProductViewController(productIndex: indexPath.item, product: productsCardsAndAccounts[indexPath.item], products: allProducts)
 
                 }
 //                delegate?.goProductViewController(productIndex: indexPath.item, product: productList[indexPath.item])

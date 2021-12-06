@@ -81,7 +81,8 @@ struct AddAllUserCardtList {
                 do {
                     let operators = realm?.objects(UserAllCardsModel.self)
                     realm?.beginWrite()
-                    realm?.delete(operators!)
+
+//                    realm?.delete(operators!)
                     realm?.add(cardsArray)
                     realm?.refresh()
                     try realm?.commitWrite()

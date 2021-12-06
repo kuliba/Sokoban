@@ -10,7 +10,7 @@ import RealmSwift
 
 protocol MainViewControllerDelegate: AnyObject {
     func goSettingViewController()
-    func goProductViewController(productIndex: Int, product: UserAllCardsModel)
+    func goProductViewController(productIndex: Int, product: UserAllCardsModel, products: [UserAllCardsModel])
     func goPaymentsViewController()
 }
 
@@ -69,26 +69,7 @@ class MainViewController: UIViewController {
     var filterData = [GetProductListDatum]()
     
     
-    var productsFromRealm = [PaymentsModel](){
-        didSet {
-            DispatchQueue.main.async {
-                if self.realm?.objects(UserAllCardsModel.self).isInvalidated == false{
-//
-//                    var snapshot = self.dataSource?.snapshot()
-//
-//                    let items = snapshot?.itemIdentifiers(inSection: .products)
-//
-//                    snapshot?.deleteItems(items ?? [PaymentsModel]())
-//                    snapshot?.appendItems(self.productsFromRealm, toSection: .products)
-//
-//                    self.dataSource?.apply(snapshot ?? NSDiffableDataSourceSnapshot<Section, PaymentsModel>())
-
-                } else {
-                    print("UserAllCardsModel is invalidate")
-                }
-            }
-        }
-    }
+    var productsFromRealm = [PaymentsModel]()
     
     var products = [PaymentsModel](){
         didSet {
@@ -263,7 +244,6 @@ class MainViewController: UIViewController {
     
   
     func observerRealm(){
-        if realm?.objects(UserAllCardsModel.self).isInvalidated == false{
             allProductList = realm?.objects(UserAllCardsModel.self)
                self.token = self.allProductList?.observe { [weak self] ( changes: RealmCollectionChange) in
                    guard (self?.collectionView) != nil else {return}
@@ -275,14 +255,11 @@ class MainViewController: UIViewController {
                            })
                        DispatchQueue.main.async {
 
-                           if self?.allProductList?.isInvalidated == true{
-                               print("allProducts in Invalidated")
-                           } else {
+                      
                                self?.productList = [UserAllCardsModel]()
                                self?.dataSource?.replaceItems(self?.productsFromRealm ?? [PaymentsModel](), in: .products)
 //                               self?.reloadData(with: nil)
 
-                           }
                        }
                    case .update(_, let deletions, let insertions, let modifications):
                        print("Update")
@@ -291,12 +268,12 @@ class MainViewController: UIViewController {
                        print("modifications: \(modifications)")
 
                        DispatchQueue.main.async {
+                           self?.allProductList = self?.realm?.objects(UserAllCardsModel.self)
+                           self?.productsFromRealm.removeAll()
+                           self?.allProductList?.forEach({ product in
+                               self?.productsFromRealm.append(PaymentsModel(productListFromRealm: product))
+                               })
 
-                           if self?.allProductList?.isInvalidated == true{
-                               print("allProducts in Invalidated")
-                           } else {
-
-                               
                                   var snapshot = self?.dataSource?.snapshot()
 
                                    let items = snapshot?.itemIdentifiers(inSection: .products)
@@ -311,16 +288,12 @@ class MainViewController: UIViewController {
                                self?.dataSource?.apply(snapshot ?? NSDiffableDataSourceSnapshot<Section, PaymentsModel>())
 //                               self?.reloadData(with: nil)
 
-                           }
                        }
                        
                    case .error(let error):
                        fatalError("\(error)")
                    }
            }
-        } else {
-            print("UserAllCardsModel realm in deleted")
-        }
        
    }
     

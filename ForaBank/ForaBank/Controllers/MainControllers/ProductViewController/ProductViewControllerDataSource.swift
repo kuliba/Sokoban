@@ -23,7 +23,7 @@ extension ProductViewController: UICollectionViewDataSource {
         switch indexPath.row {
         case products.count:
             let item = collectionView.dequeueReusableCell(withReuseIdentifier: "CardCollectionViewCell", for: indexPath) as? CardCollectionViewCell
-    //        item?.card = products[indexPath.item]
+//            item?.card = products[indexPath.item]
             item?.cardImageView.image = UIImage(named: "cardMore")
 //            item?.backgroundColor = .gray
 //            item?.selectedView.isHidden = true
@@ -92,15 +92,15 @@ extension ProductViewController: UICollectionViewDataSource {
             firstTimeLoad = false
 //            self.collectionView?.selectItem(at: IndexPath(item: indexItem ?? 0, section: 0), animated: true, scrollPosition: .bottom)
             let cell = collectionView.cellForItem(at: IndexPath(item: indexItem ?? 0, section: 0)) as? CardCollectionViewCell
-//            product = products[self.indexItem ?? 0]
+            product = products[self.indexItem ?? 0]
             cell?.showSelect()
         } else {
             if indexPath.item < products.count{
                 if indexItem ?? 0 < 3{
-//                    product = products[indexPath.item]
+                    product = products[indexPath.item]
                     self.collectionView?.selectItem(at: indexPath, animated: true, scrollPosition: .bottom)
                 } else {
-//                    product = products[indexPath.item]
+                    product = products[indexPath.item]
                     indexItem = 0
                 }
                 
