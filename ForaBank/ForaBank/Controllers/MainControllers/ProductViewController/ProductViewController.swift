@@ -440,8 +440,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
         }
 
         
-        card.balanceLabel.isSkeletonable = true
-        card.balanceLabel.showAnimatedGradientSkeleton()
+//        card.balanceLabel.isSkeletonable = true
+//        card.balanceLabel.showAnimatedGradientSkeleton()
         
 //        UINavigationBar.appearance().tintColor =  UIColor(hexString: product?.fontDesignColor ?? "000000")
 
