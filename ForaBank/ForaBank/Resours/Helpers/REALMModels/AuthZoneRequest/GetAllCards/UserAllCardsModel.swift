@@ -96,6 +96,7 @@ extension UserAllCardsModel: Identifiable {
         expireDate         = data.expireDate
         XLDesign           = data.XLDesign
         statusPC           = data.statusPC
+        interestRate       = data.interestRate
         
         data.background.forEach { color in
             
