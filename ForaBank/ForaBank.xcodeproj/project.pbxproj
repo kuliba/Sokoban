@@ -288,6 +288,11 @@
 		68FFA563268DDFCB002DADFA /* SearchContactView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA562268DDFCA002DADFA /* SearchContactView.swift */; };
 		68FFA565269464FF002DADFA /* TransferByRequisitesConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA564269464FF002DADFA /* TransferByRequisitesConfirmViewController.swift */; };
 		68FFA5682695921E002DADFA /* QRScanner in Frameworks */ = {isa = PBXBuildFile; productRef = 68FFA5672695921E002DADFA /* QRScanner */; };
+		77C026E6275E6299002BE1F6 /* GKHHistoryModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C026E5275E6299002BE1F6 /* GKHHistoryModelTests.swift */; };
+		77D2D9AE275AB90A0097234D /* RealmResults+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D2D9AC275AB9090097234D /* RealmResults+Extension.swift */; };
+		77D2D9AF275AB90A0097234D /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D2D9AD275AB90A0097234D /* Array+Extensions.swift */; };
+		77D2D9B2275AB9280097234D /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D2D9B0275AB9280097234D /* Item.swift */; };
+		77D2D9B3275AB9280097234D /* RealmObjectsDiffTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D2D9B1275AB9280097234D /* RealmObjectsDiffTests.swift */; };
 		A518978A2748079D00F7B2B4 /* InternetTVDetailsFormController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A51897892748079D00F7B2B4 /* InternetTVDetailsFormController.swift */; };
 		A52A8FA0274800D600288FBD /* InternetTVRegionSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52A8F9F274800D600288FBD /* InternetTVRegionSearchController.swift */; };
 		A536C7CE274C0FDC002D5EAB /* InternetInputCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A536C7CD274C0FDC002D5EAB /* InternetInputCell.xib */; };
@@ -395,7 +400,6 @@
 		EDB14381265FDA410028EF5A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14380265FDA410028EF5A /* AppDelegate.swift */; };
 		EDB14383265FDA410028EF5A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14382265FDA410028EF5A /* SceneDelegate.swift */; };
 		EDB14385265FDA410028EF5A /* LoginCardEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14384265FDA410028EF5A /* LoginCardEntryViewController.swift */; };
-		EDB14398265FDA430028EF5A /* ForaBankTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14397265FDA430028EF5A /* ForaBankTests.swift */; };
 		EDB143A3265FDA430028EF5A /* ForaBankUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB143A2265FDA430028EF5A /* ForaBankUITests.swift */; };
 		EDB143B5265FDE960028EF5A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EDB143B4265FDE960028EF5A /* Assets.xcassets */; };
 		EDB143C4265FDEC90028EF5A /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EDB143B8265FDEC90028EF5A /* Roboto-Medium.ttf */; };
@@ -786,6 +790,11 @@
 		68FFA560268DD2CE002DADFA /* CountriesCodeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountriesCodeButton.swift; sourceTree = "<group>"; };
 		68FFA562268DDFCA002DADFA /* SearchContactView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchContactView.swift; sourceTree = "<group>"; };
 		68FFA564269464FF002DADFA /* TransferByRequisitesConfirmViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferByRequisitesConfirmViewController.swift; sourceTree = "<group>"; };
+		77C026E5275E6299002BE1F6 /* GKHHistoryModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHHistoryModelTests.swift; sourceTree = "<group>"; };
+		77D2D9AC275AB9090097234D /* RealmResults+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RealmResults+Extension.swift"; sourceTree = "<group>"; };
+		77D2D9AD275AB90A0097234D /* Array+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
+		77D2D9B0275AB9280097234D /* Item.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		77D2D9B1275AB9280097234D /* RealmObjectsDiffTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmObjectsDiffTests.swift; sourceTree = "<group>"; };
 		A51897892748079D00F7B2B4 /* InternetTVDetailsFormController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVDetailsFormController.swift; sourceTree = "<group>"; };
 		A52A8F9F274800D600288FBD /* InternetTVRegionSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVRegionSearchController.swift; sourceTree = "<group>"; };
 		A536C7CD274C0FDC002D5EAB /* InternetInputCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InternetInputCell.xib; sourceTree = "<group>"; };
@@ -891,7 +900,6 @@
 		EDB14384265FDA410028EF5A /* LoginCardEntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginCardEntryViewController.swift; sourceTree = "<group>"; };
 		EDB1438E265FDA420028EF5A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EDB14393265FDA430028EF5A /* ForaBankTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ForaBankTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		EDB14397265FDA430028EF5A /* ForaBankTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForaBankTests.swift; sourceTree = "<group>"; };
 		EDB14399265FDA430028EF5A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EDB1439E265FDA430028EF5A /* ForaBankUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ForaBankUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDB143A2265FDA430028EF5A /* ForaBankUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForaBankUITests.swift; sourceTree = "<group>"; };
@@ -1960,6 +1968,24 @@
 			path = "TransferByRequisites ";
 			sourceTree = "<group>";
 		};
+		77C026E9275E62E4002BE1F6 /* Realm */ = {
+			isa = PBXGroup;
+			children = (
+				77C026EA275E62FA002BE1F6 /* SampleTypes */,
+				77D2D9B1275AB9280097234D /* RealmObjectsDiffTests.swift */,
+				77C026E5275E6299002BE1F6 /* GKHHistoryModelTests.swift */,
+			);
+			path = Realm;
+			sourceTree = "<group>";
+		};
+		77C026EA275E62FA002BE1F6 /* SampleTypes */ = {
+			isa = PBXGroup;
+			children = (
+				77D2D9B0275AB9280097234D /* Item.swift */,
+			);
+			path = SampleTypes;
+			sourceTree = "<group>";
+		};
 		A55A52D72746F94200641DD0 /* InternetTVControllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -2696,7 +2722,7 @@
 		EDB14396265FDA430028EF5A /* ForaBankTests */ = {
 			isa = PBXGroup;
 			children = (
-				EDB14397265FDA430028EF5A /* ForaBankTests.swift */,
+				77C026E9275E62E4002BE1F6 /* Realm */,
 				EDB14399265FDA430028EF5A /* Info.plist */,
 			);
 			path = ForaBankTests;
@@ -2755,6 +2781,8 @@
 		EDB1451926652D090028EF5A /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				77D2D9AD275AB90A0097234D /* Array+Extensions.swift */,
+				77D2D9AC275AB9090097234D /* RealmResults+Extension.swift */,
 				0B3FE8E42706433D00CBDB4E /* DateExtansions */,
 				0B95C3FC26B6C93C00AA57E6 /* DoubleExtensions */,
 				0B95C3FB26B6C92700AA57E6 /* StringExtensions */,
@@ -3571,6 +3599,7 @@
 				ED84995626A8831E005205C6 /* EPContactsPicker.swift in Sources */,
 				ED4FC602266C0AB50092B4AB /* ChooseCountryTableViewController.swift in Sources */,
 				0B8C1C62273DD0DF00BA5CAC /* PushHistoryCell.swift in Sources */,
+				77D2D9AE275AB90A0097234D /* RealmResults+Extension.swift in Sources */,
 				6863EF6B2716D095008FD522 /* MTSlideToOpenControl.swift in Sources */,
 				0B931B4726DE2DF700CA8017 /* GKHHistoryCarusel.swift in Sources */,
 				EDF6821A266F9EC800FD5C07 /* RouterUrlList.swift in Sources */,
@@ -3714,6 +3743,7 @@
 				0BDE452D26E298F600B64A0A /* ExtensionQRViewController.swift in Sources */,
 				EDB14516266526B10028EF5A /* CreditCardEntryView.swift in Sources */,
 				0B37F984267A18AC007728FC /* MakeCard2CardDecodableModel.swift in Sources */,
+				77D2D9AF275AB90A0097234D /* Array+Extensions.swift in Sources */,
 				68673B5826F3772400F67A8C /* CardCollectionViewCell.swift in Sources */,
 				0B95C40826B6CD9000AA57E6 /* BottomInputViewWithRateView.swift in Sources */,
 				0BB24AAD26F0053A00DDA4F6 /* DownloadQueue.swift in Sources */,
@@ -3887,7 +3917,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EDB14398265FDA430028EF5A /* ForaBankTests.swift in Sources */,
+				77D2D9B2275AB9280097234D /* Item.swift in Sources */,
+				77C026E6275E6299002BE1F6 /* GKHHistoryModelTests.swift in Sources */,
+				77D2D9B3275AB9280097234D /* RealmObjectsDiffTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4044,6 +4076,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 8;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
@@ -4070,6 +4103,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

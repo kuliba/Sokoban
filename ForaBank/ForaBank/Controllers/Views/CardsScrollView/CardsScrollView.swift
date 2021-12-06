@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 final class CardsScrollView: UIView {
     
@@ -13,6 +14,8 @@ final class CardsScrollView: UIView {
     let reuseIdentifier = "CardCell"
     let newReuseIdentifier = "NewCardCell"
     let allReuseIdentifier = "AllCardCell"
+    
+    var cardListRealm: Results<UserAllCardsModel>? = nil
     
     var cardList = [UserAllCardsModel]() {
         didSet {
@@ -43,7 +46,8 @@ final class CardsScrollView: UIView {
     
     var didCardTapped: ((Int) -> Void)?
     
-    
+    lazy var realm = try? Realm()
+    var token: NotificationToken?
     var firstItemTap: (() -> Void)?
     var lastItemTap: (() -> Void)?
     
@@ -73,11 +77,20 @@ final class CardsScrollView: UIView {
         commonInit(onlyMy: onlyMy)
     }
     
+    deinit {
+        token?.invalidate()
+    }
 
     func commonInit(onlyMy: Bool) {
         self.onlyMy = onlyMy
 //        print("GEBUG: only:", self.onlyMy)
-        
+        updateObjectWithNotification()
+        cardListRealm?.forEach({ op in
+//            if !op.parameterList.isEmpty && op.parentCode?.contains(GlobalModule.UTILITIES_CODE) ?? false {
+            cardList.append(op)
+//                self.operators = op
+//            }
+        })
 //        let height: CGFloat = self.onlyMy ? 110 : 80
         changeCardButtonCollection.isHidden = !self.onlyMy
         self.translatesAutoresizingMaskIntoConstraints = false
@@ -97,6 +110,33 @@ final class CardsScrollView: UIView {
                 self.isFiltered = false
             }
         }
+    }
+    
+    func updateObjectWithNotification() {
+
+        cardListRealm = realm?.objects(UserAllCardsModel.self)
+        self.token = self.cardListRealm?.observe { [weak self] ( changes: RealmCollectionChange) in
+            guard (self?.collectionView) != nil else {return}
+            switch changes {
+            case .initial:
+                print("REALM Initial")
+                self?.collectionView.reloadData()
+            case .update(_, let deletions, let insertions, let modifications):
+                print("REALM Update")
+                
+//                self?.collectionView.performBatchUpdates({
+//                    self?.collectionView.reloadItems(at: modifications.map { IndexPath(row: $0, section: 0) })
+//                    self?.collectionView.insertItems(at: insertions.map { IndexPath(row: $0, section: 0) })
+//                    self?.collectionView.deleteItems(at: deletions.map { IndexPath(row: $0, section: 0) })
+//                }, completion: { (completed: Bool) in
+//                    self?.collectionView.reloadData()
+//                })
+//                break
+            case .error(let error):
+                fatalError("\(error)")
+            }
+        }
+        
     }
     
     //MARK: - Helpers

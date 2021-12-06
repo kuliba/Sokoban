@@ -6,9 +6,16 @@
 //
 
 import UIKit
+import RealmSwift
+
 
 class ProductsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
- 
+    
+    lazy var realm = try? Realm()
+    var token: NotificationToken?
+    var allProductList: Results<UserAllCardsModel>? = nil
+
+    
     var totalMoney: Double = 0.0 {
         didSet{
             totalMoneyView.totalBalance.text = String(totalMoney.currencyFormatter(symbol: ""))
@@ -17,7 +24,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
     
     weak var delegateProducts: CtoBDelegate?
 
-    var products = [GetProductListDatum](){
+    var products = [UserAllCardsModel](){
         didSet {
             DispatchQueue.main.async {
                 self.totalMoney = 0.0
@@ -27,7 +34,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                 self.notActivated.removeAll()
                 self.deposits.removeAll()
                 for i in self.products{
-                    self.totalMoney += i.balance ?? 0.0
+                    self.totalMoney += i.balance
                         if i.statusPC == "17", i.status == "Действует" || i.status == "Выдано клиенту"{
                             self.notActivated.append(i)
                             continue
@@ -45,13 +52,11 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                         
                     
                 }
-                
-                self.tableView?.reloadData()
             }
         }
     }
     
-    var blocked = [GetProductListDatum](){
+    var blocked = [UserAllCardsModel](){
         didSet{
             
             self.tableView?.reloadData()
@@ -59,21 +64,21 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
-    var activeProduct = [GetProductListDatum](){
+    var activeProduct = [UserAllCardsModel](){
         didSet{
             self.tableView?.reloadData()
             
         }
     }
     
-    var notActivated = [GetProductListDatum](){
+    var notActivated = [UserAllCardsModel](){
         didSet{
             self.tableView?.reloadData()
             
         }
     }
     
-    var deposits = [GetProductListDatum](){
+    var deposits = [UserAllCardsModel](){
         didSet{
             self.tableView?.reloadData()
             
@@ -86,9 +91,27 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        getCardList { products, errorMessage in
-            self.products = products ?? []
+//        getCardList { products, errorMessage in
+//            self.products = products ?? []
+//        }
+        observerRealm()
+        
+        AddAllUserCardtList.add() {
+            print("REALM Add")
         }
+        
+        allProductList?.forEach({ product in
+            products.append(product)
+        })
+        
+//        self.token = realm?.observe { (notification, realm) in
+//            self.allProductList = realm.objects(UserAllCardsModel.self)
+//            
+//            self.allProductList?.forEach({ product in
+//                self.products.append(product)
+//                })
+//                self.tableView.reloadData()
+//            }
         
         sectionData = MockItems.returnSectionInProducts()
         
@@ -141,6 +164,43 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
     
         
     }
+    
+    
+    func reloadData(){
+        self.allProductList?.forEach({ product in
+            self.products.append(product)
+        })
+        self.tableView.reloadData()
+    }
+    
+    func observerRealm() {
+        if realm?.objects(UserAllCardsModel.self).isInvalidated == false{
+            allProductList = realm?.objects(UserAllCardsModel.self)
+            self.token = self.allProductList?.observe { [weak self] ( changes: RealmCollectionChange) in
+                guard (self?.tableView) != nil else {return}
+                switch changes {
+                case .initial:
+                    self?.tableView.reloadData()
+                case .update(_, let deletions, let insertions, let modifications):
+                    print("Use Update Realm")
+                    self?.products.removeAll()
+                    self?.allProductList = self?.realm?.objects(UserAllCardsModel.self)
+                    self?.allProductList?.forEach({ product in
+                        self?.products.append(product)
+                        })
+                    
+//                    self?.reloadData()
+                    
+                case .error(let error):
+                    fatalError("\(error)")
+                }
+            }
+        } else {
+            print("is Invalidate")
+        }
+        
+    }
+    
     @objc func action(sender: UIBarButtonItem) {
         guard let url = URL(string: "https://promo.forabank.ru" ) else { return  }
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
@@ -175,7 +235,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                 let str = notActivated[indexPath.row].numberMasked ?? ""
                 cell.titleProductLabel.text = notActivated[indexPath.row].customName ?? notActivated[indexPath.row].mainField
                 cell.numberProductLabel.text = "\(str.suffix(4))"
-                cell.balanceLabel.text = "\(notActivated[indexPath.row].balance?.currencyFormatter(symbol: notActivated[indexPath.row].currency ?? "") ?? "")"
+                cell.balanceLabel.text = "\(notActivated[indexPath.row].balance.currencyFormatter(symbol: notActivated[indexPath.row].currency ?? "") ?? "")"
                 cell.coverpProductImage.image = notActivated[indexPath.row].smallDesign?.convertSVGStringToImage()
                 cell.cardTypeImage.image = notActivated[indexPath.row].paymentSystemImage?.convertSVGStringToImage()
                 cell.typeOfProduct.text = notActivated[indexPath.row].additionalField
@@ -188,7 +248,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                 let str = activeProduct[indexPath.row].numberMasked ?? ""
                 cell.titleProductLabel.text = activeProduct[indexPath.row].customName ?? activeProduct[indexPath.row].mainField
                 cell.numberProductLabel.text = "\(str.suffix(4))"
-                cell.balanceLabel.text = "\(activeProduct[indexPath.row].balance?.currencyFormatter(symbol: activeProduct[indexPath.row].currency ?? "") ?? "")"
+                cell.balanceLabel.text = "\(activeProduct[indexPath.row].balance.currencyFormatter(symbol: activeProduct[indexPath.row].currency ?? "") ?? "")"
                 cell.coverpProductImage.image = activeProduct[indexPath.row].smallDesign?.convertSVGStringToImage()
                 cell.cardTypeImage.image = activeProduct[indexPath.row].paymentSystemImage?.convertSVGStringToImage()
                 cell.typeOfProduct.text = activeProduct[indexPath.row].additionalField
@@ -201,7 +261,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                 let str = deposits[indexPath.row].numberMasked ?? ""
                 cell.titleProductLabel.text = deposits[indexPath.row].customName ?? deposits[indexPath.row].mainField
                 cell.numberProductLabel.text = "\(str.suffix(4))"
-                cell.balanceLabel.text = "\(deposits[indexPath.row].balance?.currencyFormatter(symbol: deposits[indexPath.row].currency ?? "") ?? "")"
+                cell.balanceLabel.text = "\(deposits[indexPath.row].balance.currencyFormatter(symbol: deposits[indexPath.row].currency ?? "") ?? "")"
                 cell.coverpProductImage.image = deposits[indexPath.row].smallDesign?.convertSVGStringToImage()
                 cell.cardTypeImage.image = deposits[indexPath.row].paymentSystemImage?.convertSVGStringToImage()
                 cell.typeOfProduct.text = deposits[indexPath.row].additionalField
@@ -214,7 +274,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                 let str = blocked[indexPath.item].numberMasked ?? ""
                 cell.titleProductLabel.text = blocked[indexPath.item].customName ?? blocked[indexPath.item].mainField
                 cell.numberProductLabel.text = "\(str.suffix(4))"
-                cell.balanceLabel.text = "\(blocked[indexPath.item].balance?.currencyFormatter(symbol: blocked[indexPath.item].currency ?? "") ?? "")"
+                cell.balanceLabel.text = "\(blocked[indexPath.item].balance.currencyFormatter(symbol: blocked[indexPath.item].currency ?? "") ?? "")"
                 cell.coverpProductImage.image = blocked[indexPath.item].smallDesign?.convertSVGStringToImage()
                 cell.cardTypeImage.image = blocked[indexPath.item].paymentSystemImage?.convertSVGStringToImage()
                 cell.typeOfProduct.text = blocked[indexPath.item].additionalField
@@ -321,8 +381,11 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                            self.showAlert(with: "Карта активирована", and: "")
                            
                            DispatchQueue.main.async {
-                               self.getCardList{ cardList,error in
-                                   print("")
+//                               self.getCardList{ cardList,error in
+//                                   print("")
+//                               }
+                               AddAllUserCardtList.add() {
+                                   print("REALM Add")
                                }
 
                            }
@@ -418,25 +481,25 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
         
     }
     
-    private func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?) ->() ) {
-        
-        let param = ["isCard": "true", "isAccount": "true", "isDeposit": "true", "isLoan": "false"]
-        
-        NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
-            if error != nil {
-                completion(nil, error)
-            }
-            guard let model = model else { return }
-            if model.statusCode == 0 {
-                guard let cardList = model.data else { return }
-                self.products = model.data ?? []
-                completion(cardList, nil)
-            } else {
-                guard let error = model.errorMessage else { return }
-                completion(nil, error)
-            }
-        }
-}
+//    private func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?) ->() ) {
+//
+//        let param = ["isCard": "true", "isAccount": "true", "isDeposit": "true", "isLoan": "false"]
+//
+//        NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
+//            if error != nil {
+//                completion(nil, error)
+//            }
+//            guard let model = model else { return }
+//            if model.statusCode == 0 {
+//                guard let cardList = model.data else { return }
+//                self.products = model.data ?? []
+//                completion(cardList, nil)
+//            } else {
+//                guard let error = model.errorMessage else { return }
+//                completion(nil, error)
+//            }
+//        }
+//}
 }
 
 

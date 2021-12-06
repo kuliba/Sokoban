@@ -84,7 +84,7 @@ class GKHMainViewController: UIViewController, UITableViewDelegate {
         observerRealm()
         operatorsList?.forEach({ op in
             if !op.parameterList.isEmpty && op.parentCode?.contains(GlobalModule.UTILITIES_CODE) ?? false {
-            organization.append(op)
+                organization.append(op)
                 self.operators = op
             }
         })

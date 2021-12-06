@@ -13,7 +13,7 @@ class AccountDetailsViewController: UIViewController {
     var productType: String?
     var tableView = UITableView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
     var openControlButtons = false
-    var product: GetProductListDatum?
+    var product: UserAllCardsModel?
     var mockItem = MockItems.returnsRequisits()
     var mockItemsDeposit = MockItems.returnsDepositInfo()
     
@@ -41,7 +41,7 @@ class AccountDetailsViewController: UIViewController {
     }
     
     
-    func presentRequisitsVc(product: GetProductListDatum?){
+    func presentRequisitsVc(product: UserAllCardsModel?){
         showActivity()
         var body = ["cardId": product?.cardID] as [String : AnyObject]
         
@@ -116,7 +116,7 @@ class AccountDetailsViewController: UIViewController {
         return localDate
     }
     
-    func presentToDepositInfo(product: GetProductListDatum?){
+    func presentToDepositInfo(product: UserAllCardsModel?){
         showActivity()
         let bodyForInfo = ["id": product?.id] as [String : AnyObject]
 
