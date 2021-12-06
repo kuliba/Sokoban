@@ -13,9 +13,6 @@ struct AddHistoryList {
     
     static func add() {
         
-        /// Общая информация об поставщике услуг
-        var additionalList          = GKHHistoryModel()
-        var tempAdditionalListArray = [AdditionalListModel]()
         let param = ["isPhonePayments": "false",
                      "isCountriesPayments": "false",
                      "isServicePayments": "true",
@@ -23,46 +20,38 @@ struct AddHistoryList {
                      "isInternetPayments": "false"]
         
         NetworkManager<GetLatestServicePaymentsDecodableModel>.addRequest(.getLatestServicePayments, param, [:]) { model, error in
-            if error != nil {
-                print("DEBUG: error", error!)
-            } else {
-                guard let model = model else { return }
-                guard let additionalListData = model.data else { return }
+            
+            if let error = error {
                 
-                additionalListData.forEach { list in
-                    /// Общая информация об поставщике услуг
-                    let a = GKHHistoryModel()
-                    a.amount    = list.amount ?? 0
-                    a.paymentDate = list.paymentDate
-                    a.puref    = list.puref
+                print("DEBUG: error", error)
+                return
+            }
+            
+            guard let model = model else { return }
+            guard let receivedData = model.data else { return }
+            
+            let receivedPayments = receivedData.map{ GKHHistoryModel(with: $0) }
+            
+            do {
+                
+                let realm = try Realm()
+                let existingPayments = realm.objects(GKHHistoryModel.self)
+                
+                // fitst transaction: delete items to inform subscribers in UI
+                try realm.write {
                     
-                    /// Поля для заполнения
-                    list.additionalList?.forEach({ parameterList in
-                        let p = AdditionalListModel()
-                        p.fieldName       = parameterList.fieldName
-                        p.fieldValue     = parameterList.fieldValue
-                        tempAdditionalListArray.append(p)
-                    })
-                    additionalList = a
-                    tempAdditionalListArray.forEach { i in
-                        additionalList.additionalList.append(i)
-                    }
+                    realm.delete(existingPayments)
+                }
+                
+                // second transaction: add fresh data from server
+                try realm.write {
                     
-                    tempAdditionalListArray.removeAll()
+                    realm.add(receivedPayments)
                 }
-                /// Сохраняем в REALM
-                let realm = try? Realm()
-                do {
-                    let operators = realm?.objects(GKHHistoryModel.self)
-                    //                            guard (operators != nil) else { return }
-                    realm?.beginWrite()
-                    realm?.delete(operators!)
-                    realm?.add(additionalList)
-                    try realm?.commitWrite()
-                    print("REALM",realm?.configuration.fileURL?.absoluteString ?? "")
-                } catch {
-                    print(error.localizedDescription)
-                }
+                
+            } catch {
+                
+                print(error.localizedDescription)
             }
         }
     }

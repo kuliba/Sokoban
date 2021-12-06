@@ -288,10 +288,11 @@
 		68FFA563268DDFCB002DADFA /* SearchContactView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA562268DDFCA002DADFA /* SearchContactView.swift */; };
 		68FFA565269464FF002DADFA /* TransferByRequisitesConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA564269464FF002DADFA /* TransferByRequisitesConfirmViewController.swift */; };
 		68FFA5682695921E002DADFA /* QRScanner in Frameworks */ = {isa = PBXBuildFile; productRef = 68FFA5672695921E002DADFA /* QRScanner */; };
+		77C026E6275E6299002BE1F6 /* GKHHistoryModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C026E5275E6299002BE1F6 /* GKHHistoryModelTests.swift */; };
 		77D2D9AE275AB90A0097234D /* RealmResults+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D2D9AC275AB9090097234D /* RealmResults+Extension.swift */; };
 		77D2D9AF275AB90A0097234D /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D2D9AD275AB90A0097234D /* Array+Extensions.swift */; };
 		77D2D9B2275AB9280097234D /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D2D9B0275AB9280097234D /* Item.swift */; };
-		77D2D9B3275AB9280097234D /* RealmPlaygroundTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D2D9B1275AB9280097234D /* RealmPlaygroundTests.swift */; };
+		77D2D9B3275AB9280097234D /* RealmObjectsDiffTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D2D9B1275AB9280097234D /* RealmObjectsDiffTests.swift */; };
 		A518978A2748079D00F7B2B4 /* InternetTVDetailsFormController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A51897892748079D00F7B2B4 /* InternetTVDetailsFormController.swift */; };
 		A52A8FA0274800D600288FBD /* InternetTVRegionSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52A8F9F274800D600288FBD /* InternetTVRegionSearchController.swift */; };
 		A536C7CE274C0FDC002D5EAB /* InternetInputCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A536C7CD274C0FDC002D5EAB /* InternetInputCell.xib */; };
@@ -780,10 +781,11 @@
 		68FFA560268DD2CE002DADFA /* CountriesCodeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountriesCodeButton.swift; sourceTree = "<group>"; };
 		68FFA562268DDFCA002DADFA /* SearchContactView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchContactView.swift; sourceTree = "<group>"; };
 		68FFA564269464FF002DADFA /* TransferByRequisitesConfirmViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferByRequisitesConfirmViewController.swift; sourceTree = "<group>"; };
+		77C026E5275E6299002BE1F6 /* GKHHistoryModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHHistoryModelTests.swift; sourceTree = "<group>"; };
 		77D2D9AC275AB9090097234D /* RealmResults+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RealmResults+Extension.swift"; sourceTree = "<group>"; };
 		77D2D9AD275AB90A0097234D /* Array+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
 		77D2D9B0275AB9280097234D /* Item.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
-		77D2D9B1275AB9280097234D /* RealmPlaygroundTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmPlaygroundTests.swift; sourceTree = "<group>"; };
+		77D2D9B1275AB9280097234D /* RealmObjectsDiffTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmObjectsDiffTests.swift; sourceTree = "<group>"; };
 		A51897892748079D00F7B2B4 /* InternetTVDetailsFormController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVDetailsFormController.swift; sourceTree = "<group>"; };
 		A52A8F9F274800D600288FBD /* InternetTVRegionSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVRegionSearchController.swift; sourceTree = "<group>"; };
 		A536C7CD274C0FDC002D5EAB /* InternetInputCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InternetInputCell.xib; sourceTree = "<group>"; };
@@ -1948,6 +1950,24 @@
 			path = "TransferByRequisites ";
 			sourceTree = "<group>";
 		};
+		77C026E9275E62E4002BE1F6 /* Realm */ = {
+			isa = PBXGroup;
+			children = (
+				77C026EA275E62FA002BE1F6 /* SampleTypes */,
+				77D2D9B1275AB9280097234D /* RealmObjectsDiffTests.swift */,
+				77C026E5275E6299002BE1F6 /* GKHHistoryModelTests.swift */,
+			);
+			path = Realm;
+			sourceTree = "<group>";
+		};
+		77C026EA275E62FA002BE1F6 /* SampleTypes */ = {
+			isa = PBXGroup;
+			children = (
+				77D2D9B0275AB9280097234D /* Item.swift */,
+			);
+			path = SampleTypes;
+			sourceTree = "<group>";
+		};
 		A55A52D72746F94200641DD0 /* InternetTVControllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -2627,8 +2647,7 @@
 		EDB14396265FDA430028EF5A /* ForaBankTests */ = {
 			isa = PBXGroup;
 			children = (
-				77D2D9B0275AB9280097234D /* Item.swift */,
-				77D2D9B1275AB9280097234D /* RealmPlaygroundTests.swift */,
+				77C026E9275E62E4002BE1F6 /* Realm */,
 				EDB14399265FDA430028EF5A /* Info.plist */,
 			);
 			path = ForaBankTests;
@@ -3815,7 +3834,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				77D2D9B2275AB9280097234D /* Item.swift in Sources */,
-				77D2D9B3275AB9280097234D /* RealmPlaygroundTests.swift in Sources */,
+				77C026E6275E6299002BE1F6 /* GKHHistoryModelTests.swift in Sources */,
+				77D2D9B3275AB9280097234D /* RealmObjectsDiffTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
