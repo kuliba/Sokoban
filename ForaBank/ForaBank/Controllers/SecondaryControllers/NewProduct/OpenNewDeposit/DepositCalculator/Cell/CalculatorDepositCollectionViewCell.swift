@@ -25,7 +25,7 @@ class CalculatorDepositCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var summSlider: UISlider!
     
     let defaultValue: Float = 500000
-    let defaultDate: Int = 366
+    let defaultDate: Int = 365
     weak var delegate: CalculatorDepositDelegate?
     var viewModel: OpenDepositDatum? {
         didSet {

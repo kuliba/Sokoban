@@ -11,6 +11,8 @@ import RealmSwift
 
 class ConfurmOpenDepositViewController: PaymentViewController {
     
+    var startAmount: Float = 5000.0
+    var showSmsCode = false
     lazy var realm = try? Realm()
     var product: OpenDepositDatum? {
         didSet {
@@ -26,6 +28,7 @@ class ConfurmOpenDepositViewController: PaymentViewController {
             rateField.text = "\(choosenRate.rate ?? 0.0)%"
         }
     }
+    var moneyFormatter: SumTextInputFormatter?
     
     var nameField = ForaInput(
         viewModel: ForaInputModel(
@@ -63,6 +66,7 @@ class ConfurmOpenDepositViewController: PaymentViewController {
             image: UIImage(named: "message-square")!,
             type: .smsCode))
     
+    //MARK: - View LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -85,12 +89,20 @@ class ConfurmOpenDepositViewController: PaymentViewController {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        calculateSumm(with: startAmount)
+        bottomView.amountTextField.text = moneyFormatter?.format("\(startAmount)") ?? ""
+    }
+    
+    //MARK: - Helper
     func setupUI() {
         
         title = "Подтвердите параметры вклада"
-//        view.addSubview(bottomView)
+
         bottomView.currencySymbol = "₽"
         bottomView.buttomLabel.isHidden = true
+        
         stackView.addArrangedSubview(nameField)
         stackView.addArrangedSubview(termField)
         stackView.addArrangedSubview(rateField)
@@ -99,11 +111,18 @@ class ConfurmOpenDepositViewController: PaymentViewController {
         stackView.addArrangedSubview(cardListView)
         stackView.addArrangedSubview(smsCodeField)
         
+        smsCodeField.isHidden = true
+        smsCodeField.alpha = 0
+        
         cardFromField.titleLabel.text = "Счет списания"
         cardFromField.titleLabel.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
         cardFromField.imageView.isHidden = false
         cardFromField.leftTitleAncor.constant = 64
         cardFromField.layoutIfNeeded()
+        
+        self.moneyFormatter = SumTextInputFormatter(textPattern: "# ###,## ₽")
+        self.bottomView.moneyInputController.formatter = self.moneyFormatter
+        calculateSumm(with: startAmount)
         
         termField.didChooseButtonTapped = {
             let controller = SelectDepositPeriodViewController()
@@ -136,8 +155,16 @@ class ConfurmOpenDepositViewController: PaymentViewController {
             }         
         }
         
+        bottomView.didDoneButtonTapped = { amount in
+            if self.showSmsCode {
+                self.makeDepositPayment()
+            } else {
+                self.openDeposit(amount: amount)
+            }
+        }
         
     }
+    
     
     private func readAndSetupCard() {
         DispatchQueue.main.async {
@@ -156,20 +183,20 @@ class ConfurmOpenDepositViewController: PaymentViewController {
         }
     }
     
+    //MARK: - Calculator
     private func calculateSumm(with value: Float) {
         chooseRate(from: value)
         let interestRate = Float(choosenRate?.rate ?? 0)
         let termDay = Float(choosenRate?.term ?? 0)
         
         let income = ( (value * interestRate * termDay) / 365 ) / 100
-        
-        incomeField.text = bottomView.moneyFormatter?.format("\(income)") ?? ""
+        incomeField.text = moneyFormatter?.format("\(income)") ?? ""
     }
     
     private func chooseRate(from value: Float) {
         guard let mainRateList = self.product?.termRateList else { return }
         mainRateList.forEach { termRateList in
-            if termRateList.сurrencyCode == "RUR" || termRateList.сurrencyCode == "RUB" {
+            if termRateList.сurrencyCode == "810" {
                 let termRateSumm = termRateList.termRateSum
                 termRateSumm?.forEach({ rateSum in
                     if value >= Float(rateSum.sum ?? 0) {
@@ -207,8 +234,93 @@ class ConfurmOpenDepositViewController: PaymentViewController {
         }
     }
     
+    //MARK: - API
+    private func openDeposit(amount: String) {
+        
+        guard let initialAmount = Double(amount) else { return }
+        guard let sourceCardId = self.cardFromField.model?.cardID else { return }
+        guard let finOperID = self.product?.depositProductID else { return }
+        guard let term = self.choosenRate?.term else { return }
+        
+        let body = [
+            "finOperID": finOperID,
+            "term": term,
+            "currencyCode": "810",
+            "sourceCardId": sourceCardId,
+            "initialAmount": initialAmount
+        ] as [String: AnyObject]
+        
+        self.showActivity()
+        NetworkManager<OpenDepositDecodableModel>.addRequest(.openDeposit, [:], body) { respons, error in
+            self.dismissActivity()
+            if error != nil {
+                print("DEBUG: Error openDeposit:", error ?? "")
+                self.showAlert(with: "Ошибка", and: error ?? "")
+            }
+            guard let model = respons else { return }
+            if model.statusCode == 0 {
+                print("DEBUG: Success openDeposit")
+                self.showSmsCode = true
+                self.hideView(self.smsCodeField, needHide: false)
+            } else {
+                print("DEBUG: Error openDeposit:", model.errorMessage ?? "")
+                self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+            }
+        }
+    }
+    
+    private func makeDepositPayment() {
+        guard var code = smsCodeField.textField.text else { return }
+        if code.isEmpty {
+            code = "0"
+        }
+        let body = ["verificationCode": code] as [String: AnyObject]
+        showActivity()
+        
+        NetworkManager<MakeTransferDecodableModel>.addRequest(.makeDepositPayment, [:], body) { respons, error in
+            DispatchQueue.main.async {
+                self.dismissActivity()
+                if error != nil {
+                    print("DEBUG: Error: ", error ?? "")
+                    self.showAlert(with: "Ошибка", and: error ?? "")
+                }
+                guard let model = respons else { return }
+                
+                if model.statusCode == 0 {
+                    print("DEBUG: Success payment")
+                    
+                    let confurmVCModel = ConfirmViewControllerModel(type: .openDeposit)
+                    confurmVCModel.cardFromRealm = self.cardFromField.model
+                    confurmVCModel.fullName = self.product?.name
+                    confurmVCModel.summTransction = self.bottomView.amountTextField.text ?? ""
+                    confurmVCModel.taxTransction = self.incomeField.text
+                    confurmVCModel.phone = self.termField.text
+                    confurmVCModel.summInCurrency = self.rateField.text
+                    
+                    let vc: DepositSuccessViewController = DepositSuccessViewController.loadFromNib()
+                    vc.confurmVCModel = confurmVCModel
+                    
+                    
+                    vc.id = model.data?.paymentOperationDetailId ?? 0
+                    switch confurmVCModel.type {
+                    case .openDeposit, .phoneNumber:
+                        vc.printFormType = "internal"
+                    default:
+                        break
+                    }
+                    
+                    vc.modalPresentationStyle = .fullScreen
+                    self.present(vc, animated: true, completion: nil)
+                } else {
+                    print("DEBUG: Error: ", model.errorMessage ?? "")
+                    self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+                }
+            }
+        }
+    }
 }
 
+//MARK: - TransitioningDelegate
 extension ConfurmOpenDepositViewController: UIViewControllerTransitioningDelegate {
 
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {

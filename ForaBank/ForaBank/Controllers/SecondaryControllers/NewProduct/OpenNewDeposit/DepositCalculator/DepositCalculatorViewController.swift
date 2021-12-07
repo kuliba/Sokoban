@@ -49,6 +49,8 @@ class DepositCalculatorViewController: UICollectionViewController {
         controller.product = calculator.viewModel
         controller.choosenRateList = calculator.choosenRateList
         controller.choosenRate = calculator.choosenRate
+        let amount = calculator.moneyFormatter?.unformat(calculator.summTextField.text) ?? ""
+        controller.startAmount = Float(amount) ?? 0
 //        controller.bottomView.amountTextField.text = calculator.summTextField.text
         navigationController?.pushViewController(controller, animated: true)
     }

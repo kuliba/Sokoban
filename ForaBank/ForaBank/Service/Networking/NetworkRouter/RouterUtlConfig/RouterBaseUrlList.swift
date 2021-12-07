@@ -135,6 +135,10 @@ enum RouterBaseUrlList: String {
     
     case nextStepServiceTransfer   = "/rest/transfer/nextStepServiceTransfer"
     
+    case openDeposit               = "/rest/openDeposit"
+    
+    case makeDepositPayment        = "/rest/makeDepositPayment"
+    
     // MARK: - В не авторизованную зону.
     ///Обновление по serial
         

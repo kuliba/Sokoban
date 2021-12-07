@@ -89,6 +89,8 @@ enum RouterManager {
     case isSingleService
     case nextStepServiceTransfer
     case getDepositProductList
+    case openDeposit
+    case makeDepositPayment
 }
 
 extension RouterManager {
@@ -1302,6 +1304,33 @@ extension RouterManager {
             request.httpMethod = RequestMethod.get.rawValue
             return request
             
+        case .openDeposit:
+            let baseUrl = RouterUrlList.openDeposit.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+            
+        case .makeDepositPayment:
+            let baseUrl = RouterUrlList.makeDepositPayment.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
             
         }
     }

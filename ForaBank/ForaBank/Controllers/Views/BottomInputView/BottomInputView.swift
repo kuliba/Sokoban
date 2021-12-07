@@ -300,16 +300,16 @@ class BottomInputView: UIView {
     
     private func setupMoneyController() {
         DispatchQueue.main.async {
-        var amount = ""
+            var amount = ""
             if let text = self.amountTextField.text {
                 let unformatText = self.moneyFormatter?.unformat(text)
-            amount = unformatText ?? ""
-        }
-        
+                amount = unformatText ?? ""
+            }
+            
             self.moneyFormatter = SumTextInputFormatter(textPattern: "# ###,## \(self.currencySymbol)")
             self.moneyInputController.formatter = self.moneyFormatter
             self.amountTextField.delegate = self.moneyInputController
-        
+            
             let newText = self.moneyFormatter?.format(amount)
             self.amountTextField.text = newText
         }
