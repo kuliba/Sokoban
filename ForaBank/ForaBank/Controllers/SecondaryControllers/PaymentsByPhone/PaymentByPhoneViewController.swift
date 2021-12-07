@@ -120,6 +120,12 @@ class PaymentByPhoneViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        AddAllUserCardtList.add() {
+           print(" AddAllUserCardtList.add()")
+
+        }
+        
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "otpCode"))
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.showSpinningWheel(_:)), name: NSNotification.Name(rawValue: "otpCode"), object: nil)
