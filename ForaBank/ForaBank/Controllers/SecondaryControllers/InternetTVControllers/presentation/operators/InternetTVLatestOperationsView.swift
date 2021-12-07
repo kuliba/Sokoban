@@ -1,24 +1,26 @@
 import Foundation
 import UIKit
-import RealmSwift
 
 class InternetTVLatestOperationsView: UIView {
 
     private var latestOpCollectionView = InternetTVCollectionView()
+    var viewModel = InternetTVLatestOperationsViewModel()
 
     private var lineView: UIView = {
         let view = UIView()
         view.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
         view.translatesAutoresizingMaskIntoConstraints = false
+        //view.translatesAutoresizingMavarntoConstraints = false
         return view
     }()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
+        viewModel.controller = self
         configureContents()
         if latestOpCollectionView.items.isEmpty {
             InternetTVMainController.latestOpIsEmpty = true
-            InternetTVMainController.iMsg?.handleMsg(what: -1)
+            InternetTVMainController.iMsg?.handleMsg(what: InternetTVMainController.msgHideLatestOperation)
         }
     }
 
@@ -42,43 +44,8 @@ class InternetTVLatestOperationsView: UIView {
             lineView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0),
             lineView.heightAnchor.constraint(equalToConstant: 1)
         ])
-        latestOpCollectionView.set(list: getData())
+        latestOpCollectionView.set(list: viewModel.getData())
     }
-
-    func getData() -> [InternetLatestOpsDO] {
-        var resultArr = [InternetLatestOpsDO]()
-        var amount = ""
-        var name = ""
-        var image: UIImage!
-
-        let realm = try? Realm()
-        let payModelArray = realm?.objects(InternetTVLatestOperationsModel.self)
-        let operatorsArray = realm?.objects(GKHOperatorsModel.self)
-
-        payModelArray?.forEach({ operation in
-            operatorsArray?.forEach({ op in
-                if operation.puref == op.puref {
-                    name = op.name?.capitalizingFirstLetter() ?? ""
-                    amount = String(operation.amount) + " ₽"
-                    if let tempImage = op.logotypeList.first?.content, tempImage != "" {
-                        let dataDecoded: Data = Data(base64Encoded: tempImage, options: .ignoreUnknownCharacters)!
-                        image = UIImage(data: dataDecoded)
-                    }
-                }
-            })
-            if image != nil {
-                let ob = InternetLatestOpsDO(mainImage: image, name: name, amount: amount)
-                resultArr.append(ob)
-            }
-        })
-        return resultArr
-    }
-}
-
-struct InternetLatestOpsDO {
-    var mainImage: UIImage
-    var name: String
-    var amount: String
 }
 
 struct InternetTVConstants {
@@ -114,6 +81,11 @@ class InternetTVCollectionView: UICollectionView, UICollectionViewDelegate, UICo
         items = list
     }
 
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        InternetTVMainViewModel.latestOp = items[indexPath.item]
+        InternetTVMainController.iMsg?.handleMsg(what: InternetTVMainController.msgPerformSegue)
+    }
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return items.count
     }
@@ -129,7 +101,7 @@ class InternetTVCollectionView: UICollectionView, UICollectionViewDelegate, UICo
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: GKHConstants.galleryItemWidth, height: frame.height * 0.8)
+        return CGSize(width: 90, height: frame.height * 0.8)
     }
 
     required init?(coder aDecoder: NSCoder) {

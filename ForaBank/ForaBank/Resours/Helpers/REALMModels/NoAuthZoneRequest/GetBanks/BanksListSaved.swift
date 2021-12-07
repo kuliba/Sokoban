@@ -15,12 +15,22 @@ struct BanksListSaved: DownloadQueueProtocol {
         NetworkManager<GetFullBankInfoListDecodableModel>.addRequest(.getFullBankInfoList, param, body) { model, error in
             if error != nil {
                 print("DEBUG: error", error!)
+                completion()
             } else {
-                guard let statusCode = model?.statusCode else { return }
+                guard let statusCode = model?.statusCode else {
+                    completion()
+                    return
+                }
                 if statusCode == 0 {
                     
-                    guard let model = model else { return }
-                    guard let banks = model.data else { return }
+                    guard let model = model else {
+                        completion()
+                        return
+                    }
+                    guard let banks = model.data else {
+                        completion()
+                        return
+                    }
                     
                     let banksList = GetBankList()
                     banksList.serial = banks.serial
@@ -65,8 +75,8 @@ struct BanksListSaved: DownloadQueueProtocol {
                     }
                     
                     /// Сохраняем в REALM
-                    let realm = try? Realm()
                     do {
+                        let realm = try? Realm()
                         let banks = realm?.objects(GetBankList.self)
                         realm?.beginWrite()
                         realm?.delete(banks!)
@@ -74,6 +84,7 @@ struct BanksListSaved: DownloadQueueProtocol {
                         try realm?.commitWrite()
                         completion()
                     } catch {
+                        completion()
                         print(error.localizedDescription)
                     }
                 }

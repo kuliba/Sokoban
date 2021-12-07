@@ -26,9 +26,16 @@ struct AddOperatorsList: DownloadQueueProtocol {
         NetworkManager<GetAnywayOperatorsListDecodableModel>.addRequest(.getAnywayOperatorsList, [:], [:]) { model, error in
             if error != nil {
                 print("DEBUG: error", error!)
+                completion()
             } else {
-                guard let model = model else { return }
-                guard let allOperators = model.data?.operatorGroupList else { return }
+                guard let model = model else {
+                    completion()
+                    return
+                }
+                guard let allOperators = model.data?.operatorGroupList else {
+                    completion()
+                    return
+                }
 
                 allOperators.forEach { item in
                     if item.code?.contains(GlobalModule.UTILITIES_CODE) ?? false ||
@@ -47,6 +54,7 @@ struct AddOperatorsList: DownloadQueueProtocol {
                                 l.content = logotypeList.content
                                 l.name    = logotypeList.name
                                 l.code    = item.code
+                                l.svgImage = logotypeList.svgImage
                                 listPositionArray.append(l)
                             })
                             /// ИНН
@@ -97,17 +105,16 @@ struct AddOperatorsList: DownloadQueueProtocol {
                     }
                 }
 
-                let realm = try? Realm()
                 do {
+                    let realm = try? Realm()
                     let operators = realm?.objects(GKHOperatorsModel.self)
-//                            guard (operators != nil) else { return }
                     realm?.beginWrite()
                     realm?.delete(operators!)
                     realm?.add(operatorsArr)
                     try realm?.commitWrite()
                     completion()
-                    print("REALM",realm?.configuration.fileURL?.absoluteString ?? "")
                 } catch {
+                    completion()
                     print(error.localizedDescription)
                 }
             }

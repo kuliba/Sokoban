@@ -1,6 +1,6 @@
 //
-//  RealmPlaygroundTests.swift
-//  RealmPlaygroundTests
+//  RealmObjectsDiffTests.swift
+//  RealmObjectsDiffTests
 //
 //  Created by Max Gribov on 03.12.2021.
 //
@@ -9,7 +9,7 @@ import XCTest
 @testable import ForaBank
 import RealmSwift
 
-class RealmPlaygroundTests: XCTestCase {
+class RealmObjectsDiffTests: XCTestCase {
     
     override func setUpWithError() throws {
 

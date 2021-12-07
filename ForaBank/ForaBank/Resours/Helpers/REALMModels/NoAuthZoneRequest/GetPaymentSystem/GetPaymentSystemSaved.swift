@@ -16,9 +16,16 @@ struct GetPaymentSystemSaved: DownloadQueueProtocol {
             
             if error != nil {
                 print("DEBUG: error", error!)
+                completion()
             } else {
-                guard let model = model else { return }
-                guard let paymentSystem = model.data else { return }
+                guard let model = model else {
+                    completion()
+                    return
+                }
+                guard let paymentSystem = model.data else {
+                    completion()
+                    return
+                }
                 
                 let getPaymentSystemList = GetPaymentSystemList()
                 getPaymentSystemList.serial = paymentSystem.serial
@@ -56,15 +63,17 @@ struct GetPaymentSystemSaved: DownloadQueueProtocol {
                     getPaymentSystemList.paymentSystemList.append(getPaymentList)
                     
                     /// Сохраняем в REALM
-                    let realm = try? Realm()
                     do {
+                        let realm = try? Realm()
                         let operators = realm?.objects(GetPaymentSystemList.self)
                         realm?.beginWrite()
                         realm?.delete(operators!)
                         realm?.add(getPaymentSystemList)
                         try realm?.commitWrite()
+                        print(realm?.configuration.fileURL?.absoluteString ?? "")
                         completion()
                     } catch {
+                        completion()
                         print(error.localizedDescription)
                     }
                 }

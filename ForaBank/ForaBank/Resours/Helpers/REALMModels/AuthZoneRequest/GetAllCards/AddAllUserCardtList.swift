@@ -20,12 +20,14 @@ struct AddAllUserCardtList {
             if let error = error {
                 
                 print("DEBUG: error", error)
+                completion()
                 return
             }
             
             guard let model = model,
                   let receivedData = model.data else {
                       
+                      completion()
                       return
                   }
             
@@ -50,6 +52,7 @@ struct AddAllUserCardtList {
             } catch  {
                 
                 print(error.localizedDescription)
+                completion()
             }
         }
     }

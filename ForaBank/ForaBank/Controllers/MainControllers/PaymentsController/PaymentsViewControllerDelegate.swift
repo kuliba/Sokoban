@@ -97,15 +97,17 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 case 2:
                     // ЖКХ
                     // self.delegate?.goToGKHController()
-                    let gkh = GKHMainViewController.storyboardInstance()!
-                    let nc = UINavigationController(rootViewController: gkh)
+                    InternetTVMainViewModel.filter = GlobalModule.UTILITIES_CODE
+                    let controller = InternetTVMainController.storyboardInstance()!
+                    let nc = UINavigationController(rootViewController: controller)
                     nc.modalPresentationStyle = .fullScreen
                     present(nc, animated: true)
                     break
                 case 3:
                     // Интернет ТВ
-                    let gkh = InternetTVMainController.storyboardInstance()!
-                    let nc = UINavigationController(rootViewController: gkh)
+                    InternetTVMainViewModel.filter = GlobalModule.INTERNET_TV_CODE
+                    let controller = InternetTVMainController.storyboardInstance()!
+                    let nc = UINavigationController(rootViewController: controller)
                     nc.modalPresentationStyle = .fullScreen
                     present(nc, animated: true)
                     break
