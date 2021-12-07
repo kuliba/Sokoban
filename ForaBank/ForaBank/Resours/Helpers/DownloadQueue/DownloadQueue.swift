@@ -17,13 +17,14 @@ final class DownloadQueue {
     /// Функция загрузки
     func download(_ completion: @escaping () -> ()) {
         setDownloadQueue()
-        
+        print("Cache update: started")
         for (n, i) in self.downloadArray.enumerated() {
             DispatchQueue.global().async { [weak self] in
                 guard let self = self else { return }
                 self.semaphore.wait()
                 i.add(self.paramArray[n], [:]) {
                     self.semaphore.signal()
+                    print("Cache update: complete for: \(type(of: i))")
                 }
             }
         }

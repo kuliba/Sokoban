@@ -13,56 +13,47 @@ struct GetCurrencySaved: DownloadQueueProtocol {
     func add(_ param: [String : String], _ body: [String: AnyObject], completion: @escaping () -> ()) {
         
         NetworkManager<GetCurrencyListDecodableModel>.addRequest(.getCurrencyList, param, body) { model, error in
-            if error != nil {
-                print("DEBUG: error", error!)
+            
+            if let error = error {
+                print("DEBUG: error", error)
                 completion()
-            } else {
-                guard let statusCode = model?.statusCode else {
-                    completion()
-                    return
+                return
+            }
+            
+            guard let model = model, let currencyData = model.data else {
+                completion()
+                return
+            }
+            
+            // check if we actually have data from serever
+            guard let currencyList = currencyData.currencyList, currencyList.count > 0 else {
+                completion()
+                return
+            }
+            
+            let updatedCurrency = GetCurrency(with: currencyData)
+            
+            do {
+                
+                let realm = try Realm()
+                let existingCurrency = realm.objects(GetCurrency.self)
+                
+                // fitst transaction: delete items to inform subscribers in UI
+                try realm.write {
+                    
+                    realm.delete(existingCurrency)
                 }
-                if statusCode == 0 {
+                
+                // second transaction: add fresh data from server
+                try realm.write {
                     
-                    guard let model = model else {
-                        completion()
-                        return
-                    }
-                    guard let m = model.data else {
-                        completion()
-                        return
-                    }
-                    
-                    let currency = GetCurrency()
-                    currency.serial = m.serial
-                    
-                    m.currencyList?.forEach{ b in
-                        let a = GetCurrencyList()
-                        
-                        a.id = b.id
-                        a.code = b.code
-                        a.cssCode = b.cssCode
-                        a.name = b.name
-                        a.unicode = b.unicode
-                        a.htmlCode = b.htmlCode
-                        
-                        currency.currencyList.append(a)
-                        
-                    }
-                    
-                    /// Сохраняем в REALM
-                    do {
-                        let realm = try? Realm()
-                        let b = realm?.objects(GetCurrency.self)
-                        realm?.beginWrite()
-                        realm?.delete(b!)
-                        realm?.add(currency)
-                        try realm?.commitWrite()
-                        completion()
-                    } catch {
-                        completion()
-                        print(error.localizedDescription)
-                    }
+                    realm.add(updatedCurrency)
                 }
+                
+            } catch {
+                
+                print(error.localizedDescription)
+                completion()
             }
         }
     }
