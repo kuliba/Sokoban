@@ -16,7 +16,7 @@ extension MainViewController {
             }
             switch section {
             case .products:
-                if self.products.count > 0{
+                if self.productsFromRealm.count > 0{
                     return self.createProduct()
                 } else {
                     return nil

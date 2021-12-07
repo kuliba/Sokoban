@@ -23,7 +23,7 @@ extension ProductViewController: UICollectionViewDataSource {
         switch indexPath.row {
         case products.count:
             let item = collectionView.dequeueReusableCell(withReuseIdentifier: "CardCollectionViewCell", for: indexPath) as? CardCollectionViewCell
-    //        item?.card = products[indexPath.item]
+//            item?.card = products[indexPath.item]
             item?.cardImageView.image = UIImage(named: "cardMore")
 //            item?.backgroundColor = .gray
 //            item?.selectedView.isHidden = true

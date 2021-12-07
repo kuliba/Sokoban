@@ -49,7 +49,8 @@ extension MainViewController {
                         else {
                             fatalError("Unable to dequeue \(ProductCell.self)")
                         }
-                                cell.card = item.productList
+                            
+                            cell.card = item.productListFromRealm
 //                        cell.statusPC = item.productList?.statusPC
 //                        cell.status  = item.productList?.status
 
@@ -144,18 +145,45 @@ extension MainViewController {
                     switch select {
                     case 0:
                         productList = productsCardsAndAccounts
-                        products.removeAll()
+                        productsFromRealm.removeAll()
                         for i in productList {
-                            self.products.append(PaymentsModel(productList: i))
+                            self.productsFromRealm.append(PaymentsModel(productListFromRealm: i))
+//                            self.reloadData(with: nil)
+
                         }
+                        var snapshot = self.dataSource?.snapshot()
+                        
+                         let items = snapshot?.itemIdentifiers(inSection: .products)
+                        
+                         snapshot?.deleteItems(items ?? [PaymentsModel]())
+                        snapshot?.appendItems(self.productsFromRealm, toSection: .products)
+//                                snapshot?.reloadSections([.products])
+                        
+                        
+                        self.dataSource?.apply(snapshot ?? NSDiffableDataSourceSnapshot<Section, PaymentsModel>())
                         isFiltered = false
                     case 1:
+                        
 //                       productList = productList.filter({$0.productType == "CARD" || $0.productType == "ACCOUNT"})
                         productList = productsDeposits
-                        products.removeAll()
+                        productsFromRealm.removeAll()
                         for i in productList {
-                            self.products.append(PaymentsModel(productList: i))
+                            self.productsFromRealm.append(PaymentsModel(productListFromRealm: i))
+//                            self.reloadData(with: nil)
+
                         }
+                        
+                        var snapshot = self.dataSource?.snapshot()
+                        
+                         let items = snapshot?.itemIdentifiers(inSection: .products)
+                        
+                         snapshot?.deleteItems(items ?? [PaymentsModel]())
+                        snapshot?.appendItems(self.productsFromRealm, toSection: .products)
+//                                snapshot?.reloadSections([.products])
+                        
+                        
+                        self.dataSource?.apply(snapshot ?? NSDiffableDataSourceSnapshot<Section, PaymentsModel>())
+                        
                         isFiltered = true
                     default:
                         isFiltered = false
@@ -190,6 +218,7 @@ extension MainViewController {
     @objc func passAllProducts(){
             let viewController = ProductsViewController()
             viewController.addCloseButton()
+//            viewController.products = self.productList
             let navVC = UINavigationController(rootViewController: viewController)
             navVC.modalPresentationStyle = .fullScreen
             
