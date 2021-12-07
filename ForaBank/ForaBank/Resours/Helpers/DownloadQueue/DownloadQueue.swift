@@ -51,6 +51,7 @@ final class DownloadQueue {
         let countriesBank = ["serial" : withIdBank, "type" : "", "bic":"", "serviceType":""]
         
         let operators = realm?.objects(GKHOperatorsModel.self)
+        //FIXME: serial never saved inside AddOperatorsList. We downloading updates every time
         let withIdOperators = operators?.first?.serial ?? ""
         let countriesOperators = ["serial" : withIdOperators ]
         

@@ -50,6 +50,8 @@ struct CountriesListSaved: DownloadQueueProtocol {
                     realm.add(updatedCounties)
                 }
                 
+                completion()
+                
             } catch {
                 
                 print(error.localizedDescription)

@@ -1,18 +1,19 @@
 //
-//  BanksListSaved.swift
+//  GKHAddOperatorsList.swift
 //  ForaBank
 //
-//  Created by Константин Савялов on 06.09.2021.
+//  Created by Константин Савялов on 30.08.2021.
 //
 
 import Foundation
 import RealmSwift
 
-struct BanksListSaved: DownloadQueueProtocol {
-    
+// MARK: - Save REALM
+struct AddOperatorsList: DownloadQueueProtocol {
+
     func add(_ param: [String : String], _ body: [String: AnyObject], completion: @escaping () -> ()) {
         
-        NetworkManager<GetFullBankInfoListDecodableModel>.addRequest(.getFullBankInfoList, param, body) { model, error in
+        NetworkManager<GetAnywayOperatorsListDecodableModel>.addRequest(.getAnywayOperatorsList, [:], [:]) { model, error in
             
             if let error = error {
                 print("DEBUG: error", error)
@@ -20,34 +21,36 @@ struct BanksListSaved: DownloadQueueProtocol {
                 return
             }
             
-            guard let model = model, let bankListData = model.data else {
+            guard let model = model, let operatorsData = model.data else {
                 completion()
                 return
             }
             
             // check if we actually have data from serever
-            guard let bankFullInfoList = bankListData.bankFullInfoList, bankFullInfoList.count > 0 else {
+            guard let operatorGroupList = operatorsData.operatorGroupList, operatorGroupList.count > 0 else {
                 completion()
                 return
             }
-
-            let updatedBankList = GetBankList(with: bankListData)
+            
+            let operatorCodes = [GlobalModule.UTILITIES_CODE, GlobalModule.INTERNET_TV_CODE]
+            let parameterTypes = ["INPUT"]
+            let updatedOperators = GKHOperatorsModel.childOperators(with: operatorGroupList, operatorCodes: operatorCodes, parameterTypes: parameterTypes)
             
             do {
                 
                 let realm = try Realm()
-                let existingBankList = realm.objects(GetBankList.self)
+                let existingOperators = realm.objects(GKHOperatorsModel.self)
                 
                 // fitst transaction: delete items to inform subscribers in UI
                 try realm.write {
                     
-                    realm.delete(existingBankList)
+                    realm.delete(existingOperators)
                 }
                 
                 // second transaction: add fresh data from server
                 try realm.write {
                     
-                    realm.add(updatedBankList)
+                    realm.add(updatedOperators)
                 }
                 
                 completion()

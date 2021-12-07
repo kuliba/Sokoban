@@ -50,6 +50,8 @@ struct GetPaymentSystemSaved: DownloadQueueProtocol {
                     realm.add(updatedPaymentSystemList)
                 }
                 
+                completion()
+                
             } catch {
                 
                 print(error.localizedDescription)

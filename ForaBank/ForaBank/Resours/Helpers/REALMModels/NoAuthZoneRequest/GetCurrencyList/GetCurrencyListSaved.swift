@@ -50,6 +50,8 @@ struct GetCurrencySaved: DownloadQueueProtocol {
                     realm.add(updatedCurrency)
                 }
                 
+                completion()
+                
             } catch {
                 
                 print(error.localizedDescription)
