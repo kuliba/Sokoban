@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 struct Fio {
     var name, patronymic, surname: String
@@ -13,6 +14,10 @@ struct Fio {
 
 class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate, MyProtocol {
 
+    lazy var realm = try? Realm()
+    var cardIsSelect = false
+
+    
     var viewModel = ConfirmViewControllerModel(type: .requisites) {
         didSet {
 //            checkModel(with: viewModel)
@@ -99,7 +104,8 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
     
     var cardField = CardChooseView()
     
-    var cardListView = CardListView()
+    var cardListView = CardsScrollView(onlyMy: true)
+
     
     
     var stackView = UIStackView(arrangedSubviews: [])
@@ -139,7 +145,9 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        accountNumber.textField.delegate = self
+        AddAllUserCardtList.add() {
+           print(" AddAllUserCardtList.add()")
+        }
         bottomView.currencySymbol = "₽"
 
         let item = UIBarButtonItem(image: UIImage.init(imageLiteralResourceName: "scanner"), style: .plain, target: self, action: #selector(presentScanner))
@@ -163,22 +171,21 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         innField.errorLabel.isHidden = true
         innField.errorLabel.alpha = 0
 
-        getCardList { [weak self] data ,error in
-            DispatchQueue.main.async {
-                
-                
-                if error != nil {
-                    self?.showAlert(with: "Ошибка", and: error!)
+        DispatchQueue.main.async {
+            var filterProduct: [UserAllCardsModel] = []
+            let cards = ReturnAllCardList.cards()
+            cards.forEach { product in
+                if (product.productType == "CARD"
+                        || product.productType == "ACCOUNT") && product.currency == "RUB" {
+                    filterProduct.append(product)
                 }
-                guard let data = data else { return }
-                self?.cardListView.cardList = data
-                
-                if data.count > 0 {
-                    self?.cardField.cardModel = data.first
-//                    self?.cardField.configCardView(data.first!)
-                    guard let cardNumber  = data.first?.number else { return }
-                    self?.selectedCardNumber = cardNumber
-                }
+            }
+//            self.cardListView.cardList = filterProduct
+            if filterProduct.count > 0 {
+                self.cardField.model = filterProduct.first
+                guard let cardNumber  = filterProduct.first?.number else { return }
+                self.selectedCardNumber = cardNumber
+                self.cardIsSelect = true
             }
         }
         
@@ -303,6 +310,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
             }
         }
         
+ 
         setupUI()
         setupActions()
         
@@ -335,29 +343,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
 //                }
 //            }
 //        }
-        getCardList { [weak self] data ,error in
-            DispatchQueue.main.async {
-                
-                if error != nil {
-                    self?.showAlert(with: "Ошибка", and: error!)
-                }
-                guard let data = data else { return }
-                var filterProduct: [GetProductListDatum] = []
-                data.forEach { product in
-                    if (product.productType == "CARD" || product.productType == "ACCOUNT") && product.currency == "RUB" {
-                        filterProduct.append(product)
-                    }
-                }
-                
-                self?.cardListView.cardList = filterProduct
-                
-                if filterProduct.count > 0 {
-                    guard let cardNumber  = filterProduct.first?.number else { return }
-                    self?.selectedCardNumber = cardNumber
-//                    completion(nil)
-                }
-            }
-        }
+    
         
         bankListView.didBankTapped = { (bank) in
             self.selectedBank = bank
@@ -387,13 +373,25 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         }
         
         
-        cardListView.didCardTapped = { card in
-            self.cardField.cardModel = card
-//            self.cardField.configCardView(card)
-            self.selectedCardNumber = card.number ?? ""
-            self.hideView(self.cardListView, needHide: true)
-            self.hideView(self.bankListView, needHide: true)
-            
+        cardListView.didCardTapped = { cardId in
+            DispatchQueue.main.async {
+
+                
+                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
+                cardList.forEach({ card in
+                    if card.id == cardId {
+                        self.cardField.model = card
+                        self.selectedCardNumber = String(card.cardID)
+                        if self.bankListView.isHidden == false {
+                            self.hideView(self.bankListView, needHide: true)
+                        }
+                        if self.cardListView.isHidden == false {
+                            self.hideView(self.cardListView, needHide: true)
+                        }
+                    }
+                })
+            }
+                      
         }
         
         bottomView.didDoneButtonTapped = { [weak self] (_) in

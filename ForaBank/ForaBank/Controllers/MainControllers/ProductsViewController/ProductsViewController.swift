@@ -38,7 +38,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                         if i.statusPC == "17", i.status == "Действует" || i.status == "Выдано клиенту"{
                             self.notActivated.append(i)
                             continue
-                        } else if i.status == "Заблокирована банком" || i.status == "Блокирована по решению Клиента" || i.status == "BLOCKED_DEBET" || i.status == "BLOCKED_CREDIT" || i.status == "BLOCKED", i.statusPC == "3" || i.statusPC == "5" || i.statusPC == "6"  || i.statusPC == "7"  || i.statusPC == "20"  || i.statusPC == "21" || i .statusPC == nil {
+                        } else if i.status == "Заблокирована банком" || i.status == "Блокирована по решению Клиента" || i.status == "BLOCKED_DEBET" || i.status == "BLOCKED_CREDIT" || i.status == "BLOCKED" || i.statusPC == "3" || i.statusPC == "5" || i.statusPC == "6"  || i.statusPC == "7"  || i.statusPC == "20"  || i.statusPC == "21" {
                             self.blocked.append(i)
                             continue
                         } else if  i.statusPC == "0" || i.statusPC == nil, i.status == "Действует" || i.status == "NOT_BLOCKED"{

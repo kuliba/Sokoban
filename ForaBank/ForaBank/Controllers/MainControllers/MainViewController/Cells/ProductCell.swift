@@ -122,7 +122,7 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
             balanceLabel.alpha = 0.5
             logoImageView.alpha = 0.5
             backgroundImageView.alpha = 0.8
-        } else if card.status == "Заблокирована банком" || card.status == "Блокирована по решению Клиента" || card.status == "Блокирована по решению Клиента" || card.status == "BLOCKED_DEBET" || card.status == "BLOCKED_CREDIT" || card.status == "BLOCKED" , card.statusPC == "3" || card.statusPC == "5" || card.statusPC == "6" || card.statusPC == "7" || card.statusPC == "20" || card.statusPC == "21" || card.statusPC == nil{
+        } else if card.status == "Заблокирована банком" || card.status == "Блокирована по решению Клиента" || card.status == "Блокирована по решению Клиента" || card.status == "BLOCKED_DEBET" || card.status == "BLOCKED_CREDIT" || card.status == "BLOCKED" || card.statusPC == "3" || card.statusPC == "5" || card.statusPC == "6" || card.statusPC == "7" || card.statusPC == "20" || card.statusPC == "21" {
             statusImage.image = UIImage(named: "blockProduct")
             maskCardLabel.alpha = 0.5
             cardNameLabel.alpha = 0.5
@@ -137,6 +137,7 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
             logoImageView.alpha = 1
             backgroundImageView.alpha = 1
         }
+        
         
         if card.productType == "DEPOSIT"{
             balanceLabel.textColor = .black
@@ -245,3 +246,23 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
                 }
                 }
 }
+
+
+enum Status: String {
+    case blockedByBank = "Заблокирована банком"
+    case blockedByClient = "Блокирована по решению Клиента"
+    case notActivated = ""
+}
+
+enum StatusPC: String{
+    case blocked = "3"
+    case notActivated = "17"
+}
+
+enum ProductType: String {
+    case DEPOSIT
+    case CARD
+    case ACCOUNT
+    case LOAN
+}
+

@@ -7,6 +7,7 @@
 
 import UIKit
 import SkeletonView
+import RealmSwift
 
 protocol ProductViewControllerDelegate: AnyObject {
     func goPaymentsViewController()
@@ -25,6 +26,10 @@ protocol CtoBDelegate : AnyObject{
 
 class ProductViewController: UIViewController, UICollectionViewDelegate, UITableViewDelegate, SkeletonTableViewDataSource, UIScrollViewDelegate, MTSlideToOpenDelegate, UITextFieldDelegate{
     weak var delegate: FirstControllerDelegate!
+    
+    lazy var realm = try? Realm()
+    var token: NotificationToken?
+    var allProductList: Results<UserAllCardsModel>? = nil
 
     var halfScreen: Bool?
     
@@ -147,7 +152,9 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
     }
     var product: UserAllCardsModel? {
         didSet{
-            
+            card.reloadInputViews()
+            print("statusPC: \(product?.statusPC)")
+            print("status: \(product?.status)")
             amounPeriodLabel.text = ""
             card.card = product
             tableViewLabel.isSkeletonable = false
@@ -162,13 +169,36 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
                 button4.alpha = 1
                 button4.isUserInteractionEnabled = true
             }
-            if product?.status == "Заблокирована банком" || product?.status == "Блокирована по решению Клиента" || product?.status == "BLOCKED_DEBET" || product?.status == "BLOCKED_CREDIT" || product?.status == "BLOCKED", product?.statusPC == "3" || product?.statusPC == "5" || product?.statusPC == "6"  || product?.statusPC == "7"  || product?.statusPC == "20"  || product?.statusPC == "21" || product?.statusPC == nil {
+            if product?.status == "Заблокирована банком" || product?.status == "Блокирована по решению Клиента" || product?.status == "BLOCKED_DEBET" || product?.status == "BLOCKED_CREDIT" || product?.status == "BLOCKED" || product?.statusPC == "3" || product?.statusPC == "5" || product?.statusPC == "6"  || product?.statusPC == "7"  || product?.statusPC == "20"  || product?.statusPC == "21"{
+                
+                card.addSubview(blockView)
+                button.isEnabled = false
+                button.alpha = 0.4
+                button2.isEnabled = false
+                button2.alpha = 0.4
+                button4.setTitle("Разблокирова.", for: .normal)
+                button4.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+                let btnImage4 = UIImage(named: "unlock")
+                button4.tintColor = .black
+                button4.setImage(btnImage4 , for: .normal)
+                blockView.isHidden = false
+                activateSlider.isHidden = true
                 
                 guard let number = self.product?.number else { return }
 
                 self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4))) · Заблокирована", color: self.product?.fontDesignColor)
                 
             } else if  product?.statusPC == "17", product?.status == "Действует" || product?.status == "Выдано клиенту"{
+                
+                button.isEnabled = false
+                button.alpha = 0.4
+                button2.isEnabled = false
+                button2.alpha = 0.4
+                button4.isEnabled = false
+                button4.alpha = 0.4
+                activateSlider.isHidden = false
+                blockView.isHidden = true
+                
                 guard let number = self.product?.number else { return }
 
                 self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4))) · Карта не активирована", color: self.product?.fontDesignColor)
@@ -177,12 +207,28 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
                 guard let number = self.product?.number else { return }
 
                 self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4)))", color: self.product?.fontDesignColor)
+                blockView.isHidden = true
+                button.isEnabled = true
+                button.alpha = 1
+                button2.isEnabled = true
+                button2.alpha = 1
+               button4.setTitle("Блокировать", for: .normal)
+                button4.setImage(UIImage(named: "lock"), for: .normal)
+                blockView.isHidden = true
+                button.isUserInteractionEnabled = true
+                button2.isUserInteractionEnabled = true
+                button.isEnabled = true
+                button2.isEnabled = true
+                button.alpha = 1
+                button2.alpha = 1
             }
             activateSlider.textColor = UIColor(hexString: product?.fontDesignColor ?? "999999")
             activateSlider.sliderBackgroundColor = UIColor(hexString: product?.background[0].color ?? "").darker()
             backgroundView.backgroundColor = UIColor(hexString: product?.background[0].color ?? "999999").darker()
 
+        
             if product?.productType == "DEPOSIT"{
+        
                 guard let number = self.product?.accountNumber else { return }
                 addCloseColorButton(with: UIColor(hexString: "#ffffff"))
 
@@ -217,8 +263,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
 //                card.anchor(top: collectionView?.bottomAnchor, paddingTop: 0,  paddingBottom: 30,  width: 228, height: 160)
             } else {
                 card.interestRate.isHidden = true
-                button.alpha = 1
-                button.isUserInteractionEnabled = true
                 button3.setTitle("Реквизиты\nи выписки", for: .normal)
                 button3.titleLabel?.lineBreakMode = .byWordWrapping
                 button3.titleLabel?.font = UIFont.systemFont(ofSize: 14)
@@ -228,11 +272,11 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
                 button3.setImage(btnImage3 , for: .normal)
                 navigationController?.view.backgroundColor =  UIColor(hexString: product?.background[0].color ?? "999999").darker()
                 navigationController?.navigationBar.backgroundColor = UIColor(hexString: product?.background[0].color ?? "").darker()
-                button4.setTitle("Блокировать", for: .normal)
-                button4.titleLabel?.font = UIFont.systemFont(ofSize: 14)
-                let btnImage4 = UIImage(named: "lock")
-                button4.tintColor = .black
-                button4.setImage(btnImage4 , for: .normal)
+//                button4.setTitle("Блокировать", for: .normal)
+//                button4.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+//                let btnImage4 = UIImage(named: "lock")
+//                button4.tintColor = .black
+//                button4.setImage(btnImage4 , for: .normal)
 
 
             }
@@ -384,6 +428,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        
         addCloseColorButton(with: .white)
         startSkeleton()
 //        tableView?.setContentOffset(CGPoint(x: 0, y: CGFloat.greatestFiniteMagnitude), animated: false)
@@ -418,6 +463,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
 
         }
         
+        observerRealm()
 //        guard let number = product?.numberMasked else {
 //            return
 //        }
@@ -599,7 +645,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
         self.blockView.anchor(width: 64, height: 64)
         self.blockView.center(inView: self.card)
         self.blockView.backgroundColor = UIColor(patternImage: UIImage(named: "blockIcon") ?? UIImage())
-        blockView.isHidden = true
+//        blockView.isHidden = true
 
         
         // UIView
@@ -718,13 +764,18 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
                 if model.statusCode == 0 {
                     
 //                    guard let lastPaymentsList  = model.data else { return }
-                    guard let number = self.product?.numberMasked else {
-                        return
-                    }
+//                    guard let number = self.product?.numberMasked else {
+//                        return
+//                    }
                     DispatchQueue.main.async {
                         self.card.cardNameLabel.text = name
-                        self.products[self.indexItem ?? 0].customName = name
-                        self.navigationItem.setTitle(title: name, subtitle: "· \(String(number.suffix(4)))", color: self.product?.fontDesignColor)
+                        
+                        AddAllUserCardtList.add() {
+//                            self.productList = [UserAllCardsModel]()
+
+                        }
+//                        self.products[self.indexItem ?? 0].customName = name
+//                        self.navigationItem.setTitle(title: name, subtitle: "· \(String(number.suffix(4)))", color: self.product?.fontDesignColor)
                     }
 //                    self.dataUSD = lastPaymentsList
                 } else {
@@ -780,8 +831,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
     
     @objc func blockProduct(){
         
-       
-        
         if button4.titleLabel?.text == "Блокировать"{
             guard let idCard = self.product?.cardID else { return }
             guard let number = self.product?.number else { return }
@@ -825,9 +874,9 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
                         }
                         guard let lastPaymentsList  = model.data else { return }
                         self.showAlert(with: "Карта заблокирована", and: "")
-                        guard let number = self.product?.numberMasked else {
-                            return
-                        }
+//                        guard let number = self.product?.numberMasked else {
+//                            return
+//                        }
     //                    self.navigationItem.setTitle(title: name, subtitle: "· \(String(number.suffix(4)))", color: self.product?.fontDesignColor)
     //                    self.dataUSD = lastPaymentsList
                     } else {
@@ -903,6 +952,47 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
                 self.present(alertController, animated: true, completion: nil)
                     }
     }
+    
+    
+    func observerRealm(){
+            allProductList = realm?.objects(UserAllCardsModel.self)
+               self.token = self.allProductList?.observe { [weak self] ( changes: RealmCollectionChange) in
+                   guard (self?.collectionView) != nil else {return}
+                   switch changes {
+                   case .initial:
+                       print("Initial")
+                       self?.products.removeAll()
+                       guard let products = self?.allProductList else {
+                           return
+                       }
+                       for i in products{
+                           self?.products.append(i)
+                       }
+                       self?.collectionView?.reloadData()
+//                       self?.productList = [UserAllCardsModel]()
+
+
+                   case .update(_, let deletions, let insertions, let modifications):
+                       print("Update")
+                       self?.products.removeAll()
+                       guard let products = self?.allProductList else {
+                           return
+                       }
+                       for i in products{
+                           self?.products.append(i)
+                       }
+                       self?.collectionView?.reloadData()
+//                       self?.productList = [UserAllCardsModel]()
+
+                       self?.collectionView?.reloadData()
+                       
+                       
+                   case .error(let error):
+                       fatalError("\(error)")
+                   }
+           }
+       
+   }
     
     func loadHistoryForCard(){
         historyArray.removeAll()

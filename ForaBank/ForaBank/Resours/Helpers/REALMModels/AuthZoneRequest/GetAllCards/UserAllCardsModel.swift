@@ -96,7 +96,7 @@ extension UserAllCardsModel: Identifiable {
         expireDate         = data.expireDate
         XLDesign           = data.XLDesign
         statusPC           = data.statusPC
-        interestRate       = data.interestRate
+        interestRate       = "\(data.interestRate ?? 0.0)"
         
         data.background.forEach { color in
             

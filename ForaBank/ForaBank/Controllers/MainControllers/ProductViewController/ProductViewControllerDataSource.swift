@@ -114,39 +114,6 @@ extension ProductViewController: UICollectionViewDataSource {
                 present(vc, animated: true, completion: nil)
             }
         }
-        if product?.status == "Заблокирована банком" || product?.status == "Блокирована по решению Клиента" || product?.status == "BLOCKED_CREDIT" || product?.status == "BLOCKED_DEBET" || product?.status == "BLOCKED", product?.statusPC == "3" || product?.statusPC == "5" || product?.statusPC == "6"  || product?.statusPC == "7"  || product?.statusPC == "20"  || product?.statusPC == "21" ||  product?.statusPC == nil{
-            card.addSubview(blockView)
-            button.isEnabled = false
-            button.alpha = 0.4
-            button2.isEnabled = false
-            button2.alpha = 0.4
-            button4.setTitle("Разблокирова.", for: .normal)
-            button4.titleLabel?.font = UIFont.systemFont(ofSize: 14)
-            let btnImage4 = UIImage(named: "unlock")
-            button4.tintColor = .black
-            button4.setImage(btnImage4 , for: .normal)
-            blockView.isHidden = false
-            activateSlider.isHidden = true
-        } else if product?.status == "Действует" || product?.status == "Выдано клиенту", product?.statusPC == "17"{
-                button.isEnabled = false
-                button.alpha = 0.4
-                button2.isEnabled = false
-                button2.alpha = 0.4
-                button4.isEnabled = false
-                button4.alpha = 0.4
-                activateSlider.isHidden = false
-                blockView.isHidden = true
-        } else {
-            if product?.productType == "DEPOSIT"{
-                button.isUserInteractionEnabled = false
-                button.alpha = 0.4
-                button2.isUserInteractionEnabled = false
-                button2.alpha = 0.4
-            } else {
-                button2.isEnabled = true
-                button2.alpha = 1
-            }
-        }
         
     }
     
