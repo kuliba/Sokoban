@@ -75,7 +75,7 @@ class DepositSuccessViewController: UIViewController {
     func setupData(with model: ConfirmViewControllerModel) {
         cardFromField.model = model.cardFromRealm
         termField.text = model.phone ?? ""
-        
+        incomeField.text = model.summTransction ?? ""
     }
     
     func openDetailVC() {

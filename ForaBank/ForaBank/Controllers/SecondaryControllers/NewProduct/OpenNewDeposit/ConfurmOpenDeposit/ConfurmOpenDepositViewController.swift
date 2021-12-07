@@ -12,7 +12,19 @@ import RealmSwift
 class ConfurmOpenDepositViewController: PaymentViewController {
     
     var startAmount: Float = 5000.0
-    var showSmsCode = false
+    var showSmsCode = false {
+        didSet {
+            if showSmsCode {
+                UIView.animate(withDuration: 0.3) {
+                    self.bottomView.doneButton.setTitle("Открыть", for: .normal)
+                }
+            } else {
+                UIView.animate(withDuration: 0.3) {
+                    self.bottomView.doneButton.setTitle("Продолжить", for: .normal)
+                }
+            }
+        }
+    }
     lazy var realm = try? Realm()
     var product: OpenDepositDatum? {
         didSet {
@@ -24,8 +36,13 @@ class ConfurmOpenDepositViewController: PaymentViewController {
     var choosenRate: TermRateSumTermRateList? {
         didSet {
             guard let choosenRate = choosenRate else { return }
-            termField.text = "\(choosenRate.termName ?? "")"
+            let dateDepositButtontext = "\(choosenRate.termName ?? "") (\(choosenRate.term ?? 0) дней)"
+            termField.text = dateDepositButtontext
             rateField.text = "\(choosenRate.rate ?? 0.0)%"
+            guard let text = self.bottomView.amountTextField.text else { return }
+            guard let unformatText = self.moneyFormatter?.unformat(text) else { return }
+            guard let value = Float(unformatText) else { return }
+            calculateSumm(with: value)
         }
     }
     var moneyFormatter: SumTextInputFormatter?
@@ -92,16 +109,20 @@ class ConfurmOpenDepositViewController: PaymentViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         calculateSumm(with: startAmount)
-        bottomView.amountTextField.text = moneyFormatter?.format("\(startAmount)") ?? ""
+        bottomView.amountTextField.text = moneyFormatter?.format("\(Double(startAmount))") ?? ""
     }
     
     //MARK: - Helper
     func setupUI() {
         
         title = "Подтвердите параметры вклада"
-
+        moneyFormatter = SumTextInputFormatter(textPattern: "# ###,## ₽")
+        bottomView.moneyInputController.formatter = moneyFormatter
         bottomView.currencySymbol = "₽"
         bottomView.buttomLabel.isHidden = true
+        bottomView.doneButton.setTitle("Продолжить", for: .normal)
+        
+        calculateSumm(with: startAmount)
         
         stackView.addArrangedSubview(nameField)
         stackView.addArrangedSubview(termField)
@@ -120,9 +141,6 @@ class ConfurmOpenDepositViewController: PaymentViewController {
         cardFromField.leftTitleAncor.constant = 64
         cardFromField.layoutIfNeeded()
         
-        self.moneyFormatter = SumTextInputFormatter(textPattern: "# ###,## ₽")
-        self.bottomView.moneyInputController.formatter = self.moneyFormatter
-        calculateSumm(with: startAmount)
         
         termField.didChooseButtonTapped = {
             let controller = SelectDepositPeriodViewController()
@@ -299,17 +317,10 @@ class ConfurmOpenDepositViewController: PaymentViewController {
                     
                     let vc: DepositSuccessViewController = DepositSuccessViewController.loadFromNib()
                     vc.confurmVCModel = confurmVCModel
-                    
-                    
                     vc.id = model.data?.paymentOperationDetailId ?? 0
-                    switch confurmVCModel.type {
-                    case .openDeposit, .phoneNumber:
-                        vc.printFormType = "internal"
-                    default:
-                        break
-                    }
-                    
+                    vc.printFormType = "internal"
                     vc.modalPresentationStyle = .fullScreen
+                    
                     self.present(vc, animated: true, completion: nil)
                 } else {
                     print("DEBUG: Error: ", model.errorMessage ?? "")

@@ -162,7 +162,6 @@ class BottomInputView: UIView {
                 let tempLable = tempBottomLable.replacingOccurrences(of: ".", with: ",")
                 self.buttomLabel.text = tempLable
                 self.currencyCode = self.currencyFrom?.currencyCodeAlpha ?? ""
-                print(self.currencyFrom?.currencyCodeAlpha)
             }
         }
     }
@@ -300,15 +299,18 @@ class BottomInputView: UIView {
     
     private func setupMoneyController() {
         DispatchQueue.main.async {
-            var amount = ""
-            if let text = self.amountTextField.text {
-                let unformatText = self.moneyFormatter?.unformat(text)
-                amount = unformatText ?? ""
-            }
-            
             self.moneyFormatter = SumTextInputFormatter(textPattern: "# ###,## \(self.currencySymbol)")
             self.moneyInputController.formatter = self.moneyFormatter
             self.amountTextField.delegate = self.moneyInputController
+            
+            var amount = ""
+            if let text = self.amountTextField.text {
+                let unformatText = self.moneyFormatter?.unformat(text)
+                if unformatText != nil {
+                    self.doneButtonIsEnabled(false)
+                }
+                amount = unformatText ?? ""
+            }
             
             let newText = self.moneyFormatter?.format(amount)
             self.amountTextField.text = newText
@@ -317,18 +319,3 @@ class BottomInputView: UIView {
     }
  
 }
-
-//extension BottomInputView: TextFieldStartInputController {
-//    func textFieldDidChangeSelection(_ textField: UITextField) {
-//        guard let text = textField.text else { return }
-//        self.doneButtonIsEnabled(text.isEmpty)
-//        UIView.animate(withDuration: 0.2) {
-//            self.topLabel.alpha = text.isEmpty ? 0 : 1
-//            self.buttomLabel.alpha = text.isEmpty ? 0 : 1
-//        }
-//
-//    }
-//
-//
-//}
-
