@@ -455,9 +455,9 @@ class PaymentByPhoneViewController: UIViewController {
 //                            vc.payeerField.text = data.payeeName ?? "Получатель не оперделен>"
 //                            vc.otpCode = self?.otpCode
                             
-                            var model = ConfirmViewControllerModel(type: .phoneNumber)
+                            let model = ConfirmViewControllerModel(type: .phoneNumber)
                             model.bank = self?.selectedBank
-                            model.cardFrom = self?.cardField.cardModel
+                            model.cardFromRealm = self?.cardField.model
                             model.phone = self?.phoneField.text.digits ?? ""
                             model.summTransction = data.debitAmount?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
                             model.summInCurrency = data.creditAmount?.currencyFormatter(symbol: data.currencyPayee ?? "RUB") ?? ""
@@ -554,7 +554,7 @@ class PaymentByPhoneViewController: UIViewController {
                             
                         }
                         
-                        model.cardFrom = self?.cardField.cardModel
+                        model.cardFromRealm = self?.cardField.model
                         model.phone = self?.phoneField.text.digits ?? ""
 //                        model.summTransction = model.summTransction
                         
