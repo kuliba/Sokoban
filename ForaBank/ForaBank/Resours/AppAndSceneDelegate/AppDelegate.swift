@@ -19,8 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var isAuth: Bool? {
         didSet {
             guard isAuth != nil else { return }
-            /// Запуск таймера
-            timer.repeatTimer()
+            // Запуск таймера
+           timer.repeatTimer()
         }
     }
 
@@ -28,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
+     
         RealmConfiguration()
 
         /// FirebaseApp configure
@@ -58,7 +58,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let updatingTimeObject = GetSessionTimeout()
         updatingTimeObject.maxTimeOut = StaticDefaultTimeOut.staticDefaultTimeOut
         updatingTimeObject.mustCheckTimeOut = true
-
+        print("Debugging AppDelegate", updatingTimeObject.mustCheckTimeOut)
         do {
             let model = realm?.objects(GetSessionTimeout.self)
             realm?.beginWrite()

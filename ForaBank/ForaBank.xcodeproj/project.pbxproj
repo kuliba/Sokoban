@@ -186,6 +186,7 @@
 		0BEC8939267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC8938267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift */; };
 		0BEC893B2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC893A2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift */; };
 		0BEC893D2672591A00D8BD22 /* GetCardListDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC893C2672591A00D8BD22 /* GetCardListDecodebleModel.swift */; };
+		0BF0BF4A275E818C006AE967 /* ClearRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF0BF49275E818C006AE967 /* ClearRealm.swift */; };
 		0BF3484E268A455C005138A8 /* AllCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0BF3484D268A455C005138A8 /* AllCardView.xib */; };
 		0BF34850268A52CD005138A8 /* AllCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF3484F268A52CD005138A8 /* AllCardView.swift */; };
 		0BF34852268A5F54005138A8 /* GetVerificationCodeDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF34851268A5F54005138A8 /* GetVerificationCodeDecodableModel.swift */; };
@@ -688,6 +689,7 @@
 		0BEC8938267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallPushDeviceDecodebleModel.swift; sourceTree = "<group>"; };
 		0BEC893A2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistredPushDeviceTorUserDecodebleModel.swift; sourceTree = "<group>"; };
 		0BEC893C2672591A00D8BD22 /* GetCardListDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCardListDecodebleModel.swift; sourceTree = "<group>"; };
+		0BF0BF49275E818C006AE967 /* ClearRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClearRealm.swift; sourceTree = "<group>"; };
 		0BF3484D268A455C005138A8 /* AllCardView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AllCardView.xib; sourceTree = "<group>"; };
 		0BF3484F268A52CD005138A8 /* AllCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllCardView.swift; sourceTree = "<group>"; };
 		0BF34851268A5F54005138A8 /* GetVerificationCodeDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetVerificationCodeDecodableModel.swift; sourceTree = "<group>"; };
@@ -1484,6 +1486,7 @@
 		0BB8817126D6C95200015E27 /* REALMModels */ = {
 			isa = PBXGroup;
 			children = (
+				0BF0BF48275E8147006AE967 /* ClearRealm */,
 				0BB24AA926F0038D00DDA4F6 /* NoAuthZoneRequest */,
 				0BB24AAA26F003E300DDA4F6 /* AuthZoneRequest */,
 			);
@@ -1556,6 +1559,14 @@
 				0B8BE0962670D53600E96CAA /* DoRegistrationDecodebleModel.swift */,
 			);
 			path = NetworkingLoginModel;
+			sourceTree = "<group>";
+		};
+		0BF0BF48275E8147006AE967 /* ClearRealm */ = {
+			isa = PBXGroup;
+			children = (
+				0BF0BF49275E818C006AE967 /* ClearRealm.swift */,
+			);
+			path = ClearRealm;
 			sourceTree = "<group>";
 		};
 		681E073A273D3F3E00551FAD /* DetailOperation */ = {
@@ -3667,6 +3678,7 @@
 				0BB24AAF26F0141200DDA4F6 /* DownloadQueueProtocol.swift in Sources */,
 				68D06F3826CCDDCA00F9BE4C /* NavigationBarUIView.swift in Sources */,
 				0B37F982267A1814007728FC /* FastPaymentBanksListDecodableModel.swift in Sources */,
+				0BF0BF4A275E818C006AE967 /* ClearRealm.swift in Sources */,
 				ED75CDFD26E2AA5B0074F5D5 /* RequestMeToMeModel.swift in Sources */,
 				EDA0DCD72739BAB00013F47E /* UIControl.swift in Sources */,
 				EDB1654B26676F20007E6030 /* UIButton.swift in Sources */,

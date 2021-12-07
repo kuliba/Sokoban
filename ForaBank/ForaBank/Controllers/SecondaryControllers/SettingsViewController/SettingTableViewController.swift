@@ -166,11 +166,7 @@ class SettingTableViewController: UITableViewController {
         UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
         
         //TODO: - Написать очистку данных после выхода из приложения
-        
-        lazy var realm = try? Realm()
-        try? realm?.write {
-          realm?.deleteAll()
-        }
+        ClearRealm.clear()
         
         AppDelegate.shared.isAuth = false
     }

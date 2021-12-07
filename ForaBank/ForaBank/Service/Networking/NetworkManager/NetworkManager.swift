@@ -96,7 +96,6 @@ final class NetworkManager<T: NetworkModelProtocol> {
                         completion(nil, NetworkResponse.noData.rawValue)
                         return
                     }
-                    print(String(data: data ?? Data(), encoding: .utf8) ?? "null")
                     let updatingTimeObject = returnRealmModel()
                     
                     /// Сохраняем в REALM
@@ -144,7 +143,7 @@ func returnRealmModel() -> GetSessionTimeout {
     let lastActionTimestamp = timeObject.lastActionTimestamp
     let maxTimeOut = timeObject.maxTimeOut
     let mustCheckTimeOut = timeObject.mustCheckTimeOut
-    
+    print("Debugging NetworkManager", mustCheckTimeOut)
     // Сохраняем текущее время
     let updatingTimeObject = GetSessionTimeout()
     

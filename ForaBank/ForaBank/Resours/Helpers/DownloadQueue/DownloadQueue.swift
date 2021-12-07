@@ -37,9 +37,9 @@ final class DownloadQueue {
         let withIdCountries = countries?.first?.serial ?? ""
         let countriesParam = ["serial" : withIdCountries ]
         
-        let paymentSystem = realm?.objects(GetPaymentSystemList.self)
-        let withIdPaymentSystem = paymentSystem?.first?.serial ?? ""
-        let paymentSystemParam = ["serial" : withIdPaymentSystem ]
+//        let paymentSystem = realm?.objects(GetPaymentSystemList.self)
+//        let withIdPaymentSystem = paymentSystem?.first?.serial ?? ""
+//        let paymentSystemParam = ["serial" : withIdPaymentSystem ]
         
         let currency = realm?.objects(GetCurrency.self)
         let withIdCurrency = currency?.first?.serial ?? ""
@@ -56,8 +56,8 @@ final class DownloadQueue {
         downloadArray.append(CountriesListSaved())
         paramArray.append(countriesParam)
         
-        downloadArray.append(GetPaymentSystemSaved())
-        paramArray.append(paymentSystemParam)
+//        downloadArray.append(GetPaymentSystemSaved())
+//        paramArray.append(paymentSystemParam)
         
         downloadArray.append(GetCurrencySaved())
         paramArray.append(currencyParam)

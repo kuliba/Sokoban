@@ -10,3 +10,4 @@ import Foundation
 struct StaticDefaultTimeOut {
     static let staticDefaultTimeOut = 300
 }
+
