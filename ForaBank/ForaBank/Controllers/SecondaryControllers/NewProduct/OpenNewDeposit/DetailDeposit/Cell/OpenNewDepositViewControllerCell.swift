@@ -70,6 +70,17 @@ class OpenNewDepositViewControllerCell: UICollectionViewCell {
         depositDateFrom.textColor = UIColor(hexString: viewModel.generalСondition?.design?.textColor?.first ?? "")
         detailLabel.textColor = UIColor(hexString: viewModel.generalСondition?.design?.textColor?.first ?? "")
         moreDetailButton.tintColor = UIColor(hexString: viewModel.generalСondition?.design?.textColor?.first ?? "")
+        
+        let result = URLConstruct.setUrl(.https, .qa, "/\(viewModel.generalСondition?.imageLink ?? "")")
+        switch result {
+        case .success(let url):
+            depositImage.sd_setImage(with: url, completed: nil)
+        case .failure(let error):
+            debugPrint(error)
+            return
+        }
+        
+        
     }
     
 }
