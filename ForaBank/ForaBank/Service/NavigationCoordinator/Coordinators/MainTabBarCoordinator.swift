@@ -29,10 +29,21 @@ class MainTabBarCoordinator: Coordinator {
 
 extension MainTabBarCoordinator: MainViewControllerDelegate {
     
-    func goProductViewController(productIndex: Int) {
+    
+    func goPaymentsViewController() {
+        let settingCoordinator = PaymentsViewCoordinator(router: router)
+        addChild(settingCoordinator)
+        settingCoordinator.start()
+        router.present(settingCoordinator, animated: true)
+    }
+    
+    
+    func goProductViewController(productIndex: Int, product: UserAllCardsModel, products: [UserAllCardsModel]) {
         let productCoordinator = ProductCoordinator(router: router)
         productCoordinator.productViewController.indexItem = productIndex
-        addChild(productCoordinator)
+        productCoordinator.productViewController.product = product
+        productCoordinator.productViewController.products = products
+//        addChild(productCoordinator)
         productCoordinator.start()
         router.present(productCoordinator, animated: true)
     }
@@ -43,7 +54,10 @@ extension MainTabBarCoordinator: MainViewControllerDelegate {
         settingCoordinator.start()
         router.present(settingCoordinator, animated: true)
     }
+    
 }
+
+
 
 extension MainTabBarCoordinator: PaymentsViewControllerDelegate {
     

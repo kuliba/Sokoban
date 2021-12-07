@@ -1,5 +1,6 @@
 import Foundation
 import RealmSwift
+import UIKit
 
 class InternetTVLatestOperationsModel: Object {
 
@@ -9,4 +10,5 @@ class InternetTVLatestOperationsModel: Object {
 
     var additionalList  = List<AdditionalListModel>()
 }
+
 

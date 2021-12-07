@@ -13,6 +13,7 @@ class ForaSwitchView: UIView {
     let kContentXibName = "ForaSwitchView"
     var switchIsChanged: ((UISwitch) -> Void)?
     
+    @IBOutlet weak var phoneImage: UIImageView!
     @IBOutlet weak var bankByPhoneSwitch: UISwitch!
     @IBOutlet var contentView: UIView!
     
@@ -37,7 +38,7 @@ class ForaSwitchView: UIView {
     func commonInit(viewModel: ForaInputModel) {
         Bundle.main.loadNibNamed(kContentXibName, owner: self, options: nil)
         contentView.fixInView(self)
-        self.heightAnchor.constraint(equalToConstant: 48).isActive = true
+        self.heightAnchor.constraint(equalToConstant: 64).isActive = true
         bankByPhoneSwitch.set(width: 48, height: 24)
         bankByPhoneSwitch.increaseThumb()
         bankByPhoneSwitch.layer.cornerRadius = 31 / 2
@@ -54,6 +55,7 @@ class ForaSwitchView: UIView {
     func switchDidChange(_ sender: UISwitch) {
         bankByPhoneSwitch.layer.borderColor = sender.isOn ? #colorLiteral(red: 0.1333333333, green: 0.7568627451, blue: 0.5137254902, alpha: 1) : #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         bankByPhoneSwitch.thumbTintColor = sender.isOn ? #colorLiteral(red: 0.1333333333, green: 0.7568627451, blue: 0.5137254902, alpha: 1) : #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        phoneImage.image = sender.isOn ? UIImage(named: "smartphoneGreen") : UIImage(named: "smartphoneGrey")
         
     }
 }

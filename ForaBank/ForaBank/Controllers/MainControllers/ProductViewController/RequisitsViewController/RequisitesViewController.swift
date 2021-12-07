@@ -14,7 +14,7 @@ class RequisitesViewController: UIViewController, UITableViewDataSource, UITable
     var tableView = UITableView()
     var cardUnMask = false
     var mockItem: [PaymentsModel] = []
-    var product: GetProductListDatum? = nil {
+    var product: UserAllCardsModel? = nil {
         didSet{
             if product?.productType == "ACCOUNT"{
                 mockItem.removeLast(3)
@@ -22,6 +22,7 @@ class RequisitesViewController: UIViewController, UITableViewDataSource, UITable
         }
     }
     var model: GetProductDetailsDataClass?
+    var modelDeposit: DepositInfoData?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,7 +36,7 @@ class RequisitesViewController: UIViewController, UITableViewDataSource, UITable
         tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
 
         tableView.register(UINib(nibName: "RequisitsTableViewCell", bundle: nil), forCellReuseIdentifier: "RequisitsTableViewCell")
-        
+        mockItem = mockItem.filter({$0.description != nil})
         self.tableView.rowHeight = 56
 
         // Do any additional setup after loading the view.
@@ -49,22 +50,36 @@ class RequisitesViewController: UIViewController, UITableViewDataSource, UITable
 //        label.text = "Реквизиты счета карты"
 //        self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(customView: label)
 //        self.navigationItem.leftItemsSupplementBackButton = true
-        title = "Рекзвизиты счета карты"
+        if modelDeposit != nil{
+            title = "Информация по вкладу"
+
+        } else{
+            switch product?.productType {
+            case "DEPOSIT":
+                title = "Рекзвизиты счета вклада"
+            default:
+                title = "Рекзвизиты счета карты"
+
+            }
+            
+            let button: UIButton = UIButton(type: .custom)
+                  //set image for button
+            button.setImage(UIImage(named: "share"), for: .normal)
+                  //add function for button
+            button.addTarget(self, action: #selector(share), for: .touchUpInside)
+                //set frame
+            button.frame = CGRect(x: 0, y: 0, width: 53, height: 31)
+
+            let barButton = UIBarButtonItem(customView: button)
+                  //assign button to navigationbar
+            self.navigationItem.rightBarButtonItem = barButton
+
+        }
         navigationController?.view.backgroundColor =  .white
         let close = UIBarButtonItem(title: "", style: .plain, target: self, action: #selector(backButton))
         close.tintColor = .black
         
-        let button: UIButton = UIButton(type: .custom)
-              //set image for button
-        button.setImage(UIImage(named: "share"), for: .normal)
-              //add function for button
-        button.addTarget(self, action: #selector(share), for: .touchUpInside)
-            //set frame
-        button.frame = CGRect(x: 0, y: 0, width: 53, height: 31)
-
-        let barButton = UIBarButtonItem(customView: button)
-              //assign button to navigationbar
-        self.navigationItem.rightBarButtonItem = barButton
+  
         //        self.navigationItem.setRightBarButton(close, animated: true)
         
         //        self.navigationItem.rightBarButtonItem?.action = #selector(backButton)
@@ -78,11 +93,19 @@ class RequisitesViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return mockItem.count
+        switch product?.productType {
+        case "DEPOSIT":
+            return mockItem.count
+
+        default:
+            return mockItem.count
+
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "RequisitsTableViewCell", for: indexPath) as? RequisitsTableViewCell
+        
         cell?.nameCellLabel.text = mockItem[indexPath.row].name
         cell?.titleLabel.text = mockItem[indexPath.row].description
         cell?.product = self.product
@@ -109,20 +132,22 @@ class RequisitesViewController: UIViewController, UITableViewDataSource, UITable
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
        let footerView = UIView()
-        footerView.backgroundColor = .clear
-        footerView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height:
-                                    50)
-        let button = UIButton()
-        button.setTitle("Поделиться", for: .normal)
-        button.backgroundColor = UIColor(hexString: "EAEBEB")
-        button.setTitleColor(.black, for: .normal)
-        footerView.addSubview(button)
-        button.center(inView: footerView)
-        button.anchor(left: footerView.leftAnchor, right: footerView.rightAnchor, height: 48)
-        button.layer.cornerRadius = 8
-        button.addTarget(self,
-                         action: #selector(self.share),
-                         for: .touchUpInside)
+        if modelDeposit == nil{
+            footerView.backgroundColor = .clear
+            footerView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height:
+                                        50)
+            let button = UIButton()
+            button.setTitle("Поделиться", for: .normal)
+            button.backgroundColor = UIColor(hexString: "EAEBEB")
+            button.setTitleColor(.black, for: .normal)
+            footerView.addSubview(button)
+            button.center(inView: footerView)
+            button.anchor(left: footerView.leftAnchor, right: footerView.rightAnchor, height: 48)
+            button.layer.cornerRadius = 8
+            button.addTarget(self,
+                             action: #selector(self.share),
+                             for: .touchUpInside)
+        }
         return footerView
     }
     

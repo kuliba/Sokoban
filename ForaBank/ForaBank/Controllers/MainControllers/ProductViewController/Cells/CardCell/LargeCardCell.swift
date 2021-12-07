@@ -16,16 +16,17 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
     func configure<U>(with value: U) where U : Hashable {
         guard let card = card else { return }
         
-        let viewModel = CardViewModel(card: card)
+        let viewModel = CardViewModelFromRealm(card: card)
         balanceLabel.text = viewModel.balance
         maskCardLabel.text = viewModel.maskedcardNumber
         logoImageView.image = viewModel.logoImage
     }
     
+    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterial))
     
     static var reuseId: String = "LargeCardCell"
     //MARK: - Properties
-    var card: GetProductListDatum? {
+    var card: UserAllCardsModel? {
         didSet {
 //            backgroundUnlockColor = card?.background[0] ?? "ffffff"
             configure()
@@ -58,6 +59,17 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
         label.text = ""
         return label
     }()
+    
+    public let interestRate: UILabel = {
+        let label = PaddingLabel(withInsets: 1, 1, 5, 5)
+        label.layer.masksToBounds = true
+        label.layer.cornerRadius = 8
+        label.font = UIFont(name: "Inter-Regular", size: 12)
+//        label.font = UIFont.boldSystemFont(ofSize: 11 )
+        label.textAlignment = .left
+        label.text = ""
+        return label
+    }()
 
     public let cardNameLabel: UILabel = {
         let label = UILabel()
@@ -70,7 +82,7 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
     
     public let backgroundImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleToFill
         return imageView
     }()
     
@@ -100,14 +112,23 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
     func configure() {
         guard let card = card else { return }
         
-        let viewModel = CardViewModel(card: card)
+        let viewModel = CardViewModelFromRealm(card: card)
         backgroundImageView.image = card.XLDesign?.convertSVGStringToImage()
         balanceLabel.text = viewModel.balance
         balanceLabel.textColor = viewModel.colorText
         cardNameLabel.text = viewModel.cardName
         cardNameLabel.textColor = viewModel.colorText
         cardNameLabel.alpha = 0.5
-        maskCardLabel.text = viewModel.maskedcardNumber
+        if card.productType == "DEPOSIT"{
+            guard let number = viewModel.card.accountNumber else {
+                return
+            }
+            maskCardLabel.text = String(number.digits.suffix(4))
+        } else {
+            maskCardLabel.text = viewModel.maskedcardNumber
+
+        }
+        
         maskCardLabel.textColor = viewModel.colorText
         logoImageView.image = viewModel.logoImage
     }
@@ -132,6 +153,7 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
         addSubview(maskCardLabel)
         addSubview(cardNameLabel)
         addSubview(balanceLabel)
+        addSubview(interestRate)
 //        addSubview(customizeSlideToOpen)
 //
 //        customizeSlideToOpen.delegate = self
@@ -154,6 +176,49 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
         balanceLabel.font = UIFont.boldSystemFont(ofSize: 14)
         balanceLabel.anchor(left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor,
                             paddingLeft: 12, paddingBottom: 16, paddingRight: 30)
+        interestRate.anchor(bottom: self.bottomAnchor, right: self.rightAnchor,
+                            paddingLeft: 12, paddingBottom: 16, paddingRight: 10)
+        interestRate.backgroundColor = UIColor(hexString: "e1e1e2")
+        
+
+        if MyVariables.onBalanceLabel == true{
+          
+            blurView.frame = balanceLabel.bounds
+            balanceLabel.addSubview(blurView)
+            balanceLabel.sendSubviewToBack(blurView)
+            blurView.isHidden = false
+            blurView.alpha = 1
+        } else {
+            blurView.isHidden = true
+            blurView.alpha = 0
+//            balanceLabel.textColor = .white
+        }
+
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(handleMassage),
+                                               name: .deviceDidShakeNotification,
+                                               object: nil)
+        
     }
+    
+    @objc func handleMassage(notification: NSNotification) {
+        if MyVariables.onBalanceLabel == true{
+          
+            blurView.frame = balanceLabel.bounds
+            balanceLabel.addSubview(blurView)
+            balanceLabel.sendSubviewToBack(blurView)
+            blurView.isHidden = false
+            blurView.alpha = 1
+        } else {
+            blurView.removeFromSuperview()
+            blurView.isHidden = true
+            blurView.alpha = 0
+
+            
+//            balanceLabel.textColor = .white
+
+        }
+        
+        }
     
 }

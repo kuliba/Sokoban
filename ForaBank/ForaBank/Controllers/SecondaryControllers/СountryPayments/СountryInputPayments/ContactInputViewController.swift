@@ -117,6 +117,17 @@ class ContactInputViewController: UIViewController {
         setupActions()
         
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.view.backgroundColor = UIColor(red: 0.973, green: 0.973, blue: 0.973, alpha: 0.82)
+        navigationController?.navigationBar.backgroundColor = UIColor(red: 0.973, green: 0.973, blue: 0.973, alpha: 0.82)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationController?.view.backgroundColor = UIColor.white
+        navigationController?.navigationBar.backgroundColor = UIColor.white
+    }
 
     //MARK: - Actions
     @objc func titleDidTaped() {
@@ -354,7 +365,7 @@ class ContactInputViewController: UIViewController {
                     filterProduct.append(product)
                 }
             }
-            self.cardListView.cardList = filterProduct
+//            self.cardListView.cardList = filterProduct
             if filterProduct.count > 0 {
                 self.cardFromField.model = filterProduct.first
                 guard let cardNumber  = filterProduct.first?.number else { return }

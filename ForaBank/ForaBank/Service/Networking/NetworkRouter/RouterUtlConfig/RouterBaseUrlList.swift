@@ -123,6 +123,12 @@ enum RouterBaseUrlList: String {
     
     case getAccountStatement        = "/rest/getAccountStatement"
     
+    case getDepositInfo             = "/rest/getDepositInfo"
+
+
+    case getDepositStatement        = "/rest/getDepositStatement"
+
+    
     case getLatestMobilePayments    = "/rest/getLatestMobilePayments"
     
     case getMobileList             = "/dict/getMobileList"

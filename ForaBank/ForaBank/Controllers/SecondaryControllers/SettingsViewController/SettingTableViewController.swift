@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 protocol SettingTableViewControllerDelegate: AnyObject {
     func goLoginCardEntry()
@@ -163,7 +164,10 @@ class SettingTableViewController: UITableViewController {
     
     private func cleanAllData() {
         UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
+        
         //TODO: - Написать очистку данных после выхода из приложения
+        ClearRealm.clear()
+        
         AppDelegate.shared.isAuth = false
     }
     

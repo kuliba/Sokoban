@@ -146,7 +146,7 @@ func returnRealmModel() -> GetSessionTimeout {
     let lastActionTimestamp = timeObject.lastActionTimestamp
     let maxTimeOut = timeObject.maxTimeOut
     let mustCheckTimeOut = timeObject.mustCheckTimeOut
-    
+    print("Debugging NetworkManager", mustCheckTimeOut)
     // Сохраняем текущее время
     let updatingTimeObject = GetSessionTimeout()
     

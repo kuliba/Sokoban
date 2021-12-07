@@ -17,7 +17,6 @@ extension MainViewController {
             guard let section = Section(rawValue: indexPath.section) else {
                 fatalError("Unknown section kind")
             }
-            
             switch section {
                 case .products:
                     switch item.id {
@@ -29,8 +28,6 @@ extension MainViewController {
                             else {
                                 fatalError("Unable to dequeue \(AllCardCell.self)")
                             }
-                            
-                            
     //                                cell.widthAnchor.constraint(equalToConstant: 112).isActive = true
                             return cell
                         } else {
@@ -52,7 +49,8 @@ extension MainViewController {
                         else {
                             fatalError("Unable to dequeue \(ProductCell.self)")
                         }
-                                cell.card = item.productList
+                            
+                            cell.card = item.productListFromRealm
 //                        cell.statusPC = item.productList?.statusPC
 //                        cell.status  = item.productList?.status
 
@@ -135,14 +133,65 @@ extension MainViewController {
             case .offer:
                 sectionHeader.configure(text: section.description(),
                                         font: .boldSystemFont(ofSize: 1),
-                                        textColor: .black, expandingIsHidden: true, seeAllIsHidden: true)
+                                        textColor: .black, expandingIsHidden: true, seeAllIsHidden: true, onlyCards: true)
                 sectionHeader.isHidden = true
             case .products:
                 sectionHeader.configure(text: section.description(),
                                         font: .boldSystemFont(ofSize: 20),
-                                        textColor: .black, expandingIsHidden: false, seeAllIsHidden: false)
+                                        textColor: .black, expandingIsHidden: false, seeAllIsHidden: false, onlyCards: productsDeposits.isEmpty)
                 sectionHeader.seeAllButton.addTarget(self, action: #selector(passAllProducts), for: .touchUpInside)
                 sectionHeader.arrowButton.addTarget(self, action: #selector(expandingSection), for: .touchUpInside)
+                sectionHeader.changeCardButtonCollection.complition = { (select) in
+                    switch select {
+                    case 0:
+                        productList = productsCardsAndAccounts
+                        productsFromRealm.removeAll()
+                        for i in productList {
+                            self.productsFromRealm.append(PaymentsModel(productListFromRealm: i))
+//                            self.reloadData(with: nil)
+
+                        }
+                        var snapshot = self.dataSource?.snapshot()
+                        
+                         let items = snapshot?.itemIdentifiers(inSection: .products)
+                        
+                         snapshot?.deleteItems(items ?? [PaymentsModel]())
+                        snapshot?.appendItems(self.productsFromRealm, toSection: .products)
+//                                snapshot?.reloadSections([.products])
+                        
+                        
+                        self.dataSource?.apply(snapshot ?? NSDiffableDataSourceSnapshot<Section, PaymentsModel>())
+                        isFiltered = false
+                    case 1:
+                        
+//                       productList = productList.filter({$0.productType == "CARD" || $0.productType == "ACCOUNT"})
+                        productList = productsDeposits
+                        productsFromRealm.removeAll()
+                        for i in productList {
+                            self.productsFromRealm.append(PaymentsModel(productListFromRealm: i))
+//                            self.reloadData(with: nil)
+
+                        }
+                        
+                        var snapshot = self.dataSource?.snapshot()
+                        
+                         let items = snapshot?.itemIdentifiers(inSection: .products)
+                        
+                         snapshot?.deleteItems(items ?? [PaymentsModel]())
+                        snapshot?.appendItems(self.productsFromRealm, toSection: .products)
+//                                snapshot?.reloadSections([.products])
+                        
+                        
+                        self.dataSource?.apply(snapshot ?? NSDiffableDataSourceSnapshot<Section, PaymentsModel>())
+                        
+                        isFiltered = true
+                    default:
+                        isFiltered = false
+                        
+//                        productList = productList.filter({$0.productType == "DEPOSIT"})
+
+                    }
+                }
 //            case .transfers:
 //                sectionHeader.configure(text: section.description(),
 //                                        font: .boldSystemFont(ofSize: 18),
@@ -151,7 +200,7 @@ extension MainViewController {
             default:
                 sectionHeader.configure(text: section.description(),
                                         font: .boldSystemFont(ofSize: 20),
-                                        textColor: .black, expandingIsHidden: false, seeAllIsHidden: true)
+                                        textColor: .black, expandingIsHidden: false, seeAllIsHidden: true, onlyCards: true)
             }
             
 //            if sectionHeader.title.text == "Отделения и банкоматы" || sectionHeader.title.text == "Инвестиции и пенсии"  || sectionHeader.title.text == "Услуги и сервисы" {
@@ -169,6 +218,7 @@ extension MainViewController {
     @objc func passAllProducts(){
             let viewController = ProductsViewController()
             viewController.addCloseButton()
+//            viewController.products = self.productList
             let navVC = UINavigationController(rootViewController: viewController)
             navVC.modalPresentationStyle = .fullScreen
             

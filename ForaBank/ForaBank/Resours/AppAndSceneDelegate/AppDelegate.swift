@@ -20,9 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var isAuth: Bool? {
         didSet {
             guard isAuth != nil else { return }
-            /// Запуск таймера
-            print("Запуск таймера")
-            timer.repeatTimer()
+            // Запуск таймера
+           timer.repeatTimer()
         }
     }
 
@@ -30,10 +29,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
+     
         RealmConfiguration()
 
-        
         /// FirebaseApp configure
         var filePath = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist")!
         #if DEBUG
@@ -49,11 +47,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         requestNotificationAuthorization(application: application)
         customizeUiInApp()
         
+        self.initRealmTimerParameters()
         // Net Detect
         NetStatus.shared.startMonitoring()
-        
-        initRealmTimerParameters()
-
         return true
     }
     
@@ -61,21 +57,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let realm = try? Realm()
         // Сохраняем текущее время
         let updatingTimeObject = GetSessionTimeout()
-
         updatingTimeObject.maxTimeOut = StaticDefaultTimeOut.staticDefaultTimeOut
         updatingTimeObject.mustCheckTimeOut = true
-        
+        print("Debugging AppDelegate", updatingTimeObject.mustCheckTimeOut)
         do {
             let model = realm?.objects(GetSessionTimeout.self)
             realm?.beginWrite()
             realm?.delete(model!)
             realm?.add(updatingTimeObject)
             try realm?.commitWrite()
-            print("REALM File !!!",realm?.configuration.fileURL?.absoluteString ?? "")
+       
         } catch {
             print(error.localizedDescription)
         }
-        
+
     }
 
     
@@ -110,8 +105,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     fileprivate func RealmConfiguration() {
         // Версия БД (изменить на большую если меняем БД)
-        let schemaVersion: UInt64 = 4
-        
+        let schemaVersion: UInt64 = 5
+
         let config = Realm.Configuration(
             // Set the new schema version. This must be greater than the previously used
             // version (if you've never set a schema version before, the version is 0).
@@ -127,6 +122,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     }
                     if oldSchemaVersion < 4 {
                         migration.deleteData(forType: "Parameters")
+                    }
+                    if oldSchemaVersion < 5 {
+                        migration.deleteData(forType: "LogotypeData")
+                         migration.deleteData(forType: "UserAllCardsModel")
                     }
 
                     // Nothing to do!
@@ -424,4 +423,25 @@ extension Bundle {
             return ""
         }
     }
+}
+
+extension UIWindow {
+ open override func motionEnded(_ motion: UIEvent.EventSubtype, with event:   UIEvent?) {
+     if motion == .motionShake {
+        print("Device shaken")
+//        NotificationCenter.default.post(name: .deviceDidShakeNotification, object: event)
+//        UserDefaults.standard.set(MyVariables.onBalanceLabel.toggle(), forKey: "blurBalanceLabel")
+        MyVariables.onBalanceLabel = false
+        
+        NotificationCenter.default.post(name: .deviceDidShakeNotification, object: nil)
+    }
+  }
+}
+
+extension NSNotification.Name {
+    public static let deviceDidShakeNotification = NSNotification.Name("MyDeviceDidShakeNotification")
+}
+
+struct MyVariables {
+    static var onBalanceLabel = false
 }

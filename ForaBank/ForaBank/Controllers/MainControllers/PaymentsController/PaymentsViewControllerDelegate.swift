@@ -43,10 +43,11 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 }
             }
         case .transfers:
-            if indexPath.row == 0 {
-                delegate?.goToPaymentByPhone()
+//            if indexPath.row == 0 {
+//                delegate?.goToPaymentByPhone()
                 
-            } else if indexPath.row == 1 {
+//             } else
+                if indexPath.row == 1 {
                 let model = ConfirmViewControllerModel(type: .card2card)
                 let popView = CustomPopUpWithRateView()
                 popView.viewModel = model
@@ -54,8 +55,8 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 popView.modalPresentationStyle = .custom
                 popView.transitioningDelegate = self
                 self.present(popView, animated: true, completion: nil)
-            } else if indexPath.row == 2 {
-                delegate?.goToCountryPayments()
+//            } else if indexPath.row == 2 {
+//                delegate?.goToCountryPayments()
                 
             } else if indexPath.row == 3 {
                 let popView = MemeDetailVC()
@@ -89,22 +90,24 @@ extension PaymentsViewController: UICollectionViewDelegate {
 //                    present(navVC, animated: true)
 
                 switch (indexPath.row) {
-                case 1:
-                    // Мобильная связь
-                    delegate?.toMobilePay(viewController)
-                    break
+//                case 1:
+//                    // Мобильная связь
+//                    delegate?.toMobilePay(viewController)
+//                    break
                 case 2:
                     // ЖКХ
                     // self.delegate?.goToGKHController()
-                    let gkh = GKHMainViewController.storyboardInstance()!
-                    let nc = UINavigationController(rootViewController: gkh)
+                    InternetTVMainViewModel.filter = GlobalModule.UTILITIES_CODE
+                    let controller = InternetTVMainController.storyboardInstance()!
+                    let nc = UINavigationController(rootViewController: controller)
                     nc.modalPresentationStyle = .fullScreen
                     present(nc, animated: true)
                     break
                 case 3:
                     // Интернет ТВ
-                    let gkh = InternetTVMainController.storyboardInstance()!
-                    let nc = UINavigationController(rootViewController: gkh)
+                    InternetTVMainViewModel.filter = GlobalModule.INTERNET_TV_CODE
+                    let controller = InternetTVMainController.storyboardInstance()!
+                    let nc = UINavigationController(rootViewController: controller)
                     nc.modalPresentationStyle = .fullScreen
                     present(nc, animated: true)
                     break

@@ -362,6 +362,7 @@ public class AppLocker: UIViewController {
     private func cleanAllData() {
         UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
         //TODO: - Написать очистку данных после выхода из приложения
+        ClearRealm.clear()
         AppDelegate.shared.isAuth = false
     }
     
@@ -390,13 +391,10 @@ public class AppLocker: UIViewController {
                 mySceneDelegate?.appCoordinator.start()
             }
         }
-
     }
-    
 }
 
 extension AppLocker {
-    
     
     //MARK: - API
     func registerMyPin(with code: String, completion: @escaping (_ error: String?) ->() ) {
@@ -446,8 +444,7 @@ extension AppLocker {
                     "loginValue": encript(string: code.sha256() ),
                     "type": encript(string: type.rawValue)
                 ] as [String : AnyObject]
-                //        print(data)
-                print("DEBUG: Start login with body: ", data)
+                
                 NetworkManager<LoginDoCodableModel>.addRequest(.login, [:], data) { model, error in
                     if error != nil {
                         guard let error = error else { return }
@@ -460,7 +457,6 @@ extension AppLocker {
                                 "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
                                 "pushFcmToken": Messaging.messaging().fcmToken as String?
                             ] as [String : AnyObject]
-                            print("DEBUG: Start registerPushDeviceForUser with body: ", bodyRegisterPush)
                             NetworkManager<RegisterPushDeviceDecodebleModel>.addRequest(.registerPushDeviceForUser, [:], bodyRegisterPush) { modelPush, error in
                                 if error != nil {
                                     guard let error = error else { return }
@@ -468,7 +464,6 @@ extension AppLocker {
                                 }
                                 guard let mPush = modelPush else { return }
                                 if mPush.statusCode == 0 {
-                                    print("DEBUG: You are LOGGIN!!!")
                                     DispatchQueue.main.async {
                                         AppDelegate.shared.isAuth = true
                                         
@@ -476,18 +471,18 @@ extension AppLocker {
                                         let realm = try? Realm()
                                         let timeOutObjects = self.returnRealmModel()
                                         
-                                        /// Сохраняем в REALM
+                                        // Сохраняем в REALM
                                         do {
                                             let b = realm?.objects(GetSessionTimeout.self)
                                             realm?.beginWrite()
                                             realm?.delete(b!)
                                             realm?.add(timeOutObjects)
                                             try realm?.commitWrite()
-                                            
+                                            print(realm?.configuration.fileURL?.absoluteString ?? "")
                                         } catch {
                                             print(error.localizedDescription)
                                         }
-                                        //
+                                        
                                         
                                     }
                                     self.dismissActivity()
@@ -525,11 +520,6 @@ extension AppLocker {
         
         let updatingTimeObject = GetSessionTimeout()
         
-        let realm = try? Realm()
-        guard let timeObject = realm?.objects(GetSessionTimeout.self).first else {return GetSessionTimeout()}
-        let lastActionTimestamp = timeObject.lastActionTimestamp
-        let maxTimeOut = timeObject.maxTimeOut
-        let mustCheckTimeOut = timeObject.mustCheckTimeOut
         let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
         if userIsRegister == true {
             // Сохраняем текущее время
@@ -541,9 +531,7 @@ extension AppLocker {
             updatingTimeObject.mustCheckTimeOut = true
             
         }
-        
         return updatingTimeObject
-        
     }
     
     func biometricType() -> BiometricType {
@@ -560,7 +548,6 @@ extension AppLocker {
             return .pin
         }
     }
-    
     
     enum BiometricType: String {
         case pin

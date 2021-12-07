@@ -16,7 +16,7 @@ extension UIApplication {
         }
 
         if let tabBarViewController = baseViewController as? UITabBarController {
-
+         
             let moreNavigationController = tabBarViewController.moreNavigationController
 
             if let topViewController = moreNavigationController.topViewController, topViewController.view.window != nil {

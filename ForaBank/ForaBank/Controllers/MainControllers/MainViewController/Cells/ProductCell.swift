@@ -17,7 +17,7 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
     func configure<U>(with value: U) where U : Hashable {
         guard let card = card else { return }
         
-        let viewModel = CardViewModel(card: card)
+        let viewModel = CardViewModelFromRealm(card: card)
         backgroundImageView.image =  card.largeDesign?.convertSVGStringToImage()
         balanceLabel.text = viewModel.balance
         balanceLabel.textColor = viewModel.colorText
@@ -33,9 +33,12 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
     
     static var reuseId: String = "ProductCell"
     //MARK: - Properties
-    var card: GetProductListDatum? {
+    var card: UserAllCardsModel? {
         didSet { configure() }
     }
+    
+    
+    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterial))
     
     private let logoImageView: UIImageView = {
         let imageView = UIImageView()
@@ -100,7 +103,7 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
     func configure() {
         guard let card = card else { return }
         
-        let viewModel = CardViewModel(card: card)
+        let viewModel = CardViewModelFromRealm(card: card)
         
         backgroundImageView.image =  card.largeDesign?.convertSVGStringToImage()
 
@@ -133,6 +136,17 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
             balanceLabel.alpha = 1
             logoImageView.alpha = 1
             backgroundImageView.alpha = 1
+        }
+        
+        if card.productType == "DEPOSIT"{
+            balanceLabel.textColor = .black
+            cardNameLabel.textColor = UIColor(hexString: "#999999")
+            maskCardLabel.textColor = .black
+            guard let number = card.accountNumber?.suffix(4) else {
+                return
+            }
+            maskCardLabel.text = number.description
+            
         }
     }
     
@@ -178,7 +192,56 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
 
         balanceLabel.anchor(left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor,
                             paddingLeft: 12, paddingBottom: 11, paddingRight: 30)
+//        if NotificationCenter.default.post(name: .deviceDidShakeNotification, object: event){
+//
+//        }
+//        if NotificationCenter.default.addObserver(self,, name: .deviceDidShakeNotification, object: nil){
+//
+//        }
+    
+
+        if MyVariables.onBalanceLabel == true{
+          
+            blurView.frame = balanceLabel.bounds
+            balanceLabel.addSubview(blurView)
+            balanceLabel.sendSubviewToBack(blurView)
+            blurView.isHidden = false
+            blurView.alpha = 1
+        } else {
+            blurView.isHidden = true
+            blurView.alpha = 0
+//            balanceLabel.textColor = .white
+
+        }
+
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(handleMassage),
+                                               name: .deviceDidShakeNotification,
+                                               object: nil)
+
+
 
     }
-    
+            @objc func handleMassage(notification: NSNotification) {
+                
+                
+               
+
+                if MyVariables.onBalanceLabel == true{
+                  
+                    blurView.frame = balanceLabel.bounds
+                    balanceLabel.addSubview(blurView)
+                    balanceLabel.sendSubviewToBack(blurView)
+                    blurView.isHidden = false
+                    blurView.alpha = 1
+                } else {
+                    blurView.removeFromSuperview()
+                    blurView.isHidden = true
+                    blurView.alpha = 0
+
+                    
+        //            balanceLabel.textColor = .white
+
+                }
+                }
 }

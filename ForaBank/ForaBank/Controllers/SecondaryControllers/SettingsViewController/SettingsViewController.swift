@@ -126,9 +126,6 @@ class SettingsViewController: UIViewController {
 //            print("Logout :", "Вышли из приложения")
             DispatchQueue.main.async {
                 self.cleanAllData()
-                
-                
-                
                 let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
                 navVC.modalPresentationStyle = .fullScreen
                 self.present(navVC, animated: true, completion: nil)
