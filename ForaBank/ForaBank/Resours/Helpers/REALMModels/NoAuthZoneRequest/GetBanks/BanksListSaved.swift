@@ -10,24 +10,24 @@ import RealmSwift
 
 struct BanksListSaved: DownloadQueueProtocol {
     
-    func add(_ param: [String : String], _ body: [String: AnyObject], completion: @escaping () -> ()) {
+    func add(_ param: [String : String], _ body: [String: AnyObject], completion: @escaping (DownloadQueue.Result) -> Void) {
         
         NetworkManager<GetFullBankInfoListDecodableModel>.addRequest(.getFullBankInfoList, param, body) { model, error in
             
             if let error = error {
                 print("DEBUG: error", error)
-                completion()
+                completion(.failed(nil))
                 return
             }
             
-            guard let model = model, let bankListData = model.data else {
-                completion()
+            guard let model = model, let bankListData = model.data, let serial = model.data?.serial else {
+                completion(.failed(nil))
                 return
             }
             
             // check if we actually have data from serever
             guard let bankFullInfoList = bankListData.bankFullInfoList, bankFullInfoList.count > 0 else {
-                completion()
+                completion(.passed)
                 return
             }
 
@@ -50,12 +50,11 @@ struct BanksListSaved: DownloadQueueProtocol {
                     realm.add(updatedBankList)
                 }
                 
-                completion()
+                completion(.updated(serial))
                 
             } catch {
-                
-                print(error.localizedDescription)
-                completion()
+
+                completion(.failed(error))
             }
         }
     }

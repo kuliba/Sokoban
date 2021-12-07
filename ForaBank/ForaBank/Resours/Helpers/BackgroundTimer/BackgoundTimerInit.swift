@@ -62,7 +62,7 @@ class TimerTimeInit {
                     
                     if maxSessionRenewTimeOutNotPassed {
                         let request = GetSessionTimeoutSaved()
-                        request.add([:], [:]) {}
+                        request.add([:], [:]) { _ in }
                     }
                 }
             }

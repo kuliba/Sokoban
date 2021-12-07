@@ -10,21 +10,22 @@ import RealmSwift
 
 struct GetSessionTimeoutSaved: DownloadQueueProtocol {
     
-    func add(_ param: [String : String], _ body: [String : AnyObject], completion: @escaping () -> ()) {
+    func add(_ param: [String : String], _ body: [String: AnyObject], completion: @escaping (DownloadQueue.Result) -> Void) {
         
         NetworkManager<GetSessionTimeoutDecodableModel>.addRequest(.getSessionTimeout, param, body) { model, error in
             
             if error != nil {
                 print("DEBUG: error", error!)
-                completion()
+                completion(.failed(nil))
             } else {
                 guard let statusCode = model?.statusCode else {
-                    completion()
+                    completion(.failed(nil))
                     return
                     
                 }
                 if statusCode == 0 {
-
+                    
+                    //FIXME: in fact, we never use the data received from the server
                     let sessionTimeOutParameters = returnRealmModel()
                     sessionTimeOutParameters.maxTimeOut = StaticDefaultTimeOut.staticDefaultTimeOut
                     sessionTimeOutParameters.mustCheckTimeOut = true
@@ -37,10 +38,9 @@ struct GetSessionTimeoutSaved: DownloadQueueProtocol {
                         realm?.delete(b!)
                         realm?.add(sessionTimeOutParameters)
                         try realm?.commitWrite()
-                        completion()
+                        completion(.passed)
                     } catch {
-                        completion()
-                        print(error.localizedDescription)
+                        completion(.failed(error))
                     }
                 }
             }

@@ -11,24 +11,24 @@ import RealmSwift
 // MARK: - Save REALM
 struct AddOperatorsList: DownloadQueueProtocol {
 
-    func add(_ param: [String : String], _ body: [String: AnyObject], completion: @escaping () -> ()) {
+    func add(_ param: [String : String], _ body: [String: AnyObject], completion: @escaping (DownloadQueue.Result) -> Void) {
         
-        NetworkManager<GetAnywayOperatorsListDecodableModel>.addRequest(.getAnywayOperatorsList, [:], [:]) { model, error in
+        NetworkManager<GetAnywayOperatorsListDecodableModel>.addRequest(.getAnywayOperatorsList, param, body) { model, error in
             
             if let error = error {
                 print("DEBUG: error", error)
-                completion()
+                completion(.failed(nil))
                 return
             }
             
-            guard let model = model, let operatorsData = model.data else {
-                completion()
+            guard let model = model, let operatorsData = model.data, let serial = model.data?.serial else {
+                completion(.failed(nil))
                 return
             }
             
             // check if we actually have data from serever
             guard let operatorGroupList = operatorsData.operatorGroupList, operatorGroupList.count > 0 else {
-                completion()
+                completion(.passed)
                 return
             }
             
@@ -53,12 +53,11 @@ struct AddOperatorsList: DownloadQueueProtocol {
                     realm.add(updatedOperators)
                 }
                 
-                completion()
+                completion(.updated(serial))
                 
             } catch {
-                
-                print(error.localizedDescription)
-                completion()
+
+                completion(.failed(error))
             }
         }
     }
