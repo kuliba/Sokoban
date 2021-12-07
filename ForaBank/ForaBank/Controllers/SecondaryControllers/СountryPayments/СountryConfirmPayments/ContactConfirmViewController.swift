@@ -436,7 +436,7 @@ class ContactConfurmViewController: UIViewController {
             bankField.text = model.bank?.memberNameRus ?? "" //"АйДиБанк"
             bankField.imageView.image = model.bank?.svgImage?.convertSVGStringToImage()
 
-            cardFromField.cardModel = model.cardFrom
+            cardFromField.model = model.cardFromRealm
             cardFromField.isHidden = false
             cardFromField.choseButton.isHidden = true
             cardFromField.balanceLabel.isHidden = true

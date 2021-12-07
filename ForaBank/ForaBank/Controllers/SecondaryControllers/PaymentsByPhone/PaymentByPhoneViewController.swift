@@ -15,6 +15,7 @@ class PaymentByPhoneViewController: UIViewController {
     var sbp: Bool?
     var confirm: Bool?
     var selectedCardNumber = 0
+    var productType = ""
     var cardIsSelect = false
 
     var selectedBank: BanksList? {
@@ -184,8 +185,10 @@ class PaymentByPhoneViewController: UIViewController {
 //            self.cardListView.cardList = filterProduct
             if filterProduct.count > 0 {
                 self.cardField.model = filterProduct.first
-                guard let cardNumber  = filterProduct.first?.number else { return }
-                self.selectedCardNumber = Int(cardNumber) ?? 0
+                guard let cardId  = filterProduct.first?.cardID else { return }
+                guard let productType  = filterProduct.first?.productType else { return }
+                self.selectedCardNumber = cardId
+                self.productType = productType
                 self.cardIsSelect = true
             }
         }
@@ -239,6 +242,7 @@ class PaymentByPhoneViewController: UIViewController {
                     if card.id == cardId {
                         self.cardField.model = card
                         self.selectedCardNumber = card.cardID
+                        self.productType = card.productType ?? ""
                         if self.bankListView.isHidden == false {
                             self.hideView(self.bankListView, needHide: true)
                         }
@@ -396,7 +400,7 @@ class PaymentByPhoneViewController: UIViewController {
         var accountId: Int?
         var cardId: Int?
         
-        if String(selectedCardNumber).count > 16{
+        if productType == "ACCOUNT"{
             accountId = selectedCardNumber
 //            cardNumber = ""
         } else {
