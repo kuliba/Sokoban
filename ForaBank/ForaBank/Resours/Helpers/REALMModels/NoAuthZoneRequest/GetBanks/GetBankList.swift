@@ -54,3 +54,60 @@ class BankAccauntList: Object {
     @objc dynamic var CBRBIC : String?
     
 }
+
+extension GetBankList {
+    
+    convenience init(with data: GetFullBankInfoListDecodableModelDataClass) {
+        
+        self.init()
+        serial = data.serial
+        
+        if let bankFullInfoListData = data.bankFullInfoList {
+            
+            banksList.append(objectsIn: bankFullInfoListData.map{ BankList(with: $0) })
+        }
+    }
+}
+
+extension BankList {
+    
+    convenience init(with data: BankFullInfoList) {
+        
+        self.init()
+        memberId = data.memberID
+        name = data.name
+        fullName = data.fullName
+        engName = data.engName
+        rusName = data.rusName
+        svgImage = data.svgImage
+        bic = data.bic
+        fiasId = data.fiasID
+        address = data.address
+        latitude = data.latitude
+        
+        longitude = data.longitude
+        inn = data.inn
+        kpp = data.kpp
+        registrationNumber = data.registrationNumber
+        bankType = data.bankType
+        bankTypeCode = data.bankTypeCode
+        bankServiceType = data.bankServiceType
+        bankServiceTypeCode = data.bankServiceTypeCode
+        
+    }
+}
+
+extension BankAccauntList {
+    
+    convenience init(with data: AccountList) {
+        
+        self.init()
+        account = data.account
+        regulationAccountType = data.regulationAccountType
+        ck = data.ck
+        dateIn = data.dateIn
+        dateOut = data.dateOut
+        status = data.status
+        CBRBIC = data.cbrbic
+    }
+}

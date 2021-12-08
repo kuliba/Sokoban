@@ -10,12 +10,12 @@ import Firebase
 import FirebaseMessaging
 import RealmSwift
 
-
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var delegate: Encription?
     let timer = BackgroundTimer()
+    private let downloadCash = DownloadQueue()
     
     var isAuth: Bool? {
         didSet {
@@ -48,6 +48,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         customizeUiInApp()
         
         self.initRealmTimerParameters()
+        // Зарузка кэша
+        downloadCash.download()
         // Net Detect
         NetStatus.shared.startMonitoring()
         return true

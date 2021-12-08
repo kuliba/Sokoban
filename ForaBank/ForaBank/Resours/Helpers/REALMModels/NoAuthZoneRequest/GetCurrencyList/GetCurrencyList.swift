@@ -27,3 +27,34 @@ class GetCurrencyList: Object {
     @objc dynamic var cssCode : String?
     
 }
+
+//MARK: - convenience inits
+
+extension GetCurrency {
+    
+    convenience init(with data: GetCurrencyListDataClass) {
+        
+        self.init()
+        serial = data.serial
+        
+        if let currencyListData = data.currencyList {
+            
+            currencyList.append(objectsIn: currencyListData.map{GetCurrencyList(with: $0) })
+        }
+    }
+}
+
+extension GetCurrencyList {
+    
+    convenience init(with data: CurrencyList) {
+        
+        self.init()
+        
+        id = data.id
+        code = data.code
+        cssCode = data.cssCode
+        name = data.name
+        unicode = data.unicode
+        htmlCode = data.htmlCode
+    }
+}
