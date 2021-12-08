@@ -11,29 +11,14 @@ class DownloadQueueSerialsStorage {
     
     let defaults = UserDefaults.standard
     
-    func serial(for kind: Kind) -> String {
+    func serial(for kind: DownloadQueue.Kind) -> String {
         
         return defaults.string(forKey: kind.key) ?? ""
     }
     
-    func store(serial: String, of kind: Kind) {
+    func store(serial: String, of kind: DownloadQueue.Kind) {
         
         defaults.set(serial, forKey: kind.key)
         defaults.synchronize()
-    }
-}
-
-extension DownloadQueueSerialsStorage {
-    
-    enum Kind: String {
-        
-        case sessionTimeout
-        case countryList
-        case paymentSystemList
-        case currencyList
-        case bankList
-        case operatorList
-        
-        var key: String { "DownloadQueueStorage_\(rawValue)_Key"}
     }
 }

@@ -96,9 +96,21 @@ final class DownloadQueue {
      
 extension DownloadQueue {
     
+    enum Kind: String {
+        
+        case sessionTimeout
+        case countryList
+        case paymentSystemList
+        case currencyList
+        case bankList
+        case operatorList
+        
+        var key: String { "DownloadQueueStorage_\(rawValue)_Key"}
+    }
+    
     struct Task {
 
-        let kind: DownloadQueueSerialsStorage.Kind
+        let kind: Kind
         let handler: DownloadQueueProtocol
         let params: [String: String]
     }
