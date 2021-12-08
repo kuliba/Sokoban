@@ -15,7 +15,11 @@ class NewProductCell: UICollectionViewCell, SelfConfiguringCell {
         transferImage.image = UIImage(named: payment.iconName ?? "")
         transferLabel.text = payment.name
         descriptionLabel.text = payment.description
-        if payment.id == 98 || payment.id == 97 || payment.id == 96 || payment.id == 95{
+        if
+//#if DEBUG
+//            payment.id == 98 ||
+//#endif
+                payment.id == 97 || payment.id == 96 || payment.id == 95{
             self.backgroundView?.alpha = 0.4
             transferImage.alpha = 0.4
             transferLabel.alpha = 0.4

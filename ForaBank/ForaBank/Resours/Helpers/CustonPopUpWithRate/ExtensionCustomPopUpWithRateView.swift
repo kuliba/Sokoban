@@ -81,17 +81,20 @@ extension CustomPopUpWithRateView {
     }
     
     func updateObjectWithNotification() {
-        let object = realm?.objects(UserAllCardsModel.self)
-        token = object?.observe { ( changes: RealmCollectionChange) in
+        let cards = realm?.objects(UserAllCardsModel.self)
+        token = cards?.observe { [weak self] changes in
+            
+            guard let self = self else {
+                return
+            }
+            
             switch changes {
             case .initial:
                 print("REALM Initial")
-//                let cards = self.updateCardsList(with: object)
-//                self.allCardsFromRealm = cards
+                self.allCardsFromRealm = self.updateCardsList(with: cards)
             case .update:
                 print("REALM Update")
-                let cards = self.updateCardsList(with: object)
-                self.allCardsFromRealm = cards
+                self.allCardsFromRealm = self.updateCardsList(with: cards)
             case .error(let error):
                 print("DEBUG token fatalError:", error)
                 fatalError("\(error)")

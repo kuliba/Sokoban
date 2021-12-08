@@ -50,9 +50,7 @@ extension ProductViewController {
     }
     
     func accountHistory(){
-        tableView?.isSkeletonable = true
-        tableView?.showAnimatedGradientSkeleton()
-        tableView?.skeletonCornerRadius = 10
+        startSkeleton()
         let body = ["id": product?.id
                      ] as [String : AnyObject]
         
@@ -111,12 +109,10 @@ extension ProductViewController {
                     self.tableView?.hideSkeleton()
                     self.statusBarView.stopSkeletonAnimation()
                     self.statusBarView.hideSkeleton()
-                    self.filterButton.hideSkeleton()
                     self.statusBarView.layer.cornerRadius = 8
                     self.tableViewLabel.stopSkeletonAnimation()
                     self.tableViewLabel.isSkeletonable = false
                     self.tableViewLabel.hideSkeleton()
-                    self.view.hideSkeleton()
                     
                     self.scrollView.contentSize.height = UIScreen.main.bounds.height + CGFloat((self.historyArrayAccount.count * 80))
                     for i in lastPaymentsList{
@@ -142,9 +138,7 @@ extension ProductViewController {
     
     
     func cardHistory(){
-        tableView?.isSkeletonable = true
-        tableView?.showAnimatedGradientSkeleton()
-        tableView?.skeletonCornerRadius = 10
+//        startSkeleton()
         let body = ["cardNumber": product?.number
                      ] as [String : AnyObject]
         
@@ -207,14 +201,14 @@ extension ProductViewController {
                         }
                     }
                     self.tableView?.isSkeletonable = false
+                    self.statusBarView.layer.cornerRadius = 8
 
                     self.tableView?.stopSkeletonAnimation()
                     self.tableView?.hideSkeleton()
                     self.tableViewLabel.stopSkeletonAnimation()
                     self.tableViewLabel.isSkeletonable = false
                     self.tableViewLabel.hideSkeleton()
-                    self.view.hideSkeleton()
-                    self.view.hideSkeleton()
+                    
                     self.scrollView.contentSize.height = UIScreen.main.bounds.height + CGFloat((self.historyArray.count * 80))
 
                 }
@@ -239,8 +233,7 @@ extension ProductViewController {
     }
     
     func loadDeposit(){
-        self.tableView?.isSkeletonable = true
-        self.tableView?.showAnimatedGradientSkeleton()
+        startSkeleton()
         let body = ["id": product?.id
                      ] as [String : AnyObject]
         
@@ -299,12 +292,11 @@ extension ProductViewController {
                     self.tableView?.hideSkeleton()
                     self.statusBarView.stopSkeletonAnimation()
                     self.statusBarView.hideSkeleton()
-                    self.filterButton.hideSkeleton()
                     self.statusBarView.layer.cornerRadius = 8
                     self.tableViewLabel.stopSkeletonAnimation()
                     self.tableViewLabel.isSkeletonable = false
                     self.tableViewLabel.hideSkeleton()
-                    self.view.hideSkeleton()
+                    
 
                     self.scrollView.contentSize.height = UIScreen.main.bounds.height + CGFloat((self.historyArrayDeposit.count * 80))
 

@@ -67,6 +67,7 @@ extension NetworkHelper {
         case getExchangeCurrencyRates
         
         case getMobileSystem
+        
     }
     
 }

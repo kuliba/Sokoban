@@ -362,10 +362,7 @@ public class AppLocker: UIViewController {
     private func cleanAllData() {
         UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
         //TODO: - Написать очистку данных после выхода из приложения
-        lazy var realm = try? Realm()
-        try? realm?.write {
-          realm?.deleteAll()
-        }
+        ClearRealm.clear()
         AppDelegate.shared.isAuth = false
     }
     
@@ -394,13 +391,10 @@ public class AppLocker: UIViewController {
                 mySceneDelegate?.appCoordinator.start()
             }
         }
-
     }
-    
 }
 
 extension AppLocker {
-    
     
     //MARK: - API
     func registerMyPin(with code: String, completion: @escaping (_ error: String?) ->() ) {
@@ -470,7 +464,6 @@ extension AppLocker {
                                 }
                                 guard let mPush = modelPush else { return }
                                 if mPush.statusCode == 0 {
-                                    print("DEBUG: You are LOGGIN!!!")
                                     DispatchQueue.main.async {
                                         AppDelegate.shared.isAuth = true
                                         
@@ -478,18 +471,18 @@ extension AppLocker {
                                         let realm = try? Realm()
                                         let timeOutObjects = self.returnRealmModel()
                                         
-                                        /// Сохраняем в REALM
+                                        // Сохраняем в REALM
                                         do {
                                             let b = realm?.objects(GetSessionTimeout.self)
                                             realm?.beginWrite()
                                             realm?.delete(b!)
                                             realm?.add(timeOutObjects)
                                             try realm?.commitWrite()
-                                            
+                                            print(realm?.configuration.fileURL?.absoluteString ?? "")
                                         } catch {
                                             print(error.localizedDescription)
                                         }
-                                        //
+                                        
                                         
                                     }
                                     self.dismissActivity()
@@ -538,9 +531,7 @@ extension AppLocker {
             updatingTimeObject.mustCheckTimeOut = true
             
         }
-        
         return updatingTimeObject
-        
     }
     
     func biometricType() -> BiometricType {
@@ -557,7 +548,6 @@ extension AppLocker {
             return .pin
         }
     }
-    
     
     enum BiometricType: String {
         case pin

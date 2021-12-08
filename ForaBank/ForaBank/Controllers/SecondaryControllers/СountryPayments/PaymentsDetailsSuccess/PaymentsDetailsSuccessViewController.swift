@@ -13,7 +13,6 @@ class PaymentsDetailsSuccessViewController: UIViewController {
     var printFormType: String?
     let confurmView = PaymentsDetailsView()
     let button = UIButton(title: "На главную")
-    let opView = ""
     var confurmVCModel: ConfirmViewControllerModel? {
         didSet {
             guard let model = confurmVCModel else { return }
@@ -21,11 +20,9 @@ class PaymentsDetailsSuccessViewController: UIViewController {
         }
     }
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        
         
         button.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
         confurmView.detailTapped = { () in

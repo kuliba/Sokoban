@@ -83,60 +83,62 @@ final class NetworkManager<T: NetworkModelProtocol> {
         let a = String(data: request.httpBody ?? Data(), encoding: .utf8)
         
         let task = session.dataTask(with: request) { data, response, error in
-            if error != nil {
-                completion(nil, "Пожалуйста, проверьте ваше сетевое соединение.")
-            }
-            //print("test5555 \(response.request.content.body)")
-            
-            if let response = response as? HTTPURLResponse {
-                let result = handleNetworkResponse(response)
-                switch result {
-                case .success:
-                    guard data != nil else {
-                        completion(nil, NetworkResponse.noData.rawValue)
-                        return
-                    }
-                    print(String(data: data ?? Data(), encoding: .utf8) ?? "null")
-                    let updatingTimeObject = returnRealmModel()
-                    
-                    /// Сохраняем в REALM
-                    let r = try? Realm()
-                    do {
-                        let b = r?.objects(GetSessionTimeout.self)
-                        r?.beginWrite()
-                        r?.delete(b!)
-                        r?.add(updatingTimeObject)
-                        try r?.commitWrite()
-                    } catch {
-                        print(error.localizedDescription)
-                    }
-                    do {
-                        let returnValue = try T (data: data!)
+            runOnMainQueue {
+                if error != nil {
+                    completion(nil, "Пожалуйста, проверьте ваше сетевое соединение.")
+                }
+                //print("test5555 \(response.request.content.body)")
+                
+                if let response = response as? HTTPURLResponse {
+                    let result = handleNetworkResponse(response)
+                    switch result {
+                    case .success:
+                        guard data != nil else {
+                            completion(nil, NetworkResponse.noData.rawValue)
+                            return
+                        }
+                        print(String(data: data ?? Data(), encoding: .utf8) ?? "null")
+                        let updatingTimeObject = returnRealmModel()
                         
-                        completion(returnValue, nil)
-                    } catch {
-                        print(error)
-                        completion(nil, NetworkResponse.unableToDecode.rawValue)
+                        /// Сохраняем в REALM
+                        let r = try? Realm()
+                        do {
+                            let b = r?.objects(GetSessionTimeout.self)
+                            r?.beginWrite()
+                            r?.delete(b!)
+                            r?.add(updatingTimeObject)
+                            try r?.commitWrite()
+                        } catch {
+                            print(error.localizedDescription)
+                        }
+                        do {
+                            let returnValue = try T (data: data!)
+                            
+                            completion(returnValue, nil)
+                        } catch {
+                            print(error)
+                            completion(nil, NetworkResponse.unableToDecode.rawValue)
+                        }
+                    case .failure(let networkFailureError):
+                        completion(nil, networkFailureError)
                     }
-                case .failure(let networkFailureError):
-                    completion(nil, networkFailureError)
                 }
             }
         }
         task.resume()
         
         func handleNetworkResponse(_ response: HTTPURLResponse) -> SessionResult<String>{
-           switch response.statusCode {
-           case 200...299: return .success
-           case 400...401: return .success
-           case 402...500: return .failure(NetworkResponse.authenticationError.rawValue)
-           case 501...599: return .failure(NetworkResponse.badRequest.rawValue)
-           case 600:       return .failure(NetworkResponse.outdated.rawValue)
-           default:        return .failure(NetworkResponse.failed.rawValue)
-           }
-       }
+            switch response.statusCode {
+            case 200...299: return .success
+            case 400...401: return .success
+            case 402...500: return .failure(NetworkResponse.authenticationError.rawValue)
+            case 501...599: return .failure(NetworkResponse.badRequest.rawValue)
+            case 600:       return .failure(NetworkResponse.outdated.rawValue)
+            default:        return .failure(NetworkResponse.failed.rawValue)
+            }
+        }
     }
-    }
+}
 
 func returnRealmModel() -> GetSessionTimeout {
     let realm = try? Realm()
@@ -144,7 +146,7 @@ func returnRealmModel() -> GetSessionTimeout {
     let lastActionTimestamp = timeObject.lastActionTimestamp
     let maxTimeOut = timeObject.maxTimeOut
     let mustCheckTimeOut = timeObject.mustCheckTimeOut
-    
+    print("Debugging NetworkManager", mustCheckTimeOut)
     // Сохраняем текущее время
     let updatingTimeObject = GetSessionTimeout()
     

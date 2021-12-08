@@ -6,12 +6,19 @@
 //
 
 import UIKit
+import RealmSwift
 
 class PaymentByPhoneViewController: UIViewController {
+
+    lazy var realm = try? Realm()
 
     var sbp: Bool?
     var confirm: Bool?
     var selectedCardNumber = 0
+    var selectedAccountId = 0
+    var productType = ""
+    var cardIsSelect = false
+
     var selectedBank: BanksList? {
         didSet {
             guard let bank = selectedBank else { return }
@@ -91,7 +98,7 @@ class PaymentByPhoneViewController: UIViewController {
     
     var stackView = UIStackView(arrangedSubviews: [])
     
-    var cardListView = CardListView()
+    var cardListView = CardsScrollView(onlyMy: true)
     
     
     lazy var doneButton: UIButton = {
@@ -115,13 +122,18 @@ class PaymentByPhoneViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        AddAllUserCardtList.add() {
+           print(" AddAllUserCardtList.add()")
+
+        }
+        
         NotificationCenter.default.removeObserver(NSNotification.Name(rawValue: "otpCode"))
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.showSpinningWheel(_:)), name: NSNotification.Name(rawValue: "otpCode"), object: nil)
 
         // handle notification
-    
-        
+  
         phoneField.rightButton.setImage(UIImage(imageLiteralResourceName: "user-plus"), for: .normal)
         if selectNumber != nil{
             phoneField.text = selectNumber ?? ""
@@ -162,37 +174,32 @@ class PaymentByPhoneViewController: UIViewController {
                 self.createTransfer()
             }
         }
-        getCardList { [weak self] data ,error in
-            DispatchQueue.main.async {
-                
-                
-                if error != nil {
-                    self?.showAlert(with: "Ошибка", and: error!)
-                }
-                guard let data = data else { return }
-                self?.cardListView.cardList = data.filter({ item in
-                    if item.productType == "CARD"{
-                        guard  item.statusPC == "0" && item.status == "Действует" else {
-                            return false
-                        }
-                        return true
-                    } else if item.productType == "ACCOUNT"{
-                        guard  item.status == "NOT_BLOCKED" || item.status == "BLOCKED_CREDIT" else {
-                            return false
-                        }
-                        return true
-                    }
-                    return true
-                })
-                
-                if data.count > 0 {
-                    self?.cardField.cardModel = data.first
-//                    self?.cardField.configCardView(data.first!)
-                    guard let cardNumber  = data.first?.cardID else { return }
-                    self?.selectedCardNumber = cardNumber
+        DispatchQueue.main.async {
+            var filterProduct: [UserAllCardsModel] = []
+            let cards = ReturnAllCardList.cards()
+            cards.forEach { product in
+                if (product.productType == "CARD"
+                        || product.productType == "ACCOUNT") && product.currency == "RUB" {
+                    filterProduct.append(product)
                 }
             }
+//            self.cardListView.cardList = filterProduct
+            if filterProduct.count > 0 {
+                self.cardField.model = filterProduct.first
+                guard let cardId  = filterProduct.first?.cardID else { return }
+                guard let accountId  = filterProduct.first?.id else { return }
+//                guard let productType  = filterProduct.first?.productType else { return }
+                if filterProduct.first?.productType == "ACCOUNT"{
+                    self.selectedAccountId = accountId
+                } else {
+                    self.selectedCardNumber = cardId
+                }
+                self.productType = filterProduct.first?.productType ?? ""
+
+                self.cardIsSelect = true
+            }
         }
+        
         setupBankList()
         
     }
@@ -233,13 +240,33 @@ class PaymentByPhoneViewController: UIViewController {
         }
         
         
-        cardListView.didCardTapped = { card in
-            self.cardField.cardModel = card
-//            self.cardField.configCardView(card)
-            self.selectedCardNumber = card.cardID ?? 0
-            self.hideView(self.cardListView, needHide: true)
-//            self.hideView(self.bankListView, needHide: true)
-            
+        cardListView.didCardTapped = { cardId in
+            DispatchQueue.main.async {
+
+                
+                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
+                cardList.forEach({ card in
+                    if card.id == cardId {
+                        self.cardField.model = card
+                      
+                        if card.productType == "ACCOUNT"{
+                            self.selectedAccountId = card.id
+                            print(card)
+                            print(card.accountNumber?.digits )
+                        } else {
+                            self.selectedCardNumber = card.cardID
+                        }
+                        self.productType = card.productType ?? ""
+                        if self.bankListView.isHidden == false {
+                            self.hideView(self.bankListView, needHide: true)
+                        }
+                        if self.cardListView.isHidden == false {
+                            self.hideView(self.cardListView, needHide: true)
+                        }
+                    }
+                })
+            }
+                      
         }
         bankPayeer.didChooseButtonTapped = { () in
             self.openOrHideView(self.bankListView)
@@ -384,16 +411,17 @@ class PaymentByPhoneViewController: UIViewController {
         let clearAmount = sum.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "₽", with: "").replacingOccurrences(of: ",", with: ".")
         let clearNumber = number.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "").replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "").replacingOccurrences(of: ",", with: ".").replacingOccurrences(of: "+", with: "")
 //       let fromatNumber =
-        var accountId: Int?
+        var accountNumber: Int?
         var cardId: Int?
         
-        if String(selectedCardNumber).count > 16{
-            accountId = selectedCardNumber
-//            cardNumber = ""
+        if  self.productType == "ACCOUNT"{
+            accountNumber = selectedAccountId
         } else {
             cardId = selectedCardNumber
-//            accountNumber = ""
         }
+        
+//            accountNumber = ""
+
         
         bottomView.doneButtonIsEnabled(true)
         
@@ -403,7 +431,7 @@ class PaymentByPhoneViewController: UIViewController {
                      "payer" : [
                         "cardId"        : cardId,
                         "cardNumber"    : nil,
-                        "accountId"     : accountId,
+                        "accountId"     : accountNumber,
                         "accountNumber" : nil
                      ],
                      "payeeInternal" : [
@@ -446,9 +474,9 @@ class PaymentByPhoneViewController: UIViewController {
 //                            vc.payeerField.text = data.payeeName ?? "Получатель не оперделен>"
 //                            vc.otpCode = self?.otpCode
                             
-                            var model = ConfirmViewControllerModel(type: .phoneNumber)
+                            let model = ConfirmViewControllerModel(type: .phoneNumber)
                             model.bank = self?.selectedBank
-                            model.cardFrom = self?.cardField.cardModel
+                            model.cardFromRealm = self?.cardField.model
                             model.phone = self?.phoneField.text.digits ?? ""
                             model.summTransction = data.debitAmount?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
                             model.summInCurrency = data.creditAmount?.currencyFormatter(symbol: data.currencyPayee ?? "RUB") ?? ""
@@ -479,6 +507,17 @@ class PaymentByPhoneViewController: UIViewController {
     func startContactPayment(with card: Int, completion: @escaping (_ error: String?)->()) {
         showActivity()
         
+        var accountId: Int?
+        var cardId: Int?
+        
+        if productType == "ACCOUNT"{
+            accountId = selectedAccountId
+//            cardNumber = ""
+        } else {
+            cardId = selectedCardNumber
+//            accountNumber = ""
+        }
+        
         guard let sum = bottomView.amountTextField.text else {
             return
         }
@@ -496,9 +535,6 @@ class PaymentByPhoneViewController: UIViewController {
             clearPhone = newPhone
         }
         
-        guard let memberId = self.selectedBank?.memberID else {
-            return
-        }
         
         
         let newBody = [
@@ -506,9 +542,9 @@ class PaymentByPhoneViewController: UIViewController {
             "amount" : clearAmount,
             "currencyAmount" : "RUB",
             "payer" : [
-                "cardId" : card,
+                "cardId" : cardId,
                 "cardNumber" : nil,
-                "accountId" : nil
+                "accountId" : accountId
             ],
             "puref" : "iFora||TransferC2CSTEP",
             "additional" : [
@@ -545,7 +581,7 @@ class PaymentByPhoneViewController: UIViewController {
                             
                         }
                         
-                        model.cardFrom = self?.cardField.cardModel
+                        model.cardFromRealm = self?.cardField.model
                         model.phone = self?.phoneField.text.digits ?? ""
 //                        model.summTransction = model.summTransction
                         

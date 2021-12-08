@@ -19,6 +19,7 @@ struct PaymentsModel: Hashable {
     var productList: GetProductListDatum? = nil
     var lastMobilePayment: GetLatestMobilePaymentsDatum? = nil
     var lastGKHPayment: GetAllLatestPaymentsDatum? = nil
+    var productListFromRealm: UserAllCardsModel? = nil
 
     
     
@@ -92,6 +93,12 @@ struct PaymentsModel: Hashable {
         self.controllerName = "GKHInputViewController"
         self.iconName = "GKH"
     }
-
+    init(productListFromRealm: UserAllCardsModel) {
+        self.productListFromRealm = productListFromRealm
+        self.id = Int.random(in: 100 ... 10000)
+        self.name = productListFromRealm.name ?? "1234"
+        self.controllerName = "PaymentByPhoneViewController"
+        self.iconName = "smartphonegray"
+    }
     
 }

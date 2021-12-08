@@ -15,12 +15,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var delegate: Encription?
     let timer = BackgroundTimer()
-    
+    private let downloadCash = DownloadQueue()
+
     var isAuth: Bool? {
         didSet {
             guard isAuth != nil else { return }
-            /// Запуск таймера
-            timer.repeatTimer()
+            // Запуск таймера
+           timer.repeatTimer()
         }
     }
 
@@ -28,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
+
         RealmConfiguration()
 
         /// FirebaseApp configure
@@ -47,6 +48,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         customizeUiInApp()
         
         self.initRealmTimerParameters()
+        // Зарузка кэша
+        downloadCash.download()
         // Net Detect
         NetStatus.shared.startMonitoring()
         return true
@@ -58,7 +61,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let updatingTimeObject = GetSessionTimeout()
         updatingTimeObject.maxTimeOut = StaticDefaultTimeOut.staticDefaultTimeOut
         updatingTimeObject.mustCheckTimeOut = true
-
+        print("Debugging AppDelegate", updatingTimeObject.mustCheckTimeOut)
         do {
             let model = realm?.objects(GetSessionTimeout.self)
             realm?.beginWrite()
@@ -105,7 +108,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     fileprivate func RealmConfiguration() {
         // Версия БД (изменить на большую если меняем БД)
         let schemaVersion: UInt64 = 7
-        
+
         let config = Realm.Configuration(
             // Set the new schema version. This must be greater than the previously used
             // version (if you've never set a schema version before, the version is 0).
@@ -116,14 +119,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             migrationBlock: { migration, oldSchemaVersion in
                 // We haven’t migrated anything yet, so oldSchemaVersion == 0
                 if (oldSchemaVersion < schemaVersion) {
-                    if oldSchemaVersion < 3 {
+                    if oldSchemaVersion < 7 {
                         migration.deleteData(forType: "GKHOperatorsModel")
                     }
-                    if oldSchemaVersion < 4 {
+                    if oldSchemaVersion < 7 {
                         migration.deleteData(forType: "Parameters")
                     }
-                    if oldSchemaVersion < 5 {
+                    if oldSchemaVersion < 7 {
                         migration.deleteData(forType: "LogotypeData")
+                         migration.deleteData(forType: "UserAllCardsModel")
                     }
                     if oldSchemaVersion < 6 {
                         migration.deleteData(forType: "AdditionalListModel")
@@ -352,8 +356,9 @@ class AppUpdater: NSObject {
                     } else {
                         print("Needs update: AppStore Version: \(appStoreAppVersion) > Current version: ",currentVersion)
                         DispatchQueue.main.async {
-                            let topController: UIViewController = UIApplication.shared.keyWindow!.rootViewController!
-                            topController.showAppUpdateAlert(Version: (info?.version)!, Force: force, AppURL: (info?.trackViewUrl)!)
+                            guard let vc = UIApplication.getTopViewController() else {return}
+//                            let topController: UIViewController = UIApplication.shared.keyWindow!.rootViewController!
+                            vc.showAppUpdateAlert(Version: (info?.version)!, Force: force, AppURL: (info?.trackViewUrl)!)
                         }
                     }
                 }

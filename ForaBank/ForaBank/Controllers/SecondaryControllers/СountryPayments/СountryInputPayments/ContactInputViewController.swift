@@ -365,7 +365,7 @@ class ContactInputViewController: UIViewController {
                     filterProduct.append(product)
                 }
             }
-            self.cardListView.cardList = filterProduct
+//            self.cardListView.cardList = filterProduct
             if filterProduct.count > 0 {
                 self.cardFromField.model = filterProduct.first
                 guard let cardNumber  = filterProduct.first?.number else { return }

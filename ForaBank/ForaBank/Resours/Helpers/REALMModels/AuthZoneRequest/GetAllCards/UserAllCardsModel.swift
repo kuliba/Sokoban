@@ -46,9 +46,70 @@ class UserAllCardsModel: Object {
     @objc dynamic var expireDate: String?
     @objc dynamic var XLDesign: String?
     @objc dynamic var statusPC: String?
+    @objc dynamic var interestRate: String?
+
     
-}
+    override static func primaryKey() -> String? {
+        return "id"
+    }
+}    
 
 class UserAllCardsbackgroundModel: Object {
     @objc dynamic var color: String?
+}
+
+extension UserAllCardsModel: Identifiable {
+    
+    convenience init(with data: GetProductListDatum) {
+        
+        self.init()
+        number             = data.number
+        numberMasked       = data.numberMasked
+        balance            = data.balance ?? 0.0
+        currency           = data.currency
+        productType        = data.productType
+        productName        = data.productName
+        ownerID            = data.ownerID ?? 0
+        accountNumber      = data.accountNumber
+        allowDebit         = data.allowDebit ?? false
+        allowCredit        = data.allowCredit ?? false
+        customName         = data.customName
+        cardID             = data.cardID ?? 0
+        name               = data.name
+        validThru          = data.validThru ?? 0
+        status             = data.status
+        holderName         = data.holderName
+        product            = data.product
+        branch             = data.branch
+        mainField          = data.mainField
+        additionalField    = data.additionalField
+        smallDesign        = data.smallDesign
+        mediumDesign       = data.mediumDesign
+        largeDesign        = data.largeDesign
+        paymentSystemName  = data.paymentSystemName
+        paymentSystemImage = data.paymentSystemImage
+        fontDesignColor    = data.fontDesignColor
+        id                 = data.id ?? 0
+        openDate           = data.openDate ?? 0
+        branchId           = data.branchId ?? 0
+        accountID          = data.accountID ?? 0
+        expireDate         = data.expireDate
+        XLDesign           = data.XLDesign
+        statusPC           = data.statusPC
+        interestRate       = "\(data.interestRate ?? 0.0)"
+        
+        data.background.forEach { color in
+            
+            background.append(UserAllCardsbackgroundModel(with: color))
+        }
+    }
+}
+
+extension UserAllCardsbackgroundModel {
+    
+    convenience init(with color: String?) {
+        
+        self.init()
+        self.color = color
+    }
 }

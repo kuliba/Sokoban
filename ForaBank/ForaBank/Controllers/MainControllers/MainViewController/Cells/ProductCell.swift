@@ -17,7 +17,7 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
     func configure<U>(with value: U) where U : Hashable {
         guard let card = card else { return }
         
-        let viewModel = CardViewModel(card: card)
+        let viewModel = CardViewModelFromRealm(card: card)
         backgroundImageView.image =  card.largeDesign?.convertSVGStringToImage()
         balanceLabel.text = viewModel.balance
         balanceLabel.textColor = viewModel.colorText
@@ -33,9 +33,10 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
     
     static var reuseId: String = "ProductCell"
     //MARK: - Properties
-    var card: GetProductListDatum? {
+    var card: UserAllCardsModel? {
         didSet { configure() }
     }
+    
     
     private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterial))
     
@@ -102,7 +103,7 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
     func configure() {
         guard let card = card else { return }
         
-        let viewModel = CardViewModel(card: card)
+        let viewModel = CardViewModelFromRealm(card: card)
         
         backgroundImageView.image =  card.largeDesign?.convertSVGStringToImage()
 
@@ -121,7 +122,7 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
             balanceLabel.alpha = 0.5
             logoImageView.alpha = 0.5
             backgroundImageView.alpha = 0.8
-        } else if card.status == "Заблокирована банком" || card.status == "Блокирована по решению Клиента" || card.status == "Блокирована по решению Клиента" || card.status == "BLOCKED_DEBET" || card.status == "BLOCKED_CREDIT" || card.status == "BLOCKED" , card.statusPC == "3" || card.statusPC == "5" || card.statusPC == "6" || card.statusPC == "7" || card.statusPC == "20" || card.statusPC == "21" || card.statusPC == nil{
+        } else if card.status == "Заблокирована банком" || card.status == "Блокирована по решению Клиента" || card.status == "Блокирована по решению Клиента" || card.status == "BLOCKED_DEBET" || card.status == "BLOCKED_CREDIT" || card.status == "BLOCKED" || card.statusPC == "3" || card.statusPC == "5" || card.statusPC == "6" || card.statusPC == "7" || card.statusPC == "20" || card.statusPC == "21" {
             statusImage.image = UIImage(named: "blockProduct")
             maskCardLabel.alpha = 0.5
             cardNameLabel.alpha = 0.5
@@ -136,6 +137,7 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
             logoImageView.alpha = 1
             backgroundImageView.alpha = 1
         }
+        
         
         if card.productType == "DEPOSIT"{
             balanceLabel.textColor = .black
@@ -244,3 +246,23 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
                 }
                 }
 }
+
+
+enum Status: String {
+    case blockedByBank = "Заблокирована банком"
+    case blockedByClient = "Блокирована по решению Клиента"
+    case notActivated = ""
+}
+
+enum StatusPC: String{
+    case blocked = "3"
+    case notActivated = "17"
+}
+
+enum ProductType: String {
+    case DEPOSIT
+    case CARD
+    case ACCOUNT
+    case LOAN
+}
+

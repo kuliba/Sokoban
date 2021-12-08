@@ -27,3 +27,40 @@ class GetCountriesList: Object {
     @objc dynamic var svgImage : String?
     var paymentSystemIdList = List<String>()
 }
+
+//MARK: - convenience inits
+
+extension GetCountries {
+    
+    convenience init(with data: GetCountriesDataClass) {
+        
+        self.init()
+        
+        serial = data.serial
+        
+        if let countriesListData = data.countriesList {
+            
+            countriesList.append(objectsIn: countriesListData.map{ GetCountriesList(with: $0)} )
+        }
+    }
+}
+
+extension GetCountriesList {
+    
+    convenience init(with data: CountriesList) {
+        
+        self.init()
+        code = data.code
+        contactCode = data.contactCode
+        name = data.name
+        md5hash = data.md5Hash
+        svgImage = data.svgImage
+        
+        if let paymentSystemCodeListData = data.paymentSystemCodeList {
+            
+            paymentSystemIdList.append(objectsIn: paymentSystemCodeListData)
+        }
+    }
+}
+
+
