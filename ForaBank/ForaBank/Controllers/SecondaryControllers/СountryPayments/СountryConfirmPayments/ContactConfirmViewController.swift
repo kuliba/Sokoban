@@ -287,7 +287,7 @@ class ContactConfurmViewController: UIViewController {
             summTransctionField.isHidden = false
             summTransctionField.viewModel.title = "Счет вклада"
             summTransctionField.viewModel.image = UIImage(named: "depositIcon-1")!
-            summTransctionField.text = "123432434323"
+            summTransctionField.text = model.numberTransction
             
             cardFromField.isHidden = false
             cardFromField.choseButton.isHidden = true
