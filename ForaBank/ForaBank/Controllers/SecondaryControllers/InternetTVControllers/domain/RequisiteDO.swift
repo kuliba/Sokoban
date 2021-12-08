@@ -60,7 +60,7 @@ class RequisiteDO {
     var maxLength = 0
     var minLength = 0
     var rawLength = 0
-    var readOnly = true
+    var readOnly = false
     var content: String?
     var svgImage: String?
 }

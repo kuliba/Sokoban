@@ -23,7 +23,7 @@ class Parameters: Object {
     @objc dynamic var maxLength = 0
     @objc dynamic var minLength = 0
     @objc dynamic var rawLength = 0
-    @objc dynamic var readOnly = true
+    @objc dynamic var readOnly = false
     @objc dynamic var content: String?
     @objc dynamic var svgImage: String?
 }
@@ -61,7 +61,7 @@ extension Parameters {
         maxLength = data.maxLength ?? 0
         minLength = data.minLength ?? 0
         rawLength = data.rawLength ?? 0
-        readOnly  = data.readOnly ?? true
+        readOnly  = data.readOnly ?? false
         content    = data.content
     }
 }

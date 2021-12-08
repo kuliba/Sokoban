@@ -94,8 +94,10 @@ class InternetTVInputCell: UITableViewCell, UITextFieldDelegate, IMsg {
         
         if item.readOnly {
             textField.isEnabled = false
+            btnShowSelectView.isEnabled = false
         } else {
             textField.isEnabled = true
+            btnShowSelectView.isEnabled = true
         }
     }
 
