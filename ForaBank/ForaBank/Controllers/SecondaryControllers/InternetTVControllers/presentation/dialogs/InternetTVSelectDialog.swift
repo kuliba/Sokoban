@@ -193,26 +193,21 @@ class SelectVC : AddHeaderImageViewController {
     let labelOne: UILabel = {
         let label = UILabel()
         label.text = " "
-        //label.backgroundColor = .red
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     let labelTwo: UILabel = {
         let label = UILabel()
         label.text = " "
-        //label.backgroundColor = .green
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     let scrollView: UIScrollView = {
         let v = UIScrollView()
         v.translatesAutoresizingMaskIntoConstraints = false
-        //v.backgroundColor = .cyan
         return v
     }()
     var titleLabel = UILabel(text: "Выберите значение", font: .boldSystemFont(ofSize: 18), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
-
-    //var stackView = UIStackView(arrangedSubviews: [])
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -223,26 +218,6 @@ class SelectVC : AddHeaderImageViewController {
         view.clipsToBounds = true
         view.backgroundColor = .white
         //view.anchor(width: UIScreen.main.bounds.width, height: 490)
-
-//        stackView = UIStackView(arrangedSubviews: [])
-//        stackView.axis = .vertical
-//        stackView.alignment = .fill
-//        stackView.distribution = .fillProportionally
-//        stackView.spacing = 5
-//        stackView.isUserInteractionEnabled = false
-
-//        var button1: CheckBox {
-//            let button = CheckBox()
-//            button.setTitle("Закрыть1", for: .normal)
-//            button.backgroundColor = .clear
-//            button.setTitleColor(UIColor.black, for: .normal)
-//            button.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.right
-//            button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
-//            button.translatesAutoresizingMaskIntoConstraints = false
-//            button.heightAnchor.constraint(equalToConstant: 30.0).isActive = true
-//            return button
-//        }
-
 
         let a = UIScreen.main.bounds.size.width
 

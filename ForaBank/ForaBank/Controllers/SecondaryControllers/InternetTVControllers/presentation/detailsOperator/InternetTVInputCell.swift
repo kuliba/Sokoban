@@ -14,20 +14,14 @@ class InternetTVInputCell: UITableViewCell, UITextFieldDelegate, IMsg {
     static var spinnerValuesSelected = [String : [String : String]]()
     var info = ""
     var spinnerValues = [String : String]()
-    //var elementID = "-1"
     var showInfoView: ((String) -> ())? = nil
     var showSelectView: (([String: String], String) -> ())? = nil
     var showGoButton: ((Bool) -> ())? = nil
     var currentElementUI: RequisiteDO? = nil
 
-    weak var tableViewDelegate: InternetTableViewDelegate?
-
     var fieldId = ""
     var fieldName = ""
     var fieldValue = ""
-    //var item: RequisiteDO?
-    //var body = [String: String]()
-    //var perAcc = ""
     var isSelect = true
     @IBOutlet weak var infoButon: UIButton!
     @IBOutlet weak var operatorsIcon: UIImageView!
@@ -50,7 +44,6 @@ class InternetTVInputCell: UITableViewCell, UITextFieldDelegate, IMsg {
         textField.clearButtonMode = .whileEditing
     }
 
-    // UITextField Defaults delegates
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
@@ -61,7 +54,6 @@ class InternetTVInputCell: UITableViewCell, UITextFieldDelegate, IMsg {
     }
 
     func setupUI (_ index: Int, _ item: RequisiteDO, _ qrData: [String: String], additionalList: [AdditionalListModel]) {
-        //elementID = item.id ?? "-1"
         currentElementUI = item
         infoButon.isHidden = true
         fieldId = String(item.order)
@@ -110,16 +102,22 @@ class InternetTVInputCell: UITableViewCell, UITextFieldDelegate, IMsg {
     private func setupInputField(additionalList: [AdditionalListModel], item: RequisiteDO, q: (String, String), qrData: [String: String]) {
         btnShowSelectView.isHidden = true
 
-        let field = additionalList.filter{ it in
+        let field = additionalList.filter { it in
             it.fieldName == item.id
         }
         if field.count > 0 {
             textField.text = field.first?.fieldValue
+            InternetTVDetailsFormViewModel.additionalDic[fieldName] = ["fieldid" : fieldId,
+                                                                       "fieldname" : fieldName,
+                                                                       "fieldvalue" : field.first?.fieldValue ?? "-1"]
         } else {
             if let el = InternetTVDetailsFormViewModel.additionalDic[item.id ?? ""], !el.isEmpty {
                 textField.text = el["fieldvalue"]
             } else {
                 textField.text = item.content
+                InternetTVDetailsFormViewModel.additionalDic[fieldName] = ["fieldid" : fieldId,
+                                                                           "fieldname" : fieldName,
+                                                                           "fieldvalue" : item.content ?? ""]
             }
         }
         if q.0 == "Лицевой счет" {

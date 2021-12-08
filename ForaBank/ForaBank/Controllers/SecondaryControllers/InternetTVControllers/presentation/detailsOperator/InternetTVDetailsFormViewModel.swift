@@ -1,10 +1,3 @@
-//
-//  InternetTVDetailsFormViewModel.swift
-//  ForaBank
-//
-//  Created by Роман Воробьев on 04.12.2021.
-//
-
 import Foundation
 
 class InternetTVDetailsFormViewModel {
@@ -14,13 +7,11 @@ class InternetTVDetailsFormViewModel {
     var firstStep = true
     var firstAdditional = [[String: String]]()
     var stepsPayment = [[[String: String]]]()
-
     var requisites = [RequisiteDO]()
     var puref = ""
     var cardNumber = ""
     var product: GetProductListDatum?
     
-    init() {}
 
     func retryPayment(amount: String) {
         guard let controller = controller else {return}
@@ -32,14 +23,8 @@ class InternetTVDetailsFormViewModel {
                 if error != nil {
                     controller.showAlert(with: "Ошибка", and: error!)
                 } else {
-                    if let respUnw = response {
-//                        if respUnw.data?.finalStep ?? false {
-//                            controller.doConfirmation(response: respUnw)
-//                        } else {
-                            controller.showActivity()
-                            self.continueRetry(amount: amount)
-//                        }
-                    }
+                    controller.showActivity()
+                    self.continueRetry(amount: amount)
                 }
             }
         }
@@ -120,10 +105,6 @@ class InternetTVDetailsFormViewModel {
                     }
                 }
             }
-            controller.setupCardList { error in
-                guard let error = error else { return }
-                controller.showAlert(with: "Ошибка", and: error)
-            }
         }
     }
 
@@ -158,10 +139,6 @@ class InternetTVDetailsFormViewModel {
                         }
                     }
                 }
-            }
-            controller.setupCardList { error in
-                guard let error = error else { return }
-                controller.showAlert(with: "Ошибка", and: error)
             }
         }
     }
