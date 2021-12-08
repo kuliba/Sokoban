@@ -222,10 +222,20 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                 ] as [String: AnyObject]
                 
                 NetworkManager<CreateMobileTransferDecodableModel>.addRequest(.createMobileTransfer, [:], body, completion: { [weak self] data, error in
+                    
                     self?.dismissActivity()
                     if data?.errorMessage != nil {
                         completion(error)
                     }
+                    
+                    if data?.statusCode == 102 {
+                        self?.showAlertWithCancel(with: "Ошибка", and: "Сумма платежа не может быть меньше 10 рублей")
+                        completion("")
+                        return
+                    }
+                    
+                    
+                    
                     if data?.statusCode == 0 {
                         let model = ConfirmViewControllerModel(type: .mobilePayment)
                         
