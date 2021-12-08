@@ -10,9 +10,8 @@ import RealmSwift
 
 //TODO: отрефакторить под сетевые запросы, вынести в отдельный файл
 class ConfirmViewControllerModel {
-    
+    static var svgIcon = ""
     lazy var realm = try? Realm()
-    
     var type: PaymentType
     var paymentSystem: PaymentSystemList?
     
@@ -203,13 +202,10 @@ class ConfirmViewControllerModel {
         case gkh
         case mobilePayment
     }
-    
 }
 
 class ContactConfurmViewController: UIViewController {
-    
     lazy var realm = try? Realm()
-    
     var confurmVCModel: ConfirmViewControllerModel? {
         didSet {
             guard let model = confurmVCModel else { return }

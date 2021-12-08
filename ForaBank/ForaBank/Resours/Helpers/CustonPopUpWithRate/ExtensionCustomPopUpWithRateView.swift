@@ -31,12 +31,12 @@ extension CustomPopUpWithRateView {
         setupListFrom()
         setupListTo()
         
-        self.addHeaderImage()
-        self.view.layer.cornerRadius = 16
-        self.view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        self.view.clipsToBounds = true
-        self.view.backgroundColor = .white
-        self.view.anchor(width: UIScreen.main.bounds.width, height: 490)
+        addHeaderImage()
+        view.layer.cornerRadius = 16
+        view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        view.clipsToBounds = true
+        view.backgroundColor = .white
+        view.anchor(width: UIScreen.main.bounds.width, height: 490)
         
         stackView = UIStackView(arrangedSubviews: [cardFromField,
                                                    seporatorView,

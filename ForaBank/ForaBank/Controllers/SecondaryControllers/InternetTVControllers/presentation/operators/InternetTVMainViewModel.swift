@@ -28,7 +28,12 @@ class InternetTVMainViewModel {
     lazy var realm = try? Realm()
 
     init() {
-        InternetTVLatestOperationRealm.load()
+        if InternetTVMainViewModel.filter == GlobalModule.UTILITIES_CODE {
+            AddHistoryList.add()
+        }
+        if InternetTVMainViewModel.filter == GlobalModule.INTERNET_TV_CODE {
+            InternetTVLatestOperationRealm.load()
+        }
 
         //observerRealm()
         operatorsList = realm?.objects(GKHOperatorsModel.self)

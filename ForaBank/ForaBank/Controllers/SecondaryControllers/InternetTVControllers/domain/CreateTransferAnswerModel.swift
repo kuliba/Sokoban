@@ -26,14 +26,15 @@ struct CreateTransferAnswerData: Codable {
     let additionalList: [AdditionalList2]?
     let parameterListForNextStep: [ParameterListForNextStep2]?
     let finalStep: Bool?
+    let infoMessage: String?
 
     enum CodingKeys: String, CodingKey {
         case needMake, needOTP, needSum, amount, creditAmount, fee, currencyAmount, currencyPayer, currencyPayee, currencyRate, debitAmount, payeeName
         case paymentOperationDetailID = "paymentOperationDetailId"
-        case documentStatus, additionalList, parameterListForNextStep, finalStep
+        case documentStatus, additionalList, parameterListForNextStep, finalStep, infoMessage
     }
 
-    init(needMake: Bool?, needOTP: Bool?, needSum: Bool?, amount: Double?, creditAmount: Double?, fee: Double?, currencyAmount: Double?, currencyPayer: JSONNull?, currencyPayee: JSONNull?, currencyRate: JSONNull?, debitAmount: Double?, payeeName: String?, paymentOperationDetailID: String?, documentStatus: String?, additionalList: [AdditionalList2]?, parameterListForNextStep: [ParameterListForNextStep2]?, finalStep: Bool?) {
+    init(needMake: Bool?, needOTP: Bool?, needSum: Bool?, amount: Double?, creditAmount: Double?, fee: Double?, currencyAmount: Double?, currencyPayer: JSONNull?, currencyPayee: JSONNull?, currencyRate: JSONNull?, debitAmount: Double?, payeeName: String?, paymentOperationDetailID: String?, documentStatus: String?, additionalList: [AdditionalList2]?, parameterListForNextStep: [ParameterListForNextStep2]?, finalStep: Bool?, infoMessage: String?) {
         self.needMake = needMake
         self.needOTP = needOTP
         self.needSum = needSum
@@ -51,6 +52,7 @@ struct CreateTransferAnswerData: Codable {
         self.additionalList = additionalList
         self.parameterListForNextStep = parameterListForNextStep
         self.finalStep = finalStep
+        self.infoMessage = infoMessage
     }
 }
 
@@ -76,8 +78,9 @@ struct ParameterListForNextStep2: Codable {
     let isRequired: Bool?
     let content: String?
     let readOnly: Bool?
+    let svgImage: String?
 
-    init(id: String?, order: Int?, title: String?, subTitle: String?, viewType: String?, dataType: String?, type: String?, mask: String?, regExp: String?, maxLength: Int?, minLength: Int?, rawLength: Int?, isRequired: Bool?, content: String?, readOnly: Bool?) {
+    init(id: String?, order: Int?, title: String?, subTitle: String?, viewType: String?, dataType: String?, type: String?, mask: String?, regExp: String?, maxLength: Int?, minLength: Int?, rawLength: Int?, isRequired: Bool?, content: String?, readOnly: Bool?, svgImage: String?) {
         self.id = id
         self.order = order
         self.title = title
@@ -93,6 +96,7 @@ struct ParameterListForNextStep2: Codable {
         self.isRequired = isRequired
         self.content = content
         self.readOnly = readOnly
+        self.svgImage = svgImage
     }
 }
 

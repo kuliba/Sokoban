@@ -24,6 +24,7 @@ class RequisiteDO {
         ob.rawLength = item.rawLength
         ob.readOnly = item.readOnly
         ob.content = item.content
+        ob.svgImage = item.svgImage
         return  ob
     }
 
@@ -43,6 +44,7 @@ class RequisiteDO {
         ob.rawLength = item.rawLength ?? 0
         ob.readOnly = item.readOnly ?? false
         ob.content = item.content
+        ob.svgImage = item.svgImage
         return  ob
     }
 
@@ -60,4 +62,5 @@ class RequisiteDO {
     var rawLength = 0
     var readOnly = true
     var content: String?
+    var svgImage: String?
 }
