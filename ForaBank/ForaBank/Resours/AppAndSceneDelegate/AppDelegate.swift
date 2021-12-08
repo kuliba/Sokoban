@@ -348,8 +348,9 @@ class AppUpdater: NSObject {
                     } else {
                         print("Needs update: AppStore Version: \(appStoreAppVersion) > Current version: ",currentVersion)
                         DispatchQueue.main.async {
-                            let topController: UIViewController = UIApplication.shared.keyWindow!.rootViewController!
-                            topController.showAppUpdateAlert(Version: (info?.version)!, Force: force, AppURL: (info?.trackViewUrl)!)
+                            guard let vc = UIApplication.getTopViewController() else {return}
+//                            let topController: UIViewController = UIApplication.shared.keyWindow!.rootViewController!
+                            vc.showAppUpdateAlert(Version: (info?.version)!, Force: force, AppURL: (info?.trackViewUrl)!)
                         }
                     }
                 }
