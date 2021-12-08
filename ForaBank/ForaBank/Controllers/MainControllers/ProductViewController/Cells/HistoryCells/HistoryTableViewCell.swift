@@ -56,18 +56,18 @@ class HistoryTableViewCell: UITableViewCell {
           
         isSkeletonable = true
         
-          
-//        titleLable.isSkeletonable = true
-        titleLable.showAnimatedGradientSkeleton()
-        titleLable.linesCornerRadius = 8
-//        amountLabel.isSkeletonable = true
-        amountLabel.showAnimatedGradientSkeleton()
-        amountLabel.linesCornerRadius = 8
-//        subTitleLabel.isSkeletonable = true
-        subTitleLabel.showAnimatedGradientSkeleton()
-        subTitleLabel.linesCornerRadius = 8
-//        logoImageView.isSkeletonable = true
-        logoImageView.showAnimatedGradientSkeleton()
+//          
+////        titleLable.isSkeletonable = true
+//        titleLable.showAnimatedGradientSkeleton()
+//        titleLable.linesCornerRadius = 8
+////        amountLabel.isSkeletonable = true
+//        amountLabel.showAnimatedGradientSkeleton()
+//        amountLabel.linesCornerRadius = 8
+////        subTitleLabel.isSkeletonable = true
+//        subTitleLabel.showAnimatedGradientSkeleton()
+//        subTitleLabel.linesCornerRadius = 8
+////        logoImageView.isSkeletonable = true
+//        logoImageView.showAnimatedGradientSkeleton()
       }
     
     func configure(currency: String){

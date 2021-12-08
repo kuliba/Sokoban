@@ -21,7 +21,6 @@ class MainViewController: UIViewController {
     var sectionIndexCounter = 0
     
     
-    
     var token: NotificationToken?
     
     var allProductList: Results<UserAllCardsModel>? = nil
@@ -35,6 +34,7 @@ class MainViewController: UIViewController {
             }
         }
     }
+    var selectable = true
     
     var productList = [UserAllCardsModel](){
         didSet{
@@ -46,22 +46,20 @@ class MainViewController: UIViewController {
                 }
                 for i in products{
                     switch i.productType {
-                    case "DEPOSIT":
+                    case ProductType.DEPOSIT.rawValue:
                         self.productsDeposits.append(i)
                     default:
                         self.productsCardsAndAccounts.append(i)
                     }
                 }
-                var snapshot = self.dataSource?.snapshot()
-                
-                let items = snapshot?.itemIdentifiers(inSection: .products)
-                
-                 snapshot?.deleteItems(items ?? [PaymentsModel]())
-                snapshot?.appendItems(self.productsFromRealm, toSection: .products)
-    //                                snapshot?.reloadSections([.products])
-                
-                
-                self.dataSource?.apply(snapshot ?? NSDiffableDataSourceSnapshot<Section, PaymentsModel>())
+                if self.selectable{
+                    self.productsFromRealm.removeAll()
+                    for i  in self.productsCardsAndAccounts {
+                        self.productsFromRealm.append(PaymentsModel(productListFromRealm: i))
+                    }
+                    self.reloadData(with: nil)
+                }
+
             }
         }
     }
@@ -71,25 +69,7 @@ class MainViewController: UIViewController {
     
     var productsFromRealm = [PaymentsModel]()
     
-    var products = [PaymentsModel](){
-        didSet {
-            DispatchQueue.main.async {
-                var snapshot = self.dataSource?.snapshot()
-//                snapshot?.appendSections([.products])
-                let items = snapshot?.itemIdentifiers(inSection: .products)
-//                snapshot?.deleteItems(items ?? [PaymentsModel]())
-                
-//                snapshot?.appendItems(self.products, toSection: .products)
-//                snapshot?.sectionIdentifier(containingItem: self.products[0])
-//                snapshot?.reloadItems(self.products)
-            
-//                snapshot?.deleteSections([.products])
-//                snapshot?.appendItems(self.products, toSection: .products)
-
-//                self.dataSource?.apply(snapshot ?? NSDiffableDataSourceSnapshot<Section, PaymentsModel>())
-            }
-        }
-    }
+    var products = [PaymentsModel]()
     
     var productsCardsAndAccounts = [UserAllCardsModel]()
     
@@ -191,6 +171,8 @@ class MainViewController: UIViewController {
         reloadData(with: nil)
         AddAllUserCardtList.add() {
            print(" AddAllUserCardtList.add()")
+//            self.observerRealm()
+            self.productList = [UserAllCardsModel]()
 
         }
         observerRealm()
@@ -250,45 +232,14 @@ class MainViewController: UIViewController {
                    switch changes {
                    case .initial:
                        print("Initial")
-                       self?.productsCardsAndAccounts.forEach({ product in
-                               self?.productsFromRealm.append(PaymentsModel(productListFromRealm: product))
-                           })
-                       DispatchQueue.main.async {
+                       self?.productList = [UserAllCardsModel]()
+                       self?.reloadData(with: nil)
 
-                      
-                               self?.productList = [UserAllCardsModel]()
-                               self?.dataSource?.replaceItems(self?.productsFromRealm ?? [PaymentsModel](), in: .products)
-//                               self?.reloadData(with: nil)
-
-                       }
                    case .update(_, let deletions, let insertions, let modifications):
                        print("Update")
-                       print("deletions: \(deletions)")
-                       print("insertions: \(insertions)")
-                       print("modifications: \(modifications)")
-
-                       DispatchQueue.main.async {
-                           self?.allProductList = self?.realm?.objects(UserAllCardsModel.self)
-                           self?.productsFromRealm.removeAll()
-                           self?.allProductList?.forEach({ product in
-                               self?.productsFromRealm.append(PaymentsModel(productListFromRealm: product))
-                               })
-
-                                  var snapshot = self?.dataSource?.snapshot()
-
-                                   let items = snapshot?.itemIdentifiers(inSection: .products)
-
-                                   snapshot?.deleteItems(items ?? [PaymentsModel]())
-                               
-                               self?.productList = [UserAllCardsModel]()
-                  
-                                snapshot?.appendItems(self?.productsFromRealm ?? [PaymentsModel](), toSection: .products)
-
-
-                               self?.dataSource?.apply(snapshot ?? NSDiffableDataSourceSnapshot<Section, PaymentsModel>())
-//                               self?.reloadData(with: nil)
-
-                       }
+                       self?.productList = [UserAllCardsModel]()
+                       
+                       self?.dataSource?.replaceItems(self?.productsFromRealm ?? [], in: .products)
                        
                    case .error(let error):
                        fatalError("\(error)")
@@ -334,6 +285,7 @@ class MainViewController: UIViewController {
         var snapshot = NSDiffableDataSourceSnapshot<Section, PaymentsModel>()
         
         snapshot.appendSections([.products, .pay, .offer, .currentsExchange, .openProduct, .branches, .investment, . services])
+
         snapshot.appendItems(productsFromRealm, toSection: .products)
         snapshot.appendItems(pay, toSection: .pay)
         snapshot.appendItems(offer, toSection: .offer)

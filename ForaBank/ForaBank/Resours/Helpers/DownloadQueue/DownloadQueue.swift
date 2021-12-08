@@ -10,65 +10,115 @@ import RealmSwift
 
 final class DownloadQueue {
     
-    var downloadArray = [DownloadQueueProtocol]()
-    var paramArray = [[String: String]]()
-    let semaphore = DispatchSemaphore(value: 1)
-    
-    /// Функция загрузки
-    func download(_ completion: @escaping () -> ()) {
-        setDownloadQueue()
+    private let serialsStorage = DownloadQueueSerialsStorage()
+    private let queue = DispatchQueue(label: "ru.forabank.sense.DownloadQueue", qos: .utility, attributes: .concurrent)
+    private let semaphore = DispatchSemaphore(value: 1)
+
+    func download() {
         
-        for (n, i) in self.downloadArray.enumerated() {
-            DispatchQueue.global().async { [weak self] in
+        print("DownloadQueue: started")
+        
+        let tasks = prepareTasks()
+        
+        for task in tasks {
+            
+            queue.async { [weak self] in
+                
                 guard let self = self else { return }
+                
                 self.semaphore.wait()
-                i.add(self.paramArray[n], [:]) {
+                
+                task.handler.add(task.params, [:]) { result in
+                    
+                    switch result {
+                    case .updated(let serial):
+                        self.serialsStorage.store(serial: serial, of: task.kind)
+                        print("DownloadQueue: \(type(of: task.handler)), serial: \(serial)")
+                        
+                    case .passed:
+                        print("DownloadQueue: \(type(of: task.handler)) passed")
+                    
+                    case .failed(let error):
+                        
+                        if let error = error {
+                            
+                            print("DownloadQueue: \(type(of: task.handler)) failed, \(error.localizedDescription)")
+                            
+                        } else {
+                            
+                            print("DownloadQueue: \(type(of: task.handler)) failed")
+                        }
+                    }
+
                     self.semaphore.signal()
                 }
             }
         }
     }
     
-    private func setDownloadQueue() {
+    func prepareTasks() -> [Task] {
         
-        lazy var realm = try? Realm()
+        var queue = [Task]()
         
-        let countries = realm?.objects(GetCountries.self)
-        let withIdCountries = countries?.first?.serial ?? ""
-        let countriesParam = ["serial" : withIdCountries ]
+        // Countries list
+        queue.append(Task(kind: .countryList,
+                          handler: CountriesListSaved(),
+                          params: ["serial" : serialsStorage.serial(for: .countryList)]))
         
-//        let paymentSystem = realm?.objects(GetPaymentSystemList.self)
-//        let withIdPaymentSystem = paymentSystem?.first?.serial ?? ""
-//        let paymentSystemParam = ["serial" : withIdPaymentSystem ]
+        // Payments systems list
+        queue.append(Task(kind: .paymentSystemList,
+                          handler: GetPaymentSystemSaved(),
+                          params: ["serial" : serialsStorage.serial(for: .paymentSystemList)]))
         
-        let currency = realm?.objects(GetCurrency.self)
-        let withIdCurrency = currency?.first?.serial ?? ""
-        let currencyParam = ["serial" : withIdCurrency ]
+        // Currencies list
+        queue.append(Task(kind: .currencyList,
+                          handler: GetCurrencySaved(),
+                          params: ["serial" : serialsStorage.serial(for: .currencyList)]))
         
-        let bank = realm?.objects(GetBankList.self)
-        let withIdBank = bank?.first?.serial ?? ""
-        let countriesBank = ["serial" : withIdBank, "type" : "", "bic":"", "serviceType":""]
+        // Banks list
+        queue.append(Task(kind: .bankList,
+                          handler: BanksListSaved(),
+                          params: ["serial" : serialsStorage.serial(for: .bankList), "type" : "", "bic":"", "serviceType": ""]))
         
-        let operators = realm?.objects(GKHOperatorsModel.self)
-        let withIdOperators = operators?.first?.serial ?? ""
-        let countriesOperators = ["serial" : withIdOperators ]
+        // Operators list
+        queue.append(Task(kind: .operatorList,
+                          handler: AddOperatorsList(),
+                          params: ["serial" : serialsStorage.serial(for: .operatorList)]))
         
-        downloadArray.append(CountriesListSaved())
-        paramArray.append(countriesParam)
+        // Session tiemout
+        queue.append(Task(kind: .sessionTimeout,
+                          handler: GetSessionTimeoutSaved(),
+                          params: ["serial" : serialsStorage.serial(for: .sessionTimeout)]))
         
-//        downloadArray.append(GetPaymentSystemSaved())
-//        paramArray.append(paymentSystemParam)
+        return queue
+    }
+}
+     
+extension DownloadQueue {
+    
+    enum Kind: String {
         
-        downloadArray.append(GetCurrencySaved())
-        paramArray.append(currencyParam)
+        case sessionTimeout
+        case countryList
+        case paymentSystemList
+        case currencyList
+        case bankList
+        case operatorList
         
-        downloadArray.append(BanksListSaved())
-        paramArray.append(countriesBank)
-        downloadArray.append(AddOperatorsList())
-        paramArray.append(countriesOperators)
+        var key: String { "DownloadQueueStorage_\(rawValue)_Key"}
+    }
+    
+    struct Task {
+
+        let kind: Kind
+        let handler: DownloadQueueProtocol
+        let params: [String: String]
+    }
+    
+    enum Result {
         
-        downloadArray.append(GetSessionTimeoutSaved())
-        paramArray.append(["serial": ""])
-        
+        case updated(String)
+        case passed
+        case failed(Error?)
     }
 }

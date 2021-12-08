@@ -3,20 +3,15 @@ import RealmSwift
 import Foundation
 
 
-class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSource, InternetTableViewDelegate, IMsg {
+class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSource, IMsg, UIPopoverPresentationControllerDelegate, UIViewControllerTransitioningDelegate {
     
     static var iMsg: IMsg? = nil
     static let msgHideLatestOperation = 1
-    static let msgIsSingleService = 1
+    static let msgIsSingleService = 2
+    static let msgUpdateTable = 3
 
-    //var bodyValue = [String : String]()
     var operatorData: GKHOperatorsModel?
     var latestOperation: InternetLatestOpsDO?
-    var requisites = [RequisiteDO]()
-    //var valueToPass : String?
-    var puref = ""
-    var cardNumber = ""
-    var product: GetProductListDatum?
     var qrData = [String: String]()
     var viewModel = InternetTVDetailsFormViewModel()
 
@@ -25,7 +20,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
     @IBOutlet weak var goButton: UIButton!
 
     lazy var realm = try? Realm()
-    var cardList: Results<UserAllCardsModel>? = nil
+    //var cardList: Results<UserAllCardsModel>? = nil
     let footerView = GKHInputFooterView()
 
     func handleMsg(what: Int) {
@@ -50,7 +45,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
         super.viewDidLoad()
         InternetTVDetailsFormController.iMsg = self
         viewModel.controller = self
-        cardList = realm?.objects(UserAllCardsModel.self)
+        //cardList = realm?.objects(UserAllCardsModel.self)
         
         if !qrData.isEmpty {
             let a = qrData.filter { $0.key == "Sum"}
@@ -62,8 +57,8 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
 //        goButton.isEnabled = false
 //        goButton.backgroundColor = .lightGray
         goButton.add_CornerRadius(5)
-        puref = operatorData?.puref ?? ""
-        InternetTVApiRequests.isSingleService(puref: puref)
+        viewModel.puref = operatorData?.puref ?? ""
+        InternetTVApiRequests.isSingleService(puref: viewModel.puref)
         tableView.register(UINib(nibName: "InternetInputCell", bundle: nil), forCellReuseIdentifier: InternetTVInputCell.reuseId)
 //        tableView.register(GKHInputFooterView.self, forHeaderFooterViewReuseIdentifier: "sectionFooter")
         bottomInputView.currencySymbol = "₽"
@@ -72,7 +67,12 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
         bottomInputView.didDoneButtonTapped = { amount in
             self.showActivity()
             if InternetTVApiRequests.isSingleService {
-                self.viewModel.requestCreateInternetTransfer(amount: amount)
+                if InternetTVMainViewModel.filter == GlobalModule.UTILITIES_CODE {
+                    self.viewModel.requestCreateServiceTransfer(amount: amount)
+                }
+                if InternetTVMainViewModel.filter == GlobalModule.INTERNET_TV_CODE {
+                    self.viewModel.requestCreateInternetTransfer(amount: amount)
+                }
             } else {
                 if !self.viewModel.firstStep {
                     self.viewModel.retryPayment(amount: amount)
@@ -80,6 +80,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
                 }
             }
         }
+
         setupCardList { error in
             guard let error = error else { return }
             self.showAlert(with: "Ошибка", and: error)
@@ -88,7 +89,9 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
         if let list = operatorData?.parameterList {
             list.forEach { item in
                 let req = RequisiteDO.convertParameter(item)
-                requisites.append(req)
+                if (viewModel.requisites.first { requisite in requisite.id == req.id  } == nil) {
+                    viewModel.requisites.append(req)
+                }
             }
             tableView.reloadData()
         }
@@ -105,6 +108,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
         ob.summTransction = sum.currencyFormatter(symbol: "RUB")
         let tax = response?.data?.fee ?? 0.0
         ob.taxTransction = tax.currencyFormatter(symbol: "RUB")
+        ob.cardFrom = footerView.cardFromField.cardModel
 
         DispatchQueue.main.async {
             let vc = ContactConfurmViewController()
@@ -120,7 +124,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
             vc.taxTransctionField.isHidden = false
             vc.currTransctionField.isHidden = true
             vc.currancyTransctionField.isHidden = true
-            vc.operatorView = self.operatorData?.logotypeList.first?.content ?? ""
+            vc.operatorView = self.operatorData?.logotypeList.first?.svgImage ?? ""
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }
@@ -133,21 +137,28 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
             param.title = item.fieldTitle
             param.content = item.fieldValue
             param.readOnly = true
-            if (requisites.first { requisite in requisite.id == param.id  } == nil) {
-                requisites.append(param)
+            if (viewModel.requisites.first { requisite in requisite.id == param.id  } == nil) {
+                viewModel.requisites.append(param)
             }
         }
 
         answer.data?.parameterListForNextStep?.forEach { item in
             let param = RequisiteDO.convertParameter(item)
-            requisites.append(param)
+            if (viewModel.requisites.first { requisite in requisite.id == param.id  } == nil) {
+                viewModel.requisites.append(param)
+            }
         }
 
         DispatchQueue.main.async {
             self.tableView.reloadData()
+            if let msg = answer.data?.infoMessage {
+                let infoView = GKHInfoView()
+                infoView.label.text = msg
+                self.showAlert(infoView)
+            }
         }
     }
-
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         let size = footerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
@@ -166,7 +177,12 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
             animationHidden(goButton)
             if viewModel.firstStep {
                 viewModel.firstStep = false
-                viewModel.requestCreateInternetTransfer(amount: "null")
+                if InternetTVMainViewModel.filter == GlobalModule.UTILITIES_CODE {
+                    viewModel.requestCreateServiceTransfer(amount: "null")
+                }
+                if InternetTVMainViewModel.filter == GlobalModule.INTERNET_TV_CODE {
+                    viewModel.requestCreateInternetTransfer(amount: "null")
+                }
             } else {
                 viewModel.requestNextCreateInternetTransfer(amount: "null")
             }
@@ -204,6 +220,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
+        goButton.isHidden = true
         qrData.removeAll()
     }
 
@@ -215,11 +232,11 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
         let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
         imageView.contentMode = .scaleAspectFit
 
-        if operatorData?.logotypeList.first?.content != nil {
-            UserDefaults.standard.set(operatorData?.logotypeList.first?.content ?? "", forKey: "OPERATOR_IMAGE")
-            let dataDecoded : Data = Data(base64Encoded: operatorData?.logotypeList.first?.content ?? "", options: .ignoreUnknownCharacters)!
-            let decodedImage = UIImage(data: dataDecoded)
-            imageView.image = decodedImage
+        if let svg = operatorData?.logotypeList.first?.svgImage {
+            UserDefaults.standard.set(svg, forKey: "OPERATOR_IMAGE")
+            //let dataDecoded : Data = Data(base64Encoded: operatorData?.logotypeList.first?.content ?? "", options: .ignoreUnknownCharacters)!
+            //let decodedImage = UIImage(data: dataDecoded)
+            imageView.image = svg.convertSVGStringToImage()
             imageView.setDimensions(height: 30, width: 30)
             navigationItem.rightBarButtonItem = UIBarButtonItem(customView: imageView)
         } else {
@@ -270,34 +287,37 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
     }
 
     func setupCardList(completion: @escaping ( _ error: String?) ->() ) {
-//        self.cardList?.forEach{ card in
-//            if (card.allowDebit && card.productType == "CARD") {
-//                var filterProduct: [UserAllCardsModel] = []
-//                filterProduct.append(card)
+        showActivity()
+//        self.cardList?.forEach{ product in
+//            if (product.allowDebit && product.currency == "RUB" && (product.productType == "CARD" || product.productType == "ACCOUNT")) {
+//                var filterProduct: [GetProductListDatum] = []
+//                let ob = GetProductListDatum.init(number: product.number, numberMasked: product.numberMasked, balance: product.balance, currency: product.currency, productType: product.productType, productName: product.productName, ownerID: product.ownerID, accountNumber: product.accountNumber, allowDebit: product.allowDebit, allowCredit: product.allowCredit, customName: product.customName, cardID: product.cardID, accountID: product.accountID, name: product.name, validThru: product.validThru, status: product.status, holderName: product.holderName, product: product.product, branch: product.branch, miniStatement: nil, mainField: product.mainField, additionalField: product.additionalField, smallDesign: product.smallDesign, mediumDesign: product.mediumDesign, largeDesign: product.largeDesign, paymentSystemName: product.paymentSystemName, paymentSystemImage: product.paymentSystemImage, fontDesignColor: product.fontDesignColor, id: product.id, background: [""], XLDesign: product.XLDesign, statusPC: product.statusPC, interestRate: nil, openDate: product.openDate, branchId: product.branchId, expireDate: product.expireDate)
+//
+//                filterProduct.append(ob)
 //                self.footerView.cardListView.cardList = filterProduct
 //                self.footerView.cardFromField.cardModel = filterProduct.first
-//                self.cardNumber  = filterProduct.first?.accountNumber ?? ""
+//                self.viewModel.cardNumber  = filterProduct.first?.accountNumber ?? ""
 //            }
 //        }
+
         viewModel.getCardList { [weak self] data ,error in
             DispatchQueue.main.async { [self] in
                 if error != nil {
                     self?.showAlert(with: "Ошибка", and: error!)
                 }
                 guard let data = data else { return }
+                self?.dismissActivity()
                 var arrProducts: [GetProductListDatum] = []
                 data.forEach { product in
-                    if (product.productType == "CARD" || product.productType == "ACCOUNT") && product.currency == "RUB" {
-                        if product.allowDebit == true {
+                    if (product.productType == "CARD" || product.productType == "ACCOUNT") && product.currency == "RUB" && product.allowDebit ?? false {
                         arrProducts.append(product)
-                        }
                     }
                 }
                 self?.footerView.cardListView.cardList = arrProducts
                 self?.footerView.cardFromField.cardModel = arrProducts.first
 
                 //self?.product = arrProducts.first
-                self?.cardNumber  = arrProducts.first?.number ?? ""
+                self?.viewModel.cardNumber  = arrProducts.first?.number ?? ""
 //                                self?.cardListView.cardList = filterProduct
 //
 //                                if filterProduct.count > 0 {
@@ -311,21 +331,73 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
         }
     }
 
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .custom
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        //super.prepare(for: segue, sender: sender)
+        if let tvc = segue.destination as? InternetTVSelectController
+        {
+            tvc.transitioningDelegate = self
+            tvc.modalPresentationStyle = .custom
+            if let ppc = tvc.popoverPresentationController
+            {
+                //ppc.delegate = self
+                //ppc.permittedArrowDirections = UIPopoverArrowDirection(rawValue: UIPopoverArrowDirection.up.rawValue)
+                //tvc.transitioningDelegate = self
+                //tvc.modalPresentationStyle = .custom
+                //let view = InternetTVSelectDialog()
+                //ppc.sourceView = view
+                //ppc.sourceRect = view.frame
+//                dialog.modalPresentationStyle = .popover
+//                dialog.popoverPresentationController?.delegate = self
+//                dialog.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection(rawValue: 0)
+//                dialog.popoverPresentationController?.sourceView = view
+//                dialog.popoverPresentationController?.sourceRect = view.frame
+            }
+        }
+    }
+
+    var heightForSelectVC = 400
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        let presenter = PresentationController(presentedViewController: presented, presenting: presenting)
+        presenter.height = heightForSelectVC
+        return presenter
+    }
+}
+
+extension  InternetTVDetailsFormController {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        requisites.count
+        viewModel.requisites.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: InternetTVInputCell.reuseId, for: indexPath) as! InternetTVInputCell
-        guard requisites.count != 0 else { return cell }
-
-        cell.setupUI(indexPath.row, (requisites[indexPath.row]), qrData)
-        cell.tableViewDelegate = (self as InternetTableViewDelegate)
+        guard viewModel.requisites.count != 0 else { return cell }
+        cell.setupUI(indexPath.row, (viewModel.requisites[indexPath.row]), qrData, additionalList: latestOperation?.additionalList ?? [AdditionalListModel]())
+        //cell.tableViewDelegate = (self as InternetTableViewDelegate)
 
         cell.showInfoView = { value in
             let infoView = GKHInfoView()
-            infoView.lable.text = value
+            infoView.label.text = value
             self.showAlert(infoView)
+        }
+
+        cell.showSelectView = { value , elementID in
+            let heightScreen = UIScreen.main.bounds.size.height
+            self.heightForSelectVC = 150 + (value.count * 50)
+
+            if (heightScreen - 250) < CGFloat(self.heightForSelectVC) {
+                self.heightForSelectVC = Int(heightScreen - 250)
+            }
+
+            let popView = SelectVC()
+            popView.spinnerValues = value
+            popView.elementID = elementID
+            popView.modalPresentationStyle = .custom
+            popView.transitioningDelegate = self
+            self.present(popView, animated: true, completion: nil)
         }
         return cell
     }
@@ -334,21 +406,4 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
         let height: CGFloat = 80.0
         return height
     }
-
-    func afterClickingReturnInTextField(cell: InternetTVInputCell) {
-        let fieldId = cell.body["fieldid"]
-        let value = cell.body["fieldvalue"]
-        let fieldName = cell.body["fieldname"]
-        viewModel.additionalElement["fieldid"] = fieldId
-        viewModel.additionalElement["fieldname"] = fieldName
-        viewModel.additionalElement["fieldvalue"] = value
-        viewModel.additionalDic[fieldName ?? "-1"] = viewModel.additionalElement
-        let item = requisites.first { requisite in requisite.id == fieldName }
-        item?.content = value
-        item?.readOnly = true
-    }
-}
-
-@objc protocol InternetTableViewDelegate: NSObjectProtocol{
-    func afterClickingReturnInTextField(cell: InternetTVInputCell)
 }

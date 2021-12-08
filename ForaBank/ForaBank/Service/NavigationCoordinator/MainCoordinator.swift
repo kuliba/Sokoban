@@ -11,7 +11,7 @@ import UIKit
 class MainCoordinator: Coordinator {
     
     let coordinator: Coordinator!
-    
+
     override init(router: RouterType) {
         coordinator = BaseCoordinator(router: router)
         super.init(router: router)
@@ -21,12 +21,6 @@ class MainCoordinator: Coordinator {
     override func start() {
         
         let userIsRegister = UserDefaults.standard.object(forKey: "UserIsRegister") as? Bool
-        
-        // Зарузка кэша
-        DispatchQueue.main.async(qos: .userInteractive) {
-        lazy var downloadCash = DownloadQueue()
-        downloadCash.download {}
-        }
         
         if let userIsRegister = userIsRegister {
             if userIsRegister {

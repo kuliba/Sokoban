@@ -27,7 +27,7 @@ class InternetTVCitySearchController: UIViewController, UITableViewDataSource, U
         regionsArr.removeAll()
         allRegionsArr.append(InternetTVCitySearchController.ALL_REGION)
         operatorsList?.forEach { op in
-            if op.parentCode?.contains(GlobalModule.INTERNET_TV_CODE) ?? false {
+            if op.parentCode?.contains(InternetTVMainViewModel.filter) ?? false {
                 print("region5555 \(op.region) + \(op.name)")
                 let arrRegion = (op.region ?? "").split(separator: ",")
                 for item in arrRegion {

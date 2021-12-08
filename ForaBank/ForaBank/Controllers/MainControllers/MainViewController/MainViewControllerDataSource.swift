@@ -161,8 +161,10 @@ extension MainViewController {
                         
                         
                         self.dataSource?.apply(snapshot ?? NSDiffableDataSourceSnapshot<Section, PaymentsModel>())
+                        selectable = false
                         isFiltered = false
                     case 1:
+                        selectable = false
                         
 //                       productList = productList.filter({$0.productType == "CARD" || $0.productType == "ACCOUNT"})
                         productList = productsDeposits

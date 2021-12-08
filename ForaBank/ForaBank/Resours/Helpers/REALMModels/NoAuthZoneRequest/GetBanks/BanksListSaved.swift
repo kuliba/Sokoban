@@ -10,84 +10,51 @@ import RealmSwift
 
 struct BanksListSaved: DownloadQueueProtocol {
     
-    func add(_ param: [String : String], _ body: [String: AnyObject], completion: @escaping () -> ()) {
+    func add(_ param: [String : String], _ body: [String: AnyObject], completion: @escaping (DownloadQueue.Result) -> Void) {
         
         NetworkManager<GetFullBankInfoListDecodableModel>.addRequest(.getFullBankInfoList, param, body) { model, error in
-            if error != nil {
-                print("DEBUG: error", error!)
-                completion()
-            } else {
-                guard let statusCode = model?.statusCode else {
-                    completion()
-                    return
+            
+            if let error = error {
+                print("DEBUG: error", error)
+                completion(.failed(nil))
+                return
+            }
+            
+            guard let model = model, let bankListData = model.data, let serial = model.data?.serial else {
+                completion(.failed(nil))
+                return
+            }
+            
+            // check if we actually have data from serever
+            guard let bankFullInfoList = bankListData.bankFullInfoList, bankFullInfoList.count > 0 else {
+                completion(.passed)
+                return
+            }
+
+            let updatedBankList = GetBankList(with: bankListData)
+            
+            do {
+                
+                let realm = try Realm()
+                let existingBankList = realm.objects(GetBankList.self)
+                
+                // fitst transaction: delete items to inform subscribers in UI
+                try realm.write {
+                    
+                    realm.delete(existingBankList)
                 }
-                if statusCode == 0 {
+                
+                // second transaction: add fresh data from server
+                try realm.write {
                     
-                    guard let model = model else {
-                        completion()
-                        return
-                    }
-                    guard let banks = model.data else {
-                        completion()
-                        return
-                    }
-                    
-                    let banksList = GetBankList()
-                    banksList.serial = banks.serial
-                    
-                    banks.bankFullInfoList?.forEach{ bank in
-                        let a = BankList()
-                        
-                        a.memberId = bank.memberID
-                        a.name = bank.name
-                        a.fullName = bank.fullName
-                        a.engName = bank.engName
-                        a.rusName = bank.rusName
-                        a.svgImage = bank.svgImage
-                        a.bic = bank.bic
-                        a.fiasId = bank.fiasID
-                        a.address = bank.address
-                        a.latitude = bank.latitude
-                        
-                        a.longitude = bank.longitude
-                        a.inn = bank.inn
-                        a.kpp = bank.kpp
-                        a.registrationNumber = bank.registrationNumber
-                        a.bankType = bank.bankType
-                        a.bankTypeCode = bank.bankTypeCode
-                        a.bankServiceType = bank.bankServiceType
-                        a.bankServiceTypeCode = bank.bankServiceTypeCode
-                        
-                        bank.accountList?.forEach{ list in
-                            
-                            let b = BankAccauntList()
-                            
-                            b.account = list.account
-                            b.regulationAccountType = list.regulationAccountType
-                            b.ck = list.ck
-                            b.dateIn = list.dateIn
-                            b.dateOut = list.dateOut
-                            b.status = list.status
-                            b.CBRBIC = list.cbrbic
-                            a.accountList.append(b)
-                        }
-                        banksList.banksList.append(a)
-                    }
-                    
-                    /// Сохраняем в REALM
-                    do {
-                        let realm = try? Realm()
-                        let banks = realm?.objects(GetBankList.self)
-                        realm?.beginWrite()
-                        realm?.delete(banks!)
-                        realm?.add(banksList)
-                        try realm?.commitWrite()
-                        completion()
-                    } catch {
-                        completion()
-                        print(error.localizedDescription)
-                    }
+                    realm.add(updatedBankList)
                 }
+                
+                completion(.updated(serial))
+                
+            } catch {
+
+                completion(.failed(error))
             }
         }
     }

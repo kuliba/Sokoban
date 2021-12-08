@@ -24,3 +24,53 @@ class GKHOperatorsModel: Object {
     
 }
 
+extension GKHOperatorsModel {
+        
+    static func childOperators(with data: [Operator], operatorCodes: [String], parameterTypes: [String]) -> [GKHOperatorsModel] {
+        
+        var operators = [GKHOperatorsModel]()
+        
+        for group in data {
+            
+            guard let code = group.code, code.contained(in: operatorCodes), let grouopOperatorsData = group.operators else {
+                continue
+            }
+            
+            let groupOperators = grouopOperatorsData.compactMap{ GKHOperatorsModel(with: $0, and: parameterTypes) }
+            operators.append(contentsOf: groupOperators)
+        }
+        
+        return operators
+    }
+    
+    convenience init(with data: Operator, and parameterTypes: [String]?) {
+        
+        self.init()
+        puref   = data.code
+        isGroup = data.isGroup ?? false
+        name    = data.name
+        region  = data.region
+        parentCode = data.parentCode
+        
+        if let logotypeListData = data.logotypeList {
+            
+            logotypeList.append(objectsIn: logotypeListData.map{ LogotypeData(with: $0, and: data.code)} )
+        }
+        
+        if let synonymListData = data.synonymList {
+            
+            synonymList.append(objectsIn: synonymListData)
+        }
+        
+        if let parameterListData = data.parameterList {
+            
+            let parametersObjects = parameterListData.compactMap{ Parameters(with: $0, for: parameterTypes) }
+            let sortedParametersObjects = parametersObjects.sorted(by: { $0.order < $1.order })
+            
+            parameterList.append(objectsIn: sortedParametersObjects )
+        }
+        
+        //FIXME: child operators from Operator model not implemented
+    }
+}
+
