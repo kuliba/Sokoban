@@ -25,7 +25,7 @@ class Parameters: Object {
     @objc dynamic var rawLength = 0
     @objc dynamic var readOnly = true
     @objc dynamic var content: String?
-    
+    @objc dynamic var svgImage: String?
 }
 
 extension Parameters {

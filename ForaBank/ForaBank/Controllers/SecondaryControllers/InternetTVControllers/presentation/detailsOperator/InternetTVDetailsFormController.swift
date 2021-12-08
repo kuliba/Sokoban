@@ -291,12 +291,14 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
 //        self.cardList?.forEach{ card in
 //            if (card.allowDebit && card.productType == "CARD") {
 //                var filterProduct: [UserAllCardsModel] = []
+//
 //                filterProduct.append(card)
 //                self.footerView.cardListView.cardList = filterProduct
 //                self.footerView.cardFromField.cardModel = filterProduct.first
-//                self.cardNumber  = filterProduct.first?.accountNumber ?? ""
+//                self.viewModel.cardNumber  = filterProduct.first?.accountNumber ?? ""
 //            }
 //        }
+
         viewModel.getCardList { [weak self] data ,error in
             DispatchQueue.main.async { [self] in
                 if error != nil {
