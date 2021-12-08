@@ -15,6 +15,8 @@ class PaymentByPhoneViewController: UIViewController {
     var sbp: Bool?
     var confirm: Bool?
     var selectedCardNumber = 0
+    var selectedAccountId = 0
+    var productType = ""
     var cardIsSelect = false
 
     var selectedBank: BanksList? {
@@ -184,8 +186,16 @@ class PaymentByPhoneViewController: UIViewController {
 //            self.cardListView.cardList = filterProduct
             if filterProduct.count > 0 {
                 self.cardField.model = filterProduct.first
-                guard let cardNumber  = filterProduct.first?.number else { return }
-                self.selectedCardNumber = Int(cardNumber) ?? 0
+                guard let cardId  = filterProduct.first?.cardID else { return }
+                guard let accountId  = filterProduct.first?.id else { return }
+//                guard let productType  = filterProduct.first?.productType else { return }
+                if filterProduct.first?.productType == "ACCOUNT"{
+                    self.selectedAccountId = accountId
+                } else {
+                    self.selectedCardNumber = cardId
+                }
+                self.productType = filterProduct.first?.productType ?? ""
+
                 self.cardIsSelect = true
             }
         }
@@ -238,7 +248,16 @@ class PaymentByPhoneViewController: UIViewController {
                 cardList.forEach({ card in
                     if card.id == cardId {
                         self.cardField.model = card
-                        self.selectedCardNumber = card.cardID
+                      
+                        if card.productType == "ACCOUNT"{
+                            self.selectedAccountId = card.id
+                            print(card)
+                            print(card.accountNumber?.digits )
+                            
+                        } else {
+                            self.selectedCardNumber = card.cardID
+                        }
+                        self.productType = card.productType ?? ""
                         if self.bankListView.isHidden == false {
                             self.hideView(self.bankListView, needHide: true)
                         }
@@ -393,16 +412,16 @@ class PaymentByPhoneViewController: UIViewController {
         let clearAmount = sum.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "₽", with: "").replacingOccurrences(of: ",", with: ".")
         let clearNumber = number.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "").replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "").replacingOccurrences(of: ",", with: ".").replacingOccurrences(of: "+", with: "")
 //       let fromatNumber =
-        var accountId: Int?
+        var accountNumber: Int?
         var cardId: Int?
         
-        if String(selectedCardNumber).count > 16{
-            accountId = selectedCardNumber
+        
+            accountNumber = selectedAccountId
 //            cardNumber = ""
-        } else {
+        
             cardId = selectedCardNumber
 //            accountNumber = ""
-        }
+
         
         bottomView.doneButtonIsEnabled(true)
         
@@ -412,7 +431,7 @@ class PaymentByPhoneViewController: UIViewController {
                      "payer" : [
                         "cardId"        : cardId,
                         "cardNumber"    : nil,
-                        "accountId"     : accountId,
+                        "accountId"     : accountNumber,
                         "accountNumber" : nil
                      ],
                      "payeeInternal" : [
@@ -455,9 +474,9 @@ class PaymentByPhoneViewController: UIViewController {
 //                            vc.payeerField.text = data.payeeName ?? "Получатель не оперделен>"
 //                            vc.otpCode = self?.otpCode
                             
-                            var model = ConfirmViewControllerModel(type: .phoneNumber)
+                            let model = ConfirmViewControllerModel(type: .phoneNumber)
                             model.bank = self?.selectedBank
-                            model.cardFrom = self?.cardField.cardModel
+                            model.cardFromRealm = self?.cardField.model
                             model.phone = self?.phoneField.text.digits ?? ""
                             model.summTransction = data.debitAmount?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
                             model.summInCurrency = data.creditAmount?.currencyFormatter(symbol: data.currencyPayee ?? "RUB") ?? ""
@@ -488,6 +507,17 @@ class PaymentByPhoneViewController: UIViewController {
     func startContactPayment(with card: Int, completion: @escaping (_ error: String?)->()) {
         showActivity()
         
+        var accountId: Int?
+        var cardId: Int?
+        
+        if productType == "ACCOUNT"{
+            accountId = selectedAccountId
+//            cardNumber = ""
+        } else {
+            cardId = selectedCardNumber
+//            accountNumber = ""
+        }
+        
         guard let sum = bottomView.amountTextField.text else {
             return
         }
@@ -505,9 +535,6 @@ class PaymentByPhoneViewController: UIViewController {
             clearPhone = newPhone
         }
         
-        guard let memberId = self.selectedBank?.memberID else {
-            return
-        }
         
         
         let newBody = [
@@ -515,9 +542,9 @@ class PaymentByPhoneViewController: UIViewController {
             "amount" : clearAmount,
             "currencyAmount" : "RUB",
             "payer" : [
-                "cardId" : card,
+                "cardId" : cardId,
                 "cardNumber" : nil,
-                "accountId" : nil
+                "accountId" : accountId
             ],
             "puref" : "iFora||TransferC2CSTEP",
             "additional" : [
@@ -554,7 +581,7 @@ class PaymentByPhoneViewController: UIViewController {
                             
                         }
                         
-                        model.cardFrom = self?.cardField.cardModel
+                        model.cardFromRealm = self?.cardField.model
                         model.phone = self?.phoneField.text.digits ?? ""
 //                        model.summTransction = model.summTransction
                         

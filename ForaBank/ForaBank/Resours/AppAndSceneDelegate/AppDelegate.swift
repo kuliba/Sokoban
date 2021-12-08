@@ -10,12 +10,12 @@ import Firebase
 import FirebaseMessaging
 import RealmSwift
 
-
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var delegate: Encription?
     let timer = BackgroundTimer()
+    private let downloadCash = DownloadQueue()
     
     var isAuth: Bool? {
         didSet {
@@ -48,6 +48,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         customizeUiInApp()
         
         self.initRealmTimerParameters()
+        // Зарузка кэша
+        downloadCash.download()
         // Net Detect
         NetStatus.shared.startMonitoring()
         return true
@@ -105,7 +107,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     fileprivate func RealmConfiguration() {
         // Версия БД (изменить на большую если меняем БД)
-        let schemaVersion: UInt64 = 5
+        let schemaVersion: UInt64 = 7
 
         let config = Realm.Configuration(
             // Set the new schema version. This must be greater than the previously used
@@ -117,13 +119,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             migrationBlock: { migration, oldSchemaVersion in
                 // We haven’t migrated anything yet, so oldSchemaVersion == 0
                 if (oldSchemaVersion < schemaVersion) {
-                    if oldSchemaVersion < 3 {
+                    if oldSchemaVersion < 7 {
                         migration.deleteData(forType: "GKHOperatorsModel")
                     }
-                    if oldSchemaVersion < 4 {
+                    if oldSchemaVersion < 7 {
                         migration.deleteData(forType: "Parameters")
                     }
-                    if oldSchemaVersion < 5 {
+                    if oldSchemaVersion < 7 {
                         migration.deleteData(forType: "LogotypeData")
                          migration.deleteData(forType: "UserAllCardsModel")
                     }

@@ -10,24 +10,24 @@ import RealmSwift
 
 struct GetPaymentSystemSaved: DownloadQueueProtocol {
     
-    func add(_ param: [String : String], _ body: [String: AnyObject], completion: @escaping () -> ()) {
+    func add(_ param: [String : String], _ body: [String: AnyObject], completion: @escaping (DownloadQueue.Result) -> Void) {
         
         NetworkManager<GetPaymentSystemListDecodableModel>.addRequest(.getPaymentSystemList, param, body) { model, error in
             
             if let error = error {
                 print("DEBUG: error", error)
-                completion()
+                completion(.failed(nil))
                 return
             }
             
-            guard let model = model, let paymentSystemData = model.data else {
-                completion()
+            guard let model = model, let paymentSystemData = model.data, let serial = model.data?.serial else {
+                completion(.failed(nil))
                 return
             }
             
             // check if we actually have data from serever
             guard let paymentSystemDataList = paymentSystemData.paymentSystemList, paymentSystemDataList.count > 0 else {
-                completion()
+                completion(.passed)
                 return
             }
             
@@ -50,10 +50,11 @@ struct GetPaymentSystemSaved: DownloadQueueProtocol {
                     realm.add(updatedPaymentSystemList)
                 }
                 
+                completion(.updated(serial))
+                
             } catch {
                 
-                print(error.localizedDescription)
-                completion()
+                completion(.failed(error))
             }
         }
     }
