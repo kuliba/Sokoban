@@ -15,6 +15,7 @@ class PaymentByPhoneViewController: UIViewController {
     var sbp: Bool?
     var confirm: Bool?
     var selectedCardNumber = 0
+    var selectedAccountId = 0
     var productType = ""
     var cardIsSelect = false
 
@@ -186,9 +187,15 @@ class PaymentByPhoneViewController: UIViewController {
             if filterProduct.count > 0 {
                 self.cardField.model = filterProduct.first
                 guard let cardId  = filterProduct.first?.cardID else { return }
-                guard let productType  = filterProduct.first?.productType else { return }
-                self.selectedCardNumber = cardId
-                self.productType = productType
+                guard let accountId  = filterProduct.first?.id else { return }
+//                guard let productType  = filterProduct.first?.productType else { return }
+                if filterProduct.first?.productType == "ACCOUNT"{
+                    self.selectedAccountId = accountId
+                } else {
+                    self.selectedCardNumber = cardId
+                }
+                self.productType = filterProduct.first?.productType ?? ""
+
                 self.cardIsSelect = true
             }
         }
@@ -241,7 +248,15 @@ class PaymentByPhoneViewController: UIViewController {
                 cardList.forEach({ card in
                     if card.id == cardId {
                         self.cardField.model = card
-                        self.selectedCardNumber = card.cardID
+                      
+                        if card.productType == "ACCOUNT"{
+                            self.selectedAccountId = card.id
+                            print(card)
+                            print(card.accountNumber?.digits )
+                            
+                        } else {
+                            self.selectedCardNumber = card.cardID
+                        }
                         self.productType = card.productType ?? ""
                         if self.bankListView.isHidden == false {
                             self.hideView(self.bankListView, needHide: true)
@@ -397,16 +412,16 @@ class PaymentByPhoneViewController: UIViewController {
         let clearAmount = sum.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "₽", with: "").replacingOccurrences(of: ",", with: ".")
         let clearNumber = number.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "").replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "").replacingOccurrences(of: ",", with: ".").replacingOccurrences(of: "+", with: "")
 //       let fromatNumber =
-        var accountId: Int?
+        var accountNumber: Int?
         var cardId: Int?
         
-        if productType == "ACCOUNT"{
-            accountId = selectedCardNumber
+        
+            accountNumber = selectedAccountId
 //            cardNumber = ""
-        } else {
+        
             cardId = selectedCardNumber
 //            accountNumber = ""
-        }
+
         
         bottomView.doneButtonIsEnabled(true)
         
@@ -416,7 +431,7 @@ class PaymentByPhoneViewController: UIViewController {
                      "payer" : [
                         "cardId"        : cardId,
                         "cardNumber"    : nil,
-                        "accountId"     : accountId,
+                        "accountId"     : accountNumber,
                         "accountNumber" : nil
                      ],
                      "payeeInternal" : [
@@ -492,6 +507,17 @@ class PaymentByPhoneViewController: UIViewController {
     func startContactPayment(with card: Int, completion: @escaping (_ error: String?)->()) {
         showActivity()
         
+        var accountId: Int?
+        var cardId: Int?
+        
+        if productType == "ACCOUNT"{
+            accountId = selectedAccountId
+//            cardNumber = ""
+        } else {
+            cardId = selectedCardNumber
+//            accountNumber = ""
+        }
+        
         guard let sum = bottomView.amountTextField.text else {
             return
         }
@@ -509,9 +535,6 @@ class PaymentByPhoneViewController: UIViewController {
             clearPhone = newPhone
         }
         
-        guard let memberId = self.selectedBank?.memberID else {
-            return
-        }
         
         
         let newBody = [
@@ -519,9 +542,9 @@ class PaymentByPhoneViewController: UIViewController {
             "amount" : clearAmount,
             "currencyAmount" : "RUB",
             "payer" : [
-                "cardId" : card,
+                "cardId" : cardId,
                 "cardNumber" : nil,
-                "accountId" : nil
+                "accountId" : accountId
             ],
             "puref" : "iFora||TransferC2CSTEP",
             "additional" : [
