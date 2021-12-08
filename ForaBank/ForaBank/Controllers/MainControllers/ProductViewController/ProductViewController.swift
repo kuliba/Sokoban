@@ -294,8 +294,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
             statusBarView.hideSkeleton()
             statusBarLabel.isSkeletonable = false
             statusBarLabel.hideSkeleton()
-            filterButton.hideSkeleton()
-            filterButton.isSkeletonable = false
+//            filterButton.hideSkeleton()
+//            filterButton.isSkeletonable = false
             tableViewLabel.isSkeletonable = false
             tableViewLabel.hideSkeleton()
             collectionView?.reloadData()
@@ -404,18 +404,13 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
     }
     
     func startSkeleton(){
-//        self.isSkeletonable = true
-        
-        
-        filterButton.isSkeletonable = true
-        filterButton.showAnimatedGradientSkeleton()
-        
-//        statusBarView.isSkeletonable = true
-//        statusBarView.showAnimatedGradientSkeleton()
-        statusBarView.skeletonCornerRadius = 12
-        statusBarView.layer.cornerRadius = 8
+        tableView?.reloadInputViews()
         tableView?.isSkeletonable = true
         tableView?.showAnimatedGradientSkeleton()
+        
+        statusBarView.showAnimatedGradientSkeleton()
+        statusBarView.skeletonCornerRadius = 12
+        statusBarView.layer.cornerRadius = 8
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -423,6 +418,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
 //        navigationController?.navigationBar.barTintColor = UIColor(hexString: product?.background[0] ?? "").darker()
 //        navigationController?.view.backgroundColor =   UIColor(hexString: product?.background[0] ?? "").darker()
 //        navigationController?.navigationBar.backgroundColor =  UIColor(hexString: product?.background[0] ?? "").darker()
+        
     }
     
     override func viewDidLoad() {
@@ -430,7 +426,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
         view.backgroundColor = .white
         
         addCloseColorButton(with: .white)
-        startSkeleton()
 //        tableView?.setContentOffset(CGPoint(x: 0, y: CGFloat.greatestFiniteMagnitude), animated: false)
 
 //        statusBarView.isHidden = true
@@ -698,6 +693,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
         tableView?.register(UINib(nibName: "HistoryTableViewCell", bundle: nil), forCellReuseIdentifier: "HistoryTableViewCell")
         tableView?.separatorStyle = UITableViewCell.SeparatorStyle.none
         tableView?.showsVerticalScrollIndicator = false
+        tableView?.isSkeletonable = true
+        tableView?.showGradientSkeleton()
         
     
         //Right navigation button
@@ -707,14 +704,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
     }
     
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-//        self.navigationController?.navigationBar.barTintColor = .white
-//        self.navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
-//        self.navigationController?.navigationBar.shadowImage = nil
-//        self.navigationController?.navigationBar.isTranslucent = false
 
-    }
     
     func addCloseColorButton(with color: UIColor) {
         let button = UIBarButtonItem(image: UIImage(systemName: "xmark"),
@@ -1004,9 +994,11 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
         groupByCategory.removeAll()
         groupByCategoryAccount.removeAll()
         groupByCategoryDeposit.removeAll()
-        tableView?.reloadInputViews()
-        statusBarView.showAnimatedGradientSkeleton()
         tableView?.reloadData()
+        tableView?.reloadInputViews()
+        tableView?.isSkeletonable = true
+        tableView?.showAnimatedGradientSkeleton()
+        statusBarView.showAnimatedGradientSkeleton()
         tableView?.isScrollEnabled = false
         self.tableView?.reloadRows(at: self.tableView?.indexPathsForVisibleRows ?? [IndexPath(row: 0, section: 0)], with: .automatic)
 
@@ -1088,7 +1080,7 @@ extension ProductViewController{
             print(data)
 //            cell.accountOperation = (data as! [GetAccountStatementDatum])[indexPath.row]
 //            groupByCategory[index].value[indexPath.row]
-            cell.titleLable.isSkeletonable = true
+//            cell.titleLable.isSkeletonable = true
 //            cell.operation = sortedAccount
 //            let data = groupByCategory.forEach({$0.value[indexPath.row]})
             _ = groupByCategoryDeposit[indexPath.section]
@@ -1107,7 +1099,7 @@ extension ProductViewController{
             print(data)
 //            cell.accountOperation = (data as! [GetAccountStatementDatum])[indexPath.row]
 //            groupByCategory[index].value[indexPath.row]
-            cell.titleLable.isSkeletonable = true
+//            cell.titleLable.isSkeletonable = true
 //            cell.operation = sortedAccount
 //            let data = groupByCategory.forEach({$0.value[indexPath.row]})
             _ = groupByCategoryAccount[indexPath.section] as? Array<Any>
@@ -1129,7 +1121,7 @@ extension ProductViewController{
 //            print(data)
 //            cell.accountOperation = (data as! [GetAccountStatementDatum])[indexPath.row]
 //            groupByCategory[index].value[indexPath.row]
-            cell.titleLable.isSkeletonable = true
+//            cell.titleLable.isSkeletonable = true
             cell.depositOperation = nil
             cell.accountOperation = nil
             let section = groupByCategory[indexPath.section]

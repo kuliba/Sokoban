@@ -74,15 +74,6 @@ extension ProductViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        tableView?.showAnimatedGradientSkeleton()
-        historyArray.removeAll()
-        historyArrayAccount.removeAll()
-        sorted.removeAll()
-        groupByCategory.removeAll()
-        tableView?.reloadInputViews()
-        tableView?.isSkeletonable = true
-        
-        statusBarView.showAnimatedGradientSkeleton()
        
         DispatchQueue.main.async {
             self.tableView?.reloadData()
@@ -96,6 +87,15 @@ extension ProductViewController: UICollectionViewDataSource {
             cell?.showSelect()
         } else {
             if indexPath.item < products.count{
+                historyArray.removeAll()
+                historyArrayAccount.removeAll()
+                sorted.removeAll()
+                groupByCategory.removeAll()
+                tableView?.reloadInputViews()
+                tableView?.isSkeletonable = true
+                tableView?.showAnimatedGradientSkeleton()
+                
+                statusBarView.showAnimatedGradientSkeleton()
                 if indexItem ?? 0 < 3{
                     product = products[indexPath.item]
                     self.collectionView?.selectItem(at: indexPath, animated: true, scrollPosition: .bottom)
@@ -107,6 +107,8 @@ extension ProductViewController: UICollectionViewDataSource {
 //                guard let cell = collectionView.cellForItem(at: indexPath) as? CardCollectionViewCell else {return}
 //                cell.showSelect()
             } else {
+                
+
                 self.collectionView?.deselectItem(at: indexPath, animated: true)
                 let vc = ProductsViewController()
                 vc.addCloseButton()
