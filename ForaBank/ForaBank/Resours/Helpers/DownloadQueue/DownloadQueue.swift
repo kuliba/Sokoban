@@ -90,8 +90,13 @@ final class DownloadQueue {
                           handler: GetSessionTimeoutSaved(),
                           params: ["serial" : serialsStorage.serial(for: .sessionTimeout)]))
         
-        downloadArray.append(GetPaymentSystemSaved())
-        paramArray.append(paymentSystemParam)
+        return queue
+    }
+}
+     
+extension DownloadQueue {
+    
+    enum Kind: String {
         
         case sessionTimeout
         case countryList

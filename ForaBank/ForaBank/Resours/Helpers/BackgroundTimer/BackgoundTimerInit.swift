@@ -26,7 +26,7 @@ final class TimerTimeInit {
             let maxTimeOut = timeObject?.maxTimeOut ?? 0
             let renewSessionTimeStamp = timeObject?.renewSessionTimeStamp ?? Date().localDate()
             let mustCheckTimeOut = timeObject?.mustCheckTimeOut ?? true
-            print("Debugging TimerTimeInit", mustCheckTimeOut)
+//            print("Debugging TimerTimeInit", mustCheckTimeOut)
             // Получаем и форматируем текущее время
             let currentTimeStamp = Date().localDate()
             
@@ -62,7 +62,7 @@ final class TimerTimeInit {
                         // Отправка запроса на сервер об обновлении сессии после удачной авторизации
                         if maxSessionRenewTimeOutNotPassed {
                             let request = GetSessionTimeoutSaved()
-                            request.add([:], [:]) {}
+                            request.add([:], [:]) {_ in }
                         }
                     }
                 }
