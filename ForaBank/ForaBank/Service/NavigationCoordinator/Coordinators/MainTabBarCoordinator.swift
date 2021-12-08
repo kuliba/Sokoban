@@ -84,10 +84,11 @@ extension MainTabBarCoordinator: PaymentsViewControllerDelegate {
 //        }
 //    }
     
-    func toMobilePay(_ controller: UIViewController) {
+    func toMobilePay(_ controller: UIViewController, _ phone: String) {
         let mobilePay = MobilePayCoordinator(router: router)
         addChild(mobilePay)
         mobilePay.start()
+        
         router.present(mobilePay, animated: true)
     }
     

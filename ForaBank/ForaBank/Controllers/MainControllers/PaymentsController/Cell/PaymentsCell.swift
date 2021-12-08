@@ -265,7 +265,6 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
                 
                 if message != nil {
                     DispatchQueue.main.async {
-                        print(message ?? "")
                         guard let avatarImage = UIImage(named: "smartphonegray") else { return }
                         self.iconImageView.image = avatarImage
                     }
