@@ -61,7 +61,8 @@ struct CreateDirectDataClass: Codable {
     let currencyRate: JSONNull?
     let debitAmount: Double?
     let payeeName: String?
-    let paymentOperationDetailID, documentStatus: JSONNull?
+    let paymentOperationDetailID: Int?
+    let documentStatus: JSONNull?
     let additionalList: [AdditionalList]?
 
     enum CodingKeys: String, CodingKey {
@@ -101,7 +102,7 @@ extension CreateDirectDataClass {
         currencyRate: JSONNull?? = nil,
         debitAmount: Double?? = nil,
         payeeName: String?? = nil,
-        paymentOperationDetailID: JSONNull?? = nil,
+        paymentOperationDetailID: Int?? = nil,
         documentStatus: JSONNull?? = nil,
         additionalList: [AdditionalList]?? = nil
     ) -> CreateDirectDataClass {

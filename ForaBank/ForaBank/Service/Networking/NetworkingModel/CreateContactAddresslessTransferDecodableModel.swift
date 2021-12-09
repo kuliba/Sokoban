@@ -63,7 +63,8 @@ struct CreateContactAddresslessDataClass: Codable {
     let currencyRate: JSONNull?
     let debitAmount: Double?
     let payeeName: String?
-    let paymentOperationDetailID, documentStatus: JSONNull?
+    let paymentOperationDetailID: Int?
+    let documentStatus: JSONNull?
     let additionalList: [CreateAdditionalList]?
 
     enum CodingKeys: String, CodingKey {
@@ -103,7 +104,7 @@ extension CreateContactAddresslessDataClass {
         currencyRate: JSONNull?? = nil,
         debitAmount: Double?? = nil,
         payeeName: String?? = nil,
-        paymentOperationDetailID: JSONNull?? = nil,
+        paymentOperationDetailID: Int?? = nil,
         documentStatus: JSONNull?? = nil,
         additionalList: [CreateAdditionalList]?? = nil
     ) -> CreateContactAddresslessDataClass {

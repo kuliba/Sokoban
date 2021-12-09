@@ -36,7 +36,7 @@ class ConfurmOpenDepositViewController: PaymentViewController {
     var choosenRate: TermRateSumTermRateList? {
         didSet {
             guard let choosenRate = choosenRate else { return }
-            let dateDepositButtontext = "\(choosenRate.termName ?? "") (\(choosenRate.term ?? 0) дней)"
+            let dateDepositButtontext = "\(choosenRate.termName ?? "") (\(choosenRate.term ?? 0) \(WordDeclensionUtil.getWordInDeclension(type: WordDeclensionEnum().day, n: choosenRate.term )))"
             termField.text = dateDepositButtontext
             rateField.text = "\(choosenRate.rate ?? 0.0)%"
             guard let text = self.bottomView.amountTextField.text else { return }
@@ -136,6 +136,8 @@ class ConfurmOpenDepositViewController: PaymentViewController {
         bottomView.doneButton.setTitle("Продолжить", for: .normal)
         
         calculateSumm(with: startAmount)
+        
+        incomeField.chooseButton.setImage(UIImage(named: "info"), for: .normal)
         
         stackView.addArrangedSubview(nameField)
         stackView.addArrangedSubview(termField)
@@ -341,7 +343,11 @@ class ConfurmOpenDepositViewController: PaymentViewController {
                     confurmVCModel.phone = self.termField.text
                     confurmVCModel.summInCurrency = self.rateField.text
                     confurmVCModel.numberTransction = model.data?.accountNumber ?? ""
-                    
+                    let formatter = Date.dateFormatterSimpleDateConvenient()
+                    let date2 = Date(timeIntervalSinceNow: TimeInterval(model.data?.closeDate ?? 0))
+                    let date = Date(timeIntervalSince1970: TimeInterval(model.data?.closeDate ?? 0))
+                    print(formatter.string(from: date))
+                    print(formatter.string(from: date2))
                     
                     let vc: DepositSuccessViewController = DepositSuccessViewController.loadFromNib()
                     vc.confurmVCModel = confurmVCModel
