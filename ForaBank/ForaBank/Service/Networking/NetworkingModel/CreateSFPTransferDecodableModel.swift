@@ -63,7 +63,8 @@ struct CreateSFPDataClass: Codable {
     let currencyRate: String?
     let debitAmount: Double?
     let payeeName: String?
-    let paymentOperationDetailID, documentStatus: String?
+    let paymentOperationDetailID: Int?
+    let documentStatus: String?
     let additionalList: [CreateSFPAdditionalList]?
 
     enum CodingKeys: String, CodingKey {
@@ -103,7 +104,7 @@ extension CreateSFPDataClass {
         currencyRate: String?? = nil,
         debitAmount: Double?? = nil,
         payeeName: String?? = nil,
-        paymentOperationDetailID: String?? = nil,
+        paymentOperationDetailID: Int?? = nil,
         documentStatus: String?? = nil,
         additionalList: [CreateSFPAdditionalList]?? = nil
     ) -> CreateSFPDataClass {

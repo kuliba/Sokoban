@@ -22,7 +22,8 @@ struct CreateTransferAnswerData: Codable {
     let amount, creditAmount, currencyAmount: Double?
     let currencyPayer, currencyPayee, currencyRate: JSONNull?
     let debitAmount, fee: Double?
-    let payeeName, paymentOperationDetailID, documentStatus: String?
+    let payeeName, documentStatus: String?
+    let paymentOperationDetailID: Int?
     let additionalList: [AdditionalList2]?
     let parameterListForNextStep: [ParameterListForNextStep2]?
     let finalStep: Bool?
@@ -34,7 +35,7 @@ struct CreateTransferAnswerData: Codable {
         case documentStatus, additionalList, parameterListForNextStep, finalStep, infoMessage
     }
 
-    init(needMake: Bool?, needOTP: Bool?, needSum: Bool?, amount: Double?, creditAmount: Double?, fee: Double?, currencyAmount: Double?, currencyPayer: JSONNull?, currencyPayee: JSONNull?, currencyRate: JSONNull?, debitAmount: Double?, payeeName: String?, paymentOperationDetailID: String?, documentStatus: String?, additionalList: [AdditionalList2]?, parameterListForNextStep: [ParameterListForNextStep2]?, finalStep: Bool?, infoMessage: String?) {
+    init(needMake: Bool?, needOTP: Bool?, needSum: Bool?, amount: Double?, creditAmount: Double?, fee: Double?, currencyAmount: Double?, currencyPayer: JSONNull?, currencyPayee: JSONNull?, currencyRate: JSONNull?, debitAmount: Double?, payeeName: String?, paymentOperationDetailID: Int?, documentStatus: String?, additionalList: [AdditionalList2]?, parameterListForNextStep: [ParameterListForNextStep2]?, finalStep: Bool?, infoMessage: String?) {
         self.needMake = needMake
         self.needOTP = needOTP
         self.needSum = needSum
