@@ -57,7 +57,7 @@ extension MakeDepositDecodableModel {
 struct MakeDepositDataDecodableModel: Codable {
     let documentStatus: String?
     let accountNumber: String?
-    let closeDate: Date?
+    let closeDate: Int?
     let paymentOperationDetailId: Int?
 }
 
@@ -82,7 +82,7 @@ extension MakeDepositDataDecodableModel {
     func with(
         documentStatus: String?? = nil,
         accountNumber: String?? = nil,
-        closeDate: Date?? = nil,
+        closeDate: Int?? = nil,
         paymentOperationDetailId: Int?? = nil
     ) -> MakeDepositDataDecodableModel {
         return MakeDepositDataDecodableModel(

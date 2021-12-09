@@ -203,6 +203,7 @@ struct GeneralСondition: Codable {
     let maxRate: Double?
     let minSum, maxSum, minTerm: Int?
     let maxTerm: Int?
+    let maxTermTxt: String?
     let imageLink: String?
     let design: Design?
     let formula: String?
@@ -233,6 +234,7 @@ extension GeneralСondition {
         maxSum: Int?? = nil,
         minTerm: Int?? = nil,
         maxTerm: Int?? = nil,
+        maxTermTxt: String?? = nil,
         imageLink: String?? = nil,
         design: Design?? = nil,
         formula: String?? = nil,
@@ -245,6 +247,7 @@ extension GeneralСondition {
             maxSum: maxSum ?? self.maxSum,
             minTerm: minTerm ?? self.minTerm,
             maxTerm: maxTerm ?? self.maxTerm,
+            maxTermTxt: maxTermTxt ?? self.maxTermTxt,
             imageLink: imageLink ?? self.imageLink,
             design: design ?? self.design,
             formula: formula ?? self.formula,
@@ -439,12 +442,34 @@ extension TermRateSumTermRateList {
     }
 }
 
-enum TermName: String, Codable {
-    case the1Год = "1 год"
-    case the1Год6Месяцев = "1 год 6 месяцев"
-    case the1Месяц = "1 месяц"
-    case the2Года = "2 года"
-    case the3Месяца = "3 месяца"
-    case the6Месяцев = "6 месяцев"
-    case the9Месяцев = "9 месяцев"
+public struct WordDeclensionEnum {
+     let day = ["день", "дня", "дней"]
+}
+
+public class WordDeclensionUtil {
+    
+    class func getWordInDeclension(type: [String] ,n: Int?) -> String {
+        guard let n = n else { return "" }
+        // смотрим две последние цифры
+        var result: Int = n % 100
+        
+        if (result >= 10 && result <= 20) {
+            // если окончание 11 - 20
+            return type[2]
+        }
+        
+        // смотрим одну последнюю цифру
+        result = n % 10;
+        if (result == 0 || result > 4) {
+            return type[2]
+        }
+        if (result > 1) {
+            return type[1]
+        }
+        if (result == 1) {
+            return type[0]
+        }
+        return ""
+    }
+    
 }
