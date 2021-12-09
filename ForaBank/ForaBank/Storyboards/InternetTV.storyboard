@@ -318,15 +318,8 @@
                                     <outlet property="delegate" destination="hxj-Pz-9K3" id="SLU-yS-iuL"/>
                                 </connections>
                             </tableView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8uf-sT-zlf" customClass="BottomInputView" customModule="ForaBank" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="698" width="414" height="144"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="144" id="70b-pb-KMt"/>
-                                </constraints>
-                            </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xCf-kx-aSO">
-                                <rect key="frame" x="20" y="752" width="374" height="40"/>
+                                <rect key="frame" x="20" y="762" width="374" height="40"/>
                                 <color key="backgroundColor" name="redColorFora"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="4ue-1X-IAD"/>
@@ -348,12 +341,19 @@
                                     <segue destination="MpX-hL-bGE" kind="presentation" id="yND-WP-QfI"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8uf-sT-zlf" customClass="BottomInputView" customModule="ForaBank" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="698" width="414" height="144"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="144" id="70b-pb-KMt"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="7hC-gn-1yv"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="8uf-sT-zlf" firstAttribute="top" secondItem="q6A-BO-oc8" secondAttribute="bottom" id="9dQ-EF-5W8"/>
-                            <constraint firstAttribute="bottom" secondItem="xCf-kx-aSO" secondAttribute="bottom" constant="50" id="BaP-Vn-G3A"/>
+                            <constraint firstAttribute="bottom" secondItem="xCf-kx-aSO" secondAttribute="bottom" constant="40" id="BaP-Vn-G3A"/>
                             <constraint firstItem="8uf-sT-zlf" firstAttribute="bottom" secondItem="mnL-wU-aGE" secondAttribute="bottom" id="TFa-NL-Q8L"/>
                             <constraint firstAttribute="trailing" secondItem="xCf-kx-aSO" secondAttribute="trailing" constant="20" id="cYK-Ry-n2L"/>
                             <constraint firstItem="xCf-kx-aSO" firstAttribute="leading" secondItem="mnL-wU-aGE" secondAttribute="leading" constant="20" id="cqr-di-EbU"/>

@@ -11,7 +11,44 @@ class InternetTVDetailsFormViewModel {
     var puref = ""
     var cardNumber = ""
     var product: GetProductListDatum?
-    
+
+
+    func setupNextStep(_ answer: CreateTransferAnswerModel) {
+        fillRequisites(answer: answer)
+
+        DispatchQueue.main.async {
+            if let msg = answer.data?.infoMessage {
+                let infoView = GKHInfoView()
+                infoView.label.text = msg
+                self.controller?.showAlert(infoView)
+            }
+        }
+    }
+
+    func fillRequisites(answer: CreateTransferAnswerModel) {
+        answer.data?.additionalList?.forEach { item in
+            let param = RequisiteDO()
+            param.subTitle = ""
+            param.id = item.fieldName
+            param.title = item.fieldTitle
+            param.content = item.fieldValue
+            param.readOnly = true
+            if (requisites.first { requisite in requisite.id == param.id  } == nil) {
+                requisites.append(param)
+            }
+        }
+
+        answer.data?.parameterListForNextStep?.forEach { item in
+            let param = RequisiteDO.convertParameter(item)
+            if (requisites.first { requisite in requisite.id == param.id  } == nil) {
+                requisites.append(param)
+            }
+        }
+
+        DispatchQueue.main.async {
+            self.controller?.tableView.reloadData()
+        }
+    }
 
     func retryPayment(amount: String) {
         guard let controller = controller else {return}
@@ -75,39 +112,6 @@ class InternetTVDetailsFormViewModel {
         }
     }
 
-    func requestCreateInternetTransfer(amount: String) {
-        guard let controller = controller else {return}
-
-        controller.showActivity()
-        var additionalArray = [[String: String]]()
-        InternetTVDetailsFormViewModel.additionalDic.forEach { item in
-            additionalArray.append(item.value)
-        }
-        firstAdditional = additionalArray
-        let request = getCreateRequest(amount: amount, additionalArray: additionalArray,productType: controller.footerView.cardFromField.cardModel?.productType ?? "", id: controller.footerView.cardFromField.cardModel?.id ?? -1, puref: puref)
-
-        doCreateInternetTransfer(request: request) { response, error in
-            guard let controller = self.controller else {return}
-            controller.dismissActivity()
-            controller.animationShow(controller.goButton)
-            if error != nil {
-                controller.showAlert(with: "Ошибка", and: error!)
-            } else {
-                if InternetTVApiRequests.isSingleService {
-                    controller.doConfirmation(response: response)
-                } else {
-                    if let respUnw = response {
-                        if respUnw.data?.needSum ?? false {
-                            controller.showFinalStep()
-                        } else {
-                            controller.setupNextStep(respUnw)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     func requestCreateServiceTransfer(amount: String) {
         guard let controller = controller else {return}
 
@@ -126,6 +130,42 @@ class InternetTVDetailsFormViewModel {
             controller.dismissActivity()
             controller.animationShow(controller.goButton)
             if error != nil {
+                controller.goButton.isHidden = true
+                controller.showAlert(with: "Ошибка", and: error!)
+            } else {
+                if InternetTVApiRequests.isSingleService {
+                    controller.doConfirmation(response: response)
+                } else {
+                    if let respUnw = response {
+                        if respUnw.data?.needSum ?? false {
+                            self.fillRequisites(answer: respUnw)
+                            controller.showFinalStep()
+                        } else {
+                            self.setupNextStep(respUnw)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    func requestCreateInternetTransfer(amount: String) {
+        guard let controller = controller else {return}
+
+        controller.showActivity()
+        var additionalArray = [[String: String]]()
+        InternetTVDetailsFormViewModel.additionalDic.forEach { item in
+            additionalArray.append(item.value)
+        }
+        firstAdditional = additionalArray
+        let request = getCreateRequest(amount: amount, additionalArray: additionalArray,productType: controller.footerView.cardFromField.cardModel?.productType ?? "", id: controller.footerView.cardFromField.cardModel?.id ?? -1, puref: puref)
+
+        doCreateInternetTransfer(request: request) { response, error in
+            guard let controller = self.controller else {return}
+            controller.dismissActivity()
+            controller.animationShow(controller.goButton)
+            if error != nil {
+                controller.goButton.isHidden = true
                 controller.showAlert(with: "Ошибка", and: error!)
             } else {
                 if InternetTVApiRequests.isSingleService {
@@ -135,7 +175,7 @@ class InternetTVDetailsFormViewModel {
                         if respUnw.data?.needSum ?? false {
                             controller.showFinalStep()
                         } else {
-                            controller.setupNextStep(respUnw)
+                            self.setupNextStep(respUnw)
                         }
                     }
                 }
@@ -157,6 +197,7 @@ class InternetTVDetailsFormViewModel {
             controller.dismissActivity()
             controller.animationShow(controller.goButton)
             if error != nil {
+                controller.goButton.isHidden = true
                 controller.showAlert(with: "Ошибка", and: error!)
             } else {
                 if let respUnw = response {
@@ -166,7 +207,7 @@ class InternetTVDetailsFormViewModel {
                         if respUnw.data?.needSum ?? false {
                             controller.showFinalStep()
                         } else {
-                            controller.setupNextStep(respUnw)
+                            self.setupNextStep(respUnw)
                         }
                     }
                 }

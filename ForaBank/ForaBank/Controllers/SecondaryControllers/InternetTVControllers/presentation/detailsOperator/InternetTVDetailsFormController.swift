@@ -41,6 +41,11 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
         }
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        goButton.isHidden = !bottomInputView.isHidden
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         InternetTVDetailsFormController.iMsg = self
@@ -129,36 +134,6 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
         }
     }
 
-    func setupNextStep(_ answer: CreateTransferAnswerModel) {
-        answer.data?.additionalList?.forEach { item in
-            let param = RequisiteDO()
-            param.subTitle = ""
-            param.id = item.fieldName
-            param.title = item.fieldTitle
-            param.content = item.fieldValue
-            param.readOnly = true
-            if (viewModel.requisites.first { requisite in requisite.id == param.id  } == nil) {
-                viewModel.requisites.append(param)
-            }
-        }
-
-        answer.data?.parameterListForNextStep?.forEach { item in
-            let param = RequisiteDO.convertParameter(item)
-            if (viewModel.requisites.first { requisite in requisite.id == param.id  } == nil) {
-                viewModel.requisites.append(param)
-            }
-        }
-
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-            if let msg = answer.data?.infoMessage {
-                let infoView = GKHInfoView()
-                infoView.label.text = msg
-                self.showAlert(infoView)
-            }
-        }
-    }
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         let size = footerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
