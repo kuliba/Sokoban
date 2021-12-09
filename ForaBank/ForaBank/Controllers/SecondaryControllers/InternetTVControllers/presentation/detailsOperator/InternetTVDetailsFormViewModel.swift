@@ -190,7 +190,6 @@ class InternetTVDetailsFormViewModel {
 
     func requestNextCreateInternetTransfer(amount: String) {
         guard let controller = controller else {return}
-            //controller.showActivity()
             var additionalArray = [[String: String]]()
             InternetTVDetailsFormViewModel.additionalDic.forEach { item in
                 additionalArray.append(item.value)

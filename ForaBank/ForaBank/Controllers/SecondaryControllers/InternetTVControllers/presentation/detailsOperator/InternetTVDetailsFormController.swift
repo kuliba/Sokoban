@@ -150,6 +150,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
             animationShow(bottomInputView)
         } else {
             animationHidden(goButton)
+            showActivity()
             if viewModel.firstStep {
                 viewModel.firstStep = false
                 if InternetTVMainViewModel.filter == GlobalModule.UTILITIES_CODE {
@@ -212,7 +213,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
             //let dataDecoded : Data = Data(base64Encoded: operatorData?.logotypeList.first?.content ?? "", options: .ignoreUnknownCharacters)!
             //let decodedImage = UIImage(data: dataDecoded)
             imageView.image = svg.convertSVGStringToImage()
-            imageView.setDimensions(height: 30, width: 30)
+            //imageView.setDimensions(height: 30, width: 30)
             navigationItem.rightBarButtonItem = UIBarButtonItem(customView: imageView)
         } else {
             imageView.image = UIImage(named: "GKH")

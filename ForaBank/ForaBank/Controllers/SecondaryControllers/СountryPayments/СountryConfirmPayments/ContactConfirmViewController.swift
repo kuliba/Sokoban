@@ -610,8 +610,9 @@ class ContactConfurmViewController: UIViewController {
                     self.dismissActivity()
                     DispatchQueue.main.async {
                         let vc = PaymentsDetailsSuccessViewController()
+                        self.confurmVCModel?.statusIsSuccses = true
                         vc.confurmVCModel = self.confurmVCModel
-                        vc.confurmVCModel?.statusIsSuccses = true
+                        //vc.confurmVCModel?.statusIsSuccses = true
                         vc.id = model.data?.paymentOperationDetailId ?? 0
                         switch self.confurmVCModel?.type {
                         case .card2card, .phoneNumber:
