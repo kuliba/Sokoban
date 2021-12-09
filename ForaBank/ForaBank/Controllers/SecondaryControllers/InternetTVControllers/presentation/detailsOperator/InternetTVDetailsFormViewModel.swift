@@ -68,6 +68,7 @@ class InternetTVDetailsFormViewModel {
         if InternetTVMainViewModel.filter == GlobalModule.INTERNET_TV_CODE {
             doCreateInternetTransfer(request: request) {  response, error in
                 controller.dismissActivity()
+                sleep(1)
                 if error != nil {
                     controller.showAlert(with: "Ошибка", and: error!)
                 } else {
@@ -114,8 +115,7 @@ class InternetTVDetailsFormViewModel {
 
     func requestCreateServiceTransfer(amount: String) {
         guard let controller = controller else {return}
-
-        controller.showActivity()
+        //controller.showActivity()
         var additionalArray = [[String: String]]()
         InternetTVDetailsFormViewModel.additionalDic.forEach { item in
             additionalArray.append(item.value)
@@ -127,21 +127,24 @@ class InternetTVDetailsFormViewModel {
 
         doCreateServiceTransfer(request: request) { response, error in
             guard let controller = self.controller else {return}
-            controller.dismissActivity()
-            controller.animationShow(controller.goButton)
-            if error != nil {
-                controller.goButton.isHidden = true
-                controller.showAlert(with: "Ошибка", and: error!)
-            } else {
-                if InternetTVApiRequests.isSingleService {
-                    controller.doConfirmation(response: response)
+            DispatchQueue.main.async {
+                controller.dismissActivity()
+                sleep(1)
+                controller.animationShow(controller.goButton)
+                if error != nil {
+                    controller.goButton.isHidden = true
+                    controller.showAlert(with: "Ошибка", and: error!)
                 } else {
-                    if let respUnw = response {
-                        if respUnw.data?.needSum ?? false {
-                            self.fillRequisites(answer: respUnw)
-                            controller.showFinalStep()
-                        } else {
-                            self.setupNextStep(respUnw)
+                    if InternetTVApiRequests.isSingleService {
+                        controller.doConfirmation(response: response)
+                    } else {
+                        if let respUnw = response {
+                            if respUnw.data?.needSum ?? false {
+                                self.fillRequisites(answer: respUnw)
+                                controller.showFinalStep()
+                            } else {
+                                self.setupNextStep(respUnw)
+                            }
                         }
                     }
                 }
@@ -151,8 +154,7 @@ class InternetTVDetailsFormViewModel {
 
     func requestCreateInternetTransfer(amount: String) {
         guard let controller = controller else {return}
-
-        controller.showActivity()
+        //controller.showActivity()
         var additionalArray = [[String: String]]()
         InternetTVDetailsFormViewModel.additionalDic.forEach { item in
             additionalArray.append(item.value)
@@ -162,20 +164,23 @@ class InternetTVDetailsFormViewModel {
 
         doCreateInternetTransfer(request: request) { response, error in
             guard let controller = self.controller else {return}
-            controller.dismissActivity()
-            controller.animationShow(controller.goButton)
-            if error != nil {
-                controller.goButton.isHidden = true
-                controller.showAlert(with: "Ошибка", and: error!)
-            } else {
-                if InternetTVApiRequests.isSingleService {
-                    controller.doConfirmation(response: response)
+            DispatchQueue.main.async {
+                controller.dismissActivity()
+                sleep(1)
+                controller.animationShow(controller.goButton)
+                if error != nil {
+                    controller.goButton.isHidden = true
+                    controller.showAlert(with: "Ошибка", and: error!)
                 } else {
-                    if let respUnw = response {
-                        if respUnw.data?.needSum ?? false {
-                            controller.showFinalStep()
-                        } else {
-                            self.setupNextStep(respUnw)
+                    if InternetTVApiRequests.isSingleService {
+                        controller.doConfirmation(response: response)
+                    } else {
+                        if let respUnw = response {
+                            if respUnw.data?.needSum ?? false {
+                                controller.showFinalStep()
+                            } else {
+                                self.setupNextStep(respUnw)
+                            }
                         }
                     }
                 }
@@ -185,34 +190,37 @@ class InternetTVDetailsFormViewModel {
 
     func requestNextCreateInternetTransfer(amount: String) {
         guard let controller = controller else {return}
-        controller.showActivity()
-        var additionalArray = [[String: String]]()
-        InternetTVDetailsFormViewModel.additionalDic.forEach { item in
-            additionalArray.append(item.value)
-        }
-        stepsPayment.append(additionalArray)
-        let request = getNextStepRequest(amount: amount, additionalArray: additionalArray)
-        doNextStepServiceTransfer(request: request) { response, error in
-            guard let controller = self.controller else {return}
-            controller.dismissActivity()
-            controller.animationShow(controller.goButton)
-            if error != nil {
-                controller.goButton.isHidden = true
-                controller.showAlert(with: "Ошибка", and: error!)
-            } else {
-                if let respUnw = response {
-                    if respUnw.data?.finalStep ?? false {
-                        controller.doConfirmation(response: respUnw)
+            //controller.showActivity()
+            var additionalArray = [[String: String]]()
+            InternetTVDetailsFormViewModel.additionalDic.forEach { item in
+                additionalArray.append(item.value)
+            }
+            stepsPayment.append(additionalArray)
+            let request = self.getNextStepRequest(amount: amount, additionalArray: additionalArray)
+            doNextStepServiceTransfer(request: request) { response, error in
+                guard let controller = self.controller else {return}
+                DispatchQueue.main.async {
+                    controller.dismissActivity()
+                    sleep(1)
+                    controller.animationShow(controller.goButton)
+                    if error != nil {
+                        controller.goButton.isHidden = true
+                        controller.showAlert(with: "Ошибка", and: error!)
                     } else {
-                        if respUnw.data?.needSum ?? false {
-                            controller.showFinalStep()
-                        } else {
-                            self.setupNextStep(respUnw)
+                        if let respUnw = response {
+                            if respUnw.data?.finalStep ?? false {
+                                controller.doConfirmation(response: respUnw)
+                            } else {
+                                if respUnw.data?.needSum ?? false {
+                                    controller.showFinalStep()
+                                } else {
+                                    self.setupNextStep(respUnw)
+                                }
+                            }
                         }
                     }
                 }
             }
-        }
     }
 
     func getNextStepRequest(amount: String, additionalArray: [[String: String]]) -> [String: AnyObject] {
