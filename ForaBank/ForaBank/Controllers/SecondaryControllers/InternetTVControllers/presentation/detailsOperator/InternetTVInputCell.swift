@@ -59,14 +59,18 @@ class InternetTVInputCell: UITableViewCell, UITextFieldDelegate, IMsg {
         fieldId = String(item.order)
         fieldName = item.id ?? ""
         let q = GKHDataSorted.a(item.title ?? "")
-        DispatchQueue.main.async {
-            self.operatorsIcon.image = UIImage(named: q.1)
-        }
+//        DispatchQueue.main.async {
+//            self.operatorsIcon.image = UIImage(named: q.1)
+//        }
         textField.placeholder = q.0
         placeholder = q.0
 
-        if let svg = item.svgImage {
-            operatorsIcon.image = svg.convertSVGStringToImage()
+        DispatchQueue.main.async {
+            if let svg = item.svgImage {
+                self.operatorsIcon.image = svg.convertSVGStringToImage()
+            } else {
+                self.operatorsIcon.image = UIImage(named: "accaunt")
+            }
         }
 
         switch (item.viewType) {
@@ -88,8 +92,12 @@ class InternetTVInputCell: UITableViewCell, UITextFieldDelegate, IMsg {
         case "SELECT":
             //fillSelect(elementUI)
             break
-        case .none: break
-        case .some(_): break
+        case .none:
+            setupInputField(additionalList: additionalList, item: item, q: q, qrData: qrData)
+            break
+        case .some(_):
+            setupInputField(additionalList: additionalList, item: item, q: q, qrData: qrData)
+            break
         }
         
         if item.readOnly {

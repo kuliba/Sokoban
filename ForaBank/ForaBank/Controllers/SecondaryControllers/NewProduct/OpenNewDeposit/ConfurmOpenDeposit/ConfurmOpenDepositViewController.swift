@@ -344,11 +344,8 @@ class ConfurmOpenDepositViewController: PaymentViewController {
                     confurmVCModel.summInCurrency = self.rateField.text
                     confurmVCModel.numberTransction = model.data?.accountNumber ?? ""
                     let formatter = Date.dateFormatterSimpleDateConvenient()
-                    let date2 = Date(timeIntervalSinceNow: TimeInterval(model.data?.closeDate ?? 0))
-                    let date = Date(timeIntervalSince1970: TimeInterval(model.data?.closeDate ?? 0))
-                    print(formatter.string(from: date))
-                    print(formatter.string(from: date2))
-                    
+                    let date = Date(timeIntervalSince1970: TimeInterval((model.data?.closeDate ?? 0)/1000))
+                    confurmVCModel.dateOfTransction = formatter.string(from: date)
                     let vc: DepositSuccessViewController = DepositSuccessViewController.loadFromNib()
                     vc.confurmVCModel = confurmVCModel
                     vc.id = model.data?.paymentOperationDetailId ?? 0
