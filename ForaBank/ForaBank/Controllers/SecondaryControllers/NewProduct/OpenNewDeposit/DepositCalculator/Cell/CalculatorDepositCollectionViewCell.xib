@@ -33,7 +33,7 @@
                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="pZN-7Z-R00">
                         <rect key="frame" x="20" y="167" width="331" height="31"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="500 000 ₽" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1p5-cQ-g4A">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="5 000 ₽" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1p5-cQ-g4A">
                                 <rect key="frame" x="0.0" y="0.0" width="222.5" height="31"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" name="Inter-Regular_SemiBold" family="Inter" pointSize="24"/>
@@ -109,7 +109,7 @@
                             </stackView>
                         </subviews>
                     </stackView>
-                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="500000" minValue="5000" maxValue="5000000" translatesAutoresizingMaskIntoConstraints="NO" id="eFr-dn-3Kf">
+                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="5000" minValue="5000" maxValue="5000000" translatesAutoresizingMaskIntoConstraints="NO" id="eFr-dn-3Kf">
                         <rect key="frame" x="18" y="211" width="335" height="31"/>
                         <color key="tintColor" red="1" green="0.21176470588235294" blue="0.21176470588235294" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="thumbTintColor" red="1" green="0.21176470589999999" blue="0.21176470589999999" alpha="1" colorSpace="calibratedRGB"/>
