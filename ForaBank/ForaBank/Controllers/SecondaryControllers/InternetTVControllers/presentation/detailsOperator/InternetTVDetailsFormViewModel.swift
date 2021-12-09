@@ -115,7 +115,7 @@ class InternetTVDetailsFormViewModel {
 
     func requestCreateServiceTransfer(amount: String) {
         guard let controller = controller else {return}
-        controller.showActivity()
+        //controller.showActivity()
         var additionalArray = [[String: String]]()
         InternetTVDetailsFormViewModel.additionalDic.forEach { item in
             additionalArray.append(item.value)
@@ -154,8 +154,7 @@ class InternetTVDetailsFormViewModel {
 
     func requestCreateInternetTransfer(amount: String) {
         guard let controller = controller else {return}
-
-        controller.showActivity()
+        //controller.showActivity()
         var additionalArray = [[String: String]]()
         InternetTVDetailsFormViewModel.additionalDic.forEach { item in
             additionalArray.append(item.value)
@@ -191,7 +190,7 @@ class InternetTVDetailsFormViewModel {
 
     func requestNextCreateInternetTransfer(amount: String) {
         guard let controller = controller else {return}
-            controller.showActivity()
+            //controller.showActivity()
             var additionalArray = [[String: String]]()
             InternetTVDetailsFormViewModel.additionalDic.forEach { item in
                 additionalArray.append(item.value)
