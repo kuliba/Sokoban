@@ -109,7 +109,7 @@ class ConfirmViewControllerModel {
     var comment = ""
     
     var bank : BanksList?
-    
+    var dateOfTransction: String = ""
     var phone: String?
     var fullName: String? = ""
     var country: CountriesList?
