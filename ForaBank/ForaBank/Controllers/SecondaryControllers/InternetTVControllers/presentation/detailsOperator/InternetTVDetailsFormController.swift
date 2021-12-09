@@ -209,7 +209,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
         imageView.contentMode = .scaleAspectFit
 
         if let svg = operatorData?.logotypeList.first?.svgImage {
-            UserDefaults.standard.set(svg, forKey: "OPERATOR_IMAGE")
+            //UserDefaults.standard.set(svg, forKey: "OPERATOR_IMAGE")
             //let dataDecoded : Data = Data(base64Encoded: operatorData?.logotypeList.first?.content ?? "", options: .ignoreUnknownCharacters)!
             //let decodedImage = UIImage(data: dataDecoded)
             imageView.image = svg.convertSVGStringToImage()
