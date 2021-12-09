@@ -237,9 +237,11 @@ class MainViewController: UIViewController {
 
                    case .update(_, let deletions, let insertions, let modifications):
                        print("Update")
-                       self?.productList = [UserAllCardsModel]()
-                       
-                       self?.dataSource?.replaceItems(self?.productsFromRealm ?? [], in: .products)
+                       if self?.allProductList?.count ?? 0 > 0 {
+                           
+                           self?.productList = [UserAllCardsModel]()
+                           self?.dataSource?.replaceItems(self?.productsFromRealm ?? [], in: .products)
+                       }
                        
                    case .error(let error):
                        fatalError("\(error)")
