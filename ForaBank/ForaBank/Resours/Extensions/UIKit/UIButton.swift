@@ -39,5 +39,21 @@ extension UIButton {
         
     }
     
+  
+    func setupButtonTitle(title:String, with color: UIColor = .black)  {
+        
+        let imageAttachment = NSTextAttachment()
+        imageAttachment.image = UIImage(systemName: "chevron.down")?.withRenderingMode(.alwaysTemplate)
+        imageAttachment.image?.withTintColor(color)
+        imageAttachment.bounds = CGRect(x: 0, y: 0, width: 10, height: 10)
+
+        let attachmentString = NSAttributedString(attachment: imageAttachment)
+        let completeText = NSMutableAttributedString(string: "")
+        let text = NSAttributedString(string: title + " ", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14)])
+        completeText.append(text)
+        completeText.append(attachmentString)
+        
+        self.setAttributedTitle(completeText, for: .normal)
+    }
     
 }
