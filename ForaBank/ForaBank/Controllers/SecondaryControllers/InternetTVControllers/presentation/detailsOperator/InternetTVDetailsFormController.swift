@@ -70,7 +70,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
         AddAllUserCardtList.add {}
 
         bottomInputView.didDoneButtonTapped = { amount in
-            //self.showActivity()
+            self.showActivity()
             if InternetTVApiRequests.isSingleService {
                 if InternetTVMainViewModel.filter == GlobalModule.UTILITIES_CODE {
                     self.viewModel.requestCreateServiceTransfer(amount: amount)
