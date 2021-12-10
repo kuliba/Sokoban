@@ -36,8 +36,9 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
         setupNavBar()
         phoneField.textField.delegate = self
         phoneField.rightButton.setImage(UIImage(imageLiteralResourceName: "user-plus"), for: .normal)
-        if selectNumber != nil{
-            phoneField.text = selectNumber ?? ""
+        if selectNumber != nil {
+            phoneField.textField.text = selectNumber ?? ""
+            phoneField.textField.maskString = selectNumber ?? ""
         }
         setupUI()
         phoneField.didChooseButtonTapped = {() in
@@ -222,10 +223,20 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                 ] as [String: AnyObject]
                 
                 NetworkManager<CreateMobileTransferDecodableModel>.addRequest(.createMobileTransfer, [:], body, completion: { [weak self] data, error in
+                    
                     self?.dismissActivity()
                     if data?.errorMessage != nil {
                         completion(error)
                     }
+                    
+                    if data?.statusCode == 102 {
+                        self?.showAlert(with: "Ошибка", and: "Минимальная сумма платежа 10 рублей")
+                        completion("")
+                        return
+                    }
+                    
+                    
+                    
                     if data?.statusCode == 0 {
                         let model = ConfirmViewControllerModel(type: .mobilePayment)
                         

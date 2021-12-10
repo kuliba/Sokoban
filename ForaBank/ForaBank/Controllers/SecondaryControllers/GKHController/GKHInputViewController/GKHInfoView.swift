@@ -9,7 +9,7 @@ import UIKit
 
 class GKHInfoView: UIView {
 
-    var clouseButton: UIButton {
+    var closeButton: UIButton {
         let button = UIButton()
         button.setTitle("Закрыть", for: .normal)
         button.backgroundColor = .clear
@@ -32,16 +32,16 @@ class GKHInfoView: UIView {
         return imageView
     }
     
-    let lable = UILabel()
+    let label = UILabel()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        lable.font = UIFont.systemFont(ofSize: 17)
-        lable.textAlignment = .center
-        lable.numberOfLines = 0
-        lable.translatesAutoresizingMaskIntoConstraints = false
-        lable.heightAnchor.constraint(equalToConstant: 150.0).isActive = true
+        label.font = UIFont.systemFont(ofSize: 17)
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.heightAnchor.constraint(equalToConstant: 150.0).isActive = true
         
         let stackView = UIStackView()
         stackView.axis          = .vertical
@@ -49,15 +49,15 @@ class GKHInfoView: UIView {
         stackView.alignment     = .fill
         stackView.spacing       = 5
         
-        stackView.addArrangedSubview(clouseButton)
+        stackView.addArrangedSubview(closeButton)
         stackView.addArrangedSubview(infoImage)
-        stackView.addArrangedSubview(lable)
+        stackView.addArrangedSubview(label)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
-        self.addSubview(stackView)
-        stackView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-        stackView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 10).isActive = true
-        stackView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -10).isActive = true
+        addSubview(stackView)
+        stackView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        stackView.leftAnchor.constraint(equalTo: leftAnchor, constant: 10).isActive = true
+        stackView.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
         
     }
     

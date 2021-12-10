@@ -79,13 +79,13 @@ extension ProductViewController: UICollectionViewDataSource {
             self.tableView?.reloadData()
         }
         
-        if firstTimeLoad, products.count != 0{
-            firstTimeLoad = false
-//            self.collectionView?.selectItem(at: IndexPath(item: indexItem ?? 0, section: 0), animated: true, scrollPosition: .bottom)
-            let cell = collectionView.cellForItem(at: IndexPath(item: indexItem ?? 0, section: 0)) as? CardCollectionViewCell
-            product = products[self.indexItem ?? 0]
-            cell?.showSelect()
-        } else {
+//        if firstTimeLoad, products.count != 0{
+//            firstTimeLoad = false
+////            self.collectionView?.selectItem(at: IndexPath(item: indexItem ?? 0, section: 0), animated: true, scrollPosition: .bottom)
+//            let cell = collectionView.cellForItem(at: IndexPath(item: indexItem ?? 0, section: 0)) as? CardCollectionViewCell
+//            product = products[self.indexItem ?? 0]
+//            cell?.showSelect()
+//        } else {
             if indexPath.item < products.count{
                 historyArray.removeAll()
                 historyArrayAccount.removeAll()
@@ -101,7 +101,8 @@ extension ProductViewController: UICollectionViewDataSource {
                     self.collectionView?.selectItem(at: indexPath, animated: true, scrollPosition: .bottom)
                 } else {
                     product = products[indexPath.item]
-                    indexItem = 0
+                    self.collectionView?.selectItem(at: indexPath, animated: true, scrollPosition: .bottom)
+
                 }
                 
 //                guard let cell = collectionView.cellForItem(at: indexPath) as? CardCollectionViewCell else {return}
@@ -115,7 +116,7 @@ extension ProductViewController: UICollectionViewDataSource {
                 vc.delegateProducts = self
                 present(vc, animated: true, completion: nil)
             }
-        }
+//        }
         
     }
     

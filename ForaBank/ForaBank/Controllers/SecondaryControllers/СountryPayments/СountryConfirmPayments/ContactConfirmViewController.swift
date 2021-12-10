@@ -10,9 +10,8 @@ import RealmSwift
 
 //TODO: отрефакторить под сетевые запросы, вынести в отдельный файл
 class ConfirmViewControllerModel {
-    
+    static var svgIcon = ""
     lazy var realm = try? Realm()
-    
     var type: PaymentType
     var paymentSystem: PaymentSystemList?
     
@@ -110,13 +109,9 @@ class ConfirmViewControllerModel {
     var comment = ""
     
     var bank : BanksList?
-    
+    var dateOfTransction: String = ""
     var phone: String?
-    var fullName: String? = "" {
-        didSet {
-            print("DEBUG: fullName", fullName ?? "")
-        }
-    }
+    var fullName: String? = ""
     var country: CountriesList?
     var numberTransction: String = ""
     var summTransction: String = ""
@@ -129,70 +124,6 @@ class ConfirmViewControllerModel {
         self.type = type
     }
     
-    init?(country: CountriesList, model: AnywayPaymentDecodableModel?, fullName: String? = nil) {
-        self.type = .contact
-        print("DEBUG:", model ?? "")
-        var name = ""
-        var surname = ""
-        var secondName = ""
-        var phone = ""
-        var transctionNum = ""
-        var fullName = fullName ?? ""
-        var curr = ""
-        var currAmount = ""
-        if let listInputs = model?.data?.listInputs {
-            for item in listInputs {
-                if item.id == "RECF" {
-                    surname = item.content?.first ?? ""
-                } else if item.id == "RECI" {
-                    //
-                    name = item.content?.first ?? ""
-                } else if item.id == "RECO" {
-                    //
-                    secondName = item.content?.first ?? ""
-                } else if item.id == "RECP" {
-                    // телефон
-                    phone = item.content?.first ?? ""
-                } else if item.id == "trnReference" {
-                    transctionNum = item.content?.first ?? ""
-                } else if item.id == "RECFIO" {
-                    fullName = item.content?.first ?? ""
-                } else if item.id == "RECCURRENCY" {
-                    curr = item.content?.first ?? ""
-                } else if item.id == "RECAMOUNT" {
-                    currAmount = item.content?.first ?? ""
-                } else if item.id == "A" {
-                    currAmount = item.content?.first ?? ""
-                } else if item.id == "CURR" {
-                    curr = item.content?.first ?? ""
-                }
-                
-                
-            }
-        }
-        if fullName.isEmpty {
-            self.fullName = surname + " " + name + " " + secondName
-        } else {
-            self.fullName = fullName
-        }
-        
-//        let currArr = Dict.shared.currencyList
-//        currArr?.forEach({ currency in
-//            if currency.code == curr {
-//                print("DEBUG: currency", currency)
-//            }
-//        })
-        self.summInCurrency = Double(currAmount)?.currencyFormatter(symbol: curr) ?? ""
-
-        self.statusIsSuccses = model?.statusCode == 0 ? true : false
-        self.phone = phone
-        self.summTransction = Double(model?.data?.amount ?? 0).currencyFormatter(symbol: "RUB")
-        self.taxTransction = Double(model?.data?.commission ?? 0).currencyFormatter(symbol: "RUB")
-        self.numberTransction = transctionNum
-        self.currancyTransction = "Наличные"
-        self.country = country
-    }
-    
     enum PaymentType {
         case card2card
         case contact
@@ -202,14 +133,12 @@ class ConfirmViewControllerModel {
         case phoneNumberSBP
         case gkh
         case mobilePayment
+        case openDeposit
     }
-    
 }
 
 class ContactConfurmViewController: UIViewController {
-    
     lazy var realm = try? Realm()
-    
     var confurmVCModel: ConfirmViewControllerModel? {
         didSet {
             guard let model = confurmVCModel else { return }
@@ -318,6 +247,51 @@ class ContactConfurmViewController: UIViewController {
         }
         
         switch model.type {
+        case .openDeposit:
+            cardToField.isHidden = true
+            taxTransctionField.isHidden = true
+            currTransctionField.isHidden = true
+            currancyTransctionField.isHidden = true
+            smsCodeField.isHidden = true
+            
+            phoneField.isHidden = false
+            phoneField.viewModel.title = "Наименования вклада"
+            phoneField.viewModel.image = UIImage(named: "depositIcon")!
+            phoneField.text = model.fullName ?? ""
+            
+            nameField.isHidden = false
+            nameField.viewModel.title = "Срок вклада"
+            nameField.viewModel.image = UIImage(named: "date")!
+            nameField.text = model.phone ?? ""
+            
+            bankField.isHidden = false
+            bankField.viewModel.title = "Процентная ставка"
+            bankField.viewModel.image = #imageLiteral(resourceName: "Frame 580")
+            bankField.text = model.summInCurrency
+            
+            countryField.isHidden = false
+            countryField.viewModel.title = "Сумма вклада"
+            countryField.viewModel.image = UIImage(named: "coins")!
+            countryField.text = model.summTransction
+            
+            numberTransctionField.isHidden = false
+            numberTransctionField.viewModel.title = "Ваш потенциальный доход"
+            numberTransctionField.viewModel.image = #imageLiteral(resourceName: "Frame 579")
+            numberTransctionField.text = model.taxTransction
+            
+            
+            summTransctionField.isHidden = false
+            summTransctionField.viewModel.title = "Счет вклада"
+            summTransctionField.viewModel.image = UIImage(named: "depositIcon-1")!
+            summTransctionField.text = model.numberTransction
+            
+            cardFromField.isHidden = false
+            cardFromField.choseButton.isHidden = true
+            cardFromField.balanceLabel.isHidden = true
+            cardFromField.leftTitleAncor.constant = 64
+            cardFromField.titleLabel.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
+            cardFromField.model = model.cardFromRealm
+            
         case .card2card:
             nameField.isHidden = true
             numberTransctionField.isHidden = true
@@ -328,6 +302,7 @@ class ContactConfurmViewController: UIViewController {
             
             cardFromField.isHidden = false
             cardFromField.choseButton.isHidden = true
+            cardFromField.titleLabel.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
             cardFromField.balanceLabel.isHidden = true
             cardFromField.leftTitleAncor.constant = 64
             
@@ -582,7 +557,18 @@ class ContactConfurmViewController: UIViewController {
         view.backgroundColor = .white
         
         let stackView = UIStackView(
-            arrangedSubviews: [phoneField, nameField, bankField, countryField, numberTransctionField, cardFromField, cardToField, summTransctionField, taxTransctionField, currTransctionField, currancyTransctionField, smsCodeField])
+            arrangedSubviews: [phoneField,
+                               nameField,
+                               bankField,
+                               countryField,
+                               numberTransctionField,
+                               cardFromField,
+                               cardToField,
+                               summTransctionField,
+                               taxTransctionField,
+                               currTransctionField,
+                               currancyTransctionField,
+                               smsCodeField])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
@@ -624,8 +610,9 @@ class ContactConfurmViewController: UIViewController {
                     self.dismissActivity()
                     DispatchQueue.main.async {
                         let vc = PaymentsDetailsSuccessViewController()
+                        self.confurmVCModel?.statusIsSuccses = true
                         vc.confurmVCModel = self.confurmVCModel
-                        vc.confurmVCModel?.statusIsSuccses = true
+                        //vc.confurmVCModel?.statusIsSuccses = true
                         vc.id = model.data?.paymentOperationDetailId ?? 0
                         switch self.confurmVCModel?.type {
                         case .card2card, .phoneNumber:

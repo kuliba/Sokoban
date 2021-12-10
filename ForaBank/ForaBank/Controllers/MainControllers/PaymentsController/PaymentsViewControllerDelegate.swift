@@ -9,7 +9,7 @@ import UIKit
 
 
 protocol PaymentsViewControllerDelegate: AnyObject {
-    func toMobilePay(_ controller: UIViewController)
+    func toMobilePay(_ controller: UIViewController, _ phone: String)
     func goToCountryPayments()
 //    func goToQRController()
 //    func goToGKHController()
@@ -24,7 +24,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
         }
         switch section {
         case .payments:
-            print("DEBUG: " + #function + payments[indexPath.row].name)
+            
             if let lastCountryPaymentModel = payments[indexPath.row].lastCountryPayment {
                 openCountryPaymentVC(model: lastCountryPaymentModel)
             } else if let lastPhonePayment = payments[indexPath.row].lastPhonePayment {
@@ -32,7 +32,19 @@ extension PaymentsViewController: UICollectionViewDelegate {
             } else if let lastMobilePayment = payments[indexPath.row].lastMobilePayment {
 
                 let viewController = (payments[indexPath.row].controllerName.getViewController() as? MobilePayViewController)!
-                delegate?.toMobilePay(viewController)
+                
+                let phoneNumber = lastMobilePayment.additionalList?.filter{$0.fieldName == "a3_NUMBER_1_2"}
+                let number = phoneNumber?.first?.fieldValue ?? ""
+                
+               // delegate?.toMobilePay(viewController, number )
+                
+                let mask = StringMask(mask: "+7 (000) 000-00-00")
+                let maskPhone = mask.mask(string: number)
+                viewController.phoneField.text = maskPhone ?? ""
+                viewController.selectNumber = maskPhone
+                let vc = UINavigationController(rootViewController: viewController)
+                vc.modalPresentationStyle = .fullScreen
+                present(vc, animated: true)
 
             } else {
                 if let viewController = payments[indexPath.row].controllerName.getViewController() {

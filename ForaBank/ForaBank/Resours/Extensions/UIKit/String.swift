@@ -20,13 +20,10 @@ extension String {
     }
 
     func convertSVGStringToImage() -> UIImage {
-            
         let imageData = Data(self.data)
         let imageSVG = SVGKImage(data: imageData)
         let image = imageSVG?.uiImage ?? UIImage()
         return image
-        
-
     }
     
     func getSymbol() -> String? {

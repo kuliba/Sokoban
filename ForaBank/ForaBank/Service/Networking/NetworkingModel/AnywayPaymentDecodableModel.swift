@@ -69,7 +69,7 @@ import Foundation
 
 // MARK: - DataClass
 struct AnywayPayment: Codable {
-    let paymentOperationDetailID: JSONNull?
+    let paymentOperationDetailID: Int?
     let listInputs: [ListInput]?
     let error: String?
     let errorMessage: String?
@@ -104,7 +104,7 @@ extension AnywayPayment {
     }
 
     func with(
-        paymentOperationDetailID: JSONNull?? = nil,
+        paymentOperationDetailID: Int?? = nil,
         listInputs: [ListInput]?? = nil,
         error: String?? = nil,
         errorMessage: String?? = nil,

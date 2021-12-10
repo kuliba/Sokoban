@@ -29,7 +29,7 @@ struct GetSessionTimeoutSaved: DownloadQueueProtocol {
                     let sessionTimeOutParameters = returnRealmModel()
                     sessionTimeOutParameters.maxTimeOut = StaticDefaultTimeOut.staticDefaultTimeOut
                     sessionTimeOutParameters.mustCheckTimeOut = true
-                    
+                    print("Debugging GetSessionTimeoutSaved", sessionTimeOutParameters.mustCheckTimeOut)
                     /// Сохраняем в REALM
                     do {
                         let realm = try? Realm()

@@ -61,11 +61,23 @@
                                                             <action selector="textField:" destination="YSr-Zo-ERi" eventType="editingDidEnd" id="5gA-im-c8q"/>
                                                         </connections>
                                                     </textField>
+                                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oGn-dp-ddJ">
+                                                        <rect key="frame" x="0.0" y="0.0" width="257" height="29"/>
+                                                        <state key="normal" title="Button"/>
+                                                        <buttonConfiguration key="configuration" style="plain" title=" "/>
+                                                        <connections>
+                                                            <action selector="showSelectView:" destination="YSr-Zo-ERi" eventType="touchUpInside" id="pbo-Dp-UDn"/>
+                                                        </connections>
+                                                    </button>
                                                 </subviews>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 <constraints>
                                                     <constraint firstItem="dXE-ga-D5X" firstAttribute="top" secondItem="rG9-DJ-H9G" secondAttribute="top" id="8cs-ie-ZVz"/>
+                                                    <constraint firstAttribute="trailing" secondItem="oGn-dp-ddJ" secondAttribute="trailing" id="GYU-Xe-wav"/>
                                                     <constraint firstAttribute="bottom" secondItem="dXE-ga-D5X" secondAttribute="bottom" id="IVb-hb-Rr8"/>
+                                                    <constraint firstAttribute="bottom" secondItem="oGn-dp-ddJ" secondAttribute="bottom" id="XPK-r2-W8r"/>
+                                                    <constraint firstItem="oGn-dp-ddJ" firstAttribute="leading" secondItem="rG9-DJ-H9G" secondAttribute="leading" id="aXj-uz-NFu"/>
+                                                    <constraint firstItem="oGn-dp-ddJ" firstAttribute="top" secondItem="rG9-DJ-H9G" secondAttribute="top" id="cSf-9T-hSA"/>
                                                     <constraint firstItem="dXE-ga-D5X" firstAttribute="leading" secondItem="rG9-DJ-H9G" secondAttribute="leading" id="m3K-UI-muI"/>
                                                     <constraint firstAttribute="trailing" secondItem="dXE-ga-D5X" secondAttribute="trailing" id="qro-g7-RLe"/>
                                                 </constraints>
@@ -160,6 +172,7 @@
                 <constraint firstItem="ujY-wc-OZM" firstAttribute="centerY" secondItem="YSr-Zo-ERi" secondAttribute="centerY" id="8wm-BP-bPq"/>
             </constraints>
             <connections>
+                <outlet property="btnShowSelectView" destination="oGn-dp-ddJ" id="ErI-ce-e8W"/>
                 <outlet property="errorLable" destination="GBe-0Q-3aC" id="WOO-aT-M5i"/>
                 <outlet property="infoButon" destination="QwA-rP-lhX" id="BmX-Zp-nmF"/>
                 <outlet property="lineView" destination="TRd-ac-DCS" id="4BL-Bl-u5P"/>

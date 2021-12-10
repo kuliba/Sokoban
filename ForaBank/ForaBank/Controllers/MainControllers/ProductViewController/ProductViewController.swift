@@ -1330,6 +1330,7 @@ extension ProductViewController{
 
 extension ProductViewController: CtoBDelegate {
     func sendMyDataBack(product: UserAllCardsModel?) {
+        
         self.product = product
     }
     
@@ -1422,7 +1423,7 @@ extension ProductViewController: UIViewControllerTransitioningDelegate {
 
         let presenter = PresentationController(presentedViewController: presented, presenting: presenting)
         if halfScreen == true {
-            presenter.height = 490
+            presenter.height = 550
         } else {
             presenter.height = 310
         }

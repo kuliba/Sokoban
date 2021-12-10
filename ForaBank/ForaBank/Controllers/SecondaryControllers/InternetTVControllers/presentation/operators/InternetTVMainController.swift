@@ -253,6 +253,8 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
         switch segue.identifier {
 
         case "input":
+            InternetTVDetailsFormViewModel.additionalDic.removeAll()
+            InternetTVInputCell.spinnerValuesSelected.removeAll()
             if let latestOp = InternetTVMainViewModel.latestOp {
                 let dc = segue.destination as! InternetTVDetailsFormController
                 dc.operatorData = latestOp.op

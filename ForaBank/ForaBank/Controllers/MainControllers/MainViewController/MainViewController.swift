@@ -186,17 +186,14 @@ class MainViewController: UIViewController {
             [.foregroundColor: UIColor.black ], for: .selected)
 
         self.navigationController?.navigationBar.isHidden = true
+        AddAllUserCardtList.add() {
+           print(" AddAllUserCardtList.add()")
+
+        }
     }
     
 
     
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-//        if self.isMovingFromParent {
-//            showAlert(with: "isMovingFromParent", and: "123")
-//        }
-    }
     
     @objc func openSetting() {
         delegate?.goSettingViewController()
@@ -237,9 +234,11 @@ class MainViewController: UIViewController {
 
                    case .update(_, let deletions, let insertions, let modifications):
                        print("Update")
-                       self?.productList = [UserAllCardsModel]()
-                       
-                       self?.dataSource?.replaceItems(self?.productsFromRealm ?? [], in: .products)
+                       if self?.allProductList?.count ?? 0 > 0 {
+                           
+                           self?.productList = [UserAllCardsModel]()
+                           self?.dataSource?.replaceItems(self?.productsFromRealm ?? [], in: .products)
+                       }
                        
                    case .error(let error):
                        fatalError("\(error)")

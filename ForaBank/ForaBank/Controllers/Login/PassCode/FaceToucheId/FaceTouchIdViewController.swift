@@ -169,8 +169,8 @@ class FaceTouchIdViewController: UIViewController {
                                         if error != nil {
                                             print("DEBUG: Error getCSRF: ", error!)
                                         } else {
-                                            
-                                            // Обновление времени старта
+                                            AppDelegate.shared.isAuth = true
+                                            // Обновление времени старта после ввода нового пина при авторизации
                                             let realm = try? Realm()
                                             let timeOutObjects = returnRealmModel()
 
@@ -181,7 +181,7 @@ class FaceTouchIdViewController: UIViewController {
                                                 realm?.delete(b!)
                                                 realm?.add(timeOutObjects)
                                                 try realm?.commitWrite()
-
+                                                print("REALM", realm?.configuration.fileURL?.absoluteString ?? "")
                                             } catch {
                                                 print(error.localizedDescription)
                                             }

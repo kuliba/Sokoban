@@ -292,7 +292,7 @@ class ContactInputViewController: UIViewController {
             
             switch self.typeOfPay {
             case .mig:
-                self.migPayment(with: self.selectedCardNumber, phone: phone, amount: amount) { model, error in
+                self.migPayment(with: self.selectedCardNumber, phone: phone, amount: Double(amount) ?? 0) { model, error in
                     self.dismissActivity()
                     if error != nil {
                         print("DEBUG: Error: endContactPayment ", error ?? "")
@@ -303,7 +303,7 @@ class ContactInputViewController: UIViewController {
                     }
                 }
             default:
-                self.contaktPayment(with: self.selectedCardNumber, surname: surname, name: name, secondName: secondName, amount: amount) { model, error in
+                self.contaktPayment(with: self.selectedCardNumber, surname: surname, name: name, secondName: secondName, amount: Double(amount) ?? 0) { model, error in
                     self.dismissActivity()
                     if error != nil {
                         print("DEBUG: Error: endContactPayment ", error ?? "")

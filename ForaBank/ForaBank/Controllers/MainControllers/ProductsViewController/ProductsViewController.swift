@@ -14,7 +14,6 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
     lazy var realm = try? Realm()
     var token: NotificationToken?
     var allProductList: Results<UserAllCardsModel>? = nil
-
     
     var totalMoney: Double = 0.0 {
         didSet{
@@ -182,7 +181,6 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                 case .initial:
                     self?.tableView.reloadData()
                 case .update(_, let deletions, let insertions, let modifications):
-                    print("Use Update Realm")
                     self?.products.removeAll()
                     self?.allProductList = self?.realm?.objects(UserAllCardsModel.self)
                     self?.allProductList?.forEach({ product in
@@ -248,7 +246,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                 let str = activeProduct[indexPath.row].numberMasked ?? ""
                 cell.titleProductLabel.text = activeProduct[indexPath.row].customName ?? activeProduct[indexPath.row].mainField
                 cell.numberProductLabel.text = "\(str.suffix(4))"
-                cell.balanceLabel.text = "\(activeProduct[indexPath.row].balance.currencyFormatter(symbol: activeProduct[indexPath.row].currency ?? "") ?? "")"
+                cell.balanceLabel.text = "\(activeProduct[indexPath.row].balance.currencyFormatter(symbol: activeProduct[indexPath.row].currency ?? "") )"
                 cell.coverpProductImage.image = activeProduct[indexPath.row].smallDesign?.convertSVGStringToImage()
                 cell.cardTypeImage.image = activeProduct[indexPath.row].paymentSystemImage?.convertSVGStringToImage()
                 cell.typeOfProduct.text = activeProduct[indexPath.row].additionalField
@@ -261,7 +259,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                 let str = deposits[indexPath.row].numberMasked ?? ""
                 cell.titleProductLabel.text = deposits[indexPath.row].customName ?? deposits[indexPath.row].mainField
                 cell.numberProductLabel.text = "\(str.suffix(4))"
-                cell.balanceLabel.text = "\(deposits[indexPath.row].balance.currencyFormatter(symbol: deposits[indexPath.row].currency ?? "") ?? "")"
+                cell.balanceLabel.text = "\(deposits[indexPath.row].balance.currencyFormatter(symbol: deposits[indexPath.row].currency ?? "") )"
                 cell.coverpProductImage.image = deposits[indexPath.row].smallDesign?.convertSVGStringToImage()
                 cell.cardTypeImage.image = deposits[indexPath.row].paymentSystemImage?.convertSVGStringToImage()
                 cell.typeOfProduct.text = deposits[indexPath.row].additionalField
@@ -274,7 +272,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                 let str = blocked[indexPath.item].numberMasked ?? ""
                 cell.titleProductLabel.text = blocked[indexPath.item].customName ?? blocked[indexPath.item].mainField
                 cell.numberProductLabel.text = "\(str.suffix(4))"
-                cell.balanceLabel.text = "\(blocked[indexPath.item].balance.currencyFormatter(symbol: blocked[indexPath.item].currency ?? "") ?? "")"
+                cell.balanceLabel.text = "\(blocked[indexPath.item].balance.currencyFormatter(symbol: blocked[indexPath.item].currency ?? "") )"
                 cell.coverpProductImage.image = blocked[indexPath.item].smallDesign?.convertSVGStringToImage()
                 cell.cardTypeImage.image = blocked[indexPath.item].paymentSystemImage?.convertSVGStringToImage()
                 cell.typeOfProduct.text = blocked[indexPath.item].additionalField
