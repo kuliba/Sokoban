@@ -12,7 +12,7 @@ import UIKit
 extension DepositCalculatorViewController {
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
+        return 4
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -29,6 +29,10 @@ extension DepositCalculatorViewController {
         case 2:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: detailDepositCell, for: indexPath) as! DetailInformationCollectionViewCell
             cell.viewModel = product
+            return cell
+        case 3:
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: docDepositCell, for: indexPath) as! DocDepositCollectionViewCell
+            cell.documentsList = product?.documentsList
             return cell
         default:
             return UICollectionViewCell()

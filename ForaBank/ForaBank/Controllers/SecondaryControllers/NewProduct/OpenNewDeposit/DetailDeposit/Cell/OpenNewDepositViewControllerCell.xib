@@ -104,7 +104,7 @@
                     <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="M2q-Da-ejl">
                         <rect key="frame" x="20" y="517" width="342" height="48"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vh2-vY-ui9">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vh2-vY-ui9">
                                 <rect key="frame" x="0.0" y="0.0" width="166" height="48"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="H4N-Mo-14h"/>
@@ -112,7 +112,7 @@
                                 <color key="tintColor" red="0.10980392156862745" green="0.10980392156862745" blue="0.10980392156862745" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" image="info" imagePlacement="leading" imagePadding="14">
-                                    <string key="title">Подробные 
+                                    <string key="title">Допол. 
 условия</string>
                                     <fontDescription key="titleFontDescription" name="Inter-Regular" family="Inter" pointSize="14"/>
                                 </buttonConfiguration>
