@@ -1,14 +1,7 @@
-//
-//  InternetTVInputCell.swift
-//  ForaBank
-//
-//  Created by Роман Воробьев on 04.12.2021.
-//
-
 import Foundation
 import UIKit
 
-class InternetTVInputCell: UITableViewCell, UITextFieldDelegate, IMsg {
+class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
     static let reuseId = "InternetTVInputCell"
     static var iMsg: IMsg? = nil
     static var spinnerValuesSelected = [String : [String : String]]()
@@ -35,22 +28,25 @@ class InternetTVInputCell: UITableViewCell, UITextFieldDelegate, IMsg {
 
     @IBOutlet weak var btnShowSelectView: UIButton!
     
+    @IBOutlet weak var textView: UITextView!
+    
+    
     var placeholder = ""
 
     override func awakeFromNib() {
         super.awakeFromNib()
         showFIOButton.isHidden = true
-        textField.delegate = self
-        textField.clearButtonMode = .whileEditing
+        textView.delegate = self
+        //textField.clearButtonMode = .whileEditing
     }
 
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
+    func textViewShouldBeginEditing(_ textView: UITextView)-> Bool {
+        textView.resignFirstResponder()
         return true
     }
 
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        fieldValue = textField.text ?? ""
+    func textViewDidEndEditing(_ textView: UITextView) {
+        fieldValue = textView.text ?? ""
     }
 
     func setupUI (_ index: Int, _ item: RequisiteDO, _ qrData: [String: String], additionalList: [AdditionalListModel]) {
@@ -58,18 +54,26 @@ class InternetTVInputCell: UITableViewCell, UITextFieldDelegate, IMsg {
         infoButon.isHidden = true
         fieldId = String(item.order)
         fieldName = item.id ?? ""
-        let q = GKHDataSorted.a(item.title ?? "")
-//        DispatchQueue.main.async {
-//            self.operatorsIcon.image = UIImage(named: q.1)
-//        }
-        textField.placeholder = q.0
-        placeholder = q.0
+        //textField.placeholder = item.title
+        placeholderLable.text = item.title
+        //textView.text = item.title
+
+        if item.subTitle != nil {
+            info = item.subTitle ?? ""
+            infoButon.isHidden = false
+        } else {
+            infoButon.isHidden = true
+        }
+//        let q = GKHDataSorted.a(item.title ?? "")
+//        textField.placeholder = q.0
+//        placeholder = q.0
+
 
         DispatchQueue.main.async {
             if let svg = item.svgImage {
                 self.operatorsIcon.image = svg.convertSVGStringToImage()
             } else {
-                self.operatorsIcon.image = UIImage(named: "accaunt")
+                self.operatorsIcon.image = nil
             }
         }
 
@@ -77,80 +81,76 @@ class InternetTVInputCell: UITableViewCell, UITextFieldDelegate, IMsg {
         case "INPUT":
             switch (item.type) {
             case "MaskList" :
-                setupSelectField(additionalList: additionalList, elementUI: item, q: q, qrData: qrData)
+                setupSelectField(additionalList: additionalList, elementUI: item, qrData: qrData)
                 break
             case "Select" :
-                setupSelectField(additionalList: additionalList, elementUI: item, q: q, qrData: qrData)
+                setupSelectField(additionalList: additionalList, elementUI: item, qrData: qrData)
                 break
             case .none:
-                setupInputField(additionalList: additionalList, item: item, q: q, qrData: qrData)
+                setupInputField(additionalList: additionalList, item: item, qrData: qrData)
                 break
             case .some(_):
-                setupInputField(additionalList: additionalList, item: item, q: q, qrData: qrData)
+                setupInputField(additionalList: additionalList, item: item, qrData: qrData)
                 break
             }
         case "SELECT":
             //fillSelect(elementUI)
             break
         case .none:
-            setupInputField(additionalList: additionalList, item: item, q: q, qrData: qrData)
+            setupInputField(additionalList: additionalList, item: item, qrData: qrData)
             break
         case .some(_):
-            setupInputField(additionalList: additionalList, item: item, q: q, qrData: qrData)
+            setupInputField(additionalList: additionalList, item: item, qrData: qrData)
             break
         }
         
         if item.readOnly {
-            textField.isEnabled = false
+            textView.isEditable = false
             btnShowSelectView.isEnabled = false
         } else {
-            textField.isEnabled = true
+            textView.isEditable = true
             btnShowSelectView.isEnabled = true
         }
     }
 
-    private func setupInputField(additionalList: [AdditionalListModel], item: RequisiteDO, q: (String, String), qrData: [String: String]) {
+    private func setupInputField(additionalList: [AdditionalListModel], item: RequisiteDO, qrData: [String: String]) {
         btnShowSelectView.isHidden = true
 
         let field = additionalList.filter { it in
             it.fieldName == item.id
         }
         if field.count > 0 {
-            textField.text = field.first?.fieldValue
+            textView.text = field.first?.fieldValue
             InternetTVDetailsFormViewModel.additionalDic[fieldName] = ["fieldid" : fieldId,
                                                                        "fieldname" : fieldName,
                                                                        "fieldvalue" : field.first?.fieldValue ?? "-1"]
         } else {
             if let el = InternetTVDetailsFormViewModel.additionalDic[item.id ?? ""], !el.isEmpty {
-                textField.text = el["fieldvalue"]
+                textView.text = el["fieldvalue"]
             } else {
-                textField.text = item.content
+                textView.text = item.content
                 InternetTVDetailsFormViewModel.additionalDic[fieldName] = ["fieldid" : fieldId,
                                                                            "fieldname" : fieldName,
                                                                            "fieldvalue" : item.content ?? ""]
             }
         }
-        if q.0 == "Лицевой счет" {
-            let qr = qrData.filter { $0.key == "Лицевой счет"}
-            if let qrUnw = qr.first?.value, qrUnw != "" {
-                textField.text = qrUnw
-            }
-        }
-        if q.0 == "" {
-            textField.placeholder = item.title
-        }
-        if q.0 == "ФИО" {
-            showFioButton.isHidden = false
-        } else {
-            showFioButton.isHidden = true
-        }
-        if item.subTitle != nil {
-            info = item.subTitle ?? ""
-            infoButon.isHidden = false
-        }
+//        if q.0 == "Лицевой счет" {
+//            let qr = qrData.filter { $0.key == "Лицевой счет"}
+//            if let qrUnw = qr.first?.value, qrUnw != "" {
+//                textField.text = qrUnw
+//            }
+//        }
+        //if q.0 == "" {
+        //    textField.placeholder = item.title
+        //}
+//        if q.0 == "ФИО" {
+//            showFioButton.isHidden = false
+//        } else {
+//            showFioButton.isHidden = true
+//        }
     }
 
-    private func setupSelectField(additionalList: [AdditionalListModel], elementUI: RequisiteDO, q: (String, String), qrData: [String: String]) {
+    private func setupSelectField(additionalList: [AdditionalListModel], elementUI: RequisiteDO, qrData: [String: String]) {
         btnShowSelectView.isHidden = false
         spinnerValues = [String : String]()
         let arr = elementUI.dataType?.split(separator: ",")
@@ -166,78 +166,60 @@ class InternetTVInputCell: UITableViewCell, UITextFieldDelegate, IMsg {
         }
 
         if let fill = InternetTVDetailsFormViewModel.additionalDic[elementUI.id ?? "-1"] {
-            textField.text = spinnerValues[fill["fieldvalue"] ?? "-1"]
+            textView.text = spinnerValues[fill["fieldvalue"] ?? "-1"]
         }
 
         InternetTVInputCell.spinnerValuesSelected.forEach { key,  value in
             if key == elementUI.id {
-                textField.text = spinnerValues[value.first?.key ?? "-1"]
+                textView.text = spinnerValues[value.first?.key ?? "-1"]
             }
         }
 
-        if textField.text?.isEmpty ?? true {
+        if textView.text?.isEmpty ?? true {
             let field = additionalList.filter { it in
                 it.fieldName == elementUI.id
             }
             if field.count > 0 {
-                textField.text = spinnerValues[field.first?.fieldValue ?? "-1"]
+                textView.text = spinnerValues[field.first?.fieldValue ?? "-1"]
                 InternetTVDetailsFormViewModel.additionalDic[fieldName] = ["fieldid" : fieldId,
                                                                            "fieldname" : fieldName,
                                                                            "fieldvalue" : field.first?.fieldValue ?? "-1"]
             } else {
-                textField.text = spinnerValues[elementUI.content ?? "-1"]
-                InternetTVDetailsFormViewModel.additionalDic[fieldName ?? "-1"] = ["fieldid" : fieldId,
-                                                                                   "fieldname" : fieldName,
-                                                                                   "fieldvalue" : elementUI.content ?? "-1"]
+                textView.text = spinnerValues[elementUI.content ?? "-1"]
+                InternetTVDetailsFormViewModel.additionalDic[fieldName] = ["fieldid" : fieldId,
+                                                                           "fieldname" : fieldName,
+                                                                           "fieldvalue" : elementUI.content ?? "-1"]
             }
         }
 
-        if q.0 == "Лицевой счет" {
-            let qr = qrData.filter { $0.key == "Лицевой счет"}
-            if let qrUnw = qr.first?.value, qrUnw != "" {
-                textField.text = qrUnw
-            }
-        }
-        if q.0 == "" {
-            textField.placeholder = elementUI.title
-        }
-        if q.0 == "ФИО" {
-            showFioButton.isHidden = false
-        } else {
-            showFioButton.isHidden = true
-        }
-        if elementUI.subTitle != nil {
-            info = elementUI.subTitle ?? ""
-            infoButon.isHidden = false
-        }
+//        if q.0 == "Лицевой счет" {
+//            let qr = qrData.filter { $0.key == "Лицевой счет"}
+//            if let qrUnw = qr.first?.value, qrUnw != "" {
+//                textField.text = qrUnw
+//            }
+//        }
+//        if q.0 == "" {
+//            textField.placeholder = elementUI.title
+//        }
+//        if q.0 == "ФИО" {
+//            showFioButton.isHidden = false
+//        } else {
+//            showFioButton.isHidden = true
+//        }
     }
 
     @IBAction func textField(_ sender: UITextField) {
         fieldValue = textField.text ?? ""
-//        body.updateValue(fieldId, forKey: "fieldid")
-//        body.updateValue(fieldName, forKey: "fieldname")
-//        body.updateValue(textField.text ?? "" , forKey: "fieldvalue")
-        //perAcc = body["Лицевой счет"] ?? ""
-        haveEmptyCell()
-        InternetTVDetailsFormViewModel.additionalDic[fieldName ?? "-1"] = ["fieldid" : fieldId, "fieldname" : fieldName, "fieldvalue" : textField.text ?? ""]
-        //tableViewDelegate?.responds(to: #selector(InternetTableViewDelegate.afterClickingReturnInTextField(cell:)))
-        //tableViewDelegate?.afterClickingReturnInTextField(cell: self)
+        checkForEmpty()
+        InternetTVDetailsFormViewModel.additionalDic[fieldName] = ["fieldid" : fieldId, "fieldname" : fieldName, "fieldvalue" : textField.text ?? ""]
     }
 
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let previousText:NSString = textField.text! as NSString
-        let updatedText = previousText.replacingCharacters(in: range, with: string)
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let previousText:NSString = textView.text! as NSString
+        let updatedText = previousText.replacingCharacters(in: range, with: text)
         fieldValue = updatedText
-//        body.updateValue(fieldId, forKey: "fieldid")
-//        body.updateValue(fieldName, forKey: "fieldname")
-//        body.updateValue(fieldValue , forKey: "fieldvalue")
-        //perAcc = body["Лицевой счет"] ?? ""
-        haveEmptyCell()
-
-        InternetTVDetailsFormViewModel.additionalDic[fieldName ?? "-1"] = ["fieldid" : fieldId, "fieldname" : fieldName, "fieldvalue" : fieldValue]
-//        tableViewDelegate?.responds(to: #selector(InternetTableViewDelegate.afterClickingReturnInTextField(cell:)))
-//        tableViewDelegate?.afterClickingReturnInTextField(cell: self)
-
+        checkForEmpty()
+        InternetTVDetailsFormViewModel.additionalDic[fieldName] = ["fieldid" : fieldId, "fieldname" : fieldName, "fieldvalue" : fieldValue]
         return true
     }
 
@@ -256,7 +238,7 @@ class InternetTVInputCell: UITableViewCell, UITextFieldDelegate, IMsg {
         showSelectView?(spinnerValues, currentElementUI?.id ?? "-1")
     }
     
-    final func haveEmptyCell() {
+    final func checkForEmpty() {
         if (fieldValue != "" && isSelect == true) {
             showGoButton?(true)
         } else if (fieldValue == "" && isSelect == false) {
@@ -278,10 +260,11 @@ class InternetTVInputCell: UITableViewCell, UITextFieldDelegate, IMsg {
     func handleMsg(what: Int) {
         InternetTVInputCell.spinnerValuesSelected.forEach { key,  value in
             if key == currentElementUI?.id {
-                textField.text = spinnerValues[value.first?.key ?? "-1"]
-                InternetTVDetailsFormViewModel.additionalDic[fieldName ?? "-1"] = ["fieldid" : fieldId,
-                                                                                   "fieldname" : fieldName,
-                                                                                   "fieldvalue" : value.first?.key ?? "-1"]
+                //textField
+                textView.text = spinnerValues[value.first?.key ?? "-1"]
+                InternetTVDetailsFormViewModel.additionalDic[fieldName] = ["fieldid" : fieldId,
+                                                                           "fieldname" : fieldName,
+                                                                           "fieldvalue" : value.first?.key ?? "-1"]
             }
         }
     }

@@ -142,7 +142,6 @@ class CheckBox: UIView {
     
     @IBAction func btnAction(_ sender: Any) {
         isChecked = !isChecked
-        print("btn5555!!!!")
     }
     
     var isChecked: Bool = false {
@@ -230,7 +229,11 @@ class SelectVC : AddHeaderImageViewController {
         var index = 0
         spinnerValues.forEach{ key, value in
             let myButton = UIButton(frame: CGRect(x: 30, y: CGFloat(index) * 50.0, width: a - 56, height: 30))
-            //myButton.backgroundColor = .gray
+            myButton.titleLabel?.font =  UIFont.systemFont(ofSize: 14.0)
+            myButton.titleLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping
+            myButton.titleLabel?.numberOfLines = 2
+            myButton.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
+
             myButton.setTitle("\(value)", for: .normal)
             myButton.setTitleColor(UIColor(hexString: "000000"), for: .normal)
             myButton.addTarget(self, action: #selector(myButtonAction), for: .touchUpInside)
@@ -240,17 +243,6 @@ class SelectVC : AddHeaderImageViewController {
             spinnerValuesIndexed[index] = [key: value]
             index += 1
         }
-
-
-//        for index in 1...10 {
-//            let myButton = UIButton(frame: CGRect(x: 30, y: CGFloat(index) * 50.0, width: a - 56, height: 30))
-//            //myButton.backgroundColor = .gray
-//            myButton.setTitle("Hello UIButton \(index)", for: .normal)
-//            myButton.setTitleColor(UIColor(hexString: "000000"), for: .normal)
-//            myButton.addTarget(self, action: #selector(myButtonAction), for: .touchUpInside)
-//            myButton.tag = index
-//            scrollView.addSubview(myButton)
-//        }
 
         scrollView.addSubview(labelOne)
         labelOne.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16.0).isActive = true
@@ -276,14 +268,5 @@ class SelectVC : AddHeaderImageViewController {
         view.addSubview(titleLabel)
         titleLabel.anchor(top: view.topAnchor, left: view.leftAnchor,
                 paddingTop: 28, paddingLeft: 20)
-
-//        let saveAreaView = UIView()
-//        saveAreaView.backgroundColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1)
-//        view.addSubview(saveAreaView)
-//        saveAreaView.anchor(top: view.safeAreaLayoutGuide.bottomAnchor, left: view.leftAnchor,
-//                bottom: view.bottomAnchor, right: view.rightAnchor)
-
-        //stackView.anchor(top: titleLabel.bottomAnchor, left: view.leftAnchor,
-        //        right: view.rightAnchor, paddingTop: 16)
     }
 }
