@@ -1,0 +1,66 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Description of what the lane does"
+
+  lane :tests do
+    run_tests(
+      project: "ForaBank/ForaBank.xcodeproj",
+      scheme: "ForaBank-Tests",
+      devices: ["iPhone 12"],
+      clean: false
+    )
+  end
+
+end
+
+#
+# { platform:iOS, id:dvtdevice-DVTiPhonePlaceholder-iphoneos:placeholder, name:Any iOS Device }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:dvtdevice-DVTiOSDeviceSimulatorPlaceholder-iphonesimulator:placeholder, name:Any iOS Simulator Device }
+# [21:29:06]: ▸ { platform:iOS, id:00008020-0003385934B8003A, name:Max’s iPhone }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:5523D282-A18E-4CF7-A7D4-48A7D7EFB125, OS:13.1, name:iPhone 8 }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:0CAA5566-A164-4AF5-B395-5E5CAD86E9CB, OS:15.0, name:iPhone 8 }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:355E8498-79E3-420A-ABD3-1880495B8165, OS:13.1, name:iPhone 8 Plus }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:D28FD276-25AA-4B73-909F-7B10C098DDE0, OS:15.0, name:iPhone 8 Plus }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:72B3E746-F1D9-410B-A056-0C10064EC179, OS:13.1, name:iPhone 11 }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:5E00623E-C3B5-4E52-BCC7-DC6C6BD30C08, OS:15.0, name:iPhone 11 }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:E43FC795-2A7D-482F-8DDF-3F2DE4AE3921, OS:13.1, name:iPhone 11 Pro }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:29E71A0E-9D99-4688-88D1-75D3B1870E83, OS:15.0, name:iPhone 11 Pro }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:4106128E-8FE0-422F-BA81-A7B1588443F8, OS:13.1, name:iPhone 11 Pro Max }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:18159042-C76F-4A5F-89CF-35AA806D095D, OS:15.0, name:iPhone 11 Pro Max }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:95A0ECDD-938B-4C57-A088-86698DE133E0, OS:15.0, name:iPhone 12 }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:2628CABF-C13F-4B18-8E80-D10D0226C265, OS:15.0, name:iPhone 12 Pro }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:98F356CD-4E1B-4184-8DC1-DA980D2ADFD3, OS:15.0, name:iPhone 12 Pro Max }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:B4B51A48-8C9E-4226-A701-B88053D3C2EF, OS:15.0, name:iPhone 12 mini }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:05127245-98E4-48EB-B99D-E1074E8C90AF, OS:15.0, name:iPhone 13 }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:411A8728-B98A-4004-B889-38834B06CC33, OS:15.0, name:iPhone 13 Pro }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:ACA640E0-9FF0-4A52-B382-3AA3C4DC6626, OS:15.0, name:iPhone 13 Pro Max }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:36846273-E536-4911-B1C6-F82BB8C6AC9C, OS:15.0, name:iPhone 13 mini }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:E980AD5D-3470-4A8B-82F2-66FF180BF704, OS:15.0, name:iPhone SE (2nd generation) }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:10F5BA42-4667-4ADD-B5B2-B05AD3A29996, OS:13.1, name:iPhone X (13.1) }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:FC1080D5-CC2B-4561-AC49-394712F8D77F, OS:15.0, name:iPod touch (7th generation) }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:E38F0F21-0C09-4EDD-90C4-25A094AB2864, OS:15.0, name:iPad (9th generation) }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:43556E89-790C-4096-A6A3-FD88A7113D9E, OS:13.1, name:iPad Air (3rd generation) }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:002C3FDC-7EB6-446E-B244-03F7B5967663, OS:15.0, name:iPad Air (4th generation) }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:38808DE8-C4FD-4A45-9DA2-8B0300E7A932, OS:13.1, name:iPad Pro (9.7-inch) }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:8B078E19-282A-49FF-950F-41358AB1A125, OS:15.0, name:iPad Pro (9.7-inch) }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:BEBB969A-CE9E-48D8-B00F-EF3B2CA7ABBF, OS:13.1, name:iPad Pro (11-inch) (1st generation) }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:A0B5944D-AAA6-41EA-B680-367B39446C41, OS:15.0, name:iPad Pro (11-inch) (3rd generation) }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:032AA77A-F6B3-4D25-BC51-1940D07AEFFE, OS:13.1, name:iPad Pro (12.9-inch) (3rd generation) }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:3EAFB6E7-1B94-4567-AB87-A1F2EBBDAE24, OS:15.0, name:iPad Pro (12.9-inch) (5th generation) }
+# [21:29:06]: ▸ { platform:iOS Simulator, id:9B66B50C-0177-42E5-AB83-D817BAE3926C, OS:15.0, name:iPad mini (6th generation) }
