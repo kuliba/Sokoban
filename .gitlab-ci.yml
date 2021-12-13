@@ -1,0 +1,20 @@
+##########
+
+stages:
+  - test
+#  - build
+
+
+# start only on runner with label "macos"
+default:
+  tags:
+    - macos
+
+fastlane:
+
+  stage: test
+  when: manual
+  only:
+    - ci_setup
+  script:
+    - fastlane tests
