@@ -2,19 +2,34 @@
 
 stages:
   - test
-#  - build
+  - build
 
+variables:
+  LC_ALL: "en_US.UTF-8"
+  LANG: "en_US.UTF-8"
+  GIT_STRATEGY: clone
 
 # start only on runner with label "macos"
 default:
   tags:
     - macos
 
-fastlane:
-
+fastlane-test:
   stage: test
-  when: manual
+#  when: manual
   only:
     - ci_setup
   script:
-    - fastlane ios tests
+    - fastlane tests
+
+build:
+  stage: build
+  only:
+    - ci_setup
+  script:
+    - bundle install
+    - bundle exec fastlane ForaBank
+  artifacts:
+    paths:
+    - ./ForaBank.ipa
+
