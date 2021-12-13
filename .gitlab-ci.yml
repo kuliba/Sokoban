@@ -2,7 +2,7 @@
 
 stages:
   - test
-  - build
+#  - build
 
 variables:
   LC_ALL: "en_US.UTF-8"
@@ -20,17 +20,21 @@ fastlane-test:
 #  when: manual
   only:
     - ci_setup
+  artifacts:
+    paths:
+      - fastlane/screenshots
+      - fastlane/logs    
   script:
     - fastlane tests
 
-build:
-  stage: build
-  only:
-    - ci_setup
-  script:
-    - bundle install
-    - bundle exec fastlane ForaBank
-  artifacts:
-    paths:
-    - ./ForaBank.ipa
+#build:
+#  stage: build
+#  only:
+#    - ci_setup
+#  script:
+#    - bundle install
+#    - bundle exec fastlane build
+#  artifacts:
+#    paths:
+#    - ./ForaBank.ipa
 
