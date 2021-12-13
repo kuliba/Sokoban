@@ -17,4 +17,4 @@ fastlane:
   only:
     - ci_setup
   script:
-    - fastlane tests
+    - fastlane ios tests
