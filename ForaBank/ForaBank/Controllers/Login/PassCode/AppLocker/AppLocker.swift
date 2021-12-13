@@ -123,9 +123,13 @@ public class AppLocker: UIViewController {
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        let isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
-        if isSensorsEnabled ?? false {
-            checkSensors()
+        //FIXME: this is hotfix for the DBSNEW-2851 issue. Should be fixed in the refactoring process
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) { [weak self] in
+            
+            let isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
+            if isSensorsEnabled ?? false {
+                self?.checkSensors()
+            }
         }
     }
     
