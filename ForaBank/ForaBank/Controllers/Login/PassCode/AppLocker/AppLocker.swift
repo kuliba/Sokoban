@@ -113,6 +113,8 @@ public class AppLocker: UIViewController {
     
     //MARK: - Lifecycle
     
+    private var isSensorsDisabledForEarlyOpenedAppLocker = false
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         modalPresentationStyle = .fullScreen
@@ -124,11 +126,12 @@ public class AppLocker: UIViewController {
         super.viewDidAppear(animated)
         
         //FIXME: this is hotfix for the DBSNEW-2851 issue. Should be fixed in the refactoring process
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) { [weak self] in
+        if isSensorsDisabledForEarlyOpenedAppLocker == false {
             
             let isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
             if isSensorsEnabled ?? false {
-                self?.checkSensors()
+                checkSensors()
+                isSensorsDisabledForEarlyOpenedAppLocker = true
             }
         }
     }
