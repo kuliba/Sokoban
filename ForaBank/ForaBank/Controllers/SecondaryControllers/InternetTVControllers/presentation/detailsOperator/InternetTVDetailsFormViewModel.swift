@@ -33,6 +33,7 @@ class InternetTVDetailsFormViewModel {
             param.title = item.fieldTitle
             param.content = item.fieldValue
             param.readOnly = true
+            param.svgImage = item.svgImage
             if (requisites.first { requisite in requisite.id == param.id  } == nil) {
                 requisites.append(param)
             }
@@ -141,6 +142,10 @@ class InternetTVDetailsFormViewModel {
                         if let respUnw = response {
                             if respUnw.data?.needSum ?? false {
                                 self.fillRequisites(answer: respUnw)
+                                if let sum = respUnw.data?.amount, sum > 0 {
+                                    self.controller?.bottomInputView.amountTextField.text = "\(sum)\(self.controller?.bottomInputView.amountTextField.text ?? "" )"
+                                    self.controller?.bottomInputView.amountTextField.isEnabled = false
+                                }
                                 controller.showFinalStep()
                             } else {
                                 self.setupNextStep(respUnw)
@@ -177,6 +182,10 @@ class InternetTVDetailsFormViewModel {
                     } else {
                         if let respUnw = response {
                             if respUnw.data?.needSum ?? false {
+                                if let sum = respUnw.data?.amount, sum > 0 {
+                                    self.controller?.bottomInputView.amountTextField.text = "\(sum)\(self.controller?.bottomInputView.amountTextField.text ?? "")"
+                                    self.controller?.bottomInputView.amountTextField.isEnabled = false
+                                }
                                 controller.showFinalStep()
                             } else {
                                 self.setupNextStep(respUnw)
@@ -211,6 +220,10 @@ class InternetTVDetailsFormViewModel {
                                 controller.doConfirmation(response: respUnw)
                             } else {
                                 if respUnw.data?.needSum ?? false {
+                                    if let sum = respUnw.data?.amount, sum > 0 {
+                                        self.controller?.bottomInputView.amountTextField.text = "\(sum)\(self.controller?.bottomInputView.amountTextField.text ?? "")"
+                                        self.controller?.bottomInputView.amountTextField.isEnabled = false
+                                    }
                                     controller.showFinalStep()
                                 } else {
                                     self.setupNextStep(respUnw)
