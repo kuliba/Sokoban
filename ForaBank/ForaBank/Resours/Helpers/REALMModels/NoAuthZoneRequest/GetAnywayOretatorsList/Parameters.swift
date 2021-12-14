@@ -62,6 +62,7 @@ extension Parameters {
         minLength = data.minLength ?? 0
         rawLength = data.rawLength ?? 0
         readOnly  = data.readOnly ?? false
-        content    = data.content
+        content   = data.content
+        svgImage  = data.svgImage
     }
 }

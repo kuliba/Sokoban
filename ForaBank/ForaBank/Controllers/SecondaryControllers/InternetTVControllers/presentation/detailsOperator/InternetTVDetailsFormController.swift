@@ -21,7 +21,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
 
     lazy var realm = try? Realm()
     //var cardList: Results<UserAllCardsModel>? = nil
-    let footerView = GKHInputFooterView()
+    let footerView = InternetTVSourceView()
 
     func handleMsg(what: Int) {
         switch (what) {
@@ -108,28 +108,28 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
     }
 
     func doConfirmation(response: CreateTransferAnswerModel?) {
-        let ob = ConfirmViewControllerModel(type: .gkh)
+        let ob = InternetTVConfirmViewModel(type: .gkh)
         let sum = response?.data?.debitAmount ?? 0.0
-        ob.summTransction = sum.currencyFormatter(symbol: "RUB")
+        ob.sumTransaction = sum.currencyFormatter(symbol: "RUB")
         let tax = response?.data?.fee ?? 0.0
-        ob.taxTransction = tax.currencyFormatter(symbol: "RUB")
+        ob.taxTransaction = tax.currencyFormatter(symbol: "RUB")
         ob.cardFrom = footerView.cardFromField.cardModel
 
         DispatchQueue.main.async {
-            let vc = ContactConfurmViewController()
+            let vc = InternetTVConfirmViewController()
             vc.title = "Подтвердите реквизиты"
-            vc.confurmVCModel = ob
+            vc.viewModel = ob
             vc.countryField.isHidden = true
             vc.phoneField.isHidden = true
             vc.nameField.isHidden = true
             vc.bankField.isHidden = true
-            vc.numberTransctionField.isHidden = true
+            vc.numberTransactionField.isHidden = true
             vc.cardToField.isHidden = true
-            vc.summTransctionField.isHidden = false
-            vc.taxTransctionField.isHidden = false
-            vc.currTransctionField.isHidden = true
-            vc.currancyTransctionField.isHidden = true
-            vc.operatorView = self.operatorData?.logotypeList.first?.svgImage ?? ""
+            vc.sumTransactionField.isHidden = false
+            vc.taxTransactionField.isHidden = false
+            vc.currTransactionField.isHidden = true
+            vc.currencyTransactionField.isHidden = true
+            InternetTVSuccessView.svgImg = self.operatorData?.logotypeList.first?.svgImage ?? ""
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }
@@ -276,35 +276,65 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
 //            }
 //        }
 
-        viewModel.getCardList { [weak self] data ,error in
-            DispatchQueue.main.async { [self] in
-                if error != nil {
-                    self?.showAlert(with: "Ошибка", and: error!)
-                }
-                guard let data = data else { return }
-                self?.dismissActivity()
-                var arrProducts: [GetProductListDatum] = []
-                data.forEach { product in
-                    if (product.productType == "CARD" || product.productType == "ACCOUNT") && product.currency == "RUB" && product.allowDebit ?? false {
-                        arrProducts.append(product)
-                    }
-                }
-                self?.footerView.cardListView.cardList = arrProducts
-                self?.footerView.cardFromField.cardModel = arrProducts.first
+        var userAllCardsModelArr = [UserAllCardsModel]()
+        var productListDatum: [GetProductListDatum] = []
+        let object = realm?.objects(UserAllCardsModel.self)
 
-                //self?.product = arrProducts.first
-                self?.viewModel.cardNumber  = arrProducts.first?.number ?? ""
-//                                self?.cardListView.cardList = filterProduct
-//
-//                                if filterProduct.count > 0 {
-//                                    self?.cardFromField.cardModel = filterProduct.first
-//                                    guard let cardNumber  = filterProduct.first?.number else { return }
-//                                    self?.selectedCardNumber = cardNumber
-//                                    self?.cardIsSelect = true
-//                                    completion(nil)
-//                                }
+        dismissActivity()
+        object?.forEach { product in
+            if product.productType == "CARD" || product.productType == "ACCOUNT"  {
+                userAllCardsModelArr.append(product)
+                let ob = GetProductListDatum.init(number: product.number, numberMasked: product.numberMasked, balance: product.balance, currency: product.currency, productType: product.productType, productName: product.productName, ownerID: product.ownerID, accountNumber: product.accountNumber, allowDebit: product.allowDebit, allowCredit: product.allowCredit, customName: product.customName, cardID: product.cardID, accountID: product.accountID, name: product.name, validThru: product.validThru, status: product.status, holderName: product.holderName, product: product.product, branch: product.branch, miniStatement: nil, mainField: product.mainField, additionalField: product.additionalField, smallDesign: product.smallDesign, mediumDesign: product.mediumDesign, largeDesign: product.largeDesign, paymentSystemName: product.paymentSystemName, paymentSystemImage: product.paymentSystemImage, fontDesignColor: product.fontDesignColor, id: product.id, background: [""], XLDesign: product.XLDesign, statusPC: product.statusPC, interestRate: nil, openDate: product.openDate, branchId: product.branchId, expireDate: product.expireDate)
+                productListDatum.append(ob)
             }
         }
+
+        if (productListDatum.count > 0) {
+            self.footerView.cardListView.cardList = productListDatum
+            self.footerView.cardFromField.cardModel = productListDatum.first
+        }
+
+//        let token = object?.observe { ( changes: RealmCollectionChange) in
+//            switch changes {
+//            case .initial:
+//
+//                break
+//            case .update:
+//                break
+//            case .error(let error):
+//                fatalError("\(error)")
+//            }
+//        }
+
+//        viewModel.getCardList { [weak self] data ,error in
+//            DispatchQueue.main.async { [self] in
+//                if error != nil {
+//                    self?.showAlert(with: "Ошибка", and: error!)
+//                }
+//                guard let data = data else { return }
+//                self?.dismissActivity()
+//                var arrProducts: [GetProductListDatum] = []
+//                data.forEach { product in
+//                    if (product.productType == "CARD" || product.productType == "ACCOUNT") && product.currency == "RUB" && product.allowDebit ?? false {
+//                        arrProducts.append(product)
+//                    }
+//                }
+//                self?.footerView.cardListView.cardList = arrProducts
+//                self?.footerView.cardFromField.cardModel = arrProducts.first
+//
+//                //self?.product = arrProducts.first
+//                self?.viewModel.cardNumber  = arrProducts.first?.number ?? ""
+////                                self?.cardListView.cardList = filterProduct
+////
+////                                if filterProduct.count > 0 {
+////                                    self?.cardFromField.cardModel = filterProduct.first
+////                                    guard let cardNumber  = filterProduct.first?.number else { return }
+////                                    self?.selectedCardNumber = cardNumber
+////                                    self?.cardIsSelect = true
+////                                    completion(nil)
+////                                }
+//            }
+//        }
     }
 
     func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {

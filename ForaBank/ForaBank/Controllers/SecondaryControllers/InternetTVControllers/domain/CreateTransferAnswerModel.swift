@@ -58,12 +58,13 @@ struct CreateTransferAnswerData: Codable {
 }
 
 struct AdditionalList2: Codable {
-    let fieldTitle, fieldName, fieldValue: String?
+    let fieldTitle, fieldName, fieldValue, svgImage: String?
 
-    init(fieldTitle: String?, fieldName: String?, fieldValue: String?) {
+    init(fieldTitle: String?, fieldName: String?, fieldValue: String?, svgImage: String?) {
         self.fieldTitle = fieldTitle
         self.fieldName = fieldName
         self.fieldValue = fieldValue
+        self.svgImage = svgImage
     }
 }
 
