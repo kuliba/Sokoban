@@ -36,9 +36,9 @@ platform :ios do
   end
 
 
-  lane :deploy do
+  lane :deploy do |options|
 
-    upload_to_testflight(api_key_path: "../auth/api_key_info.json", changelog: last_commit_message, ipa: "../build/ForaBank.ipa")
+    upload_to_testflight(api_key_path: "../auth/api_key_info.json", changelog: options[:changelog], ipa: "../build/ForaBank.ipa")
 
   end
 
@@ -60,7 +60,7 @@ platform :ios do
     build_beta
 
     # deploy
-    deploy
+    deploy(changelog: last_commit_message)
 
   end
 
