@@ -36,13 +36,15 @@ platform :ios do
 
   lane :deploy_beta do
 
-    build_number = get_build_number(xcodeproj: "ForaBank/ForaBank.xcodeproj")
-    printf "Last build number %d\n", build_number
+    increment_build_number(xcodeproj: "ForaBank/ForaBank.xcodeproj")
+    # build_number = get_build_number(xcodeproj: "ForaBank/ForaBank.xcodeproj")
+    # printf "Last build number %d\n", build_number
 
     # last_commit_message = last_git_commit[:message]
     last_commit_message = "CI manual beta deploy test. Not for QA testing."
 
-
+    version = get_version_number(xcodeproj: "ForaBank/ForaBank.xcodeproj") + " (" + get_build_number(xcodeproj: "ForaBank/ForaBank.xcodeproj") + ")"
+    git_commit(path: ".", message: "Version " + version)
 
   end
 
