@@ -27,6 +27,25 @@ platform :ios do
     )
   end
 
+  lane :build_beta do
+    build_app(scheme: "ForaBank-Deploy-Beta",
+              project: "ForaBank/ForaBank.xcodeproj",
+              output_directory: "../build",
+              include_bitcode: true)
+  end
+
+  lane :deploy_beta do
+
+    build_number = get_build_number(xcodeproj: "ForaBank/ForaBank.xcodeproj")
+    printf "Last build number %d\n", build_number
+
+    # last_commit_message = last_git_commit[:message]
+    last_commit_message = "CI manual beta deploy test. Not for QA testing."
+
+
+
+  end
+
 end
 
 #
