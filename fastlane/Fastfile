@@ -35,6 +35,14 @@ platform :ios do
               include_bitcode: true)
   end
 
+
+  lane :deploy do
+
+    upload_to_testflight(api_key_path: "../auth/api_key_info.json", changelog: last_commit_message, ipa: "../build/ForaBank.ipa")
+
+  end
+
+
   lane :build_deploy_beta do
 
     # last commit message
@@ -48,11 +56,11 @@ platform :ios do
     git_commit(path: ".", message: "Version " + version)
     push_to_git_remote
 
-    # build & sign
+    # build
     build_beta
 
-    # upload
-    upload_to_testflight(api_key_path: "../auth/api_key_info.json", changelog: last_commit_message, ipa: "../build/ForaBank.ipa")
+    # deploy
+    deploy
 
   end
 
