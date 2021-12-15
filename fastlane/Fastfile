@@ -38,15 +38,20 @@ platform :ios do
 
   lane :deploy_beta do
 
-    # build & sign
+    # increment build
     increment_build_number(xcodeproj: "ForaBank/ForaBank.xcodeproj")
-    sync_code_signing
-    disable_automatic_code_signing(path: "ForaBank/ForaBank.xcodeproj")
+    # last_commit_message = last_git_commit[:message]
+    last_commit_message = "CI manual beta deploy test. Not for QA testing."
+
+    # commit & push
+    version = get_version_number(xcodeproj: "ForaBank/ForaBank.xcodeproj") + " (" + get_build_number(xcodeproj: "ForaBank/ForaBank.xcodeproj") + ")"
+    git_commit(path: ".", message: "Version " + version)
+    push_to_git_remote
+
     build_app(scheme: "ForaBank-Deploy-Beta",
               project: "ForaBank/ForaBank.xcodeproj",
               output_directory: "../build",
               include_bitcode: true)
-    enable_automatic_code_signing(path: "ForaBank/ForaBank.xcodeproj")
 
     # auth
     api_key = app_store_connect_api_key(
@@ -58,14 +63,7 @@ platform :ios do
     )
 
     # upload
-    # last_commit_message = last_git_commit[:message]
-    last_commit_message = "CI manual beta deploy test. Not for QA testing."
     upload_to_testflight(api_key: api_key, changelog: last_commit_message)
-
-    # commit & push
-    version = get_version_number(xcodeproj: "ForaBank/ForaBank.xcodeproj") + " (" + get_build_number(xcodeproj: "ForaBank/ForaBank.xcodeproj") + ")"
-    git_commit(path: ".", message: "Version " + version)
-    push_to_git_remote
 
   end
 
