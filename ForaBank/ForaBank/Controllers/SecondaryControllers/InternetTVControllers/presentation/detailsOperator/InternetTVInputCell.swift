@@ -134,20 +134,13 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
                                                                            "fieldvalue" : item.content ?? ""]
             }
         }
-//        if q.0 == "Лицевой счет" {
-//            let qr = qrData.filter { $0.key == "Лицевой счет"}
-//            if let qrUnw = qr.first?.value, qrUnw != "" {
-//                textField.text = qrUnw
-//            }
-//        }
-        //if q.0 == "" {
-        //    textField.placeholder = item.title
-        //}
-//        if q.0 == "ФИО" {
-//            showFioButton.isHidden = false
-//        } else {
-//            showFioButton.isHidden = true
-//        }
+
+        if isPersonalAcc(strCheck: item.title ?? ""), let textValue = qrData["Лицевой счет"]  {
+            textView.text = textValue
+            InternetTVDetailsFormViewModel.additionalDic[fieldName] = ["fieldid" : fieldId,
+                                                                       "fieldname" : fieldName,
+                                                                       "fieldvalue" : textValue]
+        }
     }
 
     private func setupSelectField(additionalList: [AdditionalListModel], elementUI: RequisiteDO, qrData: [String: String]) {
@@ -191,21 +184,6 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
                                                                            "fieldvalue" : elementUI.content ?? "-1"]
             }
         }
-
-//        if q.0 == "Лицевой счет" {
-//            let qr = qrData.filter { $0.key == "Лицевой счет"}
-//            if let qrUnw = qr.first?.value, qrUnw != "" {
-//                textField.text = qrUnw
-//            }
-//        }
-//        if q.0 == "" {
-//            textField.placeholder = elementUI.title
-//        }
-//        if q.0 == "ФИО" {
-//            showFioButton.isHidden = false
-//        } else {
-//            showFioButton.isHidden = true
-//        }
     }
 
     @IBAction func textField(_ sender: UITextField) {
@@ -267,5 +245,14 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
                                                                            "fieldvalue" : value.first?.key ?? "-1"]
             }
         }
+    }
+
+    func isPersonalAcc(strCheck: String) -> Bool {
+        if strCheck.isEmpty {return false}
+        let str = strCheck.lowercased()
+        return str.contains("счет")
+                || str.contains("лицев")
+                || str.contains("номер")
+                || str.contains("абонент")
     }
 }

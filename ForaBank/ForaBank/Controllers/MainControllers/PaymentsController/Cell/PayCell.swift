@@ -23,7 +23,7 @@ class PayCell: UICollectionViewCell, SelfConfiguringCell {
         guard let payments: PaymentsModel = value as? PaymentsModel else { return }
         paymentsName.text = payments.name
         iconImageView.image = UIImage(named: payments.iconName ?? "")
-        if paymentsName.text == "Оплата по QR" || paymentsName.text ==  "Интернет, ТВ!" || paymentsName.text == "Штрафы" ||  paymentsName.text == "Соцсети, игры, карты" ||  paymentsName.text == "Госуслуги" ||  paymentsName.text == "Охранные системы" ||  paymentsName.text == "Прочее" {
+        if paymentsName.text == "Штрафы" ||  paymentsName.text == "Соцсети, игры, карты" ||  paymentsName.text == "Госуслуги" ||  paymentsName.text == "Охранные системы" ||  paymentsName.text == "Прочее" {
             iconImageView.alpha = 0.3
             paymentsName.alpha = 0.3
             self.isUserInteractionEnabled = false

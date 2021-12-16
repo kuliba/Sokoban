@@ -45,6 +45,7 @@ class PaymentsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
         UITabBarItem.appearance().setTitleTextAttributes(
             [.foregroundColor: UIColor.black ], for: .selected)
     }
@@ -56,7 +57,7 @@ class PaymentsViewController: UIViewController {
         super.viewDidLoad()
         navigationController?.navigationBar.isHidden = true
         view.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 1)
-        self.view.addSubview(searchContact)
+        view.addSubview(searchContact)
         searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 48)
         searchContact.alpha = 0.5
         searchContact.bellIcon.isHidden = true
@@ -69,14 +70,18 @@ class PaymentsViewController: UIViewController {
         loadLastPayments()
         loadLastMobilePayments()
         loadAllLastMobilePayments()
-        //        loadLastGKHPayments()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        if GlobalModule.qrOperator != nil && GlobalModule.qrData != nil {
+            let controller = InternetTVMainController.storyboardInstance()!
+            let nc = UINavigationController(rootViewController: controller)
+            nc.modalPresentationStyle = .fullScreen
+            present(nc, animated: false)
+        }
         navigationController?.navigationBar.isHidden = true
         loadAllLastMobilePayments()
-
     }
     
 //    override func viewWillDisappear(_ animated: Bool) {
@@ -92,11 +97,13 @@ class PaymentsViewController: UIViewController {
 
 // MARK: QR
     @objc func openSetting() {
-        ///  Отображение экрана QR
-        self.checkCameraAccess(isAllowed: {
+        checkCameraAccess(isAllowed: {
                 if $0 {
                     DispatchQueue.main.async {
-//                        self.delegate?.goToQRController()
+                        let controller = QRViewController.storyboardInstance()!
+                        let nc = UINavigationController(rootViewController: controller)
+                        nc.modalPresentationStyle = .fullScreen
+                        self.present(nc, animated: true)
                     }
                 } else {
                     guard self.alertController == nil else {
@@ -114,7 +121,6 @@ class PaymentsViewController: UIViewController {
                     }
                 }
             })
-        
     }
     
     private func setupSearchBar() {
@@ -153,7 +159,6 @@ class PaymentsViewController: UIViewController {
         collectionView!.contentInset = UIEdgeInsets(top: 16, left: 0, bottom: 0, right: 0)
         collectionView.isScrollEnabled = true
         collectionView.delegate = self
-        
     }
     
     func reloadData(with searchText: String?) {
@@ -166,10 +171,7 @@ class PaymentsViewController: UIViewController {
         
         dataSource?.apply(snapshot, animatingDifferences: true)
         collectionView.reloadData()
-        
     }
-    
-    
 }
 
 //MARK: - API
@@ -209,7 +211,6 @@ extension PaymentsViewController {
             print("DEBUG: LatestPayment: ", model)
             if model.statusCode == 0 {
                 guard let lastPaymentsList  = model.data else { return }
-                
                 if lastPaymentsList.count > 3 {
                     let payArr = lastPaymentsList.prefix(3)
                     payArr.forEach { lastPayment in
@@ -224,7 +225,6 @@ extension PaymentsViewController {
                 }
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
-                
             }
         }
     }
@@ -259,9 +259,7 @@ extension PaymentsViewController {
     }
     
     func loadAllLastMobilePayments() {
-        
         let param = ["isPhonePayments": "true", "isCountriesPayments": "true", "isServicePayments": "true", "isMobilePayments": "true"]
-        
         NetworkManager<GetAllLatestPaymentsDecodableModel>.addRequest(.getAllLatestPayments, param, [:]) { model, error in
             if error != nil {
                 print("DEBUG: Error: ", error ?? "")
@@ -274,16 +272,13 @@ extension PaymentsViewController {
                 payArr.forEach { lastPayment in
                     let payment = PaymentsModel(lastGKHPayment: lastPayment)
 //                    self.payments.append(payment)
-                    
                 }
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
-                
             }
         }
     }
-    
-    
+
     func getFastPaymentContractList(_ completion: @escaping (_ model: [FastPaymentContractFindListDatum]? ,_ error: String?) -> Void) {
         NetworkManager<FastPaymentContractFindListDecodableModel>.addRequest(.fastPaymentContractFindList, [:], [:]) { model, error in
             if error != nil {
@@ -296,15 +291,11 @@ extension PaymentsViewController {
                 completion(model.data,nil)
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
-                
                 completion(nil, model.errorMessage)
             }
         }
     }
-    
-    
-    
-    /// Проверка доступа к камере
+
     func checkCameraAccess(isAllowed: @escaping (Bool) -> Void) {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .denied:
