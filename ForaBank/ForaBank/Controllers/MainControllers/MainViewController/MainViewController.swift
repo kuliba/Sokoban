@@ -188,6 +188,7 @@ class MainViewController: UIViewController {
         self.navigationController?.navigationBar.isHidden = true
     }
     
+    
 
     
     

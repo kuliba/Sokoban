@@ -22,6 +22,7 @@ class DetailOperationViewController: UIViewController {
     var tableView: UITableView?
     
     var data =  MockItems.returnDetails()
+    var newData = [PaymentsModel]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,7 +36,7 @@ class DetailOperationViewController: UIViewController {
         data[6].controllerName = terminal ?? ""
         data[7].controllerName = merchant ?? ""
         data[8].controllerName = code ?? ""
-
+        newData = data.filter({$0.controllerName != ""})
 
 
 //        tableView.frame = tableView.frame.inset(by: UIEdgeInsets(top: 10, left: 0, bottom: 20, right: 20))
@@ -58,13 +59,13 @@ class DetailOperationViewController: UIViewController {
 extension DetailOperationViewController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count
+        return newData.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DetailOperationCell") as? DetailOperationTableViewCell
-        cell?.categoryLabel.text =  data[indexPath.row].name
-        cell?.titleLabel.text = data[indexPath.row].controllerName
+        cell?.categoryLabel.text =  newData[indexPath.row].name
+        cell?.titleLabel.text = newData[indexPath.row].controllerName
 //        cell?.titleLabel.text = data[indexPath.row].iconName
         return cell ?? UITableViewCell()
     }

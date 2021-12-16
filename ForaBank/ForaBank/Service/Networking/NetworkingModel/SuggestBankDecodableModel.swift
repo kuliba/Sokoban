@@ -125,7 +125,7 @@ struct DatumData: Codable {
     let okpo: String?
     let opf: Opf?
     let paymentCity, phones, registrationNumber, rkc: String?
-    let state: State?
+    let state: StateBank?
     let swift: String?
 }
 
@@ -158,7 +158,7 @@ extension DatumData {
         phones: String?? = nil,
         registrationNumber: String?? = nil,
         rkc: String?? = nil,
-        state: State?? = nil,
+        state: StateBank?? = nil,
         swift: String?? = nil
     ) -> DatumData {
         return DatumData(
@@ -661,15 +661,15 @@ extension Opf {
 //   let state = try State(json)
 
 // MARK: - State
-struct State: Codable {
+struct StateBank: Codable {
     let actualityDate, liquidationDate, registrationDate, status: String?
 }
 
 // MARK: State convenience initializers and mutators
 
-extension State {
+extension StateBank {
     init(data: Data) throws {
-        self = try newJSONDecoder().decode(State.self, from: data)
+        self = try newJSONDecoder().decode(StateBank.self, from: data)
     }
 
     init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -688,8 +688,8 @@ extension State {
         liquidationDate: String?? = nil,
         registrationDate: String?? = nil,
         status: String?? = nil
-    ) -> State {
-        return State(
+    ) -> StateBank {
+        return StateBank(
             actualityDate: actualityDate ?? self.actualityDate,
             liquidationDate: liquidationDate ?? self.liquidationDate,
             registrationDate: registrationDate ?? self.registrationDate,
