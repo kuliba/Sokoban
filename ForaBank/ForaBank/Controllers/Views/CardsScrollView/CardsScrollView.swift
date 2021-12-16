@@ -26,7 +26,7 @@ final class CardsScrollView: UIView {
     }
     
     var canAddNewCard = false
-
+    var onlyCard: Bool = false
     var onlyMy: Bool = true
     var filteredCardList = [UserAllCardsModel]() {
         didSet {
@@ -72,24 +72,33 @@ final class CardsScrollView: UIView {
         commonInit(onlyMy: true)
     }
     
-    required init(frame: CGRect = .zero, onlyMy: Bool) {
+    required init(frame: CGRect = .zero, onlyMy: Bool, onlyCard: Bool = false, deleteDeposit: Bool = false) {
         super.init(frame: frame)
-        commonInit(onlyMy: onlyMy)
+        commonInit(onlyMy: onlyMy, onlyCard: onlyCard, deleteDeposit: deleteDeposit)
     }
     
     deinit {
         token?.invalidate()
     }
 
-    func commonInit(onlyMy: Bool) {
+    func commonInit(onlyMy: Bool, onlyCard: Bool = false, deleteDeposit: Bool = false) {
         self.onlyMy = onlyMy
-//        print("GEBUG: only:", self.onlyMy)
+        self.onlyCard = onlyCard
         updateObjectWithNotification()
         cardListRealm?.forEach({ op in
-//            if !op.parameterList.isEmpty && op.parentCode?.contains(GlobalModule.UTILITIES_CODE) ?? false {
-            cardList.append(op)
-//                self.operators = op
-//            }
+            if onlyCard {
+                if op.productType == "CARD" {
+                    cardList.append(op)
+                }
+            } else {
+                if deleteDeposit {
+                    if op.productType != "DEPOSIT" {
+                        cardList.append(op)
+                    }
+                } else {
+                    cardList.append(op)
+                }
+            }
         })
 //        let height: CGFloat = self.onlyMy ? 110 : 80
         changeCardButtonCollection.isHidden = !self.onlyMy
@@ -105,7 +114,7 @@ final class CardsScrollView: UIView {
                 self.filteredCardList = self.cardList.filter { $0.productType == "CARD" }
             case 2:
                 self.isFiltered = true
-                self.filteredCardList = self.cardList.filter { $0.productType == "ACCOUNT" }
+                self.filteredCardList = self.cardList.filter { $0.productType == "ACCOUNT" || $0.productType == "DEPOSIT" }
             default:
                 self.isFiltered = false
             }
