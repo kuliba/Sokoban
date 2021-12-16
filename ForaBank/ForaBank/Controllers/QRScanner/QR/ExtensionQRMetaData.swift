@@ -1,10 +1,3 @@
-//
-//  ExtensionQRMetaData.swift
-//  ForaBank
-//
-//  Created by Константин Савялов on 03.09.2021.
-//
-
 import UIKit
 import AVFoundation
 import RealmSwift
@@ -12,24 +5,23 @@ import RealmSwift
 extension QRViewController: AVCaptureMetadataOutputObjectsDelegate, CALayerDelegate {
 
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-        guard metadataObjects.count > 0 else { return }
-        
+        guard metadataObjects.count > 0, !qrIsFired else { return }
+        qrIsFired = true
         var tempInn = ""
         if let object = metadataObjects.first as? AVMetadataMachineReadableCodeObject {
             if object.type == AVMetadataObject.ObjectType.qr {
-                self.keyValue = object.stringValue ?? ""
-                let a = self.keyValue.components(separatedBy: "|")
-                
+                keyValue = object.stringValue ?? ""
+                let a = keyValue.components(separatedBy: "|")
+
+                var dicQR = [String: String]()
                 a.forEach { [weak self] v in
                     if v.contains("=") {
                         let tempArray = v.components(separatedBy: "=")
                         var key = tempArray[0].lowercased()
                         let value = tempArray[1]
+                        dicQR[key] = value
                         if key == "persacc" {
                             key = "Лицевой счет"
-                            self?.qrData.updateValue(value, forKey: key)
-                        }
-                        if key == "persacc" {
                             self?.qrData.updateValue(value, forKey: key)
                         }
                         if key == "sum" {
@@ -41,15 +33,40 @@ extension QRViewController: AVCaptureMetadataOutputObjectsDelegate, CALayerDeleg
                         }
                     }
                 }
-                
-            //    let inn = qrData.filter { $0.key == "payeeinn" }
-                operatorsList?.forEach({ operators in
-                    if operators.synonymList.first == tempInn {
-                        self.operators = operators
-                        
+
+                let foundOperators = operatorsList?.filter{ item in
+                    if item.synonymList.count > 0 {
+                        return item.synonymList.first == tempInn
+                    } else {
+                        return  false
                     }
-                })
-                self.returnKey()
+                }
+
+                if foundOperators?.count ?? 0 > 1 {
+                    let foundByName = foundOperators?.filter{item in
+                        let nameOrg = dicQR["name"]
+                        return nameOrg?.lowercased().contains(item.name?.lowercased() ?? "####") == true
+                    }
+                    if foundByName?.count == 1 {
+                        navigationController?.popViewController(animated: true)
+                        operators = foundOperators?.first
+                        returnKey()
+                    } else {
+                        GlobalModule.qrData = qrData
+                        QRErrorViewController.operators.removeAll()
+                        QRErrorViewController.operators.append(contentsOf: foundOperators!)
+                        performSegue(withIdentifier: "qrError", sender: nil)
+                    }
+                } else if foundOperators?.count ?? 0 == 1 {
+                    navigationController?.popViewController(animated: true)
+                    operators = foundOperators?.first
+                    returnKey()
+                } else if foundOperators?.count ?? 0 == 0 {
+                    GlobalModule.qrData = nil
+                    QRErrorViewController.operators.removeAll()
+                    navigationController?.popViewController(animated: true)
+                    performSegue(withIdentifier: "qrError", sender: nil)
+                }
             } else {
                 DispatchQueue.main.async {
                     guard self.alertController == nil else {
@@ -68,7 +85,5 @@ extension QRViewController: AVCaptureMetadataOutputObjectsDelegate, CALayerDeleg
                 }
             }
         }
-        
     }
-    
 }

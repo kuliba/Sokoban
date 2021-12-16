@@ -51,7 +51,16 @@ class MainTabBarViewController: UITabBarController {
         loadCatalog()
         
     }
-    
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if GlobalModule.qrOperator != nil && GlobalModule.qrData != nil {
+            let controller = InternetTVMainController.storyboardInstance()!
+            let nc = UINavigationController(rootViewController: controller)
+            nc.modalPresentationStyle = .fullScreen
+            present(nc, animated: false)
+        }
+    }
 
     override func viewWillAppear(_ animated: Bool) {
         UITabBar.appearance().tintColor = .black

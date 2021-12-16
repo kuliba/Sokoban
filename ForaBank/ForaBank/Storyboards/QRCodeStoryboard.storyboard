@@ -167,8 +167,45 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="TCm-IX-7AV">
+                                <rect key="frame" x="0.0" y="40" width="414" height="222"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="QRFoundOrgCell" rowHeight="50" id="dCz-Fa-56e" customClass="QRFoundOrgCell" customModule="ForaBank" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="44.5" width="414" height="50"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="dCz-Fa-56e" id="mop-Nh-c1r" customClass="QRFoundOrgCell" customModule="ForaBank" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="diV-FP-3V9">
+                                                    <rect key="frame" x="14" y="5" width="40" height="40"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" text="Lorem ipsusdfsdfsdfsdfsdfsdfsdfsdfsdfm dsdfsdfsdfsdfsdfsdfsdfsdf" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="vnz-73-9ju">
+                                                    <rect key="frame" x="62" y="0.0" width="257" height="50"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                    <color key="textColor" systemColor="labelColor"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                </textView>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="icon" destination="diV-FP-3V9" id="Dvp-ED-UeN"/>
+                                            <outlet property="label" destination="vnz-73-9ju" id="gqH-Vx-7JV"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="SQy-yt-Ubh" id="6jP-kh-2xV"/>
+                                    <outlet property="delegate" destination="SQy-yt-Ubh" id="Drs-DU-Fs3"/>
+                                </connections>
+                            </tableView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="22" translatesAutoresizingMaskIntoConstraints="NO" id="NB2-pe-HVu">
-                                <rect key="frame" x="40" y="250" width="334" height="342.5"/>
+                                <rect key="frame" x="40" y="360" width="334" height="322.5"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="qrError" translatesAutoresizingMaskIntoConstraints="NO" id="9Vm-BV-NRd">
                                         <rect key="frame" x="0.0" y="0.0" width="334" height="96"/>
@@ -185,33 +222,33 @@
                                         <color key="textColor" systemColor="secondaryLabelColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hJ9-Gf-ttu">
-                                        <rect key="frame" x="0.0" y="200.5" width="334" height="60"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hJ9-Gf-ttu">
+                                        <rect key="frame" x="0.0" y="200.5" width="334" height="50"/>
                                         <color key="backgroundColor" systemColor="systemGray6Color"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="60" id="D9i-bC-9dW"/>
+                                            <constraint firstAttribute="height" constant="50" id="D9i-bC-9dW"/>
                                         </constraints>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Найти поставщика в ручную">
-                                            <fontDescription key="titleFontDescription" type="system" weight="semibold" pointSize="17"/>
-                                            <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </buttonConfiguration>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="14"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="Закрыть">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
                                         <connections>
                                             <action selector="goToTransfer:" destination="SQy-yt-Ubh" eventType="touchUpInside" id="S2q-NL-oOF"/>
                                             <segue destination="AA5-n0-o3Z" kind="unwind" unwindAction="gkhMain:" id="Kem-ef-xhJ"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zW1-J8-cWf">
-                                        <rect key="frame" x="0.0" y="282.5" width="334" height="60"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zW1-J8-cWf">
+                                        <rect key="frame" x="0.0" y="272.5" width="334" height="50"/>
                                         <color key="backgroundColor" systemColor="systemGray6Color"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="60" id="0DD-oF-fZz"/>
+                                            <constraint firstAttribute="height" constant="50" id="0DD-oF-fZz"/>
                                         </constraints>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Оплатить по реквизитам">
-                                            <fontDescription key="titleFontDescription" type="system" weight="semibold" pointSize="17"/>
-                                            <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </buttonConfiguration>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="14"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="Оплатить по реквизитам">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
                                         <connections>
                                             <action selector="goToGKH:" destination="SQy-yt-Ubh" eventType="touchUpInside" id="Tdx-m5-ifm"/>
                                         </connections>
@@ -224,15 +261,21 @@
                         <constraints>
                             <constraint firstItem="NB2-pe-HVu" firstAttribute="leading" secondItem="fEF-zB-O37" secondAttribute="leading" constant="40" id="3s6-o2-jWc"/>
                             <constraint firstAttribute="trailing" secondItem="NB2-pe-HVu" secondAttribute="trailing" constant="40" id="FQl-lU-KM9"/>
-                            <constraint firstItem="NB2-pe-HVu" firstAttribute="centerY" secondItem="YAa-Hg-jX1" secondAttribute="centerY" id="PY8-vk-vxI"/>
+                            <constraint firstItem="NB2-pe-HVu" firstAttribute="centerY" secondItem="YAa-Hg-jX1" secondAttribute="centerY" constant="100" id="PY8-vk-vxI"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="OJm-9w-O5K"/>
+                    <connections>
+                        <outlet property="qrErrImg" destination="9Vm-BV-NRd" id="i9E-Pn-wrV"/>
+                        <outlet property="qrErrText1" destination="wSS-T8-3oS" id="QTR-os-Ln9"/>
+                        <outlet property="qrErrText2" destination="TZc-bs-jEM" id="e3A-As-odJ"/>
+                        <outlet property="tableView" destination="TCm-IX-7AV" id="5HM-Rr-HAw"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="I3h-JU-tnF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="AA5-n0-o3Z" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="4493" y="1557"/>
+            <point key="canvasLocation" x="4247.826086956522" y="1555.5803571428571"/>
         </scene>
     </scenes>
     <resources>
