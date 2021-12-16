@@ -171,7 +171,7 @@ extension CustomPopUpWithRateView {
     
     /// Инициализация верхних карт
     private func setupListFrom() {
-        cardFromListView = CardsScrollView(onlyMy: onlyMy)
+        cardFromListView = CardsScrollView(onlyMy: onlyMy, deleteDeposit: true)
         cardFromListView.didCardTapped = { (cardId) in
             DispatchQueue.main.async {
                 guard let cardList = self.allCardsFromRealm else { return }

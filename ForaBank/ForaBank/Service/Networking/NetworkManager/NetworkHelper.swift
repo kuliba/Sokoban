@@ -122,28 +122,6 @@ struct NetworkHelper {
                 }
             }
             
-        case .getCardList:
-            if CardModel.cardList != nil {
-                completion(CardModel.cardList, nil)
-            }
-            NetworkManager<GetCardListDecodebleModel>.addRequest(.getCardList, tempParameters, body) { model, error in
-                if error != nil {
-                    print("DEBUG: Error: ", error ?? "")
-                    completion(nil, error)
-                }
-                guard let model = model else { return }
-                
-                if model.statusCode == 0 {
-                    guard let data = model.data else { return }
-                    CardModel.cardList = data
-                    
-                    completion(data, nil)
-                    
-                } else {
-                    completion(nil ,model.errorMessage)
-
-                }
-            }
         case .keyExchange:
             NetworkManager<KeyExchangeDecodebleModel>.addRequest(.keyExchange, tempParameters, body) { model, error in
             
