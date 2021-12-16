@@ -126,12 +126,11 @@ public class AppLocker: UIViewController {
         super.viewDidAppear(animated)
         
         //FIXME: this is hotfix for the DBSNEW-2851 issue. Should be fixed in the refactoring process
-        if isSensorsDisabledForEarlyOpenedAppLocker == false {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) { [weak self] in
             
             let isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
             if isSensorsEnabled ?? false {
-                checkSensors()
-                isSensorsDisabledForEarlyOpenedAppLocker = true
+                self?.checkSensors()
             }
         }
     }

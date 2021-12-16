@@ -56,8 +56,6 @@
 		0B66E8DA26CC5F1E00FD735D /* SquareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B66E8D926CC5F1E00FD735D /* SquareView.swift */; };
 		0B66E8DC26CC5F4D00FD735D /* QRScannerCodeDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B66E8DB26CC5F4D00FD735D /* QRScannerCodeDelegate.swift */; };
 		0B66E8DE26CC5F8900FD735D /* QRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B66E8DD26CC5F8900FD735D /* QRViewController.swift */; };
-		0B66E8E126CC62BC00FD735D /* NetDetect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B66E8E026CC62BC00FD735D /* NetDetect.swift */; };
-		0B66E8E326CC62DF00FD735D /* NetStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B66E8E226CC62DF00FD735D /* NetStatus.swift */; };
 		0B66E8E626CC658A00FD735D /* GKHStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0B66E8E526CC658A00FD735D /* GKHStoryboard.storyboard */; };
 		0B747890267343B400C44F79 /* KeyExchangeDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B74788F267343B400C44F79 /* KeyExchangeDecodebleModel.swift */; };
 		0B797C9226E6ABC100589DBF /* GetBankList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B797C9126E6ABC100589DBF /* GetBankList.swift */; };
@@ -187,6 +185,7 @@
 		0BEC893B2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC893A2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift */; };
 		0BEC893D2672591A00D8BD22 /* GetCardListDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC893C2672591A00D8BD22 /* GetCardListDecodebleModel.swift */; };
 		0BF0BF4A275E818C006AE967 /* ClearRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF0BF49275E818C006AE967 /* ClearRealm.swift */; };
+		0BF0BF4C2767E337006AE967 /* NetMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF0BF4B2767E337006AE967 /* NetMonitor.swift */; };
 		0BF3484E268A455C005138A8 /* AllCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0BF3484D268A455C005138A8 /* AllCardView.xib */; };
 		0BF34850268A52CD005138A8 /* AllCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF3484F268A52CD005138A8 /* AllCardView.swift */; };
 		0BF34852268A5F54005138A8 /* GetVerificationCodeDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF34851268A5F54005138A8 /* GetVerificationCodeDecodableModel.swift */; };
@@ -610,8 +609,6 @@
 		0B66E8D926CC5F1E00FD735D /* SquareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquareView.swift; sourceTree = "<group>"; };
 		0B66E8DB26CC5F4D00FD735D /* QRScannerCodeDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerCodeDelegate.swift; sourceTree = "<group>"; };
 		0B66E8DD26CC5F8900FD735D /* QRViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRViewController.swift; sourceTree = "<group>"; };
-		0B66E8E026CC62BC00FD735D /* NetDetect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetDetect.swift; sourceTree = "<group>"; };
-		0B66E8E226CC62DF00FD735D /* NetStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetStatus.swift; sourceTree = "<group>"; };
 		0B66E8E526CC658A00FD735D /* GKHStoryboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = GKHStoryboard.storyboard; sourceTree = "<group>"; };
 		0B74788F267343B400C44F79 /* KeyExchangeDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyExchangeDecodebleModel.swift; sourceTree = "<group>"; };
 		0B797C9126E6ABC100589DBF /* GetBankList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetBankList.swift; sourceTree = "<group>"; };
@@ -738,6 +735,7 @@
 		0BEC893A2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistredPushDeviceTorUserDecodebleModel.swift; sourceTree = "<group>"; };
 		0BEC893C2672591A00D8BD22 /* GetCardListDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCardListDecodebleModel.swift; sourceTree = "<group>"; };
 		0BF0BF49275E818C006AE967 /* ClearRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClearRealm.swift; sourceTree = "<group>"; };
+		0BF0BF4B2767E337006AE967 /* NetMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetMonitor.swift; sourceTree = "<group>"; };
 		0BF3484D268A455C005138A8 /* AllCardView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AllCardView.xib; sourceTree = "<group>"; };
 		0BF3484F268A52CD005138A8 /* AllCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllCardView.swift; sourceTree = "<group>"; };
 		0BF34851268A5F54005138A8 /* GetVerificationCodeDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetVerificationCodeDecodableModel.swift; sourceTree = "<group>"; };
@@ -1259,8 +1257,7 @@
 		0B66E8DF26CC62A100FD735D /* NetDetect */ = {
 			isa = PBXGroup;
 			children = (
-				0B66E8E026CC62BC00FD735D /* NetDetect.swift */,
-				0B66E8E226CC62DF00FD735D /* NetStatus.swift */,
+				0BF0BF4B2767E337006AE967 /* NetMonitor.swift */,
 			);
 			path = NetDetect;
 			sourceTree = "<group>";
@@ -3877,6 +3874,7 @@
 				0BB8817026D6AE4200015E27 /* UserAllCardsModel.swift in Sources */,
 				0B9EC85D26739C0000D86EB2 /* GetCountriesDecodebleModel.swift in Sources */,
 				68FFA54C2684C854002DADFA /* PDFViewerViewController.swift in Sources */,
+				0BF0BF4C2767E337006AE967 /* NetMonitor.swift in Sources */,
 				0B05163126A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift in Sources */,
 				ED3A966E2690A80B00252857 /* PresentationController.swift in Sources */,
 				ED0B489C267D41A60037EA06 /* PaymentsDetailsView.swift in Sources */,
@@ -3949,7 +3947,6 @@
 				68FFA5432682DC95002DADFA /* PhoneConfirmViewController.swift in Sources */,
 				0BAC674126D408DC005AAD91 /* CreateDirectTransferDecodableModel.swift in Sources */,
 				0BF348A1269E0CDA005138A8 /* LogoutDecodableModel.swift in Sources */,
-				0B66E8E126CC62BC00FD735D /* NetDetect.swift in Sources */,
 				0BDCF00D274A8B0F00AAA1C3 /* IsSingleServiceDecodableModel.swift in Sources */,
 				0B7A18D02689C51A0007CC75 /* AppHeaderProtocol.swift in Sources */,
 				ED51D6702688B287005FD655 /* SeparatorView.swift in Sources */,
@@ -4093,7 +4090,6 @@
 				EDA0DCCE2739773A0013F47E /* MainCoordinator.swift in Sources */,
 				0BA14E14270DD0BF0098E422 /* BackgroundTimerController.swift in Sources */,
 				0B283FC32701016100B5E925 /* CreateMobileTransferDecodableModel.swift in Sources */,
-				0B66E8E326CC62DF00FD735D /* NetStatus.swift in Sources */,
 				ED84994826A6FD97005205C6 /* CountryListView.swift in Sources */,
 				0BA251F726C2782500AD087A /* FastPaymentContractFindListDecodableModel.swift in Sources */,
 				EDB1658026694676007E6030 /* PaymentsViewControllerLayout.swift in Sources */,
