@@ -108,7 +108,6 @@ final class CardChooseView: UIView {
             self.imageView.image = model.smallDesign?.convertSVGStringToImage() ?? #imageLiteral(resourceName: "credit-card")
         }
         
-        
         let balance = Double(model.balance ?? 0)
         self.balanceLabel.text = balance.currencyFormatter(symbol: model.currency ?? "")
         let text = NSAttributedString(

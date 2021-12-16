@@ -50,8 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.initRealmTimerParameters()
         // Зарузка кэша
         downloadCash.download()
-        // Net Detect
-        NetStatus.shared.startMonitoring()
+
         return true
     }
     
