@@ -108,7 +108,7 @@ extension CustomPopUpWithRateView {
         cards.forEach { card in
             if card.productType == "CARD" {
                 cardsArray.append(card)
-            } else if !onlyCard &&  card.productType == "ACCOUNT" {
+            } else if !onlyCard && (card.productType == "ACCOUNT" || card.productType == "DEPOSIT" ) {
                 cardsArray.append(card)
             }
         }

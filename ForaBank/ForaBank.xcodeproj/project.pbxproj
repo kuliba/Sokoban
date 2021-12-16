@@ -374,6 +374,7 @@
 		ED684CEF27638E6700AA7A33 /* DocDepositCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED684CED27638E6700AA7A33 /* DocDepositCollectionViewCell.xib */; };
 		ED684CF22763955E00AA7A33 /* DocDepositTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED684CF02763955E00AA7A33 /* DocDepositTableViewCell.swift */; };
 		ED684CF32763955E00AA7A33 /* DocDepositTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED684CF12763955E00AA7A33 /* DocDepositTableViewCell.xib */; };
+		ED687C2D2768906800A38E87 /* DepositInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED687C2C2768906800A38E87 /* DepositInfoViewController.swift */; };
 		ED75CDF926E245EE0074F5D5 /* GoogleService-Info-test.plist in Resources */ = {isa = PBXBuildFile; fileRef = ED75CDF826E245EE0074F5D5 /* GoogleService-Info-test.plist */; };
 		ED75CDFB26E27F150074F5D5 /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED75CDFA26E27F150074F5D5 /* UIApplication.swift */; };
 		ED75CDFD26E2AA5B0074F5D5 /* RequestMeToMeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED75CDFC26E2AA5B0074F5D5 /* RequestMeToMeModel.swift */; };
@@ -915,6 +916,7 @@
 		ED684CED27638E6700AA7A33 /* DocDepositCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DocDepositCollectionViewCell.xib; sourceTree = "<group>"; };
 		ED684CF02763955E00AA7A33 /* DocDepositTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocDepositTableViewCell.swift; sourceTree = "<group>"; };
 		ED684CF12763955E00AA7A33 /* DocDepositTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DocDepositTableViewCell.xib; sourceTree = "<group>"; };
+		ED687C2C2768906800A38E87 /* DepositInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositInfoViewController.swift; sourceTree = "<group>"; };
 		ED75CDF826E245EE0074F5D5 /* GoogleService-Info-test.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-test.plist"; sourceTree = "<group>"; };
 		ED75CDFA26E27F150074F5D5 /* UIApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplication.swift; sourceTree = "<group>"; };
 		ED75CDFC26E2AA5B0074F5D5 /* RequestMeToMeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestMeToMeModel.swift; sourceTree = "<group>"; };
@@ -3207,6 +3209,7 @@
 		EDDFE3C4275972F200F57C71 /* ConfurmOpenDeposit */ = {
 			isa = PBXGroup;
 			children = (
+				EDEC407A27688FE300427FED /* View */,
 				EDDFE3C52759731B00F57C71 /* ConfurmOpenDepositViewController.swift */,
 				EDDFE3C727597A7600F57C71 /* PaymentViewController.swift */,
 			);
@@ -3245,6 +3248,14 @@
 			children = (
 				EDE212FA27432651005D9821 /* DateChooseView.xib */,
 				EDE212FC2743265C005D9821 /* DateChooseView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		EDEC407A27688FE300427FED /* View */ = {
+			isa = PBXGroup;
+			children = (
+				ED687C2C2768906800A38E87 /* DepositInfoViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -4072,6 +4083,7 @@
 				0B8C1C64273DD21300BA5CAC /* ExtensionPushHistoryViewController.swift in Sources */,
 				A5F15C0D274972F900DC91DA /* InternetTVLatestOperationsView.swift in Sources */,
 				6880D32D26A70585008FBCB4 /* FaceTouchIdViewController.swift in Sources */,
+				ED687C2D2768906800A38E87 /* DepositInfoViewController.swift in Sources */,
 				0B95C40C26B72CB100AA57E6 /* ExtensionBottomViewWithSetup.swift in Sources */,
 				ED664BB2274512C80050D1E0 /* ResultAccountStatementController.swift in Sources */,
 				68FFA551268538CF002DADFA /* PhoneContactModel.swift in Sources */,
