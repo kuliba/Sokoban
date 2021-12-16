@@ -25,7 +25,7 @@ fastlane-test:
       - fastlane/screenshots
       - fastlane/logs    
   script:
-    - fastlane tests
+    - bundle exec fastlane tests
 
 #build:
 #  stage: build
