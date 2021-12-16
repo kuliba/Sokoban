@@ -25,6 +25,11 @@ class ConfirmViewControllerModel {
                 cardFromAccountId = "\(cardFrom.id)"
                 cardFromCardId = ""
             }
+//            else if cardFrom.productType == "DEPOSIT" {
+//                cardFromAccountId = "\(cardFrom.accountID)"
+//                cardFromCardId = ""
+//            }
+            
         }
     }
     var cardFrom: GetProductListDatum? {
@@ -58,8 +63,11 @@ class ConfirmViewControllerModel {
             if cardTo.productType == "CARD" {
                 cardToCardId = "\(cardTo.id)"
                 cardToAccountId = ""
-            } else if cardTo.productType == "ACCOUNT" {
+            } else if cardTo.productType == "ACCOUNT"  {
                 cardToAccountId = "\(cardTo.id)"
+                cardToCardId = ""
+            } else if cardTo.productType == "DEPOSIT" {
+                cardToAccountId = "\(cardTo.accountID)"
                 cardToCardId = ""
             }
         }
