@@ -103,7 +103,7 @@ extension CustomPopUpWithRateView {
             if let card = with {
                 if card.allowCredit {
                     let amount = Double(amount) ?? 0.0
-                    if card.creditMinimumAmount < amount {
+                    if card.creditMinimumAmount <= amount {
                         return true
                     } else {
                         showAlert(with: "Невозможно пополнить", and: "Введенная сумма меньше минимальной суммы пополнения")
