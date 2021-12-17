@@ -250,6 +250,7 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
     func isPersonalAcc(strCheck: String) -> Bool {
         if strCheck.isEmpty {return false}
         let str = strCheck.lowercased()
+        if str.contains("счетч") {return false}
         return str.contains("счет")
                 || str.contains("лицев")
                 || str.contains("номер")
