@@ -137,6 +137,6 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate {
         qrCodesession.stopRunning()
         qrView.layer.sublayers?.removeLast()
         dismiss(animated: false)
-        navigationController?.popViewController(animated: true)
+        //navigationController?.popViewController(animated: true)
     }
 }
