@@ -115,6 +115,11 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 break
             case 1:
                 // Мобильная связь
+                let viewController = pay[indexPath.row].controllerName.getViewController()
+                viewController?.addCloseButton()
+                let navVC = UINavigationController(rootViewController: viewController ?? UIViewController())
+                navVC.modalPresentationStyle = .fullScreen
+                present(navVC, animated: true, completion: nil)
                 break
             case 2:
                 // ЖКХ
