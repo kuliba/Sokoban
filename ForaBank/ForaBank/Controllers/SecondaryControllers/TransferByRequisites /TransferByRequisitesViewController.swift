@@ -635,7 +635,8 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                     return
             }
             body.removeValue(forKey: "INN")
-//            nameCompany = fio
+            
+            nameCompany = self.fio.surname + " " +  self.fio.name + " " + self.fio.patronymic
 //            body["name"] = fio as AnyObject
         }
         
