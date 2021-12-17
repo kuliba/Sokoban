@@ -202,7 +202,7 @@ extension AccountDetailsViewController: UITableViewDataSource {
                 cell.alpha = 0.3
                 cell.isUserInteractionEnabled = false
             case 4:
-                cell.titleLabel.text = "Графиик выплаты % по вкладу"
+                cell.titleLabel.text = "График выплаты % по вкладу"
                 cell.imageButton.image = UIImage(named: "scheduleButton")
                 cell.alpha = 0.3
                 cell.isUserInteractionEnabled = false
