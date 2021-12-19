@@ -58,6 +58,10 @@ platform :ios do
       build_number: Actions.lane_context[SharedValues::LATEST_TESTFLIGHT_BUILD_NUMBER] + 1,
       xcodeproj: ENV["XCODE_PROJECT"])
 
+    update_code_signing_settings(
+      use_automatic_signing: true,
+      path: ENV["XCODE_PROJECT"])
+
     build_app(scheme: ENV["XCODE_SCHEME"],
               project: ENV["XCODE_PROJECT"],
               output_directory: "./fastlane/build",
