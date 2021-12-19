@@ -19,6 +19,7 @@ platform :ios do
 
   before_all do |lane, options|
 
+    # create API KEY Hash and store it to APP_STORE_CONNECT_API_KEY
     app_store_connect_api_key(
       key_id: ENV["API_KEY_ID"],
       issuer_id: ENV["API_KEY_ISSUER"],
@@ -50,18 +51,25 @@ platform :ios do
 
   lane :build do |options|
 
+    # get project's version and store it to VERSION_NUMBER
     get_version_number(xcodeproj: ENV["XCODE_PROJECT"])
+
+    # get latest project build number on testflight and store it to LATEST_TESTFLIGHT_BUILD_NUMBER
     latest_testflight_build_number(
       api_key: Actions.lane_context[SharedValues::APP_STORE_CONNECT_API_KEY],
       version: Actions.lane_context[SharedValues::VERSION_NUMBER])
+
+    # increment project's build number
     increment_build_number(
       build_number: Actions.lane_context[SharedValues::LATEST_TESTFLIGHT_BUILD_NUMBER] + 1,
       xcodeproj: ENV["XCODE_PROJECT"])
 
+    # turn on auto signing for the project
     update_code_signing_settings(
       use_automatic_signing: true,
       path: ENV["XCODE_PROJECT"])
 
+    # build and sign app for appstore
     build_app(scheme: ENV["XCODE_SCHEME"],
               project: ENV["XCODE_PROJECT"],
               output_directory: "./fastlane/build",
@@ -76,17 +84,12 @@ platform :ios do
   end
 
 
-  lane :deploy do |options|
+  lane :deploy do
 
-    api_key = app_store_connect_api_key(
-      key_id: "57LT9YX775",
-      issuer_id: "69a6de8e-1f02-47e3-e053-5b8c7c11a4d1",
-      key_filepath: "../auth/AuthKey_57LT9YX775.p8",
-      duration: 1200, # optional (maximum 1200)
-      in_house: false # optional but may be required if using match/sigh
-    )
-
-    upload_to_testflight(api_key: api_key, changelog: options[:changelog], ipa: "../build/ForaBank.ipa")
+    upload_to_testflight(
+      api_key: Actions.lane_context[SharedValues::APP_STORE_CONNECT_API_KEY],
+      changelog: last_git_commit[:message],
+      ipa: "./fastlane/build/#{ENV["APP_NAME"]}.ipa")
 
   end
 
