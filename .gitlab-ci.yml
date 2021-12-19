@@ -10,6 +10,10 @@ variables:
   GIT_STRATEGY: clone
   GEM_HOME: .vendor/gem_install
 
+before_script:
+  - gem install bundler
+  - bundle install
+
 # start only on runner with label "macos"
 default:
   tags:
@@ -20,12 +24,7 @@ fastlane-test:
   when: manual
   only:
     - ci_setup
-  artifacts:
-    paths:
-      - fastlane/screenshots
-      - fastlane/logs
   script:
-    - bundle install
     - bundle exec fastlane tests
 
 #build:
