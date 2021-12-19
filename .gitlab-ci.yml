@@ -33,4 +33,4 @@ fastlane-build-beta:
   only:
     - ci_setup
   script:
-    - bundle exec fastlane build production:false
+    - bundle exec fastlane build production:false api_key:$API_KEY_FILE
