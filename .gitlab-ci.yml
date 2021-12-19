@@ -1,4 +1,4 @@
-##########
+############
 
 stages:
   - test
@@ -24,7 +24,6 @@ fastlane-test:
   stage: test
   when: always
   only:
-    - ci_setup
     - master
     - develop
     - merge_request
@@ -36,7 +35,6 @@ fastlane-build-beta:
   when: on_success
   allow_failure: false
   only:
-    - ci_setup
     - develop
   script:
     - bundle exec fastlane build production:false
@@ -49,7 +47,6 @@ fastlane-deploy:
   stage: deploy
   when: on_success
   only:
-    - ci_setup
     - develop
   script:
     - bundle exec fastlane deploy

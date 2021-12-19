@@ -45,7 +45,8 @@ platform :ios do
       project: ENV["XCODE_PROJECT"],
       scheme: ENV["XCODE_SCHEME_TESTS"],
       devices: ["iPhone 12"],
-      clean: false)
+      clean: false,
+      suppress_xcode_output: true)
 
   end
 
@@ -83,35 +84,12 @@ platform :ios do
               export_xcargs: "-allowProvisioningUpdates")
   end
 
-
   lane :deploy do
 
     upload_to_testflight(
       api_key: Actions.lane_context[SharedValues::APP_STORE_CONNECT_API_KEY],
       changelog: last_git_commit[:message],
       ipa: "./fastlane/build/#{ENV["APP_NAME"]}.ipa")
-
-  end
-
-
-  lane :build_deploy_beta do
-
-    # last commit message
-    last_commit_message = last_git_commit[:message]
-
-    # increment build
-    increment_build_number(xcodeproj: "ForaBank/ForaBank.xcodeproj")
-
-    # commit & push
-    version = get_version_number(xcodeproj: "ForaBank/ForaBank.xcodeproj") + " (" + get_build_number(xcodeproj: "ForaBank/ForaBank.xcodeproj") + ")"
-    git_commit(path: ".", message: "Version " + version)
-    push_to_git_remote
-
-    # build
-    build_beta
-
-    # deploy
-    deploy(changelog: last_commit_message)
 
   end
 
