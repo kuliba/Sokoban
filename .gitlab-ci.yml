@@ -22,24 +22,29 @@ default:
 
 fastlane-test:
   stage: test
+  when: manual
   only:
     - ci_setup
   script:
     - bundle exec fastlane test
-  when: manual
 
 fastlane-build-beta:
   stage: build
+  when: manual
+  allow_failure: false
   only:
     - ci_setup
   script:
     - bundle exec fastlane build production:false
-  when: manual
+  artifacts:
+    paths:
+      - ./fastlane/build/$APP_NAME.ipa
+    expire_in: 1 week
 
 fastlane-deploy:
   stage: deploy
+  when: on_success
   only:
     - ci_setup
   script:
     - bundle exec fastlane deploy
-  when: manual
