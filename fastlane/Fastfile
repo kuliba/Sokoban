@@ -30,8 +30,10 @@ platform :ios do
 
     if options[:production]
       ENV["XCODE_SCHEME"] = ENV["XCODE_SCHEME_RELEASE"]
+      ENV["BUILD_CONFIG"] = "Release"
     else
       ENV["XCODE_SCHEME"] = ENV["XCODE_SCHEME_BETA"]
+      ENV["BUILD_CONFIG"] = "Debug"
     end
 
   end
@@ -59,7 +61,13 @@ platform :ios do
     build_app(scheme: ENV["XCODE_SCHEME"],
               project: ENV["XCODE_PROJECT"],
               output_directory: "./fastlane/build",
-              include_bitcode: true)
+              export_method: "app-store",
+              output_name: "#{ENV["APP_NAME"]}.ipa",
+              clean: true,
+              configuration: ENV["BUILD_CONFIG"],
+              include_bitcode: true,
+              include_symbols: false,
+              suppress_xcode_output: true)
   end
 
 
