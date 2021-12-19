@@ -108,7 +108,7 @@ extension CustomPopUpWithRateView {
         cards.forEach { card in
             if card.productType == "CARD" {
                 cardsArray.append(card)
-            } else if !onlyCard &&  card.productType == "ACCOUNT" {
+            } else if !onlyCard && (card.productType == "ACCOUNT" || card.productType == "DEPOSIT" ) {
                 cardsArray.append(card)
             }
         }
@@ -171,7 +171,7 @@ extension CustomPopUpWithRateView {
     
     /// Инициализация верхних карт
     private func setupListFrom() {
-        cardFromListView = CardsScrollView(onlyMy: onlyMy)
+        cardFromListView = CardsScrollView(onlyMy: onlyMy, deleteDeposit: true)
         cardFromListView.didCardTapped = { (cardId) in
             DispatchQueue.main.async {
                 guard let cardList = self.allCardsFromRealm else { return }

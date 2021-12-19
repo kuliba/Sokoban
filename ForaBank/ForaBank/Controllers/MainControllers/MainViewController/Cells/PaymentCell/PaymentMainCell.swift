@@ -52,7 +52,7 @@ class PaymentsMainCell: UICollectionViewCell, SelfConfiguringCell {
         if let iconName = payment.iconName {
             iconImageView.image = UIImage(named: iconName)
         }
-        if payment.id == 82 || payment.id == 83 || payment.id == 84 || payment.id == 80{
+        if payment.id == 82 || payment.id == 83 || payment.id == 84 {
             
             titleLabel.alpha = 0.3
             avatarImageView.alpha = 0.3

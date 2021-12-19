@@ -15,7 +15,6 @@ class InternetTVDetailsFormViewModel {
 
     func setupNextStep(_ answer: CreateTransferAnswerModel) {
         fillRequisites(answer: answer)
-
         DispatchQueue.main.async {
             if let msg = answer.data?.infoMessage {
                 let infoView = GKHInfoView()
@@ -26,6 +25,9 @@ class InternetTVDetailsFormViewModel {
     }
 
     func fillRequisites(answer: CreateTransferAnswerModel) {
+        requisites.forEach { item in
+            item.readOnly = true
+        }
         answer.data?.additionalList?.forEach { item in
             let param = RequisiteDO()
             param.subTitle = ""
@@ -33,6 +35,7 @@ class InternetTVDetailsFormViewModel {
             param.title = item.fieldTitle
             param.content = item.fieldValue
             param.readOnly = true
+            param.svgImage = item.svgImage
             if (requisites.first { requisite in requisite.id == param.id  } == nil) {
                 requisites.append(param)
             }
@@ -44,7 +47,6 @@ class InternetTVDetailsFormViewModel {
                 requisites.append(param)
             }
         }
-
         DispatchQueue.main.async {
             self.controller?.tableView.reloadData()
         }
@@ -115,15 +117,12 @@ class InternetTVDetailsFormViewModel {
 
     func requestCreateServiceTransfer(amount: String) {
         guard let controller = controller else {return}
-        //controller.showActivity()
         var additionalArray = [[String: String]]()
         InternetTVDetailsFormViewModel.additionalDic.forEach { item in
             additionalArray.append(item.value)
         }
         firstAdditional = additionalArray
         let request = getCreateRequest(amount: amount, additionalArray: additionalArray,productType: controller.footerView.cardFromField.cardModel?.productType ?? "", id: controller.footerView.cardFromField.cardModel?.id ?? -1, puref: puref)
-
-        print("net5555 req \(request)")
 
         doCreateServiceTransfer(request: request) { response, error in
             guard let controller = self.controller else {return}
@@ -141,6 +140,10 @@ class InternetTVDetailsFormViewModel {
                         if let respUnw = response {
                             if respUnw.data?.needSum ?? false {
                                 self.fillRequisites(answer: respUnw)
+                                if let sum = respUnw.data?.amount, sum > 0 {
+                                    self.controller?.bottomInputView.amountTextField.text = "\(sum)\(self.controller?.bottomInputView.amountTextField.text ?? "" )"
+                                    self.controller?.bottomInputView.amountTextField.isEnabled = false
+                                }
                                 controller.showFinalStep()
                             } else {
                                 self.setupNextStep(respUnw)
@@ -177,6 +180,10 @@ class InternetTVDetailsFormViewModel {
                     } else {
                         if let respUnw = response {
                             if respUnw.data?.needSum ?? false {
+                                if let sum = respUnw.data?.amount, sum > 0 {
+                                    self.controller?.bottomInputView.amountTextField.text = "\(sum)\(self.controller?.bottomInputView.amountTextField.text ?? "")"
+                                    self.controller?.bottomInputView.amountTextField.isEnabled = false
+                                }
                                 controller.showFinalStep()
                             } else {
                                 self.setupNextStep(respUnw)
@@ -211,6 +218,10 @@ class InternetTVDetailsFormViewModel {
                                 controller.doConfirmation(response: respUnw)
                             } else {
                                 if respUnw.data?.needSum ?? false {
+                                    if let sum = respUnw.data?.amount, sum > 0 {
+                                        self.controller?.bottomInputView.amountTextField.text = "\(sum)\(self.controller?.bottomInputView.amountTextField.text ?? "")"
+                                        self.controller?.bottomInputView.amountTextField.isEnabled = false
+                                    }
                                     controller.showFinalStep()
                                 } else {
                                     self.setupNextStep(respUnw)
@@ -298,7 +309,6 @@ class InternetTVDetailsFormViewModel {
 
     func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?)->()) {
         let param = ["isCard": "true", "isAccount": "true", "isDeposit": "false", "isLoan": "false"]
-
         NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
             if error != nil {
                 completion(nil, error)
@@ -313,5 +323,4 @@ class InternetTVDetailsFormViewModel {
             }
         }
     }
-
 }

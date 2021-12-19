@@ -96,7 +96,10 @@ struct GetProductListDatum: Codable{
     let openDate: Int?
     let branchId: Int?
     let expireDate: String?
-    
+    let depositProductID: Int?
+    let depositID: Int?
+    let creditMinimumAmount: Double?
+    let minimumBalance: Double?
 }
 
 // MARK: GetProductListDatum convenience initializers and mutators
@@ -153,7 +156,12 @@ extension GetProductListDatum {
         interestRate: Float? = nil,
         openDate: Int?? = nil,
         branchId: Int?? = nil,
-        expireDate: String?? = nil
+        expireDate: String?? = nil,
+        depositProductID: Int?? = nil,
+        depositID: Int?? = nil,
+        creditMinimumAmount: Double?? = nil,
+        minimumBalance: Double?? = nil
+        
     ) -> GetProductListDatum {
         return GetProductListDatum (
             number: number ?? self.number,
@@ -191,7 +199,11 @@ extension GetProductListDatum {
             interestRate: interestRate ?? self.interestRate,
             openDate: openDate ?? self.openDate,
             branchId: branchId ?? self.branchId,
-            expireDate: expireDate ?? self.expireDate
+            expireDate: expireDate ?? self.expireDate,
+            depositProductID: depositProductID ?? self.depositProductID,
+            depositID: depositID ?? self.depositID,
+            creditMinimumAmount: creditMinimumAmount ?? self.creditMinimumAmount,
+            minimumBalance: minimumBalance ?? self.minimumBalance
         )
     }
 

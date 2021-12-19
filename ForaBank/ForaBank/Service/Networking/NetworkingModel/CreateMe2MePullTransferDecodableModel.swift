@@ -8,12 +8,12 @@
 // This file was generated from JSON Schema using quicktype, do not modify it directly.
 // To parse the JSON, add this file to your project and do:
 //
-//   let сreateMe2MePullTransferDecodableModel = try СreateMe2MePullTransferDecodableModel(json)
+//   let сreateMe2MePullTransferDecodableModel = try CreateMe2MePullTransferDecodableModel(json)
 
 import Foundation
 
 // MARK: - СreateMe2MePullTransferDecodableModel
-struct СreateMe2MePullTransferDecodableModel: Codable, NetworkModelProtocol {
+struct CreateMe2MePullTransferDecodableModel: Codable, NetworkModelProtocol {
     let statusCode: Int?
     let errorMessage: String?
     let data: JSONNull?
@@ -21,9 +21,9 @@ struct СreateMe2MePullTransferDecodableModel: Codable, NetworkModelProtocol {
 
 // MARK: СreateMe2MePullTransferDecodableModel convenience initializers and mutators
 
-extension СreateMe2MePullTransferDecodableModel {
+extension CreateMe2MePullTransferDecodableModel {
     init(data: Data) throws {
-        self = try newJSONDecoder().decode(СreateMe2MePullTransferDecodableModel.self, from: data)
+        self = try newJSONDecoder().decode(CreateMe2MePullTransferDecodableModel.self, from: data)
     }
 
     init(_ json: String, using encoding: String.Encoding = .utf8) throws {
@@ -41,8 +41,8 @@ extension СreateMe2MePullTransferDecodableModel {
         statusCode: Int?? = nil,
         errorMessage: String?? = nil,
         data: JSONNull?? = nil
-    ) -> СreateMe2MePullTransferDecodableModel {
-        return СreateMe2MePullTransferDecodableModel(
+    ) -> CreateMe2MePullTransferDecodableModel {
+        return CreateMe2MePullTransferDecodableModel(
             statusCode: statusCode ?? self.statusCode,
             errorMessage: errorMessage ?? self.errorMessage,
             data: data ?? self.data

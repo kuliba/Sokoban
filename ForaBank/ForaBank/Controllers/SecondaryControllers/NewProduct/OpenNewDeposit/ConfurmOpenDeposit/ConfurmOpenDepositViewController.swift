@@ -196,6 +196,14 @@ class ConfurmOpenDepositViewController: PaymentViewController {
             }
         }
         
+        incomeField.didChooseButtonTapped = {
+            let controller = DepositInfoViewController()
+            let navController = UINavigationController(rootViewController: controller)
+            navController.modalPresentationStyle = .custom
+            navController.transitioningDelegate = self
+            self.present(navController, animated: true)
+        }
+        
     }
     
     
@@ -269,19 +277,6 @@ class ConfurmOpenDepositViewController: PaymentViewController {
     
     //MARK: - API
     private func openDeposit(amount: String) {
-        
-//        guard let initialAmount = Double(amount) else { return }
-//        guard let sourceCardId = self.cardFromField.model?.cardID else { return }
-//        guard let finOperID = self.product?.depositProductID else { return }
-//        guard let term = self.choosenRate?.term else { return }
-//
-//        let body = [
-//            "finOperID": finOperID,
-//            "term": term,
-//            "currencyCode": "810",
-//            "sourceCardId": sourceCardId,
-//            "initialAmount": initialAmount
-//        ] as [String: AnyObject]
         
         self.showActivity()
         NetworkManager<OpenDepositDecodableModel>.addRequest(.openDeposit, [:], [:]) { respons, error in
@@ -370,9 +365,11 @@ extension ConfurmOpenDepositViewController: UIViewControllerTransitioningDelegat
         if let nav = presented as? UINavigationController {
             if let controller = nav.viewControllers.first as? SelectDepositPeriodViewController {
                 presenter.height = ((controller.elements?.count ?? 1) * 56) + 80
+            } else {
+                presenter.height = 300
             }
         } else {
-            presenter.height = (4 * 44) + 160
+            presenter.height = 300
         }
         return presenter
     }

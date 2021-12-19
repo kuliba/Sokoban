@@ -11,6 +11,7 @@ extension CustomPopUpWithRateView {
     //MARK: - API
     
     func doneButtonTapped(with viewModel: ConfirmViewControllerModel) {
+        guard checkDeposit(with: viewModel.cardToRealm, and: viewModel.summTransction) == true else { return }
         
         self.dismissKeyboard()
         self.showActivity()
@@ -94,6 +95,30 @@ extension CustomPopUpWithRateView {
                     }
                 }
             }
+        }
+    }
+    
+    func checkDeposit(with: UserAllCardsModel?, and amount: String) -> Bool {
+        if with?.productType == "DEPOSIT" {
+            if let card = with {
+                if card.allowCredit {
+                    let amount = Double(amount) ?? 0.0
+                    if card.creditMinimumAmount <= amount {
+                        return true
+                    } else {
+                        showAlert(with: "Невозможно пополнить", and: "Введенная сумма меньше минимальной суммы пополнения")
+                        return false
+                    }
+                } else {
+                    showAlert(with: "Невозможно пополнить", and: "Вклад не предусматривает возможности пополнения. Подробнее в информации о вкладе в деталях")
+                    return false
+                }
+            } else {
+                showAlert(with: "Невозможно пополнить", and: "Вклад не предусматривает возможности пополнения. Подробнее в информации о вкладе в деталях")
+                return false
+            }
+        } else {
+            return true
         }
     }
     

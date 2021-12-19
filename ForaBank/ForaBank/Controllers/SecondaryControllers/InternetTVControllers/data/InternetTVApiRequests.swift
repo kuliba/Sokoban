@@ -13,7 +13,6 @@ struct InternetTVApiRequests {
                 guard let model = model else { return }
                 guard let data = model.data else { return }
                 isSingleService = data
-                InternetTVDetailsFormController.iMsg?.handleMsg(what: InternetTVDetailsFormController.msgIsSingleService)
             }
         }
     }

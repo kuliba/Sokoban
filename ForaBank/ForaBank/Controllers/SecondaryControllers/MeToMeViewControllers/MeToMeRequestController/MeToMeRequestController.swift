@@ -404,6 +404,7 @@ class MeToMeRequestController: UIViewController {
             guard let viewModel = self.viewModel else { return }
             guard let bankRecipientID = viewModel.bank?.memberID else { return }
             
+            
             let body = [
                 "check" : false,
                 "amount" : viewModel.amount,

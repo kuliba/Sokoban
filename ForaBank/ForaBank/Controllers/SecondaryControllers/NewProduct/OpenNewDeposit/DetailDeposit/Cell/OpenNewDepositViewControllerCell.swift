@@ -29,7 +29,11 @@ class OpenNewDepositViewControllerCell: UICollectionViewCell {
     @IBOutlet weak var depositDateFrom: UILabel!
     @IBOutlet weak var detailLabel: UILabel!
     @IBOutlet weak var depositImage: UIImageView!
-    @IBOutlet weak var moreDetailButton: UIButton!
+    @IBOutlet weak var moreDetailButton: UIButton! {
+        didSet {
+            moreDetailButton?.titleLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping
+        }
+    }
     
     
     override func awakeFromNib() {
