@@ -19,9 +19,6 @@ platform :ios do
 
   before_all do |lane, options|
 
-    ENV["XCODE_PROJECT"] = "<XCODE_PROJECT>"
-    ENV["XCODE_SCHEME_TESTS"] = "<XCODE_SCHEME_TESTS>"
-
   end
 
   lane :setup_beta do
