@@ -71,7 +71,8 @@ platform :ios do
               configuration: ENV["BUILD_CONFIG"],
               include_bitcode: true,
               include_symbols: false,
-              suppress_xcode_output: true)
+              suppress_xcode_output: true,
+              export_xcargs: "-allowProvisioningUpdates")
   end
 
 
