@@ -19,6 +19,14 @@ platform :ios do
 
   before_all do |lane, options|
 
+    ENV["API_KEY"] = app_store_connect_api_key(
+      key_id: ENV["API_KEY_ID"],
+      issuer_id: ENV["API_KEY_ISSUER"],
+      key_filepath: ENV["API_KEY_FILE_PATH"],
+      duration: 1200, # optional (maximum 1200)
+      in_house: false # optional but may be required if using match/sigh
+    )
+
     if options[:production]
       ENV["XCODE_SCHEME"] = ENV["XCODE_SCHEME_RELEASE"]
     else
@@ -40,7 +48,7 @@ platform :ios do
   lane :build do |options|
 
     version = get_version_number(xcodeproj: ENV["XCODE_PROJECT"])
-    build_number = latest_testflight_build_number(version: version) + 1
+    build_number = latest_testflight_build_number(api_key: ENV["API_KEY"], version: version) + 1
     increment_build_number(build_number: build_number, xcodeproj: ENV["XCODE_PROJECT"])
 
     build_app(scheme: ENV["XCODE_SCHEME"],
