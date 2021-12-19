@@ -19,7 +19,7 @@ platform :ios do
 
   before_all do |lane, options|
 
-    ENV["APPSTORE_API_KEY"] = app_store_connect_api_key(
+    app_store_connect_api_key(
       key_id: ENV["API_KEY_ID"],
       issuer_id: ENV["API_KEY_ISSUER"],
       key_content: ENV["API_KEY_FILE"],
@@ -49,7 +49,7 @@ platform :ios do
   lane :build do |options|
 
     version = get_version_number(xcodeproj: ENV["XCODE_PROJECT"])
-    build_number = latest_testflight_build_number(api_key: ENV["APPSTORE_API_KEY"], version: version) + 1
+    build_number = latest_testflight_build_number(api_key: Actions.lane_context[SharedValues::APP_STORE_CONNECT_API_KEY], version: version) + 1
     increment_build_number(build_number: build_number, xcodeproj: ENV["XCODE_PROJECT"])
 
     build_app(scheme: ENV["XCODE_SCHEME"],
