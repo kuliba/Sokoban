@@ -17,13 +17,13 @@ default:
 
 fastlane-test:
   stage: test
-#  when: manual
+  when: manual
   only:
     - ci_setup
   artifacts:
     paths:
       - fastlane/screenshots
-      - fastlane/logs    
+      - fastlane/logs
   script:
     - bundle install
     - bundle exec fastlane tests
@@ -38,4 +38,3 @@ fastlane-test:
 #  artifacts:
 #    paths:
 #    - ./ForaBank.ipa
-
