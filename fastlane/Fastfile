@@ -19,19 +19,15 @@ platform :ios do
 
   before_all do |lane, options|
 
-  end
-
-  lane :setup_beta do
-
-
-  end
-
-  lane :setup_release do
-
+    if options[:production]
+      ENV["XCODE_SCHEME"] = ENV["XCODE_SCHEME_RELEASE"]
+    else
+      ENV["XCODE_SCHEME"] = ENV["XCODE_SCHEME_BETA"]
+    end
 
   end
 
-  lane :tests do
+  lane :test do
 
     run_tests(
       project: ENV["XCODE_PROJECT"],
@@ -41,11 +37,15 @@ platform :ios do
 
   end
 
-  lane :build_beta do
+  lane :build do |options|
 
-    build_app(scheme: "ForaBank-Deploy-Beta",
-              project: "ForaBank/ForaBank.xcodeproj",
-              output_directory: "../build",
+    version = get_version_number(xcodeproj: ENV["XCODE_PROJECT"])
+    build_number = latest_testflight_build_number(version: version) + 1
+    increment_build_number(build_number: build_number, xcodeproj: ENV["XCODE_PROJECT"])
+
+    build_app(scheme: ENV["XCODE_SCHEME"],
+              project: ENV["XCODE_PROJECT"],
+              output_directory: ENV["BUILD_PATH"],
               include_bitcode: true)
   end
 
