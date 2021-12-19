@@ -12,6 +12,7 @@ class DepositCalculatorViewController: UICollectionViewController {
     let mainDepositCell = "MainDepositCollectionViewCell"
     let calculatorDepositCell = "CalculatorDepositCollectionViewCell"
     let detailDepositCell = "DetailInformationCollectionViewCell"
+    let docDepositCell = "DocDepositCollectionViewCell"
     
     lazy var doneButton: UIButton = {
         let button = UIButton(title: "Открыть вклад")
@@ -73,6 +74,7 @@ class DepositCalculatorViewController: UICollectionViewController {
         collectionView.backgroundColor = .white
         collectionView.register(UINib(nibName: mainDepositCell, bundle: nil), forCellWithReuseIdentifier: mainDepositCell)
         collectionView.register(UINib(nibName: calculatorDepositCell, bundle: nil), forCellWithReuseIdentifier: calculatorDepositCell)
+        collectionView.register(UINib(nibName: docDepositCell, bundle: nil), forCellWithReuseIdentifier: docDepositCell)
         collectionView.register(DetailInformationCollectionViewCell.self, forCellWithReuseIdentifier: detailDepositCell)
         
     }

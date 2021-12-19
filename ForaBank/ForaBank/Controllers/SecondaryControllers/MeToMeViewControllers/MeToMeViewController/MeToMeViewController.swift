@@ -313,7 +313,7 @@ class MeToMeViewController: UIViewController {
                 guard let data = data else { return }
                 var filterProduct: [GetProductListDatum] = []
                 data.forEach { product in
-                    if (product.productType == "CARD" || product.productType == "ACCOUNT") && product.currency == "RUB" {
+                    if (product.productType == "CARD" || product.productType == "ACCOUNT" || product.productType == "DEPOSIT") && product.currency == "RUB" {
                         filterProduct.append(product)
                     }
                 }
@@ -357,7 +357,7 @@ class MeToMeViewController: UIViewController {
     
     //MARK: - API
     func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?)->()) {
-        let param = ["isCard": "true", "isAccount": "true", "isDeposit": "false", "isLoan": "false"]
+        let param = ["isCard": "true", "isAccount": "true", "isDeposit": "true", "isLoan": "false"]
         
         NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
             if error != nil {
@@ -450,6 +450,10 @@ class MeToMeViewController: UIViewController {
             body["payer"] = ["cardId": nil,
                              "cardNumber" : nil,
                              "accountId" : cardModel.id] as AnyObject
+        } else if cardModel.productType == "DEPOSIT" {
+            body["payer"] = ["cardId": nil,
+                             "cardNumber" : nil,
+                             "accountId" : cardModel.accountID] as AnyObject
         }
         
         NetworkManager<CreateFastPaymentContractDecodableModel>.addRequest(.createMe2MePullCreditTransfer, [:], body) { model, error in

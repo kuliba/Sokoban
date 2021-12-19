@@ -233,8 +233,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
                 addCloseColorButton(with: UIColor(hexString: "#ffffff"))
 
                 self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4)))", color: "#ffffff")
-                button.alpha = 0.4
-                button.isUserInteractionEnabled = false
+//                button.alpha = 0.4
+//                button.isUserInteractionEnabled = false
 
                 button2.alpha = 0.4
                 button2.isUserInteractionEnabled = false

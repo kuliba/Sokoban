@@ -95,7 +95,7 @@ public class AppLocker: UIViewController {
     // MARK: - Pincode
     var onSuccessfulDismiss: onSuccessfulDismissCallback?
     var onFailedAttempt: onFailedAttemptCallback?
-    let context = LAContext()
+    var context = LAContext()
     var pin = "" // Entered pincode
     var reservedPin = "" // Reserve pincode for confirm
     var isFirstCreationStep = true
@@ -113,6 +113,8 @@ public class AppLocker: UIViewController {
     
     //MARK: - Lifecycle
     
+    private var isSensorsDisabledForEarlyOpenedAppLocker = false
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         modalPresentationStyle = .fullScreen
@@ -120,11 +122,16 @@ public class AppLocker: UIViewController {
         setupUI()
     }
     
-    public override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        let isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
-        if isSensorsEnabled ?? false {
-            checkSensors()
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        //FIXME: this is hotfix for the DBSNEW-2851 issue. Should be fixed in the refactoring process
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) { [weak self] in
+            
+            let isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
+            if isSensorsEnabled ?? false {
+                self?.checkSensors()
+            }
         }
     }
     
@@ -299,24 +306,30 @@ public class AppLocker: UIViewController {
     
     // MARK: - Touch ID / Face ID
     func checkSensors() {
-        if case .login = mode {}
-        else if case .validate = mode {}
-        else { return }
         
-        guard let pin = try? AppLocker.valet.string(forKey: ALConstants.kPincode) else { return }
+        guard mode == .login || mode == .validate else {
+            return
+        }
         
-        // iOS 8+ users with Biometric and Custom (Fallback button) verification
-        let policy: LAPolicy = .deviceOwnerAuthenticationWithBiometrics
+        guard let pin = try? AppLocker.valet.string(forKey: ALConstants.kPincode) else {
+            return
+        }
         
-        // Depending the iOS version we'll need to choose the policy we are able to use
+        // Get a fresh context for each login. If you use the same context on multiple attempts
+        //  (by commenting out the next line), then a previously successful authentication
+        //  causes the next policy evaluation to succeed without testing biometry again.
+        //  That's usually not what you want.
+        // see demo project at:
+        // https://developer.apple.com/documentation/localauthentication/logging_a_user_into_your_app_with_face_id_or_touch_id
         
-        // iOS 9+ users with Biometric and Passcode verification
-//        policy = .deviceOwnerAuthentication
+        context = LAContext()
         
-        var err: NSError?
+        let policy: LAPolicy = .deviceOwnerAuthentication
+
+        var err: NSError? = nil
         // Check if the user is able to use the policy we've selected previously
         guard context.canEvaluatePolicy(policy, error: &err) else {return}
-        let biometricType = biometricType()
+        let biometricType = biometricType(with: context.biometryType)
         // The user is able to use his/her Touch ID / Face ID 👍
         context.evaluatePolicy(policy, localizedReason: ALConstants.kLocalizedReason, reply: {  success, error in
             if success {
@@ -534,10 +547,9 @@ extension AppLocker {
         return updatingTimeObject
     }
     
-    func biometricType() -> BiometricType {
-        let _ = context.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: nil)
-        
-        switch context.biometryType {
+    func biometricType(with type: LABiometryType) -> BiometricType {
+
+        switch type {
         case .none:
             return .pin
         case .faceID:

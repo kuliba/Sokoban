@@ -113,8 +113,8 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
     var fio = Fio(name: "", patronymic: "", surname: "") {
         didSet{
             if fio.name != "" && fio.patronymic != "" && fio.surname != ""{
-                self.commentField.isHidden = false
-                self.stackView.addSubview(commentField)
+//                self.commentField.isHidden = false
+//                self.stackView.addSubview(commentField)
             }
         }
     }
@@ -571,16 +571,19 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
             return
         }
         //TODO: сделать выборку только по картам и счетам с RUB
-        guard let cardNumber = cardField.cardModel?.number else {
-            return
-        }
+//        guard let cardNumber = selectedCardNumber else {
+//            return
+//        }
+        var cardId: String?
+        var accountId: String?
+        
         guard let bikBank = bikBankField.textField.text else {
             return
         }
         guard let comment = commentField.textField.text else {
             return
         }
-        guard var inn = innField.textField.text else {
+        guard let inn = innField.textField.text else {
             return
         }
         guard let kpp = kppField.textField.text else {
@@ -605,17 +608,24 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         let unformatText = bottomView.moneyFormatter?.unformat(bottomView.amountTextField.text)
         guard let amount = unformatText?.replacingOccurrences(of: ",", with: ".") else { return }
         
+        if cardField.model?.productType == "CARD"{
+            cardId = "\(cardField.model?.cardID ?? 0)"
+        } else {
+            accountId = "\(cardField.model?.id ?? 0)"
+        }
     
         var body = [ "check" : false,
                      "amount" : amount,
-//                     "comment" : comment,
+                     "comment" : comment,
                      "currencyAmount" : "RUB",
-                     "payer" : [
-                        "cardNumber" : cardNumber
-                     ],
+                     "payer" : [ "cardId" : cardId,
+                                 "cardNumber" : nil,
+                                 "accountId" : accountId
+                               ],
                      "payeeExternal" : [
                         "accountNumber" : accountNumber.replacingOccurrences(of: " ", with: ""), // "40702810638110103994"
-                        "date" : "2021-07-07",
+                        "date" : nil,
+                        "compilerStatus": nil,
                         "name" : nameCompany,
                         "bankBIC" : bikBank, //044525187
                         "INN" : inn, //7718164343
@@ -626,7 +636,8 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                     return
             }
             body.removeValue(forKey: "INN")
-//            nameCompany = fio
+            
+            nameCompany = self.fio.surname + " " +  self.fio.name + " " + self.fio.patronymic
 //            body["name"] = fio as AnyObject
         }
         

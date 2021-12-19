@@ -31,16 +31,19 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="pZN-7Z-R00">
-                        <rect key="frame" x="20" y="167" width="331" height="31"/>
+                        <rect key="frame" x="20" y="168.5" width="331" height="32"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="5 000 ₽" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1p5-cQ-g4A">
-                                <rect key="frame" x="0.0" y="0.0" width="222.5" height="31"/>
+                                <rect key="frame" x="0.0" y="0.0" width="222.5" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="32" id="frK-gD-VN6"/>
+                                </constraints>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" name="Inter-Regular_SemiBold" family="Inter" pointSize="24"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad" returnKeyType="next"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="От 5 тыс. ₽" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BXN-YB-lNp">
-                                <rect key="frame" x="242.5" y="8" width="88.5" height="15"/>
+                                <rect key="frame" x="242.5" y="8.5" width="88.5" height="15"/>
                                 <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
                                 <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -48,19 +51,22 @@
                         </subviews>
                     </stackView>
                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="gUS-vl-Nu0">
-                        <rect key="frame" x="20" y="68.5" width="331" height="43.5"/>
+                        <rect key="frame" x="20" y="68.5" width="331" height="44"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="zeg-ZN-FKU">
-                                <rect key="frame" x="0.0" y="2.5" width="155.5" height="38"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="zeg-ZN-FKU">
+                                <rect key="frame" x="0.0" y="0.0" width="155.5" height="44"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Срок вклада" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2cq-ky-K85">
-                                        <rect key="frame" x="0.0" y="0.0" width="155.5" height="10"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="155.5" height="16"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="16" id="JXD-W0-xJR"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
                                         <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="izX-DR-tnN">
-                                        <rect key="frame" x="0.0" y="18" width="155.5" height="20"/>
+                                        <rect key="frame" x="0.0" y="24" width="155.5" height="20"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="20" id="ILP-tf-FiM"/>
                                         </constraints>
@@ -81,17 +87,20 @@
                                     <constraint firstItem="2cq-ky-K85" firstAttribute="leading" secondItem="zeg-ZN-FKU" secondAttribute="leading" id="gf7-mZ-3qw"/>
                                 </constraints>
                             </stackView>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="35X-Zu-GVV">
-                                <rect key="frame" x="175.5" y="0.0" width="155.5" height="43.5"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="35X-Zu-GVV">
+                                <rect key="frame" x="175.5" y="0.0" width="155.5" height="44"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Процентная ставка" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JCX-8g-2ZT">
-                                        <rect key="frame" x="0.0" y="0.0" width="155.5" height="15.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="155.5" height="16"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="16" id="09l-zy-lHQ"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
                                         <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.00%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rie-vM-Fxz">
-                                        <rect key="frame" x="0.0" y="23.5" width="155.5" height="20"/>
+                                        <rect key="frame" x="0.0" y="24" width="155.5" height="20"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="20" id="qBK-Mk-EIk"/>
                                         </constraints>
@@ -110,7 +119,7 @@
                         </subviews>
                     </stackView>
                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="5000" minValue="5000" maxValue="5000000" translatesAutoresizingMaskIntoConstraints="NO" id="eFr-dn-3Kf">
-                        <rect key="frame" x="18" y="211" width="335" height="31"/>
+                        <rect key="frame" x="18" y="213.5" width="335" height="31"/>
                         <color key="tintColor" red="1" green="0.21176470588235294" blue="0.21176470588235294" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="thumbTintColor" red="1" green="0.21176470589999999" blue="0.21176470589999999" alpha="1" colorSpace="calibratedRGB"/>
                         <connections>
@@ -118,7 +127,10 @@
                         </connections>
                     </slider>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Сумма депозита" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aZp-sM-SXp">
-                        <rect key="frame" x="20" y="144" width="331" height="15"/>
+                        <rect key="frame" x="20" y="144.5" width="331" height="16"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="16" id="VMc-6e-RMt"/>
+                        </constraints>
                         <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
                         <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
@@ -127,19 +139,25 @@
                         <rect key="frame" x="0.0" y="360" width="371" height="118"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="MZ0-B7-yK8">
-                                <rect key="frame" x="20" y="15" width="331" height="42.5"/>
+                                <rect key="frame" x="20" y="15" width="331" height="44"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="LEk-ne-Reh">
-                                        <rect key="frame" x="0.0" y="0.0" width="155.5" height="42.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="155.5" height="44"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ваш доход" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aM8-ZU-dO7">
-                                                <rect key="frame" x="0.0" y="0.0" width="155.5" height="15"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="155.5" height="16"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="16" id="3Zv-Tr-C6M"/>
+                                                </constraints>
                                                 <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
                                                 <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.00 ₽" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Mkw-Db-adk">
-                                                <rect key="frame" x="0.0" y="23" width="155.5" height="19.5"/>
+                                                <rect key="frame" x="0.0" y="24" width="155.5" height="20"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="20" id="BCC-wA-86p"/>
+                                                </constraints>
                                                 <fontDescription key="fontDescription" name="Inter-Regular_Medium" family="Inter" pointSize="16"/>
                                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -153,16 +171,22 @@
                                         </constraints>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="tsP-E6-Q4t">
-                                        <rect key="frame" x="175.5" y="0.0" width="155.5" height="42.5"/>
+                                        <rect key="frame" x="175.5" y="0.0" width="155.5" height="44"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Итоговая сумма" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oeo-HR-qgM">
-                                                <rect key="frame" x="0.0" y="0.0" width="155.5" height="15"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="155.5" height="16"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="16" id="iLT-Ma-HSX"/>
+                                                </constraints>
                                                 <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
                                                 <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.00 ₽" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="I0g-Nc-gth">
-                                                <rect key="frame" x="0.0" y="23" width="155.5" height="19.5"/>
+                                                <rect key="frame" x="0.0" y="24" width="155.5" height="20"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="20" id="w7G-GF-4yk"/>
+                                                </constraints>
                                                 <fontDescription key="fontDescription" name="Inter-Regular_Medium" family="Inter" pointSize="16"/>
                                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -178,7 +202,7 @@
                                 </subviews>
                             </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Представленные параметры являются расчетными и носят справочный характер" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.59999999999999998" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uOm-86-O28">
-                                <rect key="frame" x="20" y="72.5" width="331" height="29.5"/>
+                                <rect key="frame" x="20" y="74" width="331" height="28"/>
                                 <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
                                 <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>

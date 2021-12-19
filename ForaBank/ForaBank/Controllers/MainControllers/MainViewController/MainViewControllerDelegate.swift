@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 extension MainViewController: UICollectionViewDelegate {
     
@@ -71,6 +72,33 @@ extension MainViewController: UICollectionViewDelegate {
 //        case .offer:
 //            print("It's transfer")
         case .pay:
+            if indexPath.row == 0{
+                checkCameraAccess(isAllowed: {
+                    if $0 {
+                        DispatchQueue.main.async {
+                            let controller = QRViewController.storyboardInstance()!
+                            let nc = UINavigationController(rootViewController: controller)
+                            nc.modalPresentationStyle = .fullScreen
+                            self.present(nc, animated: true)
+                        }
+                    } else {
+                        guard self.alertController == nil else {
+                            print("There is already an alert presented")
+                            return
+                        }
+                        self.alertController = UIAlertController(title: "Внимание", message: "Для сканирования QR кода, необходим доступ к камере", preferredStyle: .alert)
+                        guard let alert = self.alertController else {
+                            return
+                        }
+                        alert.addAction(UIAlertAction(title: "Понятно", style: .default, handler: { (action) in
+                            self.alertController = nil
+                        }))
+                        DispatchQueue.main.async {
+                            self.present(alert, animated: true, completion: nil)
+                        }
+                    }
+                })
+            }
             if indexPath.row == 1{
                 if let viewController = pay[indexPath.row].controllerName.getViewController() {
                     let navVC = UINavigationController(rootViewController: viewController)
@@ -95,7 +123,24 @@ extension MainViewController: UICollectionViewDelegate {
         case .services: break
         }
     }
-    
+
+    func checkCameraAccess(isAllowed: @escaping (Bool) -> Void) {
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .denied:
+            // Доступ к камере не был дан
+            isAllowed(false)
+        case .restricted:
+            isAllowed(false)
+        case .authorized:
+            // Есть разрешение на доступ к камере
+            isAllowed(true)
+        case .notDetermined:
+            // Первый запрос на доступ к камере
+            AVCaptureDevice.requestAccess(for: .video) { isAllowed($0) }
+        @unknown default:
+            print()
+        }
+    }
 }
 
 extension MainViewController: UIViewControllerTransitioningDelegate {

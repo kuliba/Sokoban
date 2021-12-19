@@ -57,8 +57,6 @@ class CalculatorDepositCollectionViewCell: UICollectionViewCell {
         moneyFormatter = SumTextInputFormatter(textPattern: "# ###,## \(self.currencyCode.getSymbol() ?? "₽")")
         moneyInputController.formatter = moneyFormatter
         summTextField.delegate = moneyInputController
-        dateDepositButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: -30, bottom: 0, right: 0)
-        dateDepositButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: -20, bottom: 0, right: 0)
         NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: summTextField, queue: .main) { _ in
             guard let text = self.summTextField.text else { return }
             guard let unformatText = self.moneyFormatter?.unformat(text) else { return }

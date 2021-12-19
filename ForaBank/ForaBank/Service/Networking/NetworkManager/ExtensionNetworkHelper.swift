@@ -32,7 +32,6 @@ extension NetworkHelper {
 
         case uninstallPushDevice
 
-        case getCardList
 
         case keyExchange
 

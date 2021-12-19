@@ -29,8 +29,6 @@ class CardTableCell: UITableViewCell {
         cardView.choseButton.isHidden = true
         cardView.backgroundColor = .clear
     }
-    
-    
 }
 
 
@@ -62,7 +60,6 @@ class AllCardListViewController: UITableViewController {
         tableView.backgroundColor = .white
         tableView.register(CardTableCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.tableFooterView = UIView()
-//        tableView.separatorStyle = .none
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 60, bottom: 0, right: 20)
         getCardList { [weak self] data ,error in
             DispatchQueue.main.async {
@@ -141,11 +138,6 @@ class AllCardListViewController: UITableViewController {
             let model = saveCardModel[indexPath.row]
             didTemplateTapped?(model)
         }
-        
-        
-        
-//        self.dismiss(animated: true, completion: nil)
-        
     }
     
     //MARK: - API

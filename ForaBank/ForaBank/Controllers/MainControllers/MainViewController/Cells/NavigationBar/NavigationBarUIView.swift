@@ -14,6 +14,7 @@ class NavigationBarUIView: UIView {
     @IBOutlet weak var secondButton: UIImageView!
     @IBOutlet weak var bellIcon: UIButton!
     @IBOutlet weak var textField: MaskedTextField!
+    @IBOutlet weak var searchIcon: UIImageView!
     
     
     @IBAction func bellButtonTapped(_ sender: Any) {

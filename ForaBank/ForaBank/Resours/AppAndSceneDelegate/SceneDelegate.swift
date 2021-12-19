@@ -8,8 +8,14 @@
 import UIKit
 import Firebase
 import FirebaseMessaging
+import Combine
+import Network
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    
+    // MARK: - NetMonitor
+    private var cancellables = Set<AnyCancellable>()
+    private let monitorQueue = DispatchQueue(label: "monitor")
 
     var window: UIWindow?
     
@@ -34,25 +40,31 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         tapGesture.delegate = self
         window?.addGestureRecognizer(tapGesture)
         
-        NetStatus.shared.netStatusChangeHandler = {
-            DispatchQueue.main.async { [weak self] in
-                if NetStatus.shared.isConnected == true {
-                    self?.netStatus = true
-                    self?.netAlert?.removeFromSuperview()
-                } else {
-                    self?.netStatus = false
-                    self?.netDetect()
-                }
-            }
-        }
+        // NetMonitoring observer
+        self.observeNetworkStatus()
+
     }
     
-    private func netDetect() {
-        guard let vc = UIApplication.getTopViewController() else {return}
-        self.netAlert = NetDetectAlert(vc.view)
-        if self.netAlert != nil {
-            vc.view.addSubview(self.netAlert)
-        }
+    private func observeNetworkStatus() {
+        NWPathMonitor()
+            .publisher(queue: monitorQueue)
+            .receive(on: DispatchQueue.main)
+            .sink { status in
+                DispatchQueue.main.async { [weak self] in
+                    if status == .satisfied {
+                        self?.netStatus = true
+                        self?.netAlert?.removeFromSuperview()
+                        self?.netAlert = nil
+                    } else {
+                        guard let vc = UIApplication.getTopViewController() else {return}
+                        if self?.netAlert == nil {
+                            self?.netAlert = NetDetectAlert(vc.view)
+                            vc.view.addSubview((self?.netAlert)!)
+                        }
+                    }
+                }
+            }
+            .store(in: &cancellables)
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
