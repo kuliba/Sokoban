@@ -535,7 +535,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         
         let body = [
             "bic": bic,
-            "type": "20"
+            "type": ""
         ]
         
         NetworkManager<GetFullBankInfoListDecodableModel>.addRequest(.getFullBankInfoList , body, [:]) { model, error in
@@ -551,6 +551,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
 //                self.selectedCardNumber = cardNumber
 //                let image = data.bankFullInfoList?.first?.svgImage
                 completion(data.bankFullInfoList ?? [])
+                
 //                DispatchQueue.main.async {
 //                    self.bikBankField.imageView.image = self.convertSVGStringToImage(image ?? "")
 //                }
