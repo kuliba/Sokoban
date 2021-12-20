@@ -19,8 +19,7 @@ class MainViewController: UIViewController {
     weak var delegate: MainViewControllerDelegate?
     var card: UserAllCardsModel?
     var alertController: UIAlertController?
-    var sectionIndexCounter = 0
-
+ 
     var token: NotificationToken?
 
     var allProductList: Results<UserAllCardsModel>? = nil
@@ -56,6 +55,11 @@ class MainViewController: UIViewController {
                     self.productsFromRealm.removeAll()
                     for i in self.productsCardsAndAccounts {
                         self.productsFromRealm.append(PaymentsModel(productListFromRealm: i))
+                    }
+                    if self.productsCardsAndAccounts.count >= 0{
+                                        self.productsFromRealm.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
+                    } else if self.productsCardsAndAccounts.prefix(3).count == 3{
+                                        self.productsFromRealm.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
                     }
                     self.reloadData(with: nil)
                 }
@@ -291,9 +295,9 @@ class MainViewController: UIViewController {
         snapshot.appendItems(offer, toSection: .offer)
         snapshot.appendItems(currentsExchange, toSection: .currentsExchange)
         snapshot.appendItems(openProduct, toSection: .openProduct)
-        snapshot.appendItems(branches, toSection: .branches)
-        snapshot.appendItems(investment, toSection: .investment)
-        snapshot.appendItems(services, toSection: .services)
+//        snapshot.appendItems(branches, toSection: .branches)
+//        snapshot.appendItems(investment, toSection: .investment)
+//        snapshot.appendItems(services, toSection: .services)
 
         dataSource?.apply(snapshot, animatingDifferences: true)
         collectionView.reloadData()
