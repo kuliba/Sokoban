@@ -14,6 +14,7 @@ extension MainViewController {
             guard let section = Section(rawValue: sectionIndex) else {
                 fatalError("Unknown section kind")
             }
+            
             switch section {
             case .products:
                 if self.productsFromRealm.count > 0{
@@ -59,11 +60,15 @@ extension MainViewController {
             }
         }
         let config = UICollectionViewCompositionalLayoutConfiguration()
+        
         config.interSectionSpacing = 0
         layout.configuration = config
         return layout
     }
+    
 
+    
+    
     private func createProduct(type: Int?) -> NSCollectionLayoutSection {
 
         let item = NSCollectionLayoutItem.withEntireSize()
@@ -74,7 +79,7 @@ extension MainViewController {
         topItem.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
 
         var groupSize: NSCollectionLayoutSize!
-        
+    
         if type == 32{
             groupSize = NSCollectionLayoutSize(
                 widthDimension: .absolute(112),

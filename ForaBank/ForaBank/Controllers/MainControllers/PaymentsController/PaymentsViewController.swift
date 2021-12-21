@@ -70,6 +70,7 @@ class PaymentsViewController: UIViewController {
         loadLastPhonePayments()
         loadLastPayments()
         loadLastMobilePayments()
+    
         loadAllLastMobilePayments()
     }
     
@@ -129,21 +130,6 @@ class PaymentsViewController: UIViewController {
         
         let gesture = UITapGestureRecognizer(target: self, action: #selector(openSetting))
         searchContact.secondButton.addGestureRecognizer(gesture)
-        
-        //        navigationController?.navigationBar.barTintColor = .white
-        //        navigationController?.navigationBar.backgroundColor = .white
-        //        navigationController?.navigationBar.shadowImage = UIImage()
-        //        let searchController = UISearchController(searchResultsController: nil)
-        //        navigationItem.searchController = searchController
-        //        navigationItem.hidesSearchBarWhenScrolling = false
-        //        searchController.hidesNavigationBarDuringPresentation = true
-        //        searchController.obscuresBackgroundDuringPresentation = false
-        //        searchController.automaticallyShowsCancelButton = false
-        //        searchController.searchBar.delegate = self
-        //        searchController.searchBar.placeholder = "Название категории, ИНН"
-        //        searchController.searchBar.showsBookmarkButton = true
-        //        searchController.searchBar.setImage(UIImage(named: "scanCard")?.withTintColor(.black), for: .bookmark, state: .normal)
-        //        searchController.searchBar.backgroundColor = .white
         
     }
     

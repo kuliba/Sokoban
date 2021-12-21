@@ -56,11 +56,11 @@ class MainViewController: UIViewController {
                     for i in self.productsCardsAndAccounts {
                         self.productsFromRealm.append(PaymentsModel(productListFromRealm: i))
                     }
-                    if self.productsCardsAndAccounts.count >= 0{
-                                        self.productsFromRealm.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
-                    } else if self.productsCardsAndAccounts.prefix(3).count == 3{
-                                        self.productsFromRealm.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
-                    }
+//                    if self.productsCardsAndAccounts.count >= 0{
+//                            self.productsFromRealm.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
+//                    } else if self.productsCardsAndAccounts.prefix(3).count == 3{
+//                            self.productsFromRealm.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
+//                    }
                     self.reloadData(with: nil)
                 }
 
@@ -106,6 +106,14 @@ class MainViewController: UIViewController {
             }
         }
     }
+    var additionalButton = [PaymentsModel]() {
+        didSet {
+            DispatchQueue.main.async {
+                self.reloadData(with: nil)
+            }
+        }
+    }
+    
     var branches = [PaymentsModel]()
     var investment = [PaymentsModel]()
     var services = [PaymentsModel]()
@@ -176,6 +184,7 @@ class MainViewController: UIViewController {
 
         }
         observerRealm()
+        additionalButton = [PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: "")]
         productList = [UserAllCardsModel]()
 
     }
@@ -298,7 +307,7 @@ class MainViewController: UIViewController {
 //        snapshot.appendItems(branches, toSection: .branches)
 //        snapshot.appendItems(investment, toSection: .investment)
 //        snapshot.appendItems(services, toSection: .services)
-
+//        snapshot.appendItems(additionalButton, toSection: .products)
         dataSource?.apply(snapshot, animatingDifferences: true)
         collectionView.reloadData()
 

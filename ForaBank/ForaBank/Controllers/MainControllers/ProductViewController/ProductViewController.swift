@@ -186,7 +186,11 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
                 
                 guard let number = self.product?.number else { return }
 
-                self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4))) · Заблокирована", color: self.product?.fontDesignColor)
+                if self.product?.productType == "CARD"{
+                    self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4))) · Заблокирована", color: self.product?.fontDesignColor)
+                } else {
+                    self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4))) · Заблокирован", color: self.product?.fontDesignColor)
+                }
                 
             } else if  product?.statusPC == "17", product?.status == "Действует" || product?.status == "Выдано клиенту"{
                 
@@ -853,8 +857,12 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
                             self.button2.isUserInteractionEnabled = false
                             self.button.alpha = 0.4
                             self.button2.alpha = 0.4
-                            self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4))) · Заблокирована", color: self.product?.fontDesignColor)
-
+                         
+                            if self.product?.productType == "CARD"{
+                                self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4))) · Заблокирована", color: self.product?.fontDesignColor)
+                            } else {
+                                self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4))) · Заблокирован", color: self.product?.fontDesignColor)
+                            }
                             
                             AddAllUserCardtList.add() {
                                print(" AddAllUserCardtList.add()")
