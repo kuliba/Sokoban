@@ -1102,7 +1102,7 @@ extension ProductViewController{
 //            cell.titleLable.isSkeletonable = true
 //            cell.operation = sortedAccount
 //            let data = groupByCategory.forEach({$0.value[indexPath.row]})
-            _ = groupByCategoryAccount[indexPath.section] as? Array<Any>
+            _ = groupByCategoryAccount[indexPath.section]
 //                let data = Array(groupByCategory.values)[indexPath.section]
             //            sorted[indexPath.section].value[indexPath.item]
             cell.operation = nil
