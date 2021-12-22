@@ -228,6 +228,7 @@ class PaymentByPhoneViewController: UIViewController {
         
         bankListView.didBankTapped = { bank in
             self.selectedBank = bank
+            self.bankId = bank.memberID ?? ""
             self.hideView(self.bankListView, needHide: true)
         }
     }
@@ -628,127 +629,7 @@ class PaymentByPhoneViewController: UIViewController {
         
         
     }
-    
-    func endSBPPayment(amount: String, completion: @escaping (_ error: String?)->()) {
-        showActivity()
-//        37477404102
-        var newPhone = String()
-        var clearPhone = String()
-        
-        newPhone = selectNumber?.digits ?? ""
-        
-        if newPhone.prefix(1) == "7" || newPhone.prefix(1) == "8"{
-            clearPhone = String(newPhone.dropFirst())
-        } else{
-            clearPhone = newPhone
-        }
-        let clearAmount = amount.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "₽", with: "").replacingOccurrences(of: ",", with: ".")
-        let dataName = ["additional": [
-            [ "fieldid": 1,
-              "fieldname": "RecipientID",
-              "fieldvalue": clearPhone
-            ],
-            [ "fieldid": 1,
-              "fieldname": "SumSTrs",
-              "fieldvalue": clearAmount ]
-        ]] as [String: AnyObject]
-        
-        NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], dataName) { [weak self] model, error in
-            if error != nil {
-                self?.dismissActivity()
-                print("DEBUG: Error: ", error ?? "")
-                self?.showAlert(with: "Ошибка", and: error!)
-                completion(error!)
-            }
-            guard let model = model else { return }
-            if model.statusCode == 0 {
-                print("DEBUG: Success send Phone")
-                DispatchQueue.main.async {
-                    self?.dismissActivity()
-                    self?.endSBPPayment2()
-                }
-            } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
-                self?.showAlert(with: "Ошибка", and: error!)
-                self?.dismissActivity()
-                self?.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
-                completion(model.errorMessage)
-            }
-        }
-        
-    }
-    
-    func endSBPPayment2() {
-        showActivity()
-//        37477404102
-        guard let memberId = self.selectedBank?.memberID else {
-            return
-        }
-        let dataName = ["additional": [
-            [ "fieldid": 1,
-              "fieldname": "BankRecipientID",
-              "fieldvalue": memberId]
-        ]] as [String: AnyObject]
-        
-        NetworkManager<AnywayPaymentDecodableModel>.addRequest(.anywayPayment, [:], dataName) { [weak self] dataresp, error in
-            if error != nil {
-                self?.dismissActivity()
-                self?.showAlert(with: "Ошибка", and: error!)
-                print("DEBUG: Error: ", error ?? "")
-                
-            }
-//            print("DEBUG: amount ", amount)
-            guard let data = dataresp else { return }
-            if data.statusCode == 0 {
-                print("DEBUG: Success send Phone")
-                self?.confirm = true
-                DispatchQueue.main.async {
-                    var model = ConfirmViewControllerModel(type: .phoneNumberSBP)
-                    if self?.selectedBank != nil {
-                        model.bank = self?.selectedBank
-                    } else {
-                        
-                    }
-                    
-                    model.cardFrom = self?.cardField.cardModel
-                    model.phone = self?.phoneField.text.digits ?? ""
-                    
-                    model.summTransction = data.data?.amount?.currencyFormatter(symbol: "RUB") ?? ""// debitAmount?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
-//                    model.summInCurrency = model.creditAmount?.currencyFormatter(symbol: data.currencyPayee ?? "RUB") ?? ""
-                    model.taxTransction = data.data?.commission?.currencyFormatter(symbol: "RUB") ?? ""
-//                            model.comment = comment
-                    model.fullName = data.data?.listInputs?[5].content?[0] ?? "Получатель не найден"
-                    
-                    model.numberTransction = data.data?.id ?? ""
-                    
-                    model.statusIsSuccses = true
-                    
-                    let vc = ContactConfurmViewController()
-                    vc.confurmVCModel = model
-                    vc.addCloseButton()
-                    vc.title = "Подтвердите реквизиты"
-                    
-                    let navController = UINavigationController(rootViewController: vc)
-                    navController.modalPresentationStyle = .fullScreen
-                    self?.present(navController, animated: true, completion: nil)
-                    self?.dismissActivity()
-                    
-                }
-//                let model = ConfurmViewControllerModel(
-//                    country: country,
-//                    model: model)
-//                self.goToConfurmVC(with: model)
-                
-            } else {
-                self?.dismissActivity()
-                self?.showAlert(with: "Ошибка", and: data.errorMessage ?? "")
 
-                print("DEBUG: Error: ", data.errorMessage ?? "")
-                
-            }
-        }
-        
-    }
 }
 
 //MARK: EPContactsPicker delegates
