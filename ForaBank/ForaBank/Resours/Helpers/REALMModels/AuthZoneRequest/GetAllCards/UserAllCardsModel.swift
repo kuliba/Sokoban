@@ -47,7 +47,10 @@ class UserAllCardsModel: Object {
     @objc dynamic var XLDesign: String?
     @objc dynamic var statusPC: String?
     @objc dynamic var interestRate: String?
-
+    @objc dynamic var depositProductID: Int = 0
+    @objc dynamic var depositID: Int = 0
+    @objc dynamic var creditMinimumAmount: Double = 0.0
+    @objc dynamic var minimumBalance: Double = 0.0
     
     override static func primaryKey() -> String? {
         return "id"
@@ -97,6 +100,10 @@ extension UserAllCardsModel: Identifiable {
         XLDesign           = data.XLDesign
         statusPC           = data.statusPC
         interestRate       = "\(data.interestRate ?? 0.0)"
+        depositProductID   = data.depositProductID ?? 0
+        depositID          = data.depositID ?? 0
+        creditMinimumAmount = data.creditMinimumAmount ?? 0.0
+        minimumBalance     = data.minimumBalance ?? 0.0
         
         data.background.forEach { color in
             

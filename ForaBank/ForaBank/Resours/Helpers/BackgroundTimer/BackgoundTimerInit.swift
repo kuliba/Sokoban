@@ -16,17 +16,28 @@ final class TimerTimeInit {
     
     lazy var realm = try? Realm()
     
+    var authState: Bool?
+    
     func timeResult() {
         
-        if AppDelegate.shared.isAuth ?? false {
+        DispatchQueue.main.async {
+            switch AppDelegate.shared.isAuth {
+            case nil: self.authState = false
+            case true: self.authState = true
+            case false: self.authState = false
+            case .some(_): self.authState = false
+            }
+        }
+        lazy var realm = try? Realm()
+        
+        if authState ?? false {
             //Читаем данные из REALM
-            let realm = try? Realm()
             let timeObject = realm?.objects(GetSessionTimeout.self).first
             let lastActionTimestamp = timeObject?.lastActionTimestamp ?? Date().localDate()
             let maxTimeOut = timeObject?.maxTimeOut ?? 0
             let renewSessionTimeStamp = timeObject?.renewSessionTimeStamp ?? Date().localDate()
             let mustCheckTimeOut = timeObject?.mustCheckTimeOut ?? true
-//            print("Debugging TimerTimeInit", mustCheckTimeOut)
+
             // Получаем и форматируем текущее время
             let currentTimeStamp = Date().localDate()
             

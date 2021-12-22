@@ -27,7 +27,7 @@ extension GKHInputViewController: UITableViewDataSource, TableViewDelegate {
         cell.tableViewDelegate = (self as TableViewDelegate)
         cell.showInfoView = {[weak self] value in
             let infoView = GKHInfoView()
-            infoView.lable.text = value
+            infoView.label.text = value
             self?.showAlert(infoView)
         }
         cell.showGoButton = { [weak self] value in

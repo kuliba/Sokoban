@@ -1,37 +1,86 @@
-//
-//  InternetTVDetailsFormViewModel.swift
-//  ForaBank
-//
-//  Created by Роман Воробьев on 04.12.2021.
-//
-
 import Foundation
 
 class InternetTVDetailsFormViewModel {
-    
+
+    static var additionalDic = [String : [String : String]]()
     var controller: InternetTVDetailsFormController? = nil
     var firstStep = true
-    var additionalElement = [String : String]()
-    var additionalDic = [String : [String : String]]()
     var firstAdditional = [[String: String]]()
     var stepsPayment = [[[String: String]]]()
-    
-    init() {}
+    var requisites = [RequisiteDO]()
+    var puref = ""
+    var cardNumber = ""
+    var product: GetProductListDatum?
+
+
+    func setupNextStep(_ answer: CreateTransferAnswerModel) {
+        fillRequisites(answer: answer)
+        DispatchQueue.main.async {
+            if let msg = answer.data?.infoMessage {
+                let infoView = GKHInfoView()
+                infoView.label.text = msg
+                self.controller?.showAlert(infoView)
+            }
+        }
+    }
+
+    func fillRequisites(answer: CreateTransferAnswerModel) {
+        requisites.forEach { item in
+            item.readOnly = true
+        }
+        answer.data?.additionalList?.forEach { item in
+            let param = RequisiteDO()
+            param.subTitle = ""
+            param.id = item.fieldName
+            param.title = item.fieldTitle
+            param.content = item.fieldValue
+            param.readOnly = true
+            param.svgImage = item.svgImage
+            if (requisites.first { requisite in requisite.id == param.id  } == nil) {
+                requisites.append(param)
+            }
+        }
+
+        answer.data?.parameterListForNextStep?.forEach { item in
+            let param = RequisiteDO.convertParameter(item)
+            if (requisites.first { requisite in requisite.id == param.id  } == nil) {
+                requisites.append(param)
+            }
+        }
+        DispatchQueue.main.async {
+            self.controller?.tableView.reloadData()
+        }
+    }
 
     func retryPayment(amount: String) {
         guard let controller = controller else {return}
-        let request = getCreateRequest(amount: amount, additionalArray: firstAdditional, productType: controller.footerView.cardFromField.cardModel?.productType ?? "", id: controller.footerView.cardFromField.cardModel?.id ?? -1, puref: controller.puref)
-        doCreateInternetTransfer(request: request) {  response, error in
-            controller.dismissActivity()
-            if error != nil {
-                controller.showAlert(with: "Ошибка", and: error!)
-            } else {
-                if let respUnw = response {
-                    if respUnw.data?.finalStep ?? false {
-                        controller.doConfirmation(response: respUnw)
-                    } else {
-                        controller.showActivity()
-                        self.continueRetry(amount: amount)
+        let request = getCreateRequest(amount: amount, additionalArray: firstAdditional, productType: controller.footerView.cardFromField.cardModel?.productType ?? "", id: controller.footerView.cardFromField.cardModel?.id ?? -1, puref: puref)
+
+        if InternetTVMainViewModel.filter == GlobalModule.UTILITIES_CODE {
+            doCreateServiceTransfer(request: request) {  response, error in
+                controller.dismissActivity()
+                if error != nil {
+                    controller.showAlert(with: "Ошибка", and: error!)
+                } else {
+                    controller.showActivity()
+                    self.continueRetry(amount: amount)
+                }
+            }
+        }
+        if InternetTVMainViewModel.filter == GlobalModule.INTERNET_TV_CODE {
+            doCreateInternetTransfer(request: request) {  response, error in
+                controller.dismissActivity()
+                sleep(1)
+                if error != nil {
+                    controller.showAlert(with: "Ошибка", and: error!)
+                } else {
+                    if let respUnw = response {
+                        if respUnw.data?.finalStep ?? false {
+                            controller.doConfirmation(response: respUnw)
+                        } else {
+                            controller.showActivity()
+                            self.continueRetry(amount: amount)
+                        }
                     }
                 }
             }
@@ -41,7 +90,7 @@ class InternetTVDetailsFormViewModel {
     func continueRetry(amount: String) {
         guard let controller = controller else {return}
         var additionalArray = [[String: String]]()
-        additionalDic.forEach { item in
+        InternetTVDetailsFormViewModel.additionalDic.forEach { item in
             additionalArray.append(item.value)
         }
         var request = getNextStepRequest(amount: amount, additionalArray: additionalArray)
@@ -66,72 +115,122 @@ class InternetTVDetailsFormViewModel {
         }
     }
 
-    func requestCreateInternetTransfer(amount: String) {
+    func requestCreateServiceTransfer(amount: String) {
         guard let controller = controller else {return}
-
-        controller.showActivity()
         var additionalArray = [[String: String]]()
-        additionalDic.forEach { item in
+        InternetTVDetailsFormViewModel.additionalDic.forEach { item in
             additionalArray.append(item.value)
         }
         firstAdditional = additionalArray
-        let request = getCreateRequest(amount: amount, additionalArray: additionalArray,productType: controller.footerView.cardFromField.cardModel?.productType ?? "", id: controller.footerView.cardFromField.cardModel?.id ?? -1, puref: controller.puref)
+        let request = getCreateRequest(amount: amount, additionalArray: additionalArray,productType: controller.footerView.cardFromField.cardModel?.productType ?? "", id: controller.footerView.cardFromField.cardModel?.id ?? -1, puref: puref)
 
-        doCreateInternetTransfer(request: request) { response, error in
+        doCreateServiceTransfer(request: request) { response, error in
             guard let controller = self.controller else {return}
-            controller.dismissActivity()
-            controller.animationShow(controller.goButton)
-            if error != nil {
-                controller.showAlert(with: "Ошибка", and: error!)
-            } else {
-                if InternetTVApiRequests.isSingleService {
-                    controller.doConfirmation(response: response)
+            DispatchQueue.main.async {
+                controller.dismissActivity()
+                sleep(1)
+                controller.animationShow(controller.goButton)
+                if error != nil {
+                    controller.goButton.isHidden = true
+                    controller.showAlert(with: "Ошибка", and: error!)
                 } else {
-                    if let respUnw = response {
-                        if respUnw.data?.needSum ?? false {
-                            controller.showFinalStep()
-                        } else {
-                            controller.setupNextStep(respUnw)
+                    if InternetTVApiRequests.isSingleService {
+                        controller.doConfirmation(response: response)
+                    } else {
+                        if let respUnw = response {
+                            if respUnw.data?.needSum ?? false {
+                                self.fillRequisites(answer: respUnw)
+                                if let sum = respUnw.data?.amount, sum > 0 {
+                                    self.controller?.bottomInputView.amountTextField.text = "\(sum)\(self.controller?.bottomInputView.amountTextField.text ?? "" )"
+                                    self.controller?.bottomInputView.amountTextField.isEnabled = false
+                                }
+                                controller.showFinalStep()
+                            } else {
+                                self.setupNextStep(respUnw)
+                            }
                         }
                     }
                 }
             }
-            controller.setupCardList { error in
-                guard let error = error else { return }
-                controller.showAlert(with: "Ошибка", and: error)
+        }
+    }
+
+    func requestCreateInternetTransfer(amount: String) {
+        guard let controller = controller else {return}
+        //controller.showActivity()
+        var additionalArray = [[String: String]]()
+        InternetTVDetailsFormViewModel.additionalDic.forEach { item in
+            additionalArray.append(item.value)
+        }
+        firstAdditional = additionalArray
+        let request = getCreateRequest(amount: amount, additionalArray: additionalArray,productType: controller.footerView.cardFromField.cardModel?.productType ?? "", id: controller.footerView.cardFromField.cardModel?.id ?? -1, puref: puref)
+
+        doCreateInternetTransfer(request: request) { response, error in
+            guard let controller = self.controller else {return}
+            DispatchQueue.main.async {
+                controller.dismissActivity()
+                sleep(1)
+                controller.animationShow(controller.goButton)
+                if error != nil {
+                    controller.goButton.isHidden = true
+                    controller.showAlert(with: "Ошибка", and: error!)
+                } else {
+                    if InternetTVApiRequests.isSingleService {
+                        controller.doConfirmation(response: response)
+                    } else {
+                        if let respUnw = response {
+                            if respUnw.data?.needSum ?? false {
+                                if let sum = respUnw.data?.amount, sum > 0 {
+                                    self.controller?.bottomInputView.amountTextField.text = "\(sum)\(self.controller?.bottomInputView.amountTextField.text ?? "")"
+                                    self.controller?.bottomInputView.amountTextField.isEnabled = false
+                                }
+                                controller.showFinalStep()
+                            } else {
+                                self.setupNextStep(respUnw)
+                            }
+                        }
+                    }
+                }
             }
         }
     }
 
     func requestNextCreateInternetTransfer(amount: String) {
         guard let controller = controller else {return}
-        controller.showActivity()
-        var additionalArray = [[String: String]]()
-        additionalDic.forEach { item in
-            additionalArray.append(item.value)
-        }
-        stepsPayment.append(additionalArray)
-        let request = getNextStepRequest(amount: amount, additionalArray: additionalArray)
-        doNextStepServiceTransfer(request: request) { response, error in
-            guard let controller = self.controller else {return}
-            controller.dismissActivity()
-            controller.animationShow(controller.goButton)
-            if error != nil {
-                controller.showAlert(with: "Ошибка", and: error!)
-            } else {
-                if let respUnw = response {
-                    if respUnw.data?.finalStep ?? false {
-                        controller.doConfirmation(response: respUnw)
+            var additionalArray = [[String: String]]()
+            InternetTVDetailsFormViewModel.additionalDic.forEach { item in
+                additionalArray.append(item.value)
+            }
+            stepsPayment.append(additionalArray)
+            let request = self.getNextStepRequest(amount: amount, additionalArray: additionalArray)
+            doNextStepServiceTransfer(request: request) { response, error in
+                guard let controller = self.controller else {return}
+                DispatchQueue.main.async {
+                    controller.dismissActivity()
+                    sleep(1)
+                    controller.animationShow(controller.goButton)
+                    if error != nil {
+                        controller.goButton.isHidden = true
+                        controller.showAlert(with: "Ошибка", and: error!)
                     } else {
-                        if respUnw.data?.needSum ?? false {
-                            controller.showFinalStep()
-                        } else {
-                            controller.setupNextStep(respUnw)
+                        if let respUnw = response {
+                            if respUnw.data?.finalStep ?? false {
+                                controller.doConfirmation(response: respUnw)
+                            } else {
+                                if respUnw.data?.needSum ?? false {
+                                    if let sum = respUnw.data?.amount, sum > 0 {
+                                        self.controller?.bottomInputView.amountTextField.text = "\(sum)\(self.controller?.bottomInputView.amountTextField.text ?? "")"
+                                        self.controller?.bottomInputView.amountTextField.isEnabled = false
+                                    }
+                                    controller.showFinalStep()
+                                } else {
+                                    self.setupNextStep(respUnw)
+                                }
+                            }
                         }
                     }
                 }
             }
-        }
     }
 
     func getNextStepRequest(amount: String, additionalArray: [[String: String]]) -> [String: AnyObject] {
@@ -149,7 +248,7 @@ class InternetTVDetailsFormViewModel {
                         "currencyAmount" : "RUB",
                         "payer" : [ "cardId" : nil,
                                     "cardNumber" : nil,
-                                    "accountId" : id ],
+                                    "accountId" : String(id) ],
                         "puref" : puref,
                         "additional" : additionalArray] as [String: AnyObject]
 
@@ -157,7 +256,7 @@ class InternetTVDetailsFormViewModel {
             request = [ "check" : false,
                         "amount" : amount,
                         "currencyAmount" : "RUB",
-                        "payer" : [ "cardId" : id,
+                        "payer" : [ "cardId" : String(id),
                                     "cardNumber" : nil,
                                     "accountId" : nil ],
                         "puref" : puref,
@@ -168,6 +267,20 @@ class InternetTVDetailsFormViewModel {
 
     func doCreateInternetTransfer(request: [String: AnyObject], completion: @escaping (CreateTransferAnswerModel?, String?) -> ()) {
         NetworkManager<CreateTransferAnswerModel>.addRequest(.createInternetTransfer, [:], request) { respModel, error in
+            if error != nil {
+                completion(nil, error!)
+            }
+            guard let respModel = respModel else { return }
+            if respModel.statusCode == 0 {
+                completion(respModel, nil)
+            } else {
+                completion(nil, respModel.errorMessage)
+            }
+        }
+    }
+
+    func doCreateServiceTransfer(request: [String: AnyObject], completion: @escaping (CreateTransferAnswerModel?, String?) -> ()) {
+        NetworkManager<CreateTransferAnswerModel>.addRequest(.createServiceTransfer, [:], request) { respModel, error in
             if error != nil {
                 completion(nil, error!)
             }
@@ -196,7 +309,6 @@ class InternetTVDetailsFormViewModel {
 
     func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?)->()) {
         let param = ["isCard": "true", "isAccount": "true", "isDeposit": "false", "isLoan": "false"]
-
         NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
             if error != nil {
                 completion(nil, error)
@@ -211,5 +323,4 @@ class InternetTVDetailsFormViewModel {
             }
         }
     }
-
 }

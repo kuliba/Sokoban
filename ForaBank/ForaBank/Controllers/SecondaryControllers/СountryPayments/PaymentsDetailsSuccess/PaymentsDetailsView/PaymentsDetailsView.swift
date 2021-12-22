@@ -74,7 +74,6 @@ class PaymentsDetailsView: UIView {
             let im = UserDefaults.standard.object(forKey: "OPERATOR_IMAGE") as? String ?? ""
             if im != "" {
                 let dataDecoded : Data = Data(base64Encoded: im, options: .ignoreUnknownCharacters)!
-                
                 let decodedimage = UIImage(data: dataDecoded)
                 operatorImageView.image = decodedimage
                 UserDefaults.standard.removeObject(forKey: "OPERATOR_IMAGE")

@@ -36,7 +36,7 @@ class ConfurmOpenDepositViewController: PaymentViewController {
     var choosenRate: TermRateSumTermRateList? {
         didSet {
             guard let choosenRate = choosenRate else { return }
-            let dateDepositButtontext = "\(choosenRate.termName ?? "") (\(choosenRate.term ?? 0) дней)"
+            let dateDepositButtontext = "\(choosenRate.termName ?? "") (\(choosenRate.term ?? 0) \(WordDeclensionUtil.getWordInDeclension(type: WordDeclensionEnum().day, n: choosenRate.term )))"
             termField.text = dateDepositButtontext
             rateField.text = "\(choosenRate.rate ?? 0.0)%"
             guard let text = self.bottomView.amountTextField.text else { return }
@@ -93,6 +93,19 @@ class ConfurmOpenDepositViewController: PaymentViewController {
             guard let unformatText = self.bottomView.moneyFormatter?.unformat(text) else { return }
             guard let value = Float(unformatText) else { return }
             self.calculateSumm(with: value)
+            
+            //TODO: - Validate summ
+            let intValue = Int(unformatText) ?? 0
+            let minSumm = self.product?.generalСondition?.minSum ?? 5000
+            let maxSumm = Int(self.cardFromField.model?.balance ?? 0)
+            if intValue < minSumm ||
+                intValue > maxSumm {
+                
+                print("TODO: - Validate summ")
+                
+            }
+            
+            
         }
         NotificationCenter.default.addObserver(forName: UITextField.textDidEndEditingNotification, object: bottomView.amountTextField, queue: .main) { _ in
             guard let text = self.bottomView.amountTextField.text else { return }
@@ -123,6 +136,8 @@ class ConfurmOpenDepositViewController: PaymentViewController {
         bottomView.doneButton.setTitle("Продолжить", for: .normal)
         
         calculateSumm(with: startAmount)
+        
+        incomeField.chooseButton.setImage(UIImage(named: "info"), for: .normal)
         
         stackView.addArrangedSubview(nameField)
         stackView.addArrangedSubview(termField)
@@ -175,10 +190,18 @@ class ConfurmOpenDepositViewController: PaymentViewController {
         
         bottomView.didDoneButtonTapped = { amount in
             if self.showSmsCode {
-                self.makeDepositPayment()
+                self.makeDepositPayment(amount: amount)
             } else {
                 self.openDeposit(amount: amount)
             }
+        }
+        
+        incomeField.didChooseButtonTapped = {
+            let controller = DepositInfoViewController()
+            let navController = UINavigationController(rootViewController: controller)
+            navController.modalPresentationStyle = .custom
+            navController.transitioningDelegate = self
+            self.present(navController, animated: true)
         }
         
     }
@@ -255,21 +278,8 @@ class ConfurmOpenDepositViewController: PaymentViewController {
     //MARK: - API
     private func openDeposit(amount: String) {
         
-        guard let initialAmount = Double(amount) else { return }
-        guard let sourceCardId = self.cardFromField.model?.cardID else { return }
-        guard let finOperID = self.product?.depositProductID else { return }
-        guard let term = self.choosenRate?.term else { return }
-        
-        let body = [
-            "finOperID": finOperID,
-            "term": term,
-            "currencyCode": "810",
-            "sourceCardId": sourceCardId,
-            "initialAmount": initialAmount
-        ] as [String: AnyObject]
-        
         self.showActivity()
-        NetworkManager<OpenDepositDecodableModel>.addRequest(.openDeposit, [:], body) { respons, error in
+        NetworkManager<OpenDepositDecodableModel>.addRequest(.openDeposit, [:], [:]) { respons, error in
             self.dismissActivity()
             if error != nil {
                 print("DEBUG: Error openDeposit:", error ?? "")
@@ -287,15 +297,28 @@ class ConfurmOpenDepositViewController: PaymentViewController {
         }
     }
     
-    private func makeDepositPayment() {
+    private func makeDepositPayment(amount: String) {
+        guard let initialAmount = Double(amount) else { return }
+        guard let sourceCardId = self.cardFromField.model?.cardID else { return }
+        guard let finOperID = self.product?.depositProductID else { return }
+        guard let term = self.choosenRate?.term else { return }
         guard var code = smsCodeField.textField.text else { return }
         if code.isEmpty {
             code = "0"
         }
-        let body = ["verificationCode": code] as [String: AnyObject]
+        
+        let body = [
+            "finOperID": finOperID,
+            "term": term,
+            "currencyCode": "810",
+            "sourceCardId": sourceCardId,
+            "initialAmount": initialAmount,
+            "verificationCode": code
+        ] as [String: AnyObject]
+        
         showActivity()
         
-        NetworkManager<MakeTransferDecodableModel>.addRequest(.makeDepositPayment, [:], body) { respons, error in
+        NetworkManager<MakeDepositDecodableModel>.addRequest(.makeDepositPayment, [:], body) { respons, error in
             DispatchQueue.main.async {
                 self.dismissActivity()
                 if error != nil {
@@ -314,7 +337,10 @@ class ConfurmOpenDepositViewController: PaymentViewController {
                     confurmVCModel.taxTransction = self.incomeField.text
                     confurmVCModel.phone = self.termField.text
                     confurmVCModel.summInCurrency = self.rateField.text
-                    
+                    confurmVCModel.numberTransction = model.data?.accountNumber ?? ""
+                    let formatter = Date.dateFormatterSimpleDateConvenient()
+                    let date = Date(timeIntervalSince1970: TimeInterval((model.data?.closeDate ?? 0)/1000))
+                    confurmVCModel.dateOfTransction = formatter.string(from: date)
                     let vc: DepositSuccessViewController = DepositSuccessViewController.loadFromNib()
                     vc.confurmVCModel = confurmVCModel
                     vc.id = model.data?.paymentOperationDetailId ?? 0
@@ -339,9 +365,11 @@ extension ConfurmOpenDepositViewController: UIViewControllerTransitioningDelegat
         if let nav = presented as? UINavigationController {
             if let controller = nav.viewControllers.first as? SelectDepositPeriodViewController {
                 presenter.height = ((controller.elements?.count ?? 1) * 56) + 80
+            } else {
+                presenter.height = 300
             }
         } else {
-            presenter.height = (4 * 44) + 160
+            presenter.height = 300
         }
         return presenter
     }

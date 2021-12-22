@@ -36,8 +36,9 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
         setupNavBar()
         phoneField.textField.delegate = self
         phoneField.rightButton.setImage(UIImage(imageLiteralResourceName: "user-plus"), for: .normal)
-        if selectNumber != nil{
-            phoneField.text = selectNumber ?? ""
+        if selectNumber != nil {
+            phoneField.textField.text = selectNumber ?? ""
+            phoneField.textField.maskString = selectNumber ?? ""
         }
         setupUI()
         phoneField.didChooseButtonTapped = {() in
@@ -98,15 +99,29 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
     }
     
     func setupActions() {
+        
         cardField.didChooseButtonTapped = { () in
-            print("cardField didChooseButtonTapped")
             self.openOrHideView(self.cardListView)
         }
+        
         cardListView.didCardTapped = { card in
             self.cardField.cardModel = card
             self.selectedCardNumber = card.cardID ?? 0
             self.hideView(self.cardListView, needHide: true)
-            
+        }
+        
+        cardListView.lastItemTap = {
+            let vc = AllCardListViewController()
+            vc.withTemplate = false
+            vc.didCardTapped = { card in
+                self.cardField.cardModel = card
+                self.selectedCardNumber = card.cardID ?? 0
+                self.hideView(self.cardListView, needHide: true)
+                vc.dismiss(animated: true, completion: nil)
+            }
+            let navVc = UINavigationController(rootViewController: vc)
+            navVc.modalPresentationStyle = .fullScreen
+            self.present(navVc, animated: true, completion: nil)
         }
     }
     
@@ -222,10 +237,20 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                 ] as [String: AnyObject]
                 
                 NetworkManager<CreateMobileTransferDecodableModel>.addRequest(.createMobileTransfer, [:], body, completion: { [weak self] data, error in
+                    
                     self?.dismissActivity()
                     if data?.errorMessage != nil {
                         completion(error)
                     }
+                    
+                    if data?.statusCode == 102 {
+                        self?.showAlert(with: "Ошибка", and: "Минимальная сумма платежа 10 рублей")
+                        completion("")
+                        return
+                    }
+                    
+                    
+                    
                     if data?.statusCode == 0 {
                         let model = ConfirmViewControllerModel(type: .mobilePayment)
                         

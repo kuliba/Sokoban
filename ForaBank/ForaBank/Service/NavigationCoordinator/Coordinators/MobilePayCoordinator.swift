@@ -8,8 +8,7 @@
 import UIKit
 
 class MobilePayCoordinator: Coordinator {
-
-
+    
     let mobilePayViewController = UINavigationController(rootViewController: MobilePayViewController()) 
 
     override init(router: RouterType) {

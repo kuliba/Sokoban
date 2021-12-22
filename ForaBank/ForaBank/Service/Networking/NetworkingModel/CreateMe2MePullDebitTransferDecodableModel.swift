@@ -63,7 +63,8 @@ struct CreateMe2MePullDebitTransferDataClass: Codable {
     let currencyRate: JSONNull?
     let debitAmount: Int?
     let payeeName: String?
-    let paymentOperationDetailID, documentStatus: JSONNull?
+    let paymentOperationDetailID: Int?
+    let documentStatus: JSONNull?
     let additionalList: [CreateMe2MePullDebitTransfer]?
 
     enum CodingKeys: String, CodingKey {
@@ -103,7 +104,7 @@ extension CreateMe2MePullDebitTransferDataClass {
         currencyRate: JSONNull?? = nil,
         debitAmount: Int?? = nil,
         payeeName: String?? = nil,
-        paymentOperationDetailID: JSONNull?? = nil,
+        paymentOperationDetailID: Int?? = nil,
         documentStatus: JSONNull?? = nil,
         additionalList: [CreateMe2MePullDebitTransfer]?? = nil
     ) -> CreateMe2MePullDebitTransferDataClass {

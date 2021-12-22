@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var delegate: Encription?
     let timer = BackgroundTimer()
     private let downloadCash = DownloadQueue()
-    
+
     var isAuth: Bool? {
         didSet {
             guard isAuth != nil else { return }
@@ -29,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-     
+
         RealmConfiguration()
 
         /// FirebaseApp configure
@@ -50,8 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.initRealmTimerParameters()
         // Зарузка кэша
         downloadCash.download()
-        // Net Detect
-        NetStatus.shared.startMonitoring()
+
         return true
     }
     
@@ -107,7 +106,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     fileprivate func RealmConfiguration() {
         // Версия БД (изменить на большую если меняем БД)
-        let schemaVersion: UInt64 = 8
+        let schemaVersion: UInt64 = 9
 
         let config = Realm.Configuration(
             // Set the new schema version. This must be greater than the previously used
@@ -119,15 +118,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             migrationBlock: { migration, oldSchemaVersion in
                 // We haven’t migrated anything yet, so oldSchemaVersion == 0
                 if (oldSchemaVersion < schemaVersion) {
-                    if oldSchemaVersion < 8 {
+                    if oldSchemaVersion < 4 {
                         migration.deleteData(forType: "GKHOperatorsModel")
                     }
+                    if oldSchemaVersion < 6 {
+                        migration.deleteData(forType: "GKHOperatorsModel")
+                        migration.deleteData(forType: "AdditionalListModel")
+                    }
+                    if oldSchemaVersion < 7 {
+                        migration.deleteData(forType: "Parameters")
+                        migration.deleteData(forType: "GKHOperatorsModel")
+                        migration.deleteData(forType: "LogotypeData")
+                        migration.deleteData(forType: "UserAllCardsModel")
+                    }
+
                     if oldSchemaVersion < 8 {
+                        migration.deleteData(forType: "GKHOperatorsModel")
                         migration.deleteData(forType: "Parameters")
                     }
-                    if oldSchemaVersion < 8 {
-                        migration.deleteData(forType: "LogotypeData")
-                         migration.deleteData(forType: "UserAllCardsModel")
+                    if oldSchemaVersion < 9 {
+                        migration.deleteData(forType: "UserAllCardsModel")
                     }
 
                     // Nothing to do!

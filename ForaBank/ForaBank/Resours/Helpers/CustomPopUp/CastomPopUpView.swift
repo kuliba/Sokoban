@@ -128,7 +128,7 @@ class MemeDetailVC : AddHeaderImageViewController {
         result?.forEach { card in
             if card.productType == "CARD" {
                 cardsArray.append(card)
-            } else if !onlyCard &&  card.productType == "ACCOUNT" {
+            } else if !onlyCard && (card.productType == "ACCOUNT" || card.productType == "DEPOSIT" ) {
                 cardsArray.append(card)
             }
         }
@@ -234,7 +234,7 @@ class MemeDetailVC : AddHeaderImageViewController {
     }
     
     private func setupListFrom() {
-        cardFromListView = CardsScrollView(onlyMy: onlyMy)
+        cardFromListView = CardsScrollView(onlyMy: onlyMy, onlyCard: true)
         cardFromListView.didCardTapped = { (cardId) in
             DispatchQueue.main.async {
                 let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
@@ -280,7 +280,7 @@ class MemeDetailVC : AddHeaderImageViewController {
     }
     
     private func setupListTo() {
-        cardToListView = CardsScrollView(onlyMy: onlyMy)
+        cardToListView = CardsScrollView(onlyMy: onlyMy, onlyCard: true)
         cardToListView.canAddNewCard = onlyMy ? false : true
         
         cardToListView.firstItemTap = {

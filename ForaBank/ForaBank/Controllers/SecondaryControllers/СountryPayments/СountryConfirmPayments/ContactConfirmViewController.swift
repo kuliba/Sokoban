@@ -11,10 +11,9 @@ import SwiftUI
 import Combine
 
 //TODO: отрефакторить под сетевые запросы, вынести в отдельный файл
-class ConfirmViewControllerModel: ObservableObject {
-    
+class ConfirmViewControllerModel {
+    static var svgIcon = ""
     lazy var realm = try? Realm()
-    
     var type: PaymentType
     var paymentSystem: PaymentSystemList?
     
@@ -28,6 +27,11 @@ class ConfirmViewControllerModel: ObservableObject {
                 cardFromAccountId = "\(cardFrom.id)"
                 cardFromCardId = ""
             }
+//            else if cardFrom.productType == "DEPOSIT" {
+//                cardFromAccountId = "\(cardFrom.accountID)"
+//                cardFromCardId = ""
+//            }
+            
         }
     }
     var cardFrom: GetProductListDatum? {
@@ -62,8 +66,11 @@ class ConfirmViewControllerModel: ObservableObject {
             if cardTo.productType == "CARD" {
                 cardToCardId = "\(cardTo.id)"
                 cardToAccountId = ""
-            } else if cardTo.productType == "ACCOUNT" {
+            } else if cardTo.productType == "ACCOUNT"  {
                 cardToAccountId = "\(cardTo.id)"
+                cardToCardId = ""
+            } else if cardTo.productType == "DEPOSIT" {
+                cardToAccountId = "\(cardTo.accountID)"
                 cardToCardId = ""
             }
         }
@@ -113,7 +120,7 @@ class ConfirmViewControllerModel: ObservableObject {
     var comment = ""
     
     var bank : BanksList?
-    
+    var dateOfTransction: String = ""
     var phone: String?
     var fullName: String? = ""
     var country: CountriesList?
@@ -139,15 +146,10 @@ class ConfirmViewControllerModel: ObservableObject {
         case mobilePayment
         case openDeposit
     }
-    
 }
 
 class ContactConfurmViewController: UIViewController {
-    
-//    private var cancellable: AnyCancellable!
-    
     lazy var realm = try? Realm()
-    
     var confurmVCModel: ConfirmViewControllerModel? {
         didSet {
             guard let model = confurmVCModel else { return }
@@ -348,7 +350,7 @@ class ContactConfurmViewController: UIViewController {
             summTransctionField.isHidden = false
             summTransctionField.viewModel.title = "Счет вклада"
             summTransctionField.viewModel.image = UIImage(named: "depositIcon-1")!
-            summTransctionField.text = "123432434323"
+            summTransctionField.text = model.numberTransction
             
             cardFromField.isHidden = false
             cardFromField.choseButton.isHidden = true
@@ -675,8 +677,9 @@ class ContactConfurmViewController: UIViewController {
                     self.dismissActivity()
                     DispatchQueue.main.async {
                         let vc = PaymentsDetailsSuccessViewController()
+                        self.confurmVCModel?.statusIsSuccses = true
                         vc.confurmVCModel = self.confurmVCModel
-                        vc.confurmVCModel?.statusIsSuccses = true
+                        //vc.confurmVCModel?.statusIsSuccses = true
                         vc.id = model.data?.paymentOperationDetailId ?? 0
                         switch self.confurmVCModel?.type {
                         case .card2card, .phoneNumber:

@@ -6,12 +6,12 @@ protocol IMsg {
     func handleMsg(what: Int)
 }
 
-class InternetTVMainController: UIViewController, UITableViewDelegate, UITableViewDataSource, QRProtocol, UISearchBarDelegate, IMsg {
+class InternetTVMainController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, IMsg {
+
     public static var iMsg: IMsg? = nil
     public static let msgHideLatestOperation = 1
     public static let msgPerformSegue = 2
     public static var latestOpIsEmpty = false
-
     public static func storyboardInstance() -> InternetTVMainController? {
         let storyboard = UIStoryboard(name: "InternetTV", bundle: nil)
         return storyboard.instantiateViewController(withIdentifier: "InternetTVMain") as? InternetTVMainController
@@ -25,11 +25,9 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
     @IBOutlet weak var tableView: UITableView!
 
     var viewModel = InternetTVMainViewModel()
-    //var token: NotificationToken?
     var alertController: UIAlertController?
     var searching = false
     let searchController = UISearchController(searchResultsController: nil)
-    //var searchingText = ""
     let latestOperationView = InternetTVLatestOperationsView()
 
     func handleMsg(what: Int) {
@@ -46,18 +44,73 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
         }
     }
 
+    func setTitle(title: String, subtitle: String) -> UIView {
+        let titleLabel = UILabel(frame: CGRect(x: 0, y: -2, width: 0, height: 0))
+
+        titleLabel.backgroundColor = .clear
+        titleLabel.textColor = .black
+
+        let imageAttachment = NSTextAttachment()
+        imageAttachment.image = UIImage(systemName: "chevron.down")
+        imageAttachment.bounds = CGRect(x: 0, y: 0, width: imageAttachment.image!.size.width, height: imageAttachment.image!.size.height)
+
+        let attachmentString = NSAttributedString(attachment: imageAttachment)
+        let completeText = NSMutableAttributedString(string: "")
+        let text = NSAttributedString(string: title + " ", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16)])
+        completeText.append(text)
+        completeText.append(attachmentString)
+
+        titleLabel.attributedText = completeText
+        titleLabel.numberOfLines = 2
+        titleLabel.sizeToFit()
+        let titleView = UIView(frame: CGRect(x: 0, y: 0, width: titleLabel.frame.size.width, height: 15))
+        titleView.addSubview(titleLabel)
+
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(titleDidTaped))
+        titleView.addGestureRecognizer(gesture)
+
+        return titleView
+    }
+
     func changeTitle(_ text: String) {
         DispatchQueue.main.async {
             self.navigationItem.titleView = self.setTitle(title: text, subtitle: "")
         }
     }
 
+    func setupNavBar() {
+        navigationItem.titleView = setTitle(title: "Все регионы", subtitle: "")
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Поиск"
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.automaticallyShowsCancelButton = false
+        searchController.searchBar.delegate = self
+        definesPresentationContext = true
+
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "back_button"), style: .plain, target: self, action: #selector(backAction))
+        navigationItem.leftBarButtonItem?.setTitleTextAttributes(
+                [.foregroundColor: UIColor.black], for: .normal)
+        navigationItem.leftBarButtonItem?.setTitleTextAttributes(
+                [.foregroundColor: UIColor.black], for: .highlighted)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "qr_Icon"), style: .plain, target: self, action: #selector(onQR))
+
+        navigationItem.rightBarButtonItem?.setTitleTextAttributes(
+                [.foregroundColor: UIColor.black], for: .normal)
+        navigationItem.rightBarButtonItem?.setTitleTextAttributes(
+                [.foregroundColor: UIColor.black], for: .highlighted)
+
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         InternetTVMainController.iMsg = self
         viewModel.controller = self
-        latestOperationView.frame = historyView.frame
-        historyView.addSubview(latestOperationView)
+        if historyView != nil {
+            latestOperationView.frame = historyView.frame
+            historyView.addSubview(latestOperationView)
+        }
 
         if InternetTVMainController.latestOpIsEmpty {
             historyView?.isHidden = true
@@ -99,6 +152,11 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
         navigationController?.isNavigationBarHidden = false
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        checkQREvent()
+    }
+
     func checkCameraAccess(isAllowed: @escaping (Bool) -> Void) {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .denied:
@@ -119,71 +177,8 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
         }
     }
 
-    @IBAction func gkhMain(_ unwindSegue: UIStoryboardSegue) {
-    }
-
-    deinit {
-        print("GKH Deinit")
-    }
-
-    func setTitle(title: String, subtitle: String) -> UIView {
-        let titleLabel = UILabel(frame: CGRect(x: 0, y: -2, width: 0, height: 0))
-
-        titleLabel.backgroundColor = .clear
-        titleLabel.textColor = .black
-
-        let imageAttachment = NSTextAttachment()
-        imageAttachment.image = UIImage(systemName: "chevron.down")
-        imageAttachment.bounds = CGRect(x: 0, y: 0, width: imageAttachment.image!.size.width, height: imageAttachment.image!.size.height)
-
-        let attachmentString = NSAttributedString(attachment: imageAttachment)
-        let completeText = NSMutableAttributedString(string: "")
-        let text = NSAttributedString(string: title + " ", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16)])
-        completeText.append(text)
-        completeText.append(attachmentString)
-
-        titleLabel.attributedText = completeText
-        titleLabel.numberOfLines = 2
-        titleLabel.sizeToFit()
-        let titleView = UIView(frame: CGRect(x: 0, y: 0, width: titleLabel.frame.size.width, height: 15))
-        titleView.addSubview(titleLabel)
-
-        let gesture = UITapGestureRecognizer(target: self, action: #selector(titleDidTaped))
-        titleView.addGestureRecognizer(gesture)
-
-        return titleView
-    }
-
     @objc func titleDidTaped() {
         performSegue(withIdentifier: "citySearch", sender: self)
-    }
-
-    func setupNavBar() {
-
-        navigationItem.titleView = setTitle(title: "Все регионы", subtitle: "")
-        navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = false
-        searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.placeholder = "Поиск"
-        searchController.hidesNavigationBarDuringPresentation = false
-        searchController.automaticallyShowsCancelButton = false
-        searchController.searchBar.delegate = self
-        definesPresentationContext = true
-
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "back_button"), style: .plain, target: self, action: #selector(backAction))
-
-        navigationItem.leftBarButtonItem?.setTitleTextAttributes(
-                [.foregroundColor: UIColor.black], for: .normal)
-        navigationItem.leftBarButtonItem?.setTitleTextAttributes(
-                [.foregroundColor: UIColor.black], for: .highlighted)
-
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "qr_Icon"), style: .plain, target: self, action: #selector(onQR))
-
-        navigationItem.rightBarButtonItem?.setTitleTextAttributes(
-                [.foregroundColor: UIColor.black], for: .normal)
-        navigationItem.rightBarButtonItem?.setTitleTextAttributes(
-                [.foregroundColor: UIColor.black], for: .highlighted)
-
     }
 
     @objc func backAction() {
@@ -219,33 +214,46 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
         })
     }
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if searching {
-            return viewModel.searchedOrganization.count
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if !doStringContainsNumber(_string: searchText) {
+            viewModel.searchedOrganization = viewModel.organization.filter {
+                $0.name?.lowercased().contains(searchText.lowercased()) == true
+            }
         } else {
-            return viewModel.organization.count
+            viewModel.searchedOrganization = viewModel.organization.filter {
+                $0.synonymList.first?.lowercased().contains(searchText.lowercased()) == true
+            }
         }
+        searching = true
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: GHKCell.reuseId, for: indexPath) as! GHKCell
-        if searching {
-            let model = viewModel.searchedOrganization[indexPath.row]
-            cell.set(viewModel: model)
-        } else {
-            let model = viewModel.organization[indexPath.row]
-            cell.set(viewModel: model)
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searching = false
+        searchBar.text = ""
+        tableView.reloadData()
+    }
+
+    func doStringContainsNumber(_string: String) -> Bool {
+        let numberRegEx = ".*[0-9]+.*"
+        let testCase = NSPredicate(format: "SELF MATCHES %@", numberRegEx)
+        let containsNumber = testCase.evaluate(with: _string)
+        return containsNumber
+    }
+
+    func checkQREvent() {
+        if let qrDataUnw = GlobalModule.qrData, let operatorModelUnw = GlobalModule.qrOperator {
+            if operatorModelUnw.parentCode?.contains(GlobalModule.INTERNET_TV_CODE) == true {
+                InternetTVMainViewModel.filter = GlobalModule.INTERNET_TV_CODE
+            }
+            if operatorModelUnw.parentCode?.contains(GlobalModule.UTILITIES_CODE) == true {
+                InternetTVMainViewModel.filter = GlobalModule.UTILITIES_CODE
+            }
+            viewModel.qrData = qrDataUnw
+            viewModel.operators = operatorModelUnw
+            GlobalModule.qrData = nil
+            GlobalModule.qrOperator = nil
+            performSegue(withIdentifier: "input", sender: self)
         }
-        return cell
-    }
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        64
-    }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        searchController.searchBar.searchTextField.endEditing(true)
-        performSegue(withIdentifier: "input", sender: self)
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -253,6 +261,8 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
         switch segue.identifier {
 
         case "input":
+            InternetTVDetailsFormViewModel.additionalDic.removeAll()
+            InternetTVInputCell.spinnerValuesSelected.removeAll()
             if let latestOp = InternetTVMainViewModel.latestOp {
                 let dc = segue.destination as! InternetTVDetailsFormController
                 dc.operatorData = latestOp.op
@@ -279,44 +289,43 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
             viewModel.qrData.removeAll()
         case "qr":
             let dc = segue.destination as! QRViewController
-            dc.delegate = self
+            //dc.delegate = self
         case .none:
             print()
         case .some(_):
             print()
         }
     }
+}
 
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if !doStringContainsNumber(_string: searchText) {
-            viewModel.searchedOrganization = viewModel.organization.filter {
-                $0.name?.lowercased().prefix(searchText.count) ?? "" == searchText.lowercased()
-            }
+extension InternetTVMainController {
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if searching {
+            return viewModel.searchedOrganization.count
         } else {
-            viewModel.searchedOrganization = viewModel.organization.filter {
-                $0.synonymList.first?.lowercased().prefix(searchText.count) ?? "" == searchText.lowercased()
-            }
+            return viewModel.organization.count
         }
-        searching = true
-
     }
 
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searching = false
-        searchBar.text = ""
-        tableView.reloadData()
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: GHKCell.reuseId, for: indexPath) as! GHKCell
+        if searching {
+            let model = viewModel.searchedOrganization[indexPath.row]
+            cell.set(viewModel: model)
+        } else {
+            let model = viewModel.organization[indexPath.row]
+            cell.set(viewModel: model)
+        }
+        return cell
     }
 
-    func doStringContainsNumber(_string: String) -> Bool {
-        let numberRegEx = ".*[0-9]+.*"
-        let testCase = NSPredicate(format: "SELF MATCHES %@", numberRegEx)
-        let containsNumber = testCase.evaluate(with: _string)
-        return containsNumber
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        64
     }
 
-    func setResultOfBusinessLogic(_ qr: [String: String], _ model: GKHOperatorsModel) {
-        viewModel.qrData = qr
-        viewModel.operators = model
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        searchController.searchBar.searchTextField.endEditing(true)
         performSegue(withIdentifier: "input", sender: self)
     }
 }

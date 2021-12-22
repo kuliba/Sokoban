@@ -42,8 +42,7 @@ class PaymentsDetailsSuccessViewController: UIViewController {
     fileprivate func setupUI() {
         navigationController?.navigationBar.isHidden = true
         view.backgroundColor = .white
-        
-        
+
         view.addSubview(button)
         button.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
                       right: view.rightAnchor, paddingLeft: 20, paddingBottom: 20,

@@ -24,7 +24,6 @@ enum RouterUrlList: String {
     case installPushDevice
     case registerPushDeviceForUser
     case uninstallPushDevice
-    case getCardList
     case keyExchange
     case getCountries
     case anywayPaymentBegin
@@ -204,17 +203,6 @@ enum RouterUrlList: String {
             }
         case .uninstallPushDevice:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.uninstallPushDevice.rawValue)
-            
-            switch result {
-            case .success(let url):
-                return .success(url.absoluteURL)
-            case .failure(let error):
-                debugPrint(error)
-                return .failure(.urlError)
-            }
-            
-        case .getCardList:
-            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getCardList.rawValue)
             
             switch result {
             case .success(let url):

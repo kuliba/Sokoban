@@ -12,5 +12,6 @@ class AdditionalListModel: Object {
     
     @objc dynamic var fieldName: String?
     @objc dynamic var fieldValue: String?
+    @objc dynamic var fieldTitle: String?
     
 }

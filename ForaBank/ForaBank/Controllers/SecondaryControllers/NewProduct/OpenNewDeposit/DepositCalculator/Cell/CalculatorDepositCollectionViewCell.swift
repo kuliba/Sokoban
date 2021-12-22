@@ -24,7 +24,7 @@ class CalculatorDepositCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var mainSummLabel: UILabel!
     @IBOutlet weak var summSlider: UISlider!
     
-    let defaultValue: Float = 500000
+    let defaultValue: Float = 5000
     let defaultDate: Int = 365
     weak var delegate: CalculatorDepositDelegate?
     var viewModel: OpenDepositDatum? {
@@ -38,7 +38,7 @@ class CalculatorDepositCollectionViewCell: UICollectionViewCell {
     var choosenRate: TermRateSumTermRateList? {
         didSet {
             guard let choosenRate = choosenRate else { return }
-            dateDepositButton.setTitle(choosenRate.termName ?? "", for: .normal)
+            dateDepositButton.setupButtonTitle(title: choosenRate.termName ?? "", with: .white)
             percentDepositLabel.text = "\(choosenRate.rate ?? 0.0)%"
             guard let text = self.summTextField.text else { return }
             guard let unformatText = self.moneyFormatter?.unformat(text) else { return }
@@ -57,8 +57,6 @@ class CalculatorDepositCollectionViewCell: UICollectionViewCell {
         moneyFormatter = SumTextInputFormatter(textPattern: "# ###,## \(self.currencyCode.getSymbol() ?? "₽")")
         moneyInputController.formatter = moneyFormatter
         summTextField.delegate = moneyInputController
-        dateDepositButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: -30, bottom: 0, right: 0)
-        dateDepositButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: -20, bottom: 0, right: 0)
         NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: summTextField, queue: .main) { _ in
             guard let text = self.summTextField.text else { return }
             guard let unformatText = self.moneyFormatter?.unformat(text) else { return }
@@ -127,11 +125,6 @@ class CalculatorDepositCollectionViewCell: UICollectionViewCell {
     }
     
     
-    ///Формула для расчета дохода по вкладу: (initialAmount * interestRate * termDay/AllDay) / 100
-///    initialAmount - первоначальная сумма вложений
-///    interestRate – годовая ставка
-///    termDay – кол-во дней вклада
-///    AllDay - кол-во дней в году
     private func calculateSumm(with value: Float) {
         chooseRate(from: value)
         let interestRate = Float(choosenRate?.rate ?? 0)
@@ -158,3 +151,4 @@ class CalculatorDepositCollectionViewCell: UICollectionViewCell {
     }
     
 }
+

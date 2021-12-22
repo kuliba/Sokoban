@@ -83,7 +83,6 @@ class PayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.row {
         case 0:
-
             self.getFastPaymentContractList { [weak self] contractList, error in
                 DispatchQueue.main.async {
                     if error != nil {
@@ -128,7 +127,7 @@ class PayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
             popView.modalPresentationStyle = .custom
             popView.transitioningDelegate = self
             self.present(popView, animated: true, completion: nil)
-        case 2:
+        case 3:
             let popView = MemeDetailVC()
             popView.onlyMy = false
             popView.onlyCard = true

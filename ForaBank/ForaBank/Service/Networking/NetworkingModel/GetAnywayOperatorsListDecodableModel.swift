@@ -209,6 +209,7 @@ extension LogotypeList {
 // MARK: - ParameterList
 struct ParameterList: Codable {
     let content, dataType, id: String?
+    let svgImage: String?
     let isRequired: Bool?
     let mask: String?
     let maxLength, minLength, order, rawLength: Int?
@@ -235,41 +236,41 @@ extension ParameterList {
         try self.init(data: try Data(contentsOf: url))
     }
 
-    func with(
-        content: String?? = nil,
-        dataType: String?? = nil,
-        id: String?? = nil,
-        isRequired: Bool?? = nil,
-        mask: String?? = nil,
-        maxLength: Int?? = nil,
-        minLength: Int?? = nil,
-        order: Int?? = nil,
-        rawLength: Int?? = nil,
-        readOnly: Bool?? = nil,
-        regExp: String?? = nil,
-        subTitle: String?? = nil,
-        title: String?? = nil,
-        type: String?? = nil,
-        viewType: String?? = nil
-    ) -> ParameterList {
-        return ParameterList(
-            content: content ?? self.content,
-            dataType: dataType ?? self.dataType,
-            id: id ?? self.id,
-            isRequired: isRequired ?? self.isRequired,
-            mask: mask ?? self.mask,
-            maxLength: maxLength ?? self.maxLength,
-            minLength: minLength ?? self.minLength,
-            order: order ?? self.order,
-            rawLength: rawLength ?? self.rawLength,
-            readOnly: readOnly ?? self.readOnly,
-            regExp: regExp ?? self.regExp,
-            subTitle: subTitle ?? self.subTitle,
-            title: title ?? self.title,
-            type: type ?? self.type,
-            viewType: viewType ?? self.viewType
-        )
-    }
+//    func with(
+//        content: String?? = nil,
+//        dataType: String?? = nil,
+//        id: String?? = nil,
+//        isRequired: Bool?? = nil,
+//        mask: String?? = nil,
+//        maxLength: Int?? = nil,
+//        minLength: Int?? = nil,
+//        order: Int?? = nil,
+//        rawLength: Int?? = nil,
+//        readOnly: Bool?? = nil,
+//        regExp: String?? = nil,
+//        subTitle: String?? = nil,
+//        title: String?? = nil,
+//        type: String?? = nil,
+//        viewType: String?? = nil
+//    ) -> ParameterList {
+//        return ParameterList(
+//            content: content ?? self.content,
+//            dataType: dataType ?? self.dataType,
+//            id: id ?? self.id,
+//            isRequired: isRequired ?? self.isRequired,
+//            mask: mask ?? self.mask,
+//            maxLength: maxLength ?? self.maxLength,
+//            minLength: minLength ?? self.minLength,
+//            order: order ?? self.order,
+//            rawLength: rawLength ?? self.rawLength,
+//            readOnly: readOnly ?? self.readOnly,
+//            regExp: regExp ?? self.regExp,
+//            subTitle: subTitle ?? self.subTitle,
+//            title: title ?? self.title,
+//            type: type ?? self.type,
+//            viewType: viewType ?? self.viewType
+//        )
+//    }
 
     func jsonData() throws -> Data {
         return try newJSONEncoder().encode(self)

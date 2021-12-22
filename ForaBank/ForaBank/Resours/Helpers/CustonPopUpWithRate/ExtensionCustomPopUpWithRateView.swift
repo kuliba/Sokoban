@@ -31,12 +31,12 @@ extension CustomPopUpWithRateView {
         setupListFrom()
         setupListTo()
         
-        self.addHeaderImage()
-        self.view.layer.cornerRadius = 16
-        self.view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        self.view.clipsToBounds = true
-        self.view.backgroundColor = .white
-        self.view.anchor(width: UIScreen.main.bounds.width, height: 490)
+        addHeaderImage()
+        view.layer.cornerRadius = 16
+        view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        view.clipsToBounds = true
+        view.backgroundColor = .white
+        view.anchor(width: UIScreen.main.bounds.width, height: 490)
         
         stackView = UIStackView(arrangedSubviews: [cardFromField,
                                                    seporatorView,
@@ -108,7 +108,7 @@ extension CustomPopUpWithRateView {
         cards.forEach { card in
             if card.productType == "CARD" {
                 cardsArray.append(card)
-            } else if !onlyCard &&  card.productType == "ACCOUNT" {
+            } else if !onlyCard && (card.productType == "ACCOUNT" || card.productType == "DEPOSIT" ) {
                 cardsArray.append(card)
             }
         }
@@ -171,7 +171,7 @@ extension CustomPopUpWithRateView {
     
     /// Инициализация верхних карт
     private func setupListFrom() {
-        cardFromListView = CardsScrollView(onlyMy: onlyMy)
+        cardFromListView = CardsScrollView(onlyMy: onlyMy, deleteDeposit: true)
         cardFromListView.didCardTapped = { (cardId) in
             DispatchQueue.main.async {
                 guard let cardList = self.allCardsFromRealm else { return }

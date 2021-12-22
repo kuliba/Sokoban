@@ -17,6 +17,11 @@ protocol QRProtocol: AnyObject {
 
 final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate {
     
+    public static func storyboardInstance() -> QRViewController? {
+            let storyboard = UIStoryboard(name: "QRCodeStoryboard", bundle: nil)
+            return storyboard.instantiateViewController(withIdentifier: "qr") as? QRViewController
+        }
+    
     weak var delegate: QRProtocol?
 //    weak var qrCoordinatorDelegate: QRCoordinatorDelegate?
     
@@ -27,17 +32,15 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate {
     @IBOutlet weak var pdfFile: UIButton!
     @IBOutlet weak var zap: UIButton!
     @IBOutlet weak var info: UIButton!
-    
+
     let bottomSpace: CGFloat = 80.0
     var squareView: SquareView? = nil
-    
     lazy var realm = try? Realm()
     var operatorsList: Results<GKHOperatorsModel>? = nil
-    
     var keyValue = ""
-    
     var qrData = [String: String]()
     var operators: GKHOperatorsModel? = nil
+    var qrIsFired = false
     
     @IBOutlet weak var qrView: UIView!
     @IBOutlet weak var backButton: UIButton!
@@ -47,13 +50,13 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate {
         pdfFile.add_CornerRadius(30)
         zap.add_CornerRadius(30)
         info.add_CornerRadius(30)
-        self.navigationController?.isNavigationBarHidden = true
+        navigationController?.isNavigationBarHidden = true
         
         operatorsList = realm?.objects(GKHOperatorsModel.self)
-        self.setupLayer()
-        self.startQRCodeScanning()
-        self.view.insertSubview(qrView, at: 1)
-        self.backButton.setupButtonRadius()
+        setupLayer()
+        startQRCodeScanning()
+        view.insertSubview(qrView, at: 1)
+        backButton.setupButtonRadius()
     }
     
     public func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
@@ -78,19 +81,15 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate {
         }
     }
     @IBAction func addPdfFile(_ sender: UIButton) {
-        
         var documentPickerController: UIDocumentPickerViewController!
-        
         documentPickerController = UIDocumentPickerViewController(documentTypes: ["com.adobe.pdf", /*"public.image"*/"public.composite-content"], in: .import)
         documentPickerController.delegate = self
         present(documentPickerController, animated: true, completion: nil)
     }
     
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
-        
         let image = drawPDFfromURL(url: url)
         let qrString = string(from: image!)
-        
         let a = qrString.components(separatedBy: "|")
         
         a.forEach { [weak self] v in
@@ -115,37 +114,29 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate {
                 self.operators = operators
             }
         })
-        self.returnKey()
+        returnKey()
         } else {
             performSegue(withIdentifier: "qrError", sender: nil)
-//            qrCoordinatorDelegate?.goToQRError()
         }
-        
     }
     
     final func returnKey() {
-        self.qrCodesession.stopRunning()
-        self.qrView.layer.sublayers?.removeLast()
+        qrCodesession.stopRunning()
+        qrView.layer.sublayers?.removeLast()
         if operators != nil {
-//            self.qrCoordinatorDelegate?.goToExit()
-            self.navigationController?.popViewController(animated: true)
-            self.delegate?.setResultOfBusinessLogic(qrData, operators!)
+            GlobalModule.qrOperator = operators
+            GlobalModule.qrData = qrData
+            dismiss(animated: false)
+            //navigationController?.popViewController(animated: true)
         } else {
- //           qrCoordinatorDelegate?.goToQRError()
             performSegue(withIdentifier: "qrError", sender: nil)
         }
     }
     
     @IBAction func back(_ sender: UIButton) {
-        self.qrCodesession.stopRunning()
-        self.qrView.layer.sublayers?.removeLast()
-//        self.qrCoordinatorDelegate?.goToExit()
-        self.navigationController?.popViewController(animated: true)
-        
+        qrCodesession.stopRunning()
+        qrView.layer.sublayers?.removeLast()
+        dismiss(animated: false)
+        //navigationController?.popViewController(animated: true)
     }
-    
-    deinit {
-        print("QR Deinit")
-    }
-    
 }

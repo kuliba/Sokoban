@@ -233,8 +233,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
                 addCloseColorButton(with: UIColor(hexString: "#ffffff"))
 
                 self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4)))", color: "#ffffff")
-                button.alpha = 0.4
-                button.isUserInteractionEnabled = false
+//                button.alpha = 0.4
+//                button.isUserInteractionEnabled = false
 
                 button2.alpha = 0.4
                 button2.isUserInteractionEnabled = false
@@ -1102,7 +1102,7 @@ extension ProductViewController{
 //            cell.titleLable.isSkeletonable = true
 //            cell.operation = sortedAccount
 //            let data = groupByCategory.forEach({$0.value[indexPath.row]})
-            _ = groupByCategoryAccount[indexPath.section] as? Array<Any>
+            _ = groupByCategoryAccount[indexPath.section]
 //                let data = Array(groupByCategory.values)[indexPath.section]
             //            sorted[indexPath.section].value[indexPath.item]
             cell.operation = nil
@@ -1330,6 +1330,7 @@ extension ProductViewController{
 
 extension ProductViewController: CtoBDelegate {
     func sendMyDataBack(product: UserAllCardsModel?) {
+        
         self.product = product
     }
     
@@ -1422,7 +1423,7 @@ extension ProductViewController: UIViewControllerTransitioningDelegate {
 
         let presenter = PresentationController(presentedViewController: presented, presenting: presenting)
         if halfScreen == true {
-            presenter.height = 490
+            presenter.height = 550
         } else {
             presenter.height = 310
         }

@@ -33,6 +33,10 @@ extension DepositCalculatorViewController: UICollectionViewDelegateFlowLayout {
             return CGSize(
                 width: Int(collectionView.bounds.width) - 40,
                 height: height)
+        case 3:
+            return CGSize(
+                width: collectionView.bounds.width - 40,
+                height: 180)
         default:
             return CGSize(
                 width: collectionView.bounds.width,

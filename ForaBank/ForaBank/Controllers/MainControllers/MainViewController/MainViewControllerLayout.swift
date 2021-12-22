@@ -169,15 +169,10 @@ extension MainViewController {
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .absolute(80),
             heightDimension: .absolute(96))
-
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-      
         let section = NSCollectionLayoutSection(group: group)
-
         section.interGroupSpacing = 4
         section.contentInsets = .init(top: 16, leading: 8, bottom: 32, trailing: 20)
-        
-        
         section.orthogonalScrollingBehavior = .continuous
         let sectionHeader = createSectionHeader()
         sectionHeader.contentInsets = .init(top: 0, leading: 12, bottom: 0, trailing: 0)

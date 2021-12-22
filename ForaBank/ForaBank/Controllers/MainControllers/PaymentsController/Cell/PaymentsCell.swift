@@ -138,6 +138,13 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
                     
                 }
             }
+            let phoneNumber = payment.lastMobilePayment?.additionalList?.filter{$0.fieldName == "a3_NUMBER_1_2"}
+            let number = phoneNumber?.first?.fieldValue ?? ""
+            let mask = StringMask(mask: "+7 (000) 000-00-00")
+            self.titleLabel.text = mask.mask(string: number)
+            guard let avatarImage = UIImage(named: "smartphonegray") else { return }
+            self.iconImageView.image = avatarImage
+            
         } else if payment.lastPhonePayment?.bankID != nil {
             guard let banks = Dict.shared.banks  else {
                 return
@@ -265,7 +272,6 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
                 
                 if message != nil {
                     DispatchQueue.main.async {
-                        print(message ?? "")
                         guard let avatarImage = UIImage(named: "smartphonegray") else { return }
                         self.iconImageView.image = avatarImage
                     }

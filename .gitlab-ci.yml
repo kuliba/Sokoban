@@ -1,0 +1,52 @@
+############
+
+stages:
+  - test
+  - build
+  - deploy
+
+variables:
+  LC_ALL: "en_US.UTF-8"
+  LANG: "en_US.UTF-8"
+  GIT_STRATEGY: clone
+  GEM_HOME: .vendor/gem_install
+
+before_script:
+  - gem install bundler
+  - bundle install
+
+# start only on runner with label "macos"
+default:
+  tags:
+    - macos
+
+fastlane-test:
+  stage: test
+  when: always
+  only:
+    - master
+    - develop
+    - merge_request
+  script:
+    - bundle exec fastlane test
+
+fastlane-build-beta:
+  stage: build
+  when: on_success
+  allow_failure: false
+  only:
+    - develop
+  script:
+    - bundle exec fastlane build production:false
+  artifacts:
+    paths:
+      - ./fastlane/build/$APP_NAME.ipa
+    expire_in: 1 week
+
+fastlane-deploy:
+  stage: deploy
+  when: on_success
+  only:
+    - develop
+  script:
+    - bundle exec fastlane deploy

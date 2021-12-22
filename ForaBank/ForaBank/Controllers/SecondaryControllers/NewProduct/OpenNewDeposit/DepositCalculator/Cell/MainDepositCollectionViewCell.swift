@@ -32,14 +32,7 @@ class MainDepositCollectionViewCell: UICollectionViewCell {
         depositNameLabel.text = viewModel.name
         maxPercentDepositLabel.text = "до \(viewModel.generalСondition?.maxRate ?? 0) %"
         minSummDepositLabel.text = "\(viewModel.generalСondition?.minSum ?? 0) ₽"
-        maxDateDepositLabel.text = "До \((viewModel.generalСondition?.maxTerm ?? 0) / 365) лет"
-//        if let detailText = viewModel.generalСondition?.generalTxtСondition {
-//            var labelText = ""
-//            detailText.forEach { element in
-//                labelText = labelText + "• " + element + "\n"
-//            }
-//            detailLabel.text = labelText
-//        }
+        maxDateDepositLabel.text = viewModel.generalСondition?.maxTermTxt
         
         /// design
         backgroundColor = UIColor(hexString: viewModel.generalСondition?.design?.background?.first ?? "")

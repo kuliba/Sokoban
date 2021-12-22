@@ -77,7 +77,7 @@ final class CardChooseView: UIView {
     private func setupRealmData(with model: UserAllCardsModel) {
         hideAll(false)
         
-        if model.productType == "ACCOUNT" {
+        if model.productType == "ACCOUNT" || model.productType == "DEPOSIT" {
             imageView.image = model.smallDesign?.convertSVGStringToImage() ?? #imageLiteral(resourceName: "AccImage")
             cardTypeImage.isHidden = true
         }
@@ -100,14 +100,13 @@ final class CardChooseView: UIView {
     private func setupData(with model: GetProductListDatum) {
         hideAll(false)
         
-        if model.productType == "ACCOUNT" {
+        if model.productType == "ACCOUNT" || model.productType == "DEPOSIT" {
             imageView.image = model.smallDesign?.convertSVGStringToImage() ?? #imageLiteral(resourceName: "AccImage")
             cardTypeImage.isHidden = true
         }
         else if model.productType == "CARD" {
             self.imageView.image = model.smallDesign?.convertSVGStringToImage() ?? #imageLiteral(resourceName: "credit-card")
         }
-        
         
         let balance = Double(model.balance ?? 0)
         self.balanceLabel.text = balance.currencyFormatter(symbol: model.currency ?? "")

@@ -126,8 +126,17 @@ class BottomInputViewWithRateView: UIView {
         DispatchQueue.main.async {
             var amount = ""
             if let text = self.amountTextField.text {
-                let unformatText = self.moneyFormatter?.unformat(text)
-                amount = unformatText ?? ""
+                if self.currencySymbol != "" {
+                    let unformatText = self.moneyFormatter?.unformat(text)
+                    if unformatText == "" || unformatText == nil {
+                        amount = "0"
+                    } else {
+                        amount = unformatText ?? ""
+                    }
+                } else {
+                    let unformatText = self.moneyFormatter?.unformat(text)
+                    amount = unformatText ?? ""
+                }
             }
             self.moneyFormatter = SumTextInputFormatter(textPattern: "# ###,## \(self.currencySymbol)")
             self.moneyInputController.formatter = self.moneyFormatter

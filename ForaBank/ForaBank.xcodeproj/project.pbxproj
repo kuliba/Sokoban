@@ -56,8 +56,6 @@
 		0B66E8DA26CC5F1E00FD735D /* SquareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B66E8D926CC5F1E00FD735D /* SquareView.swift */; };
 		0B66E8DC26CC5F4D00FD735D /* QRScannerCodeDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B66E8DB26CC5F4D00FD735D /* QRScannerCodeDelegate.swift */; };
 		0B66E8DE26CC5F8900FD735D /* QRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B66E8DD26CC5F8900FD735D /* QRViewController.swift */; };
-		0B66E8E126CC62BC00FD735D /* NetDetect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B66E8E026CC62BC00FD735D /* NetDetect.swift */; };
-		0B66E8E326CC62DF00FD735D /* NetStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B66E8E226CC62DF00FD735D /* NetStatus.swift */; };
 		0B66E8E626CC658A00FD735D /* GKHStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0B66E8E526CC658A00FD735D /* GKHStoryboard.storyboard */; };
 		0B747890267343B400C44F79 /* KeyExchangeDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B74788F267343B400C44F79 /* KeyExchangeDecodebleModel.swift */; };
 		0B797C9226E6ABC100589DBF /* GetBankList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B797C9126E6ABC100589DBF /* GetBankList.swift */; };
@@ -126,7 +124,7 @@
 		0BA14E1C2715628A0098E422 /* GetAllLatestPaymentsDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA14E1B2715628A0098E422 /* GetAllLatestPaymentsDecodableModel.swift */; };
 		0BA251ED26C266A400AD087A /* CreateServiceTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA251EC26C266A400AD087A /* CreateServiceTransferDecodableModel.swift */; };
 		0BA251EF26C26AE700AD087A /* AntiFraudDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA251EE26C26AE700AD087A /* AntiFraudDecodableModel.swift */; };
-		0BA251F126C26BE200AD087A /* СreateMe2MePullTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA251F026C26BE200AD087A /* СreateMe2MePullTransferDecodableModel.swift */; };
+		0BA251F126C26BE200AD087A /* CreateMe2MePullTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA251F026C26BE200AD087A /* CreateMe2MePullTransferDecodableModel.swift */; };
 		0BA251F326C26FE000AD087A /* CreateFastPaymentContractDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA251F226C26FE000AD087A /* CreateFastPaymentContractDecodableModel.swift */; };
 		0BA251F526C270A100AD087A /* UpdateFastPaymentContractDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA251F426C270A100AD087A /* UpdateFastPaymentContractDecodableModel.swift */; };
 		0BA251F726C2782500AD087A /* FastPaymentContractFindListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA251F626C2782500AD087A /* FastPaymentContractFindListDecodableModel.swift */; };
@@ -185,8 +183,8 @@
 		0BE270B826B9DC4200FA958C /* ExtensionBottomInputViewExchange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE270B726B9DC4200FA958C /* ExtensionBottomInputViewExchange.swift */; };
 		0BEC8939267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC8938267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift */; };
 		0BEC893B2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC893A2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift */; };
-		0BEC893D2672591A00D8BD22 /* GetCardListDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BEC893C2672591A00D8BD22 /* GetCardListDecodebleModel.swift */; };
 		0BF0BF4A275E818C006AE967 /* ClearRealm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF0BF49275E818C006AE967 /* ClearRealm.swift */; };
+		0BF0BF4C2767E337006AE967 /* NetMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF0BF4B2767E337006AE967 /* NetMonitor.swift */; };
 		0BF3484E268A455C005138A8 /* AllCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0BF3484D268A455C005138A8 /* AllCardView.xib */; };
 		0BF34850268A52CD005138A8 /* AllCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF3484F268A52CD005138A8 /* AllCardView.swift */; };
 		0BF34852268A5F54005138A8 /* GetVerificationCodeDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF34851268A5F54005138A8 /* GetVerificationCodeDecodableModel.swift */; };
@@ -295,21 +293,27 @@
 		77067CD9275FBB70000C442B /* StringExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77067CD8275FBB70000C442B /* StringExtensionsTests.swift */; };
 		77067CDB275FBE8F000C442B /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77067CDA275FBE8F000C442B /* String+Extensions.swift */; };
 		77067CDD275FCBA5000C442B /* DownloadQueueSerialsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77067CDC275FCBA5000C442B /* DownloadQueueSerialsStorage.swift */; };
+		7757624B276FEC4F00B902BF /* URLHostTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7757624A276FEC4F00B902BF /* URLHostTests.swift */; };
+		7757624D276FEE2400B902BF /* ForaBankUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7757624C276FEE2400B902BF /* ForaBankUITests.swift */; };
 		77C026E6275E6299002BE1F6 /* GKHHistoryModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C026E5275E6299002BE1F6 /* GKHHistoryModelTests.swift */; };
 		77D2D9AE275AB90A0097234D /* RealmResults+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D2D9AC275AB9090097234D /* RealmResults+Extension.swift */; };
 		77D2D9AF275AB90A0097234D /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D2D9AD275AB90A0097234D /* Array+Extensions.swift */; };
 		77D2D9B2275AB9280097234D /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D2D9B0275AB9280097234D /* Item.swift */; };
 		77D2D9B3275AB9280097234D /* RealmObjectsDiffTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D2D9B1275AB9280097234D /* RealmObjectsDiffTests.swift */; };
-		A518978A2748079D00F7B2B4 /* InternetTVDetailsFormController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A51897892748079D00F7B2B4 /* InternetTVDetailsFormController.swift */; };
+		A50869DA2767F394004C5E17 /* InternetTVSuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50869D82767F394004C5E17 /* InternetTVSuccessView.swift */; };
+		A50869DB2767F394004C5E17 /* InternetTVSuccess.xib in Resources */ = {isa = PBXBuildFile; fileRef = A50869D92767F394004C5E17 /* InternetTVSuccess.xib */; };
+		A50869DD2768CA4A004C5E17 /* InternetTVSourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50869DC2768CA4A004C5E17 /* InternetTVSourceView.swift */; };
+		A50869E027690E53004C5E17 /* InternetTVConfirmViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50869DF27690E53004C5E17 /* InternetTVConfirmViewModel.swift */; };
+		A50869E2276B9BAE004C5E17 /* QRFoundOrgCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50869E1276B9BAE004C5E17 /* QRFoundOrgCell.swift */; };
 		A52A8FA0274800D600288FBD /* InternetTVRegionSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52A8F9F274800D600288FBD /* InternetTVRegionSearchController.swift */; };
-		A536C7CE274C0FDC002D5EAB /* InternetInputCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A536C7CD274C0FDC002D5EAB /* InternetInputCell.xib */; };
 		A55A52D92746FC3B00641DD0 /* InternetTV.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A55A52D82746FC3B00641DD0 /* InternetTV.storyboard */; };
 		A55A52DB2746FF1700641DD0 /* InternetTVMainController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55A52DA2746FF1700641DD0 /* InternetTVMainController.swift */; };
+		A5662694275D3CD000FFE31A /* InternetTVSelectDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5662693275D3CD000FFE31A /* InternetTVSelectDialog.swift */; };
+		A5662696275E945A00FFE31A /* InternetTVSelectController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5662695275E945A00FFE31A /* InternetTVSelectController.swift */; };
+		A5662698275FDD2400FFE31A /* checkBtn.xib in Resources */ = {isa = PBXBuildFile; fileRef = A5662697275FDD2300FFE31A /* checkBtn.xib */; };
 		A5C7A1AE275BEF58003BEF6D /* RequisiteDO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C7A1AD275BEF58003BEF6D /* RequisiteDO.swift */; };
 		A5C7A1B1275BF0B9003BEF6D /* InternetTVApiRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C7A1B0275BF0B9003BEF6D /* InternetTVApiRequests.swift */; };
-		A5C7A1B3275BF1A0003BEF6D /* InternetTVInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C7A1B2275BF1A0003BEF6D /* InternetTVInputCell.swift */; };
 		A5C7A1B5275BF2C3003BEF6D /* IsSingleServiceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C7A1B4275BF2C3003BEF6D /* IsSingleServiceModel.swift */; };
-		A5C7A1B7275BF3C4003BEF6D /* InternetTVDetailsFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C7A1B6275BF3C4003BEF6D /* InternetTVDetailsFormViewModel.swift */; };
 		A5C7A1B9275C023F003BEF6D /* InternetTVMainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C7A1B8275C023E003BEF6D /* InternetTVMainViewModel.swift */; };
 		A5C7A1BB275C0A2A003BEF6D /* InternetLatestOpsDO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C7A1BA275C0A2A003BEF6D /* InternetLatestOpsDO.swift */; };
 		A5C7A1BD275C0B15003BEF6D /* InternetTVLatestOperationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C7A1BC275C0B15003BEF6D /* InternetTVLatestOperationsViewModel.swift */; };
@@ -331,6 +335,7 @@
 		ED0B48AF2681CC6D0037EA06 /* CodeVerificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED0B48AE2681CC6D0037EA06 /* CodeVerificationViewModel.swift */; };
 		ED147D4C26BAD7E0002F66C8 /* BottomInputView.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED147D4B26BAD7E0002F66C8 /* BottomInputView.xib */; };
 		ED147D4F26BC1237002F66C8 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = ED147D4E26BC1237002F66C8 /* FirebaseCrashlytics */; };
+		ED234CD2276BA08300B23985 /* JSONCodingKeyJSONAny.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED234CD1276BA08300B23985 /* JSONCodingKeyJSONAny.swift */; };
 		ED2BE17F26A0498400647CB1 /* AllCardListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2BE17E26A0498400647CB1 /* AllCardListViewController.swift */; };
 		ED2BE18126A04A4300647CB1 /* CastomCardXIB.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED2BE18026A04A4300647CB1 /* CastomCardXIB.xib */; };
 		ED2BE18326A04A8800647CB1 /* BottomInputViewWithRate.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED2BE18226A04A8800647CB1 /* BottomInputViewWithRate.xib */; };
@@ -369,6 +374,12 @@
 		ED664BB2274512C80050D1E0 /* ResultAccountStatementController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED664BB1274512C80050D1E0 /* ResultAccountStatementController.swift */; };
 		ED664BB4274513040050D1E0 /* ResultAccountStatementController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ED664BB3274513040050D1E0 /* ResultAccountStatementController.storyboard */; };
 		ED664BB7274530320050D1E0 /* AccountStatementPDFController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED664BB6274530320050D1E0 /* AccountStatementPDFController.swift */; };
+		ED684CD52760C75600AA7A33 /* MakeDepositDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED684CD42760C75600AA7A33 /* MakeDepositDecodableModel.swift */; };
+		ED684CEE27638E6700AA7A33 /* DocDepositCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED684CEC27638E6700AA7A33 /* DocDepositCollectionViewCell.swift */; };
+		ED684CEF27638E6700AA7A33 /* DocDepositCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED684CED27638E6700AA7A33 /* DocDepositCollectionViewCell.xib */; };
+		ED684CF22763955E00AA7A33 /* DocDepositTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED684CF02763955E00AA7A33 /* DocDepositTableViewCell.swift */; };
+		ED684CF32763955E00AA7A33 /* DocDepositTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED684CF12763955E00AA7A33 /* DocDepositTableViewCell.xib */; };
+		ED687C2D2768906800A38E87 /* DepositInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED687C2C2768906800A38E87 /* DepositInfoViewController.swift */; };
 		ED75CDF926E245EE0074F5D5 /* GoogleService-Info-test.plist in Resources */ = {isa = PBXBuildFile; fileRef = ED75CDF826E245EE0074F5D5 /* GoogleService-Info-test.plist */; };
 		ED75CDFB26E27F150074F5D5 /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED75CDFA26E27F150074F5D5 /* UIApplication.swift */; };
 		ED75CDFD26E2AA5B0074F5D5 /* RequestMeToMeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED75CDFC26E2AA5B0074F5D5 /* RequestMeToMeModel.swift */; };
@@ -411,7 +422,6 @@
 		EDB14381265FDA410028EF5A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14380265FDA410028EF5A /* AppDelegate.swift */; };
 		EDB14383265FDA410028EF5A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14382265FDA410028EF5A /* SceneDelegate.swift */; };
 		EDB14385265FDA410028EF5A /* LoginCardEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14384265FDA410028EF5A /* LoginCardEntryViewController.swift */; };
-		EDB143A3265FDA430028EF5A /* ForaBankUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB143A2265FDA430028EF5A /* ForaBankUITests.swift */; };
 		EDB143B5265FDE960028EF5A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EDB143B4265FDE960028EF5A /* Assets.xcassets */; };
 		EDB143C4265FDEC90028EF5A /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EDB143B8265FDEC90028EF5A /* Roboto-Medium.ttf */; };
 		EDB143C5265FDEC90028EF5A /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EDB143B9265FDEC90028EF5A /* Roboto-Light.ttf */; };
@@ -528,6 +538,13 @@
 		EDFFCAF82683943A004EE095 /* UISwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFFCAF72683943A004EE095 /* UISwitch.swift */; };
 		EDFFCAFB2683C135004EE095 /* PaymentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFFCAFA2683C135004EE095 /* PaymentType.swift */; };
 		EDFFCAFD2683C18B004EE095 /* ContactInputViewController API.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFFCAFC2683C18B004EE095 /* ContactInputViewController API.swift */; };
+		F63D409A487FD3AD287E63D1 /* InternetInputCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F63D4C0F67E89D23EA2C68CC /* InternetInputCell.xib */; };
+		F63D42697A06C6D37A64F590 /* InternetTVDetailsFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D42613FF2F4EDEA6BA9D3 /* InternetTVDetailsFormViewModel.swift */; };
+		F63D42FC24C643FCB7631F83 /* InternetTVDetailsFormController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D4DD4905E8BA594B990E1 /* InternetTVDetailsFormController.swift */; };
+		F63D43A404CF8AA69942CCFF /* InternetTVSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D46CF73A04FDB7B1061E0 /* InternetTVSuccessViewController.swift */; };
+		F63D45F2B6942EA98C94F9FE /* CheckBoxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F63D4056E8B88CC673C85295 /* CheckBoxView.xib */; };
+		F63D4A3FB30397A82426313C /* InternetTVConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D4A26E0479DD5215DB784 /* InternetTVConfirmViewController.swift */; };
+		F63D4C7CF864543AD9AABF9A /* InternetTVInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D42CEA742F58D23C97218 /* InternetTVInputCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -597,8 +614,6 @@
 		0B66E8D926CC5F1E00FD735D /* SquareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquareView.swift; sourceTree = "<group>"; };
 		0B66E8DB26CC5F4D00FD735D /* QRScannerCodeDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerCodeDelegate.swift; sourceTree = "<group>"; };
 		0B66E8DD26CC5F8900FD735D /* QRViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRViewController.swift; sourceTree = "<group>"; };
-		0B66E8E026CC62BC00FD735D /* NetDetect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetDetect.swift; sourceTree = "<group>"; };
-		0B66E8E226CC62DF00FD735D /* NetStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetStatus.swift; sourceTree = "<group>"; };
 		0B66E8E526CC658A00FD735D /* GKHStoryboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = GKHStoryboard.storyboard; sourceTree = "<group>"; };
 		0B74788F267343B400C44F79 /* KeyExchangeDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyExchangeDecodebleModel.swift; sourceTree = "<group>"; };
 		0B797C9126E6ABC100589DBF /* GetBankList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetBankList.swift; sourceTree = "<group>"; };
@@ -666,7 +681,7 @@
 		0BA14E1B2715628A0098E422 /* GetAllLatestPaymentsDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAllLatestPaymentsDecodableModel.swift; sourceTree = "<group>"; };
 		0BA251EC26C266A400AD087A /* CreateServiceTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateServiceTransferDecodableModel.swift; sourceTree = "<group>"; };
 		0BA251EE26C26AE700AD087A /* AntiFraudDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AntiFraudDecodableModel.swift; sourceTree = "<group>"; };
-		0BA251F026C26BE200AD087A /* СreateMe2MePullTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "СreateMe2MePullTransferDecodableModel.swift"; sourceTree = "<group>"; };
+		0BA251F026C26BE200AD087A /* CreateMe2MePullTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateMe2MePullTransferDecodableModel.swift; sourceTree = "<group>"; };
 		0BA251F226C26FE000AD087A /* CreateFastPaymentContractDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateFastPaymentContractDecodableModel.swift; sourceTree = "<group>"; };
 		0BA251F426C270A100AD087A /* UpdateFastPaymentContractDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateFastPaymentContractDecodableModel.swift; sourceTree = "<group>"; };
 		0BA251F626C2782500AD087A /* FastPaymentContractFindListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentContractFindListDecodableModel.swift; sourceTree = "<group>"; };
@@ -723,8 +738,8 @@
 		0BE270B726B9DC4200FA958C /* ExtensionBottomInputViewExchange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionBottomInputViewExchange.swift; sourceTree = "<group>"; };
 		0BEC8938267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallPushDeviceDecodebleModel.swift; sourceTree = "<group>"; };
 		0BEC893A2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistredPushDeviceTorUserDecodebleModel.swift; sourceTree = "<group>"; };
-		0BEC893C2672591A00D8BD22 /* GetCardListDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCardListDecodebleModel.swift; sourceTree = "<group>"; };
 		0BF0BF49275E818C006AE967 /* ClearRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClearRealm.swift; sourceTree = "<group>"; };
+		0BF0BF4B2767E337006AE967 /* NetMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetMonitor.swift; sourceTree = "<group>"; };
 		0BF3484D268A455C005138A8 /* AllCardView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AllCardView.xib; sourceTree = "<group>"; };
 		0BF3484F268A52CD005138A8 /* AllCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllCardView.swift; sourceTree = "<group>"; };
 		0BF34851268A5F54005138A8 /* GetVerificationCodeDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetVerificationCodeDecodableModel.swift; sourceTree = "<group>"; };
@@ -829,21 +844,27 @@
 		77067CD8275FBB70000C442B /* StringExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensionsTests.swift; sourceTree = "<group>"; };
 		77067CDA275FBE8F000C442B /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		77067CDC275FCBA5000C442B /* DownloadQueueSerialsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadQueueSerialsStorage.swift; sourceTree = "<group>"; };
+		7757624A276FEC4F00B902BF /* URLHostTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLHostTests.swift; sourceTree = "<group>"; };
+		7757624C276FEE2400B902BF /* ForaBankUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForaBankUITests.swift; sourceTree = "<group>"; };
 		77C026E5275E6299002BE1F6 /* GKHHistoryModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHHistoryModelTests.swift; sourceTree = "<group>"; };
 		77D2D9AC275AB9090097234D /* RealmResults+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RealmResults+Extension.swift"; sourceTree = "<group>"; };
 		77D2D9AD275AB90A0097234D /* Array+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
 		77D2D9B0275AB9280097234D /* Item.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		77D2D9B1275AB9280097234D /* RealmObjectsDiffTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealmObjectsDiffTests.swift; sourceTree = "<group>"; };
-		A51897892748079D00F7B2B4 /* InternetTVDetailsFormController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVDetailsFormController.swift; sourceTree = "<group>"; };
+		A50869D82767F394004C5E17 /* InternetTVSuccessView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetTVSuccessView.swift; sourceTree = "<group>"; };
+		A50869D92767F394004C5E17 /* InternetTVSuccess.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InternetTVSuccess.xib; sourceTree = "<group>"; };
+		A50869DC2768CA4A004C5E17 /* InternetTVSourceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVSourceView.swift; sourceTree = "<group>"; };
+		A50869DF27690E53004C5E17 /* InternetTVConfirmViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVConfirmViewModel.swift; sourceTree = "<group>"; };
+		A50869E1276B9BAE004C5E17 /* QRFoundOrgCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRFoundOrgCell.swift; sourceTree = "<group>"; };
 		A52A8F9F274800D600288FBD /* InternetTVRegionSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVRegionSearchController.swift; sourceTree = "<group>"; };
-		A536C7CD274C0FDC002D5EAB /* InternetInputCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InternetInputCell.xib; sourceTree = "<group>"; };
 		A55A52D82746FC3B00641DD0 /* InternetTV.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = InternetTV.storyboard; sourceTree = "<group>"; };
 		A55A52DA2746FF1700641DD0 /* InternetTVMainController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVMainController.swift; sourceTree = "<group>"; };
+		A5662693275D3CD000FFE31A /* InternetTVSelectDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVSelectDialog.swift; sourceTree = "<group>"; };
+		A5662695275E945A00FFE31A /* InternetTVSelectController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVSelectController.swift; sourceTree = "<group>"; };
+		A5662697275FDD2300FFE31A /* checkBtn.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = checkBtn.xib; sourceTree = "<group>"; };
 		A5C7A1AD275BEF58003BEF6D /* RequisiteDO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequisiteDO.swift; sourceTree = "<group>"; };
 		A5C7A1B0275BF0B9003BEF6D /* InternetTVApiRequests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVApiRequests.swift; sourceTree = "<group>"; };
-		A5C7A1B2275BF1A0003BEF6D /* InternetTVInputCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVInputCell.swift; sourceTree = "<group>"; };
 		A5C7A1B4275BF2C3003BEF6D /* IsSingleServiceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsSingleServiceModel.swift; sourceTree = "<group>"; };
-		A5C7A1B6275BF3C4003BEF6D /* InternetTVDetailsFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVDetailsFormViewModel.swift; sourceTree = "<group>"; };
 		A5C7A1B8275C023E003BEF6D /* InternetTVMainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVMainViewModel.swift; sourceTree = "<group>"; };
 		A5C7A1BA275C0A2A003BEF6D /* InternetLatestOpsDO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetLatestOpsDO.swift; sourceTree = "<group>"; };
 		A5C7A1BC275C0B15003BEF6D /* InternetTVLatestOperationsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVLatestOperationsViewModel.swift; sourceTree = "<group>"; };
@@ -863,6 +884,7 @@
 		ED0B48AB26812F450037EA06 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		ED0B48AE2681CC6D0037EA06 /* CodeVerificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeVerificationViewModel.swift; sourceTree = "<group>"; };
 		ED147D4B26BAD7E0002F66C8 /* BottomInputView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BottomInputView.xib; sourceTree = "<group>"; };
+		ED234CD1276BA08300B23985 /* JSONCodingKeyJSONAny.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONCodingKeyJSONAny.swift; sourceTree = "<group>"; };
 		ED2BE17E26A0498400647CB1 /* AllCardListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllCardListViewController.swift; sourceTree = "<group>"; };
 		ED2BE18026A04A4300647CB1 /* CastomCardXIB.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CastomCardXIB.xib; sourceTree = "<group>"; };
 		ED2BE18226A04A8800647CB1 /* BottomInputViewWithRate.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BottomInputViewWithRate.xib; sourceTree = "<group>"; };
@@ -898,6 +920,12 @@
 		ED664BB1274512C80050D1E0 /* ResultAccountStatementController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultAccountStatementController.swift; sourceTree = "<group>"; };
 		ED664BB3274513040050D1E0 /* ResultAccountStatementController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ResultAccountStatementController.storyboard; sourceTree = "<group>"; };
 		ED664BB6274530320050D1E0 /* AccountStatementPDFController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountStatementPDFController.swift; sourceTree = "<group>"; };
+		ED684CD42760C75600AA7A33 /* MakeDepositDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeDepositDecodableModel.swift; sourceTree = "<group>"; };
+		ED684CEC27638E6700AA7A33 /* DocDepositCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocDepositCollectionViewCell.swift; sourceTree = "<group>"; };
+		ED684CED27638E6700AA7A33 /* DocDepositCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DocDepositCollectionViewCell.xib; sourceTree = "<group>"; };
+		ED684CF02763955E00AA7A33 /* DocDepositTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocDepositTableViewCell.swift; sourceTree = "<group>"; };
+		ED684CF12763955E00AA7A33 /* DocDepositTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DocDepositTableViewCell.xib; sourceTree = "<group>"; };
+		ED687C2C2768906800A38E87 /* DepositInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositInfoViewController.swift; sourceTree = "<group>"; };
 		ED75CDF826E245EE0074F5D5 /* GoogleService-Info-test.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-test.plist"; sourceTree = "<group>"; };
 		ED75CDFA26E27F150074F5D5 /* UIApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplication.swift; sourceTree = "<group>"; };
 		ED75CDFC26E2AA5B0074F5D5 /* RequestMeToMeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestMeToMeModel.swift; sourceTree = "<group>"; };
@@ -945,7 +973,6 @@
 		EDB14393265FDA430028EF5A /* ForaBankTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ForaBankTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDB14399265FDA430028EF5A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EDB1439E265FDA430028EF5A /* ForaBankUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ForaBankUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		EDB143A2265FDA430028EF5A /* ForaBankUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForaBankUITests.swift; sourceTree = "<group>"; };
 		EDB143A4265FDA430028EF5A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EDB143B0265FDB380028EF5A /* ForaBank.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ForaBank.entitlements; sourceTree = "<group>"; };
 		EDB143B4265FDE960028EF5A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -1062,6 +1089,13 @@
 		EDFFCAF72683943A004EE095 /* UISwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UISwitch.swift; sourceTree = "<group>"; };
 		EDFFCAFA2683C135004EE095 /* PaymentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentType.swift; sourceTree = "<group>"; };
 		EDFFCAFC2683C18B004EE095 /* ContactInputViewController API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContactInputViewController API.swift"; sourceTree = "<group>"; };
+		F63D4056E8B88CC673C85295 /* CheckBoxView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CheckBoxView.xib; sourceTree = "<group>"; };
+		F63D42613FF2F4EDEA6BA9D3 /* InternetTVDetailsFormViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetTVDetailsFormViewModel.swift; sourceTree = "<group>"; };
+		F63D42CEA742F58D23C97218 /* InternetTVInputCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetTVInputCell.swift; sourceTree = "<group>"; };
+		F63D46CF73A04FDB7B1061E0 /* InternetTVSuccessViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetTVSuccessViewController.swift; sourceTree = "<group>"; };
+		F63D4A26E0479DD5215DB784 /* InternetTVConfirmViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetTVConfirmViewController.swift; sourceTree = "<group>"; };
+		F63D4C0F67E89D23EA2C68CC /* InternetInputCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InternetInputCell.xib; sourceTree = "<group>"; };
+		F63D4DD4905E8BA594B990E1 /* InternetTVDetailsFormController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetTVDetailsFormController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1226,6 +1260,7 @@
 				0BDE453226E3EA4A00B64A0A /* ExtensionQRReadPDF.swift */,
 				0B8C1C48273B04DE00BA5CAC /* QRScanerInfoView.swift */,
 				0B8C1C4A273B09CD00BA5CAC /* QRErrorViewController.swift */,
+				A50869E1276B9BAE004C5E17 /* QRFoundOrgCell.swift */,
 			);
 			path = QR;
 			sourceTree = "<group>";
@@ -1233,8 +1268,7 @@
 		0B66E8DF26CC62A100FD735D /* NetDetect */ = {
 			isa = PBXGroup;
 			children = (
-				0B66E8E026CC62BC00FD735D /* NetDetect.swift */,
-				0B66E8E226CC62DF00FD735D /* NetStatus.swift */,
+				0BF0BF4B2767E337006AE967 /* NetMonitor.swift */,
 			);
 			path = NetDetect;
 			sourceTree = "<group>";
@@ -1621,13 +1655,13 @@
 		0BEC89372672305600D8BD22 /* NetworkingLoginModel */ = {
 			isa = PBXGroup;
 			children = (
-				EDF681F7266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift */,
-				EDF681F8266F9EC800FD5C07 /* LoginDoCodableModel.swift */,
-				0B8BE08E266FBE0500E96CAA /* CSRFDecodableModel.swift */,
 				0B8BE090266FDA1B00E96CAA /* CheckClientDecodebleModel.swift */,
-				0B8BE092266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift */,
-				0B8BE0942670D4A300E96CAA /* GetCodeDecodebleModel.swift */,
+				0B8BE08E266FBE0500E96CAA /* CSRFDecodableModel.swift */,
 				0B8BE0962670D53600E96CAA /* DoRegistrationDecodebleModel.swift */,
+				0B8BE0942670D4A300E96CAA /* GetCodeDecodebleModel.swift */,
+				EDF681F8266F9EC800FD5C07 /* LoginDoCodableModel.swift */,
+				EDF681F7266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift */,
+				0B8BE092266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift */,
 			);
 			path = NetworkingLoginModel;
 			sourceTree = "<group>";
@@ -2092,6 +2126,16 @@
 			path = SampleTypes;
 			sourceTree = "<group>";
 		};
+		A50869DE27690CB0004C5E17 /* success */ = {
+			isa = PBXGroup;
+			children = (
+				A50869D92767F394004C5E17 /* InternetTVSuccess.xib */,
+				A50869D82767F394004C5E17 /* InternetTVSuccessView.swift */,
+				F63D46CF73A04FDB7B1061E0 /* InternetTVSuccessViewController.swift */,
+			);
+			path = success;
+			sourceTree = "<group>";
+		};
 		A55A52D72746F94200641DD0 /* InternetTVControllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -2117,9 +2161,11 @@
 		A5C7A1A9275BEBE1003BEF6D /* presentation */ = {
 			isa = PBXGroup;
 			children = (
-				A5C7A1AC275BEC52003BEF6D /* info */,
-				A5C7A1AB275BEC2A003BEF6D /* detailsOperator */,
+				A50869DE27690CB0004C5E17 /* success */,
+				A5C7A1AC275BEC52003BEF6D /* dialogs */,
 				A5C7A1AA275BEC01003BEF6D /* operators */,
+				F63D4FC8C8C553E5473899D3 /* detailsOperator */,
+				F63D40CE4F39C6AFA5553C08 /* confirm */,
 			);
 			path = presentation;
 			sourceTree = "<group>";
@@ -2136,22 +2182,15 @@
 			path = operators;
 			sourceTree = "<group>";
 		};
-		A5C7A1AB275BEC2A003BEF6D /* detailsOperator */ = {
+		A5C7A1AC275BEC52003BEF6D /* dialogs */ = {
 			isa = PBXGroup;
 			children = (
-				A536C7CD274C0FDC002D5EAB /* InternetInputCell.xib */,
-				A51897892748079D00F7B2B4 /* InternetTVDetailsFormController.swift */,
-				A5C7A1B2275BF1A0003BEF6D /* InternetTVInputCell.swift */,
-				A5C7A1B6275BF3C4003BEF6D /* InternetTVDetailsFormViewModel.swift */,
+				A5662693275D3CD000FFE31A /* InternetTVSelectDialog.swift */,
+				F63D4056E8B88CC673C85295 /* CheckBoxView.xib */,
+				A5662695275E945A00FFE31A /* InternetTVSelectController.swift */,
+				A5662697275FDD2300FFE31A /* checkBtn.xib */,
 			);
-			path = detailsOperator;
-			sourceTree = "<group>";
-		};
-		A5C7A1AC275BEC52003BEF6D /* info */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = info;
+			path = dialogs;
 			sourceTree = "<group>";
 		};
 		A5C7A1AF275BF05A003BEF6D /* data */ = {
@@ -2861,6 +2900,7 @@
 				77067CD7275FBB40000C442B /* Extensions */,
 				77C026E9275E62E4002BE1F6 /* Realm */,
 				EDB14399265FDA430028EF5A /* Info.plist */,
+				7757624A276FEC4F00B902BF /* URLHostTests.swift */,
 			);
 			path = ForaBankTests;
 			sourceTree = "<group>";
@@ -2868,8 +2908,8 @@
 		EDB143A1265FDA430028EF5A /* ForaBankUITests */ = {
 			isa = PBXGroup;
 			children = (
-				EDB143A2265FDA430028EF5A /* ForaBankUITests.swift */,
 				EDB143A4265FDA430028EF5A /* Info.plist */,
+				7757624C276FEE2400B902BF /* ForaBankUITests.swift */,
 			);
 			path = ForaBankUITests;
 			sourceTree = "<group>";
@@ -3176,6 +3216,10 @@
 				EDDFE3B32756D54700F57C71 /* CalculatorDepositCollectionViewCell.swift */,
 				EDDFE3B42756D54700F57C71 /* CalculatorDepositCollectionViewCell.xib */,
 				EDDFE3B72756E6F900F57C71 /* DetailInformationCollectionViewCell.swift */,
+				ED684CEC27638E6700AA7A33 /* DocDepositCollectionViewCell.swift */,
+				ED684CED27638E6700AA7A33 /* DocDepositCollectionViewCell.xib */,
+				ED684CF02763955E00AA7A33 /* DocDepositTableViewCell.swift */,
+				ED684CF12763955E00AA7A33 /* DocDepositTableViewCell.xib */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -3201,6 +3245,7 @@
 		EDDFE3C4275972F200F57C71 /* ConfurmOpenDeposit */ = {
 			isa = PBXGroup;
 			children = (
+				EDEC407A27688FE300427FED /* View */,
 				EDDFE3C52759731B00F57C71 /* ConfurmOpenDepositViewController.swift */,
 				EDDFE3C727597A7600F57C71 /* PaymentViewController.swift */,
 			);
@@ -3243,6 +3288,14 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		EDEC407A27688FE300427FED /* View */ = {
+			isa = PBXGroup;
+			children = (
+				ED687C2C2768906800A38E87 /* DepositInfoViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		EDF681F0266F9EC800FD5C07 /* Service */ = {
 			isa = PBXGroup;
 			children = (
@@ -3279,78 +3332,79 @@
 			isa = PBXGroup;
 			children = (
 				0BDCF00B274A8A0800AAA1C3 /* NetworkingGKHModel */,
-				EDF681F5266F9EC800FD5C07 /* NetworkingModelProtocol */,
 				0BEC89372672305600D8BD22 /* NetworkingLoginModel */,
-				0BEC8938267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift */,
-				0BEC893A2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift */,
-				0BEC893C2672591A00D8BD22 /* GetCardListDecodebleModel.swift */,
-				0B74788F267343B400C44F79 /* KeyExchangeDecodebleModel.swift */,
-				0B9EC85C26739C0000D86EB2 /* GetCountriesDecodebleModel.swift */,
-				0B37F9772678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift */,
-				0B37F9792678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift */,
-				0B37F97B2678EC69007728FC /* AnywayPaymentDecodableModel.swift */,
-				0B37F97D267A10E4007728FC /* PrepareCard2PhoneDecodableModel.swift */,
-				0B37F97F267A11FB007728FC /* GetOwnerPhoneNumberPhoneDecodableModel.swift */,
-				0B37F981267A1814007728FC /* FastPaymentBanksListDecodableModel.swift */,
-				0B37F983267A18AC007728FC /* MakeCard2CardDecodableModel.swift */,
-				0B37F9872680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift */,
-				0B7A18AE268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift */,
-				0B7A18C226852D6B0007CC75 /* CreatTransferDecodableModel.swift */,
-				0B7A18C426852EFC0007CC75 /* MakeTransferDecodableModel.swift */,
-				0B7A18C62685BD130007CC75 /* GetBanksDecodableModel.swift */,
-				0B7A18C82685BF700007CC75 /* GetPaymentSystemListDecodableModel.swift */,
-				0B7A18CA268648030007CC75 /* GetProductListDecodableModel.swift */,
-				0BF34851268A5F54005138A8 /* GetVerificationCodeDecodableModel.swift */,
-				0BF34853268B2699005138A8 /* PrepareExternalDecodableModel.swift */,
-				0BF3485A268E5907005138A8 /* GetExchangeCurrencyRatesDecodableModel.swift */,
-				0BF3485C26931254005138A8 /* SuggestBankDecodableModel.swift */,
-				0BF3486326943DFB005138A8 /* SuggestCompanyDecodableModel.swift */,
-				68E6A29626A033F200A1D9A1 /* GetProductTemplateListDecodableModel.swift */,
-				68E6A29826A0340D00A1D9A1 /* GetCurrencyListDecodableModel.swift */,
-				68E6A29426A033D900A1D9A1 /* DeleteProductTemplateDecodableModel.swift */,
-				68E6A29226A033B700A1D9A1 /* CheckCardDecodableModel.swift */,
-				0BF348A0269E0CDA005138A8 /* LogoutDecodableModel.swift */,
-				0B05163026A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift */,
-				0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */,
-				0BA09E3326B08E1A0065D623 /* GetFullBankInfoListDecodableModel.swift */,
-				0BA251EC26C266A400AD087A /* CreateServiceTransferDecodableModel.swift */,
+				EDF681F5266F9EC800FD5C07 /* NetworkingModelProtocol */,
 				0BA251EE26C26AE700AD087A /* AntiFraudDecodableModel.swift */,
-				0BA251F026C26BE200AD087A /* СreateMe2MePullTransferDecodableModel.swift */,
-				0BA251F226C26FE000AD087A /* CreateFastPaymentContractDecodableModel.swift */,
-				0BA251F426C270A100AD087A /* UpdateFastPaymentContractDecodableModel.swift */,
-				0BA251F626C2782500AD087A /* FastPaymentContractFindListDecodableModel.swift */,
+				0B37F9772678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift */,
+				0B37F97B2678EC69007728FC /* AnywayPaymentDecodableModel.swift */,
+				0B37F9792678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift */,
+				0BB24AB426F0C62500DDA4F6 /* BlockCardDecodableModel.swift */,
+				ED60A1E226DC1600000F3208 /* ChangeClientConsentMe2MePullDecodableModel.swift */,
+				68E6A29226A033B700A1D9A1 /* CheckCardDecodableModel.swift */,
 				0B1DBA9B26D4032F009F3E98 /* CreateContactAddresslessTransferDecodableModel.swift */,
 				0BAC674026D408DC005AAD91 /* CreateDirectTransferDecodableModel.swift */,
-				ED60A1E026DC10A3000F3208 /* GetClientConsentMe2MePullDecodableModel.swift */,
-				ED60A1E226DC1600000F3208 /* ChangeClientConsentMe2MePullDecodableModel.swift */,
-				0B931B2126DCDA1800CA8017 /* GetLatestServicePaymentsDecodableModel.swift */,
-				0BD1CAA326E6C7E400CFE993 /* CreateSFPTransferDecodableModel.swift */,
+				0BA251F226C26FE000AD087A /* CreateFastPaymentContractDecodableModel.swift */,
 				0BD1CAA526E6D54A00CFE993 /* CreateIsOneTimeConsentMe2MePullDecodableModel.swift */,
-				0BD1CAA726E6D5D600CFE993 /* CreatePermanentConsentMe2MePullDecodableModel.swift */,
-				0B2A8D2626E7837300651BCB /* IsLoginDecodableModel.swift */,
 				0B2A8D2826E78E5C00651BCB /* CreateMe2MePullDebitTransferDecodableModel.swift */,
-				ED07DB8F26EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift */,
-				0BB24AB026F0C3DC00DDA4F6 /* GetCardStatementDecodableModel.swift */,
-				0BB24AB226F0C59900DDA4F6 /* SaveCardNameDecodableModel.swift */,
-				0BB24AB426F0C62500DDA4F6 /* BlockCardDecodableModel.swift */,
-				0BB24AB626F0C6AC00DDA4F6 /* UnBlockCardDecodableModel.swift */,
-				0BB24ABB26F370A300DDA4F6 /* GetProductDetailsDecodableModel.swift */,
-				ED353B6926FB5ADA00F17F00 /* SetUserSettingDecodableModel.swift */,
-				ED353B6B26FB5E8300F17F00 /* GetUserSettingDecodableModel.swift */,
-				0B283FC026FCB31600B5E925 /* GetPhoneInfoDecodableModel.swift */,
+				0BA251F026C26BE200AD087A /* CreateMe2MePullTransferDecodableModel.swift */,
 				0B283FC22701016100B5E925 /* CreateMobileTransferDecodableModel.swift */,
-				0B283FC42703722900B5E925 /* GetSessionTimeoutDecodableModel.swift */,
+				0BD1CAA726E6D5D600CFE993 /* CreatePermanentConsentMe2MePullDecodableModel.swift */,
+				0BA251EC26C266A400AD087A /* CreateServiceTransferDecodableModel.swift */,
+				0BD1CAA326E6C7E400CFE993 /* CreateSFPTransferDecodableModel.swift */,
+				0B7A18C226852D6B0007CC75 /* CreatTransferDecodableModel.swift */,
+				68E6A29426A033D900A1D9A1 /* DeleteProductTemplateDecodableModel.swift */,
+				0B37F981267A1814007728FC /* FastPaymentBanksListDecodableModel.swift */,
+				0BA251F626C2782500AD087A /* FastPaymentContractFindListDecodableModel.swift */,
 				0B283FCD2704D0D600B5E925 /* GetAccountStatementDecodableModel.swift */,
-				0B3FE8E02704DBEE00CBDB4E /* GetLatestMobilePaymentsDecodableModel.swift */,
-				0B3FE8E22705C86200CBDB4E /* GetMobileListDecodableModel.swift */,
 				0BA14E1B2715628A0098E422 /* GetAllLatestPaymentsDecodableModel.swift */,
-				6833E0AA27303E8F004C070F /* GetOperationDetailDecodebleModel.swift */,
-				0BAD4D32273EDA9B00FDF9B6 /* GetNotificationsDecodableModel.swift */,
-				68BAECAE2744132D00E1BF65 /* GetDepositStatementDecodableModel.swift */,
+				0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */,
+				0B7A18C62685BD130007CC75 /* GetBanksDecodableModel.swift */,
+				0BB24AB026F0C3DC00DDA4F6 /* GetCardStatementDecodableModel.swift */,
+				ED60A1E026DC10A3000F3208 /* GetClientConsentMe2MePullDecodableModel.swift */,
+				0B9EC85C26739C0000D86EB2 /* GetCountriesDecodebleModel.swift */,
+				68E6A29826A0340D00A1D9A1 /* GetCurrencyListDecodableModel.swift */,
 				68BAECB02744157200E1BF65 /* GetDepositInfoDecodableModel.swift */,
-				0BDCF00E274D56C500AAA1C3 /* NextStepServiceTransferDecodableModel.swift */,
 				EDDFE39C2756926000F57C71 /* GetDepositProductListDecodableModel.swift */,
+				68BAECAE2744132D00E1BF65 /* GetDepositStatementDecodableModel.swift */,
+				0BF3485A268E5907005138A8 /* GetExchangeCurrencyRatesDecodableModel.swift */,
+				0BA09E3326B08E1A0065D623 /* GetFullBankInfoListDecodableModel.swift */,
+				0B3FE8E02704DBEE00CBDB4E /* GetLatestMobilePaymentsDecodableModel.swift */,
+				0B37F9872680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift */,
+				0B7A18AE268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift */,
+				0B931B2126DCDA1800CA8017 /* GetLatestServicePaymentsDecodableModel.swift */,
+				ED07DB8F26EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift */,
+				0B3FE8E22705C86200CBDB4E /* GetMobileListDecodableModel.swift */,
+				0BAD4D32273EDA9B00FDF9B6 /* GetNotificationsDecodableModel.swift */,
+				6833E0AA27303E8F004C070F /* GetOperationDetailDecodebleModel.swift */,
+				0B37F97F267A11FB007728FC /* GetOwnerPhoneNumberPhoneDecodableModel.swift */,
+				0B05163026A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift */,
+				0B7A18C82685BF700007CC75 /* GetPaymentSystemListDecodableModel.swift */,
+				0B283FC026FCB31600B5E925 /* GetPhoneInfoDecodableModel.swift */,
+				0BB24ABB26F370A300DDA4F6 /* GetProductDetailsDecodableModel.swift */,
+				0B7A18CA268648030007CC75 /* GetProductListDecodableModel.swift */,
+				68E6A29626A033F200A1D9A1 /* GetProductTemplateListDecodableModel.swift */,
+				0B283FC42703722900B5E925 /* GetSessionTimeoutDecodableModel.swift */,
+				ED353B6B26FB5E8300F17F00 /* GetUserSettingDecodableModel.swift */,
+				0BF34851268A5F54005138A8 /* GetVerificationCodeDecodableModel.swift */,
+				0BEC8938267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift */,
+				0B2A8D2626E7837300651BCB /* IsLoginDecodableModel.swift */,
+				ED234CD1276BA08300B23985 /* JSONCodingKeyJSONAny.swift */,
+				0B74788F267343B400C44F79 /* KeyExchangeDecodebleModel.swift */,
+				0BF348A0269E0CDA005138A8 /* LogoutDecodableModel.swift */,
+				0B37F983267A18AC007728FC /* MakeCard2CardDecodableModel.swift */,
+				ED684CD42760C75600AA7A33 /* MakeDepositDecodableModel.swift */,
+				0B7A18C426852EFC0007CC75 /* MakeTransferDecodableModel.swift */,
+				0BDCF00E274D56C500AAA1C3 /* NextStepServiceTransferDecodableModel.swift */,
 				EDDFE3C9275E1C4100F57C71 /* OpenDepositDecodableModel.swift */,
+				0B37F97D267A10E4007728FC /* PrepareCard2PhoneDecodableModel.swift */,
+				0BF34853268B2699005138A8 /* PrepareExternalDecodableModel.swift */,
+				0BEC893A2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift */,
+				0BB24AB226F0C59900DDA4F6 /* SaveCardNameDecodableModel.swift */,
+				ED353B6926FB5ADA00F17F00 /* SetUserSettingDecodableModel.swift */,
+				0BF3485C26931254005138A8 /* SuggestBankDecodableModel.swift */,
+				0BF3486326943DFB005138A8 /* SuggestCompanyDecodableModel.swift */,
+				0BB24AB626F0C6AC00DDA4F6 /* UnBlockCardDecodableModel.swift */,
+				0BA251F426C270A100AD087A /* UpdateFastPaymentContractDecodableModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -3488,6 +3542,27 @@
 			path = PaymentType;
 			sourceTree = "<group>";
 		};
+		F63D40CE4F39C6AFA5553C08 /* confirm */ = {
+			isa = PBXGroup;
+			children = (
+				F63D4A26E0479DD5215DB784 /* InternetTVConfirmViewController.swift */,
+				A50869DF27690E53004C5E17 /* InternetTVConfirmViewModel.swift */,
+			);
+			path = confirm;
+			sourceTree = "<group>";
+		};
+		F63D4FC8C8C553E5473899D3 /* detailsOperator */ = {
+			isa = PBXGroup;
+			children = (
+				F63D4C0F67E89D23EA2C68CC /* InternetInputCell.xib */,
+				F63D4DD4905E8BA594B990E1 /* InternetTVDetailsFormController.swift */,
+				F63D42CEA742F58D23C97218 /* InternetTVInputCell.swift */,
+				F63D42613FF2F4EDEA6BA9D3 /* InternetTVDetailsFormViewModel.swift */,
+				A50869DC2768CA4A004C5E17 /* InternetTVSourceView.swift */,
+			);
+			path = detailsOperator;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -3498,7 +3573,6 @@
 				EDB14379265FDA410028EF5A /* Sources */,
 				EDB1437A265FDA410028EF5A /* Frameworks */,
 				EDB1437B265FDA410028EF5A /* Resources */,
-				6863D8CB26BC0D59004EF45F /* Run Script */,
 			);
 			buildRules = (
 			);
@@ -3580,6 +3654,7 @@
 					};
 					EDB1439D265FDA430028EF5A = {
 						CreatedOnToolsVersion = 12.5;
+						LastSwiftMigration = 1310;
 						TestTargetID = EDB1437C265FDA410028EF5A;
 					};
 				};
@@ -3659,7 +3734,6 @@
 				EDB143C5265FDEC90028EF5A /* Roboto-Light.ttf in Resources */,
 				EDB143C8265FDEC90028EF5A /* Roboto-ThinItalic.ttf in Resources */,
 				ED664BB4274513040050D1E0 /* ResultAccountStatementController.storyboard in Resources */,
-				A536C7CE274C0FDC002D5EAB /* InternetInputCell.xib in Resources */,
 				EDB14518266526BD0028EF5A /* CreditCardEntryView.xib in Resources */,
 				EDB14526266624DC0028EF5A /* OrderCardView.xib in Resources */,
 				EDDFE3D6275EC34300F57C71 /* DepositSuccessViewController.xib in Resources */,
@@ -3671,15 +3745,18 @@
 				EDB143CC265FDEC90028EF5A /* Roboto-BlackItalic.ttf in Resources */,
 				EDE212F62742E91D005D9821 /* ChooseCurrencyTableViewCell.xib in Resources */,
 				ED2BE18126A04A4300647CB1 /* CastomCardXIB.xib in Resources */,
+				ED684CF32763955E00AA7A33 /* DocDepositTableViewCell.xib in Resources */,
 				0BA09E2E26ADEBF50065D623 /* GHKCell.xib in Resources */,
 				68FFA55C268586D3002DADFA /* HeaderBanksCollectionReusableView.xib in Resources */,
 				EDCF8A1626CED86100DC9F54 /* BankTableViewCell.xib in Resources */,
 				EDB143C7265FDEC90028EF5A /* Roboto-MediumItalic.ttf in Resources */,
+				A50869DB2767F394004C5E17 /* InternetTVSuccess.xib in Resources */,
 				0B216FBC26D15BAA0023C878 /* GKHInputCell.xib in Resources */,
 				EDDFE3B62756D54800F57C71 /* CalculatorDepositCollectionViewCell.xib in Resources */,
 				EDAA99B12673ABF200435484 /* ForaSwitchView.xib in Resources */,
 				68D06F3A26CCDE0100F9BE4C /* NavigationBarUIView.xib in Resources */,
 				0BF3484E268A455C005138A8 /* AllCardView.xib in Resources */,
+				A5662698275FDD2400FFE31A /* checkBtn.xib in Resources */,
 				EDA0DCBD2735E8030013F47E /* AppLocker.storyboard in Resources */,
 				ED84995826A8831E005205C6 /* EPContactCell.xib in Resources */,
 				EDB145112664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf in Resources */,
@@ -3687,6 +3764,7 @@
 				ED8AB45D26C2B55E006F0D03 /* SuccessMeToMeController.xib in Resources */,
 				688B9BB626E03B3E00407A75 /* TotalMoneyView.xib in Resources */,
 				EDB143B5265FDE960028EF5A /* Assets.xcassets in Resources */,
+				ED684CEF27638E6700AA7A33 /* DocDepositCollectionViewCell.xib in Resources */,
 				68FFA52D2682AF62002DADFA /* ContactCollectionViewCell.xib in Resources */,
 				EDB143CB265FDEC90028EF5A /* Roboto-Italic.ttf in Resources */,
 				EDB1655E2667A55F007E6030 /* ForaInput.xib in Resources */,
@@ -3695,6 +3773,8 @@
 				ED75CE0326E2AB8A0074F5D5 /* MeToMeReqestSwitchView.xib in Resources */,
 				0B66E8E626CC658A00FD735D /* GKHStoryboard.storyboard in Resources */,
 				EDB14532266667140028EF5A /* OrderProductsCollectionViewCell.xib in Resources */,
+				F63D45F2B6942EA98C94F9FE /* CheckBoxView.xib in Resources */,
+				F63D409A487FD3AD287E63D1 /* InternetInputCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3714,29 +3794,6 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		6863D8CB26BC0D59004EF45F /* Run Script */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
-				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
-			);
-			name = "Run Script";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${BUILD_DIR%Build/*}SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		EDB14379265FDA410028EF5A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -3749,6 +3806,7 @@
 				0B8C1C54273B393E00BA5CAC /* GKHCoordinator.swift in Sources */,
 				EDCF8A1026CE876600DC9F54 /* MeToMeSearchBanksViewController.swift in Sources */,
 				68C64626269DCBD800473DE7 /* QRScannerViewController.swift in Sources */,
+				A50869DA2767F394004C5E17 /* InternetTVSuccessView.swift in Sources */,
 				EDFFCAF82683943A004EE095 /* UISwitch.swift in Sources */,
 				681E073D273D3FCF00551FAD /* ProductViewControllerRequest.swift in Sources */,
 				0BA09E3026ADEC300065D623 /* GHKCell.swift in Sources */,
@@ -3758,7 +3816,6 @@
 				EDBEEA1D26B1AF2F00265683 /* FullBankInfoCell.swift in Sources */,
 				EDCF8A1826CEFF2100DC9F54 /* TextFieldWithPadding.swift in Sources */,
 				77067CDB275FBE8F000C442B /* String+Extensions.swift in Sources */,
-				0BEC893D2672591A00D8BD22 /* GetCardListDecodebleModel.swift in Sources */,
 				EDF68211266F9EC800FD5C07 /* RequestError.swift in Sources */,
 				68E6A29526A033D900A1D9A1 /* DeleteProductTemplateDecodableModel.swift in Sources */,
 				0B1DBA9C26D4032F009F3E98 /* CreateContactAddresslessTransferDecodableModel.swift in Sources */,
@@ -3798,9 +3855,10 @@
 				EDF68216266F9EC800FD5C07 /* RouterError.swift in Sources */,
 				0B216FC626D1E9EB0023C878 /* ExtensionNotificationName.swift in Sources */,
 				0BAC674426D41C18005AAD91 /* ExtensionGKHSearch.swift in Sources */,
+				ED684CF22763955E00AA7A33 /* DocDepositTableViewCell.swift in Sources */,
 				0BDCF00F274D56C500AAA1C3 /* NextStepServiceTransferDecodableModel.swift in Sources */,
 				68D06F2626C3C11700F9BE4C /* MainViewControllerDataSource.swift in Sources */,
-				0BA251F126C26BE200AD087A /* СreateMe2MePullTransferDecodableModel.swift in Sources */,
+				0BA251F126C26BE200AD087A /* CreateMe2MePullTransferDecodableModel.swift in Sources */,
 				68F6816F269E5E56008157CE /* SearchBanksViewController.swift in Sources */,
 				0BB24AA326EFEFCF00DDA4F6 /* GetProductListByFilterSaved.swift in Sources */,
 				0B931B4926DE2E3300CA8017 /* GKHHistoryCaruselCell.swift in Sources */,
@@ -3832,6 +3890,7 @@
 				0BB8817026D6AE4200015E27 /* UserAllCardsModel.swift in Sources */,
 				0B9EC85D26739C0000D86EB2 /* GetCountriesDecodebleModel.swift in Sources */,
 				68FFA54C2684C854002DADFA /* PDFViewerViewController.swift in Sources */,
+				0BF0BF4C2767E337006AE967 /* NetMonitor.swift in Sources */,
 				0B05163126A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift in Sources */,
 				ED3A966E2690A80B00252857 /* PresentationController.swift in Sources */,
 				ED0B489C267D41A60037EA06 /* PaymentsDetailsView.swift in Sources */,
@@ -3846,9 +3905,11 @@
 				0B8C1C62273DD0DF00BA5CAC /* PushHistoryCell.swift in Sources */,
 				77D2D9AE275AB90A0097234D /* RealmResults+Extension.swift in Sources */,
 				6863EF6B2716D095008FD522 /* MTSlideToOpenControl.swift in Sources */,
+				ED234CD2276BA08300B23985 /* JSONCodingKeyJSONAny.swift in Sources */,
 				0B931B4726DE2DF700CA8017 /* GKHHistoryCarusel.swift in Sources */,
 				EDF6821A266F9EC800FD5C07 /* RouterUrlList.swift in Sources */,
 				0B8C1C44273ADF7E00BA5CAC /* QRCoordinator.swift in Sources */,
+				ED684CD52760C75600AA7A33 /* MakeDepositDecodableModel.swift in Sources */,
 				0BF3486426943DFB005138A8 /* SuggestCompanyDecodableModel.swift in Sources */,
 				EDB1452026661B030028EF5A /* StringMask.swift in Sources */,
 				EDB16586266A0883007E6030 /* NSDirectionalEdgeInsets.swift in Sources */,
@@ -3878,7 +3939,6 @@
 				0B8BE091266FDA1B00E96CAA /* CheckClientDecodebleModel.swift in Sources */,
 				EDB16595266A4438007E6030 /* DevelopViewController.swift in Sources */,
 				6833E0B22732B69E004C070F /* DetailOperationViewController.swift in Sources */,
-				A5C7A1B7275BF3C4003BEF6D /* InternetTVDetailsFormViewModel.swift in Sources */,
 				0B283FC72703815900B5E925 /* ExtensionSceneDelegate.swift in Sources */,
 				A5E8DEAD2756B12900E5EB34 /* CreateTransferAnswerModel.swift in Sources */,
 				68E6A29926A0340D00A1D9A1 /* GetCurrencyListDecodableModel.swift in Sources */,
@@ -3888,6 +3948,7 @@
 				0B37F97A2678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift in Sources */,
 				687ADF1026B07721005A239B /* DataExtension.swift in Sources */,
 				ED75CDFB26E27F150074F5D5 /* UIApplication.swift in Sources */,
+				A50869E027690E53004C5E17 /* InternetTVConfirmViewModel.swift in Sources */,
 				0B8C1C4E273B2BB000BA5CAC /* TransferByRequisitesCoordinator.swift in Sources */,
 				ED0B48A0267E1A2D0037EA06 /* PaymentsDetailsSuccessViewController.swift in Sources */,
 				0B8CB0882680CAE3006A39C3 /* ExtensionNetworkHelper.swift in Sources */,
@@ -3904,7 +3965,6 @@
 				68FFA5432682DC95002DADFA /* PhoneConfirmViewController.swift in Sources */,
 				0BAC674126D408DC005AAD91 /* CreateDirectTransferDecodableModel.swift in Sources */,
 				0BF348A1269E0CDA005138A8 /* LogoutDecodableModel.swift in Sources */,
-				0B66E8E126CC62BC00FD735D /* NetDetect.swift in Sources */,
 				0BDCF00D274A8B0F00AAA1C3 /* IsSingleServiceDecodableModel.swift in Sources */,
 				0B7A18D02689C51A0007CC75 /* AppHeaderProtocol.swift in Sources */,
 				ED51D6702688B287005FD655 /* SeparatorView.swift in Sources */,
@@ -3939,7 +3999,6 @@
 				0B216FBE26D15BDF0023C878 /* GKHInputCell.swift in Sources */,
 				0B3FE8E32705C86200CBDB4E /* GetMobileListDecodableModel.swift in Sources */,
 				0B283FC927038C2600B5E925 /* GetSessionTimeout.swift in Sources */,
-				A518978A2748079D00F7B2B4 /* InternetTVDetailsFormController.swift in Sources */,
 				68D099D6273A7A3E0017D777 /* ProductCoordinator.swift in Sources */,
 				0BB24AAF26F0141200DDA4F6 /* DownloadQueueProtocol.swift in Sources */,
 				68D06F3826CCDDCA00F9BE4C /* NavigationBarUIView.swift in Sources */,
@@ -3994,6 +4053,7 @@
 				ED4FC61B266EA42E0092B4AB /* UI.swift in Sources */,
 				6833E0B62732B763004C070F /* DetailOperationTableViewCell.swift in Sources */,
 				ED84995926A8831E005205C6 /* EPContactCell.swift in Sources */,
+				A5662694275D3CD000FFE31A /* InternetTVSelectDialog.swift in Sources */,
 				68673B6026F4B87900F67A8C /* PayTableViewCell.swift in Sources */,
 				EDF6820E266F9EC800FD5C07 /* NetworkModelProtocol.swift in Sources */,
 				0BDE452D26E298F600B64A0A /* ExtensionQRViewController.swift in Sources */,
@@ -4039,23 +4099,23 @@
 				0B8C1C64273DD21300BA5CAC /* ExtensionPushHistoryViewController.swift in Sources */,
 				A5F15C0D274972F900DC91DA /* InternetTVLatestOperationsView.swift in Sources */,
 				6880D32D26A70585008FBCB4 /* FaceTouchIdViewController.swift in Sources */,
+				ED687C2D2768906800A38E87 /* DepositInfoViewController.swift in Sources */,
 				0B95C40C26B72CB100AA57E6 /* ExtensionBottomViewWithSetup.swift in Sources */,
 				ED664BB2274512C80050D1E0 /* ResultAccountStatementController.swift in Sources */,
 				68FFA551268538CF002DADFA /* PhoneContactModel.swift in Sources */,
 				ED84994E26A85A65005205C6 /* SettingsViewController.swift in Sources */,
+				A50869E2276B9BAE004C5E17 /* QRFoundOrgCell.swift in Sources */,
 				ED84995726A8831E005205C6 /* EPExtensions.swift in Sources */,
 				EDF68218266F9EC800FD5C07 /* RouterManager.swift in Sources */,
 				EDA0DCCE2739773A0013F47E /* MainCoordinator.swift in Sources */,
 				0BA14E14270DD0BF0098E422 /* BackgroundTimerController.swift in Sources */,
 				0B283FC32701016100B5E925 /* CreateMobileTransferDecodableModel.swift in Sources */,
-				0B66E8E326CC62DF00FD735D /* NetStatus.swift in Sources */,
 				ED84994826A6FD97005205C6 /* CountryListView.swift in Sources */,
 				0BA251F726C2782500AD087A /* FastPaymentContractFindListDecodableModel.swift in Sources */,
 				EDB1658026694676007E6030 /* PaymentsViewControllerLayout.swift in Sources */,
 				0B931B4B26DE2E5F00CA8017 /* GKHHistoryCaruselModel.swift in Sources */,
 				0B66E8D826CC5EC400FD735D /* ExtensionDevice.swift in Sources */,
 				0B216FC326D1B30C0023C878 /* ExtensionGKHCitySearchController.swift in Sources */,
-				A5C7A1B3275BF1A0003BEF6D /* InternetTVInputCell.swift in Sources */,
 				ED60A1E126DC10A3000F3208 /* GetClientConsentMe2MePullDecodableModel.swift in Sources */,
 				ED4B54462703465200C87A1A /* CardsScrollModel.swift in Sources */,
 				ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */,
@@ -4077,6 +4137,7 @@
 				EDB145382666770A0028EF5A /* OrderProductModel.swift in Sources */,
 				EDE212F12742E7D6005D9821 /* ChooseCurrencyPaymentController.swift in Sources */,
 				0B931B2026DCD87F00CA8017 /* GKHHistorySaveRealm.swift in Sources */,
+				A5662696275E945A00FFE31A /* InternetTVSelectController.swift in Sources */,
 				0B8C1C47273B03EB00BA5CAC /* BottomPopUpViewAdapter.swift in Sources */,
 				68673B5326F2F3B900F67A8C /* RequisitsTableViewCell.swift in Sources */,
 				EDBEEA1726B1AE7300265683 /* FullBankInfoListView.swift in Sources */,
@@ -4091,6 +4152,7 @@
 				ED8AB45526C116DB006F0D03 /* MeToMeViewController.swift in Sources */,
 				0B8BE0952670D4A300E96CAA /* GetCodeDecodebleModel.swift in Sources */,
 				ED60A1E326DC1600000F3208 /* ChangeClientConsentMe2MePullDecodableModel.swift in Sources */,
+				ED684CEE27638E6700AA7A33 /* DocDepositCollectionViewCell.swift in Sources */,
 				0B66E8DE26CC5F8900FD735D /* QRViewController.swift in Sources */,
 				68BAECAF2744132E00E1BF65 /* GetDepositStatementDecodableModel.swift in Sources */,
 				0BA14E12270DCF750098E422 /* BackgroundTimer.swift in Sources */,
@@ -4165,6 +4227,7 @@
 				688B9BA126DD0C2500407A75 /* ProductsViewController.swift in Sources */,
 				0BA251ED26C266A400AD087A /* CreateServiceTransferDecodableModel.swift in Sources */,
 				0BDCF0082749A56300AAA1C3 /* ExtensionGKHInputRequest.swift in Sources */,
+				A50869DD2768CA4A004C5E17 /* InternetTVSourceView.swift in Sources */,
 				0B283FB626FB7D1000B5E925 /* MobilePayViewController.swift in Sources */,
 				688B9BB026DEC27200407A75 /* OfferCollectionViewCell.swift in Sources */,
 				0BAC319626CB264B006E03FD /* ExtensionGKHMainTableView.swift in Sources */,
@@ -4172,7 +4235,12 @@
 				0BF34854268B2699005138A8 /* PrepareExternalDecodableModel.swift in Sources */,
 				ED3A96772690FCD700252857 /* BankViewModel.swift in Sources */,
 				68FFA54F26853897002DADFA /* PhoneContacts.swift in Sources */,
+				F63D42FC24C643FCB7631F83 /* InternetTVDetailsFormController.swift in Sources */,
+				F63D4C7CF864543AD9AABF9A /* InternetTVInputCell.swift in Sources */,
+				F63D42697A06C6D37A64F590 /* InternetTVDetailsFormViewModel.swift in Sources */,
 				EDDFE3AD2756D3FD00F57C71 /* DepositCalculatorViewControllerFlowLayout.swift in Sources */,
+				F63D4A3FB30397A82426313C /* InternetTVConfirmViewController.swift in Sources */,
+				F63D43A404CF8AA69942CCFF /* InternetTVSuccessViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4182,6 +4250,7 @@
 			files = (
 				77067CD9275FBB70000C442B /* StringExtensionsTests.swift in Sources */,
 				77D2D9B2275AB9280097234D /* Item.swift in Sources */,
+				7757624B276FEC4F00B902BF /* URLHostTests.swift in Sources */,
 				77C026E6275E6299002BE1F6 /* GKHHistoryModelTests.swift in Sources */,
 				77D2D9B3275AB9280097234D /* RealmObjectsDiffTests.swift in Sources */,
 			);
@@ -4191,7 +4260,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EDB143A3265FDA430028EF5A /* ForaBankUITests.swift in Sources */,
+				7757624D276FEE2400B902BF /* ForaBankUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4336,12 +4405,15 @@
 		EDB143A8265FDA430028EF5A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = AppIconNewYear;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconNewYear;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
@@ -4350,7 +4422,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 7.12.2;
+				MARKETING_VERSION = 7.12.4;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4362,12 +4434,15 @@
 		EDB143A9265FDA430028EF5A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = AppIconNewYear;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconNewYear;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 0;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -4375,7 +4450,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 7.12.2;
+				MARKETING_VERSION = 7.12.4;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4432,6 +4507,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBankUITests/Info.plist;
@@ -4442,6 +4518,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.ForaBankUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = ForaBank;
@@ -4452,6 +4529,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBankUITests/Info.plist;

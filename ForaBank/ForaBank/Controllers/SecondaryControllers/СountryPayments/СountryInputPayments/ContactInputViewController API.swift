@@ -22,7 +22,7 @@ extension ContactInputViewController {
         }
     }
     
-    func contaktPayment(with card: String, surname: String, name: String, secondName: String, amount: String, completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
+    func contaktPayment(with card: String, surname: String, name: String, secondName: String, amount: Double, completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
         
         guard let countryCode = country?.contactCode else { return }
         
@@ -93,7 +93,7 @@ extension ContactInputViewController {
         })
     }
     
-    func migPayment(with card: String, phone: String, amount: String, completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
+    func migPayment(with card: String, phone: String, amount: Double, completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
         
         let body = ["check" : false,
                     "amount" : amount,
