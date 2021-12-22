@@ -70,6 +70,10 @@ class PaymentsDetailsView: UIView {
         statusImageView.image = model.statusIsSuccses ? #imageLiteral(resourceName: "OkOperators") : #imageLiteral(resourceName: "errorIcon")
         operatorImageView.image = UIImage()
         
+        if model.operatorImage != "" {
+            operatorImageView.image = model.operatorImage.convertSVGStringToImage()
+        }
+        
         if (UserDefaults.standard.object(forKey: "OPERATOR_IMAGE") != nil) {
             let im = UserDefaults.standard.object(forKey: "OPERATOR_IMAGE") as? String ?? ""
             if im != "" {

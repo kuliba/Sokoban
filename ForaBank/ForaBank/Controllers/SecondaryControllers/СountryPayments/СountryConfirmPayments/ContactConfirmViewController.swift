@@ -12,6 +12,7 @@ import Combine
 
 //TODO: отрефакторить под сетевые запросы, вынести в отдельный файл
 class ConfirmViewControllerModel {
+    
     static var svgIcon = ""
     lazy var realm = try? Realm()
     var type: PaymentType
@@ -490,13 +491,12 @@ class ContactConfurmViewController: UIViewController {
             countryField.isHidden = true
             bankField.isHidden = true
             currancyTransctionField.isHidden = true
-            
+            nameField.isHidden = true
             numberTransctionField.isHidden = true
             let mask = StringMask(mask: "+7 (000) 000-00-00")
             let maskPhone = mask.mask(string: model.phone)
         
             phoneField.text = maskPhone ?? ""
-            nameField.text =  model.fullName ?? ""
 
             cardFromField.cardModel = model.cardFrom
             cardFromField.isHidden = false
