@@ -1,0 +1,9 @@
+{
+    "sort": 1,
+    "svgImage": "string",
+    "parameterList": [],
+    "groupName": "Переводы СБП",
+    "type": "SFP",
+    "name": "Иванов Иван Иванович",
+    "paymentTemplateId": 1
+}

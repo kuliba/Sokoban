@@ -1,0 +1,52 @@
+{
+    "groupName": "Переводы СБП",
+    "name": "Иванов Иван Иванович",
+    "parameterList": [{
+        "amount": 100,
+        "check": false,
+        "comment": "string",
+        "currencyAmount": "RUB",
+        "payeeExternal": {
+            "INN": "string",
+            "KPP": "string",
+            "accountId": 0,
+            "accountNumber": "string",
+            "bankBIC": "string",
+            "cardId": 0,
+            "cardNumber": "string",
+            "compilerStatus": "string",
+            "date": "string",
+            "name": "string",
+            "tax": {
+                "bcc": "string",
+                "date": "string",
+                "documentNumber": "string",
+                "documentType": "string",
+                "oktmo": "string",
+                "period": "string",
+                "reason": "string",
+                "uin": "string"
+            }
+        },
+        "payeeInternal": {
+            "accountId": 0,
+            "accountNumber": "string",
+            "cardId": 0,
+            "cardNumber": "string",
+            "phoneNumber": "string",
+            "productCustomName": "string"
+        },
+        "payer": {
+            "INN": "string",
+            "accountId": 0,
+            "accountNumber": "string",
+            "cardId": 0,
+            "cardNumber": "string",
+            "phoneNumber": "string"
+        }
+    }],
+    "paymentTemplateId": 1,
+    "sort": 1,
+    "svgImage": "string",
+    "type": "SFP"
+}
