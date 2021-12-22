@@ -86,13 +86,13 @@ extension Double {
             let tempDoubleSelf = self / 1_000_000
             if let priceString = currencyFormatter.string(from: NSNumber(value: tempDoubleSelf)) {
                 return priceString
-            } else if self >= 1_000_000_000 {
-                currencyFormatter.currencySymbol = "Млрд. " + resultString
-                let tempDoubleSelf = self / 1_000_000
-                if let priceString = currencyFormatter.string(from: NSNumber(value: tempDoubleSelf)) {
-                    return priceString
             }
-        }
+        } else if self >= 1_000_000_000 {
+            currencyFormatter.currencySymbol = "Млрд. " + resultString
+            let tempDoubleSelf = self / 1_000_000_000
+            if let priceString = currencyFormatter.string(from: NSNumber(value: tempDoubleSelf)) {
+                return priceString
+            }
         }
         return String(self)
     }
