@@ -229,6 +229,11 @@ class PaymentByPhoneViewController: UIViewController {
         bankListView.didBankTapped = { bank in
             self.selectedBank = bank
             self.bankId = bank.memberID ?? ""
+            if bank.memberID == "100000000217"{
+                self.sbp = false
+            } else {
+                self.sbp = true
+            }
             self.hideView(self.bankListView, needHide: true)
         }
     }
