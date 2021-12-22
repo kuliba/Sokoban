@@ -217,7 +217,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
             if phoneData?.statusCode == 0 {
                 UserDefaults.standard.set(data.data?.first?.svgImage, forKey: "MobilePhoneSVGImage")
                 let puref = data.data?.first?.puref ?? ""
-                
+                let svgImage = data.data?.first?.svgImage
                 let cardId = self?.cardField.cardModel?.id ?? 0
                 
                 let body = [
@@ -253,7 +253,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                     
                     if data?.statusCode == 0 {
                         let model = ConfirmViewControllerModel(type: .mobilePayment)
-                        
+                        model.operatorImage = svgImage ?? ""
                         model.cardFrom = self?.cardField.cardModel
                         
                         let a = data?.data?.additionalList
@@ -264,19 +264,12 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                             }
                         }
                         
-                        model.summTransction = Double(data?.data?.amount ?? Double(0.0)).currencyFormatter(symbol: data?.data?.currencyAmount ?? "" )
-                        model.taxTransction = Double(data?.data?.fee ?? Int(0.0)).currencyFormatter(symbol: data?.data?.currencyAmount ?? "")
+                        model.summTransction = Double(data?.data?.amount ?? Double(0.0)).currencyFormatter(symbol: "RUB" )
+                        model.taxTransction = Double(data?.data?.fee ?? Int(0.0)).currencyFormatter(symbol: "RUB")
                         
                         model.statusIsSuccses = true
                         DispatchQueue.main.async {
                             let vc = ContactConfurmViewController()
-                            vc.bankField.isHidden = true
-                            vc.cardToField.isHidden = true
-                            vc.countryField.isHidden = true
-                            vc.currTransctionField.isHidden = true
-                            vc.nameField.isHidden = true
-                            vc.numberTransctionField.isHidden = true
-                            vc.currancyTransctionField.isHidden = true
                             vc.confurmVCModel = model
                             vc.addCloseButton()
                             vc.title = "Подтвердите реквизиты"

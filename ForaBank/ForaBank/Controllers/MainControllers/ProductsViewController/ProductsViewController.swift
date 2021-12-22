@@ -143,9 +143,6 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
         tableView.register(ProductTableViewCell.nib(), forCellReuseIdentifier: ProductTableViewCell.identifier)
         tableView?.delegate = self
         tableView?.dataSource = self
-
-        
-        
         view.addSubview(totalMoneyView)
         view.addSubview(tableView)
         tableView?.anchor(top: totalMoneyView.bottomAnchor ,left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor,paddingTop: 10)
