@@ -477,7 +477,7 @@ class PaymentByPhoneViewController: UIViewController {
                             let model = ConfirmViewControllerModel(type: .phoneNumber)
                             model.bank = self?.selectedBank
                             model.cardFromRealm = self?.cardField.model
-                            model.phone = self?.phoneField.text.digits ?? ""
+                            model.phone = self?.phoneField.textField.text?.digits ?? ""
                             model.summTransction = data.debitAmount?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
                             model.summInCurrency = data.creditAmount?.currencyFormatter(symbol: data.currencyPayee ?? "RUB") ?? ""
                             model.taxTransction = data.fee?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
@@ -518,6 +518,10 @@ class PaymentByPhoneViewController: UIViewController {
 //            accountNumber = ""
         }
         
+        guard let number = phoneField.textField.unmaskedText else {
+            return
+        }
+        
         guard let sum = bottomView.amountTextField.text else {
             return
         }
@@ -527,7 +531,7 @@ class PaymentByPhoneViewController: UIViewController {
         var newPhone = String()
         var clearPhone = String()
         
-        newPhone = selectNumber?.digits ?? ""
+        newPhone = number.digits 
         
         if newPhone.prefix(1) == "7" || newPhone.prefix(1) == "8"{
             clearPhone = String(newPhone.dropFirst())
@@ -582,7 +586,7 @@ class PaymentByPhoneViewController: UIViewController {
                         }
                         
                         model.cardFromRealm = self?.cardField.model
-                        model.phone = self?.phoneField.text.digits ?? ""
+                        model.phone = self?.phoneField.textField.text?.digits ?? ""
 //                        model.summTransction = model.summTransction
                         
 //                        model.summTransction = data.data?.amount?.currencyFormatter(symbol: "RUB") ?? ""// debitAmount?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
