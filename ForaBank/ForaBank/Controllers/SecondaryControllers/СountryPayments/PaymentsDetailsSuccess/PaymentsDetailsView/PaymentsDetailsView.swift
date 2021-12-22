@@ -25,6 +25,7 @@ class PaymentsDetailsView: UIView {
     @IBOutlet weak var summLabel: UILabel!
     @IBOutlet weak var infoLabel: UILabel!
 //    @IBOutlet weak var buttonView: UIStackView!
+    @IBOutlet weak var buttonsView: UIView!
     
     var confurmVCModel: ConfirmViewControllerModel? {
         didSet {

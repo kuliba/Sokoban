@@ -7,6 +7,8 @@
 
 import UIKit
 import RealmSwift
+import SwiftUI
+import Combine
 
 //TODO: отрефакторить под сетевые запросы, вынести в отдельный файл
 class ConfirmViewControllerModel {
@@ -55,6 +57,7 @@ class ConfirmViewControllerModel {
     var cardFromAccountId = ""
     var cardFromAccountNumber = ""
     var operatorImage = ""
+    var antifraudStatus = ""
     
     var cardToRealm: UserAllCardsModel? {
         didSet {
@@ -221,20 +224,76 @@ class ContactConfurmViewController: UIViewController {
             type: .smsCode))
     
     let doneButton = UIButton(title: "Оплатить")
-    
+    var createTransferSBP: CreateSFPTransferDecodableModel?
+    var cancelledPayment = false
+    var buttonTapped: (() -> Void)?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         doneButton.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
         hideKeyboardWhenTappedAround()
         NotificationCenter.default.addObserver(self, selector: #selector(self.setOtpCode(_:)), name: NSNotification.Name(rawValue: "otpCode"), object: nil)
+        let delegate = ContentViewDelegate()
+        let statusValue = createTransferSBP?.data?.additionalList?.filter({$0.fieldName == "AFResponse"})
+        if statusValue?[0].fieldValue == "G"{
+        
+        } else {
+            guard let data = self.createTransferSBP else {
+                return
+            }
+            self.presentSwiftUIView(data: AntifraudViewModel(model: data, phoneNumber: self.phoneField.text))
+
+        }
+        NotificationCenter.default.addObserver(forName: NSNotification.Name("dismissSwiftUI"), object: nil, queue: nil) { data in
+            let vc = PaymentsDetailsSuccessViewController()
+            vc.modalPresentationStyle = .fullScreen
+    //            vc.confurmView.operatorImageView = ""
+            vc.confurmView.statusImageView.image = UIImage(named: "waiting")
+            vc.confurmView.summLabel.text = self.summTransctionField.text
+            vc.confurmView.statusLabel.text = "Перевод отменен!"
+            vc.confurmView.operatorImageView.image = UIImage(named: "sbp-long")
+            vc.confurmView.statusLabel.textColor = .red
+            vc.confurmView.buttonsView.isHidden = true
+            if data.userInfo?.count ?? 0 > 0{
+                vc.confurmView.infoLabel.text = "Время на подтверждение\n перевода вышло"
+            } else {
+                vc.confurmView.infoLabel.text = ""
+            }
+
+            self.present(vc, animated: true, completion: nil)
+        }
     }
+    
+
+    
     
     @objc func setOtpCode(_ notification: NSNotification) {
         let otpCode = notification.userInfo?["body"] as! String
         self.otpCode = otpCode.filter { "0"..."9" ~= $0 }
         smsCodeField.text =  self.otpCode
         
+    }
+    
+    
+    func presentSwiftUIView(data: AntifraudViewModel) {
+        let swiftUIView = AntifraudView(data: data, delegate: ContentViewDelegate())
+        let hostingController = UIHostingController(rootView: swiftUIView)
+//        hostingController.modalPresentationStyle = .overCurrentContext
+        
+        if #available(iOS 15.0, *) {
+            if let presentationController = hostingController.presentationController as? UISheetPresentationController {
+                presentationController.detents = [.medium()] /// set here!
+            }
+        } else {
+            // Fallback on earlier versions
+        }
+            hostingController.rootView.present = {
+            let vc = PaymentsDetailsSuccessViewController()
+            hostingController.present(vc, animated: true, completion: nil)
+          }
+            present(hostingController, animated: true, completion: nil)
+
     }
     
     func setupData(with model: ConfirmViewControllerModel) {
