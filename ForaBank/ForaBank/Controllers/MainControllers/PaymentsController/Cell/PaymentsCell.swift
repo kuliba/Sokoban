@@ -334,7 +334,6 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
         self.requestForAccess { (accessGranted) -> Void in
             if accessGranted {
                 var contacts = [CNContact]()
-                var message: String!
                 
                 let contactsStore = CNContactStore()
                 do {
@@ -364,37 +363,6 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
                 }
                 catch {
                     message = "Unable to fetch contacts."
-                }
-                
-                if message != nil {
-                    DispatchQueue.main.async {
-                        guard let avatarImage = UIImage(named: "smartphonegray") else { return }
-                        self.iconImageView.image = avatarImage
-                    }
-                } else {
-                    // Success
-                    DispatchQueue.main.async {
-                        
-                        // Do someting with the contacts in the main queue, for example
-                        /*
-                         self.delegate.didFetchContacts(contacts) <= which extracts the required info and puts it in a tableview
-                         */
-                        print(contacts) // Will print all contact info for each contact (multiple line is, for example, there are multiple phone numbers or email addresses)
-                        let contact = contacts[0] // For just the first contact (if two contacts had the same phone number)
-                        completion(contact)
-                        
-                        
-                        print(contact.givenName) // Print the "first" name
-                        print(contact.familyName) // Print the "last" name
-                        if contact.isKeyAvailable(CNContactImageDataKey) {
-                            if let contactImageData = contact.imageData {
-                                print(UIImage(data: contactImageData)) // Print the image set on the contact
-                            }
-                        } else {
-                            // No Image available
-                            
-                        }
-                    }
                 }
             }
         }
