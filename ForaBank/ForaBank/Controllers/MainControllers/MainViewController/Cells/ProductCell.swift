@@ -259,10 +259,3 @@ enum StatusPC: String{
     case notActivated = "17"
 }
 
-enum ProductType: String {
-    case DEPOSIT
-    case CARD
-    case ACCOUNT
-    case LOAN
-}
-

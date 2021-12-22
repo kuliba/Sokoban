@@ -1,0 +1,9 @@
+{
+    "amount": null,
+    "currencyAmount": "RUB",
+    "check": false,
+    "payeeInternal": null,
+    "comment": null,
+    "payer": {},
+    "payeeExternal": null
+}

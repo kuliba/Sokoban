@@ -1144,82 +1144,50 @@ extension ProductViewController{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let vc = OperationDetailViewController()
-        switch product?.productType {
-        case "DEPOSIT":
-            vc.documentId = "\(sortedDeposit[indexPath.section].value[indexPath.row].documentID ?? 0)"
-            vc.categoryGroupLabel.text = sortedDeposit[indexPath.section].value[indexPath.row].groupName
-            vc.transferImage.image = sortedDeposit[indexPath.section].value[indexPath.row].svgImage?.convertSVGStringToImage()
-            if sortedDeposit[indexPath.section].value[indexPath.row].operationType == "DEBIT"{
-                vc.amount.textColor = UIColor(hexString: "1C1C1C")
-                vc.amount.text = "-\(Double(sortedDeposit[indexPath.section].value[indexPath.row].amount ?? 0.0).currencyFormatter(symbol:  product?.currency ?? "RUB"))"
-            } else if sortedDeposit[indexPath.section].value[indexPath.row].operationType == "CREDIT"{
-                vc.amount.textColor = UIColor(hexString: "1C1C1C")
-                vc.amount.text = "+\(Double(sortedDeposit[indexPath.section].value[indexPath.row].amount ?? 0.0).currencyFormatter(symbol:  product?.currency ?? "RUB"))"
-            }
-    //        vc.commissionLabel.text = sorted[indexPath.section].value[indexPath.row].comment
-            if sortedDeposit[indexPath.section].value[indexPath.row].merchantNameRus != nil{
-                vc.mainLabel.text = sortedDeposit[indexPath.section].value[indexPath.row].merchantNameRus
-            } else {
-                vc.mainLabel.text = sortedDeposit[indexPath.section].value[indexPath.row].merchantName
-            }
-            
-            vc.addCloseButton_xMark()
-        case "CARD":
-            vc.documentId = "\(sorted[indexPath.section].value[indexPath.row].documentID ?? 0)"
-            vc.categoryGroupLabel.text = sorted[indexPath.section].value[indexPath.row].groupName
-            vc.transferImage.image = sorted[indexPath.section].value[indexPath.row].svgImage?.convertSVGStringToImage()
-            if sorted[indexPath.section].value[indexPath.row].operationType == "DEBIT"{
-                vc.amount.textColor = UIColor(hexString: "1C1C1C")
-                vc.amount.text = "-\(Double(sorted[indexPath.section].value[indexPath.row].amount ?? 0.0).currencyFormatter(symbol:  product?.currency ?? "RUB"))"
-            } else if sorted[indexPath.section].value[indexPath.row].operationType == "CREDIT"{
-                vc.amount.textColor = UIColor(hexString: "1C1C1C")
-                vc.amount.text = "+\(Double(sorted[indexPath.section].value[indexPath.row].amount ?? 0.0).currencyFormatter(symbol:  product?.currency ?? "RUB"))"
-            }
-    //        vc.commissionLabel.text = sorted[indexPath.section].value[indexPath.row].comment
-            if sorted[indexPath.section].value[indexPath.row].merchantNameRus != nil{
-                vc.mainLabel.text = sorted[indexPath.section].value[indexPath.row].merchantNameRus
-            } else {
-                vc.mainLabel.text = sorted[indexPath.section].value[indexPath.row].merchantName
-            }
-            
-            vc.addCloseButton_xMark()
-        default:
-            vc.documentId = "\(sortedAccount[indexPath.section].value[indexPath.row].documentID ?? 0)"
-            vc.categoryGroupLabel.text = sortedAccount[indexPath.section].value[indexPath.row].groupName
-            vc.transferImage.image = sortedAccount[indexPath.section].value[indexPath.row].svgImage?.convertSVGStringToImage()
-            if sortedAccount[indexPath.section].value[indexPath.row].operationType == "DEBIT"{
-                vc.amount.textColor = UIColor(hexString: "1C1C1C")
-                vc.amount.text = "-\(Double(sortedAccount[indexPath.section].value[indexPath.row].amount ?? 0.0).currencyFormatter(symbol:  product?.currency ?? "RUB"))"
-            } else if sortedAccount[indexPath.section].value[indexPath.row].operationType == "CREDIT"{
-                vc.amount.textColor = UIColor(hexString: "1C1C1C")
-                vc.amount.text = "+\(Double(sortedAccount[indexPath.section].value[indexPath.row].amount ?? 0.0).currencyFormatter(symbol:  product?.currency ?? "RUB"))"
-            }
-    //        vc.commissionLabel.text = sorted[indexPath.section].value[indexPath.row].comment
-            if sortedAccount[indexPath.section].value[indexPath.row].merchantNameRus != nil{
-                vc.mainLabel.text = sortedAccount[indexPath.section].value[indexPath.row].merchantNameRus
-            } else {
-                vc.mainLabel.text = sortedAccount[indexPath.section].value[indexPath.row].merchantName
-            }
-            
-            vc.addCloseButton_xMark()
-        }
-      
-//        vc.modalPresentationStyle = .pageSheet
-//        vc.providesPresentationContextTransitionStyle = true
-//        vc.definesPresentationContext = true
-//        vc.transitioningDelegate = self
-////        vc.transitioningDelegate = self
-//        self.present(vc, animated: true, completion: nil)
-//        self.navigationController?.pushViewController(vc, animated: true)
-//        present(vc, animated: true, completion: nil)
         
+        guard let product = product, let currency = product.currency else {
+            return
+        }
+        
+        switch product.productTypeEnum {
+        case .deposit:
+            let deposit = sortedDeposit[indexPath.section].value[indexPath.row]
+            let operationDetailViewModel = OperationDetailViewModel(with: deposit, currency: currency)
+            let operationDetailVC = OperationDetailHostingViewController(with: operationDetailViewModel)
+            operationDetailVC.modalPresentationStyle = .custom
+            operationDetailVC.transitioningDelegate = self
+            halfScreen = true
+            present(operationDetailVC, animated: true)
+            
+        case .card:
+            let card = sorted[indexPath.section].value[indexPath.row]
+            let operationDetailViewModel = OperationDetailViewModel(with: card, currency: currency)
+            let operationDetailVC = OperationDetailHostingViewController(with: operationDetailViewModel)
+            operationDetailVC.modalPresentationStyle = .custom
+            operationDetailVC.transitioningDelegate = self
+            halfScreen = true
+            present(operationDetailVC, animated: true)
+            
+        case .account:
+            let account = sortedAccount[indexPath.section].value[indexPath.row]
+            let operationDetailViewModel = OperationDetailViewModel(with: account, currency: currency)
+            let operationDetailVC = OperationDetailHostingViewController(with: operationDetailViewModel)
+            operationDetailVC.modalPresentationStyle = .custom
+            operationDetailVC.transitioningDelegate = self
+            halfScreen = true
+            present(operationDetailVC, animated: true)
+            
+        case .loan:
+            return
+        }
+        
+        /*
         let navController = UINavigationController(rootViewController: vc)
         navController.modalPresentationStyle = .custom
         navController.transitioningDelegate = self
         halfScreen = true
         self.present(navController, animated: true, completion: nil)
-
+         */
     }
     
     func collectionSkeletonView(_ skeletonView: UITableView, numberOfRowsInSection section: Int) -> Int {
