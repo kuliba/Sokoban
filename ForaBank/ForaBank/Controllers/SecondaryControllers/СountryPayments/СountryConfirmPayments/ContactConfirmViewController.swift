@@ -229,6 +229,8 @@ class ContactConfurmViewController: UIViewController {
     var cancelledPayment = false
     var buttonTapped: (() -> Void)?
 
+    var fromTitle = "От куда"
+    var toTitle = "Куда"
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
