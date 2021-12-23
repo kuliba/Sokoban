@@ -140,7 +140,8 @@ class MeToMeRequestController: UIViewController {
         
         checkAuth { error in
             if error != nil {
-                self.goToPinVC(.validate)
+                print(error!)
+//                self.goToPinVC(.validate)
             } else {
                 DispatchQueue.main.async {
                     self.nextButton.isEnabled = true
@@ -326,9 +327,9 @@ class MeToMeRequestController: UIViewController {
     }
     
     
-    func goToPinVC(_ mode: ALMode) {
-        DispatchQueue.main.async { [weak self] in
-            var options = ALOptions()
+//    func goToPinVC(_ mode: ALMode) {
+//        DispatchQueue.main.async { [weak self] in
+//            var options = ALOptions()
 //            options.isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
 //            options.onSuccessfulDismiss = { (mode: ALMode?) in
 //                self?.nextButton.isEnabled = true
@@ -348,8 +349,8 @@ class MeToMeRequestController: UIViewController {
 //            options.onFailedAttempt = { (mode: ALMode?) in
 //                print("Failed to \(String(describing: mode))")
 //            }
-        }
-    }
+//        }
+//    }
     
     
     //MARK: - API

@@ -17,6 +17,10 @@ class PaymentsDetailsView: UIView {
     /// Замыкание для действия по нажатию кнопки "Детали операции"
     var detailTapped: (() -> Void)?
     
+    var changeTapped: (() -> Void)?
+    
+    var returnTapped: (() -> Void)?
+    
     @IBOutlet var contentView: UIView!
     
     @IBOutlet weak var statusImageView: UIImageView!
@@ -25,7 +29,9 @@ class PaymentsDetailsView: UIView {
     @IBOutlet weak var summLabel: UILabel!
     @IBOutlet weak var infoLabel: UILabel!
 //    @IBOutlet weak var buttonView: UIStackView!
-    @IBOutlet weak var buttonsView: UIView!
+    @IBOutlet weak var changeButtonsStackView: UIStackView!
+    @IBOutlet weak var detailButtonsStackView: UIStackView!
+    
     
     var confurmVCModel: ConfirmViewControllerModel? {
         didSet {
@@ -59,6 +65,14 @@ class PaymentsDetailsView: UIView {
         saveTapped?()
     }
     
+    @IBAction func changeButtonDidTapped(_ sender: Any) {
+        changeTapped?()
+    }
+    
+    @IBAction func returnButtonDidTappeed(_ sender: Any) {
+        returnTapped?()
+    }
+    
     @IBAction func detailBattonTapped(_ sender: Any) {
         print(#function)
         detailTapped?()
@@ -67,7 +81,39 @@ class PaymentsDetailsView: UIView {
     
     func setupData(with model: ConfirmViewControllerModel) {
 //        buttonView.isHidden = !model.statusIsSuccses
-        statusImageView.image = model.statusIsSuccses ? #imageLiteral(resourceName: "OkOperators") : #imageLiteral(resourceName: "errorIcon")
+        
+        if model.type == .contact {
+            changeButtonsStackView.isHidden = false
+        } else {
+            changeButtonsStackView.isHidden = true
+        }
+        
+        
+        switch model.status {
+        case .succses:
+            statusLabel.text = "Успешный перевод"
+            statusImageView.image = UIImage(named: "OkOperators")
+        case .error:
+            statusLabel.text = "Операция неуспешна!"
+            statusImageView.image = UIImage(named: "errorIcon")
+//            statusImageView.image = #imageLiteral(resourceName: "errorIcon") waiting
+        case .returnRequest:
+            statusLabel.text = "Запрос на возврат перевода принят в обработку"
+            statusImageView.image = UIImage(named: "waiting")
+            changeButtonsStackView.isHidden = true
+            detailButtonsStackView.isHidden = true
+        case .changeRequest:
+            statusLabel.text = "Запрос на изменения перевода принят в обработку"
+            statusImageView.image = UIImage(named: "waiting")
+            changeButtonsStackView.isHidden = true
+            detailButtonsStackView.isHidden = true
+        case .processing:
+            statusLabel.text = "Операция ожидает подтверждения"
+            statusImageView.image = UIImage(named: "waiting")
+            detailButtonsStackView.isHidden = true
+        }
+        
+        
         operatorImageView.image = UIImage()
         
         if model.operatorImage != "" {
@@ -86,9 +132,9 @@ class PaymentsDetailsView: UIView {
             }
             
         }
-        statusLabel.text = model.statusIsSuccses
-            ? "Успешный перевод" : "Операция неуспешна!"
+        
         summLabel.text = model.summTransction
+        
         
     }
     

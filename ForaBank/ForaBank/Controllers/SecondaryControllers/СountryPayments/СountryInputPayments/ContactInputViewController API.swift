@@ -70,15 +70,21 @@ extension ContactInputViewController {
                 guard let country = self.country else { return }
                 guard let data = respModel.data else { return }
                 print(data)
-                var model = ConfirmViewControllerModel(type: .contact)
+                let model = ConfirmViewControllerModel(type: .contact)
                 model.country = country
                 model.cardFrom = self.cardFromField.cardModel
+                model.cardFromRealm = self.cardFromField.model
                 model.summTransction = data.debitAmount?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
                 model.taxTransction = data.fee?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
                 model.summInCurrency = data.amount?.currencyFormatter(symbol: data.currencyPayee ?? "RUB") ?? ""
                 model.fullName = data.payeeName ?? "Получатель не оперделен"
+                model.surname = surname
+                model.name = name
+                model.secondName = secondName
                 model.currancyTransction = "Наличные"
-                model.statusIsSuccses = true
+                model.status = .succses
+                // TODO: add paymentSystem in model
+//                model.paymentSystem =
                 respModel.data?.additionalList?.forEach({ additional in
                     if additional.fieldName == "trnReference" {
                         model.numberTransction = additional.fieldValue ?? ""
@@ -131,7 +137,7 @@ extension ContactInputViewController {
                 
                 model.taxTransction = data.fee?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
                 model.fullName = data.payeeName ?? "Получатель не оперделен"
-                model.statusIsSuccses = true
+                model.status = .succses
                 model.bank = self.selectedBank
                 respModel.data?.additionalList?.forEach({ additional in
                     if additional.fieldName == "RECP" {

@@ -98,6 +98,8 @@ enum RouterUrlList: String {
     case openDeposit
     case makeDepositPayment
     case getDepositInfo
+    case changeOutgoing
+    case returnOutgoing
     
     func returnUrl () -> URLValue {
         switch self {
@@ -1005,6 +1007,26 @@ enum RouterUrlList: String {
             
         case .makeDepositPayment:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.makeDepositPayment.rawValue)
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .changeOutgoing:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.changeOutgoing.rawValue)
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .returnOutgoing:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.returnOutgoing.rawValue)
             switch result {
             case .success(let url):
                 return .success(url.absoluteURL)
