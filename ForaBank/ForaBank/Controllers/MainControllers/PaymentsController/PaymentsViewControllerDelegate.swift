@@ -40,6 +40,29 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 let vc = UINavigationController(rootViewController: viewController)
                 vc.modalPresentationStyle = .fullScreen
                 present(vc, animated: true)
+            } else if let lastGKHPayment = payments[indexPath.row].lastGKHPayment{
+                    
+                    let viewController = InternetTVDetailsFormController()
+                    viewController.addCloseButton()
+                    
+//                let op = GKHOperatorsModel??.self
+//                    viewController.operatorData = op
+//                    viewController.operatorType = true
+//                viewController.operatorData?.puref = lastGKHPayment.puref
+                let ob = InternetTVLatestOperationsModel()
+           
+                lastGKHPayment.additionalList?.forEach({ parameterList in
+                    let param = AdditionalListModel()
+                    param.fieldName       = parameterList.fieldName
+                    param.fieldValue     = parameterList.fieldValue
+                    ob.additionalList.append(param)
+                })
+                
+                
+                
+                    let navVC = UINavigationController(rootViewController: viewController)
+                    navVC.modalPresentationStyle = .fullScreen
+                    present(navVC, animated: true)
             } else {
                 if let viewController = payments[indexPath.row].controllerName.getViewController() {
                     viewController.addCloseButton()
@@ -143,7 +166,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
         }
     }
 
-    private func openPhonePaymentVC(model: GetLatestPaymentsDatum) {
+    private func openPhonePaymentVC(model: GetAllLatestPaymentsDatum) {
         let vc = PaymentByPhoneViewController()
 
         let banksList = Dict.shared.banks
@@ -175,19 +198,20 @@ extension PaymentsViewController: UICollectionViewDelegate {
         present(navController, animated: true, completion: nil)
     }
 
-    private func openCountryPaymentVC(model: ChooseCountryHeaderViewModel) {
+    private func openCountryPaymentVC(model: GetAllLatestPaymentsDatum) {
         let vc = ContactInputViewController()
-        vc.country = model.country
+        let country = getCountry(code: model.countryCode ?? "")
+        vc.country = country
         if model.phoneNumber != nil {
             vc.typeOfPay = .mig
-            vc.configure(with: model.country, byPhone: true)
-            vc.selectedBank = model.bank
+            vc.configure(with: country, byPhone: true)
+            vc.selectedBank = findBankByPuref(purefString: model.puref ?? "")
             let mask = StringMask(mask: "+000-0000-00-00")
             let maskPhone = mask.mask(string: model.phoneNumber)
             vc.phoneField.text = maskPhone ?? ""
         } else if model.firstName != nil, model.middleName != nil, model.surName != nil {
             vc.typeOfPay = .contact
-            vc.configure(with: model.country, byPhone: false)
+//            vc.configure(with: model.country, byPhone: false)
             vc.foraSwitchView.bankByPhoneSwitch.isOn = false
             vc.foraSwitchView.bankByPhoneSwitch.layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
             vc.foraSwitchView.bankByPhoneSwitch.thumbTintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
@@ -200,7 +224,45 @@ extension PaymentsViewController: UICollectionViewDelegate {
         navVC.modalPresentationStyle = .fullScreen
         present(navVC, animated: true, completion: nil)
     }
+    
+        func getCountry(code: String) -> CountriesList{
+            var countryValue: CountriesList?
+            let list = Dict.shared.countries
+            list?.forEach({ country in
+            if country.code == code {
+                countryValue = country
+                }
+            })
+            return countryValue!
+        }
+    
+    func findBankByPuref(purefString: String) -> BanksList? {
+        var bankValue: BanksList?
+       let paymentSystems = Dict.shared.paymentList
+       paymentSystems?.forEach({ paymentSystem in
+           if paymentSystem.code == "DIRECT" {
+               let purefList = paymentSystem.purefList
+               purefList?.forEach({ puref in
+                   puref.forEach({ (key, value) in
+                       value.forEach { purefList in
+                           if purefList.puref == purefString {
+                               let bankList = Dict.shared.banks
+                               bankList?.forEach({ bank in
+                                   if bank.memberID == key {
+                                       bankValue = bank
+                                   }
+                               })
+                           }
+                       }
+                   })
+               })
+           }
+       })
+        return bankValue!
+   }
 }
+           
+    
 
 extension PaymentsViewController: UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {

@@ -152,8 +152,8 @@ class GKHInputViewController: BottomPopUpViewAdapter {
                 animationShow (goButton)
                 animationHidden(bottomInputView)
             } else {
-                animationHidden (goButton)
-                animationHidden(bottomInputView)
+//                animationHidden (goButton)
+//                animationHidden(bottomInputView)
             }
         case false:
             if qrData.isEmpty == false {
@@ -171,8 +171,8 @@ class GKHInputViewController: BottomPopUpViewAdapter {
         let size = footerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
         if footerView.frame.size.height != size.height {
             footerView.frame.size.height = size.height + 70
-            tableView.tableFooterView = footerView
-            tableView.layoutIfNeeded()
+//            tableView.tableFooterView = footerView
+//            tableView.layoutIfNeeded()
         }
     }
     

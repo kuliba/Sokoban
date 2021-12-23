@@ -48,7 +48,7 @@ class InternetTVDetailsFormViewModel {
             }
         }
         DispatchQueue.main.async {
-            self.controller?.tableView.reloadData()
+            self.controller?.tableView?.reloadData()
         }
     }
 
@@ -100,7 +100,7 @@ class InternetTVDetailsFormViewModel {
         doNextStepServiceTransfer(request: request) { response, error in
             guard let controller = self.controller else {return}
             controller.dismissActivity()
-            controller.animationShow(controller.goButton)
+            controller.animationShow(controller.goButton!)
             if error != nil {
                 controller.showAlert(with: "Ошибка", and: error!)
             } else {
@@ -129,9 +129,9 @@ class InternetTVDetailsFormViewModel {
             DispatchQueue.main.async {
                 controller.dismissActivity()
                 sleep(1)
-                controller.animationShow(controller.goButton)
+                controller.animationShow(controller.goButton!)
                 if error != nil {
-                    controller.goButton.isHidden = true
+                    controller.goButton?.isHidden = true
                     controller.showAlert(with: "Ошибка", and: error!)
                 } else {
                     if InternetTVApiRequests.isSingleService {
@@ -141,8 +141,8 @@ class InternetTVDetailsFormViewModel {
                             if respUnw.data?.needSum ?? false {
                                 self.fillRequisites(answer: respUnw)
                                 if let sum = respUnw.data?.amount, sum > 0 {
-                                    self.controller?.bottomInputView.amountTextField.text = "\(sum)\(self.controller?.bottomInputView.amountTextField.text ?? "" )"
-                                    self.controller?.bottomInputView.amountTextField.isEnabled = false
+                                    self.controller?.bottomInputView?.amountTextField.text = "\(sum)\(self.controller?.bottomInputView?.amountTextField.text ?? "" )"
+                                    self.controller?.bottomInputView?.amountTextField.isEnabled = false
                                 }
                                 controller.showFinalStep()
                             } else {
@@ -170,9 +170,9 @@ class InternetTVDetailsFormViewModel {
             DispatchQueue.main.async {
                 controller.dismissActivity()
                 sleep(1)
-                controller.animationShow(controller.goButton)
+                controller.animationShow(controller.goButton!)
                 if error != nil {
-                    controller.goButton.isHidden = true
+                    controller.goButton?.isHidden = true
                     controller.showAlert(with: "Ошибка", and: error!)
                 } else {
                     if InternetTVApiRequests.isSingleService {
@@ -181,8 +181,8 @@ class InternetTVDetailsFormViewModel {
                         if let respUnw = response {
                             if respUnw.data?.needSum ?? false {
                                 if let sum = respUnw.data?.amount, sum > 0 {
-                                    self.controller?.bottomInputView.amountTextField.text = "\(sum)\(self.controller?.bottomInputView.amountTextField.text ?? "")"
-                                    self.controller?.bottomInputView.amountTextField.isEnabled = false
+                                    self.controller?.bottomInputView?.amountTextField.text = "\(sum)\(self.controller?.bottomInputView?.amountTextField.text ?? "")"
+                                    self.controller?.bottomInputView?.amountTextField.isEnabled = false
                                 }
                                 controller.showFinalStep()
                             } else {
@@ -208,9 +208,9 @@ class InternetTVDetailsFormViewModel {
                 DispatchQueue.main.async {
                     controller.dismissActivity()
                     sleep(1)
-                    controller.animationShow(controller.goButton)
+                    controller.animationShow(controller.goButton!)
                     if error != nil {
-                        controller.goButton.isHidden = true
+                        controller.goButton?.isHidden = true
                         controller.showAlert(with: "Ошибка", and: error!)
                     } else {
                         if let respUnw = response {
@@ -219,8 +219,8 @@ class InternetTVDetailsFormViewModel {
                             } else {
                                 if respUnw.data?.needSum ?? false {
                                     if let sum = respUnw.data?.amount, sum > 0 {
-                                        self.controller?.bottomInputView.amountTextField.text = "\(sum)\(self.controller?.bottomInputView.amountTextField.text ?? "")"
-                                        self.controller?.bottomInputView.amountTextField.isEnabled = false
+                                        self.controller?.bottomInputView?.amountTextField.text = "\(sum)\(self.controller?.bottomInputView?.amountTextField.text ?? "")"
+                                        self.controller?.bottomInputView?.amountTextField.isEnabled = false
                                     }
                                     controller.showFinalStep()
                                 } else {
