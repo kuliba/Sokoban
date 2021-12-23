@@ -59,7 +59,8 @@ class PaymentsViewController: UIViewController {
         view.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 1)
         view.addSubview(searchContact)
         searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 48)
-        searchContact.alpha = 0.5
+        searchContact.textField.alpha = 0.5
+        searchContact.searchIcon.alpha = 0.5
         searchContact.bellIcon.isHidden = true
         setupData()
         setupSearchBar()
@@ -124,6 +125,8 @@ class PaymentsViewController: UIViewController {
     }
     
     private func setupSearchBar() {
+        searchContact.secondButton.tintColor = .black
+        
         let gesture = UITapGestureRecognizer(target: self, action: #selector(openSetting))
         searchContact.secondButton.addGestureRecognizer(gesture)
         

@@ -450,6 +450,10 @@ class MeToMeViewController: UIViewController {
             body["payer"] = ["cardId": nil,
                              "cardNumber" : nil,
                              "accountId" : cardModel.id] as AnyObject
+        } else if cardModel.productType == "DEPOSIT" {
+            body["payer"] = ["cardId": nil,
+                             "cardNumber" : nil,
+                             "accountId" : cardModel.accountID] as AnyObject
         }
         
         NetworkManager<CreateFastPaymentContractDecodableModel>.addRequest(.createMe2MePullCreditTransfer, [:], body) { model, error in

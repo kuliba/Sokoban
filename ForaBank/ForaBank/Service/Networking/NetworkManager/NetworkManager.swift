@@ -80,8 +80,6 @@ final class NetworkManager<T: NetworkModelProtocol> {
             }
         }
         
-        let a = String(data: request.httpBody ?? Data(), encoding: .utf8)
-        
         let task = session.dataTask(with: request) { data, response, error in
             runOnMainQueue {
                 if error != nil {

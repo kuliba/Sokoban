@@ -13,6 +13,9 @@ import RealmSwift
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
+    //FIXME: remove singletone after refactoring
+    let model = Model.shared
+    
     var delegate: Encription?
     let timer = BackgroundTimer()
     private let downloadCash = DownloadQueue()

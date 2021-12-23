@@ -616,7 +616,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
     
         var body = [ "check" : false,
                      "amount" : amount,
-//                     "comment" : comment,
+                     "comment" : comment,
                      "currencyAmount" : "RUB",
                      "payer" : [ "cardId" : cardId,
                                  "cardNumber" : nil,
@@ -624,7 +624,8 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                                ],
                      "payeeExternal" : [
                         "accountNumber" : accountNumber.replacingOccurrences(of: " ", with: ""), // "40702810638110103994"
-                        "date" : "2021-07-07",
+                        "date" : nil,
+                        "compilerStatus": nil,
                         "name" : nameCompany,
                         "bankBIC" : bikBank, //044525187
                         "INN" : inn, //7718164343
