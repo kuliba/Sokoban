@@ -105,21 +105,21 @@ class MockItems {
                           iconName: "openDeposit",
                           controllerName: "https://www.forabank.ru/private/deposits/",
                           description: "8% годовых"),
-            
-            PaymentsModel(id: 97, name: "Кредит",
-                          iconName: "loanIcon",
-                          controllerName: "https://www.forabank.ru/private/credits/",
-                          description: "от 7% годовых"),
-            
-            PaymentsModel(id: 96, name: "Счет",
-                          iconName: "openAccount",
-                          controllerName: "https://www.forabank.ru/business/credits/investitsii/?sphrase_id=26274",
-                          description: "₽  $  €"),
-            
-            PaymentsModel(id: 95, name: "Страховку",
-                          iconName: "shieldMain",
-                          controllerName: "https://www.forabank.ru/private/strakhovanie/",
-                          description: "Для себя")
+//            
+//            PaymentsModel(id: 97, name: "Кредит",
+//                          iconName: "loanIcon",
+//                          controllerName: "https://www.forabank.ru/private/credits/",
+//                          description: "от 7% годовых"),
+//            
+//            PaymentsModel(id: 96, name: "Счет",
+//                          iconName: "openAccount",
+//                          controllerName: "https://www.forabank.ru/business/credits/investitsii/?sphrase_id=26274",
+//                          description: "₽  $  €"),
+//            
+//            PaymentsModel(id: 95, name: "Страховку",
+//                          iconName: "shieldMain",
+//                          controllerName: "https://www.forabank.ru/private/strakhovanie/",
+//                          description: "Для себя")
             
         ]
     }
@@ -184,24 +184,24 @@ class MockItems {
                           description: "QR"),
             
             PaymentsModel(id: 81, name: "Перевод по номеру",
-                          iconName: "smartphone",
+                          iconName: "smartphoneblack",
                           controllerName: "ContactsViewController",
                           description: "Что то"),
             
-            PaymentsModel(id: 82, name: "Шаблоны и автоплатежи",
-                          iconName: "star",
-                          controllerName: "GKHMainViewController",
-                          description: "ЖКХ"),
-            
-            PaymentsModel(id: 83, name: "Мой дом",
-                          iconName: "home",
-                          controllerName: "",
-                          description: "Что то"),
-            
-            PaymentsModel(id: 84, name: "Госуслуги",
-                          iconName: "PaymentsIconBlazon",
-                          controllerName: "",
-                          description: "Что то")
+//            PaymentsModel(id: 82, name: "Шаблоны и автоплатежи",
+//                          iconName: "star",
+//                          controllerName: "GKHMainViewController",
+//                          description: "ЖКХ"),
+//
+//            PaymentsModel(id: 83, name: "Мой дом",
+//                          iconName: "home",
+//                          controllerName: "",
+//                          description: "Что то"),
+//
+//            PaymentsModel(id: 84, name: "Госуслуги",
+//                          iconName: "PaymentsIconBlazon",
+//                          controllerName: "",
+//                          description: "Что то")
         ]
     }
     
@@ -214,14 +214,14 @@ class MockItems {
 //                          controllerName: "DevelopViewController",
 //                          description: "QR"),
             
-            PaymentsModel(id: 22, name: "Шаблоны и\nавтоплатежи",
-                          iconName: "bannerMig",
-                          controllerName: "https://www.forabank.ru/landings/mig/"),
-            
             PaymentsModel(id: 33, name: "Перевод по\nтелефону",
                           iconName: "bannerNG",
                           controllerName: "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/",
                           description: "Что то"),
+            PaymentsModel(id: 22, name: "Шаблоны и\nавтоплатежи",
+                          iconName: "bannerMig",
+                          controllerName: "https://www.forabank.ru/landings/mig/"),
+            
 //
 //            PaymentsModel(id: 4, name: "Любимая Beeline",
 ////                          iconName: "bilane",
