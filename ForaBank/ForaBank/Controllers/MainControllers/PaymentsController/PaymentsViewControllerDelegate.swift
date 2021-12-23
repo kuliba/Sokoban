@@ -42,12 +42,24 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 present(vc, animated: true)
             } else if let lastGKHPayment = payments[indexPath.row].lastGKHPayment{
                     
-                    let viewController = GKHInputViewController()
+                    let viewController = InternetTVDetailsFormController()
                     viewController.addCloseButton()
                     
 //                let op = GKHOperatorsModel??.self
 //                    viewController.operatorData = op
-                    viewController.operatorType = true
+//                    viewController.operatorType = true
+//                viewController.operatorData?.puref = lastGKHPayment.puref
+                let ob = InternetTVLatestOperationsModel()
+           
+                lastGKHPayment.additionalList?.forEach({ parameterList in
+                    let param = AdditionalListModel()
+                    param.fieldName       = parameterList.fieldName
+                    param.fieldValue     = parameterList.fieldValue
+                    ob.additionalList.append(param)
+                })
+                
+                
+                
                     let navVC = UINavigationController(rootViewController: viewController)
                     navVC.modalPresentationStyle = .fullScreen
                     present(navVC, animated: true)
