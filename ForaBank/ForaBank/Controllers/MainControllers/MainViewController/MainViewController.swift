@@ -45,7 +45,7 @@ class MainViewController: UIViewController {
                 }
                 for i in products {
                     switch i.productType {
-                    case ProductType.DEPOSIT.rawValue:
+                    case ProductType.deposit.rawValue:
                         self.productsDeposits.append(i)
                     default:
                         self.productsCardsAndAccounts.append(i)

@@ -7,6 +7,7 @@
 
 import UIKit
 import RealmSwift
+import SwiftUI
 
 class PaymentByPhoneViewController: UIViewController {
 
@@ -584,7 +585,7 @@ class PaymentByPhoneViewController: UIViewController {
                     print("DEBUG: Success send Phone")
                     self?.confirm = true
                     DispatchQueue.main.async {
-                        var model = ConfirmViewControllerModel(type: .phoneNumberSBP)
+                        let model = ConfirmViewControllerModel(type: .phoneNumberSBP)
                         if self?.selectedBank != nil {
                             model.bank = self?.selectedBank
                         } else {
@@ -608,15 +609,21 @@ class PaymentByPhoneViewController: UIViewController {
 //                        model.numberTransction = data.data?.
                         
                         model.statusIsSuccses = true
-                        
-                        let vc = ContactConfurmViewController()
-                        vc.confurmVCModel = model
-                        vc.addCloseButton()
-                        vc.title = "Подтвердите реквизиты"
-                        
-                        let navController = UINavigationController(rootViewController: vc)
-                        navController.modalPresentationStyle = .fullScreen
-                        self?.present(navController, animated: true, completion: nil)
+                        let statusValue = data.data?.additionalList?.filter({$0.fieldName == "AFResponse"})
+                            
+                            let vc = ContactConfurmViewController()
+                            vc.confurmVCModel = model
+                            vc.addCloseButton()
+                            vc.title = "Подтвердите реквизиты"
+                            vc.createTransferSBP = data
+                            let navController = UINavigationController(rootViewController: vc)
+                            navController.modalPresentationStyle = .fullScreen
+                        if statusValue?[0].fieldValue == "G"{
+                            self?.present(navController, animated: true, completion: nil)
+                        } else {
+//                            self?.presentSwiftUIView(data: data)
+                            self?.present(navController, animated: true, completion: nil)
+                        }
                         self?.dismissActivity()
                         
                     }

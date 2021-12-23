@@ -25,6 +25,7 @@ class PaymentsDetailsView: UIView {
     @IBOutlet weak var summLabel: UILabel!
     @IBOutlet weak var infoLabel: UILabel!
 //    @IBOutlet weak var buttonView: UIStackView!
+    @IBOutlet weak var buttonsView: UIView!
     
     var confurmVCModel: ConfirmViewControllerModel? {
         didSet {
@@ -68,6 +69,10 @@ class PaymentsDetailsView: UIView {
 //        buttonView.isHidden = !model.statusIsSuccses
         statusImageView.image = model.statusIsSuccses ? #imageLiteral(resourceName: "OkOperators") : #imageLiteral(resourceName: "errorIcon")
         operatorImageView.image = UIImage()
+        
+        if model.operatorImage != "" {
+            operatorImageView.image = model.operatorImage.convertSVGStringToImage()
+        }
         
         if (UserDefaults.standard.object(forKey: "OPERATOR_IMAGE") != nil) {
             let im = UserDefaults.standard.object(forKey: "OPERATOR_IMAGE") as? String ?? ""

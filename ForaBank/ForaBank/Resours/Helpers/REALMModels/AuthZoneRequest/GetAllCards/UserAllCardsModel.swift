@@ -120,3 +120,17 @@ extension UserAllCardsbackgroundModel {
         self.color = color
     }
 }
+
+extension UserAllCardsModel {
+    
+    var productTypeEnum: ProductType {
+        
+        guard let productType = productType, let productTypeEnum = ProductType(rawValue: productType) else {
+            
+            //FIXME: dirty hack for refactoring period!!!
+            return .account
+        }
+        
+        return productTypeEnum
+    }
+}

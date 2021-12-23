@@ -21,6 +21,12 @@ struct CardViewModel {
         return cardBal.currencyFormatter(symbol: card.currency ?? "")
     }
     
+    var fullBalance: String {
+        let cardBal: Double = card.balance ?? 0
+        return cardBal.fullCurrencyFormatter(symbol: card.currency ?? "")
+    }
+    
+    
     var maskedcardNumber: String {
         return "\(cardNumber?.suffix(4) ?? "")"
     }
@@ -96,8 +102,13 @@ struct CardViewModelFromRealm {
     }
     
     var balance: String {
-        let cardBal: Double = card.balance ?? 0
+        let cardBal: Double = card.balance
         return cardBal.currencyFormatter(symbol: card.currency ?? "")
+    }
+    
+    var fullBalance: String {
+        let cardBal: Double = card.balance
+        return cardBal.fullCurrencyFormatter(symbol: card.currency ?? "")
     }
     
     var maskedcardNumber: String {
