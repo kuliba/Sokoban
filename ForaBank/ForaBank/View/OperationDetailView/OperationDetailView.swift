@@ -110,14 +110,14 @@ extension OperationDetailView {
                         .padding(.top, 24)
                 }
                 
-                Text(viewModel.name)
+                Text(viewModel.merchant)
                     .multilineTextAlignment(.center)
                     .font(.system(size: 16, weight: .medium))
                     .foregroundColor(.black)
                     .padding(.top, 8)
                     .padding(.horizontal, 24)
                 
-                if let category = viewModel.category {
+                if let category = viewModel.name {
                     
                     Text(category)
                         .font(.system(size: 12, weight: .regular))
