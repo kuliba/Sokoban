@@ -22,16 +22,20 @@ class OperationDetailViewModel: ObservableObject {
         self?.action.send(OperationDetailViewModelAction.Dismiss())
     }
     
+    private let groupName: String
+    private let operationType: OperationType
     private let data: OperationDetailDatum?
     
-    init(documentId: Int, groupImage: UIImage, merchantName: String, categoryName: String, amount: Double, currency: String, operationType: OperationType, date: Date) {
+    init(documentId: Int, groupImage: UIImage, merchantName: String, groupName: String, amount: Double, currency: String, operationType: OperationType, date: Date) {
         
-        self.group = GroupViewModel(logo: Image(uiImage: groupImage), name: merchantName, status: nil, category: categoryName)
+        self.group = GroupViewModel(logo: Image(uiImage: groupImage), merchant: merchantName, status: nil, name: groupName)
         let amountViewModel = AmountViewModel(amount: amount, currency: currency, operationType: operationType, payService: nil)
         self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: date)
         self.actionButtons = nil
         self.featureButtons = []
         
+        self.groupName = groupName
+        self.operationType = operationType
         self.data = nil
         
         fetchOperationDetail(documentId: documentId)
@@ -94,9 +98,9 @@ extension OperationDetailViewModel {
     struct GroupViewModel {
         
         let logo: Image
-        let name: String
+        let merchant: String
         let status: StatusViewModel?
-        let category: String?
+        let name: String?
     }
     
     struct OperationViewModel {
@@ -343,7 +347,7 @@ extension OperationDetailViewModel {
         let operationType = model.operationTypeEnum
         let date = model.transactionDate
         
-        self.init(documentId: documentId, groupImage: groupImage, merchantName: merchantName, categoryName: categoryName, amount: amount, currency: currency, operationType: operationType, date: date)
+        self.init(documentId: documentId, groupImage: groupImage, merchantName: merchantName, groupName: categoryName, amount: amount, currency: currency, operationType: operationType, date: date)
     }
     
     convenience init(with model: GetCardStatementDatum, currency: String) {
@@ -356,7 +360,7 @@ extension OperationDetailViewModel {
         let operationType = model.operationTypeEnum
         let date = model.transactionDate
         
-        self.init(documentId: documentId, groupImage: groupImage, merchantName: merchantName, categoryName: categoryName, amount: amount, currency: currency, operationType: operationType, date: date)
+        self.init(documentId: documentId, groupImage: groupImage, merchantName: merchantName, groupName: categoryName, amount: amount, currency: currency, operationType: operationType, date: date)
     }
     
     convenience init(with model: GetAccountStatementDatum, currency: String) {
@@ -369,7 +373,7 @@ extension OperationDetailViewModel {
         let operationType = model.operationTypeEnum
         let date = model.transactionDate
         
-        self.init(documentId: documentId, groupImage: groupImage, merchantName: merchantName, categoryName: categoryName, amount: amount, currency: currency, operationType: operationType, date: date)
+        self.init(documentId: documentId, groupImage: groupImage, merchantName: merchantName, groupName: categoryName, amount: amount, currency: currency, operationType: operationType, date: date)
     }
 }
 
@@ -377,9 +381,9 @@ extension OperationDetailViewModel {
     
     static let sample: OperationDetailViewModel = {
        
-        var viewModel = OperationDetailViewModel(documentId: 0, groupImage: UIImage(named: "Operation Group Sample")!, merchantName: "Merchant name", categoryName: "Category name", amount: 1000.25, currency: "RUB", operationType: .debit, date: Date())
+        var viewModel = OperationDetailViewModel(documentId: 0, groupImage: UIImage(named: "Operation Group Sample")!, merchantName: "Merchant name", groupName: "Category name", amount: 1000.25, currency: "RUB", operationType: .debit, date: Date())
         
-        viewModel.group = GroupViewModel(logo: viewModel.group.logo, name: viewModel.group.name, status: .success, category: viewModel.group.category)
+        viewModel.group = GroupViewModel(logo: viewModel.group.logo, merchant: viewModel.group.merchant, status: .success, name: viewModel.group.name)
         
         viewModel.operation = OperationViewModel(bankLogo: Image(uiImage: UIImage(named: "Bank Logo Sample")!), payee: .doubleRow("Payee Name", "+7 555 555-5555"), amount: .init(amount: 1000.25, currency: "RUB", operationType: .debit, payService: .applePay), fee: .init(title: "Комиссия:", amount: "50,00"), description: "Описание операции", date: viewModel.operation.date)
         
