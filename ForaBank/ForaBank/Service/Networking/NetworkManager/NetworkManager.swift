@@ -9,18 +9,18 @@ import Foundation
 import RealmSwift
 
 final class NetworkManager<T: NetworkModelProtocol> {
-    
+
     static func addRequest(_ requestType: RouterManager,
                            _ urlParametrs: [String: String],
                            _ requestBody: [String: AnyObject],
                            completion: @escaping (_ movie: T?, _ error: String?)->()) {
-        
+
         guard var request = requestType.request() else { return }
- 
+
         let s = RouterSassionConfiguration()
         let session = s.returnSession()
-        
-        
+
+
         if let token = CSRFToken.token {
             request.allHTTPHeaderFields = ["X-XSRF-TOKEN": token]
         }
@@ -29,27 +29,27 @@ final class NetworkManager<T: NetworkModelProtocol> {
         if request.httpMethod != "GET" {
             /// URL Parameters
             if var urlComponents = URLComponents(url: request.url!,
-                                                 resolvingAgainstBaseURL: false), !urlParametrs.isEmpty {
-                
+                    resolvingAgainstBaseURL: false), !urlParametrs.isEmpty {
+
                 urlComponents.queryItems = [URLQueryItem]()
-                
+
                 urlParametrs.forEach({ (key, value) in
                     let queryItem = URLQueryItem(name: key,
-                                                 value: "\(value)".addingPercentEncoding(withAllowedCharacters: .urlHostAllowed))
+                            value: "\(value)".addingPercentEncoding(withAllowedCharacters: .urlHostAllowed))
                     urlComponents.queryItems?.append(queryItem)
                 })
-                
+
                 print("DEBUG: URLrequest:", urlComponents.query ?? "")
                 request.url = urlComponents.url
             }
             request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
-            
+
             if request.value(forHTTPHeaderField: "Content-Type") == nil {
                 request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
             }
-            
+
             /// Request Body
-            
+
             do {
                 let jsonAsData = try JSONSerialization.data(withJSONObject: requestBody, options: [])
                 request.httpBody = jsonAsData
@@ -60,21 +60,21 @@ final class NetworkManager<T: NetworkModelProtocol> {
             } catch {
                 debugPrint(NetworkError.encodingFailed)
             }
-            
+
         }
-        
+
         if request.httpMethod == "GET" {
             if var urlComponents = URLComponents(url: request.url!,
-                                                 resolvingAgainstBaseURL: false), !urlParametrs.isEmpty {
-                
+                    resolvingAgainstBaseURL: false), !urlParametrs.isEmpty {
+
                 urlComponents.queryItems = [URLQueryItem]()
-                
+
                 urlParametrs.forEach({ (key, value) in
                     let queryItem = URLQueryItem(name: key,
-                                                 value: "\(value)".addingPercentEncoding(withAllowedCharacters: .urlHostAllowed))
+                            value: "\(value)".addingPercentEncoding(withAllowedCharacters: .urlHostAllowed))
                     urlComponents.queryItems?.append(queryItem)
                 })
-                
+
                 print("DEBUG: URLrequest:", urlComponents.url ?? "")
                 request.url = urlComponents.url
             }
@@ -86,7 +86,7 @@ final class NetworkManager<T: NetworkModelProtocol> {
                     completion(nil, "Пожалуйста, проверьте ваше сетевое соединение.")
                 }
                 //print("test5555 \(response.request.content.body)")
-                
+
                 if let response = response as? HTTPURLResponse {
                     let result = handleNetworkResponse(response)
                     switch result {
@@ -97,7 +97,7 @@ final class NetworkManager<T: NetworkModelProtocol> {
                         }
                         print(String(data: data ?? Data(), encoding: .utf8) ?? "null")
                         let updatingTimeObject = returnRealmModel()
-                        
+
                         /// Сохраняем в REALM
                         let r = try? Realm()
                         do {
@@ -111,7 +111,7 @@ final class NetworkManager<T: NetworkModelProtocol> {
                         }
                         do {
                             let returnValue = try T (data: data!)
-                            
+
                             completion(returnValue, nil)
                         } catch {
                             print(error)
@@ -124,7 +124,7 @@ final class NetworkManager<T: NetworkModelProtocol> {
             }
         }
         task.resume()
-        
+
         func handleNetworkResponse(_ response: HTTPURLResponse) -> SessionResult<String>{
             switch response.statusCode {
             case 200...299: return .success
@@ -147,14 +147,14 @@ func returnRealmModel() -> GetSessionTimeout {
     print("Debugging NetworkManager", mustCheckTimeOut)
     // Сохраняем текущее время
     let updatingTimeObject = GetSessionTimeout()
-    
+
     updatingTimeObject.lastActionTimestamp = lastActionTimestamp
     updatingTimeObject.renewSessionTimeStamp = Date().localDate()
     updatingTimeObject.maxTimeOut = maxTimeOut
     updatingTimeObject.mustCheckTimeOut = mustCheckTimeOut
-    
+
     return updatingTimeObject
-    
+
 }
 
 public enum NetworkError : String, Error {
