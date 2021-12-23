@@ -267,7 +267,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                         model.summTransction = Double(data?.data?.amount ?? Double(0.0)).currencyFormatter(symbol: "RUB" )
                         model.taxTransction = Double(data?.data?.fee ?? Int(0.0)).currencyFormatter(symbol: "RUB")
                         
-                        model.statusIsSuccses = true
+                        model.status = .succses
                         DispatchQueue.main.async {
                             let vc = ContactConfurmViewController()
                             vc.confurmVCModel = model

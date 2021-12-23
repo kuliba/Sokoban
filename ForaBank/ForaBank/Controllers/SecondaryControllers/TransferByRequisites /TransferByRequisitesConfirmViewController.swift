@@ -113,7 +113,9 @@ class TransferByRequisitesConfirmViewController: UIViewController {
                 
                 DispatchQueue.main.async {
                     let vc = PaymentsDetailsSuccessViewController()
-                    vc.id = model.data?.paymentOperationDetailId
+                    let viewModel = ConfirmViewControllerModel(type: .requisites)
+                    viewModel.paymentOperationDetailId = model.data?.paymentOperationDetailId ?? 0
+                    vc.confurmVCModel = viewModel
                     vc.printFormType = "external"
                     self.navigationController?.pushViewController(vc, animated: true)
                 }

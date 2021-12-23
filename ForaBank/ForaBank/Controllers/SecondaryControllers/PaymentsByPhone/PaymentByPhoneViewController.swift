@@ -490,7 +490,7 @@ class PaymentByPhoneViewController: UIViewController {
                             model.taxTransction = data.fee?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
 //                            model.comment = comment
                             model.fullName = data.payeeName ?? "Получатель не оперделен"
-                            model.statusIsSuccses = true
+                            model.status = .succses
                             
                             let vc = ContactConfurmViewController()
                             vc.confurmVCModel = model
@@ -608,7 +608,7 @@ class PaymentByPhoneViewController: UIViewController {
 //
 //                        model.numberTransction = data.data?.
                         
-                        model.statusIsSuccses = true
+                        model.status = .succses
                         let statusValue = data.data?.additionalList?.filter({$0.fieldName == "AFResponse"})
                             
                             let vc = ContactConfurmViewController()

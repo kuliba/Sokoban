@@ -654,7 +654,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                     guard let data  = model.data else { return }
     //                self.selectedCardNumber = cardNumber
                     DispatchQueue.main.async {
-                        self.viewModel.statusIsSuccses = true
+                        self.viewModel.status = .succses
                         self.viewModel.cardFrom = self.cardField.cardModel
                         self.viewModel.summTransction = data.debitAmount?.currencyFormatter(symbol: model.data?.currencyPayer ?? "RUB") ?? ""
                         self.viewModel.summInCurrency = data.creditAmount?.currencyFormatter(symbol: model.data?.currencyPayee ?? "RUB") ?? ""

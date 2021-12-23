@@ -145,6 +145,10 @@ enum RouterBaseUrlList: String {
     
     case makeDepositPayment        = "/rest/makeDepositPayment"
     
+    case changeOutgoing            = "/rest/transfer/changeOutgoing"
+    
+    case returnOutgoing            = "/rest/transfer/returnOutgoing"
+    
     // MARK: - В не авторизованную зону.
     ///Обновление по serial
         

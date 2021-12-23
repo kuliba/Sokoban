@@ -126,14 +126,26 @@ class ConfirmViewControllerModel {
     var fullName: String? = ""
     var country: CountriesList?
     var numberTransction: String = ""
+    var paymentOperationDetailId: Int = 0
     var summTransction: String = ""
     var taxTransction: String = ""
     var currancyTransction: String = ""
-    var statusIsSuccses: Bool = false
+    var status: StatusOperation = .error
     var summInCurrency = ""
+    var name: String? = ""
+    var surname: String? = ""
+    var secondName: String? = ""
     
     init(type: PaymentType) {
         self.type = type
+    }
+    
+    enum StatusOperation {
+        case succses
+        case error
+        case returnRequest
+        case changeRequest
+        case processing
     }
     
     enum PaymentType {
@@ -257,7 +269,7 @@ class ContactConfurmViewController: UIViewController {
             vc.confurmView.statusLabel.text = "Перевод отменен!"
             vc.confurmView.operatorImageView.image = UIImage(named: "sbp-long")
             vc.confurmView.statusLabel.textColor = .red
-            vc.confurmView.buttonsView.isHidden = true
+            vc.confurmView.detailButtonsStackView.isHidden = true
             if data.userInfo?.count ?? 0 > 0{
                 vc.confurmView.infoLabel.text = "Время на подтверждение\n перевода вышло"
             } else {
@@ -282,7 +294,7 @@ class ContactConfurmViewController: UIViewController {
     func presentSwiftUIView(data: AntifraudViewModel) {
         let swiftUIView = AntifraudView(data: data, delegate: ContentViewDelegate())
         let hostingController = UIHostingController(rootView: swiftUIView)
-//        hostingController.modalPresentationStyle = .overCurrentContext
+        //        hostingController.modalPresentationStyle = .overCurrentContext
         
         if #available(iOS 15.0, *) {
             if let presentationController = hostingController.presentationController as? UISheetPresentationController {
@@ -291,12 +303,12 @@ class ContactConfurmViewController: UIViewController {
         } else {
             // Fallback on earlier versions
         }
-            hostingController.rootView.present = {
+        hostingController.rootView.present = {
             let vc = PaymentsDetailsSuccessViewController()
             hostingController.present(vc, animated: true, completion: nil)
-          }
-            present(hostingController, animated: true, completion: nil)
-
+        }
+        present(hostingController, animated: true, completion: nil)
+        
     }
     
     func setupData(with model: ConfirmViewControllerModel) {
@@ -681,10 +693,10 @@ class ContactConfurmViewController: UIViewController {
                     self.dismissActivity()
                     DispatchQueue.main.async {
                         let vc = PaymentsDetailsSuccessViewController()
-                        self.confurmVCModel?.statusIsSuccses = true
+                        self.confurmVCModel?.status = .succses
                         vc.confurmVCModel = self.confurmVCModel
                         //vc.confurmVCModel?.statusIsSuccses = true
-                        vc.id = model.data?.paymentOperationDetailId ?? 0
+                        vc.confurmVCModel?.paymentOperationDetailId = model.data?.paymentOperationDetailId ?? 0
                         switch self.confurmVCModel?.type {
                         case .card2card, .phoneNumber:
                             vc.printFormType = "internal"
@@ -698,8 +710,10 @@ class ContactConfurmViewController: UIViewController {
                             break
                         }
                         
-                        vc.modalPresentationStyle = .fullScreen
-                        self.present(vc, animated: true, completion: nil)
+//                        vc.modalPresentationStyle = .fullScreen
+                        let nav = UINavigationController(rootViewController: vc)
+                        nav.modalPresentationStyle = .fullScreen
+                        self.present(nav, animated: true, completion: nil)
                     }
                 } else {
                     self.dismissActivity()
@@ -723,8 +737,8 @@ class ContactConfurmViewController: UIViewController {
                     DispatchQueue.main.async {
                         let vc = PaymentsDetailsSuccessViewController()
                         vc.confurmVCModel = self.confurmVCModel
-                        vc.confurmVCModel?.statusIsSuccses = true
-                        vc.id = model.data?.paymentOperationDetailId ?? 0
+                        vc.confurmVCModel?.status = .succses
+                        vc.confurmVCModel?.paymentOperationDetailId = model.data?.paymentOperationDetailId ?? 0
                         switch self.confurmVCModel?.type {
                         case .card2card, .phoneNumber:
                             vc.printFormType = "internal"
@@ -736,8 +750,10 @@ class ContactConfurmViewController: UIViewController {
                         if self.confurmVCModel?.type == .phoneNumberSBP {
                             vc.printFormType = "sbp"
                         }
-                        vc.modalPresentationStyle = .fullScreen
-                        self.present(vc, animated: true, completion: nil)
+//                        vc.modalPresentationStyle = .fullScreen
+                        let nav = UINavigationController(rootViewController: vc)
+                        nav.modalPresentationStyle = .fullScreen
+                        self.present(nav, animated: true, completion: nil)
                     }
                 } else if model.statusCode == 102 {
                     self.showAlert(with: "Ошибка", and: model.errorMessage ?? "") {

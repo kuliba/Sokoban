@@ -13,8 +13,8 @@ final class NetworkManager<T: NetworkModelProtocol> {
     static func addRequest(_ requestType: RouterManager,
                            _ urlParametrs: [String: String],
                            _ requestBody: [String: AnyObject],
-                           completion: @escaping (_ movie: T?, _ error: String?)->()) {
-
+                           completion: @escaping (_ model: T?, _ error: String?)->()) {
+        
         guard var request = requestType.request() else { return }
 
         let s = RouterSassionConfiguration()
