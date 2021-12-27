@@ -158,6 +158,43 @@ class ConfirmViewControllerModel {
         case gkh
         case mobilePayment
         case openDeposit
+        
+        //BANK_DEF, BEST2PAY, CHANGE_OUTGOING, CONTACT_ADDRESSING, CONTACT_ADDRESSLESS, DIRECT, ELECSNET, EXTERNAL, HOUSING_AND_COMMUNAL_SERVICE, INTERNAL, INTERNET, ME2ME_CREDIT, ME2ME_DEBIT, MOBILE, OTH, RETURN_OUTGOING, SFP
+        
+        init?(with transferType: StringLiteralType) {
+            
+            switch transferType {
+            case "ME2ME_CREDIT", "ME2ME_DEBIT":
+                self = .card2card
+                
+            case "CONTACT_ADDRESSING", "CONTACT_ADDRESSLESS":
+                self = .contact
+                
+            case "DIRECT":
+                self = .mig
+                
+            case "EXTERNAL":
+                self = .requisites
+                
+            case "INTERNAL":
+                self = .phoneNumber
+                
+            case "HOUSING_AND_COMMUNAL_SERVICE":
+                self = .gkh
+                
+            case "MOBILE":
+                self = .mobilePayment
+                
+            case "OTH":
+                self = .openDeposit
+                
+            case "SFP":
+                self = .phoneNumberSBP
+   
+            default:
+                return nil
+            }
+        }
     }
 }
 
@@ -272,6 +309,8 @@ class ContactConfurmViewController: UIViewController {
             vc.confurmView.detailButtonsStackView.isHidden = true
             if data.userInfo?.count ?? 0 > 0{
                 vc.confurmView.infoLabel.text = "Время на подтверждение\n перевода вышло"
+                vc.confurmView.infoLabel.isHidden = false
+                
             } else {
                 vc.confurmView.infoLabel.text = ""
             }
@@ -298,16 +337,21 @@ class ContactConfurmViewController: UIViewController {
         
         if #available(iOS 15.0, *) {
             if let presentationController = hostingController.presentationController as? UISheetPresentationController {
-                presentationController.detents = [.medium()] /// set here!
+                presentationController.detents = [.medium()]
             }
         } else {
             // Fallback on earlier versions
         }
         hostingController.rootView.present = {
             let vc = PaymentsDetailsSuccessViewController()
+            vc.isModalInPresentation = true
+            
+
             hostingController.present(vc, animated: true, completion: nil)
         }
-        present(hostingController, animated: true, completion: nil)
+        present(hostingController, animated: true, completion: {
+            hostingController.presentationController?.presentedView?.gestureRecognizers?[0].isEnabled = false
+         })
         
     }
     
@@ -800,3 +844,23 @@ class ContactConfurmViewController: UIViewController {
 
 }
 
+
+extension ConfirmViewControllerModel {
+    
+    convenience init?(operation: OperationDetailDatum) {
+        
+        guard let transferType = operation.transferEnum, let operationType = PaymentType(with: transferType) else {
+            return nil
+        }
+
+        self.init(type: operationType)
+        
+        fullName = operation.payeeFullName
+        phone = operation.payeePhone
+        currancyTransction  =   operation.payerCurrency ?? ""
+        dateOfTransction = operation.transferDate ?? ""
+        taxTransction = String(operation.payerFee ?? 0)
+        summTransction = String(operation.payerAmount ?? 0)
+        cardFromAccountNumber = operation.payerAccountNumber ?? ""
+    }
+}

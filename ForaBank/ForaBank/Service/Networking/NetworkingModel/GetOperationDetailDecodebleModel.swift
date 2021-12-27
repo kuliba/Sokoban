@@ -68,102 +68,34 @@ import Foundation
 
 // MARK: - OperationDetailDatum
 struct OperationDetailDatum: Codable {
-    let payeeFullName, payeePhone, payeeCurrency, payeeCardNumber: String?
-    let payeeAmount: Double?
+    
+    let payeeFullName, payeeFirstName, payeeMiddleName, payeeSurName, payeePhone, payeeCardNumber: String?
+    let payeeAmount, amount: Double?
     let claimID, transferDate, responseDate: String?
+    let currencyAmount: String?
     let payerFee: Double?
     let fullAmount: Double?
     let payerAccountNumber, payerCurrency, payerCardNumber, payeeBankName: String?
     let payerFullName, payerDocument, requestDate: String?
     let payerAmount: Double?
     let paymentOperationDetailID: Int?
-    let printFormType, dateForDetail, memberID: String?
+    let printFormType, dateForDetail, memberID: String?, transferEnum: String?
+    let transferReference: String?
 
     enum CodingKeys: String, CodingKey {
-        case payeeFullName, payeePhone, payeeCurrency, payeeAmount, payeeCardNumber
-        case claimID = "claimId"
-        case transferDate, responseDate, payerFee, fullAmount, payerAccountNumber, payerCurrency, payerCardNumber, payeeBankName, payerFullName, payerDocument, requestDate, payerAmount
+        
+        case payeeFullName, payeeFirstName, payeeMiddleName, payeeSurName, payeePhone, payeeCardNumber
+        case payeeAmount, amount
+        case claimID = "claimId", transferDate, responseDate
+        case currencyAmount
+        case payerFee
+        case fullAmount
+        case payerAccountNumber, payerCurrency, payerCardNumber, payeeBankName
+        case payerFullName, payerDocument, requestDate
+        case payerAmount
         case paymentOperationDetailID = "paymentOperationDetailId"
-        case printFormType, dateForDetail
-        case memberID = "memberId"
+        case printFormType, dateForDetail, memberID = "memberId", transferEnum
+        case transferReference
     }
 }
-
-// MARK: OperationDetailDatum convenience initializers and mutators
-
-extension OperationDetailDatum {
-    init(data: Data) throws {
-        self = try newJSONDecoder().decode(OperationDetailDatum.self, from: data)
-    }
-
-    init(_ json: String, using encoding: String.Encoding = .utf8) throws {
-        guard let data = json.data(using: encoding) else {
-            throw NSError(domain: "JSONDecoding", code: 0, userInfo: nil)
-        }
-        try self.init(data: data)
-    }
-
-    init(fromURL url: URL) throws {
-        try self.init(data: try Data(contentsOf: url))
-    }
-
-    func with(
-        payeeFullName: String?? = nil,
-        payeeCardNumber: String?? = nil,
-        payeePhone: String?? = nil,
-        payeeCurrency: String?? = nil,
-        payeeAmount: Double?? = nil,
-        claimID: String?? = nil,
-        transferDate: String?? = nil,
-        responseDate: String?? = nil,
-        payerFee: Double?? = nil,
-        fullAmount: Double?? = nil,
-        payerAccountNumber: String?? = nil,
-        payerCurrency: String?? = nil,
-        payerCardNumber: String?? = nil,
-        payeeBankName: String?? = nil,
-        payerFullName: String?? = nil,
-        payerDocument: String?? = nil,
-        requestDate: String?? = nil,
-        payerAmount: Double?? = nil,
-        paymentOperationDetailID: Int?? = nil,
-        printFormType: String?? = nil,
-        dateForDetail: String?? = nil,
-        memberID: String?? = nil
-    ) -> OperationDetailDatum {
-        return OperationDetailDatum(
-            payeeFullName: payeeFullName ?? self.payeeFullName,
-            payeePhone: payeeCardNumber ?? self.payeeCardNumber,
-            payeeCurrency: payeePhone ?? self.payeePhone,
-            payeeCardNumber: payeeCurrency ?? self.payeeCurrency,
-            payeeAmount: payeeAmount ?? self.payeeAmount,
-            claimID: claimID ?? self.claimID,
-            transferDate: transferDate ?? self.transferDate,
-            responseDate: responseDate ?? self.responseDate,
-            payerFee: payerFee ?? self.payerFee,
-            fullAmount: fullAmount ?? self.fullAmount,
-            payerAccountNumber: payerAccountNumber ?? self.payerAccountNumber,
-            payerCurrency: payerCurrency ?? self.payerCurrency,
-            payerCardNumber: payerCardNumber ?? self.payerCardNumber,
-            payeeBankName: payeeBankName ?? self.payeeBankName,
-            payerFullName: payerFullName ?? self.payerFullName,
-            payerDocument: payerDocument ?? self.payerDocument,
-            requestDate: requestDate ?? self.requestDate,
-            payerAmount: payerAmount ?? self.payerAmount,
-            paymentOperationDetailID: paymentOperationDetailID ?? self.paymentOperationDetailID,
-            printFormType: printFormType ?? self.printFormType,
-            dateForDetail: dateForDetail ?? self.dateForDetail,
-            memberID: memberID ?? self.memberID
-        )
-    }
-
-    func jsonData() throws -> Data {
-        return try newJSONEncoder().encode(self)
-    }
-
-    func jsonString(encoding: String.Encoding = .utf8) throws -> String? {
-        return String(data: try self.jsonData(), encoding: encoding)
-    }
-}
-
 

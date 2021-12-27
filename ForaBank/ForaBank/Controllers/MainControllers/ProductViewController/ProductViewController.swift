@@ -1160,7 +1160,7 @@ extension ProductViewController{
         switch product.productTypeEnum {
         case .deposit:
             let deposit = sortedDeposit[indexPath.section].value[indexPath.row]
-            let operationDetailViewModel = OperationDetailViewModel(with: deposit, currency: currency)
+            let operationDetailViewModel = OperationDetailViewModel(with: deposit, currency: currency, product: product)
             let operationDetailVC = OperationDetailHostingViewController(with: operationDetailViewModel)
             operationDetailVC.modalPresentationStyle = .custom
             operationDetailVC.transitioningDelegate = self
@@ -1169,7 +1169,7 @@ extension ProductViewController{
             
         case .card:
             let card = sorted[indexPath.section].value[indexPath.row]
-            let operationDetailViewModel = OperationDetailViewModel(with: card, currency: currency)
+            let operationDetailViewModel = OperationDetailViewModel(with: card, currency: currency, product: product)
             let operationDetailVC = OperationDetailHostingViewController(with: operationDetailViewModel)
             operationDetailVC.modalPresentationStyle = .custom
             operationDetailVC.transitioningDelegate = self
@@ -1178,7 +1178,7 @@ extension ProductViewController{
             
         case .account:
             let account = sortedAccount[indexPath.section].value[indexPath.row]
-            let operationDetailViewModel = OperationDetailViewModel(with: account, currency: currency)
+            let operationDetailViewModel = OperationDetailViewModel(with: account, currency: currency, product: product)
             let operationDetailVC = OperationDetailHostingViewController(with: operationDetailViewModel)
             operationDetailVC.modalPresentationStyle = .custom
             operationDetailVC.transitioningDelegate = self
@@ -1399,7 +1399,7 @@ extension ProductViewController: UIViewControllerTransitioningDelegate {
 
         let presenter = PresentationController(presentedViewController: presented, presenting: presenting)
         if halfScreen == true {
-            presenter.height = 550
+            presenter.height = 640
         } else {
             presenter.height = 310
         }

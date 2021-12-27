@@ -258,8 +258,6 @@ class PaymentByPhoneViewController: UIViewController {
                       
                         if card.productType == "ACCOUNT"{
                             self.selectedAccountId = card.id
-                            print(card)
-                            print(card.accountNumber?.digits )
                         } else {
                             self.selectedCardNumber = card.cardID
                         }
