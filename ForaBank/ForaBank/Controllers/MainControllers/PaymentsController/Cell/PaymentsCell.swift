@@ -181,6 +181,7 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
             let number = phoneNumber?.first?.fieldValue ?? ""
             let mask = StringMask(mask: "+7 (000) 000-00-00")
             self.titleLabel.text = mask.mask(string: number)
+            self.titleLabel.text = number.numberFormatter()
             guard let avatarImage = UIImage(named: "smartphonegray") else { return }
             self.iconImageView.image = avatarImage
             self.avatarImageView.image = nil

@@ -36,6 +36,7 @@ class PaymentsDetailsView: UIView {
     var confurmVCModel: ConfirmViewControllerModel? {
         didSet {
             guard let model = confurmVCModel else { return }
+            
             setupData(with: model)
         }
     }
@@ -55,7 +56,8 @@ class PaymentsDetailsView: UIView {
     func commonInit() {
         Bundle.main.loadNibNamed(kContentXibName, owner: self, options: nil)
         contentView.fixInView(self)
-        
+        changeButtonsStackView.isHidden = true
+        infoLabel.isHidden = true
         layer.shadowRadius = 16
         
     }
@@ -103,7 +105,7 @@ class PaymentsDetailsView: UIView {
             changeButtonsStackView.isHidden = true
             detailButtonsStackView.isHidden = true
         case .changeRequest:
-            statusLabel.text = "Запрос на изменения перевода принят в обработку"
+            statusLabel.text = "Запрос на изменение перевода принят в обработку"
             statusImageView.image = UIImage(named: "waiting")
             changeButtonsStackView.isHidden = true
             detailButtonsStackView.isHidden = true

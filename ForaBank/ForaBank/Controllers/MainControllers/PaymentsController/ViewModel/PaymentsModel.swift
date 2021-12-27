@@ -67,16 +67,14 @@ struct PaymentsModel: Hashable {
         self.lastPhonePayment = lastPhonePayment
         self.type = lastPhonePayment.type
         self.id = Int.random(in: 100 ... 10000)
-        let mask = StringMask(mask: "+7 (000) 000-00-00")
-        let maskPhone = mask.mask(string: lastPhonePayment.phoneNumber)
-        self.name = maskPhone ?? ""
+        self.name = lastPhonePayment.phoneNumber?.numberFormatter() ?? ""
         self.controllerName = "PaymentByPhoneViewController"
         self.iconName = "smartphonegray"
     }
     init(productList: GetProductListDatum) {
         self.productList = productList
         self.id = Int.random(in: 100 ... 10000)
-        self.name = productList.name ?? "1234"
+        self.name = productList.name ?? ""
         self.controllerName = "PaymentByPhoneViewController"
         self.iconName = "smartphonegray"
     }

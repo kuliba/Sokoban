@@ -25,8 +25,9 @@ class OperationDetailViewModel: ObservableObject {
     private let groupName: String
     private let operationType: OperationType
     private let data: OperationDetailDatum?
+    private let product: UserAllCardsModel
     
-    init(documentId: Int, groupImage: UIImage, merchantName: String, groupName: String, amount: Double, currency: String, operationType: OperationType, date: Date) {
+    init(documentId: Int, groupImage: UIImage, merchantName: String, groupName: String, amount: Double, currency: String, operationType: OperationType, date: Date, product: UserAllCardsModel) {
         
         self.group = GroupViewModel(logo: Image(uiImage: groupImage), merchant: merchantName, status: nil, name: groupName)
         let amountViewModel = AmountViewModel(amount: amount, currency: currency, operationType: operationType, payService: nil)
@@ -37,6 +38,7 @@ class OperationDetailViewModel: ObservableObject {
         self.groupName = groupName
         self.operationType = operationType
         self.data = nil
+        self.product = product
         
         fetchOperationDetail(documentId: documentId)
     }
@@ -56,37 +58,64 @@ class OperationDetailViewModel: ObservableObject {
             
             DispatchQueue.main.async {
                 
-                self.operation = self.operation.updated(with: operationDetailModel)
+                //FIXME: refactor more elegant way without self
+                self.operation = self.operation.updated(with: operationDetailModel, viewModel: self)
                 
-                //TODO: buttons appear condition
-                if false {
-                    
+                if self.groupName == "Перевод Contact" && self.operationType == .debit {
                     var actionButtons = [ActionButtonViewModel]()
                     
-                    let changeButton = ActionButtonViewModel(name: "Изменить", action: { [weak self] in self?.action.send(OperationDetailViewModelAction.Change())})
+                    let changeButton = ActionButtonViewModel(name: "Изменить",
+                                                             action: { [weak self] in
+                        self?.action.send(OperationDetailViewModelAction.Change(
+                            amount: (operationDetailModel.amount ?? 0).currencyFormatter(symbol: operationDetailModel.currencyAmount ?? ""),
+                            name: operationDetailModel.payeeFirstName ?? "",
+                            surname: operationDetailModel.payeeSurName ?? "",
+                            secondName: operationDetailModel.payeeMiddleName ?? "",
+                            paymentOperationDetailId: operationDetailModel.paymentOperationDetailID ?? 0,
+                            transferReference: operationDetailModel.transferReference ?? "",
+                            product: self?.product ?? UserAllCardsModel())
+                        )
+                    })
                     actionButtons.append(changeButton)
                     
-                    let returnButton = ActionButtonViewModel(name: "Вернуть", action: { [weak self] in self?.action.send(OperationDetailViewModelAction.Return())})
+                    let returnButton = ActionButtonViewModel(name: "Вернуть",
+                                                             action: { [weak self] in
+                        self?.action.send(OperationDetailViewModelAction.Return(
+                            amount: (operationDetailModel.amount ?? 0).currencyFormatter(symbol: operationDetailModel.currencyAmount ?? ""),
+                            fullName: operationDetailModel.payeeFullName ?? "",
+                            name: operationDetailModel.payeeFirstName ?? "",
+                            surname: operationDetailModel.payeeSurName ?? "",
+                            secondName: operationDetailModel.payeeMiddleName ?? "",
+                            paymentOperationDetailId: operationDetailModel.paymentOperationDetailID ?? 0,
+                            transferReference: operationDetailModel.transferReference ?? "",
+                            product: self?.product ?? UserAllCardsModel())
+                        )
+                    })
                     actionButtons.append(returnButton)
                     
                     self.actionButtons = actionButtons
                 }
                 
+                // check if transferReferensen is not nill
                 if let paymentOperationDetailID = operationDetailModel.paymentOperationDetailID {
 
-                    // document button
-                    //TODO: document view controller required
-                    /*
-                    let documentButtonViewModel = FeatureButtonViewModel(icon: "Operation Details Document", name: "Документ", action: { [weak self] in self?.action.send(OperationDetailViewModelAction.ShowDocument(paymentOperationDetailID: paymentOperationDetailID))})
-                    self.featureButtons.append(documentButtonViewModel)
-                     */
-                    
                     // detail button
                     if let printFormType = operationDetailModel.printFormType {
                         
-                        let detailButtonViewModel = FeatureButtonViewModel(icon: "Operation Details Info", name: "Детали", action: { [weak self] in self?.action.send(OperationDetailViewModelAction.ShowDetail(paymentOperationDetailID: paymentOperationDetailID, printFormType: printFormType))})
+                        let detailButtonViewModel = FeatureButtonViewModel(icon: "Operation Details Document", name: "Документ", action: { [weak self] in self?.action.send(OperationDetailViewModelAction.ShowDocument(paymentOperationDetailID: paymentOperationDetailID, printFormType: printFormType))})
                         self.featureButtons.append(detailButtonViewModel)
                     }
+                    
+                    //TODO: temp disabled
+                    /*
+                    // info button
+                    if let detailViewModel = ConfirmViewControllerModel(operation: operationDetailModel) {
+                        
+                        let documentButtonViewModel = FeatureButtonViewModel(icon: "Operation Details Info", name: "Детали", action: { [weak self] in self?.action.send(OperationDetailViewModelAction.ShowDetail(viewModel: detailViewModel))})
+                        self.featureButtons.append(documentButtonViewModel)
+                    }
+                     
+                     */
                 }
             }
         }
@@ -152,7 +181,7 @@ extension OperationDetailViewModel {
             OperationViewModel(bankLogo: bankLogo, payee: payee, amount: amount, fee: fee, description: description, date: date)
         }
         
-        func updated(with operation: OperationDetailDatum) -> OperationViewModel {
+        func updated(with operation: OperationDetailDatum, viewModel: OperationDetailViewModel) -> OperationViewModel {
             
             var operationViewModel = self
             
@@ -161,7 +190,7 @@ extension OperationDetailViewModel {
                 operationViewModel = operationViewModel.updated(with: updatedDate)
             }
             
-            if let payeeVewModel = PayeeViewModel(with: operation) {
+            if let payeeVewModel = PayeeViewModel(with: operation, viewModel: viewModel) {
                 
                 operationViewModel = operationViewModel.updated(with: payeeVewModel)
             }
@@ -188,24 +217,34 @@ extension OperationDetailViewModel {
         
         case singleRow(String)
         case doubleRow(String, String)
+        case number(String, String, () -> Void)
         
-        init?(with operation: OperationDetailDatum) {
+        init?(with operation: OperationDetailDatum, viewModel: OperationDetailViewModel) {
             
-            guard let name = operation.payeeFullName else {
+            guard let name = operation.payerFullName else {
                 return nil
             }
             
-            if let phone = operation.payeePhone {
-                
-                self = .doubleRow(name, phone)
-                
-            } else if let cardNumber = operation.payeeCardNumber {
-                
-                self = .doubleRow(name, cardNumber)
+            if let transferNumber = operation.transferReference {
+
+                self = .number(name, transferNumber, {[weak viewModel] in viewModel?.action.send(OperationDetailViewModelAction.CopyNumber(number: transferNumber)) })
                 
             } else {
                 
-                self = .singleRow(name)
+                if let phone = operation.payeePhone {
+                    
+                    let mask = StringMask(mask: "+7 (000) 000-00-00")
+                    let maskPhone = mask.mask(string: phone) ?? phone
+                    self = .doubleRow(name, maskPhone)
+                    
+                } else if let cardNumber = operation.payeeCardNumber {
+                    
+                    self = .doubleRow(name, cardNumber)
+                    
+                } else {
+                    
+                    self = .singleRow(name)
+                }
             }
         }
     }
@@ -337,7 +376,7 @@ extension OperationDetailViewModel {
 
 extension OperationDetailViewModel {
     
-    convenience init(with model: GetDepositStatementDatum, currency: String) {
+    convenience init(with model: GetDepositStatementDatum, currency: String, product: UserAllCardsModel) {
         
         let documentId = model.documentID ?? 0
         let groupImage = model.svgImage?.convertSVGStringToImage() ?? UIImage()
@@ -347,10 +386,10 @@ extension OperationDetailViewModel {
         let operationType = model.operationTypeEnum
         let date = model.transactionDate
         
-        self.init(documentId: documentId, groupImage: groupImage, merchantName: merchantName, groupName: categoryName, amount: amount, currency: currency, operationType: operationType, date: date)
+        self.init(documentId: documentId, groupImage: groupImage, merchantName: merchantName, groupName: categoryName, amount: amount, currency: currency, operationType: operationType, date: date, product: product)
     }
     
-    convenience init(with model: GetCardStatementDatum, currency: String) {
+    convenience init(with model: GetCardStatementDatum, currency: String, product: UserAllCardsModel) {
         
         let documentId = model.documentID ?? 0
         let groupImage = model.svgImage?.convertSVGStringToImage() ?? UIImage()
@@ -360,10 +399,10 @@ extension OperationDetailViewModel {
         let operationType = model.operationTypeEnum
         let date = model.transactionDate
         
-        self.init(documentId: documentId, groupImage: groupImage, merchantName: merchantName, groupName: categoryName, amount: amount, currency: currency, operationType: operationType, date: date)
+        self.init(documentId: documentId, groupImage: groupImage, merchantName: merchantName, groupName: categoryName, amount: amount, currency: currency, operationType: operationType, date: date, product: product)
     }
     
-    convenience init(with model: GetAccountStatementDatum, currency: String) {
+    convenience init(with model: GetAccountStatementDatum, currency: String, product: UserAllCardsModel) {
         
         let documentId = model.documentID ?? 0
         let groupImage = model.svgImage?.convertSVGStringToImage() ?? UIImage()
@@ -373,7 +412,7 @@ extension OperationDetailViewModel {
         let operationType = model.operationTypeEnum
         let date = model.transactionDate
         
-        self.init(documentId: documentId, groupImage: groupImage, merchantName: merchantName, groupName: categoryName, amount: amount, currency: currency, operationType: operationType, date: date)
+        self.init(documentId: documentId, groupImage: groupImage, merchantName: merchantName, groupName: categoryName, amount: amount, currency: currency, operationType: operationType, date: date, product: product)
     }
 }
 
@@ -381,11 +420,11 @@ extension OperationDetailViewModel {
     
     static let sample: OperationDetailViewModel = {
        
-        var viewModel = OperationDetailViewModel(documentId: 0, groupImage: UIImage(named: "Operation Group Sample")!, merchantName: "Merchant name", groupName: "Category name", amount: 1000.25, currency: "RUB", operationType: .debit, date: Date())
+        var viewModel = OperationDetailViewModel(documentId: 0, groupImage: UIImage(named: "Operation Group Sample")!, merchantName: "Merchant name", groupName: "Category name", amount: 1000.25, currency: "RUB", operationType: .debit, date: Date(), product:  UserAllCardsModel())
         
         viewModel.group = GroupViewModel(logo: viewModel.group.logo, merchant: viewModel.group.merchant, status: .success, name: viewModel.group.name)
         
-        viewModel.operation = OperationViewModel(bankLogo: Image(uiImage: UIImage(named: "Bank Logo Sample")!), payee: .doubleRow("Payee Name", "+7 555 555-5555"), amount: .init(amount: 1000.25, currency: "RUB", operationType: .debit, payService: .applePay), fee: .init(title: "Комиссия:", amount: "50,00"), description: "Описание операции", date: viewModel.operation.date)
+        viewModel.operation = OperationViewModel(bankLogo: Image(uiImage: UIImage(named: "Bank Logo Sample")!), payee: .number("Иванов Иван Иванович", "4556676767", {}), amount: .init(amount: 1000.25, currency: "RUB", operationType: .debit, payService: .applePay), fee: .init(title: "Комиссия:", amount: "50,00"), description: "Описание операции", date: viewModel.operation.date)
         
         viewModel.actionButtons = [ActionButtonViewModel(name: "Изменить", action: {}), ActionButtonViewModel(name: "Вернуть", action: {})]
         

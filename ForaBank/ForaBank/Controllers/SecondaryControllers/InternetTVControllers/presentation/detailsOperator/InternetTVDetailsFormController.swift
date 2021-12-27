@@ -6,7 +6,7 @@ import Foundation
 class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSource, UIPopoverPresentationControllerDelegate, UIViewControllerTransitioningDelegate {
 
     static let msgUpdateTable = 3
-
+    var fromPaymentVc = false
     var operatorData: GKHOperatorsModel?
     var latestOperation: InternetLatestOpsDO?
     var qrData = [String: String]()
@@ -33,7 +33,11 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
         bottomInputView?.isHidden = true
         setupNavBar()
         goButton?.add_CornerRadius(5)
-        viewModel.puref = operatorData?.puref ?? ""
+        if fromPaymentVc == false{
+            viewModel.puref = operatorData?.puref ?? ""
+        } else {
+
+        }
         InternetTVApiRequests.isSingleService(puref: viewModel.puref)
         tableView?.register(UINib(nibName: "InternetInputCell", bundle: nil), forCellReuseIdentifier: InternetTVInputCell.reuseId)
         bottomInputView?.currencySymbol = "₽"

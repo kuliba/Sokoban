@@ -28,6 +28,7 @@ struct AntifraudView: View {
     let data: AntifraudViewModel
 
     @ObservedObject var delegate: ContentViewDelegate
+    
     var present: (()->Void)?
 
 
@@ -38,25 +39,30 @@ struct AntifraudView: View {
         VStack {
             Image("antifraud")
                 .frame(width: 64, height: 64, alignment: .center)
-                .padding(EdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 0))
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: 15, trailing: 0))
             Text("Подозрительные действия")
                 .bold()
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 0))
                 .font(.system(size: 16))
-            Text("Есть подозрения в попытке совершения мошеннических операций")
-                .padding(EdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 0))
-                .multilineTextAlignment(.center)
-                .foregroundColor(.gray)
-                .font(.system(size: 13))
+            VStack {
+                Text("Есть подозрения в попытке совершения\n мошеннических операций")
+                    .padding(EdgeInsets(top: 0, leading: 40, bottom: 15, trailing: 40))
+                    .multilineTextAlignment(.center)
+                    .foregroundColor(.gray)
+                    .lineLimit(nil)
+                    .font(.system(size: 13))
+                    .fixedSize(horizontal: false, vertical: true)
+                    Spacer()
+            }
             Text(data.name)
                 .font(.system(size: 16))
             Text(data.phoneNumber)
                 .font(.system(size: 16))
-                .padding(EdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 0))
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: 15, trailing: 0))
             Text(data.amount)
                 .font(.system(size: 24))
                 .bold()
-                .padding(EdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 0))
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: 15, trailing: 0))
             Text("\(timeString(time: timeRemaining))")
                 .foregroundColor(.red)
                     .onReceive(timer){ _ in
@@ -74,15 +80,11 @@ struct AntifraudView: View {
                 Button("Отменить") {
                     presentationMode.wrappedValue.dismiss()
                     NotificationCenter.default.post(name: NSNotification.Name("dismissSwiftUI"), object: nil, userInfo: nil)
-                    print("Отменить")
-                    
-
                 }
                 .buttonStyle(StyledButton())
 
                 Button("Продолжить") {
                     presentationMode.wrappedValue.dismiss()
-                    print("Продолжить")
                 }
                 .buttonStyle(StyledButton())
             }

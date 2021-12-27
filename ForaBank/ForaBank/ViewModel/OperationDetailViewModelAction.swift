@@ -16,21 +16,37 @@ enum OperationDetailViewModelAction {
     struct ShowDocument: Action {
         
         let paymentOperationDetailID: Int
+        let printFormType: String
     }
     
     struct ShowDetail: Action {
         
-        let paymentOperationDetailID: Int
-        let printFormType: String
+        let viewModel: ConfirmViewControllerModel
     }
     
     struct Change: Action {
-        
-        //TODO: change properties
+        var amount: String
+        var name: String
+        var surname: String
+        var secondName: String
+        var paymentOperationDetailId: Int
+        var transferReference: String
+        var product: UserAllCardsModel
     }
     
     struct Return: Action {
+        var amount: String
+        let fullName: String
+        var name: String
+        var surname: String
+        var secondName: String
+        var paymentOperationDetailId: Int
+        var transferReference: String
+        var product: UserAllCardsModel
+    }
+    
+    struct CopyNumber: Action {
         
-        //TODO: return properties
+        let number: String
     }
 }

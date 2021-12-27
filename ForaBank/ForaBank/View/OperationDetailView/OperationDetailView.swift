@@ -37,7 +37,7 @@ struct OperationDetailView: View {
             
             // content
             VStack(spacing: 0) {
- 
+                
                 GroupView(viewModel: $viewModel.group)
                 OperationView(viewModel: $viewModel.operation)
                     .padding(.top, 24)
@@ -188,6 +188,33 @@ extension OperationDetailView {
                         .font(.system(size: 16, weight: .regular))
                     Text(extra)
                         .font(.system(size: 16, weight: .regular))
+                }
+                
+            case .number(let name, let number, let action):
+                VStack {
+                    Text(name)
+                        .font(.system(size: 16, weight: .regular))
+                    
+                    HStack {
+                        
+                        Text(number)
+                            .font(.system(size: 16, weight: .regular))
+                            .foregroundColor(Color.black)
+                            .padding(.leading, 6)
+                            
+                        
+                        Button {
+                            
+                            action()
+                            
+                        } label: {
+                            
+                            Image("Operation Details Copy Button Icon")
+                        }.padding(6)
+                    }
+                    .padding(8)
+                    .background(Color(hex: "F6F6F7"))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
             }
         }
