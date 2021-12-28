@@ -40,19 +40,42 @@ class OperationDetailHostingViewController: UIHostingController<OperationDetailV
                 case _ as OperationDetailViewModelAction.Dismiss:
                     self.dismiss(animated: true)
                     
-                case let payload as OperationDetailViewModelAction.ShowDetail:
+                case let payload as OperationDetailViewModelAction.ShowDocument:
                     let pdfViewerVC = PDFViewerViewController()
                     pdfViewerVC.id = payload.paymentOperationDetailID
                     pdfViewerVC.printFormType = payload.printFormType
                     self.present(pdfViewerVC, animated: true)
                     
-                case _ as OperationDetailViewModelAction.Change:
+                case let payload as OperationDetailViewModelAction.Change:
                     //TODO: change action here
-                    break
+                    let confurmVCModel = ConfirmViewControllerModel(type: .contact)
+                    confurmVCModel.summTransction = payload.amount
+                    confurmVCModel.name = payload.name
+                    confurmVCModel.surname = payload.surname
+                    confurmVCModel.secondName = payload.secondName
+                    confurmVCModel.paymentOperationDetailId = payload.paymentOperationDetailId
+                    confurmVCModel.numberTransction = payload.transferReference
+                    confurmVCModel.cardFromRealm = payload.product
+                    let controller = ChangeReturnCountryController(type: .changePay)
+                    controller.confurmVCModel = confurmVCModel
+                    self.present(controller, animated: true, completion: nil)
+                                        
+                case let payload as OperationDetailViewModelAction.Return:
+                    let confurmVCModel = ConfirmViewControllerModel(type: .contact)
+                    confurmVCModel.summTransction = payload.amount
+                    confurmVCModel.fullName = payload.fullName
+                    confurmVCModel.name = payload.name
+                    confurmVCModel.surname = payload.surname
+                    confurmVCModel.secondName = payload.secondName
+                    confurmVCModel.paymentOperationDetailId = payload.paymentOperationDetailId
+                    confurmVCModel.numberTransction = payload.transferReference
+                    confurmVCModel.cardFromRealm = payload.product
+                    let controller = ChangeReturnCountryController(type: .changePay)
+                    controller.confurmVCModel = confurmVCModel
+                    self.present(controller, animated: true, completion: nil)
                     
-                case _ as OperationDetailViewModelAction.Return:
-                    //TODO: return action here
-                    break
+                case let payload as OperationDetailViewModelAction.CopyNumber:
+                    UIPasteboard.general.string = payload.number
                     
                 default:
                     break
@@ -60,5 +83,4 @@ class OperationDetailHostingViewController: UIHostingController<OperationDetailV
                 
             }.store(in: &bindings)
     }
-    
 }

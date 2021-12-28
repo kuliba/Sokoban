@@ -43,20 +43,20 @@ extension QRViewController: AVCaptureMetadataOutputObjectsDelegate, CALayerDeleg
                 }
 
                 if foundOperators?.count ?? 0 > 1 {
-                    let foundByName = foundOperators?.filter{item in
-                        let nameOrg = dicQR["name"]
-                        return nameOrg?.lowercased().contains(item.name?.lowercased() ?? "####") == true
-                    }
-                    if foundByName?.count == 1 {
-                        navigationController?.popViewController(animated: true)
-                        operators = foundOperators?.first
-                        returnKey()
-                    } else {
+//                    let foundByName = foundOperators?.filter{item in
+//                        let nameOrg = dicQR["name"]
+//                        return nameOrg?.lowercased().contains(item.name?.lowercased() ?? "####") == true
+//                    }
+//                    if foundByName?.count == 1 {
+//                        navigationController?.popViewController(animated: true)
+//                        operators = foundOperators?.first
+//                        returnKey()
+//                    } else {
                         GlobalModule.qrData = qrData
                         QRErrorViewController.operators.removeAll()
                         QRErrorViewController.operators.append(contentsOf: foundOperators!)
                         performSegue(withIdentifier: "qrError", sender: nil)
-                    }
+//                    }
                 } else if foundOperators?.count ?? 0 == 1 {
                     navigationController?.popViewController(animated: true)
                     operators = foundOperators?.first

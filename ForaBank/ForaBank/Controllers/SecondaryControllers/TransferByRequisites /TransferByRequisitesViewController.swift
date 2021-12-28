@@ -17,6 +17,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
     lazy var realm = try? Realm()
     var cardIsSelect = false
 
+    var byCompany = false
     
     var viewModel = ConfirmViewControllerModel(type: .requisites) {
         didSet {
@@ -133,13 +134,32 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
     }
     var delegate: MyProtocol?
     @objc func myTargetFunction(textField: UITextField) {
-        if self.nameField.isHidden ==    true {
-            self.fioField.placeHolder.text = "Фамилия"
-            self.nameField.isHidden = false
-            self.surField.isHidden = false
+        if nameField.isHidden == true{
+            hideShowFields()
+        }
+    }
+    
+    func hideShowFields() {
+        
+            let model = ForaInputModel(
+                title: "Фамилия",
+                image: #imageLiteral(resourceName: "person"),
+                showChooseButton: true)
+            
+            self.fioField.viewModel = model
+//            self.fioField.placeHolder.text = "Фамилия"
+            self.nameField.isHidden.toggle()
+            if nameField.isHidden == true{
+                let model = ForaInputModel(
+                    title: "ФИО получателя",
+                    image: #imageLiteral(resourceName: "person"),
+                    showChooseButton: true)
+                
+                self.fioField.viewModel = model
+            }
+            self.surField.isHidden.toggle()
             self.stackView.insertArrangedSubview(self.nameField, at: 6)
             self.stackView.insertArrangedSubview(self.surField, at: 7)
-        }
     }
     
     
@@ -171,6 +191,9 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         innField.errorLabel.isHidden = true
         innField.errorLabel.alpha = 0
 
+        nameField.isHidden = true
+        surField.isHidden = true
+        
         DispatchQueue.main.async {
             var filterProduct: [UserAllCardsModel] = []
             let cards = ReturnAllCardList.cards()
@@ -208,16 +231,6 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         bikBankField.didChangeValueField = {(field) in
             self.hideView(self.bankListView, needHide: false)
             self.bankListView.textFieldDidChanchedValue(textField: field)
-//            if self.bikBankField.textField.text?.count == 9 {
-//                self.suggestBank(self.bikBankField.textField.text ?? "") { model in
-//                    let image = model.first?.svgImage
-//                    DispatchQueue.main.async {
-//                        self.bikBankField.imageView.image = image?.convertSVGStringToImage()
-//                    }
-//                }
-//            } else {
-//                self.bikBankField.imageView.image = UIImage(imageLiteralResourceName: "bikbank")
-//            }
         }
         
         bikBankField.didChooseButtonTapped = { () in
@@ -236,19 +249,12 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                     self.commentField.isHidden = true
             }
         }
-//        nameField.didChangeValueField = {(field) in
-//            self.nameField.errorLabel.isHidden = false
-//            self.nameField.errorLabel.text = "Укажите название организации"
-//        }
+        
         fioField.textField.addTarget(self, action: #selector(myTargetFunction), for: .touchDown)
             
        
             self.fioField.didChooseButtonTapped = { () in
-            self.fioField.placeHolder.text = "Фамилия"
-            self.nameField.isHidden.toggle()
-            self.surField.isHidden.toggle()
-            self.stackView.insertArrangedSubview(self.nameField, at: 6)
-            self.stackView.insertArrangedSubview(self.surField, at: 7)
+                self.hideShowFields()
                 if self.fioField.textField.text?.count != 0{
                     self.fioField.textField.text = self.fio.surname
                 } else {
@@ -268,6 +274,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
             
         }
         fioField.didChangeValueField = {(field) in
+    
             if self.nameField.isHidden == true {
                 self.fioField.textField.text = self.fio.surname + self.fio.patronymic + self.fio.name
             } else {
@@ -283,8 +290,10 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                 self.stackView.addArrangedSubview(self.fioField)
 //                self.commentField.isHidden = false
 //                self.stackView.addArrangedSubview(self.commentField)
+                self.byCompany = false
                 self.fioField.isHidden = false
             } else if self.accountNumber.textField.text?.replacingOccurrences(of: " ", with: "").count == 20 {
+                self.byCompany = true
                 self.fio.name.removeAll()
                 self.fio.patronymic.removeAll()
                 self.fioField.textField.text = ""
@@ -292,7 +301,6 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                 self.stackView.addArrangedSubview(self.innField)
                 self.innField.isHidden = false
             } else {
-                
                 self.fioField.isHidden = true
                 self.nameField.isHidden = true
                 self.surField.isHidden = true
@@ -327,23 +335,6 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
 
     
     func setupActions() {
-//        getCardList { [weak self] data ,error in
-//            DispatchQueue.main.async {
-//
-//                if error != nil {
-//                    self?.showAlert(with: "Ошибка", and: error!)
-//                }
-//                guard let data = data else { return }
-//                self?.cardListView.cardList = data
-//
-//                if data.count > 0 {
-//                    self?.cardField.configCardView(data.first!)
-//                    guard let cardNumber  = data.first?.number else { return }
-//                    self?.selectedCardNumber = cardNumber
-//                }
-//            }
-//        }
-    
         
         bankListView.didBankTapped = { (bank) in
             self.selectedBank = bank
@@ -352,14 +343,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
             self.hideView(self.cardListView, needHide: true)
         }
         
-//        bankListView.didSeeAll = { () in
-////            self.selectedBank = bank
-//            let vc = SearchBanksViewController()
-//            vc.banks = self.banks
-//            let navController = UINavigationController(rootViewController: vc)
-////            navController.modalPresentationStyle = .fullScreen
-//            self.present(navController, animated: true, completion: nil)
-//        }
+
         
         
         bankListView.didBankTapped = { (bank) in self.selectBank(bank: bank)}
@@ -394,9 +378,9 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                       
         }
         
-        bottomView.didDoneButtonTapped = { [weak self] (_) in
+        bottomView.didDoneButtonTapped = { [weak self] (amount) in
 //            fatalError()
-            self?.doneButtonTapped()
+                self?.doneButtonTapped()
         }
     }
     
@@ -535,7 +519,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         
         let body = [
             "bic": bic,
-            "type": "20"
+            "type": ""
         ]
         
         NetworkManager<GetFullBankInfoListDecodableModel>.addRequest(.getFullBankInfoList , body, [:]) { model, error in
@@ -551,6 +535,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
 //                self.selectedCardNumber = cardNumber
 //                let image = data.bankFullInfoList?.first?.svgImage
                 completion(data.bankFullInfoList ?? [])
+                
 //                DispatchQueue.main.async {
 //                    self.bikBankField.imageView.image = self.convertSVGStringToImage(image ?? "")
 //                }
@@ -589,10 +574,10 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         guard let kpp = kppField.textField.text else {
             return
         }
-        
         guard var nameCompany = nameCompanyField.textField.text else {
             return
         }
+        
         if self.nameField.isHidden == false {
             self.fio.name = self.nameField.textField.text ?? ""
             self.fio.patronymic = self.surField.textField.text ?? ""
@@ -631,14 +616,29 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                         "INN" : inn, //7718164343
                         "KPP" : kpp
                      ] ] as [String : AnyObject]
-        if fioField.textField.text?.count != 0{
-            guard fioField.textField.text != nil else {
+        
+        print("DEBUG: \(body)")
+        
+      
+        if fioField.isHidden == false{
+            guard fioField.textField.text != "" else {
+                self.dismissActivity()
+
+                    return
+            }
+            guard nameField.textField.text != "" else {
+                self.dismissActivity()
+
                     return
             }
             body.removeValue(forKey: "INN")
             
             nameCompany = self.fio.surname + " " +  self.fio.name + " " + self.fio.patronymic
-//            body["name"] = fio as AnyObject
+        }
+        
+        guard nameCompany != "" else {
+            self.dismissActivity()
+            return
         }
         
         NetworkManager<CreatTransferDecodableModel>.addRequest(.createTransfer , [:], body) { model, error in
@@ -654,7 +654,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                     guard let data  = model.data else { return }
     //                self.selectedCardNumber = cardNumber
                     DispatchQueue.main.async {
-                        self.viewModel.statusIsSuccses = true
+                        self.viewModel.status = .succses
                         self.viewModel.cardFrom = self.cardField.cardModel
                         self.viewModel.summTransction = data.debitAmount?.currencyFormatter(symbol: model.data?.currencyPayer ?? "RUB") ?? ""
                         self.viewModel.summInCurrency = data.creditAmount?.currencyFormatter(symbol: model.data?.currencyPayee ?? "RUB") ?? ""

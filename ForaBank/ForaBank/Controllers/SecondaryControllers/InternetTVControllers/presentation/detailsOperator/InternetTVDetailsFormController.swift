@@ -6,40 +6,44 @@ import Foundation
 class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSource, UIPopoverPresentationControllerDelegate, UIViewControllerTransitioningDelegate {
 
     static let msgUpdateTable = 3
-
+    var fromPaymentVc = false
     var operatorData: GKHOperatorsModel?
     var latestOperation: InternetLatestOpsDO?
     var qrData = [String: String]()
     var viewModel = InternetTVDetailsFormViewModel()
 
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var bottomInputView: BottomInputView!
-    @IBOutlet weak var goButton: UIButton!
+    @IBOutlet weak var tableView: UITableView?
+    @IBOutlet weak var bottomInputView: BottomInputView?
+    @IBOutlet weak var goButton: UIButton?
 
     lazy var realm = try? Realm()
     let footerView = InternetTVSourceView()
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        goButton.isHidden = !bottomInputView.isHidden
+        goButton?.isHidden = !(bottomInputView?.isHidden ?? false)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.controller = self
-
-        bottomInputView.tempTextFieldValue = qrData["Сумма"] ?? "0"
+        view.backgroundColor = .white
+        bottomInputView?.tempTextFieldValue = qrData["Сумма"] ?? "0"
 
         bottomInputView?.isHidden = true
         setupNavBar()
-        goButton.add_CornerRadius(5)
-        viewModel.puref = operatorData?.puref ?? ""
+        goButton?.add_CornerRadius(5)
+        if fromPaymentVc == false{
+            viewModel.puref = operatorData?.puref ?? ""
+        } else {
+
+        }
         InternetTVApiRequests.isSingleService(puref: viewModel.puref)
-        tableView.register(UINib(nibName: "InternetInputCell", bundle: nil), forCellReuseIdentifier: InternetTVInputCell.reuseId)
-        bottomInputView.currencySymbol = "₽"
+        tableView?.register(UINib(nibName: "InternetInputCell", bundle: nil), forCellReuseIdentifier: InternetTVInputCell.reuseId)
+        bottomInputView?.currencySymbol = "₽"
         AddAllUserCardtList.add {}
 
-        bottomInputView.didDoneButtonTapped = { amount in
+        bottomInputView?.didDoneButtonTapped = { amount in
             self.showActivity()
             if InternetTVApiRequests.isSingleService {
                 if InternetTVMainViewModel.filter == GlobalModule.UTILITIES_CODE {
@@ -67,13 +71,13 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
                     viewModel.requisites.append(req)
                 }
             }
-            tableView.reloadData()
+            tableView?.reloadData()
         }
     }
 
     func showFinalStep() {
-        animationHidden(goButton)
-        animationShow(bottomInputView)
+        animationHidden(goButton ?? UIButton())
+        animationShow(bottomInputView!)
     }
 
     func doConfirmation(response: CreateTransferAnswerModel?) {
@@ -115,17 +119,17 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
         let size = footerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
         if footerView.frame.size.height != size.height {
             footerView.frame.size.height = size.height + 70
-            tableView.tableFooterView = footerView
-            tableView.layoutIfNeeded()
+            tableView?.tableFooterView = footerView
+            tableView?.layoutIfNeeded()
         }
     }
     
     @IBAction func goButton(_ sender: UIButton) {
         if InternetTVApiRequests.isSingleService {
-            animationHidden(goButton)
-            animationShow(bottomInputView)
+            animationHidden(goButton ?? UIButton())
+            animationShow(bottomInputView!)
         } else {
-            animationHidden(goButton)
+            animationHidden(goButton ?? UIButton())
             showActivity()
             if viewModel.firstStep {
                 viewModel.firstStep = false
@@ -172,7 +176,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
-        goButton.isHidden = true
+        goButton?.isHidden = true
         qrData.removeAll()
     }
 

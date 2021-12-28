@@ -28,7 +28,7 @@ extension MainViewController {
                             else {
                                 fatalError("Unable to dequeue \(AllCardCell.self)")
                             }
-    //                                cell.widthAnchor.constraint(equalToConstant: 112).isActive = true
+                           
                             return cell
                         } else {
                             guard let cell = collectionView.dequeueReusableCell(
@@ -118,6 +118,7 @@ extension MainViewController {
 
             }
         })
+        
         dataSource?.supplementaryViewProvider = { [self]
             collectionView, kind, indexPath in
             guard let sectionHeader = collectionView.dequeueReusableSupplementaryView(
@@ -251,5 +252,6 @@ extension MainViewController {
         section.boundarySupplementaryItems = [sectionHeader]
         return section
     }
+    
 }
 

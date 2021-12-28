@@ -126,14 +126,26 @@ class ConfirmViewControllerModel {
     var fullName: String? = ""
     var country: CountriesList?
     var numberTransction: String = ""
+    var paymentOperationDetailId: Int = 0
     var summTransction: String = ""
     var taxTransction: String = ""
     var currancyTransction: String = ""
-    var statusIsSuccses: Bool = false
+    var status: StatusOperation = .error
     var summInCurrency = ""
+    var name: String? = ""
+    var surname: String? = ""
+    var secondName: String? = ""
     
     init(type: PaymentType) {
         self.type = type
+    }
+    
+    enum StatusOperation {
+        case succses
+        case error
+        case returnRequest
+        case changeRequest
+        case processing
     }
     
     enum PaymentType {
@@ -146,6 +158,43 @@ class ConfirmViewControllerModel {
         case gkh
         case mobilePayment
         case openDeposit
+        
+        //BANK_DEF, BEST2PAY, CHANGE_OUTGOING, CONTACT_ADDRESSING, CONTACT_ADDRESSLESS, DIRECT, ELECSNET, EXTERNAL, HOUSING_AND_COMMUNAL_SERVICE, INTERNAL, INTERNET, ME2ME_CREDIT, ME2ME_DEBIT, MOBILE, OTH, RETURN_OUTGOING, SFP
+        
+        init?(with transferType: StringLiteralType) {
+            
+            switch transferType {
+            case "ME2ME_CREDIT", "ME2ME_DEBIT":
+                self = .card2card
+                
+            case "CONTACT_ADDRESSING", "CONTACT_ADDRESSLESS":
+                self = .contact
+                
+            case "DIRECT":
+                self = .mig
+                
+            case "EXTERNAL":
+                self = .requisites
+                
+            case "INTERNAL":
+                self = .phoneNumber
+                
+            case "HOUSING_AND_COMMUNAL_SERVICE":
+                self = .gkh
+                
+            case "MOBILE":
+                self = .mobilePayment
+                
+            case "OTH":
+                self = .openDeposit
+                
+            case "SFP":
+                self = .phoneNumberSBP
+   
+            default:
+                return nil
+            }
+        }
     }
 }
 
@@ -229,6 +278,8 @@ class ContactConfurmViewController: UIViewController {
     var cancelledPayment = false
     var buttonTapped: (() -> Void)?
 
+    var fromTitle = "От куда"
+    var toTitle = "Куда"
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -255,9 +306,11 @@ class ContactConfurmViewController: UIViewController {
             vc.confurmView.statusLabel.text = "Перевод отменен!"
             vc.confurmView.operatorImageView.image = UIImage(named: "sbp-long")
             vc.confurmView.statusLabel.textColor = .red
-            vc.confurmView.buttonsView.isHidden = true
+            vc.confurmView.detailButtonsStackView.isHidden = true
             if data.userInfo?.count ?? 0 > 0{
                 vc.confurmView.infoLabel.text = "Время на подтверждение\n перевода вышло"
+                vc.confurmView.infoLabel.isHidden = false
+                
             } else {
                 vc.confurmView.infoLabel.text = ""
             }
@@ -280,21 +333,26 @@ class ContactConfurmViewController: UIViewController {
     func presentSwiftUIView(data: AntifraudViewModel) {
         let swiftUIView = AntifraudView(data: data, delegate: ContentViewDelegate())
         let hostingController = UIHostingController(rootView: swiftUIView)
-//        hostingController.modalPresentationStyle = .overCurrentContext
+        //        hostingController.modalPresentationStyle = .overCurrentContext
         
         if #available(iOS 15.0, *) {
             if let presentationController = hostingController.presentationController as? UISheetPresentationController {
-                presentationController.detents = [.medium()] /// set here!
+                presentationController.detents = [.medium()]
             }
         } else {
             // Fallback on earlier versions
         }
-            hostingController.rootView.present = {
+        hostingController.rootView.present = {
             let vc = PaymentsDetailsSuccessViewController()
-            hostingController.present(vc, animated: true, completion: nil)
-          }
-            present(hostingController, animated: true, completion: nil)
+            vc.isModalInPresentation = true
+            
 
+            hostingController.present(vc, animated: true, completion: nil)
+        }
+        present(hostingController, animated: true, completion: {
+            hostingController.presentationController?.presentedView?.gestureRecognizers?[0].isEnabled = false
+         })
+        
     }
     
     func setupData(with model: ConfirmViewControllerModel) {
@@ -374,30 +432,7 @@ class ContactConfurmViewController: UIViewController {
             cardFromField.balanceLabel.isHidden = true
             cardFromField.leftTitleAncor.constant = 64
             
-            var fromTitle = "Откуда"
-            if let cardModelFrom = model.cardFrom {
-                cardFromField.cardModel = cardModelFrom
-                if cardModelFrom.productType == "CARD" {
-                    fromTitle = "С карты"
-                } else if cardModelFrom.productType == "ACCOUNT" {
-                    fromTitle = "Со счета"
-                }
-            } else {
-                if model.cardFromCardId != "" || model.cardFromAccountId != "" {
-                    let cardList = self.realm?.objects(UserAllCardsModel.self)
-                    let cards = cardList?.compactMap { $0 } ?? []
-                    cards.forEach({ card in
-                        if String(card.id) == model.cardFromCardId || String(card.id) == model.cardFromAccountId {
-                            cardFromField.model = card
-                            if card.productType == "CARD" {
-                                fromTitle = "С карты"
-                            } else if card.productType == "ACCOUNT" {
-                                fromTitle = "Со счета"
-                            }
-                        }
-                    })
-                }
-            }
+            
             cardFromField.titleLabel.text = fromTitle
             
             
@@ -406,34 +441,6 @@ class ContactConfurmViewController: UIViewController {
             cardToField.balanceLabel.isHidden = true
             cardToField.leftTitleAncor.constant = 64
             
-            var toTitle = "Куда"
-            
-            if let cardModelTo = model.cardTo {
-                cardToField.cardModel = cardModelTo
-                if cardModelTo.productType == "CARD" {
-                    toTitle = "На карту"
-                } else if cardModelTo.productType == "ACCOUNT" {
-                    toTitle = "На счет"
-                }
-            } else if let cardModelTemp = model.customCardTo {
-                cardToField.customCardModel = cardModelTemp
-                toTitle = "На карту"
-            } else {
-                if model.cardToCardId != "" || model.cardToAccountId != "" {
-                    let cardList = self.realm?.objects(UserAllCardsModel.self)
-                    let cards = cardList?.compactMap { $0 } ?? []
-                    cards.forEach({ card in
-                        if String(card.id) == model.cardToCardId || String(card.id) == model.cardToAccountId {
-                            cardToField.model = card
-                            if card.productType == "CARD" {
-                                toTitle = "На карту"
-                            } else if card.productType == "ACCOUNT" {
-                                toTitle = "На счет"
-                            }
-                        }
-                    })
-                }
-            }
             
             cardToField.titleLabel.text = toTitle
             
@@ -485,6 +492,7 @@ class ContactConfurmViewController: UIViewController {
             cardFromField.balanceLabel.isHidden = true
             cardFromField.titleLabel.text = "Счет списания"
             cardFromField.leftTitleAncor.constant = 64
+          
             
         case .mobilePayment:
             cardToField.isHidden = true
@@ -616,6 +624,58 @@ class ContactConfurmViewController: UIViewController {
             }
         }
         
+        if let cardModelFrom = model.cardFrom {
+            cardFromField.cardModel = cardModelFrom
+            if cardModelFrom.productType == "CARD" {
+                fromTitle = "С карты"
+            } else if cardModelFrom.productType == "ACCOUNT" {
+                fromTitle = "Со счета"
+            }
+        } else {
+            if model.cardFromCardId != "" || model.cardFromAccountId != "" || model.cardFromCardNumber.digits.count != 0 {
+                let cardList = self.realm?.objects(UserAllCardsModel.self)
+                let cards = cardList?.compactMap { $0 } ?? []
+                cards.forEach({ card in
+                    if String(card.id) == model.cardFromCardId || String(card.id) == model.cardFromAccountId || card.number?.suffix(4) == model.cardFromCardNumber.suffix(4) {
+                        cardFromField.model = card
+                        if card.productType == "CARD" {
+                            fromTitle = "С карты"
+                        } else if card.productType == "ACCOUNT" {
+                            fromTitle = "Со счета"
+                        }
+                    }
+                })
+            }
+        }
+        
+        
+        if let cardModelTo = model.cardTo {
+            cardToField.cardModel = cardModelTo
+            if cardModelTo.productType == "CARD" {
+                toTitle = "На карту"
+            } else if cardModelTo.productType == "ACCOUNT" {
+                toTitle = "На счет"
+            }
+        } else if let cardModelTemp = model.customCardTo {
+            cardToField.customCardModel = cardModelTemp
+            toTitle = "На карту"
+        } else {
+            if model.cardToCardId != "" || model.cardToAccountId != "" || model.cardToCardNumber != ""{
+                let cardList = self.realm?.objects(UserAllCardsModel.self)
+                let cards = cardList?.compactMap { $0 } ?? []
+                cards.forEach({ card in
+                    if String(card.id) == model.cardToCardId || String(card.id) == model.cardToAccountId || card.number?.suffix(4) == model.cardToCardNumber.suffix(4){
+                        cardToField.model = card
+                        if card.productType == "CARD" {
+                            toTitle = "На карту"
+                        } else if card.productType == "ACCOUNT" {
+                            toTitle = "На счет"
+                        }
+                    }
+                })
+            }
+        }
+        
         smsCodeField.textField.textContentType = .oneTimeCode
         
     }
@@ -677,10 +737,10 @@ class ContactConfurmViewController: UIViewController {
                     self.dismissActivity()
                     DispatchQueue.main.async {
                         let vc = PaymentsDetailsSuccessViewController()
-                        self.confurmVCModel?.statusIsSuccses = true
+                        self.confurmVCModel?.status = .succses
                         vc.confurmVCModel = self.confurmVCModel
                         //vc.confurmVCModel?.statusIsSuccses = true
-                        vc.id = model.data?.paymentOperationDetailId ?? 0
+                        vc.confurmVCModel?.paymentOperationDetailId = model.data?.paymentOperationDetailId ?? 0
                         switch self.confurmVCModel?.type {
                         case .card2card, .phoneNumber:
                             vc.printFormType = "internal"
@@ -694,8 +754,10 @@ class ContactConfurmViewController: UIViewController {
                             break
                         }
                         
-                        vc.modalPresentationStyle = .fullScreen
-                        self.present(vc, animated: true, completion: nil)
+//                        vc.modalPresentationStyle = .fullScreen
+                        let nav = UINavigationController(rootViewController: vc)
+                        nav.modalPresentationStyle = .fullScreen
+                        self.present(nav, animated: true, completion: nil)
                     }
                 } else {
                     self.dismissActivity()
@@ -719,8 +781,8 @@ class ContactConfurmViewController: UIViewController {
                     DispatchQueue.main.async {
                         let vc = PaymentsDetailsSuccessViewController()
                         vc.confurmVCModel = self.confurmVCModel
-                        vc.confurmVCModel?.statusIsSuccses = true
-                        vc.id = model.data?.paymentOperationDetailId ?? 0
+                        vc.confurmVCModel?.status = .succses
+                        vc.confurmVCModel?.paymentOperationDetailId = model.data?.paymentOperationDetailId ?? 0
                         switch self.confurmVCModel?.type {
                         case .card2card, .phoneNumber:
                             vc.printFormType = "internal"
@@ -732,8 +794,10 @@ class ContactConfurmViewController: UIViewController {
                         if self.confurmVCModel?.type == .phoneNumberSBP {
                             vc.printFormType = "sbp"
                         }
-                        vc.modalPresentationStyle = .fullScreen
-                        self.present(vc, animated: true, completion: nil)
+//                        vc.modalPresentationStyle = .fullScreen
+                        let nav = UINavigationController(rootViewController: vc)
+                        nav.modalPresentationStyle = .fullScreen
+                        self.present(nav, animated: true, completion: nil)
                     }
                 } else if model.statusCode == 102 {
                     self.showAlert(with: "Ошибка", and: model.errorMessage ?? "") {
@@ -780,3 +844,23 @@ class ContactConfurmViewController: UIViewController {
 
 }
 
+
+extension ConfirmViewControllerModel {
+    
+    convenience init?(operation: OperationDetailDatum) {
+        
+        guard let transferType = operation.transferEnum, let operationType = PaymentType(with: transferType) else {
+            return nil
+        }
+
+        self.init(type: operationType)
+        
+        fullName = operation.payeeFullName
+        phone = operation.payeePhone
+        currancyTransction  =   operation.payerCurrency ?? ""
+        dateOfTransction = operation.transferDate ?? ""
+        taxTransction = String(operation.payerFee ?? 0)
+        summTransction = String(operation.payerAmount ?? 0)
+        cardFromAccountNumber = operation.payerAccountNumber ?? ""
+    }
+}

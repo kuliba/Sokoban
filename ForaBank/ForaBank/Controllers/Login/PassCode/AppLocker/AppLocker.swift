@@ -324,8 +324,8 @@ public class AppLocker: UIViewController {
         
         context = LAContext()
         
-        let policy: LAPolicy = .deviceOwnerAuthentication
-
+        let policy: LAPolicy = .deviceOwnerAuthenticationWithBiometrics
+        
         var err: NSError? = nil
         // Check if the user is able to use the policy we've selected previously
         guard context.canEvaluatePolicy(policy, error: &err) else {return}
