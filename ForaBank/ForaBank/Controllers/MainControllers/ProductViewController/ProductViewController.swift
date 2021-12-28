@@ -1153,49 +1153,36 @@ extension ProductViewController{
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        guard let product = product, let currency = product.currency else {
+        guard let operationDetailViewModel = operationDetailViewModel(for: indexPath) else {
             return
+        }
+        
+        let operationDetailVC = OperationDetailHostingViewController(with: operationDetailViewModel)
+        present(operationDetailVC, animated: true)
+    }
+    
+    private func operationDetailViewModel(for indexPath: IndexPath) -> OperationDetailViewModel? {
+        
+        guard let product = product, let currency = product.currency else {
+            return nil
         }
         
         switch product.productTypeEnum {
         case .deposit:
             let deposit = sortedDeposit[indexPath.section].value[indexPath.row]
-            let operationDetailViewModel = OperationDetailViewModel(with: deposit, currency: currency, product: product)
-            let operationDetailVC = OperationDetailHostingViewController(with: operationDetailViewModel)
-            operationDetailVC.modalPresentationStyle = .custom
-            operationDetailVC.transitioningDelegate = self
-            halfScreen = true
-            present(operationDetailVC, animated: true)
-            
+            return OperationDetailViewModel(with: deposit, currency: currency, product: product)
+
         case .card:
             let card = sorted[indexPath.section].value[indexPath.row]
-            let operationDetailViewModel = OperationDetailViewModel(with: card, currency: currency, product: product)
-            let operationDetailVC = OperationDetailHostingViewController(with: operationDetailViewModel)
-            operationDetailVC.modalPresentationStyle = .custom
-            operationDetailVC.transitioningDelegate = self
-            halfScreen = true
-            present(operationDetailVC, animated: true)
+            return OperationDetailViewModel(with: card, currency: currency, product: product)
             
         case .account:
             let account = sortedAccount[indexPath.section].value[indexPath.row]
-            let operationDetailViewModel = OperationDetailViewModel(with: account, currency: currency, product: product)
-            let operationDetailVC = OperationDetailHostingViewController(with: operationDetailViewModel)
-            operationDetailVC.modalPresentationStyle = .custom
-            operationDetailVC.transitioningDelegate = self
-            halfScreen = true
-            present(operationDetailVC, animated: true)
+            return OperationDetailViewModel(with: account, currency: currency, product: product)
             
-        case .loan:
-            return
+        default:
+            return nil
         }
-        
-        /*
-        let navController = UINavigationController(rootViewController: vc)
-        navController.modalPresentationStyle = .custom
-        navController.transitioningDelegate = self
-        halfScreen = true
-        self.present(navController, animated: true, completion: nil)
-         */
     }
     
     func collectionSkeletonView(_ skeletonView: UITableView, numberOfRowsInSection section: Int) -> Int {
