@@ -416,7 +416,7 @@ class MemeDetailVC : AddHeaderImageViewController {
     
     func doneButtonTapped(with viewModel: ConfirmViewControllerModel, amaunt: String) {
 //        self?.viewModel.summTransction = amaunt
-        var viewModel = viewModel
+//        var viewModel = viewModel
         self.dismissKeyboard()
         self.showActivity()
         bottomView.doneButtonIsEnabled(true)
@@ -452,7 +452,7 @@ class MemeDetailVC : AddHeaderImageViewController {
                         if let needMake = model.data?.needMake {
                             if needMake {
                                 viewModel.taxTransction = "\(model.data?.fee ?? 0)"
-                                viewModel.statusIsSuccses = true
+                                viewModel.status = .succses
                                 print("DEBUG: cardToCard payment Succses", #function, model)
                                 let vc = ContactConfurmViewController()
                                 vc.modalPresentationStyle = .fullScreen
@@ -470,24 +470,27 @@ class MemeDetailVC : AddHeaderImageViewController {
                             } else {
                                 let vc = PaymentsDetailsSuccessViewController()
                                 if model.data?.documentStatus == "COMPLETE" {
-                                    viewModel.statusIsSuccses = true
+                                    viewModel.status = .succses
                                     viewModel.taxTransction = model.data?.fee?.currencyFormatter(symbol: model.data?.currencyAmount ?? "RUB") ?? ""
                                     viewModel.summTransction = model.data?.debitAmount?.currencyFormatter(symbol: model.data?.currencyAmount ?? "RUB") ?? ""
-                                    vc.id = model.data?.paymentOperationDetailID ?? 0
+                                    viewModel.paymentOperationDetailId = model.data?.paymentOperationDetailID ?? 0
                                     vc.printFormType = "internal"
                                   
                                 }
                                 vc.confurmVCModel = viewModel
-                                vc.modalPresentationStyle = .fullScreen
-                                self?.present(vc, animated: true, completion: nil)
                                 
+                                let nav = UINavigationController(rootViewController: vc)
+                                nav.modalPresentationStyle = .fullScreen
+                                self?.present(nav, animated: true, completion: nil)
                             }
                         } else {
-                            viewModel.statusIsSuccses = true
+                            viewModel.status = .succses
                             let vc = PaymentsDetailsSuccessViewController()
                             vc.confurmVCModel = viewModel
-                            vc.modalPresentationStyle = .fullScreen
-                            self?.present(vc, animated: true, completion: nil)
+//                            vc.modalPresentationStyle = .fullScreen
+                            let nav = UINavigationController(rootViewController: vc)
+                            nav.modalPresentationStyle = .fullScreen
+                            self?.present(nav, animated: true, completion: nil)
                         }
                     } else {
                         print("DEBUG: ", #function, model.errorMessage ?? "nil")

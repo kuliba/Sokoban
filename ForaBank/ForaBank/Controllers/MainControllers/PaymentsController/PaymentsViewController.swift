@@ -67,10 +67,10 @@ class PaymentsViewController: UIViewController {
         setupCollectionView()
         createDataSource()
         reloadData(with: nil)
-        loadLastPhonePayments()
-        loadLastPayments()
-        loadLastMobilePayments()
-        loadAllLastMobilePayments()
+//        loadLastPhonePayments()
+//        loadLastPayments()
+//        loadLastMobilePayments()
+        loadAllLastLatestPayments()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -82,7 +82,6 @@ class PaymentsViewController: UIViewController {
             present(nc, animated: false)
         }
         navigationController?.navigationBar.isHidden = true
-        loadAllLastMobilePayments()
     }
     
 //    override func viewWillDisappear(_ animated: Bool) {
@@ -130,21 +129,6 @@ class PaymentsViewController: UIViewController {
         let gesture = UITapGestureRecognizer(target: self, action: #selector(openSetting))
         searchContact.secondButton.addGestureRecognizer(gesture)
         
-        //        navigationController?.navigationBar.barTintColor = .white
-        //        navigationController?.navigationBar.backgroundColor = .white
-        //        navigationController?.navigationBar.shadowImage = UIImage()
-        //        let searchController = UISearchController(searchResultsController: nil)
-        //        navigationItem.searchController = searchController
-        //        navigationItem.hidesSearchBarWhenScrolling = false
-        //        searchController.hidesNavigationBarDuringPresentation = true
-        //        searchController.obscuresBackgroundDuringPresentation = false
-        //        searchController.automaticallyShowsCancelButton = false
-        //        searchController.searchBar.delegate = self
-        //        searchController.searchBar.placeholder = "Название категории, ИНН"
-        //        searchController.searchBar.showsBookmarkButton = true
-        //        searchController.searchBar.setImage(UIImage(named: "scanCard")?.withTintColor(.black), for: .bookmark, state: .normal)
-        //        searchController.searchBar.backgroundColor = .white
-        
     }
     
     private func setupCollectionView() {
@@ -180,89 +164,8 @@ class PaymentsViewController: UIViewController {
 //MARK: - API
 extension PaymentsViewController {
     
-    func loadLastPayments() {
-        NetworkManager<GetPaymentCountriesDecodableModel>.addRequest(.getPaymentCountries, [:], [:]) { model, error in
-            if error != nil {
-                print("DEBUG: error", error!)
-            } else {
-                guard let model = model else { return }
-                guard let lastPaymentsList = model.data else { return }
-                if lastPaymentsList.count > 3 {
-                    let payArr = lastPaymentsList.prefix(3)
-                    payArr.forEach { lastPayment in
-                        let mod = ChooseCountryHeaderViewModel(model: lastPayment)
-                        let payment = PaymentsModel(lastCountryPayment: mod)
-                        self.payments.append(payment)
-                    }
-                } else {
-                    lastPaymentsList.forEach { lastPayment in
-                        let mod = ChooseCountryHeaderViewModel(model: lastPayment)
-                        let payment = PaymentsModel(lastCountryPayment: mod)
-                        self.payments.append(payment)
-                    }
-                }
-            }
-        }
-    }
-    
-    func loadLastPhonePayments() {
-        NetworkManager<GetLatestPaymentsDecodableModel>.addRequest(.getLatestPayments, [:], [:]) { model, error in
-            if error != nil {
-                print("DEBUG: Error: ", error ?? "")
-            }
-            guard let model = model else { return }
-            print("DEBUG: LatestPayment: ", model)
-            if model.statusCode == 0 {
-                guard let lastPaymentsList  = model.data else { return }
-                if lastPaymentsList.count > 3 {
-                    let payArr = lastPaymentsList.prefix(3)
-                    payArr.forEach { lastPayment in
-                        let payment = PaymentsModel(lastPhonePayment: lastPayment)
-                        self.payments.append(payment)
-                    }
-                } else {
-                    lastPaymentsList.forEach { lastPayment in
-                        let payment = PaymentsModel(lastPhonePayment: lastPayment)
-                        self.payments.append(payment)
-                    }
-                }
-            } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
-            }
-        }
-    }
-    
-    func loadLastMobilePayments() {
-        NetworkManager<GetLatestMobilePaymentsDecodableModel>.addRequest(.getLatestMobilePayments, [:], [:]) { model, error in
-            if error != nil {
-                print("DEBUG: Error: ", error ?? "")
-            }
-            guard let model = model else { return }
-            print("DEBUG: LatestPayment: ", model)
-            if model.statusCode == 0 {
-                guard let lastPaymentsList  = model.data else { return }
-                
-                if lastPaymentsList.count > 3 {
-                    let payArr = lastPaymentsList.prefix(3)
-                    payArr.forEach { lastPayment in
-                        let payment = PaymentsModel(lastMobilePayment: lastPayment)
-                        self.payments.append(payment)
-                    }
-                } else {
-                    lastPaymentsList.forEach { lastPayment in
-                        let payment = PaymentsModel(lastMobilePayment: lastPayment)
-                        self.payments.append(payment)
-                    }
-                }
-            } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
-                
-            }
-        }
-    }
-    
-    func loadAllLastMobilePayments() {
-        let param = ["isPhonePayments": "true", "isCountriesPayments": "true", "isServicePayments": "true", "isMobilePayments": "true"]
+    func loadAllLastLatestPayments() {
+        let param = ["isPhonePayments": "true", "isCountriesPayments": "true", "isMobilePayments": "true"]
         NetworkManager<GetAllLatestPaymentsDecodableModel>.addRequest(.getAllLatestPayments, param, [:]) { model, error in
             if error != nil {
                 print("DEBUG: Error: ", error ?? "")
@@ -271,10 +174,28 @@ extension PaymentsViewController {
             print("DEBUG: LatestPayment: ", model)
             if model.statusCode == 0 {
                 guard let lastPaymentsList  = model.data else { return }
-                let payArr = lastPaymentsList.prefix(3)
-                payArr.forEach { lastPayment in
-                    let payment = PaymentsModel(lastGKHPayment: lastPayment)
-//                    self.payments.append(payment)
+                lastPaymentsList.forEach { lastPayment in
+                    switch lastPayment.type {
+                    case "phone":
+                        let payment = PaymentsModel(lastPhonePayment: lastPayment)
+                        self.payments.append(payment)
+                    case "country":
+                        let payment = PaymentsModel(lastCountryPayment: lastPayment)
+                        self.payments.append(payment)
+                    case "service":
+                        let payment = PaymentsModel(lastGKHPayment: lastPayment)
+                        self.payments.append(payment)
+                    case "mobile":
+                        let payment = PaymentsModel(lastMobilePayment: lastPayment)
+                        self.payments.append(payment)
+                    case "internet":
+                        let payment = PaymentsModel(lastInternetPayment: lastPayment)
+                        self.payments.append(payment)
+                    default:
+                        let payment = PaymentsModel(lastPhonePayment: lastPayment)
+                        self.payments.append(payment)
+                    }
+
                 }
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")

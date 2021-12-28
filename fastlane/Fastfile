@@ -1,0 +1,96 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+
+  before_all do |lane, options|
+
+    # create API KEY Hash and store it to APP_STORE_CONNECT_API_KEY
+    app_store_connect_api_key(
+      key_id: ENV["API_KEY_ID"],
+      issuer_id: ENV["API_KEY_ISSUER"],
+      key_content: ENV["API_KEY_FILE"],
+      is_key_content_base64: true,
+      duration: 1200, # optional (maximum 1200)
+      in_house: false # optional but may be required if using match/sigh
+    )
+
+    if options[:production]
+      ENV["XCODE_SCHEME"] = ENV["XCODE_SCHEME_RELEASE"]
+      ENV["BUILD_CONFIG"] = "Release"
+    else
+      ENV["XCODE_SCHEME"] = ENV["XCODE_SCHEME_BETA"]
+      ENV["BUILD_CONFIG"] = "Debug"
+    end
+
+  end
+
+  lane :test do
+
+    run_tests(
+      project: ENV["XCODE_PROJECT"],
+      scheme: ENV["XCODE_SCHEME_TESTS"],
+      devices: ["iPhone 12"],
+      clean: false,
+      suppress_xcode_output: true)
+
+  end
+
+  lane :build do |options|
+
+    # get project's version and store it to VERSION_NUMBER
+    get_version_number(xcodeproj: ENV["XCODE_PROJECT"])
+
+    # get latest project build number on testflight and store it to LATEST_TESTFLIGHT_BUILD_NUMBER
+    latest_testflight_build_number(
+      api_key: Actions.lane_context[SharedValues::APP_STORE_CONNECT_API_KEY],
+      version: Actions.lane_context[SharedValues::VERSION_NUMBER])
+
+    # increment project's build number
+    increment_build_number(
+      build_number: Actions.lane_context[SharedValues::LATEST_TESTFLIGHT_BUILD_NUMBER] + 1,
+      xcodeproj: ENV["XCODE_PROJECT"])
+
+    # turn on auto signing for the project
+    update_code_signing_settings(
+      use_automatic_signing: true,
+      path: ENV["XCODE_PROJECT"])
+
+    # build and sign app for appstore
+    build_app(scheme: ENV["XCODE_SCHEME"],
+              project: ENV["XCODE_PROJECT"],
+              output_directory: "./fastlane/build",
+              export_method: "app-store",
+              output_name: "#{ENV["APP_NAME"]}.ipa",
+              clean: true,
+              configuration: ENV["BUILD_CONFIG"],
+              include_bitcode: true,
+              include_symbols: false,
+              suppress_xcode_output: true,
+              export_xcargs: "-allowProvisioningUpdates")
+  end
+
+  lane :deploy do
+
+    upload_to_testflight(
+      api_key: Actions.lane_context[SharedValues::APP_STORE_CONNECT_API_KEY],
+      changelog: last_git_commit[:message],
+      ipa: "./fastlane/build/#{ENV["APP_NAME"]}.ipa")
+
+  end
+
+end

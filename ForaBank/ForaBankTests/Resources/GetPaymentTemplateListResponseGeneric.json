@@ -1,0 +1,21 @@
+{
+    "data": [{
+        "groupName": "Переводы СБП",
+        "name": "Иванов Иван Иванович",
+        "parameterList": [{
+            "amount": null,
+            "currencyAmount": "RUB",
+            "check": false,
+            "payeeInternal": null,
+            "comment": null,
+            "payer": {},
+            "payeeExternal": null
+        }],
+        "paymentTemplateId": 1,
+        "sort": 1,
+        "svgImage": "string",
+        "type": "SFP"
+    }],
+    "errorMessage": "string",
+    "statusCode": 0
+}

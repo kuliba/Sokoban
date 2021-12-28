@@ -17,9 +17,9 @@ final class RouterSassionConfiguration: NSObject, URLSessionDelegate {
             // Логическое значение, определяющее, следует ли устанавливать соединения по сотовой сети.
         session?.configuration.allowsCellularAccess = true
             // Интервал времени ожидания, используемый при ожидании дополнительных данных.
-        session?.configuration.timeoutIntervalForRequest = 3
+        session?.configuration.timeoutIntervalForRequest = 180
             // Максимальное количество времени, которое может потребоваться для запроса ресурса.
-        session?.configuration.timeoutIntervalForResource = 3
+        session?.configuration.timeoutIntervalForResource = 180
             // Логическое значение, которое указывает, должен ли сеанс ждать, пока подключение станет доступным, или немедленно завершиться неудачей.
             if #available(iOS 11.0, *) {
                 session?.configuration.waitsForConnectivity = false

@@ -19,8 +19,7 @@ class MainViewController: UIViewController {
     weak var delegate: MainViewControllerDelegate?
     var card: UserAllCardsModel?
     var alertController: UIAlertController?
-    var sectionIndexCounter = 0
-
+ 
     var token: NotificationToken?
 
     var allProductList: Results<UserAllCardsModel>? = nil
@@ -46,7 +45,7 @@ class MainViewController: UIViewController {
                 }
                 for i in products {
                     switch i.productType {
-                    case ProductType.DEPOSIT.rawValue:
+                    case ProductType.deposit.rawValue:
                         self.productsDeposits.append(i)
                     default:
                         self.productsCardsAndAccounts.append(i)
@@ -56,6 +55,11 @@ class MainViewController: UIViewController {
                     self.productsFromRealm.removeAll()
                     for i in self.productsCardsAndAccounts {
                         self.productsFromRealm.append(PaymentsModel(productListFromRealm: i))
+                    }
+                    if self.productsCardsAndAccounts.count <= 3{
+                            self.productsFromRealm.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
+                    } else if self.productsCardsAndAccounts.count > 4{
+//                            self.productsFromRealm.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
                     }
                     self.reloadData(with: nil)
                 }
@@ -102,6 +106,14 @@ class MainViewController: UIViewController {
             }
         }
     }
+    var additionalButton = [PaymentsModel]() {
+        didSet {
+            DispatchQueue.main.async {
+                self.reloadData(with: nil)
+            }
+        }
+    }
+    
     var branches = [PaymentsModel]()
     var investment = [PaymentsModel]()
     var services = [PaymentsModel]()
@@ -172,6 +184,7 @@ class MainViewController: UIViewController {
 
         }
         observerRealm()
+        additionalButton = [PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: "")]
         productList = [UserAllCardsModel]()
 
     }
@@ -240,7 +253,7 @@ class MainViewController: UIViewController {
                 if self?.allProductList?.count ?? 0 > 0 {
 
                     self?.productList = [UserAllCardsModel]()
-                    self?.dataSource?.replaceItems(self?.productsFromRealm ?? [], in: .products)
+                    self?.reloadData(with: nil)
                 }
 
             case .error(let error):
@@ -291,10 +304,10 @@ class MainViewController: UIViewController {
         snapshot.appendItems(offer, toSection: .offer)
         snapshot.appendItems(currentsExchange, toSection: .currentsExchange)
         snapshot.appendItems(openProduct, toSection: .openProduct)
-        snapshot.appendItems(branches, toSection: .branches)
-        snapshot.appendItems(investment, toSection: .investment)
-        snapshot.appendItems(services, toSection: .services)
-
+//        snapshot.appendItems(branches, toSection: .branches)
+//        snapshot.appendItems(investment, toSection: .investment)
+//        snapshot.appendItems(services, toSection: .services)
+//        snapshot.appendItems(additionalButton, toSection: .products)
         dataSource?.apply(snapshot, animatingDifferences: true)
         collectionView.reloadData()
 

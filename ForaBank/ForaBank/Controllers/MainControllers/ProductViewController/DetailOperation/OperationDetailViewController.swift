@@ -11,13 +11,30 @@ import UIKit
 
 class OperationDetailViewController: UIViewController{
     
-    var operation: OperationDetailDatum?
-    
+    var operation: OperationDetailDatum?{
+        didSet{
+            viewModel.fullName = operation?.payeeFullName
+            viewModel.phone = operation?.payeePhone
+            viewModel.currancyTransction  =   operation?.payerCurrency ?? ""
+            viewModel.dateOfTransction = operation?.transferDate ?? ""
+            viewModel.taxTransction = String(operation?.payerFee ?? 0)
+            viewModel.summTransction = String(operation?.payerAmount ?? 0)
+            viewModel.cardFromAccountNumber = operation?.payerAccountNumber ?? ""
+        }
+    }
+
     var confurmVCModel: ConfirmViewControllerModel? {
         didSet {
-            guard let model = confurmVCModel else { return }
-//            confurmView.confurmVCModel = model
-            
+            print(confurmVCModel)
+//            guard let model = confurmVCModel else { return }
+//            setupData(with: model)
+        }
+    }
+    
+    var viewModel = ConfirmViewControllerModel(type: .phoneNumberSBP) {
+        didSet {
+            print(viewModel)
+//            checkModel(with: viewModel)
         }
     }
     
@@ -127,9 +144,6 @@ class OperationDetailViewController: UIViewController{
     func setupUI(){
         
         view.backgroundColor = .white
-//        view.addSubview(closeButton)
-//        closeButton.anchor(top: view.topAnchor, right: view.rightAnchor, paddingTop: 10, paddingRight: 10, width: 24, height: 24)
-//        closeButton.addTarget(self, action: #selector(back), for: .touchUpInside)
         
         mainLabel.isHidden = false
         
@@ -143,25 +157,36 @@ class OperationDetailViewController: UIViewController{
             commentLabel.isHidden = true
         }
         
+        
         switch categoryGroupLabel.text {
         case "Переводы СБП":
             transferImage.image = UIImage(named: "sbpindetails")
+            viewModel.type = .phoneNumberSBP
+            viewModel.phone = operation?.payeePhone
+            viewModel.fullName = operation?.payerFullName
+            
         case "Между своими":
             mainLabel.isHidden = false
             companyImage.isHidden = true
             recipient.isHidden = true
+            viewModel.type = .card2card
         case "Перевод Contact":
             categoryGroupLabel.isHidden = true
             mainLabel.text = categoryGroupLabel.text
             mainLabel.isHidden = false
+            viewModel.type = .contact
         case "Перевод МИГ":
             categoryGroupLabel.isHidden = true
             mainLabel.text = categoryGroupLabel.text
             mainLabel.isHidden = false
+            viewModel.type = .mig
         case "Перевод внутри банка":
             companyImage.isHidden = true
-            
+            viewModel.type = .phoneNumber
+            viewModel.phone = operation?.payeePhone
         default:
+            viewModel.type = .requisites
+            viewModel.fullName = operation?.payeeFullName
             print("default")
         }
         
@@ -243,6 +268,7 @@ class OperationDetailViewController: UIViewController{
     }
     
     @objc func toPrintForm(){
+        
         let vc = PDFViewerViewController()
         vc.id = operation?.paymentOperationDetailID
         vc.printFormType = operation?.printFormType
@@ -250,39 +276,19 @@ class OperationDetailViewController: UIViewController{
     }
     
     @objc func openDetailVC(){
-//        let vc = ContactConfurmViewController()
-////        confurmVCModel?.phone = "123"
-//        vc.confurmVCModel = confurmVCModel
-//        vc.doneButton.isHidden = true
-//        vc.smsCodeField.isHidden = true
-//        vc.addCloseButton()
-//        if operation?.printFormType == "sbp"{
-//            vc.confurmVCModel?.payToCompany = true
+        
+        let vc = ContactConfurmViewController()
+            vc.confurmVCModel = viewModel
+            vc.doneButton.isHidden = true
+            vc.smsCodeField.isHidden = true
+            vc.addCloseButton()
+//            if printFormType == "sbp"{
+//                vc.confurmVCModel?.payToCompany = true
+//            }
+            vc.title = "Детали операции"
+            let navVC = UINavigationController(rootViewController: vc)
+            self.present(navVC, animated: true)
 //        }
-//        
-//        vc.title = "Детали операции"
-//        let navVC = UINavigationController(rootViewController: vc)
-//        self.present(navVC, animated: true)
-//        
-        let vc = DetailOperationViewController()
-//        confurmVCModel?.phone = "123"
-   
-        vc.addCloseButton()
-        vc.title = "Сохранить или отправить чек"
-        vc.modalPresentationStyle = .fullScreen
-        vc.name = mainLabel.text
-        vc.amount = amount.text
-        vc.commisstion = commissionLabel.text
-        vc.date = dateLabel.text
-        vc.adress = ""
-        vc.card = operation?.payerCardNumber
-        vc.terminal = ""
-        vc.merchant = ""
-        vc.code = ""
-        let navVC = UINavigationController(rootViewController: vc)
-        navVC.modalPresentationStyle = .fullScreen
-            
-        self.present(navVC, animated: true)
     }
     
     func requestOperationDetail(documentId: String){
@@ -310,12 +316,16 @@ class OperationDetailViewController: UIViewController{
                         commissionLabel.isHidden = true
                     }
                     operation = model.data
+                    viewModel.cardFromCardNumber = model.data?.payerCardNumber ?? ""
+                    viewModel.cardToCardNumber = model.data?.payeeCardNumber ?? ""
 //                    let dict = Dict.shared.organization
                     let banks = Dict.shared.banks
 //                    let banksInfo = Dict.shared.bankFullInfoList
                     for i in banks!{
                         if  model.data?.payeeBankName == i.memberNameRus{
                             self.companyImage.image = i.svgImage?.convertSVGStringToImage()
+                            viewModel.bank = i
+                            
                         }
                     }
                     if self.companyImage.image == nil{
@@ -325,6 +335,11 @@ class OperationDetailViewController: UIViewController{
                         buttonsArray.remove(at: 1)
                         buttonsArray.remove(at: 0)
                     }
+                    
+                    
+                    
+
+
                     addButtons()
                 }
             } else {
@@ -397,10 +412,10 @@ class OperationDetailViewController: UIViewController{
                 if str.name == "Детали"{
                     a.addTarget(self, action: #selector(openDetailVC), for: .touchUpInside)
                     b.addTarget(self, action: #selector(openDetailVC), for: .touchUpInside)
-                    a.isUserInteractionEnabled = false
-                    b.isUserInteractionEnabled = false
-                    a.alpha = 0.3
-                    b.alpha = 0.3
+//                    a.isUserInteractionEnabled = false
+//                    b.isUserInteractionEnabled = false
+//                    a.alpha = 0.3
+//                    b.alpha = 0.3
                 } else if str.name == "+ Шаблон" {
                     a.isUserInteractionEnabled = false
                     b.isUserInteractionEnabled = false

@@ -76,6 +76,37 @@ struct GetCardStatementDatum: Codable {
     }
 }
 
+//FIXME: refactor model as soon as possible!!!
+extension GetCardStatementDatum {
+    
+    var operationTypeEnum: OperationType {
+        
+        guard let operationType = operationType, let operationTypeEnum = OperationType(rawValue: operationType) else {
+            
+            //FIXME: dirty hack for refactoring period!!!
+            return .debit
+        }
+        
+        return operationTypeEnum
+    }
+    
+    var operationEnv: OperationEnvironment {
+        
+        guard let type = type, let operationEnv = OperationEnvironment(rawValue: type) else {
+            
+            //FIXME: dirty hack for refactoring period!!!
+            return .inside
+        }
+        
+        return operationEnv
+    }
+    
+    var transactionDate: Date {
+        
+        Date(timeIntervalSince1970: TimeInterval((date ?? 0) / 1000))
+    }
+}
+
 // MARK: GetCardStatementDatum convenience initializers and mutators
 
 extension GetCardStatementDatum {

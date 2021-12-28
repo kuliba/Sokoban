@@ -14,10 +14,11 @@ extension MainViewController {
             guard let section = Section(rawValue: sectionIndex) else {
                 fatalError("Unknown section kind")
             }
+            
             switch section {
             case .products:
                 if self.productsFromRealm.count > 0{
-                    return self.createProduct()
+                    return self.createProduct(type: 1)
                 } else {
                     return nil
                 }
@@ -47,20 +48,28 @@ extension MainViewController {
                 }
 
             case .branches:
-                return self.createSection()
+//                return self.createSection()
+                return nil
             case .services:
-                return self.createSection()
+//                return self.createSection()
+                return nil
             case .investment:
-                return self.createSection()
+//                return self.createSection()
+                return nil
+
             }
         }
         let config = UICollectionViewCompositionalLayoutConfiguration()
+        
         config.interSectionSpacing = 0
         layout.configuration = config
         return layout
     }
+    
 
-    private func createProduct() -> NSCollectionLayoutSection {
+    
+    
+    private func createProduct(type: Int?) -> NSCollectionLayoutSection {
 
         let item = NSCollectionLayoutItem.withEntireSize()
         let itemadd = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .absolute(114), heightDimension: .absolute(104)))
@@ -68,10 +77,19 @@ extension MainViewController {
                     layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                    heightDimension: .fractionalHeight(0.3)))
         topItem.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
-        
-        let groupSize = NSCollectionLayoutSize(
-            widthDimension: .absolute(164),
-          heightDimension: .absolute(104))
+
+        var groupSize: NSCollectionLayoutSize!
+    
+        if type == 32{
+            groupSize = NSCollectionLayoutSize(
+                widthDimension: .absolute(112),
+              heightDimension: .absolute(104))
+        } else {
+           groupSize = NSCollectionLayoutSize(
+                widthDimension: .absolute(164),
+              heightDimension: .absolute(104))
+        }
+  
 
         let group = NSCollectionLayoutGroup.horizontal(
             layoutSize: groupSize,  subitems: [item, itemadd, topItem])
