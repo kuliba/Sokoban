@@ -146,11 +146,13 @@ class PhoneConfirmViewController: UIViewController {
                     self.dismissActivity()
                     DispatchQueue.main.async {
                         let vc = PaymentsDetailsSuccessViewController()
-                        var data = ConfirmViewControllerModel(type: .phoneNumberSBP)
-                        vc.id = model.data?.paymentOperationDetailID
-                        vc.modalPresentationStyle = .fullScreen
+                        let data = ConfirmViewControllerModel(type: .phoneNumberSBP)
+                        data.paymentOperationDetailId = model.data?.paymentOperationDetailID ?? 0
+                        vc.confurmVCModel = data
                         vc.printFormType = "sbp"
-                        self.present(vc, animated: true, completion: nil)
+                        let nav = UINavigationController(rootViewController: vc)
+                        nav.modalPresentationStyle = .fullScreen
+                        self.present(nav, animated: true, completion: nil)
                     }
                 } else {
                     print("DEBUG: Error: ", model.errorMessage ?? "")
@@ -181,9 +183,9 @@ class PhoneConfirmViewController: UIViewController {
                     
                        vc.confurmVCModel = ConfirmViewControllerModel(type: .phoneNumber)
 //                    vc.confurmVCModel = ConfirmViewControllerModel(country: CountriesList(code: "", contactCode: "", name: "", sendCurr: nil, md5Hash: "", svgImage: "", paymentSystemCodeList: nil), model: AnywayPaymentDecodableModel(statusCode: 0, errorMessage: "", data: AnywayPayment(paymentOperationDetailID: nil, listInputs: [], error: "", errorMessage: "", finalStep: 1, id: "", amount: Double(self.summTransctionField.text.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "₽", with: "").replacingOccurrences(of: ",", with: ".")), commission: 0.0, nextStep: 0)), fullName: "")
-                    vc.id = model.data?.paymentOperationDetailId
-                    vc.printFormType = "internal"
-                    self.navigationController?.pushViewController(vc, animated: true)
+                       vc.confurmVCModel?.paymentOperationDetailId = model.data?.paymentOperationDetailId ?? 0
+                       vc.printFormType = "internal"
+                       self.navigationController?.pushViewController(vc, animated: true)
                    }
                } else {
                    print("DEBUG: Error: ", model.errorMessage ?? "")

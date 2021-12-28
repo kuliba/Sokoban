@@ -1,0 +1,15 @@
+{
+    "amount": 100,
+    "bankId": "string",
+    "check": false,
+    "comment": "string",
+    "currencyAmount": "RUB",
+    "payer": {
+        "INN": "string",
+        "accountId": 0,
+        "accountNumber": "string",
+        "cardId": 0,
+        "cardNumber": "string",
+        "phoneNumber": "string"
+    }
+}

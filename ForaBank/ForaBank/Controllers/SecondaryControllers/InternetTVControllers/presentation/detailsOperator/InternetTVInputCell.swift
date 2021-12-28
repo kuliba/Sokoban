@@ -58,16 +58,12 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
         placeholderLable.text = item.title
         //textView.text = item.title
 
-        if item.subTitle != nil {
+        if let textSubTitle = item.subTitle, !textSubTitle.isEmpty {
             info = item.subTitle ?? ""
             infoButon.isHidden = false
         } else {
             infoButon.isHidden = true
         }
-//        let q = GKHDataSorted.a(item.title ?? "")
-//        textField.placeholder = q.0
-//        placeholder = q.0
-
 
         DispatchQueue.main.async {
             if let svg = item.svgImage {

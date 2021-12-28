@@ -18,6 +18,12 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
     var totalMoney: Double = 0.0 {
         didSet{
             totalMoneyView.totalBalance.text = String(totalMoney.currencyFormatter(symbol: ""))
+            let isLong = String(totalMoney.currencyFormatter(symbol: ""))
+            if isLong.contains("Млн") {
+                totalMoneyView.stackViewAxis (true)
+            } else {
+                totalMoneyView.stackViewAxis (false)
+            }
         }
     }
     
@@ -137,9 +143,6 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
         tableView.register(ProductTableViewCell.nib(), forCellReuseIdentifier: ProductTableViewCell.identifier)
         tableView?.delegate = self
         tableView?.dataSource = self
-
-        
-        
         view.addSubview(totalMoneyView)
         view.addSubview(tableView)
         tableView?.anchor(top: totalMoneyView.bottomAnchor ,left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor,paddingTop: 10)

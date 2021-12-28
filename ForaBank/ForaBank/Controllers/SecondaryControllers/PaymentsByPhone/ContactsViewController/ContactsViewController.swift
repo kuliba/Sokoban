@@ -80,7 +80,6 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
     override func viewDidLoad() {
         super.viewDidLoad()
         banksList = Dict.shared.banks?.filter({$0.paymentSystemCodeList?.first == "SFP"}) ?? []
-        print(banks)
         let viewLine = UIView()
         
         tableView.keyboardDismissMode = .interactive

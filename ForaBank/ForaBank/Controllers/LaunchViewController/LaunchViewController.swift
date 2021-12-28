@@ -9,9 +9,11 @@ import UIKit
 
 class LaunchViewController: UIViewController {
 
+    @IBOutlet weak var versionLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        versionLabel.text = "version " + Bundle.main.appVersionShort
         // Do any additional setup after loading the view.
     }
     
@@ -26,4 +28,29 @@ class LaunchViewController: UIViewController {
     }
     */
 
+}
+
+extension Bundle {
+    
+    public var appVersionShort: String {
+        if let result = infoDictionary?["CFBundleShortVersionString"] as? String {
+            return result
+        } else {
+            return "⚠️"
+        }
+    }
+    public var appVersionLong: String {
+        if let result = infoDictionary?["CFBundleVersion"] as? String {
+            return result
+        } else {
+            return "⚠️"
+        }
+    }
+    public var appName: String {
+        if let result = infoDictionary?["CFBundleName"] as? String {
+            return result
+        } else {
+            return "⚠️"
+        }
+    }
 }
