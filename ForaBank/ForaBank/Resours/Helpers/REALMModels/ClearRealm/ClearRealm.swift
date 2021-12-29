@@ -13,7 +13,7 @@ struct ClearRealm {
     static func clear() {
         lazy var realm = try! Realm()
         try! realm.write {
-            realm.delete(realm.objects(GetNotificationsEntitytModel.self))
+//            realm.delete(realm.objects(GetNotificationsEntitytModel.self))
             realm.delete(realm.objects(GetNotificationsCellModel.self))
             realm.delete(realm.objects(UserAllCardsModel.self))
             realm.delete(realm.objects(UserAllCardsbackgroundModel.self))

@@ -27,19 +27,22 @@ struct GetNotificationsModelSaved {
             
             let a = notificationsData.map{ $0.date?.components(separatedBy: " ").first ?? "" }.uniqued()
             
-            let updatedNotifications = notificationsData.map{ GetNotificationsCellModel(value: $0) }
+            let updatedNotifications = notificationsData.map{ GetNotificationsCellModel(with: $0) }
             
             var resultArray = [GetNotificationsModel]()
             
-            let getNotificationsModel = GetNotificationsModel()
             a.forEach { value in
+                let getNotificationsModel = GetNotificationsModel()
                 getNotificationsModel.date = value
+                var tempResultArray = [GetNotificationsModel]()
                 updatedNotifications.forEach { getNotificationsSectionModel in
                     if value == getNotificationsSectionModel.date?.components(separatedBy: " ").first ?? "" {
                         getNotificationsModel.getNotificationsEntity.append(getNotificationsSectionModel)
                     }
                 }
-                resultArray.append(getNotificationsModel)
+                tempResultArray.append(getNotificationsModel)
+                resultArray += tempResultArray
+                print()
             }
             
             do {
