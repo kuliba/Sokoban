@@ -59,7 +59,7 @@ extension PushHistoryViewController: UITableViewDelegate, UITableViewDataSource 
     func dateFormater(_ string: String, _ formatter: String) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "ru_RU")
-        dateFormatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
+        dateFormatter.dateFormat = "dd.MM.yyyy"
         let date = dateFormatter.date(from: string)!
         
         let d = DateFormatter()
@@ -94,11 +94,11 @@ extension PushHistoryViewController: UITableViewDelegate, UITableViewDataSource 
         
         let realm = try? Realm()
         do {
-            let b = realm?.objects(GetNotificationsEntitytModel.self)
+//            let b = realm?.objects(GetNotificationsEntitytModel.self)
             let a = realm?.objects(GetNotificationsCellModel.self)
             let c = realm?.objects(GetNotificationsModel.self)
             realm?.beginWrite()
-            realm?.delete(b!)
+//            realm?.delete(b!)
             realm?.delete(a!)
             realm?.delete(c!)
             try realm?.commitWrite()
