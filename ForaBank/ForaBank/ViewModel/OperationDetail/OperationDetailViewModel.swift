@@ -71,10 +71,11 @@ class OperationDetailViewModel: ObservableObject {
             self.header = HeaderViewModel(logo: sfpLogoImage, status: nil, title: groupName, category: nil)
             var payeeViewModel: PayeeViewModel
             
-            //FIXME: mask phone number
             if let foreignPhoneNumber = foreignPhoneNumber?.replacingOccurrences(of: " ", with: "") {
                 
-                payeeViewModel = .doubleRow(merchantName, foreignPhoneNumber)
+                let phoneFormatter = PhoneNumberFormater()
+                let formattedPhone = phoneFormatter.format(foreignPhoneNumber)
+                payeeViewModel = .doubleRow(merchantName, formattedPhone)
                 
             } else {
                 
@@ -289,10 +290,10 @@ extension OperationDetailViewModel {
                     operationViewModel = operationViewModel.updated(with: bankLogoImage)
                 }
                 
-                //FIXME: mask phone number
                 if let payeePhone = operation.payeePhone {
-                    
-                    operationViewModel = operationViewModel.updated(with: .doubleRow(merchantName, payeePhone))
+                    let phoneFormatter = PhoneNumberFormater()
+                    let formattedPhone = phoneFormatter.format(payeePhone)
+                    operationViewModel = operationViewModel.updated(with: .doubleRow(merchantName, formattedPhone))
                 }
 
             case .externalIndivudual, .externalEntity:
