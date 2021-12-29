@@ -63,7 +63,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let updatingTimeObject = GetSessionTimeout()
         updatingTimeObject.maxTimeOut = StaticDefaultTimeOut.staticDefaultTimeOut
         updatingTimeObject.mustCheckTimeOut = true
-        print("Debugging AppDelegate", updatingTimeObject.mustCheckTimeOut)
         do {
             let model = realm?.objects(GetSessionTimeout.self)
             realm?.beginWrite()
@@ -109,7 +108,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     fileprivate func RealmConfiguration() {
         // Версия БД (изменить на большую если меняем БД)
-        let schemaVersion: UInt64 = 9
+        let schemaVersion: UInt64 = 10
 
         let config = Realm.Configuration(
             // Set the new schema version. This must be greater than the previously used
@@ -141,6 +140,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     }
                     if oldSchemaVersion < 9 {
                         migration.deleteData(forType: "UserAllCardsModel")
+                    }
+                    if oldSchemaVersion < 10 {
+                        migration.deleteData(forType: "GetNotificationsEntitytModel")
+                        migration.deleteData(forType: "GetNotificationsModel")
                     }
 
                     // Nothing to do!
