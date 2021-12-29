@@ -81,6 +81,7 @@ struct OperationDetailDatum: Codable {
     let paymentOperationDetailID: Int?
     let printFormType, dateForDetail, memberID: String?, transferEnum: String?
     let transferReference: String?
+    let account: String?
 
     enum CodingKeys: String, CodingKey {
         
@@ -96,6 +97,7 @@ struct OperationDetailDatum: Codable {
         case paymentOperationDetailID = "paymentOperationDetailId"
         case printFormType, dateForDetail, memberID = "memberId", transferEnum
         case transferReference
+        case account
     }
 }
 
