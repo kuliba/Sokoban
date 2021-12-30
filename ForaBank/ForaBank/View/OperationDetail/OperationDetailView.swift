@@ -51,7 +51,7 @@ struct OperationDetailView: View {
                             
                             HStack(spacing: 15) {
                                 
-                                ForEach(actionButtons, id: \.self) { buttonViewModel in
+                                ForEach(actionButtons) { buttonViewModel in
                                     
                                     Button(buttonViewModel.name) {
                                         
@@ -67,7 +67,7 @@ struct OperationDetailView: View {
                         // template, document, details buttons
                         HStack(spacing: 52) {
                             
-                            ForEach(viewModel.featureButtons, id: \.self) { buttonViewModel in
+                            ForEach(viewModel.featureButtons) { buttonViewModel in
                                 
                                 VStack(spacing: 12) {
                                     
@@ -88,6 +88,7 @@ struct OperationDetailView: View {
                             }
                         }
                         .padding(.top, 28)
+                        .animation(nil)
                     }
                     
                     if viewModel.isLoading {
