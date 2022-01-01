@@ -53,7 +53,6 @@ final class NetworkManager<T: NetworkModelProtocol> {
             do {
                 let jsonAsData = try JSONSerialization.data(withJSONObject: requestBody, options: [])
                 request.httpBody = jsonAsData
-                print("DEBUG: URLrequest: \(request.httpBody)")
                 if request.value(forHTTPHeaderField: "Content-Type") == nil {
                     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
                 }
@@ -95,7 +94,7 @@ final class NetworkManager<T: NetworkModelProtocol> {
                             completion(nil, NetworkResponse.noData.rawValue)
                             return
                         }
-                        print(String(data: data ?? Data(), encoding: .utf8) ?? "null")
+                    
                         let updatingTimeObject = returnRealmModel()
 
                         /// Сохраняем в REALM
