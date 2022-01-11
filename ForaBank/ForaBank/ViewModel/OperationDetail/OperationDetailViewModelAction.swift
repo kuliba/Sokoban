@@ -19,9 +19,9 @@ enum OperationDetailViewModelAction {
         let printFormType: String
     }
     
-    struct ShowDetail: Action {
+    struct ShowInfo: Action {
         
-        let viewModel: ConfirmViewControllerModel
+        let viewModel: OperationDetailInfoViewModel
     }
     
     struct Change: Action {
