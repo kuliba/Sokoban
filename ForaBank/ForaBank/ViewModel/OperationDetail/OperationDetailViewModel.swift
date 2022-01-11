@@ -23,6 +23,7 @@ class OperationDetailViewModel: ObservableObject {
     }
     
     @Published var isLoading: Bool
+    @Published var operationDetailInfoViewModel: OperationDetailInfoViewModel?
     
     private let animationDuration: Double = 0.5
     
@@ -202,19 +203,8 @@ class OperationDetailViewModel: ObservableObject {
 private extension OperationDetailViewModel {
     
     func infoFeatureButtonViewModel(with productStatement: ProductStatementProxy, product: UserAllCardsModel, operationDetail: OperationDetailDatum? = nil) -> FeatureButtonViewModel? {
-        
-        //FIXME: temp mock
-        return FeatureButtonViewModel(kind: .info, icon: "Operation Details Info", name: "Детали", action: {})
-        
-        guard let operationDetail = operationDetail else {
-            return nil
-        }
 
-        guard let detailViewModel = ConfirmViewControllerModel(operation: operationDetail) else {
-            return nil
-        }
-    
-        return FeatureButtonViewModel(kind: .info, icon: "Operation Details Info", name: "Детали", action: { [weak self] in self?.action.send(OperationDetailViewModelAction.ShowDetail(viewModel: detailViewModel))})
+        return FeatureButtonViewModel(kind: .info, icon: "Operation Details Info", name: "Детали", action: { [weak self] in self?.operationDetailInfoViewModel = OperationDetailInfoViewModel(with: productStatement, operation: operationDetail, product: product, dismissAction: { [weak self] in self?.operationDetailInfoViewModel = nil})})
     }
     
     func documentButtonViewModel(with operationDetail: OperationDetailDatum) -> FeatureButtonViewModel? {
@@ -549,7 +539,7 @@ extension OperationDetailViewModel {
         let documentComment = statement.fastPayment?.documentComment
         let operationType = statement.operationTypeEnum
         
-        let productStatement = ProductStatementProxy(paymentDetailType: paymentDetailType, documentId: documentId, svgImage: svgImage, merchantName: merchantName, groupName: groupName, mcc: mcc, amount: amount, currencyCode: currency, tranDate: tranDate, foreignPhoneNumber: foreignPhoneNumber, documentComment: documentComment, operationType: operationType)
+        let productStatement = ProductStatementProxy(paymentDetailType: paymentDetailType, documentId: documentId, svgImage: svgImage, merchantName: merchantName, groupName: groupName, mcc: mcc, amount: amount, currencyCode: currency, tranDate: tranDate, foreignPhoneNumber: foreignPhoneNumber, documentComment: documentComment, operationType: operationType, fastPayment: statement.fastPayment, comment: statement.comment)
         
         self.init(productStatement: productStatement, product: product)
     }
@@ -572,7 +562,7 @@ extension OperationDetailViewModel {
         let documentComment = statement.fastPayment?.documentComment
         let operationType = statement.operationTypeEnum
         
-        let productStatement = ProductStatementProxy(paymentDetailType: paymentDetailType, documentId: documentId, svgImage: svgImage, merchantName: merchantName, groupName: groupName, mcc: mcc, amount: amount, currencyCode: currency, tranDate: tranDate, foreignPhoneNumber: foreignPhoneNumber, documentComment: documentComment, operationType: operationType)
+        let productStatement = ProductStatementProxy(paymentDetailType: paymentDetailType, documentId: documentId, svgImage: svgImage, merchantName: merchantName, groupName: groupName, mcc: mcc, amount: amount, currencyCode: currency, tranDate: tranDate, foreignPhoneNumber: foreignPhoneNumber, documentComment: documentComment, operationType: operationType, fastPayment: statement.fastPayment, comment: statement.comment)
         
         self.init(productStatement: productStatement, product: product)
     }
@@ -595,7 +585,7 @@ extension OperationDetailViewModel {
         let documentComment = statement.fastPayment?.documentComment
         let operationType = statement.operationTypeEnum
         
-        let productStatement = ProductStatementProxy(paymentDetailType: paymentDetailType, documentId: documentId, svgImage: svgImage, merchantName: merchantName, groupName: groupName, mcc: mcc, amount: amount, currencyCode: currency, tranDate: tranDate, foreignPhoneNumber: foreignPhoneNumber, documentComment: documentComment, operationType: operationType)
+        let productStatement = ProductStatementProxy(paymentDetailType: paymentDetailType, documentId: documentId, svgImage: svgImage, merchantName: merchantName, groupName: groupName, mcc: mcc, amount: amount, currencyCode: currency, tranDate: tranDate, foreignPhoneNumber: foreignPhoneNumber, documentComment: documentComment, operationType: operationType, fastPayment: statement.fastPayment, comment: statement.comment)
         
         self.init(productStatement: productStatement, product: product)
     }
@@ -607,7 +597,7 @@ extension OperationDetailViewModel {
     
     static let sampleComplete: OperationDetailViewModel = {
         
-        var viewModel = OperationDetailViewModel(productStatement: .init(paymentDetailType: .sfp, documentId: 0, svgImage: Image(uiImage: UIImage(named: "Operation Group Sample")!), merchantName: "Merchant Name", groupName: "Group Name", mcc: 234, amount: 1234, currencyCode: "RUS", tranDate: Date(), foreignPhoneNumber: nil, documentComment: nil, operationType: .debit), product: UserAllCardsModel())!
+        var viewModel = OperationDetailViewModel(productStatement: .init(paymentDetailType: .sfp, documentId: 0, svgImage: Image(uiImage: UIImage(named: "Operation Group Sample")!), merchantName: "Merchant Name", groupName: "Group Name", mcc: 234, amount: 1234, currencyCode: "RUS", tranDate: Date(), foreignPhoneNumber: nil, documentComment: nil, operationType: .debit, fastPayment: nil, comment: nil), product: UserAllCardsModel())!
         
         viewModel.header = HeaderViewModel(logo: viewModel.header.logo, status: .success, title: viewModel.header.title,  category: viewModel.header.category)
         
@@ -623,7 +613,7 @@ extension OperationDetailViewModel {
     
     static let sampleMin: OperationDetailViewModel = {
        
-        var viewModel = OperationDetailViewModel(productStatement: .init(paymentDetailType: .sfp, documentId: 0, svgImage: Image(uiImage: UIImage(named: "Operation Group Sample")!), merchantName: "Merchant Name", groupName: "Group Name", mcc: 234, amount: 1234, currencyCode: "RUS", tranDate: Date(), foreignPhoneNumber: nil, documentComment: nil, operationType: .debit), product: UserAllCardsModel())!
+        var viewModel = OperationDetailViewModel(productStatement: .init(paymentDetailType: .sfp, documentId: 0, svgImage: Image(uiImage: UIImage(named: "Operation Group Sample")!), merchantName: "Merchant Name", groupName: "Group Name", mcc: 234, amount: 1234, currencyCode: "RUS", tranDate: Date(), foreignPhoneNumber: nil, documentComment: nil, operationType: .debit, fastPayment: nil, comment: nil), product: UserAllCardsModel())!
         
         viewModel.header = HeaderViewModel(logo: viewModel.header.logo, status: nil, title: viewModel.header.title,  category: nil)
         
@@ -653,4 +643,6 @@ struct ProductStatementProxy {
     let foreignPhoneNumber: String?
     let documentComment: String?
     let operationType: OperationType
+    let fastPayment: FastPaymentData?
+    let comment: String?
 }

@@ -12,7 +12,7 @@ extension DateFormatter {
     static var operation: DateFormatter {
         
         let formatter = DateFormatter()
-        formatter.timeStyle = DateFormatter.Style.none//Set time style
+        formatter.timeStyle = DateFormatter.Style.short//Set time style
         formatter.dateStyle = DateFormatter.Style.long //Set date style
         
 //        formatter.dateFormat =  "d MMMM, E"
@@ -21,4 +21,6 @@ extension DateFormatter {
   
         return formatter
     }
+    
+    
 }

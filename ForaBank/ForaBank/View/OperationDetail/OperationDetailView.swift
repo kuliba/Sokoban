@@ -108,6 +108,10 @@ struct OperationDetailView: View {
         }
         .transition(.scale)
         .edgesIgnoringSafeArea(.bottom)
+        .sheet(item: $viewModel.operationDetailInfoViewModel) {  operationDetailInfoViewModel in
+            
+            OperationDetailInfoView(viewModel: operationDetailInfoViewModel)
+        }
     }
 }
 
