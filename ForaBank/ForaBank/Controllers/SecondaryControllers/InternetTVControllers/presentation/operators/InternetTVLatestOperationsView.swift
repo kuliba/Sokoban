@@ -38,7 +38,6 @@ class InternetTVLatestOperationsView: UIView {
             latestOpCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
             latestOpCollectionView.topAnchor.constraint(equalTo: topAnchor, constant: 0),
             latestOpCollectionView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0),
-//            caruselCollectionView.heightAnchor.constraint(equalToConstant: 200),
             lineView.leadingAnchor.constraint(equalTo: leadingAnchor),
             lineView.trailingAnchor.constraint(equalTo: trailingAnchor),
             lineView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0),
