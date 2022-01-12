@@ -97,8 +97,8 @@ class PaymentsViewController: UIViewController {
 
 // MARK: QR
     @objc func openSetting() {
-        checkCameraAccess(isAllowed: {
-                if $0 {
+        PermissionHelper.checkCameraAccess(isAllowed: { granted, alert in
+                if granted{
                     DispatchQueue.main.async {
                         let controller = QRViewController.storyboardInstance()!
                         let nc = UINavigationController(rootViewController: controller)
@@ -106,18 +106,10 @@ class PaymentsViewController: UIViewController {
                         self.present(nc, animated: true)
                     }
                 } else {
-                    guard self.alertController == nil else {
-                        return
-                    }
-                    self.alertController = UIAlertController(title: "Внимание", message: "Для сканирования QR кода, необходим доступ к камере", preferredStyle: .alert)
-                    guard let alert = self.alertController else {
-                        return
-                    }
-                    alert.addAction(UIAlertAction(title: "Понятно", style: .default, handler: { (action) in
-                        self.alertController = nil
-                    }))
                     DispatchQueue.main.async {
-                        self.present(alert, animated: true, completion: nil)
+                        if let alertUnw = alert {
+                            self.present(alertUnw, animated: true, completion: nil)
+                        }
                     }
                 }
             })
@@ -165,7 +157,7 @@ class PaymentsViewController: UIViewController {
 extension PaymentsViewController {
     
     func loadAllLastLatestPayments() {
-        let param = ["isPhonePayments": "true", "isCountriesPayments": "true", "isMobilePayments": "true"]
+        let param = ["isPhonePayments": "true", "isCountriesPayments": "true", "isMobilePayments": "true", "isServicePayments": "true", "isInternetPayments": "true"]
         NetworkManager<GetAllLatestPaymentsDecodableModel>.addRequest(.getAllLatestPayments, param, [:]) { model, error in
             if error != nil {
                 print("DEBUG: Error: ", error ?? "")
@@ -217,24 +209,6 @@ extension PaymentsViewController {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
                 completion(nil, model.errorMessage)
             }
-        }
-    }
-
-    func checkCameraAccess(isAllowed: @escaping (Bool) -> Void) {
-        switch AVCaptureDevice.authorizationStatus(for: .video) {
-        case .denied:
-            // Доступ к камере не был дан
-            isAllowed(false)
-        case .restricted:
-            isAllowed(false)
-        case .authorized:
-            // Есть разрешение на доступ к камере
-            isAllowed(true)
-        case .notDetermined:
-            // Первый запрос на доступ к камере
-            AVCaptureDevice.requestAccess(for: .video) { isAllowed($0) }
-        @unknown default:
-            print()
         }
     }
 }

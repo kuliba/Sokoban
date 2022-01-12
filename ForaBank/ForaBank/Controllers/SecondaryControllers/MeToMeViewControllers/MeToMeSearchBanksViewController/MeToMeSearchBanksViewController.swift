@@ -208,7 +208,7 @@ class MeToMeSearchBanksViewController: UIViewController {
                     }
                 })
                 var list = filterBank.sorted(by: {$0.rusName ?? "" < $1.rusName ?? ""})
-                #if RELEASE
+                //#if RELEASE
                 list.forEach { bank in
                     if bank.memberID == "100000000217" {
                         if let index = list.firstIndex(where: {$0.memberID == bank.memberID}) {
@@ -216,7 +216,7 @@ class MeToMeSearchBanksViewController: UIViewController {
                         }
                     }
                 }
-                #endif
+                //#endif
                 completion(list, nil)
             } else {
                 guard let error = model.errorMessage else { return }

@@ -46,29 +46,23 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
 
     func setTitle(title: String, subtitle: String) -> UIView {
         let titleLabel = UILabel(frame: CGRect(x: 0, y: -2, width: 0, height: 0))
-
         titleLabel.backgroundColor = .clear
         titleLabel.textColor = .black
-
         let imageAttachment = NSTextAttachment()
         imageAttachment.image = UIImage(systemName: "chevron.down")
         imageAttachment.bounds = CGRect(x: 0, y: 0, width: imageAttachment.image!.size.width, height: imageAttachment.image!.size.height)
-
         let attachmentString = NSAttributedString(attachment: imageAttachment)
         let completeText = NSMutableAttributedString(string: "")
         let text = NSAttributedString(string: title + " ", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16)])
         completeText.append(text)
         completeText.append(attachmentString)
-
         titleLabel.attributedText = completeText
         titleLabel.numberOfLines = 2
         titleLabel.sizeToFit()
         let titleView = UIView(frame: CGRect(x: 0, y: 0, width: titleLabel.frame.size.width, height: 15))
         titleView.addSubview(titleLabel)
-
         let gesture = UITapGestureRecognizer(target: self, action: #selector(titleDidTaped))
         titleView.addGestureRecognizer(gesture)
-
         return titleView
     }
 
@@ -88,19 +82,16 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
         searchController.automaticallyShowsCancelButton = false
         searchController.searchBar.delegate = self
         definesPresentationContext = true
-
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "back_button"), style: .plain, target: self, action: #selector(backAction))
         navigationItem.leftBarButtonItem?.setTitleTextAttributes(
                 [.foregroundColor: UIColor.black], for: .normal)
         navigationItem.leftBarButtonItem?.setTitleTextAttributes(
                 [.foregroundColor: UIColor.black], for: .highlighted)
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "qr_Icon"), style: .plain, target: self, action: #selector(onQR))
-
         navigationItem.rightBarButtonItem?.setTitleTextAttributes(
                 [.foregroundColor: UIColor.black], for: .normal)
         navigationItem.rightBarButtonItem?.setTitleTextAttributes(
                 [.foregroundColor: UIColor.black], for: .highlighted)
-
     }
 
     override func viewDidLoad() {
@@ -111,26 +102,18 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
             latestOperationView.frame = historyView.frame
             historyView.addSubview(latestOperationView)
         }
-
         if InternetTVMainController.latestOpIsEmpty {
             historyView?.isHidden = true
             historyView?.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
         }
-
         tableView.delegate = self
         tableView.dataSource = self
-
         AddAllUserCardtList.add {}
-
         navigationController?.isNavigationBarHidden = false
-
         reqView.add_CornerRadius(5)
         zayavka.add_CornerRadius(5)
-
         tableView.register(UINib(nibName: "GHKCell", bundle: nil), forCellReuseIdentifier: GHKCell.reuseId)
-
         setupNavBar()
-
         NotificationCenter.default.addObserver(forName: .city, object: nil, queue: .none) { [weak self] (value) in
             self?.searching = true
             let value = value.userInfo?["key"] as? String ?? ""
@@ -155,25 +138,8 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         checkQREvent()
-    }
-
-    func checkCameraAccess(isAllowed: @escaping (Bool) -> Void) {
-        switch AVCaptureDevice.authorizationStatus(for: .video) {
-        case .denied:
-            // Доступ к камере не был дан
-            isAllowed(false)
-        case .restricted:
-            isAllowed(false)
-        case .authorized:
-            // Есть разрешение на доступ к камере
-            isAllowed(true)
-        case .notDetermined:
-            // Первый запрос на доступ к камере
-            AVCaptureDevice.requestAccess(for: .video) {
-                isAllowed($0)
-            }
-        @unknown default:
-            print()
+        if InternetTVMainViewModel.latestOp != nil {
+            handleMsg(what: InternetTVMainController.msgPerformSegue)
         }
     }
 
@@ -188,27 +154,17 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
     }
 
     @objc func onQR() {
-        checkCameraAccess(isAllowed: {
-            if $0 {
-                // self.delegate?.goToQRController()
+        PermissionHelper.checkCameraAccess(isAllowed: { granted, alert in
+            if granted {
                 DispatchQueue.main.async {
                     self.navigationController?.isNavigationBarHidden = true
                     self.performSegue(withIdentifier: "qr", sender: nil)
                 }
             } else {
-                guard self.alertController == nil else {
-                    print("There is already an alert presented")
-                    return
-                }
-                self.alertController = UIAlertController(title: "Внимание", message: "Для сканирования QR кода, необходим доступ к камере", preferredStyle: .alert)
-                guard let alert = self.alertController else {
-                    return
-                }
-                alert.addAction(UIAlertAction(title: "Понятно", style: .default, handler: { (action) in
-                    self.alertController = nil
-                }))
                 DispatchQueue.main.async {
-                    self.present(alert, animated: true, completion: nil)
+                    if let alertUnw = alert {
+                        self.present(alertUnw, animated: true, completion: nil)
+                    }
                 }
             }
         })
