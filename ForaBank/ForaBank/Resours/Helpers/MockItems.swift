@@ -145,32 +145,33 @@ class MockItems {
             PaymentsModel(id: 14, name: "Интернет, ТВ",
                           iconName: "tv",
                           controllerName: "InternetTVMainController",
-                          description: "Интернет, ТВ"),
+                          description: "Интернет, ТВ")
+//            ,
             
-            PaymentsModel(id: 15, name: "Штрафы",
-                          iconName: "carMain",
-                          controllerName: "",
-                          description: "Что то"),
-            
-            PaymentsModel(id: 16, name: "Соцсети, игры, карты",
-                          iconName: "iconGame",
-                          controllerName: "",
-                          description: "Что то"),
-            
-            PaymentsModel(id: 17, name: "Госуслуги",
-                          iconName: "PaymentsIconBlazon",
-                          controllerName: "",
-                          description: "Что то"),
-            
-            PaymentsModel(id: 18, name: "Охранные системы",
-                          iconName: "key",
-                          controllerName: "",
-                          description: "Что то"),
-            
-            PaymentsModel(id: 19, name: "Прочее",
-                          iconName: "shopping-cart",
-                          controllerName: "MeToMeViewController",
-                          description: "Что то")
+//            PaymentsModel(id: 15, name: "Штрафы",
+//                          iconName: "carMain",
+//                          controllerName: "",
+//                          description: "Что то"),
+//
+//            PaymentsModel(id: 16, name: "Соцсети, игры, карты",
+//                          iconName: "iconGame",
+//                          controllerName: "",
+//                          description: "Что то"),
+//
+//            PaymentsModel(id: 17, name: "Госуслуги",
+//                          iconName: "PaymentsIconBlazon",
+//                          controllerName: "",
+//                          description: "Что то"),
+//
+//            PaymentsModel(id: 18, name: "Охранные системы",
+//                          iconName: "key",
+//                          controllerName: "",
+//                          description: "Что то"),
+//
+//            PaymentsModel(id: 19, name: "Прочее",
+//                          iconName: "shopping-cart",
+//                          controllerName: "MeToMeViewController",
+//                          description: "Что то")
         ]
     }
     
