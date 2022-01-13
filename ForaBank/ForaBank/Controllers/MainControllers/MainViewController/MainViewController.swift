@@ -56,11 +56,11 @@ class MainViewController: UIViewController {
                     for i in self.productsCardsAndAccounts {
                         self.productsFromRealm.append(PaymentsModel(productListFromRealm: i))
                     }
-                    if self.productsCardsAndAccounts.count <= 3{
+//                    if self.productsCardsAndAccounts.count <= 3{
                             self.productsFromRealm.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
-                    } else if self.productsCardsAndAccounts.count > 4{
-//                            self.productsFromRealm.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
-                    }
+//                    } else if self.productsCardsAndAccounts.count > 4{
+////                            self.productsFromRealm.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
+//                    }
                     self.reloadData(with: nil)
                 }
 
