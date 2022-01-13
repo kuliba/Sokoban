@@ -28,30 +28,32 @@ class OperationDetailViewModel: ObservableObject {
     private let animationDuration: Double = 0.5
     
     init?(productStatement: ProductStatementProxy, product: UserAllCardsModel) {
-        
+
+        let tranDateString = DateFormatter.operation.string(from: productStatement.tranDate)
+
         switch productStatement.paymentDetailType {
         case .betweenTheir, .insideBank, .otherBank:
             self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: productStatement.groupName, category: "Переводы")
             let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchantName)
             let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
-            self.operation = OperationViewModel(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: productStatement.tranDate)
+            self.operation = OperationViewModel(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
             
         case .contactAddressless, .direct:
             self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: productStatement.groupName, category: nil)
             let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchantName)
             let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
-            self.operation = OperationViewModel(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: productStatement.tranDate)
+            self.operation = OperationViewModel(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
             
         case .externalIndivudual, .externalEntity:
             self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: productStatement.groupName, category: nil)
             let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
-            self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: productStatement.tranDate)
+            self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
             
             
         case .housingAndCommunalService, .insideOther, .internet, .mobile:
             self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: productStatement.merchantName, category: "\(productStatement.groupName)")
             let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
-            self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: productStatement.tranDate)
+            self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
             
         case .notFinance:
             return nil
@@ -60,12 +62,12 @@ class OperationDetailViewModel: ObservableObject {
             self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: productStatement.groupName, category: "Прочие")
             let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchantName)
             let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
-            self.operation = OperationViewModel(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: productStatement.tranDate)
+            self.operation = OperationViewModel(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
             
         case .outsideOther:
             self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: productStatement.merchantName, category: "\(productStatement.groupName) (\(productStatement.mcc))")
             let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
-            self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: productStatement.tranDate)
+            self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
             
         case .sfp:
             let sfpLogoImage = Image("Operation Type SFP Icon")
@@ -85,11 +87,11 @@ class OperationDetailViewModel: ObservableObject {
             let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
             if let documentComment = productStatement.documentComment, documentComment != "" {
                 
-                self.operation = OperationViewModel(bankLogo: productStatement.svgImage, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: documentComment, date: productStatement.tranDate)
+                self.operation = OperationViewModel(bankLogo: productStatement.svgImage, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: documentComment, date: tranDateString)
            
             } else {
                 
-                self.operation = OperationViewModel(bankLogo: productStatement.svgImage, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: productStatement.tranDate)
+                self.operation = OperationViewModel(bankLogo: productStatement.svgImage, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
             }
         }
         
@@ -352,12 +354,18 @@ extension OperationDetailViewModel {
                     let formattedPhone = phoneFormatter.format(payeePhone)
                     operationViewModel = operationViewModel.updated(with: .doubleRow(productStatement.merchantName, formattedPhone))
                 }
+                
+                if let feeViewModel = FeeViewModel(with: operation, currencyCode: productStatement.currencyCode)  {
+                    
+                    operationViewModel = operationViewModel.updated(with: feeViewModel)
+                }
 
             case .externalIndivudual, .externalEntity:
 
-                if let bankName = operation.payeeBankName,
-                   let bank = Dict.shared.banks?.first(where: { $0.memberNameRus == bankName }),
+                if let bankBic = operation.payeeBankBIC,
+                   let bank = Dict.shared.bankFullInfoList?.first(where: {$0.bic == bankBic}),
                    let bankLogoSVG = bank.svgImage {
+                    
                     
                     let bankLogoImage = Image(uiImage: bankLogoSVG.convertSVGStringToImage())
                     operationViewModel = operationViewModel.updated(with: bankLogoImage)
@@ -368,22 +376,38 @@ extension OperationDetailViewModel {
                     operationViewModel = operationViewModel.updated(with: .doubleRow(payeeFullName, payeeAccountNumber))
                 }
                 
+                if let feeViewModel = FeeViewModel(with: operation, currencyCode: productStatement.currencyCode)  {
+                    
+                    operationViewModel = operationViewModel.updated(with: feeViewModel)
+                }
+                
             case .internet:
                 if let account = operation.account {
                     
                     operationViewModel = operationViewModel.updated(with: .singleRow(account))
                 }
+                if let feeViewModel = FeeViewModel(with: operation, currencyCode: productStatement.currencyCode)  {
+                    
+                    operationViewModel = operationViewModel.updated(with: feeViewModel)
+                }
                 
             case .mobile:
                 if let payeePhone = operation.payeePhone {
-                    
-                    operationViewModel = operationViewModel.updated(with: .singleRow(payeePhone))
+                    let phoneFormatter = PhoneNumberFormater()
+                    let formattedPhone = phoneFormatter.format(payeePhone)
+
+                    operationViewModel = operationViewModel.updated(with: .singleRow(formattedPhone))
                 }
                 
             case .otherBank, .housingAndCommunalService:
                 if let payeeCardNumber = operation.payeeCardNumber {
                     
                     operationViewModel = operationViewModel.updated(with: .singleRow(payeeCardNumber))
+                }
+                
+                if let feeViewModel = FeeViewModel(with: operation, currencyCode: productStatement.currencyCode)  {
+                    
+                    operationViewModel = operationViewModel.updated(with: feeViewModel)
                 }
                 
             case .sfp:
@@ -446,7 +470,7 @@ extension OperationDetailViewModel {
             }
             
             //FIXME: localization required
-            self.title = "Комиссия:"
+            self.title = "Из них комиссия:"
             self.amount = feeAmount.currencyFormatter(symbol: currencyCode)
         }
     }

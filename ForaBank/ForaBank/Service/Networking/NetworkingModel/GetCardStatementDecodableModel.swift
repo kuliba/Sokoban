@@ -106,7 +106,6 @@ extension GetCardStatementDatum {
     }
     
     var transactionDate: Date {
-        
-        Date(timeIntervalSince1970: TimeInterval((date ?? 0) / 1000))
+        Date(timeIntervalSince1970: TimeInterval(((tranDate ?? date) ?? 0) / 1000))
     }
 }
