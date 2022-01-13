@@ -6,6 +6,11 @@ import Foundation
 class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSource, UIPopoverPresentationControllerDelegate, UIViewControllerTransitioningDelegate {
 
     static let msgUpdateTable = 3
+
+    public static func storyboardInstance() -> InternetTVDetailsFormController? {
+        let storyboard = UIStoryboard(name: "InternetTV", bundle: nil)
+        return storyboard.instantiateViewController(withIdentifier: "InternetTVDetail") as? InternetTVDetailsFormController
+    }
     var fromPaymentVc = false
     var operatorData: GKHOperatorsModel?
     var latestOperation: InternetLatestOpsDO?

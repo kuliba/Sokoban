@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import RealmSwift
 
 protocol PaymentsViewControllerDelegate: AnyObject {
     func toMobilePay(_ controller: UIViewController, _ phone: String)
@@ -40,10 +40,10 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 let vc = UINavigationController(rootViewController: viewController)
                 vc.modalPresentationStyle = .fullScreen
                 present(vc, animated: true)
-            } else if let lastGKHPayment = payments[indexPath.row].lastGKHPayment{
-                    
-           
-                    
+            } else if let lastUtilitiesPayment = payments[indexPath.row].lastGKHPayment {
+                openLatestUtilities(lastGKHPayment: lastUtilitiesPayment)
+            } else if let lastUtilitiesPayment = payments[indexPath.row].lastInternetPayment {
+                openLatestUtilities(lastGKHPayment: lastUtilitiesPayment)
             } else {
                 if let viewController = payments[indexPath.row].controllerName.getViewController() {
                     viewController.addCloseButton()
@@ -83,7 +83,6 @@ extension PaymentsViewController: UICollectionViewDelegate {
 //                        navController.transitioningDelegate = self
                     } else {
                         navController.modalPresentationStyle = .fullScreen
-
                     }
                     present(navController, animated: true, completion: nil)
                 }
@@ -91,8 +90,8 @@ extension PaymentsViewController: UICollectionViewDelegate {
         case .pay:
             switch (indexPath.row) {
             case 0:
-                checkCameraAccess(isAllowed: {
-                    if $0 {
+                PermissionHelper.checkCameraAccess(isAllowed: { granted, alert in
+                    if granted {
                         DispatchQueue.main.async {
                             let controller = QRViewController.storyboardInstance()!
                             let nc = UINavigationController(rootViewController: controller)
@@ -100,19 +99,10 @@ extension PaymentsViewController: UICollectionViewDelegate {
                             self.present(nc, animated: true)
                         }
                     } else {
-                        guard self.alertController == nil else {
-                            print("There is already an alert presented")
-                            return
-                        }
-                        self.alertController = UIAlertController(title: "Внимание", message: "Для сканирования QR кода, необходим доступ к камере", preferredStyle: .alert)
-                        guard let alert = self.alertController else {
-                            return
-                        }
-                        alert.addAction(UIAlertAction(title: "Понятно", style: .default, handler: { (action) in
-                            self.alertController = nil
-                        }))
                         DispatchQueue.main.async {
-                            self.present(alert, animated: true, completion: nil)
+                            if let alertUnw = alert {
+                                self.present(alertUnw, animated: true, completion: nil)
+                            }
                         }
                     }
                 })
@@ -147,9 +137,45 @@ extension PaymentsViewController: UICollectionViewDelegate {
         }
     }
 
+    private func openLatestUtilities(lastGKHPayment: GetAllLatestPaymentsDatum) {
+        var amount = ""
+        var name = ""
+        var image: UIImage!
+        let realm = try? Realm()
+        if let operatorsArray = realm?.objects(GKHOperatorsModel.self).filter { item in
+            item.puref == lastGKHPayment.puref }
+                , operatorsArray.count > 0, let foundedOperator = operatorsArray.first {
+            name = foundedOperator.name?.capitalizingFirstLetter() ?? ""
+            if let svgImage = foundedOperator.logotypeList.first?.svgImage, svgImage != "" {
+                image = svgImage.convertSVGStringToImage()
+            } else {
+                image = UIImage(named: "GKH")
+            }
+            var additionalList = [AdditionalListModel]()
+            lastGKHPayment.additionalList?.forEach { item in
+                let additionalItem = AdditionalListModel()
+                additionalItem.fieldValue = item.fieldValue
+                additionalItem.fieldName = item.fieldName
+                additionalItem.fieldTitle = item.fieldName
+                additionalList.append(additionalItem)
+            }
+            let latestOpsDO = InternetLatestOpsDO(mainImage: image, name: name, amount: amount, op: foundedOperator, additionalList: additionalList)
+            InternetTVMainViewModel.latestOp = latestOpsDO
+            if foundedOperator.parentCode?.contains(GlobalModule.UTILITIES_CODE) == true {
+                InternetTVMainViewModel.filter = GlobalModule.UTILITIES_CODE
+            } else if foundedOperator.parentCode?.contains(GlobalModule.INTERNET_TV_CODE) == true {
+                InternetTVMainViewModel.filter = GlobalModule.INTERNET_TV_CODE
+            }
+
+            let controller = InternetTVMainController.storyboardInstance()!
+            let nc = UINavigationController(rootViewController: controller)
+            nc.modalPresentationStyle = .fullScreen
+            present(nc, animated: false)
+        }
+    }
+
     private func openPhonePaymentVC(model: GetAllLatestPaymentsDatum) {
         let vc = PaymentByPhoneViewController()
-
         let banksList = Dict.shared.banks
         banksList?.forEach { bank in
             if bank.memberID == model.bankID {
@@ -205,45 +231,43 @@ extension PaymentsViewController: UICollectionViewDelegate {
         navVC.modalPresentationStyle = .fullScreen
         present(navVC, animated: true, completion: nil)
     }
-    
-        func getCountry(code: String) -> CountriesList{
-            var countryValue: CountriesList?
-            let list = Dict.shared.countries
-            list?.forEach({ country in
+
+    func getCountry(code: String) -> CountriesList {
+        var countryValue: CountriesList?
+        let list = Dict.shared.countries
+        list?.forEach({ country in
             if country.code == code {
                 countryValue = country
-                }
-            })
-            return countryValue!
-        }
-    
+            }
+        })
+        return countryValue!
+    }
+
     func findBankByPuref(purefString: String) -> BanksList? {
         var bankValue: BanksList?
-       let paymentSystems = Dict.shared.paymentList
-       paymentSystems?.forEach({ paymentSystem in
-           if paymentSystem.code == "DIRECT" {
-               let purefList = paymentSystem.purefList
-               purefList?.forEach({ puref in
-                   puref.forEach({ (key, value) in
-                       value.forEach { purefList in
-                           if purefList.puref == purefString {
-                               let bankList = Dict.shared.banks
-                               bankList?.forEach({ bank in
-                                   if bank.memberID == key {
-                                       bankValue = bank
-                                   }
-                               })
-                           }
-                       }
-                   })
-               })
-           }
-       })
+        let paymentSystems = Dict.shared.paymentList
+        paymentSystems?.forEach({ paymentSystem in
+            if paymentSystem.code == "DIRECT" {
+                let purefList = paymentSystem.purefList
+                purefList?.forEach({ puref in
+                    puref.forEach({ (key, value) in
+                        value.forEach { purefList in
+                            if purefList.puref == purefString {
+                                let bankList = Dict.shared.banks
+                                bankList?.forEach({ bank in
+                                    if bank.memberID == key {
+                                        bankValue = bank
+                                    }
+                                })
+                            }
+                        }
+                    })
+                })
+            }
+        })
         return bankValue!
-   }
+    }
 }
-           
-    
 
 extension PaymentsViewController: UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
@@ -252,5 +276,3 @@ extension PaymentsViewController: UIViewControllerTransitioningDelegate {
         return presenter
     }
 }
-
-
