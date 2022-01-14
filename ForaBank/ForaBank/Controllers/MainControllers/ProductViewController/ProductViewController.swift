@@ -1096,8 +1096,9 @@ extension ProductViewController{
             //            sorted[indexPath.section].value[indexPath.item]
             cell.operation = nil
             cell.accountOperation = nil
+            let bank =  Dict.shared.currencyList?.first(where: {$0.codeNumeric == sortedDeposit[indexPath.section].value[indexPath.row].currencyCodeNumeric})
             cell.depositOperation = sortedDeposit[indexPath.section].value[indexPath.row]
-            cell.configure(currency: product?.currency ?? "RUB")
+            cell.configure(currency: bank?.code ?? "RUB")
             cell.selectionStyle = .none
             return cell
         case "ACCOUNT":
@@ -1115,8 +1116,10 @@ extension ProductViewController{
             //            sorted[indexPath.section].value[indexPath.item]
             cell.operation = nil
             cell.depositOperation = nil
+            let bank =  Dict.shared.currencyList?.first(where: {$0.codeNumeric == sortedAccount[indexPath.section].value[indexPath.row].currencyCodeNumeric})
             cell.accountOperation = sortedAccount[indexPath.section].value[indexPath.row]
-            cell.configure(currency: product?.currency ?? "RUB")
+            cell.configure(currency: bank?.code ?? "RUB")
+            
             cell.selectionStyle = .none
             return cell
         case "CARD":
@@ -1132,9 +1135,10 @@ extension ProductViewController{
 //            cell.titleLable.isSkeletonable = true
             cell.depositOperation = nil
             cell.accountOperation = nil
-            let section = groupByCategory[indexPath.section]
             cell.operation = sorted[indexPath.section].value[indexPath.row]
-            cell.configure(currency: product?.currency ?? "RUB")
+
+            let bank =  Dict.shared.currencyList?.first(where: {$0.codeNumeric == sorted[indexPath.section].value[indexPath.row].currencyCodeNumeric})
+            cell.configure(currency: bank?.code ?? "RUB")
             cell.selectionStyle = .none
             return cell
         case .none:
@@ -1170,14 +1174,23 @@ extension ProductViewController{
         switch product.productTypeEnum {
         case .deposit:
             let deposit = sortedDeposit[indexPath.section].value[indexPath.row]
+            if let bank =  Dict.shared.currencyList?.first(where: {$0.codeNumeric == sortedDeposit[indexPath.section].value[indexPath.row].currencyCodeNumeric}), let currency = bank.code{
+                return OperationDetailViewModel(with: deposit, currency: currency, product: product)
+            }
             return OperationDetailViewModel(with: deposit, currency: currency, product: product)
 
         case .card:
             let card = sorted[indexPath.section].value[indexPath.row]
+            if let bank =  Dict.shared.currencyList?.first(where: {$0.codeNumeric == sorted[indexPath.section].value[indexPath.row].currencyCodeNumeric}), let currency = bank.code{
+                return OperationDetailViewModel(with: card, currency: currency, product: product)
+            }
             return OperationDetailViewModel(with: card, currency: currency, product: product)
             
         case .account:
             let account = sortedAccount[indexPath.section].value[indexPath.row]
+            if let bank =  Dict.shared.currencyList?.first(where: {$0.codeNumeric == sortedAccount[indexPath.section].value[indexPath.row].currencyCodeNumeric}), let currency = bank.code{
+                return OperationDetailViewModel(with: account, currency: currency, product: product)
+            }
             return OperationDetailViewModel(with: account, currency: currency, product: product)
             
         default:

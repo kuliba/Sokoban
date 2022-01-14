@@ -82,8 +82,9 @@ final class OperationDetailInfoViewModel: Identifiable {
                             if let smallDesign = product.smallDesign?.convertSVGStringToImage(),
                                   let productName = product.mainField,
                                   let additionalField = product.additionalField,
+                               let productCurrency = product.currency,
                                let description = product.number?.suffix(4){
-                                let balanceString = product.balance.currencyFormatter(symbol: currency)
+                                let balanceString = product.balance.currencyFormatter(symbol: productCurrency)
                             
                                 cells.append(ProductCellViewModel(title: "Счет пополнения", icon: Image(uiImage: smallDesign), name: productName, iconPaymentService: nil, balance: balanceString, description: "· \(description) · \(additionalField)"))
                             }
@@ -104,8 +105,9 @@ final class OperationDetailInfoViewModel: Identifiable {
                         if let smallDesign = product.smallDesign?.convertSVGStringToImage(),
                               let productName = product.mainField,
                               let additionalField = product.additionalField,
+                           let productCurrency = product.currency,
                            let description = product.number?.suffix(4){
-                            let balanceString = product.balance.currencyFormatter(symbol: currency)
+                            let balanceString = product.balance.currencyFormatter(symbol: productCurrency)
                         
                             cells.append(ProductCellViewModel(title: "Счет списания", icon: Image(uiImage: smallDesign), name: productName, iconPaymentService: nil, balance: balanceString, description: "· \(description) · \(additionalField)"))
                         }
@@ -640,10 +642,11 @@ private extension OperationDetailInfoViewModel {
         guard let smallDesign = product.smallDesign?.convertSVGStringToImage(),
               let productName = product.mainField,
               let additionalField = product.additionalField,
+              let productCurrency = product.currency,
               let description = product.number?.suffix(4) else  {
                   return nil
               }
-        let balanceString = product.balance.currencyFormatter(symbol: currency)
+        let balanceString = product.balance.currencyFormatter(symbol: productCurrency)
         
         return ProductCellViewModel(title: "Счет списания", icon: Image(uiImage: smallDesign), name: productName, iconPaymentService: nil, balance:balanceString, description: "· \(description) · \(additionalField)")
     }

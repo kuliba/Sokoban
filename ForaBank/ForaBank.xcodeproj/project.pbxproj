@@ -275,6 +275,7 @@
 		68E6A29526A033D900A1D9A1 /* DeleteProductTemplateDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E6A29426A033D900A1D9A1 /* DeleteProductTemplateDecodableModel.swift */; };
 		68E6A29726A033F200A1D9A1 /* GetProductTemplateListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E6A29626A033F200A1D9A1 /* GetProductTemplateListDecodableModel.swift */; };
 		68E6A29926A0340D00A1D9A1 /* GetCurrencyListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E6A29826A0340D00A1D9A1 /* GetCurrencyListDecodableModel.swift */; };
+		68E76524278D5F1F005860FE /* AntifraudViewHostingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E76523278D5F1F005860FE /* AntifraudViewHostingController.swift */; };
 		68F6816F269E5E56008157CE /* SearchBanksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F6816E269E5E56008157CE /* SearchBanksViewController.swift */; };
 		68FB358B2760C1C80097AECE /* AntifraudView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FB358A2760C1C80097AECE /* AntifraudView.swift */; };
 		68FFA5282682AF2C002DADFA /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA5272682AF2C002DADFA /* ContactsViewController.swift */; };
@@ -899,6 +900,7 @@
 		68E6A29426A033D900A1D9A1 /* DeleteProductTemplateDecodableModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeleteProductTemplateDecodableModel.swift; sourceTree = "<group>"; };
 		68E6A29626A033F200A1D9A1 /* GetProductTemplateListDecodableModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetProductTemplateListDecodableModel.swift; sourceTree = "<group>"; };
 		68E6A29826A0340D00A1D9A1 /* GetCurrencyListDecodableModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetCurrencyListDecodableModel.swift; sourceTree = "<group>"; };
+		68E76523278D5F1F005860FE /* AntifraudViewHostingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AntifraudViewHostingController.swift; sourceTree = "<group>"; };
 		68F6816E269E5E56008157CE /* SearchBanksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBanksViewController.swift; sourceTree = "<group>"; };
 		68FB358A2760C1C80097AECE /* AntifraudView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AntifraudView.swift; sourceTree = "<group>"; };
 		68FFA5272682AF2C002DADFA /* ContactsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewController.swift; sourceTree = "<group>"; };
@@ -2179,6 +2181,7 @@
 			isa = PBXGroup;
 			children = (
 				68FB358A2760C1C80097AECE /* AntifraudView.swift */,
+				68E76523278D5F1F005860FE /* AntifraudViewHostingController.swift */,
 			);
 			path = AntifraudController;
 			sourceTree = "<group>";
@@ -4654,6 +4657,7 @@
 				EDC341A226864C4100FFFEF8 /* BottomInputView.swift in Sources */,
 				68D06F2226C3C0C100F9BE4C /* MainViewController.swift in Sources */,
 				0B747890267343B400C44F79 /* KeyExchangeDecodebleModel.swift in Sources */,
+				68E76524278D5F1F005860FE /* AntifraudViewHostingController.swift in Sources */,
 				0B7A18C526852EFC0007CC75 /* MakeTransferDecodableModel.swift in Sources */,
 				ED8AB45B26C2A7C5006F0D03 /* SuccessMeToMeController.swift in Sources */,
 				A55A52DB2746FF1700641DD0 /* InternetTVMainController.swift in Sources */,
@@ -4872,7 +4876,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 9;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
@@ -4900,7 +4904,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
