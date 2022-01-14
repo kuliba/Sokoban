@@ -329,14 +329,13 @@ extension OperationDetailViewModel {
             switch productStatement.paymentDetailType {
             case .contactAddressless:
                 if let transferReference = operation.transferReference {
-
-                    let payeeViewModel: PayeeViewModel = .number(productStatement.merchantName, transferReference, {[weak viewModel] in viewModel?.action.send(OperationDetailViewModelAction.CopyNumber(number: transferReference)) })
+                    let titleNumber = "Номер перевода:"
+                    let payeeViewModel: PayeeViewModel = .number(productStatement.merchantName, titleNumber, transferReference, {[weak viewModel] in viewModel?.action.send(OperationDetailViewModelAction.CopyNumber(number: transferReference)) })
                     
                     operationViewModel = operationViewModel.updated(with: payeeViewModel)
                 }
                 
                 if let feeViewModel = FeeViewModel(with: operation, currencyCode: productStatement.currencyCode)  {
-                    
                     operationViewModel = operationViewModel.updated(with: feeViewModel)
                 }
                 
@@ -371,13 +370,13 @@ extension OperationDetailViewModel {
                     operationViewModel = operationViewModel.updated(with: bankLogoImage)
                 }
                 
-                if let payeeFullName = operation.payeeFullName, let payeeAccountNumber = operation.payerAccountNumber {
+                if let payeeFullName = operation.payeeFullName, let payeeAccountNumber = operation.payeeAccountNumber {
                     
                     operationViewModel = operationViewModel.updated(with: .doubleRow(payeeFullName, payeeAccountNumber))
                 }
                 
-                if let feeViewModel = FeeViewModel(with: operation, currencyCode: productStatement.currencyCode)  {
-                    
+                if var feeViewModel = FeeViewModel(with: operation, currencyCode: productStatement.currencyCode)  {
+                    feeViewModel.title = "Комиссия:"
                     operationViewModel = operationViewModel.updated(with: feeViewModel)
                 }
                 
@@ -411,8 +410,8 @@ extension OperationDetailViewModel {
                 }
                 
             case .sfp:
-                if let feeViewModel = FeeViewModel(with: operation, currencyCode: productStatement.currencyCode)  {
-                    
+                if var feeViewModel = FeeViewModel(with: operation, currencyCode: productStatement.currencyCode)  {
+                    feeViewModel.title = "Комиссия:"
                     operationViewModel = operationViewModel.updated(with: feeViewModel)
                 }
 
@@ -428,7 +427,7 @@ extension OperationDetailViewModel {
         
         case singleRow(String)
         case doubleRow(String, String)
-        case number(String, String, () -> Void)
+        case number(String, String, String, () -> Void)
     }
     
     struct AmountViewModel {
@@ -455,7 +454,7 @@ extension OperationDetailViewModel {
     
     struct FeeViewModel {
 
-        let title: String
+        var title: String
         let amount: String
         
         internal init(title: String, amount: String) {
@@ -465,10 +464,9 @@ extension OperationDetailViewModel {
         
         init?(with operation: OperationDetailDatum, currencyCode: String) {
             
-            guard let feeAmount = operation.payerFee, feeAmount > 0 else {
+            guard let feeAmount = operation.payerFee, feeAmount >= 0 else {
                 return nil
             }
-            
             //FIXME: localization required
             self.title = "Из них комиссия:"
             self.amount = feeAmount.currencyFormatter(symbol: currencyCode)
@@ -625,7 +623,7 @@ extension OperationDetailViewModel {
         
         viewModel.header = HeaderViewModel(logo: viewModel.header.logo, status: .success, title: viewModel.header.title,  category: viewModel.header.category)
         
-        viewModel.operation = OperationViewModel(bankLogo: Image(uiImage: UIImage(named: "Bank Logo Sample")!), payee: .number("Иванов Иван Иванович", "4556676767", {}), amount: .init(amount: 1000.25, currency: "RUB", operationType: .debit, payService: .applePay), fee: .init(title: "Комиссия:", amount: "50,00"), description: "Описание операции", date: viewModel.operation.date)
+        viewModel.operation = OperationViewModel(bankLogo: Image(uiImage: UIImage(named: "Bank Logo Sample")!), payee: .number("Иванов Иван Иванович","Номер перевода:", "4556676767", {}), amount: .init(amount: 1000.25, currency: "RUB", operationType: .debit, payService: .applePay), fee: .init(title: "Комиссия:", amount: "50,00"), description: "Описание операции", date: viewModel.operation.date)
         
         viewModel.actionButtons = [ActionButtonViewModel(name: "Изменить", action: {}), ActionButtonViewModel(name: "Вернуть", action: {})]
         
