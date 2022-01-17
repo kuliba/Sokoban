@@ -101,7 +101,7 @@ class ContactInputViewController: UIViewController {
             
     var cardFromField = CardChooseView()
     
-    var cardListView = CardsScrollView(onlyMy: false)
+    var cardListView = CardsScrollView(onlyMy: false, deleteDeposit: true)
     
     var bottomView = BottomInputView()
     

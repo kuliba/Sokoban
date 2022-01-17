@@ -129,7 +129,7 @@ extension ContactInputViewController {
             if respModel.statusCode == 0 {
                 guard let country = self.country else { return }
                 guard let data = respModel.data else { return }
-                var model = ConfirmViewControllerModel(type: .mig)
+                let model = ConfirmViewControllerModel(type: .mig)
                 model.country = country
                 model.cardFrom = self.cardFromField.cardModel
                 model.summTransction = data.debitAmount?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""

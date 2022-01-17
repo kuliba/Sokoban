@@ -286,7 +286,7 @@ class ContactConfurmViewController: UIViewController {
         doneButton.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
         hideKeyboardWhenTappedAround()
         NotificationCenter.default.addObserver(self, selector: #selector(self.setOtpCode(_:)), name: NSNotification.Name(rawValue: "otpCode"), object: nil)
-        let delegate = ContentViewDelegate()
+//        let delegate = ContentViewDelegate()
         let statusValue = createTransferSBP?.data?.additionalList?.filter({$0.fieldName == "AFResponse"})
         if statusValue?[0].fieldValue == "G"{
         

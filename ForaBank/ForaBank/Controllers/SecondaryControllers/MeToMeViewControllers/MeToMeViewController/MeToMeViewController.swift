@@ -47,7 +47,6 @@ class MeToMeViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         hideKeyboardWhenTappedAround()
-
     }
     
     func setupUI() {
@@ -157,15 +156,19 @@ class MeToMeViewController: UIViewController {
     private func setupBottomView() {
         view.addSubview(bottomView)
         bottomView.currencySymbol = "₽"
-        bottomView.anchor(left: view.leftAnchor,
-                          bottom: view.safeAreaLayoutGuide.bottomAnchor,
-                          right: view.rightAnchor)
+        bottomView.anchor(
+            left: view.leftAnchor,
+            bottom: view.safeAreaLayoutGuide.bottomAnchor,
+            right: view.rightAnchor)
         
         let saveAreaView = UIView()
         saveAreaView.backgroundColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1)
         view.addSubview(saveAreaView)
-        saveAreaView.anchor(top: view.safeAreaLayoutGuide.bottomAnchor, left: view.leftAnchor,
-                            bottom: view.bottomAnchor, right: view.rightAnchor)
+        saveAreaView.anchor(
+            top: view.safeAreaLayoutGuide.bottomAnchor,
+            left: view.leftAnchor,
+            bottom: view.bottomAnchor,
+            right: view.rightAnchor)
         bottomView.didDoneButtonTapped = { amount in
             self.showActivity()
             self.antiFraud { success, error in

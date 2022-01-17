@@ -15,7 +15,7 @@ class BottomInputView: UIView {
     var tempTextFieldValue = ""
     
     let moneyInputController = TextFieldStartInputController()
-    var currencySymbol = "" {
+    var currencySymbol = "₽" {
         didSet {
             setupMoneyController()
         }
@@ -78,6 +78,11 @@ class BottomInputView: UIView {
         commonInit()
     }
 
+    required init(frame: CGRect = .zero, formater: SumTextInputFormatter) {
+        moneyFormatter = formater
+        super.init(frame: .zero)
+        commonInit()
+    }
     
     func commonInit() {
         
@@ -85,7 +90,7 @@ class BottomInputView: UIView {
         contentView.fixInView(self)
         self.heightAnchor.constraint(equalToConstant: 88).isActive = true
         setupTextFIeld()
-//        setupMoneyController()
+        setupMoneyController()
         
         NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: amountTextField, queue: .main) { _ in
             guard let text = self.amountTextField.text else { return }
@@ -319,6 +324,8 @@ class BottomInputView: UIView {
             
             let newText = self.moneyFormatter?.format(amount)
             self.amountTextField.text = newText
+            guard let unformatText = self.moneyFormatter?.unformat(newText) else { return }
+            self.doneButtonIsEnabled((unformatText.isEmpty) || (unformatText == "0"))
         }
     }
  

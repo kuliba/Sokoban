@@ -83,7 +83,7 @@ class PaymentsDetailsView: UIView {
     
     func setupData(with model: ConfirmViewControllerModel) {
 //        buttonView.isHidden = !model.statusIsSuccses
-        
+        operatorImageView.image = UIImage()
         if model.type == .contact {
             changeButtonsStackView.isHidden = false
         } else {
@@ -104,19 +104,19 @@ class PaymentsDetailsView: UIView {
             statusImageView.image = UIImage(named: "waiting")
             changeButtonsStackView.isHidden = true
             detailButtonsStackView.isHidden = true
+            operatorImageView.image = #imageLiteral(resourceName: "Vector")
         case .changeRequest:
             statusLabel.text = "Запрос на изменение перевода принят в обработку"
             statusImageView.image = UIImage(named: "waiting")
             changeButtonsStackView.isHidden = true
             detailButtonsStackView.isHidden = true
+            operatorImageView.image = #imageLiteral(resourceName: "Vector")
         case .processing:
             statusLabel.text = "Операция ожидает подтверждения"
             statusImageView.image = UIImage(named: "waiting")
             detailButtonsStackView.isHidden = true
         }
         
-        
-        operatorImageView.image = UIImage()
         
         if model.operatorImage != "" {
             operatorImageView.image = model.operatorImage.convertSVGStringToImage()
@@ -136,7 +136,6 @@ class PaymentsDetailsView: UIView {
         }
         
         summLabel.text = model.summTransction
-        
         
     }
     

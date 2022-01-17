@@ -595,6 +595,10 @@
 		EDF68219266F9EC800FD5C07 /* RouterBaseUrlList.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF6820B266F9EC800FD5C07 /* RouterBaseUrlList.swift */; };
 		EDF6821A266F9EC800FD5C07 /* RouterUrlList.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDF6820C266F9EC800FD5C07 /* RouterUrlList.swift */; };
 		EDF6821D266FC37F00FD5C07 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = EDF6821C266FC37F00FD5C07 /* FirebaseMessaging */; };
+		EDFA7521277D15A000EEB4AE /* TermsDepositCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFA751F277D15A000EEB4AE /* TermsDepositCollectionViewCell.swift */; };
+		EDFA7522277D15A000EEB4AE /* TermsDepositCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDFA7520277D15A000EEB4AE /* TermsDepositCollectionViewCell.xib */; };
+		EDFA7525277D181500EEB4AE /* TermsDepositTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFA7523277D181500EEB4AE /* TermsDepositTableViewCell.swift */; };
+		EDFA7526277D181500EEB4AE /* TermsDepositTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDFA7524277D181500EEB4AE /* TermsDepositTableViewCell.xib */; };
 		EDFFCACD2681F975004EE095 /* CardListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFFCACC2681F975004EE095 /* CardListView.swift */; };
 		EDFFCAF0268245EC004EE095 /* CardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFFCAEF268245EC004EE095 /* CardViewModel.swift */; };
 		EDFFCAF32682461F004EE095 /* CardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFFCAF22682461F004EE095 /* CardCell.swift */; };
@@ -1218,6 +1222,10 @@
 		EDF68209266F9EC800FD5C07 /* RouterManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouterManager.swift; sourceTree = "<group>"; };
 		EDF6820B266F9EC800FD5C07 /* RouterBaseUrlList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouterBaseUrlList.swift; sourceTree = "<group>"; };
 		EDF6820C266F9EC800FD5C07 /* RouterUrlList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouterUrlList.swift; sourceTree = "<group>"; };
+		EDFA751F277D15A000EEB4AE /* TermsDepositCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsDepositCollectionViewCell.swift; sourceTree = "<group>"; };
+		EDFA7520277D15A000EEB4AE /* TermsDepositCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TermsDepositCollectionViewCell.xib; sourceTree = "<group>"; };
+		EDFA7523277D181500EEB4AE /* TermsDepositTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsDepositTableViewCell.swift; sourceTree = "<group>"; };
+		EDFA7524277D181500EEB4AE /* TermsDepositTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TermsDepositTableViewCell.xib; sourceTree = "<group>"; };
 		EDFFCACC2681F975004EE095 /* CardListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardListView.swift; sourceTree = "<group>"; };
 		EDFFCAEF268245EC004EE095 /* CardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewModel.swift; sourceTree = "<group>"; };
 		EDFFCAF22682461F004EE095 /* CardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardCell.swift; sourceTree = "<group>"; };
@@ -2002,18 +2010,10 @@
 		688B9BA226DD0DAA00407A75 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				688B9BA726DE6DC500407A75 /* HeaderTotalMoney */,
 				688B9BA326DD0DC600407A75 /* ProductTableViewCell.swift */,
 				688B9BA426DD0DC600407A75 /* ProductTableViewCell.xib */,
 			);
 			path = Cells;
-			sourceTree = "<group>";
-		};
-		688B9BA726DE6DC500407A75 /* HeaderTotalMoney */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = HeaderTotalMoney;
 			sourceTree = "<group>";
 		};
 		688B9BAA26DE7D6300407A75 /* ProductViewController */ = {
@@ -3607,15 +3607,11 @@
 		EDDFE3AE2756D4F700F57C71 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
-				EDDFE3AF2756D52500F57C71 /* MainDepositCollectionViewCell.swift */,
-				EDDFE3B02756D52500F57C71 /* MainDepositCollectionViewCell.xib */,
-				EDDFE3B32756D54700F57C71 /* CalculatorDepositCollectionViewCell.swift */,
-				EDDFE3B42756D54700F57C71 /* CalculatorDepositCollectionViewCell.xib */,
-				EDDFE3B72756E6F900F57C71 /* DetailInformationCollectionViewCell.swift */,
-				ED684CEC27638E6700AA7A33 /* DocDepositCollectionViewCell.swift */,
-				ED684CED27638E6700AA7A33 /* DocDepositCollectionViewCell.xib */,
-				ED684CF02763955E00AA7A33 /* DocDepositTableViewCell.swift */,
-				ED684CF12763955E00AA7A33 /* DocDepositTableViewCell.xib */,
+				EDFA751E277D156600EEB4AE /* TermsDepositCollectionViewCell */,
+				EDFA751D277CFDB000EEB4AE /* DocDepositCollectionViewCell */,
+				EDFA751C277CFD6200EEB4AE /* DetailInformationCollectionViewCell */,
+				EDFA751B277CFD5300EEB4AE /* CalculatorDepositCollectionViewCell */,
+				EDFA751A277CFD4400EEB4AE /* MainDepositCollectionViewCell */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -3903,6 +3899,54 @@
 			path = RouterUtlConfig;
 			sourceTree = "<group>";
 		};
+		EDFA751A277CFD4400EEB4AE /* MainDepositCollectionViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				EDDFE3AF2756D52500F57C71 /* MainDepositCollectionViewCell.swift */,
+				EDDFE3B02756D52500F57C71 /* MainDepositCollectionViewCell.xib */,
+			);
+			path = MainDepositCollectionViewCell;
+			sourceTree = "<group>";
+		};
+		EDFA751B277CFD5300EEB4AE /* CalculatorDepositCollectionViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				EDDFE3B32756D54700F57C71 /* CalculatorDepositCollectionViewCell.swift */,
+				EDDFE3B42756D54700F57C71 /* CalculatorDepositCollectionViewCell.xib */,
+			);
+			path = CalculatorDepositCollectionViewCell;
+			sourceTree = "<group>";
+		};
+		EDFA751C277CFD6200EEB4AE /* DetailInformationCollectionViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				EDDFE3B72756E6F900F57C71 /* DetailInformationCollectionViewCell.swift */,
+			);
+			path = DetailInformationCollectionViewCell;
+			sourceTree = "<group>";
+		};
+		EDFA751D277CFDB000EEB4AE /* DocDepositCollectionViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				ED684CEC27638E6700AA7A33 /* DocDepositCollectionViewCell.swift */,
+				ED684CED27638E6700AA7A33 /* DocDepositCollectionViewCell.xib */,
+				ED684CF02763955E00AA7A33 /* DocDepositTableViewCell.swift */,
+				ED684CF12763955E00AA7A33 /* DocDepositTableViewCell.xib */,
+			);
+			path = DocDepositCollectionViewCell;
+			sourceTree = "<group>";
+		};
+		EDFA751E277D156600EEB4AE /* TermsDepositCollectionViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				EDFA751F277D15A000EEB4AE /* TermsDepositCollectionViewCell.swift */,
+				EDFA7520277D15A000EEB4AE /* TermsDepositCollectionViewCell.xib */,
+				EDFA7523277D181500EEB4AE /* TermsDepositTableViewCell.swift */,
+				EDFA7524277D181500EEB4AE /* TermsDepositTableViewCell.xib */,
+			);
+			path = TermsDepositCollectionViewCell;
+			sourceTree = "<group>";
+		};
 		EDFFCACB2681F950004EE095 /* CardListView */ = {
 			isa = PBXGroup;
 			children = (
@@ -4137,6 +4181,7 @@
 				68673B5926F3772400F67A8C /* CardCollectionViewCell.xib in Resources */,
 				EDB143C4265FDEC90028EF5A /* Roboto-Medium.ttf in Resources */,
 				EDB143C5265FDEC90028EF5A /* Roboto-Light.ttf in Resources */,
+				EDFA7526277D181500EEB4AE /* TermsDepositTableViewCell.xib in Resources */,
 				EDB143C8265FDEC90028EF5A /* Roboto-ThinItalic.ttf in Resources */,
 				ED664BB4274513040050D1E0 /* ResultAccountStatementController.storyboard in Resources */,
 				EDB14518266526BD0028EF5A /* CreditCardEntryView.xib in Resources */,
@@ -4170,6 +4215,7 @@
 				688B9BB626E03B3E00407A75 /* TotalMoneyView.xib in Resources */,
 				EDB143B5265FDE960028EF5A /* Assets.xcassets in Resources */,
 				ED684CEF27638E6700AA7A33 /* DocDepositCollectionViewCell.xib in Resources */,
+				EDFA7522277D15A000EEB4AE /* TermsDepositCollectionViewCell.xib in Resources */,
 				68FFA52D2682AF62002DADFA /* ContactCollectionViewCell.xib in Resources */,
 				EDB143CB265FDEC90028EF5A /* Roboto-Italic.ttf in Resources */,
 				EDB1655E2667A55F007E6030 /* ForaInput.xib in Resources */,
@@ -4519,6 +4565,7 @@
 				0BB24A9226EFC6AB00DDA4F6 /* GetProductTemplateList.swift in Sources */,
 				0B8C1C49273B04DE00BA5CAC /* QRScanerInfoView.swift in Sources */,
 				0BA14E18270DF8F60098E422 /* AppLockerHelper.swift in Sources */,
+				EDFA7525277D181500EEB4AE /* TermsDepositTableViewCell.swift in Sources */,
 				0BA09E3426B08E1A0065D623 /* GetFullBankInfoListDecodableModel.swift in Sources */,
 				77499C412773A40100F6C079 /* OperationDetailView.swift in Sources */,
 				ED84994B26A6FEE3005205C6 /* CountryListCell.swift in Sources */,
@@ -4670,6 +4717,7 @@
 				EDDFE3C827597A7600F57C71 /* PaymentViewController.swift in Sources */,
 				68FFA5452682F48C002DADFA /* SearchContact.swift in Sources */,
 				0B7A18C72685BD130007CC75 /* GetBanksDecodableModel.swift in Sources */,
+				EDFA7521277D15A000EEB4AE /* TermsDepositCollectionViewCell.swift in Sources */,
 				0B8BE093266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift in Sources */,
 				ED4FC60B266CD1020092B4AB /* СountryCell.swift in Sources */,
 				0B7A18B82683A9940007CC75 /* FileManagerHelper.swift in Sources */,
