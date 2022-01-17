@@ -42,11 +42,11 @@ class Model {
     //FIXME: remove after refactoring
     static var shared: Model = {
        
-        #if DEBUG
-        let context = ServerAgent.Context(for: .test)
-        #else
+//        #if DEBUG
+//        let context = ServerAgent.Context(for: .test)
+//        #else
         let context = ServerAgent.Context(for: .prod)
-        #endif
+//        #endif
         
         let serverAgent = ServerAgent(context: context)
         

@@ -88,8 +88,12 @@ enum RouterManager {
     case getNotifications
     case getPrintFormForAccountStatement
     case isSingleService
+    case getClientInfo
+    case getMosParkingList
     case getDepositInfo
     case nextStepServiceTransfer
+    case createAnywayTransfer
+    case createAnywayTransferNew
     case getDepositProductList
     case openDeposit
     case makeDepositPayment
@@ -1295,9 +1299,65 @@ extension RouterManager {
             var request = URLRequest(url: resultUrl!)
             request.httpMethod = RequestMethod.post.rawValue
             return request
+
+        case .getMosParkingList:
+            let baseUrl = RouterUrlList.getMosParkingList.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+
+        case .getClientInfo:
+            let baseUrl = RouterUrlList.getClientInfo.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
             
         case .nextStepServiceTransfer:
             let baseUrl = RouterUrlList.nextStepServiceTransfer.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+
+        case .createAnywayTransfer:
+            let baseUrl = RouterUrlList.createAnywayTransfer.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+
+        case .createAnywayTransferNew:
+            let baseUrl = RouterUrlList.createAnywayTransferNew.returnUrl()
             switch baseUrl {
             case .success(let url):
                 resultUrl = url.absoluteURL

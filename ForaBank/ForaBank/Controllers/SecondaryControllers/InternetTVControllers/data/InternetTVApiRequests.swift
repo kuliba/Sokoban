@@ -17,4 +17,57 @@ struct InternetTVApiRequests {
         }
     }
 
+    static func getMosParkingList() {
+        let body = ["puref" : "puref"] as [String: AnyObject]
+        NetworkManager<IsSingleServiceModel>.addRequest(.getMosParkingList, [:], body) { model, error in
+            if error != nil {
+                print("DEBUG: error", error!)
+            } else {
+                guard let model = model else { return }
+                guard let data = model.data else { return }
+                isSingleService = data
+            }
+        }
+    }
+
+    static func getClientInfo() {
+        let body = ["puref" : "puref"] as [String: AnyObject]
+        NetworkManager<IsSingleServiceModel>.addRequest(.getClientInfo, [:], body) { model, error in
+            if error != nil {
+                print("DEBUG: error", error!)
+            } else {
+                guard let model = model else { return }
+                guard let data = model.data else { return }
+                isSingleService = data
+            }
+        }
+    }
+
+    static func createAnywayTransfer(request: [String: AnyObject], completion: @escaping (CreateTransferAnswerModel?, String?) -> ()) {
+        NetworkManager<CreateTransferAnswerModel>.addRequest(.createAnywayTransfer, [:], request) { respModel, error in
+            if error != nil {
+                completion(nil, error!)
+            }
+            guard let respModel = respModel else { return }
+            if respModel.statusCode == 0 {
+                completion(respModel, nil)
+            } else {
+                completion(nil, respModel.errorMessage)
+            }
+        }
+    }
+
+    static func createAnywayTransferNew(request: [String: AnyObject], completion: @escaping (CreateTransferAnswerModel?, String?) -> ()) {
+        NetworkManager<CreateTransferAnswerModel>.addRequest(.createAnywayTransferNew, [:], request) { respModel, error in
+            if error != nil {
+                completion(nil, error!)
+            }
+            guard let respModel = respModel else { return }
+            if respModel.statusCode == 0 {
+                completion(respModel, nil)
+            } else {
+                completion(nil, respModel.errorMessage)
+            }
+        }
+    }
 }

@@ -51,12 +51,12 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
         bottomInputView?.didDoneButtonTapped = { amount in
             self.showActivity()
             if InternetTVApiRequests.isSingleService {
-                if InternetTVMainViewModel.filter == GlobalModule.UTILITIES_CODE {
-                    self.viewModel.requestCreateServiceTransfer(amount: amount)
-                }
-                if InternetTVMainViewModel.filter == GlobalModule.INTERNET_TV_CODE {
-                    self.viewModel.requestCreateInternetTransfer(amount: amount)
-                }
+                //if InternetTVMainViewModel.filter == GlobalModule.UTILITIES_CODE {
+                    self.viewModel.requestCreateAnywayTransferNew(amount: amount)
+//                }
+//                if InternetTVMainViewModel.filter == GlobalModule.INTERNET_TV_CODE {
+//                    self.viewModel.requestCreateInternetTransfer(amount: amount)
+//                }
             } else {
                 if !self.viewModel.firstStep {
                     self.viewModel.retryPayment(amount: amount)
@@ -138,12 +138,12 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
             showActivity()
             if viewModel.firstStep {
                 viewModel.firstStep = false
-                if InternetTVMainViewModel.filter == GlobalModule.UTILITIES_CODE {
-                    viewModel.requestCreateServiceTransfer(amount: "null")
-                }
-                if InternetTVMainViewModel.filter == GlobalModule.INTERNET_TV_CODE {
-                    viewModel.requestCreateInternetTransfer(amount: "null")
-                }
+                //if InternetTVMainViewModel.filter == GlobalModule.UTILITIES_CODE {
+                    viewModel.requestCreateAnywayTransferNew(amount: "null")
+//                }
+//                if InternetTVMainViewModel.filter == GlobalModule.INTERNET_TV_CODE {
+//                    viewModel.requestCreateInternetTransfer(amount: "null")
+//                }
             } else {
                 viewModel.requestNextCreateInternetTransfer(amount: "null")
             }
