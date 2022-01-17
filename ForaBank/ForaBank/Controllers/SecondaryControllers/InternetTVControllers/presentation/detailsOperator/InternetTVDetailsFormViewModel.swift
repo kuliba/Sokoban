@@ -88,7 +88,7 @@ class InternetTVDetailsFormViewModel {
     }
 
     func continueRetry(amount: String) {
-        guard let controller = controller else {return}
+        guard controller != nil else {return}
         var additionalArray = [[String: String]]()
         InternetTVDetailsFormViewModel.additionalDic.forEach { item in
             additionalArray.append(item.value)
@@ -196,7 +196,7 @@ class InternetTVDetailsFormViewModel {
     }
 
     func requestNextCreateInternetTransfer(amount: String) {
-        guard let controller = controller else {return}
+        guard controller != nil else {return}
             var additionalArray = [[String: String]]()
             InternetTVDetailsFormViewModel.additionalDic.forEach { item in
                 additionalArray.append(item.value)

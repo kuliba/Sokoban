@@ -130,7 +130,7 @@ final class CardsScrollView: UIView {
             case .initial:
                 print("REALM Initial")
                 self?.collectionView.reloadData()
-            case .update(_, let deletions, let insertions, let modifications):
+            case .update(_, _, _, _):
                 print("REALM Update")
                 
 //                self?.collectionView.performBatchUpdates({

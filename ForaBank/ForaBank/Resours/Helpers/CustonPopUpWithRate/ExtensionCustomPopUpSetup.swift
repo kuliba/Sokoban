@@ -11,10 +11,26 @@ extension CustomPopUpWithRateView {
     //MARK: - API
     
     func doneButtonTapped(with viewModel: ConfirmViewControllerModel) {
-        guard checkDeposit(with: viewModel.cardToRealm, and: viewModel.summTransction) == true else { return }
-        
         self.dismissKeyboard()
         self.showActivity()
+        checkDeposit(with: viewModel.cardToRealm,
+                     and: viewModel.summTransction,
+                     currency: viewModel.cardFromRealm?.currency ?? "") { check, error in
+            if error != nil {
+                self.dismissActivity()
+                self.showAlert(with: "Невозможно пополнить", and: error ?? "")
+            } else {
+                if check == true {
+                    self.transferModey(with: viewModel)
+                } else {
+                    self.dismissActivity()
+                }
+            }
+        }
+    }
+    
+    func transferModey(with viewModel: ConfirmViewControllerModel) {
+        
         bottomView.doneButtonIsEnabled(true)
         if self.bottomView.requestModel.to == ""{
             self.bottomView.requestModel.to = viewModel.cardFromRealm?.currency ?? ""
@@ -102,27 +118,51 @@ extension CustomPopUpWithRateView {
         }
     }
     
-    func checkDeposit(with: UserAllCardsModel?, and amount: String) -> Bool {
+    func checkDeposit(with: UserAllCardsModel?, and amount: String, currency: String, completion: @escaping(_ rate: Bool?,_ error: String?) -> Void) {
         if with?.productType == "DEPOSIT" {
             if let card = with {
                 if card.allowCredit {
                     let amount = Double(amount) ?? 0.0
-                    if card.creditMinimumAmount <= amount {
-                        return true
+                    
+                    if currency == with?.currency {
+                        if card.creditMinimumAmount <= amount {
+                            completion(true, nil)
+                        } else {
+                            completion(false, "Введенная сумма меньше минимальной суммы пополнения")
+                        }
                     } else {
-                        showAlert(with: "Невозможно пополнить", and: "Введенная сумма меньше минимальной суммы пополнения")
-                        return false
+                        checkCurrency(currency: currency) { rate, error in
+                            if error != nil {
+                                completion(false, "Вклад не предусматривает возможности пополнения. Подробнее в информации о вкладе в деталях")
+                            } else {
+                                let rate = amount * (rate ?? 0)
+                                if card.creditMinimumAmount <= rate {
+                                    completion(true, nil)
+                                } else {
+                                    completion(false, "Введенная сумма меньше минимальной суммы пополнения")
+                                }
+                            }
+                        }
                     }
                 } else {
-                    showAlert(with: "Невозможно пополнить", and: "Вклад не предусматривает возможности пополнения. Подробнее в информации о вкладе в деталях")
-                    return false
+                    completion(false, "Вклад не предусматривает возможности пополнения. Подробнее в информации о вкладе в деталях")
                 }
             } else {
-                showAlert(with: "Невозможно пополнить", and: "Вклад не предусматривает возможности пополнения. Подробнее в информации о вкладе в деталях")
-                return false
+                completion(false, "Вклад не предусматривает возможности пополнения. Подробнее в информации о вкладе в деталях")
             }
         } else {
-            return true
+            completion(true, nil)
+        }
+    }
+    
+    private func checkCurrency(currency: String, completion: @escaping(_ rate: Double?,_ error: String?) -> Void)  {
+        let bodyFrom = [ "currencyCodeAlpha" : currency] as [String: AnyObject]
+        NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], bodyFrom) { model, error in
+            if error != nil {
+                completion(nil, error)
+            } else {
+                completion(model?.data?.rateSell ?? 0, nil)
+            }
         }
     }
     

@@ -73,7 +73,7 @@ class OperationDetailHostingViewController: UIHostingController<OperationDetailV
                     confurmVCModel.paymentOperationDetailId = payload.paymentOperationDetailId
                     confurmVCModel.numberTransction = payload.transferReference
                     confurmVCModel.cardFromRealm = payload.product
-                    let controller = ChangeReturnCountryController(type: .changePay)
+                    let controller = ChangeReturnCountryController(type: .returnPay)
                     controller.confurmVCModel = confurmVCModel
                     self.present(controller, animated: true, completion: nil)
                     
