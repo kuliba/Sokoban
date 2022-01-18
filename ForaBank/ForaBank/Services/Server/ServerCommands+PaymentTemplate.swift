@@ -58,7 +58,7 @@ enum ServerCommands {
 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: [PaymentTemplate]
+                let data: [PaymentTemplate]?
             }
             
             internal init(token: String) {
