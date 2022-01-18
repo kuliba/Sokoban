@@ -65,7 +65,7 @@ class OperationDetailViewModel: ObservableObject {
             self.operation = OperationViewModel(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
             
         case .outsideOther:
-            self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: productStatement.merchantName, category: "\(productStatement.groupName) (\(productStatement.mcc))")
+            self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: productStatement.merchantName, category: "\(productStatement.groupName) (MCC \(productStatement.mcc))")
             let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
             self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
             
@@ -381,10 +381,6 @@ extension OperationDetailViewModel {
                 }
                 
             case .internet:
-                if let account = operation.account {
-                    
-                    operationViewModel = operationViewModel.updated(with: .singleRow(account))
-                }
                 if let feeViewModel = FeeViewModel(with: operation, currencyCode: productStatement.currencyCode)  {
                     
                     operationViewModel = operationViewModel.updated(with: feeViewModel)
@@ -623,7 +619,7 @@ extension OperationDetailViewModel {
         
         viewModel.header = HeaderViewModel(logo: viewModel.header.logo, status: .success, title: viewModel.header.title,  category: viewModel.header.category)
         
-        viewModel.operation = OperationViewModel(bankLogo: Image(uiImage: UIImage(named: "Bank Logo Sample")!), payee: .number("Иванов Иван Иванович","Номер перевода:", "4556676767", {}), amount: .init(amount: 1000.25, currency: "RUB", operationType: .debit, payService: .applePay), fee: .init(title: "Комиссия:", amount: "50,00"), description: "Описание операции", date: viewModel.operation.date)
+        viewModel.operation = OperationViewModel(bankLogo: Image(uiImage: UIImage(named: "Bank Logo Sample")!), payee: .doubleRow("payeeFullName", "payeeAccountNumber"), amount: .init(amount: 1000.25, currency: "RUB", operationType: .debit, payService: .applePay), fee: .init(title: "Комиссия:", amount: "50,00"), description: "Описание операции", date: viewModel.operation.date)
         
         viewModel.actionButtons = [ActionButtonViewModel(name: "Изменить", action: {}), ActionButtonViewModel(name: "Вернуть", action: {})]
         
