@@ -10,8 +10,8 @@ import XCTest
 
 class ServerCommandsRegistrationTests: XCTestCase {
     
-    let bundle = Bundle(for: type(of: self))
-    
+    let bundle = Bundle(for: ServerCommandsRegistrationTests.self)
+
     let decoder = JSONDecoder()
     let encoder = JSONEncoder()
     
