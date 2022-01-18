@@ -18,11 +18,11 @@ protocol ServerCommand {
     associatedtype Payload: Encodable
     associatedtype Response: ServerResponse
     
+    var token: String { get }
     var endpoint: String { get }
     var method: ServerCommandMethod { get }
     var parameters: [ServerCommandParameter]? { get }
     var payload: Payload? { get }
-    var token: String? { get }
 }
 
 protocol ServerResponse: Decodable, Equatable {
