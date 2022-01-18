@@ -58,8 +58,7 @@ extension ServerCommands{
                 let model: String
                 let operationSystem: String
                 let pushDeviceId: String
-                let pushFcmToken: String
-                
+                let pushFcmToken: String    
             }
             
             struct Response: ServerResponse {
