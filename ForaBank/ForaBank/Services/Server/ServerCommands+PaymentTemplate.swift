@@ -16,10 +16,11 @@ enum ServerCommands {
          */
         struct DeletePaymentTemplates: ServerCommand {
 
+            let token: String
             let endpoint = "/rest/deletePaymentTemplates"
             let method: ServerCommandMethod = .delete
+            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
-            let token: String?
             
             struct Payload: Encodable {
                 
@@ -45,10 +46,11 @@ enum ServerCommands {
          */
         struct GetPaymentTemplateList: ServerCommand {
             
+            let token: String
             let endpoint = "/rest/getPaymentTemplateList"
             let method: ServerCommandMethod = .get
+            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload? = nil
-            let token: String?
             
             struct Payload: Encodable {}
             
@@ -56,7 +58,7 @@ enum ServerCommands {
 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: [PaymentTemplate]
+                let data: [PaymentTemplate]?
             }
             
             internal init(token: String) {
@@ -70,10 +72,11 @@ enum ServerCommands {
          */
         struct SavePaymentTemplate: ServerCommand {
             
+            let token: String
             let endpoint = "/rest/savePaymentTemplate"
             let method: ServerCommandMethod = .post
+            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
-            let token: String?
             
             struct Payload: Encodable {
                 
@@ -105,10 +108,11 @@ enum ServerCommands {
          */
         struct SortingPaymentTemplates: ServerCommand {
             
+            let token: String
             let endpoint = "/rest/sortingPaymentTemplates"
             let method: ServerCommandMethod = .post
+            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
-            let token: String?
             
             struct Payload: Encodable {
                 
@@ -134,10 +138,11 @@ enum ServerCommands {
          */
         struct UpdatePaymentTemplate: ServerCommand{
             
+            let token: String
             let endpoint = "/rest/updatePaymentTemplate"
             let method: ServerCommandMethod = .post
+            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
-            let token: String?
             
             struct Payload: Encodable {
                 
