@@ -93,6 +93,11 @@ class OperationDetailViewModel: ObservableObject {
                 
                 self.operation = OperationViewModel(bankLogo: productStatement.svgImage, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
             }
+            
+        case .transport:
+            self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: productStatement.merchantName, category: "\(productStatement.groupName)")
+            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
+            self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: productStatement.tranDate)
         }
         
         self.actionButtons = nil
@@ -148,8 +153,7 @@ class OperationDetailViewModel: ObservableObject {
                 var featureButtonsUpdated = [FeatureButtonViewModel]()
                 
                 switch productStatement.paymentDetailType {
-                case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp:
-
+                case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp, .transport:
                     if let templateButtonViewModel = self.templateButtonViewModel(with: operationDetail) {
                         
                         featureButtonsUpdated.append(templateButtonViewModel)
@@ -205,7 +209,6 @@ class OperationDetailViewModel: ObservableObject {
 private extension OperationDetailViewModel {
     
     func infoFeatureButtonViewModel(with productStatement: ProductStatementProxy, product: UserAllCardsModel, operationDetail: OperationDetailDatum? = nil) -> FeatureButtonViewModel? {
-
         return FeatureButtonViewModel(kind: .info, icon: "Operation Details Info", name: "Детали", action: { [weak self] in self?.operationDetailInfoViewModel = OperationDetailInfoViewModel(with: productStatement, operation: operationDetail, product: product, dismissAction: { [weak self] in self?.operationDetailInfoViewModel = nil})})
     }
     
@@ -410,7 +413,10 @@ extension OperationDetailViewModel {
                     feeViewModel.title = "Комиссия:"
                     operationViewModel = operationViewModel.updated(with: feeViewModel)
                 }
-
+            case .transport:
+                if let feeViewModel = FeeViewModel(with: operation, currencyCode: productStatement.currencyCode)  {
+                    operationViewModel = operationViewModel.updated(with: feeViewModel)
+                }
             case .outsideOther, .insideOther, .betweenTheir, .insideBank, .notFinance, .outsideCash:
                 return operationViewModel
             }
@@ -528,9 +534,9 @@ extension OperationDetailViewModel {
         let action: () -> Void
         
         enum Kind {
-        case template(Bool)
-        case document
-        case info
+            case template(Bool)
+            case document
+            case info
         }
     }
 }
@@ -542,11 +548,11 @@ extension OperationDetailViewModel {
     convenience init?(with statement: GetDepositStatementDatum, currency: String, product: UserAllCardsModel) {
         
         guard let paymentDetailType = statement.paymentDetailType,
-        let svgImageData = statement.svgImage,
-        let groupName = statement.groupName,
-        let amount = statement.amount else {
-            return nil
-        }
+              let svgImageData = statement.svgImage,
+              let groupName = statement.groupName,
+              let amount = statement.amount else {
+                  return nil
+              }
         
         let documentId = statement.documentID
         let svgImage = Image(uiImage: svgImageData.convertSVGStringToImage())
@@ -565,11 +571,11 @@ extension OperationDetailViewModel {
     convenience init?(with statement: GetCardStatementDatum, currency: String, product: UserAllCardsModel) {
         
         guard let paymentDetailType = statement.paymentDetailType,
-        let svgImageData = statement.svgImage,
-        let groupName = statement.groupName,
-        let amount = statement.amount else {
-            return nil
-        }
+              let svgImageData = statement.svgImage,
+              let groupName = statement.groupName,
+              let amount = statement.amount else {
+                  return nil
+              }
         
         let documentId = statement.documentID
         let svgImage = Image(uiImage: svgImageData.convertSVGStringToImage())
@@ -588,11 +594,11 @@ extension OperationDetailViewModel {
     convenience init?(with statement: GetAccountStatementDatum, currency: String, product: UserAllCardsModel) {
         
         guard let paymentDetailType = statement.paymentDetailType,
-        let svgImageData = statement.svgImage,
-        let groupName = statement.groupName,
-        let amount = statement.amount else {
-            return nil
-        }
+              let svgImageData = statement.svgImage,
+              let groupName = statement.groupName,
+              let amount = statement.amount else {
+                  return nil
+              }
         
         let documentId = statement.documentID
         let svgImage = Image(uiImage: svgImageData.convertSVGStringToImage())

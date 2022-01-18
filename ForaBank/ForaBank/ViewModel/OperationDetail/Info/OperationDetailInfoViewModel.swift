@@ -624,7 +624,38 @@ final class OperationDetailInfoViewModel: Identifiable {
             
             
                 cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)", iconType: .date, value: tranDateString))
-                             
+        case .transport:
+            /*
+             svgImage
+             merchantName || merchantNameRus
+             account
+             amount + currencyCode
+             product
+             tranDate
+             */
+            logo = statement.svgImage
+
+            cells.append(BankCellViewModel(title: "Наименование получателя", icon: statement.svgImage, name: statement.merchantName))
+            
+            if let accountTitle = operation?.accountTitle, let account =  operation?.account{
+                
+                cells.append(PropertyCellViewModel(title: accountTitle, iconType: .phone, value: account))
+            }
+            
+            cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: statement.amount.currencyFormatter(symbol: currency)))
+            
+            if let fee = operation?.payerFee {
+                
+                cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: fee.currencyFormatter(symbol: currency)))
+            }
+            
+            if let debitAccounCell = Self.debitAccountCell(with: product, currency: currency) {
+                
+                cells.append(debitAccounCell)
+            }
+            
+            cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)", iconType: .date, value: tranDateString))
+  
         }
         
         self.logo = logo
