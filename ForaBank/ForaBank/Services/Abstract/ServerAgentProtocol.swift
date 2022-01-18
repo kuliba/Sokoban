@@ -20,6 +20,7 @@ protocol ServerCommand {
     
     var endpoint: String { get }
     var method: ServerCommandMethod { get }
+    var parameters: [ServerCommandParameter]? { get }
     var payload: Payload? { get }
     var token: String? { get }
 }
@@ -59,4 +60,10 @@ enum ServerCommandMethod: String {
     case post = "POST"
     case get = "GET"
     case delete = "DELETE"
+}
+
+struct ServerCommandParameter {
+    
+    let name: String
+    let value: String
 }

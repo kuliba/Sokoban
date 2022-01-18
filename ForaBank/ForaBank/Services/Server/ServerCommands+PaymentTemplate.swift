@@ -18,6 +18,7 @@ enum ServerCommands {
 
             let endpoint = "/rest/deletePaymentTemplates"
             let method: ServerCommandMethod = .delete
+            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
             let token: String?
             
@@ -47,6 +48,7 @@ enum ServerCommands {
             
             let endpoint = "/rest/getPaymentTemplateList"
             let method: ServerCommandMethod = .get
+            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload? = nil
             let token: String?
             
@@ -72,6 +74,7 @@ enum ServerCommands {
             
             let endpoint = "/rest/savePaymentTemplate"
             let method: ServerCommandMethod = .post
+            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
             let token: String?
             
@@ -107,6 +110,7 @@ enum ServerCommands {
             
             let endpoint = "/rest/sortingPaymentTemplates"
             let method: ServerCommandMethod = .post
+            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
             let token: String?
             
@@ -136,6 +140,7 @@ enum ServerCommands {
             
             let endpoint = "/rest/updatePaymentTemplate"
             let method: ServerCommandMethod = .post
+            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
             let token: String?
             
