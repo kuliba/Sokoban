@@ -9,7 +9,7 @@ import Foundation
 
 extension ServerCommands{
     
-    enum RegistrationContoller {
+    enum RegistrationContoller{
         
         /*
          https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/registration/checkClient
@@ -51,7 +51,6 @@ extension ServerCommands{
             let method: ServerCommandMethod = .post
             var parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
-
             
             struct Payload: Encodable {
                 
