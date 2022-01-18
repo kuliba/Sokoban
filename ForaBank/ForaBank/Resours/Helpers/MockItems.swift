@@ -504,7 +504,8 @@ class MockItems {
             payeeKPP: nil,
             provider: nil,
             period: nil,
-            transferNumber: nil
+            transferNumber: nil,
+            accountTitle: "Номер телефона"
         )
     }
 }
