@@ -52,6 +52,7 @@ enum ServerAgentError: Error {
 enum ServerRequestCreationError: Error {
     
     case unableConstructURL
+    case unableCounstructURLWithParameters
     case unableEncodePayload(Error)
 }
 

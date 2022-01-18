@@ -70,7 +70,18 @@ class ServerAgent: ServerAgentProtocol {
             request.setValue(token, forHTTPHeaderField: "X-XSRF-TOKEN")
         }
         
-        //TODO: parameters
+        // parameters
+        if let parameters = command.parameters, parameters.isEmpty == false {
+            
+            var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
+            urlComponents?.queryItems = parameters.map{ URLQueryItem(name: $0.name, value: $0.value) }
+            
+            guard let updatedURL = urlComponents?.url else {
+                throw ServerRequestCreationError.unableCounstructURLWithParameters
+            }
+            
+            request.url = updatedURL
+        }
         
         // body
         if let payload = command.payload {
