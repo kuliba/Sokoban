@@ -639,7 +639,7 @@ final class OperationDetailInfoViewModel: Identifiable {
             
             if let accountTitle = operation?.accountTitle, let account =  operation?.account{
                 
-                cells.append(PropertyCellViewModel(title: accountTitle, iconType: .phone, value: account))
+                cells.append(PropertyCellViewModel(title: accountTitle, iconType: .operationNumber, value: account))
             }
             
             cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: statement.amount.currencyFormatter(symbol: currency)))
