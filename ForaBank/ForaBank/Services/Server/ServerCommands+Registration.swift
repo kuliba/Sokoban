@@ -7,9 +7,9 @@
 
 import Foundation
 
-extension ServerCommands{
+extension ServerCommands {
     
-    enum RegistrationContoller{
+    enum RegistrationContoller {
         
         /*
          https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/registration/checkClient
