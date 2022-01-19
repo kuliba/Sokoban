@@ -157,8 +157,15 @@ class Model {
                         case .success(let response):
                             switch response.statusCode {
                             case .ok:
-                                self.action.send(ModelAction.PaymentTemplate.List.Complete(paymentTemplates: response.data))
-                                
+                                if let templates = response.data {
+                                    
+                                    self.action.send(ModelAction.PaymentTemplate.List.Complete(paymentTemplates: templates))
+                                    
+                                } else {
+                                    
+                                    self.action.send(ModelAction.PaymentTemplate.List.Complete(paymentTemplates: []))
+                                }
+
                             default:
                                 //TODO: handle not ok server status
                                 return
