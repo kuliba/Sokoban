@@ -275,6 +275,14 @@
 		68E6A29526A033D900A1D9A1 /* DeleteProductTemplateDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E6A29426A033D900A1D9A1 /* DeleteProductTemplateDecodableModel.swift */; };
 		68E6A29726A033F200A1D9A1 /* GetProductTemplateListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E6A29626A033F200A1D9A1 /* GetProductTemplateListDecodableModel.swift */; };
 		68E6A29926A0340D00A1D9A1 /* GetCurrencyListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E6A29826A0340D00A1D9A1 /* GetCurrencyListDecodableModel.swift */; };
+		68E765262796B38B005860FE /* ServerCommands+Registration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E765252796B38B005860FE /* ServerCommands+Registration.swift */; };
+		68E765282796D6DF005860FE /* ServerCommandsRegistrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E765272796D6DF005860FE /* ServerCommandsRegistrationTests.swift */; };
+		68E7652D2797009A005860FE /* CheckClientResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 68E7652C2797009A005860FE /* CheckClientResponseGeneric.json */; };
+		68E7652F27970137005860FE /* DoRegistrationResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 68E7652E27970137005860FE /* DoRegistrationResponseGeneric.json */; };
+		68E7653327970261005860FE /* SetDeviceSettingsResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 68E7653227970261005860FE /* SetDeviceSettingsResponseGeneric.json */; };
+		68E76535279702C6005860FE /* VerifyCodeResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 68E76534279702C6005860FE /* VerifyCodeResponseGeneric.json */; };
+		68E7653C279705E6005860FE /* SetDeviceSettingDecodingGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 68E7653B279705E6005860FE /* SetDeviceSettingDecodingGeneric.json */; };
+		68E7653E279713B2005860FE /* GetCodeResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 68E7653D279713B2005860FE /* GetCodeResponseGeneric.json */; };
 		68F6816F269E5E56008157CE /* SearchBanksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F6816E269E5E56008157CE /* SearchBanksViewController.swift */; };
 		68FB358B2760C1C80097AECE /* AntifraudView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FB358A2760C1C80097AECE /* AntifraudView.swift */; };
 		68FFA5282682AF2C002DADFA /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA5272682AF2C002DADFA /* ContactsViewController.swift */; };
@@ -904,6 +912,14 @@
 		68E6A29426A033D900A1D9A1 /* DeleteProductTemplateDecodableModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeleteProductTemplateDecodableModel.swift; sourceTree = "<group>"; };
 		68E6A29626A033F200A1D9A1 /* GetProductTemplateListDecodableModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetProductTemplateListDecodableModel.swift; sourceTree = "<group>"; };
 		68E6A29826A0340D00A1D9A1 /* GetCurrencyListDecodableModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetCurrencyListDecodableModel.swift; sourceTree = "<group>"; };
+		68E765252796B38B005860FE /* ServerCommands+Registration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServerCommands+Registration.swift"; sourceTree = "<group>"; };
+		68E765272796D6DF005860FE /* ServerCommandsRegistrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommandsRegistrationTests.swift; sourceTree = "<group>"; };
+		68E7652C2797009A005860FE /* CheckClientResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = CheckClientResponseGeneric.json; sourceTree = "<group>"; };
+		68E7652E27970137005860FE /* DoRegistrationResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = DoRegistrationResponseGeneric.json; sourceTree = "<group>"; };
+		68E7653227970261005860FE /* SetDeviceSettingsResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = SetDeviceSettingsResponseGeneric.json; sourceTree = "<group>"; };
+		68E76534279702C6005860FE /* VerifyCodeResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = VerifyCodeResponseGeneric.json; sourceTree = "<group>"; };
+		68E7653B279705E6005860FE /* SetDeviceSettingDecodingGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = SetDeviceSettingDecodingGeneric.json; sourceTree = "<group>"; };
+		68E7653D279713B2005860FE /* GetCodeResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetCodeResponseGeneric.json; sourceTree = "<group>"; };
 		68F6816E269E5E56008157CE /* SearchBanksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBanksViewController.swift; sourceTree = "<group>"; };
 		68FB358A2760C1C80097AECE /* AntifraudView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AntifraudView.swift; sourceTree = "<group>"; };
 		68FFA5272682AF2C002DADFA /* ContactsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewController.swift; sourceTree = "<group>"; };
@@ -2177,6 +2193,13 @@
 			path = LaunchViewController;
 			sourceTree = "<group>";
 		};
+		68E76536279704D5005860FE /* Registration */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Registration;
+			sourceTree = "<group>";
+		};
 		68FB35892760C1A90097AECE /* AntifraudController */ = {
 			isa = PBXGroup;
 			children = (
@@ -2391,6 +2414,7 @@
 			children = (
 				77DC126C2770F84B00C917B0 /* ServerStatusCode.swift */,
 				77DC126E2770F8C900C917B0 /* ServerCommands+PaymentTemplate.swift */,
+				68E765252796B38B005860FE /* ServerCommands+Registration.swift */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -2430,6 +2454,7 @@
 			children = (
 				77EC58CA277133C40054D75C /* PaymentTemplateTests.swift */,
 				77EC58B0277121B00054D75C /* Transfer */,
+				68E76536279704D5005860FE /* Registration */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -2460,6 +2485,12 @@
 				77EC58D62771F6C10054D75C /* SavePaymentTemplateResponseGeneric.json */,
 				77EC58DA2771FC360054D75C /* UpdatePaymentTemplateResponseGeneric.json */,
 				77EC58DE277200E90054D75C /* SortingPaymentTemplatesResponseGeneric.json */,
+				68E7652C2797009A005860FE /* CheckClientResponseGeneric.json */,
+				68E7652E27970137005860FE /* DoRegistrationResponseGeneric.json */,
+				68E7653227970261005860FE /* SetDeviceSettingsResponseGeneric.json */,
+				68E76534279702C6005860FE /* VerifyCodeResponseGeneric.json */,
+				68E7653B279705E6005860FE /* SetDeviceSettingDecodingGeneric.json */,
+				68E7653D279713B2005860FE /* GetCodeResponseGeneric.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -2478,6 +2509,7 @@
 				77EC58E4277221F80054D75C /* ServerAgentTests.swift */,
 				77EC58E0277214D60054D75C /* ServerStatusCodeTests.swift */,
 				77EC58D02771D48E0054D75C /* ServerCommandsPaymentTemplateTests.swift */,
+				68E765272796D6DF005860FE /* ServerCommandsRegistrationTests.swift */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -4235,17 +4267,23 @@
 			files = (
 				77EC58DF277200E90054D75C /* SortingPaymentTemplatesResponseGeneric.json in Resources */,
 				77EC58D32771D69E0054D75C /* DeletePaymentTemplatesResponseGeneric.json in Resources */,
+				68E7653C279705E6005860FE /* SetDeviceSettingDecodingGeneric.json in Resources */,
 				77EC58B5277122430054D75C /* TransferDecodingGeneric.json in Resources */,
 				77EC58B9277125000054D75C /* TransferEncodingMin.json in Resources */,
 				77EC58C327712EDD0054D75C /* TransferMe2MeDecodingGeneric.json in Resources */,
+				68E7652F27970137005860FE /* DoRegistrationResponseGeneric.json in Resources */,
+				68E7653E279713B2005860FE /* GetCodeResponseGeneric.json in Resources */,
+				68E7653327970261005860FE /* SetDeviceSettingsResponseGeneric.json in Resources */,
 				77EC58D72771F6C10054D75C /* SavePaymentTemplateResponseGeneric.json in Resources */,
 				77EC58C7277131710054D75C /* TransferMe2MeEncodingMin.json in Resources */,
 				77EC58C9277133910054D75C /* PaymentTemplateDecodingGeneric.json in Resources */,
+				68E76535279702C6005860FE /* VerifyCodeResponseGeneric.json in Resources */,
 				77EC58D52771F28C0054D75C /* GetPaymentTemplateListResponseGeneric.json in Resources */,
 				77EC58BF27712D340054D75C /* TransferAnywayEncodingMin.json in Resources */,
 				77EC58BD27712B680054D75C /* TransferAnywayDecodingGeneric.json in Resources */,
 				77EC58DB2771FC360054D75C /* UpdatePaymentTemplateResponseGeneric.json in Resources */,
 				77EC58CD27713A860054D75C /* PaymentTemplateEncodingMin.json in Resources */,
+				68E7652D2797009A005860FE /* CheckClientResponseGeneric.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4433,6 +4471,7 @@
 				0B22AEAE26CE8DFE00B11E7F /* GKHDataCaseImage.swift in Sources */,
 				EDDFE3B82756E6F900F57C71 /* DetailInformationCollectionViewCell.swift in Sources */,
 				EDB14385265FDA410028EF5A /* LoginCardEntryViewController.swift in Sources */,
+				68E765262796B38B005860FE /* ServerCommands+Registration.swift in Sources */,
 				0B37F98626807620007728FC /* NetworkHelper.swift in Sources */,
 				EDF6820D266F9EC800FD5C07 /* NetworkManager.swift in Sources */,
 				0B95C40026B6C99A00AA57E6 /* RoundedDoubleExtension.swift in Sources */,
@@ -4752,6 +4791,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				68E765282796D6DF005860FE /* ServerCommandsRegistrationTests.swift in Sources */,
 				77EC58E1277214D60054D75C /* ServerStatusCodeTests.swift in Sources */,
 				77067CD9275FBB70000C442B /* StringExtensionsTests.swift in Sources */,
 				77EC58C127712E570054D75C /* TransferMe2MeTests.swift in Sources */,
