@@ -56,7 +56,7 @@ extension ServerCommands{
                 
                 let cryptoVersion: String
                 let model: String
-                let operationSystem: String
+                let operationSystem = "iOS"
                 let pushDeviceId: String
                 let pushFcmToken: String    
             }
@@ -123,10 +123,11 @@ extension ServerCommands{
             
             struct Settings: Encodable {
                 let isActive: Bool
-                let type: String
+                let type: SettingsType
                 let value: String
             }
-
+            
+            enum SettingsType: String, Encodable { case pin, touchid, faceid }
             
             struct Response: ServerResponse {
                 

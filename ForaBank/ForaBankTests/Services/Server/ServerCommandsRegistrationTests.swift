@@ -34,7 +34,10 @@ class ServerCommandsRegistrationTests: XCTestCase {
     func testCheckClient_Response_Decoding() throws {
         
         // given
-        let url = bundle.url(forResource: "CheckClientResponseGeneric", withExtension: "json")!
+        guard let url = bundle.url(forResource: "CheckClientResponseGeneric", withExtension: "json") else {
+            XCTFail("testCheckClient_Response_Decoding : Missing file: CheckClientResponseGeneric.json")
+            return
+        }
         let json = try Data(contentsOf: url)
         let expected = ServerCommands.RegistrationContoller.CheckClient.Response(statusCode: .ok, errorMessage: "string", data: EmptyData())
         
@@ -50,7 +53,7 @@ class ServerCommandsRegistrationTests: XCTestCase {
     func testDoRegistration_Payload_Encoding() throws {
         
         // given
-        let command = ServerCommands.RegistrationContoller.DoRegistration(token: "", payload: .init(cryptoVersion: "1.0", model: "iPhone SE", operationSystem: "iOS", pushDeviceId: "", pushFcmToken: ""))
+        let command = ServerCommands.RegistrationContoller.DoRegistration(token: "", payload: .init(cryptoVersion: "1.0", model: "iPhone SE", pushDeviceId: "", pushFcmToken: ""))
         let expected = "{\"cryptoVersion\":\"1.0\",\"model\":\"iPhone SE\",\"pushDeviceId\":\"\",\"operationSystem\":\"iOS\",\"pushFcmToken\":\"\"}"
         
         // when
@@ -65,7 +68,10 @@ class ServerCommandsRegistrationTests: XCTestCase {
     func testDoRegistration_Response_Decoding() throws {
         
         // given
-        let url = bundle.url(forResource: "DoRegistrationResponseGeneric", withExtension: "json")!
+        guard let url = bundle.url(forResource: "DoRegistrationResponseGeneric", withExtension: "json") else {
+            XCTFail("testDoRegistration_Response_Decoding : Missing file: DoRegistrationResponseGeneric.json")
+            return
+        }
         let json = try Data(contentsOf: url)
         let expected = ServerCommands.RegistrationContoller.DoRegistration.Response(statusCode: .ok, errorMessage: "string", data: EmptyData())
         
@@ -82,10 +88,9 @@ class ServerCommandsRegistrationTests: XCTestCase {
         
         // given
         guard let url = bundle.url(forResource: "GetCodeResponseGeneric", withExtension: "json") else {
-            XCTFail("Missing file: User.json")
+            XCTFail("testGetCode_Response_Decoding : Missing file: GetCodeResponseGeneric.json")
             return
         }
-        
         let json = try Data(contentsOf: url)
         let expected = ServerCommands.RegistrationContoller.GetCode.Response(statusCode: .ok, errorMessage: "string", data: EmptyData())
         
@@ -101,7 +106,10 @@ class ServerCommandsRegistrationTests: XCTestCase {
     func testSetDeviceSettings_Response_Decoding() throws {
         
         // given
-        let url = bundle.url(forResource: "SetDeviceSettingsResponseGeneric", withExtension: "json")!
+        guard let url = bundle.url(forResource: "SetDeviceSettingsResponseGeneric", withExtension: "json") else {
+            XCTFail("testSetDeviceSettings_Response_Decoding : Missing file: SetDeviceSettingsResponseGeneric.json")
+            return
+        }
         let json = try Data(contentsOf: url)
         let expected = ServerCommands.RegistrationContoller.DoRegistration.Response(statusCode: .ok, errorMessage: "string", data: EmptyData())
         
@@ -112,10 +120,15 @@ class ServerCommandsRegistrationTests: XCTestCase {
         XCTAssertEqual(result, expected)
     }
     
+    //MARK: - VerifyCode
+    
     func testVerifyCode_Response_Decoding() throws {
         
         // given
-        let url = bundle.url(forResource: "VerifyCodeResponseGeneric", withExtension: "json")!
+        guard let url = bundle.url(forResource: "VerifyCodeResponseGeneric", withExtension: "json") else {
+            XCTFail("testVerifyCode_Response_Decoding : Missing file: VerifyCodeResponseGeneric.json")
+            return
+        }
         let json = try Data(contentsOf: url)
         let expected = ServerCommands.RegistrationContoller.VerifyCode.Response(statusCode: .ok, errorMessage: "string", data: EmptyData())
         
