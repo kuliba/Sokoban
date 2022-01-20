@@ -8,13 +8,13 @@
 import Foundation
 
 //FIXME: Statements API documentation required
-struct FastPaymentData: Codable {
+struct FastPaymentData: Codable, Equatable {
     
-    let documentComment: String?
-    let foreignBankBIC: String?
-    let foreignBankID: String?
-    let foreignBankName: String?
-    let foreignName: String?
-    let foreignPhoneNumber: String?
-    let opkcid: String?
+    let documentComment: String
+    let foreignBankBIC: String
+    let foreignBankID: String
+    let foreignBankName: String
+    let foreignName: String
+    let foreignPhoneNumber: String
+    let opkcid: String
 }

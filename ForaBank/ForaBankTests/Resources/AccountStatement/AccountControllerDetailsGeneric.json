@@ -1,0 +1,28 @@
+{
+  "data": {
+	"balanceIn": 10000,
+	"balanceOut": 10000,
+	"endDate": "22.12.2021",
+	"payerAccountNumber": "40817810052005000621",
+	"payerCurrency": "RUB",
+	"payerFullName": "Иванов Иван Иванович",
+	"productStatementList": [
+	  {
+		"amount": 999.08,
+		"comment": "22.12.2021",
+		"lineNumber": 1,
+		"operationDate": "22.12.2021",
+		"operationType": "DEBIT",
+		"tranDate": "22.12.2021",
+		"tranTime": "14:52"
+	  }
+	],
+	"responseDate": "20.12.2021 13:06:13",
+	"startDate": "01.12.2021",
+	"totalCredit": 1000,
+	"totalDebit": 1000,
+	"transferDate": "20.12.2021"
+  },
+  "errorMessage": "string",
+  "statusCode": 0
+}
