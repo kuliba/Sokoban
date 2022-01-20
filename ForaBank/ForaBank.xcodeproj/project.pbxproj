@@ -216,6 +216,11 @@
 		6833E0D0273920CE004C070F /* CountryPayCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6833E0C9273920CD004C070F /* CountryPayCoordinator.swift */; };
 		6833E0D1273920CE004C070F /* MainTabBarCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6833E0CA273920CD004C070F /* MainTabBarCoordinator.swift */; };
 		68368BAE272FDAA200A435B1 /* OperationDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68368BAD272FDAA200A435B1 /* OperationDetailViewController.swift */; };
+		6845336C279843DF00104A8B /* ServerCommands+UtilityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6845336B279843DF00104A8B /* ServerCommands+UtilityController.swift */; };
+		6845336E27984B2800104A8B /* ServerCommandsUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6845336D27984B2800104A8B /* ServerCommandsUtilityTests.swift */; };
+		6845337027984D1000104A8B /* CsrfResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 6845336F27984D1000104A8B /* CsrfResponseGeneric.json */; };
+		684533722798515100104A8B /* CsrfData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 684533712798515100104A8B /* CsrfData.swift */; };
+		684533752798532300104A8B /* CsrfDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 684533742798532300104A8B /* CsrfDataTests.swift */; };
 		684AD35A26B7D2520071C762 /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 684AD35926B7D2520071C762 /* CryptoSwift */; };
 		6863EF6B2716D095008FD522 /* MTSlideToOpenControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6863EF6A2716D095008FD522 /* MTSlideToOpenControl.swift */; };
 		68673B4F26F2F29300F67A8C /* RequisitesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68673B4E26F2F29300F67A8C /* RequisitesViewController.swift */; };
@@ -246,6 +251,10 @@
 		68935F72276970CF002F56C2 /* AntifraudViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68935F71276970CF002F56C2 /* AntifraudViewModel.swift */; };
 		689A99AE2779E73600D1FDAE /* OperationDetailInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689A99AD2779E73600D1FDAE /* OperationDetailInfoViewModel.swift */; };
 		68A40A132771E154007333EA /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 68A40A122771E154007333EA /* FirebaseAnalytics */; };
+		68AD33F1279858E900647665 /* CsrfDtoDecodingGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 68AD33F0279858E900647665 /* CsrfDtoDecodingGeneric.json */; };
+		68AD33F327985AD500647665 /* GetSessionTimeoutResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 68AD33F227985AD500647665 /* GetSessionTimeoutResponseGeneric.json */; };
+		68AD33F527985B9B00647665 /* KeyExchangeResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 68AD33F427985B9B00647665 /* KeyExchangeResponseGeneric.json */; };
+		68AD33F727985C8B00647665 /* IsLoginResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 68AD33F627985C8B00647665 /* IsLoginResponseGeneric.json */; };
 		68B6755D26BC8A9B004DECA4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 68B6755C26BC8A9B004DECA4 /* GoogleService-Info.plist */; };
 		68BAECAF2744132E00E1BF65 /* GetDepositStatementDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BAECAE2744132D00E1BF65 /* GetDepositStatementDecodableModel.swift */; };
 		68BAECB12744157200E1BF65 /* GetDepositInfoDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BAECB02744157200E1BF65 /* GetDepositInfoDecodableModel.swift */; };
@@ -856,6 +865,11 @@
 		6833E0C9273920CD004C070F /* CountryPayCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryPayCoordinator.swift; sourceTree = "<group>"; };
 		6833E0CA273920CD004C070F /* MainTabBarCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTabBarCoordinator.swift; sourceTree = "<group>"; };
 		68368BAD272FDAA200A435B1 /* OperationDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailViewController.swift; sourceTree = "<group>"; };
+		6845336B279843DF00104A8B /* ServerCommands+UtilityController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServerCommands+UtilityController.swift"; sourceTree = "<group>"; };
+		6845336D27984B2800104A8B /* ServerCommandsUtilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommandsUtilityTests.swift; sourceTree = "<group>"; };
+		6845336F27984D1000104A8B /* CsrfResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = CsrfResponseGeneric.json; sourceTree = "<group>"; };
+		684533712798515100104A8B /* CsrfData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CsrfData.swift; sourceTree = "<group>"; };
+		684533742798532300104A8B /* CsrfDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CsrfDataTests.swift; sourceTree = "<group>"; };
 		6863EF6A2716D095008FD522 /* MTSlideToOpenControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTSlideToOpenControl.swift; sourceTree = "<group>"; };
 		68673B4E26F2F29300F67A8C /* RequisitesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequisitesViewController.swift; sourceTree = "<group>"; };
 		68673B5126F2F3B900F67A8C /* RequisitsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequisitsTableViewCell.swift; sourceTree = "<group>"; };
@@ -884,6 +898,10 @@
 		688B9BB526E03B3E00407A75 /* TotalMoneyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TotalMoneyView.xib; sourceTree = "<group>"; };
 		68935F71276970CF002F56C2 /* AntifraudViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AntifraudViewModel.swift; sourceTree = "<group>"; };
 		689A99AD2779E73600D1FDAE /* OperationDetailInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailInfoViewModel.swift; sourceTree = "<group>"; };
+		68AD33F0279858E900647665 /* CsrfDtoDecodingGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = CsrfDtoDecodingGeneric.json; sourceTree = "<group>"; };
+		68AD33F227985AD500647665 /* GetSessionTimeoutResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetSessionTimeoutResponseGeneric.json; sourceTree = "<group>"; };
+		68AD33F427985B9B00647665 /* KeyExchangeResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = KeyExchangeResponseGeneric.json; sourceTree = "<group>"; };
+		68AD33F627985C8B00647665 /* IsLoginResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = IsLoginResponseGeneric.json; sourceTree = "<group>"; };
 		68B6755C26BC8A9B004DECA4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		68BAECAE2744132D00E1BF65 /* GetDepositStatementDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDepositStatementDecodableModel.swift; sourceTree = "<group>"; };
 		68BAECB02744157200E1BF65 /* GetDepositInfoDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDepositInfoDecodableModel.swift; sourceTree = "<group>"; };
@@ -1927,6 +1945,14 @@
 			path = LoginCoordinators;
 			sourceTree = "<group>";
 		};
+		684533732798530800104A8B /* UtilityController */ = {
+			isa = PBXGroup;
+			children = (
+				684533742798532300104A8B /* CsrfDataTests.swift */,
+			);
+			path = UtilityController;
+			sourceTree = "<group>";
+		};
 		68673B5026F2F39E00F67A8C /* Cell */ = {
 			isa = PBXGroup;
 			children = (
@@ -2352,6 +2378,7 @@
 				77499C3927738F6200F6C079 /* ProductType.swift */,
 				77AC915A277B60C500E49D5D /* PaymentDetailType.swift */,
 				77AC915C277BA5EA00E49D5D /* FastPaymentData.swift */,
+				684533712798515100104A8B /* CsrfData.swift */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -2415,6 +2442,7 @@
 				77DC126C2770F84B00C917B0 /* ServerStatusCode.swift */,
 				77DC126E2770F8C900C917B0 /* ServerCommands+PaymentTemplate.swift */,
 				68E765252796B38B005860FE /* ServerCommands+Registration.swift */,
+				6845336B279843DF00104A8B /* ServerCommands+UtilityController.swift */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -2452,6 +2480,7 @@
 		77EC58AF277121A30054D75C /* Domain */ = {
 			isa = PBXGroup;
 			children = (
+				684533732798530800104A8B /* UtilityController */,
 				77EC58CA277133C40054D75C /* PaymentTemplateTests.swift */,
 				77EC58B0277121B00054D75C /* Transfer */,
 				68E76536279704D5005860FE /* Registration */,
@@ -2491,6 +2520,11 @@
 				68E76534279702C6005860FE /* VerifyCodeResponseGeneric.json */,
 				68E7653B279705E6005860FE /* SetDeviceSettingDecodingGeneric.json */,
 				68E7653D279713B2005860FE /* GetCodeResponseGeneric.json */,
+				6845336F27984D1000104A8B /* CsrfResponseGeneric.json */,
+				68AD33F0279858E900647665 /* CsrfDtoDecodingGeneric.json */,
+				68AD33F227985AD500647665 /* GetSessionTimeoutResponseGeneric.json */,
+				68AD33F427985B9B00647665 /* KeyExchangeResponseGeneric.json */,
+				68AD33F627985C8B00647665 /* IsLoginResponseGeneric.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -2510,6 +2544,7 @@
 				77EC58E0277214D60054D75C /* ServerStatusCodeTests.swift */,
 				77EC58D02771D48E0054D75C /* ServerCommandsPaymentTemplateTests.swift */,
 				68E765272796D6DF005860FE /* ServerCommandsRegistrationTests.swift */,
+				6845336D27984B2800104A8B /* ServerCommandsUtilityTests.swift */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -4268,17 +4303,22 @@
 				77EC58DF277200E90054D75C /* SortingPaymentTemplatesResponseGeneric.json in Resources */,
 				77EC58D32771D69E0054D75C /* DeletePaymentTemplatesResponseGeneric.json in Resources */,
 				68E7653C279705E6005860FE /* SetDeviceSettingDecodingGeneric.json in Resources */,
+				6845337027984D1000104A8B /* CsrfResponseGeneric.json in Resources */,
+				68AD33F727985C8B00647665 /* IsLoginResponseGeneric.json in Resources */,
 				77EC58B5277122430054D75C /* TransferDecodingGeneric.json in Resources */,
 				77EC58B9277125000054D75C /* TransferEncodingMin.json in Resources */,
 				77EC58C327712EDD0054D75C /* TransferMe2MeDecodingGeneric.json in Resources */,
 				68E7652F27970137005860FE /* DoRegistrationResponseGeneric.json in Resources */,
 				68E7653E279713B2005860FE /* GetCodeResponseGeneric.json in Resources */,
+				68AD33F527985B9B00647665 /* KeyExchangeResponseGeneric.json in Resources */,
 				68E7653327970261005860FE /* SetDeviceSettingsResponseGeneric.json in Resources */,
 				77EC58D72771F6C10054D75C /* SavePaymentTemplateResponseGeneric.json in Resources */,
 				77EC58C7277131710054D75C /* TransferMe2MeEncodingMin.json in Resources */,
+				68AD33F1279858E900647665 /* CsrfDtoDecodingGeneric.json in Resources */,
 				77EC58C9277133910054D75C /* PaymentTemplateDecodingGeneric.json in Resources */,
 				68E76535279702C6005860FE /* VerifyCodeResponseGeneric.json in Resources */,
 				77EC58D52771F28C0054D75C /* GetPaymentTemplateListResponseGeneric.json in Resources */,
+				68AD33F327985AD500647665 /* GetSessionTimeoutResponseGeneric.json in Resources */,
 				77EC58BF27712D340054D75C /* TransferAnywayEncodingMin.json in Resources */,
 				77EC58BD27712B680054D75C /* TransferAnywayDecodingGeneric.json in Resources */,
 				77EC58DB2771FC360054D75C /* UpdatePaymentTemplateResponseGeneric.json in Resources */,
@@ -4354,6 +4394,7 @@
 				ED9C1A032756809200AF9DFF /* OpenNewDepositViewControllerFlowLayout.swift in Sources */,
 				A5156425277CBB7C00F5ED73 /* PermissionHelper.swift in Sources */,
 				EDB165602667A569007E6030 /* ForaInput.swift in Sources */,
+				6845336C279843DF00104A8B /* ServerCommands+UtilityController.swift in Sources */,
 				68E6A29126A0338700A1D9A1 /* CastomCardView.swift in Sources */,
 				6833E0CF273920CE004C070F /* MobilePayCoordinator.swift in Sources */,
 				0B2A8D2E26E8DA3400651BCB /* GetLatestPhonePaymentsSaved.swift in Sources */,
@@ -4756,6 +4797,7 @@
 				EDDFE3C827597A7600F57C71 /* PaymentViewController.swift in Sources */,
 				68FFA5452682F48C002DADFA /* SearchContact.swift in Sources */,
 				0B7A18C72685BD130007CC75 /* GetBanksDecodableModel.swift in Sources */,
+				684533722798515100104A8B /* CsrfData.swift in Sources */,
 				EDFA7521277D15A000EEB4AE /* TermsDepositCollectionViewCell.swift in Sources */,
 				0B8BE093266FDBA600E96CAA /* VerifyCodeDecodebleModel.swift in Sources */,
 				ED4FC60B266CD1020092B4AB /* СountryCell.swift in Sources */,
@@ -4796,6 +4838,7 @@
 				77067CD9275FBB70000C442B /* StringExtensionsTests.swift in Sources */,
 				77EC58C127712E570054D75C /* TransferMe2MeTests.swift in Sources */,
 				77D2D9B2275AB9280097234D /* Item.swift in Sources */,
+				684533752798532300104A8B /* CsrfDataTests.swift in Sources */,
 				77EC58BB27712AF50054D75C /* TransferAnywayTests.swift in Sources */,
 				77EC58CB277133C40054D75C /* PaymentTemplateTests.swift in Sources */,
 				0B34AF87277B24F80080F31A /* PhoneNumberKitTest.swift in Sources */,
@@ -4805,6 +4848,7 @@
 				77C026E6275E6299002BE1F6 /* GKHHistoryModelTests.swift in Sources */,
 				77D2D9B3275AB9280097234D /* RealmObjectsDiffTests.swift in Sources */,
 				77EC58D12771D48E0054D75C /* ServerCommandsPaymentTemplateTests.swift in Sources */,
+				6845336E27984B2800104A8B /* ServerCommandsUtilityTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
