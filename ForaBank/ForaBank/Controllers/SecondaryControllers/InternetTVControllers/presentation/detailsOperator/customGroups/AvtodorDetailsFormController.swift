@@ -3,22 +3,43 @@ import RealmSwift
 import Foundation
 
 
-class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSource, UIPopoverPresentationControllerDelegate, UIViewControllerTransitioningDelegate {
+class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSource, UIPopoverPresentationControllerDelegate, UIViewControllerTransitioningDelegate {
 
     static let msgUpdateTable = 3
 
-    public static func storyboardInstance() -> InternetTVDetailsFormController? {
+    public static func storyboardInstance() -> AvtodorDetailsFormController? {
         let storyboard = UIStoryboard(name: "InternetTV", bundle: nil)
-        return storyboard.instantiateViewController(withIdentifier: "InternetTVDetail") as? InternetTVDetailsFormController
+        return storyboard.instantiateViewController(withIdentifier: "InternetTVDetail") as? AvtodorDetailsFormController
     }
     var fromPaymentVc = false
     var operatorData: GKHOperatorsModel?
+    var customGroup: CustomGroup?
     var latestOperation: InternetLatestOpsDO?
     var qrData = [String: String]()
-    var viewModel = InternetTVDetailsFormViewModel()
+    var viewModel = AvtodorDetailsFormViewModel()
     var selectedValue = "-1"
     var userInfo: ClintInfoModelData? = nil
+    
+    @IBOutlet weak var btnContract: UIButton!
+    
+    @IBOutlet weak var btnTransponder: UIButton!
 
+    @IBAction func contractAction(_ sender: Any) {
+        btnContract.backgroundColor = UIColor.white
+        btnTransponder.backgroundColor = UIColor.clear
+
+        operatorData = customGroup?.childsOperators[0]
+        initData()
+    }
+    
+    @IBAction func transponderAction(_ sender: Any) {
+        btnContract.backgroundColor = UIColor.clear
+        btnTransponder.backgroundColor = UIColor.white
+
+        operatorData = customGroup?.childsOperators[1]
+        initData()
+    }
+    
     @IBOutlet weak var tableView: UITableView?
     @IBOutlet weak var bottomInputView: BottomInputView?
     @IBOutlet weak var goButton: UIButton?
@@ -33,19 +54,30 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        operatorData = customGroup?.childsOperators[0]
         viewModel.controller = self
         view.backgroundColor = .white
         bottomInputView?.tempTextFieldValue = qrData["Сумма"] ?? "0"
         bottomInputView?.isHidden = true
         setupToolbar()
         goButton?.add_CornerRadius(5)
+        tableView?.register(UINib(nibName: "InternetInputCell", bundle: nil), forCellReuseIdentifier: InternetTVInputCell.reuseId)
+        AddAllUserCardtList.add {}
+        setupCardList { error in
+            guard let error = error else { return }
+            self.showAlert(with: "Ошибка", and: error)
+        }
+
+        initData()
+    }
+
+    private func initData() {
+        viewModel.requisites.removeAll()
         if fromPaymentVc == false {
             viewModel.puref = operatorData?.puref ?? ""
         }
         InternetTVApiRequests.isSingleService(puref: viewModel.puref)
-        tableView?.register(UINib(nibName: "InternetInputCell", bundle: nil), forCellReuseIdentifier: InternetTVInputCell.reuseId)
         bottomInputView?.currencySymbol = "₽"
-        AddAllUserCardtList.add {}
 
         bottomInputView?.didDoneButtonTapped = { amount in
             self.showActivity()
@@ -56,11 +88,6 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
                     self.viewModel.retryPayment(amount: amount)
                 }
             }
-        }
-
-        setupCardList { error in
-            guard let error = error else { return }
-            self.showAlert(with: "Ошибка", and: error)
         }
 
         if let list = operatorData?.parameterList {
@@ -201,7 +228,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
     }
 
     func setupToolbar() {
-        let operatorsName = operatorData?.name ?? ""
+        let operatorsName = customGroup?.name ?? ""
         let inn = operatorData?.synonymList.first ?? ""
         navigationItem.titleView = setTitle(title: operatorsName, subtitle: "ИНН " +  inn )
 
@@ -312,7 +339,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
     }
 }
 
-extension  InternetTVDetailsFormController {
+extension  AvtodorDetailsFormController {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         viewModel.requisites.count
     }

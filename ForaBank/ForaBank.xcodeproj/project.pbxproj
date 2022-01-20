@@ -371,6 +371,8 @@
 		A5662694275D3CD000FFE31A /* InternetTVSelectDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5662693275D3CD000FFE31A /* InternetTVSelectDialog.swift */; };
 		A5662696275E945A00FFE31A /* InternetTVSelectController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5662695275E945A00FFE31A /* InternetTVSelectController.swift */; };
 		A5662698275FDD2400FFE31A /* checkBtn.xib in Resources */ = {isa = PBXBuildFile; fileRef = A5662697275FDD2300FFE31A /* checkBtn.xib */; };
+		A578AA842795F70900F1867B /* MosParkingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A578AA832795F70900F1867B /* MosParkingViewController.swift */; };
+		A578AA86279601E100F1867B /* MosParkingListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A578AA85279601E100F1867B /* MosParkingListModel.swift */; };
 		A5C7A1AE275BEF58003BEF6D /* RequisiteDO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C7A1AD275BEF58003BEF6D /* RequisiteDO.swift */; };
 		A5C7A1B1275BF0B9003BEF6D /* InternetTVApiRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C7A1B0275BF0B9003BEF6D /* InternetTVApiRequests.swift */; };
 		A5C7A1B5275BF2C3003BEF6D /* IsSingleServiceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C7A1B4275BF2C3003BEF6D /* IsSingleServiceModel.swift */; };
@@ -602,10 +604,13 @@
 		EDFFCAFB2683C135004EE095 /* PaymentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFFCAFA2683C135004EE095 /* PaymentType.swift */; };
 		EDFFCAFD2683C18B004EE095 /* ContactInputViewController API.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFFCAFC2683C18B004EE095 /* ContactInputViewController API.swift */; };
 		F63D409A487FD3AD287E63D1 /* InternetInputCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F63D4C0F67E89D23EA2C68CC /* InternetInputCell.xib */; };
+		F63D40EC3454C0DAF5DFDBC4 /* ClientInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D4D93E1924F097E08847C /* ClientInfoModel.swift */; };
 		F63D42697A06C6D37A64F590 /* InternetTVDetailsFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D42613FF2F4EDEA6BA9D3 /* InternetTVDetailsFormViewModel.swift */; };
 		F63D42FC24C643FCB7631F83 /* InternetTVDetailsFormController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D4DD4905E8BA594B990E1 /* InternetTVDetailsFormController.swift */; };
 		F63D43A404CF8AA69942CCFF /* InternetTVSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D46CF73A04FDB7B1061E0 /* InternetTVSuccessViewController.swift */; };
+		F63D4543C2BD628A0BFB42EA /* AvtodorDetailsFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D4AA55D705272DDD13E19 /* AvtodorDetailsFormViewModel.swift */; };
 		F63D45F2B6942EA98C94F9FE /* CheckBoxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F63D4056E8B88CC673C85295 /* CheckBoxView.xib */; };
+		F63D473F220AD92D6D04C8DD /* AvtodorDetailsFormController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D41A4E0088FEC1D9DD013 /* AvtodorDetailsFormController.swift */; };
 		F63D4A3FB30397A82426313C /* InternetTVConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D4A26E0479DD5215DB784 /* InternetTVConfirmViewController.swift */; };
 		F63D4C7CF864543AD9AABF9A /* InternetTVInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D42CEA742F58D23C97218 /* InternetTVInputCell.swift */; };
 /* End PBXBuildFile section */
@@ -994,6 +999,8 @@
 		A5662693275D3CD000FFE31A /* InternetTVSelectDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVSelectDialog.swift; sourceTree = "<group>"; };
 		A5662695275E945A00FFE31A /* InternetTVSelectController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVSelectController.swift; sourceTree = "<group>"; };
 		A5662697275FDD2300FFE31A /* checkBtn.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = checkBtn.xib; sourceTree = "<group>"; };
+		A578AA832795F70900F1867B /* MosParkingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosParkingViewController.swift; sourceTree = "<group>"; };
+		A578AA85279601E100F1867B /* MosParkingListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosParkingListModel.swift; sourceTree = "<group>"; };
 		A5C7A1AD275BEF58003BEF6D /* RequisiteDO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequisiteDO.swift; sourceTree = "<group>"; };
 		A5C7A1B0275BF0B9003BEF6D /* InternetTVApiRequests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVApiRequests.swift; sourceTree = "<group>"; };
 		A5C7A1B4275BF2C3003BEF6D /* IsSingleServiceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsSingleServiceModel.swift; sourceTree = "<group>"; };
@@ -1225,11 +1232,14 @@
 		EDFFCAFA2683C135004EE095 /* PaymentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentType.swift; sourceTree = "<group>"; };
 		EDFFCAFC2683C18B004EE095 /* ContactInputViewController API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContactInputViewController API.swift"; sourceTree = "<group>"; };
 		F63D4056E8B88CC673C85295 /* CheckBoxView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CheckBoxView.xib; sourceTree = "<group>"; };
+		F63D41A4E0088FEC1D9DD013 /* AvtodorDetailsFormController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AvtodorDetailsFormController.swift; sourceTree = "<group>"; };
 		F63D42613FF2F4EDEA6BA9D3 /* InternetTVDetailsFormViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetTVDetailsFormViewModel.swift; sourceTree = "<group>"; };
 		F63D42CEA742F58D23C97218 /* InternetTVInputCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetTVInputCell.swift; sourceTree = "<group>"; };
 		F63D46CF73A04FDB7B1061E0 /* InternetTVSuccessViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetTVSuccessViewController.swift; sourceTree = "<group>"; };
 		F63D4A26E0479DD5215DB784 /* InternetTVConfirmViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetTVConfirmViewController.swift; sourceTree = "<group>"; };
+		F63D4AA55D705272DDD13E19 /* AvtodorDetailsFormViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AvtodorDetailsFormViewModel.swift; sourceTree = "<group>"; };
 		F63D4C0F67E89D23EA2C68CC /* InternetInputCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InternetInputCell.xib; sourceTree = "<group>"; };
+		F63D4D93E1924F097E08847C /* ClientInfoModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientInfoModel.swift; sourceTree = "<group>"; };
 		F63D4DD4905E8BA594B990E1 /* InternetTVDetailsFormController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetTVDetailsFormController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -2520,6 +2530,16 @@
 			path = InternetTVControllers;
 			sourceTree = "<group>";
 		};
+		A578AA802795F30D00F1867B /* customGroups */ = {
+			isa = PBXGroup;
+			children = (
+				A578AA832795F70900F1867B /* MosParkingViewController.swift */,
+				F63D41A4E0088FEC1D9DD013 /* AvtodorDetailsFormController.swift */,
+				F63D4AA55D705272DDD13E19 /* AvtodorDetailsFormViewModel.swift */,
+			);
+			path = customGroups;
+			sourceTree = "<group>";
+		};
 		A5C7A1A8275BEBD2003BEF6D /* domain */ = {
 			isa = PBXGroup;
 			children = (
@@ -2528,6 +2548,8 @@
 				A5C7A1AD275BEF58003BEF6D /* RequisiteDO.swift */,
 				A5C7A1B4275BF2C3003BEF6D /* IsSingleServiceModel.swift */,
 				A5C7A1BA275C0A2A003BEF6D /* InternetLatestOpsDO.swift */,
+				A578AA85279601E100F1867B /* MosParkingListModel.swift */,
+				F63D4D93E1924F097E08847C /* ClientInfoModel.swift */,
 			);
 			path = domain;
 			sourceTree = "<group>";
@@ -3952,6 +3974,7 @@
 		F63D4FC8C8C553E5473899D3 /* detailsOperator */ = {
 			isa = PBXGroup;
 			children = (
+				A578AA802795F30D00F1867B /* customGroups */,
 				F63D4C0F67E89D23EA2C68CC /* InternetInputCell.xib */,
 				F63D4DD4905E8BA594B990E1 /* InternetTVDetailsFormController.swift */,
 				F63D42CEA742F58D23C97218 /* InternetTVInputCell.swift */,
@@ -4075,19 +4098,19 @@
 			packageReferences = (
 				ED4FC61F266EA5CD0092B4AB /* XCRemoteSwiftPackageReference "Valet" */,
 				EDF6821B266FC37F00FD5C07 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				EDAA99B22674C38900435484 /* XCRemoteSwiftPackageReference "ProgressHUD" */,
-				ED0B4890267B4CDD0037EA06 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
+				EDAA99B22674C38900435484 /* XCRemoteSwiftPackageReference "ProgressHUD.git" */,
+				ED0B4890267B4CDD0037EA06 /* XCRemoteSwiftPackageReference "IQKeyboardManager.git" */,
 				0B7A18A92681CED70007CC75 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */,
-				ED39EC86268B308800158E46 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */,
-				ED39EC8F268C8FA700158E46 /* XCRemoteSwiftPackageReference "SVGKit" */,
+				ED39EC86268B308800158E46 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder.git" */,
+				ED39EC8F268C8FA700158E46 /* XCRemoteSwiftPackageReference "SVGKit.git" */,
 				68FFA5662695921D002DADFA /* XCRemoteSwiftPackageReference "QRScanner" */,
 				68E6A28326A02C1800A1D9A1 /* XCRemoteSwiftPackageReference "AnyFormatKit" */,
-				EDC8BA3226A5AA0D00EDB401 /* XCRemoteSwiftPackageReference "SDWebImagePDFCoder" */,
-				684AD35826B7D2510071C762 /* XCRemoteSwiftPackageReference "CryptoSwift" */,
-				0BA2524526C5DB5500AD087A /* XCRemoteSwiftPackageReference "realm-cocoa" */,
-				6833E0AE27322876004C070F /* XCRemoteSwiftPackageReference "SkeletonView" */,
+				EDC8BA3226A5AA0D00EDB401 /* XCRemoteSwiftPackageReference "SDWebImagePDFCoder.git" */,
+				684AD35826B7D2510071C762 /* XCRemoteSwiftPackageReference "CryptoSwift.git" */,
+				0BA2524526C5DB5500AD087A /* XCRemoteSwiftPackageReference "realm-cocoa.git" */,
+				6833E0AE27322876004C070F /* XCRemoteSwiftPackageReference "SkeletonView.git" */,
 				77AC9157277A518A00E49D5D /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */,
-				0B677288277CCD7500DCCECD /* XCRemoteSwiftPackageReference "PhoneNumberKit" */,
+				0B677288277CCD7500DCCECD /* XCRemoteSwiftPackageReference "PhoneNumberKit.git" */,
 			);
 			productRefGroup = EDB1437E265FDA410028EF5A /* Products */;
 			projectDirPath = "";
@@ -4233,6 +4256,7 @@
 				EDDFE3BA2756ED7A00F57C71 /* DepositCalculatorViewControllerDataSource.swift in Sources */,
 				ED2BE17F26A0498400647CB1 /* AllCardListViewController.swift in Sources */,
 				EDBEEA1D26B1AF2F00265683 /* FullBankInfoCell.swift in Sources */,
+				A578AA842795F70900F1867B /* MosParkingViewController.swift in Sources */,
 				EDCF8A1826CEFF2100DC9F54 /* TextFieldWithPadding.swift in Sources */,
 				77067CDB275FBE8F000C442B /* String+Extensions.swift in Sources */,
 				EDF68211266F9EC800FD5C07 /* RequestError.swift in Sources */,
@@ -4681,6 +4705,7 @@
 				0B95C40A26B6D88000AA57E6 /* BottomLableModel.swift in Sources */,
 				ED4FC61A266EA42E0092B4AB /* AppLocker.swift in Sources */,
 				688B9BA126DD0C2500407A75 /* ProductsViewController.swift in Sources */,
+				A578AA86279601E100F1867B /* MosParkingListModel.swift in Sources */,
 				0BA251ED26C266A400AD087A /* CreateServiceTransferDecodableModel.swift in Sources */,
 				0BDCF0082749A56300AAA1C3 /* ExtensionGKHInputRequest.swift in Sources */,
 				A50869DD2768CA4A004C5E17 /* InternetTVSourceView.swift in Sources */,
@@ -4697,6 +4722,9 @@
 				EDDFE3AD2756D3FD00F57C71 /* DepositCalculatorViewControllerFlowLayout.swift in Sources */,
 				F63D4A3FB30397A82426313C /* InternetTVConfirmViewController.swift in Sources */,
 				F63D43A404CF8AA69942CCFF /* InternetTVSuccessViewController.swift in Sources */,
+				F63D40EC3454C0DAF5DFDBC4 /* ClientInfoModel.swift in Sources */,
+				F63D473F220AD92D6D04C8DD /* AvtodorDetailsFormController.swift in Sources */,
+				F63D4543C2BD628A0BFB42EA /* AvtodorDetailsFormViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5050,7 +5078,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		0B677288277CCD7500DCCECD /* XCRemoteSwiftPackageReference "PhoneNumberKit" */ = {
+		0B677288277CCD7500DCCECD /* XCRemoteSwiftPackageReference "PhoneNumberKit.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/marmelroy/PhoneNumberKit.git";
 			requirement = {
@@ -5066,7 +5094,7 @@
 				minimumVersion = 1.2.7;
 			};
 		};
-		0BA2524526C5DB5500AD087A /* XCRemoteSwiftPackageReference "realm-cocoa" */ = {
+		0BA2524526C5DB5500AD087A /* XCRemoteSwiftPackageReference "realm-cocoa.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/realm-cocoa.git";
 			requirement = {
@@ -5074,7 +5102,7 @@
 				minimumVersion = 10.14.0;
 			};
 		};
-		6833E0AE27322876004C070F /* XCRemoteSwiftPackageReference "SkeletonView" */ = {
+		6833E0AE27322876004C070F /* XCRemoteSwiftPackageReference "SkeletonView.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Juanpe/SkeletonView.git";
 			requirement = {
@@ -5082,7 +5110,7 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		684AD35826B7D2510071C762 /* XCRemoteSwiftPackageReference "CryptoSwift" */ = {
+		684AD35826B7D2510071C762 /* XCRemoteSwiftPackageReference "CryptoSwift.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/krzyzanowskim/CryptoSwift.git";
 			requirement = {
@@ -5114,7 +5142,7 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		ED0B4890267B4CDD0037EA06 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
+		ED0B4890267B4CDD0037EA06 /* XCRemoteSwiftPackageReference "IQKeyboardManager.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
 			requirement = {
@@ -5122,7 +5150,7 @@
 				minimumVersion = 6.5.6;
 			};
 		};
-		ED39EC86268B308800158E46 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */ = {
+		ED39EC86268B308800158E46 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImageSVGCoder.git";
 			requirement = {
@@ -5130,7 +5158,7 @@
 				minimumVersion = 1.6.0;
 			};
 		};
-		ED39EC8F268C8FA700158E46 /* XCRemoteSwiftPackageReference "SVGKit" */ = {
+		ED39EC8F268C8FA700158E46 /* XCRemoteSwiftPackageReference "SVGKit.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SVGKit/SVGKit.git";
 			requirement = {
@@ -5146,7 +5174,7 @@
 				minimumVersion = 4.1.2;
 			};
 		};
-		EDAA99B22674C38900435484 /* XCRemoteSwiftPackageReference "ProgressHUD" */ = {
+		EDAA99B22674C38900435484 /* XCRemoteSwiftPackageReference "ProgressHUD.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/relatedcode/ProgressHUD.git";
 			requirement = {
@@ -5154,7 +5182,7 @@
 				kind = branch;
 			};
 		};
-		EDC8BA3226A5AA0D00EDB401 /* XCRemoteSwiftPackageReference "SDWebImagePDFCoder" */ = {
+		EDC8BA3226A5AA0D00EDB401 /* XCRemoteSwiftPackageReference "SDWebImagePDFCoder.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImagePDFCoder.git";
 			requirement = {
@@ -5175,12 +5203,12 @@
 /* Begin XCSwiftPackageProductDependency section */
 		0B677289277CCD7500DCCECD /* PhoneNumberKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0B677288277CCD7500DCCECD /* XCRemoteSwiftPackageReference "PhoneNumberKit" */;
+			package = 0B677288277CCD7500DCCECD /* XCRemoteSwiftPackageReference "PhoneNumberKit.git" */;
 			productName = PhoneNumberKit;
 		};
 		0B67728D277CCD7500DCCECD /* PhoneNumberKit-Static */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0B677288277CCD7500DCCECD /* XCRemoteSwiftPackageReference "PhoneNumberKit" */;
+			package = 0B677288277CCD7500DCCECD /* XCRemoteSwiftPackageReference "PhoneNumberKit.git" */;
 			productName = "PhoneNumberKit-Static";
 		};
 		0B7A18AA2681CED70007CC75 /* SwiftEntryKit */ = {
@@ -5190,22 +5218,22 @@
 		};
 		0BA2524626C5DB5600AD087A /* Realm */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0BA2524526C5DB5500AD087A /* XCRemoteSwiftPackageReference "realm-cocoa" */;
+			package = 0BA2524526C5DB5500AD087A /* XCRemoteSwiftPackageReference "realm-cocoa.git" */;
 			productName = Realm;
 		};
 		0BA2524826C5DB5600AD087A /* RealmSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0BA2524526C5DB5500AD087A /* XCRemoteSwiftPackageReference "realm-cocoa" */;
+			package = 0BA2524526C5DB5500AD087A /* XCRemoteSwiftPackageReference "realm-cocoa.git" */;
 			productName = RealmSwift;
 		};
 		6833E0AF27322878004C070F /* SkeletonView */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 6833E0AE27322876004C070F /* XCRemoteSwiftPackageReference "SkeletonView" */;
+			package = 6833E0AE27322876004C070F /* XCRemoteSwiftPackageReference "SkeletonView.git" */;
 			productName = SkeletonView;
 		};
 		684AD35926B7D2520071C762 /* CryptoSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 684AD35826B7D2510071C762 /* XCRemoteSwiftPackageReference "CryptoSwift" */;
+			package = 684AD35826B7D2510071C762 /* XCRemoteSwiftPackageReference "CryptoSwift.git" */;
 			productName = CryptoSwift;
 		};
 		68A40A122771E154007333EA /* FirebaseAnalytics */ = {
@@ -5230,7 +5258,7 @@
 		};
 		ED0B4891267B4CDD0037EA06 /* IQKeyboardManagerSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = ED0B4890267B4CDD0037EA06 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			package = ED0B4890267B4CDD0037EA06 /* XCRemoteSwiftPackageReference "IQKeyboardManager.git" */;
 			productName = IQKeyboardManagerSwift;
 		};
 		ED147D4E26BC1237002F66C8 /* FirebaseCrashlytics */ = {
@@ -5240,12 +5268,12 @@
 		};
 		ED39EC87268B308800158E46 /* SDWebImageSVGCoder */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = ED39EC86268B308800158E46 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */;
+			package = ED39EC86268B308800158E46 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder.git" */;
 			productName = SDWebImageSVGCoder;
 		};
 		ED39EC90268C8FA800158E46 /* SVGKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = ED39EC8F268C8FA700158E46 /* XCRemoteSwiftPackageReference "SVGKit" */;
+			package = ED39EC8F268C8FA700158E46 /* XCRemoteSwiftPackageReference "SVGKit.git" */;
 			productName = SVGKit;
 		};
 		ED4FC620266EA5CD0092B4AB /* Valet */ = {
@@ -5255,12 +5283,12 @@
 		};
 		EDAA99B32674C38900435484 /* ProgressHUD */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = EDAA99B22674C38900435484 /* XCRemoteSwiftPackageReference "ProgressHUD" */;
+			package = EDAA99B22674C38900435484 /* XCRemoteSwiftPackageReference "ProgressHUD.git" */;
 			productName = ProgressHUD;
 		};
 		EDC8BA3326A5AA0E00EDB401 /* SDWebImagePDFCoder */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = EDC8BA3226A5AA0D00EDB401 /* XCRemoteSwiftPackageReference "SDWebImagePDFCoder" */;
+			package = EDC8BA3226A5AA0D00EDB401 /* XCRemoteSwiftPackageReference "SDWebImagePDFCoder.git" */;
 			productName = SDWebImagePDFCoder;
 		};
 		EDF6821C266FC37F00FD5C07 /* FirebaseMessaging */ = {

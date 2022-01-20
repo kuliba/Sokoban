@@ -22,10 +22,10 @@ extension GKHMainViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: GHKCell.reuseId, for: indexPath) as! GHKCell
         if searching {
             let model = searchedOrganization[indexPath.row]
-            cell.set(viewModel: model)
+            //cell.set(viewModel: model)
         } else {
             let model = organization[indexPath.row]
-            cell.set(viewModel: model)
+            //cell.set(viewModel: model)
         }
         return cell
     }

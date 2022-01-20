@@ -1,9 +1,9 @@
 import Foundation
 
-class InternetTVDetailsFormViewModel {
+class AvtodorDetailsFormViewModel {
 
     static var additionalDic = [String: [String: String]]()
-    var controller: InternetTVDetailsFormController? = nil
+    var controller: AvtodorDetailsFormController? = nil
     var firstStep = true
     var firstAdditional = [[String: String]]()
     var stepsPayment = [[[String: String]]]()

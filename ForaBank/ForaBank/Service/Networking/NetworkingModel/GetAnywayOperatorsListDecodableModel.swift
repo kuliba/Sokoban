@@ -99,7 +99,7 @@ struct Operator: Codable {
     let city, code: String?
     let isGroup: Bool?
     let logotypeList: [LogotypeList]?
-    let name: String?
+    var name: String?
     let operators: [Operator]?
     let region: String?
     let synonymList: [String]?
