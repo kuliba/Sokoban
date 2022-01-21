@@ -14,8 +14,10 @@ class Model {
     // interface
     let action: PassthroughSubject<Action, Never>
     let auth: CurrentValueSubject<AuthorizationState, Never>
+    
     // services
     private let serverAgent: ServerAgentProtocol
+    private let localAgent: LocalAgentProtocol
     
     // private
     private var bindings: Set<AnyCancellable>
@@ -29,11 +31,12 @@ class Model {
         return token
     }
     
-    init(serverAgent: ServerAgentProtocol) {
+    init(serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol) {
         
         self.action = .init()
         self.auth = .init(.notAuthorized)
         self.serverAgent = serverAgent
+        self.localAgent = localAgent
         self.bindings = []
         
         bind()
@@ -42,15 +45,20 @@ class Model {
     //FIXME: remove after refactoring
     static var shared: Model = {
        
+        // server agent
         #if DEBUG
-        let context = ServerAgent.Context(for: .test)
+        let serverContext = ServerAgent.Context(for: .test)
         #else
-        let context = ServerAgent.Context(for: .prod)
+        let serverContext = ServerAgent.Context(for: .prod)
         #endif
         
-        let serverAgent = ServerAgent(context: context)
+        let serverAgent = ServerAgent(context: serverContext)
         
-        return Model(serverAgent: serverAgent)
+        // local agent
+        let localContext = LocalAgent.Context(cacheFolderName: "cache", encoder: JSONEncoder(), decoder: JSONDecoder(), fileManager: FileManager.default)
+        let localAgent = LocalAgent(context: localContext)
+        
+        return Model(serverAgent: serverAgent, localAgent: localAgent)
     }()
     
     private func bind() {
