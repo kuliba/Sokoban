@@ -68,7 +68,7 @@ extension ModelAction {
             
             struct Complete: Action {
                 
-                let paymentTemplates: [ForaBank.PaymentTemplate]
+                let paymentTemplates: [PaymentTemplateData]
             }
             
             struct Failed: Action {

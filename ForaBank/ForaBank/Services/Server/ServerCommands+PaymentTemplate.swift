@@ -58,7 +58,7 @@ enum ServerCommands {
 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: [PaymentTemplate]?
+                let data: [PaymentTemplateData]?
             }
             
             internal init(token: String) {
@@ -116,7 +116,7 @@ enum ServerCommands {
             
             struct Payload: Encodable {
                 
-                let sortDataList: [PaymentTemplate.SortData]
+                let sortDataList: [PaymentTemplateData.SortData]
             }
             
             struct Response: ServerResponse {
