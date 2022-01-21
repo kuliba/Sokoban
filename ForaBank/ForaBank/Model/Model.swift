@@ -14,6 +14,7 @@ class Model {
     // interface
     let action: PassthroughSubject<Action, Never>
     let auth: CurrentValueSubject<AuthorizationState, Never>
+    let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
     
     // services
     private let serverAgent: ServerAgentProtocol
@@ -35,6 +36,7 @@ class Model {
         
         self.action = .init()
         self.auth = .init(.notAuthorized)
+        self.paymentTemplates = .init([])
         self.serverAgent = serverAgent
         self.localAgent = localAgent
         self.bindings = []
@@ -167,10 +169,12 @@ class Model {
                             case .ok:
                                 if let templates = response.data {
                                     
+                                    self.paymentTemplates.value = templates
                                     self.action.send(ModelAction.PaymentTemplate.List.Complete(paymentTemplates: templates))
                                     
                                 } else {
                                     
+                                    self.paymentTemplates.value = []
                                     self.action.send(ModelAction.PaymentTemplate.List.Complete(paymentTemplates: []))
                                 }
 
