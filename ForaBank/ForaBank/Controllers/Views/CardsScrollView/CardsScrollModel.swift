@@ -22,7 +22,12 @@ struct CardsScrollModel {
     }
     
     var maskedcardNumber: String {
-        return "\(cardNumber?.suffix(4) ?? "")"
+        if card.productType == "DEPOSIT" {
+            return "\(card.accountNumber?.suffix(4) ?? "")"
+        } else {
+            return "\(cardNumber?.suffix(4) ?? "")"
+        }
+        
     }
     
     var cardName: String? {

@@ -14,8 +14,11 @@ class Model {
     // interface
     let action: PassthroughSubject<Action, Never>
     let auth: CurrentValueSubject<AuthorizationState, Never>
+    let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
+    
     // services
     private let serverAgent: ServerAgentProtocol
+    private let localAgent: LocalAgentProtocol
     
     // private
     private var bindings: Set<AnyCancellable>
@@ -29,11 +32,13 @@ class Model {
         return token
     }
     
-    init(serverAgent: ServerAgentProtocol) {
+    init(serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol) {
         
         self.action = .init()
         self.auth = .init(.notAuthorized)
+        self.paymentTemplates = .init([])
         self.serverAgent = serverAgent
+        self.localAgent = localAgent
         self.bindings = []
         
         bind()
@@ -42,15 +47,20 @@ class Model {
     //FIXME: remove after refactoring
     static var shared: Model = {
        
+        // server agent
         #if DEBUG
-        let context = ServerAgent.Context(for: .test)
+        let serverContext = ServerAgent.Context(for: .test)
         #else
-        let context = ServerAgent.Context(for: .prod)
+        let serverContext = ServerAgent.Context(for: .prod)
         #endif
         
-        let serverAgent = ServerAgent(context: context)
+        let serverAgent = ServerAgent(context: serverContext)
         
-        return Model(serverAgent: serverAgent)
+        // local agent
+        let localContext = LocalAgent.Context(cacheFolderName: "cache", encoder: JSONEncoder(), decoder: JSONDecoder(), fileManager: FileManager.default)
+        let localAgent = LocalAgent(context: localContext)
+        
+        return Model(serverAgent: serverAgent, localAgent: localAgent)
     }()
     
     private func bind() {
@@ -157,8 +167,17 @@ class Model {
                         case .success(let response):
                             switch response.statusCode {
                             case .ok:
-                                self.action.send(ModelAction.PaymentTemplate.List.Complete(paymentTemplates: response.data))
-                                
+                                if let templates = response.data {
+                                    
+                                    self.paymentTemplates.value = templates
+                                    self.action.send(ModelAction.PaymentTemplate.List.Complete(paymentTemplates: templates))
+                                    
+                                } else {
+                                    
+                                    self.paymentTemplates.value = []
+                                    self.action.send(ModelAction.PaymentTemplate.List.Complete(paymentTemplates: []))
+                                }
+
                             default:
                                 //TODO: handle not ok server status
                                 return

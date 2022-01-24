@@ -1,5 +1,5 @@
 //
-//  PaymentTemplate.swift
+//  PaymentTemplateData.swift
 //  ForaBank
 //
 //  Created by Max Gribov on 20.12.2021.
@@ -8,7 +8,7 @@
 import Foundation
 import CoreText
 
-struct PaymentTemplate: Equatable {
+struct PaymentTemplateData: Equatable {
     
     let groupName: String
     let name: String
@@ -21,7 +21,7 @@ struct PaymentTemplate: Equatable {
 
 //MARK: - Types
 
-extension PaymentTemplate {
+extension PaymentTemplateData {
     
     enum Kind: String, Codable, Equatable {
         
@@ -51,7 +51,7 @@ extension PaymentTemplate {
 
 //MARK: - Codable
 
-extension PaymentTemplate: Codable {
+extension PaymentTemplateData: Codable {
     
     private enum CodingKeys : String, CodingKey {
         case groupName, name, parameterList, paymentTemplateId, sort, svgImage, type

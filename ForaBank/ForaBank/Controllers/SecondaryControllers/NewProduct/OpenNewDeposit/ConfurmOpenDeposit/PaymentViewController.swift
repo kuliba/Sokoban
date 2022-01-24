@@ -6,12 +6,18 @@
 //
 
 import UIKit
+import AnyFormatKit
 import IQKeyboardManagerSwift
 
 class PaymentViewController: UIViewController {
     
     var stackView = UIStackView(arrangedSubviews: [])
-    var bottomView = BottomInputView()
+    var bottomView: BottomInputView = {
+        let inputView = BottomInputView(formater: SumTextInputFormatter(textPattern: "# ###,## ₽"))
+        inputView.buttomLabel.isHidden = true
+        inputView.doneButton.setTitle("Продолжить", for: .normal)
+        return inputView
+    }()
     private weak var bottomViewAncor: NSLayoutConstraint!
     private let saveAreaView = UIView()
     
@@ -51,17 +57,6 @@ class PaymentViewController: UIViewController {
         
     }
     
-    
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//
-//        addKBNotification()
-//    }
-//
-//    override func viewWillDisappear(_ animated: Bool) {
-//        super.viewWillDisappear(animated)
-//        IQKeyboardManager.shared.enable = true
-//    }
     
     private func addKBNotification() {
         IQKeyboardManager.shared.enable = false
