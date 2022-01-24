@@ -125,6 +125,7 @@ class BottomInputView: UIView {
                 self.buttomLabel.alpha = unformatText.isEmpty ? 0 : 1
             }
             self.exchangeRate(unformatText)
+            amountTextField.text = "\(amountTextField.text ?? "") \(currencySymbol)"
         }
 }
     
