@@ -13,7 +13,6 @@ class MosParkingViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     static var iMsg: IMsg? = nil
     static let msgUpdateTable = 3
     static var mosParkingList: MosParkingListData? = nil
-    static var userInfo: ClintInfoModelData? = nil
     
     var dicMosGroups = [String:[String:String]]()
     var operatorData: GKHOperatorsModel?
@@ -123,7 +122,7 @@ class MosParkingViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         titleLabel.textAlignment = .center
         titleLabel.sizeToFit()
         let titleView = UIView(frame: CGRect(x: 0, y: 0, width: titleLabel.frame.size.width,  height: 30))
-        titleView.setDimensions(height: 30, width: 300)
+        titleView.setDimensions(height: 30, width: 250)
         titleView.addSubview(titleLabel)
         titleLabel.numberOfLines = 3;
         titleLabel.anchor( left: titleView.leftAnchor, right: titleView.rightAnchor)
@@ -150,7 +149,6 @@ class MosParkingViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
             }
             dc.operatorData = operatorData
             dc.selectedValue = value
-            dc.userInfo = MosParkingViewController.userInfo
         }
     }
     

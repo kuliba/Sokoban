@@ -605,6 +605,7 @@
 		EDFFCAFD2683C18B004EE095 /* ContactInputViewController API.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFFCAFC2683C18B004EE095 /* ContactInputViewController API.swift */; };
 		F63D409A487FD3AD287E63D1 /* InternetInputCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F63D4C0F67E89D23EA2C68CC /* InternetInputCell.xib */; };
 		F63D40EC3454C0DAF5DFDBC4 /* ClientInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D4D93E1924F097E08847C /* ClientInfoModel.swift */; };
+		F63D41C3BB407DA15542F98F /* GIBDDFineDetailsFormController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D4437CCD925CC2709D0C6 /* GIBDDFineDetailsFormController.swift */; };
 		F63D42697A06C6D37A64F590 /* InternetTVDetailsFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D42613FF2F4EDEA6BA9D3 /* InternetTVDetailsFormViewModel.swift */; };
 		F63D42FC24C643FCB7631F83 /* InternetTVDetailsFormController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D4DD4905E8BA594B990E1 /* InternetTVDetailsFormController.swift */; };
 		F63D43A404CF8AA69942CCFF /* InternetTVSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D46CF73A04FDB7B1061E0 /* InternetTVSuccessViewController.swift */; };
@@ -612,6 +613,7 @@
 		F63D45F2B6942EA98C94F9FE /* CheckBoxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F63D4056E8B88CC673C85295 /* CheckBoxView.xib */; };
 		F63D473F220AD92D6D04C8DD /* AvtodorDetailsFormController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D41A4E0088FEC1D9DD013 /* AvtodorDetailsFormController.swift */; };
 		F63D4A3FB30397A82426313C /* InternetTVConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D4A26E0479DD5215DB784 /* InternetTVConfirmViewController.swift */; };
+		F63D4B91E94C13AFD50FF312 /* GIBDDFineDetailsFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D4C8F9B14DFF843262392 /* GIBDDFineDetailsFormViewModel.swift */; };
 		F63D4C7CF864543AD9AABF9A /* InternetTVInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D42CEA742F58D23C97218 /* InternetTVInputCell.swift */; };
 /* End PBXBuildFile section */
 
@@ -1235,10 +1237,12 @@
 		F63D41A4E0088FEC1D9DD013 /* AvtodorDetailsFormController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AvtodorDetailsFormController.swift; sourceTree = "<group>"; };
 		F63D42613FF2F4EDEA6BA9D3 /* InternetTVDetailsFormViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetTVDetailsFormViewModel.swift; sourceTree = "<group>"; };
 		F63D42CEA742F58D23C97218 /* InternetTVInputCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetTVInputCell.swift; sourceTree = "<group>"; };
+		F63D4437CCD925CC2709D0C6 /* GIBDDFineDetailsFormController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GIBDDFineDetailsFormController.swift; sourceTree = "<group>"; };
 		F63D46CF73A04FDB7B1061E0 /* InternetTVSuccessViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetTVSuccessViewController.swift; sourceTree = "<group>"; };
 		F63D4A26E0479DD5215DB784 /* InternetTVConfirmViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetTVConfirmViewController.swift; sourceTree = "<group>"; };
 		F63D4AA55D705272DDD13E19 /* AvtodorDetailsFormViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AvtodorDetailsFormViewModel.swift; sourceTree = "<group>"; };
 		F63D4C0F67E89D23EA2C68CC /* InternetInputCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InternetInputCell.xib; sourceTree = "<group>"; };
+		F63D4C8F9B14DFF843262392 /* GIBDDFineDetailsFormViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GIBDDFineDetailsFormViewModel.swift; sourceTree = "<group>"; };
 		F63D4D93E1924F097E08847C /* ClientInfoModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientInfoModel.swift; sourceTree = "<group>"; };
 		F63D4DD4905E8BA594B990E1 /* InternetTVDetailsFormController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetTVDetailsFormController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -2536,6 +2540,8 @@
 				A578AA832795F70900F1867B /* MosParkingViewController.swift */,
 				F63D41A4E0088FEC1D9DD013 /* AvtodorDetailsFormController.swift */,
 				F63D4AA55D705272DDD13E19 /* AvtodorDetailsFormViewModel.swift */,
+				F63D4437CCD925CC2709D0C6 /* GIBDDFineDetailsFormController.swift */,
+				F63D4C8F9B14DFF843262392 /* GIBDDFineDetailsFormViewModel.swift */,
 			);
 			path = customGroups;
 			sourceTree = "<group>";
@@ -4725,6 +4731,8 @@
 				F63D40EC3454C0DAF5DFDBC4 /* ClientInfoModel.swift in Sources */,
 				F63D473F220AD92D6D04C8DD /* AvtodorDetailsFormController.swift in Sources */,
 				F63D4543C2BD628A0BFB42EA /* AvtodorDetailsFormViewModel.swift in Sources */,
+				F63D41C3BB407DA15542F98F /* GIBDDFineDetailsFormController.swift in Sources */,
+				F63D4B91E94C13AFD50FF312 /* GIBDDFineDetailsFormViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

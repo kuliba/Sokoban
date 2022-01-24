@@ -68,6 +68,7 @@ enum RouterUrlList: String {
     case changeClientConsentMe2MePull
     case getLatestServicePayments
     case getLatestInternetTVPayments
+    case getLatestInternetTVPaymentsTransport
     case createSFPTransfer
     case createIsOneTimeConsentMe2MePull
     case createPermanentConsentMe2MePull
@@ -690,6 +691,15 @@ enum RouterUrlList: String {
             }
         case .getLatestInternetTVPayments:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getLatestInternetTVPayments.rawValue)
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+        case .getLatestInternetTVPaymentsTransport:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getLatestInternetTVPaymentsTransport.rawValue)
             switch result {
             case .success(let url):
                 return .success(url.absoluteURL)

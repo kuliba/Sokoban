@@ -63,6 +63,7 @@ enum RouterManager {
     case changeClientConsentMe2MePull
     case getLatestServicePayments
     case getLatestInternetTVPayments
+    case getLatestInternetTVPaymentsTransport
     case createSFPTransfer
     case createIsOneTimeConsentMe2MePull
     case createPermanentConsentMe2MePull
@@ -912,7 +913,22 @@ extension RouterManager {
             var request = URLRequest(url: resultUrl!)
             request.httpMethod = RequestMethod.get.rawValue
             return request
-            
+
+        case .getLatestInternetTVPaymentsTransport:
+            let baseUrl = RouterUrlList.getLatestInternetTVPaymentsTransport.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.get.rawValue
+            return request
+
         case .createSFPTransfer:
             let baseUrl = RouterUrlList.createSFPTransfer.returnUrl()
             switch baseUrl {

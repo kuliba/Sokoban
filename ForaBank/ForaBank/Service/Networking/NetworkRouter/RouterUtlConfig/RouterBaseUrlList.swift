@@ -176,6 +176,8 @@ enum RouterBaseUrlList: String {
 
     case getLatestInternetTVPayments  = "/rest/getLatestInternetPayments"
 
+    case getLatestInternetTVPaymentsTransport  = "/rest/getLatestTransportPayments"
+
     case getPaymentCountries       = "/rest/getPaymentCountries"
     // В процессе
     case getProductListByFilter    = "/rest/getProductListByFilter"

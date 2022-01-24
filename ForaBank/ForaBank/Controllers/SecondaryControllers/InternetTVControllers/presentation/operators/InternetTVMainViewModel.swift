@@ -12,6 +12,7 @@ class InternetTVMainViewModel {
     var arrOrganizations = [GKHOperatorsModel]()
     var arrSearchedOrganizations = [GKHOperatorsModel]() {
         didSet {
+            arrCustomOrg.removeAll()
             arrSearchedOrganizations.forEach {op in
                 getCustomOrgs(op: op)
             }
@@ -20,7 +21,7 @@ class InternetTVMainViewModel {
             }
         }
     }
-    var customGroups = [CustomGroup(name: "Автодор", puref: "avtodor", childPurefs: "iFora||AVDТ;iFora||AVDD")]
+    var customGroups = [CustomGroup(name: "Автодор", puref: "avtodor", childPurefs: "iFora||AVDТ;iFora||AVDD", parentCode: "iFora||1051062")]
     var arrCustomOrg = [CustomGroup]()
     var operatorsList: Results<GKHOperatorsModel>? = nil
     lazy var realm = try? Realm()
@@ -29,7 +30,7 @@ class InternetTVMainViewModel {
         if InternetTVMainViewModel.filter == GlobalModule.UTILITIES_CODE {
             AddHistoryList.add()
         }
-        if InternetTVMainViewModel.filter == GlobalModule.INTERNET_TV_CODE {
+        if InternetTVMainViewModel.filter == GlobalModule.INTERNET_TV_CODE || InternetTVMainViewModel.filter == GlobalModule.PAYMENT_TRANSPORT  {
             InternetTVLatestOperationRealm.load()
         }
         operatorsList = realm?.objects(GKHOperatorsModel.self)
@@ -40,7 +41,11 @@ class InternetTVMainViewModel {
                 arrOrganizations.append(op)
             }
         })
-        arrCustomOrg.append(contentsOf: customGroups)
+        customGroups.forEach { group in
+            if group.parentCode.contains(InternetTVMainViewModel.filter) {
+                arrCustomOrg.append(group)
+            }
+        }
         arrCustomOrg.sort {
             $0.name ?? "" < $1.name ?? ""
         }
@@ -58,7 +63,7 @@ class InternetTVMainViewModel {
             counter += 1
         }
         if !isFound {
-            var item = CustomGroup(name: op.name ?? "-1", puref: "",childPurefs: "")
+            var item = CustomGroup(name: op.name ?? "-1", puref: "",childPurefs: "", parentCode: op.parentCode ?? "")
             item.op = op
             arrCustomOrg.append(item)
         }
@@ -67,15 +72,17 @@ class InternetTVMainViewModel {
 
 struct CustomGroup {
     var name = "Group"
+    var parentCode = ""
     var isShown = false
     var puref = ""
     var childPurefs = ""
     var op: GKHOperatorsModel? = nil
     var childsOperators = [GKHOperatorsModel]()
 
-    init (name:String, puref: String, childPurefs: String) {
+    init (name:String, puref: String, childPurefs: String, parentCode: String) {
         self.name = name
         self.puref = puref
         self.childPurefs = childPurefs
+        self.parentCode = parentCode
     }
 }

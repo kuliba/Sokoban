@@ -1,11 +1,12 @@
 import Foundation
 
-class InternetTVDetailsFormViewModel {
+class GIBDDFineDetailsFormViewModel {
 
     static var additionalDic = [String: [String: String]]()
-    var controller: InternetTVDetailsFormController? = nil
+    var controller: GIBDDFineDetailsFormController? = nil
     var firstStep = true
-    var firstAdditional = [[String: String]]()
+    var finalStep = false
+    var additionalFields = [[String: String]]()
     var stepsPayment = [[[String: String]]]()
     var requisites = [RequisiteDO]()
     var puref = ""
@@ -26,14 +27,7 @@ class InternetTVDetailsFormViewModel {
 
     func fillRequisites(answer: CreateTransferAnswerModel) {
         requisites.forEach { item in
-            if (answer.data?.parameterListForNextStep?.first { reg in
-                reg.id == item.id
-            } == nil) {
-                item.readOnly = true
-            } else {
-                item.readOnly = false
-                print("req5555 \(item.id) \(item.title)")
-            }
+            item.readOnly = true
         }
         answer.data?.additionalList?.forEach { item in
             let param = RequisiteDO()
@@ -49,13 +43,26 @@ class InternetTVDetailsFormViewModel {
                 requisites.append(param)
             }
         }
+
         answer.data?.parameterListForNextStep?.forEach { item in
-            print("req5555 _ \(item.id) \(item.title)")
-            let param = RequisiteDO.convertParameter(item)
+            let req = RequisiteDO.convertParameter(item)
+            if let userInfoUnw = InternetTVApiRequests.userInfo {
+                if item.id?.lowercased().contains("iregcert") == true {
+                    req.content = "\(userInfoUnw.regSeries ?? "")\(userInfoUnw.regNumber ?? "")"
+                } else if item.id?.lowercased().contains("lastname") == true {
+                    req.content = userInfoUnw.lastName
+                } else if item.id?.lowercased().contains("firstname") == true {
+                    req.content = userInfoUnw.firstName
+                } else if item.id?.lowercased().contains("middlename") == true {
+                    req.content = userInfoUnw.patronymic
+                } else if item.id?.lowercased().contains("address") == true {
+                    req.content = userInfoUnw.address
+                }
+            }
             if (requisites.first { requisite in
-                requisite.id == param.id
+                requisite.id == req.id
             } == nil) {
-                requisites.append(param)
+                requisites.append(req)
             }
         }
         DispatchQueue.main.async {
@@ -67,7 +74,7 @@ class InternetTVDetailsFormViewModel {
         guard let controller = controller else {
             return
         }
-        let request = getRequestBody(amount: amount, additionalArray: firstAdditional)
+        let request = getRequestBody(amount: amount, additionalArray: additionalFields)
         InternetTVApiRequests.createAnywayTransferNew(request: request) { response, error in
             controller.dismissActivity()
             sleep(1)
@@ -94,7 +101,7 @@ class InternetTVDetailsFormViewModel {
         InternetTVDetailsFormViewModel.additionalDic.forEach { item in
             additionalArray.append(item.value)
         }
-        var request = getRequestBody(amount: amount, additionalArray: firstAdditional)
+        var request = getRequestBody(amount: amount, additionalArray: additionalFields)
         if stepsPayment.count > 0 {
             request = getRequestBody(amount: amount, additionalArray: stepsPayment.removeFirst())
         }
@@ -126,7 +133,7 @@ class InternetTVDetailsFormViewModel {
         InternetTVDetailsFormViewModel.additionalDic.forEach { item in
             additionalArray.append(item.value)
         }
-        firstAdditional = additionalArray
+        additionalFields = additionalArray
         let request = getRequestBody(amount: amount, additionalArray: additionalArray)
 
         InternetTVApiRequests.createAnywayTransferNew(request: request) { response, error in
@@ -149,9 +156,13 @@ class InternetTVDetailsFormViewModel {
                                 self.fillRequisites(answer: respUnw)
                                 if let sum = respUnw.data?.amount, sum > 0 {
                                     self.controller?.bottomInputView?.amountTextField.text = "\(sum)\(self.controller?.bottomInputView?.amountTextField.text ?? "")"
-                                    self.controller?.bottomInputView?.amountTextField.isEnabled = false
+                                    //self.controller?.bottomInputView?.amountTextField.isEnabled = false
                                 }
-                                controller.showFinalStep()
+                                controller.showPaymentField()
+                            }
+                            self.finalStep = respUnw.data?.finalStep ?? false
+                            if self.finalStep {
+                                controller.showPaymentField()
                             } else {
                                 self.setupNextStep(respUnw)
                             }
@@ -191,15 +202,13 @@ class InternetTVDetailsFormViewModel {
                             if respUnw.data?.needSum ?? false {
                                 if let sum = respUnw.data?.amount, sum > 0 {
                                     self.controller?.bottomInputView?.amountTextField.text = "\(sum)\(self.controller?.bottomInputView?.amountTextField.text ?? "")"
-                                    self.controller?.bottomInputView?.amountTextField.isEnabled = false
+                                    //self.controller?.bottomInputView?.amountTextField.isEnabled = false
                                 }
-                                self.requisites.forEach { item in
-                                    item.readOnly = true
-                                }
-                                DispatchQueue.main.async {
-                                    self.controller?.tableView?.reloadData()
-                                }
-                                controller.showFinalStep()
+                                controller.showPaymentField()
+                            }
+                            self.finalStep = respUnw.data?.finalStep ?? false
+                            if self.finalStep {
+                                controller.showPaymentField()
                             } else {
                                 self.setupNextStep(respUnw)
                             }

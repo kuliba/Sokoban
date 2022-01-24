@@ -3,8 +3,9 @@ import Foundation
 
 struct InternetTVApiRequests {
     static var isSingleService = true
+    static var userInfo:ClintInfoModelData? = nil
 
-    static func isSingleService(puref: String) {
+    static func isSingleService(puref: String, completion: @escaping () -> Void) {
         let body = ["puref" : puref] as [String: AnyObject]
         NetworkManager<IsSingleServiceModel>.addRequest(.isSingleService, [:], body) { model, error in
             if error != nil {
@@ -13,6 +14,7 @@ struct InternetTVApiRequests {
                 guard let model = model else { return }
                 guard let data = model.data else { return }
                 isSingleService = data
+                completion()
             }
         }
     }
@@ -37,7 +39,7 @@ struct InternetTVApiRequests {
             } else {
                 guard let model = model else { return }
                 guard let data = model.data else { return }
-                MosParkingViewController.userInfo = data
+                InternetTVApiRequests.userInfo = data
             }
         }
     }

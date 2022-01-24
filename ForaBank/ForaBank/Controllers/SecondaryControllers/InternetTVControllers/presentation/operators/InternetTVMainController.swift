@@ -10,6 +10,7 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
 
     public static var iMsg: IMsg? = nil
     public static let msgHideLatestOperation = 1
+    public static let msgShowLatestOperation = 3
     public static let msgPerformSegue = 2
     public static var latestOpIsEmpty = false
     public static func storyboardInstance() -> InternetTVMainController? {
@@ -34,10 +35,20 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
         switch (what) {
         case InternetTVMainController.msgHideLatestOperation:
             historyView?.isHidden = true
-            historyView?.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
+            //historyView?.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
+            break
+        case InternetTVMainController.msgShowLatestOperation:
+            historyView?.isHidden = false
+            //historyView?.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
             break
         case InternetTVMainController.msgPerformSegue:
-            performSegue(withIdentifier: "input", sender: self)
+            if "iFora||AVDТ;iFora||AVDD".contains(InternetTVMainViewModel.latestOp?.op.puref ?? "-1" ) == true {
+                performSegue(withIdentifier: "avtodor", sender: self)
+            } else if InternetTVMainViewModel.latestOp?.op.puref == "iFora||5173" {
+                performSegue(withIdentifier: "gbdd", sender: self)
+            } else {
+                performSegue(withIdentifier: "input", sender: self)
+            }
             break
         default:
             break
@@ -97,6 +108,8 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
     override func viewDidLoad() {
         super.viewDidLoad()
         InternetTVMainController.iMsg = self
+        
+        InternetTVApiRequests.getClientInfo()
         if  InternetTVMainViewModel.filter == GlobalModule.PAYMENT_TRANSPORT {
             InternetTVApiRequests.getMosParkingList()
         }
@@ -174,6 +187,7 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        print("search5555  \(searchText)")
         if !doStringContainsNumber(_string: searchText) {
             viewModel.arrSearchedOrganizations = viewModel.arrOrganizations.filter {
                 $0.name?.lowercased().contains(searchText.lowercased()) == true
@@ -182,6 +196,9 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
             viewModel.arrSearchedOrganizations = viewModel.arrOrganizations.filter {
                 $0.synonymList.first?.lowercased().contains(searchText.lowercased()) == true
             }
+        }
+        if searchText.isEmpty {
+            viewModel.arrSearchedOrganizations = viewModel.arrOrganizations
         }
         searching = true
     }
@@ -220,24 +237,28 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
         if let index = tableView.indexPathForSelectedRow?.row {
             customGroup = viewModel.arrCustomOrg[index]
         }
+        InternetTVDetailsFormViewModel.additionalDic.removeAll()
+        InternetTVInputCell.spinnerValuesSelected.removeAll()
         
         switch segue.identifier {
         case "avtodor":
             let dc = segue.destination as! AvtodorDetailsFormController
             dc.customGroup = customGroup
+            if let latestOp = InternetTVMainViewModel.latestOp {
+                dc.operatorData = latestOp.op
+                dc.latestOperation = latestOp
+                InternetTVMainViewModel.latestOp = nil
+            }
         case "mosparking":
             let dc = segue.destination as! MosParkingViewController
             dc.operatorData = customGroup?.op
         case "input":
-            InternetTVDetailsFormViewModel.additionalDic.removeAll()
-            InternetTVInputCell.spinnerValuesSelected.removeAll()
+            let dc = segue.destination as! InternetTVDetailsFormController
             if let latestOp = InternetTVMainViewModel.latestOp {
-                let dc = segue.destination as! InternetTVDetailsFormController
                 dc.operatorData = latestOp.op
                 dc.latestOperation = latestOp
                 InternetTVMainViewModel.latestOp = nil
             } else {
-                let dc = segue.destination as! InternetTVDetailsFormController
                 dc.operatorData = customGroup?.op
                 // Переход по QR
                 if viewModel.qrData.count != 0 {
@@ -249,6 +270,16 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
             viewModel.qrData.removeAll()
         case "qr":
             let dc = segue.destination as! QRViewController
+        case "gbdd":
+            InternetTVApiRequests.getClientInfo()
+            let dc = segue.destination as! GIBDDFineDetailsFormController
+            if let latestOp = InternetTVMainViewModel.latestOp {
+                dc.operatorData = latestOp.op
+                dc.latestOperation = latestOp
+                InternetTVMainViewModel.latestOp = nil
+            } else {
+                dc.operatorData = customGroup?.op
+            }
         case .none:
             break
         case .some(_):
@@ -260,7 +291,7 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
 extension InternetTVMainController {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.arrCustomOrg.count
+        viewModel.arrCustomOrg.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -282,6 +313,8 @@ extension InternetTVMainController {
             performSegue(withIdentifier: "mosparking", sender: self)
         } else if item.puref == "avtodor" {
             performSegue(withIdentifier: "avtodor", sender: self)
+        } else if item.op?.puref == "iFora||5173" {
+            performSegue(withIdentifier: "gbdd", sender: self)
         } else {
             performSegue(withIdentifier: "input", sender: self)
         }

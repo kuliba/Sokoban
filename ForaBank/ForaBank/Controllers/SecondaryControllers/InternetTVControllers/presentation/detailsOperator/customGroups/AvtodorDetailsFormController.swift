@@ -27,7 +27,6 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
     @IBAction func contractAction(_ sender: Any) {
         btnContract.backgroundColor = UIColor.white
         btnTransponder.backgroundColor = UIColor.clear
-
         operatorData = customGroup?.childsOperators[0]
         initData()
     }
@@ -35,7 +34,6 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
     @IBAction func transponderAction(_ sender: Any) {
         btnContract.backgroundColor = UIColor.clear
         btnTransponder.backgroundColor = UIColor.white
-
         operatorData = customGroup?.childsOperators[1]
         initData()
     }
@@ -50,14 +48,28 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         goButton?.isHidden = !(bottomInputView?.isHidden ?? false)
+        bottomInputView?.updateAmountUI(textAmount: latestOperation?.amount)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        operatorData = customGroup?.childsOperators[0]
+        if operatorData == nil {
+            operatorData = customGroup?.childsOperators[0]
+        } else {
+            if operatorData?.puref != "iFora||AVDТ" {
+                btnContract.backgroundColor = UIColor.white
+                btnTransponder.backgroundColor = UIColor.clear
+                btnTransponder.isEnabled = false
+            } else {
+                btnContract.backgroundColor = UIColor.clear
+                btnTransponder.backgroundColor = UIColor.white
+                btnContract.isEnabled = false
+            }
+        }
         viewModel.controller = self
         view.backgroundColor = .white
         bottomInputView?.tempTextFieldValue = qrData["Сумма"] ?? "0"
+
         bottomInputView?.isHidden = true
         setupToolbar()
         goButton?.add_CornerRadius(5)
@@ -67,16 +79,18 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
             guard let error = error else { return }
             self.showAlert(with: "Ошибка", and: error)
         }
+        
+        if fromPaymentVc == false {
+            viewModel.puref = operatorData?.puref ?? ""
+        }
 
-        initData()
+        InternetTVApiRequests.isSingleService(puref: operatorData?.puref ?? "") {
+            self.initData()
+        }
     }
 
     private func initData() {
         viewModel.requisites.removeAll()
-        if fromPaymentVc == false {
-            viewModel.puref = operatorData?.puref ?? ""
-        }
-        InternetTVApiRequests.isSingleService(puref: viewModel.puref)
         bottomInputView?.currencySymbol = "₽"
 
         bottomInputView?.didDoneButtonTapped = { amount in
@@ -264,7 +278,7 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
         subtitleLabel.sizeToFit()
 
         let titleView = UIView(frame: CGRect(x: 0, y: 0, width: max(titleLabel.frame.size.width, subtitleLabel.frame.size.width),  height: 30))
-        titleView.setDimensions(height: 30, width: 300)
+        titleView.setDimensions(height: 30, width: 250)
         titleView.addSubview(titleLabel)
         titleView.addSubview(subtitleLabel)
         titleLabel.numberOfLines = 3;
