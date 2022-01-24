@@ -248,7 +248,7 @@ class MainViewController: UIViewController {
                 self?.productList = [UserAllCardsModel]()
                 self?.reloadData(with: nil)
 
-            case .update(_, let deletions, let insertions, let modifications):
+            case .update(_, _, _, _):
                 print("Update")
                 if self?.allProductList?.count ?? 0 > 0 {
 

@@ -110,6 +110,7 @@ extension MainViewController: UICollectionViewDelegate {
         case .openProduct:
             if indexPath.row == 1{
                 let viewController = OpenNewDepositViewController()
+                viewController.addCloseButton()
                 let navVC = UINavigationController(rootViewController: viewController)
                 navVC.modalPresentationStyle = .fullScreen
                 present(navVC, animated: true)

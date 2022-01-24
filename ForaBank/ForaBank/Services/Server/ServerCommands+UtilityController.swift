@@ -1,0 +1,124 @@
+//
+//  ServerCommands+UtilityController.swift
+//  ForaBank
+//
+//  Created by Дмитрий on 19.01.2022.
+//
+
+import Foundation
+
+extension ServerCommands {
+    
+    enum UtilityController {
+        
+        /*
+         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/csrf
+         */
+        struct Csrf: ServerCommand {
+            
+            let token: String
+            let endpoint = "/csrf"
+            let method: ServerCommandMethod = .get
+            let parameters: [ServerCommandParameter]? = nil
+            let payload: Payload? = nil
+
+            struct Payload: Encodable {}
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: CsrfData
+            } 
+            
+            internal init(token: String) {
+                
+                self.token = token
+            }
+        }
+        
+        /*
+         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/getSessionTimeout
+         */
+        struct GetSessionTimeout: ServerCommand {
+            
+            let token: String
+            let endpoint = "/getSessionTimeout"
+            let method: ServerCommandMethod = .get
+            let parameters: [ServerCommandParameter]? = nil
+            let payload: Payload? = nil
+            
+            struct Payload: Encodable {}
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: Int
+            }
+            
+            internal init(token: String) {
+                
+                self.token = token
+            }
+        }
+        
+        /*
+         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/keyExchange
+         */
+        struct KeyExchange: ServerCommand {
+            
+            let token: String
+            let endpoint = "/keyExchange"
+            let method: ServerCommandMethod = .post
+            let parameters: [ServerCommandParameter]? = nil
+            let payload: Payload?
+            
+            struct Payload: Encodable {
+                
+                let data: String
+                let token: String
+                let type: String
+            }
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: EmptyData
+            }
+            
+            internal init(token: String, payload: Payload) {
+                self.payload = payload
+                self.token = token
+            }
+        }
+        
+        /*
+         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/rest/isLogin
+         */
+        struct IsLogin: ServerCommand {
+            
+            let token: String
+            let endpoint = "/rest/isLogin"
+            let method: ServerCommandMethod = .get
+            let parameters: [ServerCommandParameter]? = nil
+            let payload: Payload? = nil
+
+            struct Payload: Encodable {}
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: Bool
+            }
+            
+            internal init(token: String) {
+                
+                self.token = token
+            }
+        }
+    }
+}
+

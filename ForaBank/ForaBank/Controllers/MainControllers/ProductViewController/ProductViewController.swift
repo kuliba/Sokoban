@@ -75,7 +75,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
                            self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4)))", color: self.product?.fontDesignColor)
                            self.getCardList { data, errorMessage in
                                
-                               guard let listProducts = data else {return}
+                               guard data != nil else {return}
 //                               self.products = listProducts
                             }
 
@@ -153,8 +153,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
     var product: UserAllCardsModel? {
         didSet{
             card.reloadInputViews()
-            print("statusPC: \(product?.statusPC)")
-            print("status: \(product?.status)")
+//            print("statusPC: \(product?.statusPC)")
+//            print("status: \(product?.status)")
             amounPeriodLabel.text = ""
             card.card = product
             tableViewLabel.isSkeletonable = false
@@ -289,7 +289,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
             tableView?.reloadData()
             card.reloadInputViews()
             loadHistoryForCard()
-            guard let number = product?.numberMasked else {
+            guard (product?.numberMasked) != nil else {
                 return
             }
             navigationController?.navigationBar.barTintColor = UIColor(hexString: product?.background[0].color ?? "").darker()
@@ -870,7 +870,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
                             }
                             
                         }
-                        guard let lastPaymentsList  = model.data else { return }
+                        guard model.data != nil else { return }
                         self.showAlert(with: "Карта заблокирована", and: "")
 //                        guard let number = self.product?.numberMasked else {
 //                            return
@@ -970,7 +970,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
 //                       self?.productList = [UserAllCardsModel]()
 
 
-                   case .update(_, let deletions, let insertions, let modifications):
+                   case .update(_, _, _, _):
                        print("Update")
                        self?.products.removeAll()
                        guard let products = self?.allProductList else {
