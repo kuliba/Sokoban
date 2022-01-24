@@ -332,6 +332,14 @@
 		7758754B27996D8B0080115D /* Cachable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7758754A27996D8B0080115D /* Cachable.swift */; };
 		7758754D27996DCB0080115D /* LocalAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7758754C27996DCB0080115D /* LocalAgent.swift */; };
 		7758754F27996E610080115D /* FileManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7758754E27996E610080115D /* FileManager+Extensions.swift */; };
+		7763A690279DAFD10064B037 /* EncryptionProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7763A68F279DAFD10064B037 /* EncryptionProtocols.swift */; };
+		7763A692279DB1CB0064B037 /* CSRFAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7763A691279DB1CB0064B037 /* CSRFAgentProtocol.swift */; };
+		776C6C1C279D58A800253581 /* CSRFAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776C6C1B279D58A800253581 /* CSRFAgent.swift */; };
+		776C6C1E279D5D8800253581 /* CSRFAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776C6C1D279D5D8800253581 /* CSRFAgentTests.swift */; };
+		77925575279AF54F00A85723 /* ECKeysProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77925574279AF54F00A85723 /* ECKeysProvider.swift */; };
+		77925577279AF5AD00A85723 /* Decryptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77925576279AF5AD00A85723 /* Decryptor.swift */; };
+		77925579279AF61000A85723 /* Encryptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77925578279AF61000A85723 /* Encryptor.swift */; };
+		7792557C279AF6F800A85723 /* ECEncryptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7792557B279AF6F800A85723 /* ECEncryptionTests.swift */; };
 		77AC9159277A518B00E49D5D /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = 77AC9158277A518B00E49D5D /* Shimmer */; };
 		77AC915B277B60C500E49D5D /* PaymentDetailType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77AC915A277B60C500E49D5D /* PaymentDetailType.swift */; };
 		77AC915D277BA5EA00E49D5D /* FastPaymentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77AC915C277BA5EA00E49D5D /* FastPaymentData.swift */; };
@@ -981,6 +989,14 @@
 		7758754A27996D8B0080115D /* Cachable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cachable.swift; sourceTree = "<group>"; };
 		7758754C27996DCB0080115D /* LocalAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAgent.swift; sourceTree = "<group>"; };
 		7758754E27996E610080115D /* FileManager+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+Extensions.swift"; sourceTree = "<group>"; };
+		7763A68F279DAFD10064B037 /* EncryptionProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptionProtocols.swift; sourceTree = "<group>"; };
+		7763A691279DB1CB0064B037 /* CSRFAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFAgentProtocol.swift; sourceTree = "<group>"; };
+		776C6C1B279D58A800253581 /* CSRFAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFAgent.swift; sourceTree = "<group>"; };
+		776C6C1D279D5D8800253581 /* CSRFAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFAgentTests.swift; sourceTree = "<group>"; };
+		77925574279AF54F00A85723 /* ECKeysProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKeysProvider.swift; sourceTree = "<group>"; };
+		77925576279AF5AD00A85723 /* Decryptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decryptor.swift; sourceTree = "<group>"; };
+		77925578279AF61000A85723 /* Encryptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Encryptor.swift; sourceTree = "<group>"; };
+		7792557B279AF6F800A85723 /* ECEncryptionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECEncryptionTests.swift; sourceTree = "<group>"; };
 		77AC915A277B60C500E49D5D /* PaymentDetailType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailType.swift; sourceTree = "<group>"; };
 		77AC915C277BA5EA00E49D5D /* FastPaymentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentData.swift; sourceTree = "<group>"; };
 		77C026E5275E6299002BE1F6 /* GKHHistoryModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHHistoryModelTests.swift; sourceTree = "<group>"; };
@@ -2354,6 +2370,25 @@
 			path = Styles;
 			sourceTree = "<group>";
 		};
+		77925573279AF3AA00A85723 /* Encryption */ = {
+			isa = PBXGroup;
+			children = (
+				77925574279AF54F00A85723 /* ECKeysProvider.swift */,
+				77925576279AF5AD00A85723 /* Decryptor.swift */,
+				77925578279AF61000A85723 /* Encryptor.swift */,
+			);
+			path = Encryption;
+			sourceTree = "<group>";
+		};
+		7792557A279AF6C900A85723 /* Encryption */ = {
+			isa = PBXGroup;
+			children = (
+				7792557B279AF6F800A85723 /* ECEncryptionTests.swift */,
+				776C6C1D279D5D8800253581 /* CSRFAgentTests.swift */,
+			);
+			path = Encryption;
+			sourceTree = "<group>";
+		};
 		77C026E9275E62E4002BE1F6 /* Realm */ = {
 			isa = PBXGroup;
 			children = (
@@ -2431,8 +2466,10 @@
 			children = (
 				77EC58E2277217D20054D75C /* ServerAgent.swift */,
 				7758754C27996DCB0080115D /* LocalAgent.swift */,
+				776C6C1B279D58A800253581 /* CSRFAgent.swift */,
 				77DC12682770F63400C917B0 /* Abstract */,
 				77DC126B2770F83400C917B0 /* Server */,
+				77925573279AF3AA00A85723 /* Encryption */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -2442,6 +2479,8 @@
 			children = (
 				77DC12692770F65000C917B0 /* ServerAgentProtocol.swift */,
 				7758754827996D510080115D /* LocalAgentProtocol.swift */,
+				7763A691279DB1CB0064B037 /* CSRFAgentProtocol.swift */,
+				7763A68F279DAFD10064B037 /* EncryptionProtocols.swift */,
 			);
 			path = Abstract;
 			sourceTree = "<group>";
@@ -2543,6 +2582,7 @@
 			isa = PBXGroup;
 			children = (
 				77EC58CF2771D45F0054D75C /* Server */,
+				7792557A279AF6C900A85723 /* Encryption */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -4421,6 +4461,7 @@
 				77EC58F027723C840054D75C /* AuthorizationState.swift in Sources */,
 				68F6816F269E5E56008157CE /* SearchBanksViewController.swift in Sources */,
 				0BB24AA326EFEFCF00DDA4F6 /* GetProductListByFilterSaved.swift in Sources */,
+				7763A690279DAFD10064B037 /* EncryptionProtocols.swift in Sources */,
 				0B931B4926DE2E3300CA8017 /* GKHHistoryCaruselCell.swift in Sources */,
 				0BF34852268A5F54005138A8 /* GetVerificationCodeDecodableModel.swift in Sources */,
 				0BE270B626B9DA4800FA958C /* ExtensionBottomInputViewRevers.swift in Sources */,
@@ -4549,6 +4590,7 @@
 				EDF4F24D277249B90030F087 /* ReturnPaymentContactDecodableModel.swift in Sources */,
 				0B95C40526B6CB1D00AA57E6 /* ExtensionCustomPopUpWithRateView.swift in Sources */,
 				EDF6820F266F9EC800FD5C07 /* SetDeviceSettingDecodbleModel.swift in Sources */,
+				7763A692279DB1CB0064B037 /* CSRFAgentProtocol.swift in Sources */,
 				ED353B6C26FB5E8300F17F00 /* GetUserSettingDecodableModel.swift in Sources */,
 				0B931B1626DCD5F100CA8017 /* Parameters.swift in Sources */,
 				EDB1656E266827A8007E6030 /* PaymentsViewController.swift in Sources */,
@@ -4678,6 +4720,7 @@
 				ED0B4896267B97C60037EA06 /* ContactInputViewController + UI.swift in Sources */,
 				0BB24AB126F0C3DC00DDA4F6 /* GetCardStatementDecodableModel.swift in Sources */,
 				689A99AE2779E73600D1FDAE /* OperationDetailInfoViewModel.swift in Sources */,
+				77925579279AF61000A85723 /* Encryptor.swift in Sources */,
 				ED59E7AE27713F1300E8AC12 /* ChangeReturnCountryController.swift in Sources */,
 				6833E0AB27303E8F004C070F /* GetOperationDetailDecodebleModel.swift in Sources */,
 				68E6A29326A033B700A1D9A1 /* CheckCardDecodableModel.swift in Sources */,
@@ -4721,6 +4764,7 @@
 				0B7A18BA2683AC880007CC75 /* NotificationName.swift in Sources */,
 				0B95C3FE26B6C96F00AA57E6 /* DoubleInStringExtension.swift in Sources */,
 				0BA251F326C26FE000AD087A /* CreateFastPaymentContractDecodableModel.swift in Sources */,
+				776C6C1C279D58A800253581 /* CSRFAgent.swift in Sources */,
 				A5F15C0F274980CB00DC91DA /* InternetTVLatestOperationRealm.swift in Sources */,
 				EDDFE3C62759731B00F57C71 /* ConfurmOpenDepositViewController.swift in Sources */,
 				A5C7A1B9275C023F003BEF6D /* InternetTVMainViewModel.swift in Sources */,
@@ -4740,6 +4784,7 @@
 				0BA251F526C270A100AD087A /* UpdateFastPaymentContractDecodableModel.swift in Sources */,
 				EDF68217266F9EC800FD5C07 /* RouterSassionConfiguration.swift in Sources */,
 				0BDE453826E53AEF00B64A0A /* AddAllUserCardtList.swift in Sources */,
+				77925575279AF54F00A85723 /* ECKeysProvider.swift in Sources */,
 				ED84995B26A8831E005205C6 /* EPConstants.swift in Sources */,
 				0B37F97E267A10E4007728FC /* PrepareCard2PhoneDecodableModel.swift in Sources */,
 				ED8AB45526C116DB006F0D03 /* MeToMeViewController.swift in Sources */,
@@ -4761,6 +4806,7 @@
 				0B22AEA326CDB38500B11E7F /* ExtensionGKHInput.swift in Sources */,
 				EDE212FD2743265C005D9821 /* DateChooseView.swift in Sources */,
 				EDB16588266A14F9007E6030 /* String.swift in Sources */,
+				77925577279AF5AD00A85723 /* Decryptor.swift in Sources */,
 				77EC58F6277382A60054D75C /* OperationEnvironment.swift in Sources */,
 				EDB165762668C5BE007E6030 /* PaymentsCell.swift in Sources */,
 				EDB14383265FDA410028EF5A /* SceneDelegate.swift in Sources */,
@@ -4858,7 +4904,9 @@
 				77EC58BB27712AF50054D75C /* TransferAnywayTests.swift in Sources */,
 				77EC58CB277133C40054D75C /* PaymentTemplateTests.swift in Sources */,
 				0B34AF87277B24F80080F31A /* PhoneNumberKitTest.swift in Sources */,
+				776C6C1E279D5D8800253581 /* CSRFAgentTests.swift in Sources */,
 				77EC58E5277221F80054D75C /* ServerAgentTests.swift in Sources */,
+				7792557C279AF6F800A85723 /* ECEncryptionTests.swift in Sources */,
 				77EC58B2277121CF0054D75C /* TransferTests.swift in Sources */,
 				7757624B276FEC4F00B902BF /* URLHostTests.swift in Sources */,
 				77C026E6275E6299002BE1F6 /* GKHHistoryModelTests.swift in Sources */,
