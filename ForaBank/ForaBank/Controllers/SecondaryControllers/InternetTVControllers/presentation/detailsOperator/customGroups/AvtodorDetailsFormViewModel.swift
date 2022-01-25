@@ -153,37 +153,6 @@ class AvtodorDetailsFormViewModel {
                 }
             }
         }
-
-
-//        doCreateServiceTransfer(request: request) { response, error in
-//            guard let controller = self.controller else {return}
-//            DispatchQueue.main.async {
-//                controller.dismissActivity()
-//                sleep(1)
-//                controller.animationShow(controller.goButton!)
-//                if error != nil {
-//                    controller.goButton?.isHidden = true
-//                    controller.showAlert(with: "Ошибка", and: error!)
-//                } else {
-//                    if InternetTVApiRequests.isSingleService {
-//                        controller.doConfirmation(response: response)
-//                    } else {
-//                        if let respUnw = response {
-//                            if respUnw.data?.needSum ?? false {
-//                                self.fillRequisites(answer: respUnw)
-//                                if let sum = respUnw.data?.amount, sum > 0 {
-//                                    self.controller?.bottomInputView?.amountTextField.text = "\(sum)\(self.controller?.bottomInputView?.amountTextField.text ?? "" )"
-//                                    self.controller?.bottomInputView?.amountTextField.isEnabled = false
-//                                }
-//                                controller.showFinalStep()
-//                            } else {
-//                                self.setupNextStep(respUnw)
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
     }
 
     func doNextStep(amount: String) {

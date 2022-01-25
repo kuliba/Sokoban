@@ -28,14 +28,20 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
         btnContract.backgroundColor = UIColor.white
         btnTransponder.backgroundColor = UIColor.clear
         operatorData = customGroup?.childsOperators[0]
-        initData()
+        viewModel.puref = operatorData?.puref ?? ""
+        InternetTVApiRequests.isSingleService(puref: operatorData?.puref ?? "") {
+            self.initData()
+        }
     }
     
     @IBAction func transponderAction(_ sender: Any) {
         btnContract.backgroundColor = UIColor.clear
         btnTransponder.backgroundColor = UIColor.white
         operatorData = customGroup?.childsOperators[1]
-        initData()
+        viewModel.puref = operatorData?.puref ?? ""
+        InternetTVApiRequests.isSingleService(puref: operatorData?.puref ?? "") {
+            self.initData()
+        }
     }
     
     @IBOutlet weak var tableView: UITableView?
