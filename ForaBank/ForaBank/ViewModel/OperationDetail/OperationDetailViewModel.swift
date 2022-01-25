@@ -28,30 +28,45 @@ class OperationDetailViewModel: ObservableObject {
     private let animationDuration: Double = 0.5
     
     init?(productStatement: ProductStatementProxy, product: UserAllCardsModel) {
-        
+
+        let tranDateString = DateFormatter.operation.string(from: productStatement.tranDate)
+
         switch productStatement.paymentDetailType {
-        case .betweenTheir, .insideBank, .otherBank:
+        case .betweenTheir, .insideBank:
+            self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: "Перевод на карту", category: productStatement.groupName)
+            let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchantName)
+            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
+            self.operation = OperationViewModel(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
+            
+        case .otherBank:
             self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: productStatement.groupName, category: "Переводы")
             let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchantName)
             let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
-            self.operation = OperationViewModel(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: productStatement.tranDate)
+            self.operation = OperationViewModel(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
             
         case .contactAddressless, .direct:
             self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: productStatement.groupName, category: nil)
             let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchantName)
             let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
-            self.operation = OperationViewModel(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: productStatement.tranDate)
+            self.operation = OperationViewModel(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
             
         case .externalIndivudual, .externalEntity:
             self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: productStatement.groupName, category: nil)
             let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
-            self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: productStatement.tranDate)
             
+            if let documentComment = productStatement.documentComment, documentComment != "" {
+                
+                self.operation = OperationViewModel(bankLogo: productStatement.svgImage, payee: nil, amount: amountViewModel, fee: nil, description: documentComment, date: tranDateString)
+           
+            } else {
+                
+                self.operation = OperationViewModel(bankLogo: productStatement.svgImage, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
+            }
             
         case .housingAndCommunalService, .insideOther, .internet, .mobile:
             self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: productStatement.merchantName, category: "\(productStatement.groupName)")
             let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
-            self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: productStatement.tranDate)
+            self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
             
         case .notFinance:
             return nil
@@ -60,12 +75,12 @@ class OperationDetailViewModel: ObservableObject {
             self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: productStatement.groupName, category: "Прочие")
             let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchantName)
             let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
-            self.operation = OperationViewModel(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: productStatement.tranDate)
+            self.operation = OperationViewModel(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
             
         case .outsideOther:
-            self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: productStatement.merchantName, category: "\(productStatement.groupName) (\(productStatement.mcc))")
+            self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: productStatement.merchantName, category: "\(productStatement.groupName) (MCC \(productStatement.mcc))")
             let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
-            self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: productStatement.tranDate)
+            self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
             
         case .sfp:
             let sfpLogoImage = Image("Operation Type SFP Icon")
@@ -85,12 +100,17 @@ class OperationDetailViewModel: ObservableObject {
             let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
             if let documentComment = productStatement.documentComment, documentComment != "" {
                 
-                self.operation = OperationViewModel(bankLogo: productStatement.svgImage, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: documentComment, date: productStatement.tranDate)
+                self.operation = OperationViewModel(bankLogo: productStatement.svgImage, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: documentComment, date: tranDateString)
            
             } else {
                 
-                self.operation = OperationViewModel(bankLogo: productStatement.svgImage, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: productStatement.tranDate)
+                self.operation = OperationViewModel(bankLogo: productStatement.svgImage, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
             }
+            
+        case .transport:
+            self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: productStatement.merchantName, category: "\(productStatement.groupName)")
+            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
+            self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: productStatement.tranDate)
         }
         
         self.actionButtons = nil
@@ -146,8 +166,7 @@ class OperationDetailViewModel: ObservableObject {
                 var featureButtonsUpdated = [FeatureButtonViewModel]()
                 
                 switch productStatement.paymentDetailType {
-                case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp:
-
+                case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp, .transport:
                     if let templateButtonViewModel = self.templateButtonViewModel(with: operationDetail) {
                         
                         featureButtonsUpdated.append(templateButtonViewModel)
@@ -203,7 +222,6 @@ class OperationDetailViewModel: ObservableObject {
 private extension OperationDetailViewModel {
     
     func infoFeatureButtonViewModel(with productStatement: ProductStatementProxy, product: UserAllCardsModel, operationDetail: OperationDetailDatum? = nil) -> FeatureButtonViewModel? {
-
         return FeatureButtonViewModel(kind: .info, icon: "Operation Details Info", name: "Детали", action: { [weak self] in self?.operationDetailInfoViewModel = OperationDetailInfoViewModel(with: productStatement, operation: operationDetail, product: product, dismissAction: { [weak self] in self?.operationDetailInfoViewModel = nil})})
     }
     
@@ -327,14 +345,13 @@ extension OperationDetailViewModel {
             switch productStatement.paymentDetailType {
             case .contactAddressless:
                 if let transferReference = operation.transferReference {
-
-                    let payeeViewModel: PayeeViewModel = .number(productStatement.merchantName, transferReference, {[weak viewModel] in viewModel?.action.send(OperationDetailViewModelAction.CopyNumber(number: transferReference)) })
+                    let titleNumber = "Номер перевода:"
+                    let payeeViewModel: PayeeViewModel = .number(productStatement.merchantName, titleNumber, transferReference, {[weak viewModel] in viewModel?.action.send(OperationDetailViewModelAction.CopyNumber(number: transferReference)) })
                     
                     operationViewModel = operationViewModel.updated(with: payeeViewModel)
                 }
                 
                 if let feeViewModel = FeeViewModel(with: operation, currencyCode: productStatement.currencyCode)  {
-                    
                     operationViewModel = operationViewModel.updated(with: feeViewModel)
                 }
                 
@@ -352,32 +369,50 @@ extension OperationDetailViewModel {
                     let formattedPhone = phoneFormatter.format(payeePhone)
                     operationViewModel = operationViewModel.updated(with: .doubleRow(productStatement.merchantName, formattedPhone))
                 }
+                
+                if let feeViewModel = FeeViewModel(with: operation, currencyCode: productStatement.currencyCode)  {
+                    
+                    operationViewModel = operationViewModel.updated(with: feeViewModel)
+                }
 
             case .externalIndivudual, .externalEntity:
 
-                if let bankName = operation.payeeBankName,
-                   let bank = Dict.shared.banks?.first(where: { $0.memberNameRus == bankName }),
+                if let bankBic = operation.payeeBankBIC,
+                   let bank = Dict.shared.bankFullInfoList?.first(where: {$0.bic == bankBic}),
                    let bankLogoSVG = bank.svgImage {
+                    
                     
                     let bankLogoImage = Image(uiImage: bankLogoSVG.convertSVGStringToImage())
                     operationViewModel = operationViewModel.updated(with: bankLogoImage)
                 }
                 
-                if let payeeFullName = operation.payeeFullName, let payeeAccountNumber = operation.payerAccountNumber {
+                if let payeeFullName = operation.payeeFullName, let payeeAccountNumber = operation.payeeAccountNumber {
                     
                     operationViewModel = operationViewModel.updated(with: .doubleRow(payeeFullName, payeeAccountNumber))
                 }
                 
+                if var feeViewModel = FeeViewModel(with: operation, currencyCode: productStatement.currencyCode)  {
+                    feeViewModel.title = "Комиссия:"
+                    operationViewModel = operationViewModel.updated(with: feeViewModel)
+                }
+                
             case .internet:
-                if let account = operation.account {
+                if let feeViewModel = FeeViewModel(with: operation, currencyCode: productStatement.currencyCode)  {
                     
-                    operationViewModel = operationViewModel.updated(with: .singleRow(account))
+                    operationViewModel = operationViewModel.updated(with: feeViewModel)
                 }
                 
             case .mobile:
                 if let payeePhone = operation.payeePhone {
+                    let phoneFormatter = PhoneNumberFormater()
+                    let formattedPhone = phoneFormatter.format(payeePhone)
+
+                    operationViewModel = operationViewModel.updated(with: .singleRow(formattedPhone))
+                }
+                
+                if let feeViewModel = FeeViewModel(with: operation, currencyCode: productStatement.currencyCode)  {
                     
-                    operationViewModel = operationViewModel.updated(with: .singleRow(payeePhone))
+                    operationViewModel = operationViewModel.updated(with: feeViewModel)
                 }
                 
             case .otherBank, .housingAndCommunalService:
@@ -386,12 +421,20 @@ extension OperationDetailViewModel {
                     operationViewModel = operationViewModel.updated(with: .singleRow(payeeCardNumber))
                 }
                 
-            case .sfp:
                 if let feeViewModel = FeeViewModel(with: operation, currencyCode: productStatement.currencyCode)  {
                     
                     operationViewModel = operationViewModel.updated(with: feeViewModel)
                 }
-
+                
+            case .sfp:
+                if var feeViewModel = FeeViewModel(with: operation, currencyCode: productStatement.currencyCode)  {
+                    feeViewModel.title = "Комиссия:"
+                    operationViewModel = operationViewModel.updated(with: feeViewModel)
+                }
+            case .transport:
+                if let feeViewModel = FeeViewModel(with: operation, currencyCode: productStatement.currencyCode)  {
+                    operationViewModel = operationViewModel.updated(with: feeViewModel)
+                }
             case .outsideOther, .insideOther, .betweenTheir, .insideBank, .notFinance, .outsideCash:
                 return operationViewModel
             }
@@ -404,7 +447,7 @@ extension OperationDetailViewModel {
         
         case singleRow(String)
         case doubleRow(String, String)
-        case number(String, String, () -> Void)
+        case number(String, String, String, () -> Void)
     }
     
     struct AmountViewModel {
@@ -431,7 +474,7 @@ extension OperationDetailViewModel {
     
     struct FeeViewModel {
 
-        let title: String
+        var title: String
         let amount: String
         
         internal init(title: String, amount: String) {
@@ -441,12 +484,11 @@ extension OperationDetailViewModel {
         
         init?(with operation: OperationDetailDatum, currencyCode: String) {
             
-            guard let feeAmount = operation.payerFee, feeAmount > 0 else {
+            guard let feeAmount = operation.payerFee, feeAmount >= 0 else {
                 return nil
             }
-            
             //FIXME: localization required
-            self.title = "Комиссия:"
+            self.title = "Из них комиссия:"
             self.amount = feeAmount.currencyFormatter(symbol: currencyCode)
         }
     }
@@ -510,9 +552,9 @@ extension OperationDetailViewModel {
         let action: () -> Void
         
         enum Kind {
-        case template(Bool)
-        case document
-        case info
+            case template(Bool)
+            case document
+            case info
         }
     }
 }
@@ -524,10 +566,16 @@ extension OperationDetailViewModel {
     convenience init?(with statement: GetDepositStatementDatum, currency: String, product: UserAllCardsModel) {
         
         guard let paymentDetailType = statement.paymentDetailType,
-        let svgImageData = statement.svgImage,
-        let groupName = statement.groupName,
-        let amount = statement.amount else {
-            return nil
+              let svgImageData = statement.svgImage,
+              let groupName = statement.groupName,
+              var amount = statement.documentAmount else {
+                  return nil
+              }
+        
+        if let amountStatement = statement.amount {
+            amount = amountStatement
+        } else if let documentAmount = statement.documentAmount{
+            amount = documentAmount
         }
         
         let documentId = statement.documentID
@@ -547,10 +595,16 @@ extension OperationDetailViewModel {
     convenience init?(with statement: GetCardStatementDatum, currency: String, product: UserAllCardsModel) {
         
         guard let paymentDetailType = statement.paymentDetailType,
-        let svgImageData = statement.svgImage,
-        let groupName = statement.groupName,
-        let amount = statement.amount else {
-            return nil
+              let svgImageData = statement.svgImage,
+              let groupName = statement.groupName,
+              var amount = statement.documentAmount else{
+                  return nil
+              }
+        
+        if let amountStatement = statement.amount {
+            amount = amountStatement
+        } else if let documentAmount = statement.documentAmount{
+            amount = documentAmount
         }
         
         let documentId = statement.documentID
@@ -569,13 +623,19 @@ extension OperationDetailViewModel {
     
     convenience init?(with statement: GetAccountStatementDatum, currency: String, product: UserAllCardsModel) {
         
-        guard let paymentDetailType = statement.paymentDetailType,
-        let svgImageData = statement.svgImage,
-        let groupName = statement.groupName,
-        let amount = statement.amount else {
-            return nil
-        }
         
+        guard let paymentDetailType = statement.paymentDetailType,
+              let svgImageData = statement.svgImage,
+              let groupName = statement.groupName,
+              var amount = statement.documentAmount else {
+                  return nil
+              }
+        
+        if let amountStatement = statement.amount {
+            amount = amountStatement
+        } else if let documentAmount = statement.documentAmount{
+            amount = documentAmount
+        }
         let documentId = statement.documentID
         let svgImage = Image(uiImage: svgImageData.convertSVGStringToImage())
         let merchantName = (statement.merchantNameRus ?? statement.merchantName) ?? ""
@@ -601,7 +661,7 @@ extension OperationDetailViewModel {
         
         viewModel.header = HeaderViewModel(logo: viewModel.header.logo, status: .success, title: viewModel.header.title,  category: viewModel.header.category)
         
-        viewModel.operation = OperationViewModel(bankLogo: Image(uiImage: UIImage(named: "Bank Logo Sample")!), payee: .number("Иванов Иван Иванович", "4556676767", {}), amount: .init(amount: 1000.25, currency: "RUB", operationType: .debit, payService: .applePay), fee: .init(title: "Комиссия:", amount: "50,00"), description: "Описание операции", date: viewModel.operation.date)
+        viewModel.operation = OperationViewModel(bankLogo: Image(uiImage: UIImage(named: "Bank Logo Sample")!), payee: .doubleRow("payeeFullName", "payeeAccountNumber"), amount: .init(amount: 1000.25, currency: "RUB", operationType: .debit, payService: .applePay), fee: .init(title: "Комиссия:", amount: "50,00"), description: "Описание операции", date: viewModel.operation.date)
         
         viewModel.actionButtons = [ActionButtonViewModel(name: "Изменить", action: {}), ActionButtonViewModel(name: "Вернуть", action: {})]
         

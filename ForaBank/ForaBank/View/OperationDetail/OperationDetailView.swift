@@ -207,22 +207,29 @@ extension OperationDetailView {
             case .singleRow(let name):
                 Text(name)
                     .font(.system(size: 16, weight: .regular))
+                    .multilineTextAlignment(.center)
+                
                 
             case .doubleRow(let name, let extra):
                 VStack {
                     Text(name)
                         .font(.system(size: 16, weight: .regular))
+                        .multilineTextAlignment(.center)
                     Text(extra)
                         .font(.system(size: 16, weight: .regular))
+                        .multilineTextAlignment(.center)
                 }
                 
-            case .number(let name, let number, let action):
+            case .number(let name, let title, let number, let action):
                 VStack {
                     Text(name)
                         .font(.system(size: 16, weight: .regular))
-                    
+                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 3, trailing: 0))
+                        .multilineTextAlignment(.center)
+                    Text(title)
+                        .font(.system(size: 16, weight: .regular))
+                        .foregroundColor(Color(hex: "999999"))
                     HStack {
-                        
                         Text(number)
                             .font(.system(size: 16, weight: .regular))
                             .foregroundColor(Color.black)
@@ -281,7 +288,7 @@ extension OperationDetailView {
                 Text(viewModel.title)
                     .font(.system(size: 16, weight: .regular))
                     .foregroundColor(Color(hex: "999999"))
-                
+                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 1, trailing: 0))
                 Text(viewModel.amount)
                     .font(.system(size: 16, weight: .regular))
                 
@@ -342,6 +349,9 @@ struct OperationDetailView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        OperationDetailView(viewModel: .sampleMin)
+        Group {
+            OperationDetailView(viewModel: .sampleComplete)
+            OperationDetailView(viewModel: .sampleComplete)
+        }
     }
 }
