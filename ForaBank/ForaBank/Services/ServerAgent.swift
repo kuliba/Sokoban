@@ -65,12 +65,20 @@ class ServerAgent: ServerAgentProtocol {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         // token
-        if let token = command.token {
-            
-            request.setValue(token, forHTTPHeaderField: "X-XSRF-TOKEN")
-        }
+        request.setValue(command.token, forHTTPHeaderField: "X-XSRF-TOKEN")
         
-        //TODO: parameters
+        // parameters
+        if let parameters = command.parameters, parameters.isEmpty == false {
+            
+            var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
+            urlComponents?.queryItems = parameters.map{ URLQueryItem(name: $0.name, value: $0.value) }
+            
+            guard let updatedURL = urlComponents?.url else {
+                throw ServerRequestCreationError.unableCounstructURLWithParameters
+            }
+            
+            request.url = updatedURL
+        }
         
         // body
         if let payload = command.payload {
@@ -118,9 +126,9 @@ extension ServerAgent {
             
             switch self {
             case .test:
-                return "git.briginvest.ru/dbo/api/v3"
+                return "https://git.briginvest.ru/dbo/api/v3"
             case .prod:
-                return "bg.forabank.ru/dbo/api/v4/f437e29a3a094bcfa73cea12366de95b"
+                return "https://bg.forabank.ru/dbo/api/v4/f437e29a3a094bcfa73cea12366de95b"
             }
         }
     }

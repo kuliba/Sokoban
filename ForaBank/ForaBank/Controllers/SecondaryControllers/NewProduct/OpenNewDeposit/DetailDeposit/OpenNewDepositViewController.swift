@@ -34,7 +34,6 @@ class OpenNewDepositViewController: UICollectionViewController {
     
     private func setupUI() {
         title = "Вклады"
-        addCloseButton()
         collectionView.backgroundColor = .white
         collectionView.register(UINib(nibName: reuseIdentifier, bundle: nil), forCellWithReuseIdentifier: reuseIdentifier)
     }

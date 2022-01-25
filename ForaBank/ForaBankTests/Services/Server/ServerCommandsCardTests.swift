@@ -1,0 +1,152 @@
+//
+//  ServerCommandsCardTests.swift
+//  ForaBankTests
+//
+//  Created by Дмитрий on 20.01.2022.
+//
+
+import XCTest
+@testable import ForaBank
+
+class ServerCommandsCardTests: XCTestCase {
+
+    let bundle = Bundle(for: ServerCommandsCardTests.self)
+    let decoder = JSONDecoder.serverDate
+    let formatter = DateFormatter.utc
+
+    //MARK: - BlockCard
+    
+    func testBlockCard_Response_Decoding() throws {
+
+        // given
+        guard let url = bundle.url(forResource: "BlockCardResponseGeneric", withExtension: "json") else {
+            XCTFail("testBlockCard_Response_Decoding : Missing file: BlockCardResponseGeneric.json")
+            return
+        }
+        let json = try Data(contentsOf: url)
+        let cardBlockReturnData = CardBlockReturnData(statusBrief: "string", statusDescription: "string")
+        let expected = ServerCommands.CardController.BlockCard.Response(statusCode: .ok, errorMessage: "string", data: cardBlockReturnData)
+        
+        // when
+        let result = try decoder.decode(ServerCommands.CardController.BlockCard.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
+    
+    func testBlockCard_Response_Decoding_Min() throws {
+
+        // given
+        guard let url = bundle.url(forResource: "BlockCardResponseGenericMin", withExtension: "json") else {
+            XCTFail("testBlockCard_Response_Decoding_Min : Missing file: BlockCardResponseGenericMin.json")
+            return
+        }
+        let json = try Data(contentsOf: url)
+        let cardBlockReturnData = CardBlockReturnData(statusBrief: nil, statusDescription: nil)
+        let expected = ServerCommands.CardController.BlockCard.Response(statusCode: .ok, errorMessage: "string", data: cardBlockReturnData)
+        
+        // when
+        let result = try decoder.decode(ServerCommands.CardController.BlockCard.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
+    
+    //MARK: - GetCardStatement
+    
+    func testGetCardStatement_Response_Decoding() throws {
+
+        // given
+        guard let url = bundle.url(forResource: "GetCardStatementResponseGeneric", withExtension: "json") else {
+            XCTFail("testGetCardStatement_Response_Decoding : Missing file: GetCardStatementResponseGeneric.json")
+            return
+        }
+        let json = try Data(contentsOf: url)
+        let date = formatter.date(from: "2022-01-20T11:52:41.707Z")!
+        let productStatementData = ProductStatementData(MCC: 3245, accountID: 10004111477, accountNumber: "70601810711002740401", amount: 144.21, cardTranNumber: "4256901080508437", city: "string", comment: "Перевод денежных средств. НДС не облагается.", country: "string", currencyCodeNumeric: 810, date: date, deviceCode: "string", documentAmount: 144.21, documentID: 10230444722, fastPayment: .init(documentComment: "string", foreignBankBIC: "044525491", foreignBankID: "10000001153", foreignBankName: "КУ ООО ПИР Банк - ГК \\\"АСВ\\\"", foreignName: "Петров Петр Петрович", foreignPhoneNumber: "70115110217", opkcid: "A1355084612564010000057CAFC75755"), groupName: "Прочие операции", isCancellation: false, md5hash: "75f3ee3b2d44e5808f41777c613f23c9", merchantName: "DBO MERCHANT FORA, Zubovskiy 2", merchantNameRus: "DBO MERCHANT FORA, Zubovskiy 2", opCode: 1, operationId: "909743", operationType: .debit, paymentDetailType: .betweenTheir, svgImage: .init(description: "string"), terminalCode: "41010601", tranDate: date, type: OperationEnvironment.inside)
+        let expected = ServerCommands.CardController.GetCardStatement.Response(statusCode: .ok, errorMessage: "string", data: [productStatementData])
+        
+        // when
+        let result = try decoder.decode(ServerCommands.CardController.GetCardStatement.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
+    
+    func testGetCardStatement_Response_Decoding_Min() throws {
+
+        // given
+        guard let url = bundle.url(forResource: "GetCardStatementResponseGenericMin", withExtension: "json") else {
+            XCTFail("testGetCardStatement_Response_Decoding_Min : Missing file: GetCardStatementResponseGenericMin.json")
+            return
+        }
+        let json = try Data(contentsOf: url)
+        let date = formatter.date(from: "2022-01-20T11:52:41.707Z")!
+        let productStatementData = ProductStatementData(MCC: nil, accountID: nil, accountNumber: "70601810711002740401", amount: 144.21, cardTranNumber: nil, city: nil, comment: "Перевод денежных средств. НДС не облагается.", country: nil, currencyCodeNumeric: 810, date: date, deviceCode: nil, documentAmount: nil, documentID: nil, fastPayment: .init(documentComment: "string", foreignBankBIC: "044525491", foreignBankID: "10000001153", foreignBankName: "КУ ООО ПИР Банк - ГК \\\"АСВ\\\"", foreignName: "Петров Петр Петрович", foreignPhoneNumber: "70115110217", opkcid: "A1355084612564010000057CAFC75755"), groupName: "Прочие операции", isCancellation: false, md5hash: "75f3ee3b2d44e5808f41777c613f23c9", merchantName: "DBO MERCHANT FORA, Zubovskiy 2", merchantNameRus: nil, opCode: nil, operationId: nil, operationType: .debit, paymentDetailType: .betweenTheir, svgImage: .init(description: "string"), terminalCode: nil, tranDate: date, type: OperationEnvironment.inside)
+        let expected = ServerCommands.CardController.GetCardStatement.Response(statusCode: .ok, errorMessage: "string", data: [productStatementData])
+        
+        // when
+        let result = try decoder.decode(ServerCommands.CardController.GetCardStatement.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
+    
+    //MARK: - GetOwnerPhoneNumber
+
+    func testGetOwnerPhoneNumber_Response_Decoding() throws {
+
+        // given
+        guard let url = bundle.url(forResource: "GetOwnerPhoneNumberResponseGeneric", withExtension: "json") else {
+            XCTFail("testGetOwnerPhoneNumber_Response_Decoding : Missing file: GetOwnerPhoneNumberResponseGeneric.json")
+            return
+        }
+        let json = try Data(contentsOf: url)
+        let expected = ServerCommands.CardController.GetOwnerPhoneNumber.Response(statusCode: .ok, errorMessage: "string", data: "string")
+        
+        // when
+        let result = try decoder.decode(ServerCommands.CardController.GetOwnerPhoneNumber.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
+    
+    //MARK: - SaveCardName
+
+    func testSaveCardName_Response_Decoding() throws {
+
+        // given
+        guard let url = bundle.url(forResource: "SaveCardNameResponseGeneric", withExtension: "json") else {
+            XCTFail("testSaveCardName_Response_Decoding : Missing file: SaveCardNameResponseGeneric.json")
+            return
+        }
+        let json = try Data(contentsOf: url)
+        let expected = ServerCommands.CardController.SaveCardName.Response(statusCode: .ok, errorMessage: "string", data: EmptyData())
+        
+        // when
+        let result = try decoder.decode(ServerCommands.CardController.SaveCardName.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
+    
+    //MARK: - UnblockCard
+
+    func testUnblockCard_Response_Decoding() throws {
+
+        // given
+        guard let url = bundle.url(forResource: "UnblockCardResponseGeneric", withExtension: "json") else {
+            XCTFail("UnblockCard_Response_Decoding : Missing file: UnblockCardResponseGeneric.json")
+            return
+        }
+        let json = try Data(contentsOf: url)
+        let cardBlockReturnData = CardBlockReturnData(statusBrief: "string", statusDescription: "string")
+        let expected = ServerCommands.CardController.UnblockCard.Response(statusCode: .ok, errorMessage: "string", data: cardBlockReturnData)
+        
+        // when
+        let result = try decoder.decode(ServerCommands.CardController.UnblockCard.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
+}

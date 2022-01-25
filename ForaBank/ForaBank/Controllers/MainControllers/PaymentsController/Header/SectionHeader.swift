@@ -53,11 +53,10 @@ class SectionHeader: UICollectionReusableView {
         arrowButton.isHidden = expandingIsHidden
         seeAllButton.isHidden = seeAllIsHidden
         if title.text == "Мои продукты"{
-            self.addSubview(changeCardButtonCollection)
+            addSubview(changeCardButtonCollection)
             title.anchor(top: self.topAnchor, height: 24)
             changeCardButtonCollection.isHidden = onlyCards
             changeCardButtonCollection.anchor(left: self.leftAnchor, bottom: self.bottomAnchor, paddingLeft: -10, paddingBottom: 0, height: 24)
-            
             changeCardButtonCollection.button_1.setTitle("Карты и счета", for: .normal)
             changeCardButtonCollection.button_2.setTitle("Вклады", for: .normal)
             changeCardButtonCollection.button_3.isHidden = true
