@@ -11,12 +11,6 @@ extension ServerCommands {
 
 	enum AccountController {
 
-		enum StatementFormat: String, Codable, Equatable {
-
-			case csv = "CSV"
-			case pdf = "PDF"
-		}
-
 		/*
 		 https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/AccountController/getAccountStatementUsingPOST
 		 */
@@ -30,12 +24,12 @@ extension ServerCommands {
 
 			struct Payload: Encodable {
 
-				let accountNumber: String
-				let endDate: String
+				let accountNumber: String?
+				let endDate: String?
 				let id: Int
-				let name: String
-				let startDate: String
-				let statementFormat: StatementFormat
+				let name: String?
+				let startDate: String?
+				let statementFormat: StatementFormat?
 			}
 
 			struct Response: ServerResponse {
@@ -45,45 +39,33 @@ extension ServerCommands {
 				let data: [ProductStatementData]?
 			}
 
-			internal init(token: String, payload: Payload) {
+			internal init(token: String,
+						  accountNumber: String?,
+						  endDate: Date?,
+						  id: Int,
+						  name: String?,
+						  startDate: Date?,
+						  statementFormat: StatementFormat?) {
 
+				let formatter = DateFormatter.utc
 				self.token = token
-				self.payload = payload
-			}
-		}
 
-		/*
-		 https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/AccountController/getAccountStatementForPeriodUsingPOST
-		 */
-		struct GetAccountStatementForPeriod: ServerCommand {
+				var endDateString: String? = nil
+				if let endDate = endDate {
+					endDateString = formatter.string(from: endDate)
+				}
 
-			let token: String
-			let endpoint = "/rest/getAccountStatementForPeriod"
-			let method: ServerCommandMethod = .post
-			let parameters: [ServerCommandParameter]? = nil
-			var payload: Payload?
+				var startDateString: String? = nil
+				if let startDate = startDate {
+					startDateString = formatter.string(from: startDate)
+				}
 
-			struct Payload: Encodable {
-
-				let accountNumber: String
-				let endDate: String
-				let id: Int
-				let name: String
-				let startDate: String
-				let statementFormat: StatementFormat
-			}
-
-			struct Response: ServerResponse {
-				
-				let statusCode: ServerStatusCode
-				let errorMessage: String?
-				let data: [ProductStatementData]?
-			}
-
-			internal init(token: String, payload: Payload) {
-				
-				self.token = token
-				self.payload = payload
+				self.payload = Payload(accountNumber: accountNumber,
+									   endDate: endDateString,
+									   id: id,
+									   name: name,
+									   startDate: startDateString,
+									   statementFormat: statementFormat)
 			}
 		}
 
@@ -100,12 +82,12 @@ extension ServerCommands {
 
 			struct Payload: Encodable {
 
-				let accountNumber: String
-				let endDate: String
+				let accountNumber: String?
+				let endDate: String?
 				let id: Int
-				let name: String
-				let startDate: String
-				let statementFormat: StatementFormat
+				let name: String?
+				let startDate: String?
+				let statementFormat: StatementFormat?
 			}
 
 			struct Response: ServerResponse {
@@ -115,46 +97,33 @@ extension ServerCommands {
 				let data: EmptyData
 			}
 
-			internal init(token: String, payload: Payload) {
+			internal init(token: String,
+						  accountNumber: String?,
+						  endDate: Date?,
+						  id: Int,
+						  name: String?,
+						  startDate: Date?,
+						  statementFormat: StatementFormat?) {
 
+				let formatter = DateFormatter.utc
 				self.token = token
-				self.payload = payload
-			}
-		}
 
-		/*
-		 https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/AccountController/getPrintMapForAccountStatementUsingPOST
-		 */
+				var endDateString: String? = nil
+				if let endDate = endDate {
+					endDateString = formatter.string(from: endDate)
+				}
 
-		struct GetPrintMapForAccountStatement: ServerCommand {
+				var startDateString: String? = nil
+				if let startDate = startDate {
+					startDateString = formatter.string(from: startDate)
+				}
 
-			let token: String
-			let endpoint = "/rest/getPrintMapForAccountStatement"
-			let method: ServerCommandMethod = .post
-			let parameters: [ServerCommandParameter]? = nil
-			var payload: Payload?
-
-			struct Payload: Encodable {
-
-				let accountNumber: String
-				let endDate: String
-				let id: Int
-				let name: String
-				let startDate: String
-				let statementFormat: StatementFormat
-			}
-
-			struct Response: ServerResponse {
-
-				let statusCode: ServerStatusCode
-				let errorMessage: String?
-				let data: AccountStatementPrintMapResponseData?
-			}
-
-			internal init(token: String, payload: Payload) {
-
-				self.token = token
-				self.payload = payload
+				self.payload = Payload(accountNumber: accountNumber,
+									   endDate: endDateString,
+									   id: id,
+									   name: name,
+									   startDate: startDateString,
+									   statementFormat: statementFormat)
 			}
 		}
 	}

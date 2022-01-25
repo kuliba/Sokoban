@@ -8,6 +8,7 @@
 import Foundation
 
 //FIXME: Statements API documentation required
+
 struct FastPaymentData: Codable, Equatable {
     
     let documentComment: String

@@ -1,0 +1,10 @@
+{
+    "accountId": 10000184511,
+    "amount": 100,
+    "bankRecipientID": "string",
+    "cardId": 10000184511,
+    "fee": 10,
+    "rcvrMsgId": "string",
+    "recipientID": "string",
+    "refTrnId": "string"
+}
