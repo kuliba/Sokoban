@@ -3,22 +3,43 @@ import RealmSwift
 import Foundation
 
 
-class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSource, UIPopoverPresentationControllerDelegate, UIViewControllerTransitioningDelegate {
+class GIBDDFineDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSource, UIPopoverPresentationControllerDelegate, UIViewControllerTransitioningDelegate {
 
     static let msgUpdateTable = 3
 
-    public static func storyboardInstance() -> InternetTVDetailsFormController? {
+    public static func storyboardInstance() -> GIBDDFineDetailsFormController? {
         let storyboard = UIStoryboard(name: "InternetTV", bundle: nil)
-        return storyboard.instantiateViewController(withIdentifier: "InternetTVDetail") as? InternetTVDetailsFormController
+        return storyboard.instantiateViewController(withIdentifier: "InternetTVDetail") as? GIBDDFineDetailsFormController
     }
     var fromPaymentVc = false
     var operatorData: GKHOperatorsModel?
+    var customGroup: CustomGroup?
     var latestOperation: InternetLatestOpsDO?
     var qrData = [String: String]()
-    var viewModel = InternetTVDetailsFormViewModel()
-    var selectedValue = "-1"
+    var viewModel = GIBDDFineDetailsFormViewModel()
+    var selectedValue = "20"
     var userInfo: ClintInfoModelData? = nil
+    
+    @IBOutlet weak var btnContract: UIButton!
+    
+    @IBOutlet weak var btnTransponder: UIButton!
 
+    @IBAction func contractAction(_ sender: Any) {
+        btnContract.backgroundColor = UIColor.white
+        btnTransponder.backgroundColor = UIColor.clear
+        //"=,20=данным водителя / данным автомобиля,30=номеру постановления (УИН)"
+        selectedValue = "20"
+        initData()
+    }
+    
+    @IBAction func transponderAction(_ sender: Any) {
+        btnContract.backgroundColor = UIColor.clear
+        btnTransponder.backgroundColor = UIColor.white
+        //operatorData = customGroup?.childsOperators[1]
+        selectedValue = "30"
+        initData()
+    }
+    
     @IBOutlet weak var tableView: UITableView?
     @IBOutlet weak var bottomInputView: BottomInputView?
     @IBOutlet weak var goButton: UIButton?
@@ -37,52 +58,70 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
         viewModel.controller = self
         view.backgroundColor = .white
         bottomInputView?.tempTextFieldValue = qrData["Сумма"] ?? "0"
-        bottomInputView?.updateAmountUI(textAmount: qrData["Сумма"] ?? "0")
         bottomInputView?.isHidden = true
         setupToolbar()
         goButton?.add_CornerRadius(5)
+        tableView?.register(UINib(nibName: "InternetInputCell", bundle: nil), forCellReuseIdentifier: InternetTVInputCell.reuseId)
+        AddAllUserCardtList.add {}
+        setupCardList { error in
+            guard let error = error else { return }
+            self.showAlert(with: "Ошибка", and: error)
+        }
         if fromPaymentVc == false {
             viewModel.puref = operatorData?.puref ?? ""
         }
-        InternetTVApiRequests.isSingleService(puref: viewModel.puref) {
-            
-        }
-        tableView?.register(UINib(nibName: "InternetInputCell", bundle: nil), forCellReuseIdentifier: InternetTVInputCell.reuseId)
-        bottomInputView?.currencySymbol = "₽"
-        AddAllUserCardtList.add {}
 
+        selectedValue = "20"
+        latestOperation?.additionalList.forEach { item in
+            if item.fieldName == "a3_SearchType_1_1" {
+                selectedValue = item.fieldValue ?? "20"
+                if selectedValue == "20" {
+                    btnContract.backgroundColor = UIColor.white
+                    btnTransponder.backgroundColor = UIColor.clear
+                } else {
+                    btnContract.backgroundColor = UIColor.clear
+                    btnTransponder.backgroundColor = UIColor.white
+                }
+            }
+        }
+        
+        InternetTVApiRequests.isSingleService(puref: viewModel.puref) {
+            self.initData()
+        }
+    }
+
+    private func initData() {
+        viewModel.firstStep = true
+        viewModel.requisites.removeAll()
+        viewModel.additionalFields.removeAll()
+        bottomInputView?.currencySymbol = "₽"
         bottomInputView?.didDoneButtonTapped = { amount in
             self.showActivity()
             if InternetTVApiRequests.isSingleService {
                     self.viewModel.doFirstStep(amount: amount)
             } else {
                 if !self.viewModel.firstStep {
-                    if self.viewModel.cardNumber != "-2" {
-                        self.viewModel.doNextStep(amount: amount)
-                    } else {
+                    if (self.viewModel.finalStep) {
                         self.viewModel.retryPayment(amount: amount)
+                    } else {
+                        self.viewModel.doNextStep(amount: amount)
                     }
                 }
             }
-        }
-
-        setupCardList { error in
-            guard let error = error else { return }
-            self.showAlert(with: "Ошибка", and: error)
         }
 
         if let list = operatorData?.parameterList {
             list.forEach { item in
                 print("item5555", "\(item.id) - \(item.title)")
                 if selectedValue != "-1" && (item.type == "MaskList" || item.type == "Select") {
-                    if item.id == "a3_serviceId_2_1" {
+                    if item.id == "a3_SearchType_1_1" {
                         InternetTVDetailsFormViewModel.additionalDic["fieldName"] = ["fieldid": "\(item.order ?? 0)",
                                                                                      "fieldname": item.id ?? "",
                                                                                    "fieldvalue": selectedValue]
                     }
                 } else {
                     let req = RequisiteDO.convertParameter(item)
-                    if let userInfoUnw = InternetTVApiRequests.userInfo {
+                    if let userInfoUnw = userInfo {
                         if item.id?.lowercased().contains("iregcert") == true {
                             req.content = "\(userInfoUnw.regSeries ?? "")\(userInfoUnw.regNumber ?? "")"
                         } else if item.id?.lowercased().contains("lastname") == true {
@@ -101,12 +140,14 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
                 }
             }
             tableView?.reloadData()
+            proceed()
         }
     }
 
-    func showFinalStep() {
+    func showPaymentField() {
         animationHidden(goButton ?? UIButton())
         animationShow(bottomInputView!)
+        //bottomInputView?.doneButtonIsEnabled(true)
         bottomInputView?.doneButtonIsEnabled(false)
     }
 
@@ -118,11 +159,9 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
         if InternetTVMainViewModel.filter == GlobalModule.INTERNET_TV_CODE {
             ob = InternetTVConfirmViewModel(type: .internetTV)
         }
-
         if InternetTVMainViewModel.filter == GlobalModule.PAYMENT_TRANSPORT {
             ob = InternetTVConfirmViewModel(type: .transport)
         }
-
         let sum = response?.data?.debitAmount ?? 0.0
         ob?.sumTransaction = sum.currencyFormatter(symbol: "RUB")
         let tax = response?.data?.fee ?? 0.0
@@ -159,6 +198,10 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
     }
     
     @IBAction func goButton(_ sender: UIButton) {
+        proceed()
+    }
+
+    private func proceed() {
         if InternetTVApiRequests.isSingleService {
             animationHidden(goButton ?? UIButton())
             animationShow(bottomInputView!)
@@ -321,7 +364,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
     }
 }
 
-extension  InternetTVDetailsFormController {
+extension  GIBDDFineDetailsFormController {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         viewModel.requisites.count
     }
