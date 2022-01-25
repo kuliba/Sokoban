@@ -92,5 +92,6 @@ class InternetTVConfirmViewModel {
     enum PaymentType {
         case internetTV
         case gkh
+        case transport
     }
 }

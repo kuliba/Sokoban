@@ -131,6 +131,14 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 nc.modalPresentationStyle = .fullScreen
                 present(nc, animated: true)
                 break
+            case 4:
+                // Штрафы
+                InternetTVMainViewModel.filter = GlobalModule.PAYMENT_TRANSPORT
+                let controller = InternetTVMainController.storyboardInstance()!
+                let nc = UINavigationController(rootViewController: controller)
+                nc.modalPresentationStyle = .fullScreen
+                present(nc, animated: true)
+                break
             default:
                 break
             }
