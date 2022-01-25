@@ -24,17 +24,14 @@ struct AntifraudView: View {
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
 
+    let viewModel: AntifraudViewModel
     
-    let data: AntifraudViewModel
-
     @ObservedObject var delegate: ContentViewDelegate
     
     var present: (()->Void)?
 
 
     var body: some View {
-        
-//        let action: () -> Void = { DismissAction }
         
         VStack {
             Image("antifraud")
@@ -52,14 +49,13 @@ struct AntifraudView: View {
                     .lineLimit(nil)
                     .font(.system(size: 13))
                     .fixedSize(horizontal: false, vertical: true)
-                    Spacer()
             }
-            Text(data.name)
+            Text(viewModel.name)
                 .font(.system(size: 16))
-            Text(data.phoneNumber)
+            Text(viewModel.phoneNumber)
                 .font(.system(size: 16))
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 15, trailing: 0))
-            Text(data.amount)
+            Text(viewModel.amount)
                 .font(.system(size: 24))
                 .bold()
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 15, trailing: 0))
@@ -70,29 +66,32 @@ struct AntifraudView: View {
                             self.timeRemaining -= 1
                         }else{
                             self.timer.upstream.connect().cancel()  
-                            presentationMode.wrappedValue.dismiss()
-                            let dic = ["Timer": true]
-                            NotificationCenter.default.post(name: NSNotification.Name("dismissSwiftUI"), object: nil, userInfo: dic)
+                            viewModel.timerAction()
 
                         }
                     }
             HStack{
                 Button("Отменить") {
-                    presentationMode.wrappedValue.dismiss()
-                    NotificationCenter.default.post(name: NSNotification.Name("dismissSwiftUI"), object: nil, userInfo: nil)
+                    viewModel.cancelAction()
                 }
+                .buttonStyle(StyledButton())
+                
+                Button(action: {
+                    viewModel.dismissAction()
+                })  {
+                         Text("Продолжить")
+                     }
                 .buttonStyle(StyledButton())
 
-                Button("Продолжить") {
-                    presentationMode.wrappedValue.dismiss()
-                }
-                .buttonStyle(StyledButton())
             }
             .padding()
         }
         .padding(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: 0))
+        .transition(.scale)
+        .edgesIgnoringSafeArea(.bottom)
         
     }
+
     
     func timeString(time: Int) -> String {
 //        let hours   = Int(time) / 3600
@@ -117,6 +116,6 @@ struct StyledButton: ButtonStyle {
 
 struct AntifraudView_Previews: PreviewProvider {
     static var previews: some View {
-        AntifraudView(data: AntifraudViewModel(model: CreateSFPTransferDecodableModel(statusCode: nil, errorMessage: nil, data: nil), phoneNumber: "+7 (925) 279-86-13"), delegate: ContentViewDelegate())
+        AntifraudView(viewModel: AntifraudViewModel(model: CreateSFPTransferDecodableModel(statusCode: nil, errorMessage: nil, data: nil), phoneNumber: "+7 (925) 279-86-13"), delegate: ContentViewDelegate())
     }
 }

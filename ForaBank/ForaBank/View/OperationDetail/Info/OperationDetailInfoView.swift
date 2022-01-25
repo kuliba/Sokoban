@@ -16,7 +16,7 @@ struct OperationDetailInfoView: View {
     var body: some View {
         
         VStack {
-            HStack(alignment: .center, spacing: 30){
+            HStack(alignment: .center, spacing: 0){
                 Button {
                     
                     viewModel.dismissAction()
@@ -80,7 +80,7 @@ extension OperationDetailInfoView {
         var body: some View {
             HStack(alignment: .bottom, spacing: 15){
                 viewModel.iconType?.icon
-                    .frame(width: 24, height: 24, alignment: .bottom)
+                    .frame(width: 32, height: 24, alignment: .bottom)
                 VStack(alignment: .leading, spacing: 4){
                     Text(viewModel.title)
                         .foregroundColor(Color(hex: "999999"))
@@ -103,7 +103,7 @@ extension OperationDetailInfoView {
             HStack(alignment: .bottom, spacing: 15){
                 viewModel.icon
                     .resizable()
-                    .frame(width: 24, height: 24, alignment: .bottom)
+                    .frame(width: 32, height: 32, alignment: .bottom)
                 
                 VStack(alignment: .leading, spacing: 4){
                     Text(viewModel.title)
@@ -126,8 +126,7 @@ extension OperationDetailInfoView {
         var body: some View {
             HStack(alignment: .center, spacing: 15){
                 viewModel.icon
-                    .resizable()
-                    .frame(width: 24, height: 24, alignment: .bottom)
+                    .frame(width: 32, height: 22, alignment: .center)
                 HStack{
                     VStack(alignment: .leading, spacing: 4){
                         Text(viewModel.title)

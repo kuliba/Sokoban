@@ -69,22 +69,7 @@ struct OperationDetailView: View {
                             
                             ForEach(viewModel.featureButtons) { buttonViewModel in
                                 
-                                VStack(spacing: 12) {
-                                    
-                                    Button {
-                                        
-                                        buttonViewModel.action()
-                                        
-                                    } label: {
-                                        
-                                        Image(buttonViewModel.icon)
-                                            .resizable()
-                                            .frame(width: 56, height: 56)
-                                    }
-                                    
-                                    Text(buttonViewModel.name)
-                                        .font(.system(size: 12, weight: .medium))
-                                }
+                                FeatureButtonView(viewModel: buttonViewModel)
                             }
                         }
                         .padding(.top, 28)
@@ -207,22 +192,29 @@ extension OperationDetailView {
             case .singleRow(let name):
                 Text(name)
                     .font(.system(size: 16, weight: .regular))
+                    .multilineTextAlignment(.center)
+                
                 
             case .doubleRow(let name, let extra):
                 VStack {
                     Text(name)
                         .font(.system(size: 16, weight: .regular))
+                        .multilineTextAlignment(.center)
                     Text(extra)
                         .font(.system(size: 16, weight: .regular))
+                        .multilineTextAlignment(.center)
                 }
                 
-            case .number(let name, let number, let action):
+            case .number(let name, let title, let number, let action):
                 VStack {
                     Text(name)
                         .font(.system(size: 16, weight: .regular))
-                    
+                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 3, trailing: 0))
+                        .multilineTextAlignment(.center)
+                    Text(title)
+                        .font(.system(size: 16, weight: .regular))
+                        .foregroundColor(Color(hex: "999999"))
                     HStack {
-                        
                         Text(number)
                             .font(.system(size: 16, weight: .regular))
                             .foregroundColor(Color.black)
@@ -281,7 +273,7 @@ extension OperationDetailView {
                 Text(viewModel.title)
                     .font(.system(size: 16, weight: .regular))
                     .foregroundColor(Color(hex: "999999"))
-                
+                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 1, trailing: 0))
                 Text(viewModel.amount)
                     .font(.system(size: 16, weight: .regular))
                 
@@ -301,6 +293,72 @@ extension OperationDetailView {
                     .padding()
                     .padding(.horizontal, 10)
                     .shimmering(active: true, bounce: true)
+            }
+        }
+    }
+    
+    struct FeatureButtonView: View {
+        
+        let viewModel: OperationDetailViewModel.FeatureButtonViewModel
+        
+        var body: some View {
+            
+            switch viewModel.kind {
+            case .template(let selected):
+                if selected == true {
+                    
+                    VStack(spacing: 12) {
+                        
+                        Image(viewModel.icon)
+                            .resizable()
+                            .frame(width: 56, height: 56)
+                        
+                        HStack(spacing: 3) {
+                            
+                            Image("Operation Details Template Check Icon")
+                            Text(viewModel.name)
+                                .font(.system(size: 12, weight: .medium))
+                                .foregroundColor(Color(hex: "#22C183"))
+                        }
+                    }
+                    
+                } else {
+                    
+                    VStack(spacing: 12) {
+                        
+                        Button {
+                            
+                            viewModel.action()
+                            
+                        } label: {
+                            
+                            Image(viewModel.icon)
+                                .resizable()
+                                .frame(width: 56, height: 56)
+                        }
+                        
+                        Text(viewModel.name)
+                            .font(.system(size: 12, weight: .medium))
+                    }
+                }
+                
+            default:
+                VStack(spacing: 12) {
+                    
+                    Button {
+                        
+                        viewModel.action()
+                        
+                    } label: {
+                        
+                        Image(viewModel.icon)
+                            .resizable()
+                            .frame(width: 56, height: 56)
+                    }
+                    
+                    Text(viewModel.name)
+                        .font(.system(size: 12, weight: .medium))
+                }
             }
         }
     }
@@ -342,6 +400,9 @@ struct OperationDetailView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        OperationDetailView(viewModel: .sampleMin)
+        Group {
+            OperationDetailView(viewModel: .sampleComplete)
+            OperationDetailView(viewModel: .sampleComplete)
+        }
     }
 }

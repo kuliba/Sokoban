@@ -99,6 +99,7 @@ class Model {
                             switch response.statusCode {
                             case .ok:
                                 self.action.send(ModelAction.PaymentTemplate.Save.Complete(paymentTemplateId: response.data.paymentTemplateId))
+                                self.action.send(ModelAction.PaymentTemplate.List.Requested())
                                 
                             default:
                                 //TODO: handle not ok server status

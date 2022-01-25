@@ -11,8 +11,6 @@ enum OperationDetailViewModelAction {
 
     struct Dismiss: Action {}
     
-    struct CreateTemplate: Action {}
-    
     struct ShowDocument: Action {
         
         let paymentOperationDetailID: Int
