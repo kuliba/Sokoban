@@ -146,12 +146,12 @@ class MockItems {
                           iconName: "tv",
                           controllerName: "InternetTVMainController",
                           description: "Интернет, ТВ")
-//            ,
-            
-//            PaymentsModel(id: 15, name: "Штрафы",
-//                          iconName: "carMain",
-//                          controllerName: "",
-//                          description: "Что то"),
+            ,
+        
+            PaymentsModel(id: 15, name: "Штрафы",
+                          iconName: "carMain",
+                          controllerName: "",
+                          description: "Что то")
 //
 //            PaymentsModel(id: 16, name: "Соцсети, игры, карты",
 //                          iconName: "iconGame",

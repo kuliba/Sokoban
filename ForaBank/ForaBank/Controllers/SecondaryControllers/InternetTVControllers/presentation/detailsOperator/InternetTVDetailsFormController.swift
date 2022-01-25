@@ -57,7 +57,11 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
                     self.viewModel.doFirstStep(amount: amount)
             } else {
                 if !self.viewModel.firstStep {
-                    self.viewModel.retryPayment(amount: amount)
+                    if self.viewModel.cardNumber != "-2" {
+                        self.viewModel.doNextStep(amount: amount)
+                    } else {
+                        self.viewModel.retryPayment(amount: amount)
+                    }
                 }
             }
         }

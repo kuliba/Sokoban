@@ -9,7 +9,7 @@ class InternetTVDetailsFormViewModel {
     var stepsPayment = [[[String: String]]]()
     var requisites = [RequisiteDO]()
     var puref = ""
-    var cardNumber = ""
+    var cardNumber = "-1"
     var product: GetProductListDatum?
 
 
@@ -86,6 +86,7 @@ class InternetTVDetailsFormViewModel {
         }
     }
 
+    var needSum = false
     func continueRetry(amount: String) {
         guard let controller = controller else {
             return
@@ -94,10 +95,11 @@ class InternetTVDetailsFormViewModel {
         InternetTVDetailsFormViewModel.additionalDic.forEach { item in
             additionalArray.append(item.value)
         }
-        var request = getRequestBody(amount: amount, additionalArray: firstAdditional)
-        if stepsPayment.count > 0 {
-            request = getRequestBody(amount: amount, additionalArray: stepsPayment.removeFirst())
-        }
+        var tempAmount: String? = nil
+        if needSum { tempAmount = amount }
+        var additionArray = firstAdditional
+        if stepsPayment.count > 0 { additionArray = stepsPayment.removeFirst() }
+        var request = getRequestBody(amount: tempAmount, additionalArray: additionArray)
         InternetTVApiRequests.createAnywayTransfer(request: request) { response, error in
             guard let controller = self.controller else {
                 return
@@ -108,6 +110,7 @@ class InternetTVDetailsFormViewModel {
                 controller.showAlert(with: "Ошибка", and: error!)
             } else {
                 if let respUnw = response {
+                    self.needSum = respUnw.data?.needSum ?? false
                     if respUnw.data?.finalStep ?? false {
                         controller.doConfirmation(response: respUnw)
                     } else {
@@ -210,9 +213,11 @@ class InternetTVDetailsFormViewModel {
         }
     }
 
-    func getRequestBody(amount: String, additionalArray: [[String: String]]) -> [String: AnyObject] {
+    func getRequestBody(amount: String?, additionalArray: [[String: String]]) -> [String: AnyObject] {
         let productType = controller?.footerView.cardFromField.cardModel?.productType ?? ""
         let id = controller?.footerView.cardFromField.cardModel?.id ?? -1
+        if cardNumber == "-1" { cardNumber = String(id) }
+        if cardNumber != String(id) { cardNumber = "-2" }
 
         var request = [String: AnyObject]()
         if productType == "ACCOUNT" {
