@@ -505,7 +505,8 @@ class MockItems {
             provider: nil,
             period: nil,
             transferNumber: nil,
-            accountTitle: "Номер телефона"
+            accountTitle: "Номер телефона",
+            isTrafficPoliceService: false
         )
     }
 }

@@ -32,7 +32,13 @@ class OperationDetailViewModel: ObservableObject {
         let tranDateString = DateFormatter.operation.string(from: productStatement.tranDate)
 
         switch productStatement.paymentDetailType {
-        case .betweenTheir, .insideBank, .otherBank:
+        case .betweenTheir, .insideBank:
+            self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: "Перевод на карту", category: productStatement.groupName)
+            let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchantName)
+            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
+            self.operation = OperationViewModel(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
+            
+        case .otherBank:
             self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: productStatement.groupName, category: "Переводы")
             let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchantName)
             let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
@@ -47,8 +53,15 @@ class OperationDetailViewModel: ObservableObject {
         case .externalIndivudual, .externalEntity:
             self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: productStatement.groupName, category: nil)
             let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
-            self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
             
+            if let documentComment = productStatement.documentComment, documentComment != "" {
+                
+                self.operation = OperationViewModel(bankLogo: productStatement.svgImage, payee: nil, amount: amountViewModel, fee: nil, description: documentComment, date: tranDateString)
+           
+            } else {
+                
+                self.operation = OperationViewModel(bankLogo: productStatement.svgImage, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
+            }
             
         case .housingAndCommunalService, .insideOther, .internet, .mobile:
             self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: productStatement.merchantName, category: "\(productStatement.groupName)")
@@ -397,6 +410,11 @@ extension OperationDetailViewModel {
                     operationViewModel = operationViewModel.updated(with: .singleRow(formattedPhone))
                 }
                 
+                if let feeViewModel = FeeViewModel(with: operation, currencyCode: productStatement.currencyCode)  {
+                    
+                    operationViewModel = operationViewModel.updated(with: feeViewModel)
+                }
+                
             case .otherBank, .housingAndCommunalService:
                 if let payeeCardNumber = operation.payeeCardNumber {
                     
@@ -550,9 +568,15 @@ extension OperationDetailViewModel {
         guard let paymentDetailType = statement.paymentDetailType,
               let svgImageData = statement.svgImage,
               let groupName = statement.groupName,
-              let amount = statement.amount else {
+              var amount = statement.documentAmount else {
                   return nil
               }
+        
+        if let amountStatement = statement.amount {
+            amount = amountStatement
+        } else if let documentAmount = statement.documentAmount{
+            amount = documentAmount
+        }
         
         let documentId = statement.documentID
         let svgImage = Image(uiImage: svgImageData.convertSVGStringToImage())
@@ -573,9 +597,15 @@ extension OperationDetailViewModel {
         guard let paymentDetailType = statement.paymentDetailType,
               let svgImageData = statement.svgImage,
               let groupName = statement.groupName,
-              let amount = statement.amount else {
+              var amount = statement.documentAmount else{
                   return nil
               }
+        
+        if let amountStatement = statement.amount {
+            amount = amountStatement
+        } else if let documentAmount = statement.documentAmount{
+            amount = documentAmount
+        }
         
         let documentId = statement.documentID
         let svgImage = Image(uiImage: svgImageData.convertSVGStringToImage())
@@ -593,13 +623,19 @@ extension OperationDetailViewModel {
     
     convenience init?(with statement: GetAccountStatementDatum, currency: String, product: UserAllCardsModel) {
         
+        
         guard let paymentDetailType = statement.paymentDetailType,
               let svgImageData = statement.svgImage,
               let groupName = statement.groupName,
-              let amount = statement.amount else {
+              var amount = statement.documentAmount else {
                   return nil
               }
         
+        if let amountStatement = statement.amount {
+            amount = amountStatement
+        } else if let documentAmount = statement.documentAmount{
+            amount = documentAmount
+        }
         let documentId = statement.documentID
         let svgImage = Image(uiImage: svgImageData.convertSVGStringToImage())
         let merchantName = (statement.merchantNameRus ?? statement.merchantName) ?? ""

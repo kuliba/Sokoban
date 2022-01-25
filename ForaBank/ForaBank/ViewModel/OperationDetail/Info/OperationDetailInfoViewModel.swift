@@ -333,16 +333,13 @@ final class OperationDetailInfoViewModel: Identifiable {
             
             if let payeeFullName = operation?.payeeFullName {
                 
-                cells.append(PropertyCellViewModel(title: "Получатель", iconType: .user, value: payeeFullName))
+                cells.append(PropertyCellViewModel(title: "Наименование получателя", iconType: .nil, value: payeeFullName))
             }
             
             if let payeeAccountNumber = operation?.payeeAccountNumber {
                 
                 cells.append(PropertyCellViewModel(title: "Номер счета получателя", iconType: .account, value: payeeAccountNumber))
                 
-            } else if let payeeCardNumber = operation?.payeeCardNumber {
-                
-                cells.append(PropertyCellViewModel(title: "Номер счета получателя", iconType: .account, value: payeeCardNumber))
             }
             
             if let payeeINN = operation?.payeeINN  {
@@ -365,6 +362,18 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(BankCellViewModel(title: "Банк получателя", icon: bankLogoImage, name: bankBic))
             }
             
+            cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: statement.amount.currencyFormatter(symbol: currency)))
+            
+            if let fee = operation?.payerFee {
+                
+                cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: fee.currencyFormatter(symbol: currency)))
+            }
+            
+            if let debitAccounCell = Self.debitAccountCell(with: product, currency: currency) {
+                
+                cells.append(debitAccounCell)
+            }
+            
             if let comment = statement.comment {
                 
                 cells.append(PropertyCellViewModel(title: "Назначение платежа", iconType: .purpose, value: comment))
@@ -380,7 +389,6 @@ final class OperationDetailInfoViewModel: Identifiable {
              amount + currencyCode
              tranDate
              */
-            //TODO: add iconType with dif image
             cells.append(BankCellViewModel(title: "Наименование операции", icon: statement.svgImage, name: statement.merchantName))
             cells.append(PropertyCellViewModel(title: "Категория операции", iconType: .nil, value: statement.groupName))
             cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: statement.amount.currencyFormatter(symbol: currency)))
@@ -638,8 +646,11 @@ final class OperationDetailInfoViewModel: Identifiable {
             cells.append(BankCellViewModel(title: "Наименование получателя", icon: statement.svgImage, name: statement.merchantName))
             
             if let accountTitle = operation?.accountTitle, let account =  operation?.account{
-                
-                cells.append(PropertyCellViewModel(title: accountTitle, iconType: .operationNumber, value: account))
+                if operation?.isTrafficPoliceService == true{
+                    cells.append(PropertyCellViewModel(title: accountTitle, iconType: .account, value: account))
+                } else {
+                    cells.append(PropertyCellViewModel(title: accountTitle, iconType: .operationNumber, value: account))
+                }
             }
             
             cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: statement.amount.currencyFormatter(symbol: currency)))
