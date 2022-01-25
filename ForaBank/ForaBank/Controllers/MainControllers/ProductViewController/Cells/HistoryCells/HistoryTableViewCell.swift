@@ -113,11 +113,19 @@ class HistoryTableViewCell: UITableViewCell {
                 
                 if operation?.operationType == "DEBIT"{
                     amountLabel.textColor = UIColor(hexString: "1C1C1C")
-                    amountLabel.text = "-\(Double(operation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
+                    if let amount = operation?.documentAmount{
+                        amountLabel.text = "-\(Double(amount).currencyFormatter(symbol: currency))"
+                    } else {
+                        amountLabel.text = "-\(Double(operation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
+                    }
                     amountLabel.isHidden = false
                 } else if operation?.operationType == "CREDIT" {
                     amountLabel.textColor = UIColor(hexString: "22C183")
-                    amountLabel.text = "+\(Double(operation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
+                    if let amount = operation?.documentAmount{
+                        amountLabel.text = "+\(Double(amount).currencyFormatter(symbol: currency))"
+                    } else {
+                        amountLabel.text = "+\(Double(operation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
+                    }
                     amountLabel.isHidden = false
                 } else {
                     amountLabel.isHidden = true
@@ -168,13 +176,22 @@ class HistoryTableViewCell: UITableViewCell {
                     logoImageView.alpha = 1
                 }
                 
+                
                 if operation?.operationType == "DEBIT"{
                     amountLabel.textColor = UIColor(hexString: "1C1C1C")
-                    amountLabel.text = "-\(Double(operation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
+                    if let amount = operation?.documentAmount{
+                        amountLabel.text = "-\(Double(amount).currencyFormatter(symbol: currency))"
+                    } else {
+                        amountLabel.text = "-\(Double(operation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
+                    }
                     amountLabel.isHidden = false
                 } else if operation?.operationType == "CREDIT" {
                     amountLabel.textColor = UIColor(hexString: "22C183")
-                    amountLabel.text = "+\(Double(operation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
+                    if let amount = operation?.documentAmount{
+                        amountLabel.text = "+\(Double(amount).currencyFormatter(symbol: currency))"
+                    } else {
+                        amountLabel.text = "+\(Double(operation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
+                    }
                     amountLabel.isHidden = false
                 } else {
                     amountLabel.isHidden = true
@@ -187,11 +204,18 @@ class HistoryTableViewCell: UITableViewCell {
                 if operation?.operationType == "DEBIT"{
                     amountLabel.textColor = UIColor(hexString: "1C1C1C")
                     logoImageView.backgroundColor = .red
-                    amountLabel.text = "-\(Double(operation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
-                } else {
-                    logoImageView.backgroundColor = .green
+                    if let amount = operation?.documentAmount{
+                        amountLabel.text = "-\(Double(amount).currencyFormatter(symbol: currency))"
+                    } else {
+                        amountLabel.text = "-\(Double(operation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
+                    }
+                } else if operation?.operationType == "CREDIT" {
                     amountLabel.textColor = UIColor(hexString: "22C183")
-                    amountLabel.text = "+\(Double(operation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
+                    if let amount = operation?.documentAmount{
+                        amountLabel.text = "+\(Double(amount).currencyFormatter(symbol: currency))"
+                    } else {
+                        amountLabel.text = "+\(Double(operation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
+                    }
                 }
             case .some(_):
                 print("some")
@@ -239,11 +263,19 @@ class HistoryTableViewCell: UITableViewCell {
                     
                     if accountOperation?.operationType == "DEBIT"{
                         amountLabel.textColor = UIColor(hexString: "1C1C1C")
-                        amountLabel.text = "-\(Double(accountOperation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
+                        if let amount = operation?.documentAmount{
+                            amountLabel.text = "-\(Double(amount).currencyFormatter(symbol: currency))"
+                        } else {
+                            amountLabel.text = "-\(Double(operation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
+                        }
                         amountLabel.isHidden = false
-                    } else if accountOperation?.operationType == "CREDIT" {
+                    } else if operation?.operationType == "CREDIT" {
                         amountLabel.textColor = UIColor(hexString: "22C183")
-                        amountLabel.text = "+\(Double(accountOperation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
+                        if let amount = operation?.documentAmount{
+                            amountLabel.text = "+\(Double(amount).currencyFormatter(symbol: currency))"
+                        } else {
+                            amountLabel.text = "+\(Double(operation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
+                        }
                         amountLabel.isHidden = false
                     } else {
                         amountLabel.isHidden = true
@@ -296,11 +328,19 @@ class HistoryTableViewCell: UITableViewCell {
                     
                     if accountOperation?.operationType == "DEBIT"{
                         amountLabel.textColor = UIColor(hexString: "1C1C1C")
-                        amountLabel.text = "-\(Double(accountOperation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
+                        if let amount = operation?.documentAmount{
+                            amountLabel.text = "-\(Double(amount).currencyFormatter(symbol: currency))"
+                        } else {
+                            amountLabel.text = "-\(Double(operation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
+                        }
                         amountLabel.isHidden = false
-                    } else if accountOperation?.operationType == "CREDIT" {
+                    } else if operation?.operationType == "CREDIT" {
                         amountLabel.textColor = UIColor(hexString: "22C183")
-                        amountLabel.text = "+\(Double(accountOperation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
+                        if let amount = operation?.documentAmount{
+                            amountLabel.text = "+\(Double(amount).currencyFormatter(symbol: currency))"
+                        } else {
+                            amountLabel.text = "+\(Double(operation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
+                        }
                         amountLabel.isHidden = false
                     } else {
                         amountLabel.isHidden = true

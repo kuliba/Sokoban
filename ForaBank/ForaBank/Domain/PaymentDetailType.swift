@@ -26,4 +26,5 @@ enum PaymentDetailType: String, Codable {
     case outsideCash = "OUTSIDE_CASH"
     case outsideOther = "OUTSIDE_OTHER"
     case sfp = "SFP"
+    case transport = "TRANSPORT"
 }

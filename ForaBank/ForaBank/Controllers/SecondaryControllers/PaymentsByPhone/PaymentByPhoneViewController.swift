@@ -427,11 +427,15 @@ class PaymentByPhoneViewController: UIViewController {
         
 //            accountNumber = ""
 
+        guard let comment = commentField.textField.text else {
+            return
+        }
         
         bottomView.doneButtonIsEnabled(true)
         
         let body = [ "check"            : false,
                      "amount"           : clearAmount,
+                     "comment"          : comment,
                      "currencyAmount"   : "RUB",
                      "payer" : [
                         "cardId"        : cardId,
@@ -566,6 +570,11 @@ class PaymentByPhoneViewController: UIViewController {
                   "fieldid": "2",
                   "fieldname": "BankRecipientID",
                   "fieldvalue": bankId
+                ],
+                [
+                  "fieldid": "3",
+                  "fieldname": "Ustrd",
+                  "fieldvalue": commentField.textField.text
                 ]
             ]
         ] as [String: AnyObject]

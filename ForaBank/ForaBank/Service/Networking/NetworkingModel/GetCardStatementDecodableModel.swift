@@ -69,10 +69,11 @@ struct GetCardStatementDatum: Codable {
     var dateFormatting: String?
     let paymentDetailType: PaymentDetailType?
     let fastPayment: FastPaymentData?
+    let documentAmount: Double?
 
     enum CodingKeys: String, CodingKey {
         case mcc = "MCC"
-        case accountID, accountNumber, amount, comment, currencyCodeNumeric, date, documentID, groupName
+        case accountID, accountNumber, amount, comment, currencyCodeNumeric, date, documentID, groupName, documentAmount
         case md5Hash = "md5hash"
         case merchantName, merchantNameRus, name, operationType, svgImage, tranDate, type, dateFormatting
         case paymentDetailType
@@ -106,7 +107,6 @@ extension GetCardStatementDatum {
     }
     
     var transactionDate: Date {
-        
-        Date(timeIntervalSince1970: TimeInterval((date ?? 0) / 1000))
+        Date(timeIntervalSince1970: TimeInterval(((tranDate ?? date) ?? 0) / 1000))
     }
 }

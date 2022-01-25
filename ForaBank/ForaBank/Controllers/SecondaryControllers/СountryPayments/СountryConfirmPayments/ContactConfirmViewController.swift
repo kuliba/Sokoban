@@ -286,7 +286,6 @@ class ContactConfurmViewController: UIViewController {
         doneButton.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
         hideKeyboardWhenTappedAround()
         NotificationCenter.default.addObserver(self, selector: #selector(self.setOtpCode(_:)), name: NSNotification.Name(rawValue: "otpCode"), object: nil)
-//        let delegate = ContentViewDelegate()
         let statusValue = createTransferSBP?.data?.additionalList?.filter({$0.fieldName == "AFResponse"})
         if statusValue?[0].fieldValue == "G"{
         
@@ -331,28 +330,13 @@ class ContactConfurmViewController: UIViewController {
     
     
     func presentSwiftUIView(data: AntifraudViewModel) {
-        let swiftUIView = AntifraudView(data: data, delegate: ContentViewDelegate())
-        let hostingController = UIHostingController(rootView: swiftUIView)
-        //        hostingController.modalPresentationStyle = .overCurrentContext
-        
-        if #available(iOS 15.0, *) {
-            if let presentationController = hostingController.presentationController as? UISheetPresentationController {
-                presentationController.detents = [.medium()]
-            }
-        } else {
-            // Fallback on earlier versions
+        guard let dataTransfer = createTransferSBP else {
+            return
         }
-        hostingController.rootView.present = {
-            let vc = PaymentsDetailsSuccessViewController()
-            vc.isModalInPresentation = true
-            
 
-            hostingController.present(vc, animated: true, completion: nil)
-        }
-        present(hostingController, animated: true, completion: {
-            hostingController.presentationController?.presentedView?.gestureRecognizers?[0].isEnabled = false
-         })
+        let hostVC = AntifraudViewHostingController(with: AntifraudViewModel(model: dataTransfer, phoneNumber: data.phoneNumber))
         
+        present(hostVC, animated: true)
     }
     
     func setupData(with model: ConfirmViewControllerModel) {
