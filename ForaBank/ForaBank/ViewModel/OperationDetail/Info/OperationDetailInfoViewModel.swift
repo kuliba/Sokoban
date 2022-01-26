@@ -74,7 +74,7 @@ final class OperationDetailInfoViewModel: Identifiable {
              fee
              product
              tranDate
-             */
+             */ 
             if let payeeCardNumber = operation?.payeeCardNumber, let productObjects = realm?.objects(UserAllCardsModel.self){
                     for product in productObjects{
                         if product.number?.suffix(4) == payeeCardNumber.suffix(4){
@@ -119,8 +119,6 @@ final class OperationDetailInfoViewModel: Identifiable {
 //            }
             
                 cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)", iconType: .date, value: tranDateString))
-
-            
         case  .insideBank:
             /*
              payeeAccountNumber || payeeCardNumber || || payeePhone
@@ -131,7 +129,6 @@ final class OperationDetailInfoViewModel: Identifiable {
              product
              tranDate
              */
-            
             if let payeeAccountNumber = operation?.payeeAccountNumber {
                 cells.append(PropertyCellViewModel(title: "Номер счета получателя", iconType: .bank, value: payeeAccountNumber))
                 
@@ -196,6 +193,10 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: fee.currencyFormatter(symbol: currency)))
             }
             
+            if let payeeAmount = operation?.payeeAmount, let payeeCurrency = operation?.payeeCurrency{
+                cells.append(PropertyCellViewModel(title: "Сумма зачисления в валюте", iconType: .balance, value: payeeAmount.currencyFormatter(symbol: payeeCurrency)))
+            }
+            
             cells.append(PropertyCellViewModel(title: "Способ выплаты", iconType: .cash, value: "Наличные"))
 
             
@@ -253,6 +254,10 @@ final class OperationDetailInfoViewModel: Identifiable {
             if let fee = operation?.payerFee {
                 
                 cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: fee.currencyFormatter(symbol: currency)))
+            }
+            
+            if let payeeAmount = operation?.payeeAmount, let payeeCurrency = operation?.payeeCurrency{
+                cells.append(PropertyCellViewModel(title: "Сумма зачисления в валюте", iconType: .balance, value: payeeAmount.currencyFormatter(symbol: payeeCurrency)))
             }
             
             if let debitAccounCell = Self.debitAccountCell(with: product, currency: currency) {
