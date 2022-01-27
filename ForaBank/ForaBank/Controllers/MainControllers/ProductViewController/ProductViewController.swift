@@ -958,39 +958,38 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
                    guard (self?.collectionView) != nil else {return}
                    switch changes {
                    case .initial:
-                       print("Initial")
-                       self?.products.removeAll()
-                       guard let products = self?.allProductList else {
-                           return
-                       }
-                       for i in products{
-                           self?.products.append(i)
-                       }
+//                       self?.products.removeAll()
+//                       guard let products = self?.allProductList else {
+//                           return
+//                       }
+//                       for i in products{
+//                           self?.products.append(i)
+//                       }
                        self?.collectionView?.reloadData()
-//                       self?.productList = [UserAllCardsModel]()
-
-
-                   case .update(_, _, _, _):
-                       print("Update")
-                       self?.products.removeAll()
-                       guard let products = self?.allProductList else {
-                           return
-                       }
-                       for i in products{
-                           self?.products.append(i)
-                       }
-                       self?.collectionView?.reloadData()
-//                       self?.productList = [UserAllCardsModel]()
-
-                       self?.collectionView?.reloadData()
-                       
-                       
+                   case .update(_, let deletions, let insertions, let modifications):
+//                       self?.products.removeAll()
+//                       guard let products = self?.allProductList else {
+//                           return
+//                       }
+//                       for i in products{
+//                           self?.products.append(i)
+//                       }
+//                       self?.collectionView?.reloadData()
+                        self?.collectionView?.performBatchUpdates({
+                        self?.collectionView?.reloadItems(at: modifications.map { IndexPath(row: $0, section: 0) })
+                        self?.collectionView?.insertItems(at: insertions.map { IndexPath(row: $0, section: 0) })
+                        self?.collectionView?.deleteItems(at: deletions.map { IndexPath(row: $0, section: 0) })
+                       })
                    case .error(let error):
                        fatalError("\(error)")
                    }
            }
        
    }
+    
+    deinit {
+        self.token?.invalidate()
+    }
     
     func loadHistoryForCard(){
         historyArray.removeAll()
