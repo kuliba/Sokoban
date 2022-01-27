@@ -548,7 +548,9 @@ class PaymentByPhoneViewController: UIViewController {
             clearPhone = newPhone
         }
         
-        
+        guard let comment = commentField.textField.text else {
+            return
+        }
         
         let newBody = [
             "check" : false,
@@ -574,7 +576,7 @@ class PaymentByPhoneViewController: UIViewController {
                 [
                   "fieldid": "3",
                   "fieldname": "Ustrd",
-                  "fieldvalue": commentField.textField.text
+                  "fieldvalue": comment
                 ]
             ]
         ] as [String: AnyObject]

@@ -36,10 +36,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
     var contactCollectionView: UICollectionView!
     var delegate: PassTextFieldText? = nil
     let contactView = UIView()
-    var banksList = [BanksList](){
-        didSet{
-        }
-    }
+    var banksList = [BanksList]()
     
     var reserveContacts = [PhoneContact]()
     var numberPhone: String?
@@ -57,6 +54,8 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
             lastPaymentsCollectionView.reloadData()
         }
     }
+
+    var counterNumbers = 0
     
     var lastPhonePayment = [GetLatestPhone](){
         didSet{
@@ -232,8 +231,8 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
         }
         reserveContacts = contacts
         if text.count != 0{
-            if text.isNumeric {
-                
+            if text.digits.count > 0 {
+                searchForContactUsingPhoneNumber(phoneNumber: text)
             } else {
                 searchForContactUsingName(text: text)
             }
@@ -248,17 +247,64 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
             
         }
     }
+   
+    func check(_ givenString: String) -> Bool {
+        return givenString.range(of: "^[7-8]9.", options: .regularExpression) != nil
+    }
     
-    func searchForContactUsingPhoneNumber(phoneNumber: String) -> [CNContact] {
-      var result: [CNContact] = []
-
-      for contact in self.contacts {
-          if (!contact.phoneNumber.isEmpty) {
-
-           }
-      }
-
-      return result
+    func searchForContactUsingPhoneNumber(phoneNumber: String) {
+            DispatchQueue.global().async {
+                let searchNumber = phoneNumber
+                if searchNumber.count > 0 {
+                    
+                    self.resultSearchController = true
+                    var contacts = [CNContact]()
+                    var message: String!
+                    
+                    let contactsStore = CNContactStore()
+                    do { try contactsStore.enumerateContacts(with: CNContactFetchRequest(keysToFetch: self.allowedContactKeys())) {
+                        (contact, cursor) -> Void in
+                        if (!contact.phoneNumbers.isEmpty) {
+                            
+                            let phoneNumberToCompareAgainst =  searchNumber.components(
+                                separatedBy: NSCharacterSet.decimalDigits.inverted).joined(separator: "")
+                            for phoneNumber in contact.phoneNumbers {
+                                if let phoneNumberStruct = phoneNumber.value as? CNPhoneNumber {
+                                    let phoneNumberString = phoneNumberStruct.stringValue
+                                    var phoneNumberToCompare = phoneNumberString.components(
+                                        separatedBy: NSCharacterSet.decimalDigits.inverted).joined(separator: "")
+                                    if self.check(phoneNumberToCompare)  {
+                                        phoneNumberToCompare = String(phoneNumberToCompare.dropFirst())
+                                    }
+                                    let phoneNumberFin = phoneNumberToCompare.prefix(phoneNumberToCompareAgainst.count)
+                                    if phoneNumberFin == phoneNumberToCompareAgainst {
+                                        contacts.append(contact)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    if contacts.count == 0 {
+                        message = "No contacts were found matching the given phone number."
+                        print(message!)
+                    }
+                    } catch {
+                        message = "Unable to fetch contacts."
+                    }
+                    if message != nil {
+                        DispatchQueue.main.async {
+                            print(message!)
+                        }
+                    } else {
+                        // Success
+                        DispatchQueue.main.async {
+                            
+                            self.filteredContacts = contacts
+                        }
+                    }
+                }
+            }
   }
     
     
@@ -266,7 +312,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
     private func searchForContactUsingName(text: String) {
         
         var predicate: NSPredicate
-        if text.count > 0 {
+        if text.count > 0, !text.isNumeric{
             resultSearchController = true
             predicate = CNContact.predicateForContacts(matchingName: text)
         } else {
@@ -277,6 +323,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
         do {
             filteredContacts = try store.unifiedContacts(matching: predicate,
                                                          keysToFetch: allowedContactKeys())
+            print(predicate)
             print(filteredContacts)
         }
         catch {
@@ -750,6 +797,14 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
         getContacts( {(contacts, error) in
             if (error == nil) {
                 DispatchQueue.main.async(execute: {
+                    for contact in contacts {
+                        for number in contact.phoneNumbers {
+                            let phone: PhoneContact = .init(contact: contact)
+                            phone.phoneNumber = phone.phoneNumber.filter({$0 == number.value.stringValue})
+                            print(number.value.stringValue)
+                            self.reserveContacts.append(phone)
+                        }
+                    }
                     self.tableView.reloadData()
                 })
             }
@@ -814,16 +869,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
                     if let segregatedContact = self.orderedContacts[key] {
                         contacts = segregatedContact
                     }
-//                    if contact.phoneNumbers.count > 1{
-//                        print("more one phoneNumber \(contact.givenName)")
-//
-//                        for i in contact.phoneNumbers {
-//                            let newContact: CNContact
-//                            newContact = contact
-//                            contacts.append(newContact)
-//                        }
-//
-//                    }
+                    
                     contacts.append(contact)
                     self.orderedContacts[key] = contacts
                     
@@ -844,7 +890,6 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
     }
     
     func allowedContactKeys() -> [CNKeyDescriptor]{
-        //We have to provide only the keys which we have to access. We should avoid unnecessary keys when fetching the contact. Reducing the keys means faster the access.
         return [CNContactNamePrefixKey as CNKeyDescriptor,
                 CNContactGivenNameKey as CNKeyDescriptor,
                 CNContactFamilyNameKey as CNKeyDescriptor,
@@ -949,6 +994,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
                 cell.accessoryType = UITableViewCell.AccessoryType.checkmark
             }
             cell.updateContactsinUI(contact, indexPath: indexPath, subtitleType: subtitleCellValue)
+            
         }
         return cell
     }
@@ -983,18 +1029,42 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
             let selectedContact =  cell.contact!
             selectPerson = selectedContact.displayName()
             selectPhoneNumber = selectedContact.phoneNumbers.first?.phoneNumber
-            
             guard let clearNumber = format(phoneNumber: selectPhoneNumber ?? "") else {
                 return
             }
-            
-            let newNumber = clearNumber.dropFirst(2)
-            searchContact.numberTextField.text  = newNumber.description
-            banksActive = true
-            orderedBanks.removeAll()
-            getLastPhonePayments()
-            tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: UITableView.ScrollPosition.top , animated: false)
-            tableView.reloadData()
+            if selectedContact.phoneNumbers.count > 1{
+                counterNumbers = 0
+                let controller = ChoosePhoneNumberController()
+                var numbers = [String]()
+                for i in selectedContact.phoneNumbers{
+                    numbers.append(i.phoneNumber)
+                }
+                controller.elements = numbers
+                self.counterNumbers = numbers.count
+                controller.itemIsSelect = { currency in
+                    self.selectPhoneNumber = currency
+                    let newNumber = currency.dropFirst(2)
+                    self.searchContact.numberTextField.text  = newNumber.description
+                    self.banksActive = true
+                    self.orderedBanks.removeAll()
+                    self.getLastPhonePayments()
+                    tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: UITableView.ScrollPosition.top , animated: false)
+                    tableView.reloadData()
+                    
+                }
+                let navController = UINavigationController(rootViewController: controller)
+                navController.modalPresentationStyle = .custom
+                navController.transitioningDelegate = self
+                self.present(navController, animated: true)
+            } else{
+                let newNumber = clearNumber.dropFirst(2)
+                searchContact.numberTextField.text  = newNumber.description
+                banksActive = true
+                orderedBanks.removeAll()
+                getLastPhonePayments()
+                tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: UITableView.ScrollPosition.top , animated: false)
+                tableView.reloadData()
+            }
         }
         
     }
@@ -1131,7 +1201,7 @@ extension UIView {
 extension ContactsViewController: UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         let presenter = PresentationController(presentedViewController: presented, presenting: presenting)
-        presenter.height = 490
+        presenter.height = (counterNumbers * 40) + 160
         return presenter
     }
 }

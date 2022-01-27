@@ -29,92 +29,69 @@ class SearchContact: UIView, UITextFieldDelegate{
     private let maxNumberCount = 10
     private let regex = try! NSRegularExpression(pattern: "[\\+ \\s-\\(\\)]", options: .caseInsensitive)
 //
-    private func format(phoneNumber: String, shouldRemoveLastDigit: Bool) -> String {
-           guard !(shouldRemoveLastDigit && phoneNumber.count <= 2) else { return "" }
+    func format(phoneNumber: String, shouldRemoveLastDigit: Bool = false) -> String {
+        guard !phoneNumber.isEmpty else { return "" }
+        guard let regex = try? NSRegularExpression(pattern: "[\\s-\\(\\)]", options: .caseInsensitive) else { return "" }
+        let r = NSString(string: phoneNumber).range(of: phoneNumber)
+        var number = regex.stringByReplacingMatches(in: phoneNumber, options: .init(rawValue: 0), range: r, withTemplate: "")
 
-           let range = NSString(string: phoneNumber).range(of: phoneNumber)
-           var number = regex.stringByReplacingMatches(in: phoneNumber, options: [], range: range, withTemplate: "")
+        if number.count > 10 {
+            let tenthDigitIndex = number.index(number.startIndex, offsetBy: 10)
+            number = String(number[number.startIndex..<tenthDigitIndex])
+        }
 
-           if number.count > maxNumberCount {
-               let maxIndex = number.index(number.startIndex, offsetBy: maxNumberCount)
-               number = String(number[number.startIndex..<maxIndex])
-           }
+        if shouldRemoveLastDigit {
+            let end = number.index(number.startIndex, offsetBy: number.count-1)
+            number = String(number[number.startIndex..<end])
+        }
 
-           if shouldRemoveLastDigit {
-               let maxIndex = number.index(number.startIndex, offsetBy: number.count - 1)
-               number = String(number[number.startIndex..<maxIndex])
-           }
+        if number.count < 7 {
+            let end = number.index(number.startIndex, offsetBy: number.count)
+            let range = number.startIndex..<end
+            number = number.replacingOccurrences(of: "(\\d{3})(\\d+)", with: "($1) $2", options: .regularExpression, range: range)
 
-           let maxIndex = number.index(number.startIndex, offsetBy: number.count)
-           let regRange = number.startIndex..<maxIndex
-
-           if number.count < 10 {
-               let pattern = "(\\d{3})(\\d{3})(\\d{2})(\\d+)"
-               number = number.replacingOccurrences(of: pattern, with: "($1) $2-$3-$4", options: .regularExpression, range: regRange)
-           } else {
-               let pattern = "(\\d{3})(\\d{3})(\\d{2})(\\d+)"
-               number = number.replacingOccurrences(of: pattern, with: "($1) $2-$3-$4", options: .regularExpression, range: regRange)
-           }
-
-           return number
-       }
-   
-    
-    @IBAction func valueChanged(_ sender: UITextField) {
-//        delegate2?.add_Contact(name: numberTextField.text ?? "")
-    }
-    
-    func textFieldDidChangeSelection(_ textField: UITextField) {
-//        delegateNumber?.passTextFieldText(textField: numberTextField)
-    }
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-           var fullString = (textField.text ?? "") + string
-                if string == "" {
-                    fullString = ""
-                }
-        if maskPhone {
-            textField.text = format(phoneNumber: fullString, shouldRemoveLastDigit: range.length == 1)
-            delegateNumber?.passTextFieldText(textField: numberTextField)
         } else {
-            textField.text = fullString
+            let end = number.index(number.startIndex, offsetBy: number.count)
+            let range = number.startIndex..<end
+            number = number.replacingOccurrences(of: "(\\d{3})(\\d{3})(\\d+)", with: "($1) $2-$3", options: .regularExpression, range: range)
+        }
+
+        return number
+    }
+    
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        var fullString = textField.text ?? ""
+        fullString.append(string)
+        if range.length == 1 {
+            textField.text = format(phoneNumber: fullString, shouldRemoveLastDigit: true)
+            delegateNumber?.passTextFieldText(textField: numberTextField)
+
+        } else {
+            textField.text = format(phoneNumber: fullString)
             delegateNumber?.passTextFieldText(textField: numberTextField)
 
         }
-//        delegateNumber?.passTextFieldText(text: fullString )
-           return false
-       }
+        return false
+    }
+    
+    func textFieldShouldClear(_ textField: UITextField) -> Bool {
+        numberTextField.text = ""
+        delegateNumber?.passTextFieldText(textField: numberTextField)
+        return true
+    }
+    
     
     override func layoutSubviews() {
         super.layoutSubviews()
-//        numberTextField.addTarget(self, action:Selector("yourWeightValueChanged:"), for:.valueChanged)
         numberTextField.delegate = self
-//        roundCorners(corners: .allCorners, radius: 10)
         self.layer.cornerRadius = 10
         self.layer.borderWidth = 1
         self.layer.borderColor = UIColor(red: 0.918, green: 0.922, blue: 0.922, alpha: 1).cgColor
         self.clipsToBounds = true
         
+        
     }
-
-    // other usual outlets
-
-//       func initialize() {
-//
-//          // first: load the view hierarchy to get proper outlets
-//          let name = String(describing: type(of: self))
-//          let nib = UINib(nibName: name, bundle: .main)
-//          nib.instantiate(withOwner: self, options: nil)
-//
-//          // next: append the container to our view
-//          self.addSubview(self.containerView)
-//          self.containerView.translatesAutoresizingMaskIntoConstraints = false
-//          NSLayoutConstraint.activate([
-//              self.containerView.topAnchor.constraint(equalTo: self.topAnchor),
-//              self.containerView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-//              self.containerView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-//              self.containerView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-//          ])
-//      }
 
 }
 extension UIView {

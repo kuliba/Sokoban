@@ -239,6 +239,7 @@
 		68419314279ED96800B4E184 /* GetCardStatementResponseGenericMin.json in Resources */ = {isa = PBXBuildFile; fileRef = 68419313279ED96800B4E184 /* GetCardStatementResponseGenericMin.json */; };
 		68419316279EDB6400B4E184 /* GetMe2MeDebitConsentResponseGenericMin.json in Resources */ = {isa = PBXBuildFile; fileRef = 68419315279EDB6400B4E184 /* GetMe2MeDebitConsentResponseGenericMin.json */; };
 		68419318279EDBA400B4E184 /* GetClientConsentMe2MePullResponseGenericMin.json in Resources */ = {isa = PBXBuildFile; fileRef = 68419317279EDBA400B4E184 /* GetClientConsentMe2MePullResponseGenericMin.json */; };
+		6841932127A28A4C00B4E184 /* ChoosePhoneNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6841932027A28A4B00B4E184 /* ChoosePhoneNumber.swift */; };
 		6845336C279843DF00104A8B /* ServerCommands+UtilityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6845336B279843DF00104A8B /* ServerCommands+UtilityController.swift */; };
 		6845336E27984B2800104A8B /* ServerCommandsUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6845336D27984B2800104A8B /* ServerCommandsUtilityTests.swift */; };
 		6845337027984D1000104A8B /* CsrfResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 6845336F27984D1000104A8B /* CsrfResponseGeneric.json */; };
@@ -932,6 +933,7 @@
 		68419313279ED96800B4E184 /* GetCardStatementResponseGenericMin.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetCardStatementResponseGenericMin.json; sourceTree = "<group>"; };
 		68419315279EDB6400B4E184 /* GetMe2MeDebitConsentResponseGenericMin.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetMe2MeDebitConsentResponseGenericMin.json; sourceTree = "<group>"; };
 		68419317279EDBA400B4E184 /* GetClientConsentMe2MePullResponseGenericMin.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetClientConsentMe2MePullResponseGenericMin.json; sourceTree = "<group>"; };
+		6841932027A28A4B00B4E184 /* ChoosePhoneNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChoosePhoneNumber.swift; sourceTree = "<group>"; };
 		6845336B279843DF00104A8B /* ServerCommands+UtilityController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServerCommands+UtilityController.swift"; sourceTree = "<group>"; };
 		6845336D27984B2800104A8B /* ServerCommandsUtilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommandsUtilityTests.swift; sourceTree = "<group>"; };
 		6845336F27984D1000104A8B /* CsrfResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = CsrfResponseGeneric.json; sourceTree = "<group>"; };
@@ -3386,6 +3388,7 @@
 				68FFA5262682AEE1002DADFA /* ContactsViewController */,
 				ED92D3A126735A0A006D47B3 /* PaymentByPhoneViewController.swift */,
 				68FFA5422682DC95002DADFA /* PhoneConfirmViewController.swift */,
+				6841932027A28A4B00B4E184 /* ChoosePhoneNumber.swift */,
 			);
 			path = PaymentsByPhone;
 			sourceTree = "<group>";
@@ -4860,6 +4863,7 @@
 				ED4FC610266CD66F0092B4AB /* СountryModel.swift in Sources */,
 				6822EFD226B935DB00125EEC /* BaseTableViewViewController.swift in Sources */,
 				EDF68213266F9EC800FD5C07 /* URLHostType.swift in Sources */,
+				6841932127A28A4C00B4E184 /* ChoosePhoneNumber.swift in Sources */,
 				6833E0CE273920CE004C070F /* FaceTouchIDCoordinator.swift in Sources */,
 				EDB1656C26681F0E007E6030 /* MainTabBarViewController.swift in Sources */,
 				ED3A96742690FC8300252857 /* BankCell.swift in Sources */,
