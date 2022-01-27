@@ -43,7 +43,6 @@ class PushHistoryViewController: UIViewController {
         ]
         GetNotificationsModelSaved.add(body, [:]) {
             DispatchQueue.main.async {
-                let a = self.tempArray
                 self.tableView.reloadData()
             }
         }
