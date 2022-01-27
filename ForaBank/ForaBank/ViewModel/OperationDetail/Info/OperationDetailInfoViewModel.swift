@@ -74,7 +74,7 @@ final class OperationDetailInfoViewModel: Identifiable {
              fee
              product
              tranDate
-             */ 
+             */
             if let payeeCardNumber = operation?.payeeCardNumber, let productObjects = realm?.objects(UserAllCardsModel.self){
                     for product in productObjects{
                         if product.number?.suffix(4) == payeeCardNumber.suffix(4){
@@ -257,6 +257,7 @@ final class OperationDetailInfoViewModel: Identifiable {
             }
             
             if let payeeAmount = operation?.payeeAmount, let payeeCurrency = operation?.payeeCurrency{
+                
                 cells.append(PropertyCellViewModel(title: "Сумма зачисления в валюте", iconType: .balance, value: payeeAmount.currencyFormatter(symbol: payeeCurrency)))
             }
             
@@ -282,7 +283,6 @@ final class OperationDetailInfoViewModel: Identifiable {
              product
              tranDate
              */
-            
             
             if let payeeFullName = operation?.payeeFullName {
                 
@@ -344,7 +344,6 @@ final class OperationDetailInfoViewModel: Identifiable {
             if let payeeAccountNumber = operation?.payeeAccountNumber {
                 
                 cells.append(PropertyCellViewModel(title: "Номер счета получателя", iconType: .account, value: payeeAccountNumber))
-                
             }
             
             if let payeeINN = operation?.payeeINN  {
@@ -453,11 +452,8 @@ final class OperationDetailInfoViewModel: Identifiable {
              */
             
             logo = statement.svgImage
-            
-            if let provider = operation?.provider {
 
-                cells.append(BankCellViewModel(title: "Наименование получателя", icon: statement.svgImage, name: provider))
-            }
+            cells.append(BankCellViewModel(title: "Наименование получателя", icon: statement.svgImage, name: statement.merchantName))
             
             if let account = operation?.account {
                 
@@ -493,12 +489,6 @@ final class OperationDetailInfoViewModel: Identifiable {
             logo = statement.svgImage
             
             cells.append(BankCellViewModel(title: "Наименование получателя", icon: statement.svgImage, name: statement.merchantName))
-    
-            
-//            if let account = operation?.account {
-//
-//                cells.append(PropertyCellViewModel(title: "Номер счета получателя", iconType: .account, value: account))
-//            }
             
             if let payeeINN = operation?.payeeINN  {
                 
