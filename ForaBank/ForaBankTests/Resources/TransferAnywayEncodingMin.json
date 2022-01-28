@@ -3,7 +3,13 @@
     "currencyAmount": "RUB",
     "check": false,
     "puref": null,
-    "additional": null,
+    "additional": [
+      {
+        "fieldid": 0,
+        "fieldname": "string",
+        "fieldvalue": "string"
+      }
+    ],
     "comment": null,
     "payer": {}
 }

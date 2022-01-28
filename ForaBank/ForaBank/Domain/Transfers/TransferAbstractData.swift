@@ -7,7 +7,7 @@
 
 import Foundation
 
-class TransferAbstract: Codable {
+class TransferAbstractData: Codable {
 
     let amount: Double?
     let check: Bool
@@ -51,7 +51,7 @@ class TransferAbstract: Codable {
     }
 }
 
-extension TransferAbstract {
+extension TransferAbstractData {
     
     struct Payer: Codable, Equatable {
         
@@ -64,9 +64,9 @@ extension TransferAbstract {
     }
 }
 
-extension TransferAbstract: Equatable {
+extension TransferAbstractData: Equatable {
     
-    static func == (lhs: TransferAbstract, rhs: TransferAbstract) -> Bool {
+    static func == (lhs: TransferAbstractData, rhs: TransferAbstractData) -> Bool {
         
         return  lhs.amount == rhs.amount &&
                 lhs.check == rhs.check &&

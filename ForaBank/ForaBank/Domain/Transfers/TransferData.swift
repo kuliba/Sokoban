@@ -1,5 +1,5 @@
 //
-//  Transfer.swift
+//  TransferData.swift
 //  ForaBank
 //
 //  Created by Max Gribov on 20.12.2021.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Transfer: TransferAbstract {
+class TransferData: TransferAbstractData {
 
     let payeeExternal: PayeeExternal?
     let payeeInternal: PayeeInternal?
@@ -46,7 +46,7 @@ class Transfer: TransferAbstract {
     
     //MARK: Equitable
     
-    static func == (lhs: Transfer, rhs: Transfer) -> Bool {
+    static func == (lhs: TransferData, rhs: TransferData) -> Bool {
         
         return  lhs.amount == rhs.amount &&
                 lhs.check == rhs.check &&
@@ -58,41 +58,41 @@ class Transfer: TransferAbstract {
     }
 }
 
-extension Transfer {
+extension TransferData {
     
-    //TODO: request server API documentation for optional parameters
     struct PayeeExternal: Codable, Equatable {
         
-        let inn: String?
+        let inn: String
         let kpp: String?
         let accountId: Int?
-        let accountNumber: String?
-        let bankBIC: String?
+        let accountNumber: String
+        let bankBIC: String
         let cardId: Int?
         let cardNumber: String?
-        let compilerStatus: String? //FIXME: implement enum
-        let date: String? //FIXME: implement Date type
-        let name: String?
+        let compilerStatus: String?
+        let date: String?
+        let name: String
+        let tax: Tax
         
-        struct Tax {
+        struct Tax: Codable, Equatable {
             
             let bcc: String?
-            let date: String? //FIXME: implement Date type
+            let date: String?
             let documentNumber: String?
-            let documentType: String? //FIXME: implement enum
+            let documentType: String?
             let oktmo: String?
-            let period: String? //FIXME: implement enum
-            let reason: String? //FIXME: implement enum
+            let period: String?
+            let reason: String?
             let uin: String?
         }
         
         private enum CodingKeys : String, CodingKey {
-            case inn = "INN", kpp = "KPP", accountId, accountNumber, bankBIC, cardId, cardNumber, compilerStatus, date, name
+            case inn = "INN", kpp = "KPP", accountId, accountNumber, bankBIC, cardId, cardNumber, compilerStatus, date, name, tax
         }
     }
 }
 
-extension Transfer {
+extension TransferData {
     
     struct PayeeInternal: Codable, Equatable {
         

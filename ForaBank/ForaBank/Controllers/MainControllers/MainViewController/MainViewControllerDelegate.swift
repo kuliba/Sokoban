@@ -72,7 +72,7 @@ extension MainViewController: UICollectionViewDelegate {
 //        case .offer:
 //            print("It's transfer")
         case .pay:
-            if indexPath.row == 0{
+            if indexPath.row == 0 {
                 checkCameraAccess(isAllowed: {
                     if $0 {
                         DispatchQueue.main.async {
@@ -98,15 +98,23 @@ extension MainViewController: UICollectionViewDelegate {
                         }
                     }
                 })
-            }
-            if indexPath.row == 1{
+            } else if indexPath.row == 1 {
                 if let viewController = pay[indexPath.row].controllerName.getViewController() {
                     let navVC = UINavigationController(rootViewController: viewController)
                     present(navVC, animated: true)
                 }
-            } else {
-                print("Pay")
+                
+            } else if indexPath.row == 2 {
+               
+                //FIXME: inject from parent view model after refactoring
+                let model = Model.shared
+                let templatesViewModel = TemplatesListViewModel(model)
+                let templatesViewController = TemplatesListViewHostingViewController(with: templatesViewModel)
+                templatesViewController.delegate = self
+                let navigationViewController = UINavigationController(rootViewController: templatesViewController)
+                present(navigationViewController, animated: true)
             }
+            
         case .openProduct:
             if indexPath.row == 1{
                 let viewController = OpenNewDepositViewController()
@@ -152,5 +160,23 @@ extension MainViewController: UIViewControllerTransitioningDelegate {
     }
 }
 
+//MARK: - TemplatesListViewHostingViewControllerDelegate
+
+extension MainViewController: TemplatesListViewHostingViewControllerDelegate {
+    
+    func presentProductViewController() {
+
+        let allProducts = productsCardsAndAccounts + productsDeposits
+        guard let firstProduct = allProducts.first else {
+            return
+        }
+                
+        let viewController = ProductViewController()
+        viewController.delegate = self
+        viewController.indexItem = 0
+
+        delegate?.goProductViewController(productIndex: 0, product: firstProduct, products: allProducts)
+    }
+}
 
 

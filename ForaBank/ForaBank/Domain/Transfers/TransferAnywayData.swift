@@ -1,5 +1,5 @@
 //
-//  TransferAnyway.swift
+//  TransferAnywayData.swift
 //  ForaBank
 //
 //  Created by Max Gribov on 20.12.2021.
@@ -7,12 +7,12 @@
 
 import Foundation
 
-class TransferAnyway: TransferAbstract {
+class TransferAnywayData: TransferAbstractData {
     
-    let additional: [Additional]?
+    let additional: [Additional]
     let puref: String?
     
-    internal init(amount: Double?, check: Bool, comment: String?, currencyAmount: String, payer: Payer, additional: [Additional]?, puref: String?) {
+    internal init(amount: Double?, check: Bool, comment: String?, currencyAmount: String, payer: Payer, additional: [Additional], puref: String?) {
         
         self.additional = additional
         self.puref = puref
@@ -29,7 +29,7 @@ class TransferAnyway: TransferAbstract {
     required init(from decoder: Decoder) throws {
         
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        additional = try container.decodeIfPresent([Additional].self, forKey: .additional)
+        additional = try container.decode([Additional].self, forKey: .additional)
         puref = try container.decodeIfPresent(String.self, forKey: .puref)
         
         try super.init(from: decoder)
@@ -46,7 +46,7 @@ class TransferAnyway: TransferAbstract {
     
     //MARK: Equitable
     
-    static func == (lhs: TransferAnyway, rhs: TransferAnyway) -> Bool {
+    static func == (lhs: TransferAnywayData, rhs: TransferAnywayData) -> Bool {
         
         return  lhs.amount == rhs.amount &&
                 lhs.check == rhs.check &&
@@ -58,12 +58,12 @@ class TransferAnyway: TransferAbstract {
     }
 }
 
-extension TransferAnyway {
+extension TransferAnywayData {
     
     struct Additional: Codable, Equatable {
         
-        let fieldid: Int?
-        let fieldname: String?
-        let fieldvalue: String?
+        let fieldid: Int
+        let fieldname: String
+        let fieldvalue: String
     }
 }
