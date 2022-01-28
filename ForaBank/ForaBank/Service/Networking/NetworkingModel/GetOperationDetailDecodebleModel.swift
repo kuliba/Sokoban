@@ -93,6 +93,9 @@ struct OperationDetailDatum: Codable {
     let accountTitle: String?
     let isTrafficPoliceService: Bool?
     let paymentTemplateId: Int?
+    let payeeAccountId: Int?
+    let payeeCardId: Int?
+    let payeeCurrency: String?
 
     enum CodingKeys: String, CodingKey {
         
@@ -119,7 +122,10 @@ struct OperationDetailDatum: Codable {
         case transferNumber
         case accountTitle
         case isTrafficPoliceService
+        case payeeAccountId
         case paymentTemplateId
+        case payeeCardId
+        case payeeCurrency
     }
 }
 
