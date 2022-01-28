@@ -32,6 +32,8 @@ class PaymentsDetailsView: UIView {
     @IBOutlet weak var changeButtonsStackView: UIStackView!
     @IBOutlet weak var detailButtonsStackView: UIStackView!
     
+    @IBOutlet weak var shablonStackView: UIStackView!
+    @IBOutlet weak var documentStackView: UIStackView!
     
     var confurmVCModel: ConfirmViewControllerModel? {
         didSet {
@@ -90,34 +92,6 @@ class PaymentsDetailsView: UIView {
             changeButtonsStackView.isHidden = true
         }
         
-        
-        switch model.status {
-        case .succses:
-            statusLabel.text = "Успешный перевод"
-            statusImageView.image = UIImage(named: "OkOperators")
-        case .error:
-            statusLabel.text = "Операция неуспешна!"
-            statusImageView.image = UIImage(named: "errorIcon")
-//            statusImageView.image = #imageLiteral(resourceName: "errorIcon") waiting
-        case .returnRequest:
-            statusLabel.text = "Запрос на возврат перевода принят в обработку"
-            statusImageView.image = UIImage(named: "waiting")
-            changeButtonsStackView.isHidden = true
-            detailButtonsStackView.isHidden = true
-            operatorImageView.image = #imageLiteral(resourceName: "Vector")
-        case .changeRequest:
-            statusLabel.text = "Запрос на изменение перевода принят в обработку"
-            statusImageView.image = UIImage(named: "waiting")
-            changeButtonsStackView.isHidden = true
-            detailButtonsStackView.isHidden = true
-            operatorImageView.image = #imageLiteral(resourceName: "Vector")
-        case .processing:
-            statusLabel.text = "Операция ожидает подтверждения"
-            statusImageView.image = UIImage(named: "waiting")
-            detailButtonsStackView.isHidden = true
-        }
-        
-        
         if model.operatorImage != "" {
             operatorImageView.image = model.operatorImage.convertSVGStringToImage()
         }
@@ -136,6 +110,42 @@ class PaymentsDetailsView: UIView {
         }
         
         summLabel.text = model.summTransction
+        
+        switch model.status {
+        case .inProgress:
+            statusLabel.text = "В обработке"
+            statusImageView.image = UIImage(named: "OkOperators")
+        case .succses:
+            statusLabel.text = "Успешный перевод"
+            statusImageView.image = UIImage(named: "OkOperators")
+        case .error:
+            statusLabel.text = "Операция неуспешна!"
+            statusImageView.image = UIImage(named: "errorIcon")
+        case .returnRequest:
+            statusLabel.text = "Запрос на возврат перевода принят в обработку"
+            statusImageView.image = UIImage(named: "waiting")
+            changeButtonsStackView.isHidden = true
+            detailButtonsStackView.isHidden = true
+            operatorImageView.image = #imageLiteral(resourceName: "Vector")
+        case .changeRequest:
+            statusLabel.text = "Запрос на изменение перевода принят в обработку"
+            statusImageView.image = UIImage(named: "waiting")
+            changeButtonsStackView.isHidden = true
+            detailButtonsStackView.isHidden = true
+            operatorImageView.image = #imageLiteral(resourceName: "Vector")
+        case .processing:
+            statusLabel.text = "Операция ожидает подтверждения"
+            statusImageView.image = UIImage(named: "waiting")
+            detailButtonsStackView.isHidden = true
+        case .timeOut:
+            statusLabel.text = "Запрос принят в обработку"
+            statusImageView.image = UIImage(named: "timeOutImage")
+            infoLabel.text = " "
+            summLabel.text = " "
+            operatorImageView.image = UIImage()
+            documentStackView.isHidden = true
+            shablonStackView.isHidden = true
+        }
         
     }
     
