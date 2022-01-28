@@ -23,23 +23,25 @@ struct PaymentTemplateData: Equatable {
 
 extension PaymentTemplateData {
     
+    /*
+    BETWEEN_THEIR - Между своими; INSIDE_BANK, OTHER_BANK - На другую карту; BY_PHONE, SFP - Перевод по номеру телефона; EXTERNAL_ENTITY, EXTERNAL_INDIVIDUAL - По реквизитам; CONTACT_ADDRESSLESS - Зарубеж и по РФ (Перевод через систему Contact); DIRECT - Зарубеж и по РФ (Перевод МИГ); HOUSING_AND_COMMUNAL_SERVICE - Услуги ЖКХ; MOBILE - Мобильная связь; INTERNET - Интернет, ТВ; TRANSPORT - Транспорт
+     */
+    
     enum Kind: String, Codable, Equatable {
         
-        case card2Card = "Card2Card"
-        case card2Account = "Card2Account"
-        case account2Card = "Account2Card"
-        case account2Account = "Account2Account"
-        case elecsnet = "ELECSNET"
-        case card2Phone = "Card2Phone"
-        case account2Phone = "Account2Phone"
+        case betweenTheit = "BETWEEN_THEIR"
+        case insideBank = "INSIDE_BANK"
+        case otherBank = "OTHER_BANK"
+        case byPhone = "BY_PHONE"
         case sfp = "SFP"
-        case me2MeDebet = "ME2ME_DEBET"
-        case external = "External"
+        case externalEntity = "EXTERNAL_ENTITY"
+        case externalIndividual = "EXTERNAL_INDIVIDUAL"
+        case contactAdressless = "CONTACT_ADDRESSLESS"
+        case direct = "DIRECT"
         case housingAndCommunalService = "HOUSING_AND_COMMUNAL_SERVICE"
         case mobile = "MOBILE"
-        case contactAddressless = "CONTACT_ADDRESSLESS"
-        case direct = "DIRECT"
         case internet = "INTERNET"
+        case transport = "TRANSPORT" 
     }
     
     struct SortData: Codable, Equatable {

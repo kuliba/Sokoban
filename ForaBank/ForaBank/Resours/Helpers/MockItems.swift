@@ -146,12 +146,12 @@ class MockItems {
                           iconName: "tv",
                           controllerName: "InternetTVMainController",
                           description: "Интернет, ТВ")
-//            ,
-            
-//            PaymentsModel(id: 15, name: "Штрафы",
-//                          iconName: "carMain",
-//                          controllerName: "",
-//                          description: "Что то"),
+            ,
+        
+            PaymentsModel(id: 15, name: "Транспорт",
+                          iconName: "carMain",
+                          controllerName: "",
+                          description: "Что то")
 //
 //            PaymentsModel(id: 16, name: "Соцсети, игры, карты",
 //                          iconName: "iconGame",
@@ -506,6 +506,8 @@ class MockItems {
             period: nil,
             transferNumber: nil,
             accountTitle: "Номер телефона",
+            isTrafficPoliceService: false,
+            paymentTemplateId: nil
             isTrafficPoliceService: false,
             payeeAccountId: nil,
             payeeCardId: nil,

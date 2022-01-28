@@ -48,11 +48,11 @@ class Model {
     static var shared: Model = {
        
         // server agent
-        #if DEBUG
-        let serverContext = ServerAgent.Context(for: .test)
-        #else
+//        #if DEBUG
+//        let serverContext = ServerAgent.Context(for: .test)
+//        #else
         let serverContext = ServerAgent.Context(for: .prod)
-        #endif
+//        #endif
         
         let serverAgent = ServerAgent(context: serverContext)
         
@@ -99,6 +99,7 @@ class Model {
                             switch response.statusCode {
                             case .ok:
                                 self.action.send(ModelAction.PaymentTemplate.Save.Complete(paymentTemplateId: response.data.paymentTemplateId))
+                                self.action.send(ModelAction.PaymentTemplate.List.Requested())
                                 
                             default:
                                 //TODO: handle not ok server status

@@ -57,6 +57,10 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
         //textField.placeholder = item.title
         placeholderLable.text = item.title
         //textView.text = item.title
+        print("setupUI5555 \(fieldName ?? "") \(item.title ?? "")")
+        additionalList.forEach { model in
+            print("setupUI5555__ \(model.fieldName ?? "") \(model.fieldValue ?? "")")
+        }
 
         if let textSubTitle = item.subTitle, !textSubTitle.isEmpty {
             info = item.subTitle ?? ""
@@ -113,7 +117,7 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
         btnShowSelectView.isHidden = true
 
         let field = additionalList.filter { it in
-            it.fieldName == item.id
+            it.fieldName?.contains(item.id ?? "-1") == true
         }
         if field.count > 0 {
             textView.text = field.first?.fieldValue

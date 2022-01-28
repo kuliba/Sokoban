@@ -83,7 +83,7 @@ class BottomInputView: UIView {
         super.init(frame: .zero)
         commonInit()
     }
-    
+
     func commonInit() {
         
         Bundle.main.loadNibNamed(kContentXibName, owner: self, options: nil)
@@ -108,6 +108,24 @@ class BottomInputView: UIView {
                 self.buttomLabel.alpha = unformatText.isEmpty ? 0 : 1
             }
             self.exchangeRate(unformatText)
+        }
+    }
+
+    func updateAmountUI(textAmount: String?) {
+        let result = textAmount?.filter("01234567890.".contains)
+        if let text = result, !text.isEmpty {
+            amountTextField.text = text
+            guard let unformatText = moneyFormatter?.unformat(text) else {
+                return
+            }
+            tempTextFieldValue = unformatText
+            doneButtonIsEnabled(unformatText.isEmpty)
+            UIView.animate(withDuration: 0.2) {
+                self.topLabel.alpha = unformatText.isEmpty ? 0 : 1
+                self.buttomLabel.alpha = unformatText.isEmpty ? 0 : 1
+            }
+            self.exchangeRate(unformatText)
+            amountTextField.text = "\(amountTextField.text ?? "") \(currencySymbol)"
         }
 }
     

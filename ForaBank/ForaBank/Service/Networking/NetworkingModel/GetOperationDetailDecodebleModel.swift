@@ -92,6 +92,7 @@ struct OperationDetailDatum: Codable {
     let transferNumber: String?
     let accountTitle: String?
     let isTrafficPoliceService: Bool?
+    let paymentTemplateId: Int?
     let payeeAccountId: Int?
     let payeeCardId: Int?
     let payeeCurrency: String?
@@ -121,9 +122,6 @@ struct OperationDetailDatum: Codable {
         case transferNumber
         case accountTitle
         case isTrafficPoliceService
-        case payeeAccountId
-        case payeeCardId
-        case payeeCurrency
     }
 }
 

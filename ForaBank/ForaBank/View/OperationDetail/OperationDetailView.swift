@@ -69,22 +69,7 @@ struct OperationDetailView: View {
                             
                             ForEach(viewModel.featureButtons) { buttonViewModel in
                                 
-                                VStack(spacing: 12) {
-                                    
-                                    Button {
-                                        
-                                        buttonViewModel.action()
-                                        
-                                    } label: {
-                                        
-                                        Image(buttonViewModel.icon)
-                                            .resizable()
-                                            .frame(width: 56, height: 56)
-                                    }
-                                    
-                                    Text(buttonViewModel.name)
-                                        .font(.system(size: 12, weight: .medium))
-                                }
+                                FeatureButtonView(viewModel: buttonViewModel)
                             }
                         }
                         .padding(.top, 28)
@@ -308,6 +293,72 @@ extension OperationDetailView {
                     .padding()
                     .padding(.horizontal, 10)
                     .shimmering(active: true, bounce: true)
+            }
+        }
+    }
+    
+    struct FeatureButtonView: View {
+        
+        let viewModel: OperationDetailViewModel.FeatureButtonViewModel
+        
+        var body: some View {
+            
+            switch viewModel.kind {
+            case .template(let selected):
+                if selected == true {
+                    
+                    VStack(spacing: 12) {
+                        
+                        Image(viewModel.icon)
+                            .resizable()
+                            .frame(width: 56, height: 56)
+                        
+                        HStack(spacing: 3) {
+                            
+                            Image("Operation Details Template Check Icon")
+                            Text(viewModel.name)
+                                .font(.system(size: 12, weight: .medium))
+                                .foregroundColor(Color(hex: "#22C183"))
+                        }
+                    }
+                    
+                } else {
+                    
+                    VStack(spacing: 12) {
+                        
+                        Button {
+                            
+                            viewModel.action()
+                            
+                        } label: {
+                            
+                            Image(viewModel.icon)
+                                .resizable()
+                                .frame(width: 56, height: 56)
+                        }
+                        
+                        Text(viewModel.name)
+                            .font(.system(size: 12, weight: .medium))
+                    }
+                }
+                
+            default:
+                VStack(spacing: 12) {
+                    
+                    Button {
+                        
+                        viewModel.action()
+                        
+                    } label: {
+                        
+                        Image(viewModel.icon)
+                            .resizable()
+                            .frame(width: 56, height: 56)
+                    }
+                    
+                    Text(viewModel.name)
+                        .font(.system(size: 12, weight: .medium))
+                }
             }
         }
     }

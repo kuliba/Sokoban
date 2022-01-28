@@ -32,7 +32,7 @@ struct AddOperatorsList: DownloadQueueProtocol {
                 return
             }
             
-            let operatorCodes = [GlobalModule.UTILITIES_CODE, GlobalModule.INTERNET_TV_CODE]
+            let operatorCodes = [GlobalModule.UTILITIES_CODE, GlobalModule.INTERNET_TV_CODE, GlobalModule.PAYMENT_TRANSPORT]
             let parameterTypes = ["INPUT"]
             let updatedOperators = GKHOperatorsModel.childOperators(with: operatorGroupList, operatorCodes: operatorCodes, parameterTypes: parameterTypes)
             

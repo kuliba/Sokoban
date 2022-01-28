@@ -25,7 +25,11 @@ class OperationDetailViewModel: ObservableObject {
     @Published var isLoading: Bool
     @Published var operationDetailInfoViewModel: OperationDetailInfoViewModel?
     
+    //FIXME: inject Model through init after server API refactoring
+    private let model: Model = Model.shared
+    private var bindings = Set<AnyCancellable>()
     private let animationDuration: Double = 0.5
+    private var paymentTemplateId: Int?
     
     init?(productStatement: ProductStatementProxy, product: UserAllCardsModel) {
 
@@ -123,6 +127,35 @@ class OperationDetailViewModel: ObservableObject {
         }
         
         fetchOperationDetail(productStatement: productStatement, product: product)
+        bind()
+    }
+    
+    private func bind() {
+        
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as ModelAction.PaymentTemplate.Save.Complete:
+                    var featureButtonsUpdated = [FeatureButtonViewModel]()
+                    for buttonViewModel in featureButtons {
+                        switch buttonViewModel.kind {
+                        case .template:
+                            let templateButtonSelected = FeatureButtonViewModel(kind: .template(true), icon: "Operation Details Template Selected", name: "Шаблон", action: {})
+                            featureButtonsUpdated.append(templateButtonSelected)
+                        
+                        default:
+                            featureButtonsUpdated.append(buttonViewModel)
+                        }
+                    }
+                    featureButtons = featureButtonsUpdated
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
     }
     
     private func fetchOperationDetail(productStatement: ProductStatementProxy, product: UserAllCardsModel) {
@@ -167,7 +200,7 @@ class OperationDetailViewModel: ObservableObject {
                 
                 switch productStatement.paymentDetailType {
                 case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp, .transport:
-                    if let templateButtonViewModel = self.templateButtonViewModel(with: operationDetail) {
+                    if let templateButtonViewModel = self.templateButtonViewModel(with: productStatement, operationDetail: operationDetail) {
                         
                         featureButtonsUpdated.append(templateButtonViewModel)
                     }
@@ -183,7 +216,7 @@ class OperationDetailViewModel: ObservableObject {
                     }
                     
                 case .contactAddressless:
-                    if let templateButtonViewModel = self.templateButtonViewModel(with: operationDetail) {
+                    if let templateButtonViewModel = self.templateButtonViewModel(with: productStatement, operationDetail: operationDetail) {
                         
                         featureButtonsUpdated.append(templateButtonViewModel)
                     }
@@ -234,10 +267,39 @@ private extension OperationDetailViewModel {
         return FeatureButtonViewModel(kind: .document, icon: "Operation Details Document", name: "Документ", action: { [weak self] in self?.action.send(OperationDetailViewModelAction.ShowDocument(paymentOperationDetailID: paymentOperationDetailID, printFormType: printFormType))})
     }
     
-    func templateButtonViewModel(with operationDetail: OperationDetailDatum) -> FeatureButtonViewModel? {
+    func templateButtonViewModel(with productStatement: ProductStatementProxy, operationDetail: OperationDetailDatum) -> FeatureButtonViewModel? {
         
-        //FIXME: temp mock
-        return FeatureButtonViewModel(kind: .template(false), icon: "Operation Details Template", name: "+ Шаблон", action: {})
+        if operationDetail.paymentTemplateId != nil {
+            
+            return FeatureButtonViewModel(kind: .template(true), icon: "Operation Details Template Selected", name: "Шаблон", action: {})
+            
+        } else {
+            
+            guard let name = templateName(with: productStatement, operationDetail: operationDetail),
+                  let paymentOperationDetailId = operationDetail.paymentOperationDetailID else {
+                return nil
+            }
+            
+            let action = ModelAction.PaymentTemplate.Save.Requested(name: name, paymentOperationDetailId: paymentOperationDetailId)
+            return FeatureButtonViewModel(kind: .template(false), icon: "Operation Details Template", name: "+ Шаблон", action: { [weak self] in self?.model.action.send(action)})
+        }
+    }
+    
+    func templateName(with productStatement: ProductStatementProxy, operationDetail: OperationDetailDatum) -> String? {
+
+        switch productStatement.paymentDetailType {
+        case .betweenTheir, .insideBank, .housingAndCommunalService, .internet, .mobile, .direct, .sfp, .contactAddressless:
+            return productStatement.merchantName
+        
+        case .externalIndivudual, .externalEntity:
+            return operationDetail.payeeFullName
+            
+        case .otherBank:
+            return operationDetail.payeeCardNumber
+        
+        default:
+            return nil
+        }
     }
     
     func actionButtons(with operationDetail: OperationDetailDatum, product: UserAllCardsModel) -> [ActionButtonViewModel] {
@@ -681,7 +743,7 @@ extension OperationDetailViewModel {
         
         viewModel.actionButtons = nil
         
-        viewModel.featureButtons = [FeatureButtonViewModel(kind: .template(false), icon: "Operation Details Template", name: "+ Шаблон", action: {}), FeatureButtonViewModel(kind: .document, icon: "Operation Details Document", name: "Документ", action: {}), FeatureButtonViewModel(kind: .info, icon: "Operation Details Info", name: "Детали", action: {})]
+        viewModel.featureButtons = [FeatureButtonViewModel(kind: .template(true), icon: "Operation Details Template Selected", name: "Шаблон", action: {}), FeatureButtonViewModel(kind: .document, icon: "Operation Details Document", name: "Документ", action: {}), FeatureButtonViewModel(kind: .info, icon: "Operation Details Info", name: "Детали", action: {})]
         
         return viewModel
         

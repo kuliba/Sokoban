@@ -10,6 +10,7 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
 
     public static var iMsg: IMsg? = nil
     public static let msgHideLatestOperation = 1
+    public static let msgShowLatestOperation = 3
     public static let msgPerformSegue = 2
     public static var latestOpIsEmpty = false
     public static func storyboardInstance() -> InternetTVMainController? {
@@ -34,10 +35,20 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
         switch (what) {
         case InternetTVMainController.msgHideLatestOperation:
             historyView?.isHidden = true
-            historyView?.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
+            //historyView?.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
+            break
+        case InternetTVMainController.msgShowLatestOperation:
+            historyView?.isHidden = false
+            //historyView?.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
             break
         case InternetTVMainController.msgPerformSegue:
-            performSegue(withIdentifier: "input", sender: self)
+            if "iFora||AVDТ;iFora||AVDD".contains(InternetTVMainViewModel.latestOp?.op.puref ?? "-1" ) == true {
+                performSegue(withIdentifier: "avtodor", sender: self)
+            } else if InternetTVMainViewModel.latestOp?.op.puref == "iFora||5173" {
+                performSegue(withIdentifier: "gbdd", sender: self)
+            } else {
+                performSegue(withIdentifier: "input", sender: self)
+            }
             break
         default:
             break
@@ -97,6 +108,11 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
     override func viewDidLoad() {
         super.viewDidLoad()
         InternetTVMainController.iMsg = self
+        
+        InternetTVApiRequests.getClientInfo()
+        if  InternetTVMainViewModel.filter == GlobalModule.PAYMENT_TRANSPORT {
+            InternetTVApiRequests.getMosParkingList()
+        }
         viewModel.controller = self
         if historyView != nil {
             latestOperationView.frame = historyView.frame
@@ -119,9 +135,9 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
             let value = value.userInfo?["key"] as? String ?? ""
             if value == InternetTVCitySearchController.ALL_REGION {
                 self?.searching = false
-                self?.viewModel.searchedOrganization = self?.viewModel.organization ?? [GKHOperatorsModel]()
+                self?.viewModel.arrSearchedOrganizations = self?.viewModel.arrOrganizations ?? [GKHOperatorsModel]()
             } else {
-                self?.viewModel.searchedOrganization = self?.viewModel.organization.filter {
+                self?.viewModel.arrSearchedOrganizations = self?.viewModel.arrOrganizations.filter {
                     ($0.region?.lowercased().contains(value.lowercased()) ?? false)
                             || ($0.region?.lowercased().contains(InternetTVCitySearchController.ALL_REGION.lowercased()) ?? false)
                 } ?? [GKHOperatorsModel]()
@@ -171,14 +187,18 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        print("search5555  \(searchText)")
         if !doStringContainsNumber(_string: searchText) {
-            viewModel.searchedOrganization = viewModel.organization.filter {
+            viewModel.arrSearchedOrganizations = viewModel.arrOrganizations.filter {
                 $0.name?.lowercased().contains(searchText.lowercased()) == true
             }
         } else {
-            viewModel.searchedOrganization = viewModel.organization.filter {
+            viewModel.arrSearchedOrganizations = viewModel.arrOrganizations.filter {
                 $0.synonymList.first?.lowercased().contains(searchText.lowercased()) == true
             }
+        }
+        if searchText.isEmpty {
+            viewModel.arrSearchedOrganizations = viewModel.arrOrganizations
         }
         searching = true
     }
@@ -205,7 +225,7 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
                 InternetTVMainViewModel.filter = GlobalModule.UTILITIES_CODE
             }
             viewModel.qrData = qrDataUnw
-            viewModel.operators = operatorModelUnw
+            viewModel.operatorFromQR = operatorModelUnw
             GlobalModule.qrData = nil
             GlobalModule.qrOperator = nil
             performSegue(withIdentifier: "input", sender: self)
@@ -213,43 +233,57 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let op: GKHOperatorsModel!
+        var customGroup: CustomGroup? = nil
+        if let index = tableView.indexPathForSelectedRow?.row {
+            customGroup = viewModel.arrCustomOrg[index]
+        }
+        InternetTVDetailsFormViewModel.additionalDic.removeAll()
+        InternetTVInputCell.spinnerValuesSelected.removeAll()
+        
         switch segue.identifier {
-
-        case "input":
-            InternetTVDetailsFormViewModel.additionalDic.removeAll()
-            InternetTVInputCell.spinnerValuesSelected.removeAll()
+        case "avtodor":
+            let dc = segue.destination as! AvtodorDetailsFormController
+            dc.customGroup = customGroup
             if let latestOp = InternetTVMainViewModel.latestOp {
-                let dc = segue.destination as! InternetTVDetailsFormController
+                dc.operatorData = latestOp.op
+                dc.latestOperation = latestOp
+                InternetTVMainViewModel.latestOp = nil
+            }
+        case "mosparking":
+            let dc = segue.destination as! MosParkingViewController
+            dc.operatorData = customGroup?.op
+        case "input":
+            let dc = segue.destination as! InternetTVDetailsFormController
+            if let latestOp = InternetTVMainViewModel.latestOp {
                 dc.operatorData = latestOp.op
                 dc.latestOperation = latestOp
                 InternetTVMainViewModel.latestOp = nil
             } else {
-                if tableView.indexPathForSelectedRow?.row != nil {
-                    let index = (tableView.indexPathForSelectedRow?.row)!
-                    if searching {
-                        op = viewModel.searchedOrganization[index]
-                    } else {
-                        op = viewModel.organization[index]
-                    }
-                    let dc = segue.destination as! InternetTVDetailsFormController
-                    dc.operatorData = op
-                }
+                dc.operatorData = customGroup?.op
                 // Переход по QR
                 if viewModel.qrData.count != 0 {
                     let dc = segue.destination as! InternetTVDetailsFormController
-                    dc.operatorData = viewModel.operators
+                    dc.operatorData = viewModel.operatorFromQR
                     dc.qrData = viewModel.qrData
                 }
             }
             viewModel.qrData.removeAll()
         case "qr":
             let dc = segue.destination as! QRViewController
-            //dc.delegate = self
+        case "gbdd":
+            InternetTVApiRequests.getClientInfo()
+            let dc = segue.destination as! GIBDDFineDetailsFormController
+            if let latestOp = InternetTVMainViewModel.latestOp {
+                dc.operatorData = latestOp.op
+                dc.latestOperation = latestOp
+                InternetTVMainViewModel.latestOp = nil
+            } else {
+                dc.operatorData = customGroup?.op
+            }
         case .none:
-            print()
+            break
         case .some(_):
-            print()
+            break
         }
     }
 }
@@ -257,22 +291,13 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
 extension InternetTVMainController {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if searching {
-            return viewModel.searchedOrganization.count
-        } else {
-            return viewModel.organization.count
-        }
+        viewModel.arrCustomOrg.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: GHKCell.reuseId, for: indexPath) as! GHKCell
-        if searching {
-            let model = viewModel.searchedOrganization[indexPath.row]
-            cell.set(viewModel: model)
-        } else {
-            let model = viewModel.organization[indexPath.row]
-            cell.set(viewModel: model)
-        }
+        let item = viewModel.arrCustomOrg[indexPath.row]
+        cell.set(item: item)
         return cell
     }
 
@@ -282,6 +307,16 @@ extension InternetTVMainController {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         searchController.searchBar.searchTextField.endEditing(true)
-        performSegue(withIdentifier: "input", sender: self)
+
+        let item = viewModel.arrCustomOrg[indexPath.row]
+        if (item.op?.puref == "iFora||4990") {
+            performSegue(withIdentifier: "mosparking", sender: self)
+        } else if item.puref == "avtodor" {
+            performSegue(withIdentifier: "avtodor", sender: self)
+        } else if item.op?.puref == "iFora||5173" {
+            performSegue(withIdentifier: "gbdd", sender: self)
+        } else {
+            performSegue(withIdentifier: "input", sender: self)
+        }
     }
 }
