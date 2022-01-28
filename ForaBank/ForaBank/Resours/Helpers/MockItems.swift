@@ -507,8 +507,7 @@ class MockItems {
             transferNumber: nil,
             accountTitle: "Номер телефона",
             isTrafficPoliceService: false,
-            paymentTemplateId: nil
-            isTrafficPoliceService: false,
+            paymentTemplateId: nil,
             payeeAccountId: nil,
             payeeCardId: nil,
             payeeCurrency: "USD"    

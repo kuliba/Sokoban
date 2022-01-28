@@ -122,6 +122,10 @@ struct OperationDetailDatum: Codable {
         case transferNumber
         case accountTitle
         case isTrafficPoliceService
+        case payeeAccountId
+        case paymentTemplateId
+        case payeeCardId
+        case payeeCurrency
     }
 }
 
