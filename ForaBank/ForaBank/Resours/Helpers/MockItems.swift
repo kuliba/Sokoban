@@ -148,7 +148,7 @@ class MockItems {
                           description: "Интернет, ТВ")
             ,
         
-            PaymentsModel(id: 15, name: "Штрафы",
+            PaymentsModel(id: 15, name: "Транспорт",
                           iconName: "carMain",
                           controllerName: "",
                           description: "Что то")

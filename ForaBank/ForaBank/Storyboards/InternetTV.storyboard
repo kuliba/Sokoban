@@ -302,11 +302,19 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2mL-b3-EIf">
                                 <rect key="frame" x="16" y="16" width="382" height="31"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UcK-2F-aGf">
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UcK-2F-aGf">
                                         <rect key="frame" x="258" y="3" width="120" height="25"/>
                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Годовая"/>
+                                        <buttonConfiguration key="configuration" style="plain">
+                                            <attributedString key="attributedTitle">
+                                                <fragment content="Годовая">
+                                                    <attributes>
+                                                        <font key="NSFont" metaFont="system" size="14"/>
+                                                    </attributes>
+                                                </fragment>
+                                            </attributedString>
+                                        </buttonConfiguration>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                 <integer key="value" value="6"/>
@@ -316,12 +324,19 @@
                                             <action selector="btnYear:" destination="ozF-Sv-77P" eventType="touchUpInside" id="7dg-PJ-rOZ"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WXI-yv-9ju">
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WXI-yv-9ju">
                                         <rect key="frame" x="132" y="3" width="124" height="25"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Месячная"/>
+                                        <buttonConfiguration key="configuration" style="plain">
+                                            <attributedString key="attributedTitle">
+                                                <fragment content="Месячная">
+                                                    <attributes>
+                                                        <font key="NSFont" metaFont="system" size="14"/>
+                                                    </attributes>
+                                                </fragment>
+                                            </attributedString>
+                                        </buttonConfiguration>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                 <integer key="value" value="6"/>
@@ -331,11 +346,19 @@
                                             <action selector="btnMonth:" destination="ozF-Sv-77P" eventType="touchUpInside" id="gtx-CH-FVc"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mmk-hA-Sbo">
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mmk-hA-Sbo">
                                         <rect key="frame" x="4" y="3" width="125" height="25"/>
                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Пополнение"/>
+                                        <buttonConfiguration key="configuration" style="plain">
+                                            <attributedString key="attributedTitle">
+                                                <fragment content="Пополнение">
+                                                    <attributes>
+                                                        <font key="NSFont" metaFont="system" size="14"/>
+                                                    </attributes>
+                                                </fragment>
+                                            </attributedString>
+                                        </buttonConfiguration>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                 <integer key="value" value="6"/>
@@ -348,12 +371,15 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.91021215919999998" green="0.91178005929999995" blue="0.91873186829999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
-                                    <constraint firstItem="UcK-2F-aGf" firstAttribute="top" secondItem="2mL-b3-EIf" secondAttribute="top" constant="3" id="5wO-nA-QXJ"/>
-                                    <constraint firstItem="Mmk-hA-Sbo" firstAttribute="top" secondItem="2mL-b3-EIf" secondAttribute="top" constant="3" id="9fm-Jc-NXn"/>
-                                    <constraint firstItem="Mmk-hA-Sbo" firstAttribute="leading" secondItem="2mL-b3-EIf" secondAttribute="leading" constant="4" id="G7z-xA-Idg"/>
-                                    <constraint firstAttribute="trailing" secondItem="UcK-2F-aGf" secondAttribute="trailing" constant="4" id="SIG-mY-t1c"/>
-                                    <constraint firstAttribute="bottom" secondItem="UcK-2F-aGf" secondAttribute="bottom" constant="3" id="bTZ-8y-8n4"/>
-                                    <constraint firstAttribute="bottom" secondItem="Mmk-hA-Sbo" secondAttribute="bottom" constant="3" id="orc-sG-8f2"/>
+                                    <constraint firstItem="UcK-2F-aGf" firstAttribute="top" secondItem="2mL-b3-EIf" secondAttribute="top" constant="2" id="5wO-nA-QXJ"/>
+                                    <constraint firstItem="Mmk-hA-Sbo" firstAttribute="top" secondItem="2mL-b3-EIf" secondAttribute="top" constant="2" id="9fm-Jc-NXn"/>
+                                    <constraint firstItem="Mmk-hA-Sbo" firstAttribute="leading" secondItem="2mL-b3-EIf" secondAttribute="leading" constant="2" id="G7z-xA-Idg"/>
+                                    <constraint firstItem="WXI-yv-9ju" firstAttribute="centerX" secondItem="2mL-b3-EIf" secondAttribute="centerX" id="GTw-8g-RZ0"/>
+                                    <constraint firstAttribute="trailing" secondItem="UcK-2F-aGf" secondAttribute="trailing" constant="2" id="SIG-mY-t1c"/>
+                                    <constraint firstAttribute="bottom" secondItem="WXI-yv-9ju" secondAttribute="bottom" constant="2" id="Ujz-om-h1O"/>
+                                    <constraint firstAttribute="bottom" secondItem="UcK-2F-aGf" secondAttribute="bottom" constant="2" id="bTZ-8y-8n4"/>
+                                    <constraint firstItem="WXI-yv-9ju" firstAttribute="top" secondItem="2mL-b3-EIf" secondAttribute="top" constant="2" id="hvj-Qp-Q5G"/>
+                                    <constraint firstAttribute="bottom" secondItem="Mmk-hA-Sbo" secondAttribute="bottom" constant="2" id="orc-sG-8f2"/>
                                     <constraint firstAttribute="height" constant="31" id="vuy-rg-eYo"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
@@ -402,20 +428,20 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YBX-q1-jmw">
-                                        <rect key="frame" x="45" y="145.00000000000006" width="313" height="1"/>
+                                        <rect key="frame" x="45" y="150.00000000000006" width="313" height="1"/>
                                         <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="1" id="VOd-Gw-4VX"/>
                                         </constraints>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="От внешней стороны  Садового кольца до границ г. Москвы" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rvu-Ya-HKp">
-                                        <rect key="frame" x="49" y="90" width="312" height="35.666666666666657"/>
+                                        <rect key="frame" x="49" y="80" width="312" height="35.666666666666657"/>
                                         <fontDescription key="fontDescription" name="Times-Roman" family="Times" pointSize="16"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="От внешней стороны  Садового кольца до границ г. Москвы" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ltG-bF-krn">
-                                        <rect key="frame" x="49" y="160.00000000000006" width="312" height="35.666666666666657"/>
+                                        <rect key="frame" x="49" y="162.00000000000006" width="312" height="35.666666666666657"/>
                                         <fontDescription key="fontDescription" name="Times-Roman" family="Times" pointSize="16"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -429,18 +455,22 @@
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="radio_unchecked" translatesAutoresizingMaskIntoConstraints="NO" id="K33-bi-3HE">
                                         <rect key="frame" x="12" y="163" width="20" height="20"/>
                                     </imageView>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Ux-Fd-ran">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Ux-Fd-ran">
                                         <rect key="frame" x="8" y="8" width="362" height="63"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="63" id="1g0-BT-Zqf"/>
+                                        </constraints>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title=" "/>
                                         <connections>
                                             <action selector="btnRange1:" destination="ozF-Sv-77P" eventType="touchUpInside" id="zwX-jV-RcN"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JH9-MQ-JES">
-                                        <rect key="frame" x="8" y="70" width="362" height="76"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JH9-MQ-JES">
+                                        <rect key="frame" x="8" y="70" width="362" height="70"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="70" id="9t3-0P-kXp"/>
+                                        </constraints>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title=" "/>
                                         <connections>
@@ -459,27 +489,33 @@
                                 </subviews>
                                 <color key="backgroundColor" systemColor="tertiarySystemGroupedBackgroundColor"/>
                                 <constraints>
+                                    <constraint firstItem="3Ux-Fd-ran" firstAttribute="leading" secondItem="86s-Mj-HOl" secondAttribute="leading" constant="8" id="1U2-fH-AfO"/>
                                     <constraint firstAttribute="width" secondItem="86s-Mj-HOl" secondAttribute="height" multiplier="378:227" id="6BZ-8S-n5T"/>
                                     <constraint firstItem="Sbt-cf-GRV" firstAttribute="top" secondItem="86s-Mj-HOl" secondAttribute="top" constant="24" id="8Oa-y8-tyi"/>
                                     <constraint firstAttribute="trailing" secondItem="ltG-bF-krn" secondAttribute="trailing" constant="13" id="BAB-a2-zbJ"/>
                                     <constraint firstItem="K33-bi-3HE" firstAttribute="top" secondItem="86s-Mj-HOl" secondAttribute="top" constant="163" id="Hg8-uh-axX"/>
-                                    <constraint firstItem="YBX-q1-jmw" firstAttribute="top" secondItem="86s-Mj-HOl" secondAttribute="top" constant="145.00000000000006" id="Hhy-Fc-JqU"/>
+                                    <constraint firstItem="YBX-q1-jmw" firstAttribute="top" secondItem="86s-Mj-HOl" secondAttribute="top" constant="150" id="Hhy-Fc-JqU"/>
                                     <constraint firstItem="mZK-v2-lQp" firstAttribute="top" secondItem="86s-Mj-HOl" secondAttribute="top" constant="92" id="IOV-gY-UNb"/>
                                     <constraint firstItem="tmP-Fp-3UZ" firstAttribute="top" secondItem="86s-Mj-HOl" secondAttribute="top" constant="15" id="KFB-fU-Hy8"/>
                                     <constraint firstItem="Tfe-VA-gjD" firstAttribute="leading" secondItem="86s-Mj-HOl" secondAttribute="leading" constant="45" id="O79-hn-9tV"/>
                                     <constraint firstItem="K33-bi-3HE" firstAttribute="leading" secondItem="86s-Mj-HOl" secondAttribute="leading" constant="12" id="ONd-cv-bXP"/>
                                     <constraint firstItem="Tfe-VA-gjD" firstAttribute="top" secondItem="86s-Mj-HOl" secondAttribute="top" constant="70" id="OOW-oj-mWG"/>
                                     <constraint firstItem="tmP-Fp-3UZ" firstAttribute="leading" secondItem="86s-Mj-HOl" secondAttribute="leading" constant="49" id="Qcl-uz-ThT"/>
-                                    <constraint firstItem="ltG-bF-krn" firstAttribute="top" secondItem="86s-Mj-HOl" secondAttribute="top" constant="160" id="UCU-3g-NEG"/>
+                                    <constraint firstAttribute="trailing" secondItem="3Ux-Fd-ran" secondAttribute="trailing" constant="4" id="RLV-kG-tww"/>
+                                    <constraint firstItem="ltG-bF-krn" firstAttribute="top" secondItem="86s-Mj-HOl" secondAttribute="top" constant="162" id="UCU-3g-NEG"/>
+                                    <constraint firstItem="3Ux-Fd-ran" firstAttribute="top" secondItem="86s-Mj-HOl" secondAttribute="top" constant="8" id="W7k-Eh-evl"/>
                                     <constraint firstItem="ltG-bF-krn" firstAttribute="leading" secondItem="86s-Mj-HOl" secondAttribute="leading" constant="49" id="Wq3-2J-vie"/>
                                     <constraint firstAttribute="trailing" secondItem="tmP-Fp-3UZ" secondAttribute="trailing" constant="4" id="XvE-9t-B9B"/>
+                                    <constraint firstItem="JH9-MQ-JES" firstAttribute="leading" secondItem="86s-Mj-HOl" secondAttribute="leading" constant="8" id="YcG-NO-R7t"/>
+                                    <constraint firstAttribute="trailing" secondItem="JH9-MQ-JES" secondAttribute="trailing" constant="4" id="YkJ-q4-2Pq"/>
+                                    <constraint firstItem="JH9-MQ-JES" firstAttribute="top" secondItem="86s-Mj-HOl" secondAttribute="top" constant="70" id="ZyR-Vc-Lxl"/>
                                     <constraint firstAttribute="trailing" secondItem="Rvu-Ya-HKp" secondAttribute="trailing" constant="13" id="gca-Dw-qyW"/>
                                     <constraint firstItem="YBX-q1-jmw" firstAttribute="leading" secondItem="86s-Mj-HOl" secondAttribute="leading" constant="45" id="ght-kT-ruZ"/>
                                     <constraint firstItem="Rvu-Ya-HKp" firstAttribute="leading" secondItem="86s-Mj-HOl" secondAttribute="leading" constant="49" id="h1r-U6-OFi"/>
                                     <constraint firstAttribute="trailing" secondItem="Tfe-VA-gjD" secondAttribute="trailing" constant="13" id="jJW-re-JDg"/>
                                     <constraint firstItem="mZK-v2-lQp" firstAttribute="leading" secondItem="86s-Mj-HOl" secondAttribute="leading" constant="12" id="kB8-zg-i5P"/>
                                     <constraint firstAttribute="trailing" secondItem="YBX-q1-jmw" secondAttribute="trailing" constant="16" id="lGL-JV-cdq"/>
-                                    <constraint firstItem="Rvu-Ya-HKp" firstAttribute="top" secondItem="86s-Mj-HOl" secondAttribute="top" constant="90" id="swD-nE-H1f"/>
+                                    <constraint firstItem="Rvu-Ya-HKp" firstAttribute="top" secondItem="86s-Mj-HOl" secondAttribute="top" constant="80" id="swD-nE-H1f"/>
                                     <constraint firstItem="Sbt-cf-GRV" firstAttribute="leading" secondItem="86s-Mj-HOl" secondAttribute="leading" constant="12" id="tLq-Wp-O4K"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
@@ -638,11 +674,19 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MCd-Uj-SIC">
                                 <rect key="frame" x="12" y="10" width="390" height="33"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fAd-VX-Zjf">
-                                        <rect key="frame" x="195.66666666666663" y="4" width="190.33333333333337" height="25"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fAd-VX-Zjf">
+                                        <rect key="frame" x="195.66666666666663" y="2" width="192.33333333333337" height="29"/>
                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="По транспордеру"/>
+                                        <buttonConfiguration key="configuration" style="plain">
+                                            <attributedString key="attributedTitle">
+                                                <fragment content="По транспондеру">
+                                                    <attributes>
+                                                        <font key="NSFont" size="14" name="Helvetica"/>
+                                                    </attributes>
+                                                </fragment>
+                                            </attributedString>
+                                        </buttonConfiguration>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                 <integer key="value" value="6"/>
@@ -652,12 +696,20 @@
                                             <action selector="transponderAction:" destination="xVd-jI-gq8" eventType="touchUpInside" id="Xd3-eG-mKR"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4WB-PN-Hoe">
-                                        <rect key="frame" x="4" y="4" width="190.66666666666666" height="25"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4WB-PN-Hoe">
+                                        <rect key="frame" x="2" y="2" width="192.66666666666666" height="29"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="По договору"/>
+                                        <buttonConfiguration key="configuration" style="plain">
+                                            <attributedString key="attributedTitle">
+                                                <fragment content="По договору">
+                                                    <attributes>
+                                                        <font key="NSFont" size="14" name="Helvetica"/>
+                                                    </attributes>
+                                                </fragment>
+                                            </attributedString>
+                                        </buttonConfiguration>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                 <integer key="value" value="6"/>
@@ -680,14 +732,14 @@
                                 <constraints>
                                     <constraint firstItem="ArH-iy-N4B" firstAttribute="centerY" secondItem="MCd-Uj-SIC" secondAttribute="centerY" id="4cC-Qa-KN6"/>
                                     <constraint firstItem="fAd-VX-Zjf" firstAttribute="leading" secondItem="ArH-iy-N4B" secondAttribute="trailing" id="Dnt-Tt-D8n"/>
-                                    <constraint firstItem="4WB-PN-Hoe" firstAttribute="top" secondItem="MCd-Uj-SIC" secondAttribute="top" constant="4" id="IYy-wx-kjq"/>
-                                    <constraint firstItem="fAd-VX-Zjf" firstAttribute="top" secondItem="MCd-Uj-SIC" secondAttribute="top" constant="4" id="U2m-gx-gyC"/>
-                                    <constraint firstAttribute="bottom" secondItem="4WB-PN-Hoe" secondAttribute="bottom" constant="4" id="W4K-PM-Nh6"/>
+                                    <constraint firstItem="4WB-PN-Hoe" firstAttribute="top" secondItem="MCd-Uj-SIC" secondAttribute="top" constant="2" id="IYy-wx-kjq"/>
+                                    <constraint firstItem="fAd-VX-Zjf" firstAttribute="top" secondItem="MCd-Uj-SIC" secondAttribute="top" constant="2" id="U2m-gx-gyC"/>
+                                    <constraint firstAttribute="bottom" secondItem="4WB-PN-Hoe" secondAttribute="bottom" constant="2" id="W4K-PM-Nh6"/>
                                     <constraint firstItem="ArH-iy-N4B" firstAttribute="leading" secondItem="4WB-PN-Hoe" secondAttribute="trailing" id="fVR-Eg-vF9"/>
                                     <constraint firstAttribute="height" constant="33" id="m4D-PT-nad"/>
-                                    <constraint firstAttribute="trailing" secondItem="fAd-VX-Zjf" secondAttribute="trailing" constant="4" id="my7-z0-5dV"/>
-                                    <constraint firstAttribute="bottom" secondItem="fAd-VX-Zjf" secondAttribute="bottom" constant="4" id="vCv-SC-3ol"/>
-                                    <constraint firstItem="4WB-PN-Hoe" firstAttribute="leading" secondItem="MCd-Uj-SIC" secondAttribute="leading" constant="4" id="yBe-Il-PQ8"/>
+                                    <constraint firstAttribute="trailing" secondItem="fAd-VX-Zjf" secondAttribute="trailing" constant="2" id="my7-z0-5dV"/>
+                                    <constraint firstAttribute="bottom" secondItem="fAd-VX-Zjf" secondAttribute="bottom" constant="2" id="vCv-SC-3ol"/>
+                                    <constraint firstItem="4WB-PN-Hoe" firstAttribute="leading" secondItem="MCd-Uj-SIC" secondAttribute="leading" constant="2" id="yBe-Il-PQ8"/>
                                     <constraint firstItem="ArH-iy-N4B" firstAttribute="centerX" secondItem="MCd-Uj-SIC" secondAttribute="centerX" id="yC5-e5-Gu1"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
@@ -786,11 +838,19 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DuZ-sj-ye8">
                                 <rect key="frame" x="30" y="10" width="354" height="33"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="olG-yc-f19">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="olG-yc-f19">
                                         <rect key="frame" x="177.66666666666663" y="2" width="174.33333333333337" height="29"/>
                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Номер УИН"/>
+                                        <buttonConfiguration key="configuration" style="plain">
+                                            <attributedString key="attributedTitle">
+                                                <fragment content="Номер УИН">
+                                                    <attributes>
+                                                        <font key="NSFont" size="14" name="Helvetica"/>
+                                                    </attributes>
+                                                </fragment>
+                                            </attributedString>
+                                        </buttonConfiguration>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                 <integer key="value" value="6"/>
@@ -800,12 +860,20 @@
                                             <action selector="transponderAction:" destination="4Er-K8-6lI" eventType="touchUpInside" id="v6a-9T-SMd"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rC8-RC-Sck">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rC8-RC-Sck">
                                         <rect key="frame" x="2" y="2" width="174.66666666666666" height="29"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Водитель / СТС"/>
+                                        <buttonConfiguration key="configuration" style="plain">
+                                            <attributedString key="attributedTitle">
+                                                <fragment content="Водитель / СТС">
+                                                    <attributes>
+                                                        <font key="NSFont" size="14" name="Helvetica"/>
+                                                    </attributes>
+                                                </fragment>
+                                            </attributedString>
+                                        </buttonConfiguration>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                 <integer key="value" value="6"/>
@@ -925,7 +993,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="MqJ-VG-R1K"/>
+        <segue reference="nsL-RS-rm7"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Vector_1" width="16" height="16"/>
