@@ -14,7 +14,7 @@ final class OperationDetailInfoViewModel: Identifiable {
     
     
     let id = UUID()
-    let title = "Детали операций"
+    let title = "Детали операции"
     let logo: Image?
     let cells: [DefaultCellViewModel]
     let dismissAction: () -> Void
