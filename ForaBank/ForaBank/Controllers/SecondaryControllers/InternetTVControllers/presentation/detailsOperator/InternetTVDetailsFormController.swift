@@ -57,6 +57,8 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
                     self.viewModel.doFirstStep(amount: amount)
             } else {
                 if !self.viewModel.firstStep {
+                    let id = self.footerView.cardFromField.cardModel?.id ?? -1
+                    if self.viewModel.cardNumber != String(id) { self.viewModel.cardNumber = "-2" }
                     if self.viewModel.cardNumber != "-2" {
                         self.viewModel.doNextStep(amount: amount)
                     } else {
