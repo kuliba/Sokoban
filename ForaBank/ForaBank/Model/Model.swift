@@ -48,11 +48,11 @@ class Model {
     static var shared: Model = {
        
         // server agent
-        #if DEBUG
-        let serverContext = ServerAgent.Context(for: .test)
-        #else
+//        #if DEBUG
+//        let serverContext = ServerAgent.Context(for: .test)
+//        #else
         let serverContext = ServerAgent.Context(for: .prod)
-        #endif
+//        #endif
         
         let serverAgent = ServerAgent(context: serverContext)
         
