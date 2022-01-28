@@ -8,11 +8,12 @@
 import Foundation
 import CoreText
 
-struct PaymentTemplateData: Equatable {
+struct PaymentTemplateData: Equatable, Cachable, Identifiable {
     
+    var id: Int { paymentTemplateId }
     let groupName: String
     let name: String
-    let parameterList: [TransferAbstract]
+    let parameterList: [TransferAbstractData]
     let paymentTemplateId: Int
     let sort: Int
     let svgImage: SVGImageData
@@ -23,13 +24,9 @@ struct PaymentTemplateData: Equatable {
 
 extension PaymentTemplateData {
     
-    /*
-    BETWEEN_THEIR - Между своими; INSIDE_BANK, OTHER_BANK - На другую карту; BY_PHONE, SFP - Перевод по номеру телефона; EXTERNAL_ENTITY, EXTERNAL_INDIVIDUAL - По реквизитам; CONTACT_ADDRESSLESS - Зарубеж и по РФ (Перевод через систему Contact); DIRECT - Зарубеж и по РФ (Перевод МИГ); HOUSING_AND_COMMUNAL_SERVICE - Услуги ЖКХ; MOBILE - Мобильная связь; INTERNET - Интернет, ТВ; TRANSPORT - Транспорт
-     */
-    
-    enum Kind: String, Codable, Equatable {
+    enum Kind: String, Codable, Equatable, CaseIterable {
         
-        case betweenTheit = "BETWEEN_THEIR"
+        case betweenTheir = "BETWEEN_THEIR"
         case insideBank = "INSIDE_BANK"
         case otherBank = "OTHER_BANK"
         case byPhone = "BY_PHONE"
@@ -41,7 +38,26 @@ extension PaymentTemplateData {
         case housingAndCommunalService = "HOUSING_AND_COMMUNAL_SERVICE"
         case mobile = "MOBILE"
         case internet = "INTERNET"
-        case transport = "TRANSPORT" 
+        case transport = "TRANSPORT"
+        
+        var description: String {
+            
+            switch self {
+            case .betweenTheir: return "Между своими счетами"
+            case .insideBank: return "Внутри банка"
+            case .otherBank: return "В другой банк"
+            case .byPhone: return "По номеру телефона"
+            case .sfp: return "Перевод СБП"
+            case .externalEntity: return "По реквизитам: компания"
+            case .externalIndividual: return "По реквизитам: частный"
+            case .contactAdressless: return "Перевод Контакт"
+            case .direct: return "Перевод МИГ"
+            case .housingAndCommunalService: return "Услуги ЖКХ"
+            case .mobile: return "Мобильная связь"
+            case .internet: return "Интернет, ТВ"
+            case .transport: return "Транспорт"
+            }
+        }
     }
     
     struct SortData: Codable, Equatable {
@@ -66,26 +82,22 @@ extension PaymentTemplateData: Codable {
         name = try container.decode(String.self, forKey: .name)
         
         var parameterListContainer = try container.nestedUnkeyedContainer(forKey: .parameterList)
-        var parameterListDecoded = [TransferAbstract]()
+        var parameterListDecoded = [TransferAbstractData]()
         
         while parameterListContainer.isAtEnd == false {
             
-            if let transfer = try? parameterListContainer.decode(Transfer.self) {
-                
-                parameterListDecoded.append(transfer)
-                
-            } else if let transferAnyway = try? parameterListContainer.decode(TransferAnyway.self) {
+            if let transferAnyway = try? parameterListContainer.decode(TransferAnywayData.self) {
                 
                 parameterListDecoded.append(transferAnyway)
                 
-            } else if let transferMe2Me = try? parameterListContainer.decode(TransferMe2Me.self) {
+            } else if let transferMe2Me = try? parameterListContainer.decode(TransferMe2MeData.self) {
                 
                 parameterListDecoded.append(transferMe2Me)
                 
             } else {
                 
-                let transferAbstract = try parameterListContainer.decode(TransferAbstract.self)
-                parameterListDecoded.append(transferAbstract)
+                let transfer = try parameterListContainer.decode(TransferData.self)
+                parameterListDecoded.append(transfer)
             }
         }
         
@@ -95,4 +107,40 @@ extension PaymentTemplateData: Codable {
         svgImage = try container.decode(SVGImageData.self, forKey: .svgImage)
         type = try container.decode(Kind.self, forKey: .type)
     }
+}
+
+//MARK: - Convenience SPF Properties
+
+extension PaymentTemplateData {
+    
+    var spfAmount: Double? {
+        
+        guard let transfer = parameterList.first else {
+            return nil
+        }
+        
+        return transfer.amount
+    }
+    
+    var spfPhoneNumber: String? {
+        
+        guard let transfer = parameterList.first as? TransferAnywayData,
+              let phoneData = transfer.additional.first(where: { $0.fieldname == "RecipientID" })  else {
+            return nil
+        }
+        
+        return phoneData.fieldvalue
+    }
+    
+    var spfBankId: String? {
+        
+        guard let transfer = parameterList.first as? TransferAnywayData,
+              let bankData = transfer.additional.first(where: { $0.fieldname == "BankRecipientID" })  else {
+            return nil
+        }
+        
+        return bankData.fieldvalue
+    }
+    
+    
 }

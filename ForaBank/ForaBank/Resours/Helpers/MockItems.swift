@@ -104,7 +104,7 @@ class MockItems {
             PaymentsModel(id: 98, name: "Вклад",
                           iconName: "openDeposit",
                           controllerName: "https://www.forabank.ru/private/deposits/",
-                          description: "8% годовых"),
+                          description: "9,25% годовых"),
 //            
 //            PaymentsModel(id: 97, name: "Кредит",
 //                          iconName: "loanIcon",
@@ -189,10 +189,10 @@ class MockItems {
                           controllerName: "ContactsViewController",
                           description: "Что то"),
             
-//            PaymentsModel(id: 82, name: "Шаблоны и автоплатежи",
-//                          iconName: "star",
-//                          controllerName: "GKHMainViewController",
-//                          description: "ЖКХ"),
+            PaymentsModel(id: 82, name: "Шаблоны и автоплатежи",
+                          iconName: "star",
+                          controllerName: "GKHMainViewController",
+                          description: "ЖКХ"),
 //
 //            PaymentsModel(id: 83, name: "Мой дом",
 //                          iconName: "home",

@@ -9,6 +9,9 @@ import Foundation
 
 enum ModelAction {
 
+    //TODO: remove after refactoring
+    struct LoggedIn: Action {}
+    
     struct PresentAlert: Action {
         
         let message: String

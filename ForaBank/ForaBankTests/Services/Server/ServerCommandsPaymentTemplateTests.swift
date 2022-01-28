@@ -59,8 +59,8 @@ class ServerCommandsPaymentTemplateTests: XCTestCase {
         // given
         let url = bundle.url(forResource: "GetPaymentTemplateListResponseGeneric", withExtension: "json")!
         let json = try Data(contentsOf: url)
-        let payer = TransferAbstract.Payer(inn: nil, accountId: nil, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
-        let transfer = Transfer(amount: nil, check: false, comment: nil, currencyAmount: "RUB", payer: payer, payeeExternal: nil, payeeInternal: nil)
+        let payer = TransferAbstractData.Payer(inn: nil, accountId: nil, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
+        let transfer = TransferData(amount: nil, check: false, comment: nil, currencyAmount: "RUB", payer: payer, payeeExternal: nil, payeeInternal: nil)
         let paymentTemplate = PaymentTemplateData(groupName: "Переводы СБП", name: "Иванов Иван Иванович", parameterList: [transfer], paymentTemplateId: 1, sort: 1, svgImage: SVGImageData(description: "string"), type: .sfp)
         let expected = ServerCommands.PaymentTemplateController.GetPaymentTemplateList.Response(statusCode: .ok, errorMessage: "string", data: [paymentTemplate])
         
@@ -69,6 +69,19 @@ class ServerCommandsPaymentTemplateTests: XCTestCase {
         
         // then
         XCTAssertEqual(result, expected)
+    }
+    
+    func testGetPaymentTemplateList_Response_SFP_Decoding() throws {
+
+        // given
+        let url = bundle.url(forResource: "GetPeymentTemlpateListResponseSFP", withExtension: "json")!
+        let json = try Data(contentsOf: url)
+        
+        // when
+        let result = try decoder.decode(ServerCommands.PaymentTemplateController.GetPaymentTemplateList.Response.self, from: json)
+        
+        // then
+        XCTAssert(result.data?.first?.parameterList.first is TransferAnywayData)
     }
     
     //MARK: - SavePaymentTemplate
@@ -136,8 +149,8 @@ class ServerCommandsPaymentTemplateTests: XCTestCase {
     func testUpdatePaymentTemplate_Payload_Encoding() throws {
 
         // given
-        let payer = TransferAbstract.Payer(inn: nil, accountId: nil, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
-        let transfer = Transfer(amount: nil, check: false, comment: nil, currencyAmount: "RUB", payer: payer, payeeExternal: nil, payeeInternal: nil)
+        let payer = TransferAbstractData.Payer(inn: nil, accountId: nil, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
+        let transfer = TransferData(amount: nil, check: false, comment: nil, currencyAmount: "RUB", payer: payer, payeeExternal: nil, payeeInternal: nil)
         let command = ServerCommands.PaymentTemplateController.UpdatePaymentTemplate(token: "", payload: .init(name: "test", parameterList: [transfer], paymentTemplateId: 1))
         let expected = "{\"name\":\"test\",\"paymentTemplateId\":1,\"parameterList\":[{\"amount\":null,\"currencyAmount\":\"RUB\",\"check\":false,\"payeeInternal\":null,\"comment\":null,\"payer\":{},\"payeeExternal\":null}]}"
         

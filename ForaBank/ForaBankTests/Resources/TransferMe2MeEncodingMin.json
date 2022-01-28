@@ -1,7 +1,7 @@
 {
     "amount": null,
     "check": false,
-    "bankId": null,
+    "bankId": "12345678",
     "comment": null,
     "currencyAmount": "RUB",
     "payer": {}

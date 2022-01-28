@@ -1,5 +1,5 @@
 //
-//  TransferMe2Me.swift
+//  TransferMe2MeData.swift
 //  ForaBank
 //
 //  Created by Max Gribov on 20.12.2021.
@@ -7,11 +7,11 @@
 
 import Foundation
 
-class TransferMe2Me: TransferAbstract {
+class TransferMe2MeData: TransferAbstractData {
     
-    let bankId: String?
+    let bankId: String
     
-    internal init(amount: Double?, check: Bool, comment: String?, currencyAmount: String, payer: Payer, bankId: String?) {
+    internal init(amount: Double?, check: Bool, comment: String?, currencyAmount: String, payer: Payer, bankId: String) {
         
         self.bankId = bankId
 
@@ -27,7 +27,7 @@ class TransferMe2Me: TransferAbstract {
     required init(from decoder: Decoder) throws {
         
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        bankId = try container.decodeIfPresent(String.self, forKey: .bankId)
+        bankId = try container.decode(String.self, forKey: .bankId)
         
         try super.init(from: decoder)
     }
@@ -42,7 +42,7 @@ class TransferMe2Me: TransferAbstract {
     
     //MARK: Equitable
     
-    static func == (lhs: TransferMe2Me, rhs: TransferMe2Me) -> Bool {
+    static func == (lhs: TransferMe2MeData, rhs: TransferMe2MeData) -> Bool {
         
         return  lhs.amount == rhs.amount &&
                 lhs.check == rhs.check &&

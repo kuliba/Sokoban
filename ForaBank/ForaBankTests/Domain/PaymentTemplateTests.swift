@@ -27,7 +27,7 @@ class PaymentTemplateTests: XCTestCase {
         XCTAssertEqual(result.groupName, "Переводы СБП")
         XCTAssertEqual(result.name, "Иванов Иван Иванович")
         XCTAssertEqual(result.parameterList.count, 1)
-        XCTAssertNotNil(result.parameterList.first! as? Transfer)
+        XCTAssertNotNil(result.parameterList.first! as? TransferData)
         XCTAssertEqual(result.paymentTemplateId, 1)
         XCTAssertEqual(result.sort, 1)
         XCTAssertEqual(result.svgImage.description, "string")
