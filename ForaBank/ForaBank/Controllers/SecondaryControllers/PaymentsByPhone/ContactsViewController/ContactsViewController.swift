@@ -170,7 +170,6 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
         tableView.tableFooterView = UIView()
         tableView.separatorStyle = .none
         tableView.sectionIndexColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1)
-        //        tableView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 16)
     }
     
     fileprivate func registerContactCell() {
@@ -203,9 +202,6 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
         self.navigationItem.leftItemsSupplementBackButton = true
         let close = UIBarButtonItem(title: "Закрыть", style: .plain, target: self, action: #selector(backButton))
         close.tintColor = .black
-        //        self.navigationItem.setRightBarButton(close, animated: true)
-        
-        //        self.navigationItem.rightBarButtonItem?.action = #selector(backButton)
         self.navigationItem.rightBarButtonItem = close
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .normal)
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .highlighted)
@@ -220,15 +216,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
         guard let text = textField.text else {
             return
         }
-        if text == "" {
-            resultSearchController = false
-            banksActive = false
-            lastPhonePayment.removeAll()
-            getLastPayments()
-            orderedContacts.removeAll()
-            reloadContacts()
-            tableView.reloadData()
-        }
+ 
         reserveContacts = contacts
         if text.count != 0{
             if text.digits.count > 0 {
@@ -239,12 +227,26 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
             resultSearchController = true
             tableView.reloadData()
         }
+        
         if text.digits.count == 10{
             selectPhoneNumber = "+7\(text)"
             getLastPhonePayments()
             banksActive = true
             orderedBanks.removeAll()
-            
+        } else if text.digits.count == 0, text.isNumeric{
+            resultSearchController = false
+            banksActive = false
+            lastPhonePayment.removeAll()
+            getLastPayments()
+            orderedContacts.removeAll()
+            reloadContacts()
+            tableView.reloadData()
+        } else {
+            resultSearchController = true
+            banksActive = false
+            lastPhonePayment.removeAll()
+            orderedContacts.removeAll()
+            tableView.reloadData()
         }
     }
    
@@ -268,16 +270,21 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
                             
                             let phoneNumberToCompareAgainst =  searchNumber.components(
                                 separatedBy: NSCharacterSet.decimalDigits.inverted).joined(separator: "")
+                            print("phoneNumberToCompare \(phoneNumberToCompareAgainst)")
                             for phoneNumber in contact.phoneNumbers {
                                 if let phoneNumberStruct = phoneNumber.value as? CNPhoneNumber {
                                     let phoneNumberString = phoneNumberStruct.stringValue
                                     var phoneNumberToCompare = phoneNumberString.components(
                                         separatedBy: NSCharacterSet.decimalDigits.inverted).joined(separator: "")
+                                    print("phoneNumberToCompare \(phoneNumberToCompare)")
                                     if self.check(phoneNumberToCompare)  {
                                         phoneNumberToCompare = String(phoneNumberToCompare.dropFirst())
+                                        print("phoneNumberToCompare String(phoneNumberToCompare.dropFirst()) \(String(phoneNumberToCompare.dropFirst()))")
                                     }
                                     let phoneNumberFin = phoneNumberToCompare.prefix(phoneNumberToCompareAgainst.count)
                                     if phoneNumberFin == phoneNumberToCompareAgainst {
+                                        print("phoneNumberFin \(phoneNumberFin)")
+                                        print("phoneNumberToCompareAgainst \(phoneNumberToCompareAgainst)")
                                         contacts.append(contact)
                                     }
                                 }
