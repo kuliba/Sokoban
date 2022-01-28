@@ -310,7 +310,7 @@
                                             <attributedString key="attributedTitle">
                                                 <fragment content="Годовая">
                                                     <attributes>
-                                                        <font key="NSFont" size="14" name=".SFNS-Regular"/>
+                                                        <font key="NSFont" metaFont="system" size="14"/>
                                                     </attributes>
                                                 </fragment>
                                             </attributedString>
@@ -332,7 +332,7 @@
                                             <attributedString key="attributedTitle">
                                                 <fragment content="Месячная">
                                                     <attributes>
-                                                        <font key="NSFont" metaFont="menu" size="14"/>
+                                                        <font key="NSFont" metaFont="system" size="14"/>
                                                     </attributes>
                                                 </fragment>
                                             </attributedString>
@@ -354,7 +354,7 @@
                                             <attributedString key="attributedTitle">
                                                 <fragment content="Пополнение">
                                                     <attributes>
-                                                        <font key="NSFont" size="14" name=".SFNS-Regular"/>
+                                                        <font key="NSFont" metaFont="system" size="14"/>
                                                     </attributes>
                                                 </fragment>
                                             </attributedString>
