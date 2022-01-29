@@ -44,6 +44,17 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 openLatestUtilities(lastGKHPayment: lastUtilitiesPayment)
             } else if let lastUtilitiesPayment = payments[indexPath.row].lastInternetPayment {
                 openLatestUtilities(lastGKHPayment: lastUtilitiesPayment)
+                
+            } else if payments[indexPath.row].type == "templates" {
+                
+                //FIXME: inject from parent view model after refactoring
+                let model = Model.shared
+                let templatesViewModel = TemplatesListViewModel(model)
+                let templatesViewController = TemplatesListViewHostingViewController(with: templatesViewModel)
+                templatesViewController.delegate = self
+                let navigationViewController = UINavigationController(rootViewController: templatesViewController)
+                present(navigationViewController, animated: true)
+                
             } else {
                 if let viewController = payments[indexPath.row].controllerName.getViewController() {
                     viewController.addCloseButton()
@@ -282,3 +293,22 @@ extension PaymentsViewController: UIViewControllerTransitioningDelegate {
         return presenter
     }
 }
+
+//MARK: - TemplatesListViewHostingViewControllerDelegate
+
+extension PaymentsViewController: TemplatesListViewHostingViewControllerDelegate {
+    
+    func presentProductViewController() {
+        
+        guard let tabBarController = tabBarController,
+              let mainViewControllerNavigation = tabBarController.viewControllers?.first as? UINavigationController,
+              let mainViewController = mainViewControllerNavigation.viewControllers.first as? MainViewController  else {
+                  return
+              }
+        
+        tabBarController.selectedIndex = 0
+        mainViewController.presentProductViewController()
+    }
+}
+
+

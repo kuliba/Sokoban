@@ -54,7 +54,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
             lastPaymentsCollectionView.reloadData()
         }
     }
-
+    
     var counterNumbers = 0
     
     var lastPhonePayment = [GetLatestPhone](){
@@ -216,7 +216,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
         guard let text = textField.text else {
             return
         }
- 
+        
         reserveContacts = contacts
         if text.count != 0{
             if text.digits.count > 0 {
@@ -233,7 +233,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
             getLastPhonePayments()
             banksActive = true
             orderedBanks.removeAll()
-        } else if text.digits.count == 0, text.isNumeric{
+        } else if text.count == 0{
             resultSearchController = false
             banksActive = false
             lastPhonePayment.removeAll()
@@ -249,70 +249,67 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
             tableView.reloadData()
         }
     }
-   
+    
     func check(_ givenString: String) -> Bool {
-        return givenString.range(of: "^[7-8]9.", options: .regularExpression) != nil
+        return givenString.range(of: "^[7-8]", options: .regularExpression) != nil
     }
     
     func searchForContactUsingPhoneNumber(phoneNumber: String) {
-            DispatchQueue.global().async {
-                let searchNumber = phoneNumber
-                if searchNumber.count > 0 {
-                    
-                    self.resultSearchController = true
-                    var contacts = [CNContact]()
-                    var message: String!
-                    
-                    let contactsStore = CNContactStore()
-                    do { try contactsStore.enumerateContacts(with: CNContactFetchRequest(keysToFetch: self.allowedContactKeys())) {
-                        (contact, cursor) -> Void in
-                        if (!contact.phoneNumbers.isEmpty) {
-                            
-                            let phoneNumberToCompareAgainst =  searchNumber.components(
-                                separatedBy: NSCharacterSet.decimalDigits.inverted).joined(separator: "")
-                            print("phoneNumberToCompare \(phoneNumberToCompareAgainst)")
-                            for phoneNumber in contact.phoneNumbers {
-                                if let phoneNumberStruct = phoneNumber.value as? CNPhoneNumber {
-                                    let phoneNumberString = phoneNumberStruct.stringValue
-                                    var phoneNumberToCompare = phoneNumberString.components(
-                                        separatedBy: NSCharacterSet.decimalDigits.inverted).joined(separator: "")
-                                    print("phoneNumberToCompare \(phoneNumberToCompare)")
-                                    if self.check(phoneNumberToCompare)  {
-                                        phoneNumberToCompare = String(phoneNumberToCompare.dropFirst())
-                                        print("phoneNumberToCompare String(phoneNumberToCompare.dropFirst()) \(String(phoneNumberToCompare.dropFirst()))")
-                                    }
-                                    let phoneNumberFin = phoneNumberToCompare.prefix(phoneNumberToCompareAgainst.count)
-                                    if phoneNumberFin == phoneNumberToCompareAgainst {
-                                        print("phoneNumberFin \(phoneNumberFin)")
-                                        print("phoneNumberToCompareAgainst \(phoneNumberToCompareAgainst)")
-                                        contacts.append(contact)
-                                    }
+        
+        filteredContacts.removeAll()
+            let searchNumber = phoneNumber
+            if searchNumber.count > 0 {
+                
+                self.resultSearchController = true
+                let contacts = [CNContact]()
+                var message: String!
+                
+                let contactsStore = CNContactStore()
+                do { try contactsStore.enumerateContacts(with: CNContactFetchRequest(keysToFetch: self.allowedContactKeys())) {
+                    (contact, cursor) -> Void in
+                    if (!contact.phoneNumbers.isEmpty) {
+                        
+                        let phoneNumberToCompareAgainst =  searchNumber.components(
+                            separatedBy: NSCharacterSet.decimalDigits.inverted).joined(separator: "")
+                        for phoneNumber in contact.phoneNumbers {
+                            if let phoneNumberStruct = phoneNumber.value as? CNPhoneNumber {
+                                let phoneNumberString = phoneNumberStruct.stringValue
+                                var phoneNumberToCompare = phoneNumberString.components(
+                                    separatedBy: NSCharacterSet.decimalDigits.inverted).joined(separator: "").dropFirst()
+                                
+//                                if self.check(phoneNumberToCompare)  {
+//                                    phoneNumberToCompare = String(phoneNumberToCompare.dropFirst())
+//                                    print("phoneNumberToCompare String(phoneNumberToCompare.dropFirst()) \(String(phoneNumberToCompare.dropFirst()))")
+//                                }
+                                let phoneNumberFin = phoneNumberToCompare.prefix(phoneNumberToCompareAgainst.count)
+                                if phoneNumberFin == phoneNumberToCompareAgainst {
+                                    self.filteredContacts.append(contact)
                                 }
                             }
                         }
                     }
+                }
                     
                     if contacts.count == 0 {
                         message = "No contacts were found matching the given phone number."
                         print(message!)
                     }
-                    } catch {
-                        message = "Unable to fetch contacts."
+                } catch {
+                    message = "Unable to fetch contacts."
+                }
+                if message != nil {
+                    DispatchQueue.main.async {
+                        print(message!)
                     }
-                    if message != nil {
-                        DispatchQueue.main.async {
-                            print(message!)
-                        }
-                    } else {
-                        // Success
-                        DispatchQueue.main.async {
-                            
-                            self.filteredContacts = contacts
-                        }
+                } else {
+                    // Success
+                    DispatchQueue.main.async {
+                        
+                        self.filteredContacts = contacts
                     }
                 }
             }
-  }
+    }
     
     
     
@@ -610,12 +607,8 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
             if model.statusCode == 0 {
                 self.dismissActivity()
                 guard let data  = model.data else { return }
-                //                self.selectedCardNumber = cardNumber
                 DispatchQueue.main.async {
                     self.banks = data
-                    //                        .sorted { lhs, rhs in
-                    //                        lhs.memberNameRus ?? "" < rhs.memberNameRus ?? ""
-                    //                    }
                     self.lastPaymentsCollectionView.anchor(height:100)
                     self.contactCollectionView.isHidden = false
                     self.contactCollectionView.reloadData()
@@ -831,7 +824,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
                 try contactsStore?.enumerateContacts(with: contactFetchRequest, usingBlock: { (contact, stop) -> Void in
                     //Ordering contacts based on alphabets in firstname
                     contactsArray.append(contact)
-                
+                    
                     var key: String = "#"
                     //If ordering has to be happening via family name change it here.
                     if let firstLetter = contact.givenName[0..<1] , firstLetter.containsAlphabets() {
@@ -920,7 +913,10 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
             let contactsForSection = orderedBanks[sortedContactKeys[section]]
             return contactsForSection?.count ?? 0
         } else {
-            if resultSearchController == true { return filteredContacts.count }
+            if resultSearchController == true {
+                print(filteredContacts.count)
+                return filteredContacts.count
+            }
             if let contactsForSection = orderedContacts[sortedContactKeys[section]] {
                 return contactsForSection.count
             }
@@ -953,7 +949,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
         } else if banksActive == false{
             let contact: EPContact
             if resultSearchController == true {
-                contact = EPContact(contact: filteredContacts[(indexPath as NSIndexPath).row])
+                contact = EPContact(contact: filteredContacts[indexPath.row])
             } else {
                 guard let contactsForSection = orderedContacts[sortedContactKeys[(indexPath as NSIndexPath).section]] else {
                     assertionFailure()
@@ -985,16 +981,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
                     phoneNumber: selectPhoneNumber
                 )
             )
-//            vc.viewModel.selectNumber = selectPhoneNumber
-//            vc.selectedBank = banks?[indexPath.row]
             vc.viewModel.bankId = banks?[indexPath.row].memberID ?? ""
-            
-//            if banksList[indexPath.row].memberNameRus == "ФОРА-БАНК"{
-//                vc.viewModel.isSbp = false
-//            } else {
-//                vc.viewModel.isSbp = true
-//            }
-            
             vc.modalPresentationStyle = .fullScreen
             
             vc.phoneField.text = selectPhoneNumber ?? ""
