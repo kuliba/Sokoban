@@ -27,12 +27,12 @@ class TemplatesListViewModel: ObservableObject {
     private var bindings = Set<AnyCancellable>()
     private let selectedItemsIds: CurrentValueSubject<Set<ItemViewModel.ID>, Never> = .init([])
     private let itemsRaw: CurrentValueSubject<[ItemViewModel], Never> = .init([])
-    private let categoryIndexAll = UUID().uuidString
+    private let categoryIndexAll = "TemplatesListViewModelCategoryAll"
     
     init(_ model: Model) {
         
         self.state = .normal
-        self.style = .list
+        self.style = model.paymentTemplatesViewSettings.value.style
         self.title = "Шаблоны"
         self.navButtonsRight = []
         self.items = []
@@ -72,6 +72,8 @@ private extension TemplatesListViewModel {
             .sink { [unowned self] templates in
                 
                 withAnimation {
+                    
+                    style = model.paymentTemplatesViewSettings.value.style
                     
                     if templates.isEmpty == false {
                         
@@ -238,6 +240,14 @@ private extension TemplatesListViewModel {
                 }
                 
             }.store(in: &bindings)
+        
+        $style
+            .sink { [unowned self] style in
+                
+                model.paymentTemplatesViewSettings.value = Settings(style: style)
+                
+            }.store(in: &bindings)
+            
     }
     
     func bindCategorySelector() {
@@ -250,6 +260,18 @@ private extension TemplatesListViewModel {
                 updateAddNewTemplateItem()
                 
             }.store(in: &bindings)
+    }
+}
+
+//MARK: - Settings
+
+extension TemplatesListViewModel {
+    
+    struct Settings: Cachable {
+        
+        let style: Style
+        
+        static let initial = Settings(style: .list)
     }
 }
 
@@ -388,6 +410,17 @@ private extension TemplatesListViewModel {
         return OptionSelectorViewModel(options: options, selected: optionAll.id)
     }
     
+    func isCategorySelectorContainsCategory(categoryId: Option.ID) -> Bool {
+        
+        guard let categorySelector = categorySelector else {
+            return false
+        }
+        
+        let categoriesIds = categorySelector.options.map{ $0.id }
+        
+        return categoriesIds.contains(categoryId)
+    }
+    
     func contextMenuViewModel() -> ContextMenuViewModel {
         
         var menuItems = [ContextMenuViewModel.MenuItemViewModel]()
@@ -499,7 +532,7 @@ extension TemplatesListViewModel {
         case select
     }
     
-    enum Style {
+    enum Style: Codable {
         
         case list
         case tiles

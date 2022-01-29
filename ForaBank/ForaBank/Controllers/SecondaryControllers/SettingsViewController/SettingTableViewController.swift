@@ -156,6 +156,7 @@ class SettingTableViewController: UITableViewController {
             NetworkManager<LogoutDecodableModel>.addRequest(.logout, [:], [:]) { _,_  in
                 DispatchQueue.main.async {
                     self.cleanAllData()
+                    Model.shared.action.send(ModelAction.LoggedOut())
                     self.delegate?.goLoginCardEntry()
                 }
             }
