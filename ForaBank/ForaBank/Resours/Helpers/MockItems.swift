@@ -39,7 +39,7 @@ class MockItems {
             //                          controllerName: "DevelopViewController",
             //                          description: "QR"),
             
-            PaymentsModel(id: 2, name: "Шаблоны и\nавтоплатежи",
+            PaymentsModel(id: 2, name: "Шаблоны",
                           iconName: "star",
                           controllerName: "", type: "templates"),
             
@@ -190,7 +190,7 @@ class MockItems {
                           controllerName: "ContactsViewController",
                           description: "Что то"),
             
-            PaymentsModel(id: 82, name: "Шаблоны и автоплатежи",
+            PaymentsModel(id: 82, name: "Шаблоны",
                           iconName: "star",
                           controllerName: "GKHMainViewController",
                           description: "ЖКХ"),
