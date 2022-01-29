@@ -768,11 +768,12 @@ class ContactConfurmViewController: UIViewController, NetStatusProtocol {
                         default:
                             break
                         }
-                        
-//                        vc.modalPresentationStyle = .fullScreen
+                        self.doneButton.isEnabled = true
+                        self.doneButton.backgroundColor = .red
                         let nav = UINavigationController(rootViewController: vc)
                         nav.modalPresentationStyle = .fullScreen
                         self.present(nav, animated: true, completion: nil)
+                        
                     }
                 } else {
                     self.showNetErrorAlert ()
@@ -820,10 +821,11 @@ class ContactConfurmViewController: UIViewController, NetStatusProtocol {
                             }
                         }
                         vc.confurmVCModel = self.confurmVCModel
-//                        vc.modalPresentationStyle = .fullScreen
                         let nav = UINavigationController(rootViewController: vc)
                         nav.modalPresentationStyle = .fullScreen
                         self.present(nav, animated: true, completion: nil)
+                        self.doneButton.isEnabled = true
+                        self.doneButton.backgroundColor = .red
                     }
                 } else if model.statusCode == 102 {
                     self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз") {
@@ -879,6 +881,8 @@ class ContactConfurmViewController: UIViewController, NetStatusProtocol {
                 let nav = UINavigationController(rootViewController: vc)
                 nav.modalPresentationStyle = .fullScreen
                 self.present(nav, animated: true, completion: nil)
+                self.doneButton.isEnabled = true
+                self.doneButton.backgroundColor = .red
                 complition()
             }
         }
