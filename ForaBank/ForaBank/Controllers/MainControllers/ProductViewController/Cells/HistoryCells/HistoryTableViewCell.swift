@@ -9,7 +9,7 @@ import UIKit
 import SkeletonView
 
 class HistoryTableViewCell: UITableViewCell {
-
+    
     @IBOutlet weak var titleLable: UILabel!
     
     @IBOutlet weak var logoImageView: UIImageView!
@@ -28,8 +28,8 @@ class HistoryTableViewCell: UITableViewCell {
     }
     override func layoutSubviews() {
         super.layoutSubviews()
-//        logoImageView.image = UIImage()
-   
+        //        logoImageView.image = UIImage()
+        
         
         logoImageView.isHidden = false
         logoImageView.layer.masksToBounds = false
@@ -40,7 +40,7 @@ class HistoryTableViewCell: UITableViewCell {
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
+        
         // Configure the view for the selected state
     }
     
@@ -53,35 +53,35 @@ class HistoryTableViewCell: UITableViewCell {
     }
     
     private func setupSkeleton() {
-          
+        
         isSkeletonable = true
         
-//          
-////        titleLable.isSkeletonable = true
-//        titleLable.showAnimatedGradientSkeleton()
-//        titleLable.linesCornerRadius = 8
-////        amountLabel.isSkeletonable = true
-//        amountLabel.showAnimatedGradientSkeleton()
-//        amountLabel.linesCornerRadius = 8
-////        subTitleLabel.isSkeletonable = true
-//        subTitleLabel.showAnimatedGradientSkeleton()
-//        subTitleLabel.linesCornerRadius = 8
-////        logoImageView.isSkeletonable = true
-//        logoImageView.showAnimatedGradientSkeleton()
-      }
+        //
+        ////        titleLable.isSkeletonable = true
+        //        titleLable.showAnimatedGradientSkeleton()
+        //        titleLable.linesCornerRadius = 8
+        ////        amountLabel.isSkeletonable = true
+        //        amountLabel.showAnimatedGradientSkeleton()
+        //        amountLabel.linesCornerRadius = 8
+        ////        subTitleLabel.isSkeletonable = true
+        //        subTitleLabel.showAnimatedGradientSkeleton()
+        //        subTitleLabel.linesCornerRadius = 8
+        ////        logoImageView.isSkeletonable = true
+        //        logoImageView.showAnimatedGradientSkeleton()
+    }
     
     func configure(currency: String){
-//        self.isSkeletonable = false
+        //        self.isSkeletonable = false
         
         if operation != nil{
             switch operation?.type {
             case "OUTSIDE":
-                    logoImageView.alpha = 0.3
-                    if operation?.merchantNameRus != nil{
-                        titleLable.text = operation?.merchantNameRus
-                    } else {
-                        titleLable.text = operation?.merchantName
-                    }
+                logoImageView.alpha = 0.3
+                if operation?.merchantNameRus != nil{
+                    titleLable.text = operation?.merchantNameRus
+                } else {
+                    titleLable.text = operation?.merchantName
+                }
                 
                 if operation?.merchantNameRus == ""{
                     titleLable.text = operation?.comment
@@ -94,11 +94,11 @@ class HistoryTableViewCell: UITableViewCell {
                 } else {
                     subTitleLabel.isHidden = true
                 }
-
+                
                 if operation?.operationType == "DEBIT"{
-                
+                    
                     logoImageView.backgroundColor = .red
-                
+                    
                 } else if operation?.operationType == "CREDIT"{
                     
                     logoImageView.backgroundColor = .green
@@ -113,24 +113,16 @@ class HistoryTableViewCell: UITableViewCell {
                 
                 if operation?.operationType == "DEBIT"{
                     amountLabel.textColor = UIColor(hexString: "1C1C1C")
-                    if let amount = operation?.documentAmount{
-                        amountLabel.text = "-\(Double(amount).currencyFormatter(symbol: currency))"
-                    } else {
-                        amountLabel.text = "-\(Double(operation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
-                    }
+                    amountLabel.text = "-\(Double(operation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
                     amountLabel.isHidden = false
                 } else if operation?.operationType == "CREDIT" {
                     amountLabel.textColor = UIColor(hexString: "22C183")
-                    if let amount = operation?.documentAmount{
-                        amountLabel.text = "+\(Double(amount).currencyFormatter(symbol: currency))"
-                    } else {
-                        amountLabel.text = "+\(Double(operation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
-                    }
+                    amountLabel.text = "+\(Double(operation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
                     amountLabel.isHidden = false
                 } else {
                     amountLabel.isHidden = true
                 }
-
+                
             case "INSIDE":
                 logoImageView.alpha = 0.3
                 titleLable.text = operation?.merchantNameRus
@@ -142,15 +134,15 @@ class HistoryTableViewCell: UITableViewCell {
                 }
                 
                 subTitleLabel.isHidden = true
-    //            logoImageView.image = UIImage()
-    //            logoImageView.image = operation?.svgImage?.convertSVGStringToImage()
+                //            logoImageView.image = UIImage()
+                //            logoImageView.image = operation?.svgImage?.convertSVGStringToImage()
                 if operation?.merchantNameRus == ""{
                     titleLable.text = operation?.comment
                 }
                 
-//                guard let sum = operation?.amount else {
-//                    return
-//                }
+                //                guard let sum = operation?.amount else {
+                //                    return
+                //                }
                 
                 if operation?.groupName != nil{
                     subTitleLabel.isHidden = false
@@ -161,9 +153,9 @@ class HistoryTableViewCell: UITableViewCell {
                 
                 
                 if operation?.operationType == "DEBIT"{
-                
+                    
                     logoImageView.backgroundColor = .red
-                
+                    
                 } else if operation?.operationType == "CREDIT"{
                     
                     logoImageView.backgroundColor = .green
@@ -179,43 +171,27 @@ class HistoryTableViewCell: UITableViewCell {
                 
                 if operation?.operationType == "DEBIT"{
                     amountLabel.textColor = UIColor(hexString: "1C1C1C")
-                    if let amount = operation?.documentAmount{
-                        amountLabel.text = "-\(Double(amount).currencyFormatter(symbol: currency))"
-                    } else {
                         amountLabel.text = "-\(Double(operation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
-                    }
                     amountLabel.isHidden = false
                 } else if operation?.operationType == "CREDIT" {
                     amountLabel.textColor = UIColor(hexString: "22C183")
-                    if let amount = operation?.documentAmount{
-                        amountLabel.text = "+\(Double(amount).currencyFormatter(symbol: currency))"
-                    } else {
                         amountLabel.text = "+\(Double(operation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
-                    }
                     amountLabel.isHidden = false
                 } else {
                     amountLabel.isHidden = true
                 }
             case .none:
                 titleLable.text = operation?.comment
-//                guard let sum = operation?.amount else {
-//                    return
-//                }
+                //                guard let sum = operation?.amount else {
+                //                    return
+                //                }
                 if operation?.operationType == "DEBIT"{
                     amountLabel.textColor = UIColor(hexString: "1C1C1C")
                     logoImageView.backgroundColor = .red
-                    if let amount = operation?.documentAmount{
-                        amountLabel.text = "-\(Double(amount).currencyFormatter(symbol: currency))"
-                    } else {
                         amountLabel.text = "-\(Double(operation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
-                    }
                 } else if operation?.operationType == "CREDIT" {
                     amountLabel.textColor = UIColor(hexString: "22C183")
-                    if let amount = operation?.documentAmount{
-                        amountLabel.text = "+\(Double(amount).currencyFormatter(symbol: currency))"
-                    } else {
                         amountLabel.text = "+\(Double(operation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
-                    }
                 }
             case .some(_):
                 print("some")
@@ -226,12 +202,12 @@ class HistoryTableViewCell: UITableViewCell {
             if accountOperation != nil{
                 switch accountOperation?.type {
                 case "OUTSIDE":
-                        logoImageView.alpha = 0.3
-                        if accountOperation?.merchantNameRus != nil{
-                            titleLable.text = accountOperation?.merchantNameRus
-                        } else {
-                            titleLable.text = accountOperation?.merchantName
-                        }
+                    logoImageView.alpha = 0.3
+                    if accountOperation?.merchantNameRus != nil{
+                        titleLable.text = accountOperation?.merchantNameRus
+                    } else {
+                        titleLable.text = accountOperation?.merchantName
+                    }
                     
                     if accountOperation?.merchantNameRus == ""{
                         titleLable.text = accountOperation?.comment
@@ -244,11 +220,11 @@ class HistoryTableViewCell: UITableViewCell {
                     } else {
                         subTitleLabel.isHidden = true
                     }
-
+                    
                     if accountOperation?.operationType == "DEBIT"{
-                    
+                        
                         logoImageView.backgroundColor = .red
-                    
+                        
                     } else if accountOperation?.operationType == "CREDIT"{
                         
                         logoImageView.backgroundColor = .green
@@ -263,24 +239,16 @@ class HistoryTableViewCell: UITableViewCell {
                     
                     if accountOperation?.operationType == "DEBIT"{
                         amountLabel.textColor = UIColor(hexString: "1C1C1C")
-                        if let amount = accountOperation?.documentAmount{
-                            amountLabel.text = "-\(Double(amount).currencyFormatter(symbol: currency))"
-                        } else {
                             amountLabel.text = "-\(Double(accountOperation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
-                        }
                         amountLabel.isHidden = false
                     } else if accountOperation?.operationType == "CREDIT" {
                         amountLabel.textColor = UIColor(hexString: "22C183")
-                        if let amount = accountOperation?.documentAmount{
-                            amountLabel.text = "+\(Double(amount).currencyFormatter(symbol: currency))"
-                        } else {
                             amountLabel.text = "+\(Double(accountOperation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
-                        }
                         amountLabel.isHidden = false
                     } else {
                         amountLabel.isHidden = true
                     }
-
+                    
                 case "INSIDE":
                     logoImageView.alpha = 0.3
                     titleLable.text = accountOperation?.merchantNameRus
@@ -292,15 +260,15 @@ class HistoryTableViewCell: UITableViewCell {
                     }
                     
                     subTitleLabel.isHidden = true
-        //            logoImageView.image = UIImage()
-        //            logoImageView.image = operation?.svgImage?.convertSVGStringToImage()
+                    //            logoImageView.image = UIImage()
+                    //            logoImageView.image = operation?.svgImage?.convertSVGStringToImage()
                     if accountOperation?.merchantNameRus == ""{
                         titleLable.text = accountOperation?.comment
                     }
                     
-//                    guard let sum = accountOperation?.amount else {
-//                        return
-//                    }
+                    //                    guard let sum = accountOperation?.amount else {
+                    //                        return
+                    //                    }
                     
                     if accountOperation?.groupName != nil{
                         subTitleLabel.isHidden = false
@@ -311,9 +279,9 @@ class HistoryTableViewCell: UITableViewCell {
                     
                     
                     if accountOperation?.operationType == "DEBIT"{
-                    
+                        
                         logoImageView.backgroundColor = .red
-                    
+                        
                     } else if accountOperation?.operationType == "CREDIT"{
                         
                         logoImageView.backgroundColor = .green
@@ -328,28 +296,20 @@ class HistoryTableViewCell: UITableViewCell {
                     
                     if accountOperation?.operationType == "DEBIT"{
                         amountLabel.textColor = UIColor(hexString: "1C1C1C")
-                        if let amount = accountOperation?.documentAmount{
-                            amountLabel.text = "-\(Double(amount).currencyFormatter(symbol: currency))"
-                        } else {
                             amountLabel.text = "-\(Double(accountOperation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
-                        }
                         amountLabel.isHidden = false
                     } else if accountOperation?.operationType == "CREDIT" {
                         amountLabel.textColor = UIColor(hexString: "22C183")
-                        if let amount = accountOperation?.documentAmount{
-                            amountLabel.text = "+\(Double(amount).currencyFormatter(symbol: currency))"
-                        } else {
                             amountLabel.text = "+\(Double(accountOperation?.amount ?? 0.0).currencyFormatter(symbol: currency))"
-                        }
                         amountLabel.isHidden = false
                     } else {
                         amountLabel.isHidden = true
                     }
                 case .none:
                     titleLable.text = accountOperation?.comment
-//                    guard let sum = accountOperation?.amount else {
-//                        return
-//                    }
+                    //                    guard let sum = accountOperation?.amount else {
+                    //                        return
+                    //                    }
                     if accountOperation?.operationType == "DEBIT"{
                         amountLabel.textColor = UIColor(hexString: "1C1C1C")
                         logoImageView.backgroundColor = .red
@@ -361,9 +321,9 @@ class HistoryTableViewCell: UITableViewCell {
                     }
                 case .some(_):
                     titleLable.text = accountOperation?.comment
-//                    guard let sum = accountOperation?.amount else {
-//                        return
-//                    }
+                    //                    guard let sum = accountOperation?.amount else {
+                    //                        return
+                    //                    }
                     if accountOperation?.operationType == "DEBIT"{
                         amountLabel.textColor = UIColor(hexString: "1C1C1C")
                         logoImageView.backgroundColor = .red
@@ -381,12 +341,12 @@ class HistoryTableViewCell: UITableViewCell {
             if depositOperation != nil{
                 switch depositOperation?.type {
                 case "OUTSIDE":
-                        logoImageView.alpha = 0.3
-                        if depositOperation?.merchantNameRus != nil{
-                            subTitleLabel.text = depositOperation?.merchantNameRus
-                        } else {
-                            subTitleLabel.text = accountOperation?.merchantName
-                        }
+                    logoImageView.alpha = 0.3
+                    if depositOperation?.merchantNameRus != nil{
+                        subTitleLabel.text = depositOperation?.merchantNameRus
+                    } else {
+                        subTitleLabel.text = accountOperation?.merchantName
+                    }
                     
                     if depositOperation?.merchantNameRus == ""{
                         subTitleLabel.text = accountOperation?.comment
@@ -399,11 +359,11 @@ class HistoryTableViewCell: UITableViewCell {
                     } else {
                         titleLable.isHidden = true
                     }
-
+                    
                     if depositOperation?.operationType == "DEBIT"{
-                    
+                        
                         logoImageView.backgroundColor = .red
-                    
+                        
                     } else if depositOperation?.operationType == "CREDIT"{
                         
                         logoImageView.backgroundColor = .green
@@ -427,10 +387,10 @@ class HistoryTableViewCell: UITableViewCell {
                     }  else {
                         amountLabel.isHidden = true
                     }
-
+                    
                 case "INSIDE":
-//                    logoImageView.alpha = 0.3
-//                    subTitleLabel.text = depositOperation?.merchantNameRus
+                    //                    logoImageView.alpha = 0.3
+                    //                    subTitleLabel.text = depositOperation?.merchantNameRus
                     
                     if depositOperation?.groupName != nil{
                         subTitleLabel.text = depositOperation?.groupName
@@ -440,15 +400,15 @@ class HistoryTableViewCell: UITableViewCell {
                         subTitleLabel.isHidden = true
                     }
                     
-        //            logoImageView.image = UIImage()
-        //            logoImageView.image = operation?.svgImage?.convertSVGStringToImage()
+                    //            logoImageView.image = UIImage()
+                    //            logoImageView.image = operation?.svgImage?.convertSVGStringToImage()
                     if depositOperation?.merchantNameRus == ""{
                         subTitleLabel.text = depositOperation?.comment
                     }
                     
-//                    guard let sum = depositOperation?.amount else {
-//                        return
-//                    }
+                    //                    guard let sum = depositOperation?.amount else {
+                    //                        return
+                    //                    }
                     
                     if depositOperation?.merchantNameRus != nil{
                         titleLable.isHidden = false
@@ -466,9 +426,9 @@ class HistoryTableViewCell: UITableViewCell {
                     } else {
                         logoImageView.alpha = 0.3
                         if depositOperation?.operationType == "DEBIT"{
-                        
+                            
                             logoImageView.backgroundColor = .red
-                        
+                            
                         } else if depositOperation?.operationType == "CREDIT"{
                             
                             logoImageView.backgroundColor = .green
@@ -489,9 +449,9 @@ class HistoryTableViewCell: UITableViewCell {
                     }
                 case .none:
                     titleLable.text = depositOperation?.comment
-//                    guard let sum = depositOperation?.amount else {
-//                        return
-//                    }
+                    //                    guard let sum = depositOperation?.amount else {
+                    //                        return
+                    //                    }
                     if depositOperation?.operationType == "DEBIT"{
                         amountLabel.textColor = UIColor(hexString: "1C1C1C")
                         logoImageView.backgroundColor = .red
@@ -503,9 +463,9 @@ class HistoryTableViewCell: UITableViewCell {
                     }
                 case .some(_):
                     titleLable.text = operation?.comment
-//                    guard let sum = operation?.amount else {
-//                        return
-//                    }
+                    //                    guard let sum = operation?.amount else {
+                    //                        return
+                    //                    }
                     if depositOperation?.operationType == "DEBIT"{
                         amountLabel.textColor = UIColor(hexString: "1C1C1C")
                         logoImageView.backgroundColor = .red
@@ -520,7 +480,7 @@ class HistoryTableViewCell: UITableViewCell {
         }
         
         
-          
+        
         
         
     }

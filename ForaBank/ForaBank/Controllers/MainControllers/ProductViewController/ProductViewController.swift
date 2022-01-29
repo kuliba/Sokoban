@@ -1231,7 +1231,14 @@ extension ProductViewController{
                     
                     let monthSort = historyArrayAccount.filter({longIntToDateString(longInt: $0.date!/1000)?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") ?? "" == month.replacingOccurrences(of: " ", with: "")})
                     let monthDebit = monthSort.filter({$0.operationType == "DEBIT"})
-                    let sumSalary = monthDebit.reduce(0, {$0 + $1.amount!})
+                    let sumSalary = monthDebit.reduce(0.0, {
+                        if let documentAmount = $1.documentAmount{
+                            let sum = $0 + documentAmount
+                            return sum
+                        } else {
+                            return +$1.amount!
+                        }
+                    })
 
                     amounPeriodLabel.text = "- \(sumSalary.currencyFormatter(symbol: "RUB"))"
                 }
@@ -1257,7 +1264,14 @@ extension ProductViewController{
                     
                     let monthSort = historyArrayDeposit.filter({longIntToDateString(longInt: $0.date!/1000)?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") ?? "" == month.replacingOccurrences(of: " ", with: "")})
                     let monthDebit = monthSort.filter({$0.operationType == "DEBIT"})
-                    let sumSalary = monthDebit.reduce(0, {$0 + $1.amount!})
+                    let sumSalary = monthDebit.reduce(0.0, {
+                        if let documentAmount = $1.documentAmount{
+                            let sum = $0 + documentAmount
+                            return sum
+                        } else {
+                            return +$1.amount!
+                        }
+                    })
 
                     amounPeriodLabel.text = "- \(sumSalary.currencyFormatter(symbol: "RUB"))"
                 }
@@ -1283,7 +1297,15 @@ extension ProductViewController{
                     
                     let monthSort = historyArray.filter({longIntToDateString(longInt: $0.date!/1000)?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") ?? "" == month.replacingOccurrences(of: " ", with: "")})
                     let monthDebit = monthSort.filter({$0.operationType == "DEBIT"})
-                    let sumSalary = monthDebit.reduce(0, {$0 + $1.amount!})
+                    
+                    let sumSalary = monthDebit.reduce(0.0, {
+                        if let documentAmount = $1.documentAmount{
+                            let sum = $0 + documentAmount
+                            return sum
+                        } else {
+                            return +$1.amount!
+                        }
+                    })
 
                     amounPeriodLabel.text = "- \(sumSalary.currencyFormatter(symbol: "RUB"))"
                 }
