@@ -15,7 +15,10 @@ class Model {
     let action: PassthroughSubject<Action, Never>
     let auth: CurrentValueSubject<AuthorizationState, Never>
     let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
+    
+    //TODO: remove when all templates will be implemented
     let paymentTemplatesAllowed: [PaymentDetailType] = [.sfp]
+    let paymentTemplatesDisplayed: [PaymentTemplateData.Kind] = [.sfp]
     
     // services
     private let serverAgent: ServerAgentProtocol
@@ -177,7 +180,9 @@ class Model {
                             case .ok:
                                 if let templates = response.data {
                                     
-                                    self.paymentTemplates.value = templates
+                                    //TODO: remove when all templates will be implemented
+                                    let allowed = templates.filter{ paymentTemplatesDisplayed.contains($0.type) }
+                                    self.paymentTemplates.value = allowed
                                     do {
                                         
                                         try self.localAgent.store(templates, serial: nil)
