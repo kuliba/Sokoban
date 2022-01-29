@@ -201,7 +201,28 @@ class ConfirmViewControllerModel {
     }
 }
 
-class ContactConfurmViewController: UIViewController {
+class ContactConfurmViewController: UIViewController, NetStatusProtocol {
+    
+    var netStatus = true
+    ///Сетевое  соединение отсутствует
+    func netEnable() {
+        netStatus = false
+    }
+    ///Сетевое  соединение восстановлено
+    func netDesable() {
+        netStatus = true
+    }
+    
+    func showNetErrorAlert () {
+        switch netStatus {
+        case true: showActivity()
+        case false:
+            self.dismissActivity()
+            self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
+        }
+    }
+    
+    
     lazy var realm = try? Realm()
     var confurmVCModel: ConfirmViewControllerModel? {
         didSet {
@@ -695,7 +716,8 @@ class ContactConfurmViewController: UIViewController {
     }
     
     @objc func doneButtonTapped() {
-        
+        doneButton.isEnabled = false
+        doneButton.backgroundColor = .systemGray2
         guard var code = smsCodeField.textField.text else { return }
         if code.isEmpty {
             code = "0"
@@ -714,8 +736,7 @@ class ContactConfurmViewController: UIViewController {
         case .card2card, .requisites, .phoneNumber, .gkh, .mobilePayment:
             NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { response, error in
                 if error != nil {
-                    self.dismissActivity()
-                    self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
+                    self.showNetErrorAlert ()
                 }
                 
                 guard let model = response else { return }
@@ -754,16 +775,14 @@ class ContactConfurmViewController: UIViewController {
                         self.present(nav, animated: true, completion: nil)
                     }
                 } else {
-                    self.dismissActivity()
-                    self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
+                    self.showNetErrorAlert ()
                 }
             }
             
         default:
             NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { respons, error in
-                self.dismissActivity()
                 if error != nil {
-                    self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
+                    self.showNetErrorAlert ()
                 }
                 guard let model = respons else { return }
                 
@@ -811,7 +830,7 @@ class ContactConfurmViewController: UIViewController {
                         self.navigationController?.popViewController(animated: true)
                     }
                 } else {
-                    self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
+                    self.showNetErrorAlert ()
                 }
             }
         }
@@ -840,7 +859,7 @@ class ContactConfurmViewController: UIViewController {
         NetworkManager<CreateDirectTransferDecodableModel>.addRequest(.createServiceTransfer, [:], body) { respModel, error in
             if error != nil {
                 completion(error!)
-                self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
+                self.showNetErrorAlert ()
             } else {
                 completion(nil)
             }
