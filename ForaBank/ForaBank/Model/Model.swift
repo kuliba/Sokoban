@@ -138,6 +138,7 @@ class Model {
                         case .success(let response):
                             switch response.statusCode {
                             case .ok:
+                                self.action.send(ModelAction.PaymentTemplate.List.Requested())
                                 self.action.send(ModelAction.PaymentTemplate.Update.Complete())
                                 
                             default:
