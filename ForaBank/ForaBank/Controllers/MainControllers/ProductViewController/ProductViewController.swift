@@ -963,6 +963,92 @@ extension ProductViewController{
         return 10
     }
     
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        switch product?.productType {
+        case "ACCOUNT":
+            if self.sortedAccount.count != 0{
+                   guard let tranDate = self.sortedAccount[section].value[0].tranDate  else {
+                       return
+               }
+                let label = longIntToDateString(longInt: tranDate/1000)
+
+                if let month = label?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") {
+                    statusBarLabel.text = "Траты за \(month)ь"
+                    
+                    let monthSort = historyArrayAccount.filter({longIntToDateString(longInt: $0.date!/1000)?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") ?? "" == month.replacingOccurrences(of: " ", with: "")})
+                    let monthDebit = monthSort.filter({$0.operationType == "DEBIT"})
+                    let sumSalary = monthDebit.reduce(0.0, {
+                        if let documentAmount = $1.documentAmount{
+                            let sum = $0 + documentAmount
+                            return sum
+                        } else {
+                            return +$1.amount!
+                        }
+                    })
+
+                    amounPeriodLabel.text = "- \(sumSalary.currencyFormatter(symbol: "RUB"))"
+                }
+
+            }
+        case "DEPOSIT":
+            if self.sortedDeposit.count != 0{
+                   guard let tranDate = self.sortedDeposit[section].value[0].tranDate  else {
+                       return
+               }
+                let label = longIntToDateString(longInt: tranDate/1000)
+                
+                if let month = label?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") {
+                    statusBarLabel.text = "Траты за \(month)ь"
+                    
+                    let monthSort = historyArrayDeposit.filter({longIntToDateString(longInt: $0.date!/1000)?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") ?? "" == month.replacingOccurrences(of: " ", with: "")})
+                    let monthDebit = monthSort.filter({$0.operationType == "DEBIT"})
+                    let sumSalary = monthDebit.reduce(0.0, {
+                        if let documentAmount = $1.documentAmount{
+                            let sum = $0 + documentAmount
+                            return sum
+                        } else {
+                            return +$1.amount!
+                        }
+                    })
+
+                    amounPeriodLabel.text = "- \(sumSalary.currencyFormatter(symbol: "RUB"))"
+                }
+
+            }
+        case "CARD":
+            if self.sorted.count != 0{
+                guard let tranDate = self.sorted[section].value[0].tranDate  else {
+                    return
+                }
+                
+                let label = longIntToDateString(longInt: tranDate/1000)
+
+                if let month = label?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") {
+                    statusBarLabel.text = "Траты за \(month)ь"
+                    
+                    let monthSort = historyArray.filter({longIntToDateString(longInt: $0.date!/1000)?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") ?? "" == month.replacingOccurrences(of: " ", with: "")})
+                    let monthDebit = monthSort.filter({$0.operationType == "DEBIT"})
+                    
+                    let sumSalary = monthDebit.reduce(0.0, {
+                        if let documentAmount = $1.documentAmount{
+                            let sum = $0 + documentAmount
+                            return sum
+                        } else {
+                            return +$1.amount!
+                        }
+                    })
+
+                    amounPeriodLabel.text = "- \(sumSalary.currencyFormatter(symbol: "RUB"))"
+                }
+
+                
+            }
+        default:
+            print("default")
+            
+        }
+    }
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 
             let headerView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.width, height: 50))
@@ -988,22 +1074,6 @@ extension ProductViewController{
                        return headerView
                }
                 label.text = longIntToDateString(longInt: tranDate/1000)
-                if let month = label.text?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") {
-                    statusBarLabel.text = "Траты за \(month)ь"
-                    
-                    let monthSort = historyArrayAccount.filter({longIntToDateString(longInt: $0.date!/1000)?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") ?? "" == month.replacingOccurrences(of: " ", with: "")})
-                    let monthDebit = monthSort.filter({$0.operationType == "DEBIT"})
-                    let sumSalary = monthDebit.reduce(0.0, {
-                        if let documentAmount = $1.documentAmount{
-                            let sum = $0 + documentAmount
-                            return sum
-                        } else {
-                            return +$1.amount!
-                        }
-                    })
-
-                    amounPeriodLabel.text = "- \(sumSalary.currencyFormatter(symbol: "RUB"))"
-                }
 
             }
         case "DEPOSIT":
@@ -1020,23 +1090,6 @@ extension ProductViewController{
                        return headerView
                }
                 label.text = longIntToDateString(longInt: tranDate/1000)
-                
-                if let month = label.text?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") {
-                    statusBarLabel.text = "Траты за \(month)ь"
-                    
-                    let monthSort = historyArrayDeposit.filter({longIntToDateString(longInt: $0.date!/1000)?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") ?? "" == month.replacingOccurrences(of: " ", with: "")})
-                    let monthDebit = monthSort.filter({$0.operationType == "DEBIT"})
-                    let sumSalary = monthDebit.reduce(0.0, {
-                        if let documentAmount = $1.documentAmount{
-                            let sum = $0 + documentAmount
-                            return sum
-                        } else {
-                            return +$1.amount!
-                        }
-                    })
-
-                    amounPeriodLabel.text = "- \(sumSalary.currencyFormatter(symbol: "RUB"))"
-                }
 
             }
         case "CARD":
@@ -1054,24 +1107,6 @@ extension ProductViewController{
                 }
                 
                 label.text = longIntToDateString(longInt: tranDate/1000)
-                if let month = label.text?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") {
-                    statusBarLabel.text = "Траты за \(month)ь"
-                    
-                    let monthSort = historyArray.filter({longIntToDateString(longInt: $0.date!/1000)?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") ?? "" == month.replacingOccurrences(of: " ", with: "")})
-                    let monthDebit = monthSort.filter({$0.operationType == "DEBIT"})
-                    
-                    let sumSalary = monthDebit.reduce(0.0, {
-                        if let documentAmount = $1.documentAmount{
-                            let sum = $0 + documentAmount
-                            return sum
-                        } else {
-                            return +$1.amount!
-                        }
-                    })
-
-                    amounPeriodLabel.text = "- \(sumSalary.currencyFormatter(symbol: "RUB"))"
-                }
-
                 
             }
         default:
