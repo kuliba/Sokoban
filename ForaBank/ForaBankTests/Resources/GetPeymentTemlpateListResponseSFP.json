@@ -1,0 +1,30 @@
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": [{
+        "paymentTemplateId": 279,
+        "name": "Петр Петрович П.",
+        "groupName": "Переводы СБП",
+        "type": "SFP",
+        "svgImage": "<svg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<rect width=\"40\" height=\"40\" rx=\"20\" fill=\"#F6F6F7\"/>\n<path d=\"M5 11.5302L9.45 18.0239V21.9849L5.00521 28.4659L5 11.5302Z\" fill=\"#5B57A2\"/>\n<path d=\"M22.0862 15.6608L26.256 13.5743L34.7898 13.5678L22.0862 19.9213V15.6608Z\" fill=\"#D90751\"/>\n<path d=\"M22.0626 11.4918L22.0862 20.0893L17.6257 17.8518V5L22.0629 11.4918H22.0626Z\fill=\"#FAB718\"/>\n<path d=\"M34.7897 13.5678L26.2557 13.5743L22.0626 11.4918L17.6257 5L34.7894 13.5678H34.7897Z\" fill=\"#ED6F26\"/>\n<path d=\"M22.0862 28.5019V24.3306L17.6257 22.1356L17.6282 35.0001L22.0862 28.5019Z\" fill=\"#63B22F\"/>\n<path d=\"M26.2456 26.4344L9.4497 18.0239L5 11.5302L34.7717 26.4259L26.2453 26.4344H26.2456Z\" fill=\"#1487C9\"/>\n<path d=\"M17.6282 35L22.0855 28.5018L26.2449 26.4343L34.771 26.4258L17.6282 35Z\" fill=\"#017F36\"/>\n<path d=\"M5.00488 28.4658L17.6619 22.1358L13.4067 20.0043L9.44968 21.9848L5.00488 28.4658Z\" fill=\"#984995\"/>\n</svg>",
+        "sort": 2,
+        "parameterList": [{
+            "check": false,
+            "amount": 1000,
+            "currencyAmount": "RUB",
+            "payer": {
+                "cardId": 10000164837,
+                "cardNumber": null,
+                "accountId": null,
+                "accountNumber": null,
+                "phoneNumber": null,
+                "INN": null
+            },
+            "comment": null,
+            "puref": "iFora||TransferC2CSTEP",
+            "additional": [
+            ]
+        }],
+        "productTemplate": null
+    }]
+}

@@ -14,7 +14,7 @@ final class OperationDetailInfoViewModel: Identifiable {
     
     
     let id = UUID()
-    let title = "Детали операций"
+    let title = "Детали операции"
     let logo: Image?
     let cells: [DefaultCellViewModel]
     let dismissAction: () -> Void
@@ -119,8 +119,6 @@ final class OperationDetailInfoViewModel: Identifiable {
 //            }
             
                 cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)", iconType: .date, value: tranDateString))
-
-            
         case  .insideBank:
             /*
              payeeAccountNumber || payeeCardNumber || || payeePhone
@@ -131,7 +129,6 @@ final class OperationDetailInfoViewModel: Identifiable {
              product
              tranDate
              */
-            
             if let payeeAccountNumber = operation?.payeeAccountNumber {
                 cells.append(PropertyCellViewModel(title: "Номер счета получателя", iconType: .bank, value: payeeAccountNumber))
                 
@@ -196,6 +193,10 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: fee.currencyFormatter(symbol: currency)))
             }
             
+            if let payeeAmount = operation?.payeeAmount, let payeeCurrency = operation?.payeeCurrency{
+                cells.append(PropertyCellViewModel(title: "Сумма зачисления в валюте", iconType: .balance, value: payeeAmount.currencyFormatter(symbol: payeeCurrency)))
+            }
+            
             cells.append(PropertyCellViewModel(title: "Способ выплаты", iconType: .cash, value: "Наличные"))
 
             
@@ -255,6 +256,11 @@ final class OperationDetailInfoViewModel: Identifiable {
                 cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: fee.currencyFormatter(symbol: currency)))
             }
             
+            if let payeeAmount = operation?.payeeAmount, let payeeCurrency = operation?.payeeCurrency{
+                
+                cells.append(PropertyCellViewModel(title: "Сумма зачисления в валюте", iconType: .balance, value: payeeAmount.currencyFormatter(symbol: payeeCurrency)))
+            }
+            
             if let debitAccounCell = Self.debitAccountCell(with: product, currency: currency) {
                 
                 cells.append(debitAccounCell)
@@ -277,7 +283,6 @@ final class OperationDetailInfoViewModel: Identifiable {
              product
              tranDate
              */
-            
             
             if let payeeFullName = operation?.payeeFullName {
                 
@@ -339,7 +344,6 @@ final class OperationDetailInfoViewModel: Identifiable {
             if let payeeAccountNumber = operation?.payeeAccountNumber {
                 
                 cells.append(PropertyCellViewModel(title: "Номер счета получателя", iconType: .account, value: payeeAccountNumber))
-                
             }
             
             if let payeeINN = operation?.payeeINN  {
@@ -448,11 +452,8 @@ final class OperationDetailInfoViewModel: Identifiable {
              */
             
             logo = statement.svgImage
-            
-            if let provider = operation?.provider {
 
-                cells.append(BankCellViewModel(title: "Наименование получателя", icon: statement.svgImage, name: provider))
-            }
+            cells.append(BankCellViewModel(title: "Наименование получателя", icon: statement.svgImage, name: statement.merchantName))
             
             if let account = operation?.account {
                 
@@ -488,12 +489,6 @@ final class OperationDetailInfoViewModel: Identifiable {
             logo = statement.svgImage
             
             cells.append(BankCellViewModel(title: "Наименование получателя", icon: statement.svgImage, name: statement.merchantName))
-    
-            
-//            if let account = operation?.account {
-//
-//                cells.append(PropertyCellViewModel(title: "Номер счета получателя", iconType: .account, value: account))
-//            }
             
             if let payeeINN = operation?.payeeINN  {
                 

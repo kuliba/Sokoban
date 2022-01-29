@@ -161,7 +161,8 @@ class MainViewController: UIViewController {
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Section, PaymentsModel>?
     lazy var realm = try? Realm()
-
+    
+    weak var templatesListViewDelegate: TemplatesListViewHostingViewControllerDelegate?
 
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -21,6 +21,8 @@ class PaymentsDetailsView: UIView {
     
     var returnTapped: (() -> Void)?
     
+    var templateTapped: (() -> Void)?
+    
     @IBOutlet var contentView: UIView!
     
     @IBOutlet weak var statusImageView: UIImageView!
@@ -32,7 +34,11 @@ class PaymentsDetailsView: UIView {
     @IBOutlet weak var changeButtonsStackView: UIStackView!
     @IBOutlet weak var detailButtonsStackView: UIStackView!
     
-    @IBOutlet weak var shablonStackView: UIStackView!
+    @IBOutlet weak var templateButtonContainerView: UIStackView!
+    @IBOutlet weak var templateButton: UIButton!
+    @IBOutlet weak var templateButtonTitle: UILabel!
+    @IBOutlet weak var templateButtonCheckMarkIcon: UIImageView!
+  
     @IBOutlet weak var documentStackView: UIStackView!
     
     var confurmVCModel: ConfirmViewControllerModel? {
@@ -82,6 +88,9 @@ class PaymentsDetailsView: UIView {
         detailTapped?()
     }
     
+    @IBAction func templateButtonDidTapped(_ sender: UIButton) {
+        templateTapped?()
+    }
     
     func setupData(with model: ConfirmViewControllerModel) {
 //        buttonView.isHidden = !model.statusIsSuccses
@@ -144,9 +153,59 @@ class PaymentsDetailsView: UIView {
             summLabel.text = " "
             operatorImageView.image = UIImage()
             documentStackView.isHidden = true
-            shablonStackView.isHidden = true
+            templateButtonContainerView.isHidden = true
         }
         
+        
+        if model.operatorImage != "" {
+            operatorImageView.image = model.operatorImage.convertSVGStringToImage()
+        }
+        
+        if (UserDefaults.standard.object(forKey: "OPERATOR_IMAGE") != nil) {
+            let im = UserDefaults.standard.object(forKey: "OPERATOR_IMAGE") as? String ?? ""
+            if im != "" {
+                let dataDecoded : Data = Data(base64Encoded: im, options: .ignoreUnknownCharacters)!
+                let decodedimage = UIImage(data: dataDecoded)
+                operatorImageView.image = decodedimage
+                UserDefaults.standard.removeObject(forKey: "OPERATOR_IMAGE")
+            } else {
+//                operatorImageView.isHidden  = true
+            }
+            
+        }
+        
+        summLabel.text = model.summTransction
+        
+        // template button
+        if let templateButtonViewModel = model.templateButtonViewModel {
+            
+            updateTemplateButton(with: templateButtonViewModel)
+            
+        } else {
+            
+            templateButtonContainerView.isHidden = true
+        }
     }
     
+    func updateTemplateButton(with viewModel: ConfirmViewControllerModel.TemplateButtonViewModel) {
+        templateButton.layer.cornerRadius = 28
+        templateButton.clipsToBounds = true
+        switch viewModel {
+        case .template:
+            templateButton.setImage(UIImage(named: "Template_Star"), for: .normal)
+            templateButton.setBackgroundColor(UIColor(red: 0.133, green: 0.757, blue: 0.514, alpha: 1), for: .normal)
+            templateButtonTitle.text = "Шаблон"
+            templateButtonTitle.textColor = UIColor(red: 0.133, green: 0.757, blue: 0.514, alpha: 1)
+            templateButton.isUserInteractionEnabled = false
+            templateButtonCheckMarkIcon.isHidden = false
+            
+        case .sfp:
+            templateButton.setImage(UIImage(named: "star24size"), for: .normal)
+            templateButton.setBackgroundColor(UIColor(red: 0.965, green: 0.965, blue: 0.969, alpha: 1), for: .normal)
+            templateButtonTitle.text = "+ Шаблон"
+            templateButtonTitle.textColor = UIColor(red: 0.108, green: 0.108, blue: 0.108, alpha: 1)
+            templateButton.isUserInteractionEnabled = true
+            templateButtonCheckMarkIcon.isHidden = true
+        }
+    }
 }

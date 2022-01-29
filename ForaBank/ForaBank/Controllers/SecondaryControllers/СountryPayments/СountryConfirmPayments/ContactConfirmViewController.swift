@@ -17,6 +17,7 @@ class ConfirmViewControllerModel {
     lazy var realm = try? Realm()
     var type: PaymentType
     var paymentSystem: PaymentSystemList?
+    var templateButtonViewModel: TemplateButtonViewModel?
     
     var cardFromRealm: UserAllCardsModel? {
         didSet {
@@ -775,8 +776,7 @@ class ContactConfurmViewController: UIViewController {
                         default:
                             print("Не известный статус документа")
                         }
-                        vc.confurmVCModel = self.confurmVCModel
-                        vc.confurmVCModel?.paymentOperationDetailId = model.data?.paymentOperationDetailId ?? 0
+                        self.confurmVCModel?.paymentOperationDetailId = model.data?.paymentOperationDetailId ?? 0
                         switch self.confurmVCModel?.type {
                         case .card2card, .phoneNumber:
                             vc.printFormType = "internal"
@@ -787,7 +787,14 @@ class ContactConfurmViewController: UIViewController {
                         }
                         if self.confurmVCModel?.type == .phoneNumberSBP {
                             vc.printFormType = "sbp"
+                            
+                            // Template button view model
+                            if let name = self.confurmVCModel?.fullName, let paymentOperationDetailId = model.data?.paymentOperationDetailId {
+                                
+                                self.confurmVCModel?.templateButtonViewModel = .sfp(name: name, paymentOperationDetailId: paymentOperationDetailId)
+                            }
                         }
+                        vc.confurmVCModel = self.confurmVCModel
 //                        vc.modalPresentationStyle = .fullScreen
                         let nav = UINavigationController(rootViewController: vc)
                         nav.modalPresentationStyle = .fullScreen
@@ -874,3 +881,13 @@ extension ConfirmViewControllerModel {
         cardFromAccountNumber = operation.payerAccountNumber ?? ""
     }
 }
+
+extension ConfirmViewControllerModel {
+    
+    enum TemplateButtonViewModel {
+        
+        case template(PaymentTemplateData.ID)
+        case sfp(name: String, paymentOperationDetailId: Int)
+    }
+}
+

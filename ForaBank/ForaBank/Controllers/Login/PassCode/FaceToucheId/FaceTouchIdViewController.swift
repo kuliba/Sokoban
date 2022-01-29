@@ -223,6 +223,9 @@ class FaceTouchIdViewController: UIViewController {
                 guard let statusCode = model?.statusCode else { return }
                 if statusCode == 0 {
 
+                    //TODO: remove after refactoring
+                    Model.shared.action.send(ModelAction.LoggedIn())
+                    
                     let bodyRegisterPush = [
                         "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
                         "pushFcmToken": Messaging.messaging().fcmToken as String?

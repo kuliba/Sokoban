@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class PaymentsDetailsSuccessViewController: UIViewController {
     
@@ -19,6 +20,10 @@ class PaymentsDetailsSuccessViewController: UIViewController {
             confurmView.confurmVCModel = model
         }
     }
+    
+    //TODO: remove after refactoring
+    private let model: Model = Model.shared
+    private var bindings = Set<AnyCancellable>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,6 +53,41 @@ class PaymentsDetailsSuccessViewController: UIViewController {
             controller.confurmVCModel = self?.confurmVCModel
             self?.navigationController?.pushViewController(controller, animated: true)
         }
+        
+        confurmView.templateTapped = { [weak self] in
+            
+            guard let self = self else {
+                return
+            }
+            
+            guard let templateButtonViewModel = self.confurmVCModel?.templateButtonViewModel,
+                  case .sfp(let name, let paymentOperationDetailId) = templateButtonViewModel else {
+                return
+            }
+            
+            self.model.action.send(ModelAction.PaymentTemplate.Save.Requested(name: name, paymentOperationDetailId: paymentOperationDetailId))
+        }
+        
+       bind()
+    }
+    
+    func bind() {
+        
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as ModelAction.PaymentTemplate.Save.Complete:
+                    let templateButtonViewModel: ConfirmViewControllerModel.TemplateButtonViewModel = .template(payload.paymentTemplateId)
+                    confurmVCModel?.templateButtonViewModel = templateButtonViewModel
+                    confurmView.updateTemplateButton(with: templateButtonViewModel)
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
     }
     
     fileprivate func setupUI() {

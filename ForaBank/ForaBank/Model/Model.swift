@@ -15,6 +15,7 @@ class Model {
     let action: PassthroughSubject<Action, Never>
     let auth: CurrentValueSubject<AuthorizationState, Never>
     let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
+    let paymentTemplatesAllowed: [PaymentDetailType] = [.sfp]
     
     // services
     private let serverAgent: ServerAgentProtocol
@@ -41,6 +42,7 @@ class Model {
         self.localAgent = localAgent
         self.bindings = []
         
+        loadCachedData()
         bind()
     }
     
@@ -48,11 +50,11 @@ class Model {
     static var shared: Model = {
        
         // server agent
-//        #if DEBUG
-//        let serverContext = ServerAgent.Context(for: .test)
-//        #else
+        #if DEBUG
+        let serverContext = ServerAgent.Context(for: .test)
+        #else
         let serverContext = ServerAgent.Context(for: .prod)
-//        #endif
+        #endif
         
         let serverAgent = ServerAgent(context: serverContext)
         
@@ -86,6 +88,10 @@ class Model {
             .sink {[unowned self] action in
                 
                 switch action {
+                case _ as ModelAction.LoggedIn:
+                    loadCachedData()
+                    self.action.send(ModelAction.PaymentTemplate.List.Requested())
+                    
                 case let payload as ModelAction.PaymentTemplate.Save.Requested:
                     guard let token = token else {
                         //TODO: handle not authoried server request attempt
@@ -129,7 +135,7 @@ class Model {
                                 return
                             }
                         case .failure(let error):
-                            self.action.send(ModelAction.PaymentTemplate.Save.Failed(error: error))
+                            self.action.send(ModelAction.PaymentTemplate.Update.Failed(error: error))
                         }
                     }
                     
@@ -146,6 +152,7 @@ class Model {
                             switch response.statusCode {
                             case .ok:
                                 self.action.send(ModelAction.PaymentTemplate.Delete.Complete())
+                                self.action.send(ModelAction.PaymentTemplate.List.Requested())
                                 
                             default:
                                 //TODO: handle not ok server status
@@ -171,11 +178,20 @@ class Model {
                                 if let templates = response.data {
                                     
                                     self.paymentTemplates.value = templates
+                                    do {
+                                        
+                                        try self.localAgent.store(templates, serial: nil)
+                                        
+                                    } catch {
+                                        //TODO: os log
+                                        print(error.localizedDescription)
+                                    }
                                     self.action.send(ModelAction.PaymentTemplate.List.Complete(paymentTemplates: templates))
                                     
                                 } else {
                                     
                                     self.paymentTemplates.value = []
+                                    //TODO: delete cache data
                                     self.action.send(ModelAction.PaymentTemplate.List.Complete(paymentTemplates: []))
                                 }
 
@@ -196,3 +212,15 @@ class Model {
     }
 }
 
+//MARK: - Private Helpers
+
+private extension Model {
+    
+    func loadCachedData() {
+        
+        if let paymentTemplates = localAgent.load(type: PaymentTemplateData.self) {
+            
+            self.paymentTemplates.value = paymentTemplates
+        }
+    }
+}

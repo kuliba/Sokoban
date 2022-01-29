@@ -183,33 +183,31 @@ extension PaymentsViewController: UICollectionViewDelegate {
     }
 
     private func openPhonePaymentVC(model: GetAllLatestPaymentsDatum) {
-        let vc = PaymentByPhoneViewController()
-        let banksList = Dict.shared.banks
-        banksList?.forEach { bank in
-            if bank.memberID == model.bankID {
-                vc.selectedBank = bank
-                vc.bankId = bank.memberID ?? ""
-            }
-        }
-//        vc.selectBank = model.bankName
-//        vc.memberId = model.bankID
-//        vc.bankImage = UIImage(named: "\(model.bankID ?? "")")
-        let mask = StringMask(mask: "+7 (000) 000-00-00")
-        let maskPhone = mask.mask(string: model.phoneNumber)
-        vc.phoneField.text = maskPhone ?? ""
-        vc.selectNumber = maskPhone
-        if model.bankName == "ФОРА-БАНК" {
-            vc.sbp = false
-        } else {
-            vc.sbp = true
-        }
+        
+        
+        let vc = PaymentByPhoneViewController(viewModel: PaymentByPhoneViewModel(phoneNumber: model.phoneNumber, bankId: model.bankID ?? ""))
+//        let banksList = Dict.shared.banks
+//        banksList?.forEach { bank in
+//            if bank.memberID == model.bankID {
+////                vc.selectedBank = bank
+//                vc.viewModel.bankId = bank.memberID ?? ""
+//            }
+//        }
+//        let mask = StringMask(mask: "+7 (000) 000-00-00")
+//        let maskPhone = mask.mask(string: model.phoneNumber)
+//        vc.phoneField.text = maskPhone ?? ""
+//        vc.viewModel.selectNumber = maskPhone
+//        if model.bankName == "ФОРА-БАНК" {
+//            vc.viewModel.isSbp = false
+//        } else {
+//            vc.viewModel.isSbp = true
+//        }
         vc.phoneField.chooseButton.isHidden = true
         vc.phoneField.rightButton.isHidden = true
         vc.addCloseButton()
         vc.modalPresentationStyle = .fullScreen
         let navController = UINavigationController(rootViewController: vc)
         navController.modalPresentationStyle = .fullScreen
-//        navController.transitioningDelegate = self
         present(navController, animated: true, completion: nil)
     }
 

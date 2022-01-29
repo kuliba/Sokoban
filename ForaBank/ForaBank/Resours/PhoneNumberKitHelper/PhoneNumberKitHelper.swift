@@ -24,7 +24,7 @@ struct PhoneNumberFormater: PhoneNumberFormaterProtocol {
             let phoneNumber = try phoneNumberKit.parse(phoneNumber, ignoreType: true)
             returnValue = phoneNumberKit.format(phoneNumber, toType: .international)
         } catch {
-            print("Something went wrong \(phoneNumber)")
+            print("Something went wrong \(phoneNumber), Error: \(error.localizedDescription)")
         }
         
         return returnValue

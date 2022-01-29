@@ -269,6 +269,11 @@ private extension OperationDetailViewModel {
     
     func templateButtonViewModel(with productStatement: ProductStatementProxy, operationDetail: OperationDetailDatum) -> FeatureButtonViewModel? {
         
+        // check if template allowed for this operation type
+        guard model.paymentTemplatesAllowed.contains(productStatement.paymentDetailType) else {
+            return nil
+        }
+        
         if operationDetail.paymentTemplateId != nil {
             
             return FeatureButtonViewModel(kind: .template(true), icon: "Operation Details Template Selected", name: "Шаблон", action: {})
