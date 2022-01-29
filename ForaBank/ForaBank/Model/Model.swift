@@ -15,6 +15,8 @@ class Model {
     let action: PassthroughSubject<Action, Never>
     let auth: CurrentValueSubject<AuthorizationState, Never>
     let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
+    //TODO: store in cache 
+    let paymentTemplatesViewSettings: CurrentValueSubject<TemplatesListViewModel.Settings, Never>
     
     //TODO: remove when all templates will be implemented
     let paymentTemplatesAllowed: [PaymentDetailType] = [.sfp]
@@ -41,6 +43,7 @@ class Model {
         self.action = .init()
         self.auth = .init(.notAuthorized)
         self.paymentTemplates = .init([])
+        self.paymentTemplatesViewSettings = .init(.initial)
         self.serverAgent = serverAgent
         self.localAgent = localAgent
         self.bindings = []
@@ -227,5 +230,7 @@ private extension Model {
             
             self.paymentTemplates.value = paymentTemplates
         }
+        
+        //TODO: load paymentTemplatesViewSettings from cache
     }
 }
