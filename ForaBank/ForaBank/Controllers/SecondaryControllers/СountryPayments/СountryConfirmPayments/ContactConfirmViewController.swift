@@ -201,26 +201,26 @@ class ConfirmViewControllerModel {
     }
 }
 
-class ContactConfurmViewController: UIViewController, NetStatusProtocol {
+class ContactConfurmViewController: UIViewController {
     
-    var netStatus = true
-    ///Сетевое  соединение отсутствует
-    func netEnable() {
-        netStatus = false
-    }
-    ///Сетевое  соединение восстановлено
-    func netDesable() {
-        netStatus = true
-    }
-    
-    func showNetErrorAlert () {
-        switch netStatus {
-        case true: showActivity()
-        case false:
-            self.dismissActivity()
-            self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
-        }
-    }
+//    var netStatus = true
+//    ///Сетевое  соединение отсутствует
+//    func netEnable() {
+//        netStatus = false
+//    }
+//    ///Сетевое  соединение восстановлено
+//    func netDesable() {
+//        netStatus = true
+//    }
+//
+//    func showNetErrorAlert () {
+//        switch netStatus {
+//        case true: showActivity()
+//        case false:
+//            self.dismissActivity()
+//            self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
+//        }
+//    }
     
     
     lazy var realm = try? Realm()
@@ -716,8 +716,8 @@ class ContactConfurmViewController: UIViewController, NetStatusProtocol {
     }
     
     @objc func doneButtonTapped() {
-        doneButton.isEnabled = false
-        doneButton.backgroundColor = .systemGray2
+//        doneButton.isEnabled = false
+//        doneButton.backgroundColor = .systemGray2
         guard var code = smsCodeField.textField.text else { return }
         if code.isEmpty {
             code = "0"
@@ -736,7 +736,9 @@ class ContactConfurmViewController: UIViewController, NetStatusProtocol {
         case .card2card, .requisites, .phoneNumber, .gkh, .mobilePayment:
             NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { response, error in
                 if error != nil {
-                    self.showNetErrorAlert ()
+//                    self.showNetErrorAlert ()
+                    self.dismissActivity()
+                    self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
                 }
                 
                 guard let model = response else { return }
@@ -768,22 +770,27 @@ class ContactConfurmViewController: UIViewController, NetStatusProtocol {
                         default:
                             break
                         }
-                        self.doneButton.isEnabled = true
-                        self.doneButton.backgroundColor = .red
+//                        self.doneButton.isEnabled = true
+//                        self.doneButton.backgroundColor = .red
                         let nav = UINavigationController(rootViewController: vc)
                         nav.modalPresentationStyle = .fullScreen
                         self.present(nav, animated: true, completion: nil)
                         
                     }
                 } else {
-                    self.showNetErrorAlert ()
+//                    self.showNetErrorAlert ()
+                    self.dismissActivity()
+                    self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
+                             
                 }
             }
             
         default:
             NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { respons, error in
+                self.dismissActivity()
                 if error != nil {
-                    self.showNetErrorAlert ()
+//                    self.showNetErrorAlert ()
+                    self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
                 }
                 guard let model = respons else { return }
                 
@@ -824,15 +831,16 @@ class ContactConfurmViewController: UIViewController, NetStatusProtocol {
                         let nav = UINavigationController(rootViewController: vc)
                         nav.modalPresentationStyle = .fullScreen
                         self.present(nav, animated: true, completion: nil)
-                        self.doneButton.isEnabled = true
-                        self.doneButton.backgroundColor = .red
+//                        self.doneButton.isEnabled = true
+//                        self.doneButton.backgroundColor = .red
                     }
                 } else if model.statusCode == 102 {
                     self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз") {
                         self.navigationController?.popViewController(animated: true)
                     }
                 } else {
-                    self.showNetErrorAlert ()
+//                    self.showNetErrorAlert ()
+                    self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
                 }
             }
         }
@@ -861,7 +869,8 @@ class ContactConfurmViewController: UIViewController, NetStatusProtocol {
         NetworkManager<CreateDirectTransferDecodableModel>.addRequest(.createServiceTransfer, [:], body) { respModel, error in
             if error != nil {
                 completion(error!)
-                self.showNetErrorAlert ()
+//                self.showNetErrorAlert ()
+                self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
             } else {
                 completion(nil)
             }
@@ -881,8 +890,8 @@ class ContactConfurmViewController: UIViewController, NetStatusProtocol {
                 let nav = UINavigationController(rootViewController: vc)
                 nav.modalPresentationStyle = .fullScreen
                 self.present(nav, animated: true, completion: nil)
-                self.doneButton.isEnabled = true
-                self.doneButton.backgroundColor = .red
+//                self.doneButton.isEnabled = true
+//                self.doneButton.backgroundColor = .red
                 complition()
             }
         }

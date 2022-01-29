@@ -11,10 +11,10 @@ import FirebaseMessaging
 import Combine
 import Network
 
-protocol NetStatusProtocol: AnyObject {
-    func netEnable()
-    func netDesable()
-}
+//protocol NetStatusProtocol: AnyObject {
+//    func netEnable()
+//    func netDesable()
+//}
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
@@ -27,7 +27,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var netAlert: NetDetectAlert!
     var netStatus: Bool?
     
-    weak var netDetectDelegate: NetStatusProtocol?
+//    weak var netDetectDelegate: NetStatusProtocol?
     
     lazy var appNavigationController = UINavigationController()
     lazy var appRouter = Router(navigationController: self.appNavigationController)
@@ -61,11 +61,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     if status == .satisfied {
                         self?.netStatus = true
                         self?.netAlert?.removeFromSuperview()
-                        self?.netDetectDelegate?.netDesable()
+//                        self?.netDetectDelegate?.netDesable()
                         self?.netAlert = nil
                     } else {
                         guard let vc = UIApplication.getTopViewController() else {return}
-                        self?.netDetectDelegate?.netEnable()
+//                        self?.netDetectDelegate?.netEnable()
                         if self?.netAlert == nil {
                             self?.netAlert = NetDetectAlert(vc.view)
                             vc.view.addSubview((self?.netAlert)!)
