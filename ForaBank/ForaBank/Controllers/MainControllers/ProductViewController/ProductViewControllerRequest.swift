@@ -34,16 +34,12 @@ extension ProductViewController {
     func getFastPaymentContractList(_ completion: @escaping (_ model: [FastPaymentContractFindListDatum]? ,_ error: String?) -> Void) {
         NetworkManager<FastPaymentContractFindListDecodableModel>.addRequest(.fastPaymentContractFindList, [:], [:]) { model, error in
             if error != nil {
-                print("DEBUG: Error: ", error ?? "")
                 completion(nil, error)
             }
             guard let model = model else { return }
-            print("DEBUG: fastPaymentContractFindList", model)
             if model.statusCode == 0 {
                 completion(model.data, nil)
             } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
-
                 completion(nil, model.errorMessage)
             }
         }
@@ -51,15 +47,13 @@ extension ProductViewController {
     
     func accountHistory(){
         startSkeleton()
-        let body = ["id": product?.id
-                     ] as [String : AnyObject]
+        let body = ["id": product?.id ] as [String : AnyObject]
         
         NetworkManager<GetAccountStatementDecodableModel>.addRequest(.getAccountStatement, [:], body) { model, error in
             if error != nil {
                 print("DEBUG: Error: ", error ?? "")
             }
             guard let model = model else { return }
-            print("DEBUG: LatestPayment: ", model)
             if model.statusCode == 0 {
                 DispatchQueue.main.async {
                     guard let lastPaymentsList  = model.data else { return }
@@ -76,15 +70,12 @@ extension ProductViewController {
                     for i in self.historyArrayAccount{
                         
                         if let timeResult = (i.tranDate) {
-                            print(timeResult)
                             let date = Date(timeIntervalSince1970: TimeInterval(timeResult/1000) )
                             let dateFormatter = DateFormatter()
                             dateFormatter.timeStyle = DateFormatter.Style.none //Set time style
                             dateFormatter.dateStyle = DateFormatter.Style.medium //Set date style
                             dateFormatter.timeZone = .current
                             dateFormatter.locale = Locale(identifier: "ru_RU")
-                            let localDate = dateFormatter.string(from: date)
-                            print(localDate)
                         }
                     }
                     
@@ -130,8 +121,6 @@ extension ProductViewController {
                     self.tableView?.hideSkeleton()
                     self.view.hideSkeleton()
                 }
-                print("DEBUG: Error: ", model.errorMessage ?? "")
-
             }
         }
     }

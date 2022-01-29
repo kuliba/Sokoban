@@ -703,20 +703,22 @@ class ContactConfurmViewController: UIViewController {
         let body = ["verificationCode": code] as [String: AnyObject]
 
         showActivity()
+        
         self.timeOut() {
             self.dismissActivity()
             return
         }
+        
         switch confurmVCModel?.type {
         
         case .card2card, .requisites, .phoneNumber, .gkh, .mobilePayment:
-            NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { respons, error in
+            NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { response, error in
                 if error != nil {
                     self.dismissActivity()
                     self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
                 }
                 
-                guard let model = respons else { return }
+                guard let model = response else { return }
                 
                 if model.statusCode == 0 {
                     let documentStatus = model.data?.documentStatus ?? ""
