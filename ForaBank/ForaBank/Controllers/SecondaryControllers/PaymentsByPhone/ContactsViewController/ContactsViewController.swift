@@ -957,6 +957,11 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
                 }
                 contact = EPContact(contact: contactsForSection[(indexPath as NSIndexPath).row])
                 cell.needChek = true
+                cell.ownerImageView.layer.cornerRadius = cell.ownerImageView.frame.size.width/2
+                cell.contactContainerView.layer.cornerRadius = cell.contactContainerView.frame.size.width/2
+                cell.ownerImageView.clipsToBounds = true
+                cell.contactContainerView.layer.masksToBounds = true
+                cell.contactContainerView.layer.cornerRadius = cell.contactContainerView.frame.size.width/2
             }
             
             if multiSelectEnabled  && selectedContacts.contains(where: { $0.contactId == contact.contactId }) {
