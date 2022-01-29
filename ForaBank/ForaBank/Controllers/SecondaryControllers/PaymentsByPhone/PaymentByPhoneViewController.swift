@@ -502,9 +502,13 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
                     model.comment = self?.commentField.textField.text ?? ""
                     model.status = .succses
                     let statusValue = data.data?.additionalList?.filter({$0.fieldName == "AFResponse"})
+                    let numberTransaction = data.data?.additionalList?.filter({$0.fieldName == "BizMsgIdr"})
                     
                     let vc = ContactConfurmViewController()
                     vc.confurmVCModel = model
+                    if numberTransaction?.count ?? 0 > 0{
+                        vc.confurmVCModel?.numberTransction = numberTransaction?[0].fieldValue?.description ?? ""
+                    }
                     vc.addCloseButton()
                     vc.title = "Подтвердите реквизиты"
                     vc.createTransferSBP = data
