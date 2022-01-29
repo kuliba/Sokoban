@@ -9,6 +9,7 @@ import Foundation
 
 protocol LocalAgentProtocol {
     
+    //TODO: implement storing and loading single item
     func store<T>(_ data: [T], serial: Int?) throws where T: Cachable
     func load<T>(type: T.Type) -> [T]? where T : Cachable
     func clear<T>(type: T.Type) throws where T: Cachable
