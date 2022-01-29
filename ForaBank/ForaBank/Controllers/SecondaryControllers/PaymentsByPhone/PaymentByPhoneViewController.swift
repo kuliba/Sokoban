@@ -108,7 +108,10 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
         
         AddAllUserCardtList.add() { }
         
-        phoneField.textField.maskString = "+7 (000) 000-00-00"
+        phoneField.textField.delegate = self
+        phoneField.textField.maskString = "+0 000 000-00-00"
+        
+        
         phoneField.rightButton.setImage(UIImage(named: "user-plus"), for: .normal)
         
         if let maskPhoneNumber = viewModel.maskPhoneNumber {

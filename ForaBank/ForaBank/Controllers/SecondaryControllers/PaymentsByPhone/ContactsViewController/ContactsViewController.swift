@@ -54,7 +54,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
             lastPaymentsCollectionView.reloadData()
         }
     }
-
+    
     var counterNumbers = 0
     
     var lastPhonePayment = [GetLatestPhone](){
@@ -274,18 +274,14 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
                         for phoneNumber in contact.phoneNumbers {
                             if let phoneNumberStruct = phoneNumber.value as? CNPhoneNumber {
                                 let phoneNumberString = phoneNumberStruct.stringValue
-//                                print(phoneNumberString)
                                 var phoneNumberToCompare = phoneNumberString.components(
                                     separatedBy: NSCharacterSet.decimalDigits.inverted).joined(separator: "").dropFirst()
-                                print(phoneNumberToCompare)
                                 
 //                                if self.check(phoneNumberToCompare)  {
 //                                    phoneNumberToCompare = String(phoneNumberToCompare.dropFirst())
 //                                    print("phoneNumberToCompare String(phoneNumberToCompare.dropFirst()) \(String(phoneNumberToCompare.dropFirst()))")
 //                                }
                                 let phoneNumberFin = phoneNumberToCompare.prefix(phoneNumberToCompareAgainst.count)
-                                print(phoneNumberToCompare.prefix(phoneNumberToCompareAgainst.count))
-                                print(phoneNumberToCompareAgainst)
                                 if phoneNumberFin == phoneNumberToCompareAgainst {
                                     self.filteredContacts.append(contact)
                                 }
