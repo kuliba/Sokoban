@@ -98,6 +98,10 @@ class Model {
                     loadCachedData()
                     self.action.send(ModelAction.PaymentTemplate.List.Requested())
                     
+                case _ as ModelAction.LoggedOut:
+                    clearCachedData()
+                    paymentTemplates.value = []
+                    
                 case let payload as ModelAction.PaymentTemplate.Save.Requested:
                     guard let token = token else {
                         //TODO: handle not authoried server request attempt
@@ -232,5 +236,17 @@ private extension Model {
         }
         
         //TODO: load paymentTemplatesViewSettings from cache
+    }
+    
+    func clearCachedData() {
+        
+        do {
+            
+            try localAgent.clear(type: PaymentTemplateData.self)
+            
+        } catch {
+            
+            print("Model: clearCachedData: error: \(error.localizedDescription)")
+        }
     }
 }
