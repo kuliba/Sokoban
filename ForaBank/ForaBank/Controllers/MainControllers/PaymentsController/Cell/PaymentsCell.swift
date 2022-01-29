@@ -215,6 +215,17 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
                     }
                 }
             })
+            
+        case "templates":
+            titleLabel.text = payment.name
+            titleLabel.alpha = 1.0
+            iconImageView.alpha = 1.0
+            iconCountryImageView.isHidden = true
+            iconImageView.image = UIImage(named: "star")
+            avatarImageView.image = nil
+            initialsLabel.text = ""
+            descriptionLabel.text = ""
+            
         default:
             titleLabel.text = payment.name
             titleLabel.alpha = 0.3
