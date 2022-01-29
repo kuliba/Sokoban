@@ -782,6 +782,10 @@ class ContactConfurmViewController: UIViewController {
                             vc.printFormType = "internal"
                         case .requisites:
                             vc.printFormType = "external"
+                        case .mig :
+                            vc.printFormType = "direct"
+                        case .contact:
+                            vc.printFormType = "contactAddressless"
                         default:
                             break
                         }
