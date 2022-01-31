@@ -127,6 +127,10 @@ class PaymentsDetailsView: UIView {
         case .succses:
             statusLabel.text = "Успешный перевод"
             statusImageView.image = UIImage(named: "OkOperators")
+            if let paymentSystem = self.confurmVCModel?.paymentSystem {
+                let paymentImage: UIImage = paymentSystem.svgImage?.convertSVGStringToImage() ?? UIImage()
+                operatorImageView.image = paymentImage
+            }
         case .error:
             statusLabel.text = "Операция неуспешна!"
             statusImageView.image = UIImage(named: "errorIcon")

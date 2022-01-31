@@ -44,6 +44,17 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 openLatestUtilities(lastGKHPayment: lastUtilitiesPayment)
             } else if let lastUtilitiesPayment = payments[indexPath.row].lastInternetPayment {
                 openLatestUtilities(lastGKHPayment: lastUtilitiesPayment)
+                
+            } else if payments[indexPath.row].type == "templates" {
+                
+                //FIXME: inject from parent view model after refactoring
+                let model = Model.shared
+                let templatesViewModel = TemplatesListViewModel(model)
+                let templatesViewController = TemplatesListViewHostingViewController(with: templatesViewModel)
+                templatesViewController.delegate = self
+                let navigationViewController = UINavigationController(rootViewController: templatesViewController)
+                present(navigationViewController, animated: true)
+                
             } else {
                 if let viewController = payments[indexPath.row].controllerName.getViewController() {
                     viewController.addCloseButton()
@@ -169,12 +180,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
             }
             let latestOpsDO = InternetLatestOpsDO(mainImage: image, name: name, amount: amount, op: foundedOperator, additionalList: additionalList)
             InternetTVMainViewModel.latestOp = latestOpsDO
-            if foundedOperator.parentCode?.contains(GlobalModule.UTILITIES_CODE) == true {
-                InternetTVMainViewModel.filter = GlobalModule.UTILITIES_CODE
-            } else if foundedOperator.parentCode?.contains(GlobalModule.INTERNET_TV_CODE) == true {
-                InternetTVMainViewModel.filter = GlobalModule.INTERNET_TV_CODE
-            }
-
+            InternetTVMainViewModel.filter = foundedOperator.parentCode ?? GlobalModule.UTILITIES_CODE
             let controller = InternetTVMainController.storyboardInstance()!
             let nc = UINavigationController(rootViewController: controller)
             nc.modalPresentationStyle = .fullScreen
@@ -183,8 +189,6 @@ extension PaymentsViewController: UICollectionViewDelegate {
     }
 
     private func openPhonePaymentVC(model: GetAllLatestPaymentsDatum) {
-        
-        
         let vc = PaymentByPhoneViewController(viewModel: PaymentByPhoneViewModel(phoneNumber: model.phoneNumber, bankId: model.bankID ?? ""))
 //        let banksList = Dict.shared.banks
 //        banksList?.forEach { bank in
@@ -282,3 +286,22 @@ extension PaymentsViewController: UIViewControllerTransitioningDelegate {
         return presenter
     }
 }
+
+//MARK: - TemplatesListViewHostingViewControllerDelegate
+
+extension PaymentsViewController: TemplatesListViewHostingViewControllerDelegate {
+    
+    func presentProductViewController() {
+        
+        guard let tabBarController = tabBarController,
+              let mainViewControllerNavigation = tabBarController.viewControllers?.first as? UINavigationController,
+              let mainViewController = mainViewControllerNavigation.viewControllers.first as? MainViewController  else {
+                  return
+              }
+        
+        tabBarController.selectedIndex = 0
+        mainViewController.presentProductViewController()
+    }
+}
+
+

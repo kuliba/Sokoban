@@ -202,6 +202,27 @@ class ConfirmViewControllerModel {
 }
 
 class ContactConfurmViewController: UIViewController {
+    
+//    var netStatus = true
+//    ///Сетевое  соединение отсутствует
+//    func netEnable() {
+//        netStatus = false
+//    }
+//    ///Сетевое  соединение восстановлено
+//    func netDesable() {
+//        netStatus = true
+//    }
+//
+//    func showNetErrorAlert () {
+//        switch netStatus {
+//        case true: showActivity()
+//        case false:
+//            self.dismissActivity()
+//            self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
+//        }
+//    }
+    
+    
     lazy var realm = try? Realm()
     var confurmVCModel: ConfirmViewControllerModel? {
         didSet {
@@ -695,7 +716,8 @@ class ContactConfurmViewController: UIViewController {
     }
     
     @objc func doneButtonTapped() {
-        
+//        doneButton.isEnabled = false
+//        doneButton.backgroundColor = .systemGray2
         guard var code = smsCodeField.textField.text else { return }
         if code.isEmpty {
             code = "0"
@@ -703,20 +725,23 @@ class ContactConfurmViewController: UIViewController {
         let body = ["verificationCode": code] as [String: AnyObject]
 
         showActivity()
+        
         self.timeOut() {
             self.dismissActivity()
             return
         }
+        
         switch confurmVCModel?.type {
         
         case .card2card, .requisites, .phoneNumber, .gkh, .mobilePayment:
-            NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { respons, error in
+            NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { response, error in
                 if error != nil {
+//                    self.showNetErrorAlert ()
                     self.dismissActivity()
                     self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
                 }
                 
-                guard let model = respons else { return }
+                guard let model = response else { return }
                 
                 if model.statusCode == 0 {
                     let documentStatus = model.data?.documentStatus ?? ""
@@ -745,15 +770,18 @@ class ContactConfurmViewController: UIViewController {
                         default:
                             break
                         }
-                        
-//                        vc.modalPresentationStyle = .fullScreen
+//                        self.doneButton.isEnabled = true
+//                        self.doneButton.backgroundColor = .red
                         let nav = UINavigationController(rootViewController: vc)
                         nav.modalPresentationStyle = .fullScreen
                         self.present(nav, animated: true, completion: nil)
+                        
                     }
                 } else {
+//                    self.showNetErrorAlert ()
                     self.dismissActivity()
                     self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
+                             
                 }
             }
             
@@ -761,6 +789,7 @@ class ContactConfurmViewController: UIViewController {
             NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { respons, error in
                 self.dismissActivity()
                 if error != nil {
+//                    self.showNetErrorAlert ()
                     self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
                 }
                 guard let model = respons else { return }
@@ -782,6 +811,10 @@ class ContactConfurmViewController: UIViewController {
                             vc.printFormType = "internal"
                         case .requisites:
                             vc.printFormType = "external"
+                        case .mig :
+                            vc.printFormType = "direct"
+                        case .contact:
+                            vc.printFormType = "contactAddressless"
                         default:
                             break
                         }
@@ -795,16 +828,18 @@ class ContactConfurmViewController: UIViewController {
                             }
                         }
                         vc.confurmVCModel = self.confurmVCModel
-//                        vc.modalPresentationStyle = .fullScreen
                         let nav = UINavigationController(rootViewController: vc)
                         nav.modalPresentationStyle = .fullScreen
                         self.present(nav, animated: true, completion: nil)
+//                        self.doneButton.isEnabled = true
+//                        self.doneButton.backgroundColor = .red
                     }
                 } else if model.statusCode == 102 {
                     self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз") {
                         self.navigationController?.popViewController(animated: true)
                     }
                 } else {
+//                    self.showNetErrorAlert ()
                     self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
                 }
             }
@@ -834,6 +869,7 @@ class ContactConfurmViewController: UIViewController {
         NetworkManager<CreateDirectTransferDecodableModel>.addRequest(.createServiceTransfer, [:], body) { respModel, error in
             if error != nil {
                 completion(error!)
+//                self.showNetErrorAlert ()
                 self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
             } else {
                 completion(nil)
@@ -854,6 +890,8 @@ class ContactConfurmViewController: UIViewController {
                 let nav = UINavigationController(rootViewController: vc)
                 nav.modalPresentationStyle = .fullScreen
                 self.present(nav, animated: true, completion: nil)
+//                self.doneButton.isEnabled = true
+//                self.doneButton.backgroundColor = .red
                 complition()
             }
         }

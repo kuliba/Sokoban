@@ -36,14 +36,20 @@ class OperationDetailViewModel: ObservableObject {
         let tranDateString = DateFormatter.operation.string(from: productStatement.tranDate)
 
         switch productStatement.paymentDetailType {
-        case .betweenTheir, .insideBank:
+        case .insideBank:
             self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: "Перевод на карту", category: productStatement.groupName)
             let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchantName)
             let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
             self.operation = OperationViewModel(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
             
-        case .otherBank:
+        case .betweenTheir:
             self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: productStatement.groupName, category: "Переводы")
+            let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchantName)
+            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
+            self.operation = OperationViewModel(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
+            
+        case .otherBank:
+            self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: "Перевод на карту", category: productStatement.groupName)
             let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchantName)
             let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
             self.operation = OperationViewModel(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)

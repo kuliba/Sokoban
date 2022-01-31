@@ -215,6 +215,37 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
                     }
                 }
             })
+        case "transport":
+            descriptionLabel.isHidden = false
+            titleLabel.alpha = 1
+            iconImageView.alpha = 1
+            guard let operators = operatorsList else {
+                return
+            }
+            iconCountryImageView.isHidden = true
+            avatarImageView.isHidden = false
+            avatarImageView.image = UIImage(named: "GKH")
+            for i in operators {
+                if i.puref == payment.lastGKHPayment?.puref {
+                    avatarImageView.image = i.logotypeList.first?.svgImage?.convertSVGStringToImage()
+                    titleLabel.text = i.name
+                    descriptionLabel.text = payment.lastGKHPayment?.amount?.string()
+                    descriptionLabel.isHidden = false
+                    iconCountryImageView.isHidden = true
+                    avatarImageView.isHidden = false
+                    break
+                }
+            }
+        case "templates":
+            titleLabel.text = payment.name
+            titleLabel.alpha = 1.0
+            iconImageView.alpha = 1.0
+            iconCountryImageView.isHidden = true
+            iconImageView.image = UIImage(named: "star")
+            avatarImageView.image = nil
+            initialsLabel.text = ""
+            descriptionLabel.text = ""
+            
         default:
             titleLabel.text = payment.name
             titleLabel.alpha = 0.3

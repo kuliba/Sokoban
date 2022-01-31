@@ -108,7 +108,10 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
         
         AddAllUserCardtList.add() { }
         
-        phoneField.textField.maskString = "+7 (000) 000-00-00"
+        phoneField.textField.delegate = self
+        phoneField.textField.maskString = "+0 000 000-00-00"
+        
+        
         phoneField.rightButton.setImage(UIImage(named: "user-plus"), for: .normal)
         
         if let maskPhoneNumber = viewModel.maskPhoneNumber {
@@ -127,7 +130,12 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
                 }
             }
             if filterProduct.count > 0 {
-                self.cardField.model = filterProduct.first
+                if let template = self.viewModel.template {
+                    let card = filterProduct.first(where: { $0.id == template.psfCardId })
+                    self.cardField.model = card
+                } else {
+                    self.cardField.model = filterProduct.first
+                }
             }
         }
         
@@ -255,6 +263,9 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
     fileprivate func setupUI() {
         view.backgroundColor = .white
         
+        cardField.titleLabel.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
+        cardField.imageView.isHidden = false
+        cardField.leftTitleAncor.constant = 64
         
         let saveAreaView = UIView()
         saveAreaView.backgroundColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1)
@@ -299,13 +310,13 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
         
         if let template = viewModel.template {
             title = template.name
-            
-            let item = UIBarButtonItem(image: UIImage(systemName: "qrIcon"),
-                                       landscapeImagePhone: nil,
-                                       style: .plain, target: self,
-                                       action: #selector(saveTemplate))
-            
-            self.navigationItem.rightBarButtonItem = item
+            let button = UIBarButtonItem(image: UIImage(named: "edit-2"),
+                                         landscapeImagePhone: nil,
+                                         style: .done,
+                                         target: self,
+                                         action: #selector(updateNameTemplate))
+            button.tintColor = .black
+            navigationItem.rightBarButtonItem = button
             
         } else {
             if viewModel.isSbp {
@@ -328,8 +339,34 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
         self.bankPayeer.imageView.image = bank?.svgImage?.convertSVGStringToImage()
     }
     
-    @objc private func saveTemplate() {
-        
+    @objc private func updateNameTemplate() {
+        self.showInputDialog(title: "Название шаблона",
+                             actionTitle: "Сохранить",
+                             cancelTitle: "Отмена",
+                             inputText: viewModel.template?.name,
+                             inputPlaceholder: "Введите название шаблона",
+                             actionHandler:  { text in
+            
+            guard let text = text else { return }
+            guard let templateId = self.viewModel.template?.paymentTemplateId else { return }
+            
+            if text.isEmpty != true {
+                if text.count < 20 {
+                Model.shared.action.send(ModelAction.PaymentTemplate.Update.Requested(
+                    name: text,
+                    parameterList: nil,
+                    paymentTemplateId: templateId))
+                    
+                // FIXME: В рефактре нужно слушатель на обновление title
+                self.title = text
+                
+                } else {
+                    self.showAlert(with: "Ошибка", and: "В названии шаблона не должно быть более 20 символов")
+                }
+            } else {
+                self.showAlert(with: "Ошибка", and: "Название шаблона не должно быть пустым")
+            }
+        })
     }
     
     //MARK: - API
@@ -465,9 +502,13 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
                     model.comment = self?.commentField.textField.text ?? ""
                     model.status = .succses
                     let statusValue = data.data?.additionalList?.filter({$0.fieldName == "AFResponse"})
+                    let numberTransaction = data.data?.additionalList?.filter({$0.fieldName == "BizMsgIdr"})
                     
                     let vc = ContactConfurmViewController()
                     vc.confurmVCModel = model
+                    if numberTransaction?.count ?? 0 > 0{
+                        vc.confurmVCModel?.numberTransction = numberTransaction?[0].fieldValue?.description ?? ""
+                    }
                     vc.addCloseButton()
                     vc.title = "Подтвердите реквизиты"
                     vc.createTransferSBP = data
