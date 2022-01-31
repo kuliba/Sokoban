@@ -391,6 +391,7 @@ public class AppLocker: UIViewController {
         NetworkManager<LogoutDecodableModel>.addRequest(.logout, [:], [:]) { _,_  in
             DispatchQueue.main.async {
                 self.cleanAllData()
+                Model.shared.action.send(ModelAction.LoggedOut())
                 let mySceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate
 
                 let appNavigation = UINavigationController()

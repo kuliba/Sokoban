@@ -84,7 +84,7 @@ extension ContactInputViewController {
                 model.currancyTransction = "Наличные"
                 model.status = .succses
                 // TODO: add paymentSystem in model
-//                model.paymentSystem =
+                model.paymentSystem = self.paymentSystem
                 respModel.data?.additionalList?.forEach({ additional in
                     if additional.fieldName == "trnReference" {
                         model.numberTransction = additional.fieldValue ?? ""
@@ -139,6 +139,7 @@ extension ContactInputViewController {
                 model.fullName = data.payeeName ?? "Получатель не оперделен"
                 model.status = .succses
                 model.bank = self.selectedBank
+                model.paymentSystem = self.paymentSystem
                 respModel.data?.additionalList?.forEach({ additional in
                     if additional.fieldName == "RECP" {
                         model.phone = additional.fieldValue ?? ""

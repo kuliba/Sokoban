@@ -142,5 +142,13 @@ extension PaymentTemplateData {
         return bankData.fieldvalue
     }
     
+    var psfCardId: Int? {
+        guard let transfer = parameterList.first as? TransferAnywayData,
+              let bankData = transfer.payer.cardId else {
+            return nil
+        }
+        
+        return bankData
+    }
     
 }
