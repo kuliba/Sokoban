@@ -1,0 +1,12 @@
+{
+  "data": {
+    "accountNumber": "4081781000000000001",
+    "bic": "044525341",
+    "corrAccount": "30101810300000000341",
+    "inn": "7704113772",
+    "kpp": "770401001",
+    "payeeName": "Иванов Иван Иванович"
+  },
+  "errorMessage": "string",
+  "statusCode": 0
+}

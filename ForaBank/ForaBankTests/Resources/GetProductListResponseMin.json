@@ -1,0 +1,29 @@
+{
+  "data": [
+    {
+      "XLDesign": "string",
+      "accountNumber": "40817810000000000001",
+      "allowCredit": true,
+      "allowDebit": true,
+      "background": ["FFBB36"],
+      "balance": 1000123,
+      "branchId": 2000,
+      "currency": "RUB",
+      "fontDesignColor": "FFFFFF",
+      "id": 10002585800,
+      "largeDesign": "string",
+      "mainField": "Gold",
+      "mediumDesign": "string",
+      "number": "4444555566661122",
+      "numberMasked": "4444-XXXX-XXXX-1122",
+      "openDate": "2022-02-01T14:56:20.783Z",
+      "ownerID": 10001639855,
+      "productName": "VISA REWARDS R-5",
+      "productType": "CARD",
+      "smallDesign": "string"
+    }
+  ],
+  "errorMessage": "string",
+  "statusCode": 0
+}
+
