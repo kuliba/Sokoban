@@ -401,6 +401,12 @@
 		77517FDA27A981BC005CFB77 /* GetProductListByFilterResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 77517FD927A981BC005CFB77 /* GetProductListByFilterResponseGeneric.json */; };
 		77517FDC27A98333005CFB77 /* GetProductListResponseMin.json in Resources */ = {isa = PBXBuildFile; fileRef = 77517FDB27A98333005CFB77 /* GetProductListResponseMin.json */; };
 		77517FDE27A98474005CFB77 /* GetProductListByFilterResponseMin.json in Resources */ = {isa = PBXBuildFile; fileRef = 77517FDD27A98474005CFB77 /* GetProductListByFilterResponseMin.json */; };
+		77517FE027A98A94005CFB77 /* ServerCommands+User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77517FDF27A98A94005CFB77 /* ServerCommands+User.swift */; };
+		77517FE227A98CC3005CFB77 /* UserSettingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77517FE127A98CC3005CFB77 /* UserSettingData.swift */; };
+		77517FE427A98E8F005CFB77 /* BlockAccountResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 77517FE327A98E8F005CFB77 /* BlockAccountResponseGeneric.json */; };
+		77517FE627A98EB3005CFB77 /* GetUserSettingsResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 77517FE527A98EB3005CFB77 /* GetUserSettingsResponseGeneric.json */; };
+		77517FE827A98EE8005CFB77 /* SetUserSettingResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 77517FE727A98EE8005CFB77 /* SetUserSettingResponseGeneric.json */; };
+		77517FEA27A98F2D005CFB77 /* ServerCommandsUserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77517FE927A98F2D005CFB77 /* ServerCommandsUserTests.swift */; };
 		7757624B276FEC4F00B902BF /* URLHostTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7757624A276FEC4F00B902BF /* URLHostTests.swift */; };
 		7757624D276FEE2400B902BF /* ForaBankUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7757624C276FEE2400B902BF /* ForaBankUITests.swift */; };
 		775875472798C87B0080115D /* Option.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775875462798C87B0080115D /* Option.swift */; };
@@ -1151,6 +1157,12 @@
 		77517FD927A981BC005CFB77 /* GetProductListByFilterResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetProductListByFilterResponseGeneric.json; sourceTree = "<group>"; };
 		77517FDB27A98333005CFB77 /* GetProductListResponseMin.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetProductListResponseMin.json; sourceTree = "<group>"; };
 		77517FDD27A98474005CFB77 /* GetProductListByFilterResponseMin.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetProductListByFilterResponseMin.json; sourceTree = "<group>"; };
+		77517FDF27A98A94005CFB77 /* ServerCommands+User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServerCommands+User.swift"; sourceTree = "<group>"; };
+		77517FE127A98CC3005CFB77 /* UserSettingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingData.swift; sourceTree = "<group>"; };
+		77517FE327A98E8F005CFB77 /* BlockAccountResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = BlockAccountResponseGeneric.json; sourceTree = "<group>"; };
+		77517FE527A98EB3005CFB77 /* GetUserSettingsResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetUserSettingsResponseGeneric.json; sourceTree = "<group>"; };
+		77517FE727A98EE8005CFB77 /* SetUserSettingResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = SetUserSettingResponseGeneric.json; sourceTree = "<group>"; };
+		77517FE927A98F2D005CFB77 /* ServerCommandsUserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommandsUserTests.swift; sourceTree = "<group>"; };
 		7757624A276FEC4F00B902BF /* URLHostTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLHostTests.swift; sourceTree = "<group>"; };
 		7757624C276FEE2400B902BF /* ForaBankUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForaBankUITests.swift; sourceTree = "<group>"; };
 		775875462798C87B0080115D /* Option.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Option.swift; sourceTree = "<group>"; };
@@ -2681,6 +2693,7 @@
 				775875462798C87B0080115D /* Option.swift */,
 				684533712798515100104A8B /* CsrfData.swift */,
 				6841930B279AC36100B4E184 /* StatementFormat.swift */,
+				77517FE127A98CC3005CFB77 /* UserSettingData.swift */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -2758,6 +2771,7 @@
 				684192E92799B1B100B4E184 /* ServerCommands+ConsentController.swift */,
 				77517F9327A800C6005CFB77 /* ServerCommands+Transfer.swift */,
 				77517FCA27A97095005CFB77 /* ServerCommands+Product.swift */,
+				77517FDF27A98A94005CFB77 /* ServerCommands+User.swift */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -2890,6 +2904,9 @@
 				77517FDB27A98333005CFB77 /* GetProductListResponseMin.json */,
 				77517FD927A981BC005CFB77 /* GetProductListByFilterResponseGeneric.json */,
 				77517FDD27A98474005CFB77 /* GetProductListByFilterResponseMin.json */,
+				77517FE327A98E8F005CFB77 /* BlockAccountResponseGeneric.json */,
+				77517FE527A98EB3005CFB77 /* GetUserSettingsResponseGeneric.json */,
+				77517FE727A98EE8005CFB77 /* SetUserSettingResponseGeneric.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -2916,6 +2933,7 @@
 				684192EB2799C0D000B4E184 /* ServerCommandsConsentTests.swift */,
 				77517FC827A9519E005CFB77 /* ServerCommandsTransferTests.swift */,
 				77517FD327A98052005CFB77 /* ServerCommandsProductTests.swift */,
+				77517FE927A98F2D005CFB77 /* ServerCommandsUserTests.swift */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -4735,6 +4753,7 @@
 				77EC58B5277122430054D75C /* TransferDecodingGeneric.json in Resources */,
 				77517FDE27A98474005CFB77 /* GetProductListByFilterResponseMin.json in Resources */,
 				684193042799D6A800B4E184 /* Me2MeDebitConsentDataDecodingGeneric.json in Resources */,
+				77517FE827A98EE8005CFB77 /* SetUserSettingResponseGeneric.json in Resources */,
 				77EC58B9277125000054D75C /* TransferEncodingMin.json in Resources */,
 				77EC58C327712EDD0054D75C /* TransferMe2MeDecodingGeneric.json in Resources */,
 				77517FC527A94F7A005CFB77 /* CreateTransferResponseMin.json in Resources */,
@@ -4749,6 +4768,7 @@
 				5AF3D73A27A948C400F0BB81 /* GetAccountStatementResponseGenericMin.json in Resources */,
 				77EC58D72771F6C10054D75C /* SavePaymentTemplateResponseGeneric.json in Resources */,
 				68419318279EDBA400B4E184 /* GetClientConsentMe2MePullResponseGenericMin.json in Resources */,
+				77517FE627A98EB3005CFB77 /* GetUserSettingsResponseGeneric.json in Resources */,
 				77EC58C7277131710054D75C /* TransferMe2MeEncodingMin.json in Resources */,
 				684192E42799A93E00B4E184 /* SaveCardNameResponseGeneric.json in Resources */,
 				68AD33F1279858E900647665 /* CsrfDtoDecodingGeneric.json in Resources */,
@@ -4762,6 +4782,7 @@
 				68AD340727997E6F00647665 /* BlockCardResponseGeneric.json in Resources */,
 				68AD33F327985AD500647665 /* GetSessionTimeoutResponseGeneric.json in Resources */,
 				77517FDA27A981BC005CFB77 /* GetProductListByFilterResponseGeneric.json in Resources */,
+				77517FE427A98E8F005CFB77 /* BlockAccountResponseGeneric.json in Resources */,
 				77517FB927A94D9F005CFB77 /* ReturnOutgoingResponseGeneric.json in Resources */,
 				77517FAB27A94C70005CFB77 /* CreateMe2MePullCreditTransferResponseGeneric.json in Resources */,
 				77EC58BF27712D340054D75C /* TransferAnywayEncodingMin.json in Resources */,
@@ -5136,6 +5157,7 @@
 				6833E0CE273920CE004C070F /* FaceTouchIDCoordinator.swift in Sources */,
 				EDB1656C26681F0E007E6030 /* MainTabBarViewController.swift in Sources */,
 				ED3A96742690FC8300252857 /* BankCell.swift in Sources */,
+				77517FE227A98CC3005CFB77 /* UserSettingData.swift in Sources */,
 				68E6A29726A033F200A1D9A1 /* GetProductTemplateListDecodableModel.swift in Sources */,
 				EDA0DCC22739523F0013F47E /* AccountDetailsViewController.swift in Sources */,
 				EDDFE3B52756D54800F57C71 /* CalculatorDepositCollectionViewCell.swift in Sources */,
@@ -5204,6 +5226,7 @@
 				0B8C1C47273B03EB00BA5CAC /* BottomPopUpViewAdapter.swift in Sources */,
 				68673B5326F2F3B900F67A8C /* RequisitsTableViewCell.swift in Sources */,
 				EDBEEA1726B1AE7300265683 /* FullBankInfoListView.swift in Sources */,
+				77517FE027A98A94005CFB77 /* ServerCommands+User.swift in Sources */,
 				0B7A18C326852D6B0007CC75 /* CreatTransferDecodableModel.swift in Sources */,
 				77517F9B27A858F8005CFB77 /* TransferAnywayResponseData.swift in Sources */,
 				ED7866B2279EF2FB006B4F5A /* ContextMenuViewComponent.swift in Sources */,
@@ -5340,6 +5363,7 @@
 				68AD340527997DC000647665 /* ServerCommandsCardTests.swift in Sources */,
 				68E765282796D6DF005860FE /* ServerCommandsRegistrationTests.swift in Sources */,
 				684192EC2799C0D000B4E184 /* ServerCommandsConsentTests.swift in Sources */,
+				77517FEA27A98F2D005CFB77 /* ServerCommandsUserTests.swift in Sources */,
 				77EC58E1277214D60054D75C /* ServerStatusCodeTests.swift in Sources */,
 				77067CD9275FBB70000C442B /* StringExtensionsTests.swift in Sources */,
 				77EC58C127712E570054D75C /* TransferMe2MeTests.swift in Sources */,
