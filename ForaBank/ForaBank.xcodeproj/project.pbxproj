@@ -411,6 +411,9 @@
 		77517FEE27A99383005CFB77 /* RatesExchangeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77517FED27A99383005CFB77 /* RatesExchangeData.swift */; };
 		77517FF027A99462005CFB77 /* GetExchangeCurrencyRatesResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 77517FEF27A99462005CFB77 /* GetExchangeCurrencyRatesResponseGeneric.json */; };
 		77517FF227A9949D005CFB77 /* ServerCommandsRatesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77517FF127A9949D005CFB77 /* ServerCommandsRatesTests.swift */; };
+		77517FF427A9990C005CFB77 /* ServerCommands+Default.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77517FF327A9990C005CFB77 /* ServerCommands+Default.swift */; };
+		77517FF627A999AC005CFB77 /* LoginResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 77517FF527A999AC005CFB77 /* LoginResponseGeneric.json */; };
+		77517FF827A999D5005CFB77 /* ServerCommandsDefaultTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77517FF727A999D5005CFB77 /* ServerCommandsDefaultTests.swift */; };
 		7757624B276FEC4F00B902BF /* URLHostTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7757624A276FEC4F00B902BF /* URLHostTests.swift */; };
 		7757624D276FEE2400B902BF /* ForaBankUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7757624C276FEE2400B902BF /* ForaBankUITests.swift */; };
 		775875472798C87B0080115D /* Option.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775875462798C87B0080115D /* Option.swift */; };
@@ -1171,6 +1174,9 @@
 		77517FED27A99383005CFB77 /* RatesExchangeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatesExchangeData.swift; sourceTree = "<group>"; };
 		77517FEF27A99462005CFB77 /* GetExchangeCurrencyRatesResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetExchangeCurrencyRatesResponseGeneric.json; sourceTree = "<group>"; };
 		77517FF127A9949D005CFB77 /* ServerCommandsRatesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommandsRatesTests.swift; sourceTree = "<group>"; };
+		77517FF327A9990C005CFB77 /* ServerCommands+Default.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServerCommands+Default.swift"; sourceTree = "<group>"; };
+		77517FF527A999AC005CFB77 /* LoginResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = LoginResponseGeneric.json; sourceTree = "<group>"; };
+		77517FF727A999D5005CFB77 /* ServerCommandsDefaultTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommandsDefaultTests.swift; sourceTree = "<group>"; };
 		7757624A276FEC4F00B902BF /* URLHostTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLHostTests.swift; sourceTree = "<group>"; };
 		7757624C276FEE2400B902BF /* ForaBankUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForaBankUITests.swift; sourceTree = "<group>"; };
 		775875462798C87B0080115D /* Option.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Option.swift; sourceTree = "<group>"; };
@@ -2782,6 +2788,7 @@
 				77517FCA27A97095005CFB77 /* ServerCommands+Product.swift */,
 				77517FDF27A98A94005CFB77 /* ServerCommands+User.swift */,
 				77517FEB27A99279005CFB77 /* ServerCommands+Rates.swift */,
+				77517FF327A9990C005CFB77 /* ServerCommands+Default.swift */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -2918,6 +2925,7 @@
 				77517FE527A98EB3005CFB77 /* GetUserSettingsResponseGeneric.json */,
 				77517FE727A98EE8005CFB77 /* SetUserSettingResponseGeneric.json */,
 				77517FEF27A99462005CFB77 /* GetExchangeCurrencyRatesResponseGeneric.json */,
+				77517FF527A999AC005CFB77 /* LoginResponseGeneric.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -2946,6 +2954,7 @@
 				77517FD327A98052005CFB77 /* ServerCommandsProductTests.swift */,
 				77517FE927A98F2D005CFB77 /* ServerCommandsUserTests.swift */,
 				77517FF127A9949D005CFB77 /* ServerCommandsRatesTests.swift */,
+				77517FF727A999D5005CFB77 /* ServerCommandsDefaultTests.swift */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -4743,6 +4752,7 @@
 				77517FAD27A94C99005CFB77 /* CreateMe2MePullDebitTransferResponseGeneric.json in Resources */,
 				77517FBD27A94EC3005CFB77 /* CreateContactAddresslessTransferResponseMin.json in Resources */,
 				77517FA927A94C40005CFB77 /* CreateDirectTransferResponseGeneric.json in Resources */,
+				77517FF627A999AC005CFB77 /* LoginResponseGeneric.json in Resources */,
 				684192FB2799C5A200B4E184 /* GetMe2MeDebitConsentResponseGeneric.json in Resources */,
 				77EC58DF277200E90054D75C /* SortingPaymentTemplatesResponseGeneric.json in Resources */,
 				684192DC2799997800B4E184 /* ProductStatementDataDecodingGeneric.json in Resources */,
@@ -4879,6 +4889,7 @@
 				A52A8FA0274800D600288FBD /* InternetTVRegionSearchController.swift in Sources */,
 				EDB145402666AFD70028EF5A /* Constants.swift in Sources */,
 				EDE70928279AC4BB0048CA94 /* OptionSelectorViewComponent.swift in Sources */,
+				77517FF427A9990C005CFB77 /* ServerCommands+Default.swift in Sources */,
 				68E3462227033D9100D6FE37 /* LaunchViewController.swift in Sources */,
 				68D06F2A26C3C19800F9BE4C /* MainViewControllerSearchBarDelegate.swift in Sources */,
 				0B22AEA526CDB48F00B11E7F /* GKHDataType.swift in Sources */,
@@ -5379,6 +5390,7 @@
 				68E765282796D6DF005860FE /* ServerCommandsRegistrationTests.swift in Sources */,
 				684192EC2799C0D000B4E184 /* ServerCommandsConsentTests.swift in Sources */,
 				77517FEA27A98F2D005CFB77 /* ServerCommandsUserTests.swift in Sources */,
+				77517FF827A999D5005CFB77 /* ServerCommandsDefaultTests.swift in Sources */,
 				77EC58E1277214D60054D75C /* ServerStatusCodeTests.swift in Sources */,
 				77067CD9275FBB70000C442B /* StringExtensionsTests.swift in Sources */,
 				77EC58C127712E570054D75C /* TransferMe2MeTests.swift in Sources */,
