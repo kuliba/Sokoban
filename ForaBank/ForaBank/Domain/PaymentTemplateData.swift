@@ -15,6 +15,7 @@ struct PaymentTemplateData: Equatable, Cachable, Identifiable {
     let name: String
     let parameterList: [TransferAbstractData]
     let paymentTemplateId: Int
+    let productTemplate: ProductTemplateData?
     let sort: Int
     let svgImage: SVGImageData
     let type: Kind
@@ -72,7 +73,7 @@ extension PaymentTemplateData {
 extension PaymentTemplateData: Codable {
     
     private enum CodingKeys : String, CodingKey {
-        case groupName, name, parameterList, paymentTemplateId, sort, svgImage, type
+        case groupName, name, parameterList, paymentTemplateId, productTemplate, sort, svgImage, type
     }
     
     init(from decoder: Decoder) throws {
@@ -103,6 +104,7 @@ extension PaymentTemplateData: Codable {
         
         parameterList = parameterListDecoded
         paymentTemplateId = try container.decode(Int.self, forKey: .paymentTemplateId)
+        productTemplate = try container.decodeIfPresent(ProductTemplateData.self, forKey: .productTemplate)
         sort = try container.decode(Int.self, forKey: .sort)
         svgImage = try container.decode(SVGImageData.self, forKey: .svgImage)
         type = try container.decode(Kind.self, forKey: .type)

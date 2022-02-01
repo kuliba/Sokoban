@@ -54,6 +54,7 @@ class ServerCommandsPaymentTemplateTests: XCTestCase {
         XCTAssertNil(command.payload)
     }
     
+    //TODO: - Complete data tests
     func testGetPaymentTemplateList_Response_Decoding() throws {
 
         // given
@@ -61,7 +62,24 @@ class ServerCommandsPaymentTemplateTests: XCTestCase {
         let json = try Data(contentsOf: url)
         let payer = TransferAbstractData.Payer(inn: nil, accountId: nil, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
         let transfer = TransferData(amount: nil, check: false, comment: nil, currencyAmount: "RUB", payer: payer, payeeExternal: nil, payeeInternal: nil)
-        let paymentTemplate = PaymentTemplateData(groupName: "Переводы СБП", name: "Иванов Иван Иванович", parameterList: [transfer], paymentTemplateId: 1, sort: 1, svgImage: SVGImageData(description: "string"), type: .sfp)
+        let paymentTemplate = PaymentTemplateData(groupName: "Переводы СБП", name: "Иванов Иван Иванович", parameterList: [transfer], paymentTemplateId: 1, productTemplate: .init(currency: "RUB", customName: "Новая карта", id: 1, numberMask: "4444 **** **** 1234", paymentSystemImage: .init(description: "string"), smallDesign: .init(description: "string"), type: .card), sort: 1, svgImage: SVGImageData(description: "string"), type: .sfp)
+        let expected = ServerCommands.PaymentTemplateController.GetPaymentTemplateList.Response(statusCode: .ok, errorMessage: "string", data: [paymentTemplate])
+        
+        // when
+        let result = try decoder.decode(ServerCommands.PaymentTemplateController.GetPaymentTemplateList.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
+    
+    func testGetPaymentTemplateList_Response_Decoding_Min() throws {
+
+        // given
+        let url = bundle.url(forResource: "GetPaymentTemplateListResponseMin", withExtension: "json")!
+        let json = try Data(contentsOf: url)
+        let payer = TransferAbstractData.Payer(inn: nil, accountId: nil, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
+        let transfer = TransferData(amount: nil, check: false, comment: nil, currencyAmount: "RUB", payer: payer, payeeExternal: nil, payeeInternal: nil)
+        let paymentTemplate = PaymentTemplateData(groupName: "Переводы СБП", name: "Иванов Иван Иванович", parameterList: [transfer], paymentTemplateId: 1, productTemplate: nil, sort: 1, svgImage: SVGImageData(description: "string"), type: .sfp)
         let expected = ServerCommands.PaymentTemplateController.GetPaymentTemplateList.Response(statusCode: .ok, errorMessage: "string", data: [paymentTemplate])
         
         // when

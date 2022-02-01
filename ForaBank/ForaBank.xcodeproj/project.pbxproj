@@ -414,6 +414,8 @@
 		77517FF427A9990C005CFB77 /* ServerCommands+Default.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77517FF327A9990C005CFB77 /* ServerCommands+Default.swift */; };
 		77517FF627A999AC005CFB77 /* LoginResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 77517FF527A999AC005CFB77 /* LoginResponseGeneric.json */; };
 		77517FF827A999D5005CFB77 /* ServerCommandsDefaultTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77517FF727A999D5005CFB77 /* ServerCommandsDefaultTests.swift */; };
+		77517FFA27A99BB6005CFB77 /* ProductTemplateData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77517FF927A99BB6005CFB77 /* ProductTemplateData.swift */; };
+		77517FFC27A99EDC005CFB77 /* GetPaymentTemplateListResponseMin.json in Resources */ = {isa = PBXBuildFile; fileRef = 77517FFB27A99EDC005CFB77 /* GetPaymentTemplateListResponseMin.json */; };
 		7757624B276FEC4F00B902BF /* URLHostTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7757624A276FEC4F00B902BF /* URLHostTests.swift */; };
 		7757624D276FEE2400B902BF /* ForaBankUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7757624C276FEE2400B902BF /* ForaBankUITests.swift */; };
 		775875472798C87B0080115D /* Option.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775875462798C87B0080115D /* Option.swift */; };
@@ -1177,6 +1179,8 @@
 		77517FF327A9990C005CFB77 /* ServerCommands+Default.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServerCommands+Default.swift"; sourceTree = "<group>"; };
 		77517FF527A999AC005CFB77 /* LoginResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = LoginResponseGeneric.json; sourceTree = "<group>"; };
 		77517FF727A999D5005CFB77 /* ServerCommandsDefaultTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommandsDefaultTests.swift; sourceTree = "<group>"; };
+		77517FF927A99BB6005CFB77 /* ProductTemplateData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductTemplateData.swift; sourceTree = "<group>"; };
+		77517FFB27A99EDC005CFB77 /* GetPaymentTemplateListResponseMin.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetPaymentTemplateListResponseMin.json; sourceTree = "<group>"; };
 		7757624A276FEC4F00B902BF /* URLHostTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLHostTests.swift; sourceTree = "<group>"; };
 		7757624C276FEE2400B902BF /* ForaBankUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForaBankUITests.swift; sourceTree = "<group>"; };
 		775875462798C87B0080115D /* Option.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Option.swift; sourceTree = "<group>"; };
@@ -2695,6 +2699,7 @@
 				77EC58EA2772375A0054D75C /* Abstract */,
 				77EC58EF27723C840054D75C /* AuthorizationState.swift */,
 				77DC125E27709DAF00C917B0 /* PaymentTemplateData.swift */,
+				77517FF927A99BB6005CFB77 /* ProductTemplateData.swift */,
 				77EC58A8277114400054D75C /* Transfers */,
 				77DC12642770F08300C917B0 /* SVGImageData.swift */,
 				77517FCD27A97913005CFB77 /* ColorData.swift */,
@@ -2863,6 +2868,7 @@
 				77EC58CC27713A860054D75C /* PaymentTemplateEncodingMin.json */,
 				77EC58D22771D69E0054D75C /* DeletePaymentTemplatesResponseGeneric.json */,
 				77EC58D42771F28C0054D75C /* GetPaymentTemplateListResponseGeneric.json */,
+				77517FFB27A99EDC005CFB77 /* GetPaymentTemplateListResponseMin.json */,
 				77EC58D62771F6C10054D75C /* SavePaymentTemplateResponseGeneric.json */,
 				77EC58DA2771FC360054D75C /* UpdatePaymentTemplateResponseGeneric.json */,
 				77EC58DE277200E90054D75C /* SortingPaymentTemplatesResponseGeneric.json */,
@@ -4786,6 +4792,7 @@
 				7701B27127A42BC300FBF5E3 /* GetPeymentTemlpateListResponseSFP.json in Resources */,
 				77517FA127A94B77005CFB77 /* ChangeOutgoingResponseGeneric.json in Resources */,
 				77517FD627A98150005CFB77 /* GetProductDetailsResponseGeneric.json in Resources */,
+				77517FFC27A99EDC005CFB77 /* GetPaymentTemplateListResponseMin.json in Resources */,
 				68E7653327970261005860FE /* SetDeviceSettingsResponseGeneric.json in Resources */,
 				5AF3D73A27A948C400F0BB81 /* GetAccountStatementResponseGenericMin.json in Resources */,
 				77EC58D72771F6C10054D75C /* SavePaymentTemplateResponseGeneric.json in Resources */,
@@ -4957,6 +4964,7 @@
 				6867F43D2769AFF60039A0EE /* ResultOperationView.swift in Sources */,
 				7792557E279B1A5400A85723 /* JSONDecoder+Extensions.swift in Sources */,
 				ED75CE0126E2AB3A0074F5D5 /* MeToMeReqestSwitchView.swift in Sources */,
+				77517FFA27A99BB6005CFB77 /* ProductTemplateData.swift in Sources */,
 				77499C3F2773A3B800F6C079 /* OperationDetailHostingViewController.swift in Sources */,
 				77EA0DBB2779B06E00C6ED12 /* OperationDetailHeaderComponentView.swift in Sources */,
 				0BB24ABA26F2884A00DDA4F6 /* ReturnAllCardList.swift in Sources */,
