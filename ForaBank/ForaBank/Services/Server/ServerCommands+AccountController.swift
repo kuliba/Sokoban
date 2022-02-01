@@ -11,6 +11,16 @@ extension ServerCommands {
 
 	enum AccountController {
 
+		struct AccountControllerPayload: Encodable {
+			
+			let accountNumber: String?
+			let endDate: String?
+			let id: Int
+			let name: String?
+			let startDate: String?
+			let statementFormat: StatementFormat?
+		}
+		
 		/*
 		 https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/AccountController/getAccountStatementUsingPOST
 		 */
@@ -20,17 +30,7 @@ extension ServerCommands {
 			let endpoint = "/rest/getAccountStatement"
 			let method: ServerCommandMethod = .post
 			let parameters: [ServerCommandParameter]? = nil
-			var payload: Payload?
-
-			struct Payload: Encodable {
-
-				let accountNumber: String?
-				let endDate: String?
-				let id: Int
-				let name: String?
-				let startDate: String?
-				let statementFormat: StatementFormat?
-			}
+			var payload: AccountControllerPayload?
 
 			struct Response: ServerResponse {
 
@@ -78,23 +78,15 @@ extension ServerCommands {
 			let endpoint = "/rest/getPrintFormForAccountStatement"
 			let method: ServerCommandMethod = .post
 			let parameters: [ServerCommandParameter]? = nil
-			var payload: Payload?
+			var payload: AccountControllerPayload?
 
-			struct Payload: Encodable {
-
-				let accountNumber: String?
-				let endDate: String?
-				let id: Int
-				let name: String?
-				let startDate: String?
-				let statementFormat: StatementFormat?
-			}
+			//FIXME: PDF File
 
 			struct Response: ServerResponse {
 
 				let statusCode: ServerStatusCode
 				let errorMessage: String?
-				let data: EmptyData
+				let data: EmptyData?
 			}
 
 			internal init(token: String,

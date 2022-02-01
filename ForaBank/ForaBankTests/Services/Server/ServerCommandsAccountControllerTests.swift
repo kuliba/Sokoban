@@ -18,7 +18,7 @@ class ServerCommandsAccountControllerTests: XCTestCase {
 
 	//MARK: - GetAccountStatementResponseGeneric
 
-	func testGetAccountStatement_Response_Encoding() throws {
+	func testGetAccountStatement_Payload_Encoding() throws {
 
 		// given
 		let endDate = formatter.date(from: "2022-01-20T16:44:35.147Z")
@@ -45,7 +45,7 @@ class ServerCommandsAccountControllerTests: XCTestCase {
 	func testGetAccountStatement_Response_Decoding() throws {
 
 		// given
-		let url = bundle.url(forResource: "AccountControllerResponseGeneric", withExtension: "json")!
+		let url = bundle.url(forResource: "GetAccountStatementResponseGeneric", withExtension: "json")!
 		let json = try Data(contentsOf: url)
 		let date = formatter.date(from: "2022-01-25T10:32:41.777Z")!
 		let tranDate = formatter.date(from: "2022-01-25T10:32:41.777Z")!
@@ -94,10 +94,65 @@ class ServerCommandsAccountControllerTests: XCTestCase {
 		// then
 		XCTAssertEqual(result, expected)
 	}
+	
+	func testGetAccountStatement_MinResponse_Decoding() throws {
+
+		// given
+		let url = bundle.url(forResource: "GetAccountStatementResponseGenericMin", withExtension: "json")!
+		let json = try Data(contentsOf: url)
+		let date = formatter.date(from: "2022-01-25T10:32:41.777Z")!
+		let tranDate = formatter.date(from: "2022-01-25T10:32:41.777Z")!
+
+		let accountStatementData = ProductStatementData(MCC: nil,
+														accountID: nil,
+														accountNumber: "70601810711002740401",
+														amount: 144.21,
+														cardTranNumber: nil,
+														city: nil,
+														comment: "Перевод денежных средств. НДС не облагается.",
+														country: nil,
+														currencyCodeNumeric: 810,
+														date: date,
+														deviceCode: nil,
+														documentAmount: nil,
+														documentID: nil,
+														fastPayment: .init(documentComment: "string",
+																		   foreignBankBIC: "044525491",
+																		   foreignBankID: "10000001153",
+																		   foreignBankName: "КУ ООО ПИР Банк - ГК \\\"АСВ\\\"",
+																		   foreignName: "Петров Петр Петрович",
+																		   foreignPhoneNumber: "70115110217",
+																		   opkcid: "A1355084612564010000057CAFC75755"),
+														groupName: "Прочие операции",
+														isCancellation: false,
+														md5hash: "75f3ee3b2d44e5808f41777c613f23c9",
+														merchantName: "DBO MERCHANT FORA, Zubovskiy 2",
+														merchantNameRus: nil,
+														opCode: nil,
+														operationId: nil,
+														operationType: .debit,
+														paymentDetailType: .betweenTheir,
+														svgImage: .init(description: "string"),
+														terminalCode: nil,
+														tranDate: tranDate,
+														type: .inside)
+
+		let expected = ServerCommands.AccountController.GetAccountStatement.Response(statusCode: .ok,
+																					 errorMessage: "string",
+																					 data: [accountStatementData])
+
+		// when
+		let result = try decoder.decode(ServerCommands.AccountController.GetAccountStatement.Response.self, from: json)
+
+		// then
+		XCTAssertEqual(result, expected)
+	}
+	
+	
 
 	//MARK: - GetPrintFormForAccountStatement
 
-	func testGetPrintFormForAccountStatement_Response_Encoding() throws {
+	func testGetPrintFormForAccountStatement_Payload_Encoding() throws {
 
 		// given
 		let endDate = formatter.date(from: "2022-01-20T16:46:58.563Z")

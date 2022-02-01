@@ -200,8 +200,8 @@
 		0BF348A1269E0CDA005138A8 /* LogoutDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF348A0269E0CDA005138A8 /* LogoutDecodableModel.swift */; };
 		5ADDC85227984CEF00488139 /* ServerCommands+AccountController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADDC85127984CEF00488139 /* ServerCommands+AccountController.swift */; };
 		5ADDC8542799789300488139 /* ServerCommandsAccountControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADDC8532799789300488139 /* ServerCommandsAccountControllerTests.swift */; };
-		5ADDC85727997CF800488139 /* AccountControllerResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 5ADDC85627997CF800488139 /* AccountControllerResponseGeneric.json */; };
-		5ADDC85B2799B7C800488139 /* AccountStatementPrintMapResponseData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADDC85A2799B7C800488139 /* AccountStatementPrintMapResponseData.swift */; };
+		5ADDC85727997CF800488139 /* GetAccountStatementResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 5ADDC85627997CF800488139 /* GetAccountStatementResponseGeneric.json */; };
+		5AF3D73A27A948C400F0BB81 /* GetAccountStatementResponseGenericMin.json in Resources */ = {isa = PBXBuildFile; fileRef = 5AF3D73927A948C400F0BB81 /* GetAccountStatementResponseGenericMin.json */; };
 		681E073D273D3FCF00551FAD /* ProductViewControllerRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E073C273D3FCF00551FAD /* ProductViewControllerRequest.swift */; };
 		681E073F273D478700551FAD /* ProductViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E073E273D478700551FAD /* ProductViewControllerDelegate.swift */; };
 		6822EFD226B935DB00125EEC /* BaseTableViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6822EFD126B935DB00125EEC /* BaseTableViewViewController.swift */; };
@@ -897,8 +897,8 @@
 		0BF348A0269E0CDA005138A8 /* LogoutDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutDecodableModel.swift; sourceTree = "<group>"; };
 		5ADDC85127984CEF00488139 /* ServerCommands+AccountController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServerCommands+AccountController.swift"; sourceTree = "<group>"; };
 		5ADDC8532799789300488139 /* ServerCommandsAccountControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommandsAccountControllerTests.swift; sourceTree = "<group>"; };
-		5ADDC85627997CF800488139 /* AccountControllerResponseGeneric.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = AccountControllerResponseGeneric.json; sourceTree = "<group>"; };
-		5ADDC85A2799B7C800488139 /* AccountStatementPrintMapResponseData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountStatementPrintMapResponseData.swift; sourceTree = "<group>"; };
+		5ADDC85627997CF800488139 /* GetAccountStatementResponseGeneric.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GetAccountStatementResponseGeneric.json; sourceTree = "<group>"; };
+		5AF3D73927A948C400F0BB81 /* GetAccountStatementResponseGenericMin.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GetAccountStatementResponseGenericMin.json; sourceTree = "<group>"; };
 		681E073C273D3FCF00551FAD /* ProductViewControllerRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductViewControllerRequest.swift; sourceTree = "<group>"; };
 		681E073E273D478700551FAD /* ProductViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductViewControllerDelegate.swift; sourceTree = "<group>"; };
 		6822EFD126B935DB00125EEC /* BaseTableViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewViewController.swift; sourceTree = "<group>"; };
@@ -1968,7 +1968,8 @@
 		5ADDC85527997CF800488139 /* AccountStatement */ = {
 			isa = PBXGroup;
 			children = (
-				5ADDC85627997CF800488139 /* AccountControllerResponseGeneric.json */,
+				5AF3D73927A948C400F0BB81 /* GetAccountStatementResponseGenericMin.json */,
+				5ADDC85627997CF800488139 /* GetAccountStatementResponseGeneric.json */,
 			);
 			path = AccountStatement;
 			sourceTree = "<group>";
@@ -2527,7 +2528,6 @@
 				68AD33FA279962D400647665 /* Card */,
 				77EC58EA2772375A0054D75C /* Abstract */,
 				77EC58EF27723C840054D75C /* AuthorizationState.swift */,
-				5ADDC85A2799B7C800488139 /* AccountStatementPrintMapResponseData.swift */,
 				77DC125E27709DAF00C917B0 /* PaymentTemplateData.swift */,
 				77EC58A8277114400054D75C /* Transfers */,
 				77DC12642770F08300C917B0 /* SVGImageData.swift */,
@@ -4516,6 +4516,7 @@
 				68E7653E279713B2005860FE /* GetCodeResponseGeneric.json in Resources */,
 				68AD33F527985B9B00647665 /* KeyExchangeResponseGeneric.json in Resources */,
 				68E7653327970261005860FE /* SetDeviceSettingsResponseGeneric.json in Resources */,
+				5AF3D73A27A948C400F0BB81 /* GetAccountStatementResponseGenericMin.json in Resources */,
 				77EC58D72771F6C10054D75C /* SavePaymentTemplateResponseGeneric.json in Resources */,
 				68419318279EDBA400B4E184 /* GetClientConsentMe2MePullResponseGenericMin.json in Resources */,
 				77EC58C7277131710054D75C /* TransferMe2MeEncodingMin.json in Resources */,
@@ -4536,7 +4537,7 @@
 				68419316279EDB6400B4E184 /* GetMe2MeDebitConsentResponseGenericMin.json in Resources */,
 				684192E62799A9C900B4E184 /* UnblockCardResponseGeneric.json in Resources */,
 				77EC58DB2771FC360054D75C /* UpdatePaymentTemplateResponseGeneric.json in Resources */,
-				5ADDC85727997CF800488139 /* AccountControllerResponseGeneric.json in Resources */,
+				5ADDC85727997CF800488139 /* GetAccountStatementResponseGeneric.json in Resources */,
 				77EC58CD27713A860054D75C /* PaymentTemplateEncodingMin.json in Resources */,
 				68E7652D2797009A005860FE /* CheckClientResponseGeneric.json in Resources */,
 			);
@@ -4857,7 +4858,6 @@
 				0B95C40826B6CD9000AA57E6 /* BottomInputViewWithRateView.swift in Sources */,
 				0BB24AAD26F0053A00DDA4F6 /* DownloadQueue.swift in Sources */,
 				0BE270B026B76B9700FA958C /* ExtensionCustomPopUpSetup.swift in Sources */,
-				5ADDC85B2799B7C800488139 /* AccountStatementPrintMapResponseData.swift in Sources */,
 				0BEC8939267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift in Sources */,
 				EDB1655C2667A2C8007E6030 /* LoginCardEntryViewController UI.swift in Sources */,
 				0B797C9426E6AD0700589DBF /* BanksListSaved.swift in Sources */,
