@@ -198,6 +198,10 @@
 		0BF3486426943DFB005138A8 /* SuggestCompanyDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF3486326943DFB005138A8 /* SuggestCompanyDecodableModel.swift */; };
 		0BF34866269444D9005138A8 /* AllCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF34865269444D9005138A8 /* AllCardCell.swift */; };
 		0BF348A1269E0CDA005138A8 /* LogoutDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF348A0269E0CDA005138A8 /* LogoutDecodableModel.swift */; };
+		5ADDC85227984CEF00488139 /* ServerCommands+AccountController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADDC85127984CEF00488139 /* ServerCommands+AccountController.swift */; };
+		5ADDC8542799789300488139 /* ServerCommandsAccountControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADDC8532799789300488139 /* ServerCommandsAccountControllerTests.swift */; };
+		5ADDC85727997CF800488139 /* GetAccountStatementResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 5ADDC85627997CF800488139 /* GetAccountStatementResponseGeneric.json */; };
+		5AF3D73A27A948C400F0BB81 /* GetAccountStatementResponseGenericMin.json in Resources */ = {isa = PBXBuildFile; fileRef = 5AF3D73927A948C400F0BB81 /* GetAccountStatementResponseGenericMin.json */; };
 		681E073D273D3FCF00551FAD /* ProductViewControllerRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E073C273D3FCF00551FAD /* ProductViewControllerRequest.swift */; };
 		681E073F273D478700551FAD /* ProductViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E073E273D478700551FAD /* ProductViewControllerDelegate.swift */; };
 		6822EFD226B935DB00125EEC /* BaseTableViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6822EFD126B935DB00125EEC /* BaseTableViewViewController.swift */; };
@@ -938,6 +942,10 @@
 		0BF3486326943DFB005138A8 /* SuggestCompanyDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestCompanyDecodableModel.swift; sourceTree = "<group>"; };
 		0BF34865269444D9005138A8 /* AllCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllCardCell.swift; sourceTree = "<group>"; };
 		0BF348A0269E0CDA005138A8 /* LogoutDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutDecodableModel.swift; sourceTree = "<group>"; };
+		5ADDC85127984CEF00488139 /* ServerCommands+AccountController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServerCommands+AccountController.swift"; sourceTree = "<group>"; };
+		5ADDC8532799789300488139 /* ServerCommandsAccountControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommandsAccountControllerTests.swift; sourceTree = "<group>"; };
+		5ADDC85627997CF800488139 /* GetAccountStatementResponseGeneric.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GetAccountStatementResponseGeneric.json; sourceTree = "<group>"; };
+		5AF3D73927A948C400F0BB81 /* GetAccountStatementResponseGenericMin.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GetAccountStatementResponseGenericMin.json; sourceTree = "<group>"; };
 		681E073C273D3FCF00551FAD /* ProductViewControllerRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductViewControllerRequest.swift; sourceTree = "<group>"; };
 		681E073E273D478700551FAD /* ProductViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductViewControllerDelegate.swift; sourceTree = "<group>"; };
 		6822EFD126B935DB00125EEC /* BaseTableViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewViewController.swift; sourceTree = "<group>"; };
@@ -2052,6 +2060,15 @@
 			path = ClearRealm;
 			sourceTree = "<group>";
 		};
+		5ADDC85527997CF800488139 /* AccountStatement */ = {
+			isa = PBXGroup;
+			children = (
+				5AF3D73927A948C400F0BB81 /* GetAccountStatementResponseGenericMin.json */,
+				5ADDC85627997CF800488139 /* GetAccountStatementResponseGeneric.json */,
+			);
+			path = AccountStatement;
+			sourceTree = "<group>";
+		};
 		681E073A273D3F3E00551FAD /* DetailOperation */ = {
 			isa = PBXGroup;
 			children = (
@@ -2704,6 +2721,7 @@
 				77DC126C2770F84B00C917B0 /* ServerStatusCode.swift */,
 				77DC126E2770F8C900C917B0 /* ServerCommands+PaymentTemplate.swift */,
 				68E765252796B38B005860FE /* ServerCommands+Registration.swift */,
+				5ADDC85127984CEF00488139 /* ServerCommands+AccountController.swift */,
 				6845336B279843DF00104A8B /* ServerCommands+UtilityController.swift */,
 				68AD33F8279961F700647665 /* ServerCommands+CardController.swift */,
 				684192E92799B1B100B4E184 /* ServerCommands+ConsentController.swift */,
@@ -2771,6 +2789,7 @@
 		77EC58B3277122100054D75C /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				5ADDC85527997CF800488139 /* AccountStatement */,
 				77EC58B4277122430054D75C /* TransferDecodingGeneric.json */,
 				77EC58B8277125000054D75C /* TransferEncodingMin.json */,
 				77EC58BC27712B680054D75C /* TransferAnywayDecodingGeneric.json */,
@@ -2854,6 +2873,7 @@
 				77EC58E0277214D60054D75C /* ServerStatusCodeTests.swift */,
 				77EC58D02771D48E0054D75C /* ServerCommandsPaymentTemplateTests.swift */,
 				68E765272796D6DF005860FE /* ServerCommandsRegistrationTests.swift */,
+				5ADDC8532799789300488139 /* ServerCommandsAccountControllerTests.swift */,
 				6845336D27984B2800104A8B /* ServerCommandsUtilityTests.swift */,
 				68AD340427997DC000647665 /* ServerCommandsCardTests.swift */,
 				684192EB2799C0D000B4E184 /* ServerCommandsConsentTests.swift */,
@@ -4685,6 +4705,7 @@
 				7701B27127A42BC300FBF5E3 /* GetPeymentTemlpateListResponseSFP.json in Resources */,
 				77517FA127A94B77005CFB77 /* ChangeOutgoingResponseGeneric.json in Resources */,
 				68E7653327970261005860FE /* SetDeviceSettingsResponseGeneric.json in Resources */,
+				5AF3D73A27A948C400F0BB81 /* GetAccountStatementResponseGenericMin.json in Resources */,
 				77EC58D72771F6C10054D75C /* SavePaymentTemplateResponseGeneric.json in Resources */,
 				68419318279EDBA400B4E184 /* GetClientConsentMe2MePullResponseGenericMin.json in Resources */,
 				77EC58C7277131710054D75C /* TransferMe2MeEncodingMin.json in Resources */,
@@ -4712,6 +4733,7 @@
 				77517FC327A94F49005CFB77 /* CreateSFPTransferResponseMin.json in Resources */,
 				684192E62799A9C900B4E184 /* UnblockCardResponseGeneric.json in Resources */,
 				77EC58DB2771FC360054D75C /* UpdatePaymentTemplateResponseGeneric.json in Resources */,
+				5ADDC85727997CF800488139 /* GetAccountStatementResponseGeneric.json in Resources */,
 				77EC58CD27713A860054D75C /* PaymentTemplateEncodingMin.json in Resources */,
 				77517FB527A94D4D005CFB77 /* IsSingleServiceResponseGeneric.json in Resources */,
 				68E7652D2797009A005860FE /* CheckClientResponseGeneric.json in Resources */,
@@ -5196,6 +5218,7 @@
 				EDB14535266671580028EF5A /* MockItems.swift in Sources */,
 				0B8C1C60273DCB6200BA5CAC /* PushHistoryViewController.swift in Sources */,
 				77DC126D2770F84B00C917B0 /* ServerStatusCode.swift in Sources */,
+				5ADDC85227984CEF00488139 /* ServerCommands+AccountController.swift in Sources */,
 				ED84994426A6F647005205C6 /* ChooseCountryHeaderCell.swift in Sources */,
 				774706AE277DD53100B524F1 /* OperationDetailInfoView.swift in Sources */,
 				EDBEEA1A26B1AEA200265683 /* FullBankInfoListViewModel.swift in Sources */,
@@ -5289,6 +5312,7 @@
 				684192FE2799C86C00B4E184 /* ConsentMe2MePullResponseDataTests.swift in Sources */,
 				77C026E6275E6299002BE1F6 /* GKHHistoryModelTests.swift in Sources */,
 				77D2D9B3275AB9280097234D /* RealmObjectsDiffTests.swift in Sources */,
+				5ADDC8542799789300488139 /* ServerCommandsAccountControllerTests.swift in Sources */,
 				77EC58D12771D48E0054D75C /* ServerCommandsPaymentTemplateTests.swift in Sources */,
 				6845336E27984B2800104A8B /* ServerCommandsUtilityTests.swift in Sources */,
 			);

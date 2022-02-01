@@ -8,6 +8,7 @@
 import Foundation
 
 enum StatementFormat: String, Codable {
-    case cvs = "CSV"
+
+    case csv = "CSV"
     case pdf = "PDF"
 }
