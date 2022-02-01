@@ -1,0 +1,32 @@
+{
+  "data": {
+    "additionalList": [
+      {
+        "fieldName": "a3_PERSONAL_ACCOUNT_5_5",
+        "fieldTitle": "Лицевой счет у Получателя",
+        "fieldValue": "1234567890"
+      }
+    ],
+    "finalStep": false,
+    "needSum": false,
+    "parameterListForNextStep": [
+      {
+        "dataType": "%String",
+        "id": "a3_NUMBER_1_2",
+        "isRequired": true,
+        "mask": "+7(___)-___-__-__",
+        "rawLength": 0,
+        "readOnly": false,
+        "regExp": "^\\d{10}$",
+        "title": "Номер телефона +7",
+        "type": "Input",
+        "viewType": "INPUT"
+      }
+    ],
+    "paymentOperationDetailId": 1
+  },
+  "errorMessage": "string",
+  "statusCode": 0
+}
+
+
