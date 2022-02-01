@@ -1,0 +1,13 @@
+{
+  "data": {
+    "userSettingList": [
+      {
+        "name": "Фиксированный код для логина",
+        "sysName": "FixedLoginCode",
+        "value": "111111"
+      }
+    ]
+  },
+  "errorMessage": "string",
+  "statusCode": 0
+}
