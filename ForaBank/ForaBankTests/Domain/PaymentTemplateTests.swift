@@ -37,21 +37,12 @@ class PaymentTemplateTests: XCTestCase {
     func testEncoding_Min() throws {
         
         // given
-        let paymentTemplate = PaymentTemplateData(groupName: "Переводы СБП", name: "Иванов Иван Иванович", parameterList: [], paymentTemplateId: 1, sort: 1, svgImage: SVGImageData(description: "string"), type: .sfp)
+        let paymentTemplate = PaymentTemplateData(groupName: "Переводы СБП", name: "Иванов Иван Иванович", parameterList: [], paymentTemplateId: 1, productTemplate: nil, sort: 1, svgImage: SVGImageData(description: "string"), type: .sfp)
         
         // when
         let result = try encoder.encode(paymentTemplate)
         
         // then
-        //FIXME: extra new line character in jsonString for some reson
-        /*
-        let url = bundle.url(forResource: "PaymentTemplateEncodingMin", withExtension: "json")!
-        let json = try Data(contentsOf: url)
-        let resultString = String(decoding: result, as: UTF8.self)
-        let jsonString = String(decoding: json, as: UTF8.self)
-                                .replacingOccurrences(of: "\n", with: "")
-                                .replacingOccurrences(of: " ", with: "")
-         */
         let resultString = String(decoding: result, as: UTF8.self)
         let jsonString = "{\"sort\":1,\"svgImage\":\"string\",\"parameterList\":[],\"groupName\":\"Переводы СБП\",\"type\":\"SFP\",\"name\":\"Иванов Иван Иванович\",\"paymentTemplateId\":1}"
         
