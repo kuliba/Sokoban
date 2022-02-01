@@ -391,6 +391,16 @@
 		77517FC527A94F7A005CFB77 /* CreateTransferResponseMin.json in Resources */ = {isa = PBXBuildFile; fileRef = 77517FC427A94F7A005CFB77 /* CreateTransferResponseMin.json */; };
 		77517FC727A94FB4005CFB77 /* GetVerificationCodeResponseMin.json in Resources */ = {isa = PBXBuildFile; fileRef = 77517FC627A94FB4005CFB77 /* GetVerificationCodeResponseMin.json */; };
 		77517FC927A9519E005CFB77 /* ServerCommandsTransferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77517FC827A9519E005CFB77 /* ServerCommandsTransferTests.swift */; };
+		77517FCB27A97095005CFB77 /* ServerCommands+Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77517FCA27A97095005CFB77 /* ServerCommands+Product.swift */; };
+		77517FCE27A97913005CFB77 /* ColorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77517FCD27A97913005CFB77 /* ColorData.swift */; };
+		77517FD027A97AE8005CFB77 /* ProductData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77517FCF27A97AE8005CFB77 /* ProductData.swift */; };
+		77517FD227A97B51005CFB77 /* ProductDetailsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77517FD127A97B51005CFB77 /* ProductDetailsData.swift */; };
+		77517FD427A98052005CFB77 /* ServerCommandsProductTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77517FD327A98052005CFB77 /* ServerCommandsProductTests.swift */; };
+		77517FD627A98150005CFB77 /* GetProductDetailsResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 77517FD527A98150005CFB77 /* GetProductDetailsResponseGeneric.json */; };
+		77517FD827A98189005CFB77 /* GetProductListResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 77517FD727A98189005CFB77 /* GetProductListResponseGeneric.json */; };
+		77517FDA27A981BC005CFB77 /* GetProductListByFilterResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 77517FD927A981BC005CFB77 /* GetProductListByFilterResponseGeneric.json */; };
+		77517FDC27A98333005CFB77 /* GetProductListResponseMin.json in Resources */ = {isa = PBXBuildFile; fileRef = 77517FDB27A98333005CFB77 /* GetProductListResponseMin.json */; };
+		77517FDE27A98474005CFB77 /* GetProductListByFilterResponseMin.json in Resources */ = {isa = PBXBuildFile; fileRef = 77517FDD27A98474005CFB77 /* GetProductListByFilterResponseMin.json */; };
 		7757624B276FEC4F00B902BF /* URLHostTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7757624A276FEC4F00B902BF /* URLHostTests.swift */; };
 		7757624D276FEE2400B902BF /* ForaBankUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7757624C276FEE2400B902BF /* ForaBankUITests.swift */; };
 		775875472798C87B0080115D /* Option.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775875462798C87B0080115D /* Option.swift */; };
@@ -1131,6 +1141,16 @@
 		77517FC427A94F7A005CFB77 /* CreateTransferResponseMin.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = CreateTransferResponseMin.json; sourceTree = "<group>"; };
 		77517FC627A94FB4005CFB77 /* GetVerificationCodeResponseMin.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetVerificationCodeResponseMin.json; sourceTree = "<group>"; };
 		77517FC827A9519E005CFB77 /* ServerCommandsTransferTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommandsTransferTests.swift; sourceTree = "<group>"; };
+		77517FCA27A97095005CFB77 /* ServerCommands+Product.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServerCommands+Product.swift"; sourceTree = "<group>"; };
+		77517FCD27A97913005CFB77 /* ColorData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorData.swift; sourceTree = "<group>"; };
+		77517FCF27A97AE8005CFB77 /* ProductData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductData.swift; sourceTree = "<group>"; };
+		77517FD127A97B51005CFB77 /* ProductDetailsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailsData.swift; sourceTree = "<group>"; };
+		77517FD327A98052005CFB77 /* ServerCommandsProductTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommandsProductTests.swift; sourceTree = "<group>"; };
+		77517FD527A98150005CFB77 /* GetProductDetailsResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetProductDetailsResponseGeneric.json; sourceTree = "<group>"; };
+		77517FD727A98189005CFB77 /* GetProductListResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetProductListResponseGeneric.json; sourceTree = "<group>"; };
+		77517FD927A981BC005CFB77 /* GetProductListByFilterResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetProductListByFilterResponseGeneric.json; sourceTree = "<group>"; };
+		77517FDB27A98333005CFB77 /* GetProductListResponseMin.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetProductListResponseMin.json; sourceTree = "<group>"; };
+		77517FDD27A98474005CFB77 /* GetProductListByFilterResponseMin.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetProductListByFilterResponseMin.json; sourceTree = "<group>"; };
 		7757624A276FEC4F00B902BF /* URLHostTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLHostTests.swift; sourceTree = "<group>"; };
 		7757624C276FEE2400B902BF /* ForaBankUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForaBankUITests.swift; sourceTree = "<group>"; };
 		775875462798C87B0080115D /* Option.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Option.swift; sourceTree = "<group>"; };
@@ -2594,6 +2614,15 @@
 			path = Response;
 			sourceTree = "<group>";
 		};
+		77517FCC27A9715B005CFB77 /* Product */ = {
+			isa = PBXGroup;
+			children = (
+				77517FCF27A97AE8005CFB77 /* ProductData.swift */,
+				77517FD127A97B51005CFB77 /* ProductDetailsData.swift */,
+			);
+			path = Product;
+			sourceTree = "<group>";
+		};
 		77925573279AF3AA00A85723 /* Encryption */ = {
 			isa = PBXGroup;
 			children = (
@@ -2634,6 +2663,7 @@
 		77DC12592770988B00C917B0 /* Domain */ = {
 			isa = PBXGroup;
 			children = (
+				77517FCC27A9715B005CFB77 /* Product */,
 				684192F32799C32E00B4E184 /* Consent */,
 				68AD33FA279962D400647665 /* Card */,
 				77EC58EA2772375A0054D75C /* Abstract */,
@@ -2641,6 +2671,7 @@
 				77DC125E27709DAF00C917B0 /* PaymentTemplateData.swift */,
 				77EC58A8277114400054D75C /* Transfers */,
 				77DC12642770F08300C917B0 /* SVGImageData.swift */,
+				77517FCD27A97913005CFB77 /* ColorData.swift */,
 				77DC12702771080400C917B0 /* EmptyData.swift */,
 				77EC58F3277381970054D75C /* OperationType.swift */,
 				77EC58F5277382A60054D75C /* OperationEnvironment.swift */,
@@ -2726,6 +2757,7 @@
 				68AD33F8279961F700647665 /* ServerCommands+CardController.swift */,
 				684192E92799B1B100B4E184 /* ServerCommands+ConsentController.swift */,
 				77517F9327A800C6005CFB77 /* ServerCommands+Transfer.swift */,
+				77517FCA27A97095005CFB77 /* ServerCommands+Product.swift */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -2853,6 +2885,11 @@
 				77517FB427A94D4D005CFB77 /* IsSingleServiceResponseGeneric.json */,
 				77517FB627A94D76005CFB77 /* MakeTransferResponseGeneric.json */,
 				77517FB827A94D9F005CFB77 /* ReturnOutgoingResponseGeneric.json */,
+				77517FD527A98150005CFB77 /* GetProductDetailsResponseGeneric.json */,
+				77517FD727A98189005CFB77 /* GetProductListResponseGeneric.json */,
+				77517FDB27A98333005CFB77 /* GetProductListResponseMin.json */,
+				77517FD927A981BC005CFB77 /* GetProductListByFilterResponseGeneric.json */,
+				77517FDD27A98474005CFB77 /* GetProductListByFilterResponseMin.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -2878,6 +2915,7 @@
 				68AD340427997DC000647665 /* ServerCommandsCardTests.swift */,
 				684192EB2799C0D000B4E184 /* ServerCommandsConsentTests.swift */,
 				77517FC827A9519E005CFB77 /* ServerCommandsTransferTests.swift */,
+				77517FD327A98052005CFB77 /* ServerCommandsProductTests.swift */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -4680,6 +4718,7 @@
 				684192DC2799997800B4E184 /* ProductStatementDataDecodingGeneric.json in Resources */,
 				684192EE2799C16E00B4E184 /* ChangeClientConsentMe2MePullResponseGeneric.json in Resources */,
 				684192F72799C3D200B4E184 /* GetClientConsentMe2MePullResponseGeneric.json in Resources */,
+				77517FDC27A98333005CFB77 /* GetProductListResponseMin.json in Resources */,
 				77517FA327A94BA5005CFB77 /* CheckCardResponseGeneric.json in Resources */,
 				68AD340B27998A5D00647665 /* GetCardStatementResponseGeneric.json in Resources */,
 				684193002799C98F00B4E184 /* ConsentMe2MePullResponseDataDecodingGeneric.json in Resources */,
@@ -4694,6 +4733,7 @@
 				68AD33F727985C8B00647665 /* IsLoginResponseGeneric.json in Resources */,
 				77517FB727A94D76005CFB77 /* MakeTransferResponseGeneric.json in Resources */,
 				77EC58B5277122430054D75C /* TransferDecodingGeneric.json in Resources */,
+				77517FDE27A98474005CFB77 /* GetProductListByFilterResponseMin.json in Resources */,
 				684193042799D6A800B4E184 /* Me2MeDebitConsentDataDecodingGeneric.json in Resources */,
 				77EC58B9277125000054D75C /* TransferEncodingMin.json in Resources */,
 				77EC58C327712EDD0054D75C /* TransferMe2MeDecodingGeneric.json in Resources */,
@@ -4704,6 +4744,7 @@
 				77517FC127A94F15005CFB77 /* CreateMe2MePullDebitTransferResponseMin.json in Resources */,
 				7701B27127A42BC300FBF5E3 /* GetPeymentTemlpateListResponseSFP.json in Resources */,
 				77517FA127A94B77005CFB77 /* ChangeOutgoingResponseGeneric.json in Resources */,
+				77517FD627A98150005CFB77 /* GetProductDetailsResponseGeneric.json in Resources */,
 				68E7653327970261005860FE /* SetDeviceSettingsResponseGeneric.json in Resources */,
 				5AF3D73A27A948C400F0BB81 /* GetAccountStatementResponseGenericMin.json in Resources */,
 				77EC58D72771F6C10054D75C /* SavePaymentTemplateResponseGeneric.json in Resources */,
@@ -4711,6 +4752,7 @@
 				77EC58C7277131710054D75C /* TransferMe2MeEncodingMin.json in Resources */,
 				684192E42799A93E00B4E184 /* SaveCardNameResponseGeneric.json in Resources */,
 				68AD33F1279858E900647665 /* CsrfDtoDecodingGeneric.json in Resources */,
+				77517FD827A98189005CFB77 /* GetProductListResponseGeneric.json in Resources */,
 				77EC58C9277133910054D75C /* PaymentTemplateDecodingGeneric.json in Resources */,
 				68419312279ED85F00B4E184 /* BlockCardResponseGenericMin.json in Resources */,
 				684192F02799C1D500B4E184 /* CreateIsOneTimeConsentMe2MePullResponseGeneric.json in Resources */,
@@ -4719,6 +4761,7 @@
 				77EC58D52771F28C0054D75C /* GetPaymentTemplateListResponseGeneric.json in Resources */,
 				68AD340727997E6F00647665 /* BlockCardResponseGeneric.json in Resources */,
 				68AD33F327985AD500647665 /* GetSessionTimeoutResponseGeneric.json in Resources */,
+				77517FDA27A981BC005CFB77 /* GetProductListByFilterResponseGeneric.json in Resources */,
 				77517FB927A94D9F005CFB77 /* ReturnOutgoingResponseGeneric.json in Resources */,
 				77517FAB27A94C70005CFB77 /* CreateMe2MePullCreditTransferResponseGeneric.json in Resources */,
 				77EC58BF27712D340054D75C /* TransferAnywayEncodingMin.json in Resources */,
@@ -4858,6 +4901,7 @@
 				0B9EC85D26739C0000D86EB2 /* GetCountriesDecodebleModel.swift in Sources */,
 				68FFA54C2684C854002DADFA /* PDFViewerViewController.swift in Sources */,
 				0BF0BF4C2767E337006AE967 /* NetMonitor.swift in Sources */,
+				77517FCB27A97095005CFB77 /* ServerCommands+Product.swift in Sources */,
 				6841930C279AC36100B4E184 /* StatementFormat.swift in Sources */,
 				0B05163126A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift in Sources */,
 				77674A4027A02D86008101B5 /* CircleProgressViewComponent.swift in Sources */,
@@ -4989,6 +5033,7 @@
 				A5C7A1BB275C0A2A003BEF6D /* InternetLatestOpsDO.swift in Sources */,
 				68FFA52C2682AF62002DADFA /* ContactCollectionViewCell.swift in Sources */,
 				0BDE452F26E2995700B64A0A /* ExtensionQRMetaData.swift in Sources */,
+				77517FD227A97B51005CFB77 /* ProductDetailsData.swift in Sources */,
 				0B216FBE26D15BDF0023C878 /* GKHInputCell.swift in Sources */,
 				0B3FE8E32705C86200CBDB4E /* GetMobileListDecodableModel.swift in Sources */,
 				0B283FC927038C2600B5E925 /* GetSessionTimeout.swift in Sources */,
@@ -5231,6 +5276,7 @@
 				EDB16549266766FD007E6030 /* CodeVerificationViewController.swift in Sources */,
 				EDC341A226864C4100FFFEF8 /* BottomInputView.swift in Sources */,
 				68D06F2226C3C0C100F9BE4C /* MainViewController.swift in Sources */,
+				77517FCE27A97913005CFB77 /* ColorData.swift in Sources */,
 				0B747890267343B400C44F79 /* KeyExchangeDecodebleModel.swift in Sources */,
 				68E76524278D5F1F005860FE /* AntifraudViewHostingController.swift in Sources */,
 				0B7A18C526852EFC0007CC75 /* MakeTransferDecodableModel.swift in Sources */,
@@ -5277,6 +5323,7 @@
 				EDDFE3AD2756D3FD00F57C71 /* DepositCalculatorViewControllerFlowLayout.swift in Sources */,
 				F63D4A3FB30397A82426313C /* InternetTVConfirmViewController.swift in Sources */,
 				F63D43A404CF8AA69942CCFF /* InternetTVSuccessViewController.swift in Sources */,
+				77517FD027A97AE8005CFB77 /* ProductData.swift in Sources */,
 				F63D40EC3454C0DAF5DFDBC4 /* ClientInfoModel.swift in Sources */,
 				F63D473F220AD92D6D04C8DD /* AvtodorDetailsFormController.swift in Sources */,
 				F63D4543C2BD628A0BFB42EA /* AvtodorDetailsFormViewModel.swift in Sources */,
@@ -5310,6 +5357,7 @@
 				7757624B276FEC4F00B902BF /* URLHostTests.swift in Sources */,
 				684192DA279998F800B4E184 /* ProductStatementDataTests.swift in Sources */,
 				684192FE2799C86C00B4E184 /* ConsentMe2MePullResponseDataTests.swift in Sources */,
+				77517FD427A98052005CFB77 /* ServerCommandsProductTests.swift in Sources */,
 				77C026E6275E6299002BE1F6 /* GKHHistoryModelTests.swift in Sources */,
 				77D2D9B3275AB9280097234D /* RealmObjectsDiffTests.swift in Sources */,
 				5ADDC8542799789300488139 /* ServerCommandsAccountControllerTests.swift in Sources */,

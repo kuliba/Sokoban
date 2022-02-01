@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ProductType: String, Codable {
+enum ProductType: String, Codable, Equatable {
     
     case deposit = "DEPOSIT"
     case card = "CARD"
