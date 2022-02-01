@@ -1,0 +1,8 @@
+{
+  "data": {
+    "check": true,
+    "payeeCurrency": "RUB"
+  },
+  "errorMessage": "string",
+  "statusCode": 0
+}

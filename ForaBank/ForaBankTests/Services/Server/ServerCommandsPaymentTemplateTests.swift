@@ -11,8 +11,8 @@ import XCTest
 class ServerCommandsPaymentTemplateTests: XCTestCase {
     
     let bundle = Bundle(for: PaymentTemplateTests.self)
-    let decoder = JSONDecoder()
-    let encoder = JSONEncoder()
+    let decoder = JSONDecoder.serverDate
+    let encoder = JSONEncoder.serverDate
     
     //MARK: - DeletePaymentTemplates
 

@@ -1,0 +1,51 @@
+{
+  "data": {
+    "additionalList": [
+      {
+        "fieldName": "a3_PERSONAL_ACCOUNT_5_5",
+        "fieldTitle": "Лицевой счет у Получателя",
+        "fieldValue": "1234567890",
+        "svgImage": "string"
+      }
+    ],
+    "amount": 100,
+    "creditAmount": 100,
+    "currencyAmount": "100.00",
+    "currencyPayee": "RUB",
+    "currencyPayer": "RUB",
+    "currencyRate": 86.7,
+    "debitAmount": 100,
+    "documentStatus": "COMPLETE",
+    "fee": 100,
+    "finalStep": false,
+    "infoMessage": "string",
+    "needMake": true,
+    "needOTP": true,
+    "needSum": false,
+    "parameterListForNextStep": [
+      {
+        "content": "account",
+        "dataType": "%String",
+        "id": "a3_NUMBER_1_2",
+        "isPrint": false,
+        "isRequired": true,
+        "mask": "+7(___)-___-__-__",
+        "maxLength": 10,
+        "minLength": 0,
+        "order": 2,
+        "rawLength": 0,
+        "readOnly": false,
+        "regExp": "^\\d{10}$",
+        "subTitle": "Пример: 9051111111",
+        "svgImage": "string",
+        "title": "Номер телефона +7",
+        "type": "Input",
+        "viewType": "INPUT"
+      }
+    ],
+    "payeeName": "Иван Иванович И.",
+    "paymentOperationDetailId": 1
+  },
+  "errorMessage": "string",
+  "statusCode": 0
+}
