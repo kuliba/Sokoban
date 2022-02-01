@@ -49,7 +49,6 @@ extension PaymentsViewController {
         
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .absolute(80),
-//            heightDimension: .fractionalHeight(0.12))
             heightDimension: .absolute(96))
         
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
@@ -73,7 +72,6 @@ extension PaymentsViewController {
         let item = NSCollectionLayoutItem.withEntireSize()
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .absolute(104),
-//            heightDimension: .fractionalHeight(0.2))
           heightDimension: .absolute(124))
     
         let group = NSCollectionLayoutGroup.horizontal(
@@ -99,9 +97,7 @@ extension PaymentsViewController {
         
         let item = NSCollectionLayoutItem.withEntireSize()
         var groupSize = NSCollectionLayoutSize(
-//            widthDimension: .fractionalWidth(0.73),
             widthDimension: .fractionalWidth(0.81),
-//            heightDimension: .fractionalHeight(0.35))
             heightDimension: .absolute(180))
         
         var group = NSCollectionLayoutGroup.vertical(
@@ -110,9 +106,7 @@ extension PaymentsViewController {
         
         if self.view.frame.size.height > 900{
             groupSize = NSCollectionLayoutSize(
-    //            widthDimension: .fractionalWidth(0.73),
                 widthDimension: .fractionalWidth(0.81),
-    //            heightDimension: .fractionalHeight(0.35))
                 heightDimension: .absolute(250))
             
             group = NSCollectionLayoutGroup.vertical(
@@ -124,7 +118,6 @@ extension PaymentsViewController {
         
         section.interGroupSpacing = 8
         section.contentInsets = .init(top: 10, leading: 20, bottom: 32, trailing: 20)
-
             
         section.orthogonalScrollingBehavior = .groupPaging
         
@@ -138,7 +131,6 @@ extension PaymentsViewController {
         let sectionHeaderSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1),
             heightDimension:.absolute(CGFloat(size)))
-//            heightDimension: .estimated(1))
         
         let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
             layoutSize: sectionHeaderSize,

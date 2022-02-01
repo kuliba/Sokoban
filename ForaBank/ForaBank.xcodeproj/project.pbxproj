@@ -3451,7 +3451,6 @@
 				68FFA5262682AEE1002DADFA /* ContactsViewController */,
 				ED92D3A126735A0A006D47B3 /* PaymentByPhoneViewController.swift */,
 				ED7866B327A015E2006B4F5A /* PaymentByPhoneViewModel.swift */,
-				68FFA5422682DC95002DADFA /* PhoneConfirmViewController.swift */,
 				6841932027A28A4B00B4E184 /* ChoosePhoneNumber.swift */,
 			);
 			path = PaymentsByPhone;
@@ -4453,19 +4452,19 @@
 			packageReferences = (
 				ED4FC61F266EA5CD0092B4AB /* XCRemoteSwiftPackageReference "Valet" */,
 				EDF6821B266FC37F00FD5C07 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				EDAA99B22674C38900435484 /* XCRemoteSwiftPackageReference "ProgressHUD.git" */,
-				ED0B4890267B4CDD0037EA06 /* XCRemoteSwiftPackageReference "IQKeyboardManager.git" */,
+				EDAA99B22674C38900435484 /* XCRemoteSwiftPackageReference "ProgressHUD" */,
+				ED0B4890267B4CDD0037EA06 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				0B7A18A92681CED70007CC75 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */,
-				ED39EC86268B308800158E46 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder.git" */,
-				ED39EC8F268C8FA700158E46 /* XCRemoteSwiftPackageReference "SVGKit.git" */,
+				ED39EC86268B308800158E46 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */,
+				ED39EC8F268C8FA700158E46 /* XCRemoteSwiftPackageReference "SVGKit" */,
 				68FFA5662695921D002DADFA /* XCRemoteSwiftPackageReference "QRScanner" */,
 				68E6A28326A02C1800A1D9A1 /* XCRemoteSwiftPackageReference "AnyFormatKit" */,
-				EDC8BA3226A5AA0D00EDB401 /* XCRemoteSwiftPackageReference "SDWebImagePDFCoder.git" */,
-				684AD35826B7D2510071C762 /* XCRemoteSwiftPackageReference "CryptoSwift.git" */,
-				0BA2524526C5DB5500AD087A /* XCRemoteSwiftPackageReference "realm-cocoa.git" */,
-				6833E0AE27322876004C070F /* XCRemoteSwiftPackageReference "SkeletonView.git" */,
+				EDC8BA3226A5AA0D00EDB401 /* XCRemoteSwiftPackageReference "SDWebImagePDFCoder" */,
+				684AD35826B7D2510071C762 /* XCRemoteSwiftPackageReference "CryptoSwift" */,
+				0BA2524526C5DB5500AD087A /* XCRemoteSwiftPackageReference "realm-cocoa" */,
+				6833E0AE27322876004C070F /* XCRemoteSwiftPackageReference "SkeletonView" */,
 				77AC9157277A518A00E49D5D /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */,
-				0B677288277CCD7500DCCECD /* XCRemoteSwiftPackageReference "PhoneNumberKit.git" */,
+				0B677288277CCD7500DCCECD /* XCRemoteSwiftPackageReference "PhoneNumberKit" */,
 			);
 			productRefGroup = EDB1437E265FDA410028EF5A /* Products */;
 			projectDirPath = "";
@@ -5339,7 +5338,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 33;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
@@ -5367,7 +5366,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 33;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -5513,7 +5512,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		0B677288277CCD7500DCCECD /* XCRemoteSwiftPackageReference "PhoneNumberKit.git" */ = {
+		0B677288277CCD7500DCCECD /* XCRemoteSwiftPackageReference "PhoneNumberKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/marmelroy/PhoneNumberKit.git";
 			requirement = {
@@ -5529,7 +5528,7 @@
 				minimumVersion = 1.2.7;
 			};
 		};
-		0BA2524526C5DB5500AD087A /* XCRemoteSwiftPackageReference "realm-cocoa.git" */ = {
+		0BA2524526C5DB5500AD087A /* XCRemoteSwiftPackageReference "realm-cocoa" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/realm-cocoa.git";
 			requirement = {
@@ -5537,7 +5536,7 @@
 				minimumVersion = 10.14.0;
 			};
 		};
-		6833E0AE27322876004C070F /* XCRemoteSwiftPackageReference "SkeletonView.git" */ = {
+		6833E0AE27322876004C070F /* XCRemoteSwiftPackageReference "SkeletonView" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Juanpe/SkeletonView.git";
 			requirement = {
@@ -5545,7 +5544,7 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		684AD35826B7D2510071C762 /* XCRemoteSwiftPackageReference "CryptoSwift.git" */ = {
+		684AD35826B7D2510071C762 /* XCRemoteSwiftPackageReference "CryptoSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/krzyzanowskim/CryptoSwift.git";
 			requirement = {
@@ -5577,7 +5576,7 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		ED0B4890267B4CDD0037EA06 /* XCRemoteSwiftPackageReference "IQKeyboardManager.git" */ = {
+		ED0B4890267B4CDD0037EA06 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
 			requirement = {
@@ -5585,7 +5584,7 @@
 				minimumVersion = 6.5.6;
 			};
 		};
-		ED39EC86268B308800158E46 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder.git" */ = {
+		ED39EC86268B308800158E46 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImageSVGCoder.git";
 			requirement = {
@@ -5593,7 +5592,7 @@
 				minimumVersion = 1.6.0;
 			};
 		};
-		ED39EC8F268C8FA700158E46 /* XCRemoteSwiftPackageReference "SVGKit.git" */ = {
+		ED39EC8F268C8FA700158E46 /* XCRemoteSwiftPackageReference "SVGKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SVGKit/SVGKit.git";
 			requirement = {
@@ -5609,7 +5608,7 @@
 				minimumVersion = 4.1.2;
 			};
 		};
-		EDAA99B22674C38900435484 /* XCRemoteSwiftPackageReference "ProgressHUD.git" */ = {
+		EDAA99B22674C38900435484 /* XCRemoteSwiftPackageReference "ProgressHUD" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/relatedcode/ProgressHUD.git";
 			requirement = {
@@ -5617,7 +5616,7 @@
 				kind = branch;
 			};
 		};
-		EDC8BA3226A5AA0D00EDB401 /* XCRemoteSwiftPackageReference "SDWebImagePDFCoder.git" */ = {
+		EDC8BA3226A5AA0D00EDB401 /* XCRemoteSwiftPackageReference "SDWebImagePDFCoder" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImagePDFCoder.git";
 			requirement = {
@@ -5638,12 +5637,12 @@
 /* Begin XCSwiftPackageProductDependency section */
 		0B677289277CCD7500DCCECD /* PhoneNumberKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0B677288277CCD7500DCCECD /* XCRemoteSwiftPackageReference "PhoneNumberKit.git" */;
+			package = 0B677288277CCD7500DCCECD /* XCRemoteSwiftPackageReference "PhoneNumberKit" */;
 			productName = PhoneNumberKit;
 		};
 		0B67728D277CCD7500DCCECD /* PhoneNumberKit-Static */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0B677288277CCD7500DCCECD /* XCRemoteSwiftPackageReference "PhoneNumberKit.git" */;
+			package = 0B677288277CCD7500DCCECD /* XCRemoteSwiftPackageReference "PhoneNumberKit" */;
 			productName = "PhoneNumberKit-Static";
 		};
 		0B7A18AA2681CED70007CC75 /* SwiftEntryKit */ = {
@@ -5653,22 +5652,22 @@
 		};
 		0BA2524626C5DB5600AD087A /* Realm */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0BA2524526C5DB5500AD087A /* XCRemoteSwiftPackageReference "realm-cocoa.git" */;
+			package = 0BA2524526C5DB5500AD087A /* XCRemoteSwiftPackageReference "realm-cocoa" */;
 			productName = Realm;
 		};
 		0BA2524826C5DB5600AD087A /* RealmSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 0BA2524526C5DB5500AD087A /* XCRemoteSwiftPackageReference "realm-cocoa.git" */;
+			package = 0BA2524526C5DB5500AD087A /* XCRemoteSwiftPackageReference "realm-cocoa" */;
 			productName = RealmSwift;
 		};
 		6833E0AF27322878004C070F /* SkeletonView */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 6833E0AE27322876004C070F /* XCRemoteSwiftPackageReference "SkeletonView.git" */;
+			package = 6833E0AE27322876004C070F /* XCRemoteSwiftPackageReference "SkeletonView" */;
 			productName = SkeletonView;
 		};
 		684AD35926B7D2520071C762 /* CryptoSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 684AD35826B7D2510071C762 /* XCRemoteSwiftPackageReference "CryptoSwift.git" */;
+			package = 684AD35826B7D2510071C762 /* XCRemoteSwiftPackageReference "CryptoSwift" */;
 			productName = CryptoSwift;
 		};
 		68A40A122771E154007333EA /* FirebaseAnalytics */ = {
@@ -5693,7 +5692,7 @@
 		};
 		ED0B4891267B4CDD0037EA06 /* IQKeyboardManagerSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = ED0B4890267B4CDD0037EA06 /* XCRemoteSwiftPackageReference "IQKeyboardManager.git" */;
+			package = ED0B4890267B4CDD0037EA06 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
 			productName = IQKeyboardManagerSwift;
 		};
 		ED147D4E26BC1237002F66C8 /* FirebaseCrashlytics */ = {
@@ -5703,12 +5702,12 @@
 		};
 		ED39EC87268B308800158E46 /* SDWebImageSVGCoder */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = ED39EC86268B308800158E46 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder.git" */;
+			package = ED39EC86268B308800158E46 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */;
 			productName = SDWebImageSVGCoder;
 		};
 		ED39EC90268C8FA800158E46 /* SVGKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = ED39EC8F268C8FA700158E46 /* XCRemoteSwiftPackageReference "SVGKit.git" */;
+			package = ED39EC8F268C8FA700158E46 /* XCRemoteSwiftPackageReference "SVGKit" */;
 			productName = SVGKit;
 		};
 		ED4FC620266EA5CD0092B4AB /* Valet */ = {
@@ -5718,12 +5717,12 @@
 		};
 		EDAA99B32674C38900435484 /* ProgressHUD */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = EDAA99B22674C38900435484 /* XCRemoteSwiftPackageReference "ProgressHUD.git" */;
+			package = EDAA99B22674C38900435484 /* XCRemoteSwiftPackageReference "ProgressHUD" */;
 			productName = ProgressHUD;
 		};
 		EDC8BA3326A5AA0E00EDB401 /* SDWebImagePDFCoder */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = EDC8BA3226A5AA0D00EDB401 /* XCRemoteSwiftPackageReference "SDWebImagePDFCoder.git" */;
+			package = EDC8BA3226A5AA0D00EDB401 /* XCRemoteSwiftPackageReference "SDWebImagePDFCoder" */;
 			productName = SDWebImagePDFCoder;
 		};
 		EDF6821C266FC37F00FD5C07 /* FirebaseMessaging */ = {

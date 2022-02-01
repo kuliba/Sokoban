@@ -15,7 +15,12 @@ class Model {
     let action: PassthroughSubject<Action, Never>
     let auth: CurrentValueSubject<AuthorizationState, Never>
     let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
+    //TODO: store in cache 
+    let paymentTemplatesViewSettings: CurrentValueSubject<TemplatesListViewModel.Settings, Never>
+    
+    //TODO: remove when all templates will be implemented
     let paymentTemplatesAllowed: [PaymentDetailType] = [.sfp]
+    let paymentTemplatesDisplayed: [PaymentTemplateData.Kind] = [.sfp]
     
     // services
     private let serverAgent: ServerAgentProtocol
@@ -38,6 +43,7 @@ class Model {
         self.action = .init()
         self.auth = .init(.notAuthorized)
         self.paymentTemplates = .init([])
+        self.paymentTemplatesViewSettings = .init(.initial)
         self.serverAgent = serverAgent
         self.localAgent = localAgent
         self.bindings = []
@@ -88,9 +94,18 @@ class Model {
             .sink {[unowned self] action in
                 
                 switch action {
+                
+                //MARK: - Login Actions
+                    
                 case _ as ModelAction.LoggedIn:
                     loadCachedData()
                     self.action.send(ModelAction.PaymentTemplate.List.Requested())
+                    
+                case _ as ModelAction.LoggedOut:
+                    clearCachedData()
+                    paymentTemplates.value = []
+                    
+                //MARK: - Templates Actions
                     
                 case let payload as ModelAction.PaymentTemplate.Save.Requested:
                     guard let token = token else {
@@ -104,7 +119,9 @@ class Model {
                         case .success(let response):
                             switch response.statusCode {
                             case .ok:
+                                // confirm template saved
                                 self.action.send(ModelAction.PaymentTemplate.Save.Complete(paymentTemplateId: response.data.paymentTemplateId))
+                                // request all templates from server
                                 self.action.send(ModelAction.PaymentTemplate.List.Requested())
                                 
                             default:
@@ -128,7 +145,10 @@ class Model {
                         case .success(let response):
                             switch response.statusCode {
                             case .ok:
+                                // confirm template updated
                                 self.action.send(ModelAction.PaymentTemplate.Update.Complete())
+                                // request all templates from server
+                                self.action.send(ModelAction.PaymentTemplate.List.Requested())
                                 
                             default:
                                 //TODO: handle not ok server status
@@ -151,7 +171,9 @@ class Model {
                         case .success(let response):
                             switch response.statusCode {
                             case .ok:
+                                // confirm templete deleted
                                 self.action.send(ModelAction.PaymentTemplate.Delete.Complete())
+                                // request all templates from server
                                 self.action.send(ModelAction.PaymentTemplate.List.Requested())
                                 
                             default:
@@ -177,10 +199,12 @@ class Model {
                             case .ok:
                                 if let templates = response.data {
                                     
-                                    self.paymentTemplates.value = templates
+                                    //TODO: remove when all templates will be implemented
+                                    let allowed = templates.filter{ paymentTemplatesDisplayed.contains($0.type) }
+                                    self.paymentTemplates.value = allowed
                                     do {
                                         
-                                        try self.localAgent.store(templates, serial: nil)
+                                        try self.localAgent.store(allowed, serial: nil)
                                         
                                     } catch {
                                         //TODO: os log
@@ -221,6 +245,20 @@ private extension Model {
         if let paymentTemplates = localAgent.load(type: PaymentTemplateData.self) {
             
             self.paymentTemplates.value = paymentTemplates
+        }
+        
+        //TODO: load paymentTemplatesViewSettings from cache
+    }
+    
+    func clearCachedData() {
+        
+        do {
+            
+            try localAgent.clear(type: PaymentTemplateData.self)
+            
+        } catch {
+            
+            print("Model: clearCachedData: error: \(error.localizedDescription)")
         }
     }
 }

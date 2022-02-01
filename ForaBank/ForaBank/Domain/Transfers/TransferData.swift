@@ -72,7 +72,7 @@ extension TransferData {
         let compilerStatus: String?
         let date: String?
         let name: String
-        let tax: Tax
+        let tax: Tax?
         
         struct Tax: Codable, Equatable {
             

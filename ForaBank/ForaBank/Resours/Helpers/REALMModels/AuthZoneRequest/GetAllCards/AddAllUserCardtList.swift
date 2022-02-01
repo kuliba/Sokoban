@@ -37,7 +37,7 @@ struct AddAllUserCardtList {
                 
                 let realm = try Realm()
                 let existingCards = realm.objects(UserAllCardsModel.self).sorted(byKeyPath: "id", ascending: true).toArray(ofType: UserAllCardsModel.self)
-                
+
                 guard let changes = existingCards.update(with: receivedCards) else { return }
                 
                 try realm.write({

@@ -12,6 +12,9 @@ enum ModelAction {
     //TODO: remove after refactoring
     struct LoggedIn: Action {}
     
+    //TODO: remove after refactoring
+    struct LoggedOut: Action {}
+    
     struct PresentAlert: Action {
         
         let message: String
