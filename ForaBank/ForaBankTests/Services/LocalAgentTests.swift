@@ -165,7 +165,7 @@ class LocalAgentTests: XCTestCase {
         
         // given
         let sample = SampleType()
-        let serial = 123
+        let serial = UUID().uuidString
         try localAgent.store(sample, serial: serial)
 
         // when
@@ -179,7 +179,7 @@ class LocalAgentTests: XCTestCase {
         
         // given
         let sample = SampleType()
-        let serial = 123
+        let serial = UUID().uuidString
         try localAgent.store([sample], serial: serial)
 
         // when
@@ -193,7 +193,7 @@ class LocalAgentTests: XCTestCase {
         
         // given
         let sample = SampleType()
-        let serial = 123
+        let serial = UUID().uuidString
         try localAgent.store(sample, serial: serial)
 
         // when
@@ -207,7 +207,7 @@ class LocalAgentTests: XCTestCase {
         
         // given
         let sample = SampleType()
-        let serial = 123
+        let serial = UUID().uuidString
         try localAgent.store([sample], serial: serial)
 
         // when
