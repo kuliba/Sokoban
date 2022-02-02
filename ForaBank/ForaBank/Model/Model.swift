@@ -65,7 +65,7 @@ class Model {
         let serverAgent = ServerAgent(context: serverContext)
         
         // local agent
-        let localContext = LocalAgent.Context(cacheFolderName: "cache", encoder: JSONEncoder(), decoder: JSONDecoder(), fileManager: FileManager.default)
+        let localContext = LocalAgent.Context(cacheFolderName: "cache", encoder: .serverDate, decoder: .serverDate, fileManager: FileManager.default)
         let localAgent = LocalAgent(context: localContext)
         
         return Model(serverAgent: serverAgent, localAgent: localAgent)
@@ -242,7 +242,7 @@ private extension Model {
     
     func loadCachedData() {
         
-        if let paymentTemplates = localAgent.load(type: PaymentTemplateData.self) {
+        if let paymentTemplates = localAgent.load(type: [PaymentTemplateData].self) {
             
             self.paymentTemplates.value = paymentTemplates
         }

@@ -472,6 +472,7 @@
 		77DC12712771080400C917B0 /* EmptyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DC12702771080400C917B0 /* EmptyData.swift */; };
 		77E1802927AB02630006ACC9 /* ServerCommands+PrintForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E1802827AB02630006ACC9 /* ServerCommands+PrintForm.swift */; };
 		77E1802B27AB032C0006ACC9 /* PrintFormType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E1802A27AB032C0006ACC9 /* PrintFormType.swift */; };
+		77E1802F27AB13050006ACC9 /* LocalAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E1802E27AB13050006ACC9 /* LocalAgentTests.swift */; };
 		77EA0DBB2779B06E00C6ED12 /* OperationDetailHeaderComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EA0DBA2779B06D00C6ED12 /* OperationDetailHeaderComponentView.swift */; };
 		77EC58AA277114D20054D75C /* TransferData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58A9277114D20054D75C /* TransferData.swift */; };
 		77EC58AC27711EFA0054D75C /* TransferAnywayData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58AB27711EFA0054D75C /* TransferAnywayData.swift */; };
@@ -1259,6 +1260,7 @@
 		77DC12702771080400C917B0 /* EmptyData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyData.swift; sourceTree = "<group>"; };
 		77E1802827AB02630006ACC9 /* ServerCommands+PrintForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServerCommands+PrintForm.swift"; sourceTree = "<group>"; };
 		77E1802A27AB032C0006ACC9 /* PrintFormType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintFormType.swift; sourceTree = "<group>"; };
+		77E1802E27AB13050006ACC9 /* LocalAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAgentTests.swift; sourceTree = "<group>"; };
 		77EA0DBA2779B06D00C6ED12 /* OperationDetailHeaderComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailHeaderComponentView.swift; sourceTree = "<group>"; };
 		77EC58A9277114D20054D75C /* TransferData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferData.swift; sourceTree = "<group>"; };
 		77EC58AB27711EFA0054D75C /* TransferAnywayData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferAnywayData.swift; sourceTree = "<group>"; };
@@ -3017,6 +3019,7 @@
 			children = (
 				77EC58CF2771D45F0054D75C /* Server */,
 				7792557A279AF6C900A85723 /* Encryption */,
+				77E1802E27AB13050006ACC9 /* LocalAgentTests.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -5515,6 +5518,7 @@
 				77517FC927A9519E005CFB77 /* ServerCommandsTransferTests.swift in Sources */,
 				5A5ABF9427AAF70300D548AA /* ServerCommandsAccountControllerTests.swift in Sources */,
 				77EC58B2277121CF0054D75C /* TransferTests.swift in Sources */,
+				77E1802F27AB13050006ACC9 /* LocalAgentTests.swift in Sources */,
 				7757624B276FEC4F00B902BF /* URLHostTests.swift in Sources */,
 				684192DA279998F800B4E184 /* ProductStatementDataTests.swift in Sources */,
 				684192FE2799C86C00B4E184 /* ConsentMe2MePullResponseDataTests.swift in Sources */,
