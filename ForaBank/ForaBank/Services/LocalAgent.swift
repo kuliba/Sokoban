@@ -10,7 +10,7 @@ import Foundation
 class LocalAgent: LocalAgentProtocol {
     
     private let context: Context
-    private var serials: [String: Int]
+    private var serials: [String: String]
     
     init(context: Context) {
         
@@ -22,7 +22,7 @@ class LocalAgent: LocalAgentProtocol {
     
     //MARK: - Store
     
-    func store<T>(_ data: T, serial: Int? = nil) throws where T : Cachable {
+    func store<T>(_ data: T, serial: String? = nil) throws where T : Cachable {
         
         let dataFileName = fileName(for: T.self)
         let data = try context.encoder.encode(data)
@@ -33,7 +33,7 @@ class LocalAgent: LocalAgentProtocol {
         try serialsData.write(to: fileURL(with: context.serialsFileName))
     }
     
-    func store<T>(_ data: T, serial: Int? = nil) throws where T : Collection, T: Encodable, T.Element : Cachable {
+    func store<T>(_ data: T, serial: String? = nil) throws where T : Collection, T: Encodable, T.Element : Cachable {
         
         let dataFileName = fileName(for: T.self)
         let data = try context.encoder.encode(data)
@@ -104,14 +104,14 @@ class LocalAgent: LocalAgentProtocol {
     
     //MARK: - Serial
     
-    func serial<T>(for type: T.Type) -> Int? where T : Cachable {
+    func serial<T>(for type: T.Type) -> String? where T : Cachable {
         
         let fileName = fileName(for: type)
         
         return serials[fileName]
     }
     
-    func serial<T>(for type: T.Type) -> Int? where T : Collection, T.Element : Cachable {
+    func serial<T>(for type: T.Type) -> String? where T : Collection, T.Element : Cachable {
         
         let fileName = fileName(for: type)
         
@@ -138,7 +138,7 @@ internal extension LocalAgent {
         do {
             
             let serialsData = try Data(contentsOf: fileURL(with: context.serialsFileName))
-            self.serials = try JSONDecoder().decode([String: Int].self, from: serialsData)
+            self.serials = try JSONDecoder().decode([String: String].self, from: serialsData)
             
         } catch {
             
