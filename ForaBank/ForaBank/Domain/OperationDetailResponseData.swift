@@ -71,18 +71,6 @@ struct OperationDetailResponseData: Codable, Equatable {
 	let transferNumber: String?
 	let transferReference: String?
 	
-	enum PrintFormType: String, Codable {
-
-			case sbp
-			case direct
-			case `internal`
-			case external
-			case mobile
-			case internet
-			case transport
-			case taxAndStateService
-	}
-
 	enum ExternalTransferType: String, Codable {
 
 		case entity = "ENTITY"
