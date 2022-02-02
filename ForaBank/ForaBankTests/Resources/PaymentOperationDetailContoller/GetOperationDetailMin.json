@@ -1,0 +1,26 @@
+{
+  "data": {
+	"amount": 250.5,
+	"claimId": "d3388cf0-68dd-437b-84b2-77ee4ae4abbf",
+	"currencyAmount": "RUB",
+	"dateForDetail": "21 Декабря 2021, 22:29",
+	"isTrafficPoliceService": false,
+	"payerAccountId": 10004111477,
+	"payerAccountNumber": "40817810052005000621",
+	"payerAddress": "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 141006, Московская обл, Мытищи г, Олимпийский пр-кт ,  д. 13,  корп. 2,  кв. 9",
+	"payerAmount": 1011.01,
+	"payerCurrency": "RUB",
+	"payerFee": 10.01,
+	"payerFirstName": "Иван",
+	"payerFullName": "Иван Иванович И.",
+	"payerINN": "123456789012",
+	"payerSurName": "Иванов",
+	"paymentOperationDetailId": 1,
+	"printFormType": "internal",
+	"requestDate": "20.12.2021 13:06:05",
+	"responseDate": "20.12.2021 13:06:13",
+	"transferDate": "20.12.2021",
+  },
+  "errorMessage": "string",
+  "statusCode": 0
+}

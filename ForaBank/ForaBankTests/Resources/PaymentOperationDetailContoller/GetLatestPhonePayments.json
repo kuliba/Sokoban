@@ -1,0 +1,11 @@
+{
+  "data": [
+    {
+      "bankId": "string",
+      "bankName": "string",
+      "payment": true
+    }
+  ],
+  "errorMessage": "string",
+  "statusCode": 0
+}
