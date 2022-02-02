@@ -470,6 +470,8 @@
 		77DC126D2770F84B00C917B0 /* ServerStatusCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DC126C2770F84B00C917B0 /* ServerStatusCode.swift */; };
 		77DC126F2770F8C900C917B0 /* ServerCommands+PaymentTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DC126E2770F8C900C917B0 /* ServerCommands+PaymentTemplate.swift */; };
 		77DC12712771080400C917B0 /* EmptyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DC12702771080400C917B0 /* EmptyData.swift */; };
+		77E1802927AB02630006ACC9 /* ServerCommands+PrintForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E1802827AB02630006ACC9 /* ServerCommands+PrintForm.swift */; };
+		77E1802B27AB032C0006ACC9 /* PrintFormType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E1802A27AB032C0006ACC9 /* PrintFormType.swift */; };
 		77EA0DBB2779B06E00C6ED12 /* OperationDetailHeaderComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EA0DBA2779B06D00C6ED12 /* OperationDetailHeaderComponentView.swift */; };
 		77EC58AA277114D20054D75C /* TransferData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58A9277114D20054D75C /* TransferData.swift */; };
 		77EC58AC27711EFA0054D75C /* TransferAnywayData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58AB27711EFA0054D75C /* TransferAnywayData.swift */; };
@@ -1255,6 +1257,8 @@
 		77DC126C2770F84B00C917B0 /* ServerStatusCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerStatusCode.swift; sourceTree = "<group>"; };
 		77DC126E2770F8C900C917B0 /* ServerCommands+PaymentTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServerCommands+PaymentTemplate.swift"; sourceTree = "<group>"; };
 		77DC12702771080400C917B0 /* EmptyData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyData.swift; sourceTree = "<group>"; };
+		77E1802827AB02630006ACC9 /* ServerCommands+PrintForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServerCommands+PrintForm.swift"; sourceTree = "<group>"; };
+		77E1802A27AB032C0006ACC9 /* PrintFormType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintFormType.swift; sourceTree = "<group>"; };
 		77EA0DBA2779B06D00C6ED12 /* OperationDetailHeaderComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailHeaderComponentView.swift; sourceTree = "<group>"; };
 		77EC58A9277114D20054D75C /* TransferData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferData.swift; sourceTree = "<group>"; };
 		77EC58AB27711EFA0054D75C /* TransferAnywayData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferAnywayData.swift; sourceTree = "<group>"; };
@@ -2782,6 +2786,7 @@
 				5A5ABF8927AAF53000D548AA /* OperationDetailResponseData.swift */,
 				5A5ABF8B27AAF55800D548AA /* PaymentCountriesResponseData.swift */,
 				5A5ABF8D27AAF57600D548AA /* PaymentDataKind.swift */,
+				77E1802A27AB032C0006ACC9 /* PrintFormType.swift */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -2863,6 +2868,7 @@
 				77517FEB27A99279005CFB77 /* ServerCommands+Rates.swift */,
 				77517FF327A9990C005CFB77 /* ServerCommands+Default.swift */,
 				5A5ABF8F27AAF59E00D548AA /* ServerCommands+PaymentOperationDetail.swift */,
+				77E1802827AB02630006ACC9 /* ServerCommands+PrintForm.swift */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -5019,6 +5025,7 @@
 				0BE270B826B9DC4200FA958C /* ExtensionBottomInputViewExchange.swift in Sources */,
 				EDAA99AF2673AB9200435484 /* ForaSwitchView.swift in Sources */,
 				6833E0D0273920CE004C070F /* CountryPayCoordinator.swift in Sources */,
+				77E1802B27AB032C0006ACC9 /* PrintFormType.swift in Sources */,
 				0BB015DC26C9BE3700E7A85B /* ExtensionGKHMainNav.swift in Sources */,
 				0BD1CAA226E6C46900CFE993 /* GetCurrencyListSaved.swift in Sources */,
 				A5C7A1B5275BF2C3003BEF6D /* IsSingleServiceModel.swift in Sources */,
@@ -5113,6 +5120,7 @@
 				77517F9927A858C2005CFB77 /* TransferResponseData.swift in Sources */,
 				77517FEC27A99279005CFB77 /* ServerCommands+Rates.swift in Sources */,
 				0B37F97A2678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift in Sources */,
+				77E1802927AB02630006ACC9 /* ServerCommands+PrintForm.swift in Sources */,
 				687ADF1026B07721005A239B /* DataExtension.swift in Sources */,
 				77EC58F927738B5E0054D75C /* DateFormatter+Extensions.swift in Sources */,
 				EDE709042797172E0048CA94 /* TemplatesListViewModel.swift in Sources */,
