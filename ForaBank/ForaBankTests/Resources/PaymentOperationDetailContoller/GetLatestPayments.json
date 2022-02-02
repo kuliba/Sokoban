@@ -1,0 +1,15 @@
+{
+  "data": [
+    {
+      "amount": "100",
+      "bankId": "100000000004",
+      "bankName": "Тинькофф Банк",
+      "date": "2022-01-24T15:02:31.941Z",
+      "paymentDate": "21.12.2021 11:04:26",
+      "phoneNumber": "9998887766",
+      "type": "phone"
+    }
+  ],
+  "errorMessage": "string",
+  "statusCode": 0
+}
