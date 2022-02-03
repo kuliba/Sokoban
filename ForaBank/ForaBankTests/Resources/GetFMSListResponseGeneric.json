@@ -1,0 +1,15 @@
+{
+  "data": {
+    "FMSList": [
+      {
+        "md5hash": "366e1c4043eb433b82a6ab4988e80862",
+        "svgImage": "string",
+        "text": "Российский паспорт",
+        "value": "1"
+      }
+    ],
+    "serial": "bea36075a58954199a6b8980549f6b69"
+  },
+  "errorMessage": "string",
+  "statusCode": 0
+}
