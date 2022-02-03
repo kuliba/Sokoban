@@ -1,0 +1,69 @@
+{
+  "data": {
+    "operatorGroupList": [
+      {
+        "city": "Москва",
+        "code": "iFora||1011001",
+        "isGroup": true,
+        "logotypeList": [
+          {
+            "content": "string",
+            "contentType": "string",
+            "name": "Лого Газпром.png",
+            "svgImage": "string"
+          }
+        ],
+        "name": "Мобильная связь",
+        "operators": [
+          {
+            "city": "Москва",
+            "code": "iFora||4285",
+            "isGroup": false,
+            "logotypeList": [
+              {
+                "content": "string",
+                "contentType": "string",
+                "name": "Лого Газпром.png",
+                "svgImage": "string"
+              }
+            ],
+            "name": "Билайн",
+            "parameterList": [
+              {
+                "content": "account",
+                "dataType": "%String",
+                "id": "a3_NUMBER_1_2",
+                "isPrint": false,
+                "isRequired": true,
+                "mask": "+7(___)-___-__-__",
+                "maxLength": 10,
+                "minLength": 0,
+                "order": 2,
+                "rawLength": 0,
+                "readOnly": false,
+                "regExp": "^\\d{10}$",
+                "subTitle": "Пример: 9051111111",
+                "svgImage": "string",
+                "title": "Номер телефона +7",
+                "type": "Input",
+                "viewType": "INPUT"
+              }
+            ],
+            "parentCode": "iFora||1011001",
+            "region": "Пермский край",
+            "synonymList": [
+              "string"
+            ]
+          }
+        ],
+        "region": "Пермский край",
+        "synonymList": [
+          "string"
+        ]
+      }
+    ],
+    "serial": "bea36075a58954199a6b8980549f6b69"
+  },
+  "errorMessage": "string",
+  "statusCode": 0
+}

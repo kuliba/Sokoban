@@ -1,0 +1,17 @@
+{
+  "data": {
+    "mobileList": [
+      {
+        "code": "BEELINE",
+        "md5hash": "2a025e81e19ddc447cc93d27ad75ff84",
+        "providerName": "ПАО \"Вымпел-Коммуникации\"",
+        "puref": "iFora||4285",
+        "shortName": "Билайн",
+        "svgImage": "string"
+      }
+    ],
+    "serial": "bea36075a58954199a6b8980549f6b69"
+  },
+  "errorMessage": "string",
+  "statusCode": 0
+}
