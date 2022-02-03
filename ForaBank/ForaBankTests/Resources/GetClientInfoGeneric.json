@@ -1,0 +1,13 @@
+{
+  "data": {
+    "address": "string",
+    "firstName": "Иван",
+    "lastName": "Иванов",
+    "patronymic": "Иванович",
+    "regNumber": "string",
+    "regSeries": "string"
+  },
+  "errorMessage": "string",
+  "statusCode": 0
+}
+
