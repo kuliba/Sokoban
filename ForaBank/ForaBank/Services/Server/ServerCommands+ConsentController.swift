@@ -16,11 +16,12 @@ extension ServerCommands {
          */
         struct ChangeClientConsentMe2MePull: ServerCommand {
             
-            let token: String
+            let token: String?
             let endpoint = "/rest/changeClientConsentMe2MePull"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
 
             struct Payload: Encodable {
                 let bankList: [String]
@@ -45,11 +46,12 @@ extension ServerCommands {
          */
         struct CreateIsOneTimeConsentMe2MePull: ServerCommand {
             
-            let token: String
+            let token: String?
             let endpoint = "/rest/createIsOneTimeConsentMe2MePull"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
 
             struct Payload: Encodable {
                 let bankId: String
@@ -74,11 +76,12 @@ extension ServerCommands {
          */
         struct CreatePermanentConsentMe2MePull: ServerCommand {
             
-            let token: String
+            let token: String?
             let endpoint = "/rest/createPermanentConsentMe2MePull"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
 
             struct Payload: Encodable {
                 let bankId: String
@@ -103,11 +106,12 @@ extension ServerCommands {
          */
         struct GetClientConsentMe2MePull: ServerCommand {
             
-            let token: String
+            let token: String?
             let endpoint = "/rest/getClientConsentMe2MePull"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
 
             struct Payload: Encodable {}
             
@@ -115,7 +119,12 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: ConsentMe2MePullResponseData?
+                let data: ConsentListData?
+                
+                struct ConsentListData: Codable, Equatable {
+                    
+                    let consentList: [ConsentMe2MePullData]?
+                }
             }
             
             internal init(token: String) {
@@ -129,11 +138,12 @@ extension ServerCommands {
          */
         struct GetMe2MeDebitConsent: ServerCommand {
             
-            let token: String
+            let token: String?
             let endpoint = "/rest/getMe2MeDebitConsent"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
 
             struct Payload: Encodable {
                 let bankId: String
@@ -143,7 +153,7 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: Me2MeDebitConsentData?
+                let data: ConsentMe2MeDebitData?
             }
             
             internal init(token: String, payload: Payload) {

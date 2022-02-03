@@ -12,31 +12,33 @@ struct OperatorGroupData: Codable, Equatable {
     let city: String?
     let code: String
     let isGroup: Bool
-    let logotypeList: [LogotypeDataItem]
+    let logotypeList: [LogotypeData]
     let name: String
     let operators: [OperatorData]
     let region: String?
     let synonymList: [String]
- 
-    //FIXME: rename to LogotypeData after refactoring
-    struct LogotypeDataItem: Codable, Equatable {
-        
-        let content: String
-        let contentType: String
-        let name: String
-        let svgImage: SVGImageData
-    }
+}
+
+extension OperatorGroupData {
     
     struct OperatorData: Codable, Equatable {
         
         let city: String?
         let code: String
         let isGroup: Bool
-        let logotypeList: [LogotypeDataItem]
+        let logotypeList: [LogotypeData]
         let name: String
         let parameterList: [ParameterData]
         let parentCode: String
         let region: String?
         let synonymList: [String]
+    }
+    
+    struct LogotypeData: Codable, Equatable {
+        
+        let content: String
+        let contentType: String
+        let name: String
+        let svgImage: SVGImageData
     }
 }

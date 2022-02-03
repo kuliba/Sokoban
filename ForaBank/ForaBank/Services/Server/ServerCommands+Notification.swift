@@ -16,11 +16,12 @@ extension ServerCommands {
          */
         struct GetNotifications: ServerCommand {
 
-            let token: String
+            let token: String?
             let endpoint = "/rest/getNotifications"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
             let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             

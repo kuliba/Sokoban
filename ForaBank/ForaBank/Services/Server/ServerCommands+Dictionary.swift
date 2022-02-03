@@ -16,11 +16,12 @@ extension ServerCommands {
          */
         struct GetAnywayOperatorsList: ServerCommand {
             
-            let token: String
+            let token: String? = nil
             let endpoint = "/dict/getAnywayOperatorsList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
             let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
 
             struct Payload: Encodable {}
             
@@ -37,18 +38,18 @@ extension ServerCommands {
                 }
             }
             
-            internal init(token: String, serial: String?) {
+            internal init(serial: String?) {
                 
                 if let serial = serial{
                     
                     var parameters = [ServerCommandParameter]()
                     parameters.append(.init(name: "serial", value: serial))
                     self.parameters = parameters
+                    
                 } else {
                     
                     self.parameters = nil
                 }
-                self.token = token
             }
         }
         
@@ -57,11 +58,12 @@ extension ServerCommands {
          */
         struct GetBanks: ServerCommand {
             
-            let token: String
+            let token: String? = nil
             let endpoint = "/dict/getBanks"
             let method: ServerCommandMethod = .get
             var parameters: [ServerCommandParameter]?
             let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -78,18 +80,18 @@ extension ServerCommands {
                 }
             }
             
-            internal init(token: String, serial: String?) {
+            internal init(serial: String?) {
                 
                 if let serial = serial{
                     
                     var parameters = [ServerCommandParameter]()
                     parameters.append(.init(name: "serial", value: serial))
                     self.parameters = parameters
+                    
                 } else {
                     
                     self.parameters = nil
                 }
-                self.token = token
             }
         }
         
@@ -98,11 +100,12 @@ extension ServerCommands {
          */
         struct GetCountries: ServerCommand {
             
-            let token: String
+            let token: String? = nil
             let endpoint = "/dict/getCountries"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
             let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -110,27 +113,27 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: CountryData?
+                let data: CountryListData?
                 
-                struct CountryData: Decodable, Equatable {
+                struct CountryListData: Decodable, Equatable {
                     
-                    let countriesList: [CountryDataItem]
+                    let countriesList: [CountryData]
                     let serial: String
                 }
             }
                     
-            internal init(token: String, serial: String?) {
+            internal init(serial: String?) {
                 
                 if let serial = serial{
                     
                     var parameters = [ServerCommandParameter]()
                     parameters.append(.init(name: "serial", value: serial))
                     self.parameters = parameters
+                    
                 } else {
                     
                     self.parameters = nil
                 }
-                self.token = token
             }
         }
         
@@ -139,11 +142,12 @@ extension ServerCommands {
          */
         struct GetCurrencyList: ServerCommand {
             
-            let token: String
+            let token: String? = nil
             let endpoint = "/dict/getCurrencyList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
             let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -160,18 +164,18 @@ extension ServerCommands {
                 }
             }
             
-            internal init(token: String, serial: String?) {
+            internal init(serial: String?) {
                 
                 if let serial = serial{
                     
                     var parameters = [ServerCommandParameter]()
                     parameters.append(.init(name: "serial", value: serial))
                     self.parameters = parameters
+                    
                 } else {
                     
                     self.parameters = nil
                 }
-                self.token = token
             }
         }
         
@@ -180,11 +184,12 @@ extension ServerCommands {
          */
         struct GetFMSList: ServerCommand {
             
-            let token: String
+            let token: String? = nil
             let endpoint = "/dict/getFMSList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
             let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -207,7 +212,7 @@ extension ServerCommands {
                 }
             }
             
-            internal init(token: String, serial: String?) {
+            internal init(serial: String?) {
                 
                 if let serial = serial{
                     
@@ -219,7 +224,6 @@ extension ServerCommands {
                     
                     self.parameters = nil
                 }
-                self.token = token
             }
         }
         
@@ -228,11 +232,12 @@ extension ServerCommands {
          */
         struct GetFSSPList: ServerCommand {
             
-            let token: String
+            let token: String? = nil
             let endpoint = "/dict/getFSSPList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
             let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -255,7 +260,7 @@ extension ServerCommands {
                 }
             }
             
-            internal init(token: String, serial: String?) {
+            internal init(serial: String?) {
                 
                 if let serial = serial{
                     
@@ -267,7 +272,6 @@ extension ServerCommands {
                     
                     self.parameters = nil
                 }
-                self.token = token
             }
         }
         
@@ -276,11 +280,12 @@ extension ServerCommands {
          */
         struct GetFTSList: ServerCommand {
             
-            let token: String
+            let token: String? = nil
             let endpoint = "/dict/getFTSList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
             let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -303,7 +308,7 @@ extension ServerCommands {
                 }
             }
             
-            internal init(token: String, serial: String?) {
+            internal init(serial: String?) {
                 
                 if let serial = serial{
                     
@@ -315,7 +320,6 @@ extension ServerCommands {
                     
                     self.parameters = nil
                 }
-                self.token = token
             }
         }
         
@@ -324,11 +328,12 @@ extension ServerCommands {
          */
         struct GetFullBankInfoList: ServerCommand {
             
-            let token: String
+            let token: String? = nil
             let endpoint = "/dict/getFullBankInfoList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
             let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -336,41 +341,54 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: BankFullInfoData?
+                let data: BankFullInfoListData?
                 
-                struct BankFullInfoData: Decodable, Equatable {
+                struct BankFullInfoListData: Decodable, Equatable {
                     
-                    let bankFullInfoList: [BankFullInfoDataItem]
+                    let bankFullInfoList: [BankFullInfoData]
                     let serial: String
                 }
             }
             
-            internal init(token: String, bic: String, name: String?, engName: String?, type: String?, account: String?, swift: String?, serviceType: String?, serial: String?) {
+            internal init(bic: String, name: String?, engName: String?, type: String?, account: String?, swift: String?, serviceType: String?, serial: String?) {
                 
                 var parameters = [ServerCommandParameter]()
                 parameters.append(.init(name: "bic", value: bic))
+                
                 if let name = name {
+                    
                     parameters.append(.init(name: "name", value: name))
                 }
+                
                 if let engName = engName {
+                    
                     parameters.append(.init(name: "engName", value: engName))
                 }
+                
                 if let type = type {
+                    
                     parameters.append(.init(name: "type", value: type))
                 }
+                
                 if let account = account {
+                    
                     parameters.append(.init(name: "account", value: account))
                 }
+                
                 if let swift = swift {
+                    
                     parameters.append(.init(name: "swift", value: swift))
                 }
+                
                 if let serviceType = serviceType {
+                    
                     parameters.append(.init(name: "serviceType", value: serviceType))
                 }
-                if let serial = serial{
+                
+                if let serial = serial {
+                    
                     parameters.append(.init(name: "serial", value: serial))
                 }
-                self.token = token
                 self.parameters = parameters
             }
         }
@@ -380,11 +398,12 @@ extension ServerCommands {
          */
         struct GetMobileList: ServerCommand {
             
-            let token: String
+            let token: String? = nil
             let endpoint = "/dict/getMobileList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
             let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -392,27 +411,27 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: MobileData?
+                let data: MobileListData?
                 
-                struct MobileData: Decodable, Equatable {
+                struct MobileListData: Decodable, Equatable {
                     
-                    let mobileList: [MobileDataItem]
+                    let mobileList: [MobileData]
                     let serial: String
                 }
             }
             
-            internal init(token: String, serial: String?) {
+            internal init(serial: String?) {
 
                 if let serial = serial {
                     
                     var parameters = [ServerCommandParameter]()
                     parameters.append(.init(name: "serial", value: serial))
                     self.parameters = parameters
+                    
                 } else {
                     
                     self.parameters = nil
                 }
-                self.token = token
             }
         }
         
@@ -421,11 +440,12 @@ extension ServerCommands {
          */
         struct GetMosParkingList: ServerCommand {
             
-            let token: String
+            let token: String? = nil
             let endpoint = "/dict/getMosParkingList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
             let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -433,27 +453,27 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: MosParkingData?
+                let data: MosParkingListData?
                 
-                struct MosParkingData: Decodable, Equatable {
+                struct MosParkingListData: Decodable, Equatable {
                     
-                    let mosParkingList: [MosParkingDataItem]
+                    let mosParkingList: [MosParkingData]
                     let serial: String
                 }
             }
             
-            internal init(token: String, serial: String?) {
+            internal init(serial: String?) {
                 
                 if let serial = serial {
                     
                     var parameters = [ServerCommandParameter]()
                     parameters.append(.init(name: "serial", value: serial))
                     self.parameters = parameters
+                    
                 } else {
                     
                     self.parameters = nil
                 }
-                self.token = token
             }
         }
         
@@ -462,11 +482,12 @@ extension ServerCommands {
          */
         struct GetPaymentSystemList: ServerCommand {
             
-            let token: String
+            let token: String? = nil
             let endpoint = "/dict/getPaymentSystemList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
             let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -474,16 +495,16 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                var data: PaymentSystemData?
+                var data: PaymentSystemListData?
                 
-                struct PaymentSystemData: Decodable, Equatable {
+                struct PaymentSystemListData: Decodable, Equatable {
                     
-                    var paymentSystemList: [PaymentSystemDataItem]
+                    var paymentSystemList: [PaymentSystemData]
                     let serial: String
                 }
             }
             
-            internal init(token: String, serial: String?) {
+            internal init(serial: String?) {
                 
                 if let serial = serial {
                     
@@ -494,7 +515,6 @@ extension ServerCommands {
                     
                     self.parameters = nil
                 }
-                self.token = token
             }
         }
     }

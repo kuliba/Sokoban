@@ -93,7 +93,7 @@ class ServerAgent: ServerAgentProtocol {
     }
 }
 
-//MARK: - Internal
+//MARK: - Request
 
 internal extension ServerAgent {
     
@@ -103,11 +103,16 @@ internal extension ServerAgent {
         let url = try url(with: command.endpoint)
         
         var request = URLRequest(url: url)
+        
+        // headers
         request.httpMethod = command.method.rawValue
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         // token
-        request.setValue(command.token, forHTTPHeaderField: "X-XSRF-TOKEN")
+        if let token = command.token {
+            
+            request.setValue(token, forHTTPHeaderField: "X-XSRF-TOKEN")
+        }
         
         // parameters
         if let parameters = command.parameters, parameters.isEmpty == false {
@@ -133,6 +138,12 @@ internal extension ServerAgent {
                 
                 throw ServerRequestCreationError.unableEncodePayload(error)
             }
+        }
+        
+        // timeout
+        if let timeout = command.timeout {
+            
+            request.timeoutInterval = timeout
         }
         
         return request
@@ -144,11 +155,16 @@ internal extension ServerAgent {
         let url = try url(with: command.endpoint)
         
         var request = URLRequest(url: url)
+        
+        // headers
         request.httpMethod = command.method.rawValue
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         // token
-        request.setValue(command.token, forHTTPHeaderField: "X-XSRF-TOKEN")
+        if let token = command.token {
+            
+            request.setValue(token, forHTTPHeaderField: "X-XSRF-TOKEN")
+        }
 
         // parameters
         if let parameters = command.parameters, parameters.isEmpty == false {
@@ -174,6 +190,12 @@ internal extension ServerAgent {
                 
                 throw ServerRequestCreationError.unableEncodePayload(error)
             }
+        }
+        
+        // timeout
+        if let timeout = command.timeout {
+            
+            request.timeoutInterval = timeout
         }
         
         return request

@@ -20,7 +20,7 @@ class ProductStatementDataTests: XCTestCase {
         // given
         let url = bundle.url(forResource: "ProductStatementDataDecodingGeneric", withExtension: "json")!
         let json = try Data(contentsOf: url)
-        let fastPayment = FastPaymentData(documentComment: "string", foreignBankBIC: "044525491", foreignBankID: "10000001153", foreignBankName: "КУ ООО ПИР Банк - ГК \\\"АСВ\\\"", foreignName: "Петров Петр Петрович", foreignPhoneNumber: "70115110217", opkcid: "A1355084612564010000057CAFC75755")
+        let fastPayment = ProductStatementData.FastPayment(documentComment: "string", foreignBankBIC: "044525491", foreignBankID: "10000001153", foreignBankName: "КУ ООО ПИР Банк - ГК \\\"АСВ\\\"", foreignName: "Петров Петр Петрович", foreignPhoneNumber: "70115110217", opkcid: "A1355084612564010000057CAFC75755")
         
         // when
         let result = try decoder.decode(ProductStatementData.self, from: json)
@@ -53,7 +53,7 @@ class ProductStatementDataTests: XCTestCase {
         XCTAssertEqual(result.opCode, 1)
         XCTAssertEqual(result.operationId, "909743")
         XCTAssertEqual(result.operationType, OperationType.debit)
-        XCTAssertEqual(result.paymentDetailType, PaymentDetailType.betweenTheir)
+        XCTAssertEqual(result.paymentDetailType, ProductStatementData.Kind.betweenTheir)
         XCTAssertEqual(result.svgImage, SVGImageData.init(description: "string"))
         XCTAssertEqual(result.terminalCode, "41010601")
         

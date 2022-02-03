@@ -16,11 +16,12 @@ extension ServerCommands {
 		 */
 		struct GetAllLatestPayments: ServerCommand {
 			
-			let token: String
+			let token: String?
 			let endpoint = "/rest/getAllLatestPayments"
 			let method: ServerCommandMethod = .get
 			let parameters: [ServerCommandParameter]?
 			let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
 
 			struct Payload: Encodable { }
 			
@@ -28,7 +29,7 @@ extension ServerCommands {
 
 				let statusCode: ServerStatusCode
 				let errorMessage: String?
-				let data: [LatestPaymentData]?
+				let data: [PaymentData]?
 			}
 			
 			internal init(token: String, isPhonePayments: Bool, isCountriesPayments: Bool, isServicePayments: Bool, isMobilePayments: Bool, isInternetPayments: Bool, isTransportPayments: Bool, isTaxAndStateServicePayments: Bool) {
@@ -52,11 +53,12 @@ extension ServerCommands {
 		 */
 		struct GetLatestInternetPayments: ServerCommand {
 			
-			let token: String
+			let token: String?
 			let endpoint = "/rest/getLatestInternetPayments"
 			let method: ServerCommandMethod = .get
 			let parameters: [ServerCommandParameter]? = nil
 			let payload: Payload?
+            let timeout: TimeInterval? = nil
 
 			struct Payload: Encodable { }
 			
@@ -64,7 +66,7 @@ extension ServerCommands {
 				
 				let statusCode: ServerStatusCode
 				let errorMessage: String?
-				let data: [LatestServicePaymentsResponseData]?
+				let data: [PaymentServiceData]?
 			}
 			
 			internal init(token: String, payload: Payload) {
@@ -79,11 +81,12 @@ extension ServerCommands {
 		 */
 		struct GetLatestMobilePayments: ServerCommand {
 			
-			let token: String
+			let token: String?
 			let endpoint = "/rest/getLatestMobilePayments"
 			let method: ServerCommandMethod = .get
 			let parameters: [ServerCommandParameter]? = nil
 			let payload: Payload?
+            let timeout: TimeInterval? = nil
 
 			struct Payload: Encodable { }
 			
@@ -91,7 +94,7 @@ extension ServerCommands {
 
 				let statusCode: ServerStatusCode
 				let errorMessage: String?
-				let data: [LatestServicePaymentsResponseData]?
+				let data: [PaymentServiceData]?
 			}
 			
 			internal init(token: String, payload: Payload) {
@@ -106,11 +109,12 @@ extension ServerCommands {
 		 */
 		struct GetLatestPayments: ServerCommand {
 			
-			let token: String
+			let token: String?
 			let endpoint = "/rest/getLatestPayments"
 			let method: ServerCommandMethod = .get
 			let parameters: [ServerCommandParameter]? = nil
 			let payload: Payload?
+            let timeout: TimeInterval? = nil
 
 			struct Payload: Encodable { }
 			
@@ -118,7 +122,7 @@ extension ServerCommands {
 
 				let statusCode: ServerStatusCode
 				let errorMessage: String?
-				let data: [LatestPaymentsResponseData]?
+				let data: [PaymentGeneralData]?
 			}
 			
 			internal init(token: String, payload: Payload) {
@@ -133,11 +137,12 @@ extension ServerCommands {
 		 */
 		struct GetLatestPhonePayments: ServerCommand {
 			
-			let token: String
+			let token: String?
 			let endpoint = "/rest/getLatestPhonePayments"
 			let method: ServerCommandMethod = .post
 			let parameters: [ServerCommandParameter]? = nil
 			let payload: Payload?
+            let timeout: TimeInterval? = nil
 
 			struct Payload: Encodable {
 
@@ -148,7 +153,7 @@ extension ServerCommands {
 
 				let statusCode: ServerStatusCode
 				let errorMessage: String?
-				let data: [LatestPhonePaymentsResponseData]?
+				let data: [PaymentPhoneData]?
 			}
 			
 			internal init(token: String, payload: Payload) {
@@ -163,11 +168,12 @@ extension ServerCommands {
 		 */
 		struct GetLatestServicePayments: ServerCommand {
 			
-			let token: String
+			let token: String?
 			let endpoint = "/rest/getLatestServicePayments"
 			let method: ServerCommandMethod = .get
 			let parameters: [ServerCommandParameter]? = nil
 			let payload: Payload?
+            let timeout: TimeInterval? = nil
 
 			struct Payload: Encodable { }
 			
@@ -175,7 +181,7 @@ extension ServerCommands {
 				
 				let statusCode: ServerStatusCode
 				let errorMessage: String?
-				let data: [LatestServicePaymentsResponseData]?
+				let data: [PaymentServiceData]?
 			}
 			
 			internal init(token: String, payload: Payload) {
@@ -190,11 +196,12 @@ extension ServerCommands {
 		 */
 		struct GetLatestTransportPayments: ServerCommand {
 			
-			let token: String
+			let token: String?
 			let endpoint = "/rest/getLatestTransportPayments"
 			let method: ServerCommandMethod = .get
 			let parameters: [ServerCommandParameter]? = nil
 			let payload: Payload?
+            let timeout: TimeInterval? = nil
 
 			struct Payload: Encodable { }
 			
@@ -202,7 +209,7 @@ extension ServerCommands {
 
 				let statusCode: ServerStatusCode
 				let errorMessage: String?
-				let data: [LatestServicePaymentsResponseData]?
+				let data: [PaymentServiceData]?
 			}
 			
 			internal init(token: String, payload: Payload) {
@@ -217,11 +224,12 @@ extension ServerCommands {
 		 */
 		struct GetOperationDetail: ServerCommand {
 			
-			let token: String
+			let token: String?
 			let endpoint = "/rest/getOperationDetail"
 			let method: ServerCommandMethod = .post
 			let parameters: [ServerCommandParameter]? = nil
 			let payload: Payload?
+            let timeout: TimeInterval? = nil
 
 			struct Payload: Encodable {
 
@@ -232,7 +240,7 @@ extension ServerCommands {
 
 				let statusCode: ServerStatusCode
 				let errorMessage: String?
-				let data: OperationDetailResponseData?
+				let data: OperationDetailData?
 			}
 			
 			internal init(token: String, payload: Payload) {
@@ -247,11 +255,12 @@ extension ServerCommands {
 		 */
 		struct GetPaymentCountries: ServerCommand {
 			
-			let token: String
+			let token: String?
 			let endpoint = "/rest/getPaymentCountries"
 			let method: ServerCommandMethod = .get
 			let parameters: [ServerCommandParameter]? = nil
 			let payload: Payload?
+            let timeout: TimeInterval? = nil
 
 			struct Payload: Encodable { }
 			
@@ -259,7 +268,7 @@ extension ServerCommands {
 
 				let statusCode: ServerStatusCode
 				let errorMessage: String?
-				let data: [PaymentCountriesResponseData]?
+				let data: [PaymentCountryData]?
 			}
 			
 			internal init(token: String, payload: Payload) {
@@ -268,6 +277,5 @@ extension ServerCommands {
 				self.payload = payload
 			}
 		}
-
 	}
 }

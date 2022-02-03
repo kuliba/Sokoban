@@ -17,11 +17,12 @@ extension ServerCommands {
          */
         struct AntiFraud: ServerCommand {
 
-            let token: String
+            let token: String?
             let endpoint = "/rest/transfer/antiFraud"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -43,11 +44,12 @@ extension ServerCommands {
          */
         struct ChangeOutgoing: ServerCommand {
 
-            let token: String
+            let token: String?
             let endpoint = "/rest/transfer/changeOutgoing"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {
                 
@@ -76,11 +78,12 @@ extension ServerCommands {
          */
         struct CheckCard: ServerCommand {
 
-            let token: String
+            let token: String?
             let endpoint = "/rest/transfer/checkCard"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {
                 
@@ -113,11 +116,12 @@ extension ServerCommands {
          */
         struct CreateAnywayTransfer: ServerCommand {
 
-            let token: String
+            let token: String?
             let endpoint = "/rest​/transfer​/createAnywayTransfer"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]?
             let payload: Payload?
+            let timeout: TimeInterval? = nil
             
             typealias Payload = TransferAnywayData
             
@@ -143,11 +147,12 @@ extension ServerCommands {
          */
         struct CreateContactAddresslessTransfer: ServerCommand {
 
-            let token: String
+            let token: String?
             let endpoint = "/rest/transfer/createContactAddresslessTransfer"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
             
             typealias Payload = TransferAnywayData
             
@@ -170,11 +175,12 @@ extension ServerCommands {
          */
         struct CreateDirectTransfer: ServerCommand {
 
-            let token: String
+            let token: String?
             let endpoint = "/rest/transfer/createDirectTransfer"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
             
             typealias Payload = TransferAnywayData
             
@@ -197,11 +203,12 @@ extension ServerCommands {
          */
         struct CreateMe2MePullCreditTransfer: ServerCommand {
 
-            let token: String
+            let token: String?
             let endpoint = "/rest/transfer/createMe2MePullCreditTransfer"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
             
             typealias Payload = TransferMe2MeData
             
@@ -224,11 +231,12 @@ extension ServerCommands {
          */
         struct CreateMe2MePullDebitTransfer: ServerCommand {
 
-            let token: String
+            let token: String?
             let endpoint = "/rest/transfer/createMe2MePullDebitTransfer"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
             
             typealias Payload = TransferAnywayData
             
@@ -251,11 +259,12 @@ extension ServerCommands {
          */
         struct CreateSFPTransfer: ServerCommand {
 
-            let token: String
+            let token: String?
             let endpoint = "/rest/transfer/createSFPTransfer"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
             
             typealias Payload = TransferAnywayData
             
@@ -278,13 +287,14 @@ extension ServerCommands {
          */
         struct CreateTransfer: ServerCommand {
 
-            let token: String
+            let token: String?
             let endpoint = "/rest/transfer/createTransfer"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
             
-            typealias Payload = TransferData
+            typealias Payload = TransferGeneralData
             
             struct Response: ServerResponse {
 
@@ -305,11 +315,12 @@ extension ServerCommands {
          */
         struct GetVerificationCode: ServerCommand {
 
-            let token: String
+            let token: String?
             let endpoint = "/rest/transfer/getVerificationCode"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -337,11 +348,12 @@ extension ServerCommands {
          */
         struct IsSingleService: ServerCommand {
 
-            let token: String
+            let token: String?
             let endpoint = "/rest/transfer/isSingleService"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {
                 
@@ -367,11 +379,12 @@ extension ServerCommands {
          */
         struct MakeTransfer: ServerCommand {
 
-            let token: String
+            let token: String?
             let endpoint = "/rest/transfer/makeTransfer"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {
                 
@@ -398,11 +411,12 @@ extension ServerCommands {
          */
         struct ReturnOutgoing: ServerCommand {
 
-            let token: String
+            let token: String?
             let endpoint = "/rest/transfer/returnOutgoing"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {
                 

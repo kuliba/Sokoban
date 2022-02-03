@@ -13,7 +13,7 @@ class DateFormatterExtensionsTests: XCTestCase {
     func testIso8601() throws {
  
         // given
-        let formatter = DateFormatter.utc
+        let formatter = DateFormatter.iso8601
         let sample = "2022-01-20T11:52:41.707Z"
         
         // when
@@ -24,7 +24,7 @@ class DateFormatterExtensionsTests: XCTestCase {
         XCTAssertEqual(components.year, 2022)
         XCTAssertEqual(components.month, 1)
         XCTAssertEqual(components.day, 20)
-        XCTAssertEqual(components.hour, 11)
+        XCTAssertEqual(components.hour, 14)
         XCTAssertEqual(components.minute, 52)
         XCTAssertEqual(components.second, 41)
     }

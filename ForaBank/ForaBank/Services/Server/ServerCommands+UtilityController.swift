@@ -16,11 +16,12 @@ extension ServerCommands {
          */
         struct Csrf: ServerCommand {
             
-            let token: String
+            let token: String? = nil
             let endpoint = "/csrf"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
 
             struct Payload: Encodable {}
             
@@ -29,11 +30,6 @@ extension ServerCommands {
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: CsrfData
-            } 
-            
-            internal init(token: String) {
-                
-                self.token = token
             }
         }
         
@@ -42,11 +38,12 @@ extension ServerCommands {
          */
         struct GetSessionTimeout: ServerCommand {
             
-            let token: String
+            let token: String?
             let endpoint = "/getSessionTimeout"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -68,11 +65,12 @@ extension ServerCommands {
          */
         struct KeyExchange: ServerCommand {
             
-            let token: String
+            let token: String?
             let endpoint = "/keyExchange"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {
                 
@@ -99,11 +97,12 @@ extension ServerCommands {
          */
         struct IsLogin: ServerCommand {
             
-            let token: String
+            let token: String?
             let endpoint = "/rest/isLogin"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
 
             struct Payload: Encodable {}
             

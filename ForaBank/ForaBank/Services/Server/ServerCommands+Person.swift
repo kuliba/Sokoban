@@ -16,11 +16,12 @@ extension ServerCommands {
          */
         struct GetClientInfo: ServerCommand {
 
-            let token: String
+            let token: String?
             let endpoint = "/rest/getClientInfo"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             

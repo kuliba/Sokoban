@@ -12,7 +12,7 @@ extension JSONDecoder {
     static let serverDate: JSONDecoder = {
        
         let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .formatted(.utc)
+        decoder.dateDecodingStrategy = .formatted(.iso8601)
         
         return decoder
     }()
