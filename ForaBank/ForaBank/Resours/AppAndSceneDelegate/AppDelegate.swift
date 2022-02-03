@@ -10,7 +10,7 @@ import Firebase
 import FirebaseMessaging
 import RealmSwift
 
-@main
+//@main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     //FIXME: remove singletone after refactoring

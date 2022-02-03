@@ -11,25 +11,17 @@ extension ServerCommands {
 
 	enum DepositController {
 
-		struct DepositControllerPayload: Encodable {
-
-			let endDate: String?
-			let id: Int
-			let name: String?
-			let startDate: String?
-			let statementFormat: StatementFormat?
-		}
-
 		/*
 		 https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DepositController/getDepositInfoUsingPOST
 		 */
 		struct GetDepositInfo: ServerCommand {
 
-			let token: String
+			let token: String?
 			let endpoint = "/rest/getDepositInfo"
 			let method: ServerCommandMethod = .post
 			let parameters: [ServerCommandParameter]? = nil
-			let payload: DepositControllerPayload?
+			let payload: BasePayload?
+            let timeout: TimeInterval? = nil
 
 			struct Response: ServerResponse {
 
@@ -40,7 +32,7 @@ extension ServerCommands {
 
 			internal init(token: String, endDate: Date?, id: Int, name: String?, startDate: Date?, statementFormat: StatementFormat?) {
 
-				let formatter = DateFormatter.utc
+				let formatter = DateFormatter.iso8601
 				self.token = token
 				var endDateString: String? = nil
 				if let endDate = endDate {
@@ -52,7 +44,7 @@ extension ServerCommands {
 					startDateString = formatter.string(from: startDate)
 				}
 
-				self.payload = DepositControllerPayload(endDate: endDateString,
+				self.payload = BasePayload(endDate: endDateString,
 														id: id,
 														name: name,
 														startDate: startDateString,
@@ -65,11 +57,12 @@ extension ServerCommands {
 		 */
 		struct GetDepositStatement: ServerCommand {
 
-			let token: String
+			let token: String?
 			let endpoint = "/rest/getDepositStatement"
 			let method: ServerCommandMethod = .post
 			let parameters: [ServerCommandParameter]? = nil
-			let payload: DepositControllerPayload?
+			let payload: BasePayload?
+            let timeout: TimeInterval? = nil
 
 			struct Response: ServerResponse {
 
@@ -80,7 +73,7 @@ extension ServerCommands {
 
 			internal init(token: String, endDate: Date?, id: Int, name: String?, startDate: Date?, statementFormat: StatementFormat?) {
 
-				let formatter = DateFormatter.utc
+				let formatter = DateFormatter.iso8601
 				self.token = token
 				var endDateString: String? = nil
 				if let endDate = endDate {
@@ -92,7 +85,7 @@ extension ServerCommands {
 					startDateString = formatter.string(from: startDate)
 				}
 
-				self.payload = DepositControllerPayload(endDate: endDateString,
+				self.payload = BasePayload(endDate: endDateString,
 														id: id,
 														name: name,
 														startDate: startDateString,
@@ -105,11 +98,12 @@ extension ServerCommands {
 		 */
 		struct OpenDeposit: ServerCommand {
 
-			let token: String
+			let token: String?
 			let endpoint = "/rest/openDeposit"
 			let method: ServerCommandMethod = .post
 			let parameters: [ServerCommandParameter]? = nil
 			let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
 
 			struct Payload: Encodable { }
 
@@ -131,11 +125,12 @@ extension ServerCommands {
 		 */
 		struct SaveDepositCustomName: ServerCommand {
 
-			let token: String
+			let token: String?
 			let endpoint = "/rest/saveDepositCustomName"
 			let method: ServerCommandMethod = .post
 			let parameters: [ServerCommandParameter]? = nil
-			let payload: DepositControllerPayload?
+			let payload: BasePayload?
+            let timeout: TimeInterval? = nil
 
 			struct Response: ServerResponse {
 
@@ -146,7 +141,7 @@ extension ServerCommands {
 
 			internal init(token: String, endDate: Date?, id: Int, name: String?, startDate: Date?, statementFormat: StatementFormat?) {
 
-				let formatter = DateFormatter.utc
+				let formatter = DateFormatter.iso8601
 				self.token = token
 				var endDateString: String? = nil
 				if let endDate = endDate {
@@ -165,5 +160,14 @@ extension ServerCommands {
 									   statementFormat: statementFormat)
 			}
 		}
+        
+        struct BasePayload: Encodable {
+
+            let endDate: String?
+            let id: Int
+            let name: String?
+            let startDate: String?
+            let statementFormat: StatementFormat?
+        }
 	}
 }

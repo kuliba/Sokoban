@@ -12,7 +12,8 @@ class ServerCommandsCardTests: XCTestCase {
 
     let bundle = Bundle(for: ServerCommandsCardTests.self)
     let decoder = JSONDecoder.serverDate
-    let formatter = DateFormatter.utc
+    let encoder = JSONEncoder.serverDate
+    let formatter = DateFormatter.iso8601
 
     //MARK: - BlockCard
     
@@ -24,8 +25,7 @@ class ServerCommandsCardTests: XCTestCase {
             return
         }
         let json = try Data(contentsOf: url)
-        let cardBlockReturnData = CardBlockReturnData(statusBrief: "string", statusDescription: "string")
-        let expected = ServerCommands.CardController.BlockCard.Response(statusCode: .ok, errorMessage: "string", data: cardBlockReturnData)
+        let expected = ServerCommands.CardController.BlockCard.Response(statusCode: .ok, errorMessage: "string", data: .init(statusBrief: "string", statusDescription: "string"))
         
         // when
         let result = try decoder.decode(ServerCommands.CardController.BlockCard.Response.self, from: json)
@@ -42,8 +42,7 @@ class ServerCommandsCardTests: XCTestCase {
             return
         }
         let json = try Data(contentsOf: url)
-        let cardBlockReturnData = CardBlockReturnData(statusBrief: nil, statusDescription: nil)
-        let expected = ServerCommands.CardController.BlockCard.Response(statusCode: .ok, errorMessage: "string", data: cardBlockReturnData)
+        let expected = ServerCommands.CardController.BlockCard.Response(statusCode: .ok, errorMessage: "string", data: .init(statusBrief: nil, statusDescription: nil))
         
         // when
         let result = try decoder.decode(ServerCommands.CardController.BlockCard.Response.self, from: json)
@@ -140,8 +139,7 @@ class ServerCommandsCardTests: XCTestCase {
             return
         }
         let json = try Data(contentsOf: url)
-        let cardBlockReturnData = CardBlockReturnData(statusBrief: "string", statusDescription: "string")
-        let expected = ServerCommands.CardController.UnblockCard.Response(statusCode: .ok, errorMessage: "string", data: cardBlockReturnData)
+        let expected = ServerCommands.CardController.UnblockCard.Response(statusCode: .ok, errorMessage: "string", data: .init(statusBrief: "string", statusDescription: "string"))
         
         // when
         let result = try decoder.decode(ServerCommands.CardController.UnblockCard.Response.self, from: json)

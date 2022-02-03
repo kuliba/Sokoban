@@ -12,6 +12,7 @@ class ServerCommandsPushDeviceTests: XCTestCase {
     
     let bundle = Bundle(for: ServerCommandsPushDeviceTests.self)
     let decoder = JSONDecoder.serverDate
+    let encoder = JSONEncoder.serverDate
 
     //MARK: - GetNotifications
     

@@ -16,11 +16,12 @@ extension ServerCommands {
          */
         struct GetProductDetails: ServerCommand {
 
-            let token: String
+            let token: String?
             let endpoint = "/rest/getProductDetails"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {
                 
@@ -48,11 +49,12 @@ extension ServerCommands {
          */
         struct GetProductList: ServerCommand {
 
-            let token: String
+            let token: String?
             let endpoint = "/rest/getProductList"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -74,11 +76,12 @@ extension ServerCommands {
          */
         struct GetProductListByFilter: ServerCommand {
 
-            let token: String
+            let token: String?
             let endpoint = "/rest/getProductListByFilter"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
             let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             

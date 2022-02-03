@@ -20,13 +20,12 @@ protocol ServerCommand {
     associatedtype Payload: Encodable
     associatedtype Response: ServerResponse
     
-    var token: String { get } //FIXME: optional
+    var token: String? { get }
     var endpoint: String { get }
     var method: ServerCommandMethod { get }
     var parameters: [ServerCommandParameter]? { get }
     var payload: Payload? { get }
-    //TODO: add timeoutInterval
-//    var timeoutInterval: TimeInterval? { get }
+    var timeout: TimeInterval? { get }
 }
 
 /// Multipart download server request
@@ -35,13 +34,12 @@ protocol ServerDownloadCommand {
     associatedtype Payload: Encodable
     typealias Response = Data
     
-    var token: String { get }
+    var token: String? { get }
     var endpoint: String { get }
     var method: ServerCommandMethod { get }
     var parameters: [ServerCommandParameter]? { get }
     var payload: Payload? { get }
-    //TODO: add timeoutInterval
-//    var timeoutInterval: TimeInterval? { get }
+    var timeout: TimeInterval? { get }
 }
 
 /// Regular server request response

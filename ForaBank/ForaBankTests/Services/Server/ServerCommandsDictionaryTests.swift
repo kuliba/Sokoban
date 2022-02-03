@@ -14,6 +14,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
     
     let bundle = Bundle(for: ServerCommandsDictionaryTests.self)
     let decoder = JSONDecoder.serverDate
+    let encoder = JSONEncoder.serverDate
     
     //MARK: - GetAnywayOperatorsList
     
@@ -110,10 +111,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         }
         
         let json = try Data(contentsOf: url)
-        let countryData = ServerCommands.DictionaryController.GetCountries.Response.CountryData(countriesList: [.init(code: "AM", contactCode: "BTOC", md5hash: "string", name: "АРМЕНИЯ", paymentSystemIdList: ["string"], sendCurr: "EUR;USD;RUR;", svgImage: SVGImageData(description: "string"))], serial: "bea36075a58954199a6b8980549f6b69")
-        
-        
-        let expected = ServerCommands.DictionaryController.GetCountries.Response(statusCode: .ok, errorMessage: "string", data: countryData)
+        let expected = ServerCommands.DictionaryController.GetCountries.Response(statusCode: .ok, errorMessage: "string", data: .init(countriesList: [.init(code: "AM", contactCode: "BTOC", md5hash: "string", name: "АРМЕНИЯ", paymentSystemIdList: ["string"], sendCurr: "EUR;USD;RUR;", svgImage: SVGImageData(description: "string"))], serial: "bea36075a58954199a6b8980549f6b69"))
         
         // when
         let result = try decoder.decode(ServerCommands.DictionaryController.GetCountries.Response.self, from: json)
@@ -130,10 +128,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
             return
         }
         let json = try Data(contentsOf: url)
-        let countryData = ServerCommands.DictionaryController.GetCountries.Response.CountryData(countriesList: [.init(code: "AM", contactCode: nil, md5hash: nil, name: "АРМЕНИЯ", paymentSystemIdList: ["string"], sendCurr: "EUR;USD;RUR;", svgImage: nil)], serial: "bea36075a58954199a6b8980549f6b69")
-        
-        
-        let expected = ServerCommands.DictionaryController.GetCountries.Response(statusCode: .ok, errorMessage: "string", data: countryData)
+        let expected = ServerCommands.DictionaryController.GetCountries.Response(statusCode: .ok, errorMessage: "string", data: .init(countriesList: [.init(code: "AM", contactCode: nil, md5hash: nil, name: "АРМЕНИЯ", paymentSystemIdList: ["string"], sendCurr: "EUR;USD;RUR;", svgImage: nil)], serial: "bea36075a58954199a6b8980549f6b69"))
         
         // when
         let result = try decoder.decode(ServerCommands.DictionaryController.GetCountries.Response.self, from: json)
@@ -246,9 +241,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         }
         
         let json = try Data(contentsOf: url)
-        let bankFullInfoData = ServerCommands.DictionaryController.GetFullBankInfoList.Response.BankFullInfoData(bankFullInfoList: [.init(accountList: [.init(cbrbic: "044525000", account: "30101810145250000974", ck: "37", dateIn: "16.06.2016 00:00:00", dateOut: "16.06.2016 00:00:00", regulationAccountType: "CRSA", status: "ACAC")], address: "127287, г Москва, Ул. 2-я Хуторская, д.38А, стр.26", bankServiceType: "Сервис срочного перевода и сервис быстрых платежей", bankServiceTypeCode: "5", bankType: "20", bankTypeCode: "Кредитная организация", bic: "044525974", engName: "TINKOFF BANK", fiasId: "string", fullName: "АО \"ТИНЬКОФФ БАНК\"", inn: "string", kpp: "string", latitude: 0, longitude: 0, md5hash: "a97d3153c1172f0c5333c9eadb5696f3", memberId: "100000000004", name: "Tinkoff Bank", receiverList: ["string"], registrationDate: "16.06.2016 00:00:00", registrationNumber: "2673", rusName: "Тинькофф Банк", senderList: ["string"], svgImage: SVGImageData(description: "string"), swiftList: [.init(default: true, swift: "TICSRUMMXXX")])], serial: "bea36075a58954199a6b8980549f6b69")
-        
-        let expected = ServerCommands.DictionaryController.GetFullBankInfoList.Response(statusCode: .ok, errorMessage: "string", data: bankFullInfoData)
+        let expected = ServerCommands.DictionaryController.GetFullBankInfoList.Response(statusCode: .ok, errorMessage: "string", data: .init(bankFullInfoList: [.init(accountList: [.init(cbrbic: "044525000", account: "30101810145250000974", ck: "37", dateIn: "16.06.2016 00:00:00", dateOut: "16.06.2016 00:00:00", regulationAccountType: "CRSA", status: "ACAC")], address: "127287, г Москва, Ул. 2-я Хуторская, д.38А, стр.26", bankServiceType: "Сервис срочного перевода и сервис быстрых платежей", bankServiceTypeCode: "5", bankType: "20", bankTypeCode: "Кредитная организация", bic: "044525974", engName: "TINKOFF BANK", fiasId: "string", fullName: "АО \"ТИНЬКОФФ БАНК\"", inn: "string", kpp: "string", latitude: 0, longitude: 0, md5hash: "a97d3153c1172f0c5333c9eadb5696f3", memberId: "100000000004", name: "Tinkoff Bank", receiverList: ["string"], registrationDate: "16.06.2016 00:00:00", registrationNumber: "2673", rusName: "Тинькофф Банк", senderList: ["string"], svgImage: SVGImageData(description: "string"), swiftList: [.init(default: true, swift: "TICSRUMMXXX")])], serial: "bea36075a58954199a6b8980549f6b69"))
         
         // when
         let result = try decoder.decode(ServerCommands.DictionaryController.GetFullBankInfoList.Response.self, from: json)
@@ -266,9 +259,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         }
         
         let json = try Data(contentsOf: url)
-        let bankFullInfoData = ServerCommands.DictionaryController.GetFullBankInfoList.Response.BankFullInfoData(bankFullInfoList: [.init(accountList: [.init(cbrbic: "044525000", account: "30101810145250000974", ck: "37", dateIn: "16.06.2016 00:00:00", dateOut: nil, regulationAccountType: "CRSA", status: "ACAC")], address: "127287, г Москва, Ул. 2-я Хуторская, д.38А, стр.26", bankServiceType: "Сервис срочного перевода и сервис быстрых платежей", bankServiceTypeCode: "5", bankType: "20", bankTypeCode: "Кредитная организация", bic: "044525974", engName: "TINKOFF BANK", fiasId: nil, fullName: "АО \"ТИНЬКОФФ БАНК\"", inn: nil, kpp: nil, latitude: nil, longitude: nil, md5hash: "a97d3153c1172f0c5333c9eadb5696f3", memberId: nil, name: nil, receiverList: ["string"], registrationDate: "16.06.2016 00:00:00", registrationNumber: nil, rusName: "Тинькофф Банк", senderList: ["string"], svgImage: SVGImageData(description: "string"), swiftList: [.init(default: nil, swift: "TICSRUMMXXX")])], serial: "bea36075a58954199a6b8980549f6b69")
-        
-        let expected = ServerCommands.DictionaryController.GetFullBankInfoList.Response(statusCode: .ok, errorMessage: "string", data: bankFullInfoData)
+        let expected = ServerCommands.DictionaryController.GetFullBankInfoList.Response(statusCode: .ok, errorMessage: "string", data: .init(bankFullInfoList: [.init(accountList: [.init(cbrbic: "044525000", account: "30101810145250000974", ck: "37", dateIn: "16.06.2016 00:00:00", dateOut: nil, regulationAccountType: "CRSA", status: "ACAC")], address: "127287, г Москва, Ул. 2-я Хуторская, д.38А, стр.26", bankServiceType: "Сервис срочного перевода и сервис быстрых платежей", bankServiceTypeCode: "5", bankType: "20", bankTypeCode: "Кредитная организация", bic: "044525974", engName: "TINKOFF BANK", fiasId: nil, fullName: "АО \"ТИНЬКОФФ БАНК\"", inn: nil, kpp: nil, latitude: nil, longitude: nil, md5hash: "a97d3153c1172f0c5333c9eadb5696f3", memberId: nil, name: nil, receiverList: ["string"], registrationDate: "16.06.2016 00:00:00", registrationNumber: nil, rusName: "Тинькофф Банк", senderList: ["string"], svgImage: SVGImageData(description: "string"), swiftList: [.init(default: nil, swift: "TICSRUMMXXX")])], serial: "bea36075a58954199a6b8980549f6b69"))
         
         // when
         let result = try decoder.decode(ServerCommands.DictionaryController.GetFullBankInfoList.Response.self, from: json)
@@ -288,9 +279,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         }
         
         let json = try Data(contentsOf: url)
-        let mobileData = ServerCommands.DictionaryController.GetMobileList.Response.MobileData(mobileList: [.init(code: "BEELINE", md5hash: "2a025e81e19ddc447cc93d27ad75ff84", providerName: "ПАО \"Вымпел-Коммуникации\"", puref: "iFora||4285", shortName: "Билайн", svgImage: SVGImageData(description: "string"))], serial: "bea36075a58954199a6b8980549f6b69")
-        
-        let expected = ServerCommands.DictionaryController.GetMobileList.Response(statusCode: .ok, errorMessage: "string", data: mobileData)
+        let expected = ServerCommands.DictionaryController.GetMobileList.Response(statusCode: .ok, errorMessage: "string", data: .init(mobileList: [.init(code: "BEELINE", md5hash: "2a025e81e19ddc447cc93d27ad75ff84", providerName: "ПАО \"Вымпел-Коммуникации\"", puref: "iFora||4285", shortName: "Билайн", svgImage: SVGImageData(description: "string"))], serial: "bea36075a58954199a6b8980549f6b69"))
         
         // when
         let result = try decoder.decode(ServerCommands.DictionaryController.GetMobileList.Response.self, from: json)
@@ -310,9 +299,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         }
         
         let json = try Data(contentsOf: url)
-        let mosParkingData = ServerCommands.DictionaryController.GetMosParkingList.Response.MosParkingData(mosParkingList: [.init(default: true, groupName: "Годовая", md5hash: "366e1c4043eb433b82a6ab4988e80862", svgImage: SVGImageData(description: "string"), text: "От внешней стороны Садового кольца до границ г. Москвы", value: "23")], serial: "bea36075a58954199a6b8980549f6b69")
-        
-        let expected = ServerCommands.DictionaryController.GetMosParkingList.Response(statusCode: .ok, errorMessage: "string", data: mosParkingData)
+        let expected = ServerCommands.DictionaryController.GetMosParkingList.Response(statusCode: .ok, errorMessage: "string", data: .init(mosParkingList: [.init(default: true, groupName: "Годовая", md5hash: "366e1c4043eb433b82a6ab4988e80862", svgImage: SVGImageData(description: "string"), text: "От внешней стороны Садового кольца до границ г. Москвы", value: "23")], serial: "bea36075a58954199a6b8980549f6b69"))
         
         // when
         let result = try decoder.decode(ServerCommands.DictionaryController.GetMosParkingList.Response.self, from: json)
@@ -330,9 +317,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         }
         
         let json = try Data(contentsOf: url)
-        let mosParkingData = ServerCommands.DictionaryController.GetMosParkingList.Response.MosParkingData(mosParkingList: [.init(default: nil, groupName: "Годовая", md5hash: nil, svgImage: nil, text: nil, value: "23")], serial: "bea36075a58954199a6b8980549f6b69")
-        
-        let expected = ServerCommands.DictionaryController.GetMosParkingList.Response(statusCode: .ok, errorMessage: "string", data: mosParkingData)
+        let expected = ServerCommands.DictionaryController.GetMosParkingList.Response(statusCode: .ok, errorMessage: "string", data: .init(mosParkingList: [.init(default: nil, groupName: "Годовая", md5hash: nil, svgImage: nil, text: nil, value: "23")], serial: "bea36075a58954199a6b8980549f6b69"))
         
         // when
         let result = try decoder.decode(ServerCommands.DictionaryController.GetMosParkingList.Response.self, from: json)
@@ -352,12 +337,8 @@ class ServerCommandsDictionaryTests: XCTestCase {
         }
         
         let json = try Data(contentsOf: url)
-        var purefData = [["additionalProp1": [PaymentSystemDataItem.PurefData(puref: "iFora||Addressless", type: "addressless")],"additionalProp2": [PaymentSystemDataItem.PurefData(puref: "iFora||Addressless", type: "addressless")],"additionalProp3": [PaymentSystemDataItem.PurefData(puref: "iFora||Addressless", type: "addressless")]]]
-        purefData.sort(by: {$0.first?.key ?? "" < $1.first?.key ?? ""})
-        
-        let paymentSystemData = ServerCommands.DictionaryController.GetPaymentSystemList.Response.PaymentSystemData(paymentSystemList: [.init(code: "CONTACT", md5hash: "178a385607bc45fc30bd66573d4d2c67", name: "Contact", purefList: purefData, svgImage: .init(description: "string"))], serial: "bea36075a58954199a6b8980549f6b69")
-        
-        let expected = ServerCommands.DictionaryController.GetPaymentSystemList.Response(statusCode: .ok, errorMessage: "string", data: paymentSystemData)
+        let purefData = [["additionalProp1": [PaymentSystemData.PurefData(puref: "iFora||Addressless", type: "addressless")],"additionalProp2": [PaymentSystemData.PurefData(puref: "iFora||Addressless", type: "addressless")],"additionalProp3": [PaymentSystemData.PurefData(puref: "iFora||Addressless", type: "addressless")]]]
+        let expected = ServerCommands.DictionaryController.GetPaymentSystemList.Response(statusCode: .ok, errorMessage: "string", data: .init(paymentSystemList: [.init(code: "CONTACT", md5hash: "178a385607bc45fc30bd66573d4d2c67", name: "Contact", purefList: purefData, svgImage: .init(description: "string"))], serial: "bea36075a58954199a6b8980549f6b69"))
         
         // when
         var result = try decoder.decode(ServerCommands.DictionaryController.GetPaymentSystemList.Response.self, from: json)

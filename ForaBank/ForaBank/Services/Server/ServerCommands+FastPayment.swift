@@ -17,11 +17,12 @@ extension ServerCommands {
          */
         struct CreateFastPaymentContract: ServerCommand {
             
-            let token: String
+            let token: String?
             let endpoint = "/rest/createFastPaymentContract"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
-            let payload: PayloadFastPayment?
+            let payload: BasePayload?
+            let timeout: TimeInterval? = nil
             
             struct Response: ServerResponse {
                 
@@ -30,7 +31,7 @@ extension ServerCommands {
                 let data: EmptyData?
             }
             
-            internal init(token: String, payload: PayloadFastPayment) {
+            internal init(token: String, payload: BasePayload) {
                 
                 self.token = token
                 self.payload = payload
@@ -42,11 +43,12 @@ extension ServerCommands {
          */
         struct FastPaymentContractFindList: ServerCommand {
             
-            let token: String
+            let token: String?
             let endpoint = "/rest/fastPaymentContractFindList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
 
             struct Payload: Encodable {}
             
@@ -75,11 +77,12 @@ extension ServerCommands {
          */
         struct UpdateFastPaymentContract: ServerCommand {
             
-            let token: String
+            let token: String?
             let endpoint = "/rest/updateFastPaymentContract"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
-            let payload: PayloadFastPayment?
+            let payload: BasePayload?
+            let timeout: TimeInterval? = nil
             
             struct Response: ServerResponse {
                 
@@ -88,14 +91,14 @@ extension ServerCommands {
                 let data: EmptyData?
             }
             
-            internal init(token: String, payload: PayloadFastPayment) {
+            internal init(token: String, payload: BasePayload) {
                 
                 self.token = token
                 self.payload = payload
             }
         }
         
-        struct PayloadFastPayment: Encodable {
+        struct BasePayload: Encodable {
             
             let accountId: Int?
             let cardId: Int?

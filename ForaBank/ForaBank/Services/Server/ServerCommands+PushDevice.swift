@@ -16,11 +16,12 @@ extension ServerCommands {
          */
         struct RegisterPushDeviceForUser: ServerCommand {
 
-            let token: String
+            let token: String?
             let endpoint = "/push_device_user/registerPushDeviceForUser"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: BasePayload?
+            let timeout: TimeInterval? = nil
   
             struct Response: ServerResponse {
 
@@ -41,11 +42,12 @@ extension ServerCommands {
          */
         struct InstallPushDevice: ServerCommand {
 
-            let token: String
+            let token: String?
             let endpoint = "/push_device/installPushDevice"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {
                 
@@ -75,11 +77,12 @@ extension ServerCommands {
          */
         struct UninstallPushDevice: ServerCommand {
 
-            let token: String
+            let token: String?
             let endpoint = "/push_device/uninstallPushDevice"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: BasePayload?
+            let timeout: TimeInterval? = nil
             
             struct Response: ServerResponse {
 

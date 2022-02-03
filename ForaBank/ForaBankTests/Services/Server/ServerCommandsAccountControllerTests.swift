@@ -14,7 +14,7 @@ class ServerCommandsAccountControllerTests: XCTestCase {
 
 	let decoder = JSONDecoder.serverDate
 	let encoder = JSONEncoder.serverDate
-	let formatter = DateFormatter.utc
+	let formatter = DateFormatter.iso8601
 
 	//MARK: - GetAccountStatementResponseGeneric
 

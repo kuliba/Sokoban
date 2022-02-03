@@ -16,11 +16,12 @@ extension ServerCommands {
          */
         struct BlockCard: ServerCommand {
             
-            let token: String
+            let token: String?
             let endpoint = "/rest/blockCard"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
 
             struct Payload: Encodable {
                 
@@ -32,7 +33,7 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: CardBlockReturnData?
+                let data: BlockResponseData?
             }
             
             internal init(token: String, payload: Payload) {
@@ -47,11 +48,12 @@ extension ServerCommands {
          */
         struct GetCardStatement: ServerCommand {
             
-            let token: String
+            let token: String?
             let endpoint = "/rest/getCardStatement"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
-            let payload: PayloadCardData?
+            let payload: BasePayload?
+            let timeout: TimeInterval? = nil
             
             struct Response: ServerResponse {
                 
@@ -60,7 +62,7 @@ extension ServerCommands {
                 let data: [ProductStatementData]?
             }
             
-            internal init(token: String, payload: PayloadCardData) {
+            internal init(token: String, payload: BasePayload) {
                 
                 self.token = token
                 self.payload = payload
@@ -72,11 +74,12 @@ extension ServerCommands {
          */
         struct GetOwnerPhoneNumber: ServerCommand {
             
-            let token: String
+            let token: String?
             let endpoint = "/rest/getOwnerPhoneNumber"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
 
             struct Payload: Encodable {
                 
@@ -102,11 +105,12 @@ extension ServerCommands {
          */
         struct SaveCardName: ServerCommand {
             
-            let token: String
+            let token: String?
             let endpoint = "/rest/saveCardName"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
-            let payload: PayloadCardData?
+            let payload: BasePayload?
+            let timeout: TimeInterval? = nil
             
             struct Response: ServerResponse {
                 
@@ -115,7 +119,7 @@ extension ServerCommands {
                 let data: EmptyData?
             }
             
-            internal init(token: String, payload: PayloadCardData) {
+            internal init(token: String, payload: BasePayload) {
                 
                 self.token = token
                 self.payload = payload
@@ -127,11 +131,12 @@ extension ServerCommands {
          */
         struct UnblockCard: ServerCommand {
             
-            let token: String
+            let token: String?
             let endpoint = "/rest/unblockCard"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
 
             struct Payload: Encodable {
                 
@@ -143,7 +148,7 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: CardBlockReturnData?
+                let data: BlockResponseData?
             }
             
             internal init(token: String, payload: Payload) {
@@ -153,7 +158,7 @@ extension ServerCommands {
             }
         }
         
-        struct PayloadCardData: Encodable {
+        struct BasePayload: Encodable {
             
             let cardNumber: String?
             let endDate: Date?
@@ -161,6 +166,12 @@ extension ServerCommands {
             let name: String?
             let startDate: Date?
             let statementFormat: StatementFormat?
+        }
+        
+        struct BlockResponseData: Codable, Equatable {
+            
+            let statusBrief: String?
+            let statusDescription: String?
         }
     }
 }

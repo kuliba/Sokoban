@@ -12,7 +12,7 @@ extension JSONEncoder {
     static let serverDate: JSONEncoder = {
        
         let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .formatted(.utc)
+        encoder.dateEncodingStrategy = .formatted(.iso8601)
         
         return encoder
     }()

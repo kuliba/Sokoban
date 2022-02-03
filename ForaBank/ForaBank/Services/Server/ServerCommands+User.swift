@@ -16,11 +16,12 @@ extension ServerCommands {
          */
         struct BlockAccount: ServerCommand {
 
-            let token: String
+            let token: String?
             let endpoint = "/rest/blockAccount"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -42,11 +43,12 @@ extension ServerCommands {
          */
         struct GetUserSettings: ServerCommand {
 
-            let token: String
+            let token: String?
             let endpoint = "/rest/getUserSettings"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -73,11 +75,12 @@ extension ServerCommands {
          */
         struct SetUserSetting: ServerCommand {
 
-            let token: String
+            let token: String?
             let endpoint = "/rest/setUserSetting"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {
                 

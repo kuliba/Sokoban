@@ -11,26 +11,17 @@ extension ServerCommands {
 
 	enum AccountController {
 
-		struct AccountControllerPayload: Encodable {
-			
-			let accountNumber: String?
-			let endDate: String?
-			let id: Int
-			let name: String?
-			let startDate: String?
-			let statementFormat: StatementFormat?
-		}
-		
 		/*
 		 https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/AccountController/getAccountStatementUsingPOST
 		 */
 		struct GetAccountStatement: ServerCommand {
 
-			let token: String
+			let token: String?
 			let endpoint = "/rest/getAccountStatement"
 			let method: ServerCommandMethod = .post
 			let parameters: [ServerCommandParameter]? = nil
-			var payload: AccountControllerPayload?
+			var payload: BasePayload?
+            let timeout: TimeInterval? = nil
 
 			struct Response: ServerResponse {
 
@@ -47,7 +38,7 @@ extension ServerCommands {
 						  startDate: Date?,
 						  statementFormat: StatementFormat?) {
 
-				let formatter = DateFormatter.utc
+				let formatter = DateFormatter.iso8601
 				self.token = token
 
 				var endDateString: String? = nil
@@ -72,22 +63,14 @@ extension ServerCommands {
 		/*
 		 https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/AccountController/getPrintFormForAccountStatementUsingPOST
 		 */
-		struct GetPrintFormForAccountStatement: ServerCommand {
+		struct GetPrintFormForAccountStatement: ServerDownloadCommand {
 
-			let token: String
+			let token: String?
 			let endpoint = "/rest/getPrintFormForAccountStatement"
 			let method: ServerCommandMethod = .post
 			let parameters: [ServerCommandParameter]? = nil
-			var payload: AccountControllerPayload?
-
-			//FIXME: PDF File
-
-			struct Response: ServerResponse {
-
-				let statusCode: ServerStatusCode
-				let errorMessage: String?
-				let data: EmptyData?
-			}
+			var payload: BasePayload?
+            let timeout: TimeInterval? = nil
 
 			internal init(token: String,
 						  accountNumber: String?,
@@ -97,7 +80,7 @@ extension ServerCommands {
 						  startDate: Date?,
 						  statementFormat: StatementFormat?) {
 
-				let formatter = DateFormatter.utc
+				let formatter = DateFormatter.iso8601
 				self.token = token
 
 				var endDateString: String? = nil
@@ -118,5 +101,15 @@ extension ServerCommands {
 									   statementFormat: statementFormat)
 			}
 		}
+        
+        struct BasePayload: Encodable {
+            
+            let accountNumber: String?
+            let endDate: String?
+            let id: Int
+            let name: String?
+            let startDate: String?
+            let statementFormat: StatementFormat?
+        }
 	}
 }

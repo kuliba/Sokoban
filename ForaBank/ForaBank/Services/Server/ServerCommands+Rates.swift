@@ -16,11 +16,12 @@ extension ServerCommands {
          */
         struct GetExchangeCurrencyRates: ServerCommand {
 
-            let token: String
+            let token: String?
             let endpoint = "/rest/getExchangeCurrencyRates"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {
                 
@@ -37,7 +38,7 @@ extension ServerCommands {
 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: RatesExchangeData?
+                let data: ExchangeRateData?
             }
             
             internal init(token: String, payload: Payload) {
@@ -46,6 +47,5 @@ extension ServerCommands {
                 self.payload = payload
             }
         }
-        
     }
 }

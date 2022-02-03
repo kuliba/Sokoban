@@ -16,11 +16,12 @@ extension ServerCommands {
          */
         struct SuggestBank: ServerCommand {
             
-            let token: String
+            let token: String?
             let endpoint = "/rest/suggestBank"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: SuggestPayload?
+            let timeout: TimeInterval? = nil
             
             struct Response: ServerResponse {
                 
@@ -30,7 +31,7 @@ extension ServerCommands {
                 
                 struct SuggestionsBank: Decodable, Equatable {
                     
-                    let data: BankDataItem?
+                    let data: SuggestBankData?
                     let unrestrictedValue: String?
                     let value: String?
                 }
@@ -48,11 +49,12 @@ extension ServerCommands {
          */
         struct SuggestCompany: ServerCommand {
             
-            let token: String
+            let token: String?
             let endpoint = "/rest/suggestCompany"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: SuggestPayload?
+            let timeout: TimeInterval? = nil
             
             struct Response: ServerResponse {
                 
@@ -62,7 +64,7 @@ extension ServerCommands {
                 
                 struct SuggestionsCompany: Decodable, Equatable {
                     
-                    let data: CompanyData?
+                    let data: SuggestCompanyData?
                     let unrestrictedValue: String?
                     let value: String?
                 }

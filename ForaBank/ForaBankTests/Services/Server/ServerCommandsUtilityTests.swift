@@ -11,8 +11,8 @@ import XCTest
 class ServerCommandsUtilityTests: XCTestCase {
 
     let bundle = Bundle(for: ServerCommandsUtilityTests.self)
-
-    let decoder = JSONDecoder()
+    let decoder = JSONDecoder.serverDate
+    let encoder = JSONEncoder.serverDate
 
     //MARK: - Csrf
     

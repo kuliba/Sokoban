@@ -14,7 +14,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
 	
 	let decoder = JSONDecoder.serverDate
 	let encoder = JSONEncoder.serverDate
-	let formatter = DateFormatter.utc
+	let formatter = DateFormatter.iso8601
 	
 	//MARK: - GetAllLatestPayments
 	
@@ -59,7 +59,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
 		
 		let date = formatter.date(from: "2022-01-24T15:00:32.250Z")!
 		
-		let data = LatestPaymentData(date: date,
+		let data = PaymentData(date: date,
 									 paymentDate: "21.12.2021 11:04:26",
 									 type: .phone)
 		
@@ -84,7 +84,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
 		
 		let date = formatter.date(from: "2022-01-24T15:00:50.853Z")!
 		
-		let data = LatestServicePaymentsResponseData(additionalList: [.init(fieldTitle: "Лицевой счет у Получателя",
+		let data = PaymentServiceData(additionalList: [.init(fieldTitle: "Лицевой счет у Получателя",
 																			fieldName: "a3_PERSONAL_ACCOUNT_5_5",
 																			fieldValue: "1234567890",
 																			svgImage: "string")],
@@ -115,7 +115,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
 		
 		let date = formatter.date(from: "2022-01-24T15:01:48.197Z")!
 		
-		let data = LatestServicePaymentsResponseData(additionalList: [.init(fieldTitle: "Лицевой счет у Получателя",
+		let data = PaymentServiceData(additionalList: [.init(fieldTitle: "Лицевой счет у Получателя",
 																			fieldName: "a3_PERSONAL_ACCOUNT_5_5",
 																			fieldValue: "1234567890",
 																			svgImage: "string")],
@@ -146,7 +146,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
 		
 		let date = formatter.date(from: "2022-01-24T15:02:31.941Z")!
 		
-		let data = LatestPaymentsResponseData(amount: "100",
+		let data = PaymentGeneralData(amount: "100",
 											  bankId: "100000000004",
 											  bankName: "Тинькофф Банк",
 											  date: date,
@@ -188,7 +188,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
 		let url = bundle.url(forResource: "GetLatestPhonePaymentsMin", withExtension: "json")!
 		let json = try Data(contentsOf: url)
 		
-		let data = LatestPhonePaymentsResponseData(bankId: nil,
+		let data = PaymentPhoneData(bankId: nil,
 												   bankName: nil,
 												   payment: nil)
 		
@@ -209,7 +209,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
 		let url = bundle.url(forResource: "GetLatestPhonePayments", withExtension: "json")!
 		let json = try Data(contentsOf: url)
 		
-		let data = LatestPhonePaymentsResponseData(bankId: "string",
+		let data = PaymentPhoneData(bankId: "string",
 												   bankName: "string",
 												   payment: true)
 		
@@ -234,7 +234,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
 		
 		let date = formatter.date(from: "2022-01-24T15:03:21.966Z")!
 		
-		let data = LatestServicePaymentsResponseData(additionalList: [.init(fieldTitle: "Лицевой счет у Получателя",
+		let data = PaymentServiceData(additionalList: [.init(fieldTitle: "Лицевой счет у Получателя",
 																			fieldName: "a3_PERSONAL_ACCOUNT_5_5",
 																			fieldValue: "1234567890",
 																			svgImage: "string")],
@@ -265,7 +265,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
 		
 		let date = formatter.date(from: "2022-01-24T15:04:09.120Z")!
 		
-		let data = LatestServicePaymentsResponseData(additionalList: [.init(fieldTitle: "Лицевой счет у Получателя",
+		let data = PaymentServiceData(additionalList: [.init(fieldTitle: "Лицевой счет у Получателя",
 																			fieldName: "a3_PERSONAL_ACCOUNT_5_5",
 																			fieldValue: "1234567890",
 																			svgImage: "string")],
@@ -309,7 +309,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
 		let url = bundle.url(forResource: "GetOperationDetail", withExtension: "json")!
 		let json = try Data(contentsOf: url)
 		
-		let data = OperationDetailResponseData(account: "1001200158",
+		let data = OperationDetailData(account: "1001200158",
 											   accountTitle: "1001200158",
 											   amount: 250.5,
 											   billDate: "2019-07-19",
@@ -388,7 +388,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
 		let url = bundle.url(forResource: "GetOperationDetailMin", withExtension: "json")!
 		let json = try Data(contentsOf: url)
 		
-		let data = OperationDetailResponseData(account: nil,
+		let data = OperationDetailData(account: nil,
 											   accountTitle: nil,
 											   amount: 250.5,
 											   billDate: nil,
@@ -483,7 +483,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
 		
 		let date = formatter.date(from: "2022-01-24T15:04:59.652Z")!
 		
-		let data = PaymentCountriesResponseData(countryCode: "AM",
+		let data = PaymentCountryData(countryCode: "AM",
 												countryName: "Армения",
 												date: date,
 												firstName: "Иван",
@@ -514,7 +514,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
 		
 		let date = formatter.date(from: "2022-01-24T15:04:59.652Z")!
 		
-		let data = PaymentCountriesResponseData(countryCode: "AM",
+		let data = PaymentCountryData(countryCode: "AM",
 												countryName: "Армения",
 												date: date,
 												firstName: nil,

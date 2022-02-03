@@ -61,8 +61,8 @@ struct GetDepositStatementDatum: Codable {
     let tranDate: Int?
     let type: String?
     var dateFormatting: String?
-    let paymentDetailType: PaymentDetailType?
-    let fastPayment: FastPaymentData?
+    let paymentDetailType: ProductStatementData.Kind?
+    let fastPayment: ProductStatementData.FastPayment?
     let documentAmount: Double?
     
     enum CodingKeys: String, CodingKey {

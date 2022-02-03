@@ -13,7 +13,8 @@ import XCTest
 class ServerCommandsFastPaymentTests: XCTestCase {
 
     let bundle = Bundle(for: ServerCommandsFastPaymentTests.self)
-    let decoder = JSONDecoder()
+    let decoder = JSONDecoder.serverDate
+    let encoder = JSONEncoder.serverDate
 
     //MARK: - CreateFastPaymentContract
     

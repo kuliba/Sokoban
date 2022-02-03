@@ -13,7 +13,7 @@ class ServerCommandsRatesTests: XCTestCase {
     let bundle = Bundle(for: ServerCommandsRatesTests.self)
     let decoder = JSONDecoder.serverDate
     let encoder = JSONEncoder.serverDate
-    let formatter = DateFormatter.utc
+    let formatter = DateFormatter.iso8601
 
     //MARK: - GetExchangeCurrencyRates
     
