@@ -300,6 +300,9 @@ private extension OperationDetailViewModel {
 
         switch productStatement.paymentDetailType {
         case .betweenTheir, .insideBank, .housingAndCommunalService, .internet, .mobile, .direct, .sfp, .contactAddressless:
+            
+            //TODO:  проверка на productStatement.merchantNameRus
+            
             return productStatement.merchantName
         
         case .externalIndivudual, .externalEntity:

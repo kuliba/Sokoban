@@ -123,6 +123,55 @@ private extension TemplatesListViewModel {
             .sink { [unowned self] action in
                 
                 switch action {
+                    
+                    
+                case let payload as TemplatesListViewModelAction.ItemTapped:
+                    guard let temp = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == payload.itemId}) else { return }
+                    switch temp.type {
+                        
+                    case .betweenTheir, .otherBank:
+                        print("Скорее всего не будет сделано в ближайшее время")
+                        
+                    case .insideBank:
+                        
+                        print("Action Present InsideBank")
+                        self.action.send(TemplatesListViewModelAction.Present.PaymentInsideBankByCard(viewModel: temp))
+                        
+                    case .byPhone:
+                        
+                        let paymentViewModel = PaymentByPhoneViewModel(insideByPhone: temp)
+                        self.action.send(TemplatesListViewModelAction.Present.PaymentInsideBankByPhone(viewModel: paymentViewModel))
+                        
+                    case .sfp:
+                        
+                        let paymentViewModel = PaymentByPhoneViewModel(spf: temp)
+                        self.action.send(TemplatesListViewModelAction.Present.PaymentSFP(viewModel: paymentViewModel))
+                        
+                    case .direct, .contactAdressless:
+                        print("Action Present ContactAndMig")
+                        
+                    case .housingAndCommunalService:
+                        print("Action Present HousingAndCommunalService")
+                        
+                    case .mobile:
+                        print("Action Present MobilePayment")
+                        
+                    case .internet:
+                        print("Action Present Internet")
+                        
+                    case .transport:
+                        print("Action Present Transport")
+                        
+                    case .externalEntity:
+                        print("Action Present ExternalEntity")
+                        
+                    case .externalIndividual:
+                        print("Action Present ExternalIndividual")
+                    
+                    }
+                   
+                                        
+                    
                 case _ as TemplatesListViewModelAction.ToggleStyle:
                     
                     withAnimation {

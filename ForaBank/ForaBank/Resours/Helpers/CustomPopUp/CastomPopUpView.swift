@@ -17,8 +17,10 @@ class MemeDetailVC : AddHeaderImageViewController {
 
     var titleLabel = UILabel(text: "Между своими", font: .boldSystemFont(ofSize: 18), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
     
-    var onlyMy = true
-    var onlyCard = false
+    var onlyMy = false
+    var onlyCard = true
+    
+    var paymentTemplate: PaymentTemplateData? = nil
     
     var viewModel = ConfirmViewControllerModel(type: .card2card) {
         didSet {
@@ -39,6 +41,20 @@ class MemeDetailVC : AddHeaderImageViewController {
     lazy var realm = try? Realm()
     var token: NotificationToken?
     
+    init() {
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    init(paymentTemplate: PaymentTemplateData) {
+        super.init(nibName: nil, bundle: nil)
+        self.paymentTemplate = paymentTemplate
+        
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -49,7 +65,13 @@ class MemeDetailVC : AddHeaderImageViewController {
         AddAllUserCardtList.add() {
             print("REALM Add")
         }
-        updateObjectWithNotification()
+        if let template = paymentTemplate {
+            updateObjectWithTamplate(paymentTemplate: template)
+            let cardId = template.parameterList.first?.payer.cardId
+            updateObjectWithNotification(cardId: cardId)
+        } else {
+            updateObjectWithNotification()
+        }
     }
     
     deinit {
@@ -102,7 +124,15 @@ class MemeDetailVC : AddHeaderImageViewController {
                          right: view.rightAnchor, paddingTop: 16)
     }
     
-    func updateObjectWithNotification() {
+    func updateObjectWithTamplate(paymentTemplate: PaymentTemplateData) {
+        title = paymentTemplate.name
+        titleLabel.text = ""
+        cardFromField
+        cardFromField.choseButton.isHidden = true
+        cardToField.choseButton.isHidden = true
+    }
+    
+    func updateObjectWithNotification(cardId: Int? = nil) {
         let object = realm?.objects(UserAllCardsModel.self)
         token = object?.observe { ( changes: RealmCollectionChange) in
             switch changes {

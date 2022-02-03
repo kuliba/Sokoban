@@ -54,4 +54,22 @@ enum TemplatesListViewModelAction {
     
     // Add new template action
     struct AddTemplate: Action {}
+    
+    // Action to present payment screen
+    enum Present {
+        
+        struct PaymentSFP: Action {
+            let viewModel: PaymentByPhoneViewModel
+        }
+        
+        struct PaymentInsideBankByPhone: Action {
+            let viewModel: PaymentByPhoneViewModel
+        }
+        
+        struct PaymentInsideBankByCard: Action {
+            //TODO: Сделать модель для перевода по карте в рефакторинге экрана по карте
+            let viewModel: PaymentTemplateData
+        }
+        
+    }
 }

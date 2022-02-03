@@ -19,8 +19,8 @@ class Model {
     let paymentTemplatesViewSettings: CurrentValueSubject<TemplatesListViewModel.Settings, Never>
     
     //TODO: remove when all templates will be implemented
-    let paymentTemplatesAllowed: [PaymentDetailType] = [.sfp]
-    let paymentTemplatesDisplayed: [PaymentTemplateData.Kind] = [.sfp]
+    let paymentTemplatesAllowed: [PaymentDetailType] = [.sfp, .insideBank]
+    let paymentTemplatesDisplayed: [PaymentTemplateData.Kind] = [.sfp, .byPhone, .insideBank]
     
     // services
     private let serverAgent: ServerAgentProtocol
