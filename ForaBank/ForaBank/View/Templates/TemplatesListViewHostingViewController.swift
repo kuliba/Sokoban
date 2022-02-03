@@ -38,14 +38,31 @@ private extension TemplatesListViewHostingViewController {
             
                 switch action {
                 //TODO: move this to view model after tests
-                case let payload as TemplatesListViewModelAction.ItemTapped:
-                    let model = Model.shared
-                    guard let temp = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == payload.itemId}) else { return }
+//                case let payload as TemplatesListViewModelAction.ItemTapped:
+//                    let model = Model.shared
+//                    guard let temp = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == payload.itemId}) else { return }
+//
+//                    //                    let paymentViewModel = PaymentByPhoneViewModel(phoneNumber: "9279890100", bankId: "0115110217", amount: 1000.22)
+//                    let paymentViewModel = PaymentByPhoneViewModel(template: temp)
+//                    let paymentViewController = PaymentByPhoneViewController(viewModel: paymentViewModel)
+//                    navigationController?.pushViewController(paymentViewController, animated: true)
                     
-//                    let paymentViewModel = PaymentByPhoneViewModel(phoneNumber: "9279890100", bankId: "0115110217", amount: 1000.22)
-                    let paymentViewModel = PaymentByPhoneViewModel(template: temp)
-                    let paymentViewController = PaymentByPhoneViewController(viewModel: paymentViewModel)
+                case let payload as TemplatesListViewModelAction.Present.PaymentSFP:
+                    let paymentViewController = PaymentByPhoneViewController(viewModel: payload.viewModel)
                     navigationController?.pushViewController(paymentViewController, animated: true)
+                    
+                case let payload as TemplatesListViewModelAction.Present.PaymentInsideBankByPhone:
+                    let paymentViewController = PaymentByPhoneViewController(viewModel: payload.viewModel)
+                    navigationController?.pushViewController(paymentViewController, animated: true)
+                    
+                case let payload as TemplatesListViewModelAction.Present.PaymentInsideBankByCard:
+                    let paymentViewController = MemeDetailVC(paymentTemplate: payload.viewModel)
+                    //TODO: выбор варианта отображения
+//                    navigationController?.pushViewController(paymentViewController, animated: true)
+                    
+//                    self.dismiss(animated: true) {
+                        present(paymentViewController, animated: true)
+//                    }
                     
                 case _ as TemplatesListViewModelAction.AddTemplate:
                     dismiss(animated: true) { [weak self] in

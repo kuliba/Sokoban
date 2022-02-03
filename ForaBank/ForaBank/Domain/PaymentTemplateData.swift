@@ -154,3 +154,93 @@ extension PaymentTemplateData {
     }
     
 }
+
+//MARK: - Convenience Inside Bank by Phone Properties
+
+extension PaymentTemplateData {
+    
+    var insideByPhoneAmount: Double? {
+        
+        guard let transfer = parameterList.first else {
+            return nil
+        }
+        
+        return transfer.amount
+    }
+    
+    var insideByPhonePhoneNumber: String? {
+        
+        guard let transfer = parameterList.first as? TransferAnywayData,
+              let phoneData = transfer.additional.first(where: { $0.fieldname == "RecipientID" })  else {
+            return nil
+        }
+        
+        return phoneData.fieldvalue
+    }
+    
+    var insideByPhoneBankId: String? {
+        
+        guard let transfer = parameterList.first as? TransferAnywayData,
+              let bankData = transfer.additional.first(where: { $0.fieldname == "BankRecipientID" })  else {
+            return nil
+        }
+        
+        return bankData.fieldvalue
+    }
+    
+    var insideByPhoneCardId: Int? {
+        guard let transfer = parameterList.first as? TransferAnywayData,
+              let bankData = transfer.payer.cardId else {
+            return nil
+        }
+        
+        return bankData
+    }
+    
+}
+
+//MARK: - Convenience Inside Bank by Card Properties
+
+extension PaymentTemplateData {
+    
+    
+    var insideByCardAmount: Double? {
+        
+        guard let transfer = parameterList.first else {
+            return nil
+        }
+        
+        return transfer.amount
+    }
+    
+    // изменить на карту получателя
+    var insideByCardPhoneNumber: String? {
+        
+        guard let transfer = parameterList.first as? TransferAnywayData,
+              let phoneData = transfer.additional.first(where: { $0.fieldname == "RecipientID" })  else {
+            return nil
+        }
+        
+        return phoneData.fieldvalue
+    }
+    
+    var insideByCardBankId: String? {
+        
+        guard let transfer = parameterList.first as? TransferAnywayData,
+              let bankData = transfer.additional.first(where: { $0.fieldname == "BankRecipientID" })  else {
+            return nil
+        }
+        
+        return bankData.fieldvalue
+    }
+    
+    var insideByCardCardId: Int? {
+        guard let transfer = parameterList.first as? TransferAnywayData,
+              let bankData = transfer.payer.cardId else {
+            return nil
+        }
+        
+        return bankData
+    }
+    
+}
