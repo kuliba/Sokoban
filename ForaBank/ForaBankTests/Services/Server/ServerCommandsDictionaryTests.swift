@@ -184,6 +184,57 @@ class ServerCommandsDictionaryTests: XCTestCase {
         XCTAssertEqual(result, expected)
     }
     
+    //MARK: - GetFMSList
+    
+    func testGetFMSList_Response_Decoding() throws {
+        
+        // given
+        let url = bundle.url(forResource: "GetFMSListResponseGeneric", withExtension: "json")!
+        
+        let json = try Data(contentsOf: url)
+        let expected = ServerCommands.DictionaryController.GetFMSList.Response(statusCode: .ok, errorMessage: "string", data: .init(fmsList: [.init(md5hash: "366e1c4043eb433b82a6ab4988e80862", svgImage: .init(description: "string"), text: "Российский паспорт", value: "1")], serial: "bea36075a58954199a6b8980549f6b69"))
+        
+        // when
+        let result = try decoder.decode(ServerCommands.DictionaryController.GetFMSList.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
+    
+    //MARK: - GetFSSPList
+    
+    func testGetFSSPList_Response_Decoding() throws {
+        
+        // given
+        let url = bundle.url(forResource: "GetFSSPListResponseGeneric", withExtension: "json")!
+        
+        let json = try Data(contentsOf: url)
+        let expected = ServerCommands.DictionaryController.GetFSSPList.Response(statusCode: .ok, errorMessage: "string", data: .init(fsspList: [.init(md5hash: "366e1c4043eb433b82a6ab4988e80862", svgImage: .init(description: "string"), text: "Паспорт РФ", value: "20")], serial: "bea36075a58954199a6b8980549f6b69"))
+        
+        // when
+        let result = try decoder.decode(ServerCommands.DictionaryController.GetFSSPList.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
+    
+    //MARK: - GetFTSList
+    
+    func testGetFTSList_Response_Decoding() throws {
+        
+        // given
+        let url = bundle.url(forResource: "GetFTSListResponseGeneric", withExtension: "json")!
+        
+        let json = try Data(contentsOf: url)
+        let expected = ServerCommands.DictionaryController.GetFTSList.Response(statusCode: .ok, errorMessage: "string", data: .init(ftsList: [.init(md5hash: "366e1c4043eb433b82a6ab4988e80862", svgImage: .init(description: "string"), text: "Имущественный налог", value: "1")], serial: "bea36075a58954199a6b8980549f6b69"))
+        
+        // when
+        let result = try decoder.decode(ServerCommands.DictionaryController.GetFTSList.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
+    
     //MARK: - GetFullBankInfoList
     
     func testGetFullBankInfoList_Response_Decoding() throws {

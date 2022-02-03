@@ -545,6 +545,12 @@
 		77E1803F27AC34270006ACC9 /* InstallPushDeviceResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 77E1803E27AC34270006ACC9 /* InstallPushDeviceResponseGeneric.json */; };
 		77E1804127AC34450006ACC9 /* UninstallPushDeviceResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 77E1804027AC34450006ACC9 /* UninstallPushDeviceResponseGeneric.json */; };
 		77E1804327AC34A90006ACC9 /* ServerCommandsPushDeviceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E1804227AC34A90006ACC9 /* ServerCommandsPushDeviceTests.swift */; };
+		77E1804527AC39840006ACC9 /* FMSData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E1804427AC39840006ACC9 /* FMSData.swift */; };
+		77E1804727AC3AD30006ACC9 /* FSSPData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E1804627AC3AD30006ACC9 /* FSSPData.swift */; };
+		77E1804927AC3B810006ACC9 /* FTSData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E1804827AC3B810006ACC9 /* FTSData.swift */; };
+		77E1804B27AC3C710006ACC9 /* GetFMSListResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 77E1804A27AC3C710006ACC9 /* GetFMSListResponseGeneric.json */; };
+		77E1804D27AC3CA80006ACC9 /* GetFSSPListResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 77E1804C27AC3CA80006ACC9 /* GetFSSPListResponseGeneric.json */; };
+		77E1804F27AC3CD10006ACC9 /* GetFTSListResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 77E1804E27AC3CD10006ACC9 /* GetFTSListResponseGeneric.json */; };
 		77EA0DBB2779B06E00C6ED12 /* OperationDetailHeaderComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EA0DBA2779B06D00C6ED12 /* OperationDetailHeaderComponentView.swift */; };
 		77EC58AA277114D20054D75C /* TransferData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58A9277114D20054D75C /* TransferData.swift */; };
 		77EC58AC27711EFA0054D75C /* TransferAnywayData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58AB27711EFA0054D75C /* TransferAnywayData.swift */; };
@@ -1405,6 +1411,12 @@
 		77E1803E27AC34270006ACC9 /* InstallPushDeviceResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = InstallPushDeviceResponseGeneric.json; sourceTree = "<group>"; };
 		77E1804027AC34450006ACC9 /* UninstallPushDeviceResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = UninstallPushDeviceResponseGeneric.json; sourceTree = "<group>"; };
 		77E1804227AC34A90006ACC9 /* ServerCommandsPushDeviceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommandsPushDeviceTests.swift; sourceTree = "<group>"; };
+		77E1804427AC39840006ACC9 /* FMSData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FMSData.swift; sourceTree = "<group>"; };
+		77E1804627AC3AD30006ACC9 /* FSSPData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSSPData.swift; sourceTree = "<group>"; };
+		77E1804827AC3B810006ACC9 /* FTSData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FTSData.swift; sourceTree = "<group>"; };
+		77E1804A27AC3C710006ACC9 /* GetFMSListResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetFMSListResponseGeneric.json; sourceTree = "<group>"; };
+		77E1804C27AC3CA80006ACC9 /* GetFSSPListResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetFSSPListResponseGeneric.json; sourceTree = "<group>"; };
+		77E1804E27AC3CD10006ACC9 /* GetFTSListResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetFTSListResponseGeneric.json; sourceTree = "<group>"; };
 		77EA0DBA2779B06D00C6ED12 /* OperationDetailHeaderComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailHeaderComponentView.swift; sourceTree = "<group>"; };
 		77EC58A9277114D20054D75C /* TransferData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferData.swift; sourceTree = "<group>"; };
 		77EC58AB27711EFA0054D75C /* TransferAnywayData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferAnywayData.swift; sourceTree = "<group>"; };
@@ -2363,6 +2375,9 @@
 				6820928427AB0E9D003DCAFD /* MobileDataItem.swift */,
 				6820928627AB0EC3003DCAFD /* MosParkingDataItem.swift */,
 				6820928827AB0EEC003DCAFD /* PaymentSystemDataItem.swift */,
+				77E1804427AC39840006ACC9 /* FMSData.swift */,
+				77E1804627AC3AD30006ACC9 /* FSSPData.swift */,
+				77E1804827AC3B810006ACC9 /* FTSData.swift */,
 			);
 			path = Dictionary;
 			sourceTree = "<group>";
@@ -3266,6 +3281,9 @@
 				77E1803C27AC33F50006ACC9 /* RegisterPushDeviceForUserResponseGeneric.json */,
 				77E1803E27AC34270006ACC9 /* InstallPushDeviceResponseGeneric.json */,
 				77E1804027AC34450006ACC9 /* UninstallPushDeviceResponseGeneric.json */,
+				77E1804A27AC3C710006ACC9 /* GetFMSListResponseGeneric.json */,
+				77E1804C27AC3CA80006ACC9 /* GetFSSPListResponseGeneric.json */,
+				77E1804E27AC3CD10006ACC9 /* GetFTSListResponseGeneric.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -5167,6 +5185,7 @@
 				77E1804127AC34450006ACC9 /* UninstallPushDeviceResponseGeneric.json in Resources */,
 				5A5ABFBA27ABCDC700D548AA /* GetDepositStatement.json in Resources */,
 				77EC58D72771F6C10054D75C /* SavePaymentTemplateResponseGeneric.json in Resources */,
+				77E1804B27AC3C710006ACC9 /* GetFMSListResponseGeneric.json in Resources */,
 				682092B627AC0720003DCAFD /* SuggestCompanyGenericMin.json in Resources */,
 				68419318279EDBA400B4E184 /* GetClientConsentMe2MePullResponseGenericMin.json in Resources */,
 				77517FE627A98EB3005CFB77 /* GetUserSettingsResponseGeneric.json in Resources */,
@@ -5195,6 +5214,7 @@
 				6820923427A97B44003DCAFD /* UpdateFastPaymentContractResponseGeneric.json in Resources */,
 				77517FB927A94D9F005CFB77 /* ReturnOutgoingResponseGeneric.json in Resources */,
 				77517FAB27A94C70005CFB77 /* CreateMe2MePullCreditTransferResponseGeneric.json in Resources */,
+				77E1804D27AC3CA80006ACC9 /* GetFSSPListResponseGeneric.json in Resources */,
 				77EC58BF27712D340054D75C /* TransferAnywayEncodingMin.json in Resources */,
 				77EC58BD27712B680054D75C /* TransferAnywayDecodingGeneric.json in Resources */,
 				77517FA527A94BD3005CFB77 /* CreateAnywayTransferResponseGeneric.json in Resources */,
@@ -5212,6 +5232,7 @@
 				6820925427A9D63B003DCAFD /* GetMosParkingListResponseGenericMin.json in Resources */,
 				77E1803D27AC33F50006ACC9 /* RegisterPushDeviceForUserResponseGeneric.json in Resources */,
 				68419316279EDB6400B4E184 /* GetMe2MeDebitConsentResponseGenericMin.json in Resources */,
+				77E1804F27AC3CD10006ACC9 /* GetFTSListResponseGeneric.json in Resources */,
 				77517FC327A94F49005CFB77 /* CreateSFPTransferResponseMin.json in Resources */,
 				684192E62799A9C900B4E184 /* UnblockCardResponseGeneric.json in Resources */,
 				5A5ABFA227AAF7DD00D548AA /* GetOperationDetail.json in Resources */,
@@ -5269,6 +5290,7 @@
 				0B37F9882680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift in Sources */,
 				0BD1CA9B26E6B55F00CFE993 /* GetCountriesList.swift in Sources */,
 				688B9BAC26DE7D7E00407A75 /* ProductViewController.swift in Sources */,
+				77E1804927AC3B810006ACC9 /* FTSData.swift in Sources */,
 				0BB24AB526F0C62500DDA4F6 /* BlockCardDecodableModel.swift in Sources */,
 				EDB1451C26652D370028EF5A /* UILabel.swift in Sources */,
 				77DC126F2770F8C900C917B0 /* ServerCommands+PaymentTemplate.swift in Sources */,
@@ -5390,6 +5412,7 @@
 				EDB16586266A0883007E6030 /* NSDirectionalEdgeInsets.swift in Sources */,
 				EDE212F82742ED2B005D9821 /* ChooseCurrencyTableViewCell.swift in Sources */,
 				0B931B4F26DE334500CA8017 /* GKHHistoryHeaderView.swift in Sources */,
+				77E1804727AC3AD30006ACC9 /* FSSPData.swift in Sources */,
 				EDFFCAF32682461F004EE095 /* CardCell.swift in Sources */,
 				ED60A1E626DCEA01000F3208 /* MeToMeRequestController.swift in Sources */,
 				0B8C1C4B273B09CD00BA5CAC /* QRErrorViewController.swift in Sources */,
@@ -5498,6 +5521,7 @@
 				77517FD227A97B51005CFB77 /* ProductDetailsData.swift in Sources */,
 				0B216FBE26D15BDF0023C878 /* GKHInputCell.swift in Sources */,
 				0B3FE8E32705C86200CBDB4E /* GetMobileListDecodableModel.swift in Sources */,
+				77E1804527AC39840006ACC9 /* FMSData.swift in Sources */,
 				0B283FC927038C2600B5E925 /* GetSessionTimeout.swift in Sources */,
 				68D099D6273A7A3E0017D777 /* ProductCoordinator.swift in Sources */,
 				0BB24AAF26F0141200DDA4F6 /* DownloadQueueProtocol.swift in Sources */,

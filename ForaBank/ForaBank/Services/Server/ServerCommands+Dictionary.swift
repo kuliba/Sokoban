@@ -176,6 +176,150 @@ extension ServerCommands {
         }
         
         /*
+         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getFMSListUsingGET
+         */
+        struct GetFMSList: ServerCommand {
+            
+            let token: String
+            let endpoint = "/dict/getFMSList"
+            let method: ServerCommandMethod = .get
+            let parameters: [ServerCommandParameter]?
+            let payload: Payload? = nil
+            
+            struct Payload: Encodable {}
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: FMSListData?
+                
+                struct FMSListData: Decodable, Equatable {
+                    
+                    enum CodingKeys : String, CodingKey {
+                        
+                        case fmsList = "FMSList"
+                        case serial
+                    }
+                    
+                    let fmsList: [FMSData]
+                    let serial: String
+                }
+            }
+            
+            internal init(token: String, serial: String?) {
+                
+                if let serial = serial{
+                    
+                    var parameters = [ServerCommandParameter]()
+                    parameters.append(.init(name: "serial", value: serial))
+                    self.parameters = parameters
+                    
+                } else {
+                    
+                    self.parameters = nil
+                }
+                self.token = token
+            }
+        }
+        
+        /*
+         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getFSSPListUsingGET
+         */
+        struct GetFSSPList: ServerCommand {
+            
+            let token: String
+            let endpoint = "/dict/getFSSPList"
+            let method: ServerCommandMethod = .get
+            let parameters: [ServerCommandParameter]?
+            let payload: Payload? = nil
+            
+            struct Payload: Encodable {}
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: FSSPListData?
+                
+                struct FSSPListData: Decodable, Equatable {
+                    
+                    enum CodingKeys : String, CodingKey {
+                        
+                        case fsspList = "FSSPList"
+                        case serial
+                    }
+                    
+                    let fsspList: [FSSPData]
+                    let serial: String
+                }
+            }
+            
+            internal init(token: String, serial: String?) {
+                
+                if let serial = serial{
+                    
+                    var parameters = [ServerCommandParameter]()
+                    parameters.append(.init(name: "serial", value: serial))
+                    self.parameters = parameters
+                    
+                } else {
+                    
+                    self.parameters = nil
+                }
+                self.token = token
+            }
+        }
+        
+        /*
+         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getFTSListUsingGET
+         */
+        struct GetFTSList: ServerCommand {
+            
+            let token: String
+            let endpoint = "/dict/getFTSList"
+            let method: ServerCommandMethod = .get
+            let parameters: [ServerCommandParameter]?
+            let payload: Payload? = nil
+            
+            struct Payload: Encodable {}
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: FTSListData?
+                
+                struct FTSListData: Decodable, Equatable {
+                    
+                    enum CodingKeys : String, CodingKey {
+                        
+                        case ftsList = "FTSList"
+                        case serial
+                    }
+                    
+                    let ftsList: [FTSData]
+                    let serial: String
+                }
+            }
+            
+            internal init(token: String, serial: String?) {
+                
+                if let serial = serial{
+                    
+                    var parameters = [ServerCommandParameter]()
+                    parameters.append(.init(name: "serial", value: serial))
+                    self.parameters = parameters
+                    
+                } else {
+                    
+                    self.parameters = nil
+                }
+                self.token = token
+            }
+        }
+        
+        /*
          https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/dict/getFullBankInfoList
          */
         struct GetFullBankInfoList: ServerCommand {
