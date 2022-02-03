@@ -1,0 +1,47 @@
+{
+  "data": [
+    {
+      "fastPaymentContractAccountAttributeList": [
+        {
+          "accountID": 0,
+          "accountNumber": "string",
+          "flagPossibAddAccount": "EMPTY",
+          "maxAddAccount": 0,
+          "minAddAccount": 0
+        }
+      ],
+      "fastPaymentContractAttributeList": [
+        {
+          "accountID": 0,
+          "branchBIC": "string",
+          "branchID": 0,
+          "clientID": 0,
+          "flagBankDefault": "EMPTY",
+          "flagClientAgreementIn": "EMPTY",
+          "flagClientAgreementOut": "EMPTY",
+          "fpcontractID": 0,
+          "phoneNumber": "string"
+        }
+      ],
+      "fastPaymentContractClAttributeList": [
+        {
+          "clientInfo": {
+            "address": "string",
+            "clientID": 0,
+            "clientName": "string",
+            "clientPatronymicName": "string",
+            "clientSurName": "string",
+            "docType": "string",
+            "inn": "string",
+            "name": "string",
+            "nm": "string",
+            "regNumber": "string",
+            "regSeries": "string"
+          }
+        }
+      ]
+    }
+  ],
+  "errorMessage": "string",
+  "statusCode": 0
+}

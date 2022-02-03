@@ -1,0 +1,20 @@
+{
+  "data": {
+    "countriesList": [
+      {
+        "code": "AM",
+        "contactCode": "BTOC",
+        "md5hash": "string",
+        "name": "АРМЕНИЯ",
+        "paymentSystemIdList": [
+          "string"
+        ],
+        "sendCurr": "EUR;USD;RUR;",
+        "svgImage": "string"
+      }
+    ],
+    "serial": "bea36075a58954199a6b8980549f6b69"
+  },
+  "errorMessage": "string",
+  "statusCode": 0
+}

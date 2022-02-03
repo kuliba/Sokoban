@@ -1,0 +1,11 @@
+{
+  "data": [
+    {
+      "fastPaymentContractAccountAttributeList": [{}],
+      "fastPaymentContractAttributeList": [{}],
+      "fastPaymentContractClAttributeList": [{}]
+    }
+  ],
+  "errorMessage": "string",
+  "statusCode": 0
+}

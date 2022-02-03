@@ -13,9 +13,9 @@ class TransferAnywayResponseData: TransferResponseData {
     let finalStep: Bool
     let infoMessage: String?
     let needSum: Bool
-    let parameterListForNextStep: [Parameter]
+    let parameterListForNextStep: [ParameterData]
     
-    internal init(amount: Double?, creditAmount: Double?, currencyAmount: String?, currencyPayee: String?, currencyPayer: String?, currencyRate: Double?, debitAmount: Double?,  fee: Double?, needMake: Bool?, needOTP: Bool?, payeeName: String?, documentStatus: DocumentStatus?, paymentOperationDetailId: Int, additionalList: [AdditionalData], finalStep: Bool, infoMessage: String?, needSum: Bool, parameterListForNextStep: [Parameter]) {
+    internal init(amount: Double?, creditAmount: Double?, currencyAmount: String?, currencyPayee: String?, currencyPayer: String?, currencyRate: Double?, debitAmount: Double?,  fee: Double?, needMake: Bool?, needOTP: Bool?, payeeName: String?, documentStatus: DocumentStatus?, paymentOperationDetailId: Int, additionalList: [AdditionalData], finalStep: Bool, infoMessage: String?, needSum: Bool, parameterListForNextStep: [ParameterData]) {
         
         self.additionalList = additionalList
         self.finalStep = finalStep
@@ -39,7 +39,7 @@ class TransferAnywayResponseData: TransferResponseData {
         finalStep = try container.decode(Bool.self, forKey: .finalStep)
         infoMessage = try container.decodeIfPresent(String.self, forKey: .infoMessage)
         needSum = try container.decode(Bool.self, forKey: .needSum)
-        parameterListForNextStep = try container.decode([Parameter].self, forKey: .parameterListForNextStep)
+        parameterListForNextStep = try container.decode([ParameterData].self, forKey: .parameterListForNextStep)
         
         try super.init(from: decoder)
     }
@@ -67,34 +67,6 @@ extension TransferAnywayResponseData {
         let fieldTitle: String
         let fieldValue: String
         let svgImage: SVGImageData?
-    }
-    
-    struct Parameter: Codable, Equatable {
-        
-        let content: String?
-        let dataType: String
-        let id: String
-        let isPrint: Bool?
-        let isRequired: Bool
-        let mask: String
-        let maxLength: Int?
-        let minLength: Int?
-        let order: Int?
-        let rawLength: Int
-        let readOnly: Bool
-        let regExp: String
-        let subTitle: String?
-        let svgImage: SVGImageData?
-        let title: String
-        let type: String //FIXME: enum?
-        let viewType: ViewType
-        
-        enum ViewType: String, Codable, Equatable {
-            
-            case constant = "CONSTANT"
-            case input = "INPUT"
-            case optput = "OUTPUT"
-        }
     }
 }
 

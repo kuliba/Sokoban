@@ -1,0 +1,17 @@
+{
+  "data": {
+    "countriesList": [
+      {
+        "code": "AM",
+        "name": "АРМЕНИЯ",
+        "paymentSystemIdList": [
+          "string"
+        ],
+        "sendCurr": "EUR;USD;RUR;",
+      }
+    ],
+    "serial": "bea36075a58954199a6b8980549f6b69"
+  },
+  "errorMessage": "string",
+  "statusCode": 0
+}
