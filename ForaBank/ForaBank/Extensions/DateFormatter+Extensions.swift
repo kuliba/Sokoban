@@ -22,10 +22,22 @@ extension DateFormatter {
         return formatter
     }
     
+    //FIXME: rename iso8601
     static let utc: DateFormatter = {
         
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        //FIXME: TimeZone UTC
+        
+        return formatter
+    }()
+    
+    
+    static let dateAndTime: DateFormatter = {
+        
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone(identifier: "UTC")
+        formatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
         
         return formatter
     }()

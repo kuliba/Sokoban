@@ -530,6 +530,11 @@
 		77E1802927AB02630006ACC9 /* ServerCommands+PrintForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E1802827AB02630006ACC9 /* ServerCommands+PrintForm.swift */; };
 		77E1802B27AB032C0006ACC9 /* PrintFormType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E1802A27AB032C0006ACC9 /* PrintFormType.swift */; };
 		77E1802F27AB13050006ACC9 /* LocalAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E1802E27AB13050006ACC9 /* LocalAgentTests.swift */; };
+		77E1803127AC02170006ACC9 /* ServerCommands+Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E1803027AC02170006ACC9 /* ServerCommands+Notification.swift */; };
+		77E1803327AC04320006ACC9 /* NotificationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E1803227AC04320006ACC9 /* NotificationData.swift */; };
+		77E1803527AC05370006ACC9 /* DateFormatterExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E1803427AC05370006ACC9 /* DateFormatterExtensionsTests.swift */; };
+		77E1803727AC0C980006ACC9 /* GetNotificationsResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 77E1803627AC0C980006ACC9 /* GetNotificationsResponseGeneric.json */; };
+		77E1803927AC0CF00006ACC9 /* ServerCommandsNotificationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E1803827AC0CF00006ACC9 /* ServerCommandsNotificationTests.swift */; };
 		77EA0DBB2779B06E00C6ED12 /* OperationDetailHeaderComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EA0DBA2779B06D00C6ED12 /* OperationDetailHeaderComponentView.swift */; };
 		77EC58AA277114D20054D75C /* TransferData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58A9277114D20054D75C /* TransferData.swift */; };
 		77EC58AC27711EFA0054D75C /* TransferAnywayData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58AB27711EFA0054D75C /* TransferAnywayData.swift */; };
@@ -1375,6 +1380,11 @@
 		77E1802827AB02630006ACC9 /* ServerCommands+PrintForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServerCommands+PrintForm.swift"; sourceTree = "<group>"; };
 		77E1802A27AB032C0006ACC9 /* PrintFormType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintFormType.swift; sourceTree = "<group>"; };
 		77E1802E27AB13050006ACC9 /* LocalAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAgentTests.swift; sourceTree = "<group>"; };
+		77E1803027AC02170006ACC9 /* ServerCommands+Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServerCommands+Notification.swift"; sourceTree = "<group>"; };
+		77E1803227AC04320006ACC9 /* NotificationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationData.swift; sourceTree = "<group>"; };
+		77E1803427AC05370006ACC9 /* DateFormatterExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterExtensionsTests.swift; sourceTree = "<group>"; };
+		77E1803627AC0C980006ACC9 /* GetNotificationsResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetNotificationsResponseGeneric.json; sourceTree = "<group>"; };
+		77E1803827AC0CF00006ACC9 /* ServerCommandsNotificationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommandsNotificationTests.swift; sourceTree = "<group>"; };
 		77EA0DBA2779B06D00C6ED12 /* OperationDetailHeaderComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailHeaderComponentView.swift; sourceTree = "<group>"; };
 		77EC58A9277114D20054D75C /* TransferData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferData.swift; sourceTree = "<group>"; };
 		77EC58AB27711EFA0054D75C /* TransferAnywayData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferAnywayData.swift; sourceTree = "<group>"; };
@@ -2830,6 +2840,7 @@
 			isa = PBXGroup;
 			children = (
 				77067CD8275FBB70000C442B /* StringExtensionsTests.swift */,
+				77E1803427AC05370006ACC9 /* DateFormatterExtensionsTests.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -2966,6 +2977,7 @@
 				5A5ABFB227ABCA5100D548AA /* DepositInfoDataItem.swift */,
 				6820925B27AA8350003DCAFD /* FastPaymentFlag.swift */,
 				6820929127ABD46F003DCAFD /* ParameterData.swift */,
+				77E1803227AC04320006ACC9 /* NotificationData.swift */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -3053,6 +3065,7 @@
 				6820922D27A978D0003DCAFD /* ServerCommands+Dictionary.swift */,
 				682092A327AC0653003DCAFD /* ServerCommands+Person.swift */,
 				682092A527AC0673003DCAFD /* ServerCommands+Suggest.swift */,
+				77E1803027AC02170006ACC9 /* ServerCommands+Notification.swift */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -3216,6 +3229,7 @@
 				682092B127AC06F4003DCAFD /* SuggestBankGenericMin.json */,
 				682092B327AC0708003DCAFD /* SuggestCompanyGeneric.json */,
 				682092B527AC0720003DCAFD /* SuggestCompanyGenericMin.json */,
+				77E1803627AC0C980006ACC9 /* GetNotificationsResponseGeneric.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -3252,6 +3266,7 @@
 				6820923127A97A7C003DCAFD /* ServerCommandsDictionaryTests.swift */,
 				682092A727AC0692003DCAFD /* ServerCommandsPersonTests.swift */,
 				682092A927AC069F003DCAFD /* ServerCommandsSuggestTests.swift */,
+				77E1803827AC0CF00006ACC9 /* ServerCommandsNotificationTests.swift */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -5144,6 +5159,7 @@
 				77517FA527A94BD3005CFB77 /* CreateAnywayTransferResponseGeneric.json in Resources */,
 				684192F22799C23A00B4E184 /* CreatePermanentConsentMe2MePullResponseGeneric.json in Resources */,
 				6820924627A97C31003DCAFD /* FastPaymentContractFindListResponseGeneric.json in Resources */,
+				77E1803727AC0C980006ACC9 /* GetNotificationsResponseGeneric.json in Resources */,
 				77517FBF27A94EEA005CFB77 /* CreateDirectTransferResponseMin.json in Resources */,
 				6820923827A97B78003DCAFD /* GetMosParkingListResponseGeneric.json in Resources */,
 				6820924E27A9D2F4003DCAFD /* GetCountriesResponseGenericMin.json in Resources */,
@@ -5321,6 +5337,7 @@
 				0B931B4726DE2DF700CA8017 /* GKHHistoryCarusel.swift in Sources */,
 				EDF6821A266F9EC800FD5C07 /* RouterUrlList.swift in Sources */,
 				0B8C1C44273ADF7E00BA5CAC /* QRCoordinator.swift in Sources */,
+				77E1803327AC04320006ACC9 /* NotificationData.swift in Sources */,
 				77DC12652770F08300C917B0 /* SVGImageData.swift in Sources */,
 				774E318F27A05197005A067B /* TemplatesListViewModel+Preview.swift in Sources */,
 				77EC58E9277237190054D75C /* ModelAction.swift in Sources */,
@@ -5364,6 +5381,7 @@
 				77499C3C27739B1A00F6C079 /* NumberFormatter+Extensions.swift in Sources */,
 				7758754F27996E610080115D /* FileManager+Extensions.swift in Sources */,
 				68E6A29926A0340D00A1D9A1 /* GetCurrencyListDecodableModel.swift in Sources */,
+				77E1803127AC02170006ACC9 /* ServerCommands+Notification.swift in Sources */,
 				EDE70909279865B00048CA94 /* TemplatesListView.swift in Sources */,
 				EDB165652667A741007E6030 /* ContactConfirmViewController.swift in Sources */,
 				EDB16592266A19DA007E6030 /* PaymentsViewControllerSearchBarDelegate.swift in Sources */,
@@ -5781,7 +5799,9 @@
 				0B34AF87277B24F80080F31A /* PhoneNumberKitTest.swift in Sources */,
 				776C6C1E279D5D8800253581 /* CSRFAgentTests.swift in Sources */,
 				77EC58E5277221F80054D75C /* ServerAgentTests.swift in Sources */,
+				77E1803927AC0CF00006ACC9 /* ServerCommandsNotificationTests.swift in Sources */,
 				7792557C279AF6F800A85723 /* ECEncryptionTests.swift in Sources */,
+				77E1803527AC05370006ACC9 /* DateFormatterExtensionsTests.swift in Sources */,
 				77517FC927A9519E005CFB77 /* ServerCommandsTransferTests.swift in Sources */,
 				5A5ABF9427AAF70300D548AA /* ServerCommandsAccountControllerTests.swift in Sources */,
 				77EC58B2277121CF0054D75C /* TransferTests.swift in Sources */,
