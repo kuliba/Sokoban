@@ -540,6 +540,11 @@
 		77E1803527AC05370006ACC9 /* DateFormatterExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E1803427AC05370006ACC9 /* DateFormatterExtensionsTests.swift */; };
 		77E1803727AC0C980006ACC9 /* GetNotificationsResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 77E1803627AC0C980006ACC9 /* GetNotificationsResponseGeneric.json */; };
 		77E1803927AC0CF00006ACC9 /* ServerCommandsNotificationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E1803827AC0CF00006ACC9 /* ServerCommandsNotificationTests.swift */; };
+		77E1803B27AC17DD0006ACC9 /* ServerCommands+PushDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E1803A27AC17DD0006ACC9 /* ServerCommands+PushDevice.swift */; };
+		77E1803D27AC33F50006ACC9 /* RegisterPushDeviceForUserResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 77E1803C27AC33F50006ACC9 /* RegisterPushDeviceForUserResponseGeneric.json */; };
+		77E1803F27AC34270006ACC9 /* InstallPushDeviceResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 77E1803E27AC34270006ACC9 /* InstallPushDeviceResponseGeneric.json */; };
+		77E1804127AC34450006ACC9 /* UninstallPushDeviceResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 77E1804027AC34450006ACC9 /* UninstallPushDeviceResponseGeneric.json */; };
+		77E1804327AC34A90006ACC9 /* ServerCommandsPushDeviceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E1804227AC34A90006ACC9 /* ServerCommandsPushDeviceTests.swift */; };
 		77EA0DBB2779B06E00C6ED12 /* OperationDetailHeaderComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EA0DBA2779B06D00C6ED12 /* OperationDetailHeaderComponentView.swift */; };
 		77EC58AA277114D20054D75C /* TransferData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58A9277114D20054D75C /* TransferData.swift */; };
 		77EC58AC27711EFA0054D75C /* TransferAnywayData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58AB27711EFA0054D75C /* TransferAnywayData.swift */; };
@@ -1395,6 +1400,11 @@
 		77E1803427AC05370006ACC9 /* DateFormatterExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterExtensionsTests.swift; sourceTree = "<group>"; };
 		77E1803627AC0C980006ACC9 /* GetNotificationsResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetNotificationsResponseGeneric.json; sourceTree = "<group>"; };
 		77E1803827AC0CF00006ACC9 /* ServerCommandsNotificationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommandsNotificationTests.swift; sourceTree = "<group>"; };
+		77E1803A27AC17DD0006ACC9 /* ServerCommands+PushDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServerCommands+PushDevice.swift"; sourceTree = "<group>"; };
+		77E1803C27AC33F50006ACC9 /* RegisterPushDeviceForUserResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = RegisterPushDeviceForUserResponseGeneric.json; sourceTree = "<group>"; };
+		77E1803E27AC34270006ACC9 /* InstallPushDeviceResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = InstallPushDeviceResponseGeneric.json; sourceTree = "<group>"; };
+		77E1804027AC34450006ACC9 /* UninstallPushDeviceResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = UninstallPushDeviceResponseGeneric.json; sourceTree = "<group>"; };
+		77E1804227AC34A90006ACC9 /* ServerCommandsPushDeviceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommandsPushDeviceTests.swift; sourceTree = "<group>"; };
 		77EA0DBA2779B06D00C6ED12 /* OperationDetailHeaderComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailHeaderComponentView.swift; sourceTree = "<group>"; };
 		77EC58A9277114D20054D75C /* TransferData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferData.swift; sourceTree = "<group>"; };
 		77EC58AB27711EFA0054D75C /* TransferAnywayData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferAnywayData.swift; sourceTree = "<group>"; };
@@ -3086,6 +3096,7 @@
 				682092A527AC0673003DCAFD /* ServerCommands+Suggest.swift */,
 				77E1803027AC02170006ACC9 /* ServerCommands+Notification.swift */,
 				682092B727AC138D003DCAFD /* ServerCommands+DaData.swift */,
+				77E1803A27AC17DD0006ACC9 /* ServerCommands+PushDevice.swift */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -3252,6 +3263,9 @@
 				77E1803627AC0C980006ACC9 /* GetNotificationsResponseGeneric.json */,
 				682092BE27AC184F003DCAFD /* GetPhoneInfoGeneric.json */,
 				682092C027AC1885003DCAFD /* GetPhoneInfoGenericMin.json */,
+				77E1803C27AC33F50006ACC9 /* RegisterPushDeviceForUserResponseGeneric.json */,
+				77E1803E27AC34270006ACC9 /* InstallPushDeviceResponseGeneric.json */,
+				77E1804027AC34450006ACC9 /* UninstallPushDeviceResponseGeneric.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -3290,6 +3304,7 @@
 				682092A927AC069F003DCAFD /* ServerCommandsSuggestTests.swift */,
 				77E1803827AC0CF00006ACC9 /* ServerCommandsNotificationTests.swift */,
 				682092BC27AC17D2003DCAFD /* ServerCommandsDaDataTests.swift */,
+				77E1804227AC34A90006ACC9 /* ServerCommandsPushDeviceTests.swift */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -5141,6 +5156,7 @@
 				7701B27127A42BC300FBF5E3 /* GetPeymentTemlpateListResponseSFP.json in Resources */,
 				6820923E27A97BC1003DCAFD /* GetCurrencyListResponseGeneric.json in Resources */,
 				6820924427A97C0E003DCAFD /* GetAnywayOperatorsListResponseGeneric.json in Resources */,
+				77E1803F27AC34270006ACC9 /* InstallPushDeviceResponseGeneric.json in Resources */,
 				6820924A27A9CD47003DCAFD /* GetAnywayOperatorGroupDataGenericMin.json in Resources */,
 				77517FA127A94B77005CFB77 /* ChangeOutgoingResponseGeneric.json in Resources */,
 				77517FD627A98150005CFB77 /* GetProductDetailsResponseGeneric.json in Resources */,
@@ -5148,6 +5164,7 @@
 				5A5ABFAB27AAF7DD00D548AA /* GetOperationDetailMin.json in Resources */,
 				68E7653327970261005860FE /* SetDeviceSettingsResponseGeneric.json in Resources */,
 				5AF3D73A27A948C400F0BB81 /* GetAccountStatementResponseGenericMin.json in Resources */,
+				77E1804127AC34450006ACC9 /* UninstallPushDeviceResponseGeneric.json in Resources */,
 				5A5ABFBA27ABCDC700D548AA /* GetDepositStatement.json in Resources */,
 				77EC58D72771F6C10054D75C /* SavePaymentTemplateResponseGeneric.json in Resources */,
 				682092B627AC0720003DCAFD /* SuggestCompanyGenericMin.json in Resources */,
@@ -5193,6 +5210,7 @@
 				68419314279ED96800B4E184 /* GetCardStatementResponseGenericMin.json in Resources */,
 				77517FB327A94D21005CFB77 /* GetVerificationCodeResponseGeneric.json in Resources */,
 				6820925427A9D63B003DCAFD /* GetMosParkingListResponseGenericMin.json in Resources */,
+				77E1803D27AC33F50006ACC9 /* RegisterPushDeviceForUserResponseGeneric.json in Resources */,
 				68419316279EDB6400B4E184 /* GetMe2MeDebitConsentResponseGenericMin.json in Resources */,
 				77517FC327A94F49005CFB77 /* CreateSFPTransferResponseMin.json in Resources */,
 				684192E62799A9C900B4E184 /* UnblockCardResponseGeneric.json in Resources */,
@@ -5732,6 +5750,7 @@
 				0B7A18C92685BF700007CC75 /* GetPaymentSystemListDecodableModel.swift in Sources */,
 				0BA14E16270DD1940098E422 /* BackgoundTimerInit.swift in Sources */,
 				77EC58EC277237720054D75C /* Action.swift in Sources */,
+				77E1803B27AC17DD0006ACC9 /* ServerCommands+PushDevice.swift in Sources */,
 				0BD1CAA826E6D5D600CFE993 /* CreatePermanentConsentMe2MePullDecodableModel.swift in Sources */,
 				EDF68212266F9EC800FD5C07 /* RequestMethod.swift in Sources */,
 				EDF68214266F9EC800FD5C07 /* URLSchemeType.swift in Sources */,
@@ -5805,6 +5824,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77E1804327AC34A90006ACC9 /* ServerCommandsPushDeviceTests.swift in Sources */,
 				68AD340527997DC000647665 /* ServerCommandsCardTests.swift in Sources */,
 				68E765282796D6DF005860FE /* ServerCommandsRegistrationTests.swift in Sources */,
 				682092AA27AC069F003DCAFD /* ServerCommandsSuggestTests.swift in Sources */,
