@@ -282,6 +282,11 @@
 		682092B227AC06F4003DCAFD /* SuggestBankGenericMin.json in Resources */ = {isa = PBXBuildFile; fileRef = 682092B127AC06F4003DCAFD /* SuggestBankGenericMin.json */; };
 		682092B427AC0708003DCAFD /* SuggestCompanyGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 682092B327AC0708003DCAFD /* SuggestCompanyGeneric.json */; };
 		682092B627AC0720003DCAFD /* SuggestCompanyGenericMin.json in Resources */ = {isa = PBXBuildFile; fileRef = 682092B527AC0720003DCAFD /* SuggestCompanyGenericMin.json */; };
+		682092B827AC138D003DCAFD /* ServerCommands+DaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 682092B727AC138D003DCAFD /* ServerCommands+DaData.swift */; };
+		682092BB27AC170B003DCAFD /* DaDataPhoneData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 682092BA27AC170B003DCAFD /* DaDataPhoneData.swift */; };
+		682092BD27AC17D2003DCAFD /* ServerCommandsDaDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 682092BC27AC17D2003DCAFD /* ServerCommandsDaDataTests.swift */; };
+		682092BF27AC184F003DCAFD /* GetPhoneInfoGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 682092BE27AC184F003DCAFD /* GetPhoneInfoGeneric.json */; };
+		682092C127AC1885003DCAFD /* GetPhoneInfoGenericMin.json in Resources */ = {isa = PBXBuildFile; fileRef = 682092C027AC1885003DCAFD /* GetPhoneInfoGenericMin.json */; };
 		6822EFD226B935DB00125EEC /* BaseTableViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6822EFD126B935DB00125EEC /* BaseTableViewViewController.swift */; };
 		6822EFD626B935FF00125EEC /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6822EFD426B935FF00125EEC /* BaseTableViewCell.swift */; };
 		6822EFD726B935FF00125EEC /* BaseTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6822EFD526B935FF00125EEC /* BaseTableViewCell.xib */; };
@@ -1137,6 +1142,11 @@
 		682092B127AC06F4003DCAFD /* SuggestBankGenericMin.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = SuggestBankGenericMin.json; sourceTree = "<group>"; };
 		682092B327AC0708003DCAFD /* SuggestCompanyGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = SuggestCompanyGeneric.json; sourceTree = "<group>"; };
 		682092B527AC0720003DCAFD /* SuggestCompanyGenericMin.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = SuggestCompanyGenericMin.json; sourceTree = "<group>"; };
+		682092B727AC138D003DCAFD /* ServerCommands+DaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServerCommands+DaData.swift"; sourceTree = "<group>"; };
+		682092BA27AC170B003DCAFD /* DaDataPhoneData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaDataPhoneData.swift; sourceTree = "<group>"; };
+		682092BC27AC17D2003DCAFD /* ServerCommandsDaDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommandsDaDataTests.swift; sourceTree = "<group>"; };
+		682092BE27AC184F003DCAFD /* GetPhoneInfoGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetPhoneInfoGeneric.json; sourceTree = "<group>"; };
+		682092C027AC1885003DCAFD /* GetPhoneInfoGenericMin.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetPhoneInfoGenericMin.json; sourceTree = "<group>"; };
 		6822EFD126B935DB00125EEC /* BaseTableViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewViewController.swift; sourceTree = "<group>"; };
 		6822EFD426B935FF00125EEC /* BaseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewCell.swift; sourceTree = "<group>"; };
 		6822EFD526B935FF00125EEC /* BaseTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BaseTableViewCell.xib; sourceTree = "<group>"; };
@@ -2375,6 +2385,14 @@
 			path = Suggest;
 			sourceTree = "<group>";
 		};
+		682092B927AC16FA003DCAFD /* DaData */ = {
+			isa = PBXGroup;
+			children = (
+				682092BA27AC170B003DCAFD /* DaDataPhoneData.swift */,
+			);
+			path = DaData;
+			sourceTree = "<group>";
+		};
 		6822EFD026B935A500125EEC /* DefaultTableView */ = {
 			isa = PBXGroup;
 			children = (
@@ -2941,6 +2959,7 @@
 		77DC12592770988B00C917B0 /* Domain */ = {
 			isa = PBXGroup;
 			children = (
+				682092B927AC16FA003DCAFD /* DaData */,
 				682092A027AC04CE003DCAFD /* Suggest */,
 				6820929927AC048E003DCAFD /* Person */,
 				77517FCC27A9715B005CFB77 /* Product */,
@@ -3066,6 +3085,7 @@
 				682092A327AC0653003DCAFD /* ServerCommands+Person.swift */,
 				682092A527AC0673003DCAFD /* ServerCommands+Suggest.swift */,
 				77E1803027AC02170006ACC9 /* ServerCommands+Notification.swift */,
+				682092B727AC138D003DCAFD /* ServerCommands+DaData.swift */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -3230,6 +3250,8 @@
 				682092B327AC0708003DCAFD /* SuggestCompanyGeneric.json */,
 				682092B527AC0720003DCAFD /* SuggestCompanyGenericMin.json */,
 				77E1803627AC0C980006ACC9 /* GetNotificationsResponseGeneric.json */,
+				682092BE27AC184F003DCAFD /* GetPhoneInfoGeneric.json */,
+				682092C027AC1885003DCAFD /* GetPhoneInfoGenericMin.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -3267,6 +3289,7 @@
 				682092A727AC0692003DCAFD /* ServerCommandsPersonTests.swift */,
 				682092A927AC069F003DCAFD /* ServerCommandsSuggestTests.swift */,
 				77E1803827AC0CF00006ACC9 /* ServerCommandsNotificationTests.swift */,
+				682092BC27AC17D2003DCAFD /* ServerCommandsDaDataTests.swift */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -5108,6 +5131,7 @@
 				6820925027A9D365003DCAFD /* GetCurrencyListResponseGenericMin.json in Resources */,
 				77EC58B9277125000054D75C /* TransferEncodingMin.json in Resources */,
 				77EC58C327712EDD0054D75C /* TransferMe2MeDecodingGeneric.json in Resources */,
+				682092C127AC1885003DCAFD /* GetPhoneInfoGenericMin.json in Resources */,
 				77517FC527A94F7A005CFB77 /* CreateTransferResponseMin.json in Resources */,
 				6820925227A9D3E1003DCAFD /* GetFullBankInfoListResponseGenericMin.json in Resources */,
 				68E7652F27970137005860FE /* DoRegistrationResponseGeneric.json in Resources */,
@@ -5163,6 +5187,7 @@
 				77517FBF27A94EEA005CFB77 /* CreateDirectTransferResponseMin.json in Resources */,
 				6820923827A97B78003DCAFD /* GetMosParkingListResponseGeneric.json in Resources */,
 				6820924E27A9D2F4003DCAFD /* GetCountriesResponseGenericMin.json in Resources */,
+				682092BF27AC184F003DCAFD /* GetPhoneInfoGeneric.json in Resources */,
 				6820924027A97BDB003DCAFD /* GetCountriesResponseGeneric.json in Resources */,
 				77517FBB27A94E28005CFB77 /* CreateAnywayTransferResponseMin.json in Resources */,
 				68419314279ED96800B4E184 /* GetCardStatementResponseGenericMin.json in Resources */,
@@ -5701,6 +5726,7 @@
 				5A5ABF9027AAF59F00D548AA /* ServerCommands+PaymentOperationDetail.swift in Sources */,
 				5ADDC85227984CEF00488139 /* ServerCommands+AccountController.swift in Sources */,
 				ED84994426A6F647005205C6 /* ChooseCountryHeaderCell.swift in Sources */,
+				682092B827AC138D003DCAFD /* ServerCommands+DaData.swift in Sources */,
 				774706AE277DD53100B524F1 /* OperationDetailInfoView.swift in Sources */,
 				EDBEEA1A26B1AEA200265683 /* FullBankInfoListViewModel.swift in Sources */,
 				0B7A18C92685BF700007CC75 /* GetPaymentSystemListDecodableModel.swift in Sources */,
@@ -5710,6 +5736,7 @@
 				EDF68212266F9EC800FD5C07 /* RequestMethod.swift in Sources */,
 				EDF68214266F9EC800FD5C07 /* URLSchemeType.swift in Sources */,
 				EDB16549266766FD007E6030 /* CodeVerificationViewController.swift in Sources */,
+				682092BB27AC170B003DCAFD /* DaDataPhoneData.swift in Sources */,
 				EDC341A226864C4100FFFEF8 /* BottomInputView.swift in Sources */,
 				68D06F2226C3C0C100F9BE4C /* MainViewController.swift in Sources */,
 				77517FCE27A97913005CFB77 /* ColorData.swift in Sources */,
@@ -5782,6 +5809,7 @@
 				68E765282796D6DF005860FE /* ServerCommandsRegistrationTests.swift in Sources */,
 				682092AA27AC069F003DCAFD /* ServerCommandsSuggestTests.swift in Sources */,
 				684192EC2799C0D000B4E184 /* ServerCommandsConsentTests.swift in Sources */,
+				682092BD27AC17D2003DCAFD /* ServerCommandsDaDataTests.swift in Sources */,
 				77517FEA27A98F2D005CFB77 /* ServerCommandsUserTests.swift in Sources */,
 				77517FF827A999D5005CFB77 /* ServerCommandsDefaultTests.swift in Sources */,
 				77EC58E1277214D60054D75C /* ServerStatusCodeTests.swift in Sources */,
