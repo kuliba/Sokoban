@@ -1,0 +1,18 @@
+{
+  "data": {
+    "balance": 1000,
+    "dateEnd": "2022-02-03T08:37:44.634Z",
+    "dateNext": "2022-02-03T08:37:44.634Z",
+    "dateOpen": "2022-02-03T08:37:44.634Z",
+    "id": 10000184511,
+    "initialAmount": 1000,
+    "interestRate": 10000184511,
+    "sumAccInt": 1000,
+    "sumCredit": 1000,
+    "sumDebit": 1000,
+    "sumPayInt": 1000,
+    "termDay": "540"
+  },
+  "errorMessage": "string",
+  "statusCode": 0
+}
