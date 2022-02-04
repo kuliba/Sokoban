@@ -35,6 +35,10 @@ class PaymentByPhoneViewModel {
         }
     }
     
+    var userCard: UserAllCardsModel? {
+        return getUserCard()
+    }
+    
     func getBank(id: String) -> BanksList? {
         let banksList = Dict.shared.banks
         var bankToReturn: BanksList? = nil
@@ -44,6 +48,30 @@ class PaymentByPhoneViewModel {
             }
         }
         return bankToReturn
+    }
+    
+    
+    private func getUserCard() -> UserAllCardsModel?  {
+        let cards = ReturnAllCardList.cards()
+        let filterProduct = cards.filter({
+            ($0.productType == "CARD" || $0.productType == "ACCOUNT") && $0.currency == "RUB" })
+        
+        if filterProduct.count > 0 {
+            if let template = self.template {
+                if template.type == .sfp {
+                    let card = filterProduct.first(where: { $0.id == template.psfCardId })
+                    return card
+                } else if template.type == .byPhone {
+                    let card = filterProduct.first(where: { $0.id == template.insideByPhoneCardId })
+                    return card
+                } else {
+                    return filterProduct.first
+                }
+            } else {
+                return filterProduct.first
+            }
+        }
+        return nil
     }
     
     internal init(phoneNumber: String? = nil, bankId: String = "", amount: Double? = 0) {
@@ -57,7 +85,7 @@ class PaymentByPhoneViewModel {
         self.template = template
         self.phoneNumber = template.spfPhoneNumber
         self.bankId = template.spfBankId ?? ""
-        self.amount = template.spfAmount
+        self.amount = template.amount
         
     }
     
@@ -66,7 +94,7 @@ class PaymentByPhoneViewModel {
         self.template = template
         self.phoneNumber = template.insideByPhonePhoneNumber
         self.bankId = template.insideByPhoneBankId ?? ""
-        self.amount = template.insideByPhoneAmount
+        self.amount = template.amount
         
     }
     

@@ -148,14 +148,20 @@ final class CardChooseView: UIView {
     
     private func setupTempData(with model: GetProductTemplateDatum) {
         hideAll(false)
-        imageView.image = #imageLiteral(resourceName: "credit-card")
+        imageView.image = model.smallDesign?.uiImage ?? #imageLiteral(resourceName: "credit-card")
         let text = NSAttributedString(
             string: model.customName ?? "",
             attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14),
                          NSAttributedString.Key.foregroundColor : UIColor.black])
         self.numberCardLabel.attributedText = text
         self.maskNumberLabel.text = "• \(model.numberMask?.suffix(4) ?? "")"
-        self.setupCardImage(with: model.numberMask ?? "")
+        
+        if let image = model.paymentSystemImage?.uiImage {
+            cardTypeImage.image = image
+        } else {
+            self.setupCardImage(with: model.numberMask ?? "")
+        }
+        
         self.choseButton.setImage(UIImage(systemName: "xmark"), for: .normal)
         
         self.balanceLabel.isHidden = true
