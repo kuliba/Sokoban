@@ -57,12 +57,8 @@ private extension TemplatesListViewHostingViewController {
                     
                 case let payload as TemplatesListViewModelAction.Present.PaymentInsideBankByCard:
                     let paymentViewController = MemeDetailVC(paymentTemplate: payload.viewModel)
-                    //TODO: выбор варианта отображения
-//                    navigationController?.pushViewController(paymentViewController, animated: true)
+                    navigationController?.pushViewController(paymentViewController, animated: true)
                     
-//                    self.dismiss(animated: true) {
-                        present(paymentViewController, animated: true)
-//                    }
                     
                 case _ as TemplatesListViewModelAction.AddTemplate:
                     dismiss(animated: true) { [weak self] in

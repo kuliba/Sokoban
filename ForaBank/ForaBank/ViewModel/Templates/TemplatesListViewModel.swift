@@ -383,7 +383,7 @@ private extension TemplatesListViewModel {
     func amount(for template: PaymentTemplateData) -> String? {
         
         guard let transfer = template.parameterList.first,
-              let amount = template.spfAmount else {
+              let amount = template.amount else {
                     
             return nil
         }

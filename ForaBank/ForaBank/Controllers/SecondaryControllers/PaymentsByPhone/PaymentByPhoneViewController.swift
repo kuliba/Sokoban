@@ -111,7 +111,6 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
         phoneField.textField.delegate = self
         phoneField.textField.maskString = "+0 000 000-00-00"
         
-        
         phoneField.rightButton.setImage(UIImage(named: "user-plus"), for: .normal)
         
         if let maskPhoneNumber = viewModel.maskPhoneNumber {
@@ -120,24 +119,7 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
         
         setupUI()
         
-        DispatchQueue.main.async {
-            var filterProduct: [UserAllCardsModel] = []
-            let cards = ReturnAllCardList.cards()
-            cards.forEach { product in
-                if (product.productType == "CARD" || product.productType == "ACCOUNT")
-                    && product.currency == "RUB" {
-                    filterProduct.append(product)
-                }
-            }
-            if filterProduct.count > 0 {
-                if let template = self.viewModel.template {
-                    let card = filterProduct.first(where: { $0.id == template.psfCardId })
-                    self.cardField.model = card
-                } else {
-                    self.cardField.model = filterProduct.first
-                }
-            }
-        }
+        self.cardField.model = viewModel.userCard
         
         setupBankList()
         setupActions()

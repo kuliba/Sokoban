@@ -111,19 +111,22 @@ extension PaymentTemplateData: Codable {
     }
 }
 
-//MARK: - Convenience SPF Properties
-
-//TODO: tests
 extension PaymentTemplateData {
     
-    var spfAmount: Double? {
-        
+    var amount: Double? {
         guard let transfer = parameterList.first else {
             return nil
         }
         
         return transfer.amount
     }
+    
+}
+
+//MARK: - Convenience SPF Properties
+
+//TODO: tests
+extension PaymentTemplateData {
     
     var spfPhoneNumber: String? {
         
@@ -160,38 +163,37 @@ extension PaymentTemplateData {
 //TODO: tests
 extension PaymentTemplateData {
     
-    var insideByPhoneAmount: Double? {
-        
-        guard let transfer = parameterList.first else {
-            return nil
-        }
-        
-        return transfer.amount
-    }
-    
     var insideByPhonePhoneNumber: String? {
         
-        guard let transfer = parameterList.first as? TransferAnywayData,
-              let phoneData = transfer.additional.first(where: { $0.fieldname == "RecipientID" })  else {
+        guard let transfer = parameterList.first as? TransferGeneralData,
+              let phoneData = transfer.payeeInternal?.phoneNumber  else {
             return nil
         }
         
-        return phoneData.fieldvalue
+        return phoneData
     }
     
     var insideByPhoneBankId: String? {
-        
-        guard let transfer = parameterList.first as? TransferAnywayData,
-              let bankData = transfer.additional.first(where: { $0.fieldname == "BankRecipientID" })  else {
+        guard let transfer = parameterList.first as? TransferGeneralData,
+              transfer.payeeInternal?.phoneNumber != nil  else {
             return nil
         }
         
-        return bankData.fieldvalue
+        return "100000000217"
     }
     
     var insideByPhoneCardId: Int? {
-        guard let transfer = parameterList.first as? TransferAnywayData,
+        guard let transfer = parameterList.first as? TransferGeneralData,
               let bankData = transfer.payer.cardId else {
+            return nil
+        }
+        
+        return bankData
+    }
+    
+    var insideByPhoneAccountId: Int? {
+        guard let transfer = parameterList.first as? TransferGeneralData,
+              let bankData = transfer.payer.accountId else {
             return nil
         }
         
@@ -203,15 +205,6 @@ extension PaymentTemplateData {
 
 //TODO: tests
 extension PaymentTemplateData {
-    
-    var insideByCardAmount: Double? {
-        
-        guard let transfer = parameterList.first else {
-            return nil
-        }
-        
-        return transfer.amount
-    }
     
     var insideByCardPhoneNumber: String? {
         
