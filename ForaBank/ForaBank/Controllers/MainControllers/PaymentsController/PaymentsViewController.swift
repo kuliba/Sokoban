@@ -157,7 +157,7 @@ class PaymentsViewController: UIViewController {
 extension PaymentsViewController {
     
     func loadAllLastLatestPayments() {
-        let param = ["isPhonePayments": "true", "isCountriesPayments": "true", "isMobilePayments": "true", "isServicePayments": "true", "isInternetPayments": "true", "isTransportPayment":"true"]
+        let param = ["isPhonePayments": "true", "isCountriesPayments": "true", "isMobilePayments": "true", "isServicePayments": "true", "isInternetPayments": "true", "isTransportPayments":"true"]
         NetworkManager<GetAllLatestPaymentsDecodableModel>.addRequest(.getAllLatestPayments, param, [:]) { model, error in
             if error != nil {
                 print("DEBUG: Error: ", error ?? "")
@@ -175,6 +175,9 @@ extension PaymentsViewController {
                         let payment = PaymentsModel(lastCountryPayment: lastPayment)
                         self.payments.append(payment)
                     case "service":
+                        let payment = PaymentsModel(lastGKHPayment: lastPayment)
+                        self.payments.append(payment)
+                    case "transport":
                         let payment = PaymentsModel(lastGKHPayment: lastPayment)
                         self.payments.append(payment)
                     case "mobile":
