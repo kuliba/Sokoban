@@ -497,6 +497,8 @@
 		77517FFC27A99EDC005CFB77 /* GetPaymentTemplateListResponseMin.json in Resources */ = {isa = PBXBuildFile; fileRef = 77517FFB27A99EDC005CFB77 /* GetPaymentTemplateListResponseMin.json */; };
 		7757624B276FEC4F00B902BF /* URLHostTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7757624A276FEC4F00B902BF /* URLHostTests.swift */; };
 		7757624D276FEE2400B902BF /* ForaBankUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7757624C276FEE2400B902BF /* ForaBankUITests.swift */; };
+		77583FF927AED4E700251969 /* Model+Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77583FF827AED4E700251969 /* Model+Dictionary.swift */; };
+		77583FFC27AED77F00251969 /* Model+Handlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77583FFB27AED77F00251969 /* Model+Handlers.swift */; };
 		775875472798C87B0080115D /* Option.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775875462798C87B0080115D /* Option.swift */; };
 		7758754927996D510080115D /* LocalAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7758754827996D510080115D /* LocalAgentProtocol.swift */; };
 		7758754B27996D8B0080115D /* Cachable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7758754A27996D8B0080115D /* Cachable.swift */; };
@@ -1361,6 +1363,8 @@
 		77517FFB27A99EDC005CFB77 /* GetPaymentTemplateListResponseMin.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetPaymentTemplateListResponseMin.json; sourceTree = "<group>"; };
 		7757624A276FEC4F00B902BF /* URLHostTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLHostTests.swift; sourceTree = "<group>"; };
 		7757624C276FEE2400B902BF /* ForaBankUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForaBankUITests.swift; sourceTree = "<group>"; };
+		77583FF827AED4E700251969 /* Model+Dictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Dictionary.swift"; sourceTree = "<group>"; };
+		77583FFB27AED77F00251969 /* Model+Handlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Handlers.swift"; sourceTree = "<group>"; };
 		775875462798C87B0080115D /* Option.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Option.swift; sourceTree = "<group>"; };
 		7758754827996D510080115D /* LocalAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAgentProtocol.swift; sourceTree = "<group>"; };
 		7758754A27996D8B0080115D /* Cachable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cachable.swift; sourceTree = "<group>"; };
@@ -2978,7 +2982,9 @@
 			isa = PBXGroup;
 			children = (
 				77EC58E6277236E90054D75C /* Model.swift */,
+				77583FFB27AED77F00251969 /* Model+Handlers.swift */,
 				77EC58E8277237190054D75C /* ModelAction.swift */,
+				77583FF827AED4E700251969 /* Model+Dictionary.swift */,
 				77EC58ED27723A5A0054D75C /* ModelAction+PaymentTemplate.swift */,
 			);
 			path = Model;
@@ -5415,6 +5421,7 @@
 				0BF3486426943DFB005138A8 /* SuggestCompanyDecodableModel.swift in Sources */,
 				EDB1452026661B030028EF5A /* StringMask.swift in Sources */,
 				EDB16586266A0883007E6030 /* NSDirectionalEdgeInsets.swift in Sources */,
+				77583FFC27AED77F00251969 /* Model+Handlers.swift in Sources */,
 				EDE212F82742ED2B005D9821 /* ChooseCurrencyTableViewCell.swift in Sources */,
 				0B931B4F26DE334500CA8017 /* GKHHistoryHeaderView.swift in Sources */,
 				77E1804727AC3AD30006ACC9 /* FSSPData.swift in Sources */,
@@ -5553,6 +5560,7 @@
 				0B7A18B226836A400007CC75 /* NetworkPDFManager.swift in Sources */,
 				0B7A18CE2689C4ED0007CC75 /* AddHeaderImageViewController.swift in Sources */,
 				EDDFE3A32756BDDB00F57C71 /* DetailInformationViewController.swift in Sources */,
+				77583FF927AED4E700251969 /* Model+Dictionary.swift in Sources */,
 				EDB1655826679C74007E6030 /* SmsCodeView.swift in Sources */,
 				0BB24AA126EFEE4700DDA4F6 /* GetProductListByFilter.swift in Sources */,
 				6820922C27A9781E003DCAFD /* ServerCommands+FastPayment.swift in Sources */,
