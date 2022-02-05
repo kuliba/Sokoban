@@ -23,8 +23,8 @@ class Model {
     let paymentTemplatesDisplayed: [PaymentTemplateData.Kind] = [.sfp, .byPhone, .insideBank]
     
     // services
-    private let serverAgent: ServerAgentProtocol
-    private let localAgent: LocalAgentProtocol
+    internal let serverAgent: ServerAgentProtocol
+    internal let localAgent: LocalAgentProtocol
     
     // private
     private var bindings: Set<AnyCancellable>
@@ -50,6 +50,7 @@ class Model {
         
         loadCachedData()
         bind()
+        requestDictionariesFromServer()
     }
     
     //FIXME: remove after refactoring
@@ -228,6 +229,13 @@ class Model {
                         }
                     }
                     
+                //MARK: - Dictionaries Actions
+                    
+                case let payload as ModelAction.Dictionary.AnywayOperators.Requested:
+                    handleDictionaryAnywayOperatorsRequest(serial: payload.serial)
+                    
+                    //TODO: other dictionaries actions here
+                    
                 default:
                     break
                 }
@@ -239,6 +247,12 @@ class Model {
 //MARK: - Private Helpers
 
 private extension Model {
+    
+    func requestDictionariesFromServer() {
+        
+        // Anyway Operators
+        action.send(ModelAction.Dictionary.AnywayOperators.Requested(serial: localAgent.serial(for: [OperatorGroupData].self)))
+    }
     
     func loadCachedData() {
         
