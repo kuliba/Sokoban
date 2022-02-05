@@ -100,4 +100,6 @@ extension GetCurrencyListDataClass {
 struct CurrencyList: Codable {
     let id, code, name, unicode: String?
     let htmlCode, cssCode: String?
+    let codeNumeric: Int?
+    let codeISO: Int?
 }

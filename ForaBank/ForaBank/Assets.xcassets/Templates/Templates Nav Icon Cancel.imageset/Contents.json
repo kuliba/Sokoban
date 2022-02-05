@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "Templates Nav Icon Cancel.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

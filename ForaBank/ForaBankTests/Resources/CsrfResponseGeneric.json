@@ -1,0 +1,11 @@
+{
+  "data": {
+    "cert": "string",
+    "headerName": "string",
+    "pk": "string",
+    "sign": "string",
+    "token": "string"
+  },
+  "errorMessage": "string",
+  "statusCode": 0
+}

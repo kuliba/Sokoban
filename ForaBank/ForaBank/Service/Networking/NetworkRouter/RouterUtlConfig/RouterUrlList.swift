@@ -68,6 +68,7 @@ enum RouterUrlList: String {
     case changeClientConsentMe2MePull
     case getLatestServicePayments
     case getLatestInternetTVPayments
+    case getLatestInternetTVPaymentsTransport
     case createSFPTransfer
     case createIsOneTimeConsentMe2MePull
     case createPermanentConsentMe2MePull
@@ -93,7 +94,11 @@ enum RouterUrlList: String {
     case getNotifications
     case getPrintFormForAccountStatement
     case isSingleService
+    case getMosParkingList
+    case getClientInfo
     case nextStepServiceTransfer
+    case createAnywayTransfer
+    case createAnywayTransferNew
     case getDepositProductList
     case openDeposit
     case makeDepositPayment
@@ -693,6 +698,15 @@ enum RouterUrlList: String {
                 debugPrint(error)
                 return .failure(.urlError)
             }
+        case .getLatestInternetTVPaymentsTransport:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getLatestInternetTVPaymentsTransport.rawValue)
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
         case .createSFPTransfer:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.createSFPTransfer.rawValue)
             
@@ -974,9 +988,48 @@ enum RouterUrlList: String {
                 debugPrint(error)
                 return .failure(.urlError)
             }
+
+        case .getMosParkingList:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getMosParkingList.rawValue)
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+        case .getClientInfo:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getClientInfo.rawValue)
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
             
         case .nextStepServiceTransfer:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.nextStepServiceTransfer.rawValue)
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+
+        case .createAnywayTransfer:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.createAnywayTransfer.rawValue)
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+
+        case .createAnywayTransferNew:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.createAnywayTransferNew.rawValue)
             switch result {
             case .success(let url):
                 return .success(url.absoluteURL)

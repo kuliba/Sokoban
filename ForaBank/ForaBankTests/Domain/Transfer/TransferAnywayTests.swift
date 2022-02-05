@@ -21,13 +21,14 @@ class TransferAnywayTests: XCTestCase {
         let json = try Data(contentsOf: url)
         
         // when
-        let result = try decoder.decode(TransferAnyway.self, from: json)
+        let result = try decoder.decode(TransferAnywayData.self, from: json)
         
         // then
         XCTAssertEqual(result.amount, 100)
         XCTAssertEqual(result.check, false)
         XCTAssertEqual(result.comment, "string")
         XCTAssertEqual(result.currencyAmount, "RUB")
+        XCTAssertEqual(result.additional.first?.fieldid, 0)
         
         //TODO: check all parameters
     }
@@ -35,8 +36,8 @@ class TransferAnywayTests: XCTestCase {
     func testEncoding_Min() throws {
         
         // given
-        let payer = TransferAbstract.Payer(inn: nil, accountId: nil, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
-        let transfer = TransferAnyway(amount: nil, check: false, comment: nil, currencyAmount: "RUB", payer: payer, additional: nil, puref: nil)
+        let payer = TransferAbstractData.Payer(inn: nil, accountId: nil, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
+        let transfer = TransferAnywayData(amount: nil, check: false, comment: nil, currencyAmount: "RUB", payer: payer, additional: [.init(fieldid: 0, fieldname: "string", fieldvalue: "string")], puref: nil)
         
         // when
         let result = try encoder.encode(transfer)

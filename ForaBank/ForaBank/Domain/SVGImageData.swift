@@ -5,7 +5,11 @@
 //  Created by Max Gribov on 20.12.2021.
 //
 
-//TODO: implement UIImage property
+import Foundation
+import SVGKit
+import UIKit
+import SwiftUI
+
 struct SVGImageData: CustomStringConvertible, Equatable {
     
     let description: String
@@ -23,5 +27,19 @@ extension SVGImageData: Codable {
         
         var container = encoder.singleValueContainer()
         try container.encode(description)
+    }
+}
+
+extension SVGImageData {
+    
+    var imageData: Data? { description.data(using: .utf8) }
+    var uiImage: UIImage? { SVGKImage(data: imageData).uiImage }
+    var image: Image? {
+        
+        guard let uiImage = uiImage else {
+            return nil
+        }
+        
+        return Image(uiImage: uiImage)
     }
 }

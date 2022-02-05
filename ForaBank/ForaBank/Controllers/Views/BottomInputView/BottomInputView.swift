@@ -15,7 +15,7 @@ class BottomInputView: UIView {
     var tempTextFieldValue = ""
     
     let moneyInputController = TextFieldStartInputController()
-    var currencySymbol = "" {
+    var currencySymbol = "₽" {
         didSet {
             setupMoneyController()
         }
@@ -78,14 +78,19 @@ class BottomInputView: UIView {
         commonInit()
     }
 
-    
+    required init(frame: CGRect = .zero, formater: SumTextInputFormatter) {
+        moneyFormatter = formater
+        super.init(frame: .zero)
+        commonInit()
+    }
+
     func commonInit() {
         
         Bundle.main.loadNibNamed(kContentXibName, owner: self, options: nil)
         contentView.fixInView(self)
         self.heightAnchor.constraint(equalToConstant: 88).isActive = true
         setupTextFIeld()
-//        setupMoneyController()
+        setupMoneyController()
         
         NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: amountTextField, queue: .main) { _ in
             guard let text = self.amountTextField.text else { return }
@@ -103,6 +108,24 @@ class BottomInputView: UIView {
                 self.buttomLabel.alpha = unformatText.isEmpty ? 0 : 1
             }
             self.exchangeRate(unformatText)
+        }
+    }
+
+    func updateAmountUI(textAmount: String?) {
+        let result = textAmount?.filter("01234567890.".contains)
+        if let text = result, !text.isEmpty {
+            amountTextField.text = text
+            guard let unformatText = moneyFormatter?.unformat(text) else {
+                return
+            }
+            tempTextFieldValue = unformatText
+            doneButtonIsEnabled(unformatText.isEmpty)
+            UIView.animate(withDuration: 0.2) {
+                self.topLabel.alpha = unformatText.isEmpty ? 0 : 1
+                self.buttomLabel.alpha = unformatText.isEmpty ? 0 : 1
+            }
+            self.exchangeRate(unformatText)
+            amountTextField.text = "\(amountTextField.text ?? "") \(currencySymbol)"
         }
 }
     
@@ -319,6 +342,8 @@ class BottomInputView: UIView {
             
             let newText = self.moneyFormatter?.format(amount)
             self.amountTextField.text = newText
+            guard let unformatText = self.moneyFormatter?.unformat(newText) else { return }
+            self.doneButtonIsEnabled((unformatText.isEmpty) || (unformatText == "0"))
         }
     }
  

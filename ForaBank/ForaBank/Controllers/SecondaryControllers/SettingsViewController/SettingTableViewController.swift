@@ -156,6 +156,7 @@ class SettingTableViewController: UITableViewController {
             NetworkManager<LogoutDecodableModel>.addRequest(.logout, [:], [:]) { _,_  in
                 DispatchQueue.main.async {
                     self.cleanAllData()
+                    Model.shared.action.send(ModelAction.LoggedOut())
                     self.delegate?.goLoginCardEntry()
                 }
             }
@@ -209,7 +210,7 @@ class SettingTableViewController: UITableViewController {
         case 1:
             label.text = "Платежи и переводы"
         case 2:
-            label.text = "Безопастность"
+            label.text = "Безопасность"
         default:
             label.text = ""
         }

@@ -92,7 +92,11 @@ final class CardChooseView: UIView {
             attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14),
                          NSAttributedString.Key.foregroundColor : UIColor.black])
         self.numberCardLabel.attributedText = text
-        self.maskNumberLabel.text = "• \(model.number?.suffix(4) ?? "")"
+        if model.productType == "DEPOSIT" {
+            self.maskNumberLabel.text = "• \(model.accountNumber?.suffix(4) ?? "")"
+        } else {
+            self.maskNumberLabel.text = "• \(model.number?.suffix(4) ?? "")"
+        }
         self.nameLabel.text = model.customName ?? model.additionalField ?? ""
         self.cardTypeImage.image = model.paymentSystemImage?.convertSVGStringToImage()
     }
@@ -116,7 +120,11 @@ final class CardChooseView: UIView {
             attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14),
                          NSAttributedString.Key.foregroundColor : UIColor.black])
         self.numberCardLabel.attributedText = text
-        self.maskNumberLabel.text = "• \(model.number?.suffix(4) ?? "")"
+        if model.productType == "DEPOSIT" {
+            self.maskNumberLabel.text = "• \(model.accountNumber?.suffix(4) ?? "")"
+        } else {
+            self.maskNumberLabel.text = "• \(model.number?.suffix(4) ?? "")"
+        }
         self.nameLabel.text = model.customName ?? model.additionalField ?? ""
 //        self.setupCardImage(with: model.number ?? "")
         self.cardTypeImage.image = model.paymentSystemImage?.convertSVGStringToImage()

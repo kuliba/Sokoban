@@ -19,15 +19,17 @@ class PushHistoryViewController: UIViewController {
     
     lazy var realm = try? Realm()
     var token: NotificationToken?
-    var tempArray: Results <GetNotificationsSectionModel>?
+    var tempArray: Results <GetNotificationsModel>?
     
     var offsetNumber = 0
     override func viewDidLoad() {
         super.viewDidLoad()
-        tempArray = realm?.objects(GetNotificationsSectionModel.self)
+        tempArray = realm?.objects(GetNotificationsModel.self)
         setupNavBar()
+        // Удалить
+        clearPushRealmData()
+        
         downloadPushArray()
-//        observerRealm()
     }
     
     // MARK: Загрузка истории пушей
@@ -41,7 +43,7 @@ class PushHistoryViewController: UIViewController {
         ]
         GetNotificationsModelSaved.add(body, [:]) {
             DispatchQueue.main.async {
-            self.tableView.reloadData()
+                self.tableView.reloadData()
             }
         }
     }

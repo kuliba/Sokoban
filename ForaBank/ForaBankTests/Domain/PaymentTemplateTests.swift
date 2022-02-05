@@ -21,13 +21,13 @@ class PaymentTemplateTests: XCTestCase {
         let json = try Data(contentsOf: url)
         
         // when
-        let result = try decoder.decode(PaymentTemplate.self, from: json)
+        let result = try decoder.decode(PaymentTemplateData.self, from: json)
         
         // then
         XCTAssertEqual(result.groupName, "Переводы СБП")
         XCTAssertEqual(result.name, "Иванов Иван Иванович")
         XCTAssertEqual(result.parameterList.count, 1)
-        XCTAssertNotNil(result.parameterList.first! as? Transfer)
+        XCTAssertNotNil(result.parameterList.first! as? TransferData)
         XCTAssertEqual(result.paymentTemplateId, 1)
         XCTAssertEqual(result.sort, 1)
         XCTAssertEqual(result.svgImage.description, "string")
@@ -37,7 +37,7 @@ class PaymentTemplateTests: XCTestCase {
     func testEncoding_Min() throws {
         
         // given
-        let paymentTemplate = PaymentTemplate(groupName: "Переводы СБП", name: "Иванов Иван Иванович", parameterList: [], paymentTemplateId: 1, sort: 1, svgImage: SVGImageData(description: "string"), type: .sfp)
+        let paymentTemplate = PaymentTemplateData(groupName: "Переводы СБП", name: "Иванов Иван Иванович", parameterList: [], paymentTemplateId: 1, sort: 1, svgImage: SVGImageData(description: "string"), type: .sfp)
         
         // when
         let result = try encoder.encode(paymentTemplate)

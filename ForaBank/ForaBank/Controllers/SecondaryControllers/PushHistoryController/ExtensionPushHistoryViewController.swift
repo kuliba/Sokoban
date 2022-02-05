@@ -15,14 +15,16 @@ extension PushHistoryViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tempArray?[section].getNotificationsCell.count ?? 0
+        return tempArray?[section].getNotificationsEntity.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! PushHistoryCell
-        guard tempArray?[indexPath.section].getNotificationsCell[indexPath.row] != nil else { return PushHistoryCell()}
-        cell.setData((tempArray?[indexPath.section].getNotificationsCell[indexPath.row]))
+        let a = tempArray?[indexPath.section].getNotificationsEntity[indexPath.row]
+        
+        guard tempArray?[indexPath.section].getNotificationsEntity[indexPath.row] != nil else { return PushHistoryCell()}
+        cell.setData(a)
         
         return cell
     }
@@ -57,7 +59,7 @@ extension PushHistoryViewController: UITableViewDelegate, UITableViewDataSource 
     func dateFormater(_ string: String, _ formatter: String) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "ru_RU")
-        dateFormatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
+        dateFormatter.dateFormat = "dd.MM.yyyy"
         let date = dateFormatter.date(from: string)!
         
         let d = DateFormatter()
@@ -69,7 +71,6 @@ extension PushHistoryViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func observerRealm() {
-//        tempArray = realm?.objects(GetNotificationsSectionModel.self)
         self.token = self.tempArray?.observe { [weak self] ( changes: RealmCollectionChange) in
             guard (self?.tableView) != nil else {return}
             switch changes {
@@ -93,11 +94,13 @@ extension PushHistoryViewController: UITableViewDelegate, UITableViewDataSource 
         
         let realm = try? Realm()
         do {
-            let b = realm?.objects(GetNotificationsSectionModel.self)
+//            let b = realm?.objects(GetNotificationsEntitytModel.self)
             let a = realm?.objects(GetNotificationsCellModel.self)
+            let c = realm?.objects(GetNotificationsModel.self)
             realm?.beginWrite()
-            realm?.delete(b!)
+//            realm?.delete(b!)
             realm?.delete(a!)
+            realm?.delete(c!)
             try realm?.commitWrite()
         } catch {
             print(error.localizedDescription)

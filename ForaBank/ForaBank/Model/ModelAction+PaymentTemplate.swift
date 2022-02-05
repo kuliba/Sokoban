@@ -34,8 +34,8 @@ extension ModelAction {
             
             struct Requested: Action {
                 
-                let name: String
-                let parameterList: [TransferAbstract]
+                let name: String?
+                let parameterList: [TransferAbstractData]?
                 let paymentTemplateId: Int
             }
             
@@ -68,7 +68,7 @@ extension ModelAction {
             
             struct Complete: Action {
                 
-                let paymentTemplates: [ForaBank.PaymentTemplate]
+                let paymentTemplates: [PaymentTemplateData]
             }
             
             struct Failed: Action {
@@ -76,5 +76,6 @@ extension ModelAction {
                 let error: Error
             }
         }
+    
     }
 }

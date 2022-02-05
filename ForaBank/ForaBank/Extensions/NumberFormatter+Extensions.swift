@@ -17,4 +17,14 @@ extension NumberFormatter {
         
         return formatter
     }
+    
+    func currency(with currencyCode: String) -> NumberFormatter {
+        
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = currencyCode
+        formatter.maximumFractionDigits = 2
+        
+        return formatter
+    }
 }

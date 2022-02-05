@@ -40,12 +40,13 @@ struct PaymentsModel: Hashable {
         self.controllerName = ""
     }
     
-    init(id: Int, name: String, iconName: String, controllerName: String, description: String? = "") {
+    init(id: Int, name: String, iconName: String, controllerName: String, description: String? = "", type: String? = nil) {
         self.id = id
         self.name = name
         self.iconName = iconName
         self.controllerName = controllerName
         self.description = description
+        self.type = type
     }
     
     init(lastCountryPayment: GetAllLatestPaymentsDatum) {
