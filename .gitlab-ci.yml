@@ -36,6 +36,7 @@ fastlane-build-beta:
   allow_failure: false
   only:
     - develop
+    - /^feature.*$/
   script:
     - bundle exec fastlane build production:false
   artifacts:
@@ -48,5 +49,6 @@ fastlane-deploy:
   when: on_success
   only:
     - develop
+    - /^feature.*$/
   script:
     - bundle exec fastlane deploy
