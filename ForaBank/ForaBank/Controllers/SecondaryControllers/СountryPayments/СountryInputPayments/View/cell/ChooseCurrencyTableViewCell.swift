@@ -12,6 +12,7 @@ class ChooseCurrencyTableViewCell: UITableViewCell {
     
     @IBOutlet weak var currencyLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var currencyView: UIView!
     
     override func awakeFromNib() {
         super.awakeFromNib()

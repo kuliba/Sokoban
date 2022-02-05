@@ -11,17 +11,6 @@ import IQKeyboardManagerSwift
 extension AppDelegate {
     func customizeUiInApp() {
         
-        //Fix Nav Bar tint issue in iOS 15.0 or later - is transparent w/o code below
-//        if #available(iOS 15, *) {
-//            let appearance = UINavigationBarAppearance()
-//            let navigationBar = UINavigationBar()
-//            appearance.configureWithOpaqueBackground()
-//            appearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
-//            appearance.backgroundColor = .clear
-//            navigationBar.standardAppearance = appearance
-//            UINavigationBar.appearance().scrollEdgeAppearance = appearance
-//        }
-        
         // Настройка клавиатуры
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.toolbarDoneBarButtonItemText = "Готово"
@@ -45,7 +34,7 @@ extension AppDelegate {
         UINavigationBar.appearance().titleTextAttributes =
             [.foregroundColor: UIColor.black]
         UINavigationBar.appearance().isTranslucent = false
-        
+        fixiOS15AppearanceIssues()
         // Убираем надписи у кнопок NavigationBar
 //        UIBarButtonItem.appearance().setTitleTextAttributes(
 //            [.foregroundColor: UIColor.clear], for: .normal)
@@ -56,6 +45,34 @@ extension AppDelegate {
         UITabBarItem.appearance().setTitleTextAttributes(
             [.foregroundColor: UIColor.black ], for: .selected)
     }
+    
+    func fixiOS15AppearanceIssues() {
+//        fixiOS15NavBarIssues()
+        fixiOS15TabBarIssues()
+    }
+    
+    private func fixiOS15NavBarIssues() {
+        if #available(iOS 15, *) {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = .white
+            appearance.shadowColor = .clear
+            appearance.titleTextAttributes = [.foregroundColor: UIColor.black]
+            UINavigationBar.appearance().standardAppearance = appearance
+            UINavigationBar.appearance().scrollEdgeAppearance = appearance
+        }
+    }
+    
+    private func fixiOS15TabBarIssues() {
+        if #available(iOS 15, *) {
+            let appearance = UITabBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = UIColor(red: 0.973, green: 0.973, blue: 0.973, alpha: 1)
+            UITabBar.appearance().standardAppearance = appearance
+            UITabBar.appearance().scrollEdgeAppearance = appearance
+        }
+    }
+    
 }
 
 

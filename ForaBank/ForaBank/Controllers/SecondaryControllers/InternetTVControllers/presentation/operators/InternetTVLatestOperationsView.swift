@@ -8,7 +8,8 @@ class InternetTVLatestOperationsView: UIView {
 
     private var lineView: UIView = {
         let view = UIView()
-        view.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        //view.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        view.backgroundColor = UIColor(hexString: "#F6F6F7")
         view.translatesAutoresizingMaskIntoConstraints = false
         //view.translatesAutoresizingMavarntoConstraints = false
         return view
@@ -21,6 +22,9 @@ class InternetTVLatestOperationsView: UIView {
         if latestOpCollectionView.items.isEmpty {
             InternetTVMainController.latestOpIsEmpty = true
             InternetTVMainController.iMsg?.handleMsg(what: InternetTVMainController.msgHideLatestOperation)
+        } else {
+            InternetTVMainController.latestOpIsEmpty = false
+            InternetTVMainController.iMsg?.handleMsg(what: InternetTVMainController.msgShowLatestOperation)
         }
     }
 
@@ -37,11 +41,10 @@ class InternetTVLatestOperationsView: UIView {
             latestOpCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
             latestOpCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
             latestOpCollectionView.topAnchor.constraint(equalTo: topAnchor, constant: 0),
-            latestOpCollectionView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0),
-//            caruselCollectionView.heightAnchor.constraint(equalToConstant: 200),
+            latestOpCollectionView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 4),
             lineView.leadingAnchor.constraint(equalTo: leadingAnchor),
             lineView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            lineView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0),
+            lineView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 4),
             lineView.heightAnchor.constraint(equalToConstant: 1)
         ])
         latestOpCollectionView.set(list: viewModel.getData())
@@ -63,16 +66,13 @@ class InternetTVCollectionView: UICollectionView, UICollectionViewDelegate, UICo
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         super.init(frame: .zero, collectionViewLayout: layout)
-
         backgroundColor = .clear
         delegate = self
         dataSource = self
         register(GKHCaruselCollectionViewCell.self, forCellWithReuseIdentifier: GKHCaruselCollectionViewCell.reuseId)
-
         translatesAutoresizingMaskIntoConstraints = false
         layout.minimumLineSpacing = GKHConstants.galleryMinimumLineSpacing
         contentInset = UIEdgeInsets(top: 0, left: GKHConstants.leftDistanceToView, bottom: 0, right: GKHConstants.rightDistanceToView)
-
         showsHorizontalScrollIndicator = false
         showsVerticalScrollIndicator = false
     }
@@ -101,7 +101,7 @@ class InternetTVCollectionView: UICollectionView, UICollectionViewDelegate, UICo
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 90, height: frame.height * 0.8)
+        return CGSize(width: 100, height: frame.height * 0.8)
     }
 
     required init?(coder aDecoder: NSCoder) {

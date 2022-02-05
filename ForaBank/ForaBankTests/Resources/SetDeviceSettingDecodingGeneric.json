@@ -1,0 +1,13 @@
+{
+  "cryptoVersion": "1.0",
+  "pushDeviceId": "afbf748863492878",
+  "pushFcmToken": "fum80qSRR8qE8RxYyGP9_O:APA91bHjqAd5auSyX0YF72zbzzNTnUTPFg9Liw6d7TUAeJpoCSAiww1i7_STilGfWSDEwra1PM-j0mtX7E3cQ3NjpU5p6cnODJlWCWIFYNiuo2Lg8fM6tRgE82bJ3B3ThQNji7lzbA7w",
+  "serverDeviceGUID": "6c126879-55a8-4532-9147-0e139a2cce5",
+  "settings": [
+    {
+      "isActive": true,
+      "type": "pin",
+      "value": "pcuzTpXd0FpPq6JB12b37EnIsYW7217T9la7IOkzHY0="
+    }
+  ]
+}

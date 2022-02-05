@@ -10,4 +10,11 @@ class InternetTVLatestOperationsModel: Object {
     var additionalList  = List<AdditionalListModel>()
 }
 
+class InternetTVLatestOperationsTransport: Object {
+    @objc dynamic var paymentDate: String?
+    @objc dynamic var amount: Double = 0.0
+    @objc dynamic var puref: String?
+
+    var additionalList  = List<AdditionalListModel>()
+}
 

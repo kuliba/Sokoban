@@ -10,7 +10,7 @@ import ContactsUI
 
 
 class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFieldText{
-
+    
     
     let tableView = UITableView(frame: .zero, style: .plain)
     // MARK: - Properties
@@ -31,32 +31,31 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
     var seeall: Bool?
     var stackView = UIStackView()
     var firstTap = true
-
+    
     var lastPaymentsCollectionView: UICollectionView!
     var contactCollectionView: UICollectionView!
     var delegate: PassTextFieldText? = nil
     let contactView = UIView()
-    var banksList = [BanksList](){
-        didSet{
-        }
-    }
+    var banksList = [BanksList]()
     
     var reserveContacts = [PhoneContact]()
     var numberPhone: String?
     
     var banks: [FastPayment]?
-
+    
     var selectPhoneNumber: String?
     var selectPerson: String?
     
     let searchContact: SearchContact = UIView.fromNib()
-
+    
     var lastPayment = [GetLatestPaymentsDatum](){
         didSet{
             stackView.insertArrangedSubview(lastPaymentsCollectionView, at: 1)
             lastPaymentsCollectionView.reloadData()
         }
     }
+    
+    var counterNumbers = 0
     
     var lastPhonePayment = [GetLatestPhone](){
         didSet{
@@ -71,7 +70,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
                 contact.phoneNumber[0] = format(phoneNumber:  contact.phoneNumber.first!.description) ?? ""
             }
             contactCollectionView.reloadData()
-    //            setupCollectionView()
+            //            setupCollectionView()
         }
     }// array of PhoneContact(It is model find it below)
     var filter: ContactsFilter = .none
@@ -96,55 +95,40 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
         searchContact.anchor(height:44)
         
         let layout = UICollectionViewFlowLayout()
-
-            layout.itemSize = CGSize(width: 80, height: 100)
-            layout.scrollDirection = .horizontal
-            
-        lastPaymentsCollectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
-         let xib = UINib.init(nibName: "LastPaymentsCollectionViewCell", bundle: nil)
-        lastPaymentsCollectionView.register(xib, forCellWithReuseIdentifier: "LastPaymentsCollectionViewCell")
-
-      
         
-//        let viewLastPayments = UIView()
-//        viewLastPayments.addSubview(lastPaymentsCollectionView)
+        layout.itemSize = CGSize(width: 80, height: 100)
+        layout.scrollDirection = .horizontal
+        
+        lastPaymentsCollectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
+        let xib = UINib.init(nibName: "LastPaymentsCollectionViewCell", bundle: nil)
+        lastPaymentsCollectionView.register(xib, forCellWithReuseIdentifier: "LastPaymentsCollectionViewCell")
         
         let flowLayout = UICollectionViewFlowLayout()
-            
+        
         lastPaymentsCollectionView.isScrollEnabled = true
         
         contactCollectionView = UICollectionView(frame: view.bounds, collectionViewLayout: flowLayout)
-
-          
-         
-//            viewLastPayments.heightAnchor.constraint(equalToConstant: 100).isActive = true
-//            viewLastPayments.frame = CGRect(x: 0 , y: 0, width: self.view.frame.width, height: 100)
-
-            
-            contactView.addSubview(tableView)
-//            contactView.addSubview(contactCollectionView)
-            contactCollectionView.isHidden = true
-            tableView.anchor()
-            lastPaymentsCollectionView.backgroundColor = .white
-            contactCollectionView.delegate = self
-            contactCollectionView.dataSource = self
-            lastPaymentsCollectionView?.dataSource = self
-            lastPaymentsCollectionView?.delegate = self
-            contactCollectionView.backgroundColor = .white
-      
-            contactCollectionView.register(UINib(nibName: "HeaderBanksCollectionReusableView", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderBanksCollectionReusableView")
-
-            contactCollectionView.register(UINib(nibName: "ContactCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ContactCollectionViewCell")
-            lastPaymentsCollectionView.register(UINib(nibName: "LastPaymentsCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "LastPaymentsCollectionViewCell")
+        
+        contactView.addSubview(tableView)
+        contactCollectionView.isHidden = true
+        tableView.anchor()
+        lastPaymentsCollectionView.backgroundColor = .white
+        contactCollectionView.delegate = self
+        contactCollectionView.dataSource = self
+        lastPaymentsCollectionView?.dataSource = self
+        lastPaymentsCollectionView?.delegate = self
+        contactCollectionView.backgroundColor = .white
+        
+        contactCollectionView.register(UINib(nibName: "HeaderBanksCollectionReusableView", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderBanksCollectionReusableView")
+        
+        contactCollectionView.register(UINib(nibName: "ContactCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ContactCollectionViewCell")
+        lastPaymentsCollectionView.register(UINib(nibName: "LastPaymentsCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "LastPaymentsCollectionViewCell")
         
         lastPaymentsCollectionView.anchor(height: 100)
         
         lastPaymentsCollectionView.insetsLayoutMarginsFromSafeArea = true
         searchContact.insetsLayoutMarginsFromSafeArea = true
-//        searchContact.anchor(paddingLeft: 20)
-//        lastPaymentsCollectionView.anchor(paddingLeft: 50)
         lastPaymentsCollectionView.showsHorizontalScrollIndicator = false
-//        lastPaymentsCollectionView.scrollIndicatorInsets = nil
         viewLine.anchor(width:  UIScreen.main.bounds.width + 20, height: 1)
         viewLine.backgroundColor = UIColor(red: 0.96, green: 0.96, blue: 0.97, alpha: 1)
         
@@ -154,33 +138,26 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
         default:
             stackView = UIStackView(arrangedSubviews: [searchContact, lastPaymentsCollectionView,viewLine, tableView, contactCollectionView])
         }
-     
-
+        
+        
         lastPaymentsCollectionView.isHidden = true
-//            searchContact.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 20).isActive = true
-//            searchContact.leadingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: -20).isActive = true
         searchContact.backgroundColor = .white
-
-            stackView.isLayoutMarginsRelativeArrangement = true
-            contactView.isUserInteractionEnabled = true
-            contactCollectionView.isScrollEnabled = true
-            stackView.axis = .vertical
-            stackView.alignment = .fill
-            stackView.distribution = .fill
-            stackView.spacing = 10
-            stackView.backgroundColor = .white
-            
-//            view.addSubview(lastPaymentsCollectionView)
-//            view.addSubview(contactView)
-            view.addSubview(stackView)
-            stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0)
-            stackView.layoutMargins = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        
+        stackView.isLayoutMarginsRelativeArrangement = true
+        contactView.isUserInteractionEnabled = true
+        contactCollectionView.isScrollEnabled = true
+        stackView.axis = .vertical
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        stackView.spacing = 10
+        stackView.backgroundColor = .white
+        
+        view.addSubview(stackView)
+        stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0)
+        stackView.layoutMargins = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         
         setupUI()
-//        fetchContacts()
-        phoneNumberWithContryCode()
-        self.loadContacts(filter: filter) // Calling loadContacts methods
-
+        
         getLastPayments()
         reloadContacts()
         
@@ -193,7 +170,6 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
         tableView.tableFooterView = UIView()
         tableView.separatorStyle = .none
         tableView.sectionIndexColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1)
-//        tableView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 16)
     }
     
     fileprivate func registerContactCell() {
@@ -226,9 +202,6 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
         self.navigationItem.leftItemsSupplementBackButton = true
         let close = UIBarButtonItem(title: "Закрыть", style: .plain, target: self, action: #selector(backButton))
         close.tintColor = .black
-        //        self.navigationItem.setRightBarButton(close, animated: true)
-        
-        //        self.navigationItem.rightBarButtonItem?.action = #selector(backButton)
         self.navigationItem.rightBarButtonItem = close
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .normal)
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .highlighted)
@@ -240,50 +213,112 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
     
     
     func passTextFieldText(textField: UITextField) {
-//        guard let textField = textField as? MaskedTextField else { return }
-//                guard let cardNumber = textField.unmaskedText else { return }
-//                sea.doneButton.isHidden = cardNumber.count  >= 16 ? false : true
-//
-//                creditCardView.cardNumberTextField.maskString = cardNumber.count >= 17 ? "00000 000 0 0000 0000000" : "0000 0000 0000 0000 0"
-//
-        
         guard let text = textField.text else {
             return
         }
-        if text == "" {
+        
+        reserveContacts = contacts
+        if text.count != 0{
+            if text.digits.count > 0 {
+                searchForContactUsingPhoneNumber(phoneNumber: text)
+            } else {
+                searchForContactUsingName(text: text)
+            }
+            resultSearchController = true
+            tableView.reloadData()
+        }
+        
+        if text.digits.count == 10{
+            selectPhoneNumber = "+7\(text)"
+            getLastPhonePayments()
+            banksActive = true
+            orderedBanks.removeAll()
+        } else if text.count == 0{
             resultSearchController = false
             banksActive = false
             lastPhonePayment.removeAll()
             getLastPayments()
             orderedContacts.removeAll()
-            //            tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: UITableView.ScrollPosition.top , animated: false)
             reloadContacts()
             tableView.reloadData()
-        }
-        let filteredContacts = contacts.filter({$0.name?.lowercased().prefix(text.count) ?? "" == text.lowercased() || $0.phoneNumber[0].lowercased().prefix(text.count) == text.lowercased()})
-        reserveContacts = contacts
-        if text.count != 0{
-            
-            searchForContactUsingName(text: text)
+        } else {
             resultSearchController = true
+            banksActive = false
+            lastPhonePayment.removeAll()
+            orderedContacts.removeAll()
             tableView.reloadData()
         }
-        if text.count == 15, (text.firstIndex(of: "(") != nil){
-            selectPhoneNumber = "+7\(text)"
-            getLastPhonePayments()
-            banksActive = true
-            orderedBanks.removeAll()
-            
-        }
     }
+    
+    func check(_ givenString: String) -> Bool {
+        return givenString.range(of: "^[7-8]", options: .regularExpression) != nil
+    }
+    
+    func searchForContactUsingPhoneNumber(phoneNumber: String) {
+        
+        filteredContacts.removeAll()
+            let searchNumber = phoneNumber
+            if searchNumber.count > 0 {
+                
+                self.resultSearchController = true
+                let contacts = [CNContact]()
+                var message: String!
+                
+                let contactsStore = CNContactStore()
+                do { try contactsStore.enumerateContacts(with: CNContactFetchRequest(keysToFetch: self.allowedContactKeys())) {
+                    (contact, cursor) -> Void in
+                    if (!contact.phoneNumbers.isEmpty) {
+                        
+                        let phoneNumberToCompareAgainst =  searchNumber.components(
+                            separatedBy: NSCharacterSet.decimalDigits.inverted).joined(separator: "")
+                        for phoneNumber in contact.phoneNumbers {
+                            if let phoneNumberStruct = phoneNumber.value as? CNPhoneNumber {
+                                let phoneNumberString = phoneNumberStruct.stringValue
+                                var phoneNumberToCompare = phoneNumberString.components(
+                                    separatedBy: NSCharacterSet.decimalDigits.inverted).joined(separator: "").dropFirst()
+                                
+//                                if self.check(phoneNumberToCompare)  {
+//                                    phoneNumberToCompare = String(phoneNumberToCompare.dropFirst())
+//                                    print("phoneNumberToCompare String(phoneNumberToCompare.dropFirst()) \(String(phoneNumberToCompare.dropFirst()))")
+//                                }
+                                let phoneNumberFin = phoneNumberToCompare.prefix(phoneNumberToCompareAgainst.count)
+                                if phoneNumberFin == phoneNumberToCompareAgainst {
+                                    self.filteredContacts.append(contact)
+                                }
+                            }
+                        }
+                    }
+                }
+                    
+                    if contacts.count == 0 {
+                        message = "No contacts were found matching the given phone number."
+                        print(message!)
+                    }
+                } catch {
+                    message = "Unable to fetch contacts."
+                }
+                if message != nil {
+                    DispatchQueue.main.async {
+                        print(message!)
+                    }
+                } else {
+                    // Success
+                    DispatchQueue.main.async {
+                        
+                        self.filteredContacts = contacts
+                    }
+                }
+            }
+    }
+    
+    
     
     private func searchForContactUsingName(text: String) {
         
         var predicate: NSPredicate
-        if text.count > 0 {
+        if text.count > 0, !text.isNumeric{
             resultSearchController = true
             predicate = CNContact.predicateForContacts(matchingName: text)
-//            predicate = CNContact.predicateForContacts(matching:CNPhoneNumber.init(stringValue: text))
         } else {
             predicate = CNContact.predicateForContactsInContainer(withIdentifier: contactsStore!.defaultContainerIdentifier())
         }
@@ -292,12 +327,13 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
         do {
             filteredContacts = try store.unifiedContacts(matching: predicate,
                                                          keysToFetch: allowedContactKeys())
+            print(predicate)
+            print(filteredContacts)
         }
         catch {
             print("Error!")
         }
     }
-    
     
     fileprivate func loadContacts(filter: ContactsFilter) {
         contacts.removeAll()
@@ -319,25 +355,6 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
         contacts.append(contentsOf: filterdArray)
         
     }
-
-    
-    func phoneNumberWithContryCode() -> [String] {
-        
-        let contacts = PhoneContacts.getContacts() // here calling the getContacts methods
-        var arrPhoneNumbers = [String]()
-        for contact in contacts {
-            for ContctNumVar: CNLabeledValue in contact.phoneNumbers {
-                if let fulMobNumVar  = ContctNumVar.value as? CNPhoneNumber {
-                    //let countryCode = fulMobNumVar.value(forKey: "countryCode") get country code
-                       if let MccNamVar = fulMobNumVar.value(forKey: "digits") as? String {
-                            arrPhoneNumbers.append(MccNamVar)
-                    }
-                }
-            }
-        }
-        return arrPhoneNumbers // here array has all contact numbers.
-    }
-    
 }
 
 extension ContactsViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
@@ -363,7 +380,7 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-  
+        
         if collectionView == contactCollectionView{
             let item = contactCollectionView.dequeueReusableCell(withReuseIdentifier: "ContactCollectionViewCell", for: indexPath) as! ContactCollectionViewCell
             DispatchQueue.main.async{ [self] in
@@ -402,7 +419,6 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                 } else {
                     item.nameLabel.isHidden = true
                 }
-//                item.contactImageView.image = UIImage(named: "\(lastPhonePayment[indexPath.item].bankID!)")
                 for bank in banksList {
                     if bank.memberID == lastPhonePayment[indexPath.item].bankID{
                         item.contactImageView.image = bank.svgImage?.convertSVGStringToImage()
@@ -419,12 +435,7 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                 
                 let item = lastPaymentsCollectionView.dequeueReusableCell(withReuseIdentifier: "LastPaymentsCollectionViewCell", for: indexPath) as! LastPaymentsCollectionViewCell
                 item.nameLabel.text = format(phoneNumber: lastPayment[indexPath.item].phoneNumber ?? "")
-                //                for cell in contacts {
-                //                    cell.phoneNumber[0] = lastPayment[indexPath.item].phoneNumber ?? ""
-                //                    item.nameLabel.text = cell.name
-                //                }
                 if lastPayment.count >= 1{
-                    //                    item.contactImageView.image = nil
                     item.nameLabel.isHidden = false
                     item.nameLabel.numberOfLines = 0
                     item.bankNameLabel.isHidden = true
@@ -435,7 +446,7 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                             item.nameLabel.text = contact.name
                             if contact.avatarData != nil{
                                 item.contactImageView.image = UIImage(data: (contact.avatarData) ?? Data())
-                            }                             
+                            }
                             break
                         } else {
                             item.nameLabel.text = format(phoneNumber: lastPayment[indexPath.item].phoneNumber ?? "")
@@ -482,10 +493,10 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-      
+        
         if collectionView == contactCollectionView{
             let reusableview = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderBanksCollectionReusableView", for: indexPath) as! HeaderBanksCollectionReusableView
-                reusableview.tag = indexPath.section
+            reusableview.tag = indexPath.section
             
             if self.banks?.count ?? 0 > 1{
                 reusableview.rightImage.image = UIImage(systemName: "chevron.down")
@@ -493,22 +504,22 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
                 reusableview.rightImage.image = UIImage(systemName: "chevron.up")
             }
             
-               let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:#selector(hideCollectionView))
-                reusableview.addGestureRecognizer(tapGestureRecognizer)
+            let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:#selector(hideCollectionView))
+            reusableview.addGestureRecognizer(tapGestureRecognizer)
             
             if banks?.count ?? 0 > 0{
                 reusableview.frame = CGRect(x: 0 , y: 0, width: self.view.frame.width - 40, height: 40)
             } else {
                 reusableview.frame = CGRect(x: 0 , y: 0, width: 0, height: 40)
             }
-             //do other header related calls or settups
-                return reusableview
+            //do other header related calls or settups
+            return reusableview
         } else {
             let reusableview = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderBanksCollectionReusableView", for: indexPath) as! HeaderBanksCollectionReusableView
-
+            
             reusableview.frame = CGRect(x: 0 , y: 0, width: 0, height: 0)
-             //do other header related calls or settups
-          
+            //do other header related calls or settups
+            
             return  reusableview
         }
     }
@@ -531,83 +542,42 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
             return CGSize(width: 80, height: 100)
         }
     }
-
+    
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
         if banks?.count ?? 0 > 0, collectionView == contactCollectionView {
-            let vc = PaymentByPhoneViewController()
-            //            vc.confurmVCModel = self.confurmVCModel
+            let vc = PaymentByPhoneViewController(
+                viewModel: PaymentByPhoneViewModel(
+                    phoneNumber: selectPhoneNumber,
+                    bankId: banks?[indexPath.row].memberID ?? "")
+            )
             vc.modalPresentationStyle = .fullScreen
-            let fastPaymentBank = banks?[indexPath.row]
-            self.banksList.forEach { bank in
-                if bank.memberID == fastPaymentBank?.memberID {
-                    vc.selectedBank = bank
-                    vc.bankId = bank.memberID ?? ""
-                }
-            }
-            
-            
-            
-            //            vc.selectedBank = banks?[indexPath.row]
-            //            vc.selectBank = banks?[indexPath.row].memberNameRus
-            //            vc.bankImage = UIImage(named: "\(banks?[indexPath.row].id ?? "")")
-            if banks?[indexPath.item].memberNameRus != "ФОРА-БАНК"{
-                vc.sbp = true
-            }
-            vc.phoneField.text = selectPhoneNumber ?? ""
             vc.addCloseButton()
             let navController = UINavigationController(rootViewController: vc)
             navController.modalPresentationStyle = .fullScreen
             self.present(navController, animated: true, completion: nil)
             
         } else if collectionView == lastPaymentsCollectionView {
-            let vc = PaymentByPhoneViewController()
+            let vc = PaymentByPhoneViewController(viewModel: PaymentByPhoneViewModel())
             if lastPhonePayment.count > 0 {
-                let lastPaymentBank = lastPhonePayment[indexPath.row]
-                self.banksList.forEach { bank in
-                    if bank.memberID == lastPaymentBank.bankID {
-                        vc.selectedBank = bank
-                        vc.bankId = bank.memberID ?? ""
-                    }
-                }
-                if lastPaymentBank.bankName == "ФОРА-БАНК" {
-                    vc.sbp = false
-                } else {
-                    vc.sbp = true
-                }
+                vc.viewModel.bankId = lastPhonePayment[indexPath.row].bankID ?? ""
             } else {
-                let lastPaymentBank = lastPayment[indexPath.row]
-                self.banksList.forEach { bank in
-                    if bank.memberID == lastPaymentBank.bankID {
-                        vc.selectedBank = bank
-                        vc.bankId = bank.memberID ?? ""
-                    }
-                }
-                
-                vc.selectNumber =  format(phoneNumber: lastPayment[indexPath.item].phoneNumber ?? "")
+                vc.viewModel.bankId = lastPayment[indexPath.row].bankID ?? ""
+                vc.viewModel.phoneNumber = lastPayment[indexPath.item].phoneNumber
                 vc.summTransctionField.text = lastPayment[indexPath.item].amount ?? ""
-                
-                if lastPaymentBank.bankName == "ФОРА-БАНК"{
-                    vc.sbp = false
-                } else {
-                    vc.sbp = true
-                }
             }
-            vc.modalPresentationStyle = .fullScreen
-            
-//            if selectPhoneNumber?.digits.prefix(1) == "8"{
-//                selectPhoneNumber = selectPhoneNumber?.removeFirst().description
-//            }
-            if lastPhonePayment.count > 0{
-                vc.phoneField.text = selectPhoneNumber ?? ""
-                vc.selectNumber = selectPhoneNumber ?? ""
+            if lastPhonePayment.count > 0 {
+                let mask = StringMask(mask: "+7(000) 00-00-00")
+                var phone = mask.unmask(string: selectPhoneNumber)
+                phone?.removeFirst()
+                vc.viewModel.phoneNumber = phone
             } else {
-                let mask = StringMask(mask: "0 (000) 000-00-00")
-                let maskPhone = mask.mask(string: "8\(lastPayment[indexPath.item].phoneNumber ?? "")")
-                vc.selectNumber = maskPhone
+                vc.viewModel.phoneNumber = lastPayment[indexPath.item].phoneNumber
             }
-            vc.addCloseButton()
             
+            vc.modalPresentationStyle = .fullScreen
+            vc.addCloseButton()
             let navController = UINavigationController(rootViewController: vc)
             navController.modalPresentationStyle = .fullScreen
             self.present(navController, animated: true, completion: nil)
@@ -622,11 +592,9 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
             banks = [FastPayment.init(id: "", memberID: "", memberName: "", memberNameRus: "")]
             contactCollectionView.reloadData()
             getLastPhonePayments()
-            
         }
-        
     }
- 
+    
     func getBankList() {
         showActivity()
         
@@ -639,12 +607,8 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
             if model.statusCode == 0 {
                 self.dismissActivity()
                 guard let data  = model.data else { return }
-//                self.selectedCardNumber = cardNumber
                 DispatchQueue.main.async {
                     self.banks = data
-//                        .sorted { lhs, rhs in
-//                        lhs.memberNameRus ?? "" < rhs.memberNameRus ?? ""
-//                    }
                     self.lastPaymentsCollectionView.anchor(height:100)
                     self.contactCollectionView.isHidden = false
                     self.contactCollectionView.reloadData()
@@ -693,27 +657,23 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
         ] as [String: AnyObject]
         
         NetworkManager<GetLatestPhonePaymentsDecodableModel>.addRequest(.getLatestPhonePayments, [:], body) { model, error in
-//            if error != nil {
-//                self.dismissActivity()
-//                print("DEBUG: Error: ", error ?? "")
-//            }
             self.dismissActivity()
             guard let model = model else { return }
             print("DEBUG: Card list: ", model)
             if model.statusCode == 0 {
                 self.dismissActivity()
                 guard let data  = model.data else { return }
-//                self.selectedCardNumber = cardNumber
+                //                self.selectedCardNumber = cardNumber
                 DispatchQueue.main.async {
                     self.lastPhonePayment = data
-                        if self.lastPhonePayment.count != 0{
+                    if self.lastPhonePayment.count != 0{
                         
-                           
+                        
                         self.lastPaymentsCollectionView.isHidden = false
                         self.lastPaymentsCollectionView.reloadData()
-                        } else {
-                            self.lastPaymentsCollectionView.isHidden = true
-                        }
+                    } else {
+                        self.lastPaymentsCollectionView.isHidden = true
+                    }
                     
                     
                 }
@@ -727,29 +687,29 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
     
     func format(phoneNumber sourcePhoneNumber: String) -> String? {
         // Remove any character that is not a number
-       
+        
         var numbersOnly = sourcePhoneNumber.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
         if numbersOnly.prefix(1) == "7" || numbersOnly.prefix(1) == "8" {
             numbersOnly = String(numbersOnly.dropFirst())
         }
         let length = numbersOnly.count
         let hasLeadingOne = numbersOnly.hasPrefix("1")
-
+        
         // Check for supported phone number length
         guard length == 7 || length == 10 || (length == 11) else {
             return nil
         }
-
+        
         let hasAreaCode = (length >= 10)
         var sourceIndex = 0
-
+        
         // Leading 1
         var leadingOne = ""
         if hasLeadingOne {
             leadingOne = "1 "
             sourceIndex += 1
         }
-
+        
         // Area code
         var areaCode = ""
         if hasAreaCode {
@@ -760,20 +720,20 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
             areaCode = String(format: "(%@) ", areaCodeSubstring)
             sourceIndex += areaCodeLength
         }
-
+        
         // Prefix, 3 characters
         let prefixLength = 3
         guard let prefix = numbersOnly.substring(start: sourceIndex, offsetBy: prefixLength) else {
             return nil
         }
         sourceIndex += prefixLength
-
+        
         // Suffix, 4 characters
         let suffixLength = 4
         guard let suffix = numbersOnly.substring(start: sourceIndex, offsetBy: suffixLength) else {
             return nil
         }
-
+        
         return "+7 \(leadingOne + areaCode + prefix + "-" + suffix)"
     }
 }
@@ -791,7 +751,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
         self.multiSelectEnabled = multiSelection
         contactDelegate = delegate
     }
-
+    
     convenience public init(delegate: EPPickerDelegate?, multiSelection : Bool, subtitleCellType: SubtitleCellValue) {
         self.init()
         self.multiSelectEnabled = multiSelection
@@ -799,106 +759,115 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
         subtitleCellValue = subtitleCellType
     }
     
-        open func reloadContacts() {
-          getContacts( {(contacts, error) in
-              if (error == nil) {
-                  DispatchQueue.main.async(execute: {
-                      self.tableView.reloadData()
-                  })
-              }
-          })
-        }
+    open func reloadContacts() {
+        getContacts( {(contacts, error) in
+            if (error == nil) {
+                DispatchQueue.main.async(execute: {
+                    for contact in contacts {
+                        for number in contact.phoneNumbers {
+                            let phone: PhoneContact = .init(contact: contact)
+                            phone.phoneNumber = phone.phoneNumber.filter({$0 == number.value.stringValue})
+                            print(number.value.stringValue)
+                            self.reserveContacts.append(phone)
+                        }
+                    }
+                    self.tableView.reloadData()
+                })
+            }
+        })
+    }
     
-      func getContacts(_ completion:  @escaping ContactsHandler) {
-          if contactsStore == nil {
-              //ContactStore is control for accessing the Contacts
-              contactsStore = CNContactStore()
-          }
-          let error = NSError(domain: "EPContactPickerErrorDomain", code: 1, userInfo: [NSLocalizedDescriptionKey: "No Contacts Access"])
-          
-          switch CNContactStore.authorizationStatus(for: CNEntityType.contacts) {
-              case CNAuthorizationStatus.denied, CNAuthorizationStatus.restricted:
-                  //User has denied the current app to access the contacts.
-                  
-                  let productName = Bundle.main.infoDictionary!["CFBundleName"]!
-                  
-                  let alert = UIAlertController(title: "Unable to access contacts", message: "\(productName) does not have access to contacts. Kindly enable it in privacy settings ", preferredStyle: .alert)
-                  let okAction = UIAlertAction(title: "Ok", style: .default, handler: {  action in
-                      completion([], error)
-//                      self.dismiss(animated: true, completion: {
-//                          self.contactDelegate?.epContactPicker(self, didContactFetchFailed: error)
-//                      })
-                  })
-                  alert.addAction(okAction)
-                  self.present(alert, animated: true, completion: nil)
-              
-              case CNAuthorizationStatus.notDetermined:
-                  //This case means the user is prompted for the first time for allowing contacts
-                  contactsStore?.requestAccess(for: .contacts, completionHandler: { (granted, error) -> Void in
-                      //At this point an alert is provided to the user to provide access to contacts. This will get invoked if a user responds to the alert
-                      if  (!granted ){
-                          DispatchQueue.main.async(execute: { () -> Void in
-                              completion([], error! as NSError?)
-                          })
-                      }
-                      else{
-                          self.getContacts(completion)
-                      }
-                  })
-              
-              case  CNAuthorizationStatus.authorized:
-                  //Authorization granted by user for this app.
-                  var contactsArray = [CNContact]()
-                  
-                  let contactFetchRequest = CNContactFetchRequest(keysToFetch: allowedContactKeys())
-                  
-                  do {
-                      try contactsStore?.enumerateContacts(with: contactFetchRequest, usingBlock: { (contact, stop) -> Void in
-                          //Ordering contacts based on alphabets in firstname
-                          contactsArray.append(contact)
-                          var key: String = "#"
-                          //If ordering has to be happening via family name change it here.
-                          if let firstLetter = contact.givenName[0..<1] , firstLetter.containsAlphabets() {
-                              key = firstLetter.uppercased()
-                          }
-                          var contacts = [CNContact]()
-                          
-                          if let segregatedContact = self.orderedContacts[key] {
-                              contacts = segregatedContact
-                          }
-                          contacts.append(contact)
-                          self.orderedContacts[key] = contacts
-
-                      })
-                      self.sortedContactKeys = Array(self.orderedContacts.keys).sorted(by: <)
-                      if self.sortedContactKeys.first == "#" {
-                          self.sortedContactKeys.removeFirst()
-                          self.sortedContactKeys.append("#")
-                      }
-                      completion(contactsArray, nil)
-                  }
-                  //Catching exception as enumerateContactsWithFetchRequest can throw errors
-                  catch let error as NSError {
-                      print(error.localizedDescription)
-                  }
-              
-          }
-      }
-      
-      func allowedContactKeys() -> [CNKeyDescriptor]{
-          //We have to provide only the keys which we have to access. We should avoid unnecessary keys when fetching the contact. Reducing the keys means faster the access.
-          return [CNContactNamePrefixKey as CNKeyDescriptor,
-              CNContactGivenNameKey as CNKeyDescriptor,
-              CNContactFamilyNameKey as CNKeyDescriptor,
-              CNContactOrganizationNameKey as CNKeyDescriptor,
-              CNContactBirthdayKey as CNKeyDescriptor,
-              CNContactImageDataKey as CNKeyDescriptor,
-              CNContactThumbnailImageDataKey as CNKeyDescriptor,
-              CNContactImageDataAvailableKey as CNKeyDescriptor,
-              CNContactPhoneNumbersKey as CNKeyDescriptor,
-              CNContactEmailAddressesKey as CNKeyDescriptor,
-          ]
-      }
+    func getContacts(_ completion:  @escaping ContactsHandler) {
+        if contactsStore == nil {
+            //ContactStore is control for accessing the Contacts
+            contactsStore = CNContactStore()
+        }
+        let error = NSError(domain: "EPContactPickerErrorDomain", code: 1, userInfo: [NSLocalizedDescriptionKey: "No Contacts Access"])
+        
+        switch CNContactStore.authorizationStatus(for: CNEntityType.contacts) {
+        case CNAuthorizationStatus.denied, CNAuthorizationStatus.restricted:
+            //User has denied the current app to access the contacts.
+            
+            let productName = Bundle.main.infoDictionary!["CFBundleName"]!
+            
+            let alert = UIAlertController(title: "Unable to access contacts", message: "\(productName) does not have access to contacts. Kindly enable it in privacy settings ", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "Ok", style: .default, handler: {  action in
+                completion([], error)
+                //                      self.dismiss(animated: true, completion: {
+                //                          self.contactDelegate?.epContactPicker(self, didContactFetchFailed: error)
+                //                      })
+            })
+            alert.addAction(okAction)
+            self.present(alert, animated: true, completion: nil)
+            
+        case CNAuthorizationStatus.notDetermined:
+            //This case means the user is prompted for the first time for allowing contacts
+            contactsStore?.requestAccess(for: .contacts, completionHandler: { (granted, error) -> Void in
+                //At this point an alert is provided to the user to provide access to contacts. This will get invoked if a user responds to the alert
+                if  (!granted ){
+                    DispatchQueue.main.async(execute: { () -> Void in
+                        completion([], error! as NSError?)
+                    })
+                }
+                else{
+                    self.getContacts(completion)
+                }
+            })
+            
+        case  CNAuthorizationStatus.authorized:
+            //Authorization granted by user for this app.
+            var contactsArray = [CNContact]()
+            
+            let contactFetchRequest = CNContactFetchRequest(keysToFetch: allowedContactKeys())
+            
+            do {
+                try contactsStore?.enumerateContacts(with: contactFetchRequest, usingBlock: { (contact, stop) -> Void in
+                    //Ordering contacts based on alphabets in firstname
+                    contactsArray.append(contact)
+                    
+                    var key: String = "#"
+                    //If ordering has to be happening via family name change it here.
+                    if let firstLetter = contact.givenName[0..<1] , firstLetter.containsAlphabets() {
+                        key = firstLetter.uppercased()
+                    }
+                    var contacts = [CNContact]()
+                    
+                    if let segregatedContact = self.orderedContacts[key] {
+                        contacts = segregatedContact
+                    }
+                    
+                    contacts.append(contact)
+                    self.orderedContacts[key] = contacts
+                    
+                })
+                self.sortedContactKeys = Array(self.orderedContacts.keys).sorted(by: <)
+                if self.sortedContactKeys.first == "#" {
+                    self.sortedContactKeys.removeFirst()
+                    self.sortedContactKeys.append("#")
+                }
+                completion(contactsArray, nil)
+            }
+            //Catching exception as enumerateContactsWithFetchRequest can throw errors
+            catch let error as NSError {
+                print(error.localizedDescription)
+            }
+            
+        }
+    }
+    
+    func allowedContactKeys() -> [CNKeyDescriptor]{
+        return [CNContactNamePrefixKey as CNKeyDescriptor,
+                CNContactGivenNameKey as CNKeyDescriptor,
+                CNContactFamilyNameKey as CNKeyDescriptor,
+                CNContactOrganizationNameKey as CNKeyDescriptor,
+                CNContactBirthdayKey as CNKeyDescriptor,
+                CNContactImageDataKey as CNKeyDescriptor,
+                CNContactThumbnailImageDataKey as CNKeyDescriptor,
+                CNContactImageDataAvailableKey as CNKeyDescriptor,
+                CNContactPhoneNumbersKey as CNKeyDescriptor,
+                CNContactEmailAddressesKey as CNKeyDescriptor,
+        ]
+    }
     
     func alphabetScroll(){
         orderedBanks.removeAll()
@@ -917,43 +886,46 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
             }
             banks.append(bank)
             self.orderedBanks[key] = banks
-
-        
-        self.sortedContactKeys = Array(self.orderedBanks.keys).sorted(by: <)
-        if self.sortedContactKeys.first == "#" {
-            self.sortedContactKeys.removeFirst()
-            self.sortedContactKeys.append("#")
+            
+            
+            self.sortedContactKeys = Array(self.orderedBanks.keys).sorted(by: <)
+            if self.sortedContactKeys.first == "#" {
+                self.sortedContactKeys.removeFirst()
+                self.sortedContactKeys.append("#")
+            }
         }
-    }
         tableView.reloadData()
-}
-      
-      // MARK: - Table View DataSource
-      
-      open func numberOfSections(in tableView: UITableView) -> Int {
+    }
+    
+    // MARK: - Table View DataSource
+    
+    open func numberOfSections(in tableView: UITableView) -> Int {
         if banksActive{
             return sortedContactKeys.count
         } else {
             if resultSearchController == true { return 1 }
             return sortedContactKeys.count
         }
-      }
-      
-       open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    }
+    
+    open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if banksActive{
             let contactsForSection = orderedBanks[sortedContactKeys[section]]
             return contactsForSection?.count ?? 0
         } else {
-          if resultSearchController == true { return filteredContacts.count }
-          if let contactsForSection = orderedContacts[sortedContactKeys[section]] {
-              return contactsForSection.count
-          }
-          return 0
+            if resultSearchController == true {
+                print(filteredContacts.count)
+                return filteredContacts.count
+            }
+            if let contactsForSection = orderedContacts[sortedContactKeys[section]] {
+                return contactsForSection.count
+            }
+            return 0
         }
-      }
-
-      // MARK: - Table View Delegates
-
+    }
+    
+    // MARK: - Table View Delegates
+    
     open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! EPContactCell
         cell.accessoryType = .none
@@ -962,9 +934,9 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
         cell.contactInitialLabel.isHidden  = false
         
         if banksActive{
-           
+            
             let banks = orderedBanks[sortedContactKeys[indexPath.section]]
-             
+            
             cell.contactImageView.image = UIImage(imageLiteralResourceName: "bankDefault")
             cell.banks = banks?[indexPath.item]
             cell.updateBankCell()
@@ -973,24 +945,30 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
             cell.contactInitialLabel.isHidden = true
             cell.ownerImageView.isHidden = true
             cell.needChek = false
-           
+            
         } else if banksActive == false{
             let contact: EPContact
             if resultSearchController == true {
-                contact = EPContact(contact: filteredContacts[(indexPath as NSIndexPath).row])
+                contact = EPContact(contact: filteredContacts[indexPath.row])
             } else {
                 guard let contactsForSection = orderedContacts[sortedContactKeys[(indexPath as NSIndexPath).section]] else {
                     assertionFailure()
                     return UITableViewCell()
                 }
-                contact = EPContact(contact: contactsForSection[(indexPath as NSIndexPath).row])                
+                contact = EPContact(contact: contactsForSection[(indexPath as NSIndexPath).row])
                 cell.needChek = true
+                cell.ownerImageView.layer.cornerRadius = cell.ownerImageView.frame.size.width/2
+                cell.contactContainerView.layer.cornerRadius = cell.contactContainerView.frame.size.width/2
+                cell.ownerImageView.clipsToBounds = true
+                cell.contactContainerView.layer.masksToBounds = true
+                cell.contactContainerView.layer.cornerRadius = cell.contactContainerView.frame.size.width/2
             }
             
             if multiSelectEnabled  && selectedContacts.contains(where: { $0.contactId == contact.contactId }) {
                 cell.accessoryType = UITableViewCell.AccessoryType.checkmark
             }
             cell.updateContactsinUI(contact, indexPath: indexPath, subtitleType: subtitleCellValue)
+            
         }
         return cell
     }
@@ -1003,17 +981,12 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
         resultSearchController = false
         if banksActive{
             let banks = orderedBanks[sortedContactKeys[indexPath.section]]
-            let vc = PaymentByPhoneViewController()
-            vc.selectNumber = selectPhoneNumber
-            vc.selectedBank = banks?[indexPath.row]
-            vc.bankId = banks?[indexPath.row].memberID ?? ""
-            
-            if banksList[indexPath.row].memberNameRus == "ФОРА-БАНК"{
-                vc.sbp = false
-            } else {
-                vc.sbp = true
-            }
-            
+            let vc = PaymentByPhoneViewController(
+                viewModel: PaymentByPhoneViewModel(
+                    phoneNumber: selectPhoneNumber
+                )
+            )
+            vc.viewModel.bankId = banks?[indexPath.row].memberID ?? ""
             vc.modalPresentationStyle = .fullScreen
             
             vc.phoneField.text = selectPhoneNumber ?? ""
@@ -1025,18 +998,42 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
             let selectedContact =  cell.contact!
             selectPerson = selectedContact.displayName()
             selectPhoneNumber = selectedContact.phoneNumbers.first?.phoneNumber
-            
             guard let clearNumber = format(phoneNumber: selectPhoneNumber ?? "") else {
                 return
             }
-            
-            let newNumber = clearNumber.dropFirst(2)
-            searchContact.numberTextField.text  = newNumber.description
-            banksActive = true
-            orderedBanks.removeAll()
-            getLastPhonePayments()
-            tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: UITableView.ScrollPosition.top , animated: false)
-            tableView.reloadData()
+            if selectedContact.phoneNumbers.count > 1{
+                counterNumbers = 0
+                let controller = ChoosePhoneNumberController()
+                var numbers = [String]()
+                for i in selectedContact.phoneNumbers{
+                    numbers.append(i.phoneNumber)
+                }
+                controller.elements = numbers
+                self.counterNumbers = numbers.count
+                controller.itemIsSelect = { currency in
+                    self.selectPhoneNumber = currency
+                    let newNumber = currency.dropFirst(2)
+                    self.searchContact.numberTextField.text  = newNumber.description
+                    self.banksActive = true
+                    self.orderedBanks.removeAll()
+                    self.getLastPhonePayments()
+                    tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: UITableView.ScrollPosition.top , animated: false)
+                    tableView.reloadData()
+                    
+                }
+                let navController = UINavigationController(rootViewController: controller)
+                navController.modalPresentationStyle = .custom
+                navController.transitioningDelegate = self
+                self.present(navController, animated: true)
+            } else{
+                let newNumber = clearNumber.dropFirst(2)
+                searchContact.numberTextField.text  = newNumber.description
+                banksActive = true
+                orderedBanks.removeAll()
+                getLastPhonePayments()
+                tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: UITableView.ScrollPosition.top , animated: false)
+                tableView.reloadData()
+            }
         }
         
     }
@@ -1052,7 +1049,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
             return 0
         }
     }
-
+    
     open func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
         if resultSearchController == true { return 0 }
         
@@ -1067,7 +1064,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
         case true:
             if firstTap{
                 return 1
-
+                
             } else {
                 return sortedContactKeys.firstIndex(of: title)!
             }
@@ -1114,13 +1111,12 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
             button.contentVerticalAlignment = .center
             button.addTarget(self, action: #selector(selectedSectionStoredButtonClicked), for: .touchUpInside)
             button.centerY(inView: label)
-          
+            
             if self.orderedBanks.count > 1{
                 button.setImage(UIImage(systemName: "chevron.up"), for: .normal)
             } else  {
                 button.setImage(UIImage(systemName: "chevron.down"), for: .normal)
             }
-            //            headerView.backgroundColor = .blue
             
             return headerView
         } else {
@@ -1156,11 +1152,11 @@ extension String {
         guard let substringStartIndex = self.index(startIndex, offsetBy: start, limitedBy: endIndex) else {
             return nil
         }
-
+        
         guard let substringEndIndex = self.index(startIndex, offsetBy: start + offsetBy, limitedBy: endIndex) else {
             return nil
         }
-
+        
         return String(self[substringStartIndex ..< substringEndIndex])
     }
 }
@@ -1174,7 +1170,7 @@ extension UIView {
 extension ContactsViewController: UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         let presenter = PresentationController(presentedViewController: presented, presenting: presenting)
-        presenter.height = 490
+        presenter.height = (counterNumbers * 40) + 160
         return presenter
     }
 }

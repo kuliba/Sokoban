@@ -9,9 +9,9 @@ import Foundation
 
 enum OperationType: String, Codable {
     
-    /// + 100
+    /// receipt of money to the account
     case credit = "CREDIT"
     
-    /// - 100
+    /// debiting money from an account
     case debit = "DEBIT"
 }

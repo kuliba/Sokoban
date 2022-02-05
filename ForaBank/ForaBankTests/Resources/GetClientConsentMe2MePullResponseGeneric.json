@@ -1,0 +1,16 @@
+{
+  "data": {
+    "consentList": [
+      {
+        "active": true,
+        "bankId": "1crt88888881",
+        "beginDate": "01.01.2022 00:00:00",
+        "consentId": 1,
+        "endDate": "01.01.2022 00:00:00",
+        "oneTimeConsent": true
+      }
+    ]
+  },
+  "errorMessage": "string",
+  "statusCode": 0
+}

@@ -24,24 +24,42 @@ struct GetNotificationsModelSaved {
                 completion()
                 return
             }
-
-            let updatedNotifications = notificationsData.map{ GetNotificationsSectionModel(with: $0) }
+            
+            let a = notificationsData.map{ $0.date?.components(separatedBy: " ").first ?? "" }.uniqued()
+            
+            let updatedNotifications = notificationsData.map{ GetNotificationsCellModel(with: $0) }
+            
+            var resultArray = [GetNotificationsModel]()
+            
+            a.forEach { value in
+                let getNotificationsModel = GetNotificationsModel()
+                getNotificationsModel.date = value
+                var tempResultArray = [GetNotificationsModel]()
+                updatedNotifications.forEach { getNotificationsSectionModel in
+                    if value == getNotificationsSectionModel.date?.components(separatedBy: " ").first ?? "" {
+                        getNotificationsModel.getNotificationsEntity.append(getNotificationsSectionModel)
+                    }
+                }
+                tempResultArray.append(getNotificationsModel)
+                resultArray += tempResultArray
+                print()
+            }
             
             do {
                 
                 let realm = try Realm()
-                let existingNotifications = realm.objects(GetNotificationsSectionModel.self)
+                
+                let existingNotifications = realm.objects(GetNotificationsModel.self)
                 
                 // fitst transaction: delete items to inform subscribers in UI
                 try realm.write {
-                    
                     realm.delete(existingNotifications)
                 }
                 
                 // second transaction: add fresh data from server
                 try realm.write {
-                    
-                    realm.add(updatedNotifications)
+                    realm.add(resultArray)
+                    print("REALM", realm.configuration.fileURL?.absoluteString ?? "" )
                 }
                 
                 completion()

@@ -15,17 +15,17 @@ protocol MainViewControllerDelegate: AnyObject {
 }
 
 class MainViewController: UIViewController {
-
+    
     weak var delegate: MainViewControllerDelegate?
     var card: UserAllCardsModel?
     var alertController: UIAlertController?
- 
+    
     var token: NotificationToken?
-
+    
     var allProductList: Results<UserAllCardsModel>? = nil
-
+    
     let changeCardButtonCollection = AllCardView()
-
+    
     var payments = [PaymentsModel]() {
         didSet {
             DispatchQueue.main.async {
@@ -34,7 +34,7 @@ class MainViewController: UIViewController {
         }
     }
     var selectable = true
-
+    
     var productList = [UserAllCardsModel]() {
         didSet {
             DispatchQueue.main.async {
@@ -56,28 +56,24 @@ class MainViewController: UIViewController {
                     for i in self.productsCardsAndAccounts {
                         self.productsFromRealm.append(PaymentsModel(productListFromRealm: i))
                     }
-                    if self.productsCardsAndAccounts.count <= 3{
-                            self.productsFromRealm.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
-                    } else if self.productsCardsAndAccounts.count > 4{
-//                            self.productsFromRealm.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
-                    }
+                    self.productsFromRealm.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
                     self.reloadData(with: nil)
                 }
-
+                
             }
         }
     }
-
+    
     var filterData = [GetProductListDatum]()
-
+    
     var productsFromRealm = [PaymentsModel]()
-
+    
     var products = [PaymentsModel]()
-
+    
     var productsCardsAndAccounts = [UserAllCardsModel]()
-
+    
     var productsDeposits = [UserAllCardsModel]()
-
+    
     var isFiltered = false
     var pay = [PaymentsModel]() {
         didSet {
@@ -132,10 +128,10 @@ class MainViewController: UIViewController {
         }
     }
     lazy var searchBar: NavigationBarUIView = UIView.fromNib()
-
+    
     enum Section: Int, CaseIterable {
         case products, pay, offer, currentsExchange, openProduct, branches, investment, services
-
+        
         func description() -> String {
             switch self {
             case .products:
@@ -157,50 +153,47 @@ class MainViewController: UIViewController {
             }
         }
     }
-
+    
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Section, PaymentsModel>?
     lazy var realm = try? Realm()
-
-
+    
+    weak var templatesListViewDelegate: TemplatesListViewHostingViewControllerDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-//        navigationController?.navigationBar.isHidden = true
         navigationController?.navigationBar.backgroundColor = UIColor(hexString: "F8F8F8")
         navigationController?.navigationBar.barTintColor = UIColor(hexString: "F8F8F8")
-
         view.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 1)
-
+        
         setupSearchBar()
         setupCollectionView()
         createDataSource()
         getCurrency()
         setupData()
         reloadData(with: nil)
-        AddAllUserCardtList.add() {
-            print(" AddAllUserCardtList.add()")
-//            self.observerRealm()
-            self.productList = [UserAllCardsModel]()
-
-        }
-        observerRealm()
         additionalButton = [PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: "")]
+        
+        self.allProductList = self.realm?.objects(UserAllCardsModel.self)
         productList = [UserAllCardsModel]()
-
+        AddAllUserCardtList.add() { [weak self] in
+            self?.allProductList = self?.realm?.objects(UserAllCardsModel.self)
+            self?.productList = [UserAllCardsModel]()
+        }
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         UITabBarItem.appearance().setTitleTextAttributes(
-                [.foregroundColor: UIColor.black], for: .selected)
-
+            [.foregroundColor: UIColor.black], for: .selected)
         self.navigationController?.navigationBar.isHidden = true
-        AddAllUserCardtList.add() {
-            print(" AddAllUserCardtList.add()")
-
+        
+        AddAllUserCardtList.add() { [weak self] in
+            self?.allProductList = self?.realm?.objects(UserAllCardsModel.self)
+            self?.productList = [UserAllCardsModel]()
         }
     }
-
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if GlobalModule.qrOperator != nil && GlobalModule.qrData != nil {
@@ -210,24 +203,24 @@ class MainViewController: UIViewController {
             present(nc, animated: false)
         }
     }
-
+    
     @objc func openSetting() {
         delegate?.goSettingViewController()
     }
-
+    
     private func setupSearchBar() {
         view.addSubview(searchBar)
         searchBar.secondButton.image = UIImage(named: "Avatar")?.withRenderingMode(.alwaysTemplate)
         searchBar.bellIcon.tintColor = .black
-
+        
         searchBar.secondButton.tintColor = .black
         searchBar.secondButton.isUserInteractionEnabled = true
         searchBar.secondButton.alpha = 1
-
+        
         let gesture = UITapGestureRecognizer(target: self, action: #selector(openSetting))
         searchBar.secondButton.addGestureRecognizer(gesture)
         searchBar.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, height: 48)
-
+        
         searchBar.bellTapped = {
             let pushHistory = PushHistoryViewController.storyboardInstance()!
             let nc = UINavigationController(rootViewController: pushHistory)
@@ -235,89 +228,80 @@ class MainViewController: UIViewController {
             self.present(nc, animated: true)
         }
     }
-
+    
     func observerRealm() {
         allProductList = realm?.objects(UserAllCardsModel.self)
-        self.token = self.allProductList?.observe { [weak self] (changes: RealmCollectionChange) in
-            guard (self?.collectionView) != nil else {
-                return
-            }
+        self.token = self.allProductList?.observe { [weak self] ( changes: RealmCollectionChange) in
+            guard (self?.collectionView) != nil else {return}
             switch changes {
             case .initial:
-                print("Initial")
-                self?.productList = [UserAllCardsModel]()
-                self?.reloadData(with: nil)
-
+                self?.collectionView?.reloadData()
             case .update(_, let deletions, let insertions, let modifications):
-                print("Update")
-                if self?.allProductList?.count ?? 0 > 0 {
-
-                    self?.productList = [UserAllCardsModel]()
-                    self?.reloadData(with: nil)
-                }
-
+                self?.collectionView?.performBatchUpdates({
+                    self?.collectionView?.reloadItems(at: modifications.map { IndexPath(row: $0, section: 0) })
+                    self?.collectionView?.insertItems(at: insertions.map { IndexPath(row: $0, section: 0) })
+                    self?.collectionView?.deleteItems(at: deletions.map { IndexPath(row: $0, section: 0) })
+                })
             case .error(let error):
                 fatalError("\(error)")
             }
         }
-
+        
     }
-
+    
+    deinit {
+        self.token?.invalidate()
+    }
+    
     func setupData() {
         offer = MockItems.returnBanner()
         currentsExchange = MockItems.returnCurrency()
         pay = MockItems.returnFastPay()
         openProduct = MockItems.returnOpenProduct()
     }
-
+    
     private func setupCollectionView() {
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createCompositionLayout())
         collectionView.backgroundColor = .white
         view.addSubview(collectionView)
         collectionView.anchor(top: searchBar.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor)
-
+        
         collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.reuseId)
         collectionView.register(PaymentsMainCell.self, forCellWithReuseIdentifier: PaymentsMainCell.reuseId)
         collectionView.register(AllCardCell.self, forCellWithReuseIdentifier: AllCardCell.reuseId)
         collectionView.register(OfferCard.self, forCellWithReuseIdentifier: OfferCard.reuseId)
-
+        
         let nib = UINib(nibName: "CurrencyExchangeCollectionViewCell", bundle: nil)
         collectionView.register(nib, forCellWithReuseIdentifier: "CurrencyExchangeCollectionViewCell")
         collectionView.register(TransferCell.self, forCellWithReuseIdentifier: TransferCell.reuseId)
         collectionView.register(OfferCollectionViewCell.self, forCellWithReuseIdentifier: OfferCollectionViewCell.reuseId)
         collectionView.register(ProductCell.self, forCellWithReuseIdentifier: ProductCell.reuseId)
         collectionView.register(NewProductCell.self, forCellWithReuseIdentifier: NewProductCell.reuseId)
-
+        
         collectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0)
         collectionView.isScrollEnabled = true
         collectionView.delegate = self
         collectionView.dataSource = dataSource
     }
-
+    
     func reloadData(with searchText: String?) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, PaymentsModel>()
-
         snapshot.appendSections([.products, .pay, .offer, .currentsExchange, .openProduct, .branches, .investment, .services])
-
         snapshot.appendItems(productsFromRealm, toSection: .products)
         snapshot.appendItems(pay, toSection: .pay)
         snapshot.appendItems(offer, toSection: .offer)
         snapshot.appendItems(currentsExchange, toSection: .currentsExchange)
         snapshot.appendItems(openProduct, toSection: .openProduct)
-//        snapshot.appendItems(branches, toSection: .branches)
-//        snapshot.appendItems(investment, toSection: .investment)
-//        snapshot.appendItems(services, toSection: .services)
-//        snapshot.appendItems(additionalButton, toSection: .products)
         dataSource?.apply(snapshot, animatingDifferences: true)
         collectionView.reloadData()
-
+        
     }
-
+    
     func getCurrency() {
-
+        
         let body = ["currencyCodeAlpha": "USD"
         ] as [String: AnyObject]
-
+        
         NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], body) { model, error in
             if error != nil {
                 print("DEBUG: Error: ", error ?? "")
@@ -332,22 +316,21 @@ class MainViewController: UIViewController {
                 self.dataUSD = lastPaymentsList
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
-
+                
             }
         }
-
+        
         let bodyEURO = ["currencyCodeAlpha": "EUR"
         ] as [String: AnyObject]
-
+        
         NetworkManager<GetExchangeCurrencyRatesDecodableModel>.addRequest(.getExchangeCurrencyRates, [:], bodyEURO) { model, error in
             if error != nil {
-
+                
                 print("DEBUG: Error: ", error ?? "")
             }
             guard let model = model else {
                 return
             }
-            print("DEBUG: LatestPayment: ", model)
             if model.statusCode == 0 {
                 guard let lastPaymentsList = model.data else {
                     return
@@ -355,33 +338,33 @@ class MainViewController: UIViewController {
                 self.dataEuro = lastPaymentsList
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
-
+                
             }
         }
     }
 }
 
 extension MainViewController: FirstControllerDelegate {
-
+    
     func sendData(data: [GetProductListDatum]) {
-//        DispatchQueue.main.async {
-//            self.getCardList { data, errorMessage in
-//                guard let listProducts = data else {return}
-//                self.products.removeAll()
-//                self.productList.removeAll()
-//                for i in listProducts.prefix(3) {
-//                    self.products.append(PaymentsModel(productList: i))
-//                }
-//                if listProducts.prefix(3).count < 3{
-//                    self.products.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
-//                } else if listProducts.prefix(3).count == 3{
-//                    self.products.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
-//                }
-//                self.productList = data ?? []
-//            }
-//        }
+        //        DispatchQueue.main.async {
+        //            self.getCardList { data, errorMessage in
+        //                guard let listProducts = data else {return}
+        //                self.products.removeAll()
+        //                self.productList.removeAll()
+        //                for i in listProducts.prefix(3) {
+        //                    self.products.append(PaymentsModel(productList: i))
+        //                }
+        //                if listProducts.prefix(3).count < 3{
+        //                    self.products.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
+        //                } else if listProducts.prefix(3).count == 3{
+        //                    self.products.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
+        //                }
+        //                self.productList = data ?? []
+        //            }
+        //        }
     }
-
+    
 }
 
 extension MainViewController: ChildViewControllerDelegate {

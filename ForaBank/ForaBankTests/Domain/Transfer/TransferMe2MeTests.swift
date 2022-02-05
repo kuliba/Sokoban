@@ -21,7 +21,7 @@ class TransferMe2MeTests: XCTestCase {
         let json = try Data(contentsOf: url)
         
         // when
-        let result = try decoder.decode(TransferMe2Me.self, from: json)
+        let result = try decoder.decode(TransferMe2MeData.self, from: json)
         
         // then
         XCTAssertEqual(result.amount, 100)
@@ -35,8 +35,8 @@ class TransferMe2MeTests: XCTestCase {
     func testEncoding_Min() throws {
         
         // given
-        let payer = TransferAbstract.Payer(inn: nil, accountId: nil, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
-        let transfer = TransferMe2Me(amount: nil, check: false, comment: nil, currencyAmount: "RUB", payer: payer, bankId: nil)
+        let payer = TransferAbstractData.Payer(inn: nil, accountId: nil, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
+        let transfer = TransferMe2MeData(amount: nil, check: false, comment: nil, currencyAmount: "RUB", payer: payer, bankId: "12345678")
         
         // when
         let result = try encoder.encode(transfer)

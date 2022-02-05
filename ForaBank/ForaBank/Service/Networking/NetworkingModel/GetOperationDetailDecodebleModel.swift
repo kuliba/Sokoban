@@ -81,6 +81,21 @@ struct OperationDetailDatum: Codable {
     let paymentOperationDetailID: Int?
     let printFormType, dateForDetail, memberID: String?, transferEnum: String?
     let transferReference: String?
+    let account: String?
+    let payeeAccountNumber: String?
+    let countryName: String?
+    let payeeBankBIC: String?
+    let payeeINN: String?
+    let payeeKPP: String?
+    let provider: String?
+    let period: String?
+    let transferNumber: String?
+    let accountTitle: String?
+    let isTrafficPoliceService: Bool?
+    let paymentTemplateId: Int?
+    let payeeAccountId: Int?
+    let payeeCardId: Int?
+    let payeeCurrency: String?
 
     enum CodingKeys: String, CodingKey {
         
@@ -96,6 +111,21 @@ struct OperationDetailDatum: Codable {
         case paymentOperationDetailID = "paymentOperationDetailId"
         case printFormType, dateForDetail, memberID = "memberId", transferEnum
         case transferReference
+        case account
+        case payeeAccountNumber
+        case countryName
+        case payeeBankBIC
+        case payeeINN
+        case payeeKPP
+        case provider
+        case period
+        case transferNumber
+        case accountTitle
+        case isTrafficPoliceService
+        case payeeAccountId
+        case paymentTemplateId
+        case payeeCardId
+        case payeeCurrency
     }
 }
 

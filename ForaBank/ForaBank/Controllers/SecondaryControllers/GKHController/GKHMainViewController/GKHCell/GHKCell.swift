@@ -23,17 +23,28 @@ class GHKCell: UITableViewCell {
         organizationImageView.image = nil
     }
     
-    func set(viewModel: GKHOperatorsModel) {
-        organizationName.text = viewModel.name?.uppercased()
+    func set(item: CustomGroup) {
+        organizationName.text = item.name.uppercased()
         organizationImageView.image = UIImage(named: "GKH")
-        innLable.text = viewModel.synonymList.first
-        if let svgImg = viewModel.logotypeList.first?.svgImage {
-            //let dataDecoded : Data = Data(base64Encoded: viewModel.logotypeList.first?.content ?? "", options: .ignoreUnknownCharacters)!
-            //let decodedimage = UIImage(data: dataDecoded)
-            let image = svgImg.convertSVGStringToImage()
-            organizationImageView.image = image
+        if item.op == nil && item.childsOperators.count > 0 {
+            let op = item.childsOperators[0]
+            innLable.text = op.synonymList.first
+            if let svgImg = op.logotypeList.first?.svgImage {
+                let image = svgImg.convertSVGStringToImage()
+                organizationImageView.image = image
+            } else {
+                organizationImageView.image = UIImage(named: "GKH")
+            }
         } else {
-            organizationImageView.image = UIImage(named: "GKH")
+            innLable.text = item.op?.synonymList.first
+            if let svgImg = item.op?.logotypeList.first?.svgImage {
+                //let dataDecoded : Data = Data(base64Encoded: viewModel.logotypeList.first?.content ?? "", options: .ignoreUnknownCharacters)!
+                //let decodedimage = UIImage(data: dataDecoded)
+                let image = svgImg.convertSVGStringToImage()
+                organizationImageView.image = image
+            } else {
+                organizationImageView.image = UIImage(named: "GKH")
+            }
         }
     }
 }

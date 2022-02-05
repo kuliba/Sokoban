@@ -20,11 +20,10 @@ final class NetworkManager<T: NetworkModelProtocol> {
         let s = RouterSassionConfiguration()
         let session = s.returnSession()
 
-
         if let token = CSRFToken.token {
             request.allHTTPHeaderFields = ["X-XSRF-TOKEN": token]
         }
-
+        
         print("DEBUG: urlParametrs count",urlParametrs.count)
         if request.httpMethod != "GET" {
             /// URL Parameters
@@ -53,14 +52,12 @@ final class NetworkManager<T: NetworkModelProtocol> {
             do {
                 let jsonAsData = try JSONSerialization.data(withJSONObject: requestBody, options: [])
                 request.httpBody = jsonAsData
-                print("DEBUG: URLrequest: \(request.httpBody)")
                 if request.value(forHTTPHeaderField: "Content-Type") == nil {
                     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
                 }
             } catch {
                 debugPrint(NetworkError.encodingFailed)
             }
-
         }
 
         if request.httpMethod == "GET" {
@@ -85,8 +82,7 @@ final class NetworkManager<T: NetworkModelProtocol> {
                 if error != nil {
                     completion(nil, "Пожалуйста, проверьте ваше сетевое соединение.")
                 }
-                //print("test5555 \(response.request.content.body)")
-
+              
                 if let response = response as? HTTPURLResponse {
                     let result = handleNetworkResponse(response)
                     switch result {
@@ -95,9 +91,7 @@ final class NetworkManager<T: NetworkModelProtocol> {
                             completion(nil, NetworkResponse.noData.rawValue)
                             return
                         }
-                        print(String(data: data ?? Data(), encoding: .utf8) ?? "null")
                         let updatingTimeObject = returnRealmModel()
-
                         /// Сохраняем в REALM
                         let r = try? Realm()
                         do {

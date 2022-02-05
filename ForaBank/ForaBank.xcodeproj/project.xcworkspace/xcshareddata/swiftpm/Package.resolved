@@ -128,6 +128,15 @@
         }
       },
       {
+        "package": "PhoneNumberKit",
+        "repositoryURL": "https://github.com/marmelroy/PhoneNumberKit.git",
+        "state": {
+          "branch": null,
+          "revision": "1ef0431b971f69c48ca5eb4cdba07f2c5da54c35",
+          "version": "3.3.3"
+        }
+      },
+      {
         "package": "ProgressHUD",
         "repositoryURL": "https://github.com/relatedcode/ProgressHUD.git",
         "state": {
@@ -251,6 +260,15 @@
           "branch": null,
           "revision": "c2d42574e4fe4e1f9719843f35add7922942a16b",
           "version": "1.2.7"
+        }
+      },
+      {
+        "package": "SwiftUI-Shimmer",
+        "repositoryURL": "https://github.com/markiv/SwiftUI-Shimmer",
+        "state": {
+          "branch": null,
+          "revision": "61411771350a5a4e96666a8a202ae4b2be327a2b",
+          "version": "1.0.1"
         }
       },
       {

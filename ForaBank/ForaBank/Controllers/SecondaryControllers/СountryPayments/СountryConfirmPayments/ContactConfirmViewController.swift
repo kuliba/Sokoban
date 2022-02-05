@@ -17,6 +17,7 @@ class ConfirmViewControllerModel {
     lazy var realm = try? Realm()
     var type: PaymentType
     var paymentSystem: PaymentSystemList?
+    var templateButtonViewModel: TemplateButtonViewModel?
     
     var cardFromRealm: UserAllCardsModel? {
         didSet {
@@ -141,11 +142,13 @@ class ConfirmViewControllerModel {
     }
     
     enum StatusOperation {
+        case inProgress
         case succses
         case error
         case returnRequest
         case changeRequest
         case processing
+        case timeOut
     }
     
     enum PaymentType {
@@ -199,6 +202,27 @@ class ConfirmViewControllerModel {
 }
 
 class ContactConfurmViewController: UIViewController {
+    
+//    var netStatus = true
+//    ///Сетевое  соединение отсутствует
+//    func netEnable() {
+//        netStatus = false
+//    }
+//    ///Сетевое  соединение восстановлено
+//    func netDesable() {
+//        netStatus = true
+//    }
+//
+//    func showNetErrorAlert () {
+//        switch netStatus {
+//        case true: showActivity()
+//        case false:
+//            self.dismissActivity()
+//            self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
+//        }
+//    }
+    
+    
     lazy var realm = try? Realm()
     var confurmVCModel: ConfirmViewControllerModel? {
         didSet {
@@ -286,7 +310,6 @@ class ContactConfurmViewController: UIViewController {
         doneButton.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
         hideKeyboardWhenTappedAround()
         NotificationCenter.default.addObserver(self, selector: #selector(self.setOtpCode(_:)), name: NSNotification.Name(rawValue: "otpCode"), object: nil)
-        let delegate = ContentViewDelegate()
         let statusValue = createTransferSBP?.data?.additionalList?.filter({$0.fieldName == "AFResponse"})
         if statusValue?[0].fieldValue == "G"{
         
@@ -331,28 +354,13 @@ class ContactConfurmViewController: UIViewController {
     
     
     func presentSwiftUIView(data: AntifraudViewModel) {
-        let swiftUIView = AntifraudView(data: data, delegate: ContentViewDelegate())
-        let hostingController = UIHostingController(rootView: swiftUIView)
-        //        hostingController.modalPresentationStyle = .overCurrentContext
-        
-        if #available(iOS 15.0, *) {
-            if let presentationController = hostingController.presentationController as? UISheetPresentationController {
-                presentationController.detents = [.medium()]
-            }
-        } else {
-            // Fallback on earlier versions
+        guard let dataTransfer = createTransferSBP else {
+            return
         }
-        hostingController.rootView.present = {
-            let vc = PaymentsDetailsSuccessViewController()
-            vc.isModalInPresentation = true
-            
 
-            hostingController.present(vc, animated: true, completion: nil)
-        }
-        present(hostingController, animated: true, completion: {
-            hostingController.presentationController?.presentedView?.gestureRecognizers?[0].isEnabled = false
-         })
+        let hostVC = AntifraudViewHostingController(with: AntifraudViewModel(model: dataTransfer, phoneNumber: data.phoneNumber))
         
+        present(hostVC, animated: true)
     }
     
     func setupData(with model: ConfirmViewControllerModel) {
@@ -571,9 +579,6 @@ class ContactConfurmViewController: UIViewController {
             cardFromField.balanceLabel.isHidden = true
             cardFromField.titleLabel.text = "Счет списания"
             cardFromField.leftTitleAncor.constant = 64
-//            paymentGKH() { error in
-//                print("ЖКХ", error ?? "")
-//            }
             
         case .contact:
             cardFromField.isHidden = true
@@ -711,33 +716,45 @@ class ContactConfurmViewController: UIViewController {
     }
     
     @objc func doneButtonTapped() {
-        print(#function)
+//        doneButton.isEnabled = false
+//        doneButton.backgroundColor = .systemGray2
         guard var code = smsCodeField.textField.text else { return }
         if code.isEmpty {
             code = "0"
         }
         let body = ["verificationCode": code] as [String: AnyObject]
-        print("DEBUG: PaymentMake body", body)
+
         showActivity()
+        
+        self.timeOut() {
+            self.dismissActivity()
+            return
+        }
         
         switch confurmVCModel?.type {
         
         case .card2card, .requisites, .phoneNumber, .gkh, .mobilePayment:
-            print(#function, body)
-            NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { respons, error in
+            NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { response, error in
                 if error != nil {
+//                    self.showNetErrorAlert ()
                     self.dismissActivity()
-                    print("DEBUG: Error: ", error ?? "")
-                    self.showAlert(with: "Ошибка", and: error ?? "")
+                    self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
                 }
-                guard let model = respons else { return }
+                
+                guard let model = response else { return }
                 
                 if model.statusCode == 0 {
-                    print("DEBUG: Success payment")
+                    let documentStatus = model.data?.documentStatus ?? ""
                     self.dismissActivity()
                     DispatchQueue.main.async {
                         let vc = PaymentsDetailsSuccessViewController()
-                        self.confurmVCModel?.status = .succses
+                        switch documentStatus {
+                        case "COMPLETED": self.confurmVCModel?.status = .succses
+                        case "IN_PROGRESS": self.confurmVCModel?.status = .inProgress
+                        case "REJECTED": self.confurmVCModel?.status = .error
+                        default:
+                            print("Не известный статус документа")
+                        }
                         vc.confurmVCModel = self.confurmVCModel
                         //vc.confurmVCModel?.statusIsSuccses = true
                         vc.confurmVCModel?.paymentOperationDetailId = model.data?.paymentOperationDetailId ?? 0
@@ -753,17 +770,18 @@ class ContactConfurmViewController: UIViewController {
                         default:
                             break
                         }
-                        
-//                        vc.modalPresentationStyle = .fullScreen
+//                        self.doneButton.isEnabled = true
+//                        self.doneButton.backgroundColor = .red
                         let nav = UINavigationController(rootViewController: vc)
                         nav.modalPresentationStyle = .fullScreen
                         self.present(nav, animated: true, completion: nil)
+                        
                     }
                 } else {
+//                    self.showNetErrorAlert ()
                     self.dismissActivity()
-                    print("DEBUG: Error: ", model.errorMessage ?? "")
-
-                    self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+                    self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
+                             
                 }
             }
             
@@ -771,41 +789,58 @@ class ContactConfurmViewController: UIViewController {
             NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { respons, error in
                 self.dismissActivity()
                 if error != nil {
-                    print("DEBUG: Error: ", error ?? "")
-                    self.showAlert(with: "Ошибка", and: error ?? "")
+//                    self.showNetErrorAlert ()
+                    self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
                 }
                 guard let model = respons else { return }
                 
                 if model.statusCode == 0 {
-                    print("DEBUG: Success payment")
+                    let documentStatus = model.data?.documentStatus ?? ""
                     DispatchQueue.main.async {
                         let vc = PaymentsDetailsSuccessViewController()
-                        vc.confurmVCModel = self.confurmVCModel
-                        vc.confurmVCModel?.status = .succses
-                        vc.confurmVCModel?.paymentOperationDetailId = model.data?.paymentOperationDetailId ?? 0
+                        switch documentStatus {
+                        case "COMPLETED": self.confurmVCModel?.status = .succses
+                        case "IN_PROGRESS": self.confurmVCModel?.status = .inProgress
+                        case "REJECTED": self.confurmVCModel?.status = .error
+                        default:
+                            print("Не известный статус документа")
+                        }
+                        self.confurmVCModel?.paymentOperationDetailId = model.data?.paymentOperationDetailId ?? 0
                         switch self.confurmVCModel?.type {
                         case .card2card, .phoneNumber:
                             vc.printFormType = "internal"
                         case .requisites:
                             vc.printFormType = "external"
+                        case .mig :
+                            vc.printFormType = "direct"
+                        case .contact:
+                            vc.printFormType = "contactAddressless"
                         default:
                             break
                         }
                         if self.confurmVCModel?.type == .phoneNumberSBP {
                             vc.printFormType = "sbp"
+                            
+                            // Template button view model
+                            if let name = self.confurmVCModel?.fullName, let paymentOperationDetailId = model.data?.paymentOperationDetailId {
+                                
+                                self.confurmVCModel?.templateButtonViewModel = .sfp(name: name, paymentOperationDetailId: paymentOperationDetailId)
+                            }
                         }
-//                        vc.modalPresentationStyle = .fullScreen
+                        vc.confurmVCModel = self.confurmVCModel
                         let nav = UINavigationController(rootViewController: vc)
                         nav.modalPresentationStyle = .fullScreen
                         self.present(nav, animated: true, completion: nil)
+//                        self.doneButton.isEnabled = true
+//                        self.doneButton.backgroundColor = .red
                     }
                 } else if model.statusCode == 102 {
-                    self.showAlert(with: "Ошибка", and: model.errorMessage ?? "") {
+                    self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз") {
                         self.navigationController?.popViewController(animated: true)
                     }
                 } else {
-                    print("DEBUG: Error: ", model.errorMessage ?? "")
-                    self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+//                    self.showNetErrorAlert ()
+                    self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
                 }
             }
         }
@@ -832,12 +867,32 @@ class ContactConfurmViewController: UIViewController {
                      "additional" : bodyArr] as [String: AnyObject]
         
         NetworkManager<CreateDirectTransferDecodableModel>.addRequest(.createServiceTransfer, [:], body) { respModel, error in
-//            self.dismissActivity()
             if error != nil {
-                print("DEBUG: Error: ContaktPaymentBegin ", error ?? "")
                 completion(error!)
+//                self.showNetErrorAlert ()
+                self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
             } else {
                 completion(nil)
+            }
+        }
+    }
+    
+    private func timeOut(_ complition: @escaping () -> Void) {
+        var runCount = 0
+
+        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
+            runCount += 1
+            if runCount == 60 {
+                timer.invalidate()
+                let vc = PaymentsDetailsSuccessViewController()
+                self.confurmVCModel?.status = .timeOut
+                vc.confurmVCModel = self.confurmVCModel
+                let nav = UINavigationController(rootViewController: vc)
+                nav.modalPresentationStyle = .fullScreen
+                self.present(nav, animated: true, completion: nil)
+//                self.doneButton.isEnabled = true
+//                self.doneButton.backgroundColor = .red
+                complition()
             }
         }
     }
@@ -864,3 +919,13 @@ extension ConfirmViewControllerModel {
         cardFromAccountNumber = operation.payerAccountNumber ?? ""
     }
 }
+
+extension ConfirmViewControllerModel {
+    
+    enum TemplateButtonViewModel {
+        
+        case template(PaymentTemplateData.ID)
+        case sfp(name: String, paymentOperationDetailId: Int)
+    }
+}
+

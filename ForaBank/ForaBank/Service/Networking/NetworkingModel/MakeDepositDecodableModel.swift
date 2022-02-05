@@ -57,6 +57,7 @@ extension MakeDepositDecodableModel {
 struct MakeDepositDataDecodableModel: Codable {
     let documentStatus: String?
     let accountNumber: String?
+    //FIXME: Проверить closeDate на сервере
     let closeDate: Int?
     let paymentOperationDetailId: Int?
 }

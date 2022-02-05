@@ -57,7 +57,7 @@ extension GetAccountStatementDecodableModel {
 struct GetAccountStatementDatum: Codable {
     let mcc, accountID: Int?
     let accountNumber: String?
-    let amount: Float?
+    let amount: Double?
     let comment: String?
     let currencyCodeNumeric: Int?
     let date: Int?
@@ -67,12 +67,17 @@ struct GetAccountStatementDatum: Codable {
     let tranDate: Int?
     let type: String?
     var dateFormatting: String?
+    let paymentDetailType: PaymentDetailType?
+    let fastPayment: FastPaymentData?
+    let documentAmount: Double?
     
     enum CodingKeys: String, CodingKey {
         case mcc = "MCC"
-        case accountID, accountNumber, amount, comment, currencyCodeNumeric, date, documentID, groupName
+        case accountID, accountNumber, amount, comment, currencyCodeNumeric, date, documentID, groupName, documentAmount
         case md5Hash = "md5hash"
         case merchantName, merchantNameRus, name, operationType, svgImage, tranDate, type, dateFormatting
+        case paymentDetailType
+        case fastPayment
     }
 }
 
@@ -104,74 +109,5 @@ extension GetAccountStatementDatum {
     var transactionDate: Date {
         
         Date(timeIntervalSince1970: TimeInterval((date ?? 0) / 1000))
-    }
-}
-
-// MARK: GetAccountStatementDatum convenience initializers and mutators
-
-extension GetAccountStatementDatum {
-    init(data: Data) throws {
-        self = try newJSONDecoder().decode(GetAccountStatementDatum.self, from: data)
-    }
-
-    init(_ json: String, using encoding: String.Encoding = .utf8) throws {
-        guard let data = json.data(using: encoding) else {
-            throw NSError(domain: "JSONDecoding", code: 0, userInfo: nil)
-        }
-        try self.init(data: data)
-    }
-
-    init(fromURL url: URL) throws {
-        try self.init(data: try Data(contentsOf: url))
-    }
-
-    func with(
-        mcc: Int?? = nil,
-        accountID: Int?? = nil,
-        accountNumber: String?? = nil,
-        amount: Float?? = nil,
-        comment: String?? = nil,
-        currencyCodeNumeric: Int?? = nil,
-        date: Int?? = nil,
-        documentID: Int?? = nil,
-        groupName: String?? = nil,
-        md5Hash: String?? = nil,
-        merchantName: String?? = nil,
-        merchantNameRus: String?? = nil,
-        name: String?? = nil,
-        operationType: String?? = nil,
-        svgImage: String?? = nil,
-        tranDate: Int?? = nil,
-        type: String?? = nil,
-        dateFormatting: String?? = nil
-    ) -> GetAccountStatementDatum {
-        return GetAccountStatementDatum(
-            mcc: mcc ?? self.mcc,
-            accountID: accountID ?? self.accountID,
-            accountNumber: accountNumber ?? self.accountNumber,
-            amount: amount ?? self.amount,
-            comment: comment ?? self.comment,
-            currencyCodeNumeric: currencyCodeNumeric ?? self.currencyCodeNumeric,
-            date: date ?? self.date,
-            documentID: documentID ?? self.documentID,
-            groupName: groupName ?? self.groupName,
-            md5Hash: md5Hash ?? self.md5Hash,
-            merchantName: merchantName ?? self.merchantName,
-            merchantNameRus: merchantNameRus ?? self.merchantNameRus,
-            name: name ?? self.name,
-            operationType: operationType ?? self.operationType,
-            svgImage: svgImage ?? self.svgImage,
-            tranDate: tranDate ?? self.tranDate,
-            type: type ?? self.type,
-            dateFormatting: dateFormatting ?? self.dateFormatting
-        )
-    }
-
-    func jsonData() throws -> Data {
-        return try newJSONEncoder().encode(self)
-    }
-
-    func jsonString(encoding: String.Encoding = .utf8) throws -> String? {
-        return String(data: try self.jsonData(), encoding: encoding)
     }
 }

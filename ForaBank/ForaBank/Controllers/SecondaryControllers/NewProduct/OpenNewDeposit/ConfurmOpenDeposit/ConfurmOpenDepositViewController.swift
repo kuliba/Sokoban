@@ -117,12 +117,7 @@ class ConfurmOpenDepositViewController: PaymentViewController {
                 self.calculateSumm(with: Float(self.product?.generalСondition?.minSum ?? 5000))
             }
         }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        calculateSumm(with: startAmount)
-        bottomView.amountTextField.text = moneyFormatter?.format("\(Double(startAmount))") ?? ""
+        NotificationCenter.default.addObserver(self, selector: #selector(self.setOtpCode(_:)), name: NSNotification.Name(rawValue: "otpCode"), object: nil)
     }
     
     //MARK: - Helper
@@ -130,11 +125,9 @@ class ConfurmOpenDepositViewController: PaymentViewController {
         
         title = "Подтвердите параметры вклада"
         moneyFormatter = SumTextInputFormatter(textPattern: "# ###,## ₽")
-        bottomView.moneyInputController.formatter = moneyFormatter
-        bottomView.currencySymbol = "₽"
-        bottomView.buttomLabel.isHidden = true
-        bottomView.doneButton.setTitle("Продолжить", for: .normal)
         
+        let newText = moneyFormatter?.format("\(startAmount)") ?? ""
+        bottomView.amountTextField.text = newText
         calculateSumm(with: startAmount)
         
         incomeField.chooseButton.setImage(UIImage(named: "info"), for: .normal)
@@ -206,6 +199,11 @@ class ConfurmOpenDepositViewController: PaymentViewController {
         
     }
     
+    @objc func setOtpCode(_ notification: NSNotification) {
+        let otpCode = notification.userInfo?["body"] as! String
+//        self.otpCode = otpCode.filter { "0"..."9" ~= $0 }
+        smsCodeField.text = otpCode.filter { "0"..."9" ~= $0 }
+    }
     
     private func readAndSetupCard() {
         DispatchQueue.main.async {

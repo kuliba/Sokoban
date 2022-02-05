@@ -166,6 +166,9 @@ class InternetTVConfirmViewController: UIViewController {
                     } else if self.viewModel?.type == .internetTV {
                         vc.printFormType = "internet"
                     }
+                    else if self.viewModel?.type == .transport {
+                        vc.printFormType = "transport"
+                    }
                     vc.modalPresentationStyle = .fullScreen
                     self.present(vc, animated: true, completion: nil)
                 }
