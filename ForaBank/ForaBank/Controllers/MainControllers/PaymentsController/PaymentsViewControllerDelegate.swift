@@ -180,12 +180,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
             }
             let latestOpsDO = InternetLatestOpsDO(mainImage: image, name: name, amount: amount, op: foundedOperator, additionalList: additionalList)
             InternetTVMainViewModel.latestOp = latestOpsDO
-            if foundedOperator.parentCode?.contains(GlobalModule.UTILITIES_CODE) == true {
-                InternetTVMainViewModel.filter = GlobalModule.UTILITIES_CODE
-            } else if foundedOperator.parentCode?.contains(GlobalModule.INTERNET_TV_CODE) == true {
-                InternetTVMainViewModel.filter = GlobalModule.INTERNET_TV_CODE
-            }
-
+            InternetTVMainViewModel.filter = foundedOperator.parentCode ?? GlobalModule.UTILITIES_CODE
             let controller = InternetTVMainController.storyboardInstance()!
             let nc = UINavigationController(rootViewController: controller)
             nc.modalPresentationStyle = .fullScreen
@@ -194,8 +189,6 @@ extension PaymentsViewController: UICollectionViewDelegate {
     }
 
     private func openPhonePaymentVC(model: GetAllLatestPaymentsDatum) {
-        
-        
         let vc = PaymentByPhoneViewController(viewModel: PaymentByPhoneViewModel(phoneNumber: model.phoneNumber, bankId: model.bankID ?? ""))
 //        let banksList = Dict.shared.banks
 //        banksList?.forEach { bank in
