@@ -195,8 +195,8 @@ class ChangeReturnCountryController: UIViewController {
     
     private func changePay(name: String, surname: String, secondName: String) {
         guard let model = confurmVCModel else { return }
-        let body = ["bLastName": surname,
-                    "bName": name,
+        let body = ["bLastName": name,
+                    "bName": surname,
                     "bSurName": secondName,
                     "transferReference": model.numberTransction
         ] as [String : AnyObject]
