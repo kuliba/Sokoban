@@ -71,5 +71,10 @@ enum TemplatesListViewModelAction {
             let viewModel: PaymentTemplateData
         }
         
+        struct PaymentToMyCard: Action {
+            //TODO: Сделать модель для перевода по карте в рефакторинге экрана по карте
+            let viewModel: PaymentTemplateData
+        }
+        
     }
 }

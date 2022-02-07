@@ -47,6 +47,8 @@ private extension TemplatesListViewHostingViewController {
 //                    let paymentViewController = PaymentByPhoneViewController(viewModel: paymentViewModel)
 //                    navigationController?.pushViewController(paymentViewController, animated: true)
                     
+                    
+                    
                 case let payload as TemplatesListViewModelAction.Present.PaymentSFP:
                     let paymentViewController = PaymentByPhoneViewController(viewModel: payload.viewModel)
                     navigationController?.pushViewController(paymentViewController, animated: true)
@@ -57,6 +59,12 @@ private extension TemplatesListViewHostingViewController {
                     
                 case let payload as TemplatesListViewModelAction.Present.PaymentInsideBankByCard:
                     let paymentViewController = MemeDetailVC(paymentTemplate: payload.viewModel)
+                    navigationController?.pushViewController(paymentViewController, animated: true)
+                    
+                case let payload as TemplatesListViewModelAction.Present.PaymentToMyCard:
+                    let model = ConfirmViewControllerModel(type: .card2card)
+                    let paymentViewController = CustomPopUpWithRateView(paymentTemplate: payload.viewModel)
+                    paymentViewController.viewModel = model
                     navigationController?.pushViewController(paymentViewController, animated: true)
                     
                     

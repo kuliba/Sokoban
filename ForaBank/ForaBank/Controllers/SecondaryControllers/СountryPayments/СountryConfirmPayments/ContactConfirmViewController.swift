@@ -18,6 +18,7 @@ class ConfirmViewControllerModel {
     var type: PaymentType
     var paymentSystem: PaymentSystemList?
     var templateButtonViewModel: TemplateButtonViewModel?
+    var template: PaymentTemplateData?
     
     var cardFromRealm: UserAllCardsModel? {
         didSet {
@@ -749,18 +750,38 @@ class ContactConfurmViewController: UIViewController {
                     DispatchQueue.main.async {
                         let vc = PaymentsDetailsSuccessViewController()
                         switch documentStatus {
-                        case "COMPLETED": self.confurmVCModel?.status = .succses
+                        case "COMPLETE": self.confurmVCModel?.status = .succses
                         case "IN_PROGRESS": self.confurmVCModel?.status = .inProgress
                         case "REJECTED": self.confurmVCModel?.status = .error
                         default:
                             print("Не известный статус документа")
                         }
-                        vc.confurmVCModel = self.confurmVCModel
-                        //vc.confurmVCModel?.statusIsSuccses = true
-                        vc.confurmVCModel?.paymentOperationDetailId = model.data?.paymentOperationDetailId ?? 0
+                        
+                        self.confurmVCModel?.paymentOperationDetailId = model.data?.paymentOperationDetailId ?? 0
+                        
                         switch self.confurmVCModel?.type {
-                        case .card2card, .phoneNumber:
+                        case .card2card:
                             vc.printFormType = "internal"
+                            // Template button view model
+                            if let name = self.confurmVCModel?.cardToCastomName, let paymentOperationDetailId = model.data?.paymentOperationDetailId {
+                                if self.confurmVCModel?.template == nil {
+                                    self.confurmVCModel?.templateButtonViewModel = .sfp(name: name, paymentOperationDetailId: paymentOperationDetailId)
+                                } else {
+                                    self.confurmVCModel?.templateButtonViewModel = .template(paymentOperationDetailId)
+                                }
+                            }
+                            
+                        case .phoneNumber:
+                            vc.printFormType = "internal"
+                            // Template button view model
+                            if let name = self.confurmVCModel?.fullName, let paymentOperationDetailId = model.data?.paymentOperationDetailId {
+                                if self.confurmVCModel?.template == nil {
+                                    self.confurmVCModel?.templateButtonViewModel = .sfp(name: name, paymentOperationDetailId: paymentOperationDetailId)
+                                } else {
+                                    self.confurmVCModel?.templateButtonViewModel = .template(paymentOperationDetailId)
+                                }
+                            }
+                            
                         case .requisites:
                             vc.printFormType = "external"
                         case .gkh:
@@ -770,6 +791,8 @@ class ContactConfurmViewController: UIViewController {
                         default:
                             break
                         }
+                        
+                        vc.confurmVCModel = self.confurmVCModel
 //                        self.doneButton.isEnabled = true
 //                        self.doneButton.backgroundColor = .red
                         let nav = UINavigationController(rootViewController: vc)
@@ -807,26 +830,33 @@ class ContactConfurmViewController: UIViewController {
                         }
                         self.confurmVCModel?.paymentOperationDetailId = model.data?.paymentOperationDetailId ?? 0
                         switch self.confurmVCModel?.type {
-                        case .card2card, .phoneNumber:
-                            vc.printFormType = "internal"
+                            
                         case .requisites:
                             vc.printFormType = "external"
-                        case .mig :
+                            
+                        case .mig:
                             vc.printFormType = "direct"
+                            
                         case .contact:
                             vc.printFormType = "contactAddressless"
-                        default:
-                            break
-                        }
-                        if self.confurmVCModel?.type == .phoneNumberSBP {
+                            
+                        case .phoneNumberSBP:
                             vc.printFormType = "sbp"
                             
                             // Template button view model
+                            
                             if let name = self.confurmVCModel?.fullName, let paymentOperationDetailId = model.data?.paymentOperationDetailId {
-                                
-                                self.confurmVCModel?.templateButtonViewModel = .sfp(name: name, paymentOperationDetailId: paymentOperationDetailId)
+                                if self.confurmVCModel?.template == nil {
+                                    self.confurmVCModel?.templateButtonViewModel = .sfp(name: name, paymentOperationDetailId: paymentOperationDetailId)
+                                } else {
+                                    self.confurmVCModel?.templateButtonViewModel = .template(paymentOperationDetailId)
+                                }
                             }
+                            
+                        default:
+                            break
                         }
+                        
                         vc.confurmVCModel = self.confurmVCModel
                         let nav = UINavigationController(rootViewController: vc)
                         nav.modalPresentationStyle = .fullScreen
