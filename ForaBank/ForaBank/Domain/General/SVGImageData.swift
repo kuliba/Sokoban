@@ -42,4 +42,6 @@ extension SVGImageData {
         
         return Image(uiImage: uiImage)
     }
+    
+    //TODO: ImageData 
 }
