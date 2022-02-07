@@ -95,15 +95,25 @@ class PaymentsDetailsSuccessViewController: UIViewController {
         view.backgroundColor = .white
 
         view.addSubview(button)
-        button.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
-                      right: view.rightAnchor, paddingLeft: 20, paddingBottom: 20,
-                      paddingRight: 20, height: 48)
+        button.anchor(
+            left: view.leftAnchor,
+            bottom: view.safeAreaLayoutGuide.bottomAnchor,
+            right: view.rightAnchor,
+            paddingLeft: 20,
+            paddingBottom: 20,
+            paddingRight: 20,
+            height: 48)
         
         view.addSubview(confurmView)
         confurmView.anchor(
-            top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor,
-            bottom: button.topAnchor, right: view.rightAnchor,
-            paddingTop: 120,  paddingLeft: 20, paddingBottom: 90, paddingRight: 20)
+            top: view.safeAreaLayoutGuide.topAnchor,
+            left: view.leftAnchor,
+            bottom: button.topAnchor,
+            right: view.rightAnchor,
+            paddingTop: 120,
+            paddingLeft: 20,
+            paddingBottom: 90,
+            paddingRight: 20)
         
     }
     

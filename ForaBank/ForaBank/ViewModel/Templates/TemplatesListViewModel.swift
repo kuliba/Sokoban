@@ -129,21 +129,20 @@ private extension TemplatesListViewModel {
                     guard let temp = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == payload.itemId}) else { return }
                     switch temp.type {
                         
-                    case .betweenTheir, .otherBank:
+                    case .otherBank:
                         print("Скорее всего не будет сделано в ближайшее время")
                         
-                    case .insideBank:
+                    case .betweenTheir:
+                        self.action.send(TemplatesListViewModelAction.Present.PaymentToMyCard(viewModel: temp))
                         
-                        print("Action Present InsideBank")
+                    case .insideBank:
                         self.action.send(TemplatesListViewModelAction.Present.PaymentInsideBankByCard(viewModel: temp))
                         
                     case .byPhone:
-                        
                         let paymentViewModel = PaymentByPhoneViewModel(insideByPhone: temp)
                         self.action.send(TemplatesListViewModelAction.Present.PaymentInsideBankByPhone(viewModel: paymentViewModel))
                         
                     case .sfp:
-                        
                         let paymentViewModel = PaymentByPhoneViewModel(spf: temp)
                         self.action.send(TemplatesListViewModelAction.Present.PaymentSFP(viewModel: paymentViewModel))
                         

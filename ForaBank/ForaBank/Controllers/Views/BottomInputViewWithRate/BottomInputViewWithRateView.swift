@@ -19,6 +19,7 @@ class BottomInputViewWithRateView: UIView {
     /// Меняем символ валюты в  textField
     var currencySymbol = "" {
         didSet {
+            guard moneyFormatter != nil else { return }
             setupMoneyController()
         }
     }

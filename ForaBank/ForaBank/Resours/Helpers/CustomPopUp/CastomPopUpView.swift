@@ -72,6 +72,15 @@ class MemeDetailVC : AddHeaderImageViewController {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let template = paymentTemplate {
+            runBlockAfterDelay(0.2) {
+                self.setupAmount(amount: template.amount)
+            }
+        }
+    }
+    
     deinit {
         token?.invalidate()
     }
@@ -163,8 +172,6 @@ class MemeDetailVC : AddHeaderImageViewController {
         default:
             break
         }
-        
-        setupAmount(amount: paymentTemplate.amount)
     }
     
     @objc private func updateNameTemplate() {
@@ -198,29 +205,35 @@ class MemeDetailVC : AddHeaderImageViewController {
     }
     
     func setupAmount(amount: Double?) {
-        let moneyFormatter = SumTextInputFormatter(textPattern: "# ###,## ₽")
-        
+        guard let moneyFormatter = bottomView.moneyFormatter else { return }
         let newText = moneyFormatter.format("\(amount ?? 0)") ?? ""
         bottomView.amountTextField.text = newText
+        bottomView.doneButtonIsEnabled(newText.isEmpty)
     }
     
     func updateObjectWithNotification(cardId: Int? = nil) {
         let object = realm?.objects(UserAllCardsModel.self)
-        token = object?.observe { ( changes: RealmCollectionChange) in
-            switch changes {
-            case .initial:
-//                print("REALM Initial")
-//                self.cardFromListView.cardList = self.updateCardsList(with: object)
-                self.cardFromField.model = self.updateCardsList(with: object).first
-                self.viewModel.cardFromRealm = self.updateCardsList(with: object).first
-//                self.cardToListView.cardList = self.updateCardsList(with: object)
-            case .update:
-//                print("REALM Update")
-//                self.cardFromListView.cardList = self.updateCardsList(with: object)
-                self.cardFromField.model = self.updateCardsList(with: object).first
-//                self.cardToListView.cardList = self.updateCardsList(with: object)
-            case .error(let error):
-                fatalError("\(error)")
+        if let cardId = cardId {
+            let card = object?.first(where: { $0.id == cardId })
+            self.cardFromField.model = card
+            self.viewModel.cardFromRealm = card
+        } else {
+            token = object?.observe { ( changes: RealmCollectionChange) in
+                switch changes {
+                case .initial:
+                    //                print("REALM Initial")
+                    //                self.cardFromListView.cardList = self.updateCardsList(with: object)
+                    self.cardFromField.model = self.updateCardsList(with: object).first
+                    self.viewModel.cardFromRealm = self.updateCardsList(with: object).first
+                    //                self.cardToListView.cardList = self.updateCardsList(with: object)
+                case .update:
+                    //                print("REALM Update")
+                    //                self.cardFromListView.cardList = self.updateCardsList(with: object)
+                    self.cardFromField.model = self.updateCardsList(with: object).first
+                    //                self.cardToListView.cardList = self.updateCardsList(with: object)
+                case .error(let error):
+                    fatalError("\(error)")
+                }
             }
         }
     }
@@ -555,6 +568,7 @@ class MemeDetailVC : AddHeaderImageViewController {
                                 viewModel.summTransction = model.data?.debitAmount?.currencyFormatter(symbol: model.data?.currencyPayer ?? "RUB") ?? ""
                                 viewModel.summInCurrency = model.data?.creditAmount?.currencyFormatter(symbol: model.data?.currencyPayee ?? "RUB") ?? ""
                                 viewModel.taxTransction = model.data?.fee?.currencyFormatter(symbol: model.data?.currencyPayer ?? "RUB") ?? ""
+                                viewModel.template = self?.paymentTemplate
                                 vc.smsCodeField.isHidden = !(model.data?.needOTP ?? true)
                                 vc.confurmVCModel = viewModel
                                 vc.addCloseButton()
@@ -569,6 +583,7 @@ class MemeDetailVC : AddHeaderImageViewController {
                                     viewModel.taxTransction = model.data?.fee?.currencyFormatter(symbol: model.data?.currencyAmount ?? "RUB") ?? ""
                                     viewModel.summTransction = model.data?.debitAmount?.currencyFormatter(symbol: model.data?.currencyAmount ?? "RUB") ?? ""
                                     viewModel.paymentOperationDetailId = model.data?.paymentOperationDetailID ?? 0
+                                    viewModel.template = self?.paymentTemplate
                                     vc.printFormType = "internal"
                                   
                                 }
