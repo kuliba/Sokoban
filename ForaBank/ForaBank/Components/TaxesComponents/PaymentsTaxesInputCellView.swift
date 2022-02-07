@@ -1,13 +1,13 @@
 //
-//  ParentCellView.swift
+//  PaymentsTaxesInputCellViewComponent.swift
 //  ForaBank
 //
-//  Created by Константин Савялов on 06.02.2022.
+//  Created by Константин Савялов on 07.02.2022.
 //
 
 import SwiftUI
 
-extension PaymentsTaxesSelectCellViewComponent {
+extension PaymentsTaxesInputCellViewComponent {
     
     struct ViewModel: Identifiable {
         let id = UUID()
@@ -18,7 +18,7 @@ extension PaymentsTaxesSelectCellViewComponent {
         
     }
     
-    struct ButtonViewModel {
+    struct TextFieldModel {
         
         let icon: Image
         let action: () -> Void
@@ -26,12 +26,12 @@ extension PaymentsTaxesSelectCellViewComponent {
     
 }
 
-struct PaymentsTaxesSelectCellViewComponent {
+struct PaymentsTaxesInputCellViewComponent {
     
-    struct PaymentsTaxesSelectCell: View {
-        let viewModel: PaymentsTaxesSelectCellViewComponent.ViewModel
-        let buttonViewModel:PaymentsTaxesSelectCellViewComponent.ButtonViewModel
-        @State private var showDetails = false
+    struct PaymentsTaxesInputCell: View {
+        let viewModel: PaymentsTaxesInputCellViewComponent.ViewModel
+        let buttonViewModel:PaymentsTaxesInputCellViewComponent.TextFieldModel
+        @State var text: String = ""
         var body: some View {
             HStack(spacing: 10) {
                 
@@ -42,22 +42,10 @@ struct PaymentsTaxesSelectCellViewComponent {
                     Text(viewModel.title)
                         .font(.system(size: 16, weight: .medium))
                         .foregroundColor(Color.black)
-                    Text(viewModel.subTitle)
-                        .font(.system(size: 12, weight: .medium))
-                        .foregroundColor(Color.gray)
                     
-                }
-                Spacer()
-                Button {
-                    showDetails.toggle()
-                } label: {
-                    buttonViewModel.icon
-                } .frame(width: 30, height: 30)
-                    .padding(.trailing, 15)
-
-                if showDetails {
                     
-                }
+                } .textFieldStyle(DefaultTextFieldStyle())
+                
                 
             } .frame(
                 minWidth: 0,
@@ -71,13 +59,14 @@ struct PaymentsTaxesSelectCellViewComponent {
 }
 
 
-struct PaymentsTaxesSelectCellViewComponent_Previews: PreviewProvider {
+struct PaymentsTaxesInputCellViewComponent_Previews: PreviewProvider {
     static var previews: some View {
-        PaymentsTaxesSelectCellViewComponent.PaymentsTaxesSelectCell(viewModel: PaymentsTaxesSelectCellViewComponent.ViewModel(logo: Image("fora_white_back_bordered"),
+        PaymentsTaxesInputCellViewComponent.PaymentsTaxesInputCell(viewModel: PaymentsTaxesInputCellViewComponent.ViewModel(logo: Image("fora_white_back_bordered"),
                                                                                                                                title: "Title",
                                                                                                                         subTitle: "SubTitle",         action: { _ in }),
-                                                             buttonViewModel: PaymentsTaxesSelectCellViewComponent.ButtonViewModel(icon: Image("chevron-downnew"), action:{}))
+                                                             buttonViewModel: PaymentsTaxesInputCellViewComponent.TextFieldModel(icon: Image("chevron-downnew"), action:{}))
             .previewLayout(.fixed(width: 375, height: 56))
     }
 }
+
 
