@@ -847,6 +847,7 @@
 		F63D4A3FB30397A82426313C /* InternetTVConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D4A26E0479DD5215DB784 /* InternetTVConfirmViewController.swift */; };
 		F63D4B91E94C13AFD50FF312 /* GIBDDFineDetailsFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D4C8F9B14DFF843262392 /* GIBDDFineDetailsFormViewModel.swift */; };
 		F63D4C7CF864543AD9AABF9A /* InternetTVInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D42CEA742F58D23C97218 /* InternetTVInputCell.swift */; };
+		F8E5299A27B1177100222394 /* AuthLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E5299927B1177100222394 /* AuthLoginViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1710,6 +1711,7 @@
 		F63D4C8F9B14DFF843262392 /* GIBDDFineDetailsFormViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GIBDDFineDetailsFormViewModel.swift; sourceTree = "<group>"; };
 		F63D4D93E1924F097E08847C /* ClientInfoModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientInfoModel.swift; sourceTree = "<group>"; };
 		F63D4DD4905E8BA594B990E1 /* InternetTVDetailsFormController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetTVDetailsFormController.swift; sourceTree = "<group>"; };
+		F8E5299927B1177100222394 /* AuthLoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthLoginViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2990,6 +2992,7 @@
 				774706AF277DD59700B524F1 /* AntifraudViewModel.swift */,
 				77EA0DBC2779B40100C6ED12 /* OperationDetail */,
 				EDE70902279716DF0048CA94 /* Templates */,
+				F8E5299827B1174800222394 /* Auth */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -4896,6 +4899,14 @@
 			path = detailsOperator;
 			sourceTree = "<group>";
 		};
+		F8E5299827B1174800222394 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				F8E5299927B1177100222394 /* AuthLoginViewModel.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -5275,6 +5286,7 @@
 				EDCF8A1026CE876600DC9F54 /* MeToMeSearchBanksViewController.swift in Sources */,
 				68C64626269DCBD800473DE7 /* QRScannerViewController.swift in Sources */,
 				682092A627AC0673003DCAFD /* ServerCommands+Suggest.swift in Sources */,
+				F8E5299A27B1177100222394 /* AuthLoginViewModel.swift in Sources */,
 				A50869DA2767F394004C5E17 /* InternetTVSuccessView.swift in Sources */,
 				EDFFCAF82683943A004EE095 /* UISwitch.swift in Sources */,
 				774706B0277DD59700B524F1 /* AntifraudViewModel.swift in Sources */,
