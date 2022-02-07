@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension CellType_1View {
+extension PaymentsTaxesInfoCellViewComponent {
     
     struct ViewModel: Identifiable {
         let id = UUID()
@@ -20,10 +20,10 @@ extension CellType_1View {
     
 }
 
-struct CellType_1View {
+struct PaymentsTaxesInfoCellViewComponent {
     
-    struct CellType_1: View {
-        let viewModel: CellType_1View.ViewModel
+    struct PaymentsTaxesInfoCell: View {
+        let viewModel: PaymentsTaxesInfoCellViewComponent.ViewModel
         var body: some View {
             HStack(spacing: 10) {
                 
@@ -53,7 +53,7 @@ struct CellType_1View {
 
 struct CellType_1View_Previews: PreviewProvider {
     static var previews: some View {
-        CellType_1View.CellType_1(viewModel: CellType_1View.ViewModel(logo: Image("qr_Icon"), title: "Title", subTitle: "SubTitle", action: {_ in }))
+        PaymentsTaxesInfoCellViewComponent.PaymentsTaxesInfoCell(viewModel: PaymentsTaxesInfoCellViewComponent.ViewModel(logo: Image("qr_Icon"), title: "Title", subTitle: "SubTitle", action: {_ in }))
         .previewLayout(.fixed(width: 375, height: 56))
     }
 }

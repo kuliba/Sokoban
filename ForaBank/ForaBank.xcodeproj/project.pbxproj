@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0B04EBC627B068BB00893687 /* ParentCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B04EBC527B068BB00893687 /* ParentCellView.swift */; };
+		0B04EBC627B068BB00893687 /* PaymentsTaxesSelectCellViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B04EBC527B068BB00893687 /* PaymentsTaxesSelectCellViewComponent.swift */; };
 		0B04EBCA27B0724000893687 /* PaymentsTaxesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B04EBC927B0724000893687 /* PaymentsTaxesViewModel.swift */; };
-		0B04EBCC27B07F6700893687 /* CellViewType_1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B04EBCB27B07F6700893687 /* CellViewType_1.swift */; };
+		0B04EBCC27B07F6700893687 /* PaymentsTaxesInfoCellViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B04EBCB27B07F6700893687 /* PaymentsTaxesInfoCellViewComponent.swift */; };
 		0B04EBD027B0849200893687 /* PaymentsTaxesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B04EBCF27B0849200893687 /* PaymentsTaxesView.swift */; };
 		0B05163126A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B05163026A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift */; };
 		0B1DBA9C26D4032F009F3E98 /* CreateContactAddresslessTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B1DBA9B26D4032F009F3E98 /* CreateContactAddresslessTransferDecodableModel.swift */; };
@@ -884,9 +884,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0B04EBC527B068BB00893687 /* ParentCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentCellView.swift; sourceTree = "<group>"; };
+		0B04EBC527B068BB00893687 /* PaymentsTaxesSelectCellViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTaxesSelectCellViewComponent.swift; sourceTree = "<group>"; };
 		0B04EBC927B0724000893687 /* PaymentsTaxesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTaxesViewModel.swift; sourceTree = "<group>"; };
-		0B04EBCB27B07F6700893687 /* CellViewType_1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellViewType_1.swift; sourceTree = "<group>"; };
+		0B04EBCB27B07F6700893687 /* PaymentsTaxesInfoCellViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTaxesInfoCellViewComponent.swift; sourceTree = "<group>"; };
 		0B04EBCF27B0849200893687 /* PaymentsTaxesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTaxesView.swift; sourceTree = "<group>"; };
 		0B05163026A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPaymentCountriesDecodableModel.swift; sourceTree = "<group>"; };
 		0B1DBA9B26D4032F009F3E98 /* CreateContactAddresslessTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateContactAddresslessTransferDecodableModel.swift; sourceTree = "<group>"; };
@@ -1767,8 +1767,8 @@
 		0B04EBC427B0682C00893687 /* TaxesComponents */ = {
 			isa = PBXGroup;
 			children = (
-				0B04EBC527B068BB00893687 /* ParentCellView.swift */,
-				0B04EBCB27B07F6700893687 /* CellViewType_1.swift */,
+				0B04EBC527B068BB00893687 /* PaymentsTaxesSelectCellViewComponent.swift */,
+				0B04EBCB27B07F6700893687 /* PaymentsTaxesInfoCellViewComponent.swift */,
 			);
 			path = TaxesComponents;
 			sourceTree = "<group>";
@@ -5800,7 +5800,7 @@
 				EDB1658F266A1942007E6030 /* PaymentsModel.swift in Sources */,
 				0B931B1C26DCD69900CA8017 /* GKHHistoryModel.swift in Sources */,
 				EDB165782668C76A007E6030 /* SelfConfiguringCell.swift in Sources */,
-				0B04EBC627B068BB00893687 /* ParentCellView.swift in Sources */,
+				0B04EBC627B068BB00893687 /* PaymentsTaxesSelectCellViewComponent.swift in Sources */,
 				EDB165622667A571007E6030 /* ForaInputModel.swift in Sources */,
 				77EC58EE27723A5A0054D75C /* ModelAction+PaymentTemplate.swift in Sources */,
 				ED75CE0726E2BA600074F5D5 /* TarifView.swift in Sources */,
@@ -5896,7 +5896,7 @@
 				F63D40EC3454C0DAF5DFDBC4 /* ClientInfoModel.swift in Sources */,
 				F63D473F220AD92D6D04C8DD /* AvtodorDetailsFormController.swift in Sources */,
 				F63D4543C2BD628A0BFB42EA /* AvtodorDetailsFormViewModel.swift in Sources */,
-				0B04EBCC27B07F6700893687 /* CellViewType_1.swift in Sources */,
+				0B04EBCC27B07F6700893687 /* PaymentsTaxesInfoCellViewComponent.swift in Sources */,
 				F63D41C3BB407DA15542F98F /* GIBDDFineDetailsFormController.swift in Sources */,
 				5A5ABF8627AAF4FB00D548AA /* PaymentPhoneData.swift in Sources */,
 				F63D4B91E94C13AFD50FF312 /* GIBDDFineDetailsFormViewModel.swift in Sources */,

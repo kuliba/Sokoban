@@ -63,10 +63,10 @@ extension PaymentTaxesListViewModel {
     struct Items: Identifiable {
         var id = UUID()
         let action: (Items.ID) -> Void = {_ in }
-        var item: CellType_1View.CellType_1
+        var item: PaymentsTaxesInfoCellViewComponent.PaymentsTaxesInfoCell
         
         init (parameters: PaymentTemplateData) {
-            item = CellType_1View.CellType_1(viewModel: CellType_1View.ViewModel(logo: Image(uiImage: parameters.svgImage.uiImage!), title: parameters.name, subTitle: "SubTitle", action: {_ in }))
+            item = PaymentsTaxesInfoCellViewComponent.PaymentsTaxesInfoCell(viewModel: PaymentsTaxesInfoCellViewComponent.ViewModel(logo: Image(uiImage: parameters.svgImage.uiImage!), title: parameters.name, subTitle: "SubTitle", action: {_ in }))
         }
     
     }
