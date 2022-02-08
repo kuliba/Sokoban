@@ -39,7 +39,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                 self.notActivated.removeAll()
                 self.deposits.removeAll()
                 for i in self.products{
-                    self.totalMoney += i.balanceRub
+                    self.totalMoney += i.balanceRUB
                     if i.statusPC == "17", i.status == "Действует" || i.status == "Выдано клиенту"{
                         self.notActivated.append(i)
                         continue
