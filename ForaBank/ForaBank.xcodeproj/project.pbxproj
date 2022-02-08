@@ -203,6 +203,7 @@
 		0BF3486426943DFB005138A8 /* SuggestCompanyDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF3486326943DFB005138A8 /* SuggestCompanyDecodableModel.swift */; };
 		0BF34866269444D9005138A8 /* AllCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF34865269444D9005138A8 /* AllCardCell.swift */; };
 		0BF348A1269E0CDA005138A8 /* LogoutDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF348A0269E0CDA005138A8 /* LogoutDecodableModel.swift */; };
+		0BF43D4627B2D3F3004DF248 /* PaymentsTaxesButtonInfoCellViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF43D4527B2D3F3004DF248 /* PaymentsTaxesButtonInfoCellViewComponent.swift */; };
 		5A5ABF8227AAF4BF00D548AA /* PaymentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5ABF8127AAF4BF00D548AA /* PaymentData.swift */; };
 		5A5ABF8427AAF4DE00D548AA /* PaymentGeneralData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5ABF8327AAF4DE00D548AA /* PaymentGeneralData.swift */; };
 		5A5ABF8627AAF4FB00D548AA /* PaymentPhoneData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5ABF8527AAF4FB00D548AA /* PaymentPhoneData.swift */; };
@@ -1083,6 +1084,7 @@
 		0BF3486326943DFB005138A8 /* SuggestCompanyDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestCompanyDecodableModel.swift; sourceTree = "<group>"; };
 		0BF34865269444D9005138A8 /* AllCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllCardCell.swift; sourceTree = "<group>"; };
 		0BF348A0269E0CDA005138A8 /* LogoutDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutDecodableModel.swift; sourceTree = "<group>"; };
+		0BF43D4527B2D3F3004DF248 /* PaymentsTaxesButtonInfoCellViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTaxesButtonInfoCellViewComponent.swift; sourceTree = "<group>"; };
 		5A5ABF8127AAF4BF00D548AA /* PaymentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentData.swift; sourceTree = "<group>"; };
 		5A5ABF8327AAF4DE00D548AA /* PaymentGeneralData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentGeneralData.swift; sourceTree = "<group>"; };
 		5A5ABF8527AAF4FB00D548AA /* PaymentPhoneData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentPhoneData.swift; sourceTree = "<group>"; };
@@ -1786,6 +1788,7 @@
 				0B04EBC527B068BB00893687 /* PaymentsTaxesSelectCellViewComponent.swift */,
 				0B04EBCB27B07F6700893687 /* PaymentsTaxesInfoCellViewComponent.swift */,
 				0B04EBD127B1568D00893687 /* PaymentsTaxesInputCellView.swift */,
+				0BF43D4527B2D3F3004DF248 /* PaymentsTaxesButtonInfoCellViewComponent.swift */,
 			);
 			path = TaxesComponents;
 			sourceTree = "<group>";
@@ -5610,6 +5613,7 @@
 				A5F15C0B27495F7C00DC91DA /* GlobalModule.swift in Sources */,
 				0B7A18AF268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift in Sources */,
 				0B37F980267A11FB007728FC /* GetOwnerPhoneNumberPhoneDecodableModel.swift in Sources */,
+				0BF43D4627B2D3F3004DF248 /* PaymentsTaxesButtonInfoCellViewComponent.swift in Sources */,
 				EDDFE3CA275E1C4100F57C71 /* OpenDepositDecodableModel.swift in Sources */,
 				0BB24AB326F0C59900DDA4F6 /* SaveCardNameDecodableModel.swift in Sources */,
 				A5C7A1AE275BEF58003BEF6D /* RequisiteDO.swift in Sources */,
