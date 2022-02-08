@@ -1,5 +1,5 @@
 //
-//  CellViewType_1.swift
+//  PaymentsTaxesInfoCellViewComponent.swift
 //  ForaBank
 //
 //  Created by Константин Савялов on 07.02.2022.
