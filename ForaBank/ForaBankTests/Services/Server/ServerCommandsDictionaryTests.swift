@@ -58,6 +58,18 @@ class ServerCommandsDictionaryTests: XCTestCase {
         XCTAssertEqual(result, expected)
     }
     
+    func testGetAnywayOperatorsList_Response_Server_Decoding() throws {
+        
+        // given
+        guard let url = bundle.url(forResource: "GetAnywayOperatorGroupDataResponseServer", withExtension: "json") else {
+            XCTFail("testGetAnywayOperatorGroupDataGeneric_Response_Server_Decoding : Missing file: GetAnywayOperatorGroupDataResponseServer.json")
+            return
+        }
+        
+        // then
+        XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetAnywayOperatorsList.Response.self, from: Data(contentsOf: url)))
+    }
+    
     //MARK: - GetBanks
     
     func testGetBanks_Response_Decoding() throws {
@@ -100,6 +112,18 @@ class ServerCommandsDictionaryTests: XCTestCase {
         XCTAssertEqual(result, expected)
     }
     
+    func testGetBanks_Response_Server_Decoding() throws {
+        
+        // given
+        guard let url = bundle.url(forResource: "GetBanksResponseGenericServer", withExtension: "json") else {
+            XCTFail("testGetBanks_Response_Server_Decoding : Missing file: GetBanksResponseGenericServer.json")
+            return
+        }
+        
+        // then
+        XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetBanks.Response.self, from: Data(contentsOf: url)))
+    }
+    
     //MARK: - GetCountries
     
     func testGetCountries_Response_Decoding() throws {
@@ -135,6 +159,18 @@ class ServerCommandsDictionaryTests: XCTestCase {
         
         // then
         XCTAssertEqual(result, expected)
+    }
+    
+    func testGetCountries_Response_Server_Decoding() throws {
+        
+        // given
+        guard let url = bundle.url(forResource: "GetCountriesResponseGenericServer", withExtension: "json") else {
+            XCTFail("testGetCountries_Response_Decoding_Server : Missing file: GetCountriesResponseGenericServer.json")
+            return
+        }
+        
+        // then
+        XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetCountries.Response.self, from: Data(contentsOf: url)))
     }
     
     //MARK: - GetCurrencyList
@@ -179,6 +215,18 @@ class ServerCommandsDictionaryTests: XCTestCase {
         XCTAssertEqual(result, expected)
     }
     
+    func testGetCurrencyList_Response_Server_Decoding() throws {
+        
+        // given
+        guard let url = bundle.url(forResource: "GetCurrencyListResponseGenericServer", withExtension: "json") else {
+            XCTFail("testGetCurrencyList_Response_Server_Decoding : Missing file: GetCurrencyListResponseGenericServer.json")
+            return
+        }
+        
+        // then
+        XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetCurrencyList.Response.self, from: Data(contentsOf: url)))
+    }
+    
     //MARK: - GetFMSList
     
     func testGetFMSList_Response_Decoding() throws {
@@ -187,7 +235,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let url = bundle.url(forResource: "GetFMSListResponseGeneric", withExtension: "json")!
         
         let json = try Data(contentsOf: url)
-        let expected = ServerCommands.DictionaryController.GetFMSList.Response(statusCode: .ok, errorMessage: "string", data: .init(fmsList: [.init(md5hash: "366e1c4043eb433b82a6ab4988e80862", svgImage: .init(description: "string"), text: "Российский паспорт", value: "1")], serial: "bea36075a58954199a6b8980549f6b69"))
+        let expected = ServerCommands.DictionaryController.GetFMSList.Response(statusCode: .ok, errorMessage: "string", data: .init(fmsList: [.init(md5hash: "366e1c4043eb433b82a6ab4988e80862", svgImage: .init(description: "string"), text: "Российский паспорт", value: "1")], id: "a3_dutyCategory_1_1", puref: "iFora||6273", serial: "bea36075a58954199a6b8980549f6b69"))
         
         // when
         let result = try decoder.decode(ServerCommands.DictionaryController.GetFMSList.Response.self, from: json)
@@ -196,21 +244,65 @@ class ServerCommandsDictionaryTests: XCTestCase {
         XCTAssertEqual(result, expected)
     }
     
-    //MARK: - GetFSSPList
-    
-    func testGetFSSPList_Response_Decoding() throws {
+    func testGetFMSList_Response_Server_Decoding() throws {
         
         // given
-        let url = bundle.url(forResource: "GetFSSPListResponseGeneric", withExtension: "json")!
+        let url = bundle.url(forResource: "GetFMSListResponseServerGeneric", withExtension: "json")!
+        
+        // then
+        XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetFMSList.Response.self, from: Data(contentsOf: url)))
+    }
+    
+    //MARK: - GetFSSPDebtList
+    
+    func testGetFSSPDebtList_Response_Decoding() throws {
+        
+        // given
+        let url = bundle.url(forResource: "GetFSSPDebtListResponseGeneric", withExtension: "json")!
         
         let json = try Data(contentsOf: url)
-        let expected = ServerCommands.DictionaryController.GetFSSPList.Response(statusCode: .ok, errorMessage: "string", data: .init(fsspList: [.init(md5hash: "366e1c4043eb433b82a6ab4988e80862", svgImage: .init(description: "string"), text: "Паспорт РФ", value: "20")], serial: "bea36075a58954199a6b8980549f6b69"))
+        let expected = ServerCommands.DictionaryController.GetFSSPDebtList.Response(statusCode: .ok, errorMessage: "string", data: .init(FsspDebtList: [.init(text: "Документ", value: "20")], id: "a3_dutyCategory_1_1", puref: "iFora||6273", serial: "bea36075a58954199a6b8980549f6b69"))
         
         // when
-        let result = try decoder.decode(ServerCommands.DictionaryController.GetFSSPList.Response.self, from: json)
+        let result = try decoder.decode(ServerCommands.DictionaryController.GetFSSPDebtList.Response.self, from: json)
         
         // then
         XCTAssertEqual(result, expected)
+    }
+    
+    func testGetFSSPDebtList_Response_Server_Decoding() throws {
+        
+        // given
+        let url = bundle.url(forResource: "GetFSSPDebtListResponseServerGeneric", withExtension: "json")!
+        
+        // then
+        XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetFSSPDebtList.Response.self, from: Data(contentsOf: url)))
+    }
+    
+    //MARK: - getFSSPDocumentList
+    
+    func testGetFSSPDocumentList_Response_Decoding() throws {
+        
+        // given
+        let url = bundle.url(forResource: "GetFSSPDocumentListResponseGeneric", withExtension: "json")!
+        
+        let json = try Data(contentsOf: url)
+        let expected = ServerCommands.DictionaryController.GetFSSPDocumentList.Response(statusCode: .ok, errorMessage: "string", data: .init(FsspDocumentList: [.init(text: "Документ", value: "20")], id: "a3_dutyCategory_1_1", puref: "iFora||6273", serial: "bea36075a58954199a6b8980549f6b69"))
+        
+        // when
+        let result = try decoder.decode(ServerCommands.DictionaryController.GetFSSPDocumentList.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
+    
+    func testGetFSSPDocumentList_Response_Server_Decoding() throws {
+        
+        // given
+        let url = bundle.url(forResource: "GetFSSPDocumentListResponseServerGeneric", withExtension: "json")!
+        
+        // then
+        XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetFSSPDocumentList.Response.self, from: Data(contentsOf: url)))
     }
     
     //MARK: - GetFTSList
@@ -221,13 +313,22 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let url = bundle.url(forResource: "GetFTSListResponseGeneric", withExtension: "json")!
         
         let json = try Data(contentsOf: url)
-        let expected = ServerCommands.DictionaryController.GetFTSList.Response(statusCode: .ok, errorMessage: "string", data: .init(ftsList: [.init(md5hash: "366e1c4043eb433b82a6ab4988e80862", svgImage: .init(description: "string"), text: "Имущественный налог", value: "1")], serial: "bea36075a58954199a6b8980549f6b69"))
+        let expected = ServerCommands.DictionaryController.GetFTSList.Response(statusCode: .ok, errorMessage: "string", data: .init(ftsList: [.init(md5hash: "366e1c4043eb433b82a6ab4988e80862", svgImage: .init(description: "string"), text: "Имущественный налог", value: "1")], id: "a3_dutyCategory_1_1", puref: "iFora||6273", serial: "bea36075a58954199a6b8980549f6b69"))
         
         // when
         let result = try decoder.decode(ServerCommands.DictionaryController.GetFTSList.Response.self, from: json)
         
         // then
         XCTAssertEqual(result, expected)
+    }
+    
+    func testGetFTSList_Response_Server_Decoding() throws {
+        
+        // given
+        let url = bundle.url(forResource: "GetFTSListResponseServerGeneric", withExtension: "json")!
+        
+        // then
+        XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetFTSList.Response.self, from: Data(contentsOf: url)))
     }
     
     //MARK: - GetFullBankInfoList
@@ -268,6 +369,18 @@ class ServerCommandsDictionaryTests: XCTestCase {
         XCTAssertEqual(result, expected)
     }
     
+    func testGetFullBankInfoList_Response_Server_Decoding() throws {
+        
+        // given
+        guard let url = bundle.url(forResource: "GetFullBankInfoListResponseServerGeneric", withExtension: "json") else {
+            XCTFail("testGetFullBankInfoList_Response_Server_Decoding : Missing file: GetFullBankInfoListResponseServerGeneric.json")
+            return
+        }
+        
+        // then
+        XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetFullBankInfoList.Response.self, from: Data(contentsOf: url)))
+    }
+    
     //MARK: - GetMobileData
     
     func testGetMobileData_Response_Decoding() throws {
@@ -286,6 +399,18 @@ class ServerCommandsDictionaryTests: XCTestCase {
         
         // then
         XCTAssertEqual(result, expected)
+    }
+    
+    func testGetMobileData_Response_Server_Decoding() throws {
+        
+        // given
+        guard let url = bundle.url(forResource: "GetMobileDataResponseServerGeneric", withExtension: "json") else {
+            XCTFail("testGetMobileData_Response_Server_Decoding : Missing file: GetMobileDataResponseServerGeneric.json")
+            return
+        }
+        
+        // then
+        XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetMobileList.Response.self, from: Data(contentsOf: url)))
     }
     
     //MARK: - GetMosParkingList
@@ -326,6 +451,18 @@ class ServerCommandsDictionaryTests: XCTestCase {
         XCTAssertEqual(result, expected)
     }
     
+    func testGetMosParkingList_Response_Server_Decoding() throws {
+        
+        // given
+        guard let url = bundle.url(forResource: "GetMosParkingListResponseServerGeneric", withExtension: "json") else {
+            XCTFail("testGetMosParkingList_Response_Server_Decoding : Missing file: GetMosParkingListResponseServerGeneric.json")
+            return
+        }
+        
+        // then
+        XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetMosParkingList.Response.self, from: Data(contentsOf: url)))
+    }
+    
     //MARK: - GetPaymentSystemList
     
     func testGetPaymentSystemList_Response_Decoding() throws {
@@ -346,5 +483,17 @@ class ServerCommandsDictionaryTests: XCTestCase {
         
         // then
         XCTAssertEqual(result, expected)
+    }
+    
+    func testGetPaymentSystemList_Response_Server_Decoding() throws {
+        
+        // given
+        guard let url = bundle.url(forResource: "GetPaymentSystemListResponseServerGeneric", withExtension: "json") else {
+            XCTFail("testGetPaymentSystemList_Response_Server_Decoding : Missing file: GetPaymentSystemListResponseServerGeneric.json")
+            return
+        }
+        
+        // then
+        XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetPaymentSystemList.Response.self, from: Data(contentsOf: url)))
     }
 }

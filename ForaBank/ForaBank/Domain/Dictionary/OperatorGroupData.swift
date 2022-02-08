@@ -36,9 +36,9 @@ extension OperatorGroupData {
     
     struct LogotypeData: Codable, Equatable {
         
-        let content: String
-        let contentType: String
-        let name: String
-        let svgImage: SVGImageData
+        let content: String?
+        let contentType: String?
+        let name: String?
+        let svgImage: SVGImageData?
     }
 }
