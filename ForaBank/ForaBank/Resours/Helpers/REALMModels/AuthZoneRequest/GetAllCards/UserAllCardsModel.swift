@@ -51,6 +51,8 @@ class UserAllCardsModel: Object {
     @objc dynamic var depositID: Int = 0
     @objc dynamic var creditMinimumAmount: Double = 0.0
     @objc dynamic var minimumBalance: Double = 0.0
+    @objc dynamic var balanceRub: Double = 0.0
+
     
     override static func primaryKey() -> String? {
         return "id"

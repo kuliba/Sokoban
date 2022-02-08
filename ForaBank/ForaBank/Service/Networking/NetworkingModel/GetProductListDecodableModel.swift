@@ -100,6 +100,7 @@ struct GetProductListDatum: Codable{
     let depositID: Int?
     let creditMinimumAmount: Double?
     let minimumBalance: Double?
+    let balanceRub: Double?
 }
 
 // MARK: GetProductListDatum convenience initializers and mutators
