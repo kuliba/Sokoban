@@ -9,8 +9,6 @@ import Foundation
 
 struct FSSPData: Codable, Equatable {
     
-    let md5hash: String
-    let svgImage: SVGImageData
     let text: String
     let value: String
 }
