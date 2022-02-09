@@ -9,51 +9,53 @@ import SwiftUI
 
 extension PaymentsTaxesInputCellViewComponent {
     
-    struct ViewModel: Identifiable {
-        let id = UUID()
+    struct ViewModel {
+        
         let logo: Image
         let title: String
-        let subTitle: String
-        let action: (ViewModel.ID) -> Void
-        
+        let action: (String) -> Void
     }
-    
-    struct TextFieldModel {
-        
-        let icon: Image
-        let action: () -> Void
-    }
-    
 }
 
-struct PaymentsTaxesInputCellViewComponent {
+struct PaymentsTaxesInputCellViewComponent: View {
     
-    struct PaymentsTaxesInputCell: View {
-        let viewModel: PaymentsTaxesInputCellViewComponent.ViewModel
-        let buttonViewModel:PaymentsTaxesInputCellViewComponent.TextFieldModel
-        @State var text: String = ""
-        var body: some View {
-            HStack(spacing: 10) {
+    let viewModel: PaymentsTaxesInputCellViewComponent.ViewModel
+    @State var content: String = ""
+    
+    var body: some View {
+        HStack(spacing: 10) {
+            
+            viewModel.logo
+                .resizable()
+                .frame(width: 40, height: 40)
+            VStack(alignment: .leading, spacing: 10)  {
                 
-                viewModel.logo
-                    .resizable()
-                    .frame(width: 40, height: 40)
-                VStack(alignment: .leading, spacing: 10)  {
-                    Text(viewModel.title)
-                        .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(Color.black)
-                    
-                    
-                } .textFieldStyle(DefaultTextFieldStyle())
+                Text(viewModel.title)
+                    .font(Font.custom("Inter-Regular", size: 16))
+                    .foregroundColor(Color(hex: "#999999"))
                 
+                TextField(
+                    "placeholder",
+                    text: $content,
+                    onEditingChanged: { (isBegin) in
+                        if isBegin {
+                            /// Валидация
+                        } else {
+                            viewModel.action(content)
+                        }
+                    },
+                    onCommit: {
+                        /// Возвращаем фоновый текст, если он есть. Уточнить
+                    }
+                )
+                    .foregroundColor(Color(hex: "#1C1C1C"))
+                    .font(Font.custom("Inter-Medium", size: 14))
                 
-            } .frame(
-                minWidth: 0,
-                maxWidth: .infinity,
-                minHeight: 0,
-                maxHeight: .infinity,
-                alignment: .leading
-            )
+                Divider()
+                    .frame(height: 1)
+                    .background(Color(hex: "#EAEBEB"))
+                
+            } .textFieldStyle(DefaultTextFieldStyle())
         }
     }
 }
@@ -61,10 +63,8 @@ struct PaymentsTaxesInputCellViewComponent {
 
 struct PaymentsTaxesInputCellViewComponent_Previews: PreviewProvider {
     static var previews: some View {
-        PaymentsTaxesInputCellViewComponent.PaymentsTaxesInputCell(viewModel: PaymentsTaxesInputCellViewComponent.ViewModel(logo: Image("fora_white_back_bordered"),
-                                                                                                                               title: "Title",
-                                                                                                                        subTitle: "SubTitle",         action: { _ in }),
-                                                             buttonViewModel: PaymentsTaxesInputCellViewComponent.TextFieldModel(icon: Image("chevron-downnew"), action:{}))
+        
+        PaymentsTaxesInputCellViewComponent(viewModel: .init(logo: Image("fora_white_back_bordered"),title: "Title", action:{_ in }))
             .previewLayout(.fixed(width: 375, height: 56))
     }
 }
