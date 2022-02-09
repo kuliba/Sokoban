@@ -31,6 +31,7 @@ struct ProductData: Equatable {
     let productName: String
     let productType: ProductType
     let smallDesign: SVGImageData
+    let balanceRub: Double?
 }
 
 extension ProductData: Codable {
@@ -38,6 +39,7 @@ extension ProductData: Codable {
     private enum CodingKeys: String, CodingKey {
 
         case xlDesign = "XLDesign"
+        case balanceRub = "balanceRUB"
         case accountNumber, additionalField, allowCredit, allowDebit, background, balance, branchId, currency, customName, fontDesignColor, id, largeDesign, mainField, mediumDesign, number, numberMasked, openDate, ownerID, productName, productType, smallDesign
     }
 }
