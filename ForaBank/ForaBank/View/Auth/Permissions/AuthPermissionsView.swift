@@ -12,13 +12,16 @@ struct AuthPermissionsView: View {
     var viewModel: AuthPermissionsViewModel
     
     var body: some View {
-        VStack{
-            
-            HeaderView(viewModel: viewModel.header)
-            Spacer()
-            ButtonsView(viewModel: viewModel.buttons)
-        }
-        .padding(EdgeInsets(top: 24, leading: 20, bottom: 20, trailing: 20))
+        
+            VStack{
+                
+                HeaderView(viewModel: viewModel.header)
+                
+                Spacer()
+                
+                ButtonsView(viewModel: viewModel.buttons)
+            }
+            .padding(EdgeInsets(top: 0, leading: 20, bottom: 20, trailing: 20))
     }
 }
 
@@ -31,10 +34,11 @@ extension AuthPermissionsView {
         
         var body: some View {
 
-            VStack(spacing: 24) {
+            VStack(spacing: 32) {
+                
                 ZStack(alignment: .center) {
                     Circle()
-                        .fill(.gray)
+                        .fill(Color.bGIconGrayLightest)
                         .frame(width: 170, height: 170)
                     viewModel.icon
                         .resizable()
@@ -42,9 +46,11 @@ extension AuthPermissionsView {
                 }
                 
                 Text(viewModel.title)
+                    .font(.textH4R16240())
                     .foregroundColor(.textPlaceholder)
                     .padding([.leading,.trailing], 20)
                     .multilineTextAlignment(.center)
+                    .lineSpacing(5)
             }
             .padding(EdgeInsets(top: 24, leading: 0, bottom: 20, trailing: 0))
         }
@@ -55,8 +61,11 @@ extension AuthPermissionsView {
         @State var viewModel: [AuthPermissionsViewModel.ButtonViewModel]
         
         var body: some View {
+            
             VStack(spacing: 8) {
+                
                 ForEach(0..<viewModel.count) { i in
+                    
                         Button {
                             
                             viewModel[i].action()
@@ -66,7 +75,8 @@ extension AuthPermissionsView {
                         }
                         .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
                         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 48, maxHeight: 48)
-                        .background(Color.red)
+                        .background(Color.buttonPrimary)
+                        .font(.buttonLargeSB16180())
                         .foregroundColor(.white)
                         .cornerRadius(8)
 
