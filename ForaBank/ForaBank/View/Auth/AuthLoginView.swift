@@ -111,14 +111,14 @@ extension AuthLoginView {
                     HStack{
                         
                         Spacer()
-                        if viewModel.cardNumber.count == 16 || viewModel.cardNumber.count == 20{
+                        if viewModel.cardNumber?.count == 16 || viewModel.cardNumber?.count == 20{
                             Button {
                                 
-                                viewModel.nextButton?.action()
+                                viewModel.nextButton.action()
                                 
                             } label: {
                                 
-                                viewModel.nextButton?.icon
+                                viewModel.nextButton.icon
                                     .foregroundColor(.white)
                             }
                             .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 20))
