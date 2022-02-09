@@ -76,6 +76,7 @@ extension CustomPopUpWithRateView {
                                 viewModel.summTransction = model.data?.debitAmount?.currencyFormatter(symbol: model.data?.currencyPayer ?? "RUB") ?? ""
                                 viewModel.summInCurrency = model.data?.creditAmount?.currencyFormatter(symbol: model.data?.currencyPayee ?? "RUB") ?? ""
                                 viewModel.taxTransction = model.data?.fee?.currencyFormatter(symbol: model.data?.currencyPayer ?? "RUB") ?? ""
+                                viewModel.template = self?.paymentTemplate
                                 vc.smsCodeField.isHidden = !(model.data?.needOTP ?? true)
                                 vc.confurmVCModel = viewModel
                                 vc.addCloseButton()
@@ -91,7 +92,14 @@ extension CustomPopUpWithRateView {
                                     viewModel.summTransction = model.data?.debitAmount?.currencyFormatter(symbol: model.data?.currencyAmount ?? "RUB") ?? ""
                                     viewModel.paymentOperationDetailId = model.data?.paymentOperationDetailID ?? 0
                                     vc.printFormType = "internal"
-                                  
+                                    viewModel.template = self?.paymentTemplate
+                                    if let paymentOperationDetailId = model.data?.paymentOperationDetailID {
+                                        if viewModel.template == nil {
+                                            viewModel.templateButtonViewModel = .sfp(name: "Перевод между счетами", paymentOperationDetailId: paymentOperationDetailId)
+                                        } else {
+                                            viewModel.templateButtonViewModel = .template(paymentOperationDetailId)
+                                        }
+                                    }
                                 }
                                 vc.confurmVCModel = viewModel
                                 

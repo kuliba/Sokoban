@@ -774,9 +774,9 @@ class ContactConfurmViewController: UIViewController {
                         case .phoneNumber:
                             vc.printFormType = "internal"
                             // Template button view model
-                            if let name = self.confurmVCModel?.fullName, let paymentOperationDetailId = model.data?.paymentOperationDetailId {
+                            if let paymentOperationDetailId = model.data?.paymentOperationDetailId {
                                 if self.confurmVCModel?.template == nil {
-                                    self.confurmVCModel?.templateButtonViewModel = .sfp(name: name, paymentOperationDetailId: paymentOperationDetailId)
+                                    self.confurmVCModel?.templateButtonViewModel = .sfp(name: "Перевод между счетами", paymentOperationDetailId: paymentOperationDetailId)
                                 } else {
                                     self.confurmVCModel?.templateButtonViewModel = .template(paymentOperationDetailId)
                                 }
@@ -836,10 +836,24 @@ class ContactConfurmViewController: UIViewController {
                             
                         case .mig:
                             vc.printFormType = "direct"
-                            
+                            // Template button view model
+                            if let name = self.confurmVCModel?.fullName, let paymentOperationDetailId = model.data?.paymentOperationDetailId {
+                                if self.confurmVCModel?.template == nil {
+                                    self.confurmVCModel?.templateButtonViewModel = .sfp(name: name, paymentOperationDetailId: paymentOperationDetailId)
+                                } else {
+                                    self.confurmVCModel?.templateButtonViewModel = .template(paymentOperationDetailId)
+                                }
+                            }
                         case .contact:
                             vc.printFormType = "contactAddressless"
-                            
+                            // Template button view model
+                            if let name = self.confurmVCModel?.fullName, let paymentOperationDetailId = model.data?.paymentOperationDetailId {
+                                if self.confurmVCModel?.template == nil {
+                                    self.confurmVCModel?.templateButtonViewModel = .sfp(name: name, paymentOperationDetailId: paymentOperationDetailId)
+                                } else {
+                                    self.confurmVCModel?.templateButtonViewModel = .template(paymentOperationDetailId)
+                                }
+                            }
                         case .phoneNumberSBP:
                             vc.printFormType = "sbp"
                             
