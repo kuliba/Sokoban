@@ -77,7 +77,7 @@ extension ContactInputViewController {
                 model.summTransction = data.debitAmount?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
                 model.taxTransction = data.fee?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
                 model.summInCurrency = data.amount?.currencyFormatter(symbol: data.currencyPayee ?? "RUB") ?? ""
-                model.fullName = data.payeeName ?? "Получатель не оперделен"
+                model.fullName = data.payeeName ?? "Получатель не определен"
                 model.surname = surname
                 model.name = name
                 model.secondName = secondName
@@ -85,6 +85,7 @@ extension ContactInputViewController {
                 model.status = .succses
                 // TODO: add paymentSystem in model
                 model.paymentSystem = self.paymentSystem
+                model.template = self.paymentTemplate
                 respModel.data?.additionalList?.forEach({ additional in
                     if additional.fieldName == "trnReference" {
                         model.numberTransction = additional.fieldValue ?? ""
@@ -136,10 +137,11 @@ extension ContactInputViewController {
                 model.summInCurrency = data.creditAmount?.currencyFormatter(symbol: data.currencyPayee ?? "RUB") ?? ""
                 
                 model.taxTransction = data.fee?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
-                model.fullName = data.payeeName ?? "Получатель не оперделен"
+                model.fullName = data.payeeName ?? "Получатель не определен"
                 model.status = .succses
                 model.bank = self.selectedBank
                 model.paymentSystem = self.paymentSystem
+                model.template = self.paymentTemplate
                 respModel.data?.additionalList?.forEach({ additional in
                     if additional.fieldName == "RECP" {
                         model.phone = additional.fieldValue ?? ""

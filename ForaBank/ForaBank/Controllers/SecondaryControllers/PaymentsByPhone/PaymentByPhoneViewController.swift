@@ -410,7 +410,7 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
                             model.summTransction = data.debitAmount?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
                             model.summInCurrency = data.creditAmount?.currencyFormatter(symbol: data.currencyPayee ?? "RUB") ?? ""
                             model.taxTransction = data.fee?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
-                            model.fullName = data.payeeName ?? "Получатель не оперделен"
+                            model.fullName = data.payeeName ?? "Получатель не определен"
                             model.status = .succses
                             model.template = self?.viewModel.template
                             
