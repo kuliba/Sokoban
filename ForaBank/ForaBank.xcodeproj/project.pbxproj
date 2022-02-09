@@ -849,6 +849,7 @@
 		F63D4C7CF864543AD9AABF9A /* InternetTVInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D42CEA742F58D23C97218 /* InternetTVInputCell.swift */; };
 		F8E5299A27B1177100222394 /* AuthLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E5299927B1177100222394 /* AuthLoginViewModel.swift */; };
 		F8E529A227B39ED200222394 /* AuthConfirmViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E529A127B39ED200222394 /* AuthConfirmViewModel.swift */; };
+		F8E529A527B4137D00222394 /* AuthPermissionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E529A427B4137D00222394 /* AuthPermissionsViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1714,6 +1715,7 @@
 		F63D4DD4905E8BA594B990E1 /* InternetTVDetailsFormController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetTVDetailsFormController.swift; sourceTree = "<group>"; };
 		F8E5299927B1177100222394 /* AuthLoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthLoginViewModel.swift; sourceTree = "<group>"; };
 		F8E529A127B39ED200222394 /* AuthConfirmViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthConfirmViewModel.swift; sourceTree = "<group>"; };
+		F8E529A427B4137D00222394 /* AuthPermissionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPermissionsViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -4904,6 +4906,7 @@
 		F8E5299827B1174800222394 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				F8E529A327B4136F00222394 /* Permissions */,
 				F8E529A027B39EC100222394 /* Confirm */,
 				F8E5299927B1177100222394 /* AuthLoginViewModel.swift */,
 			);
@@ -4916,6 +4919,14 @@
 				F8E529A127B39ED200222394 /* AuthConfirmViewModel.swift */,
 			);
 			path = Confirm;
+			sourceTree = "<group>";
+		};
+		F8E529A327B4136F00222394 /* Permissions */ = {
+			isa = PBXGroup;
+			children = (
+				F8E529A427B4137D00222394 /* AuthPermissionsViewModel.swift */,
+			);
+			path = Permissions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -5436,6 +5447,7 @@
 				77EC58E9277237190054D75C /* ModelAction.swift in Sources */,
 				ED684CD52760C75600AA7A33 /* MakeDepositDecodableModel.swift in Sources */,
 				0BF3486426943DFB005138A8 /* SuggestCompanyDecodableModel.swift in Sources */,
+				F8E529A527B4137D00222394 /* AuthPermissionsViewModel.swift in Sources */,
 				EDB1452026661B030028EF5A /* StringMask.swift in Sources */,
 				EDB16586266A0883007E6030 /* NSDirectionalEdgeInsets.swift in Sources */,
 				EDE212F82742ED2B005D9821 /* ChooseCurrencyTableViewCell.swift in Sources */,
