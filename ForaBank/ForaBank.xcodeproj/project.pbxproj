@@ -848,6 +848,7 @@
 		F63D4B91E94C13AFD50FF312 /* GIBDDFineDetailsFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D4C8F9B14DFF843262392 /* GIBDDFineDetailsFormViewModel.swift */; };
 		F63D4C7CF864543AD9AABF9A /* InternetTVInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D42CEA742F58D23C97218 /* InternetTVInputCell.swift */; };
 		F8E5299A27B1177100222394 /* AuthLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E5299927B1177100222394 /* AuthLoginViewModel.swift */; };
+		F8E529A227B39ED200222394 /* AuthConfirmViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E529A127B39ED200222394 /* AuthConfirmViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1712,6 +1713,7 @@
 		F63D4D93E1924F097E08847C /* ClientInfoModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientInfoModel.swift; sourceTree = "<group>"; };
 		F63D4DD4905E8BA594B990E1 /* InternetTVDetailsFormController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetTVDetailsFormController.swift; sourceTree = "<group>"; };
 		F8E5299927B1177100222394 /* AuthLoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthLoginViewModel.swift; sourceTree = "<group>"; };
+		F8E529A127B39ED200222394 /* AuthConfirmViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthConfirmViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -4902,9 +4904,18 @@
 		F8E5299827B1174800222394 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				F8E529A027B39EC100222394 /* Confirm */,
 				F8E5299927B1177100222394 /* AuthLoginViewModel.swift */,
 			);
 			path = Auth;
+			sourceTree = "<group>";
+		};
+		F8E529A027B39EC100222394 /* Confirm */ = {
+			isa = PBXGroup;
+			children = (
+				F8E529A127B39ED200222394 /* AuthConfirmViewModel.swift */,
+			);
+			path = Confirm;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -5519,6 +5530,7 @@
 				77925580279B1BCB00A85723 /* JSONEncoder+Extensions.swift in Sources */,
 				0BD1CA9D26E6B63900CFE993 /* CountriesListSaved.swift in Sources */,
 				68FFA55B268586D3002DADFA /* HeaderBanksCollectionReusableView.swift in Sources */,
+				F8E529A227B39ED200222394 /* AuthConfirmViewModel.swift in Sources */,
 				774706A3277DD4E400B524F1 /* OperationDetailViewModel.swift in Sources */,
 				68C8D57026F0DF120076246B /* HistoryTableViewCell.swift in Sources */,
 				687FB23626F0189C004A479F /* ProductViewControllerDataSource.swift in Sources */,
