@@ -233,8 +233,36 @@ class Model {
                     
                 case let payload as ModelAction.Dictionary.AnywayOperators.Requested:
                     handleDictionaryAnywayOperatorsRequest(serial: payload.serial)
+                 
+                case let payload as ModelAction.Dictionary.Banks.Requested:
+                    handleDictionaryGetBanks(serial: payload.serial)
                     
-                    //TODO: other dictionaries actions here
+                case let payload as ModelAction.Dictionary.Countries.Requested:
+                    handleDictionaryCountries(serial: payload.serial)
+                    
+                case let payload as ModelAction.Dictionary.CurrencyList.Requested:
+                    handleDictionaryCurrencyList(serial: payload.serial)
+                    
+                case let payload as ModelAction.Dictionary.FMSList.Requested:
+                    handleDictionaryFMSList(serial: payload.serial)
+                    
+                case let payload as ModelAction.Dictionary.FSSPList.Requested:
+                    handleDictionaryFSSPList(serial: payload.serial)
+                    
+                case let payload as ModelAction.Dictionary.FTSList.Requested:
+                    handleDictionaryFTSList(serial: payload.serial)
+                    
+                case let payload as ModelAction.Dictionary.FullBankInfoList.Requested:
+                    handleDictionaryFullBankInfoList(bic: payload.bic, serial: payload.serial)
+                    
+                case let payload as ModelAction.Dictionary.MobileList.Requested:
+                    handleDictionaryMobileList(serial: payload.serial)
+                    
+                case let payload as ModelAction.Dictionary.MosParkingList.Requested:
+                    handleDictionaryMosParkingList(serial: payload.serial)
+                    
+                case let payload as ModelAction.Dictionary.PaymentSystemList.Requested:
+                    handleDictionaryPaymentSystemList(serial: payload.serial)
                     
                 default:
                     break
@@ -250,8 +278,17 @@ private extension Model {
     
     func requestDictionariesFromServer() {
         
-        // Anyway Operators
         action.send(ModelAction.Dictionary.AnywayOperators.Requested(serial: localAgent.serial(for: [OperatorGroupData].self)))
+        action.send(ModelAction.Dictionary.Banks.Requested(serial: localAgent.serial(for: [BankData].self)))
+        action.send(ModelAction.Dictionary.Countries.Requested(serial: localAgent.serial(for: [CountryData].self)))
+        action.send(ModelAction.Dictionary.CurrencyList.Requested(serial: localAgent.serial(for: [CurrencyData].self)))
+        action.send(ModelAction.Dictionary.FMSList.Requested(serial: localAgent.serial(for: [FMSData].self)))
+        action.send(ModelAction.Dictionary.FSSPList.Requested(serial: localAgent.serial(for: [FSSPData].self)))
+        action.send(ModelAction.Dictionary.FTSList.Requested(serial: localAgent.serial(for: [FTSData].self)))
+        action.send(ModelAction.Dictionary.FullBankInfoList.Requested(serial: localAgent.serial(for: [BankFullInfoData].self), bic: ""))
+        action.send(ModelAction.Dictionary.MobileList.Requested(serial: localAgent.serial(for: [MobileData].self)))
+        action.send(ModelAction.Dictionary.MosParkingList.Requested(serial: localAgent.serial(for: [MosParkingData].self)))
+        action.send(ModelAction.Dictionary.PaymentSystemList.Requested(serial: localAgent.serial(for: [PaymentSystemData].self)))
     }
     
     func loadCachedData() {
