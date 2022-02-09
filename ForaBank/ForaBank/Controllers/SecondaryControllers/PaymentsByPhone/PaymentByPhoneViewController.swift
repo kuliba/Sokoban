@@ -410,8 +410,9 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
                             model.summTransction = data.debitAmount?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
                             model.summInCurrency = data.creditAmount?.currencyFormatter(symbol: data.currencyPayee ?? "RUB") ?? ""
                             model.taxTransction = data.fee?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
-                            model.fullName = data.payeeName ?? "Получатель не оперделен"
+                            model.fullName = data.payeeName ?? "Получатель не определен"
                             model.status = .succses
+                            model.template = self?.viewModel.template
                             
                             let vc = ContactConfurmViewController()
                             vc.confurmVCModel = model
@@ -483,6 +484,8 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
                     model.taxTransction = data.data?.fee?.currencyFormatter(symbol: data.data?.currencyAmount ?? "") ?? ""
                     model.comment = self?.commentField.textField.text ?? ""
                     model.status = .succses
+                    model.template = self?.viewModel.template
+                    
                     let statusValue = data.data?.additionalList?.filter({$0.fieldName == "AFResponse"})
                     let numberTransaction = data.data?.additionalList?.filter({$0.fieldName == "BizMsgIdr"})
                     

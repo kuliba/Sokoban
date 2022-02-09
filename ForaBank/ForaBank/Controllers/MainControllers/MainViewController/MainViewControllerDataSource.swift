@@ -75,10 +75,22 @@ extension MainViewController {
                 else {
                     fatalError("Unable to dequeue \(CurrencyExchangeCollectionViewCell.self)")
                 }
-                cell.rateBuyEuro.text = self.dataEuro?.rateBuy?.currencyFormatter(symbol: "")
-                cell.rateSellEuro.text = self.dataEuro?.rateSell?.currencyFormatter(symbol: "")
-                cell.rateBuyUSD.text = self.dataUSD?.rateBuy?.currencyFormatter(symbol: "")
-                cell.rateSellUSD.text = self.dataUSD?.rateSell?.currencyFormatter(symbol: "")
+                if let euroBuy = self.dataEuro?.rateBuy{
+                    
+                    cell.rateBuyEuro.text = euroBuy.currencyFormatterForMain()
+                }
+                if let euroSell = self.dataEuro?.rateSell{
+                    
+                    cell.rateSellEuro.text = euroSell.currencyFormatterForMain()
+                }
+                if let usdBuy = self.dataUSD?.rateBuy{
+                    
+                    cell.rateBuyUSD.text = usdBuy.currencyFormatterForMain()
+                }
+                if let usdSell = self.dataUSD?.rateSell{
+                    
+                    cell.rateSellUSD.text =  usdSell.currencyFormatterForMain()
+                }
                 cell.backgroundColor = .red
 
                 return cell

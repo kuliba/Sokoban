@@ -67,9 +67,23 @@ enum TemplatesListViewModelAction {
         }
         
         struct PaymentInsideBankByCard: Action {
-            //TODO: Сделать модель для перевода по карте в рефакторинге экрана по карте
+            //TODO: Сделать модель для перевода по карте внутри банка в рефакторинге экрана по карте
             let viewModel: PaymentTemplateData
         }
         
+        struct PaymentToMyCard: Action {
+            //TODO: Сделать модель для перевода по карте на мои счета в рефакторинге экрана по карте
+            let viewModel: PaymentTemplateData
+        }
+        
+        struct PaymentContact: Action {
+            //TODO: Сделать модель для перевода Контакт в рефакторинге экрана платежей
+            let viewModel: PaymentTemplateData
+        }
+        
+        struct PaymentMig: Action {
+            //TODO: Сделать модель для перевода Миг в рефакторинге экрана экрана платежей
+            let viewModel: PaymentTemplateData
+        }
     }
 }

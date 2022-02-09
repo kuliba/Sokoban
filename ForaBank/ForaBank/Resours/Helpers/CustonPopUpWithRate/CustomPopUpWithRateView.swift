@@ -15,6 +15,8 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
     var token: NotificationToken?
     var onlyMy = true
     
+    var paymentTemplate: PaymentTemplateData? = nil
+    
     var trasfer = ("", "") {
         didSet {
                /// Обновляем модели в BottomView
@@ -59,6 +61,19 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
         token?.invalidate()
     }
 
+    init() {
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    init(paymentTemplate: PaymentTemplateData) {
+        super.init(nibName: nil, bundle: nil)
+        self.paymentTemplate = paymentTemplate
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     deinit {
         token?.invalidate()
     }

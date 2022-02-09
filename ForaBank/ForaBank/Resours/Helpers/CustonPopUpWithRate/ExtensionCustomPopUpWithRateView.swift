@@ -7,6 +7,7 @@
 
 import UIKit
 import RealmSwift
+import AnyFormatKit
 
 extension CustomPopUpWithRateView {
     override func viewDidLoad() {
@@ -16,7 +17,22 @@ extension CustomPopUpWithRateView {
         AddAllUserCardtList.add() {
             print("REALM Add")
         }
-        updateObjectWithNotification()
+        if let template = paymentTemplate {
+            let cardId = template.parameterList.first?.payer.cardId
+            updateObjectWithNotification(cardId: cardId)
+            updateObjectWithTamplate(paymentTemplate: template)
+        } else {
+            updateObjectWithNotification()
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let template = paymentTemplate {
+            runBlockAfterDelay(0.2) {
+                self.setupAmount(amount: template.amount)
+            }
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -31,12 +47,13 @@ extension CustomPopUpWithRateView {
         setupListFrom()
         setupListTo()
         
-        addHeaderImage()
+        paymentTemplate != nil ? nil : addHeaderImage()
+        
         view.layer.cornerRadius = 16
         view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         view.clipsToBounds = true
         view.backgroundColor = .white
-        view.anchor(width: UIScreen.main.bounds.width, height: 490)
+//        view.anchor(width: UIScreen.main.bounds.width, height: 490)
         
         stackView = UIStackView(arrangedSubviews: [cardFromField,
                                                    seporatorView,
@@ -53,20 +70,31 @@ extension CustomPopUpWithRateView {
     
     private func setupConstraint() {
         view.addSubview(titleLabel)
-        titleLabel.anchor(top: view.topAnchor, left: view.leftAnchor,
-                          paddingTop: 28, paddingLeft: 20)
+        titleLabel.anchor(
+            top: view.topAnchor,
+            left: view.leftAnchor,
+            paddingTop: 28,
+            paddingLeft: 20)
         
         view.addSubview(bottomView)
-        bottomView.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
-                          right: view.rightAnchor)
+        bottomView.anchor(
+            left: view.leftAnchor,
+            bottom: view.safeAreaLayoutGuide.bottomAnchor,
+            right: view.rightAnchor)
         let saveAreaView = UIView()
         saveAreaView.backgroundColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1)
         view.addSubview(saveAreaView)
-        saveAreaView.anchor(top: view.safeAreaLayoutGuide.bottomAnchor, left: view.leftAnchor,
-                            bottom: view.bottomAnchor, right: view.rightAnchor)
+        saveAreaView.anchor(
+            top: view.safeAreaLayoutGuide.bottomAnchor,
+            left: view.leftAnchor,
+            bottom: view.bottomAnchor,
+            right: view.rightAnchor)
         
-        stackView.anchor(top: titleLabel.bottomAnchor, left: view.leftAnchor,
-                         right: view.rightAnchor, paddingTop: 16)
+        stackView.anchor(
+            top: titleLabel.bottomAnchor,
+            left: view.leftAnchor,
+            right: view.rightAnchor,
+            paddingTop: 16)
     }
     
     private func createTopLabel(title: String) -> UIView {
@@ -80,24 +108,98 @@ extension CustomPopUpWithRateView {
         return view
     }
     
-    func updateObjectWithNotification() {
-        let cards = realm?.objects(UserAllCardsModel.self)
-        token = cards?.observe { [weak self] changes in
-            
-            guard let self = self else {
-                return
+    func updateObjectWithTamplate(paymentTemplate: PaymentTemplateData) {
+        title = paymentTemplate.name
+        titleLabel.text = ""
+        
+        let button = UIBarButtonItem(image: UIImage(named: "edit-2"),
+                                     landscapeImagePhone: nil,
+                                     style: .done,
+                                     target: self,
+                                     action: #selector(updateNameTemplate))
+        button.tintColor = .black
+        navigationItem.rightBarButtonItem = button
+        
+        
+        switch paymentTemplate.type {
+        case .betweenTheir:
+            if let transfer = paymentTemplate.parameterList.first as? TransferGeneralData {
+                let object = realm?.objects(UserAllCardsModel.self)
+                let cardId = transfer.payeeInternal?.cardId
+                let card = object?.first(where: { $0.id == cardId })
+                self.cardToField.model = card
+                self.viewModel.cardToRealm = card
             }
+            cardFromField.choseButton.isHidden = true
+            cardToField.choseButton.isHidden = true
+            self.trasfer = (viewModel.cardFromRealm?.currency ?? "", viewModel.cardToRealm?.currency ?? "")
+        default:
+            break
+        }
+        
+        
+    }
+    
+    @objc private func updateNameTemplate() {
+        self.showInputDialog(title: "Название шаблона",
+                             actionTitle: "Сохранить",
+                             cancelTitle: "Отмена",
+                             inputText: paymentTemplate?.name,
+                             inputPlaceholder: "Введите название шаблона",
+                             actionHandler:  { text in
             
-            switch changes {
-            case .initial:
-                print("REALM Initial")
-                self.allCardsFromRealm = self.updateCardsList(with: cards)
-            case .update:
-                print("REALM Update")
-                self.allCardsFromRealm = self.updateCardsList(with: cards)
-            case .error(let error):
-                print("DEBUG token fatalError:", error)
-                fatalError("\(error)")
+            guard let text = text else { return }
+            guard let templateId = self.paymentTemplate?.paymentTemplateId else { return }
+            
+            if text.isEmpty != true {
+                if text.count < 20 {
+                Model.shared.action.send(ModelAction.PaymentTemplate.Update.Requested(
+                    name: text,
+                    parameterList: nil,
+                    paymentTemplateId: templateId))
+                    
+                // FIXME: В рефактре нужно слушатель на обновление title
+                self.title = text
+                
+                } else {
+                    self.showAlert(with: "Ошибка", and: "В названии шаблона не должно быть более 20 символов")
+                }
+            } else {
+                self.showAlert(with: "Ошибка", and: "Название шаблона не должно быть пустым")
+            }
+        })
+    }
+    
+    func setupAmount(amount: Double?) {
+        guard let moneyFormatter = bottomView.moneyFormatter else { return }
+        let newText = moneyFormatter.format("\(amount ?? 0)") ?? ""
+        bottomView.amountTextField.text = newText
+        bottomView.doneButtonIsEnabled(newText.isEmpty)
+    }
+    
+    func updateObjectWithNotification(cardId: Int? = nil) {
+        let object = realm?.objects(UserAllCardsModel.self)
+        if let cardId = cardId {
+            let card = object?.first(where: { $0.id == cardId })
+            self.cardFromField.model = card
+            self.viewModel.cardFromRealm = card
+//            self.reversCard = ""
+        } else {
+            let cards = realm?.objects(UserAllCardsModel.self)
+            token = cards?.observe { [weak self] changes in
+                
+                guard let self = self else { return }
+                switch changes {
+                case .initial:
+                    print("REALM Initial")
+                    self.allCardsFromRealm = self.updateCardsList(with: cards)
+                case .update:
+                    print("REALM Update")
+                    self.allCardsFromRealm = self.updateCardsList(with: cards)
+                case .error(let error):
+                    print("DEBUG token fatalError:", error)
+                    fatalError("\(error)")
+                }
             }
         }
     }
@@ -141,6 +243,7 @@ extension CustomPopUpWithRateView {
             ? "Номер карты или счета"
             : "Номер карты отправителя"
         cardFromField.didChooseButtonTapped = { () in
+            guard self.paymentTemplate == nil else { return }
             self.openOrHideView(self.cardFromListView) {
                 self.seporatorView.curvedLineView.isHidden.toggle()
                 self.seporatorView.straightLineView.isHidden.toggle()
@@ -157,6 +260,7 @@ extension CustomPopUpWithRateView {
             ? "Номер карты или счета"
             : "Номер карты получателя"
         cardToField.didChooseButtonTapped = { () in
+            guard self.paymentTemplate == nil else { return }
             self.openOrHideView(self.cardToListView) {
                 self.seporatorView.curvedLineView.isHidden = false
                 self.seporatorView.straightLineView.isHidden = true

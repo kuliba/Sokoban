@@ -32,8 +32,9 @@ extension Double {
     func currencyFormatterForMain() -> String {
         
         let currencyFormatter = NumberFormatter()
-        currencyFormatter.usesGroupingSeparator = true
         currencyFormatter.numberStyle = .decimal
+        currencyFormatter.maximumFractionDigits = 2
+        currencyFormatter.minimumFractionDigits = 2
         
         if let priceString = currencyFormatter.string(from: NSNumber(value: self)) {
             return priceString

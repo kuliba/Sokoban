@@ -38,14 +38,16 @@ private extension TemplatesListViewHostingViewController {
             
                 switch action {
                 //TODO: move this to view model after tests
-//                case let payload as TemplatesListViewModelAction.ItemTapped:
-//                    let model = Model.shared
-//                    guard let temp = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == payload.itemId}) else { return }
-//
-//                    //                    let paymentViewModel = PaymentByPhoneViewModel(phoneNumber: "9279890100", bankId: "0115110217", amount: 1000.22)
-//                    let paymentViewModel = PaymentByPhoneViewModel(template: temp)
-//                    let paymentViewController = PaymentByPhoneViewController(viewModel: paymentViewModel)
-//                    navigationController?.pushViewController(paymentViewController, animated: true)
+                    
+                case let payload as TemplatesListViewModelAction.Present.PaymentMig:
+                    let vc = ContactInputViewController(paymentTemplate: payload.viewModel)
+                    navigationController?.pushViewController(vc, animated: true)
+                    
+                case let payload as TemplatesListViewModelAction.Present.PaymentContact:
+                    let vc = ContactInputViewController(paymentTemplate: payload.viewModel)
+                    navigationController?.pushViewController(vc, animated: true)
+                    
+                    
                     
                 case let payload as TemplatesListViewModelAction.Present.PaymentSFP:
                     let paymentViewController = PaymentByPhoneViewController(viewModel: payload.viewModel)
@@ -57,6 +59,12 @@ private extension TemplatesListViewHostingViewController {
                     
                 case let payload as TemplatesListViewModelAction.Present.PaymentInsideBankByCard:
                     let paymentViewController = MemeDetailVC(paymentTemplate: payload.viewModel)
+                    navigationController?.pushViewController(paymentViewController, animated: true)
+                    
+                case let payload as TemplatesListViewModelAction.Present.PaymentToMyCard:
+                    let model = ConfirmViewControllerModel(type: .card2card)
+                    let paymentViewController = CustomPopUpWithRateView(paymentTemplate: payload.viewModel)
+                    paymentViewController.viewModel = model
                     navigationController?.pushViewController(paymentViewController, animated: true)
                     
                     
@@ -71,6 +79,17 @@ private extension TemplatesListViewHostingViewController {
                 
             }.store(in: &bindings)
     
+    }
+    
+    func getCountry(code: String) -> CountriesList {
+        var countryValue: CountriesList?
+        let list = Dict.shared.countries
+        list?.forEach({ country in
+            if country.code == code {
+                countryValue = country
+            }
+        })
+        return countryValue!
     }
 }
 
