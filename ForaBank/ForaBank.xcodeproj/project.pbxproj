@@ -358,6 +358,7 @@
 		688B9BB026DEC27200407A75 /* OfferCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688B9BAE26DEC27200407A75 /* OfferCollectionViewCell.swift */; };
 		688B9BB426E03B3000407A75 /* TotalMoneyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688B9BB326E03B3000407A75 /* TotalMoneyView.swift */; };
 		688B9BB626E03B3E00407A75 /* TotalMoneyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 688B9BB526E03B3E00407A75 /* TotalMoneyView.xib */; };
+		688D816927B50E5F00F23081 /* Binding+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688D816827B50E5F00F23081 /* Binding+Extensions.swift */; };
 		689A99AE2779E73600D1FDAE /* OperationDetailInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689A99AD2779E73600D1FDAE /* OperationDetailInfoViewModel.swift */; };
 		68A40A132771E154007333EA /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 68A40A122771E154007333EA /* FirebaseAnalytics */; };
 		68AD33F1279858E900647665 /* CsrfDtoDecodingGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 68AD33F0279858E900647665 /* CsrfDtoDecodingGeneric.json */; };
@@ -1231,6 +1232,7 @@
 		688B9BAE26DEC27200407A75 /* OfferCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferCollectionViewCell.swift; sourceTree = "<group>"; };
 		688B9BB326E03B3000407A75 /* TotalMoneyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalMoneyView.swift; sourceTree = "<group>"; };
 		688B9BB526E03B3E00407A75 /* TotalMoneyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TotalMoneyView.xib; sourceTree = "<group>"; };
+		688D816827B50E5F00F23081 /* Binding+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Binding+Extensions.swift"; sourceTree = "<group>"; };
 		68935F71276970CF002F56C2 /* AntifraudViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AntifraudViewModel.swift; sourceTree = "<group>"; };
 		689A99AD2779E73600D1FDAE /* OperationDetailInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailInfoViewModel.swift; sourceTree = "<group>"; };
 		68AD33F0279858E900647665 /* CsrfDtoDecodingGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = CsrfDtoDecodingGeneric.json; sourceTree = "<group>"; };
@@ -3386,6 +3388,7 @@
 				7758754E27996E610080115D /* FileManager+Extensions.swift */,
 				7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */,
 				7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */,
+				688D816827B50E5F00F23081 /* Binding+Extensions.swift */,
 				E34B29CF263A08B9A2BA3560 /* Assets */,
 			);
 			path = Extensions;
@@ -5373,6 +5376,7 @@
 				0B37F9882680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift in Sources */,
 				0BD1CA9B26E6B55F00CFE993 /* GetCountriesList.swift in Sources */,
 				688B9BAC26DE7D7E00407A75 /* ProductViewController.swift in Sources */,
+				688D816927B50E5F00F23081 /* Binding+Extensions.swift in Sources */,
 				77E1804927AC3B810006ACC9 /* FTSData.swift in Sources */,
 				0BB24AB526F0C62500DDA4F6 /* BlockCardDecodableModel.swift in Sources */,
 				EDB1451C26652D370028EF5A /* UILabel.swift in Sources */,

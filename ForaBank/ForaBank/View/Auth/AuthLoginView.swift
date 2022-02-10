@@ -66,12 +66,6 @@ extension AuthLoginView {
         
         @State var viewModel: AuthLoginViewModel.CardViewModel
         
-        let formatter: NumberFormatter = {
-            let formatter = NumberFormatter()
-            formatter.numberStyle = .decimal
-            return formatter
-        }()
-        
         var body: some View {
             VStack(spacing: 0) {
                 
@@ -80,6 +74,7 @@ extension AuthLoginView {
                     viewModel.icon
                         .resizable()
                         .frame(width: 32, height: 32)
+                        .foregroundColor(.white)
                     
                     Spacer()
                     
@@ -99,8 +94,8 @@ extension AuthLoginView {
                 Spacer()
                 
                 ZStack {
-                    
-                    TextField("", value: $viewModel.cardNumber, formatter: formatter)
+
+                    TextField("", text: .bindOptional($viewModel.cardNumber, ""))
                         .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
                         .font(.textH2M20282())
                         .foregroundColor(.white)
@@ -153,6 +148,7 @@ extension AuthLoginView {
         var viewModel: AuthLoginViewModel.ProductsButtonViewModel
         
         var body: some View {
+            
             Button(action: {
             }) {
                 
