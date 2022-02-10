@@ -410,6 +410,7 @@
 		68E76535279702C6005860FE /* VerifyCodeResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 68E76534279702C6005860FE /* VerifyCodeResponseGeneric.json */; };
 		68E7653C279705E6005860FE /* SetDeviceSettingDecodingGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 68E7653B279705E6005860FE /* SetDeviceSettingDecodingGeneric.json */; };
 		68E7653E279713B2005860FE /* GetCodeResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 68E7653D279713B2005860FE /* GetCodeResponseGeneric.json */; };
+		68EF9AEC27B5150000630831 /* AuthConfirmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68EF9AEB27B5150000630831 /* AuthConfirmView.swift */; };
 		68F6816F269E5E56008157CE /* SearchBanksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F6816E269E5E56008157CE /* SearchBanksViewController.swift */; };
 		68FB358B2760C1C80097AECE /* AntifraudView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FB358A2760C1C80097AECE /* AntifraudView.swift */; };
 		68FFA5282682AF2C002DADFA /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA5272682AF2C002DADFA /* ContactsViewController.swift */; };
@@ -1283,6 +1284,7 @@
 		68E76534279702C6005860FE /* VerifyCodeResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = VerifyCodeResponseGeneric.json; sourceTree = "<group>"; };
 		68E7653B279705E6005860FE /* SetDeviceSettingDecodingGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = SetDeviceSettingDecodingGeneric.json; sourceTree = "<group>"; };
 		68E7653D279713B2005860FE /* GetCodeResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetCodeResponseGeneric.json; sourceTree = "<group>"; };
+		68EF9AEB27B5150000630831 /* AuthConfirmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthConfirmView.swift; sourceTree = "<group>"; };
 		68F6816E269E5E56008157CE /* SearchBanksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBanksViewController.swift; sourceTree = "<group>"; };
 		68FB358A2760C1C80097AECE /* AntifraudView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AntifraudView.swift; sourceTree = "<group>"; };
 		68FFA5272682AF2C002DADFA /* ContactsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewController.swift; sourceTree = "<group>"; };
@@ -2636,6 +2638,14 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		688D816A27B513CD00F23081 /* Confirm */ = {
+			isa = PBXGroup;
+			children = (
+				68EF9AEB27B5150000630831 /* AuthConfirmView.swift */,
+			);
+			path = Confirm;
+			sourceTree = "<group>";
+		};
 		68935F70276970B7002F56C2 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -2760,6 +2770,7 @@
 		68D53ECF27B3DFE400D0EBA8 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				688D816A27B513CD00F23081 /* Confirm */,
 				68D53ED327B4178D00D0EBA8 /* Permissions */,
 				68D53ED027B3E00400D0EBA8 /* AuthLoginView.swift */,
 			);
@@ -5381,6 +5392,7 @@
 				0BB24AB526F0C62500DDA4F6 /* BlockCardDecodableModel.swift in Sources */,
 				EDB1451C26652D370028EF5A /* UILabel.swift in Sources */,
 				77DC126F2770F8C900C917B0 /* ServerCommands+PaymentTemplate.swift in Sources */,
+				68EF9AEC27B5150000630831 /* AuthConfirmView.swift in Sources */,
 				0B22AEA826CE72C200B11E7F /* GKHDataFilter.swift in Sources */,
 				0B95C40326B6CA3700AA57E6 /* CustomPopUpWithRateView.swift in Sources */,
 				77EC58E7277236E90054D75C /* Model.swift in Sources */,
