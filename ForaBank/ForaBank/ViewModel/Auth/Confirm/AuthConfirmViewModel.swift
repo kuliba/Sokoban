@@ -50,7 +50,7 @@ extension AuthConfirmViewModel {
     class CodeViewModel: ObservableObject {
         
         let title = "Введите код из сообщения"
-        @Published var code: [String?] = [nil, nil, nil, nil, nil]
+        @Published var code: String?
     }
 
     class InfoViewModel: ObservableObject {
