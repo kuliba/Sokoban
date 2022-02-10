@@ -858,6 +858,7 @@
 		F8E5299A27B1177100222394 /* AuthLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E5299927B1177100222394 /* AuthLoginViewModel.swift */; };
 		F8E529A227B39ED200222394 /* AuthConfirmViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E529A127B39ED200222394 /* AuthConfirmViewModel.swift */; };
 		F8E529A527B4137D00222394 /* AuthPermissionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E529A427B4137D00222394 /* AuthPermissionsViewModel.swift */; };
+		F8E529A827B5068E00222394 /* AuthPinCodeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E529A727B5068E00222394 /* AuthPinCodeViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1732,6 +1733,7 @@
 		F8E5299927B1177100222394 /* AuthLoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthLoginViewModel.swift; sourceTree = "<group>"; };
 		F8E529A127B39ED200222394 /* AuthConfirmViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthConfirmViewModel.swift; sourceTree = "<group>"; };
 		F8E529A427B4137D00222394 /* AuthPermissionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPermissionsViewModel.swift; sourceTree = "<group>"; };
+		F8E529A727B5068E00222394 /* AuthPinCodeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPinCodeViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -4964,6 +4966,7 @@
 			children = (
 				F8E529A327B4136F00222394 /* Permissions */,
 				F8E529A027B39EC100222394 /* Confirm */,
+				F8E529A627B5066D00222394 /* PinCode */,
 				F8E5299927B1177100222394 /* AuthLoginViewModel.swift */,
 			);
 			path = Auth;
@@ -4983,6 +4986,14 @@
 				F8E529A427B4137D00222394 /* AuthPermissionsViewModel.swift */,
 			);
 			path = Permissions;
+			sourceTree = "<group>";
+		};
+		F8E529A627B5066D00222394 /* PinCode */ = {
+			isa = PBXGroup;
+			children = (
+				F8E529A727B5068E00222394 /* AuthPinCodeViewModel.swift */,
+			);
+			path = PinCode;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -5690,6 +5701,7 @@
 				ED84995926A8831E005205C6 /* EPContactCell.swift in Sources */,
 				A5662694275D3CD000FFE31A /* InternetTVSelectDialog.swift in Sources */,
 				68673B6026F4B87900F67A8C /* PayTableViewCell.swift in Sources */,
+				F8E529A827B5068E00222394 /* AuthPinCodeViewModel.swift in Sources */,
 				EDF6820E266F9EC800FD5C07 /* NetworkModelProtocol.swift in Sources */,
 				0BDE452D26E298F600B64A0A /* ExtensionQRViewController.swift in Sources */,
 				7758754B27996D8B0080115D /* Cachable.swift in Sources */,

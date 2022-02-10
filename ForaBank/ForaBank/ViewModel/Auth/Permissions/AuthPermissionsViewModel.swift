@@ -27,15 +27,6 @@ class AuthPermissionsViewModel: ObservableObject {
         buttons = []
         header = .init(sensorType: .touchID)
 
-        bind()
-    }
-    
-    func getSensorType() -> SensorType {
-        .faceID
-    }
-    
-    func bind() {
-        
         sensorType = getSensorType()
         
         switch sensorType {
@@ -62,6 +53,10 @@ class AuthPermissionsViewModel: ObservableObject {
             })]
         }
     }
+    
+    func getSensorType() -> SensorType {
+        .faceID
+    }
 
 }
 
@@ -83,10 +78,10 @@ extension AuthPermissionsViewModel {
             switch sensorType {
             case .touchID:
                 title = "Вместо  пароля вы можете использовать отпечаток для входа"
-                icon = Image("touchId")
+                icon = .ic64TouchID
             case .faceID:
                 title = "Вместо  пароля вы можете использовать Face ID для входа"
-                icon = Image("face")
+                icon = .ic64FaceId
             }
         }
     }
