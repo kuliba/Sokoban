@@ -25,7 +25,7 @@ class AuthConfirmViewModel: ObservableObject {
     init() {
 
         code = CodeViewModel()
-        info = InfoViewModel(title: "Код отправлен на +7 ... ... 54 15", state: .timer(.init(value: "00:45")))
+        info = InfoViewModel(title: "Код отправлен на +7 ... ... 54 15 \n Запросить повторно можно будет через", state: .timer(.init(value: "00:45")))
     }
 }
 

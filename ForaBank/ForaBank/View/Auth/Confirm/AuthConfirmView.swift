@@ -9,30 +9,41 @@ import SwiftUI
 
 struct AuthConfirmView: View {
     
-    var viewModel: AuthConfirmViewModel
+    @ObservedObject var viewModel: AuthConfirmViewModel
 
     var body: some View {
         
-            VStack{
+        VStack {
+            
+            HStack(alignment: .center){
                 
-                HStack{
+                ZStack{
                     
-                    Button {
-                        
+                    Button{
+                    
                         viewModel.navigationBar.backButton.action()
                     } label: {
+                        
                         viewModel.navigationBar.backButton.icon
                     }
-                    Spacer()
-                    Text(viewModel.navigationBar.title)
+                }
+                    
+                Spacer()
+                    
+                Text(viewModel.navigationBar.title)
+                    
+                Spacer()
                     
                 }
                 
                 CodeView(viewModel: viewModel.code)
                 
-                InfoViewModel(viewModel: viewModel.info!)
+                InfoView(viewModel: viewModel.info!)
+                
+                Spacer()
             }
-            .padding(EdgeInsets(top: 0, leading: 20, bottom: 20, trailing: 20))
+            .padding(EdgeInsets(top: 12, leading: 20, bottom: 20, trailing: 20))
+        
     }
 }
 
@@ -42,7 +53,7 @@ extension AuthConfirmView {
     struct CodeView: View {
         
         @State var viewModel: AuthConfirmViewModel.CodeViewModel
-        
+
         var body: some View {
 
             VStack(spacing: 32) {
@@ -53,50 +64,75 @@ extension AuthConfirmView {
                     .padding([.leading,.trailing], 20)
                     .multilineTextAlignment(.center)
                 
-                TextField("", text: .bindOptional($viewModel.code, ""))
-                    .border(Color.mainColorsGrayMedium, width: 1)
-                    .keyboardType(.numberPad)
-                    .font(.textH0B32402())
-                    .textFieldStyle(.roundedBorder)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 15)
-                            .stroke(style: StrokeStyle(lineWidth: 1, dash: [11.0]))
-                    )
+                    VStack(spacing: 8) {
+
+                        TextField("", text: .bindOptional($viewModel.code, ""))
+                            .keyboardType(.numberPad)
+                            .font(.textH0B32402())
+                            .accentColor(.mainColorsGrayMedium)
+                            .keyboardType(.numberPad)
+                            .textContentType(.oneTimeCode)
+                            .foregroundColor(.textPlaceholder)
+                            
+                        Line()
+                            .stroke(style: StrokeStyle(lineWidth: 1, dash: [30]))
+                            .frame(height: 1)
+                            .foregroundColor(.mainColorsGrayMedium)
+                    }
                 }
             .padding(EdgeInsets(top: 24, leading: 0, bottom: 20, trailing: 0))
         }
     }
     
-    struct InfoViewModel: View {
+    struct InfoView: View {
         
         @State var viewModel: AuthConfirmViewModel.InfoViewModel
         
+        
         var body: some View {
 
-            VStack(spacing: 5) {
+            VStack(spacing: 32) {
                 
                 Text(viewModel.title)
                     .font(.textBodyMR14200())
-                    .foregroundColor(.textSecondary)
+                    .foregroundColor(.textPlaceholder)
                     .padding([.leading,.trailing], 20)
                     .multilineTextAlignment(.center)
+                    .lineSpacing(5)
                 
-                
-                
-                Button {
-                    print("")
-                } label: {
-                    Text("Отправить повторно")
+                VStack {
+                    
+                    Button {
+                        
+                        print("")
+                    } label: {
+                        
+                        Text("Отправить повторно")
+                            .font(.textBodySR12160())
+                    }
+                    .frame(width: 140, height: 24, alignment: .center)
+                    .background(Color.buttonSecondary)
+                    .cornerRadius(90)
+                    .font(.buttonMediumM14160())
+                    .foregroundColor(.textRed)
+                    
+                    Text("00:59")
+                        .font(.textH3R18240())
+                        .foregroundColor(.textSecondary)
                 }
-                .frame(width: 140, height: 24, alignment: .center)
-                .background(Color.buttonSecondary)
-                .cornerRadius(90)
-                .font(.buttonMediumM14160())
-                .foregroundColor(.textRed)
-
             }
             .padding(EdgeInsets(top: 24, leading: 0, bottom: 20, trailing: 0))
         }
+    }
+}
+
+struct Line: Shape {
+    
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: 0, y: 0))
+        path.addLine(to: CGPoint(x: rect.width, y: 0))
+        return path
     }
 }
 
