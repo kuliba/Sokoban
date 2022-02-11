@@ -855,6 +855,7 @@
 		F8E5299A27B1177100222394 /* AuthLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E5299927B1177100222394 /* AuthLoginViewModel.swift */; };
 		F8E529A227B39ED200222394 /* AuthConfirmViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E529A127B39ED200222394 /* AuthConfirmViewModel.swift */; };
 		F8E529A527B4137D00222394 /* AuthPermissionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E529A427B4137D00222394 /* AuthPermissionsViewModel.swift */; };
+		F8E529A827B5068E00222394 /* AuthPinCodeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E529A727B5068E00222394 /* AuthPinCodeViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1298,7 +1299,7 @@
 		68FFA560268DD2CE002DADFA /* CountriesCodeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountriesCodeButton.swift; sourceTree = "<group>"; };
 		68FFA562268DDFCA002DADFA /* SearchContactView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchContactView.swift; sourceTree = "<group>"; };
 		68FFA564269464FF002DADFA /* TransferByRequisitesConfirmViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferByRequisitesConfirmViewController.swift; sourceTree = "<group>"; };
-		6F88A9A4DBEADB3F8E16A822 /* Image+Illustrations.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Image+Illustrations.swift"; path = "Image+Illustrations.swift"; sourceTree = "<group>"; };
+		6F88A9A4DBEADB3F8E16A822 /* Image+Illustrations.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; fileEncoding = 4; path = "Image+Illustrations.swift"; sourceTree = "<group>"; };
 		7701B27027A42BC300FBF5E3 /* GetPeymentTemlpateListResponseSFP.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetPeymentTemlpateListResponseSFP.json; sourceTree = "<group>"; };
 		77067CD8275FBB70000C442B /* StringExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensionsTests.swift; sourceTree = "<group>"; };
 		77067CDA275FBE8F000C442B /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
@@ -1479,8 +1480,8 @@
 		A5F15C0C274972F900DC91DA /* InternetTVLatestOperationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVLatestOperationsView.swift; sourceTree = "<group>"; };
 		A5F15C0E274980CB00DC91DA /* InternetTVLatestOperationRealm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVLatestOperationRealm.swift; sourceTree = "<group>"; };
 		A5F15C10274985C900DC91DA /* InternetTVLatestOperationsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVLatestOperationsModel.swift; sourceTree = "<group>"; };
-		C70B9838CDF23BDFFAC34257 /* Font+Assets.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Font+Assets.swift"; path = "Font+Assets.swift"; sourceTree = "<group>"; };
-		C8BDBA5E8E5B98668466191C /* Color+Assets.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Color+Assets.swift"; path = "Color+Assets.swift"; sourceTree = "<group>"; };
+		C70B9838CDF23BDFFAC34257 /* Font+Assets.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; fileEncoding = 4; path = "Font+Assets.swift"; sourceTree = "<group>"; };
+		C8BDBA5E8E5B98668466191C /* Color+Assets.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; fileEncoding = 4; path = "Color+Assets.swift"; sourceTree = "<group>"; };
 		ED07DB8F26EFB006007026FB /* GetMe2MeDebitConsentDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMe2MeDebitConsentDecodableModel.swift; sourceTree = "<group>"; };
 		ED0B4893267B50F50037EA06 /* Int.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Int.swift; sourceTree = "<group>"; };
 		ED0B4895267B97C60037EA06 /* ContactInputViewController + UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContactInputViewController + UI.swift"; sourceTree = "<group>"; };
@@ -1710,7 +1711,7 @@
 		EDFFCAF72683943A004EE095 /* UISwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UISwitch.swift; sourceTree = "<group>"; };
 		EDFFCAFA2683C135004EE095 /* PaymentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentType.swift; sourceTree = "<group>"; };
 		EDFFCAFC2683C18B004EE095 /* ContactInputViewController API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContactInputViewController API.swift"; sourceTree = "<group>"; };
-		F343D52CB492075F3BA8B548 /* Image+Icons.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Image+Icons.swift"; path = "Image+Icons.swift"; sourceTree = "<group>"; };
+		F343D52CB492075F3BA8B548 /* Image+Icons.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; fileEncoding = 4; path = "Image+Icons.swift"; sourceTree = "<group>"; };
 		F63D4056E8B88CC673C85295 /* CheckBoxView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CheckBoxView.xib; sourceTree = "<group>"; };
 		F63D41A4E0088FEC1D9DD013 /* AvtodorDetailsFormController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AvtodorDetailsFormController.swift; sourceTree = "<group>"; };
 		F63D42613FF2F4EDEA6BA9D3 /* InternetTVDetailsFormViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetTVDetailsFormViewModel.swift; sourceTree = "<group>"; };
@@ -1726,6 +1727,7 @@
 		F8E5299927B1177100222394 /* AuthLoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthLoginViewModel.swift; sourceTree = "<group>"; };
 		F8E529A127B39ED200222394 /* AuthConfirmViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthConfirmViewModel.swift; sourceTree = "<group>"; };
 		F8E529A427B4137D00222394 /* AuthPermissionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPermissionsViewModel.swift; sourceTree = "<group>"; };
+		F8E529A727B5068E00222394 /* AuthPinCodeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPinCodeViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -3477,7 +3479,6 @@
 				6F88A9A4DBEADB3F8E16A822 /* Image+Illustrations.swift */,
 				C70B9838CDF23BDFFAC34257 /* Font+Assets.swift */,
 			);
-			name = Assets;
 			path = Assets;
 			sourceTree = "<group>";
 		};
@@ -4940,6 +4941,7 @@
 			children = (
 				F8E529A327B4136F00222394 /* Permissions */,
 				F8E529A027B39EC100222394 /* Confirm */,
+				F8E529A627B5066D00222394 /* PinCode */,
 				F8E5299927B1177100222394 /* AuthLoginViewModel.swift */,
 			);
 			path = Auth;
@@ -4959,6 +4961,14 @@
 				F8E529A427B4137D00222394 /* AuthPermissionsViewModel.swift */,
 			);
 			path = Permissions;
+			sourceTree = "<group>";
+		};
+		F8E529A627B5066D00222394 /* PinCode */ = {
+			isa = PBXGroup;
+			children = (
+				F8E529A727B5068E00222394 /* AuthPinCodeViewModel.swift */,
+			);
+			path = PinCode;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -5664,6 +5674,7 @@
 				ED84995926A8831E005205C6 /* EPContactCell.swift in Sources */,
 				A5662694275D3CD000FFE31A /* InternetTVSelectDialog.swift in Sources */,
 				68673B6026F4B87900F67A8C /* PayTableViewCell.swift in Sources */,
+				F8E529A827B5068E00222394 /* AuthPinCodeViewModel.swift in Sources */,
 				EDF6820E266F9EC800FD5C07 /* NetworkModelProtocol.swift in Sources */,
 				0BDE452D26E298F600B64A0A /* ExtensionQRViewController.swift in Sources */,
 				7758754B27996D8B0080115D /* Cachable.swift in Sources */,
