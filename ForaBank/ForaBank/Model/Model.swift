@@ -105,6 +105,20 @@ class Model {
                     clearCachedData()
                     paymentTemplates.value = []
                     
+                //MARK: - Payments
+                    
+                case let payload as ModelAction.Payment.Services.Request:
+                    handlePaymentsServicesRequest(payload)
+                    
+                case let payload as ModelAction.Payment.Begin.Request:
+                    handlePaymentsBeginRequest(payload)
+                    
+                case let payload as ModelAction.Payment.Continue.Request:
+                    handlePaymentsContinueRequest(payload)
+                    
+                case let payload as ModelAction.Payment.Complete.Request:
+                    handlePaymentsCompleteRequest(payload)
+                    
                 //MARK: - Templates Actions
                     
                 case let payload as ModelAction.PaymentTemplate.Save.Requested:
