@@ -12,69 +12,42 @@ extension ModelAction {
     enum Payment {
         
         typealias Category = Payments.Category
-        typealias Operator = Payments.Operator
         typealias Service = Payments.Service
+        typealias Operator = Payments.Operator
         typealias Parameter = Payments.Parameter
+        typealias Operation = Payments.Operation
         
-        // list of operators
-        enum Operators {
+        enum Services {
             
             struct Request: Action {
                 
-                let categoryId: Category.ID
+                let category: Category
             }
             
-            struct Response {
+            struct Response: Action {
                 
-                let categoryId: Category.ID
-                let result: Result<[Operator], Error>
-            }
-        }
-        
-        // data for service selection
-        enum Init {
-            
-            enum For {
-            
-                struct OperatorId: Action {
-                    
-                    let operatorId: Operator.ID
-                }
-                
-                struct ServiceType: Action {
-                    
-                    let serviceType: Service.Kind
-                }
-            }
-
-            struct Response {
-                
-                let serviceType: Service.Kind
-                let result: Result<[Parameter], Error>
+                let result: Result<[Parameter.Service], Error>
             }
         }
         
-        // start payment process
-        enum Start {
+        // begin payment process
+        enum Begin {
             
-            enum With {
-            
-                struct ServiceValue: Action {
-                    
-                    let service: Service
-                }
+            struct Request: Action {
                 
-                struct TemplateId: Action {
+                let source: Source
+                let currency: Currency
+                
+                enum Source {
                     
-                    let templateId: PaymentTemplateData.ID
+                    case service(Service)
+                    case templateId(PaymentTemplateData.ID)
                 }
             }
 
-            struct Response {
+            struct Response: Action {
                 
-                let service: Service
-                let step: Int
-                let result: Result<[Parameter], Error>
+                let result: Result<Operation, Error>
             }
         }
         
@@ -83,20 +56,17 @@ extension ModelAction {
      
             struct Request: Action {
                 
-                let service: Service
-                let step: Int
-                let values: [Parameter.Value]
+                let operation: Operation
             }
             
             struct Response: Action {
-                
-                let service: Service
+
                 let result: Result
                 
                 enum Result {
                     
-                    case step(step: Int, parameters: [Parameter])
-                    case check(parameters: [Parameter])
+                    case step(Operation)
+                    case confirm(Operation)
                     case fail(Error)
                 }
             }
@@ -107,18 +77,16 @@ extension ModelAction {
             
             struct Request: Action {
                 
-                let service: Service
-                let values: [Parameter.Value]
+                let operation: Operation
             }
             
             struct Response: Action {
                 
-                let service: Service
+                let result: Result<SuccessData, Error>
                 
-                enum Result {
+                struct SuccessData {
                     
-                    case success //Success screen data
-                    case fail(Error)
+                    //TODO: success screen data
                 }
             }
         }

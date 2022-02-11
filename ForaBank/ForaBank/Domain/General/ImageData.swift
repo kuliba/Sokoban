@@ -13,3 +13,8 @@ struct ImageData {
     
     //TODO: image from data
 }
+
+extension ImageData {
+    
+    static let empty = ImageData(data: Data())
+}

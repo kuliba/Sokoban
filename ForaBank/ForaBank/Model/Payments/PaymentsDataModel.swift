@@ -9,170 +9,80 @@ import Foundation
 
 enum Payments {
 
-    struct Category: Identifiable {
-       
-        let id: String
-        let name: String
-        let icon: ImageData
+    enum Category: String {
+        
+        case taxes = "iFora||1331001"
+        
+        var services: [Service] {
+            
+            switch self {
+            case .taxes: return [.fms, .fns, .fssp]
+            }
+        }
     }
     
-    struct Operator : Identifiable {
+    enum Service: String {
         
-        let id: String
-        let name: String
-        let description: String
-        let icon: ImageData
+        case fssp
+        case fms
+        case fns
+        
+        var operators: [Operator] {
+            
+            switch self {
+            case .fms: return [.fms]
+            case .fns: return [.fns, .fnsUin]
+            case .fssp: return [.fssp]
+            }
+        }
     }
     
-    struct Service: Identifiable {
+    enum Operator : String {
         
+        case fssp       = "iFora||5429"
+        case fms        = "iFora||6887"
+        case fns        = "iFora||6273"
+        case fnsUin     = "iFora||7069"
+    }
+    
+    struct Parameter {
+ 
         let id: String
-        let name: String
+        let value: String
         let type: Kind
+        let extra: Bool
+        
+        enum Kind {
+            
+            case hidden
+            case select([Option], icon: ImageData, title: String)
+            case selectSimple([OptionSimple], icon: ImageData, title: String, selectionTitle: String, description: String?)
+            case selectSwitch([OptionSimple])
+            case input(icon: ImageData, title: String, validator: InputValidator)
+            case info(icon: ImageData, title: String)
+            case name(icon: ImageData, title: String)
+            case amount(title: String, validator: AmountValidator)
+            case card
+        }
     }
     
-    enum Parameter {
+    struct Operation {
         
-        typealias Identifier = String
+        let service: Service
+        let type: Kind
+        let currency: Currency
+        let parameters: [Parameter]
+        let history: [[Parameter.Value]]
         
-        struct Value {
+        enum Kind {
             
-            let id: Payments.Parameter.Identifier
-            let value: String
+            case service(title: String, icon: ImageData)
+            case template(template: PaymentTemplateData.ID, name: String)
         }
-        
-        struct Select: PaymentsParameter {
-        
-            typealias Value = [Option]
-            
-            let id: Identifier
-            let name: String
-            let icon: Data
-            let value: Value
-            let state: State
-            let style: Style
-            let type: DataType
-            
-            struct Option: Identifiable {
-                
-                let id: String
-                let name: String
-                let description: String
-                let icon: Data
-            }
-            
-            enum State {
-                
-                case empty
-                case selected(Option.ID)
-            }
-            
-            enum Style {
-                
-                case selector
-                case list
-            }
-            
-            enum DataType {
-                
-                case parameter
-                case serviceType
-                case serviceId
-            }
-        }
-        
-        struct Input: PaymentsParameterValidatable {
-            
-            typealias Value = String
-            
-            let id: Identifier
-            let name: String
-            let icon: Data
-            let value: Value
-            let validator: Validator
-            
-            struct Validator: ValidatorProtocol {
-                
-                let minLength: Int
-                let maxLength: Int?
-                let regEx: String?
-                
-                func isValid(value: Value) -> Bool {
-                    
-                    guard value.count >= minLength else {
-                        return false
-                    }
-                    
-                    if let maxLength = maxLength {
-                        
-                        guard value.count < maxLength else {
-                            return false
-                        }
-                    }
-                    
-                    //TODO: validate with regex if present
-                    
-                    return true
-                }
-            }
-        }
-        
-        struct Info: PaymentsParameter {
-            
-            let id: Identifier
-            let name: String
-            let icon: Data
-            let value: String
-        }
-        
-        struct Card: PaymentsParameter {
-            
-            let id: Identifier
-            let name: String
-            let icon: Data
-            let value: Value
-            
-            struct Value: Identifiable {
-                
-                let id: String
-                let icon: Data
-                let paymentSystemIcon: Data
-                let name: String
-                let lastDigits: String
-                let categoryName: String
-                let balance: Double
-                let currency: Currency
-            }
-        }
-        
-        struct Amount: PaymentsParameterValidatable {
-            
-            let id: Identifier
-            let name: String
-            let icon: Data
-            let value: Value
-            let validator: Validator
-            
-            struct Value {
-                
-                let amount: Double
-                let currency: Currency
-                let description: String
-            }
-            
-            struct Validator: ValidatorProtocol {
-                
-                let minAmount: Double
-                
-                func isValid(value: Value) -> Bool {
-                    
-                    guard value.amount >= minAmount else {
-                        return false
-                    }
-                    
-                    return true
-                }
-            }
-        }
+    }
+    
+    enum Error: Swift.Error {
+        case unsupported
+        case unableCreateOperationForService(Service)
     }
 }
