@@ -102,23 +102,28 @@ extension AuthConfirmView {
                 
                 VStack {
                     
-                    Button {
+                    switch viewModel.state{
+                    case .timer(let timer):
                         
-                        print("")
-                    } label: {
+                        Text(timer.value)
+                            .font(.textH3R18240())
+                            .foregroundColor(.textSecondary)
+                    case .button(let button):
                         
-                        Text("Отправить повторно")
-                            .font(.textBodySR12160())
+                        Button {
+                            
+                            button.action()
+                        } label: {
+                            
+                            Text(button.title)
+                                .font(.textBodySR12160())
+                        }
+                        .frame(width: 140, height: 24, alignment: .center)
+                        .background(Color.buttonSecondary)
+                        .cornerRadius(90)
+                        .font(.buttonMediumM14160())
+                        .foregroundColor(.textRed)
                     }
-                    .frame(width: 140, height: 24, alignment: .center)
-                    .background(Color.buttonSecondary)
-                    .cornerRadius(90)
-                    .font(.buttonMediumM14160())
-                    .foregroundColor(.textRed)
-                    
-                    Text("00:59")
-                        .font(.textH3R18240())
-                        .foregroundColor(.textSecondary)
                 }
             }
             .padding(EdgeInsets(top: 24, leading: 0, bottom: 20, trailing: 0))
