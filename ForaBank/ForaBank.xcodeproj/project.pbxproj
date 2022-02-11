@@ -2501,16 +2501,8 @@
 			isa = PBXGroup;
 			children = (
 				6862B53C27B6886A006E833F /* AuthLoginView.swift */,
-				6862B53D27B6886A006E833F /* AuthConfirmView */,
 			);
 			path = Auth;
-			sourceTree = "<group>";
-		};
-		6862B53D27B6886A006E833F /* AuthConfirmView */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = AuthConfirmView;
 			sourceTree = "<group>";
 		};
 		6862B54B27B688CC006E833F /* Auth */ = {
