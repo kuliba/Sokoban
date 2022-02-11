@@ -53,8 +53,8 @@ extension AuthConfirmView {
     struct CodeView: View {
         
         @State var viewModel: AuthConfirmViewModel.CodeViewModel
-
-        var body: some View {
+        
+            var body: some View {
 
             VStack(spacing: 32) {
                 
@@ -65,19 +65,11 @@ extension AuthConfirmView {
                     .multilineTextAlignment(.center)
                 
                     VStack(spacing: 8) {
-
-                        TextField("", text: .bindOptional($viewModel.code, ""))
-                            .keyboardType(.numberPad)
-                            .font(.textH0B32402())
-                            .accentColor(.mainColorsGrayMedium)
-                            .keyboardType(.numberPad)
-                            .textContentType(.oneTimeCode)
-                            .foregroundColor(.textPlaceholder)
-                            
-                        Line()
-                            .stroke(style: StrokeStyle(lineWidth: 1, dash: [30]))
-                            .frame(height: 1)
-                            .foregroundColor(.mainColorsGrayMedium)
+                            HStack {
+                                ForEach(0...6, id: \.self) { i in
+                                    TextFieldView(viewModel: viewModel)
+                                }
+                            }
                     }
                 }
             .padding(EdgeInsets(top: 24, leading: 0, bottom: 20, trailing: 0))
@@ -131,14 +123,26 @@ extension AuthConfirmView {
     }
 }
 
-struct Line: Shape {
+
+struct TextFieldView: View {
     
-    func path(in rect: CGRect) -> Path {
-        var path = Path()
-        path.move(to: CGPoint(x: 0, y: 0))
-        path.addLine(to: CGPoint(x: rect.width, y: 0))
-        return path
+    @State var viewModel: AuthConfirmViewModel.CodeViewModel
+    
+    var body: some View {
+        VStack{
+            TextField("", text: $viewModel.code)
+                .keyboardType(.numberPad)
+                .font(.textH0B32402())
+                .accentColor(.mainColorsGrayMedium)
+                .keyboardType(.numberPad)
+                .textContentType(.oneTimeCode)
+                .foregroundColor(.textPlaceholder)
+            Capsule()
+                .fill(Color.mainColorsGrayMedium)
+                .frame(height: 1)
+        }
     }
+    
 }
 
 struct AuthConfirmView_Previews: PreviewProvider {
