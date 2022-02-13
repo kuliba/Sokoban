@@ -6,21 +6,41 @@
 //
 
 import SwiftUI
+import Combine
 
-extension PaymentsTaxesInputCellViewComponent {
+extension PaymentsTaxesInputCellView {
     
-    struct ViewModel {
+    class ViewModel: ObservableObject {
         
+        @Published var content: String = ""
         let logo: Image
         let title: String
+        let placeholder: String
+        private var bindings = Set<AnyCancellable>()
         let action: (String) -> Void
+        
+        func bind() {
+            $content
+                .receive(on: DispatchQueue.main)
+                .sink { content in
+                    self.content = content
+                }.store(in: &bindings)
+        }
+        
+        internal init(logo: Image, title: String, placeholder: String, action: @escaping (String) -> Void) {
+            self.logo = logo
+            self.title = title
+            self.placeholder = placeholder
+            self.action = action
+            self.bind()
+        }
+        
     }
 }
 
-struct PaymentsTaxesInputCellViewComponent: View {
+struct PaymentsTaxesInputCellView: View {
     
-    let viewModel: PaymentsTaxesInputCellViewComponent.ViewModel
-    @State var content: String = ""
+    @ObservedObject var viewModel: PaymentsTaxesInputCellView.ViewModel
     
     var body: some View {
         HStack(spacing: 10) {
@@ -35,17 +55,13 @@ struct PaymentsTaxesInputCellViewComponent: View {
                     .foregroundColor(Color(hex: "#999999"))
                 
                 TextField(
-                    "placeholder",
-                    text: $content,
-                    onEditingChanged: { (isBegin) in
-                        if isBegin {
-                            /// Валидация
-                        } else {
-                            viewModel.action(content)
+                    viewModel.placeholder,
+                    text: $viewModel.content,
+                    onEditingChanged: { isChanged in
+
+                        if isChanged {
+                            viewModel.action(viewModel.content)
                         }
-                    },
-                    onCommit: {
-                        /// Возвращаем фоновый текст, если он есть. Уточнить
                     }
                 )
                     .foregroundColor(Color(hex: "#1C1C1C"))
@@ -64,7 +80,7 @@ struct PaymentsTaxesInputCellViewComponent: View {
 struct PaymentsTaxesInputCellViewComponent_Previews: PreviewProvider {
     static var previews: some View {
         
-        PaymentsTaxesInputCellViewComponent(viewModel: .init(logo: Image("fora_white_back_bordered"),title: "Title", action:{_ in }))
+        PaymentsTaxesInputCellView(viewModel: .init(logo: Image("fora_white_back_bordered"),title: "Title", placeholder: "gh", action:{_ in }))
             .previewLayout(.fixed(width: 375, height: 56))
     }
 }
