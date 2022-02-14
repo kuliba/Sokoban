@@ -95,7 +95,7 @@ extension AuthLoginView {
                 
                 ZStack {
 
-                    TextField("", text: .bindOptional($viewModel.cardNumber, ""))
+                    TextField("", text: $viewModel.cardNumber)
                         .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
                         .font(.textH2M20282())
                         .foregroundColor(.white)

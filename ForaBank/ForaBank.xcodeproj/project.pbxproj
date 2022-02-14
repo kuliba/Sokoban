@@ -331,6 +331,9 @@
 		6845337027984D1000104A8B /* CsrfResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 6845336F27984D1000104A8B /* CsrfResponseGeneric.json */; };
 		684533722798515100104A8B /* CsrfData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 684533712798515100104A8B /* CsrfData.swift */; };
 		684533752798532300104A8B /* CsrfDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 684533742798532300104A8B /* CsrfDataTests.swift */; };
+		6849887927BAD8B100E84E6B /* AuthConfirmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6849887827BAD8B100E84E6B /* AuthConfirmView.swift */; };
+		6849887C27BAD96200E84E6B /* AuthPermissionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6849887B27BAD96200E84E6B /* AuthPermissionsView.swift */; };
+		6849887F27BAD96C00E84E6B /* AuthPinCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6849887E27BAD96C00E84E6B /* AuthPinCodeView.swift */; };
 		684AD35A26B7D2520071C762 /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 684AD35926B7D2520071C762 /* CryptoSwift */; };
 		6862B53E27B6886A006E833F /* AuthLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6862B53C27B6886A006E833F /* AuthLoginView.swift */; };
 		6862B55327B688CC006E833F /* AuthLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6862B54C27B688CC006E833F /* AuthLoginViewModel.swift */; };
@@ -395,8 +398,6 @@
 		68D099D2273A73CA0017D777 /* SettingViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D099D1273A73C90017D777 /* SettingViewCoordinator.swift */; };
 		68D099D6273A7A3E0017D777 /* ProductCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D099D5273A7A3E0017D777 /* ProductCoordinator.swift */; };
 		68D099D9273B5D110017D777 /* PaymentByPhoneCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D099D8273B5D110017D777 /* PaymentByPhoneCoordinator.swift */; };
-		68D53ED127B3E00400D0EBA8 /* AuthLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D53ED027B3E00400D0EBA8 /* AuthLoginView.swift */; };
-		68D53ED527B417AC00D0EBA8 /* AuthPermissionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D53ED427B417AC00D0EBA8 /* AuthPermissionsView.swift */; };
 		68E3461F27030F4F00D6FE37 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E3461E27030F4F00D6FE37 /* ChatViewController.swift */; };
 		68E3462227033D9100D6FE37 /* LaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E3462127033D9100D6FE37 /* LaunchViewController.swift */; };
 		68E346242705C6FA00D6FE37 /* ProductStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 68E346232705C6FA00D6FE37 /* ProductStoryboard.storyboard */; };
@@ -415,8 +416,6 @@
 		68E76535279702C6005860FE /* VerifyCodeResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 68E76534279702C6005860FE /* VerifyCodeResponseGeneric.json */; };
 		68E7653C279705E6005860FE /* SetDeviceSettingDecodingGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 68E7653B279705E6005860FE /* SetDeviceSettingDecodingGeneric.json */; };
 		68E7653E279713B2005860FE /* GetCodeResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 68E7653D279713B2005860FE /* GetCodeResponseGeneric.json */; };
-		68EF9AEC27B5150000630831 /* AuthConfirmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68EF9AEB27B5150000630831 /* AuthConfirmView.swift */; };
-		68EF9AEF27B5CEF300630831 /* AuthPinCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68EF9AEE27B5CEF300630831 /* AuthPinCodeView.swift */; };
 		68F6816F269E5E56008157CE /* SearchBanksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F6816E269E5E56008157CE /* SearchBanksViewController.swift */; };
 		68FB358B2760C1C80097AECE /* AntifraudView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FB358A2760C1C80097AECE /* AntifraudView.swift */; };
 		68FFA5282682AF2C002DADFA /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA5272682AF2C002DADFA /* ContactsViewController.swift */; };
@@ -1208,6 +1207,9 @@
 		6845336F27984D1000104A8B /* CsrfResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = CsrfResponseGeneric.json; sourceTree = "<group>"; };
 		684533712798515100104A8B /* CsrfData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CsrfData.swift; sourceTree = "<group>"; };
 		684533742798532300104A8B /* CsrfDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CsrfDataTests.swift; sourceTree = "<group>"; };
+		6849887827BAD8B100E84E6B /* AuthConfirmView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthConfirmView.swift; sourceTree = "<group>"; };
+		6849887B27BAD96200E84E6B /* AuthPermissionsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthPermissionsView.swift; sourceTree = "<group>"; };
+		6849887E27BAD96C00E84E6B /* AuthPinCodeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthPinCodeView.swift; sourceTree = "<group>"; };
 		6862B53C27B6886A006E833F /* AuthLoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthLoginView.swift; sourceTree = "<group>"; };
 		6862B54C27B688CC006E833F /* AuthLoginViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthLoginViewModel.swift; sourceTree = "<group>"; };
 		6862B54E27B688CC006E833F /* AuthPinCodeViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthPinCodeViewModel.swift; sourceTree = "<group>"; };
@@ -1271,8 +1273,6 @@
 		68D099D1273A73C90017D777 /* SettingViewCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewCoordinator.swift; sourceTree = "<group>"; };
 		68D099D5273A7A3E0017D777 /* ProductCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCoordinator.swift; sourceTree = "<group>"; };
 		68D099D8273B5D110017D777 /* PaymentByPhoneCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentByPhoneCoordinator.swift; sourceTree = "<group>"; };
-		68D53ED027B3E00400D0EBA8 /* AuthLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthLoginView.swift; sourceTree = "<group>"; };
-		68D53ED427B417AC00D0EBA8 /* AuthPermissionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPermissionsView.swift; sourceTree = "<group>"; };
 		68E3461E27030F4F00D6FE37 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		68E3462127033D9100D6FE37 /* LaunchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchViewController.swift; sourceTree = "<group>"; };
 		68E346232705C6FA00D6FE37 /* ProductStoryboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ProductStoryboard.storyboard; sourceTree = "<group>"; };
@@ -1290,8 +1290,6 @@
 		68E76534279702C6005860FE /* VerifyCodeResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = VerifyCodeResponseGeneric.json; sourceTree = "<group>"; };
 		68E7653B279705E6005860FE /* SetDeviceSettingDecodingGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = SetDeviceSettingDecodingGeneric.json; sourceTree = "<group>"; };
 		68E7653D279713B2005860FE /* GetCodeResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetCodeResponseGeneric.json; sourceTree = "<group>"; };
-		68EF9AEB27B5150000630831 /* AuthConfirmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthConfirmView.swift; sourceTree = "<group>"; };
-		68EF9AEE27B5CEF300630831 /* AuthPinCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPinCodeView.swift; sourceTree = "<group>"; };
 		68F6816E269E5E56008157CE /* SearchBanksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBanksViewController.swift; sourceTree = "<group>"; };
 		68FB358A2760C1C80097AECE /* AntifraudView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AntifraudView.swift; sourceTree = "<group>"; };
 		68FFA5272682AF2C002DADFA /* ContactsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewController.swift; sourceTree = "<group>"; };
@@ -2503,9 +2501,36 @@
 			path = Utility;
 			sourceTree = "<group>";
 		};
+		6849887727BAD8B100E84E6B /* Confirm */ = {
+			isa = PBXGroup;
+			children = (
+				6849887827BAD8B100E84E6B /* AuthConfirmView.swift */,
+			);
+			path = Confirm;
+			sourceTree = "<group>";
+		};
+		6849887A27BAD96200E84E6B /* Permissions */ = {
+			isa = PBXGroup;
+			children = (
+				6849887B27BAD96200E84E6B /* AuthPermissionsView.swift */,
+			);
+			path = Permissions;
+			sourceTree = "<group>";
+		};
+		6849887D27BAD96C00E84E6B /* PinCodeView */ = {
+			isa = PBXGroup;
+			children = (
+				6849887E27BAD96C00E84E6B /* AuthPinCodeView.swift */,
+			);
+			path = PinCodeView;
+			sourceTree = "<group>";
+		};
 		6862B53B27B6886A006E833F /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				6849887D27BAD96C00E84E6B /* PinCodeView */,
+				6849887A27BAD96200E84E6B /* Permissions */,
+				6849887727BAD8B100E84E6B /* Confirm */,
 				6862B53C27B6886A006E833F /* AuthLoginView.swift */,
 			);
 			path = Auth;
@@ -2683,14 +2708,6 @@
 			path = View;
 			sourceTree = "<group>";
 		};
-		688D816A27B513CD00F23081 /* Confirm */ = {
-			isa = PBXGroup;
-			children = (
-				68EF9AEB27B5150000630831 /* AuthConfirmView.swift */,
-			);
-			path = Confirm;
-			sourceTree = "<group>";
-		};
 		68935F70276970B7002F56C2 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -2812,25 +2829,6 @@
 			path = PaymentByPhoneCoordinator;
 			sourceTree = "<group>";
 		};
-		68D53ECF27B3DFE400D0EBA8 /* Auth */ = {
-			isa = PBXGroup;
-			children = (
-				68EF9AED27B5CED800630831 /* PinCodeView */,
-				688D816A27B513CD00F23081 /* Confirm */,
-				68D53ED327B4178D00D0EBA8 /* Permissions */,
-				68D53ED027B3E00400D0EBA8 /* AuthLoginView.swift */,
-			);
-			path = Auth;
-			sourceTree = "<group>";
-		};
-		68D53ED327B4178D00D0EBA8 /* Permissions */ = {
-			isa = PBXGroup;
-			children = (
-				68D53ED427B417AC00D0EBA8 /* AuthPermissionsView.swift */,
-			);
-			path = Permissions;
-			sourceTree = "<group>";
-		};
 		68E3461D27030F2A00D6FE37 /* ChatViewControllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -2845,14 +2843,6 @@
 				68E3462127033D9100D6FE37 /* LaunchViewController.swift */,
 			);
 			path = LaunchViewController;
-			sourceTree = "<group>";
-		};
-		68EF9AED27B5CED800630831 /* PinCodeView */ = {
-			isa = PBXGroup;
-			children = (
-				68EF9AEE27B5CEF300630831 /* AuthPinCodeView.swift */,
-			);
-			path = PinCodeView;
 			sourceTree = "<group>";
 		};
 		68FB35892760C1A90097AECE /* AntifraudController */ = {
@@ -5417,7 +5407,6 @@
 				0BB24AB526F0C62500DDA4F6 /* BlockCardDecodableModel.swift in Sources */,
 				EDB1451C26652D370028EF5A /* UILabel.swift in Sources */,
 				77DC126F2770F8C900C917B0 /* ServerCommands+PaymentTemplate.swift in Sources */,
-				68EF9AEC27B5150000630831 /* AuthConfirmView.swift in Sources */,
 				0B22AEA826CE72C200B11E7F /* GKHDataFilter.swift in Sources */,
 				0B95C40326B6CA3700AA57E6 /* CustomPopUpWithRateView.swift in Sources */,
 				77EC58E7277236E90054D75C /* Model.swift in Sources */,
@@ -5426,6 +5415,7 @@
 				687FB23326E9E551004A479F /* PaymentMainCell.swift in Sources */,
 				0BA14E1A2712597D0098E422 /* StaticDefaultTimeOut.swift in Sources */,
 				ED4603A62746B69300FE89B0 /* ResultAccountStatementModel.swift in Sources */,
+				6849887C27BAD96200E84E6B /* AuthPermissionsView.swift in Sources */,
 				ED0B4894267B50F50037EA06 /* Int.swift in Sources */,
 				0B283FBF26FBCA0A00B5E925 /* Router.swift in Sources */,
 				0B22AEAC26CE8DD100B11E7F /* GKHDataSorted.swift in Sources */,
@@ -5826,7 +5816,6 @@
 				0B931B2026DCD87F00CA8017 /* GKHHistorySaveRealm.swift in Sources */,
 				A5662696275E945A00FFE31A /* InternetTVSelectController.swift in Sources */,
 				0B8C1C47273B03EB00BA5CAC /* BottomPopUpViewAdapter.swift in Sources */,
-				68EF9AEF27B5CEF300630831 /* AuthPinCodeView.swift in Sources */,
 				68673B5326F2F3B900F67A8C /* RequisitsTableViewCell.swift in Sources */,
 				5A5ABFB327ABCA5100D548AA /* DepositInfoDataItem.swift in Sources */,
 				EDBEEA1726B1AE7300265683 /* FullBankInfoListView.swift in Sources */,
@@ -5838,13 +5827,13 @@
 				0B7A18CB268648030007CC75 /* GetProductListDecodableModel.swift in Sources */,
 				0BA251F526C270A100AD087A /* UpdateFastPaymentContractDecodableModel.swift in Sources */,
 				EDF68217266F9EC800FD5C07 /* RouterSassionConfiguration.swift in Sources */,
+				6849887927BAD8B100E84E6B /* AuthConfirmView.swift in Sources */,
 				0BDE453826E53AEF00B64A0A /* AddAllUserCardtList.swift in Sources */,
 				77925575279AF54F00A85723 /* ECKeysProvider.swift in Sources */,
 				ED84995B26A8831E005205C6 /* EPConstants.swift in Sources */,
 				0B37F97E267A10E4007728FC /* PrepareCard2PhoneDecodableModel.swift in Sources */,
 				ED8AB45526C116DB006F0D03 /* MeToMeViewController.swift in Sources */,
 				0B8BE0952670D4A300E96CAA /* GetCodeDecodebleModel.swift in Sources */,
-				68D53ED527B417AC00D0EBA8 /* AuthPermissionsView.swift in Sources */,
 				684192EA2799B1B100B4E184 /* ServerCommands+ConsentController.swift in Sources */,
 				ED60A1E326DC1600000F3208 /* ChangeClientConsentMe2MePullDecodableModel.swift in Sources */,
 				ED684CEE27638E6700AA7A33 /* DocDepositCollectionViewCell.swift in Sources */,
@@ -5956,6 +5945,7 @@
 				F63D42FC24C643FCB7631F83 /* InternetTVDetailsFormController.swift in Sources */,
 				F63D4C7CF864543AD9AABF9A /* InternetTVInputCell.swift in Sources */,
 				F63D42697A06C6D37A64F590 /* InternetTVDetailsFormViewModel.swift in Sources */,
+				6849887F27BAD96C00E84E6B /* AuthPinCodeView.swift in Sources */,
 				EDDFE3AD2756D3FD00F57C71 /* DepositCalculatorViewControllerFlowLayout.swift in Sources */,
 				F63D4A3FB30397A82426313C /* InternetTVConfirmViewController.swift in Sources */,
 				F63D43A404CF8AA69942CCFF /* InternetTVSuccessViewController.swift in Sources */,
