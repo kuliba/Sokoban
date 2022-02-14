@@ -516,9 +516,6 @@
 		776C6C1C279D58A800253581 /* CSRFAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776C6C1B279D58A800253581 /* CSRFAgent.swift */; };
 		776C6C1E279D5D8800253581 /* CSRFAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776C6C1D279D5D8800253581 /* CSRFAgentTests.swift */; };
 		77925575279AF54F00A85723 /* ECKeysProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77925574279AF54F00A85723 /* ECKeysProvider.swift */; };
-		77925577279AF5AD00A85723 /* Decryptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77925576279AF5AD00A85723 /* Decryptor.swift */; };
-		77925579279AF61000A85723 /* Encryptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77925578279AF61000A85723 /* Encryptor.swift */; };
-		7792557C279AF6F800A85723 /* ECEncryptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7792557B279AF6F800A85723 /* ECEncryptionTests.swift */; };
 		7792557E279B1A5400A85723 /* JSONDecoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */; };
 		77925580279B1BCB00A85723 /* JSONEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */; };
 		77AC9159277A518B00E49D5D /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = 77AC9158277A518B00E49D5D /* Shimmer */; };
@@ -589,6 +586,7 @@
 		77EC58F4277381970054D75C /* OperationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58F3277381970054D75C /* OperationType.swift */; };
 		77EC58F6277382A60054D75C /* OperationEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58F5277382A60054D75C /* OperationEnvironment.swift */; };
 		77EC58F927738B5E0054D75C /* DateFormatter+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58F827738B5E0054D75C /* DateFormatter+Extensions.swift */; };
+		77FF670927B85266009FEA09 /* AESEncryptionAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FF670827B85266009FEA09 /* AESEncryptionAgent.swift */; };
 		A50869DA2767F394004C5E17 /* InternetTVSuccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50869D82767F394004C5E17 /* InternetTVSuccessView.swift */; };
 		A50869DB2767F394004C5E17 /* InternetTVSuccess.xib in Resources */ = {isa = PBXBuildFile; fileRef = A50869D92767F394004C5E17 /* InternetTVSuccess.xib */; };
 		A50869DD2768CA4A004C5E17 /* InternetTVSourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50869DC2768CA4A004C5E17 /* InternetTVSourceView.swift */; };
@@ -1387,9 +1385,6 @@
 		776C6C1B279D58A800253581 /* CSRFAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFAgent.swift; sourceTree = "<group>"; };
 		776C6C1D279D5D8800253581 /* CSRFAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFAgentTests.swift; sourceTree = "<group>"; };
 		77925574279AF54F00A85723 /* ECKeysProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKeysProvider.swift; sourceTree = "<group>"; };
-		77925576279AF5AD00A85723 /* Decryptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decryptor.swift; sourceTree = "<group>"; };
-		77925578279AF61000A85723 /* Encryptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Encryptor.swift; sourceTree = "<group>"; };
-		7792557B279AF6F800A85723 /* ECEncryptionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECEncryptionTests.swift; sourceTree = "<group>"; };
 		7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONDecoder+Extensions.swift"; sourceTree = "<group>"; };
 		7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONEncoder+Extensions.swift"; sourceTree = "<group>"; };
 		77C026E5275E6299002BE1F6 /* GKHHistoryModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHHistoryModelTests.swift; sourceTree = "<group>"; };
@@ -1459,6 +1454,7 @@
 		77EC58F3277381970054D75C /* OperationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationType.swift; sourceTree = "<group>"; };
 		77EC58F5277382A60054D75C /* OperationEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationEnvironment.swift; sourceTree = "<group>"; };
 		77EC58F827738B5E0054D75C /* DateFormatter+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+Extensions.swift"; sourceTree = "<group>"; };
+		77FF670827B85266009FEA09 /* AESEncryptionAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AESEncryptionAgent.swift; sourceTree = "<group>"; };
 		A50869D82767F394004C5E17 /* InternetTVSuccessView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetTVSuccessView.swift; sourceTree = "<group>"; };
 		A50869D92767F394004C5E17 /* InternetTVSuccess.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InternetTVSuccess.xib; sourceTree = "<group>"; };
 		A50869DC2768CA4A004C5E17 /* InternetTVSourceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVSourceView.swift; sourceTree = "<group>"; };
@@ -2973,9 +2969,9 @@
 		77925573279AF3AA00A85723 /* Encryption */ = {
 			isa = PBXGroup;
 			children = (
+				776C6C1B279D58A800253581 /* CSRFAgent.swift */,
 				77925574279AF54F00A85723 /* ECKeysProvider.swift */,
-				77925576279AF5AD00A85723 /* Decryptor.swift */,
-				77925578279AF61000A85723 /* Encryptor.swift */,
+				77FF670827B85266009FEA09 /* AESEncryptionAgent.swift */,
 			);
 			path = Encryption;
 			sourceTree = "<group>";
@@ -2983,7 +2979,6 @@
 		7792557A279AF6C900A85723 /* Encryption */ = {
 			isa = PBXGroup;
 			children = (
-				7792557B279AF6F800A85723 /* ECEncryptionTests.swift */,
 				776C6C1D279D5D8800253581 /* CSRFAgentTests.swift */,
 			);
 			path = Encryption;
@@ -3072,7 +3067,6 @@
 			children = (
 				77EC58E2277217D20054D75C /* ServerAgent.swift */,
 				7758754C27996DCB0080115D /* LocalAgent.swift */,
-				776C6C1B279D58A800253581 /* CSRFAgent.swift */,
 				77DC12682770F63400C917B0 /* Abstract */,
 				77DC126B2770F83400C917B0 /* Server */,
 				77925573279AF3AA00A85723 /* Encryption */,
@@ -5548,6 +5542,7 @@
 				A50869E027690E53004C5E17 /* InternetTVConfirmViewModel.swift in Sources */,
 				0B8C1C4E273B2BB000BA5CAC /* TransferByRequisitesCoordinator.swift in Sources */,
 				ED0B48A0267E1A2D0037EA06 /* PaymentsDetailsSuccessViewController.swift in Sources */,
+				77FF670927B85266009FEA09 /* AESEncryptionAgent.swift in Sources */,
 				0B8CB0882680CAE3006A39C3 /* ExtensionNetworkHelper.swift in Sources */,
 				ED84994326A6F647005205C6 /* ChooseCountryHeaderViewModel.swift in Sources */,
 				0B22AEAE26CE8DFE00B11E7F /* GKHDataCaseImage.swift in Sources */,
@@ -5722,7 +5717,6 @@
 				ED0B4896267B97C60037EA06 /* ContactInputViewController + UI.swift in Sources */,
 				0BB24AB126F0C3DC00DDA4F6 /* GetCardStatementDecodableModel.swift in Sources */,
 				689A99AE2779E73600D1FDAE /* OperationDetailInfoViewModel.swift in Sources */,
-				77925579279AF61000A85723 /* Encryptor.swift in Sources */,
 				ED59E7AE27713F1300E8AC12 /* ChangeReturnCountryController.swift in Sources */,
 				6833E0AB27303E8F004C070F /* GetOperationDetailDecodebleModel.swift in Sources */,
 				68E6A29326A033B700A1D9A1 /* CheckCardDecodableModel.swift in Sources */,
@@ -5819,7 +5813,6 @@
 				0B22AEA326CDB38500B11E7F /* ExtensionGKHInput.swift in Sources */,
 				EDE212FD2743265C005D9821 /* DateChooseView.swift in Sources */,
 				EDB16588266A14F9007E6030 /* String.swift in Sources */,
-				77925577279AF5AD00A85723 /* Decryptor.swift in Sources */,
 				77EC58F6277382A60054D75C /* OperationEnvironment.swift in Sources */,
 				EDB165762668C5BE007E6030 /* PaymentsCell.swift in Sources */,
 				EDB14383265FDA410028EF5A /* SceneDelegate.swift in Sources */,
@@ -5961,7 +5954,6 @@
 				776C6C1E279D5D8800253581 /* CSRFAgentTests.swift in Sources */,
 				77EC58E5277221F80054D75C /* ServerAgentTests.swift in Sources */,
 				77E1803927AC0CF00006ACC9 /* ServerCommandsNotificationTests.swift in Sources */,
-				7792557C279AF6F800A85723 /* ECEncryptionTests.swift in Sources */,
 				77E1803527AC05370006ACC9 /* DateFormatterExtensionsTests.swift in Sources */,
 				77517FC927A9519E005CFB77 /* ServerCommandsTransferTests.swift in Sources */,
 				5A5ABF9427AAF70300D548AA /* ServerCommandsAccountControllerTests.swift in Sources */,
