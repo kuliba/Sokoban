@@ -9,12 +9,7 @@ import Foundation
 
 protocol KeychainAgentProtocol {
     
-    func value(for key: KeychainAgentKey) throws -> String
-    func set(value: String, for key: KeychainAgentKey) throws
-    func removeValue(for key: KeychainAgentKey) throws
-}
-
-enum KeychainAgentKey: String {
-    
-    case pincode
+    func store<Value>(_ value: Value, type: KeychainValueType) throws where Value : Codable
+    func load<Value>(type: KeychainValueType) throws -> Value? where Value : Codable
+    func clear(type: KeychainValueType) throws
 }
