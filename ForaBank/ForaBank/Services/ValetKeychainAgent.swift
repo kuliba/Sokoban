@@ -11,26 +11,32 @@ import Valet
 class ValetKeychainAgent: KeychainAgentProtocol {
 
     private let valet: Valet
+    private let encoder: JSONEncoder
+    private let decoder: JSONDecoder
     
-    init() {
+    init(valetName: String, encoder: JSONEncoder = .init(), decoder: JSONDecoder = .init()) {
         
-        //TODO: migrate to `ForaBank` name
-        let identifier = Identifier(nonEmpty: "Druidia")!
+        let identifier = Identifier(nonEmpty: valetName)!
         self.valet = Valet.valet(with: identifier, accessibility: .whenUnlockedThisDeviceOnly)
+        self.encoder = encoder
+        self.decoder = decoder
     }
     
-    func value(for key: KeychainAgentKey) throws -> String {
+    func store<Value>(_ value: Value, type: KeychainValueType) throws where Value : Decodable, Value : Encodable {
         
-        return try valet.string(forKey: key.rawValue)
+        let encoded = try encoder.encode(value)
+        try valet.setObject(encoded, forKey: type.rawValue)
     }
     
-    func set(value: String, for key: KeychainAgentKey) throws {
+    func load<Value>(type: KeychainValueType) throws -> Value? where Value : Decodable, Value : Encodable {
         
-        try valet.setString(value, forKey: key.rawValue)
+        let data = try valet.object(forKey: type.rawValue)
+        
+        return try decoder.decode(Value.self, from: data)
     }
     
-    func removeValue(for key: KeychainAgentKey) throws {
+    func clear(type: KeychainValueType) throws {
         
-        try valet.removeObject(forKey: key.rawValue)
+        try valet.removeObject(forKey: type.rawValue)
     }
 }
