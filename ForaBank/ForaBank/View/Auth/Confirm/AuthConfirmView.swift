@@ -37,6 +37,7 @@ struct AuthConfirmView: View {
                 }
                 ).navigationBarBackButtonHidden(true)
                     .navigationBarTitle(viewModel.navigationBar.title)
+                    .font(.textH3M18240())
                     .navigationBarTitleDisplayMode(.inline)
                     
             } else {
@@ -61,7 +62,8 @@ struct AuthConfirmView: View {
                         .renderingMode(.original)
                 }
                 ).navigationBarBackButtonHidden(true)
-                    .navigationBarTitle(Text(viewModel.navigationBar.title), displayMode: .inline)
+                    .navigationBarTitle(Text(viewModel.navigationBar.title)
+                                            .font(.textH3M18240()), displayMode: .inline)
             }
         }
     }
