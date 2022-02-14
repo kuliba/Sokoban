@@ -35,7 +35,7 @@ class AuthPinCodeViewModel: ObservableObject {
 
                                                               [.init(type: .digit("7"), action: {_ in }),
                                                                .init(type: .digit("8"), action: {_ in }),
-                                                               .init(type: .digit("8"), action: {_ in })],
+                                                               .init(type: .digit("9"), action: {_ in })],
                                             
                                                               [.init(type: .text("Выход"), action: {_ in }),
                                                                .init(type: .digit("0"), action: {_ in }),
@@ -80,25 +80,11 @@ extension AuthPinCodeViewModel {
             hasher.combine(id)
         }
         
-        
-        
         let id = UUID()
         let type: Kind
         let action: (ButtonViewModel.ID) -> Void
         
-        enum Kind: Hashable {
-
-            func hash(into hasher: inout Hasher) {
-
-                switch self {
-                case .digit(let value):
-                    hasher.combine(value)
-                case .text(let value):
-                    hasher.combine(value)
-                case .icon(_):
-                    break
-                }
-            }
+        enum Kind {
             
             case digit(String)
             case icon(Image)

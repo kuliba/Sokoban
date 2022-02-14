@@ -32,8 +32,8 @@ extension AuthPinCodeView{
     
     struct NumPadView: View {
         
-        var viewModel: AuthPinCodeViewModel.NumPadViewModel
-
+        @ObservedObject var viewModel: AuthPinCodeViewModel.NumPadViewModel
+        
         var body: some View {
             
             VStack(spacing: 24){
@@ -58,6 +58,9 @@ extension AuthPinCodeView{
                                     
                                     TextButtonView(id: button.id, title: text, action: button.action)
                                 }
+                            } else {
+                                Color.white
+                                    .frame(width: 80, height: 80, alignment: .center)
                             }
                         }
                     }
@@ -94,9 +97,9 @@ extension AuthPinCodeView{
             
             var body: some View{
                 Button(action: { action(id) }) {
-                            image
-                                .renderingMode(.original)
-                                .foregroundColor(Color.textSecondary)
+                    image
+                        .renderingMode(.original)
+                        .foregroundColor(Color.textSecondary)
                 }
                 .frame(width: 80, height: 80, alignment: .center)
             }
@@ -129,7 +132,7 @@ extension AuthPinCodeView{
     struct ButtonsView: View {
         
         let viewModel: AuthPinCodeViewModel.FooterViewModel
-
+        
         var body: some View {
             
             HStack {
@@ -171,10 +174,10 @@ extension AuthPinCodeView{
         var viewModel: AuthPinCodeViewModel.PinCodeViewModel
         
         var body: some View {
-       
+            
             Text(viewModel.title)
-                    .font(.textH4M16240())
-                    .padding([.bottom], 40)
+                .font(.textH4M16240())
+                .padding([.bottom], 40)
             
             HStack(alignment: .center, spacing: 16){
                 
@@ -185,18 +188,18 @@ extension AuthPinCodeView{
                     case .editing:
                         
                         Circle()
-                                .frame(width: 12, height: 12, alignment: .center)
-                                .foregroundColor(.mainColorsGrayMedium)
+                            .frame(width: 12, height: 12, alignment: .center)
+                            .foregroundColor(.mainColorsGrayMedium)
                     case .incorrect:
                         
                         Circle()
-                                .frame(width: 12, height: 12, alignment: .center)
-                                .foregroundColor(.systemColorError)
+                            .frame(width: 12, height: 12, alignment: .center)
+                            .foregroundColor(.systemColorError)
                     case .correct:
                         
                         Circle()
-                                .frame(width: 12, height: 12, alignment: .center)
-                                .foregroundColor(.systemColorActive)
+                            .frame(width: 12, height: 12, alignment: .center)
+                            .foregroundColor(.systemColorActive)
                     }
                     
                 }

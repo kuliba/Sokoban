@@ -12,59 +12,57 @@ struct AuthConfirmView: View {
     @ObservedObject var viewModel: AuthConfirmViewModel
     
     var body: some View {
-        NavigationView {
+        
+        if #available(iOS 14.0, *) {
             
-            if #available(iOS 14.0, *) {
+            VStack {
+                CodeView(viewModel: viewModel.code)
                 
-                VStack {
-                    CodeView(viewModel: viewModel.code)
+                if let info = viewModel.info{
                     
-                    if let info = viewModel.info{
-                        
-                        InfoView(viewModel: info)
-                    }
-                    
-                    Spacer()
+                    InfoView(viewModel: info)
                 }
-                .padding(EdgeInsets(top: 12, leading: 20, bottom: 20, trailing: 20))
-                .navigationBarItems(leading:
-                                        
-                                        Button(action: {
-                    viewModel.navigationBar.backButton.action()
-                }) {
-                    viewModel.navigationBar.backButton.icon
-                        .renderingMode(.original)
-                }
-                ).navigationBarBackButtonHidden(true)
-                    .navigationBarTitle(viewModel.navigationBar.title)
-                    .font(.textH3M18240())
-                    .navigationBarTitleDisplayMode(.inline)
-                    
-            } else {
                 
-                VStack {
-                    CodeView(viewModel: viewModel.code)
-                    
-                    if let info = viewModel.info{
-                        
-                        InfoView(viewModel: info)
-                    }
-                    
-                    Spacer()
-                }
-                .padding(EdgeInsets(top: 12, leading: 20, bottom: 20, trailing: 20))
-                .navigationBarItems(leading:
-                                        
-                                        Button(action: {
-                    viewModel.navigationBar.backButton.action()
-                }) {
-                    viewModel.navigationBar.backButton.icon
-                        .renderingMode(.original)
-                }
-                ).navigationBarBackButtonHidden(true)
-                    .navigationBarTitle(Text(viewModel.navigationBar.title)
-                                            .font(.textH3M18240()), displayMode: .inline)
+                Spacer()
             }
+            .padding(EdgeInsets(top: 12, leading: 20, bottom: 20, trailing: 20))
+            .navigationBarItems(leading:
+                                    
+                                    Button(action: {
+                viewModel.navigationBar.backButton.action()
+            }) {
+                viewModel.navigationBar.backButton.icon
+                    .renderingMode(.original)
+            }
+            ).navigationBarBackButtonHidden(true)
+                .navigationBarTitle(viewModel.navigationBar.title)
+                .font(.textH3M18240())
+                .navigationBarTitleDisplayMode(.inline)
+            
+        } else {
+            
+            VStack {
+                CodeView(viewModel: viewModel.code)
+                
+                if let info = viewModel.info{
+                    
+                    InfoView(viewModel: info)
+                }
+                
+                Spacer()
+            }
+            .padding(EdgeInsets(top: 12, leading: 20, bottom: 20, trailing: 20))
+            .navigationBarItems(leading:
+                                    
+                                    Button(action: {
+                viewModel.navigationBar.backButton.action()
+            }) {
+                viewModel.navigationBar.backButton.icon
+                    .renderingMode(.original)
+            }
+            ).navigationBarBackButtonHidden(true)
+                .navigationBarTitle(Text(viewModel.navigationBar.title)
+                                        .font(.textH3M18240()), displayMode: .inline)
         }
     }
 }
@@ -74,7 +72,7 @@ extension AuthConfirmView {
     
     struct CodeView: View {
         
-        var viewModel: AuthConfirmViewModel.CodeViewModel
+        @ObservedObject var viewModel: AuthConfirmViewModel.CodeViewModel
         
         var body: some View {
             
@@ -132,8 +130,7 @@ extension AuthConfirmView {
             
             VStack(spacing: 32) {
                 
-                switch viewModel.state{
-                case .timer(let timer):
+                VStack(spacing: 3){
                     
                     Text(viewModel.title)
                         .font(.textBodyMR14200())
@@ -141,6 +138,20 @@ extension AuthConfirmView {
                         .padding([.leading,.trailing], 20)
                         .multilineTextAlignment(.center)
                         .lineSpacing(5)
+                    
+                    if let subtitle = viewModel.subtitle{
+                        
+                        Text(subtitle)
+                            .font(.textBodyMR14200())
+                            .foregroundColor(.textPlaceholder)
+                            .padding([.leading,.trailing], 20)
+                            .multilineTextAlignment(.center)
+                            .lineSpacing(5)
+                    }
+                }
+                
+                switch viewModel.state{
+                case .timer(let timer):
                     
                     Text(timer.value)
                         .font(.textH3R18240())
@@ -169,6 +180,10 @@ extension AuthConfirmView {
 
 struct AuthConfirmView_Previews: PreviewProvider {
     static var previews: some View {
-        AuthConfirmView(viewModel: AuthConfirmViewModel())
+        
+        NavigationView {
+            
+            AuthConfirmView(viewModel: .sampleConfirm)
+        }
     }
 }

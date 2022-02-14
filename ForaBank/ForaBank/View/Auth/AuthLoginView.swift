@@ -94,7 +94,7 @@ extension AuthLoginView {
                 Spacer()
                 
                 ZStack {
-
+                    
                     TextField("", text: $viewModel.cardNumber)
                         .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
                         .font(.textH2M20282())
@@ -107,16 +107,16 @@ extension AuthLoginView {
                         
                         Spacer()
                         
-                            Button {
-                                
-                                viewModel.nextButton?.action()
-                                
-                            } label: {
-                                
-                                viewModel.nextButton?.icon
-                                    .foregroundColor(.white)
-                            }
-                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 20))
+                        Button {
+                            
+                            viewModel.nextButton?.action()
+                            
+                        } label: {
+                            
+                            viewModel.nextButton?.icon
+                                .foregroundColor(.white)
+                        }
+                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 20))
                     }
                     
                 }
@@ -165,7 +165,7 @@ extension AuthLoginView {
                             Text(viewModel.title)
                                 .foregroundColor(.white)
                                 .font(.textBodyMR14200())
-
+                            
                             Text(viewModel.subTitle)
                                 .foregroundColor(.white)
                                 .font(.textBodyMR14200())
