@@ -10,7 +10,7 @@ import SwiftUI
 struct AuthConfirmView: View {
     
     @ObservedObject var viewModel: AuthConfirmViewModel
-
+    
     var body: some View {
         
         VStack {
@@ -20,29 +20,29 @@ struct AuthConfirmView: View {
                 ZStack{
                     
                     Button{
-                    
+                        
                         viewModel.navigationBar.backButton.action()
                     } label: {
                         
                         viewModel.navigationBar.backButton.icon
                     }
                 }
-                    
+                
                 Spacer()
-                    
+                
                 Text(viewModel.navigationBar.title)
-                    
-                Spacer()
-                    
-                }
-                
-                CodeView(viewModel: viewModel.code)
-                
-                InfoView(viewModel: viewModel.info!)
                 
                 Spacer()
+                
             }
-            .padding(EdgeInsets(top: 12, leading: 20, bottom: 20, trailing: 20))
+            
+            CodeView(viewModel: viewModel.code)
+            
+            InfoView(viewModel: viewModel.info!)
+            
+            Spacer()
+        }
+        .padding(EdgeInsets(top: 12, leading: 20, bottom: 20, trailing: 20))
         
     }
 }
@@ -54,8 +54,8 @@ extension AuthConfirmView {
         
         @State var viewModel: AuthConfirmViewModel.CodeViewModel
         
-            var body: some View {
-
+        var body: some View {
+            
             VStack(spacing: 32) {
                 
                 Text(viewModel.title)
@@ -64,15 +64,31 @@ extension AuthConfirmView {
                     .padding([.leading,.trailing], 20)
                     .multilineTextAlignment(.center)
                 
-                    VStack(spacing: 8) {
-                            HStack {
-                                ForEach(0...6, id: \.self) { i in
-                                    TextFieldView(viewModel: viewModel)
-                                }
-                            }
+                HStack(spacing: 16){
+                    
+                    ForEach(viewModel.code.indices) { index in
+                        
+                        VStack(spacing: 8) {
+                            
+                            TextField("", text: Binding(
+                                get: { return viewModel.code[index] ?? "" },
+                                set: { (newValue) in return self.viewModel.code[index] = newValue}
+                            ))
+                                .keyboardType(.numberPad)
+                                .font(.textH0B32402())
+                                .accentColor(.mainColorsGrayMedium)
+                                .keyboardType(.numberPad)
+                                .textContentType(.oneTimeCode)
+                                .foregroundColor(.textPlaceholder)
+                            
+                            Capsule()
+                                .fill(Color.mainColorsGrayMedium)
+                                .frame(height: 1)
+                        }
                     }
                 }
-            .padding(EdgeInsets(top: 24, leading: 0, bottom: 20, trailing: 0))
+            }
+            .padding(EdgeInsets(top: 24, leading: 20, bottom: 20, trailing: 20))
         }
     }
     
@@ -82,7 +98,7 @@ extension AuthConfirmView {
         
         
         var body: some View {
-
+            
             VStack(spacing: 32) {
                 
                 Text(viewModel.title)
@@ -118,31 +134,9 @@ extension AuthConfirmView {
                     }
                 }
             }
-            .padding(EdgeInsets(top: 24, leading: 0, bottom: 20, trailing: 0))
+            .padding([.top, .bottom],20)
         }
     }
-}
-
-
-struct TextFieldView: View {
-    
-    @State var viewModel: AuthConfirmViewModel.CodeViewModel
-    
-    var body: some View {
-        VStack{
-            TextField("", text: $viewModel.code)
-                .keyboardType(.numberPad)
-                .font(.textH0B32402())
-                .accentColor(.mainColorsGrayMedium)
-                .keyboardType(.numberPad)
-                .textContentType(.oneTimeCode)
-                .foregroundColor(.textPlaceholder)
-            Capsule()
-                .fill(Color.mainColorsGrayMedium)
-                .frame(height: 1)
-        }
-    }
-    
 }
 
 struct AuthConfirmView_Previews: PreviewProvider {

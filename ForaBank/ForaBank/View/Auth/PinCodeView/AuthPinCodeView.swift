@@ -17,7 +17,7 @@ struct AuthPinCodeView: View {
             
             PinCodeView(viewModel: viewModel.pinCode)
             
-            KeyPad(string: $string, viewModel: viewModel.numpad)
+            NumPadView(viewModel: viewModel.numpad)
             
             Spacer()
             
@@ -25,43 +25,107 @@ struct AuthPinCodeView: View {
         }
         .padding([.top], 80)
     }
-    
-    @State private var string = "0"
-
 }
 
 
 extension AuthPinCodeView{
     
-    struct KeyPad: View {
+    struct NumPadView: View {
         
-        @Binding var string: String
-        
-        var viewModel: [[AuthPinCodeViewModel.ButtonViewModel?]]
+        @ObservedObject var viewModel: AuthPinCodeViewModel.NumPadViewModel
+
 
         var body: some View {
+            
             VStack(spacing: 24){
                 
-//                ForEach(viewModel){ button in
-//                   HStack {
-////                     TextField("PlaceHolder", text: "")
-//                   }
-//                }
-//                    ForEach(i) { buttons in
-//                            buttons.title
-//                    }
-//                if let viewModel = viewModel[0]{
-//
-//                    
-//                }
-
-                KeyPadRow(keys: ["1", "2", "3"])
-                KeyPadRow(keys: ["4", "5", "6"])
-                KeyPadRow(keys: ["7", "8", "9"])
-                KeyPadRow(keys: ["Выход", "0", "⌫"])
+                ForEach(viewModel.buttons, id: \.self) { row in
+                    
+                    HStack(spacing: 20){
+                        
+                        ForEach(row, id: \.self){ button in
+                            
+                            if let button = button {
+                                
+                                switch button.type {
+                                    
+                                case .digit(let title):
+                                    
+                                    DigitButtonView(id: button.id, title: title, action: button.action)
+                                case .icon(let icon):
+                                    
+                                    ImageButtonView(id: button.id, image: icon, action: button.action)
+                                case .text(let text):
+                                    
+                                    TextButtonView(id: button.id, title: text, action: button.action)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        struct DigitButtonView: View {
+            
+            let id: AuthPinCodeViewModel.ButtonViewModel.ID
+            let title: String
+            let action: (AuthPinCodeViewModel.ButtonViewModel.ID) -> Void
+            
+            var body: some View{
+                Button(action: { action(id) }) {
+                    
+                    Color.mainColorsGrayLightest
+                        .overlay(
+                            Text(title)
+                                .font(.textH1R24322())
+                        )
+                        .foregroundColor(Color.textSecondary)
+                }
+                .cornerRadius(50)
+                .frame(width: 80, height: 80, alignment: .center)
+            }
+        }
+        
+        struct ImageButtonView: View {
+            
+            let id: AuthPinCodeViewModel.ButtonViewModel.ID
+            let image: Image
+            let action: (AuthPinCodeViewModel.ButtonViewModel.ID) -> Void
+            
+            var body: some View{
+                Button(action: { action(id) }) {
+                            image
+                                .renderingMode(.original)
+                                .foregroundColor(Color.textSecondary)
+                }
+                .frame(width: 80, height: 80, alignment: .center)
+            }
+        }
+        
+        
+        struct TextButtonView: View {
+            
+            let id: AuthPinCodeViewModel.ButtonViewModel.ID
+            let title: String
+            let action: (AuthPinCodeViewModel.ButtonViewModel.ID) -> Void
+            
+            var body: some View{
+                Button(action: { action(id) }) {
+                    
+                    Color.mainColorsGrayLightest
+                        .overlay(
+                            Text(title)
+                                .font(.textBodyMSB14200())
+                        )
+                        .foregroundColor(Color.textSecondary)
+                }
+                .cornerRadius(50)
+                .frame(width: 80, height: 80, alignment: .center)
             }
         }
     }
+    
     
     struct ButtonsView: View {
         
@@ -139,65 +203,6 @@ extension AuthPinCodeView{
                 }
             }
             .padding([.bottom], 52)
-        }
-    }
-}
-
-struct KeyPadRow: View {
-    
-    var keys: [String]
-
-    var body: some View {
-        HStack(spacing: 20) {
-            ForEach(keys, id: \.self) { key in
-                    KeyPadButton(key: key)
-            }
-        }
-    }
-}
-
-struct KeyPadButton: View {
-    
-    var key: String
-
-    var body: some View {
-        
-        HStack{
-            if key == "⌫"{
-                
-                Button(action: { print("") }) {
-                    Image.ic40Delete
-                        .renderingMode(.original)
-                }
-
-                .frame(width: 80, height: 80, alignment: .center)
-            } else if key == "Выход" {
-                
-  
-                Button(action: { print("") }) {
-                    
-                    Color.mainColorsGrayLightest
-                        .overlay(
-                            Text(key)
-                                .font(.textBodyMSB14200())
-                        )
-                        .foregroundColor(Color.textSecondary)
-                }
-                .cornerRadius(50)
-                .frame(width: 80, height: 80, alignment: .center)
-            } else {
-
-                Button(action: { print("") }) {
-                    Color.mainColorsGrayLightest
-                        .overlay(
-                            Text(key)
-                                .font(.textH1R24322())
-                        )
-                        .foregroundColor(Color.textSecondary)
-                }
-                .cornerRadius(50)
-                .frame(width: 80, height: 80, alignment: .center)
-            }
         }
     }
 }

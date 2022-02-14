@@ -25,7 +25,7 @@ class AuthConfirmViewModel: ObservableObject {
     init() {
 
         code = CodeViewModel()
-        info = InfoViewModel(title: "Код отправлен на +7 ... ... 54 15 \n Запросить повторно можно будет через", state: .timer(.init(value: "00:45")))
+        info = InfoViewModel(title: "Код отправлен на +7 ... ... 54 15", state: .timer(.init(value: "00:46")))
     }
 }
 
@@ -50,7 +50,7 @@ extension AuthConfirmViewModel {
     class CodeViewModel: ObservableObject {
         
         let title = "Введите код из сообщения"
-        @Published var code: String?
+        @Published var code: [String?] = [nil, nil, nil, nil, nil]
     }
 
     class InfoViewModel: ObservableObject {
@@ -62,6 +62,13 @@ extension AuthConfirmViewModel {
         init(title: String, subtitle: String? = nil, state: State) {
 
             self.title = title
+            self.subtitle = subtitle
+            self.state = state
+        }
+        
+        init(phoneNumber: String, subtitle: String? = nil, state: State) {
+
+            self.title = "Код отправлен на " + phoneNumber
             self.subtitle = subtitle
             self.state = state
         }
@@ -88,7 +95,8 @@ extension AuthConfirmViewModel {
 enum AuthConfirmViewModelAction {
 
     struct Dismiss: Action {}
-    struct nextStep: Action {
+    struct SendAgain: Action {}
+    struct ConfirmCode: Action {
 
         let code: String
     }
