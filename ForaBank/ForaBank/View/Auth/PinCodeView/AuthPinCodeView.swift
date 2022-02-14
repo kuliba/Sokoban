@@ -32,8 +32,7 @@ extension AuthPinCodeView{
     
     struct NumPadView: View {
         
-        @ObservedObject var viewModel: AuthPinCodeViewModel.NumPadViewModel
-
+        var viewModel: AuthPinCodeViewModel.NumPadViewModel
 
         var body: some View {
             
@@ -129,7 +128,7 @@ extension AuthPinCodeView{
     
     struct ButtonsView: View {
         
-        @State var viewModel: AuthPinCodeViewModel.FooterViewModel
+        let viewModel: AuthPinCodeViewModel.FooterViewModel
 
         var body: some View {
             
@@ -169,7 +168,7 @@ extension AuthPinCodeView{
     
     struct PinCodeView: View {
         
-        @State var viewModel: AuthPinCodeViewModel.PinCodeViewModel
+        var viewModel: AuthPinCodeViewModel.PinCodeViewModel
         
         var body: some View {
        

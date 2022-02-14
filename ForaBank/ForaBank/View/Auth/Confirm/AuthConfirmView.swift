@@ -52,7 +52,7 @@ extension AuthConfirmView {
     
     struct CodeView: View {
         
-        @State var viewModel: AuthConfirmViewModel.CodeViewModel
+        @ObservedObject var viewModel: AuthConfirmViewModel.CodeViewModel
         
         var body: some View {
             
@@ -66,24 +66,22 @@ extension AuthConfirmView {
                 
                 HStack(spacing: 16){
                     
-                    ForEach(viewModel.code.indices) { index in
+                    ForEach(viewModel.code.indices, id: \.self) { index in
                         
                         VStack(spacing: 8) {
-                            
-                            TextField("", text: Binding(
-                                get: { return viewModel.code[index] ?? "" },
-                                set: { (newValue) in return self.viewModel.code[index] = newValue}
-                            ))
-                                .keyboardType(.numberPad)
-                                .font(.textH0B32402())
-                                .accentColor(.mainColorsGrayMedium)
-                                .keyboardType(.numberPad)
-                                .textContentType(.oneTimeCode)
-                                .foregroundColor(.textPlaceholder)
-                            
-                            Capsule()
-                                .fill(Color.mainColorsGrayMedium)
-                                .frame(height: 1)
+
+                                TextField("", text: $viewModel.code[index])
+                                    .keyboardType(.numberPad)
+                                    .font(.textH0B32402())
+                                    .accentColor(.mainColorsGrayMedium)
+                                    .keyboardType(.numberPad)
+                                    .textContentType(.oneTimeCode)
+                                    .foregroundColor(.textPlaceholder)
+                                
+                                Capsule()
+                                    .fill(Color.mainColorsGrayMedium)
+                                    .frame(height: 1)
+
                         }
                     }
                 }
@@ -94,24 +92,22 @@ extension AuthConfirmView {
     
     struct InfoView: View {
         
-        @State var viewModel: AuthConfirmViewModel.InfoViewModel
+        @ObservedObject var viewModel: AuthConfirmViewModel.InfoViewModel
         
         
         var body: some View {
-            
-            VStack(spacing: 32) {
-                
-                Text(viewModel.title)
-                    .font(.textBodyMR14200())
-                    .foregroundColor(.textPlaceholder)
-                    .padding([.leading,.trailing], 20)
-                    .multilineTextAlignment(.center)
-                    .lineSpacing(5)
-                
-                VStack {
+        
+                VStack(spacing: 32) {
                     
                     switch viewModel.state{
                     case .timer(let timer):
+                        
+                        Text(viewModel.title)
+                            .font(.textBodyMR14200())
+                            .foregroundColor(.textPlaceholder)
+                            .padding([.leading,.trailing], 20)
+                            .multilineTextAlignment(.center)
+                            .lineSpacing(5)
                         
                         Text(timer.value)
                             .font(.textH3R18240())
@@ -132,7 +128,6 @@ extension AuthConfirmView {
                         .font(.buttonMediumM14160())
                         .foregroundColor(.textRed)
                     }
-                }
             }
             .padding([.top, .bottom],20)
         }
