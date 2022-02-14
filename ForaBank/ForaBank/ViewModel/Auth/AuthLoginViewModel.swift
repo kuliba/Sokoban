@@ -26,8 +26,7 @@ class AuthLoginViewModel: ObservableObject {
                       nextButton:  .init(action:
 
             {
-                guard let cardNumber = self.card.cardNumber else { return }
-                self.action.send(AuthLoginViewModelAction.Auth(cardNumber: cardNumber))
+            self.action.send(AuthLoginViewModelAction.Auth(cardNumber: self.card.cardNumber))
             }))
     }()
 
@@ -50,15 +49,15 @@ extension AuthLoginViewModel {
         
         let title = "Войти"
         let subTitle = "чтобы получить доступ к счетам и картам"
-        let icon = Image.ic16ArrowDown
+        let icon: Image = .ic16ArrowDown
     }
 
     class CardViewModel: ObservableObject {
 
-        let icon = Image.ic32LogoForaLine
+        let icon: Image = .ic32LogoForaLine
         let scanButton: ScanButtonViewModel
-        @Published var cardNumber: String?
-        @Published var nextButton: NextButtonViewModel
+        @Published var cardNumber: String = ""
+        @Published var nextButton: NextButtonViewModel?
         let subTitle = "Введите номер вашей карты или счета"
 
         internal init(scanButton: ScanButtonViewModel, nextButton: NextButtonViewModel) {
@@ -69,23 +68,23 @@ extension AuthLoginViewModel {
 
         struct ScanButtonViewModel {
 
-            let icon = Image.ic24SkanCard
+            let icon = Image("scanCard")
             let action: () -> Void
         }
 
         struct NextButtonViewModel {
 
-            let icon = Image.ic24ArrowRight
+            let icon = Image(systemName: "arrow.right")
             let action: () -> Void
         }
     }
 
     struct ProductsButtonViewModel {
 
-        let icon = Image.ic40Card
+        let icon = Image("cardIcon")
         let title = "Нет карты?"
         let subTitle = "Доставим в любую точку"
-        let arrowRight = Image.ic24ArrowRight
+        let arrowRight = Image(systemName: "arrow.right")
         let action: () -> Void
     }
 }
