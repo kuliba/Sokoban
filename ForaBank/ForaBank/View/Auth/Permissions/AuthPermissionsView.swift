@@ -64,20 +64,20 @@ extension AuthPermissionsView {
             
             VStack(spacing: 8) {
                 
-                ForEach(viewModel, id: \.self) { button in
+                ForEach(viewModel){ buttonViewModel in
                     
                     Button {
                         
-                        button.action()
+                        buttonViewModel.action()
                     } label: {
                         
-                        Text(verbatim: button.title)
+                        Text(buttonViewModel.title)
                     }
                     .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
                     .frame(minWidth: 0, maxWidth: .infinity, minHeight: 48, maxHeight: 48)
-                    .background(Color.buttonPrimary)
+                    .background(buttonViewModel.style.background)
                     .font(.buttonLargeSB16180())
-                    .foregroundColor(.white)
+                    .foregroundColor(buttonViewModel.style.textColor)
                     .cornerRadius(8)
                     
                 }

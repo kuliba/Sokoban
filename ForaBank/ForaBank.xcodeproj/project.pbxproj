@@ -351,6 +351,7 @@
 		68673B6126F4B87900F67A8C /* PayTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68673B5F26F4B87900F67A8C /* PayTableViewCell.xib */; };
 		6867F43D2769AFF60039A0EE /* ResultOperationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6867F43C2769AFF60039A0EE /* ResultOperationView.swift */; };
 		686857D8274FA73C00BBF562 /* PaymentsViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 686857D7274FA73C00BBF562 /* PaymentsViewCoordinator.swift */; };
+		687AD14927B69A6600C6F251 /* AuthPermissionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687AD14827B69A6600C6F251 /* AuthPermissionsView.swift */; };
 		687ADF1026B07721005A239B /* DataExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687ADF0F26B07721005A239B /* DataExtension.swift */; };
 		687FB22D26E65FC5004A479F /* NewProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687FB22C26E65FC5004A479F /* NewProductCell.swift */; };
 		687FB23026E8D41A004A479F /* OfferCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687FB22F26E8D41A004A479F /* OfferCard.swift */; };
@@ -1233,6 +1234,7 @@
 		68673B5F26F4B87900F67A8C /* PayTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PayTableViewCell.xib; sourceTree = "<group>"; };
 		6867F43C2769AFF60039A0EE /* ResultOperationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultOperationView.swift; sourceTree = "<group>"; };
 		686857D7274FA73C00BBF562 /* PaymentsViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsViewCoordinator.swift; sourceTree = "<group>"; };
+		687AD14827B69A6600C6F251 /* AuthPermissionsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthPermissionsView.swift; sourceTree = "<group>"; };
 		687ADF0F26B07721005A239B /* DataExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataExtension.swift; sourceTree = "<group>"; };
 		687FB22C26E65FC5004A479F /* NewProductCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProductCell.swift; sourceTree = "<group>"; };
 		687FB22F26E8D41A004A479F /* OfferCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferCard.swift; sourceTree = "<group>"; };
@@ -2542,6 +2544,7 @@
 		6862B53B27B6886A006E833F /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				687AD14727B69A6600C6F251 /* Permissions */,
 				6849887D27BAD96C00E84E6B /* PinCodeView */,
 				6849887A27BAD96200E84E6B /* Permissions */,
 				6849887727BAD8B100E84E6B /* Confirm */,
@@ -2627,6 +2630,14 @@
 				6867F43C2769AFF60039A0EE /* ResultOperationView.swift */,
 			);
 			path = ResultOperationView;
+			sourceTree = "<group>";
+		};
+		687AD14727B69A6600C6F251 /* Permissions */ = {
+			isa = PBXGroup;
+			children = (
+				687AD14827B69A6600C6F251 /* AuthPermissionsView.swift */,
+			);
+			path = Permissions;
 			sourceTree = "<group>";
 		};
 		687FB22B26E65F9F004A479F /* NewProductCell */ = {
@@ -5491,6 +5502,7 @@
 				6820927B27AB0D9F003DCAFD /* BankFullInfoData.swift in Sources */,
 				A5C7A1B5275BF2C3003BEF6D /* IsSingleServiceModel.swift in Sources */,
 				0BF34850268A52CD005138A8 /* AllCardView.swift in Sources */,
+				687AD14927B69A6600C6F251 /* AuthPermissionsView.swift in Sources */,
 				ED39EC8C268B4F0800158E46 /* CardChooseView.swift in Sources */,
 				0BD1CAA626E6D54A00CFE993 /* CreateIsOneTimeConsentMe2MePullDecodableModel.swift in Sources */,
 				EDB1657C2668C8D5007E6030 /* PayCell.swift in Sources */,
