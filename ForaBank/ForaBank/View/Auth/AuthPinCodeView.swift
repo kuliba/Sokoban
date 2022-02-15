@@ -13,14 +13,17 @@ struct AuthPinCodeView: View {
     
     var body: some View {
         
-        VStack() {
+        VStack(spacing: 0) {
             
             PinCodeView(viewModel: viewModel.pinCode)
+                .padding(.top, 80)
+            
             NumPadView(viewModel: viewModel.numpad)
+                .padding(.top, 52)
+            
             Spacer()
             FooterView(viewModel: viewModel.footer)
         }
-        .padding(.top, 80)
     }
 }
 
@@ -34,44 +37,54 @@ extension AuthPinCodeView {
         
         var body: some View {
             
-            Text(viewModel.title)
-                .font(.textH4M16240())
-                .padding([.bottom], 40)
-            
-            HStack(alignment: .center, spacing: 16){
+            VStack(spacing: 40) {
                 
-                ForEach(viewModel.code, id: \.self) { pin in
+                Text(viewModel.title)
+                    .font(.textH4M16240())
+                    .foregroundColor(.textSecondary)
+                
+                HStack(spacing: 16) {
                     
-                    if pin != nil{
+                    ForEach(viewModel.dots, id: \.self) { dotViewModel in
                         
-                        switch viewModel.state{
-                            
-                        case .editing:
-                            
-                            Circle()
-                                .frame(width: 12, height: 12, alignment: .center)
-                                .foregroundColor(.mainColorsGrayMedium)
-                        case .incorrect:
-                            
-                            Circle()
-                                .frame(width: 12, height: 12, alignment: .center)
-                                .foregroundColor(.systemColorError)
-                        case .correct:
-                            
-                            Circle()
-                                .frame(width: 12, height: 12, alignment: .center)
-                                .foregroundColor(.systemColorActive)
-                        }
-                    } else {
-                        
-                        Circle()
-                            .frame(width: 12, height: 12, alignment: .center)
-                            .foregroundColor(.white)
+                        DotView(viewModel: dotViewModel, state: viewModel.state)
                     }
                 }
             }
-            .padding([.bottom], 52)
         }
+        
+        struct DotView: View {
+            
+            let color: Color
+            
+            init(viewModel: AuthPinCodeViewModel.PinCodeViewModel.DotViewModel, state: AuthPinCodeViewModel.PinCodeViewModel.State) {
+                
+                switch viewModel {
+                case .empty:
+                    self.color = .mainColorsGrayMedium
+                    
+                case .filled:
+                    switch state {
+                    case .editing:
+                        self.color = .mainColorsBlack
+                        
+                    case .correct:
+                        self.color = .systemColorActive
+                        
+                    case .incorrect:
+                        self.color = .systemColorError
+                    }
+                }
+            }
+            
+            var body: some View {
+                
+                Circle()
+                    .frame(width: 12, height: 12)
+                    .foregroundColor(color)
+            }
+        }
+ 
     }
 }
 
@@ -234,6 +247,25 @@ struct PinCodeView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        AuthPinCodeView(viewModel: .sample)
+        Group {
+            
+            AuthPinCodeView(viewModel: .sample)
+            
+            AuthPinCodeView.PinCodeView(viewModel: .empty)
+                .previewLayout(.fixed(width: 375, height: 100))
+                .previewDisplayName("Pincode Empty")
+            
+            AuthPinCodeView.PinCodeView(viewModel: .editing)
+                .previewLayout(.fixed(width: 375, height: 100))
+                .previewDisplayName("Pincode Empty")
+            
+            AuthPinCodeView.PinCodeView(viewModel: .correct)
+                .previewLayout(.fixed(width: 375, height: 100))
+                .previewDisplayName("Pincode Empty")
+            
+            AuthPinCodeView.PinCodeView(viewModel: .incorrect)
+                .previewLayout(.fixed(width: 375, height: 100))
+                .previewDisplayName("Pincode Empty")
+        }
     }
 }

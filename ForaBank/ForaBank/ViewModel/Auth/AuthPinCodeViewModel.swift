@@ -29,15 +29,38 @@ extension AuthPinCodeViewModel {
     
     class PinCodeViewModel: ObservableObject {
 
-        let title: String = "Придумайте код"
-        @Published var code: [String?] = [nil, nil, nil, nil]
-        @Published var state: State = .editing
+        @Published var title: String = "Придумайте код"
+        var pincode: CurrentValueSubject<String, Never>
+        @Published var dots: [DotViewModel]
+        @Published var state: State
+        
+        private let pincodeLength: Int
+        
+        init(title: String, pincodeLength: Int, pincode: String = "", state: State = .editing) {
+            
+            self.title = title
+            self.pincode = .init(pincode)
+            self.dots = Self.dots(pincode: pincode, length: pincodeLength)
+            self.state = state
+            self.pincodeLength = pincodeLength
+        }
+        
+        static func dots(pincode: String, length: Int) -> [DotViewModel] {
+            
+            return (0..<length).map{ pincode.count > $0 ? .filled : .empty }
+        }
         
         enum State {
 
             case editing
             case incorrect
             case correct
+        }
+        
+        enum DotViewModel {
+            
+            case empty
+            case filled
         }
     }
     

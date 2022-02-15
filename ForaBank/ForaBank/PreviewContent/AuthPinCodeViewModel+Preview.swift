@@ -11,7 +11,7 @@ extension AuthPinCodeViewModel {
     
     static let sample: AuthPinCodeViewModel = {
         
-        let pinCode = AuthPinCodeViewModel.PinCodeViewModel()
+        let pinCode = AuthPinCodeViewModel.PinCodeViewModel(title: "Придумайте код", pincodeLength: 4)
         let numpad = AuthPinCodeViewModel.NumPadViewModel(buttons: [[.init(type: .digit("1"), action: {_ in }),
                                                                .init(type: .digit("2"), action: {_ in }),
                                                                .init(type: .digit("3"), action: {_ in })],
@@ -35,4 +35,16 @@ extension AuthPinCodeViewModel {
         
         return AuthPinCodeViewModel(pinCode: pinCode, numpad: numpad, footer: footer)
     }()
+}
+
+
+extension AuthPinCodeViewModel.PinCodeViewModel {
+    
+    static let empty = AuthPinCodeViewModel.PinCodeViewModel(title: "Придумайте код", pincodeLength: 4)
+    
+    static let editing = AuthPinCodeViewModel.PinCodeViewModel(title: "Придумайте код", pincodeLength: 4, pincode: "12")
+    
+    static let correct = AuthPinCodeViewModel.PinCodeViewModel(title: "Придумайте код", pincodeLength: 4, pincode: "1234", state: .correct)
+    
+    static let incorrect = AuthPinCodeViewModel.PinCodeViewModel(title: "Придумайте код", pincodeLength: 4, pincode: "1234", state: .incorrect)
 }
