@@ -458,6 +458,7 @@
 		774A82CB27BAEB6100E5A5E9 /* UserDefaultsSettingsAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774A82CA27BAEB6100E5A5E9 /* UserDefaultsSettingsAgentTests.swift */; };
 		774A82CD27BAF5B600E5A5E9 /* KeychainValueType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774A82CC27BAF5B600E5A5E9 /* KeychainValueType.swift */; };
 		774A82CF27BAF76000E5A5E9 /* ValetKeychainAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774A82CE27BAF76000E5A5E9 /* ValetKeychainAgentTests.swift */; };
+		774A82D127BB871C00E5A5E9 /* ModelAction+Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774A82D027BB871C00E5A5E9 /* ModelAction+Auth.swift */; };
 		774E318927A0509C005A067B /* ServerAgentEmptyMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774E318827A0509C005A067B /* ServerAgentEmptyMock.swift */; };
 		774E318B27A050DB005A067B /* Model+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774E318A27A050DB005A067B /* Model+Preview.swift */; };
 		774E318D27A05112005A067B /* LocalAgentEmptyMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774E318C27A05112005A067B /* LocalAgentEmptyMock.swift */; };
@@ -1342,6 +1343,7 @@
 		774A82CA27BAEB6100E5A5E9 /* UserDefaultsSettingsAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsSettingsAgentTests.swift; sourceTree = "<group>"; };
 		774A82CC27BAF5B600E5A5E9 /* KeychainValueType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainValueType.swift; sourceTree = "<group>"; };
 		774A82CE27BAF76000E5A5E9 /* ValetKeychainAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValetKeychainAgentTests.swift; sourceTree = "<group>"; };
+		774A82D027BB871C00E5A5E9 /* ModelAction+Auth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModelAction+Auth.swift"; sourceTree = "<group>"; };
 		774E318827A0509C005A067B /* ServerAgentEmptyMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAgentEmptyMock.swift; sourceTree = "<group>"; };
 		774E318A27A050DB005A067B /* Model+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Preview.swift"; sourceTree = "<group>"; };
 		774E318C27A05112005A067B /* LocalAgentEmptyMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAgentEmptyMock.swift; sourceTree = "<group>"; };
@@ -3048,6 +3050,7 @@
 			children = (
 				77EC58E6277236E90054D75C /* Model.swift */,
 				77EC58E8277237190054D75C /* ModelAction.swift */,
+				774A82D027BB871C00E5A5E9 /* ModelAction+Auth.swift */,
 				77EC58ED27723A5A0054D75C /* ModelAction+PaymentTemplate.swift */,
 			);
 			path = Model;
@@ -5654,6 +5657,7 @@
 				0B7A18CE2689C4ED0007CC75 /* AddHeaderImageViewController.swift in Sources */,
 				EDDFE3A32756BDDB00F57C71 /* DetailInformationViewController.swift in Sources */,
 				EDB1655826679C74007E6030 /* SmsCodeView.swift in Sources */,
+				774A82D127BB871C00E5A5E9 /* ModelAction+Auth.swift in Sources */,
 				0BB24AA126EFEE4700DDA4F6 /* GetProductListByFilter.swift in Sources */,
 				6820922C27A9781E003DCAFD /* ServerCommands+FastPayment.swift in Sources */,
 				EDB14381265FDA410028EF5A /* AppDelegate.swift in Sources */,
