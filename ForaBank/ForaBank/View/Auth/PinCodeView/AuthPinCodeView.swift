@@ -182,26 +182,33 @@ extension AuthPinCodeView{
             HStack(alignment: .center, spacing: 16){
                 
                 ForEach(viewModel.code, id: \.self) { pin in
-                    
-                    switch viewModel.state{
                         
-                    case .editing:
+                    if pin != nil{
+                        
+                        switch viewModel.state{
+
+                        case .editing:
+                            
+                            Circle()
+                                .frame(width: 12, height: 12, alignment: .center)
+                                .foregroundColor(.mainColorsGrayMedium)
+                        case .incorrect:
+                            
+                            Circle()
+                                .frame(width: 12, height: 12, alignment: .center)
+                                .foregroundColor(.systemColorError)
+                        case .correct:
+                            
+                            Circle()
+                                .frame(width: 12, height: 12, alignment: .center)
+                                .foregroundColor(.systemColorActive)
+                        }
+                    } else {
                         
                         Circle()
                             .frame(width: 12, height: 12, alignment: .center)
-                            .foregroundColor(.mainColorsGrayMedium)
-                    case .incorrect:
-                        
-                        Circle()
-                            .frame(width: 12, height: 12, alignment: .center)
-                            .foregroundColor(.systemColorError)
-                    case .correct:
-                        
-                        Circle()
-                            .frame(width: 12, height: 12, alignment: .center)
-                            .foregroundColor(.systemColorActive)
+                            .foregroundColor(.white)
                     }
-                    
                 }
             }
             .padding([.bottom], 52)

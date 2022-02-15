@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AuthPermissionsView: View {
     
-    var viewModel: AuthPermissionsViewModel
+    @ObservedObject var viewModel: AuthPermissionsViewModel
     
     var body: some View {
         
@@ -30,7 +30,7 @@ extension AuthPermissionsView {
     
     struct HeaderView: View {
         
-        var viewModel: AuthPermissionsViewModel.HeaderViewModel
+        let viewModel: AuthPermissionsViewModel.HeaderViewModel
         
         var body: some View {
             
@@ -58,7 +58,7 @@ extension AuthPermissionsView {
     
     struct ButtonsView: View {
         
-        @State var viewModel: [AuthPermissionsViewModel.ButtonViewModel]
+        let viewModel: [AuthPermissionsViewModel.ButtonViewModel]
         
         var body: some View {
             
