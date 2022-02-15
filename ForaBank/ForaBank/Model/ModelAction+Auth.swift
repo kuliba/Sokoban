@@ -102,6 +102,13 @@ extension ModelAction {
         
         enum Login {
             
+            struct Request: Action {}
+            
+            enum Response: Action {
+                
+                case success
+                case error(Error)
+            }
         }
     }
 }
