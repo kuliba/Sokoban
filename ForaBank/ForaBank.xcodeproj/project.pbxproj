@@ -332,8 +332,9 @@
 		684533722798515100104A8B /* CsrfData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 684533712798515100104A8B /* CsrfData.swift */; };
 		684533752798532300104A8B /* CsrfDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 684533742798532300104A8B /* CsrfDataTests.swift */; };
 		6849887927BAD8B100E84E6B /* AuthConfirmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6849887827BAD8B100E84E6B /* AuthConfirmView.swift */; };
-		6849887C27BAD96200E84E6B /* AuthPermissionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6849887B27BAD96200E84E6B /* AuthPermissionsView.swift */; };
 		6849887F27BAD96C00E84E6B /* AuthPinCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6849887E27BAD96C00E84E6B /* AuthPinCodeView.swift */; };
+		6849888227BBB41400E84E6B /* AuthProductsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6849888127BBB41300E84E6B /* AuthProductsViewModel.swift */; };
+		6849888627BBB8D200E84E6B /* AuthProductsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6849888527BBB8D200E84E6B /* AuthProductsView.swift */; };
 		684AD35A26B7D2520071C762 /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 684AD35926B7D2520071C762 /* CryptoSwift */; };
 		6862B53E27B6886A006E833F /* AuthLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6862B53C27B6886A006E833F /* AuthLoginView.swift */; };
 		6862B55327B688CC006E833F /* AuthLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6862B54C27B688CC006E833F /* AuthLoginViewModel.swift */; };
@@ -866,10 +867,6 @@
 		F63D4A3FB30397A82426313C /* InternetTVConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D4A26E0479DD5215DB784 /* InternetTVConfirmViewController.swift */; };
 		F63D4B91E94C13AFD50FF312 /* GIBDDFineDetailsFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D4C8F9B14DFF843262392 /* GIBDDFineDetailsFormViewModel.swift */; };
 		F63D4C7CF864543AD9AABF9A /* InternetTVInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D42CEA742F58D23C97218 /* InternetTVInputCell.swift */; };
-		F8E5299A27B1177100222394 /* AuthLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E5299927B1177100222394 /* AuthLoginViewModel.swift */; };
-		F8E529A227B39ED200222394 /* AuthConfirmViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E529A127B39ED200222394 /* AuthConfirmViewModel.swift */; };
-		F8E529A527B4137D00222394 /* AuthPermissionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E529A427B4137D00222394 /* AuthPermissionsViewModel.swift */; };
-		F8E529A827B5068E00222394 /* AuthPinCodeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E529A727B5068E00222394 /* AuthPinCodeViewModel.swift */; };
 		F8E529AB27B666ED00222394 /* AuthProductsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E529AA27B666EC00222394 /* AuthProductsViewModel.swift */; };
 		F8E529AD27B67F7B00222394 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F8E529AC27B67F7B00222394 /* Assets.xcassets */; };
 		F8E529B227B6803300222394 /* AuthProductsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E529B127B6803300222394 /* AuthProductsView.swift */; };
@@ -1224,8 +1221,9 @@
 		684533712798515100104A8B /* CsrfData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CsrfData.swift; sourceTree = "<group>"; };
 		684533742798532300104A8B /* CsrfDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CsrfDataTests.swift; sourceTree = "<group>"; };
 		6849887827BAD8B100E84E6B /* AuthConfirmView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthConfirmView.swift; sourceTree = "<group>"; };
-		6849887B27BAD96200E84E6B /* AuthPermissionsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthPermissionsView.swift; sourceTree = "<group>"; };
 		6849887E27BAD96C00E84E6B /* AuthPinCodeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthPinCodeView.swift; sourceTree = "<group>"; };
+		6849888127BBB41300E84E6B /* AuthProductsViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthProductsViewModel.swift; sourceTree = "<group>"; };
+		6849888527BBB8D200E84E6B /* AuthProductsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthProductsView.swift; sourceTree = "<group>"; };
 		6862B53C27B6886A006E833F /* AuthLoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthLoginView.swift; sourceTree = "<group>"; };
 		6862B54C27B688CC006E833F /* AuthLoginViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthLoginViewModel.swift; sourceTree = "<group>"; };
 		6862B54E27B688CC006E833F /* AuthPinCodeViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthPinCodeViewModel.swift; sourceTree = "<group>"; };
@@ -1756,10 +1754,6 @@
 		F63D4C8F9B14DFF843262392 /* GIBDDFineDetailsFormViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GIBDDFineDetailsFormViewModel.swift; sourceTree = "<group>"; };
 		F63D4D93E1924F097E08847C /* ClientInfoModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientInfoModel.swift; sourceTree = "<group>"; };
 		F63D4DD4905E8BA594B990E1 /* InternetTVDetailsFormController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetTVDetailsFormController.swift; sourceTree = "<group>"; };
-		F8E5299927B1177100222394 /* AuthLoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthLoginViewModel.swift; sourceTree = "<group>"; };
-		F8E529A127B39ED200222394 /* AuthConfirmViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthConfirmViewModel.swift; sourceTree = "<group>"; };
-		F8E529A427B4137D00222394 /* AuthPermissionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPermissionsViewModel.swift; sourceTree = "<group>"; };
-		F8E529A727B5068E00222394 /* AuthPinCodeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPinCodeViewModel.swift; sourceTree = "<group>"; };
 		F8E529AA27B666EC00222394 /* AuthProductsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthProductsViewModel.swift; sourceTree = "<group>"; };
 		F8E529AC27B67F7B00222394 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F8E529B127B6803300222394 /* AuthProductsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthProductsView.swift; sourceTree = "<group>"; };
@@ -2481,6 +2475,8 @@
 		6833E0B82739157E004C070F /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
+				F8E529AA27B666EC00222394 /* AuthProductsViewModel.swift */,
+				F8E529B127B6803300222394 /* AuthProductsView.swift */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -2533,38 +2529,14 @@
 			path = Utility;
 			sourceTree = "<group>";
 		};
-		6849887727BAD8B100E84E6B /* Confirm */ = {
-			isa = PBXGroup;
-			children = (
-				6849887827BAD8B100E84E6B /* AuthConfirmView.swift */,
-			);
-			path = Confirm;
-			sourceTree = "<group>";
-		};
-		6849887A27BAD96200E84E6B /* Permissions */ = {
-			isa = PBXGroup;
-			children = (
-				6849887B27BAD96200E84E6B /* AuthPermissionsView.swift */,
-			);
-			path = Permissions;
-			sourceTree = "<group>";
-		};
-		6849887D27BAD96C00E84E6B /* PinCodeView */ = {
-			isa = PBXGroup;
-			children = (
-				6849887E27BAD96C00E84E6B /* AuthPinCodeView.swift */,
-			);
-			path = PinCodeView;
-			sourceTree = "<group>";
-		};
 		6862B53B27B6886A006E833F /* Auth */ = {
 			isa = PBXGroup;
 			children = (
-				687AD14727B69A6600C6F251 /* Permissions */,
-				6849887D27BAD96C00E84E6B /* PinCodeView */,
-				6849887A27BAD96200E84E6B /* Permissions */,
-				6849887727BAD8B100E84E6B /* Confirm */,
 				6862B53C27B6886A006E833F /* AuthLoginView.swift */,
+				6849887827BAD8B100E84E6B /* AuthConfirmView.swift */,
+				6849887E27BAD96C00E84E6B /* AuthPinCodeView.swift */,
+				687AD14827B69A6600C6F251 /* AuthPermissionsView.swift */,
+				6849888527BBB8D200E84E6B /* AuthProductsView.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -2573,35 +2545,12 @@
 			isa = PBXGroup;
 			children = (
 				6862B54C27B688CC006E833F /* AuthLoginViewModel.swift */,
-				6862B54D27B688CC006E833F /* PinCode */,
-				6862B54F27B688CC006E833F /* Confirm */,
-				6862B55127B688CC006E833F /* Permissions */,
+				6862B55027B688CC006E833F /* AuthConfirmViewModel.swift */,
+				6862B54E27B688CC006E833F /* AuthPinCodeViewModel.swift */,
+				6862B55227B688CC006E833F /* AuthPermissionsViewModel.swift */,
+				6849888127BBB41300E84E6B /* AuthProductsViewModel.swift */,
 			);
 			path = Auth;
-			sourceTree = "<group>";
-		};
-		6862B54D27B688CC006E833F /* PinCode */ = {
-			isa = PBXGroup;
-			children = (
-				6862B54E27B688CC006E833F /* AuthPinCodeViewModel.swift */,
-			);
-			path = PinCode;
-			sourceTree = "<group>";
-		};
-		6862B54F27B688CC006E833F /* Confirm */ = {
-			isa = PBXGroup;
-			children = (
-				6862B55027B688CC006E833F /* AuthConfirmViewModel.swift */,
-			);
-			path = Confirm;
-			sourceTree = "<group>";
-		};
-		6862B55127B688CC006E833F /* Permissions */ = {
-			isa = PBXGroup;
-			children = (
-				6862B55227B688CC006E833F /* AuthPermissionsViewModel.swift */,
-			);
-			path = Permissions;
 			sourceTree = "<group>";
 		};
 		68673B5026F2F39E00F67A8C /* Cell */ = {
@@ -2646,14 +2595,6 @@
 				6867F43C2769AFF60039A0EE /* ResultOperationView.swift */,
 			);
 			path = ResultOperationView;
-			sourceTree = "<group>";
-		};
-		687AD14727B69A6600C6F251 /* Permissions */ = {
-			isa = PBXGroup;
-			children = (
-				687AD14827B69A6600C6F251 /* AuthPermissionsView.swift */,
-			);
-			path = Permissions;
 			sourceTree = "<group>";
 		};
 		687FB22B26E65F9F004A479F /* NewProductCell */ = {
@@ -2868,15 +2809,6 @@
 				68D099D8273B5D110017D777 /* PaymentByPhoneCoordinator.swift */,
 			);
 			path = PaymentByPhoneCoordinator;
-			sourceTree = "<group>";
-		};
-		68D53ECF27B3DFE400D0EBA8 /* Auth */ = {
-			isa = PBXGroup;
-			children = (
-				F8E529AE27B6801500222394 /* Products */,
-				68D53ED027B3E00400D0EBA8 /* AuthLoginView.swift */,
-			);
-			path = Auth;
 			sourceTree = "<group>";
 		};
 		68E3461D27030F2A00D6FE37 /* ChatViewControllers */ = {
@@ -5060,58 +4992,6 @@
 			path = detailsOperator;
 			sourceTree = "<group>";
 		};
-		F8E5299827B1174800222394 /* Auth */ = {
-			isa = PBXGroup;
-			children = (
-				F8E529A927B666E000222394 /* Products */,
-				F8E529A327B4136F00222394 /* Permissions */,
-				F8E529A027B39EC100222394 /* Confirm */,
-				F8E529A627B5066D00222394 /* PinCode */,
-				F8E5299927B1177100222394 /* AuthLoginViewModel.swift */,
-			);
-			path = Auth;
-			sourceTree = "<group>";
-		};
-		F8E529A027B39EC100222394 /* Confirm */ = {
-			isa = PBXGroup;
-			children = (
-				F8E529A127B39ED200222394 /* AuthConfirmViewModel.swift */,
-			);
-			path = Confirm;
-			sourceTree = "<group>";
-		};
-		F8E529A327B4136F00222394 /* Permissions */ = {
-			isa = PBXGroup;
-			children = (
-				F8E529A427B4137D00222394 /* AuthPermissionsViewModel.swift */,
-			);
-			path = Permissions;
-			sourceTree = "<group>";
-		};
-		F8E529A627B5066D00222394 /* PinCode */ = {
-			isa = PBXGroup;
-			children = (
-				F8E529A727B5068E00222394 /* AuthPinCodeViewModel.swift */,
-			);
-			path = PinCode;
-			sourceTree = "<group>";
-		};
-		F8E529A927B666E000222394 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				F8E529AA27B666EC00222394 /* AuthProductsViewModel.swift */,
-			);
-			path = Products;
-			sourceTree = "<group>";
-		};
-		F8E529AE27B6801500222394 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				F8E529B127B6803300222394 /* AuthProductsView.swift */,
-			);
-			path = Products;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -5510,6 +5390,7 @@
 				0BF3485B268E5907005138A8 /* GetExchangeCurrencyRatesDecodableModel.swift in Sources */,
 				0BB24AA826F002B100DDA4F6 /* GetLatestPaymentsSaved.swift in Sources */,
 				684192F52799C34400B4E184 /* ConsentMe2MePullData.swift in Sources */,
+				6849888627BBB8D200E84E6B /* AuthProductsView.swift in Sources */,
 				ED7866B427A015E3006B4F5A /* PaymentByPhoneViewModel.swift in Sources */,
 				0B37F9882680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift in Sources */,
 				0BD1CA9B26E6B55F00CFE993 /* GetCountriesList.swift in Sources */,
@@ -5526,7 +5407,6 @@
 				687FB23326E9E551004A479F /* PaymentMainCell.swift in Sources */,
 				0BA14E1A2712597D0098E422 /* StaticDefaultTimeOut.swift in Sources */,
 				ED4603A62746B69300FE89B0 /* ResultAccountStatementModel.swift in Sources */,
-				6849887C27BAD96200E84E6B /* AuthPermissionsView.swift in Sources */,
 				ED0B4894267B50F50037EA06 /* Int.swift in Sources */,
 				0B283FBF26FBCA0A00B5E925 /* Router.swift in Sources */,
 				0B22AEAC26CE8DD100B11E7F /* GKHDataSorted.swift in Sources */,
@@ -5908,6 +5788,7 @@
 				6820929D27AC04B3003DCAFD /* SuggestBankData.swift in Sources */,
 				774E318927A0509C005A067B /* ServerAgentEmptyMock.swift in Sources */,
 				77E1805A27AC8BE20006ACC9 /* main.swift in Sources */,
+				6849888227BBB41400E84E6B /* AuthProductsViewModel.swift in Sources */,
 				6820928E27AB0FEF003DCAFD /* FastPaymentContractAccountAttributeTypeData.swift in Sources */,
 				77DC12712771080400C917B0 /* EmptyData.swift in Sources */,
 				77517FEE27A99383005CFB77 /* ExchangeRateData.swift in Sources */,
