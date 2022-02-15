@@ -86,7 +86,15 @@ extension AuthPermissionsViewModel {
         }
     }
 
-    struct ButtonViewModel {
+    struct ButtonViewModel: Hashable {
+        
+        static func == (lhs: AuthPermissionsViewModel.ButtonViewModel, rhs: AuthPermissionsViewModel.ButtonViewModel) -> Bool {
+            return lhs.title == rhs.title
+        }
+        
+        func hash(into hasher: inout Hasher) {
+               hasher.combine(title)
+           }
 
         var title: String
         var action: () -> Void

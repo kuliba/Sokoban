@@ -331,6 +331,9 @@
 		6845337027984D1000104A8B /* CsrfResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 6845336F27984D1000104A8B /* CsrfResponseGeneric.json */; };
 		684533722798515100104A8B /* CsrfData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 684533712798515100104A8B /* CsrfData.swift */; };
 		684533752798532300104A8B /* CsrfDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 684533742798532300104A8B /* CsrfDataTests.swift */; };
+		6849887927BAD8B100E84E6B /* AuthConfirmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6849887827BAD8B100E84E6B /* AuthConfirmView.swift */; };
+		6849887C27BAD96200E84E6B /* AuthPermissionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6849887B27BAD96200E84E6B /* AuthPermissionsView.swift */; };
+		6849887F27BAD96C00E84E6B /* AuthPinCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6849887E27BAD96C00E84E6B /* AuthPinCodeView.swift */; };
 		684AD35A26B7D2520071C762 /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 684AD35926B7D2520071C762 /* CryptoSwift */; };
 		6862B53E27B6886A006E833F /* AuthLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6862B53C27B6886A006E833F /* AuthLoginView.swift */; };
 		6862B55327B688CC006E833F /* AuthLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6862B54C27B688CC006E833F /* AuthLoginViewModel.swift */; };
@@ -363,6 +366,7 @@
 		688B9BB026DEC27200407A75 /* OfferCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688B9BAE26DEC27200407A75 /* OfferCollectionViewCell.swift */; };
 		688B9BB426E03B3000407A75 /* TotalMoneyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688B9BB326E03B3000407A75 /* TotalMoneyView.swift */; };
 		688B9BB626E03B3E00407A75 /* TotalMoneyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 688B9BB526E03B3E00407A75 /* TotalMoneyView.xib */; };
+		688D816927B50E5F00F23081 /* Binding+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688D816827B50E5F00F23081 /* Binding+Extensions.swift */; };
 		689A99AE2779E73600D1FDAE /* OperationDetailInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689A99AD2779E73600D1FDAE /* OperationDetailInfoViewModel.swift */; };
 		68A40A132771E154007333EA /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 68A40A122771E154007333EA /* FirebaseAnalytics */; };
 		68AD33F1279858E900647665 /* CsrfDtoDecodingGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 68AD33F0279858E900647665 /* CsrfDtoDecodingGeneric.json */; };
@@ -1211,6 +1215,9 @@
 		6845336F27984D1000104A8B /* CsrfResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = CsrfResponseGeneric.json; sourceTree = "<group>"; };
 		684533712798515100104A8B /* CsrfData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CsrfData.swift; sourceTree = "<group>"; };
 		684533742798532300104A8B /* CsrfDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CsrfDataTests.swift; sourceTree = "<group>"; };
+		6849887827BAD8B100E84E6B /* AuthConfirmView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthConfirmView.swift; sourceTree = "<group>"; };
+		6849887B27BAD96200E84E6B /* AuthPermissionsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthPermissionsView.swift; sourceTree = "<group>"; };
+		6849887E27BAD96C00E84E6B /* AuthPinCodeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthPinCodeView.swift; sourceTree = "<group>"; };
 		6862B53C27B6886A006E833F /* AuthLoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthLoginView.swift; sourceTree = "<group>"; };
 		6862B54C27B688CC006E833F /* AuthLoginViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthLoginViewModel.swift; sourceTree = "<group>"; };
 		6862B54E27B688CC006E833F /* AuthPinCodeViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthPinCodeViewModel.swift; sourceTree = "<group>"; };
@@ -1242,6 +1249,7 @@
 		688B9BAE26DEC27200407A75 /* OfferCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferCollectionViewCell.swift; sourceTree = "<group>"; };
 		688B9BB326E03B3000407A75 /* TotalMoneyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalMoneyView.swift; sourceTree = "<group>"; };
 		688B9BB526E03B3E00407A75 /* TotalMoneyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TotalMoneyView.xib; sourceTree = "<group>"; };
+		688D816827B50E5F00F23081 /* Binding+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Binding+Extensions.swift"; sourceTree = "<group>"; };
 		68935F71276970CF002F56C2 /* AntifraudViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AntifraudViewModel.swift; sourceTree = "<group>"; };
 		689A99AD2779E73600D1FDAE /* OperationDetailInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailInfoViewModel.swift; sourceTree = "<group>"; };
 		68AD33F0279858E900647665 /* CsrfDtoDecodingGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = CsrfDtoDecodingGeneric.json; sourceTree = "<group>"; };
@@ -2509,9 +2517,36 @@
 			path = Utility;
 			sourceTree = "<group>";
 		};
+		6849887727BAD8B100E84E6B /* Confirm */ = {
+			isa = PBXGroup;
+			children = (
+				6849887827BAD8B100E84E6B /* AuthConfirmView.swift */,
+			);
+			path = Confirm;
+			sourceTree = "<group>";
+		};
+		6849887A27BAD96200E84E6B /* Permissions */ = {
+			isa = PBXGroup;
+			children = (
+				6849887B27BAD96200E84E6B /* AuthPermissionsView.swift */,
+			);
+			path = Permissions;
+			sourceTree = "<group>";
+		};
+		6849887D27BAD96C00E84E6B /* PinCodeView */ = {
+			isa = PBXGroup;
+			children = (
+				6849887E27BAD96C00E84E6B /* AuthPinCodeView.swift */,
+			);
+			path = PinCodeView;
+			sourceTree = "<group>";
+		};
 		6862B53B27B6886A006E833F /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				6849887D27BAD96C00E84E6B /* PinCodeView */,
+				6849887A27BAD96200E84E6B /* Permissions */,
+				6849887727BAD8B100E84E6B /* Confirm */,
 				6862B53C27B6886A006E833F /* AuthLoginView.swift */,
 			);
 			path = Auth;
@@ -3430,6 +3465,7 @@
 				7758754E27996E610080115D /* FileManager+Extensions.swift */,
 				7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */,
 				7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */,
+				688D816827B50E5F00F23081 /* Binding+Extensions.swift */,
 				E34B29CF263A08B9A2BA3560 /* Assets */,
 			);
 			path = Extensions;
@@ -5390,6 +5426,7 @@
 				0B37F9882680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift in Sources */,
 				0BD1CA9B26E6B55F00CFE993 /* GetCountriesList.swift in Sources */,
 				688B9BAC26DE7D7E00407A75 /* ProductViewController.swift in Sources */,
+				688D816927B50E5F00F23081 /* Binding+Extensions.swift in Sources */,
 				77E1804927AC3B810006ACC9 /* FTSData.swift in Sources */,
 				0BB24AB526F0C62500DDA4F6 /* BlockCardDecodableModel.swift in Sources */,
 				EDB1451C26652D370028EF5A /* UILabel.swift in Sources */,
@@ -5402,6 +5439,7 @@
 				687FB23326E9E551004A479F /* PaymentMainCell.swift in Sources */,
 				0BA14E1A2712597D0098E422 /* StaticDefaultTimeOut.swift in Sources */,
 				ED4603A62746B69300FE89B0 /* ResultAccountStatementModel.swift in Sources */,
+				6849887C27BAD96200E84E6B /* AuthPermissionsView.swift in Sources */,
 				ED0B4894267B50F50037EA06 /* Int.swift in Sources */,
 				0B283FBF26FBCA0A00B5E925 /* Router.swift in Sources */,
 				0B22AEAC26CE8DD100B11E7F /* GKHDataSorted.swift in Sources */,
@@ -5818,6 +5856,7 @@
 				0B7A18CB268648030007CC75 /* GetProductListDecodableModel.swift in Sources */,
 				0BA251F526C270A100AD087A /* UpdateFastPaymentContractDecodableModel.swift in Sources */,
 				EDF68217266F9EC800FD5C07 /* RouterSassionConfiguration.swift in Sources */,
+				6849887927BAD8B100E84E6B /* AuthConfirmView.swift in Sources */,
 				0BDE453826E53AEF00B64A0A /* AddAllUserCardtList.swift in Sources */,
 				77925575279AF54F00A85723 /* ECKeysProvider.swift in Sources */,
 				ED84995B26A8831E005205C6 /* EPConstants.swift in Sources */,
@@ -5936,6 +5975,7 @@
 				F63D42FC24C643FCB7631F83 /* InternetTVDetailsFormController.swift in Sources */,
 				F63D4C7CF864543AD9AABF9A /* InternetTVInputCell.swift in Sources */,
 				F63D42697A06C6D37A64F590 /* InternetTVDetailsFormViewModel.swift in Sources */,
+				6849887F27BAD96C00E84E6B /* AuthPinCodeView.swift in Sources */,
 				EDDFE3AD2756D3FD00F57C71 /* DepositCalculatorViewControllerFlowLayout.swift in Sources */,
 				F63D4A3FB30397A82426313C /* InternetTVConfirmViewController.swift in Sources */,
 				F63D43A404CF8AA69942CCFF /* InternetTVSuccessViewController.swift in Sources */,

@@ -15,7 +15,6 @@ struct AuthLoginView: View {
     var viewModel: AuthLoginViewModel
     
     var body: some View {
-        
         VStack(spacing: 24) {
             
             HeaderView(viewModel: viewModel.header)
@@ -26,7 +25,7 @@ struct AuthLoginView: View {
         }
         .padding(EdgeInsets(top: 24, leading: 0, bottom: 20, trailing: 0))
         .background(
-            Image("BackgroundLine")
+            Image.imgRegistrationBg
                 .edgesIgnoringSafeArea(.all)
                 .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
         )
@@ -46,8 +45,8 @@ extension AuthLoginView {
                 HStack(spacing: 8) {
                     
                     Text(viewModel.title)
-                        .font(.system(size: 24, weight: .medium))
-                        .foregroundColor(Color(hex: "#1C1C1C"))
+                        .font(.textH1SB24322())
+                        .foregroundColor(.textSecondary)
                     
                     viewModel.icon
                         .resizable()
@@ -55,23 +54,17 @@ extension AuthLoginView {
                 }
                 
                 Text(viewModel.subTitle)
-                    .font(.system(size: 14, weight: .regular))
-                    .foregroundColor(Color(hex: "#1C1C1C"))
+                    .font(.textBodyMM14200())
+                    .foregroundColor(.textSecondary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
+            .padding([.leading, .trailing], 20)
         }
     }
     
     struct CardView: View {
         
         @State var viewModel: AuthLoginViewModel.CardViewModel
-        
-        let formatter: NumberFormatter = {
-            let formatter = NumberFormatter()
-            formatter.numberStyle = .decimal
-            return formatter
-        }()
         
         var body: some View {
             VStack(spacing: 0) {
@@ -81,6 +74,7 @@ extension AuthLoginView {
                     viewModel.icon
                         .resizable()
                         .frame(width: 32, height: 32)
+                        .foregroundColor(.white)
                     
                     Spacer()
                     
@@ -101,8 +95,9 @@ extension AuthLoginView {
                 
                 ZStack {
                     
-                    TextField("", value: $viewModel.cardNumber, formatter: formatter)
+                    TextField("", text: $viewModel.cardNumber)
                         .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
+                        .font(.textH2M20282())
                         .foregroundColor(.white)
                         .accentColor(.white)
                         .keyboardType(.numberPad)
@@ -111,18 +106,17 @@ extension AuthLoginView {
                     HStack{
                         
                         Spacer()
-                        if viewModel.cardNumber.count == 16 || viewModel.cardNumber.count == 20{
-                            Button {
-                                
-                                viewModel.nextButton?.action()
-                                
-                            } label: {
-                                
-                                viewModel.nextButton?.icon
-                                    .foregroundColor(.white)
-                            }
-                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 20))
+                        
+                        Button {
+                            
+                            viewModel.nextButton?.action()
+                            
+                        } label: {
+                            
+                            viewModel.nextButton?.icon
+                                .foregroundColor(.white)
                         }
+                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 20))
                     }
                     
                 }
@@ -134,16 +128,16 @@ extension AuthLoginView {
                     .padding(EdgeInsets(top: 4, leading: 20, bottom: 0, trailing: 20))
                 
                 Text(viewModel.subTitle)
-                    .font(.system(size: 14, weight: .regular))
+                    .font(.textBodyMR14200())
                     .foregroundColor(.white)
                     .padding(EdgeInsets(top: 28, leading: 20, bottom: 28, trailing: 20))
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
             }
-            .background(Color(hex: "#FF3636"))
+            .background(Color.cardClassic)
             .cornerRadius(12)
             .clipped()
-            .shadow(color: Color(hex: "#3D3D45").opacity(0.3), radius: 12, x: -10, y: 8)
+            .shadow(color: Color.mainColorsBlackMedium.opacity(0.3), radius: 12, x: -10, y: 8)
             .frame(width: .infinity, height: 204, alignment: .top)
             .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 19))
         }
@@ -154,22 +148,27 @@ extension AuthLoginView {
         var viewModel: AuthLoginViewModel.ProductsButtonViewModel
         
         var body: some View {
+            
             Button(action: {
             }) {
                 
-                VStack(alignment: .center, spacing: 0) {
+                VStack(alignment: .center) {
                     
                     Spacer()
                     
                     HStack(alignment: .center) {
+                        
                         viewModel.icon
+                        
                         VStack(alignment: .leading ,spacing: 6) {
+                            
                             Text(viewModel.title)
                                 .foregroundColor(.white)
-                                .font(.system(size: 14, weight: .medium))
+                                .font(.textBodyMR14200())
+                            
                             Text(viewModel.subTitle)
                                 .foregroundColor(.white)
-                                .font(.system(size: 14, weight: .medium))
+                                .font(.textBodyMR14200())
                         }
                         
                         Spacer()
@@ -191,7 +190,7 @@ extension AuthLoginView {
                     Spacer()
                     
                 }
-                .background(Color(hex: "#3D3D45"))
+                .background(Color.mainColorsBlackMedium)
                 .cornerRadius(12)
                 .frame(width: .infinity, height: 72, alignment: .leading)
                 .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 19))
