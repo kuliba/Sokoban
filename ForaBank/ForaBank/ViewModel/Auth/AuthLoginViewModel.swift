@@ -68,23 +68,23 @@ extension AuthLoginViewModel {
 
         struct ScanButtonViewModel {
 
-            let icon = Image("scanCard")
+            let icon: Image = .ic24SkanCard
             let action: () -> Void
         }
 
         struct NextButtonViewModel {
 
-            let icon = Image(systemName: "arrow.right")
+            let icon: Image = .ic24ArrowRight
             let action: () -> Void
         }
     }
 
     struct ProductsButtonViewModel {
 
-        let icon = Image("cardIcon")
+        let icon: Image = .ic40Card
         let title = "Нет карты?"
         let subTitle = "Доставим в любую точку"
-        let arrowRight = Image(systemName: "arrow.right")
+        let arrowRight: Image = .ic24ArrowRight
         let action: () -> Void
     }
 }

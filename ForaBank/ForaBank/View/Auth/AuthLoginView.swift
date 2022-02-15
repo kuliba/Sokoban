@@ -8,17 +8,15 @@
 import SwiftUI
 import Combine
 
-//BackgroundLine
-
 struct AuthLoginView: View {
     
-    var viewModel: AuthLoginViewModel
+    @ObservedObject var viewModel: AuthLoginViewModel
     
     var body: some View {
         VStack(spacing: 24) {
             
             HeaderView(viewModel: viewModel.header)
-            CardView(viewModel: viewModel.card)
+            CardView(viewModel: $viewModel.card)
             Spacer()
             ProductsButtonView(viewModel: viewModel.productsButton)
             
@@ -27,7 +25,7 @@ struct AuthLoginView: View {
         .background(
             Image.imgRegistrationBg
                 .edgesIgnoringSafeArea(.all)
-                .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+                .aspectRatio(contentMode: .fill)
         )
     }
 }
@@ -64,7 +62,7 @@ extension AuthLoginView {
     
     struct CardView: View {
         
-        @State var viewModel: AuthLoginViewModel.CardViewModel
+        @Binding var viewModel: AuthLoginViewModel.CardViewModel
         
         var body: some View {
             VStack(spacing: 0) {
@@ -94,7 +92,7 @@ extension AuthLoginView {
                 Spacer()
                 
                 ZStack {
-                    
+
                     TextField("", text: $viewModel.cardNumber)
                         .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
                         .font(.textH2M20282())
@@ -106,17 +104,20 @@ extension AuthLoginView {
                     HStack{
                         
                         Spacer()
-                        
-                        Button {
+
+                        if let nextButton = viewModel.nextButton{
                             
-                            viewModel.nextButton?.action()
-                            
-                        } label: {
-                            
-                            viewModel.nextButton?.icon
-                                .foregroundColor(.white)
+                            Button {
+                                
+                                nextButton.action()
+                                
+                            } label: {
+                                
+                                nextButton.icon
+                                    .foregroundColor(.white)
+                            }
+                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 20))
                         }
-                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 20))
                     }
                     
                 }
@@ -150,22 +151,21 @@ extension AuthLoginView {
         var body: some View {
             
             Button(action: {
-            }) {
                 
-                VStack(alignment: .center) {
-                    
-                    Spacer()
+                viewModel.action()
+            }) {
                     
                     HStack(alignment: .center) {
                         
                         viewModel.icon
+                            .renderingMode(.original)
                         
                         VStack(alignment: .leading ,spacing: 6) {
                             
                             Text(viewModel.title)
                                 .foregroundColor(.white)
                                 .font(.textBodyMR14200())
-                            
+
                             Text(viewModel.subTitle)
                                 .foregroundColor(.white)
                                 .font(.textBodyMR14200())
@@ -186,15 +186,10 @@ extension AuthLoginView {
                     }
                     .padding(EdgeInsets(top: 16, leading: 20, bottom: 16, trailing: 20))
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    
-                    Spacer()
-                    
-                }
-                .background(Color.mainColorsBlackMedium)
-                .cornerRadius(12)
-                .frame(width: .infinity, height: 72, alignment: .leading)
-                .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 19))
             }
+            .background(Color.mainColorsBlackMedium)
+            .cornerRadius(12)
+            .padding(.horizontal)
         }
     }
 }
