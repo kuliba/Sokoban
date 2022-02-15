@@ -856,6 +856,10 @@
 		F8E529A227B39ED200222394 /* AuthConfirmViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E529A127B39ED200222394 /* AuthConfirmViewModel.swift */; };
 		F8E529A527B4137D00222394 /* AuthPermissionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E529A427B4137D00222394 /* AuthPermissionsViewModel.swift */; };
 		F8E529A827B5068E00222394 /* AuthPinCodeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E529A727B5068E00222394 /* AuthPinCodeViewModel.swift */; };
+		F8E529AB27B666ED00222394 /* AuthProductsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E529AA27B666EC00222394 /* AuthProductsViewModel.swift */; };
+		F8E529AD27B67F7B00222394 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F8E529AC27B67F7B00222394 /* Assets.xcassets */; };
+		F8E529B227B6803300222394 /* AuthProductsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E529B127B6803300222394 /* AuthProductsView.swift */; };
+		F8E529B427BBABF600222394 /* AuthProductsViewModel+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E529B327BBABF600222394 /* AuthProductsViewModel+Preview.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1728,6 +1732,10 @@
 		F8E529A127B39ED200222394 /* AuthConfirmViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthConfirmViewModel.swift; sourceTree = "<group>"; };
 		F8E529A427B4137D00222394 /* AuthPermissionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPermissionsViewModel.swift; sourceTree = "<group>"; };
 		F8E529A727B5068E00222394 /* AuthPinCodeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPinCodeViewModel.swift; sourceTree = "<group>"; };
+		F8E529AA27B666EC00222394 /* AuthProductsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthProductsViewModel.swift; sourceTree = "<group>"; };
+		F8E529AC27B67F7B00222394 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F8E529B127B6803300222394 /* AuthProductsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthProductsView.swift; sourceTree = "<group>"; };
+		F8E529B327BBABF600222394 /* AuthProductsViewModel+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthProductsViewModel+Preview.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2758,6 +2766,7 @@
 		68D53ECF27B3DFE400D0EBA8 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				F8E529AE27B6801500222394 /* Products */,
 				68D53ED027B3E00400D0EBA8 /* AuthLoginView.swift */,
 			);
 			path = Auth;
@@ -2904,10 +2913,12 @@
 		774E318727A0506D005A067B /* PreviewContent */ = {
 			isa = PBXGroup;
 			children = (
+				F8E529AC27B67F7B00222394 /* Assets.xcassets */,
 				774E318827A0509C005A067B /* ServerAgentEmptyMock.swift */,
 				774E318C27A05112005A067B /* LocalAgentEmptyMock.swift */,
 				774E318A27A050DB005A067B /* Model+Preview.swift */,
 				774E318E27A05197005A067B /* TemplatesListViewModel+Preview.swift */,
+				F8E529B327BBABF600222394 /* AuthProductsViewModel+Preview.swift */,
 			);
 			path = PreviewContent;
 			sourceTree = "<group>";
@@ -4939,6 +4950,7 @@
 		F8E5299827B1174800222394 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				F8E529A927B666E000222394 /* Products */,
 				F8E529A327B4136F00222394 /* Permissions */,
 				F8E529A027B39EC100222394 /* Confirm */,
 				F8E529A627B5066D00222394 /* PinCode */,
@@ -4969,6 +4981,22 @@
 				F8E529A727B5068E00222394 /* AuthPinCodeViewModel.swift */,
 			);
 			path = PinCode;
+			sourceTree = "<group>";
+		};
+		F8E529A927B666E000222394 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F8E529AA27B666EC00222394 /* AuthProductsViewModel.swift */,
+			);
+			path = Products;
+			sourceTree = "<group>";
+		};
+		F8E529AE27B6801500222394 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F8E529B127B6803300222394 /* AuthProductsView.swift */,
+			);
+			path = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -5173,6 +5201,7 @@
 				68D06F3A26CCDE0100F9BE4C /* NavigationBarUIView.xib in Resources */,
 				0BF3484E268A455C005138A8 /* AllCardView.xib in Resources */,
 				A5662698275FDD2400FFE31A /* checkBtn.xib in Resources */,
+				F8E529AD27B67F7B00222394 /* Assets.xcassets in Resources */,
 				EDA0DCBD2735E8030013F47E /* AppLocker.storyboard in Resources */,
 				ED84995826A8831E005205C6 /* EPContactCell.xib in Resources */,
 				EDB145112664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf in Resources */,
@@ -5483,6 +5512,7 @@
 				0B931B4726DE2DF700CA8017 /* GKHHistoryCarusel.swift in Sources */,
 				EDF6821A266F9EC800FD5C07 /* RouterUrlList.swift in Sources */,
 				0B8C1C44273ADF7E00BA5CAC /* QRCoordinator.swift in Sources */,
+				F8E529B427BBABF600222394 /* AuthProductsViewModel+Preview.swift in Sources */,
 				77E1803327AC04320006ACC9 /* NotificationData.swift in Sources */,
 				77DC12652770F08300C917B0 /* SVGImageData.swift in Sources */,
 				774E318F27A05197005A067B /* TemplatesListViewModel+Preview.swift in Sources */,
@@ -5610,6 +5640,7 @@
 				68D06F3826CCDDCA00F9BE4C /* NavigationBarUIView.swift in Sources */,
 				0B37F982267A1814007728FC /* FastPaymentBanksListDecodableModel.swift in Sources */,
 				0BF0BF4A275E818C006AE967 /* ClearRealm.swift in Sources */,
+				F8E529AB27B666ED00222394 /* AuthProductsViewModel.swift in Sources */,
 				ED75CDFD26E2AA5B0074F5D5 /* RequestMeToMeModel.swift in Sources */,
 				6820922E27A978D0003DCAFD /* ServerCommands+Dictionary.swift in Sources */,
 				EDA0DCD72739BAB00013F47E /* UIControl.swift in Sources */,
@@ -5797,6 +5828,7 @@
 				0BDE453826E53AEF00B64A0A /* AddAllUserCardtList.swift in Sources */,
 				77925575279AF54F00A85723 /* ECKeysProvider.swift in Sources */,
 				ED84995B26A8831E005205C6 /* EPConstants.swift in Sources */,
+				F8E529B227B6803300222394 /* AuthProductsView.swift in Sources */,
 				0B37F97E267A10E4007728FC /* PrepareCard2PhoneDecodableModel.swift in Sources */,
 				ED8AB45526C116DB006F0D03 /* MeToMeViewController.swift in Sources */,
 				0B8BE0952670D4A300E96CAA /* GetCodeDecodebleModel.swift in Sources */,
