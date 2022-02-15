@@ -16,12 +16,103 @@ class AuthPinCodeViewModel: ObservableObject {
     let pinCode: PinCodeViewModel
     @Published var numpad: NumPadViewModel
     @Published var footer: FooterViewModel
+    
+    private let model: Model
+    private var mode: CurrentValueSubject<Mode, Never>
+    private var bindings = Set<AnyCancellable>()
 
-    init(pinCode: PinCodeViewModel, numpad: NumPadViewModel, footer: FooterViewModel) {
+    init(pinCode: PinCodeViewModel, numpad: NumPadViewModel, footer: FooterViewModel, model: Model = .emptyMock, mode: Mode = .lock) {
         
         self.pinCode = pinCode
         self.numpad = numpad
         self.footer = footer
+        self.model = model
+        self.mode = .init(mode)
+    }
+    
+    init(_ model: Model, mode: Mode) {
+ 
+        switch mode {
+        case .lock:
+            self.pinCode = PinCodeViewModel(title: "Введите код", pincodeLength: model.pincodeLength)
+            //TODO: detect sensor
+            self.numpad = NumPadViewModel(leftButton: .init(type: .text("Выход"), action: .exit), rightButton: .init(type: .icon(.ic40FaceId), action: .sensor))
+            self.footer = FooterViewModel(continueButton: nil, cancelButton: nil)
+            self.mode = .init(.lock)
+            
+        case .create:
+            self.pinCode = PinCodeViewModel(title: "Придумайте код", pincodeLength: model.pincodeLength)
+            self.numpad = NumPadViewModel(leftButton: .init(type: .empty, action: .cancel), rightButton: .init(type: .icon(.ic40Delete), action: .delete))
+            self.footer = FooterViewModel(continueButton: nil, cancelButton: nil)
+            self.mode = .init(.create(.fist))
+        }
+        
+        self.model = model
+        
+        bind()
+    }
+    
+    func bind() {
+        
+        
+    }
+    
+    func bindNumpad() {
+        
+        numpad.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as NumPadViewModelAction.Button:
+                    switch payload {
+                    case .digit(let number):
+                        pinCode.pincode = pinCode.pincode + String(number)
+                    
+                    case .delete:
+                        guard pinCode.pincode.count > 0 else {
+                            return
+                        }
+                        pinCode.pincode = String(pinCode.pincode.dropLast())
+                        
+                    case .sensor:
+                        print("activate sensor")
+                        
+                    case .cancel:
+                        print("cancel action")
+                        
+                    case .exit:
+                        print("exit action")
+                    }
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+    }
+}
+
+//MARK: - Types
+
+extension AuthPinCodeViewModel {
+    
+    enum Mode {
+        
+        // lock screen mode
+        case lock
+        
+        // create pincode mode
+        case create(Stage)
+        
+        enum Stage {
+            
+            // entering first time pincode
+            case fist
+            
+            // entering second time pincode
+            case second(String)
+        }
     }
 }
 
@@ -32,7 +123,7 @@ extension AuthPinCodeViewModel {
     class PinCodeViewModel: ObservableObject {
 
         @Published var title: String = "Придумайте код"
-        var pincode: CurrentValueSubject<String, Never>
+        @Published var pincode: String
         @Published var dots: [DotViewModel]
         @Published var state: State
         
@@ -41,7 +132,7 @@ extension AuthPinCodeViewModel {
         init(title: String, pincodeLength: Int, pincode: String = "", state: State = .editing) {
             
             self.title = title
-            self.pincode = .init(pincode)
+            self.pincode = pincode
             self.dots = Self.dots(pincode: pincode, length: pincodeLength)
             self.state = state
             self.pincodeLength = pincodeLength
@@ -152,6 +243,7 @@ extension AuthPinCodeViewModel {
             
             case digit(Int)
             case delete
+            case sensor
             case cancel
             case exit
         }
@@ -173,7 +265,7 @@ extension AuthPinCodeViewModel {
             let action: () -> Void
         }
         
-        internal init(continueButton: ButtonViewModel, cancelButton: ButtonViewModel) {
+        internal init(continueButton: ButtonViewModel?, cancelButton: ButtonViewModel?) {
 
             self.continueButton = continueButton
             self.cancelButton = cancelButton

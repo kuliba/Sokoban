@@ -7,6 +7,11 @@
 
 import Foundation
 
+extension Model {
+    
+    var pincodeLength: Int { 4 }
+}
+
 //MARK: - Handlers
 
 extension Model {
