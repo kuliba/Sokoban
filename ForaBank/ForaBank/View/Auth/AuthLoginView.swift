@@ -92,8 +92,21 @@ extension AuthLoginView {
                 Spacer()
                 
                 ZStack {
-
-                    TextField("", text: $viewModel.cardNumber)
+                    
+                    TextField(
+                                "",
+                                text: $viewModel.display,
+                                onEditingChanged: { (isBegin) in
+                                    if isBegin {
+                                        viewModel.display = viewModel.maskFormatter(string: viewModel.display)
+                                    } else {
+                                        print("Finishes editing")
+                                    }
+                                },  
+                                onCommit: {
+                                    print("commit")
+                                }
+                            )
                         .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
                         .font(.textH2M20282())
                         .foregroundColor(.white)
