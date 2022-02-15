@@ -104,25 +104,22 @@ extension AuthPinCodeView {
                     
                     HStack(spacing: 20) {
                         
-                        ForEach(row, id: \.self){ button in
+                        ForEach(row) { button in
                             
-                            if let button = button {
+                            switch button.type {
+                            case .digit(let title):
+                                DigitButtonView(title: title, action: button.action)
                                 
-                                switch button.type {
-                                case .digit(let title):
-                                    DigitButtonView(id: button.id, title: title, action: button.action)
-                                    
-                                case .icon(let icon):
-                                    ImageButtonView(id: button.id, image: icon, action: button.action)
-                                    
-                                case .text(let text):
-                                    TextButtonView(id: button.id, title: text, action: button.action)
-                                }
+                            case .icon(let icon):
+                                ImageButtonView(icon: icon, action: button.action)
                                 
-                            } else {
+                            case .text(let text):
+                                TextButtonView(title: text, action: button.action)
                                 
-                                Color.white
-                                    .frame(width: 80, height: 80, alignment: .center)
+                            case .empty:
+                                Color.clear
+                                    .frame(width: 80, height: 80)
+                                
                             }
                         }
                     }
@@ -138,60 +135,56 @@ extension AuthPinCodeView.NumPadView {
     
     struct DigitButtonView: View {
         
-        let id: AuthPinCodeViewModel.ButtonViewModel.ID
         let title: String
-        let action: (AuthPinCodeViewModel.ButtonViewModel.ID) -> Void
+        let action: () -> Void
         
         var body: some View{
-            Button(action: { action(id) }) {
+            
+            Button(action: action) {
                 
-                Color.mainColorsGrayLightest
-                    .overlay(
-                        Text(title)
-                            .font(.textH1R24322())
-                    )
-                    .foregroundColor(Color.textSecondary)
+                ZStack {
+                    
+                    Circle()
+                        .foregroundColor(.mainColorsGrayLightest)
+                    
+                    Text(title)
+                        .font(.textH1R24322())
+                        .foregroundColor(Color.textSecondary)
+                }
             }
-            .cornerRadius(50)
-            .frame(width: 80, height: 80, alignment: .center)
+            .frame(width: 80, height: 80)
         }
     }
     
     struct ImageButtonView: View {
         
-        let id: AuthPinCodeViewModel.ButtonViewModel.ID
-        let image: Image
-        let action: (AuthPinCodeViewModel.ButtonViewModel.ID) -> Void
+        let icon: Image
+        let action: () -> Void
         
         var body: some View{
-            Button(action: { action(id) }) {
-                image
-                    .renderingMode(.original)
-                    .foregroundColor(Color.textSecondary)
+            
+            Button(action: action) {
+                
+                icon.foregroundColor(Color.textSecondary)
             }
-            .frame(width: 80, height: 80, alignment: .center)
+            .frame(width: 80, height: 80)
         }
     }
     
-    
     struct TextButtonView: View {
         
-        let id: AuthPinCodeViewModel.ButtonViewModel.ID
         let title: String
-        let action: (AuthPinCodeViewModel.ButtonViewModel.ID) -> Void
+        let action: () -> Void
         
         var body: some View{
-            Button(action: { action(id) }) {
+            
+            Button(action: action) {
                 
-                Color.mainColorsGrayLightest
-                    .overlay(
-                        Text(title)
-                            .font(.textBodyMSB14200())
-                    )
-                    .foregroundColor(Color.textSecondary)
+                Text(title)
+                    .font(.textBodyMSB14200())
+                    .foregroundColor(.textSecondary)
             }
-            .cornerRadius(50)
-            .frame(width: 80, height: 80, alignment: .center)
+            .frame(width: 80, height: 80)
         }
     }
 }

@@ -12,21 +12,7 @@ extension AuthPinCodeViewModel {
     static let sample: AuthPinCodeViewModel = {
         
         let pinCode = AuthPinCodeViewModel.PinCodeViewModel(title: "Придумайте код", pincodeLength: 4)
-        let numpad = AuthPinCodeViewModel.NumPadViewModel(buttons: [[.init(type: .digit("1"), action: {_ in }),
-                                                               .init(type: .digit("2"), action: {_ in }),
-                                                               .init(type: .digit("3"), action: {_ in })],
-                                            
-                                                              [.init(type: .digit("4"), action: {_ in }),
-                                                               .init(type: .digit("5"), action: {_ in }),
-                                                               .init(type: .digit("6"), action: {_ in })],
-
-                                                              [.init(type: .digit("7"), action: {_ in }),
-                                                               .init(type: .digit("8"), action: {_ in }),
-                                                               .init(type: .digit("9"), action: {_ in })],
-                                            
-                                                              [.init(type: .text("Выход"), action: {_ in }),
-                                                               .init(type: .digit("0"), action: {_ in }),
-                                                               .init(type: .icon(.ic40Delete), action: {_ in })]])
+        let numpad = AuthPinCodeViewModel.NumPadViewModel(leftButton: .init(type: .text("Выход"), action: .exit), rightButton: .init(type: .icon(.ic40Delete), action: .delete))
         
         let footer = AuthPinCodeViewModel.FooterViewModel(continueButton: .init(title: "Продолжить",
                                                                    action: {}),

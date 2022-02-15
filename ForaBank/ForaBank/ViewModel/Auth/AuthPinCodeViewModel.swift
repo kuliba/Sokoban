@@ -25,6 +25,8 @@ class AuthPinCodeViewModel: ObservableObject {
     }
 }
 
+//MARK: - PinCodeViewModel
+
 extension AuthPinCodeViewModel {
     
     class PinCodeViewModel: ObservableObject {
@@ -63,40 +65,103 @@ extension AuthPinCodeViewModel {
             case filled
         }
     }
+}
+
+//MARK: - NumPadViewModel
+
+extension AuthPinCodeViewModel {
     
     class NumPadViewModel: ObservableObject {
         
-        @Published var buttons: [[ButtonViewModel?]]
+        let action: PassthroughSubject<Action, Never> = .init()
         
-        init(buttons: [[ButtonViewModel?]]) {
+        @Published var buttons: [[ButtonViewModel]]
+        
+        init(buttons: [[ButtonViewModel]]) {
             
             self.buttons = buttons
         }
-    }
-
-    struct ButtonViewModel: Identifiable, Hashable {
-
-        static func == (lhs: ButtonViewModel, rhs: ButtonViewModel) -> Bool {
-            return lhs.id == rhs.id
-        }
-
-        func hash(into hasher: inout Hasher) {
+        
+        init(leftButton: ButtonData, rightButton: ButtonData) {
             
-            hasher.combine(id)
+            self.buttons = [[]]
+            self.buttons =  [[.init(type: .digit("1"),
+                                    action: { [weak self] in self?.action.send(NumPadViewModelAction.Button.digit(1)) }),
+                              .init(type: .digit("2"),
+                                    action: { [weak self] in self?.action.send(NumPadViewModelAction.Button.digit(2)) }),
+                              .init(type: .digit("3"),
+                                    action: { [weak self] in self?.action.send(NumPadViewModelAction.Button.digit(3)) })],
+           
+                             [.init(type: .digit("4"),
+                                    action: { [weak self] in self?.action.send(NumPadViewModelAction.Button.digit(4)) }),
+                              .init(type: .digit("5"),
+                                    action: { [weak self] in self?.action.send(NumPadViewModelAction.Button.digit(5)) }),
+                              .init(type: .digit("6"),
+                                    action: { [weak self] in self?.action.send(NumPadViewModelAction.Button.digit(6)) })],
+
+                             [.init(type: .digit("7"),
+                                    action: { [weak self] in self?.action.send(NumPadViewModelAction.Button.digit(7)) }),
+                              .init(type: .digit("8"),
+                                    action: { [weak self] in self?.action.send(NumPadViewModelAction.Button.digit(8)) }),
+                              .init(type: .digit("9"),
+                                    action: { [weak self] in self?.action.send(NumPadViewModelAction.Button.digit(9)) })],
+           
+                             [.init(type: leftButton.type,
+                                    action: { [weak self] in self?.action.send(leftButton.action) }),
+                              .init(type: .digit("0"),
+                                    action: { [weak self] in self?.action.send(NumPadViewModelAction.Button.digit(9)) }),
+                              .init(type: rightButton.type,
+                                    action: { [weak self] in self?.action.send(rightButton.action) })]]
         }
         
-        let id = UUID()
-        let type: Kind
-        let action: (ButtonViewModel.ID) -> Void
-        
-        enum Kind {
+        struct ButtonData {
             
-            case digit(String)
-            case icon(Image)
-            case text(String)
+            let type: ButtonViewModel.Kind
+            let action: NumPadViewModelAction.Button
+        }
+        
+        struct ButtonViewModel: Identifiable, Hashable {
+
+            let id = UUID()
+            let type: Kind
+            let action: () -> Void
+            
+            enum Kind {
+                
+                case digit(String)
+                case icon(Image)
+                case text(String)
+                case empty
+            }
+            
+            func hash(into hasher: inout Hasher) {
+                
+                hasher.combine(id)
+            }
+            
+            static func == (lhs: ButtonViewModel, rhs: ButtonViewModel) -> Bool {
+                
+                return lhs.id == rhs.id
+            }
         }
     }
+    
+    enum NumPadViewModelAction: Action {
+        
+        enum Button: Action {
+            
+            case digit(Int)
+            case delete
+            case cancel
+            case exit
+        }
+    }
+}
 
+//MARK: - FooterViewModel
+
+extension AuthPinCodeViewModel {
+    
     class FooterViewModel: ObservableObject {
         
         @Published var continueButton: ButtonViewModel?
@@ -116,9 +181,12 @@ extension AuthPinCodeViewModel {
     }
 }
 
+//MARK: - Actions
+
 enum AuthPinCodeViewModelAction {
 
     struct Cancel: Action {}
+    
     struct Continue: Action {
 
         let code: String
