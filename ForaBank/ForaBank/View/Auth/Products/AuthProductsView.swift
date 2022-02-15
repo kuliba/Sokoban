@@ -1,0 +1,148 @@
+//
+//  AuthProductsView.swift
+//  ForaBank
+//
+//  Created by Андрей Лятовец on 11.02.2022.
+//
+
+import SwiftUI
+import Combine
+
+struct AuthProductsView: View {
+    
+    @ObservedObject var viewModel: AuthProductsViewModel
+    
+    var body: some View {
+        
+        ScrollView {
+            VStack(spacing: 0) {
+                ForEach(viewModel.productCards) {
+                    productCard in ProductView(viewModel: productCard)
+                }
+                Spacer()
+            }
+        }
+        .navigationBarTitle(Text(viewModel.navigationBar.title)
+                                .font(.textH3M18240()),
+                            displayMode: .inline)
+        .navigationBarBackButtonHidden(false)
+        .navigationBarItems(leading: btnBack)
+        .foregroundColor(.black)
+    }
+}
+
+extension AuthProductsView {
+    
+    var btnBack : some View {
+        Button(action: viewModel.navigationBar.backButton.action) {
+            HStack {
+                viewModel.navigationBar.backButton.icon
+                    .foregroundColor(.black)
+            }
+        }
+    }
+    
+    struct ProductView: View {
+        
+        let viewModel: AuthProductsViewModel.ProductCard
+
+        var body: some View {
+            
+            ZStack {
+
+                viewModel.style.backgroundColor
+
+                VStack(alignment: .leading, spacing: 0) {
+                    
+                    Text(viewModel.title)
+                        .font(.textH0B32402())
+                        .foregroundColor(viewModel.style.textColor)
+                        .padding(.top, 32)
+                    
+                    Text(viewModel.subtitle)
+                        .font(.textBodyMR14200())
+                        .foregroundColor(viewModel.style.textColor)
+                        .padding(.top, 24)
+                    
+                    viewModel.image
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .cornerRadius(12)
+                        .padding(.top, 20)
+                    
+                    HStack(alignment: .center, spacing: 20) {
+                        
+                        AuthProductsView.InfoButtonView(viewModel: viewModel.infoButton, color: viewModel.style.textColor)
+                        
+                        Spacer()
+                        
+                        AuthProductsView.OrderButtonView(viewModel: viewModel.orderButton)
+                    }
+                    .frame(height: 48)
+                    .padding(.top, 24)
+                    .padding(.bottom, 32)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 20)
+            }
+        }
+    }
+    
+    struct InfoButtonView: View {
+
+        let viewModel: AuthProductsViewModel.ProductCard.InfoButton
+
+        let color: Color
+
+        var body: some View {
+
+            Button {
+
+                viewModel.action()
+            } label: {
+
+                HStack {
+                    
+                    viewModel.icon
+                        .foregroundColor(color)
+                    
+                    Text(viewModel.title)
+                        .foregroundColor(color)
+                        .multilineTextAlignment(.leading)
+                }
+            }
+        }
+    }
+
+    struct OrderButtonView: View {
+
+        let viewModel: AuthProductsViewModel.ProductCard.OrderButton
+        
+        var body: some View {
+
+            Button {
+
+                viewModel.action()
+            } label: {
+
+                Text(viewModel.title)
+                    .foregroundColor(.textWhite)
+                    .padding(.vertical, 12)
+                    .frame(width: 166)
+                    .background(Color.buttonPrimary)
+                    .cornerRadius(8)
+            }
+        }
+    }
+}
+
+struct AuthProductsView_Previews: PreviewProvider {
+
+    static var previews: some View {
+
+        NavigationView {
+            AuthProductsView(viewModel: AuthProductsViewModel.mockData)
+        }
+
+    }
+}
