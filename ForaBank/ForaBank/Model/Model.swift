@@ -95,16 +95,39 @@ class Model {
                 
                 switch action {
                 
-                //MARK: - Login Actions
-                    
+                //MARK: - Auth Actions
+                
+                //FIXME: - remove after refactoring login screens
                 case _ as ModelAction.LoggedIn:
                     loadCachedData()
                     self.action.send(ModelAction.PaymentTemplate.List.Requested())
-                    
+                
+                //FIXME: - remove after refactoring login screens
                 case _ as ModelAction.LoggedOut:
                     clearCachedData()
                     paymentTemplates.value = []
                     
+                case let payload as ModelAction.Auth.Register.Request:
+                    handleAuthRegisterRequest(payload: payload)
+                
+                case let payload as ModelAction.Auth.VerificationCode.Confirm.Request:
+                    handleAuthVerificationCodeConfirmRequest(payload: payload)
+                    
+                case _ as ModelAction.Auth.VerificationCode.Resend.Request:
+                    handleAuthVerificationCodeResendRequest()
+                    
+                case let payload as ModelAction.Auth.Pincode.Set.Request:
+                    handleAuthPincodeSetRequest(payload: payload)
+                    
+                case let payload as ModelAction.Auth.Pincode.Check.Request:
+                    handleAuthPincodeCheckRequest(payload: payload)
+                    
+                case let payload as ModelAction.Auth.Sensor:
+                    handleAuthSensorRequest(payload: payload)
+                    
+                case _ as ModelAction.Auth.Login.Request:
+                    handleAuthLoginRequest()
+
                 //MARK: - Templates Actions
                     
                 case let payload as ModelAction.PaymentTemplate.Save.Requested:
