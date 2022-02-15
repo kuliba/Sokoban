@@ -13,33 +13,15 @@ class AuthPinCodeViewModel: ObservableObject {
 
     let action: PassthroughSubject<Action, Never> = .init()
     
-    var pinCode: PinCodeViewModel
+    let pinCode: PinCodeViewModel
     @Published var numpad: NumPadViewModel
-    @Published var bottomButton: FooterViewModel
+    @Published var footer: FooterViewModel
 
-    init() {
-
-        pinCode = PinCodeViewModel()
-        bottomButton = FooterViewModel(continueButton: .init(title: "Продолжить",
-                                                                   action: {}),
-                                             cancelButton: .init(title: "Отменить",
-                                                                 action: {}))
-
-        numpad = NumPadViewModel(buttons: [[.init(type: .digit("1"), action: {_ in }),
-                                                               .init(type: .digit("2"), action: {_ in }),
-                                                               .init(type: .digit("3"), action: {_ in })],
-                                            
-                                                              [.init(type: .digit("4"), action: {_ in }),
-                                                               .init(type: .digit("5"), action: {_ in }),
-                                                               .init(type: .digit("6"), action: {_ in })],
-
-                                                              [.init(type: .digit("7"), action: {_ in }),
-                                                               .init(type: .digit("8"), action: {_ in }),
-                                                               .init(type: .digit("9"), action: {_ in })],
-                                            
-                                                              [.init(type: .text("Выход"), action: {_ in }),
-                                                               .init(type: .digit("0"), action: {_ in }),
-                                                               .init(type: .icon(.ic40Delete), action: {_ in })]])
+    init(pinCode: PinCodeViewModel, numpad: NumPadViewModel, footer: FooterViewModel) {
+        
+        self.pinCode = pinCode
+        self.numpad = numpad
+        self.footer = footer
     }
 }
 
