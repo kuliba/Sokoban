@@ -439,6 +439,9 @@
 		68FFA5682695921E002DADFA /* QRScanner in Frameworks */ = {isa = PBXBuildFile; productRef = 68FFA5672695921E002DADFA /* QRScanner */; };
 		7538D9ADE22F0BF6C08AC91F /* Color+Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BDBA5E8E5B98668466191C /* Color+Assets.swift */; };
 		7701B27127A42BC300FBF5E3 /* GetPeymentTemlpateListResponseSFP.json in Resources */ = {isa = PBXBuildFile; fileRef = 7701B27027A42BC300FBF5E3 /* GetPeymentTemlpateListResponseSFP.json */; };
+		7705408B27BD1B1100094006 /* BiometricSensorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7705408A27BD1B1100094006 /* BiometricSensorType.swift */; };
+		7705408D27BD1B4C00094006 /* BiometricServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7705408C27BD1B4C00094006 /* BiometricServiceProtocol.swift */; };
+		7705408F27BD1C6900094006 /* BiometricService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7705408E27BD1C6900094006 /* BiometricService.swift */; };
 		77067CD9275FBB70000C442B /* StringExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77067CD8275FBB70000C442B /* StringExtensionsTests.swift */; };
 		77067CDB275FBE8F000C442B /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77067CDA275FBE8F000C442B /* String+Extensions.swift */; };
 		77067CDD275FCBA5000C442B /* DownloadQueueSerialsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77067CDC275FCBA5000C442B /* DownloadQueueSerialsStorage.swift */; };
@@ -1325,6 +1328,9 @@
 		68FFA564269464FF002DADFA /* TransferByRequisitesConfirmViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferByRequisitesConfirmViewController.swift; sourceTree = "<group>"; };
 		6F88A9A4DBEADB3F8E16A822 /* Image+Illustrations.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; fileEncoding = 4; path = "Image+Illustrations.swift"; sourceTree = "<group>"; };
 		7701B27027A42BC300FBF5E3 /* GetPeymentTemlpateListResponseSFP.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetPeymentTemlpateListResponseSFP.json; sourceTree = "<group>"; };
+		7705408A27BD1B1100094006 /* BiometricSensorType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricSensorType.swift; sourceTree = "<group>"; };
+		7705408C27BD1B4C00094006 /* BiometricServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricServiceProtocol.swift; sourceTree = "<group>"; };
+		7705408E27BD1C6900094006 /* BiometricService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricService.swift; sourceTree = "<group>"; };
 		77067CD8275FBB70000C442B /* StringExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensionsTests.swift; sourceTree = "<group>"; };
 		77067CDA275FBE8F000C442B /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		77067CDC275FCBA5000C442B /* DownloadQueueSerialsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadQueueSerialsStorage.swift; sourceTree = "<group>"; };
@@ -3088,6 +3094,7 @@
 				7758754C27996DCB0080115D /* LocalAgent.swift */,
 				77FF670C27BABFD3009FEA09 /* ValetKeychainAgent.swift */,
 				774A82C827BAE74800E5A5E9 /* UserDefaultsSettingsAgent.swift */,
+				7705408E27BD1C6900094006 /* BiometricService.swift */,
 				77DC12682770F63400C917B0 /* Abstract */,
 				77DC126B2770F83400C917B0 /* Server */,
 				77925573279AF3AA00A85723 /* Encryption */,
@@ -3104,6 +3111,7 @@
 				7763A68F279DAFD10064B037 /* EncryptionProtocols.swift */,
 				77FF670A27BABCD9009FEA09 /* KeychainAgentProtocol.swift */,
 				774A82C227BAD58300E5A5E9 /* SettingsAgentProtocol.swift */,
+				7705408C27BD1B4C00094006 /* BiometricServiceProtocol.swift */,
 			);
 			path = Abstract;
 			sourceTree = "<group>";
@@ -3151,6 +3159,7 @@
 				6820929127ABD46F003DCAFD /* ParameterData.swift */,
 				774A82C627BAE4BF00E5A5E9 /* SettingType.swift */,
 				774A82CC27BAF5B600E5A5E9 /* KeychainValueType.swift */,
+				7705408A27BD1B1100094006 /* BiometricSensorType.swift */,
 			);
 			path = General;
 			sourceTree = "<group>";
@@ -5543,6 +5552,7 @@
 				0BDE453326E3EA4A00B64A0A /* ExtensionQRReadPDF.swift in Sources */,
 				EDB14533266667140028EF5A /* OrderProductsCollectionViewCell.swift in Sources */,
 				68368BAE272FDAA200A435B1 /* OperationDetailViewController.swift in Sources */,
+				7705408F27BD1C6900094006 /* BiometricService.swift in Sources */,
 				0BA14E1C2715628A0098E422 /* GetAllLatestPaymentsDecodableModel.swift in Sources */,
 				0B8BE091266FDA1B00E96CAA /* CheckClientDecodebleModel.swift in Sources */,
 				EDB16595266A4438007E6030 /* DevelopViewController.swift in Sources */,
@@ -5668,6 +5678,7 @@
 				A5C7A1BD275C0B15003BEF6D /* InternetTVLatestOperationsViewModel.swift in Sources */,
 				EDB1658C266A18C3007E6030 /* PaymentsViewControllerDelegate.swift in Sources */,
 				6820928327AB0E6F003DCAFD /* CurrencyData.swift in Sources */,
+				7705408D27BD1B4C00094006 /* BiometricServiceProtocol.swift in Sources */,
 				0B7A18B6268373890007CC75 /* NetworkPDFManagerExtension.swift in Sources */,
 				EDF68215266F9EC800FD5C07 /* URLConstruct.swift in Sources */,
 				68FFA5402682C6CF002DADFA /* LastPaymentsCollectionViewCell.swift in Sources */,
@@ -5693,6 +5704,7 @@
 				EDFFCAFB2683C135004EE095 /* PaymentType.swift in Sources */,
 				0B283FCE2704D0D600B5E925 /* GetAccountStatementDecodableModel.swift in Sources */,
 				77DC126A2770F65000C917B0 /* ServerAgentProtocol.swift in Sources */,
+				7705408B27BD1B1100094006 /* BiometricSensorType.swift in Sources */,
 				EDB1658A266A181C007E6030 /* PaymentsViewControllerDataSource.swift in Sources */,
 				EDDFE3B12756D52500F57C71 /* MainDepositCollectionViewCell.swift in Sources */,
 				5A5ABFAF27ABC84800D548AA /* ServerCommands+Deposit.swift in Sources */,

@@ -10,6 +10,7 @@ import Foundation
 extension Model {
     
     var pincodeLength: Int { 4 }
+    var availableSensor: BiometricSensorType? { .face }
 }
 
 //MARK: - Handlers
@@ -60,10 +61,15 @@ extension Model {
         }
     }
     
-    func handleAuthSensorRequest(payload: ModelAction.Auth.Sensor) {
+    func handleAuthSensorSettings(payload: ModelAction.Auth.Sensor.Settings) {
         
         //TODO: real implementation required
         // nothing implement for mock
+    }
+    
+    func handleAuthSensorEvaluateRequest(payload: ModelAction.Auth.Sensor.Evaluate.Request) {
+        
+        action.send(ModelAction.Auth.Sensor.Evaluate.Response(result: .success(true)))
     }
     
     func handleAuthLoginRequest() {
@@ -164,10 +170,26 @@ extension ModelAction {
             }
         }
         
-        enum Sensor: Action {
+        enum Sensor {
             
-            case allow
-            case desideLater
+            enum Settings: Action {
+                
+                case allow
+                case desideLater
+            }
+            
+            enum Evaluate {
+            
+                struct Request: Action {
+                    
+                    let sensor: BiometricSensorType
+                }
+                
+                struct Response: Action {
+                    
+                    let result: Result<Bool, Error>
+                }
+            }
         }
         
         enum Login {
