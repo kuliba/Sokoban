@@ -48,10 +48,100 @@ extension AuthConfirmViewModel {
     }
     
     class CodeViewModel: ObservableObject {
+
+        var title: String
+        var codeLenght: Int
+        @Published var code: [String?]
+        @Published var textFieldCode: String
+        @Published var showKeyboard: Bool
+        @Published var state: State
+        private var bindings = Set<AnyCancellable>()
+
+        enum State {
+            
+            case edit
+            case check
+        }
+
+        internal init(title: String, codeLenght: Int, code: [String?], textFieldCode: String, showKeyboard: Bool, state: State) {
+            self.title = title
+            self.codeLenght = codeLenght
+            self.code = code
+            self.textFieldCode = textFieldCode
+            self.showKeyboard = showKeyboard
+            self.state = state
+            bind()
+        }
         
-        let title = "Введите код из сообщения"
-        @Published var code: [String?] = [nil, nil, nil, nil, nil, nil]
+        init(title: String, lenght: Int, state: State) {
+
+            self.title = title
+            showKeyboard = true
+            codeLenght = lenght
+            textFieldCode = ""
+            self.state = state
+            code = []
+            code = setupCode(codeLenght: codeLenght)
+            bind()
+        }
+
+        func bind() {
+
+            $textFieldCode
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] textFieldCode in
+
+                    guard state == .edit else { return }
+                    
+                    let codeDigits = extractDigits(value: textFieldCode)
+
+                    code = convertDigitsToCode(code: code, value: codeDigits)
+
+                    if codeDigits.count == codeLenght {
+                        state = .check
+                    }
+                }.store(in: &bindings)
+
+            $state
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] state in
+                    
+                    switch state {
+                    case .edit:
+                        code = setupCode(codeLenght: codeLenght)
+                        textFieldCode = ""
+                        showKeyboard = true
+                    case .check:
+                        ///TextFieldCode - проверка
+                        showKeyboard = false
+                        break
+                    }
+                }.store(in: &bindings)
+        }
         
+        func setupCode(codeLenght: Int) -> [String?] {
+
+            var code = [String?]()
+            for _ in 0..<codeLenght {
+                code.append(nil)
+            }
+            return code
+        }
+
+        func extractDigits(value: String) -> [String] {
+
+            value.digits.map({String($0)})
+        }
+
+        func convertDigitsToCode(code: [String?], value: [String]) -> [String?] {
+
+            var convertedCode = code
+            
+            for index in 0..<value.count {
+                convertedCode[index] = value[index]
+            }
+            return convertedCode
+        }
     }
     
     class InfoViewModel: ObservableObject {
@@ -109,7 +199,7 @@ extension AuthConfirmViewModel {
     
     static let sampleConfirm: AuthConfirmViewModel = {
         
-        let codeViewModel = CodeViewModel()
+        let codeViewModel = CodeViewModel(title: "Введите код из сообщения", lenght: 6, state: .edit)
         
         let infoViewModel = InfoViewModel(phoneNumber: "+7 ... ... 54 13", subtitle: nil, state: .timer(.init(value: "00:59")))
         
