@@ -12,7 +12,7 @@ import Combine
 class AuthLoginViewModel: ObservableObject {
 
     let action: PassthroughSubject<Action, Never> = .init()
-
+    
     let header: HeaderViewModel
 
     lazy var card: CardViewModel = {
@@ -26,8 +26,9 @@ class AuthLoginViewModel: ObservableObject {
                       nextButton:  .init(action:
 
             {
+            
             self.action.send(AuthLoginViewModelAction.Auth(cardNumber: self.card.cardNumber))
-            }))
+        }), state: .editing)
     }()
 
     lazy var productsButton: ProductsButtonViewModel = {
@@ -51,19 +52,23 @@ extension AuthLoginViewModel {
         let subTitle = "чтобы получить доступ к счетам и картам"
         let icon: Image = .ic16ArrowDown
     }
-
+    
     class CardViewModel: ObservableObject {
 
         let icon: Image = .ic32LogoForaLine
         let scanButton: ScanButtonViewModel
+        
+        @Published var state: State
         @Published var cardNumber: String = ""
         @Published var nextButton: NextButtonViewModel?
+        
         let subTitle = "Введите номер вашей карты или счета"
 
-        internal init(scanButton: ScanButtonViewModel, nextButton: NextButtonViewModel) {
+        internal init(scanButton: ScanButtonViewModel, nextButton: NextButtonViewModel, state: State) {
 
             self.scanButton = scanButton
             self.nextButton = nextButton
+            self.state = .editing
         }
 
         struct ScanButtonViewModel {
@@ -76,6 +81,12 @@ extension AuthLoginViewModel {
 
             let icon: Image = .ic24ArrowRight
             let action: () -> Void
+        }
+        
+        enum State {
+            
+            case editing
+            case ready(String)
         }
     }
 
@@ -103,3 +114,4 @@ enum AuthLoginViewModelAction {
         struct Products: Action { }
     }
 }
+
