@@ -63,7 +63,10 @@ extension AuthLoginView {
     struct CardView: View {
         
         @Binding var viewModel: AuthLoginViewModel.CardViewModel
-        
+        @State private var message = ""
+        @State private var isValidate: Bool = false
+
+
         var body: some View {
             VStack(spacing: 0) {
                 
@@ -93,26 +96,11 @@ extension AuthLoginView {
                 
                 ZStack {
                     
-                    TextField(
-                                "",
-                                text: $viewModel.display,
-                                onEditingChanged: { (isBegin) in
-                                    if isBegin {
-                                        viewModel.display = viewModel.maskFormatter(string: viewModel.display)
-                                    } else {
-                                        print("Finishes editing")
-                                    }
-                                },  
-                                onCommit: {
-                                    print("commit")
-                                }
-                            )
+                    TextView(text: $message, isValidate: isValidate)
                         .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
                         .font(.textH2M20282())
-                        .foregroundColor(.white)
-                        .accentColor(.white)
-                        .keyboardType(.numberPad)
                         .textContentType(.creditCardNumber)
+                        
                     
                     HStack{
                         
@@ -214,3 +202,4 @@ struct AuthLoginView_Previews: PreviewProvider {
         AuthLoginView(viewModel: AuthLoginViewModel())
     }
 }
+

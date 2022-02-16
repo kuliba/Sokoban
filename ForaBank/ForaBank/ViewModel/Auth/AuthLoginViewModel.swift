@@ -28,7 +28,7 @@ class AuthLoginViewModel: ObservableObject {
             {
             
             self.action.send(AuthLoginViewModelAction.Auth(cardNumber: self.card.cardNumber))
-        }), state: .editing, entered: "")
+        }), state: .editing)
     }()
 
     lazy var productsButton: ProductsButtonViewModel = {
@@ -57,18 +57,15 @@ extension AuthLoginViewModel {
 
         let icon: Image = .ic32LogoForaLine
         let scanButton: ScanButtonViewModel
-    
-        @Published var entered: String?
-        @Published var display: String = ""
+        
         @Published var state: State
         @Published var cardNumber: String = ""
         @Published var nextButton: NextButtonViewModel?
         
         let subTitle = "Введите номер вашей карты или счета"
 
-        internal init(scanButton: ScanButtonViewModel, nextButton: NextButtonViewModel, state: State, entered: String?) {
+        internal init(scanButton: ScanButtonViewModel, nextButton: NextButtonViewModel, state: State) {
 
-            self.entered = entered
             self.scanButton = scanButton
             self.nextButton = nextButton
             self.state = .editing
@@ -90,29 +87,6 @@ extension AuthLoginViewModel {
             
             case editing
             case ready(String)
-        }
-        
-        func maskFormatter(string: String) -> String {
-            
-            let maskFormatter = string.digits.count <= 16 ? "0000 0000 0000 0000"  : "00000 000 0 0000 0000000"
-            return maskFormatter
-        }
-        
-        func filterNumber(string: String) -> String{
-            
-            let filterString = string.filter({$0.isNumber})
-            return filterString
-        }
-        
-        func validate(string: String) -> Bool{
-            
-            if string.count == 16 && string.count == 20{
-                
-                return true
-            } else {
-                
-                return false
-            }
         }
     }
 
@@ -140,3 +114,4 @@ enum AuthLoginViewModelAction {
         struct Products: Action { }
     }
 }
+
