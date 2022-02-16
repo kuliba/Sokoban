@@ -122,8 +122,11 @@ class Model {
                 case let payload as ModelAction.Auth.Pincode.Check.Request:
                     handleAuthPincodeCheckRequest(payload: payload)
                     
-                case let payload as ModelAction.Auth.Sensor:
-                    handleAuthSensorRequest(payload: payload)
+                case let payload as ModelAction.Auth.Sensor.Settings:
+                    handleAuthSensorSettings(payload: payload)
+                    
+                case let payload as ModelAction.Auth.Sensor.Evaluate.Request:
+                    handleAuthSensorEvaluateRequest(payload: payload)
                     
                 case _ as ModelAction.Auth.Login.Request:
                     handleAuthLoginRequest()
