@@ -11,16 +11,18 @@ extension Model {
     
     var pincodeLength: Int { 4 }
     var availableSensor: BiometricSensorType? { .face }
+    //TODO: real products data type
+    var promoProducts: [String] { [] }
 }
 
 //MARK: - Handlers
 
-extension Model {
-    
+internal extension Model {
+        
     func handleAuthRegisterRequest(payload: ModelAction.Auth.Register.Request) {
         
         //TODO: real implementation required
-        action.send(ModelAction.Auth.Register.Response(result: .success(.init(codeLength: 5, phone: "+79255557799", repeatTimeout: 30))))
+        action.send(ModelAction.Auth.Register.Response(result: .success(.init(codeLength: 6, phone: "+79255557799", repeatTimeout: 30))))
     }
     
     func handleAuthVerificationCodeConfirmRequest(payload: ModelAction.Auth.VerificationCode.Confirm.Request) {
@@ -85,6 +87,8 @@ extension ModelAction {
     
     enum Auth {
         
+        struct ProductsReady: Action {}
+ 
         enum Register {
             
             struct Request: Action {

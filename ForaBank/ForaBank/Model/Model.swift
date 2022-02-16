@@ -11,9 +11,14 @@ import os
 
 class Model {
     
-    // interface
+    //MARK: Templates
     let action: PassthroughSubject<Action, Never>
     let auth: CurrentValueSubject<AuthorizationState, Never>
+    
+    //MARK: Dictionaries
+
+    
+    //MARK: Templates
     let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
     //TODO: store in cache 
     let paymentTemplatesViewSettings: CurrentValueSubject<TemplatesListViewModel.Settings, Never>

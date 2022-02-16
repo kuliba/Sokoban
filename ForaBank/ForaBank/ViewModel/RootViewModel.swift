@@ -21,6 +21,6 @@ class RootViewModel: ObservableObject {
     
     func showLogin() {
         
-        login = AuthLoginViewModel()
+        login = AuthLoginViewModel(model)
     }
 }

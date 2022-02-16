@@ -13,20 +13,21 @@ class AuthProductsViewModel: ObservableObject {
 
     let action: PassthroughSubject<Action, Never> = .init()
 
-    lazy var navigationBar: NavigationBarViewModel = {
-        NavigationBarViewModel(title: "Выберите продукт",
-                               action: { [weak self] in
-            self?.action.send(AuthProductsViewModelAction.Dismiss())
-        })
-    }()
-
+    let navigationBar: NavigationBarViewModel
     @Published var productCards: [ProductCard]
 
-    init(productCards: [ProductCard]) {
+    init(productCards: [ProductCard], dismissAction: @escaping () -> Void = {}) {
 
+        self.navigationBar = NavigationBarViewModel(title: "Выберите продукт", action: dismissAction)
         self.productCards = productCards
     }
+    
+    //TODO: init with real products data
+    init(products: [String], dismissAction: @escaping () -> Void = {}) {
 
+        self.navigationBar = NavigationBarViewModel(title: "Выберите продукт", action: dismissAction)
+        self.productCards = []
+    }
 }
 
 extension AuthProductsViewModel {
