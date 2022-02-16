@@ -64,7 +64,7 @@ struct CreateMobileTransferDataClass: Codable {
     let debitAmount: Double?
     let payeeName: JSONNull?
     let paymentOperationDetailID: Int?
-    let documentStatus: JSONNull?
+    let documentStatus: String?
     let additionalList: [CreateMobileTransferAdditionalList]?
 
     enum CodingKeys: String, CodingKey {
@@ -105,7 +105,7 @@ extension CreateMobileTransferDataClass {
         debitAmount: Double?? = nil,
         payeeName: JSONNull?? = nil,
         paymentOperationDetailID: Int?? = nil,
-        documentStatus: JSONNull?? = nil,
+        documentStatus: String?? = nil,
         additionalList: [CreateMobileTransferAdditionalList]?? = nil
     ) -> CreateMobileTransferDataClass {
         return CreateMobileTransferDataClass(

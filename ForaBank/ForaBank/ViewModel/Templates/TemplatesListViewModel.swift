@@ -165,11 +165,10 @@ private extension TemplatesListViewModel {
                         print("Action Present Transport")
                         
                     case .externalEntity:
-                        print("Action Present ExternalEntity")
+                        self.action.send(TemplatesListViewModelAction.Present.PaymentRequisites(viewModel: temp))
                         
                     case .externalIndividual:
-                        print("Action Present ExternalIndividual")
-                    
+                        self.action.send(TemplatesListViewModelAction.Present.PaymentRequisites(viewModel: temp))
                     }
                    
                                         

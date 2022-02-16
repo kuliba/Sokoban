@@ -167,7 +167,7 @@ class MemeDetailVC : AddHeaderImageViewController {
                 viewModel.customCardTo = CastomCardViewModel(cardNumber: card.numberMask ?? "", cardName: card.customName, cardId: card.id)
             }
             
-            cardToField.choseButton.isHidden = true
+//            cardToField.choseButton.isHidden = true
             
         default:
             break
@@ -314,7 +314,7 @@ class MemeDetailVC : AddHeaderImageViewController {
         cardToField.numberCardLabel.text = "Номер карты получателя"
         cardToField.didChooseButtonTapped = { [weak self]  () in
             
-            guard self?.paymentTemplate == nil else { return }
+//            guard self?.paymentTemplate == nil else { return }
             
             DispatchQueue.main.async {
                 UIView.animate(withDuration: 0.2) {
