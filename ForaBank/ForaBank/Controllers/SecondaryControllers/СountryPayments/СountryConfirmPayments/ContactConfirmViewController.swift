@@ -784,6 +784,14 @@ class ContactConfurmViewController: UIViewController {
                             
                         case .requisites:
                             vc.printFormType = "external"
+                            // Template button view model
+                            if let name = self.confurmVCModel?.fullName, let paymentOperationDetailId = model.data?.paymentOperationDetailId {
+                                if self.confurmVCModel?.template == nil {
+                                    self.confurmVCModel?.templateButtonViewModel = .sfp(name: name, paymentOperationDetailId: paymentOperationDetailId)
+                                } else {
+                                    self.confurmVCModel?.templateButtonViewModel = .template(paymentOperationDetailId)
+                                }
+                            }
                         case .gkh:
                             vc.printFormType = "housingAndCommunalService"
                         case .mobilePayment:

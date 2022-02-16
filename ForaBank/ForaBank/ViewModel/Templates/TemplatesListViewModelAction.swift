@@ -85,5 +85,11 @@ enum TemplatesListViewModelAction {
             //TODO: Сделать модель для перевода Миг в рефакторинге экрана экрана платежей
             let viewModel: PaymentTemplateData
         }
+        
+        struct PaymentRequisites: Action {
+            //TODO: Сделать модель для перевода по реквизитам в рефакторинге экрана экрана платежей
+            let viewModel: PaymentTemplateData
+        }
+        
     }
 }

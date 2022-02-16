@@ -130,8 +130,8 @@ extension CustomPopUpWithRateView {
                 self.cardToField.model = card
                 self.viewModel.cardToRealm = card
             }
-            cardFromField.choseButton.isHidden = true
-            cardToField.choseButton.isHidden = true
+//            cardFromField.choseButton.isHidden = true
+//            cardToField.choseButton.isHidden = true
             self.trasfer = (viewModel.cardFromRealm?.currency ?? "", viewModel.cardToRealm?.currency ?? "")
         default:
             break
@@ -243,7 +243,7 @@ extension CustomPopUpWithRateView {
             ? "Номер карты или счета"
             : "Номер карты отправителя"
         cardFromField.didChooseButtonTapped = { () in
-            guard self.paymentTemplate == nil else { return }
+//            guard self.paymentTemplate == nil else { return }
             self.openOrHideView(self.cardFromListView) {
                 self.seporatorView.curvedLineView.isHidden.toggle()
                 self.seporatorView.straightLineView.isHidden.toggle()
@@ -260,7 +260,7 @@ extension CustomPopUpWithRateView {
             ? "Номер карты или счета"
             : "Номер карты получателя"
         cardToField.didChooseButtonTapped = { () in
-            guard self.paymentTemplate == nil else { return }
+//            guard self.paymentTemplate == nil else { return }
             self.openOrHideView(self.cardToListView) {
                 self.seporatorView.curvedLineView.isHidden = false
                 self.seporatorView.straightLineView.isHidden = true
