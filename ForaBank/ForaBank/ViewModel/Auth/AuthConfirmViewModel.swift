@@ -13,19 +13,26 @@ class AuthConfirmViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
     
-    lazy var navigationBar: NavigationBarViewModel = {
-        NavigationBarViewModel(action: { [weak self] in
-            self?.action.send(AuthConfirmViewModelAction.Dismiss())
-        })
-    }()
-    
+    let navigationBar: NavigationBarViewModel
     var code: CodeViewModel
     @Published var info: InfoViewModel?
+
+    private let model: Model
     
-    init(code: CodeViewModel, info: InfoViewModel?) {
+    init(navigationBar: NavigationBarViewModel, code: CodeViewModel, info: InfoViewModel?, model: Model = .emptyMock) {
         
+        self.navigationBar = navigationBar
         self.code = code
         self.info = info
+        self.model = model
+    }
+    
+    init(_ model: Model, confirmCodeLength: Int, phoneNumber: String, repeatTimeInterval: TimeInterval, dismissAction: @escaping () -> Void) {
+        
+        self.model = model
+        self.navigationBar = NavigationBarViewModel(action: dismissAction)
+        self.code = CodeViewModel(title: "Введите код из сообщения", lenght: confirmCodeLength, state: .edit)
+        self.info = InfoViewModel(phoneNumber: phoneNumber, repeatTimeInterval: repeatTimeInterval)
     }
 }
 
@@ -157,11 +164,12 @@ extension AuthConfirmViewModel {
             self.state = state
         }
         
-        init(phoneNumber: String, subtitle: String? = nil, state: State) {
+        init(phoneNumber: String, repeatTimeInterval: TimeInterval) {
             
+            //TODO: implement timer
             self.title = "Код отправлен на " + phoneNumber
-            self.subtitle = subtitle
-            self.state = state
+            self.subtitle = nil
+            self.state = .timer(.init(value: "0.35"))
         }
         
         enum State {
@@ -200,10 +208,8 @@ extension AuthConfirmViewModel {
     static let sampleConfirm: AuthConfirmViewModel = {
         
         let codeViewModel = CodeViewModel(title: "Введите код из сообщения", lenght: 6, state: .edit)
-        
-        let infoViewModel = InfoViewModel(phoneNumber: "+7 ... ... 54 13", subtitle: nil, state: .timer(.init(value: "00:59")))
-        
-        let viewModel = AuthConfirmViewModel(code: codeViewModel, info: infoViewModel)
+        let infoViewModel = InfoViewModel(title: "+7 ... ... 54 13", subtitle: nil, state: .timer(.init(value: "00:59")))
+        let viewModel = AuthConfirmViewModel(navigationBar: .init(action: {}), code: codeViewModel, info: infoViewModel)
         
         return viewModel
     }()

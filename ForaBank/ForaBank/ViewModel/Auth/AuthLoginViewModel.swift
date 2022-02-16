@@ -14,33 +14,98 @@ class AuthLoginViewModel: ObservableObject {
     let action: PassthroughSubject<Action, Never> = .init()
     
     let header: HeaderViewModel
+    lazy var card: CardViewModel = CardViewModel(scanButton: .init(action: { self.action.send(AuthLoginViewModelAction.Show.Scaner()) }), nextButton: .init(action: { self.action.send(AuthLoginViewModelAction.Auth(cardNumber: self.card.cardNumber)) }), state: .editing)
+    
+    @Published var productsButton: ProductsButtonViewModel?
+    
+    @Published var isConfirmViewPresented: Bool
+    var confirmViewModel: AuthConfirmViewModel?
+    
+    @Published var isProductsViewPresented: Bool
+    var productsViewModel: AuthProductsViewModel?
+    
+    private let model: Model
+    private var bindings = Set<AnyCancellable>()
 
-    lazy var card: CardViewModel = {
+    init(header: HeaderViewModel = HeaderViewModel(), isConfirmViewPresented: Bool = false, isProductsViewPresented: Bool = false, model: Model = .emptyMock) {
 
-        CardViewModel(scanButton: .init(action:
-
-            {
-                self.action.send(AuthLoginViewModelAction.Show.Scaner())
-            }),
-
-                      nextButton:  .init(action:
-
-            {
-            
-            self.action.send(AuthLoginViewModelAction.Auth(cardNumber: self.card.cardNumber))
-        }), state: .editing)
-    }()
-
-    lazy var productsButton: ProductsButtonViewModel = {
-
-        ProductsButtonViewModel(action: {
-            self.action.send(AuthLoginViewModelAction.Show.Products())
-        })
-    }()
-
-    init() {
-
+        self.header = header
+        self.isConfirmViewPresented = isConfirmViewPresented
+        self.isProductsViewPresented = isProductsViewPresented
+        self.model = model
+    }
+    
+    init(_ model: Model) {
+        
+        self.model = model
         self.header = HeaderViewModel()
+        self.isConfirmViewPresented = false
+        self.isProductsViewPresented = false
+        
+        bind()
+        
+        //FIXME: REMOVE AFTER TESTS
+        model.action.send(ModelAction.Auth.ProductsReady())
+    }
+    
+    private func bind() {
+        
+        action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as AuthLoginViewModelAction.Auth:
+                    model.action.send(ModelAction.Auth.Register.Request(cardNumber: payload.cardNumber))
+                    //TODO: start spinner here and block user taps
+                    
+                case _ as AuthLoginViewModelAction.Show.Products:
+                    isProductsViewPresented = true
+                    
+                case _ as AuthLoginViewModelAction.Show.Scaner:
+                    //TODO: show scanner view here
+                    break
+                    
+                case _ as AuthLoginViewModelAction.Dismiss.Confirm:
+                    confirmViewModel = nil
+                    isConfirmViewPresented = false
+                    
+                case _ as AuthLoginViewModelAction.Dismiss.Products:
+                    isProductsViewPresented = false
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+        
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as ModelAction.Auth.Register.Response:
+                    switch payload.result {
+                    case .success(let data):
+                        confirmViewModel = AuthConfirmViewModel(model, confirmCodeLength: data.codeLength, phoneNumber: data.phone, repeatTimeInterval: data.repeatTimeout, dismissAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Dismiss.Confirm())})
+                        isConfirmViewPresented = true
+                        
+                    case .failure(let error):
+                        //TODO: handle error
+                        print(error.localizedDescription)
+                    }
+                    
+                case _ as ModelAction.Auth.ProductsReady:
+                    productsButton = ProductsButtonViewModel(action: { self.action.send(AuthLoginViewModelAction.Show.Products()) })
+                    //TODO: load products from model:
+                    //productsViewModel = AuthProductsViewModel(products: model.promoProducts)
+                    productsViewModel = AuthProductsViewModel(productCards: AuthProductsViewModel.sampleProducts, dismissAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Dismiss.Products())})
+    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
     }
 }
 
@@ -100,6 +165,8 @@ extension AuthLoginViewModel {
     }
 }
 
+//MARK: - Actions
+
 enum AuthLoginViewModelAction {
 
     struct Auth: Action {
@@ -110,6 +177,13 @@ enum AuthLoginViewModelAction {
     enum Show {
 
         struct Scaner: Action { }
+        
+        struct Products: Action { }
+    }
+    
+    enum Dismiss {
+        
+        struct Confirm: Action {}
         
         struct Products: Action { }
     }

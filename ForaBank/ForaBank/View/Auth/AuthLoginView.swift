@@ -13,13 +13,43 @@ struct AuthLoginView: View {
     @ObservedObject var viewModel: AuthLoginViewModel
     
     var body: some View {
+        
         VStack(spacing: 24) {
             
             HeaderView(viewModel: viewModel.header)
             CardView(viewModel: $viewModel.card)
-            Spacer()
-            ProductsButtonView(viewModel: viewModel.productsButton)
             
+            Spacer()
+            
+            if let productsButtonViewModel = viewModel.productsButton {
+                
+                ProductsButtonView(viewModel: productsButtonViewModel)
+            }
+            
+            
+            NavigationLink("", isActive: $viewModel.isConfirmViewPresented) {
+                
+                if let confirmViewModel = viewModel.confirmViewModel {
+                    
+                    AuthConfirmView(viewModel: confirmViewModel)
+                    
+                } else {
+                    
+                    EmptyView()
+                }
+            }
+            
+            NavigationLink("", isActive: $viewModel.isProductsViewPresented) {
+                
+                if let productsViewModel = viewModel.productsViewModel {
+                    
+                    AuthProductsView(viewModel: productsViewModel)
+                    
+                } else {
+                   
+                    EmptyView()
+                }
+            }
         }
         .padding(EdgeInsets(top: 24, leading: 0, bottom: 20, trailing: 0))
         .background(

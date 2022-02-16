@@ -3086,10 +3086,10 @@
 			isa = PBXGroup;
 			children = (
 				770DCE9027BBF7F4004099C1 /* RootViewModel.swift */,
-				774706AF277DD59700B524F1 /* AntifraudViewModel.swift */,
+				6862B54B27B688CC006E833F /* Auth */,
 				77EA0DBC2779B40100C6ED12 /* OperationDetail */,
 				EDE70902279716DF0048CA94 /* Templates */,
-				6862B54B27B688CC006E833F /* Auth */,
+				774706AF277DD59700B524F1 /* AntifraudViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -3098,9 +3098,9 @@
 			isa = PBXGroup;
 			children = (
 				770DCE9427BBFA49004099C1 /* Root */,
-				EDE70907279865960048CA94 /* Templates */,
-				77499C3D2773A37F00F6C079 /* OperationDetail */,
 				6862B53B27B6886A006E833F /* Auth */,
+				77499C3D2773A37F00F6C079 /* OperationDetail */,
+				EDE70907279865960048CA94 /* Templates */,
 				77499C442773C0BB00F6C079 /* Styles */,
 			);
 			path = View;

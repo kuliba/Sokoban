@@ -15,17 +15,19 @@ struct AuthProductsView: View {
     var body: some View {
         
         ScrollView {
+            
             VStack(spacing: 0) {
+                
                 ForEach(viewModel.productCards) {
+                    
                     productCard in ProductView(viewModel: productCard)
                 }
+                
                 Spacer()
             }
         }
-        .navigationBarTitle(Text(viewModel.navigationBar.title)
-                                .font(.textH3M18240()),
-                            displayMode: .inline)
-        .navigationBarBackButtonHidden(false)
+        .navigationBarTitle(Text(viewModel.navigationBar.title), displayMode: .inline)
+        .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: btnBack)
         .foregroundColor(.black)
     }
@@ -141,7 +143,7 @@ struct AuthProductsView_Previews: PreviewProvider {
     static var previews: some View {
 
         NavigationView {
-            AuthProductsView(viewModel: AuthProductsViewModel.mockData)
+            AuthProductsView(viewModel: .mockData)
         }
 
     }
