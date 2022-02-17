@@ -878,6 +878,7 @@
 		F63D4C7CF864543AD9AABF9A /* InternetTVInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D42CEA742F58D23C97218 /* InternetTVInputCell.swift */; };
 		F8E529AD27B67F7B00222394 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F8E529AC27B67F7B00222394 /* Assets.xcassets */; };
 		F8E529B427BBABF600222394 /* AuthProductsViewModel+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E529B327BBABF600222394 /* AuthProductsViewModel+Preview.swift */; };
+		F8E529B827BE3DDB00222394 /* GetProductCatalogList.json in Resources */ = {isa = PBXBuildFile; fileRef = F8E529B727BE3DDB00222394 /* GetProductCatalogList.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1772,6 +1773,7 @@
 		F63D4DD4905E8BA594B990E1 /* InternetTVDetailsFormController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetTVDetailsFormController.swift; sourceTree = "<group>"; };
 		F8E529AC27B67F7B00222394 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F8E529B327BBABF600222394 /* AuthProductsViewModel+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthProductsViewModel+Preview.swift"; sourceTree = "<group>"; };
+		F8E529B727BE3DDB00222394 /* GetProductCatalogList.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GetProductCatalogList.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -3305,6 +3307,7 @@
 				77EC58D42771F28C0054D75C /* GetPaymentTemplateListResponseGeneric.json */,
 				77517FFB27A99EDC005CFB77 /* GetPaymentTemplateListResponseMin.json */,
 				77EC58D62771F6C10054D75C /* SavePaymentTemplateResponseGeneric.json */,
+				F8E529B727BE3DDB00222394 /* GetProductCatalogList.json */,
 				77EC58DA2771FC360054D75C /* UpdatePaymentTemplateResponseGeneric.json */,
 				77EC58DE277200E90054D75C /* SortingPaymentTemplatesResponseGeneric.json */,
 				68E7652C2797009A005860FE /* CheckClientResponseGeneric.json */,
@@ -5359,6 +5362,7 @@
 				6820924E27A9D2F4003DCAFD /* GetCountriesResponseGenericMin.json in Resources */,
 				682092BF27AC184F003DCAFD /* GetPhoneInfoGeneric.json in Resources */,
 				6820924027A97BDB003DCAFD /* GetCountriesResponseGeneric.json in Resources */,
+				F8E529B827BE3DDB00222394 /* GetProductCatalogList.json in Resources */,
 				77517FBB27A94E28005CFB77 /* CreateAnywayTransferResponseMin.json in Resources */,
 				68419314279ED96800B4E184 /* GetCardStatementResponseGenericMin.json in Resources */,
 				77517FB327A94D21005CFB77 /* GetVerificationCodeResponseGeneric.json in Resources */,

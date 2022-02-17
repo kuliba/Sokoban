@@ -517,6 +517,65 @@ extension ServerCommands {
                 }
             }
         }
-    }
-}
+        
+         /*
+          https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getProductCatalogListUsingGET
+          */
+         struct GetProductCatalogList: ServerCommand {
 
+             var token: String? = nil
+             let endpoint = "/dict/getProductCatalogList"
+             let method: ServerCommandMethod = .get
+             let parameters: [ServerCommandParameter]? = nil
+             var payload: Payload? = nil
+             let timeout: TimeInterval? = nil
+
+             struct Payload: Encodable {}
+
+             struct Response: ServerResponse {
+                 
+                 let statusCode: ServerStatusCode
+                 let data: ProductCatalog?
+                 let errorMessage: String?
+                 
+                 struct ProductCatalog: Decodable, Equatable {
+                     
+                     let ProductCatalogList: [ProductCatalogList]
+                     let serial: String
+                 }
+
+                 struct ProductCatalogList: Decodable, Equatable {
+
+                     let conditionLink: String
+                     let imageLink: String
+                     let orderLink: String
+                     let productName: String
+                     let txtСondition: [String]
+                 }
+             }
+         }
+         
+         /*
+          https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getProductCatalogImageUsingGET
+          */
+         struct GetProductCatalogImage: ServerDownloadCommand {
+
+             var token: String? = nil
+             let endpoint = "/dict/getProductCatalogList"
+             let method: ServerCommandMethod = .get
+             let parameters: [ServerCommandParameter]?
+             var payload: Payload? = nil
+             let timeout: TimeInterval? = nil
+
+             struct Payload: Encodable {}
+
+             internal init(imageEndpoint: String) {
+
+                 var parameters = [ServerCommandParameter]()
+
+                 parameters.append(.init(name: "image", value: imageEndpoint))
+                 self.parameters = parameters
+             }
+         }
+     }
+ }
