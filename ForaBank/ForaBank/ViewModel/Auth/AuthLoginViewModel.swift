@@ -61,6 +61,9 @@ class AuthLoginViewModel: ObservableObject {
                     //TODO: start spinner here and block user taps
                     
                 case _ as AuthLoginViewModelAction.Show.Products:
+                    //TODO: load products from model:
+                    //productsViewModel = AuthProductsViewModel(products: model.promoProducts)
+                    productsViewModel = AuthProductsViewModel(productCards: AuthProductsViewModel.sampleProducts, dismissAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Dismiss.Products())})
                     isProductsViewPresented = true
                     
                 case _ as AuthLoginViewModelAction.Show.Scaner:
@@ -72,6 +75,7 @@ class AuthLoginViewModel: ObservableObject {
                     isConfirmViewPresented = false
                     
                 case _ as AuthLoginViewModelAction.Dismiss.Products:
+                    productsViewModel = nil
                     isProductsViewPresented = false
                     
                 default:
@@ -98,9 +102,6 @@ class AuthLoginViewModel: ObservableObject {
                     
                 case _ as ModelAction.Auth.ProductsReady:
                     productsButton = ProductsButtonViewModel(action: { self.action.send(AuthLoginViewModelAction.Show.Products()) })
-                    //TODO: load products from model:
-                    //productsViewModel = AuthProductsViewModel(products: model.promoProducts)
-                    productsViewModel = AuthProductsViewModel(productCards: AuthProductsViewModel.sampleProducts, dismissAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Dismiss.Products())})
     
                 default:
                     break
