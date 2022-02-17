@@ -16,14 +16,19 @@ class AuthConfirmViewModel: ObservableObject {
     let navigationBar: NavigationBarViewModel
     var code: CodeViewModel
     @Published var info: InfoViewModel?
+    
+    @Published var isPincodeViewPresented: Bool
+    var pincodeViewModel: AuthPinCodeViewModel?
 
     private let model: Model
+    private var bindings = Set<AnyCancellable>()
     
-    init(navigationBar: NavigationBarViewModel, code: CodeViewModel, info: InfoViewModel?, model: Model = .emptyMock) {
+    init(navigationBar: NavigationBarViewModel, code: CodeViewModel, info: InfoViewModel?, isPincodeViewPresented: Bool = false, model: Model = .emptyMock) {
         
         self.navigationBar = navigationBar
         self.code = code
         self.info = info
+        self.isPincodeViewPresented = isPincodeViewPresented
         self.model = model
     }
     
@@ -33,6 +38,53 @@ class AuthConfirmViewModel: ObservableObject {
         self.navigationBar = NavigationBarViewModel(action: dismissAction)
         self.code = CodeViewModel(title: "Введите код из сообщения", lenght: confirmCodeLength, state: .edit)
         self.info = InfoViewModel(phoneNumber: phoneNumber, repeatTimeInterval: repeatTimeInterval)
+        self.isPincodeViewPresented = false
+        
+        bind()
+    }
+    
+    func bind() {
+        
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as ModelAction.Auth.VerificationCode.Confirm.Response:
+                    switch payload {
+                    case .correct:
+                        pincodeViewModel = AuthPinCodeViewModel(model, mode: .create(.fist))
+                        isPincodeViewPresented = true
+                        
+                    case .incorrect:
+                        //TODO: incorrect code logic
+                        break
+                        
+                    case .error(let error):
+                        //TODO: handle error
+                        print(error.localizedDescription)
+                    }
+    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+        
+        code.$state
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] state in
+                
+                switch state {
+                case .check:
+                    model.action.send(ModelAction.Auth.VerificationCode.Confirm.Request(code: code.textFieldCode))
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+        
     }
 }
 
@@ -117,7 +169,7 @@ extension AuthConfirmViewModel {
                     case .edit:
                         code = setupCode(codeLenght: codeLenght)
                         textFieldCode = ""
-//                        showKeyboard = true
+                        showKeyboard = true
                     case .check:
                         ///TextFieldCode - проверка
                         showKeyboard = false

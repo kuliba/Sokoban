@@ -20,8 +20,10 @@ class AuthPinCodeViewModel: ObservableObject {
     private let model: Model
     private var mode: CurrentValueSubject<Mode, Never>
     private var bindings = Set<AnyCancellable>()
+    
+    typealias DismissAction = () -> Void
 
-    init(pinCode: PinCodeViewModel, numpad: NumPadViewModel, footer: FooterViewModel, model: Model = .emptyMock, mode: Mode = .lock) {
+    init(pinCode: PinCodeViewModel, numpad: NumPadViewModel, footer: FooterViewModel, dismissAction: DismissAction? = nil, model: Model = .emptyMock, mode: Mode = .lock) {
         
         self.pinCode = pinCode
         self.numpad = numpad
@@ -30,12 +32,13 @@ class AuthPinCodeViewModel: ObservableObject {
         self.mode = .init(mode)
     }
     
-    init(_ model: Model, mode: Mode) {
+    init(_ model: Model, mode: Mode, dismissAction: DismissAction? = nil) {
  
         switch mode {
         case .lock:
             self.pinCode = PinCodeViewModel(title: "Введите код", pincodeLength: model.pincodeLength)
             //TODO: detect sensor
+            //TODO: dismiss action for button exit
             self.numpad = NumPadViewModel(leftButton: .init(type: .text("Выход"), action: .exit), rightButton: .init(type: .icon(.ic40FaceId), action: .sensor))
             self.footer = FooterViewModel(continueButton: nil, cancelButton: nil)
             self.mode = .init(.lock)
@@ -49,6 +52,7 @@ class AuthPinCodeViewModel: ObservableObject {
         
         self.model = model
         
+        bindNumpad()
         bind()
     }
     

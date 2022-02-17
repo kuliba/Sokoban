@@ -30,6 +30,18 @@ struct AuthConfirmView: View {
             }
             
             Spacer()
+            
+            NavigationLink("", isActive: $viewModel.isPincodeViewPresented) {
+                
+                if let pincodeViewModel = viewModel.pincodeViewModel {
+                    
+                    AuthPinCodeView(viewModel: pincodeViewModel)
+                    
+                } else {
+                    
+                    EmptyView()
+                }
+            }
         }
         .padding(EdgeInsets(top: 12, leading: 20, bottom: 20, trailing: 20))
         .navigationBarItems(leading: Button(action: { viewModel.navigationBar.backButton.action() }) { viewModel.navigationBar.backButton.icon })

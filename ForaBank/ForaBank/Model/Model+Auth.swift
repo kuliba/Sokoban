@@ -28,7 +28,7 @@ internal extension Model {
     func handleAuthVerificationCodeConfirmRequest(payload: ModelAction.Auth.VerificationCode.Confirm.Request) {
         
         //TODO: real implementation required
-        if payload.code == "11111" {
+        if payload.code == "111111" {
             
             action.send(ModelAction.Auth.VerificationCode.Confirm.Response.correct)
             

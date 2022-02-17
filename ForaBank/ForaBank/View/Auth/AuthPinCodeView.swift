@@ -24,6 +24,7 @@ struct AuthPinCodeView: View {
             Spacer()
             FooterView(viewModel: viewModel.footer)
         }
+        .navigationBarHidden(true)
     }
 }
 
