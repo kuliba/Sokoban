@@ -24,7 +24,7 @@ struct AuthConfirmView: View {
             
             ZStack {
                 
-                CustomTextField(text: $viewModel.code.textFieldCode, isFirstResponder: viewModel.code.showKeyboard)
+                CustomTextField(text: $viewModel.code.textFieldCode, isFirstResponder: $viewModel.code.showKeyboard)
                 
                 Color.white
             }
@@ -163,10 +163,11 @@ struct CustomTextField: UIViewRepresentable {
     class Coordinator: NSObject, UITextFieldDelegate {
 
         @Binding var text: String
-        var didBecomeFirstResponder = false
+        @Binding var didBecomeFirstResponder: Bool
 
-        init(text: Binding<String>) {
+        init(text: Binding<String>, didBecomeFirstResponder: Binding<Bool>) {
             _text = text
+            _didBecomeFirstResponder = didBecomeFirstResponder
         }
 
         func textFieldDidChangeSelection(_ textField: UITextField) {
@@ -175,7 +176,7 @@ struct CustomTextField: UIViewRepresentable {
     }
 
     @Binding var text: String
-    var isFirstResponder: Bool = false
+    @Binding var isFirstResponder: Bool
 
     func makeUIView(context: UIViewRepresentableContext<CustomTextField>) -> UITextField {
         let textField = UITextField(frame: .zero)
@@ -184,14 +185,18 @@ struct CustomTextField: UIViewRepresentable {
     }
 
     func makeCoordinator() -> CustomTextField.Coordinator {
-        return Coordinator(text: $text)
+        return Coordinator(text: $text, didBecomeFirstResponder: $isFirstResponder)
     }
 
     func updateUIView(_ uiView: UITextField, context: UIViewRepresentableContext<CustomTextField>) {
         uiView.text = text
-        if isFirstResponder && !context.coordinator.didBecomeFirstResponder  {
+        if context.coordinator.didBecomeFirstResponder  {
+            
             uiView.becomeFirstResponder()
-            context.coordinator.didBecomeFirstResponder = true
+            
+        } else {
+            
+            uiView.resignFirstResponder()
         }
     }
 }
