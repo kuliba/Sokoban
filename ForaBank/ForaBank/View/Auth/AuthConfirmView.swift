@@ -43,10 +43,31 @@ struct AuthConfirmView: View {
                 }
             }
         }
+        .alert(isPresented: $viewModel.showingAlert) {
+            if viewModel.numberOfPasswordAttempts > 0 {
+                return Alert(title: Text("Введен некорректный код. Попробуйте еще раз."),
+                      message: Text("Осталось попыток: " + String(viewModel.numberOfPasswordAttempts)),
+                      dismissButton: .default(Text("ОК"), action: {
+                    viewModel.code.state = .edit
+                    viewModel.numberOfPasswordAttempts -= 1
+                }))
+            }
+            return Alert(title: Text("Ошибка"),
+                  message: Text("Вы исчерпали все попытки :("),
+                  dismissButton: .default(Text("ОК"), action: {
+                viewModel.navigationBar.backButton.action()
+            }))
+        }
         .padding(EdgeInsets(top: 12, leading: 20, bottom: 20, trailing: 20))
-        .navigationBarItems(leading: Button(action: { viewModel.navigationBar.backButton.action() }) { viewModel.navigationBar.backButton.icon })
+        .navigationBarItems(leading: Button(action: {
+            viewModel.code.showKeyboard = false
+            viewModel.navigationBar.backButton.action() }) { viewModel.navigationBar.backButton.icon })
         .navigationBarBackButtonHidden(true)
         .navigationBarTitle(Text(viewModel.navigationBar.title), displayMode: .inline)
+        .onAppear {
+            
+            viewModel.action.send(AuthConfirmViewModelAction.ViewDidAppear())
+        }
     }
 }
 
@@ -106,7 +127,7 @@ extension AuthConfirmView {
     
     struct InfoView: View {
         
-        var viewModel: AuthConfirmViewModel.InfoViewModel
+        @ObservedObject var viewModel: AuthConfirmViewModel.InfoViewModel
         
         
         var body: some View {
@@ -190,13 +211,14 @@ struct CustomTextField: UIViewRepresentable {
 
     func updateUIView(_ uiView: UITextField, context: UIViewRepresentableContext<CustomTextField>) {
         uiView.text = text
-        if context.coordinator.didBecomeFirstResponder  {
+        uiView.keyboardType = .numberPad
+        if isFirstResponder && !context.coordinator.didBecomeFirstResponder  {
             
             uiView.becomeFirstResponder()
-            
+            context.coordinator.didBecomeFirstResponder = true
         } else {
-            
             uiView.resignFirstResponder()
+            context.coordinator.didBecomeFirstResponder = false
         }
     }
 }
