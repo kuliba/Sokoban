@@ -8,6 +8,44 @@
 import Foundation
 import SwiftUI
 
+// 1 enter "2"
+// 2 unmask "1234 567" -> "1234567"
+// 3 "1234567" + "2" = "12345672" & crop (<= 20)
+// 4 mask -> "1234 5672"
+
+// 1 enter ""
+// 2 unmask "1234 567" -> "1234567"
+// 3 "1234567" - "7" = "123456" & crop (>=0)
+// 4 mask -> "1234 567"
+
+// 1 filter & crop "4565 kls l;k" -> "4565" (<= 20) range > 1
+// 2 "1234 567" -> "234 5"
+// 3 unmask "1234 567" -> "1234567"
+// 4 remove " " "234 5" -> "2345"
+// 5 range "1234567" for "2345"
+// 6 insert  "4565" in range "1234567" ->  "1456567"
+// 7 crop to 20
+// 8 mask -> "1456 567"
+
+// static func filter(value: String) -> String  ///"4565 kls l;k" -> "4565"
+// static func crop(value: String, max: Int) -> String // max = 5: "1234567" -> "12345" ; "12" -> "12"
+
+// static func mask(value: String, mask: StringValueMask) -> String
+// mask(value: "12345", mask: "### ###", symbol: "#") -> String
+
+// static func unmask(value: String, regEx: String) -> String ; "123 45" -> "12345"
+
+// static func updateMasked(value: String, inRange: Range, update: String, masks: [StringValueMask], regEx: String) -> String
+
+struct StringValueMask {
+    
+    let mask: String //"### ###"
+    let sympol: String //"#"
+    let len: Int // 16
+}
+
+// let mask = StringMask(mask: "#### ####", symbol: "#", len: 16)
+
 struct TextView: UIViewRepresentable {
     
     @Binding var text: String
