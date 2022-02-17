@@ -117,7 +117,7 @@ extension AuthConfirmViewModel {
                     case .edit:
                         code = setupCode(codeLenght: codeLenght)
                         textFieldCode = ""
-                        showKeyboard = true
+//                        showKeyboard = true
                     case .check:
                         ///TextFieldCode - проверка
                         showKeyboard = false

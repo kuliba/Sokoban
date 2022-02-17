@@ -18,9 +18,8 @@ struct AuthProductsView: View {
             
             VStack(spacing: 0) {
                 
-                ForEach(viewModel.productCards) {
-                    
-                    productCard in ProductView(viewModel: productCard)
+                ForEach(viewModel.productCards) { productCard in
+                    ProductView(viewModel: productCard)
                 }
                 
                 Spacer()
@@ -84,7 +83,6 @@ extension AuthProductsView {
                     .padding(.top, 24)
                     .padding(.bottom, 32)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 20)
             }
         }
@@ -97,12 +95,9 @@ extension AuthProductsView {
         let color: Color
 
         var body: some View {
-
-            Button {
-
-                viewModel.action()
-            } label: {
-
+            
+            Button(action: viewModel.action) {
+                
                 HStack {
                     
                     viewModel.icon
@@ -121,18 +116,16 @@ extension AuthProductsView {
         let viewModel: AuthProductsViewModel.ProductCard.OrderButton
         
         var body: some View {
-
-            Button {
-
-                viewModel.action()
-            } label: {
-
+            
+            Button(action: viewModel.action) {
+               
                 Text(viewModel.title)
                     .foregroundColor(.textWhite)
                     .padding(.vertical, 12)
                     .frame(width: 166)
                     .background(Color.buttonPrimary)
                     .cornerRadius(8)
+                
             }
         }
     }
@@ -143,6 +136,7 @@ struct AuthProductsView_Previews: PreviewProvider {
     static var previews: some View {
 
         NavigationView {
+            
             AuthProductsView(viewModel: .mockData)
         }
 

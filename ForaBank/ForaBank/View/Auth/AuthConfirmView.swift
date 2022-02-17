@@ -13,73 +13,28 @@ struct AuthConfirmView: View {
     
     var body: some View {
         
-        if #available(iOS 14.0, *) {
+        VStack {
             
-            VStack {
-                CodeView(viewModel: viewModel.code)
-                
-                if let info = viewModel.info{
-                    
-                    InfoView(viewModel: info)
-                }
-                
-                ZStack {
-                    CustomTextField(text: $viewModel.code.textFieldCode,
-                                    isFirstResponder: (viewModel.code.showKeyboard))
-                        .keyboardType(.numberPad)
-                    Color.white
-                }
-                .frame(width: 1, height: 1, alignment: .leading)
-
-                Spacer()
-            }
-            .padding(EdgeInsets(top: 12, leading: 20, bottom: 20, trailing: 20))
-            .navigationBarItems(leading:
-                                    
-                                    Button(action: {
-                viewModel.navigationBar.backButton.action()
-            }) {
-                viewModel.navigationBar.backButton.icon
-                    .renderingMode(.original)
-            }
-            ).navigationBarBackButtonHidden(true)
-                .navigationBarTitle(viewModel.navigationBar.title)
-                .font(.textH3M18240())
-                .navigationBarTitleDisplayMode(.inline)
+            CodeView(viewModel: viewModel.code)
             
-        } else {
+            if let info = viewModel.info {
+                
+                InfoView(viewModel: info)
+            }
             
-            VStack {
-                CodeView(viewModel: viewModel.code)
+            ZStack {
                 
-                if let info = viewModel.info{
-                    
-                    InfoView(viewModel: info)
-                }
+                CustomTextField(text: $viewModel.code.textFieldCode, isFirstResponder: viewModel.code.showKeyboard)
                 
-                ZStack {
-                    CustomTextField(text: $viewModel.code.textFieldCode,
-                                    isFirstResponder: viewModel.code.showKeyboard)
-                        .keyboardType(.numberPad)
-                    Color.white
-                }
-                .frame(width: 1, height: 1, alignment: .leading)
-
-                Spacer()
+                Color.white
             }
-            .padding(EdgeInsets(top: 12, leading: 20, bottom: 20, trailing: 20))
-            .navigationBarItems(leading:
-                                    
-                                    Button(action: {
-                viewModel.navigationBar.backButton.action()
-            }) {
-                viewModel.navigationBar.backButton.icon
-                    .renderingMode(.original)
-            }
-            ).navigationBarBackButtonHidden(true)
-                .navigationBarTitle(Text(viewModel.navigationBar.title)
-                                        .font(.textH3M18240()), displayMode: .inline)
+            
+            Spacer()
         }
+        .padding(EdgeInsets(top: 12, leading: 20, bottom: 20, trailing: 20))
+        .navigationBarItems(leading: Button(action: { viewModel.navigationBar.backButton.action() }) { viewModel.navigationBar.backButton.icon })
+        .navigationBarBackButtonHidden(true)
+        .navigationBarTitle(Text(viewModel.navigationBar.title), displayMode: .inline)
     }
 }
 
@@ -174,10 +129,7 @@ extension AuthConfirmView {
                         .foregroundColor(.textSecondary)
                 case .button(let button):
                     
-                    Button {
-                        
-                        button.action()
-                    } label: {
+                    Button(action: button.action) {
                         
                         Text(button.title)
                             .font(.textBodySR12160())
@@ -233,6 +185,7 @@ struct CustomTextField: UIViewRepresentable {
 }
 
 struct AuthConfirmView_Previews: PreviewProvider {
+    
     static var previews: some View {
         
         NavigationView {

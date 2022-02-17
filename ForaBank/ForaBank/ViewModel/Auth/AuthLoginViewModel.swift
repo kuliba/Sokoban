@@ -27,9 +27,10 @@ class AuthLoginViewModel: ObservableObject {
     private let model: Model
     private var bindings = Set<AnyCancellable>()
 
-    init(header: HeaderViewModel = HeaderViewModel(), isConfirmViewPresented: Bool = false, isProductsViewPresented: Bool = false, model: Model = .emptyMock) {
+    init(header: HeaderViewModel = HeaderViewModel(), productsButton: ProductsButtonViewModel? = nil,  isConfirmViewPresented: Bool = false, isProductsViewPresented: Bool = false, model: Model = .emptyMock) {
 
         self.header = header
+        self.productsButton = productsButton
         self.isConfirmViewPresented = isConfirmViewPresented
         self.isProductsViewPresented = isProductsViewPresented
         self.model = model
