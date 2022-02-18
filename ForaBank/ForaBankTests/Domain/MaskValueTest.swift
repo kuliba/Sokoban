@@ -49,7 +49,7 @@ class MaskValueTest: XCTestCase {
     func testMaskString() throws {
         
         //given
-        let cardMask = TextFieldComponent.StringValueMask(mask: "#### #### #### ####", symbol: "#")
+        let cardMask = TextFieldComponent.StringValueMask(mask: "#### #### #### ####", symbol: "#", len: 16)
         let value = TextFieldComponent.maskValue(value: "1234123412341234", mask: cardMask)
         
         //when
@@ -61,8 +61,9 @@ class MaskValueTest: XCTestCase {
     
     func testUpdatedMasked() throws {
         
-        let cardMask = TextFieldComponent.StringValueMask(mask: "#### #### #### ####", symbol: "#")
-        let updatedString = TextFieldComponent.updateMasked(value: "", inRange: NSRange(location: 0, length: 0), update: "6", masks: [cardMask], regExp: "[0-9]")
+        let cardMask = TextFieldComponent.StringValueMask(mask: "#### #### #### ####", symbol: "#", len: 16)
+        let accountMask = TextFieldComponent.StringValueMask(mask: "##### # ### #### #######", symbol: "#", len: 20)
+        let updatedString = TextFieldComponent.updateMasked(value: "", inRange: NSRange(location: 0, length: 0), update: "6", masks: [cardMask, accountMask], regExp: "[0-9]")
      
         let result = "6"
         
@@ -72,8 +73,9 @@ class MaskValueTest: XCTestCase {
     
     func testAddSymbol() throws {
         
-        let cardMask = TextFieldComponent.StringValueMask(mask: "#### #### #### ####", symbol: "#")
-        let updatedString = TextFieldComponent.updateMasked(value: "6", inRange: NSRange(location: 1, length: 0), update: "7", masks: [cardMask], regExp: "[0-9]")
+        let cardMask = TextFieldComponent.StringValueMask(mask: "#### #### #### ####", symbol: "#", len: 16)
+        let accountMask = TextFieldComponent.StringValueMask(mask: "##### # ### #### #######", symbol: "#", len: 20)
+        let updatedString = TextFieldComponent.updateMasked(value: "6", inRange: NSRange(location: 1, length: 0), update: "7", masks: [cardMask, accountMask], regExp: "[0-9]")
      
         let result = "67"
         
@@ -83,13 +85,23 @@ class MaskValueTest: XCTestCase {
     
     func testAddRangeSymbol() throws {
         
-        let cardMask = TextFieldComponent.StringValueMask(mask: "#### #### #### ####", symbol: "#")
-        let updatedString = TextFieldComponent.updateMasked(value: "123456", inRange: NSRange(location: 2, length: 0), update: "6", masks: [cardMask], regExp: "[0-9]")
+        let cardMask = TextFieldComponent.StringValueMask(mask: "#### #### #### ####", symbol: "#", len: 16)
+        let accountMask = TextFieldComponent.StringValueMask(mask: "##### # ### #### #######", symbol: "#", len: 20)
+        let updatedString = TextFieldComponent.updateMasked(value: "123456", inRange: NSRange(location: 2, length: 0), update: "6", masks: [cardMask, accountMask], regExp: "[0-9]")
      
-        let result = "1263456"
+        let result = "1263 456"
         
         XCTAssertEqual(updatedString, result)
 
+    }
+    
+    func testUpdateMask() throws {
+        
+        let cardMask = TextFieldComponent.StringValueMask(mask: "#### #### #### ####", symbol: "#", len: 16)
+        let accountMask = TextFieldComponent.StringValueMask(mask: "##### # ### #### #######", symbol: "#", len: 20)
+        let updatedString = TextFieldComponent.updateMasked(value: "1234 5678 8901 2", inRange: NSRange(location: 2, length: 5), update: "12j3 yf45lk6789 01kl", masks: [cardMask, accountMask], regExp: "[0-9]")
+        
+        XCTAssertEqual(updatedString, "12123 4 567 8901 7889012")
     }
     
 }

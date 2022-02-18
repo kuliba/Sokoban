@@ -48,24 +48,19 @@ struct TextFieldComponent: UIViewRepresentable {
         
         public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
             
-            let mask = [StringValueMask(mask: "#### #### #### ####", symbol: "#"), StringValueMask(mask: "##### # ### #### #######", symbol: "#")]
+            let mask = [StringValueMask(mask: "#### #### #### ####", symbol: "#", len: 16), StringValueMask(mask: "##### # ### #### #######", symbol: "#", len: 20)]
             
             guard let text = textField.text else {
                 return false
             }
-            
+   
                 let cleanString = filter(value: string, regEx: "[0-9]")
             
                 let croppedString = crop(value: cleanString, max: mask[1].mask.count - text.count)
+            
                 let updateMasked = updateMasked(value: text, inRange: range, update: croppedString, masks: mask, regExp: "[0-9]")
                 
-                if updateMasked.digits.count <= 16{
-                    
-                    textField.text = maskValue(value: updateMasked, mask: mask[0])
-                } else {
-                    
-                    textField.text = maskValue(value: updateMasked, mask: mask[1])
-                }
+                textField.text = updateMasked
             
             return false
         }
@@ -75,13 +70,14 @@ struct TextFieldComponent: UIViewRepresentable {
         
         let mask: String
         let symbol: String
+        let len: Int
     }
     
     static func crop(value: String, max: Int) -> String {
         
-        if value.count > max{
+        if value.digits.count > max{
             
-            let cropValue = value.dropLast( value.count - max)
+            let cropValue = value.dropLast(value.digits.count - max)
             return String(cropValue)
         }
         
@@ -145,32 +141,79 @@ struct TextFieldComponent: UIViewRepresentable {
     }
     
     static func updateMasked(value: String, inRange: NSRange, update: String,  masks: [StringValueMask], regExp: String) -> String {
-        
-        
-        
-        if inRange.length == 1{
-            
-            let maxIndex =  value.index(value.startIndex, offsetBy: value.count - 1)
-            let number = String(value[value.startIndex..<maxIndex])
-            let filteredNumber = filter(value: number, regEx: "[0-9]")
-            
-            return filteredNumber
-        }
-        
-        if inRange.lowerBound == inRange.upperBound, let textRange = Range(inRange, in: value) {
-                    
-                    let updatedText = value.replacingCharacters(in: textRange, with: update)
-                
-                    return updatedText
-            
-        } else if inRange.lowerBound < inRange.upperBound {
 
-            let updatedText = value.replacingOccurrences(of: value, with: update, options: [], range: .init(.init(location: inRange.location, length: inRange.length), in: value + update))
- 
-            return updatedText
+        var maskType = StringValueMask(mask: "#### #### #### ####", symbol: "#", len: 16)
+        
+        if value.digits.count + update.digits.count > 16{
+            
+            maskType = StringValueMask(mask: "##### # ### #### #######", symbol: "#", len: 20)
         }
         
-        return ""
+        
+        
+        if update == "" {
+            
+            let filterNumber = filter(value: value, regEx: "[0-9]")
+            let maxIndex =  filterNumber.index(filterNumber.startIndex, offsetBy: filterNumber.count - 1)
+            let number = String(filterNumber[filterNumber.startIndex..<maxIndex])
+            
+            let maskNumber = maskValue(value: number, mask: maskType)
+            
+            return maskNumber
+            
+        }
+        
+        if inRange.length > 1{
+            
+            let filteredValue = filter(value: value, regEx: "[0-9]")
+            let filteredUpdate = filter(value: update, regEx: "[0-9]")
+            
+            
+            let croppedUpdate = crop(value: filteredUpdate, max: 20 - filteredValue.digits.count)
+        
+            if croppedUpdate.count > 1{
+
+                let start = value.index(value.startIndex, offsetBy: inRange.lowerBound)
+                let end = value.index(value.startIndex, offsetBy: inRange.upperBound)
+                
+                var data = value
+                data.replaceSubrange(start..<end, with: filteredUpdate)
+                
+                let filteredData = filter(value: data, regEx: "[0-9]")
+                
+                let maskNumber = maskValue(value: filteredData, mask: maskType)
+                print(maskNumber)
+                return maskNumber
+            } else {
+                
+                return value
+            }
+        } else if inRange.lowerBound == inRange.upperBound {
+            
+            if inRange.location < value.count{
+                
+                var data = value
+                
+                let croppedNum = crop(value: update, max: 20 - value.digits.count)
+                let index = data.index(data.startIndex, offsetBy: inRange.location)
+                data.insert(contentsOf: croppedNum, at: index)
+                let maskNumber = maskValue(value: data, mask: maskType)
+                
+                return maskNumber
+            } else {
+                
+                let filteredValue = filter(value: value, regEx: "[0-9]")
+
+                let updateNumber = filteredValue + update
+                let croppedNum = crop(value: updateNumber, max: 20)
+                let maskNumber = maskValue(value: croppedNum, mask: maskType)
+                
+                return maskNumber
+            }
+        }
+        
+        
+        return value
     }
 
     
