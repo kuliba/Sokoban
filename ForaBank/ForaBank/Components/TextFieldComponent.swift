@@ -47,7 +47,27 @@ struct TextFieldComponent: UIViewRepresentable {
         }
         
         public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-            return true
+            
+            let mask = [StringValueMask(mask: "#### #### #### ####", symbol: "#"), StringValueMask(mask: "##### # ### #### #######", symbol: "#")]
+            
+            guard let text = textField.text else {
+                return false
+            }
+            
+            let cleanString = filter(value: string, regEx: "[0-9]")
+            
+                let croppedString = crop(value: cleanString, max: mask[1].mask.count - text.count)
+                let updateMasked = updateMasked(value: text, inRange: range, update: croppedString, masks: mask, regExp: "[0-9]")
+                
+                if updateMasked.digits.count <= 16{
+                    
+                    textField.text = maskValue(value: updateMasked, mask: mask[0])
+                } else {
+                    
+                    textField.text = maskValue(value: updateMasked, mask: mask[1])
+                }
+            
+            return false
         }
     }
     
@@ -55,11 +75,6 @@ struct TextFieldComponent: UIViewRepresentable {
         
         let mask: String
         let symbol: String
-    }
-    
-    static func filter(value: String) -> String {
-        
-        return  value.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
     }
     
     static func crop(value: String, max: Int) -> String {
@@ -107,10 +122,10 @@ struct TextFieldComponent: UIViewRepresentable {
         return formattedString
     }
     
-    static func unmask(value: String, regEx: String) -> String? {
+    static func filter(value: String, regEx: String) -> String {
         
         do{
-            
+        
             let regExp = try NSRegularExpression(pattern: regEx, options: [])
             let range = NSMakeRange(0, value.count)
             let results = regExp.matches(in: value, options: [], range: range)
@@ -125,9 +140,32 @@ struct TextFieldComponent: UIViewRepresentable {
         } catch {
             
             print("Regular Expressions error")
-            return nil
+            return ""
         }
     }
+    
+    static func updateMasked(value: String, inRange: NSRange, update: String,  masks: [StringValueMask], regExp: String) -> String {
+        
+        if inRange.lowerBound == inRange.upperBound {
+            
+            if let textRange = Range(inRange, in: value) {
+                    
+                    let updatedText = value.replacingCharacters(in: textRange, with: update)
+                
+                    return updatedText
+            }
+        } else if inRange.lowerBound < inRange.upperBound {
+
+            let updatedText = value.replacingOccurrences(of: value, with: update, options: [], range: .init(.init(location: inRange.location, length: inRange.length), in: value + update))
+ 
+            return updatedText
+        }
+        
+        let charactersInRange = String() //Из value должны достать сим в соот с рендж
+
+        return charactersInRange
+    }
+
     
 }
 

@@ -13,7 +13,7 @@ class MaskValueTest: XCTestCase {
     func testFilter() throws {
 
         // given
-        let value = TextFieldComponent.filter(value: "121221 dsjomcmsd")
+        let value = TextFieldComponent.filter(value: "121221 dsjomcmsd", regEx: "[0-9]")
         
         // when
         let result = "121221"
@@ -34,13 +34,13 @@ class MaskValueTest: XCTestCase {
         XCTAssertEqual(value, result)
     }
     
-    func testUnmask() throws {
+    func testCropLessValues() throws {
         
         //given
-        let value = TextFieldComponent.unmask(value: "4444 4444 4444 4444", regEx: "[0-9]")
+        let value = TextFieldComponent.crop(value: "123", max: 10)
         
         //when
-        let result = "4444444444444444"
+        let result = "123"
         
         //then
         XCTAssertEqual(value, result)
@@ -59,5 +59,37 @@ class MaskValueTest: XCTestCase {
         XCTAssertEqual(value, result)
     }
     
+    func testUpdatedMasked() throws {
+        
+        let cardMask = TextFieldComponent.StringValueMask(mask: "#### #### #### ####", symbol: "#")
+        let updatedString = TextFieldComponent.updateMasked(value: "", inRange: NSRange(location: 0, length: 0), update: "6", masks: [cardMask], regExp: "[0-9]")
+     
+        let result = "6"
+        
+        XCTAssertEqual(updatedString, result)
+
+    }
+    
+    func testAddSymbol() throws {
+        
+        let cardMask = TextFieldComponent.StringValueMask(mask: "#### #### #### ####", symbol: "#")
+        let updatedString = TextFieldComponent.updateMasked(value: "6", inRange: NSRange(location: 1, length: 0), update: "7", masks: [cardMask], regExp: "[0-9]")
+     
+        let result = "67"
+        
+        XCTAssertEqual(updatedString, result)
+
+    }
+    
+    func testAddRangeSymbol() throws {
+        
+        let cardMask = TextFieldComponent.StringValueMask(mask: "#### #### #### ####", symbol: "#")
+        let updatedString = TextFieldComponent.updateMasked(value: "123456", inRange: NSRange(location: 2, length: 0), update: "6", masks: [cardMask], regExp: "[0-9]")
+     
+        let result = "1263456"
+        
+        XCTAssertEqual(updatedString, result)
+
+    }
     
 }
