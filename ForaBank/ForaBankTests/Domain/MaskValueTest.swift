@@ -95,13 +95,41 @@ class MaskValueTest: XCTestCase {
 
     }
     
-    func testUpdateMask() throws {
+    func testUpdate_AccountMask() throws {
         
         let cardMask = TextFieldComponent.StringValueMask(mask: "#### #### #### ####", symbol: "#", len: 16)
         let accountMask = TextFieldComponent.StringValueMask(mask: "##### # ### #### #######", symbol: "#", len: 20)
         let updatedString = TextFieldComponent.updateMasked(value: "1234 5678 8901 2", inRange: NSRange(location: 2, length: 5), update: "12j3 yf45lk6789 01kl", masks: [cardMask, accountMask], regExp: "[0-9]")
         
         XCTAssertEqual(updatedString, "12123 4 567 8901 7889012")
+    }
+    
+    func testUpdate_CardMask() throws {
+        
+        let cardMask = TextFieldComponent.StringValueMask(mask: "#### #### #### ####", symbol: "#", len: 16)
+        let accountMask = TextFieldComponent.StringValueMask(mask: "##### # ### #### #######", symbol: "#", len: 20)
+        let updatedString = TextFieldComponent.updateMasked(value: "1234 5", inRange: NSRange(location: 6, length: 0), update: "1", masks: [cardMask, accountMask], regExp: "[0-9]")
+        
+        XCTAssertEqual(updatedString, "1234 51")
+    }
+    
+    
+    func testUpdated_Delete() throws {
+        
+        let cardMask = TextFieldComponent.StringValueMask(mask: "#### #### #### ####", symbol: "#", len: 16)
+        let accountMask = TextFieldComponent.StringValueMask(mask: "##### # ### #### #######", symbol: "#", len: 20)
+        let updatedString = TextFieldComponent.updateMasked(value: "1", inRange: NSRange(location: 0, length: 1), update: "", masks: [cardMask, accountMask], regExp: "[0-9]")
+        
+        XCTAssertEqual(updatedString, "")
+    }
+    
+    func testUpdated_AddSymbol() throws {
+        
+        let cardMask = TextFieldComponent.StringValueMask(mask: "#### #### #### ####", symbol: "#", len: 16)
+        let accountMask = TextFieldComponent.StringValueMask(mask: "##### # ### #### #######", symbol: "#", len: 20)
+        let updatedString = TextFieldComponent.updateMasked(value: "1", inRange: NSRange(location: 1, length: 0), update: "2", masks: [cardMask, accountMask], regExp: "[0-9]")
+        
+        XCTAssertEqual(updatedString, "12")
     }
     
 }
