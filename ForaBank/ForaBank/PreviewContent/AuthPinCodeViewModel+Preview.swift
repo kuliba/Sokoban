@@ -30,7 +30,7 @@ extension AuthPinCodeViewModel.PinCodeViewModel {
     
     static let editing = AuthPinCodeViewModel.PinCodeViewModel(title: "Придумайте код", pincodeLength: 4, pincode: "12")
     
-    static let correct = AuthPinCodeViewModel.PinCodeViewModel(title: "Придумайте код", pincodeLength: 4, pincode: "1234", state: .correct)
+    static let correct = AuthPinCodeViewModel.PinCodeViewModel(title: "Придумайте код", pincodeLength: 4, pincode: "1234", style: .correct)
     
-    static let incorrect = AuthPinCodeViewModel.PinCodeViewModel(title: "Придумайте код", pincodeLength: 4, pincode: "1234", state: .incorrect)
+    static let incorrect = AuthPinCodeViewModel.PinCodeViewModel(title: "Придумайте код", pincodeLength: 4, pincode: "1234", style: .incorrect)
 }

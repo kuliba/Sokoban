@@ -46,9 +46,9 @@ extension AuthPinCodeView {
                 
                 HStack(spacing: 16) {
                     
-                    ForEach(viewModel.dots, id: \.self) { dotViewModel in
+                    ForEach(viewModel.dots) { dotViewModel in
                         
-                        DotView(viewModel: dotViewModel, state: viewModel.state)
+                        DotView(viewModel: dotViewModel, style: viewModel.style)
                     }
                 }
             }
@@ -58,15 +58,12 @@ extension AuthPinCodeView {
             
             let color: Color
             
-            init(viewModel: AuthPinCodeViewModel.PinCodeViewModel.DotViewModel, state: AuthPinCodeViewModel.PinCodeViewModel.State) {
+            init(viewModel: AuthPinCodeViewModel.PinCodeViewModel.DotViewModel, style: AuthPinCodeViewModel.PinCodeViewModel.Style) {
                 
-                switch viewModel {
-                case .empty:
-                    self.color = .mainColorsGrayMedium
+                if viewModel.isFilled == true {
                     
-                case .filled:
-                    switch state {
-                    case .editing:
+                    switch style {
+                    case .normal:
                         self.color = .mainColorsBlack
                         
                     case .correct:
@@ -75,6 +72,10 @@ extension AuthPinCodeView {
                     case .incorrect:
                         self.color = .systemColorError
                     }
+                    
+                } else {
+                    
+                    self.color = .mainColorsGrayMedium
                 }
             }
             
@@ -110,12 +111,15 @@ extension AuthPinCodeView {
                             switch button.type {
                             case .digit(let title):
                                 DigitButtonView(title: title, action: button.action)
+                                    .disabled(viewModel.isEnabled == false)
                                 
                             case .icon(let icon):
                                 ImageButtonView(icon: icon, action: button.action)
+                                    .disabled(viewModel.isEnabled == false)
                                 
                             case .text(let text):
                                 TextButtonView(title: text, action: button.action)
+                                    .disabled(viewModel.isEnabled == false)
                                 
                             case .empty:
                                 Color.clear
