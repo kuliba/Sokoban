@@ -7,10 +7,6 @@
 
 import SwiftUI
 
-extension PaymentsTaxesSelectCardView {
-    
-}
-
 struct PaymentsTaxesSelectCardView: View {
     
     var body: some View {
@@ -48,11 +44,8 @@ struct PaymentsTaxesSelectCardView: View {
                 Text("Номер карты, имя карты")
                     .font(Font.custom("Inter-Regular", size: 12))
                     .foregroundColor(Color(hex: "#999999"))
-                
-                
             }
         }
-        
     }
 }
 

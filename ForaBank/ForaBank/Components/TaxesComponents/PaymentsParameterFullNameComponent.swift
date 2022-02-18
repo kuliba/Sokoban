@@ -10,7 +10,7 @@ import Combine
 
 extension PaymentsParameterFullNameView {
     
-    class ViewModel: ObservableObject {
+    class ViewModel: PaymentsParameterViewModel {
         
         var value: String // "Иванов Иван Иванович"
         let icon: Image
@@ -138,6 +138,7 @@ extension PaymentsParameterFullNameView {
                                              firstName: "",
                                              lastName:  "",
                                              surName:   "", value: self.value)
+            super.init()
             bind()
         }
     }

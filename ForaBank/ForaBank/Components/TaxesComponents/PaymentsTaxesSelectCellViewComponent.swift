@@ -11,12 +11,13 @@ import Combine
 
 extension PaymentsTaxesSelectCellView {
     
-    class ViewModel: ObservableObject {
+    class ViewModel: PaymentsParameterViewModel {
         
         internal init(items: [PaymentsTaxesSelectCellView.ViewModel.ItemViewModel], selectedItemTitle: String) {
             self.items = items
             self.state = .list(items)
             self.selectedItemTitle = selectedItemTitle
+            super.init()
             bind()
         }
         

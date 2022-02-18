@@ -9,11 +9,17 @@ import SwiftUI
 
 extension PaymentsTaxesInfoCellViewComponent {
     
-    struct ViewModel {
-    
+    class ViewModel: PaymentsParameterViewModel  {
+        
         let icon: Image
         let content: String
         let description: String
+        
+        internal init(icon: Image, content: String, description: String) {
+            self.icon = icon
+            self.content = content
+            self.description = description
+        }
     }
 }
 

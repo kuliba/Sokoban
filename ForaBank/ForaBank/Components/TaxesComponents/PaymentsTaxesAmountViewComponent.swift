@@ -9,7 +9,7 @@ import SwiftUI
 
 extension PaymentsTaxesAmountView {
     
-    class ViewModel: ObservableObject {
+    class ViewModel: PaymentsParameterViewModel {
         @Published var context: String = ""
     }
 }

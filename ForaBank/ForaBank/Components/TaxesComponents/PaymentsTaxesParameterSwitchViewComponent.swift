@@ -8,12 +8,12 @@
 import SwiftUI
 import Combine
 
-class PaymentsTaxesParameterSwitchViewModel: ObservableObject {
+class PaymentsTaxesParameterSwitchViewModel: PaymentsParameterViewModel {
     
     @Published var options: [OptionViewModel]
     @Published var selected: Option.ID
  
-    internal init(options: [Option], selected: Option.ID) {
+    internal init(options: [Payments.Parameter.OptionSimple], selected: Option.ID) {
         self.options = []
         self.selected = selected
         self.options = options.map{ OptionViewModel(id: $0.id, title: $0.name)}
