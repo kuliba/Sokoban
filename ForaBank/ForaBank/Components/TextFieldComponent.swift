@@ -54,7 +54,7 @@ struct TextFieldComponent: UIViewRepresentable {
                 return false
             }
             
-            let cleanString = filter(value: string, regEx: "[0-9]")
+                let cleanString = filter(value: string, regEx: "[0-9]")
             
                 let croppedString = crop(value: cleanString, max: mask[1].mask.count - text.count)
                 let updateMasked = updateMasked(value: text, inRange: range, update: croppedString, masks: mask, regExp: "[0-9]")
@@ -146,14 +146,23 @@ struct TextFieldComponent: UIViewRepresentable {
     
     static func updateMasked(value: String, inRange: NSRange, update: String,  masks: [StringValueMask], regExp: String) -> String {
         
-        if inRange.lowerBound == inRange.upperBound {
+        
+        
+        if inRange.length == 1{
             
-            if let textRange = Range(inRange, in: value) {
+            let maxIndex =  value.index(value.startIndex, offsetBy: value.count - 1)
+            let number = String(value[value.startIndex..<maxIndex])
+            let filteredNumber = filter(value: number, regEx: "[0-9]")
+            
+            return filteredNumber
+        }
+        
+        if inRange.lowerBound == inRange.upperBound, let textRange = Range(inRange, in: value) {
                     
                     let updatedText = value.replacingCharacters(in: textRange, with: update)
                 
                     return updatedText
-            }
+            
         } else if inRange.lowerBound < inRange.upperBound {
 
             let updatedText = value.replacingOccurrences(of: value, with: update, options: [], range: .init(.init(location: inRange.location, length: inRange.length), in: value + update))
@@ -161,9 +170,7 @@ struct TextFieldComponent: UIViewRepresentable {
             return updatedText
         }
         
-        let charactersInRange = String() //Из value должны достать сим в соот с рендж
-
-        return charactersInRange
+        return ""
     }
 
     
