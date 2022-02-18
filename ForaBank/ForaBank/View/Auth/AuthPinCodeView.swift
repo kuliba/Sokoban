@@ -34,7 +34,7 @@ extension AuthPinCodeView {
     
     struct PinCodeView: View {
         
-        var viewModel: AuthPinCodeViewModel.PinCodeViewModel
+        @ObservedObject var viewModel: AuthPinCodeViewModel.PinCodeViewModel
         
         var body: some View {
             
