@@ -10,7 +10,7 @@ import Combine
 
 extension PaymentsTaxesInputCellView {
     
-    class ViewModel: ObservableObject {
+    class ViewModel: PaymentsParameterViewModel {
         
         @Published var content: String = ""
         let logo: Image
@@ -32,6 +32,7 @@ extension PaymentsTaxesInputCellView {
             self.title = title
             self.placeholder = placeholder
             self.action = action
+            super.init()
             self.bind()
         }
         

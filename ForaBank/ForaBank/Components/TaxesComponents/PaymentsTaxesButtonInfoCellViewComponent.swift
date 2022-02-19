@@ -8,9 +8,23 @@
 
 import SwiftUI
 
-extension PaymentsTaxesButtonInfoCellViewComponent {
+extension PaymentsTaxesButtonInfoCellView {
     
-    struct ViewModel: Identifiable {
+    class ViewModel: PaymentsParameterViewModel {
+        internal init(icon: Image, title: String, subTitle: String, action: @escaping (ViewModel.ID) -> Void) {
+            
+            self.icon = icon
+            self.title = title
+            self.subTitle = subTitle
+            self.action = action
+        }
+        init(parameter: Payments.Parameter.Service, action: @escaping (ViewModel.ID) -> Void) {
+            
+            self.icon = Image("")
+            self.title = parameter.title
+            self.subTitle = parameter.description
+            self.action = action
+        }
         
         let id = UUID()
         let icon: Image
@@ -23,9 +37,9 @@ extension PaymentsTaxesButtonInfoCellViewComponent {
     
 }
 
-struct PaymentsTaxesButtonInfoCellViewComponent: View {
+struct PaymentsTaxesButtonInfoCellView: View {
     
-    let viewModel: PaymentsTaxesButtonInfoCellViewComponent.ViewModel
+    let viewModel: PaymentsTaxesButtonInfoCellView.ViewModel
     
     var body: some View {
         
@@ -59,10 +73,10 @@ struct PaymentsTaxesButtonInfoCellViewComponent: View {
 }
 
 
-struct PaymentsTaxesButtonInfoCellViewComponent_Previews: PreviewProvider {
+struct PaymentsTaxesButtonInfoCellView_Previews: PreviewProvider {
     static var previews: some View {
         
-        PaymentsTaxesButtonInfoCellViewComponent(viewModel: .init(icon: Image("qr_Icon"), title: "content", subTitle: "Налоги ", action: {_ in }))
+        PaymentsTaxesButtonInfoCellView(viewModel: .init(icon: Image("qr_Icon"), title: "content", subTitle: "Налоги ", action: {_ in }))
             .previewLayout(.fixed(width: 375, height: 56))
     }
     
