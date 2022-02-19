@@ -140,7 +140,7 @@ extension AuthLoginView {
                         // text field
                         ZStack {
                             
-                            TextView(text: $message, isValidate: isValidate)
+                            TextFieldComponent(text: $message, isValidate: isValidate)
                                 .font(.textH2M20282())
                                 .textContentType(.creditCardNumber)
                             
