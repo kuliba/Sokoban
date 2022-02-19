@@ -335,8 +335,10 @@ extension Model {
     
     //GetFSSPList
     
+    //FIXME: refactor
     func handleDictionaryFSSPList(serial: String?) {
         
+        /*
         let command = ServerCommands.DictionaryController.GetFSSPList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
@@ -367,6 +369,7 @@ extension Model {
                 handleDictionaryDownloadError(error: error, command: command)
             }
         }
+         */
     }
     
     //GetFTSList
