@@ -299,6 +299,20 @@
 		682092BD27AC17D2003DCAFD /* ServerCommandsDaDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 682092BC27AC17D2003DCAFD /* ServerCommandsDaDataTests.swift */; };
 		682092BF27AC184F003DCAFD /* GetPhoneInfoGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 682092BE27AC184F003DCAFD /* GetPhoneInfoGeneric.json */; };
 		682092C127AC1885003DCAFD /* GetPhoneInfoGenericMin.json in Resources */ = {isa = PBXBuildFile; fileRef = 682092C027AC1885003DCAFD /* GetPhoneInfoGenericMin.json */; };
+		682092C327B1603E003DCAFD /* GetFSSPDebtListResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 682092C227B1603E003DCAFD /* GetFSSPDebtListResponseGeneric.json */; };
+		682092C527B16316003DCAFD /* GetFSSPDocumentListResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 682092C427B16316003DCAFD /* GetFSSPDocumentListResponseGeneric.json */; };
+		682092C727B175E7003DCAFD /* GetAnywayOperatorGroupDataResponseServer.json in Resources */ = {isa = PBXBuildFile; fileRef = 682092C627B175E7003DCAFD /* GetAnywayOperatorGroupDataResponseServer.json */; };
+		682092C927B1C583003DCAFD /* GetBanksResponseGenericServer.json in Resources */ = {isa = PBXBuildFile; fileRef = 682092C827B1C583003DCAFD /* GetBanksResponseGenericServer.json */; };
+		682092CB27B1C667003DCAFD /* GetCountriesResponseGenericServer.json in Resources */ = {isa = PBXBuildFile; fileRef = 682092CA27B1C667003DCAFD /* GetCountriesResponseGenericServer.json */; };
+		682092CD27B1C6F5003DCAFD /* GetCurrencyListResponseGenericServer.json in Resources */ = {isa = PBXBuildFile; fileRef = 682092CC27B1C6F5003DCAFD /* GetCurrencyListResponseGenericServer.json */; };
+		682092CF27B1C791003DCAFD /* GetFMSListResponseServerGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 682092CE27B1C791003DCAFD /* GetFMSListResponseServerGeneric.json */; };
+		682092D127B1C7F5003DCAFD /* GetFSSPDebtListResponseServerGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 682092D027B1C7F5003DCAFD /* GetFSSPDebtListResponseServerGeneric.json */; };
+		682092D327B1C84E003DCAFD /* GetFSSPDocumentListResponseServerGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 682092D227B1C84E003DCAFD /* GetFSSPDocumentListResponseServerGeneric.json */; };
+		682092D527B1C88A003DCAFD /* GetFTSListResponseServerGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 682092D427B1C88A003DCAFD /* GetFTSListResponseServerGeneric.json */; };
+		682092D727B1C901003DCAFD /* GetFullBankInfoListResponseServerGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 682092D627B1C901003DCAFD /* GetFullBankInfoListResponseServerGeneric.json */; };
+		682092D927B1CA28003DCAFD /* GetMobileDataResponseServerGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 682092D827B1CA28003DCAFD /* GetMobileDataResponseServerGeneric.json */; };
+		682092DB27B1CA7C003DCAFD /* GetMosParkingListResponseServerGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 682092DA27B1CA7C003DCAFD /* GetMosParkingListResponseServerGeneric.json */; };
+		682092DD27B1CAF5003DCAFD /* GetPaymentSystemListResponseServerGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 682092DC27B1CAF5003DCAFD /* GetPaymentSystemListResponseServerGeneric.json */; };
 		6822EFD226B935DB00125EEC /* BaseTableViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6822EFD126B935DB00125EEC /* BaseTableViewViewController.swift */; };
 		6822EFD626B935FF00125EEC /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6822EFD426B935FF00125EEC /* BaseTableViewCell.swift */; };
 		6822EFD726B935FF00125EEC /* BaseTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6822EFD526B935FF00125EEC /* BaseTableViewCell.xib */; };
@@ -518,6 +532,8 @@
 		7758400F27B1842A00251969 /* Model+Payments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7758400E27B1842A00251969 /* Model+Payments.swift */; };
 		7758401727B1BD6000251969 /* PaymentsDataModel+Operation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7758401627B1BD6000251969 /* PaymentsDataModel+Operation.swift */; };
 		7758401B27B2A0CB00251969 /* PaymentsOperationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7758401A27B2A0CB00251969 /* PaymentsOperationTests.swift */; };
+		77583FF927AED4E700251969 /* Model+Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77583FF827AED4E700251969 /* Model+Dictionary.swift */; };
+		77583FFC27AED77F00251969 /* Model+Handlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77583FFB27AED77F00251969 /* Model+Handlers.swift */; };
 		775875472798C87B0080115D /* Option.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775875462798C87B0080115D /* Option.swift */; };
 		7758754927996D510080115D /* LocalAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7758754827996D510080115D /* LocalAgentProtocol.swift */; };
 		7758754B27996D8B0080115D /* Cachable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7758754A27996D8B0080115D /* Cachable.swift */; };
@@ -564,7 +580,6 @@
 		77E1804727AC3AD30006ACC9 /* FSSPData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E1804627AC3AD30006ACC9 /* FSSPData.swift */; };
 		77E1804927AC3B810006ACC9 /* FTSData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E1804827AC3B810006ACC9 /* FTSData.swift */; };
 		77E1804B27AC3C710006ACC9 /* GetFMSListResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 77E1804A27AC3C710006ACC9 /* GetFMSListResponseGeneric.json */; };
-		77E1804D27AC3CA80006ACC9 /* GetFSSPListResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 77E1804C27AC3CA80006ACC9 /* GetFSSPListResponseGeneric.json */; };
 		77E1804F27AC3CD10006ACC9 /* GetFTSListResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 77E1804E27AC3CD10006ACC9 /* GetFTSListResponseGeneric.json */; };
 		77E1805A27AC8BE20006ACC9 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E1805927AC8BE20006ACC9 /* main.swift */; };
 		77E1805C27AC8CAE0006ACC9 /* TestingAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E1805B27AC8CAE0006ACC9 /* TestingAppDelegate.swift */; };
@@ -1191,6 +1206,20 @@
 		682092BC27AC17D2003DCAFD /* ServerCommandsDaDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommandsDaDataTests.swift; sourceTree = "<group>"; };
 		682092BE27AC184F003DCAFD /* GetPhoneInfoGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetPhoneInfoGeneric.json; sourceTree = "<group>"; };
 		682092C027AC1885003DCAFD /* GetPhoneInfoGenericMin.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetPhoneInfoGenericMin.json; sourceTree = "<group>"; };
+		682092C227B1603E003DCAFD /* GetFSSPDebtListResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetFSSPDebtListResponseGeneric.json; sourceTree = "<group>"; };
+		682092C427B16316003DCAFD /* GetFSSPDocumentListResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetFSSPDocumentListResponseGeneric.json; sourceTree = "<group>"; };
+		682092C627B175E7003DCAFD /* GetAnywayOperatorGroupDataResponseServer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetAnywayOperatorGroupDataResponseServer.json; sourceTree = "<group>"; };
+		682092C827B1C583003DCAFD /* GetBanksResponseGenericServer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetBanksResponseGenericServer.json; sourceTree = "<group>"; };
+		682092CA27B1C667003DCAFD /* GetCountriesResponseGenericServer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetCountriesResponseGenericServer.json; sourceTree = "<group>"; };
+		682092CC27B1C6F5003DCAFD /* GetCurrencyListResponseGenericServer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetCurrencyListResponseGenericServer.json; sourceTree = "<group>"; };
+		682092CE27B1C791003DCAFD /* GetFMSListResponseServerGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetFMSListResponseServerGeneric.json; sourceTree = "<group>"; };
+		682092D027B1C7F5003DCAFD /* GetFSSPDebtListResponseServerGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetFSSPDebtListResponseServerGeneric.json; sourceTree = "<group>"; };
+		682092D227B1C84E003DCAFD /* GetFSSPDocumentListResponseServerGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetFSSPDocumentListResponseServerGeneric.json; sourceTree = "<group>"; };
+		682092D427B1C88A003DCAFD /* GetFTSListResponseServerGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetFTSListResponseServerGeneric.json; sourceTree = "<group>"; };
+		682092D627B1C901003DCAFD /* GetFullBankInfoListResponseServerGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetFullBankInfoListResponseServerGeneric.json; sourceTree = "<group>"; };
+		682092D827B1CA28003DCAFD /* GetMobileDataResponseServerGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetMobileDataResponseServerGeneric.json; sourceTree = "<group>"; };
+		682092DA27B1CA7C003DCAFD /* GetMosParkingListResponseServerGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetMosParkingListResponseServerGeneric.json; sourceTree = "<group>"; };
+		682092DC27B1CAF5003DCAFD /* GetPaymentSystemListResponseServerGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetPaymentSystemListResponseServerGeneric.json; sourceTree = "<group>"; };
 		6822EFD126B935DB00125EEC /* BaseTableViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewViewController.swift; sourceTree = "<group>"; };
 		6822EFD426B935FF00125EEC /* BaseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewCell.swift; sourceTree = "<group>"; };
 		6822EFD526B935FF00125EEC /* BaseTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BaseTableViewCell.xib; sourceTree = "<group>"; };
@@ -1406,6 +1435,8 @@
 		7758400E27B1842A00251969 /* Model+Payments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Payments.swift"; sourceTree = "<group>"; };
 		7758401627B1BD6000251969 /* PaymentsDataModel+Operation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsDataModel+Operation.swift"; sourceTree = "<group>"; };
 		7758401A27B2A0CB00251969 /* PaymentsOperationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsOperationTests.swift; sourceTree = "<group>"; };
+		77583FF827AED4E700251969 /* Model+Dictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Dictionary.swift"; sourceTree = "<group>"; };
+		77583FFB27AED77F00251969 /* Model+Handlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Handlers.swift"; sourceTree = "<group>"; };
 		775875462798C87B0080115D /* Option.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Option.swift; sourceTree = "<group>"; };
 		7758754827996D510080115D /* LocalAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAgentProtocol.swift; sourceTree = "<group>"; };
 		7758754A27996D8B0080115D /* Cachable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cachable.swift; sourceTree = "<group>"; };
@@ -1451,7 +1482,6 @@
 		77E1804627AC3AD30006ACC9 /* FSSPData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSSPData.swift; sourceTree = "<group>"; };
 		77E1804827AC3B810006ACC9 /* FTSData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FTSData.swift; sourceTree = "<group>"; };
 		77E1804A27AC3C710006ACC9 /* GetFMSListResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetFMSListResponseGeneric.json; sourceTree = "<group>"; };
-		77E1804C27AC3CA80006ACC9 /* GetFSSPListResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetFSSPListResponseGeneric.json; sourceTree = "<group>"; };
 		77E1804E27AC3CD10006ACC9 /* GetFTSListResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetFTSListResponseGeneric.json; sourceTree = "<group>"; };
 		77E1805927AC8BE20006ACC9 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		77E1805B27AC8CAE0006ACC9 /* TestingAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingAppDelegate.swift; sourceTree = "<group>"; };
@@ -3098,7 +3128,9 @@
 			isa = PBXGroup;
 			children = (
 				77EC58E6277236E90054D75C /* Model.swift */,
+				77583FFB27AED77F00251969 /* Model+Handlers.swift */,
 				77EC58E8277237190054D75C /* ModelAction.swift */,
+				77583FF827AED4E700251969 /* Model+Dictionary.swift */,
 				77EC58ED27723A5A0054D75C /* ModelAction+PaymentTemplate.swift */,
 				7758400C27B1442F00251969 /* ModelAction+Payments.swift */,
 				77583FFE27B13C1600251969 /* Payments */,
@@ -3413,8 +3445,21 @@
 				77E1803E27AC34270006ACC9 /* InstallPushDeviceResponseGeneric.json */,
 				77E1804027AC34450006ACC9 /* UninstallPushDeviceResponseGeneric.json */,
 				77E1804A27AC3C710006ACC9 /* GetFMSListResponseGeneric.json */,
-				77E1804C27AC3CA80006ACC9 /* GetFSSPListResponseGeneric.json */,
 				77E1804E27AC3CD10006ACC9 /* GetFTSListResponseGeneric.json */,
+				682092C227B1603E003DCAFD /* GetFSSPDebtListResponseGeneric.json */,
+				682092C427B16316003DCAFD /* GetFSSPDocumentListResponseGeneric.json */,
+				682092C627B175E7003DCAFD /* GetAnywayOperatorGroupDataResponseServer.json */,
+				682092C827B1C583003DCAFD /* GetBanksResponseGenericServer.json */,
+				682092CA27B1C667003DCAFD /* GetCountriesResponseGenericServer.json */,
+				682092CC27B1C6F5003DCAFD /* GetCurrencyListResponseGenericServer.json */,
+				682092CE27B1C791003DCAFD /* GetFMSListResponseServerGeneric.json */,
+				682092D027B1C7F5003DCAFD /* GetFSSPDebtListResponseServerGeneric.json */,
+				682092D227B1C84E003DCAFD /* GetFSSPDocumentListResponseServerGeneric.json */,
+				682092D427B1C88A003DCAFD /* GetFTSListResponseServerGeneric.json */,
+				682092D627B1C901003DCAFD /* GetFullBankInfoListResponseServerGeneric.json */,
+				682092D827B1CA28003DCAFD /* GetMobileDataResponseServerGeneric.json */,
+				682092DA27B1CA7C003DCAFD /* GetMosParkingListResponseServerGeneric.json */,
+				682092DC27B1CAF5003DCAFD /* GetPaymentSystemListResponseServerGeneric.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -5275,6 +5320,7 @@
 				5A5ABFAC27AAF7DD00D548AA /* GetPaymentCountries.json in Resources */,
 				77517FDC27A98333005CFB77 /* GetProductListResponseMin.json in Resources */,
 				682092B027AC06E1003DCAFD /* SuggestBankGeneric.json in Resources */,
+				682092D127B1C7F5003DCAFD /* GetFSSPDebtListResponseServerGeneric.json in Resources */,
 				77517FA327A94BA5005CFB77 /* CheckCardResponseGeneric.json in Resources */,
 				5A5ABFA927AAF7DD00D548AA /* GetAllLatestPayments.json in Resources */,
 				5A5ABFB927ABCDC700D548AA /* OpenDeposit.json in Resources */,
@@ -5290,6 +5336,7 @@
 				6820924C27A9D229003DCAFD /* GetBanksResponseGenericMin.json in Resources */,
 				682092B427AC0708003DCAFD /* SuggestCompanyGeneric.json in Resources */,
 				77517F9F27A94B46005CFB77 /* AntiFraudResponseGeneric.json in Resources */,
+				682092D927B1CA28003DCAFD /* GetMobileDataResponseServerGeneric.json in Resources */,
 				77517FB127A94CF3005CFB77 /* CreateTransferResponseGeneric.json in Resources */,
 				77517FA727A94C11005CFB77 /* CreateContactAddresslessTransferResponseGeneric.json in Resources */,
 				68AD33F727985C8B00647665 /* IsLoginResponseGeneric.json in Resources */,
@@ -5299,8 +5346,10 @@
 				6820925827A9D7C9003DCAFD /* FastPaymentContractFindListResponseGenericMin.json in Resources */,
 				77EC58B5277122430054D75C /* TransferDecodingGeneric.json in Resources */,
 				77517FDE27A98474005CFB77 /* GetProductListByFilterResponseMin.json in Resources */,
+				682092DB27B1CA7C003DCAFD /* GetMosParkingListResponseServerGeneric.json in Resources */,
 				682092B227AC06F4003DCAFD /* SuggestBankGenericMin.json in Resources */,
 				6820924227A97BF4003DCAFD /* GetBanksResponseGeneric.json in Resources */,
+				682092CD27B1C6F5003DCAFD /* GetCurrencyListResponseGenericServer.json in Resources */,
 				684193042799D6A800B4E184 /* Me2MeDebitConsentDataDecodingGeneric.json in Resources */,
 				77517FE827A98EE8005CFB77 /* SetUserSettingResponseGeneric.json in Resources */,
 				5A5ABFA327AAF7DD00D548AA /* GetLatestPhonePayments.json in Resources */,
@@ -5308,6 +5357,8 @@
 				77EC58B9277125000054D75C /* TransferEncodingMin.json in Resources */,
 				77EC58C327712EDD0054D75C /* TransferMe2MeDecodingGeneric.json in Resources */,
 				682092C127AC1885003DCAFD /* GetPhoneInfoGenericMin.json in Resources */,
+				682092C327B1603E003DCAFD /* GetFSSPDebtListResponseGeneric.json in Resources */,
+				682092C527B16316003DCAFD /* GetFSSPDocumentListResponseGeneric.json in Resources */,
 				77517FC527A94F7A005CFB77 /* CreateTransferResponseMin.json in Resources */,
 				6820925227A9D3E1003DCAFD /* GetFullBankInfoListResponseGenericMin.json in Resources */,
 				68E7652F27970137005860FE /* DoRegistrationResponseGeneric.json in Resources */,
@@ -5329,13 +5380,16 @@
 				5A5ABFBA27ABCDC700D548AA /* GetDepositStatement.json in Resources */,
 				77EC58D72771F6C10054D75C /* SavePaymentTemplateResponseGeneric.json in Resources */,
 				77E1804B27AC3C710006ACC9 /* GetFMSListResponseGeneric.json in Resources */,
+				682092C727B175E7003DCAFD /* GetAnywayOperatorGroupDataResponseServer.json in Resources */,
 				682092B627AC0720003DCAFD /* SuggestCompanyGenericMin.json in Resources */,
 				68419318279EDBA400B4E184 /* GetClientConsentMe2MePullResponseGenericMin.json in Resources */,
+				682092C927B1C583003DCAFD /* GetBanksResponseGenericServer.json in Resources */,
 				77517FE627A98EB3005CFB77 /* GetUserSettingsResponseGeneric.json in Resources */,
 				77EC58C7277131710054D75C /* TransferMe2MeEncodingMin.json in Resources */,
 				77517FF027A99462005CFB77 /* GetExchangeCurrencyRatesResponseGeneric.json in Resources */,
 				684192E42799A93E00B4E184 /* SaveCardNameResponseGeneric.json in Resources */,
 				68AD33F1279858E900647665 /* CsrfDtoDecodingGeneric.json in Resources */,
+				682092CF27B1C791003DCAFD /* GetFMSListResponseServerGeneric.json in Resources */,
 				77517FD827A98189005CFB77 /* GetProductListResponseGeneric.json in Resources */,
 				77EC58C9277133910054D75C /* PaymentTemplateDecodingGeneric.json in Resources */,
 				5A5ABFC027ABCF8C00D548AA /* GetDepositStatementMin.json in Resources */,
@@ -5357,8 +5411,8 @@
 				6820923427A97B44003DCAFD /* UpdateFastPaymentContractResponseGeneric.json in Resources */,
 				77517FB927A94D9F005CFB77 /* ReturnOutgoingResponseGeneric.json in Resources */,
 				77517FAB27A94C70005CFB77 /* CreateMe2MePullCreditTransferResponseGeneric.json in Resources */,
-				77E1804D27AC3CA80006ACC9 /* GetFSSPListResponseGeneric.json in Resources */,
 				77EC58BF27712D340054D75C /* TransferAnywayEncodingMin.json in Resources */,
+				682092D327B1C84E003DCAFD /* GetFSSPDocumentListResponseServerGeneric.json in Resources */,
 				77EC58BD27712B680054D75C /* TransferAnywayDecodingGeneric.json in Resources */,
 				77517FA527A94BD3005CFB77 /* CreateAnywayTransferResponseGeneric.json in Resources */,
 				684192F22799C23A00B4E184 /* CreatePermanentConsentMe2MePullResponseGeneric.json in Resources */,
@@ -5372,13 +5426,16 @@
 				77517FBB27A94E28005CFB77 /* CreateAnywayTransferResponseMin.json in Resources */,
 				68419314279ED96800B4E184 /* GetCardStatementResponseGenericMin.json in Resources */,
 				77517FB327A94D21005CFB77 /* GetVerificationCodeResponseGeneric.json in Resources */,
+				682092CB27B1C667003DCAFD /* GetCountriesResponseGenericServer.json in Resources */,
 				6820925427A9D63B003DCAFD /* GetMosParkingListResponseGenericMin.json in Resources */,
 				77E1803D27AC33F50006ACC9 /* RegisterPushDeviceForUserResponseGeneric.json in Resources */,
+				682092DD27B1CAF5003DCAFD /* GetPaymentSystemListResponseServerGeneric.json in Resources */,
 				68419316279EDB6400B4E184 /* GetMe2MeDebitConsentResponseGenericMin.json in Resources */,
 				77E1804F27AC3CD10006ACC9 /* GetFTSListResponseGeneric.json in Resources */,
 				77517FC327A94F49005CFB77 /* CreateSFPTransferResponseMin.json in Resources */,
 				684192E62799A9C900B4E184 /* UnblockCardResponseGeneric.json in Resources */,
 				5A5ABFA227AAF7DD00D548AA /* GetOperationDetail.json in Resources */,
+				682092D727B1C901003DCAFD /* GetFullBankInfoListResponseServerGeneric.json in Resources */,
 				6820923627A97B5F003DCAFD /* GetPaymentSystemListResponseGeneric.json in Resources */,
 				77EC58DB2771FC360054D75C /* UpdatePaymentTemplateResponseGeneric.json in Resources */,
 				5ADDC85727997CF800488139 /* GetAccountStatementResponseGeneric.json in Resources */,
@@ -5386,6 +5443,7 @@
 				77EC58CD27713A860054D75C /* PaymentTemplateEncodingMin.json in Resources */,
 				77517FB527A94D4D005CFB77 /* IsSingleServiceResponseGeneric.json in Resources */,
 				68E7652D2797009A005860FE /* CheckClientResponseGeneric.json in Resources */,
+				682092D527B1C88A003DCAFD /* GetFTSListResponseServerGeneric.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5558,6 +5616,7 @@
 				0BF3486426943DFB005138A8 /* SuggestCompanyDecodableModel.swift in Sources */,
 				EDB1452026661B030028EF5A /* StringMask.swift in Sources */,
 				EDB16586266A0883007E6030 /* NSDirectionalEdgeInsets.swift in Sources */,
+				77583FFC27AED77F00251969 /* Model+Handlers.swift in Sources */,
 				EDE212F82742ED2B005D9821 /* ChooseCurrencyTableViewCell.swift in Sources */,
 				0B931B4F26DE334500CA8017 /* GKHHistoryHeaderView.swift in Sources */,
 				77E1804727AC3AD30006ACC9 /* FSSPData.swift in Sources */,
@@ -5701,6 +5760,7 @@
 				0B7A18B226836A400007CC75 /* NetworkPDFManager.swift in Sources */,
 				0B7A18CE2689C4ED0007CC75 /* AddHeaderImageViewController.swift in Sources */,
 				EDDFE3A32756BDDB00F57C71 /* DetailInformationViewController.swift in Sources */,
+				77583FF927AED4E700251969 /* Model+Dictionary.swift in Sources */,
 				EDB1655826679C74007E6030 /* SmsCodeView.swift in Sources */,
 				0BB24AA126EFEE4700DDA4F6 /* GetProductListByFilter.swift in Sources */,
 				0BBDFBE227BBF75600A30D6D /* PaymentsServicesViewModel.swift in Sources */,

@@ -204,10 +204,14 @@ extension ServerCommands {
                     enum CodingKeys : String, CodingKey {
                         
                         case fmsList = "FMSList"
+                        case id
+                        case puref
                         case serial
                     }
                     
                     let fmsList: [FMSData]
+                    let id: String
+                    let puref: String
                     let serial: String
                 }
             }
@@ -228,12 +232,12 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getFSSPListUsingGET
+         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/dict/getFSSPDebtList
          */
-        struct GetFSSPList: ServerCommand {
+        struct GetFSSPDebtList: ServerCommand {
             
             let token: String? = nil
-            let endpoint = "/dict/getFSSPList"
+            let endpoint = "/dict/getFSSPDebtList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
             let payload: Payload? = nil
@@ -245,17 +249,21 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: FSSPListData?
+                let data: FSSPDebtData?
                 
-                struct FSSPListData: Decodable, Equatable {
+                struct FSSPDebtData: Decodable, Equatable {
                     
                     enum CodingKeys : String, CodingKey {
                         
-                        case fsspList = "FSSPList"
+                        case FsspDebtList = "FSSPDebtList"
+                        case id
+                        case puref
                         case serial
                     }
                     
-                    let fsspList: [FSSPData]
+                    let FsspDebtList: [FSSPData]
+                    let id: String
+                    let puref: String
                     let serial: String
                 }
             }
@@ -275,6 +283,58 @@ extension ServerCommands {
             }
         }
         
+        /*
+         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/dict/getFSSPDocumentList
+         */
+        struct GetFSSPDocumentList: ServerCommand {
+            
+            let token: String? = nil
+            let endpoint = "/dict/getFSSPDocumentList"
+            let method: ServerCommandMethod = .get
+            let parameters: [ServerCommandParameter]?
+            let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
+            
+            struct Payload: Encodable {}
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: FSSPDocumentData?
+                
+                struct FSSPDocumentData: Decodable, Equatable {
+                    
+                    enum CodingKeys : String, CodingKey {
+                        
+                        case FsspDocumentList = "FSSPDocumentList"
+                        case id
+                        case puref
+                        case serial
+                    }
+                    
+                    let FsspDocumentList: [FSSPData]
+                    let id: String
+                    let puref: String
+                    let serial: String
+                }
+            }
+            
+            internal init(serial: String?) {
+                
+                if let serial = serial{
+                    
+                    var parameters = [ServerCommandParameter]()
+                    parameters.append(.init(name: "serial", value: serial))
+                    self.parameters = parameters
+                    
+                } else {
+                    
+                    self.parameters = nil
+                }
+            }
+        }
+                
         /*
          https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getFTSListUsingGET
          */
@@ -300,10 +360,14 @@ extension ServerCommands {
                     enum CodingKeys : String, CodingKey {
                         
                         case ftsList = "FTSList"
+                        case id
+                        case puref
                         case serial
                     }
                     
                     let ftsList: [FTSData]
+                    let id: String
+                    let puref: String
                     let serial: String
                 }
             }

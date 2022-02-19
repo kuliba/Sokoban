@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct CountryData: Codable, Equatable {
+struct CountryData: Codable, Equatable, Cachable {
     
     let code: String
     let contactCode: String?
