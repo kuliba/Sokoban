@@ -29,7 +29,7 @@ extension PaymentsTaxesAmountView {
             self.currencyCodeTo = currencyCodeTo
             
             numberFormatter = NumberFormatter()
-            numberFormatter = setupNumberFormatter(with: getSymbol(from: currencyCodeFrom))
+            numberFormatter = Self.setupNumberFormatter(with: Self.getSymbol(from: currencyCodeFrom))
         }
         
         init(value: Double? = nil, showInfo: Bool = false, currencysymbolFrom: String, currencysymbolTo: String? = nil, showBalanceAlert: Bool = false) {
@@ -41,7 +41,7 @@ extension PaymentsTaxesAmountView {
                 self.switchButton = SwitchCurrencyButtonViewModel(fromCurrency: currencysymbolFrom, toCurrency: currencysymbolTo)
             }
             numberFormatter = NumberFormatter()
-            numberFormatter = setupNumberFormatter(with: currencysymbolFrom)
+            numberFormatter = Self.setupNumberFormatter(with: currencysymbolFrom)
         }
         
         class SwitchCurrencyButtonViewModel: ObservableObject {
@@ -60,7 +60,7 @@ extension PaymentsTaxesAmountView {
             
         }
         
-        func setupNumberFormatter(with symbol: String) -> NumberFormatter {
+        static func setupNumberFormatter(with symbol: String) -> NumberFormatter {
             
             let currencyFormatter = NumberFormatter()
             currencyFormatter.usesGroupingSeparator = true
@@ -72,7 +72,7 @@ extension PaymentsTaxesAmountView {
             return currencyFormatter
         }
         
-        func getSymbol(from symbol: String = "") -> String {
+        static func getSymbol(from symbol: String = "") -> String {
             var resultString = ""
             let currArr = Dict.shared.currencyList
             currArr?.forEach({ currency in
