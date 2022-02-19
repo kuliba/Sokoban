@@ -7,6 +7,7 @@
 
 import Foundation
 import LocalAuthentication
+import SwiftUI
 
 enum BiometricSensorType {
     
@@ -30,6 +31,17 @@ extension BiometricSensorType {
         switch self {
         case .face: return .faceID
         case .touch: return .touchID
+        }
+    }
+}
+
+extension BiometricSensorType {
+    
+    var icon: Image {
+        
+        switch self {
+        case .face: return .ic40FaceId
+        case .touch: return .ic40TouchID
         }
     }
 }

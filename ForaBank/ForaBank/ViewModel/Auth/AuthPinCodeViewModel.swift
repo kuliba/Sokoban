@@ -17,51 +17,59 @@ class AuthPinCodeViewModel: ObservableObject {
     @Published var numpad: NumPadViewModel
     @Published var footer: FooterViewModel
     
+    @Published var mode: Mode
+    @Published var stage: Stage
+    
     private let model: Model
-    private var mode: CurrentValueSubject<Mode, Never>
+    private let dismissAction: DismissAction?
     private var bindings = Set<AnyCancellable>()
     
     typealias DismissAction = () -> Void
 
-    init(pinCode: PinCodeViewModel, numpad: NumPadViewModel, footer: FooterViewModel, dismissAction: DismissAction? = nil, model: Model = .emptyMock, mode: Mode = .lock) {
+    init(pinCode: PinCodeViewModel, numpad: NumPadViewModel, footer: FooterViewModel, dismissAction: DismissAction? = nil, model: Model = .emptyMock, mode: Mode = .unlock(attempt: 3), stage: Stage = .editing) {
         
         self.pinCode = pinCode
         self.numpad = numpad
         self.footer = footer
+        self.dismissAction = dismissAction
         self.model = model
-        self.mode = .init(mode)
+        self.mode = mode
+        self.stage = stage
     }
     
     init(_ model: Model, mode: Mode, dismissAction: DismissAction? = nil) {
  
         switch mode {
-        case .lock:
+        case .unlock:
             self.pinCode = PinCodeViewModel(title: "Введите код", pincodeLength: model.pincodeLength)
-            //TODO: detect sensor
-            //TODO: dismiss action for button exit
-            self.numpad = NumPadViewModel(leftButton: .init(type: .text("Выход"), action: .exit), rightButton: .init(type: .icon(.ic40FaceId), action: .sensor))
-            self.footer = FooterViewModel(continueButton: nil, cancelButton: nil)
-            self.mode = .init(.lock)
             
+            if let sensor = model.availableBiometricSensorType, model.isBiometricSensorEnabled == true {
+                
+                self.numpad = NumPadViewModel(leftButton: .init(type: .text("Выход"), action: .exit), rightButton: .init(type: .icon(sensor.icon), action: .sensor))
+                
+            } else {
+                
+                self.numpad = NumPadViewModel(leftButton: .init(type: .text("Выход"), action: .exit), rightButton: .init(type: .empty, action: .none))
+            }
+    
+            self.footer = FooterViewModel(continueButton: nil, cancelButton: nil)
+            self.mode = mode
+
         case .create:
             self.pinCode = PinCodeViewModel(title: "Придумайте код", pincodeLength: model.pincodeLength)
-            self.numpad = NumPadViewModel(leftButton: .init(type: .empty, action: .cancel), rightButton: .init(type: .icon(.ic40Delete), action: .delete))
+            self.numpad = NumPadViewModel(leftButton: .init(type: .empty, action: .none), rightButton: .init(type: .icon(.ic40Delete), action: .delete))
             self.footer = FooterViewModel(continueButton: nil, cancelButton: nil)
-            self.mode = .init(.create(.fist))
+            self.mode = .create(step: .one)
         }
         
+        self.dismissAction = dismissAction
+        self.stage = .editing
         self.model = model
         
-        bindNumpad()
         bind()
     }
     
     func bind() {
-        
-        
-    }
-    
-    func bindNumpad() {
         
         numpad.action
             .receive(on: DispatchQueue.main)
@@ -71,24 +79,208 @@ class AuthPinCodeViewModel: ObservableObject {
                 case let payload as NumPadViewModelAction.Button:
                     switch payload {
                     case .digit(let number):
-                        pinCode.pincode = pinCode.pincode + String(number)
+                        pinCode.value = pinCode.value + String(number)
                     
                     case .delete:
-                        guard pinCode.pincode.count > 0 else {
+                        guard pinCode.value.count > 0 else {
                             return
                         }
-                        pinCode.pincode = String(pinCode.pincode.dropLast())
+                        pinCode.value = String(pinCode.value.dropLast())
                         
                     case .sensor:
-                        print("activate sensor")
-                        
-                    case .cancel:
-                        print("cancel action")
-                        
+                        guard let sensor = model.availableBiometricSensorType, model.isBiometricSensorEnabled == true else {
+                            return
+                        }
+                        model.action.send(ModelAction.Auth.Sensor.Evaluate.Request(sensor: sensor))
+      
+                    case .back:
+                        self.mode = .create(step: .one)
+                        self.pinCode.title = "Придумайте код"
+                        self.pinCode.value = ""
+                        self.numpad.update(button: .init(type: .empty, action: .none), left: true)
+
                     case .exit:
-                        print("exit action")
+                        print("exit account action")
+                        
+                    default:
+                        break
                     }
                     
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+        
+        pinCode.$value
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] value in
+                
+                if pinCode.isComplete == true {
+                    
+                    switch mode {
+                    case .unlock:
+                        stage = .finished
+                        
+                    case .create(let step):
+                        switch step {
+                        case .one:
+                            self.mode = .create(step: .two(value))
+                            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(200)) {
+                                
+                                self.pinCode.title = "Подтвердите код"
+                                self.pinCode.value = ""
+                                self.numpad.update(button: .init(type: .text("Назад"), action: .back), left: true)
+                            }
+
+                        case .two(let prevValue):
+                            if value != prevValue {
+                                
+                                self.stage = .mistake
+                                
+                            } else {
+                                
+                                self.stage = .finished
+                            }
+                        }
+                    }
+                    
+                } else {
+                    
+                    switch mode {
+                    case .unlock:
+                        
+                        if pinCode.value.count > 0 {
+                            
+                            self.numpad.update(button: .init(type: .icon(.ic40Delete), action: .delete), left: false)
+                            
+                        } else {
+                            
+                            if let sensor = model.availableBiometricSensorType, model.isBiometricSensorEnabled == true {
+                                
+                                self.numpad.update(button: .init(type: .icon(sensor.icon), action: .sensor), left: false)
+                                
+                            } else {
+                                
+                                self.numpad.update(button: .init(type: .empty, action: .none), left: false)
+                            }
+                        }
+                        
+                    default:
+                        break
+                    }
+                }
+                
+            }.store(in: &bindings)
+        
+        $stage
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] stage in
+  
+                switch stage {
+                case .mistake:
+                    withAnimation {
+                        // show incorrect pincode state
+                        pinCode.style = .incorrect
+                        numpad.isEnabled = false
+                    }
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(400)) {
+                        
+                        withAnimation {
+                            // back to editing
+                            self.stage = .editing
+                            pinCode.style = .normal
+                            pinCode.value = ""
+                            numpad.isEnabled = true
+                        }
+                    }
+                    
+                case .finished:
+                    
+                    // lock numpad
+                    numpad.isEnabled = false
+                    
+                    switch mode {
+                    case .unlock(let attempt):
+                        model.action.send(ModelAction.Auth.Pincode.Check.Request(pincode: pinCode.value, attempt: attempt))
+                        
+                    case .create:
+                        withAnimation {
+                            pinCode.style = .correct
+                        }
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(200)) {
+                            
+                            model.action.send(ModelAction.Auth.Pincode.Set.Request(pincode: pinCode.value))
+                        }
+                    }
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+        
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as ModelAction.Auth.Pincode.Check.Response:
+                    switch payload {
+                    case .correct:
+                        withAnimation {
+                            // show correct pincode state
+                            pinCode.style = .correct
+                            numpad.isEnabled = false
+                        }
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(400)) {
+                            
+                            //TODO: dismiss lock screen
+                        }
+                        
+                    case .incorrect(remainAttempts: let remainAttempts):
+                        withAnimation {
+                            // show incorrect pincode state
+                            pinCode.style = .incorrect
+                            numpad.isEnabled = false
+                        }
+                        
+                        //TODO: show alert
+                        
+                        guard case .unlock(attempt: let attempt) = mode else {
+                            return
+                        }
+                        
+                        mode = .unlock(attempt: attempt + 1)
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(400)) {
+                            
+                            withAnimation {
+                                // back to editing
+                                self.stage = .editing
+                                pinCode.style = .normal
+                                pinCode.value = ""
+                                numpad.isEnabled = true
+                            }
+                        }
+                        
+                    case .restricted:
+                        withAnimation {
+                            // show incorrect pincode state
+                            pinCode.style = .incorrect
+                            numpad.isEnabled = false
+                        }
+                        print("restricted")
+                        //TODO: all attempts gone. Logout?
+                        break
+                        
+                    case .error(let error):
+                        print(error.localizedDescription)
+                    }
+     
                 default:
                     break
                 }
@@ -103,20 +295,27 @@ extension AuthPinCodeViewModel {
     
     enum Mode {
         
-        // lock screen mode
-        case lock
+        // unlock screen mode
+        case unlock(attempt: Int)
         
         // create pincode mode
-        case create(Stage)
+        case create(step: Step)
         
-        enum Stage {
+        enum Step {
             
             // entering first time pincode
-            case fist
+            case one
             
             // entering second time pincode
-            case second(String)
+            case two(String)
         }
+    }
+    
+    enum Stage {
+        
+        case editing
+        case mistake
+        case finished
     }
 }
 
@@ -126,38 +325,55 @@ extension AuthPinCodeViewModel {
     
     class PinCodeViewModel: ObservableObject {
 
-        @Published var title: String = "Придумайте код"
-        @Published var pincode: String
+        @Published var title: String
+        @Published var value: String
         @Published var dots: [DotViewModel]
-        @Published var state: State
+        @Published var style: Style
+        
+        var isComplete: Bool { value.count >= pincodeLength }
         
         private let pincodeLength: Int
+        private var bindings = Set<AnyCancellable>()
         
-        init(title: String, pincodeLength: Int, pincode: String = "", state: State = .editing) {
+        init(title: String, pincodeLength: Int, pincode: String = "", style: Style = .normal) {
             
             self.title = title
-            self.pincode = pincode
+            self.value = pincode
             self.dots = Self.dots(pincode: pincode, length: pincodeLength)
-            self.state = state
+            self.style = style
             self.pincodeLength = pincodeLength
+            
+            bind()
         }
+        
+        func bind() {
+            
+            $value
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] value in
+ 
+                    dots = Self.dots(pincode: value, length: pincodeLength)
+                    
+                }.store(in: &bindings)
+        }
+        
         
         static func dots(pincode: String, length: Int) -> [DotViewModel] {
             
-            return (0..<length).map{ pincode.count > $0 ? .filled : .empty }
+            return (0..<length).map{ pincode.count > $0 ? .init(isFilled: true) : .init(isFilled: false) }
         }
         
-        enum State {
+        enum Style {
 
-            case editing
+            case normal
             case incorrect
             case correct
         }
         
-        enum DotViewModel {
+        struct DotViewModel: Identifiable {
             
-            case empty
-            case filled
+            let id = UUID()
+            let isFilled: Bool
         }
     }
 }
@@ -171,15 +387,19 @@ extension AuthPinCodeViewModel {
         let action: PassthroughSubject<Action, Never> = .init()
         
         @Published var buttons: [[ButtonViewModel]]
+        @Published var isEnabled: Bool
         
-        init(buttons: [[ButtonViewModel]]) {
+        init(buttons: [[ButtonViewModel]], isEnabled: Bool = true) {
             
             self.buttons = buttons
+            self.isEnabled = isEnabled
         }
         
         init(leftButton: ButtonData, rightButton: ButtonData) {
             
             self.buttons = [[]]
+            self.isEnabled = true
+            
             self.buttons =  [[.init(type: .digit("1"),
                                     action: { [weak self] in self?.action.send(NumPadViewModelAction.Button.digit(1)) }),
                               .init(type: .digit("2"),
@@ -207,6 +427,28 @@ extension AuthPinCodeViewModel {
                                     action: { [weak self] in self?.action.send(NumPadViewModelAction.Button.digit(9)) }),
                               .init(type: rightButton.type,
                                     action: { [weak self] in self?.action.send(rightButton.action) })]]
+        }
+        
+        func update(button: ButtonData, left: Bool) {
+            
+            let buttonViewModel = ButtonViewModel(type: button.type, action: { [weak self] in self?.action.send(button.action) })
+            
+            var updated = [[ButtonViewModel]]()
+            
+            updated.append(buttons[0])
+            updated.append(buttons[1])
+            updated.append(buttons[2])
+            
+            if left == true {
+                
+                updated.append([buttonViewModel, buttons[3][1], buttons[3][2]])
+                
+            } else {
+                
+                updated.append([buttons[3][0], buttons[3][1], buttonViewModel])
+            }
+            
+            buttons = updated
         }
         
         struct ButtonData {
@@ -248,8 +490,9 @@ extension AuthPinCodeViewModel {
             case digit(Int)
             case delete
             case sensor
-            case cancel
+            case back
             case exit
+            case none
         }
     }
 }

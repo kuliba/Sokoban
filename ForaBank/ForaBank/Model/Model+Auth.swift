@@ -10,7 +10,9 @@ import Foundation
 extension Model {
     
     var pincodeLength: Int { 4 }
-    var availableSensor: BiometricSensorType? { .face }
+    var unlockAttemptsAvailable: Int { 3 }
+    var availableBiometricSensorType: BiometricSensorType? { .face }
+    var isBiometricSensorEnabled: Bool { true }
     //TODO: real products data type
     var promoProducts: [String] { [] }
 }
@@ -59,7 +61,14 @@ internal extension Model {
             
         } else {
             
-            action.send(ModelAction.Auth.Pincode.Check.Response.incorrect(remainAttempts: 1))
+            let remainAttempts = max(unlockAttemptsAvailable - payload.attempt, 0)
+            if remainAttempts > 0 {
+                
+                action.send(ModelAction.Auth.Pincode.Check.Response.incorrect(remainAttempts: remainAttempts))
+            } else {
+                
+                action.send(ModelAction.Auth.Pincode.Check.Response.restricted)
+            }
         }
     }
     
@@ -163,12 +172,14 @@ extension ModelAction {
                 struct Request: Action {
                     
                     let pincode: String
+                    let attempt: Int
                 }
                 
                 enum Response: Action {
                     
                     case correct
                     case incorrect(remainAttempts: Int)
+                    case restricted
                     case error(Error)
                 }
             }
