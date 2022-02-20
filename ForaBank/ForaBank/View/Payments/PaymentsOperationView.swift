@@ -13,57 +13,79 @@ struct PaymentsOperationView: View {
     @ObservedObject var viewModel: PaymentsOperationViewModel
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                ForEach(viewModel.items) {item in
-                    parameterView(viewModel: item)
+        
+        ZStack {
+            
+            ScrollView {
+                
+                VStack(spacing: 20) {
+                    
+                    ForEach(viewModel.items, id: \.self.id) { item in
+                        
+                        switch item {
+                        case let selectViewModel as PaymentsParameterSelectView.ViewModel:
+                            PaymentsParameterSelectView(viewModel: selectViewModel)
+                            
+                        case let switchViewModel as PaymentsParameterSwitchView.ViewModel:
+                            PaymentsParameterSwitchView(viewModel: switchViewModel)
+                            
+                        case let inputViewModel as PaymentsParameterInputView.ViewModel:
+                            PaymentsParameterInputView(viewModel: inputViewModel)
+                            
+                        case let infoViewModel as PaymentsParameterInfoView.ViewModel:
+                            PaymentsParameterInfoView(viewModel: infoViewModel)
+                            
+                        case let nameViewModel as PaymentsParameterNameView.ViewModel:
+                            PaymentsParameterNameView(viewModel: nameViewModel)
+                            
+                        case let cardViewModel as PaymentsParameterCardView.ViewModel:
+                            PaymentsParameterCardView(viewModel: cardViewModel)
+                            
+                        default:
+                            Color.clear
+                            
+                        }
+                    }
                 }
             }
-        } .padding(.top, 10)
-            .padding(.horizontal, 15)
-    }
-    
-}
-
-extension PaymentsOperationView {
-    
-    func parameterView (viewModel: PaymentsParameterViewModel) -> AnyView {
-        switch viewModel {
-        case let selectViewModel as PaymentsTaxesSelectCellView.ViewModel:
-            return AnyView(PaymentsTaxesSelectCellView(viewModel: selectViewModel))
+            .padding(.horizontal, 20)
             
-        case let hiddenViewModel as PaymentsTaxesSelectCellView.ViewModel:
-            return AnyView(EmptyView())
             
-        case let selectSimpleViewModel as PaymentsTaxesButtonInfoCellView.ViewModel:
-            return AnyView(PaymentsTaxesButtonInfoCellView(viewModel: selectSimpleViewModel))
-            
-        case let selectSwitchViewModel as PaymentsTaxesParameterSwitchViewModel:
-            return AnyView(PaymentsTaxesParameterSwitchView(viewModel: selectSwitchViewModel))
-            
-        case let inputViewModel as PaymentsTaxesInputCellView.ViewModel:
-            return AnyView(PaymentsTaxesInputCellView(viewModel: inputViewModel))
-            
-        case let infoViewModel as PaymentsTaxesInfoCellViewComponent.ViewModel:
-            return AnyView(PaymentsTaxesInfoCellViewComponent(viewModel: infoViewModel))
-            
-        case let nameViewModel as PaymentsParameterFullNameView.ViewModel:
-            return AnyView(PaymentsParameterFullNameView(viewModel: nameViewModel))
-            
-        case let amountViewModel as PaymentsTaxesSelectCellView.ViewModel:
-            return AnyView(EmptyView())
-            
-        case let cardViewModel as PaymentsTaxesSelectCellView.ViewModel:
-            return AnyView(EmptyView())
-        default:
-            return AnyView(EmptyView())
+            if let amountViewModel = viewModel.amount {
+                
+                VStack {
+                    
+                    Spacer()
+                    
+                    PaymentsParameterAmountView(viewModel: amountViewModel)
+                        .edgesIgnoringSafeArea(.bottom)
+                }
+            }
         }
+        .navigationBarTitle(Text(viewModel.header.title), displayMode: .inline)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: Button(action: viewModel.header.action, label: {
+            viewModel.header.backButtonIcon
+        }))
+        
     }
-    
 }
 
 struct PaymentsOperationView_Previews: PreviewProvider {
+    
     static var previews: some View {
-        PaymentsOperationView(viewModel: .init(model: .emptyMock, category: .taxes, items: [], header: nil))
+        
+        PaymentsOperationView(viewModel: .sample)
     }
+}
+
+extension PaymentsOperationViewModel {
+    
+    
+    static let sample: PaymentsOperationViewModel = {
+        
+        let items: [PaymentsParameterViewModel] = [PaymentsParameterSwitchView.ViewModel.sample, PaymentsParameterSelectView.ViewModel.selectedMock, PaymentsParameterInfoView.ViewModel.sample, PaymentsParameterNameView.ViewModel.normal, PaymentsParameterNameView.ViewModel.edit, PaymentsParameterCardView.ViewModel.sample]
+        
+        return PaymentsOperationViewModel(header: .init(title: "Налоги и услуги", action: {}), items: items, amount: PaymentsParameterAmountView.ViewModel.amountCurrencyInfoAlert)
+    }()
 }

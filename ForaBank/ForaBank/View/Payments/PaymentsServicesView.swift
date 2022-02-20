@@ -15,52 +15,50 @@ struct PaymentsServicesView: View {
     var body: some View {
         
         NavigationView {
+            
             VStack {
+                
                 ScrollView {
-                    VStack(spacing: 20) {
-                        ForEach(viewModel.items) {item in
+                    
+                    if let selectViewModel = viewModel.select {
+                        
+                        PaymentsParameterSelectServiceView(viewModel: selectViewModel)
+                    }
+                    
+                    NavigationLink("", isActive: $viewModel.isOperationViewActive) {
+                        
+                        if let operationViewModel = viewModel.operationViewModel {
                             
+                            PaymentsOperationView(viewModel: operationViewModel)
                             
-                            NavigationLink(isActive: $viewModel.isPaymentViewActive) {
-                                if let operationViewModel = viewModel.operationViewModel {
-                                    PaymentsOperationView(viewModel: operationViewModel)
-                                } else {
-                                    EmptyView()
-                                }
-                            } label: {
-                                Button {
-                                    item.action(item.id)
-
-                                } label: {
-                                        PaymentsTaxesButtonInfoCellView(viewModel: item)
-                                }
-                            }
+                        } else {
+                            
+                            EmptyView()
                         }
                     }
-                } .padding(.top, 10)
-                  .padding(.horizontal, 15)
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 20)
             }
-            .navigationBarTitle(Text(viewModel.header?.title ?? ""), displayMode: .inline)
-            .navigationBarBackButtonHidden(true)
-            .navigationBarItems(leading:
-                                    Image("back_button")
-                                    .renderingMode(.template)
-                                    .foregroundColor(.black)
-                                
-//                                    .onTapGesture {
-//                self.presentation.wrappedValue.dismiss()
-//            })
-                                )
+            .navigationBarTitle(Text(viewModel.header.title), displayMode: .inline)
+        }
     }
-}
 }
 
+//MARK: - Preview
+
 struct PaymentsServicesView_Previews: PreviewProvider {
-        static var previews: some View {
-            PaymentsServicesView(viewModel: .init(model: .emptyMock, category: .taxes, items: [.init(icon: Image(""), title: "ФМС", subTitle: "налоги", action: { _ in
-            })], header: nil, isPaymentViewActive: false))
+    
+    static var previews: some View {
+        
+        PaymentsServicesView(viewModel: .sample)
+            .previewLayout(.fixed(width: 375, height: 200))
     }
 }
-                                    
-                                    
-                                    
+
+//MARK: - Preview Content
+
+extension PaymentsServicesViewModel {
+    
+    static let sample = PaymentsServicesViewModel(header: .init(title: "Налоги и услуги"), select: .samplePlaceholder, category: .taxes)
+}

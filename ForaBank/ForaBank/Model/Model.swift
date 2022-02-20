@@ -50,7 +50,7 @@ class Model {
         
         loadCachedData()
         bind()
-        requestDictionariesFromServer()
+//        requestDictionariesFromServer()
     }
     
     //FIXME: remove after refactoring

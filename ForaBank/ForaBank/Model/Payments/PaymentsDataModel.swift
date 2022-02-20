@@ -19,22 +19,20 @@ enum Payments {
             case .taxes: return [.fms, .fns, .fssp]
             }
         }
+        
+        var name: String {
+            
+            switch self {
+            case .taxes: return "Налоги и услуги"
+            }
+        }
     }
     
     enum Service: String {
         
-        case fssp
         case fms
         case fns
-        
-        var operators: [Operator] {
-            
-            switch self {
-            case .fms: return [.fms]
-            case .fns: return [.fns, .fnsUin]
-            case .fssp: return [.fssp]
-            }
-        }
+        case fssp
     }
     
     enum Operator : String {
@@ -45,34 +43,36 @@ enum Payments {
         case fnsUin     = "iFora||7069"
     }
     
-    struct Parameter {
- 
+    class Parameter: Identifiable {
+
         let id: String
-        let value: String
-        let type: Kind
-        let extra: Bool
+        var value: String?
         
-        enum Kind {
+        var result: Payments.Parameter.Result { Result(id: id, value: value) }
+        
+        internal init(id: String, value: String?) {
             
-            case hidden
-            case select([Option], icon: ImageData, title: String)
-            case selectSimple([OptionSimple], icon: ImageData, title: String, selectionTitle: String, description: String?)
-            case selectSwitch([OptionSimple])
-            case input(icon: ImageData, title: String, validator: InputValidator)
-            case info(icon: ImageData, title: String)
-            case name(icon: ImageData, title: String)
-            case amount(title: String, validator: AmountValidator)
-            case card
+            self.id = id
+            self.value = value
+        }
+        
+        convenience init(value: Parameter.Result) {
+            
+            self.init(id: value.id, value: value.value)
+        }
+        
+        struct Result {
+            
+            let id: String
+            let value: String?
         }
     }
     
     struct Operation {
         
         let service: Service
-        let type: Kind
-        let currency: Currency
         let parameters: [Parameter]
-        let history: [[Parameter.Value]]
+        let history: [[Parameter.Result]]
         
         enum Kind {
             
