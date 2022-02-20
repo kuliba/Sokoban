@@ -18,11 +18,11 @@ class PaymentsOperationTests: XCTestCase {
     func testHistoryStepChanged_Value_Step_0() throws {
         
         // given
-        let history: [[Parameter.Value]] = [
+        let history: [[Parameter.Result]] = [
             [.init(id: "01", value: "100")],
             [.init(id: "01", value: "100"), .init(id: "02", value: "200")],
             [.init(id: "01", value: "100"), .init(id: "02", value: "200"), .init(id: "03", value: "300")]]
-        let changedValue = Parameter.Value(id: "01", value: "200")
+        let changedValue = Parameter.Result(id: "01", value: "200")
         
         // when
         let result = Operation.historyStepChanged(history: history, value: changedValue)
@@ -35,11 +35,11 @@ class PaymentsOperationTests: XCTestCase {
     func testHistoryStepChanged_Value_Step_1() throws {
         
         // given
-        let history: [[Parameter.Value]] = [
+        let history: [[Parameter.Result]] = [
             [.init(id: "01", value: "100")],
             [.init(id: "01", value: "100"), .init(id: "02", value: "200")],
             [.init(id: "01", value: "100"), .init(id: "02", value: "200"), .init(id: "03", value: "300")]]
-        let changedValue = Parameter.Value(id: "02", value: "300")
+        let changedValue = Parameter.Result(id: "02", value: "300")
         
         // when
         let result = Operation.historyStepChanged(history: history, value: changedValue)
@@ -52,11 +52,11 @@ class PaymentsOperationTests: XCTestCase {
     func testHistoryStepChanged_Value_Step_Not_Changed() throws {
         
         // given
-        let history: [[Parameter.Value]] = [
+        let history: [[Parameter.Result]] = [
             [.init(id: "01", value: "100")],
             [.init(id: "01", value: "100"), .init(id: "02", value: "200")],
             [.init(id: "01", value: "100"), .init(id: "02", value: "200"), .init(id: "03", value: "300")]]
-        let changedValue = Parameter.Value(id: "05", value: "300")
+        let changedValue = Parameter.Result(id: "05", value: "300")
         
         // when
         let result = Operation.historyStepChanged(history: history, value: changedValue)
@@ -70,11 +70,11 @@ class PaymentsOperationTests: XCTestCase {
     func testHistoryStepChanged_Values_Step_0() throws {
         
         // given
-        let history: [[Parameter.Value]] = [
+        let history: [[Parameter.Result]] = [
             [.init(id: "01", value: "100")],
             [.init(id: "01", value: "100"), .init(id: "02", value: "200")],
             [.init(id: "01", value: "100"), .init(id: "02", value: "200"), .init(id: "03", value: "300")]]
-        let changedValues: [Parameter.Value] = [.init(id: "01", value: "200"),
+        let changedValues: [Parameter.Result] = [.init(id: "01", value: "200"),
                                                 .init(id: "02", value: "300")]
         
         // when
@@ -88,11 +88,11 @@ class PaymentsOperationTests: XCTestCase {
     func testHistoryStepChanged_Values_Step_1() throws {
         
         // given
-        let history: [[Parameter.Value]] = [
+        let history: [[Parameter.Result]] = [
             [.init(id: "01", value: "100")],
             [.init(id: "01", value: "100"), .init(id: "02", value: "200")],
             [.init(id: "01", value: "100"), .init(id: "02", value: "200"), .init(id: "03", value: "300")]]
-        let changedValues: [Parameter.Value] = [.init(id: "01", value: "100"),
+        let changedValues: [Parameter.Result] = [.init(id: "01", value: "100"),
                                                 .init(id: "02", value: "300")]
         
         // when
@@ -106,11 +106,11 @@ class PaymentsOperationTests: XCTestCase {
     func testHistoryStepChanged_Values_Step_Not_Changed() throws {
         
         // given
-        let history: [[Parameter.Value]] = [
+        let history: [[Parameter.Result]] = [
             [.init(id: "01", value: "100")],
             [.init(id: "01", value: "100"), .init(id: "02", value: "200")],
             [.init(id: "01", value: "100"), .init(id: "02", value: "200"), .init(id: "03", value: "300")]]
-        let changedValues: [Parameter.Value] = [.init(id: "04", value: "100"),
+        let changedValues: [Parameter.Result] = [.init(id: "04", value: "100"),
                                                 .init(id: "05", value: "300")]
         
         // when

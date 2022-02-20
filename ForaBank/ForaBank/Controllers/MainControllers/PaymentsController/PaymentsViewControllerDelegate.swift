@@ -152,7 +152,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
             case 5:
                 // Налоги
                 
-                let viewModel = PaymentsServicesViewModel(model: Model.shared, category: Payments.Category.taxes, isPaymentViewActive: false)
+                let viewModel = PaymentsServicesViewModel(Model.shared, category: Payments.Category.taxes)
                 let vc = UIHostingController(rootView: PaymentsServicesView(viewModel: viewModel))
                 vc.modalPresentationStyle = .fullScreen
                 present(vc, animated: true)

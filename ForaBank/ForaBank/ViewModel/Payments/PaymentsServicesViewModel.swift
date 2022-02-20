@@ -12,47 +12,42 @@ class PaymentsServicesViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
     
-    private var bindings = Set<AnyCancellable>()
-    private let model: Model
-    private let category: Payments.Category
-    private var itemsData: [Payments.Parameter.Service]?
-    @Published var items: [PaymentsTaxesButtonInfoCellView.ViewModel]
-    @Published var header: HeaderViewModel?
-    @Published var selectedService: Payments.Service?
-    @Published var isPaymentViewActive: Bool
+    @Published var header: HeaderViewModel
+    @Published var select: PaymentsParameterSelectServiceView.ViewModel?
+    @Published var isOperationViewActive: Bool
+    var operationViewModel: PaymentsOperationViewModel?
     
-    internal init(model: Model,
+    private let category: Payments.Category
+    private var selectedService: Payments.Service?
+    private let model: Model
+    private var bindings = Set<AnyCancellable>()
+    
+    internal init(header: HeaderViewModel,
+                  select: PaymentsParameterSelectServiceView.ViewModel?,
+                  isOperationViewActive: Bool = false,
                   category: Payments.Category,
-                  items: [PaymentsTaxesButtonInfoCellView.ViewModel],
-                  header: HeaderViewModel?,
-                  isPaymentViewActive: Bool,
-                  selectedService: Payments.Service? = nil
+                  selectedService: Payments.Service? = nil,
+                  model: Model = .emptyMock
     ) {
-        self.model = model
-        self.category = category
-        self.items = items
         self.header = header
-        self.isPaymentViewActive = isPaymentViewActive
+        self.select = select
+        self.isOperationViewActive = isOperationViewActive
+        self.category = category
         self.selectedService = selectedService
-        bind()
+        self.model = model
     }
     
-    internal init(model: Model, category: Payments.Category, isPaymentViewActive: Bool) {
-        self.model = model
-        self.items = []
+    internal init(_ model: Model, category: Payments.Category) {
+        
+        self.header = HeaderViewModel(title: category.name)
+        self.select = nil
+        self.isOperationViewActive = false
         self.category = category
-        self.isPaymentViewActive = isPaymentViewActive
+        self.selectedService = nil
+        self.model = model
+        
         bind()
         model.action.send(ModelAction.Payment.Services.Request(category: category))
-        
-    }
-    
-    var operationViewModel: PaymentsOperationViewModel? {
-        guard let selectedService = selectedService else {return nil}
-        switch selectedService {
-            // В зависимости от типа выбранного сервиса, готовим view model выбранного сервиса
-        default: return nil
-        }
     }
     
     class HeaderViewModel: ObservableObject {
@@ -66,38 +61,48 @@ class PaymentsServicesViewModel: ObservableObject {
     }
     
     func bind() {
+        
         model.action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 switch action {
                 case let payload as ModelAction.Payment.Services.Response:
-                    // Update items
-                    switch payload.result {
-                    case .success(let items):
-                        self.itemsData = items
-                        self.header = HeaderViewModel(title: "Налоги и услуги")
-                        self.items = items.map({ parameter in
-                            return .init(parameter: parameter) { [weak self] id in
-                                self?.action.send(PaymentsServicesViewModelAction.ItemTapped(itemId: id))
-                            }
-                        })
-                    case .failure(_):
-                        print()
+                    switch payload {
+                    case .select(let selectServiceParameter):
+                        // multiple services for category
+                        select = PaymentsParameterSelectServiceView.ViewModel(with: selectServiceParameter, action: { [weak self] id in self?.action.send(PaymentsServicesViewModelAction.ItemTapped(itemId: id)) })
+                        
+                    case .selected(let service):
+                        // single service for category
+                        model.action.send(ModelAction.Payment.Begin.Request(source: .service(service)))
+
+                    case .failed(let error):
+                        print(error.localizedDescription)
                     }
-                default: break
+                    
+                case let payload as ModelAction.Payment.Begin.Response:
+                    switch payload.result {
+                    case .success(let operation):
+                        do {
+                            
+                            operationViewModel = try PaymentsOperationViewModel(model, operation: operation, dismissAction: { [weak self] in self?.action.send(PaymentsServicesViewModelAction.DissmissOperationView())})
+                            isOperationViewActive = true
+                            
+                        } catch {
+                            //TODO: log error
+                            print(error.localizedDescription)
+                        }
+                        
+                    case .failure(let error):
+                        //TODO: log error
+                        print(error.localizedDescription)
+                    }
+
+                default:
+                    break
                 }
- 
+                
             }.store(in: &bindings)
-        
-        $selectedService
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] selectedService in
-                if selectedService != nil {
-                    self.isPaymentViewActive = true
-                } else {
-                    self.isPaymentViewActive = false
-                }
-            } .store(in: &bindings)
         
         action
             .receive(on: DispatchQueue.main)
@@ -105,23 +110,30 @@ class PaymentsServicesViewModel: ObservableObject {
                 
                 switch action {
                 case let payload as PaymentsServicesViewModelAction.ItemTapped:
-                    guard let itemsData = itemsData,
-                          let index = items.firstIndex(where: { $0.id == payload.itemId }),
-                          itemsData.count > index
-                    else {return}
-                    selectedService = itemsData[index].service
+                    guard let selectServiceParameter = select?.parameter as? Payments.ParameterSelectService,
+                            let selectedService = selectServiceParameter.options.first(where: { $0.id == payload.itemId})?.service else {
+                        return
+                    }
+                    model.action.send(ModelAction.Payment.Begin.Request(source: .service(selectedService)))
                     
-                default: break
+                case _ as PaymentsServicesViewModelAction.DissmissOperationView:
+                    isOperationViewActive = false
+                    operationViewModel = nil
+                    
+                default:
+                    break
                 }
- 
+                
             }.store(in: &bindings)
     }
-    
 }
 
 enum PaymentsServicesViewModelAction {
     
     struct ItemTapped: Action {
-        let itemId: PaymentsTaxesButtonInfoCellView.ViewModel.ID
+        
+        let itemId: PaymentsParameterSelectServiceView.ViewModel.ID
     }
+    
+    struct DissmissOperationView: Action {}
 }

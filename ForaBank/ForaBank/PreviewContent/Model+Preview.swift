@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension Model {
     
@@ -14,6 +15,6 @@ extension Model {
 
 extension ImageData {
     
-    static let serviceSample = ImageData(data: Data())
-    static let parameterSample = ImageData(data: Data())
+    static let serviceSample = ImageData(with: UIImage(named: "Payments Service Sample")!)!
+    static let parameterSample = ImageData(with: UIImage(named: "Payments List Sample")!)!
 }

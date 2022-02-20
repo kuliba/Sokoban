@@ -11,22 +11,22 @@ extension Payments.Operation {
     
     typealias Parameter = Payments.Parameter
     
-    func historyUpdated() -> [[Parameter.Value]] {
+    func historyUpdated() -> [[Parameter.Result]] {
         
         var historyUpdated = history
-        let update = parameters.map{ $0.parameterValue }
+        let update = parameters.map{ $0.result }
         historyUpdated.append(update)
         
         return historyUpdated
     }
     
-    static func historyStepChanged(history: [[Parameter.Value]], value: Parameter.Value) -> Int? {
+    static func historyStepChanged(history: [[Parameter.Result]], value: Parameter.Result) -> Int? {
         
         guard history.count > 0 else {
             return nil
         }
         
-        let historyForParameter = history.reduce([Parameter.Value?]()) { partialResult, historyStep in
+        let historyForParameter = history.reduce([Parameter.Result?]()) { partialResult, historyStep in
             
             var updated = partialResult
             
@@ -51,8 +51,19 @@ extension Payments.Operation {
         return history.count - historyForParameterDepth
     }
     
-    static func historyStepChanged(history: [[Parameter.Value]], values: [Parameter.Value]) -> Int? {
+    static func historyStepChanged(history: [[Parameter.Result]], values: [Parameter.Result]) -> Int? {
         
         return values.compactMap{ historyStepChanged(history: history, value: $0)}.min()
+    }
+    
+    static let emptyMock = Payments.Operation(service: .fms, parameters: [], history: [[]])
+}
+
+extension Payments.Operation {
+    
+    enum Error: Swift.Error {
+        
+        case unableSelectServiceForCategory(Payments.Category)
+        case operatorNotSelectedForService(Payments.Service)
     }
 }

@@ -1,5 +1,5 @@
 //
-//  PaymentsTaxesSelectCardViewComponent.swift
+//  PaymentsParameterCardViewComponent.swift
 //  ForaBank
 //
 //  Created by Константин Савялов on 13.02.2022.
@@ -7,15 +7,28 @@
 
 import SwiftUI
 
-struct PaymentsTaxesSelectCardView: View {
+//MARK: - ViewModel
+
+extension PaymentsParameterCardView {
+    
+    class ViewModel: PaymentsParameterViewModel {
+
+    }
+}
+
+//MARK: - View
+
+struct PaymentsParameterCardView: View {
+    
+    @ObservedObject var viewModel: ViewModel
     
     var body: some View {
         
         HStack(alignment: .center, spacing: 10) {
-           
-                Image("card-colored")
-                    .resizable()
-                    .frame(width: 32, height: 22)
+            
+            Image("card-colored")
+                .resizable()
+                .frame(width: 32, height: 22)
             VStack(alignment: .leading, spacing: 8)  {
                 Text("Счет списания")
                     .font(Font.custom("Inter-Regular", size: 12))
@@ -38,7 +51,7 @@ struct PaymentsTaxesSelectCardView: View {
                             .resizable()
                             .frame(width: 24, height: 24)
                     }
-
+                    
                 }
                 
                 Text("Номер карты, имя карты")
@@ -49,11 +62,19 @@ struct PaymentsTaxesSelectCardView: View {
     }
 }
 
+//MARK: - Preview
 
-struct PaymentsTaxesSelectCardView_Previews: PreviewProvider {
+struct PaymentsParameterCardView_Previews: PreviewProvider {
+    
     static var previews: some View {
-        PaymentsTaxesSelectCardView()
-        .previewLayout(.fixed(width: 375, height: 90))
+        
+        PaymentsParameterCardView(viewModel: .sample)
+            .previewLayout(.fixed(width: 375, height: 90))
     }
+}
+
+extension PaymentsParameterCardView.ViewModel {
+    
+    static let sample = PaymentsParameterCardView.ViewModel(parameter: .init(id: UUID().uuidString, value: ""))
 }
 

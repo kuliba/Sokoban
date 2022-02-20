@@ -9,96 +9,219 @@ import Foundation
 
 extension Payments.Parameter {
     
-    init(value: Value, type: Kind, extra: Bool = false) {
+    enum Identifier: String {
         
-        self.id = value.id
-        self.value = value.value
-        self.type = type
-        self.extra = extra
+        case category       = "ru.forabank.sense.category"
+        case service        = "ru.forabank.sense.service"
+        case `operator`     = "ru.forabank.sense.operator"
     }
     
-    func updated(with value: Value) -> Payments.Parameter {
-        
-        Payments.Parameter(value: value, type: type, extra: extra)
-    }
-    
-    var parameterValue: Value {
-        
-        Value(id: id, value: value)
-    }
+    static let emptyMock = Payments.Parameter(id: UUID().uuidString, value: "")
 }
 
-extension Payments.Parameter {
+extension Payments {
    
-    struct Service {
+    class ParameterSelectService: Parameter {
         
-        let service: Payments.Service
+        let category: Category
+        let options: [Option]
+        
+        internal init(category: Category, options: [Option]) {
+            
+            self.category = category
+            self.options = options
+            super.init(id: Payments.Parameter.Identifier.category.rawValue, value: nil)
+        }
+        
+        struct Option: Identifiable {
+            
+            var id: String { service.rawValue }
+            let service: Service
+            let title: String
+            let description: String
+            let icon: ImageData
+        }
+    }
+    
+    class ParameterTemplate: Parameter {
+        
+        let templateId: PaymentTemplateData.ID
+        
+        internal init(value: Parameter.Result, templateId: PaymentTemplateData.ID) {
+            
+            self.templateId = templateId
+            super.init(id: value.id, value: value.value)
+        }
+    }
+    
+    class ParameterSelect: Parameter {
+        
+        let title: String
+        let options: [Option]
+        
+        internal init(value: Parameter.Result, title: String, options: [Option]) {
+            
+            self.title = title
+            self.options = options
+            super.init(id: value.id, value: value.value)
+        }
+        
+        struct Option: Identifiable {
+            
+            let id: String
+            let name: String
+            let icon: ImageData
+        }
+    }
+    
+    class ParameterSelectSimple: Parameter {
+        
         let icon: ImageData
         let title: String
-        let description: String
+        let selectionTitle: String
+        let description: String?
+        let options: [Option]
+        
+        internal init(value: Parameter.Result, icon: ImageData, title: String, selectionTitle: String, description: String? = nil, options: [Option]) {
+            
+            self.icon = icon
+            self.title = title
+            self.selectionTitle = selectionTitle
+            self.description = description
+            self.options = options
+            super.init(id: value.id, value: value.value)
+        }
+        
+        struct Option {
+            
+            let id: String
+            let name: String
+        }
     }
     
-    struct Option {
+    class ParameterSelectSwitch: Parameter {
         
-        let id: String
-        let name: String
+        let options: [Option]
+        
+        internal init(value: Parameter.Result, options: [Option]) {
+            
+            self.options = options
+            super.init(id: value.id, value: value.value)
+        }
+        
+        struct Option: Identifiable {
+            
+            let id: String
+            let name: String
+        }
+    }
+    
+    class ParameterInput: Parameter {
+        
         let icon: ImageData
-    }
-    
-    struct OptionSimple {
+        let title: String
+        let validator: Validator
         
-        let id: String
-        let name: String
-    }
-    
-    struct InputValidator: ValidatorProtocol {
-        
-        let minLength: Int
-        let maxLength: Int?
-        let regEx: String?
-        
-        func isValid(value: String) -> Bool {
+        internal init(value: Parameter.Result, icon: ImageData, title: String, validator: Validator) {
             
-            guard value.count >= minLength else {
-                return false
-            }
+            self.icon = icon
+            self.title = title
+            self.validator = validator
+            super.init(id: value.id, value: value.value)
+        }
+        
+        struct Validator: ValidatorProtocol {
             
-            if let maxLength = maxLength {
+            let minLength: Int
+            let maxLength: Int?
+            let regEx: String?
+            
+            func isValid(value: String) -> Bool {
                 
-                guard value.count < maxLength else {
+                guard value.count >= minLength else {
                     return false
                 }
+                
+                if let maxLength = maxLength {
+                    
+                    guard value.count < maxLength else {
+                        return false
+                    }
+                }
+                
+                //TODO: validate with regex if present
+                
+                return true
             }
-            
-            //TODO: validate with regex if present
-            
-            return true
         }
     }
     
-    struct AmountValidator: ValidatorProtocol {
+    class ParameterInfo: Parameter {
         
-        let minAmount: Double
+        let icon: ImageData
+        let title: String
         
-        func isValid(value: Double) -> Bool {
+        internal init(value: Parameter.Result, icon: ImageData, title: String) {
             
-            guard value >= minAmount else {
-                return false
-            }
-            
-            return true
+            self.icon = icon
+            self.title = title
+            super.init(id: value.id, value: value.value)
         }
     }
     
-    enum ID: String {
+    class ParameterName: Parameter {
         
-        case service
-        case `operator`
+        let title: String
+        let lastName: Name
+        let firstName: Name
+        let middleName: Name
+        
+        internal init(value: Parameter.Result, title: String, lastName: Name, firstName: Name, middleName: Name) {
+            
+            self.title = title
+            self.lastName = lastName
+            self.firstName = firstName
+            self.middleName = middleName
+            super.init(id: value.id, value: value.value)
+        }
+        
+        struct Name {
+            
+            let title: String
+            let value: String
+        }
     }
-
-    struct Value {
+    
+    class ParameterAmount: Parameter {
         
-        let id: String
-        let value: String
+        let title: String
+        let currency: Currency
+        let validator: Validator
+        var amount: Double {
+            //TODO: double from value
+            return 0
+        }
+        
+        internal init(value: Parameter.Result, title: String, currency: Currency, validator: Validator) {
+            
+            self.title = title
+            self.currency = currency
+            self.validator = validator
+            super.init(id: value.id, value: value.value)
+        }
+        
+        struct Validator: ValidatorProtocol {
+            
+            let minAmount: Double
+            
+            func isValid(value: Double) -> Bool {
+                
+                guard value >= minAmount else {
+                    return false
+                }
+                
+                return true
+            }
+        }
     }
 }
