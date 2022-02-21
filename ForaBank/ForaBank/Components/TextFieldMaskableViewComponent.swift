@@ -36,7 +36,7 @@ struct TextFieldMaskableView: UIViewRepresentable {
     @ObservedObject var viewModel: ViewModel
     
     //TODO: wrapper Font -> UIFont required
-    var font: UIFont = .monospacedSystemFont(ofSize: 20, weight: .regular)
+    var font: UIFont = .monospacedSystemFont(ofSize: 19, weight: .regular)
     var backgroundColor: Color = .clear
     var textColor: Color = .white
     var tintColor: Color = .white
@@ -83,6 +83,7 @@ struct TextFieldMaskableView: UIViewRepresentable {
         public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
 
             textField.text = TextFieldMaskableView.updateMasked(value: textField.text, inRange: range, update: string, masks: masks, regExp: regExp)
+            text.wrappedValue = textField.text
             
             return false
         }
@@ -96,7 +97,7 @@ struct TextFieldMaskableView: UIViewRepresentable {
     ///   - masks: masks array, one of them must be applyed
     ///   - regExp: regular expression string required to filter update string
     /// - Returns: masked string result, example: `1234 5678 892`
-    static func updateMasked(value: String?, inRange: NSRange, update: String,  masks: [StringValueMask], regExp: String) -> String {
+    static func updateMasked(value: String?, inRange: NSRange, update: String,  masks: [StringValueMask], regExp: String) -> String? {
 
         // filter update from unexpected synbols
         let filteredUpdate = (try? update.filterred(regEx: regExp)) ?? update
@@ -116,8 +117,9 @@ struct TextFieldMaskableView: UIViewRepresentable {
             
             // remove mask from value
             let filterredValue = (try? updatedValue.filterred(regEx: regExp)) ?? updatedValue
+            let masked = filterredValue.masked(masks: masks)
             
-            return filterredValue.masked(masks: masks)
+            return masked.count > 0 ? masked : nil
             
         } else {
             
@@ -125,8 +127,9 @@ struct TextFieldMaskableView: UIViewRepresentable {
             guard masks.isEmpty == false else {
                 return filteredUpdate
             }
+            let masked = filteredUpdate.masked(masks: masks)
             
-            return filteredUpdate.masked(masks: masks)
+            return masked.count > 0 ? masked : nil
         }
     }
 }

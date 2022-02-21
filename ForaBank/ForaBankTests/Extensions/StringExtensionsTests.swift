@@ -85,4 +85,29 @@ class StringExtensionsTests: XCTestCase {
         XCTAssertEqual(value, result)
     }
     
+    func testIsComplete_False() {
+        
+        // given
+        let cardMask = StringValueMask(mask: "#### #### #### ####", symbol: "#")
+        let value = "1234 12"
+        
+        // when
+        let result = value.isComplete(for: cardMask)
+        
+        // then
+        XCTAssertFalse(result)
+    }
+    
+    func testIsComplete_True() {
+        
+        // given
+        let cardMask = StringValueMask(mask: "#### #### #### ####", symbol: "#")
+        let value = "1234 1234 6789 8990"
+        
+        // when
+        let result = value.isComplete(for: cardMask)
+        
+        // then
+        XCTAssertTrue(result)
+    }
 }

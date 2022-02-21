@@ -125,6 +125,6 @@ class TextFieldMaskableViewComponentTests: XCTestCase {
         // when
         let updatedString = TextFieldMaskableView.updateMasked(value: value, inRange: range, update: update, masks: [cardMask, accountMask], regExp: regExp)
         
-        XCTAssertEqual(updatedString, "")
+        XCTAssertNil(updatedString)
     }
 }

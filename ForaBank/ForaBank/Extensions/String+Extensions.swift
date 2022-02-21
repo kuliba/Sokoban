@@ -87,6 +87,30 @@ extension String {
         return result
     }
     
+    func isComplete(for mask: StringValueMask) -> Bool {
+        
+        let value = self
+        
+        for (maskIndex, character) in mask.mask.enumerated() {
+            
+            guard value.count > maskIndex else {
+                return false
+            }
+            
+            guard character != mask.symbol else {
+                continue
+            }
+            
+            let valueIndex = index(startIndex, offsetBy: maskIndex)
+            
+            guard value[valueIndex] == character else {
+                return false
+            }
+        }
+        
+        return true
+    }
+    
     func filterred(regEx: String) throws -> String {
         
         let value = self

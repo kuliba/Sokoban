@@ -108,6 +108,21 @@ class AuthLoginViewModel: ObservableObject {
                 }
                 
             }.store(in: &bindings)
+        
+        card.$state
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] state in
+                
+                switch state {
+                case .ready(let cardNumber):
+                    card.nextButton = CardViewModel.NextButtonViewModel(action: {[weak self] in self?.action.send(AuthLoginViewModelAction.Auth.init(cardNumber: cardNumber))})
+                    
+                case .editing:
+                    card.nextButton = nil
+                }
+                
+            }.store(in: &bindings)
+        
     }
 }
 
@@ -129,6 +144,8 @@ extension AuthLoginViewModel {
         let subTitle: String
         @Published var state: State
         
+        private var bindings = Set<AnyCancellable>()
+        
         internal init(icon: Image = .ic32LogoForaLine, scanButton: ScanButtonViewModel, textField: TextFieldMaskableView.ViewModel, nextButton: NextButtonViewModel? = nil, subTitle: String = "Введите номер вашей карты или счета", state: State = .editing) {
 
             self.icon = icon
@@ -137,8 +154,34 @@ extension AuthLoginViewModel {
             self.nextButton = nextButton
             self.subTitle = subTitle
             self.state = .editing
+            
+            bind()
         }
-
+        
+        private func bind() {
+            
+            textField.$text
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] text in
+                    
+                    guard let text = text else {
+                        return
+                    }
+                    
+                    for mask in textField.masks {
+                        
+                        if text.isComplete(for: mask) {
+                            
+                            state = .ready(text)
+                            return
+                        }
+                    }
+                    
+                    state = .editing
+                    
+                }.store(in: &bindings)
+        }
+        
         struct ScanButtonViewModel {
 
             let icon: Image = .ic24SkanCard
