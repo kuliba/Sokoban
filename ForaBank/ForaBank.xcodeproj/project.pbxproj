@@ -353,6 +353,7 @@
 		6867F43D2769AFF60039A0EE /* ResultOperationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6867F43C2769AFF60039A0EE /* ResultOperationView.swift */; };
 		686857D8274FA73C00BBF562 /* PaymentsViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 686857D7274FA73C00BBF562 /* PaymentsViewCoordinator.swift */; };
 		687AD14927B69A6600C6F251 /* AuthPermissionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687AD14827B69A6600C6F251 /* AuthPermissionsView.swift */; };
+		687AD3EA27C3CADF006EAD1A /* MainBlockProductSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687AD3E927C3CADF006EAD1A /* MainBlockProductSelector.swift */; };
 		687ADF1026B07721005A239B /* DataExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687ADF0F26B07721005A239B /* DataExtension.swift */; };
 		687FB22D26E65FC5004A479F /* NewProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687FB22C26E65FC5004A479F /* NewProductCell.swift */; };
 		687FB23026E8D41A004A479F /* OfferCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687FB22F26E8D41A004A479F /* OfferCard.swift */; };
@@ -1252,6 +1253,7 @@
 		6867F43C2769AFF60039A0EE /* ResultOperationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultOperationView.swift; sourceTree = "<group>"; };
 		686857D7274FA73C00BBF562 /* PaymentsViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsViewCoordinator.swift; sourceTree = "<group>"; };
 		687AD14827B69A6600C6F251 /* AuthPermissionsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthPermissionsView.swift; sourceTree = "<group>"; };
+		687AD3E927C3CADF006EAD1A /* MainBlockProductSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainBlockProductSelector.swift; sourceTree = "<group>"; };
 		687ADF0F26B07721005A239B /* DataExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataExtension.swift; sourceTree = "<group>"; };
 		687FB22C26E65FC5004A479F /* NewProductCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProductCell.swift; sourceTree = "<group>"; };
 		687FB22F26E8D41A004A479F /* OfferCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferCard.swift; sourceTree = "<group>"; };
@@ -3019,6 +3021,7 @@
 			isa = PBXGroup;
 			children = (
 				7772978427C38FEC0099EF91 /* MainBlockProductsViewComponent.swift */,
+				687AD3E927C3CADF006EAD1A /* MainBlockProductSelector.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -5649,6 +5652,7 @@
 				77499C432773A96500F6C079 /* Color+Extensions.swift in Sources */,
 				0BAC674126D408DC005AAD91 /* CreateDirectTransferDecodableModel.swift in Sources */,
 				770DCE9327BBF93B004099C1 /* RootView.swift in Sources */,
+				687AD3EA27C3CADF006EAD1A /* MainBlockProductSelector.swift in Sources */,
 				0BF348A1269E0CDA005138A8 /* LogoutDecodableModel.swift in Sources */,
 				0BDCF00D274A8B0F00AAA1C3 /* IsSingleServiceDecodableModel.swift in Sources */,
 				0B7A18D02689C51A0007CC75 /* AppHeaderProtocol.swift in Sources */,

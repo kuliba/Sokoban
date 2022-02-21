@@ -9,19 +9,22 @@ import Foundation
 import SwiftUI
 
 extension MainCardComponentView {
-   
-    class ViewModel: ObservableObject {
+    
+    class ViewModel: Identifiable, ObservableObject {
         
         let logo: Image
-        var name: String
-        var balance: String
+        @Published var name: String
+        @Published var balance: String
+        @Published var status: Status
         let fontColor: Color
         let cardNumber: String
         let backgroundColor: Color
-        let paymentSystem: Image
+        let paymentSystem: Image?
+        let backgroundImage: Image?
         
-
-        internal init(logo: Image, name: String, balance: String, fontColor: Color, cardNumber: String, backgroundColor: Color, paymentSystem: Image) {
+        
+        
+        internal init(logo: Image, name: String, balance: String, fontColor: Color, cardNumber: String, backgroundColor: Color, paymentSystem: Image?, status: Status, backgroundImage: Image?) {
             
             self.logo = logo
             self.name = name
@@ -29,64 +32,134 @@ extension MainCardComponentView {
             self.fontColor = fontColor
             self.cardNumber = cardNumber
             self.backgroundColor = backgroundColor
-            self.paymentSystem = paymentSystem
+            self.status = status
+            self.backgroundImage = backgroundImage
+            
+            if let paymentSystem = paymentSystem {
+                
+                self.paymentSystem = paymentSystem
+            } else {
+                
+                self.paymentSystem = nil
+            }
+            
+        }
+        
+        enum Status {
+            case active
+            case notActivated
+            case blocked
+            
+            var image: Image? {
+                switch self {
+                    case .active: return nil
+                    case .notActivated: return Image.ic16ArrowRight
+                    case .blocked: return Image.ic16Lock
+                }
+            }
         }
     }
 }
 
 struct MainCardComponentView: View {
-
+    
     @ObservedObject var viewModel: MainCardComponentView.ViewModel
     
     var body: some View {
-    
-        VStack(alignment: .leading) {
+        Button {
             
-            HStack(alignment: .center){
-                
-                Image.ic24LogoForaColor
-                    .frame(width: 18.8, height: 18.8)
-                    .foregroundColor(.white)
-                
-                Circle()
-                    .frame(width: 2.27, height: 2.38, alignment: .center)
-                    .foregroundColor(viewModel.fontColor)
-                
-                Text(viewModel.cardNumber)
-                    .font(Font(.init(.system, size: 12)))
-                    .foregroundColor(viewModel.fontColor)
-            }
-            .padding(.leading, 13)
-            .padding(.top, 12)
+        } label: {
             
-            VStack(alignment: .leading, spacing: 4) {
+            ZStack {
+                if let backgtoundImage = viewModel.backgroundImage {
+                   
+                    backgtoundImage
+                        .renderingMode(.original)
+                        .scaledToFill()
+                }
                 
-                Spacer()
-                
-                Text(viewModel.name)
-                    .font(Font(.init(.system, size: 14)))
-                    .foregroundColor(viewModel.fontColor)
-                    .fixedSize(horizontal: false, vertical: true)
-
-                HStack{
-                    Text(viewModel.balance)
-                        .font(Font(.init(.system, size: 14)))
-                        .foregroundColor(viewModel.fontColor)
-
-                    Spacer()
+                VStack(alignment: .leading) {
                     
-                    viewModel.paymentSystem
-                        .frame(width: 28, height: 28, alignment: .center)
+                    HStack(alignment: .center, spacing: 8) {
+                        
+                        viewModel.logo
+                            .frame(width: 18.8, height: 18.8, alignment: .center)
+                            .foregroundColor(viewModel.fontColor)
+                        
+                        Circle()
+                            .frame(width: 2.27, height: 2.38, alignment: .center)
+                            .foregroundColor(viewModel.fontColor)
+                        
+                        Text(viewModel.cardNumber)
+                            .font(.system(size: 12))
+                            .foregroundColor(viewModel.fontColor)
+                    }
+                    .padding(.leading, 5)
+                    
+                    
+                        Spacer()
+                    
+                        Text(viewModel.name)
+                            .font(.system(size: 14))
+                            .foregroundColor(viewModel.fontColor)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .opacity(0.5)
+                            .multilineTextAlignment(.leading)
+
+                        HStack(alignment: .center){
+                            
+                            Text(viewModel.balance)
+                                .font(.system(size: 14))
+                                .fontWeight(.semibold)
+                                .foregroundColor(viewModel.fontColor)
+                            
+                            
+                            Spacer()
+                            
+                            if let paymentSystem = viewModel.paymentSystem {
+                                
+                                paymentSystem
+                                    .frame(width: 28, height: 28, alignment: .center)
+                            }
+                        }
+                }
+                .padding(.leading, 12)
+                .padding(.trailing, 16)
+                .padding(.top, 12)
+                .padding(.bottom, 11)
+                .frame(width: 164, height: 104)
+                
+                if let stutus = viewModel.status.image{
+                    
+                    ZStack{
+                        
+                        Rectangle()
+                            .opacity(0.2)
+                            
+                        Button {
+                            
+                        } label: {
+                            
+                            stutus
+                                .renderingMode(.original)
+                                .foregroundColor(viewModel.backgroundColor)
+                        }
+                        .frame(width: 24, height: 24, alignment: .center)
+                        .background(Color.white)
+                        .cornerRadius(90)
+                    }
                 }
             }
-            .padding(.trailing, 16)
-            .padding(.leading, 12)
-            .padding(.bottom, 12)
+            .frame(width: 164, height: 104)
+            .background(viewModel.backgroundColor)
+            .cornerRadius(12)
         }
-        .frame(width: 164, height: 104)
-        .background(viewModel.backgroundColor)
-        .cornerRadius(12)
+        .foregroundColor(.black)
+        .background(Color.white
+                        .cornerRadius(12)
+                        .shadow(color: Color.black.opacity(0.2), radius: 12, x: 0, y: 15))
     }
+    
 }
 
 struct MainCardView_Previews: PreviewProvider {
@@ -95,20 +168,20 @@ struct MainCardView_Previews: PreviewProvider {
         
         Group{
             
-            MainCardComponentView(viewModel: MainCardComponentView.ViewModel(logo: .ic16CreditCard, name: "Classic", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardClassic, paymentSystem: .init(systemName: "card_visa_logo")))
-                .previewLayout(.fixed(width: 170, height: 120))
-
-            MainCardComponentView(viewModel: MainCardComponentView.ViewModel(logo: .ic16CreditCard, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem: .init(systemName: "card_visa_logo")))
+            MainCardComponentView(viewModel: MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardClassic, paymentSystem:  Image(uiImage: UIImage(named: "card_visa_logo")!), status: .notActivated, backgroundImage: Image("")))
                 .previewLayout(.fixed(width: 170, height: 120))
             
-            MainCardComponentView(viewModel: MainCardComponentView.ViewModel(logo: .ic16CreditCard, name: "Classic", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardGold, paymentSystem: .init(systemName: "card_mastercard_logo")))
+            MainCardComponentView(viewModel: MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .blocked, backgroundImage: Image("")))
                 .previewLayout(.fixed(width: 170, height: 120))
             
-            MainCardComponentView(viewModel: MainCardComponentView.ViewModel(logo: .ic16CreditCard, name: "Rio", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardRIO, paymentSystem: .init(systemName: "card_mastercard_logo")))
-                .previewLayout(.fixed(width: 170, height: 120))
+            MainCardComponentView(viewModel: MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardGold, paymentSystem: Image(uiImage: UIImage(named: "card_visa_logo")!), status: .active, backgroundImage: Image("")))
+                            .previewLayout(.fixed(width: 170, height: 120))
             
-            MainCardComponentView(viewModel: MainCardComponentView.ViewModel(logo: .ic16CreditCard, name: "Текущий зарплатный счет", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardAccount, paymentSystem: .init(systemName: "card_mastercard_logo")))
-                .previewLayout(.fixed(width: 170, height: 120))
+            MainCardComponentView(viewModel: MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Rio", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardRIO, paymentSystem: Image(uiImage: UIImage(named: "card_visa_logo")!), status: .active, backgroundImage: Image("")))
+                            .previewLayout(.fixed(width: 170, height: 120))
+            
+            MainCardComponentView(viewModel: MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Текущий зарплатный счет", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardAccount, paymentSystem: .init(systemName: "card_mastercard_logo"), status: .active ,backgroundImage: Image("")))
+                            .previewLayout(.fixed(width: 170, height: 120))
         }
     }
 }
