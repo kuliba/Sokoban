@@ -92,7 +92,7 @@ class AuthLoginViewModel: ObservableObject {
                 case let payload as ModelAction.Auth.Register.Response:
                     switch payload.result {
                     case .success(let data):
-                        confirmViewModel = AuthConfirmViewModel(model, confirmCodeLength: data.codeLength, phoneNumber: data.phone, repeatTimeInterval: data.repeatTimeout, dismissAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Dismiss.Confirm())}, numberOfPasswordAttempts: 4)
+                        confirmViewModel = AuthConfirmViewModel(model, confirmCodeLength: data.codeLength, codeAttemtsCount: data.codeAttemtsCount, phoneNumber: data.phone, resendCodeDelay: data.resendCodeDelay, dismissAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Dismiss.Confirm())})
                         isConfirmViewPresented = true
                         
                     case .failure(let error):

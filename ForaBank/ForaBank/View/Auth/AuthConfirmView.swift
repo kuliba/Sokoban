@@ -43,21 +43,21 @@ struct AuthConfirmView: View {
                 }
             }
         }
-        .alert(isPresented: $viewModel.showingAlert) {
-            if viewModel.numberOfPasswordAttempts > 0 {
-                return Alert(title: Text("Введен некорректный код. Попробуйте еще раз."),
-                      message: Text("Осталось попыток: " + String(viewModel.numberOfPasswordAttempts)),
-                      dismissButton: .default(Text("ОК"), action: {
-                    viewModel.code.state = .edit
-                    viewModel.numberOfPasswordAttempts -= 1
-                }))
-            }
-            return Alert(title: Text("Ошибка"),
-                  message: Text("Вы исчерпали все попытки :("),
-                  dismissButton: .default(Text("ОК"), action: {
-                viewModel.navigationBar.backButton.action()
-            }))
-        }
+//        .alert(isPresented: $viewModel.showingAlert) {
+//            if viewModel.codeAttemtsCount > 0 {
+//                return Alert(title: Text("Введен некорректный код. Попробуйте еще раз."),
+//                      message: Text("Осталось попыток: " + String(viewModel.codeAttemtsCount)),
+//                      dismissButton: .default(Text("ОК"), action: {
+//                    viewModel.code.state = .edit
+//                    viewModel.codeAttemtsCount -= 1
+//                }))
+//            }
+//            return Alert(title: Text("Ошибка"),
+//                  message: Text("Вы исчерпали все попытки :("),
+//                  dismissButton: .default(Text("ОК"), action: {
+//                viewModel.navigationBar.backButton.action()
+//            }))
+//        }
         .padding(EdgeInsets(top: 12, leading: 20, bottom: 20, trailing: 20))
         .navigationBarItems(leading: Button(action: {
             viewModel.code.showKeyboard = false
@@ -128,53 +128,57 @@ extension AuthConfirmView {
     struct InfoView: View {
         
         @ObservedObject var viewModel: AuthConfirmViewModel.InfoViewModel
-        
-        
+    
         var body: some View {
             
             VStack(spacing: 32) {
                 
-                VStack(spacing: 3){
+                VStack(spacing: 8) {
                     
                     Text(viewModel.title)
                         .font(.textBodyMR14200())
                         .foregroundColor(.textPlaceholder)
-                        .padding([.leading,.trailing], 20)
                         .multilineTextAlignment(.center)
-                        .lineSpacing(5)
                     
-                    if let subtitle = viewModel.subtitle{
+                    if let subtitle = viewModel.subtitle {
                         
                         Text(subtitle)
                             .font(.textBodyMR14200())
                             .foregroundColor(.textPlaceholder)
-                            .padding([.leading,.trailing], 20)
                             .multilineTextAlignment(.center)
-                            .lineSpacing(5)
                     }
                 }
                 
-                switch viewModel.state{
-                case .timer(let timer):
+                switch viewModel.state {
+                case .timer(let timerViewModel):
+                    TimerView(viewModel: timerViewModel)
                     
-                    Text(timer.value)
-                        .font(.textH3R18240())
-                        .foregroundColor(.textSecondary)
                 case .button(let button):
                     
                     Button(action: button.action) {
                         
                         Text(button.title)
                             .font(.textBodySR12160())
+                            .foregroundColor(.textRed)
+                            .padding(10)
                     }
-                    .frame(width: 140, height: 24, alignment: .center)
                     .background(Color.buttonSecondary)
-                    .cornerRadius(90)
-                    .font(.buttonMediumM14160())
-                    .foregroundColor(.textRed)
+                    .cornerRadius(8)
                 }
             }
-            .padding([.top, .bottom],20)
+            .padding(20)
+        }
+        
+        struct TimerView: View {
+            
+            @ObservedObject var viewModel: AuthConfirmViewModel.InfoViewModel.TimerViewModel
+            
+            var body: some View {
+                
+                Text(viewModel.value)
+                    .font(.textH3R18240())
+                    .foregroundColor(.textSecondary)
+            }
         }
     }
 }

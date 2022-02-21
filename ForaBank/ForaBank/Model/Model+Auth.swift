@@ -24,7 +24,7 @@ internal extension Model {
     func handleAuthRegisterRequest(payload: ModelAction.Auth.Register.Request) {
         
         //TODO: real implementation required
-        action.send(ModelAction.Auth.Register.Response(result: .success(.init(codeLength: 6, phone: "+79255557799", repeatTimeout: 30))))
+        action.send(ModelAction.Auth.Register.Response(result: .success(.init(codeLength: 6, codeAttemtsCount: 3, phone: "+79255557799", resendCodeDelay: 5))))
     }
     
     func handleAuthVerificationCodeConfirmRequest(payload: ModelAction.Auth.VerificationCode.Confirm.Request) {
@@ -112,8 +112,9 @@ extension ModelAction {
                 struct Data {
                     
                     let codeLength: Int
+                    let codeAttemtsCount: Int
                     let phone: String
-                    let repeatTimeout: TimeInterval
+                    let resendCodeDelay: TimeInterval
                 }
             }
         }
