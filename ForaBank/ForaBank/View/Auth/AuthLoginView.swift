@@ -17,7 +17,7 @@ struct AuthLoginView: View {
         VStack(spacing: 24) {
             
             HeaderView(viewModel: viewModel.header)
-            CardView(viewModel: $viewModel.card)
+            CardView(viewModel: viewModel.card)
             
             Spacer()
             
@@ -92,9 +92,7 @@ extension AuthLoginView {
     
     struct CardView: View {
         
-        @Binding var viewModel: AuthLoginViewModel.CardViewModel
-        @State private var message = ""
-        @State private var isValidate: Bool = false
+        @ObservedObject var viewModel: AuthLoginViewModel.CardViewModel
         
         var body: some View {
             
@@ -140,7 +138,7 @@ extension AuthLoginView {
                         // text field
                         ZStack {
                             
-                            TextFieldComponent(text: $message, isValidate: isValidate)
+                            TextFieldMaskableView(viewModel: viewModel.textField)
                                 .font(.textH2M20282())
                                 .textContentType(.creditCardNumber)
                             

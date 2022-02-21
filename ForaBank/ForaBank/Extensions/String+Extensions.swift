@@ -1,0 +1,114 @@
+//
+//  String+Extensions.swift
+//  ForaBank
+//
+//  Created by Max Gribov on 21.02.2022.
+//
+
+import Foundation
+
+extension String {
+    
+    func contained(in list: [String]) -> Bool {
+        
+        for item in list {
+            
+            if self.contains(item) {
+                
+                return true
+            }
+        }
+        
+        return false
+    }
+    
+    func masked(mask: StringValueMask) -> String {
+
+        let value = self
+        
+        var maskedValue = ""
+        var currentMaskIndex = 0
+        
+        for i in 0..<value.count {
+            
+            if currentMaskIndex >= mask.mask.count {
+                return maskedValue
+            }
+            
+            let currentCharacter = value[value.index(value.startIndex, offsetBy: i)]
+            var maskCharacter = mask.mask[mask.mask.index(value.startIndex, offsetBy: currentMaskIndex)]
+            
+            if currentCharacter == maskCharacter {
+                
+                maskedValue.append(currentCharacter)
+                
+            } else {
+                
+                while maskCharacter != mask.symbol {
+    
+                    maskedValue.append(maskCharacter)
+                    currentMaskIndex += 1
+                    maskCharacter = mask.mask[mask.mask.index(value.startIndex, offsetBy: currentMaskIndex)]
+                }
+                
+                maskedValue.append(currentCharacter)
+            }
+            
+            currentMaskIndex += 1
+        }
+        
+        return maskedValue
+    }
+    
+    //TODO: tests
+    func masked(masks: [StringValueMask]) -> String {
+        
+        guard self.count > 0 else {
+            return self
+        }
+        
+        let value = self
+        var result: String = ""
+
+        // sort masks by it length
+        let sortedMask = masks.sorted(by: { $0.length < $1.length })
+        
+        var maskIndex = 0
+        var currentMask = sortedMask[maskIndex]
+        
+        while value.count > currentMask.length && maskIndex < sortedMask.count - 1 {
+            
+            maskIndex += 1
+            currentMask = sortedMask[maskIndex]
+        }
+
+        result = value.masked(mask: currentMask)
+        
+        return result
+    }
+    
+    func filterred(regEx: String) throws -> String {
+        
+        let value = self
+        
+        let regExp = try NSRegularExpression(pattern: regEx, options: [])
+        let range = NSMakeRange(0, value.count)
+        let results = regExp.matches(in: value, options: [], range: range)
+        
+        return results.reduce("") { partialResult, result in
+            
+            partialResult + (value as NSString).substring(with: result.range)
+        }
+    }
+    
+    func cropped(max: Int) -> String {
+        
+        let value = self
+        
+        guard value.digits.count > max else {
+            return value
+        }
+
+        return String(value.dropLast(value.digits.count - max))
+    }
+}

@@ -14,7 +14,7 @@ class AuthLoginViewModel: ObservableObject {
     let action: PassthroughSubject<Action, Never> = .init()
     
     let header: HeaderViewModel
-    lazy var card: CardViewModel = CardViewModel(scanButton: .init(action: { self.action.send(AuthLoginViewModelAction.Show.Scaner()) }), nextButton: .init(action: { self.action.send(AuthLoginViewModelAction.Auth(cardNumber: self.card.cardNumber)) }), state: .editing)
+    lazy var card: CardViewModel = CardViewModel(scanButton: .init(action: { self.action.send(AuthLoginViewModelAction.Show.Scaner()) }), textField: .init(masks: [.card, .account], regExp: "[0-9]"), nextButton: nil, state: .editing)
     
     @Published var productsButton: ProductsButtonViewModel?
     
@@ -122,19 +122,20 @@ extension AuthLoginViewModel {
     
     class CardViewModel: ObservableObject {
 
-        let icon: Image = .ic32LogoForaLine
+        let icon: Image
         let scanButton: ScanButtonViewModel
-        
-        @Published var state: State
-        @Published var cardNumber: String = ""
+        @Published var textField: TextFieldMaskableView.ViewModel
         @Published var nextButton: NextButtonViewModel?
+        let subTitle: String
+        @Published var state: State
         
-        let subTitle = "Введите номер вашей карты или счета"
+        internal init(icon: Image = .ic32LogoForaLine, scanButton: ScanButtonViewModel, textField: TextFieldMaskableView.ViewModel, nextButton: NextButtonViewModel? = nil, subTitle: String = "Введите номер вашей карты или счета", state: State = .editing) {
 
-        internal init(scanButton: ScanButtonViewModel, nextButton: NextButtonViewModel, state: State) {
-
+            self.icon = icon
             self.scanButton = scanButton
+            self.textField = textField
             self.nextButton = nextButton
+            self.subTitle = subTitle
             self.state = .editing
         }
 
