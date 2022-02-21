@@ -12,18 +12,20 @@ import SwiftUI
 
 extension MainBlockProductsView {
     
-    struct ViewModel {
-        
-    }
+
 }
 
 //MARK: - View
 
 struct MainBlockProductsView: View {
     
+//    @Binding var viewModel: MainBlockProductsView
+    
     var body: some View {
         
-        Text("")
+        HStack{
+            
+        }
     }
 }
 
