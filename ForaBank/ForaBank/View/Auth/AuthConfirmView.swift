@@ -127,7 +127,7 @@ extension AuthConfirmView {
     
     struct InfoView: View {
         
-        var viewModel: AuthConfirmViewModel.InfoViewModel
+        @ObservedObject var viewModel: AuthConfirmViewModel.InfoViewModel
         
         
         var body: some View {

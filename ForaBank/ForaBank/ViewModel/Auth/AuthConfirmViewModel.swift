@@ -219,6 +219,10 @@ extension AuthConfirmViewModel {
         var title: String
         @Published var subtitle: String?
         @Published var state: State
+        private var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+        private var bindings = Set<AnyCancellable>()
+        private var startTime: TimeInterval = Date().timeIntervalSince1970
+        private var second = 0
         
         init(title: String, subtitle: String? = nil, state: State) {
             
@@ -229,10 +233,32 @@ extension AuthConfirmViewModel {
         
         init(phoneNumber: String, repeatTimeInterval: TimeInterval) {
             
-            //TODO: implement timer
             self.title = "Код отправлен на " + phoneNumber
-            self.subtitle = nil
-            self.state = .timer(.init(value: "0.35"))
+            self.subtitle = "Запросить повторно можно через"
+            self.state = .timer(.init(value: ""))
+
+            bind()
+        }
+        
+        func bind() {
+
+            timer
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] time in
+
+                    if time.timeIntervalSince1970 - startTime >= 9 {
+                        subtitle = ""
+                        state = .button(.init(action: {
+
+                            subtitle = "Запросить повторно можно через"
+                            startTime = Date().timeIntervalSince1970
+                            timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+                        }))
+                    } else {
+                        second = Int(10 - time.timeIntervalSince1970 + startTime)
+                        state = .timer(.init(value: timerMask(timeInSeconds: second)))
+                    }
+                }.store(in: &bindings)
         }
         
         enum State {
@@ -250,6 +276,22 @@ extension AuthConfirmViewModel {
             
             let title = "Отправить повторно"
             let action: () -> Void
+
+            init(action: @escaping () -> Void = {}) {
+
+                self.action = action
+            }
+        }
+        
+        func timerMask(timeInSeconds: Int) -> String {
+
+            let minutes = timeInSeconds / 60
+            let restOfSeconds = timeInSeconds % 60
+            let secondString =  restOfSeconds / 10 > 0 ? String(restOfSeconds) : "0" + String(restOfSeconds)
+            
+            let returnedSting = minutes / 10 > 0 ? (String(minutes) + ":" + secondString) : ("0" + String(minutes) + ":" + secondString)
+            
+            return(returnedSting)
         }
     }
 }
