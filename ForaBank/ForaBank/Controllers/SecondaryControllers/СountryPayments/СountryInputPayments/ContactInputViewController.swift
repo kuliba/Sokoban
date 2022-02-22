@@ -156,7 +156,7 @@ class ContactInputViewController: UIViewController {
                 }
                 if let middleName = model.additional.first(where: { $0.fieldname == "bSurName" })?.fieldvalue {
                     self.secondNameField.text = middleName
-                }
+                }                
             }
                 
         default :
@@ -183,6 +183,13 @@ class ContactInputViewController: UIViewController {
         if let template = paymentTemplate {
             runBlockAfterDelay(0.2) {
                 self.setupAmount(amount: template.amount)
+                
+                if let model = self.paymentTemplate?.parameterList.first as? TransferAnywayData,
+                   let currencyAmount = model.additional.first(where: { $0.fieldname == "CURR" }) {
+                    
+                    self.currency = currencyAmount.fieldvalue
+                    
+                }
             }
         }
     }

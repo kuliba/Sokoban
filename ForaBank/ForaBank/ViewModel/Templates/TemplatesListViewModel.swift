@@ -388,8 +388,16 @@ private extension TemplatesListViewModel {
                     
             return nil
         }
-        
-        return amount.currencyFormatter(symbol: transfer.currencyAmount)
+        if template.type == .contactAdressless ,
+           let parameterList = template.parameterList.first as? TransferAnywayData,
+           let currencyAmount = parameterList.additional.first(where: { $0.fieldname == "CURR" }) {
+            
+            return amount.currencyFormatter(symbol: currencyAmount.fieldvalue)
+            
+        } else {
+            
+            return amount.currencyFormatter(symbol: transfer.currencyAmount)
+        }
     }
 }
 
