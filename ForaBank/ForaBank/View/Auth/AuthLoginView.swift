@@ -50,6 +50,9 @@ struct AuthLoginView: View {
                 }
             }
         }
+        .alert(item: $viewModel.alert, content: { alertViewModel in
+            Alert(with: alertViewModel)
+        })
         .padding(.top, 24)
         .background(
             Image.imgRegistrationBg

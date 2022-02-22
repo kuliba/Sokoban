@@ -24,6 +24,8 @@ class AuthLoginViewModel: ObservableObject {
     @Published var isProductsViewPresented: Bool
     var productsViewModel: AuthProductsViewModel?
     
+    @Published var alert: Alert.ViewModel?
+    
     private let model: Model
     private var bindings = Set<AnyCancellable>()
 
@@ -50,6 +52,35 @@ class AuthLoginViewModel: ObservableObject {
     }
     
     private func bind() {
+        
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as ModelAction.Auth.Register.Response:
+                    switch payload {
+                    case .correct(codeLength: let codeLength, phone: let phone, resendCodeDelay: let resendCodeDelay):
+                        confirmViewModel = AuthConfirmViewModel(model, confirmCodeLength: codeLength, phoneNumber: phone, resendCodeDelay: resendCodeDelay, dismissAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Dismiss.Confirm())})
+                        isConfirmViewPresented = true
+                        
+                    case .incorrect(message: let message):
+                        alert = .init(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.alert = nil }))
+                        break
+                        
+                    case .error(let error):
+                        //TODO: handle error
+                        break
+                    }
+                    
+                case _ as ModelAction.Auth.ProductsReady:
+                    productsButton = ProductsButtonViewModel(action: { self.action.send(AuthLoginViewModelAction.Show.Products()) })
+    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
         
         action
             .receive(on: DispatchQueue.main)
@@ -84,30 +115,7 @@ class AuthLoginViewModel: ObservableObject {
                 
             }.store(in: &bindings)
         
-        model.action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                
-                switch action {
-                case let payload as ModelAction.Auth.Register.Response:
-                    switch payload.result {
-                    case .success(let data):
-                        confirmViewModel = AuthConfirmViewModel(model, confirmCodeLength: data.codeLength, phoneNumber: data.phone, resendCodeDelay: data.resendCodeDelay, dismissAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Dismiss.Confirm())})
-                        isConfirmViewPresented = true
-                        
-                    case .failure(let error):
-                        //TODO: handle error
-                        print(error.localizedDescription)
-                    }
-                    
-                case _ as ModelAction.Auth.ProductsReady:
-                    productsButton = ProductsButtonViewModel(action: { self.action.send(AuthLoginViewModelAction.Show.Products()) })
     
-                default:
-                    break
-                }
-                
-            }.store(in: &bindings)
         
         card.$state
             .receive(on: DispatchQueue.main)
@@ -172,7 +180,8 @@ extension AuthLoginViewModel {
                         
                         if text.isComplete(for: mask) {
                             
-                            state = .ready(text)
+                            let unmasked = (try? text.filterred(regEx: textField.regExp)) ?? text
+                            state = .ready(unmasked)
                             return
                         }
                     }

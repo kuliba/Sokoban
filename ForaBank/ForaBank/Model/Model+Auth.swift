@@ -24,7 +24,13 @@ internal extension Model {
     func handleAuthRegisterRequest(payload: ModelAction.Auth.Register.Request) {
         
         //TODO: real implementation required
-        action.send(ModelAction.Auth.Register.Response(result: .success(.init(codeLength: 6, phone: "+79255557799", resendCodeDelay: 5))))
+        if payload.cardNumber == "1111111111111111" {
+           
+            action.send(ModelAction.Auth.Register.Response.correct(codeLength: 6, phone: "+79255557799", resendCodeDelay: 5))
+        } else {
+            
+            action.send(ModelAction.Auth.Register.Response.incorrect(message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения."))
+        }
     }
     
     func handleAuthVerificationCodeConfirmRequest(payload: ModelAction.Auth.VerificationCode.Confirm.Request) {
@@ -111,16 +117,11 @@ extension ModelAction {
                 let cardNumber: String
             }
             
-            struct Response: Action {
+            enum Response: Action {
                 
-                let result: Result<Data, Error>
-                
-                struct Data {
-                    
-                    let codeLength: Int
-                    let phone: String
-                    let resendCodeDelay: TimeInterval
-                }
+                case correct(codeLength: Int, phone: String, resendCodeDelay: TimeInterval)
+                case incorrect(message: String)
+                case error(Error)
             }
         }
         
