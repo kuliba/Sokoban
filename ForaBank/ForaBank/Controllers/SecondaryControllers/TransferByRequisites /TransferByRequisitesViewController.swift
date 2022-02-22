@@ -200,6 +200,51 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         }
     }
     
+    init(orgPaymentTemplate: PaymentTemplateData) {
+        super.init(nibName: nil, bundle: nil)
+        self.paymentTemplate = orgPaymentTemplate
+        
+        if let parameter = orgPaymentTemplate.parameterList.first as? TransferGeneralData {
+            
+            self.byCompany = true
+            self.stackView.removeArrangedSubview(self.fioField)
+            self.fioField.isHidden = true
+            self.stackView.removeArrangedSubview(self.nameField)
+            self.nameField.isHidden = true
+            self.stackView.removeArrangedSubview(self.surField)
+            self.surField.isHidden = true
+            
+            self.stackView.addArrangedSubview(self.innField)
+            self.innField.isHidden = false
+            
+            self.stackView.addArrangedSubview(self.kppField)
+            self.kppField.isHidden = false
+            
+            self.stackView.addArrangedSubview(self.commentField)
+            self.commentField.isHidden = false
+            
+            self.stackView.addArrangedSubview(self.nameCompanyField)
+            self.nameCompanyField.isHidden = false
+            
+            if let bik = parameter.payeeExternal?.bankBIC {
+                bikBankField.textField.text = bik
+            }
+            
+            if let account = parameter.payeeExternal?.accountNumber {
+                let mask = StringMask(mask: "00000 000 0 0000 0000000")
+                accountNumber.textField.text = mask.mask(string: account)
+            }
+            
+            if let fullName = parameter.payeeExternal?.name,
+                let inn = parameter.payeeExternal?.inn,
+                let kpp = parameter.payeeExternal?.kpp {
+
+                sendData(kpp: kpp, name: fullName)
+                innField.textField.text = inn
+            }
+        }
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -214,7 +259,13 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
             runBlockAfterDelay(0.2) {
                 self.setupAmount(amount: template.amount)
                 self.accountNumberFieldDidChange()
-                self.hideShowFields()
+                
+                if self.byCompany == false {
+                    
+                    self.hideShowFields()
+                } else {
+                    self.innFieldDidChange()
+                }
             }
         }
     }
@@ -318,14 +369,18 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         }
         
         innField.didChangeValueField = { (field) in
-            if self.innField.textField.text?.count == 10 || self.innField.textField.text?.count == 12 {
-                self.suggestCompany()
-            } else {
-                self.nameField.isHidden = true
-                self.kppField.isHidden = true
-                self.nameCompanyField.isHidden = true
-                self.commentField.isHidden = true
-            }
+            self.innFieldDidChange()
+        }
+    }
+    
+    func innFieldDidChange() {
+        if self.innField.textField.text?.count == 10 || self.innField.textField.text?.count == 12 {
+            self.suggestCompany()
+        } else {
+            self.nameField.isHidden = true
+            self.kppField.isHidden = true
+            self.nameCompanyField.isHidden = true
+            self.commentField.isHidden = true
         }
     }
     
@@ -473,7 +528,8 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
     
     func setupUI() {
         
-        addCloseButton()
+        paymentTemplate == nil ? self.addCloseButton() : nil
+        
         view.backgroundColor = .white
         let saveAreaView = UIView()
         saveAreaView.backgroundColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1)

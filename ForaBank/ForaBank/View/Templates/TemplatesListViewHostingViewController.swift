@@ -51,6 +51,10 @@ private extension TemplatesListViewHostingViewController {
                     let paymentViewController = TransferByRequisitesViewController(paymentTemplate: payload.viewModel)
                     navigationController?.pushViewController(paymentViewController, animated: true)
                     
+                case let payload as TemplatesListViewModelAction.Present.OrgPaymentRequisites:
+                    let paymentViewController = TransferByRequisitesViewController(orgPaymentTemplate: payload.viewModel)
+                    navigationController?.pushViewController(paymentViewController, animated: true)
+                    
                 case let payload as TemplatesListViewModelAction.Present.PaymentSFP:
                     let paymentViewController = PaymentByPhoneViewController(viewModel: payload.viewModel)
                     navigationController?.pushViewController(paymentViewController, animated: true)

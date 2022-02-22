@@ -11,7 +11,11 @@ import RealmSwift
 class ContactInputViewController: UIViewController {
     
     lazy var realm = try? Realm()
-    var typeOfPay: PaymentType = .contact
+    var typeOfPay: PaymentType = .contact {
+        didSet {
+            readAndSetupCard(type: typeOfPay)
+        }
+    }
     var cardIsSelect = false
     var selectedCardNumber = ""
     var puref = ""
@@ -223,7 +227,7 @@ class ContactInputViewController: UIViewController {
     func setupActions() {
         
         
-        readAndSetupCard()
+        readAndSetupCard(type: typeOfPay)
         setupBankList()
         
         countryListView.didCountryTapped = { [weak self] country in
@@ -432,17 +436,19 @@ class ContactInputViewController: UIViewController {
         })
     }
     
-    private func readAndSetupCard() {
+    private func readAndSetupCard(type: PaymentType) {
         DispatchQueue.main.async {
-            var filterProduct: [UserAllCardsModel] = []
-            let cards = ReturnAllCardList.cards()
-            cards.forEach { product in
-                if (product.productType == "CARD"
-                        || product.productType == "ACCOUNT") && product.currency == "RUB" {
-                    filterProduct.append(product)
-                }
-            }
 
+            let cards = ReturnAllCardList.cards()
+            let filterProduct = cards.filter{
+                ($0.productType == "CARD" || $0.productType == "ACCOUNT") &&
+                
+                type == .contact
+                ? ($0.currency == "RUB" || $0.currency == "USD" || $0.currency == "EUR")
+                : ($0.currency == "RUB")
+            }
+            
+            self.cardListView.cardList = filterProduct
             if filterProduct.count > 0 {
                 if let cardId = self.paymentTemplate?.parameterList.first?.payer.cardId {
                     let card = filterProduct.first(where: { $0.id == cardId })
