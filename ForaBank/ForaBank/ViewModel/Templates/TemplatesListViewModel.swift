@@ -165,7 +165,7 @@ private extension TemplatesListViewModel {
                         print("Action Present Transport")
                         
                     case .externalEntity:
-                        self.action.send(TemplatesListViewModelAction.Present.PaymentRequisites(viewModel: temp))
+                        self.action.send(TemplatesListViewModelAction.Present.OrgPaymentRequisites(viewModel: temp))
                         
                     case .externalIndividual:
                         self.action.send(TemplatesListViewModelAction.Present.PaymentRequisites(viewModel: temp))
