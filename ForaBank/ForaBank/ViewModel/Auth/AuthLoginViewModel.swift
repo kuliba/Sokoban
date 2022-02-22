@@ -26,24 +26,27 @@ class AuthLoginViewModel: ObservableObject {
     
     @Published var alert: Alert.ViewModel?
     
+    private let dismissAction: () -> Void
     private let model: Model
     private var bindings = Set<AnyCancellable>()
 
-    init(header: HeaderViewModel = HeaderViewModel(), productsButton: ProductsButtonViewModel? = nil,  isConfirmViewPresented: Bool = false, isProductsViewPresented: Bool = false, model: Model = .emptyMock) {
+    init(header: HeaderViewModel = HeaderViewModel(), productsButton: ProductsButtonViewModel? = nil,  isConfirmViewPresented: Bool = false, isProductsViewPresented: Bool = false, dismissAction: @escaping () -> Void, model: Model = .emptyMock) {
 
         self.header = header
         self.productsButton = productsButton
         self.isConfirmViewPresented = isConfirmViewPresented
         self.isProductsViewPresented = isProductsViewPresented
+        self.dismissAction = dismissAction
         self.model = model
     }
     
-    init(_ model: Model) {
+    init(_ model: Model, dismissAction: @escaping () -> Void) {
         
         self.model = model
         self.header = HeaderViewModel()
         self.isConfirmViewPresented = false
         self.isProductsViewPresented = false
+        self.dismissAction = dismissAction
         
         bind()
         
@@ -61,7 +64,7 @@ class AuthLoginViewModel: ObservableObject {
                 case let payload as ModelAction.Auth.Register.Response:
                     switch payload {
                     case .correct(codeLength: let codeLength, phone: let phone, resendCodeDelay: let resendCodeDelay):
-                        confirmViewModel = AuthConfirmViewModel(model, confirmCodeLength: codeLength, phoneNumber: phone, resendCodeDelay: resendCodeDelay, dismissAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Dismiss.Confirm())})
+                        confirmViewModel = AuthConfirmViewModel(model, confirmCodeLength: codeLength, phoneNumber: phone, resendCodeDelay: resendCodeDelay, backAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Dismiss.Confirm())}, dismissAction: dismissAction)
                         isConfirmViewPresented = true
                         
                     case .incorrect(message: let message):

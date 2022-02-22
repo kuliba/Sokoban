@@ -21,6 +21,9 @@ class RootViewModel: ObservableObject {
     
     func showLogin() {
         
-        login = AuthLoginViewModel(model)
+        login = AuthLoginViewModel(model, dismissAction: {[weak self] in
+            withAnimation {
+                self?.login = nil
+            }})
     }
 }

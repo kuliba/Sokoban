@@ -25,6 +25,7 @@ struct RootView: View {
                         .navigationBarTitle("")
                         .navigationBarHidden(true)
                 }
+                .transition(.asymmetric(insertion: .opacity, removal: .move(edge: .bottom)))
             }
         }
     }

@@ -231,7 +231,7 @@ extension AuthLoginView {
 struct AuthLoginView_Previews: PreviewProvider {
     
     static var previews: some View {
-        AuthLoginView(viewModel: AuthLoginViewModel(productsButton: .init(action: {})))
+        AuthLoginView(viewModel: .init(.emptyMock, dismissAction: {}))
     }
 }
 

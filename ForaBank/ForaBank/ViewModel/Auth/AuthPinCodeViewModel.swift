@@ -26,14 +26,16 @@ class AuthPinCodeViewModel: ObservableObject {
     @Published var alert: Alert.ViewModel?
     
     private let model: Model
+    private let backAction: () -> Void
     private let dismissAction: () -> Void
     private var bindings = Set<AnyCancellable>()
 
-    init(pinCode: PinCodeViewModel, numpad: NumPadViewModel, footer: FooterViewModel, dismissAction: @escaping () -> Void, model: Model = .emptyMock, mode: Mode = .unlock(attempt: 3), stage: Stage = .editing, isPermissionsViewPresented: Bool = false) {
+    init(pinCode: PinCodeViewModel, numpad: NumPadViewModel, footer: FooterViewModel, backAction: @escaping () -> Void, dismissAction: @escaping () -> Void, model: Model = .emptyMock, mode: Mode = .unlock(attempt: 3), stage: Stage = .editing, isPermissionsViewPresented: Bool = false) {
         
         self.pinCode = pinCode
         self.numpad = numpad
         self.footer = footer
+        self.backAction = backAction
         self.dismissAction = dismissAction
         self.model = model
         self.mode = mode
@@ -41,7 +43,7 @@ class AuthPinCodeViewModel: ObservableObject {
         self.isPermissionsViewPresented = isPermissionsViewPresented
     }
     
-    init(_ model: Model, mode: Mode, dismissAction: @escaping () -> Void) {
+    init(_ model: Model, mode: Mode, backAction: @escaping () -> Void, dismissAction: @escaping () -> Void) {
  
         switch mode {
         case .unlock:
@@ -66,6 +68,7 @@ class AuthPinCodeViewModel: ObservableObject {
             self.mode = .create(step: .one)
         }
         
+        self.backAction = backAction
         self.dismissAction = dismissAction
         self.stage = .editing
         self.isPermissionsViewPresented = false
@@ -92,7 +95,7 @@ class AuthPinCodeViewModel: ObservableObject {
                         
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(400)) {
                             
-                            self.dismissAction()
+                            self.backAction()
                         }
                         
                     case .incorrect(remain: let remainAttempts):
@@ -310,18 +313,12 @@ class AuthPinCodeViewModel: ObservableObject {
                     let currentAttempt = attempt + 1
                     mode = .unlock(attempt: currentAttempt)
                     model.action.send(ModelAction.Auth.Pincode.Check.Request(pincode: payload.code, attempt: currentAttempt))
-                    
-                case _ as AuthPermissionsViewModelAction.Skip:
-                    model.action.send(ModelAction.Auth.Sensor.Settings.desideLater)
-                    dismissAction()
                 
                 default:
                     break
                 }
                 
             }.store(in: &bindings)
-        
-        
     }
 }
 
