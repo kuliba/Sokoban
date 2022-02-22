@@ -537,6 +537,7 @@
 		7772978727C39E2D0099EF91 /* StringValueMask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772978627C39E2D0099EF91 /* StringValueMask.swift */; };
 		7772978927C39EF70099EF91 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772978827C39EF70099EF91 /* String+Extensions.swift */; };
 		7772978C27C3B7840099EF91 /* TextFieldMaskableViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772978B27C3B7840099EF91 /* TextFieldMaskableViewComponentTests.swift */; };
+		7772978E27C4ABCE0099EF91 /* AlertViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772978D27C4ABCE0099EF91 /* AlertViewComponent.swift */; };
 		77925575279AF54F00A85723 /* ECKeysProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77925574279AF54F00A85723 /* ECKeysProvider.swift */; };
 		7792557E279B1A5400A85723 /* JSONDecoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */; };
 		77925580279B1BCB00A85723 /* JSONEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */; };
@@ -1433,6 +1434,7 @@
 		7772978627C39E2D0099EF91 /* StringValueMask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringValueMask.swift; sourceTree = "<group>"; };
 		7772978827C39EF70099EF91 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		7772978B27C3B7840099EF91 /* TextFieldMaskableViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldMaskableViewComponentTests.swift; sourceTree = "<group>"; };
+		7772978D27C4ABCE0099EF91 /* AlertViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewComponent.swift; sourceTree = "<group>"; };
 		77925574279AF54F00A85723 /* ECKeysProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKeysProvider.swift; sourceTree = "<group>"; };
 		7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONDecoder+Extensions.swift"; sourceTree = "<group>"; };
 		7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONEncoder+Extensions.swift"; sourceTree = "<group>"; };
@@ -3258,6 +3260,7 @@
 				ED7866B1279EF2FB006B4F5A /* ContextMenuViewComponent.swift */,
 				77674A3F27A02D86008101B5 /* CircleProgressViewComponent.swift */,
 				68CB3B0D27BCFE83000B3EBF /* TextFieldMaskableViewComponent.swift */,
+				7772978D27C4ABCE0099EF91 /* AlertViewComponent.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -5862,6 +5865,7 @@
 				EDDFE3C62759731B00F57C71 /* ConfurmOpenDepositViewController.swift in Sources */,
 				A5C7A1B9275C023F003BEF6D /* InternetTVMainViewModel.swift in Sources */,
 				ED4FC5EC266AD98E0092B4AB /* NSCollectionLayoutItem.swift in Sources */,
+				7772978E27C4ABCE0099EF91 /* AlertViewComponent.swift in Sources */,
 				0BB24ABC26F370A300DDA4F6 /* GetProductDetailsDecodableModel.swift in Sources */,
 				EDB1657A2668C7F2007E6030 /* TransferCell.swift in Sources */,
 				EDB145382666770A0028EF5A /* OrderProductModel.swift in Sources */,

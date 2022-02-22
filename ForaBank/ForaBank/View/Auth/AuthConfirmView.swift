@@ -43,21 +43,9 @@ struct AuthConfirmView: View {
                 }
             }
         }
-//        .alert(isPresented: $viewModel.showingAlert) {
-//            if viewModel.codeAttemtsCount > 0 {
-//                return Alert(title: Text("Введен некорректный код. Попробуйте еще раз."),
-//                      message: Text("Осталось попыток: " + String(viewModel.codeAttemtsCount)),
-//                      dismissButton: .default(Text("ОК"), action: {
-//                    viewModel.code.state = .edit
-//                    viewModel.codeAttemtsCount -= 1
-//                }))
-//            }
-//            return Alert(title: Text("Ошибка"),
-//                  message: Text("Вы исчерпали все попытки :("),
-//                  dismissButton: .default(Text("ОК"), action: {
-//                viewModel.navigationBar.backButton.action()
-//            }))
-//        }
+        .alert(item: $viewModel.alert, content: { alertViewModel in
+            Alert(with: alertViewModel)
+        })
         .padding(EdgeInsets(top: 12, leading: 20, bottom: 20, trailing: 20))
         .navigationBarItems(leading: Button(action: {
             viewModel.code.showKeyboard = false
@@ -131,30 +119,18 @@ extension AuthConfirmView {
     
         var body: some View {
             
-            VStack(spacing: 32) {
+            VStack(spacing: 8) {
                 
-                VStack(spacing: 8) {
-                    
-                    Text(viewModel.title)
-                        .font(.textBodyMR14200())
-                        .foregroundColor(.textPlaceholder)
-                        .multilineTextAlignment(.center)
-                    
-                    if let subtitle = viewModel.subtitle {
-                        
-                        Text(subtitle)
-                            .font(.textBodyMR14200())
-                            .foregroundColor(.textPlaceholder)
-                            .multilineTextAlignment(.center)
-                    }
-                }
+                Text(viewModel.title)
+                    .font(.textBodyMR14200())
+                    .foregroundColor(.textPlaceholder)
+                    .multilineTextAlignment(.center)
                 
                 switch viewModel.state {
                 case .timer(let timerViewModel):
                     TimerView(viewModel: timerViewModel)
                     
                 case .button(let button):
-                    
                     Button(action: button.action) {
                         
                         Text(button.title)
@@ -164,6 +140,7 @@ extension AuthConfirmView {
                     }
                     .background(Color.buttonSecondary)
                     .cornerRadius(8)
+                    .padding(.top, 32)
                 }
             }
             .padding(20)
@@ -175,9 +152,17 @@ extension AuthConfirmView {
             
             var body: some View {
                 
-                Text(viewModel.value)
-                    .font(.textH3R18240())
+                VStack(spacing: 32) {
+                    
+                    Text(viewModel.description)
+                        .font(.textBodyMR14200())
+                        .foregroundColor(.textPlaceholder)
+                        .multilineTextAlignment(.center)
+                    
+                    Text(viewModel.value)
+                        .font(.textH3R18240())
                     .foregroundColor(.textSecondary)
+                }
             }
         }
     }

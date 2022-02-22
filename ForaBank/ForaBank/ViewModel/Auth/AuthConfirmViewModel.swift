@@ -19,16 +19,20 @@ class AuthConfirmViewModel: ObservableObject {
     @Published var isPincodeViewPresented: Bool
     var pincodeViewModel: AuthPinCodeViewModel?
     
+    @Published var alert: Alert.ViewModel?
     @Published var showingAlert: Bool
 
     private let phoneNumber: String
-    private let codeAttemtsCount: Int
     private let resendCodeDelay: TimeInterval
+    
+    private var currentCheckCodeAttempt = 0
+    private var currentResendCodeAttempt = 0
+    private let dismissAction: () -> Void
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
-    init(navigationBar: NavigationBarViewModel, code: CodeViewModel, info: InfoViewModel?, isPincodeViewPresented: Bool = false, model: Model = .emptyMock, showingAlert: Bool = false, phoneNumber: String, codeAttemtsCount: Int, resendCodeDelay: TimeInterval) {
+    init(navigationBar: NavigationBarViewModel, code: CodeViewModel, info: InfoViewModel?, isPincodeViewPresented: Bool = false, model: Model = .emptyMock, showingAlert: Bool = false, phoneNumber: String, resendCodeDelay: TimeInterval) {
         
         self.navigationBar = navigationBar
         self.code = code
@@ -37,11 +41,11 @@ class AuthConfirmViewModel: ObservableObject {
         self.model = model
         self.showingAlert = showingAlert
         self.phoneNumber = phoneNumber
-        self.codeAttemtsCount = codeAttemtsCount
         self.resendCodeDelay = resendCodeDelay
+        self.dismissAction = {}
     }
     
-    init(_ model: Model, confirmCodeLength: Int, codeAttemtsCount: Int, phoneNumber: String, resendCodeDelay: TimeInterval, dismissAction: @escaping () -> Void) {
+    init(_ model: Model, confirmCodeLength: Int, phoneNumber: String, resendCodeDelay: TimeInterval, dismissAction: @escaping () -> Void) {
         
         self.model = model
         self.navigationBar = NavigationBarViewModel(action: dismissAction)
@@ -50,8 +54,8 @@ class AuthConfirmViewModel: ObservableObject {
         self.isPincodeViewPresented = false
         self.showingAlert = false
         self.phoneNumber = phoneNumber
-        self.codeAttemtsCount = codeAttemtsCount
         self.resendCodeDelay = resendCodeDelay
+        self.dismissAction = dismissAction
         
         bind()
         
@@ -71,31 +75,39 @@ class AuthConfirmViewModel: ObservableObject {
                         pincodeViewModel = AuthPinCodeViewModel(model, mode: .create(step: .one))
                         isPincodeViewPresented = true
                         
-                    case .incorrect:
-                        showingAlert = true
+                    case .incorrect(remain: let remain):
+                        if remain > 0 {
+                            
+                            alert = Alert.ViewModel(title: "Введен некорректный код. Попробуйте еще раз.", message: "Осталось попыток: \(remain)", primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil }))
+                            code.state = .edit
+                            code.textFieldCode = ""
+                            
+                        } else {
+                            
+                            alert = Alert.ViewModel(title: "Ошибка.", message: "Вы исчерпали все попытки :(", primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.action.send(AuthConfirmViewModelAction.Dismiss())}))
+                        }
                         
                     case .error(let error):
                         //TODO: handle error
-                        print(error.localizedDescription)
+                        break
                     }
                     
                 case let payload as ModelAction.Auth.VerificationCode.Resend.Response:
                     switch payload.result {
-                    case .success(let data):
-                        if data.remainRepeatsCount > 0 {
+                    case .success(let remain):
+                        if remain > 0 {
                             withAnimation {
                                 
-                                info = InfoViewModel(phoneNumber: phoneNumber, resendCodeDelay: resendCodeDelay, completeTimerAction: { [weak self] in self?.action.send(AuthConfirmViewModelAction.RepeatDelayComplete()) })
-                                info?.subtitle = "Запросить повторно можно через:"
+                                info?.state = .timer(.init(delay: resendCodeDelay, description: "Осталось попыток запросить код повторно: \(remain)", completeAction: { [weak self] in self?.action.send(AuthConfirmViewModelAction.RepeatDelayComplete()) }))
                             }
                         
                         } else {
                             
-                            //TODO: alert & dismiss
+                            alert = Alert.ViewModel(title: "Вы исчерпали все попытки.", message: "Попробуйте позже.", primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.action.send(AuthConfirmViewModelAction.Dismiss())}))
                         }
                         
                     case .failure(let error):
-                        //TODO: alert
+                        //TODO: handle error
                         break
                     }
     
@@ -115,13 +127,16 @@ class AuthConfirmViewModel: ObservableObject {
                     
                 case _ as AuthConfirmViewModelAction.RepeatDelayComplete:
                     withAnimation {
-                        
                         info?.state = .button(.init(action: { [weak self] in self?.action.send(AuthConfirmViewModelAction.RepeatCode())}))
-                        info?.subtitle = nil
                     }
                     
                 case _ as AuthConfirmViewModelAction.RepeatCode:
-                    model.action.send(ModelAction.Auth.VerificationCode.Resend.Request())
+                    currentResendCodeAttempt += 1
+                    model.action.send(ModelAction.Auth.VerificationCode.Resend.Request(attempt: currentResendCodeAttempt))
+                    
+                case _ as AuthConfirmViewModelAction.Dismiss:
+                    alert = nil
+                    dismissAction()
     
                 default:
                     break
@@ -144,7 +159,8 @@ class AuthConfirmViewModel: ObservableObject {
                     
                 case .check:
                     code.showKeyboard = false
-                    model.action.send(ModelAction.Auth.VerificationCode.Confirm.Request(code: code.textFieldCode))
+                    currentCheckCodeAttempt += 1
+                    model.action.send(ModelAction.Auth.VerificationCode.Confirm.Request(code: code.textFieldCode, attempt: currentCheckCodeAttempt))
                 }
                 
             }.store(in: &bindings)
@@ -216,6 +232,7 @@ extension AuthConfirmViewModel {
                         
                         state = .check
                     }
+                    
                 }.store(in: &bindings)
         }
         
@@ -254,7 +271,6 @@ extension AuthConfirmViewModel {
     class InfoViewModel: ObservableObject {
         
         var title: String
-        @Published var subtitle: String?
         @Published var state: State
 
         private var bindings = Set<AnyCancellable>()
@@ -262,15 +278,13 @@ extension AuthConfirmViewModel {
         init(title: String, subtitle: String? = nil, state: State) {
             
             self.title = title
-            self.subtitle = subtitle
             self.state = state
         }
         
         init(phoneNumber: String, resendCodeDelay: TimeInterval, completeTimerAction: @escaping () -> Void) {
             
             self.title = "Код отправлен на " + phoneNumber
-            self.subtitle = "Запросить повторно можно через:"
-            self.state = .timer(.init(delay: resendCodeDelay, completeAction: completeTimerAction))
+            self.state = .timer(.init(delay: resendCodeDelay, description: "Запросить повторно можно через:", completeAction: completeTimerAction))
         }
 
         enum State {
@@ -282,6 +296,7 @@ extension AuthConfirmViewModel {
         class TimerViewModel: ObservableObject {
       
             let delay: TimeInterval
+            let description: String
             @Published var value: String
             let completeAction: () -> Void
             
@@ -295,13 +310,15 @@ extension AuthConfirmViewModel {
             }()
             private var bindings = Set<AnyCancellable>()
             
-            init(delay: TimeInterval, completeAction: @escaping () -> Void) {
+            init(delay: TimeInterval, description: String, completeAction: @escaping () -> Void) {
                 
                 self.delay = delay
+                self.description = description
                 self.value = ""
                 self.completeAction = completeAction
                 
                 bind()
+                value = formatter.string(from: delay) ?? "0 :\(delay)"
             }
             
             func bind() {
@@ -315,7 +332,7 @@ extension AuthConfirmViewModel {
                         
                         if remain <= 1 { completeAction() }
                        
-                        value = formatter.string(from: remain) ?? "0 :\(remain) _"
+                        value = formatter.string(from: remain) ?? "0 :\(remain)"
                         
                     }.store(in: &bindings)
                 
@@ -366,7 +383,7 @@ extension AuthConfirmViewModel {
         
         let codeViewModel = CodeViewModel(title: "Введите код из сообщения", lenght: 6, state: .openening)
         let infoViewModel = InfoViewModel(title: "+7 ... ... 54 13", subtitle: "Повторно отправить можно через:", state: .button(.init(action: {})))
-        let viewModel = AuthConfirmViewModel(navigationBar: .init(action: {}), code: codeViewModel, info: infoViewModel, isPincodeViewPresented: false, model: .emptyMock, showingAlert: false, phoneNumber: "+7 ... ... 54 13", codeAttemtsCount: 3, resendCodeDelay: 60)
+        let viewModel = AuthConfirmViewModel(navigationBar: .init(action: {}), code: codeViewModel, info: infoViewModel, isPincodeViewPresented: false, model: .emptyMock, showingAlert: false, phoneNumber: "+7 ... ... 54 13", resendCodeDelay: 60)
         
         return viewModel
     }()

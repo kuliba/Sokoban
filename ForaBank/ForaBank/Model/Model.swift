@@ -118,8 +118,8 @@ class Model {
                 case let payload as ModelAction.Auth.VerificationCode.Confirm.Request:
                     handleAuthVerificationCodeConfirmRequest(payload: payload)
                     
-                case _ as ModelAction.Auth.VerificationCode.Resend.Request:
-                    handleAuthVerificationCodeResendRequest()
+                case let payload as ModelAction.Auth.VerificationCode.Resend.Request:
+                    handleAuthVerificationCodeResendRequest(payload: payload)
                     
                 case let payload as ModelAction.Auth.Pincode.Set.Request:
                     handleAuthPincodeSetRequest(payload: payload)

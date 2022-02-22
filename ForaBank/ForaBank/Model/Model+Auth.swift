@@ -24,7 +24,7 @@ internal extension Model {
     func handleAuthRegisterRequest(payload: ModelAction.Auth.Register.Request) {
         
         //TODO: real implementation required
-        action.send(ModelAction.Auth.Register.Response(result: .success(.init(codeLength: 6, codeAttemtsCount: 3, phone: "+79255557799", resendCodeDelay: 5))))
+        action.send(ModelAction.Auth.Register.Response(result: .success(.init(codeLength: 6, phone: "+79255557799", resendCodeDelay: 5))))
     }
     
     func handleAuthVerificationCodeConfirmRequest(payload: ModelAction.Auth.VerificationCode.Confirm.Request) {
@@ -36,14 +36,20 @@ internal extension Model {
             
         } else {
             
-            action.send(ModelAction.Auth.VerificationCode.Confirm.Response.incorrect)
+            let totalAttempts = 3
+            let remain = totalAttempts - payload.attempt
+            
+            action.send(ModelAction.Auth.VerificationCode.Confirm.Response.incorrect(remain: remain))
         }
     }
     
-    func handleAuthVerificationCodeResendRequest() {
+    func handleAuthVerificationCodeResendRequest(payload: ModelAction.Auth.VerificationCode.Resend.Request) {
         
         //TODO: real implementation required
-        action.send(ModelAction.Auth.VerificationCode.Resend.Response(result: .success(.init(remainRepeatsCount: 1))))
+        let totalAttempts = 3
+        let remain = totalAttempts - payload.attempt
+        
+        action.send(ModelAction.Auth.VerificationCode.Resend.Response(result: .success(remain)))
     }
     
     func handleAuthPincodeSetRequest(payload: ModelAction.Auth.Pincode.Set.Request) {
@@ -112,7 +118,6 @@ extension ModelAction {
                 struct Data {
                     
                     let codeLength: Int
-                    let codeAttemtsCount: Int
                     let phone: String
                     let resendCodeDelay: TimeInterval
                 }
@@ -126,28 +131,28 @@ extension ModelAction {
                 struct Request: Action {
                     
                     let code: String
+                    let attempt: Int
                 }
                 
                 enum Response: Action {
                     
                     case correct
-                    case incorrect
+                    case incorrect(remain: Int)
                     case error(Error)
                 }
             }
             
             enum Resend {
                 
-                struct Request: Action {}
+                struct Request: Action {
+                    
+                    let attempt: Int
+                }
                 
                 struct Response: Action {
                     
-                    let result: Result<Data, Error>
-                    
-                    struct Data {
-                        
-                        let remainRepeatsCount: Int
-                    }
+                    // remain code resends count
+                    let result: Result<Int, Error>
                 }
             }
         }
