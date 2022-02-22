@@ -135,6 +135,9 @@ class Model {
                     
                 case _ as ModelAction.Auth.Login.Request:
                     handleAuthLoginRequest()
+                    
+                case _ as ModelAction.Auth.Logout.Request:
+                    handleAuthLogoutRequest()
 
                 //MARK: - Templates Actions
                     

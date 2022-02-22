@@ -21,6 +21,7 @@ struct AuthPermissionsView: View {
             
             ButtonsView(viewModel: viewModel.buttons)
         }
+        .navigationBarHidden(true)
         .padding(EdgeInsets(top: 0, leading: 20, bottom: 20, trailing: 20))
     }
 }
@@ -89,6 +90,6 @@ extension AuthPermissionsView {
 
 struct AuthPermissionsView_Previews: PreviewProvider {
     static var previews: some View {
-        AuthPermissionsView(viewModel: AuthPermissionsViewModel(Model.emptyMock))
+        AuthPermissionsView(viewModel: .init(.emptyMock, sensorType: .face, dismissAction: {}))
     }
 }

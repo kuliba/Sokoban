@@ -13,25 +13,52 @@ class AuthPermissionsViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
     
-    private let model: Model
-    
-    @Published var sensorType: SensorType
+    @Published var sensorType: BiometricSensorType
     @Published var header: HeaderViewModel
     @Published var buttons: [ButtonViewModel]
     
-    init(_ model: Model) {
-        
+    private let dismissAction: () -> Void
+    private let model: Model
+    private var bindings = Set<AnyCancellable>()
+    
+    init(_ model: Model, sensorType: BiometricSensorType, dismissAction: @escaping () -> Void) {
+  
+        self.sensorType = sensorType
+        self.buttons = []
+        self.header = .init(sensorType: sensorType)
+        self.dismissAction = dismissAction
         self.model = model
         
-        sensorType = .touchID
-        buttons = []
-        header = .init(sensorType: .touchID)
+        setupButtons(with: sensorType)
+        bind()
+    }
+    
+    private func bind() {
         
-        sensorType = getSensorType()
+        action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as AuthPermissionsViewModelAction.Confirm:
+                    model.action.send(ModelAction.Auth.Sensor.Settings.allow)
+                    dismissAction()
+                    
+                case _ as AuthPermissionsViewModelAction.Skip:
+                    model.action.send(ModelAction.Auth.Sensor.Settings.desideLater)
+                    dismissAction()
+                
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+    }
+    
+    private func setupButtons(with sensor: BiometricSensorType) {
         
-        switch sensorType {
-        case .touchID:
-            header = .init(sensorType: sensorType)
+        switch sensor {
+        case .touch:
             buttons = [ButtonViewModel(title: "Использовать отпечаток", style: .accept,
                                        action: { [weak self] in
                 self?.action.send(AuthPermissionsViewModelAction.Confirm())
@@ -41,8 +68,7 @@ class AuthPermissionsViewModel: ObservableObject {
                 self?.action.send(AuthPermissionsViewModelAction.Skip())
             })]
             
-        case .faceID:
-            header = .init(sensorType: sensorType)
+        case .face:
             buttons = [ButtonViewModel(title: "Использовать Face ID", style: .accept,
                                        action: { [weak self] in
                 self?.action.send(AuthPermissionsViewModelAction.Confirm())
@@ -53,33 +79,23 @@ class AuthPermissionsViewModel: ObservableObject {
             })]
         }
     }
-    
-    func getSensorType() -> SensorType {
-        .faceID
-    }
-    
 }
 
 extension AuthPermissionsViewModel {
-    
-    enum SensorType {
-        
-        case touchID
-        case faceID
-    }
     
     struct HeaderViewModel {
         
         var title: String
         var icon: Image
         
-        init(sensorType: SensorType) {
+        init(sensorType: BiometricSensorType) {
             
             switch sensorType {
-            case .touchID:
+            case .touch:
                 title = "Вместо  пароля вы можете использовать отпечаток для входа"
                 icon = .ic64TouchID
-            case .faceID:
+                
+            case .face:
                 title = "Вместо  пароля вы можете использовать Face ID для входа"
                 icon = .ic64FaceId
             }
@@ -87,15 +103,7 @@ extension AuthPermissionsViewModel {
     }
 
     struct ButtonViewModel: Identifiable, Hashable {
-        
-        static func == (lhs: AuthPermissionsViewModel.ButtonViewModel, rhs: AuthPermissionsViewModel.ButtonViewModel) -> Bool {
-            return lhs.title == rhs.title
-        }
-        
-        func hash(into hasher: inout Hasher) {
-               hasher.combine(title)
-           }
-        
+    
         let id = UUID()
         var title: String
         var style: Style
@@ -128,6 +136,14 @@ extension AuthPermissionsViewModel {
                 }
             }
         }
+        
+        static func == (lhs: AuthPermissionsViewModel.ButtonViewModel, rhs: AuthPermissionsViewModel.ButtonViewModel) -> Bool {
+            return lhs.id == rhs.id
+        }
+        
+        func hash(into hasher: inout Hasher) {
+               hasher.combine(id)
+           }
     }
 }
 

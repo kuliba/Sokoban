@@ -72,7 +72,7 @@ class AuthConfirmViewModel: ObservableObject {
                 case let payload as ModelAction.Auth.VerificationCode.Confirm.Response:
                     switch payload {
                     case .correct:
-                        pincodeViewModel = AuthPinCodeViewModel(model, mode: .create(step: .one))
+                        pincodeViewModel = AuthPinCodeViewModel(model, mode: .create(step: .one), dismissAction: dismissAction)
                         isPincodeViewPresented = true
                         
                     case .incorrect(remain: let remain):

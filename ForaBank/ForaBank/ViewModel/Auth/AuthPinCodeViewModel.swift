@@ -20,13 +20,16 @@ class AuthPinCodeViewModel: ObservableObject {
     @Published var mode: Mode
     @Published var stage: Stage
     
-    private let model: Model
-    private let dismissAction: DismissAction?
-    private var bindings = Set<AnyCancellable>()
+    @Published var isPermissionsViewPresented: Bool
+    var permissionsViewModel: AuthPermissionsViewModel?
     
-    typealias DismissAction = () -> Void
+    @Published var alert: Alert.ViewModel?
+    
+    private let model: Model
+    private let dismissAction: () -> Void
+    private var bindings = Set<AnyCancellable>()
 
-    init(pinCode: PinCodeViewModel, numpad: NumPadViewModel, footer: FooterViewModel, dismissAction: DismissAction? = nil, model: Model = .emptyMock, mode: Mode = .unlock(attempt: 3), stage: Stage = .editing) {
+    init(pinCode: PinCodeViewModel, numpad: NumPadViewModel, footer: FooterViewModel, dismissAction: @escaping () -> Void, model: Model = .emptyMock, mode: Mode = .unlock(attempt: 3), stage: Stage = .editing, isPermissionsViewPresented: Bool = false) {
         
         self.pinCode = pinCode
         self.numpad = numpad
@@ -35,9 +38,10 @@ class AuthPinCodeViewModel: ObservableObject {
         self.model = model
         self.mode = mode
         self.stage = stage
+        self.isPermissionsViewPresented = isPermissionsViewPresented
     }
     
-    init(_ model: Model, mode: Mode, dismissAction: DismissAction? = nil) {
+    init(_ model: Model, mode: Mode, dismissAction: @escaping () -> Void) {
  
         switch mode {
         case .unlock:
@@ -64,12 +68,74 @@ class AuthPinCodeViewModel: ObservableObject {
         
         self.dismissAction = dismissAction
         self.stage = .editing
+        self.isPermissionsViewPresented = false
         self.model = model
         
         bind()
     }
     
     func bind() {
+        
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as ModelAction.Auth.Pincode.Check.Response:
+                    switch payload {
+                    case .correct:
+                        withAnimation {
+                            // show correct pincode state
+                            pinCode.style = .correct
+                            numpad.isEnabled = false
+                        }
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(400)) {
+                            
+                            self.dismissAction()
+                        }
+                        
+                    case .incorrect(remain: let remainAttempts):
+                        withAnimation {
+                            // show incorrect pincode state
+                            pinCode.style = .incorrect
+                            numpad.isEnabled = false
+                        }
+                        
+                        alert = .init(title: "Введен некорректный пин-код.", message: "Осталось попыток: \(remainAttempts)", primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.alert = nil }))
+     
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(400)) {
+                            
+                            withAnimation {
+                                // back to editing
+                                self.stage = .editing
+                                pinCode.style = .normal
+                                pinCode.value = ""
+                                numpad.isEnabled = true
+                            }
+                        }
+                        
+                    case .restricted:
+                        withAnimation {
+                            // show incorrect pincode state
+                            pinCode.style = .incorrect
+                            numpad.isEnabled = false
+                        }
+                        alert = .init(title: "Введен некорректный пин-код.", message: "Все попытки исчерпаны.", primary: .init(type: .default, title: "Ok", action: { [weak self] in
+                            self?.alert = nil
+                            self?.model.action.send(ModelAction.Auth.Logout.Request())
+                        }))
+                        
+                    case .error(let error):
+                        //TODO: Handle error
+                        break
+                    }
+     
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
         
         numpad.action
             .receive(on: DispatchQueue.main)
@@ -213,6 +279,16 @@ class AuthPinCodeViewModel: ObservableObject {
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(200)) {
                             
                             model.action.send(ModelAction.Auth.Pincode.Set.Request(pincode: pinCode.value))
+                            
+                            if let sensor = model.availableBiometricSensorType {
+                                
+                                permissionsViewModel = .init(model, sensorType: sensor, dismissAction: dismissAction)
+                                isPermissionsViewPresented = true
+                                
+                            } else {
+                                
+                                dismissAction()
+                            }
                         }
                     }
                     
@@ -222,70 +298,30 @@ class AuthPinCodeViewModel: ObservableObject {
                 
             }.store(in: &bindings)
         
-        model.action
+        action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 
                 switch action {
-                case let payload as ModelAction.Auth.Pincode.Check.Response:
-                    switch payload {
-                    case .correct:
-                        withAnimation {
-                            // show correct pincode state
-                            pinCode.style = .correct
-                            numpad.isEnabled = false
-                        }
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(400)) {
-                            
-                            //TODO: dismiss lock screen
-                        }
-                        
-                    case .incorrect(remainAttempts: let remainAttempts):
-                        withAnimation {
-                            // show incorrect pincode state
-                            pinCode.style = .incorrect
-                            numpad.isEnabled = false
-                        }
-                        
-                        //TODO: show alert
-                        
-                        guard case .unlock(attempt: let attempt) = mode else {
-                            return
-                        }
-                        
-                        mode = .unlock(attempt: attempt + 1)
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(400)) {
-                            
-                            withAnimation {
-                                // back to editing
-                                self.stage = .editing
-                                pinCode.style = .normal
-                                pinCode.value = ""
-                                numpad.isEnabled = true
-                            }
-                        }
-                        
-                    case .restricted:
-                        withAnimation {
-                            // show incorrect pincode state
-                            pinCode.style = .incorrect
-                            numpad.isEnabled = false
-                        }
-                        print("restricted")
-                        //TODO: all attempts gone. Logout?
-                        break
-                        
-                    case .error(let error):
-                        print(error.localizedDescription)
+                case let payload as AuthPinCodeViewModelAction.Continue:
+                    guard case .unlock(attempt: let attempt) = mode else {
+                        return
                     }
-     
+                    let currentAttempt = attempt + 1
+                    mode = .unlock(attempt: currentAttempt)
+                    model.action.send(ModelAction.Auth.Pincode.Check.Request(pincode: payload.code, attempt: currentAttempt))
+                    
+                case _ as AuthPermissionsViewModelAction.Skip:
+                    model.action.send(ModelAction.Auth.Sensor.Settings.desideLater)
+                    dismissAction()
+                
                 default:
                     break
                 }
                 
             }.store(in: &bindings)
+        
+        
     }
 }
 

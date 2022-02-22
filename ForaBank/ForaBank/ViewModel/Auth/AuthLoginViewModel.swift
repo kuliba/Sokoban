@@ -73,6 +73,18 @@ class AuthLoginViewModel: ObservableObject {
                         break
                     }
                     
+                case let payload as ModelAction.Auth.Logout.Response:
+                    switch payload {
+                    case .success:
+                        isConfirmViewPresented = false
+                        confirmViewModel = nil
+                        card.textField.text = nil
+                        
+                    case .error(let error):
+                        //TODO: handle error
+                        break
+                    }
+                    
                 case _ as ModelAction.Auth.ProductsReady:
                     productsButton = ProductsButtonViewModel(action: { self.action.send(AuthLoginViewModelAction.Show.Products()) })
     
@@ -114,8 +126,6 @@ class AuthLoginViewModel: ObservableObject {
                 }
                 
             }.store(in: &bindings)
-        
-    
         
         card.$state
             .receive(on: DispatchQueue.main)
