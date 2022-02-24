@@ -95,7 +95,7 @@ class AuthPinCodeViewModel: ObservableObject {
                         
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(400)) {
                             
-                            self.backAction()
+                            self.dismissAction()
                         }
                         
                     case .incorrect(remain: let remainAttempts):

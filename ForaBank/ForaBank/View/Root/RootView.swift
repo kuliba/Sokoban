@@ -15,7 +15,21 @@ struct RootView: View {
         
         ZStack {
             
-            Text("Main Screen Here")
+            VStack {
+                
+                Text("Главный эаран")
+                
+                Button {
+                    
+                    viewModel.showLock()
+                    
+                } label: {
+                    
+                    Text("Окно блокировки")
+                }
+                .padding()
+            }
+            
             
             if let loginViewModel = viewModel.login {
                 
@@ -26,6 +40,11 @@ struct RootView: View {
                         .navigationBarHidden(true)
                 }
                 .transition(.asymmetric(insertion: .opacity, removal: .move(edge: .bottom)))
+            }
+            
+            if let lockViewModel = viewModel.lock {
+                
+                AuthLockVew(viewModel: lockViewModel)
             }
         }
     }

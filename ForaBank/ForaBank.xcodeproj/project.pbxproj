@@ -538,6 +538,8 @@
 		7772978927C39EF70099EF91 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772978827C39EF70099EF91 /* String+Extensions.swift */; };
 		7772978C27C3B7840099EF91 /* TextFieldMaskableViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772978B27C3B7840099EF91 /* TextFieldMaskableViewComponentTests.swift */; };
 		7772978E27C4ABCE0099EF91 /* AlertViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772978D27C4ABCE0099EF91 /* AlertViewComponent.swift */; };
+		7772979727C789030099EF91 /* AuthLockViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772979627C789030099EF91 /* AuthLockViewModel.swift */; };
+		7772979927C78C5C0099EF91 /* AuthLockVew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772979827C78C5C0099EF91 /* AuthLockVew.swift */; };
 		77925575279AF54F00A85723 /* ECKeysProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77925574279AF54F00A85723 /* ECKeysProvider.swift */; };
 		7792557E279B1A5400A85723 /* JSONDecoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */; };
 		77925580279B1BCB00A85723 /* JSONEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */; };
@@ -1435,6 +1437,8 @@
 		7772978827C39EF70099EF91 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		7772978B27C3B7840099EF91 /* TextFieldMaskableViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldMaskableViewComponentTests.swift; sourceTree = "<group>"; };
 		7772978D27C4ABCE0099EF91 /* AlertViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewComponent.swift; sourceTree = "<group>"; };
+		7772979627C789030099EF91 /* AuthLockViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthLockViewModel.swift; sourceTree = "<group>"; };
+		7772979827C78C5C0099EF91 /* AuthLockVew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthLockVew.swift; sourceTree = "<group>"; };
 		77925574279AF54F00A85723 /* ECKeysProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKeysProvider.swift; sourceTree = "<group>"; };
 		7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONDecoder+Extensions.swift"; sourceTree = "<group>"; };
 		7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONEncoder+Extensions.swift"; sourceTree = "<group>"; };
@@ -2557,6 +2561,7 @@
 				6849887E27BAD96C00E84E6B /* AuthPinCodeView.swift */,
 				687AD14827B69A6600C6F251 /* AuthPermissionsView.swift */,
 				6849888527BBB8D200E84E6B /* AuthProductsView.swift */,
+				7772979827C78C5C0099EF91 /* AuthLockVew.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -2569,6 +2574,7 @@
 				6862B54E27B688CC006E833F /* AuthPinCodeViewModel.swift */,
 				6862B55227B688CC006E833F /* AuthPermissionsViewModel.swift */,
 				6849888127BBB41300E84E6B /* AuthProductsViewModel.swift */,
+				7772979627C789030099EF91 /* AuthLockViewModel.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -5485,6 +5491,7 @@
 				0BAC674426D41C18005AAD91 /* ExtensionGKHSearch.swift in Sources */,
 				6820929B27AC04A4003DCAFD /* SuggestAddressData.swift in Sources */,
 				6820928927AB0EEC003DCAFD /* PaymentSystemData.swift in Sources */,
+				7772979727C789030099EF91 /* AuthLockViewModel.swift in Sources */,
 				ED684CF22763955E00AA7A33 /* DocDepositTableViewCell.swift in Sources */,
 				0BDCF00F274D56C500AAA1C3 /* NextStepServiceTransferDecodableModel.swift in Sources */,
 				68D06F2626C3C11700F9BE4C /* MainViewControllerDataSource.swift in Sources */,
@@ -5544,6 +5551,7 @@
 				77517FFA27A99BB6005CFB77 /* ProductTemplateData.swift in Sources */,
 				77499C3F2773A3B800F6C079 /* OperationDetailHostingViewController.swift in Sources */,
 				77EA0DBB2779B06E00C6ED12 /* OperationDetailHeaderComponentView.swift in Sources */,
+				7772979927C78C5C0099EF91 /* AuthLockVew.swift in Sources */,
 				0BB24ABA26F2884A00DDA4F6 /* ReturnAllCardList.swift in Sources */,
 				0BAD4D37273EDF3A00FDF9B6 /* GetNotificationsModelSaved.swift in Sources */,
 				ED84995626A8831E005205C6 /* EPContactsPicker.swift in Sources */,

@@ -28,4 +28,9 @@ class RootViewHostingViewController: UIHostingController<RootView> {
         
         viewModel.showLogin()
     }
+    
+    func showLock() {
+        
+        viewModel.showLock()
+    }
 }

@@ -41,7 +41,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let rootViewController = RootViewHostingViewController(with: .init(Model.shared))
         window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()
-        rootViewController.showLogin()
+        rootViewController.showLock()
         
         //LEGACY
         /*

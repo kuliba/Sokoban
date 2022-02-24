@@ -36,6 +36,7 @@ struct AuthPinCodeView: View {
                 }
             }
         }
+        .background(Color.white)
         .navigationBarHidden(true)
     }
 }

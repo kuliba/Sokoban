@@ -11,6 +11,7 @@ import SwiftUI
 class RootViewModel: ObservableObject {
     
     @Published var login: AuthLoginViewModel?
+    @Published var lock: AuthLockViewModel?
     
     private let model: Model
     
@@ -25,5 +26,17 @@ class RootViewModel: ObservableObject {
             withAnimation {
                 self?.login = nil
             }})
+    }
+    
+    func showLock() {
+        
+        withAnimation {
+            
+            lock = AuthLockViewModel(model, dismissAction: {[weak self] in
+                withAnimation {
+                    self?.lock = nil
+                }
+            })
+        }
     }
 }
