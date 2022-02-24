@@ -353,7 +353,6 @@
 		6867F43D2769AFF60039A0EE /* ResultOperationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6867F43C2769AFF60039A0EE /* ResultOperationView.swift */; };
 		686857D8274FA73C00BBF562 /* PaymentsViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 686857D7274FA73C00BBF562 /* PaymentsViewCoordinator.swift */; };
 		687AD14927B69A6600C6F251 /* AuthPermissionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687AD14827B69A6600C6F251 /* AuthPermissionsView.swift */; };
-		687AD3EA27C3CADF006EAD1A /* MainBlockProductSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687AD3E927C3CADF006EAD1A /* MainBlockProductSelector.swift */; };
 		687ADF1026B07721005A239B /* DataExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687ADF0F26B07721005A239B /* DataExtension.swift */; };
 		687FB22D26E65FC5004A479F /* NewProductCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687FB22C26E65FC5004A479F /* NewProductCell.swift */; };
 		687FB23026E8D41A004A479F /* OfferCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687FB22F26E8D41A004A479F /* OfferCard.swift */; };
@@ -538,7 +537,7 @@
 		77674A4027A02D86008101B5 /* CircleProgressViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77674A3F27A02D86008101B5 /* CircleProgressViewComponent.swift */; };
 		776C6C1C279D58A800253581 /* CSRFAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776C6C1B279D58A800253581 /* CSRFAgent.swift */; };
 		776C6C1E279D5D8800253581 /* CSRFAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776C6C1D279D5D8800253581 /* CSRFAgentTests.swift */; };
-		7772978527C38FEC0099EF91 /* MainBlockProductsViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772978427C38FEC0099EF91 /* MainBlockProductsViewComponent.swift */; };
+		7772978527C38FEC0099EF91 /* MainSectionProductsViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772978427C38FEC0099EF91 /* MainSectionProductsViewComponent.swift */; };
 		77925575279AF54F00A85723 /* ECKeysProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77925574279AF54F00A85723 /* ECKeysProvider.swift */; };
 		7792557E279B1A5400A85723 /* JSONDecoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */; };
 		77925580279B1BCB00A85723 /* JSONEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */; };
@@ -1253,7 +1252,6 @@
 		6867F43C2769AFF60039A0EE /* ResultOperationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultOperationView.swift; sourceTree = "<group>"; };
 		686857D7274FA73C00BBF562 /* PaymentsViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsViewCoordinator.swift; sourceTree = "<group>"; };
 		687AD14827B69A6600C6F251 /* AuthPermissionsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthPermissionsView.swift; sourceTree = "<group>"; };
-		687AD3E927C3CADF006EAD1A /* MainBlockProductSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainBlockProductSelector.swift; sourceTree = "<group>"; };
 		687ADF0F26B07721005A239B /* DataExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataExtension.swift; sourceTree = "<group>"; };
 		687FB22C26E65FC5004A479F /* NewProductCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProductCell.swift; sourceTree = "<group>"; };
 		687FB22F26E8D41A004A479F /* OfferCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferCard.swift; sourceTree = "<group>"; };
@@ -1436,7 +1434,7 @@
 		77674A3F27A02D86008101B5 /* CircleProgressViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressViewComponent.swift; sourceTree = "<group>"; };
 		776C6C1B279D58A800253581 /* CSRFAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFAgent.swift; sourceTree = "<group>"; };
 		776C6C1D279D5D8800253581 /* CSRFAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFAgentTests.swift; sourceTree = "<group>"; };
-		7772978427C38FEC0099EF91 /* MainBlockProductsViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainBlockProductsViewComponent.swift; sourceTree = "<group>"; };
+		7772978427C38FEC0099EF91 /* MainSectionProductsViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSectionProductsViewComponent.swift; sourceTree = "<group>"; };
 		77925574279AF54F00A85723 /* ECKeysProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKeysProvider.swift; sourceTree = "<group>"; };
 		7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONDecoder+Extensions.swift"; sourceTree = "<group>"; };
 		7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONEncoder+Extensions.swift"; sourceTree = "<group>"; };
@@ -3020,8 +3018,7 @@
 		7772978227C38F2F0099EF91 /* Main */ = {
 			isa = PBXGroup;
 			children = (
-				7772978427C38FEC0099EF91 /* MainBlockProductsViewComponent.swift */,
-				687AD3E927C3CADF006EAD1A /* MainBlockProductSelector.swift */,
+				7772978427C38FEC0099EF91 /* MainSectionProductsViewComponent.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -5652,7 +5649,6 @@
 				77499C432773A96500F6C079 /* Color+Extensions.swift in Sources */,
 				0BAC674126D408DC005AAD91 /* CreateDirectTransferDecodableModel.swift in Sources */,
 				770DCE9327BBF93B004099C1 /* RootView.swift in Sources */,
-				687AD3EA27C3CADF006EAD1A /* MainBlockProductSelector.swift in Sources */,
 				0BF348A1269E0CDA005138A8 /* LogoutDecodableModel.swift in Sources */,
 				0BDCF00D274A8B0F00AAA1C3 /* IsSingleServiceDecodableModel.swift in Sources */,
 				0B7A18D02689C51A0007CC75 /* AppHeaderProtocol.swift in Sources */,
@@ -5812,7 +5808,7 @@
 				6841932127A28A4C00B4E184 /* ChoosePhoneNumber.swift in Sources */,
 				6833E0CE273920CE004C070F /* FaceTouchIDCoordinator.swift in Sources */,
 				EDB1656C26681F0E007E6030 /* MainTabBarViewController.swift in Sources */,
-				7772978527C38FEC0099EF91 /* MainBlockProductsViewComponent.swift in Sources */,
+				7772978527C38FEC0099EF91 /* MainSectionProductsViewComponent.swift in Sources */,
 				ED3A96742690FC8300252857 /* BankCell.swift in Sources */,
 				77517FE227A98CC3005CFB77 /* UserSettingData.swift in Sources */,
 				68E6A29726A033F200A1D9A1 /* GetProductTemplateListDecodableModel.swift in Sources */,

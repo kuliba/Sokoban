@@ -15,25 +15,18 @@ extension MainSectionProductsView {
     class ViewModel: ObservableObject {
         
         let title: String
-        @Published var productsTypeSelector: MainBlockProductSelectorViewModel?
+        @Published var productsTypeSelector: OptionSelectorViewModel?
         @Published var products: [MainCardComponentView.ViewModel]
         
-        init(title: String, productsTypeSelector: MainBlockProductSelectorViewModel?, products: [MainCardComponentView.ViewModel]) {
+        init(title: String, productsTypeSelector: OptionSelectorViewModel?, products: [MainCardComponentView.ViewModel]) {
             
             self.title = title
             self.products = products
-            
             if let productsTypeSelector = productsTypeSelector {
-                
                 self.productsTypeSelector = productsTypeSelector
-            } else {
-                
-                self.productsTypeSelector = nil
             }
-            
         }
     }
-
 }
 
 //MARK: - View
@@ -48,9 +41,11 @@ struct MainSectionProductsView: View {
 
             HeaderView(viewModel: viewModel)
             
-            if let selector = viewModel.productsTypeSelector {
+            if let productSelectorViewModel = viewModel.productsTypeSelector {
                 
-                MainBlockProductSelectorView(viewModel: selector)
+                OptionSelectorView(viewModel: productSelectorViewModel)
+                    .frame(height: 24)
+                    .padding(.top, 12)
             }
             
             ScrollView(.horizontal, showsIndicators: false) {
@@ -124,11 +119,7 @@ struct MainBlockProductsView_Previews: PreviewProvider {
         
         NavigationView {
 
-            MainSectionProductsView(viewModel: .init(title: "Мои продукты", productsTypeSelector: nil, products: [
-            .init(logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardClassic, paymentSystem:  Image(uiImage: UIImage(named: "card_visa_logo")!), status: .notActivated, backgroundImage: Image("")),
-            .init(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .blocked, backgroundImage: Image("")),
-            .init(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .active, backgroundImage: Image(""))
-        ]))
+            MainSectionProductsView(viewModel: .sample)
         }
     }
         
@@ -136,6 +127,12 @@ struct MainBlockProductsView_Previews: PreviewProvider {
 
 //MARK: - Preview Content
 
-extension MainSectionProductsView {
+extension MainSectionProductsView.ViewModel {
+    
+    static let sample = MainSectionProductsView.ViewModel(title: "Мои продукты", productsTypeSelector: .init(options: [.init(id: "all", name: "Карты"), .init(id: "", name: "Счета")], selected: "all", style: .products), products: [
+        .init(logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardClassic, paymentSystem:  Image(uiImage: UIImage(named: "card_visa_logo")!), status: .notActivated, backgroundImage: Image("")),
+        .init(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .blocked, backgroundImage: Image("")),
+        .init(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .active, backgroundImage: Image(""))
+    ])
     
 }
