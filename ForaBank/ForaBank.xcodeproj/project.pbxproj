@@ -537,6 +537,8 @@
 		776C6C1C279D58A800253581 /* CSRFAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776C6C1B279D58A800253581 /* CSRFAgent.swift */; };
 		776C6C1E279D5D8800253581 /* CSRFAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776C6C1D279D5D8800253581 /* CSRFAgentTests.swift */; };
 		7772978527C38FEC0099EF91 /* MainBlockProductsViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772978427C38FEC0099EF91 /* MainBlockProductsViewComponent.swift */; };
+		7772979327C77C190099EF91 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772979227C77C190099EF91 /* MainViewModel.swift */; };
+		7772979527C781420099EF91 /* MainViewSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772979427C781420099EF91 /* MainViewSectionViewModel.swift */; };
 		77925575279AF54F00A85723 /* ECKeysProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77925574279AF54F00A85723 /* ECKeysProvider.swift */; };
 		7792557E279B1A5400A85723 /* JSONDecoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */; };
 		77925580279B1BCB00A85723 /* JSONEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */; };
@@ -878,7 +880,7 @@
 		F63D4A3FB30397A82426313C /* InternetTVConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D4A26E0479DD5215DB784 /* InternetTVConfirmViewController.swift */; };
 		F63D4B91E94C13AFD50FF312 /* GIBDDFineDetailsFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D4C8F9B14DFF843262392 /* GIBDDFineDetailsFormViewModel.swift */; };
 		F63D4C7CF864543AD9AABF9A /* InternetTVInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D42CEA742F58D23C97218 /* InternetTVInputCell.swift */; };
-		F87F9B1E27C3A0FD007E3D94 /* MainBlockFastOperationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87F9B1D27C3A0FD007E3D94 /* MainBlockFastOperationView.swift */; };
+		F87F9B1E27C3A0FD007E3D94 /* MainSectionFastOperationViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87F9B1D27C3A0FD007E3D94 /* MainSectionFastOperationViewComponent.swift */; };
 		F87F9B2027C3B1B2007E3D94 /* ButtonIconTextViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87F9B1F27C3B1B2007E3D94 /* ButtonIconTextViewComponent.swift */; };
 		F8E529AD27B67F7B00222394 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F8E529AC27B67F7B00222394 /* Assets.xcassets */; };
 		F8E529B427BBABF600222394 /* AuthProductsViewModel+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E529B327BBABF600222394 /* AuthProductsViewModel+Preview.swift */; };
@@ -1435,6 +1437,8 @@
 		776C6C1B279D58A800253581 /* CSRFAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFAgent.swift; sourceTree = "<group>"; };
 		776C6C1D279D5D8800253581 /* CSRFAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFAgentTests.swift; sourceTree = "<group>"; };
 		7772978427C38FEC0099EF91 /* MainBlockProductsViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainBlockProductsViewComponent.swift; sourceTree = "<group>"; };
+		7772979227C77C190099EF91 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		7772979427C781420099EF91 /* MainViewSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewSectionViewModel.swift; sourceTree = "<group>"; };
 		77925574279AF54F00A85723 /* ECKeysProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKeysProvider.swift; sourceTree = "<group>"; };
 		7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONDecoder+Extensions.swift"; sourceTree = "<group>"; };
 		7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONEncoder+Extensions.swift"; sourceTree = "<group>"; };
@@ -1777,7 +1781,7 @@
 		F63D4C8F9B14DFF843262392 /* GIBDDFineDetailsFormViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GIBDDFineDetailsFormViewModel.swift; sourceTree = "<group>"; };
 		F63D4D93E1924F097E08847C /* ClientInfoModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientInfoModel.swift; sourceTree = "<group>"; };
 		F63D4DD4905E8BA594B990E1 /* InternetTVDetailsFormController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetTVDetailsFormController.swift; sourceTree = "<group>"; };
-		F87F9B1D27C3A0FD007E3D94 /* MainBlockFastOperationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainBlockFastOperationView.swift; sourceTree = "<group>"; };
+		F87F9B1D27C3A0FD007E3D94 /* MainSectionFastOperationViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSectionFastOperationViewComponent.swift; sourceTree = "<group>"; };
 		F87F9B1F27C3B1B2007E3D94 /* ButtonIconTextViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonIconTextViewComponent.swift; sourceTree = "<group>"; };
 		F8E529AC27B67F7B00222394 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F8E529B327BBABF600222394 /* AuthProductsViewModel+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthProductsViewModel+Preview.swift"; sourceTree = "<group>"; };
@@ -3032,6 +3036,15 @@
 			path = Product;
 			sourceTree = "<group>";
 		};
+		7772979127C77BFF0099EF91 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				7772979227C77C190099EF91 /* MainViewModel.swift */,
+				7772979427C781420099EF91 /* MainViewSectionViewModel.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
 		77925573279AF3AA00A85723 /* Encryption */ = {
 			isa = PBXGroup;
 			children = (
@@ -3111,6 +3124,7 @@
 			isa = PBXGroup;
 			children = (
 				770DCE9027BBF7F4004099C1 /* RootViewModel.swift */,
+				7772979127C77BFF0099EF91 /* Main */,
 				6862B54B27B688CC006E833F /* Auth */,
 				77EA0DBC2779B40100C6ED12 /* OperationDetail */,
 				EDE70902279716DF0048CA94 /* Templates */,
@@ -5055,7 +5069,7 @@
 		F87F9B1C27C3A0E1007E3D94 /* FastOperation */ = {
 			isa = PBXGroup;
 			children = (
-				F87F9B1D27C3A0FD007E3D94 /* MainBlockFastOperationView.swift */,
+				F87F9B1D27C3A0FD007E3D94 /* MainSectionFastOperationViewComponent.swift */,
 			);
 			path = FastOperation;
 			sourceTree = "<group>";
@@ -5616,6 +5630,7 @@
 				7705408F27BD1C6900094006 /* BiometricService.swift in Sources */,
 				0BA14E1C2715628A0098E422 /* GetAllLatestPaymentsDecodableModel.swift in Sources */,
 				0B8BE091266FDA1B00E96CAA /* CheckClientDecodebleModel.swift in Sources */,
+				7772979327C77C190099EF91 /* MainViewModel.swift in Sources */,
 				EDB16595266A4438007E6030 /* DevelopViewController.swift in Sources */,
 				6820928C27AB0FD7003DCAFD /* FastPaymentContractAttributeTypeData.swift in Sources */,
 				6833E0B22732B69E004C070F /* DetailOperationViewController.swift in Sources */,
@@ -5772,7 +5787,7 @@
 				EDDFE3B12756D52500F57C71 /* MainDepositCollectionViewCell.swift in Sources */,
 				5A5ABFAF27ABC84800D548AA /* ServerCommands+Deposit.swift in Sources */,
 				0B216FC126D1B28F0023C878 /* GKHCitySearchController.swift in Sources */,
-				F87F9B1E27C3A0FD007E3D94 /* MainBlockFastOperationView.swift in Sources */,
+				F87F9B1E27C3A0FD007E3D94 /* MainSectionFastOperationViewComponent.swift in Sources */,
 				68E3461F27030F4F00D6FE37 /* ChatViewController.swift in Sources */,
 				ED3A96712690FADD00252857 /* BankListView.swift in Sources */,
 				774A82C927BAE74800E5A5E9 /* UserDefaultsSettingsAgent.swift in Sources */,
@@ -5866,6 +5881,7 @@
 				68D099D9273B5D110017D777 /* PaymentByPhoneCoordinator.swift in Sources */,
 				6820929D27AC04B3003DCAFD /* SuggestBankData.swift in Sources */,
 				774E318927A0509C005A067B /* ServerAgentEmptyMock.swift in Sources */,
+				7772979527C781420099EF91 /* MainViewSectionViewModel.swift in Sources */,
 				77E1805A27AC8BE20006ACC9 /* main.swift in Sources */,
 				6849888227BBB41400E84E6B /* AuthProductsViewModel.swift in Sources */,
 				6820928E27AB0FEF003DCAFD /* FastPaymentContractAccountAttributeTypeData.swift in Sources */,
