@@ -1,5 +1,5 @@
 //
-//  MainBlockProductsViewComponent.swift
+//  MainSectionProductsViewComponent.swift
 //  ForaBank
 //
 //  Created by Max Gribov on 21.02.2022.
@@ -10,7 +10,7 @@ import SwiftUI
 
 //MARK: - ViewModel
 
-extension MainBlockProductsView {
+extension MainSectionProductsView {
     
     class ViewModel: ObservableObject {
         
@@ -38,7 +38,7 @@ extension MainBlockProductsView {
 
 //MARK: - View
 
-struct MainBlockProductsView: View {
+struct MainSectionProductsView: View {
     
     @ObservedObject var viewModel: ViewModel
     
@@ -124,7 +124,7 @@ struct MainBlockProductsView_Previews: PreviewProvider {
         
         NavigationView {
 
-            MainBlockProductsView(viewModel: .init(title: "Мои продукты", productsTypeSelector: nil, products: [
+            MainSectionProductsView(viewModel: .init(title: "Мои продукты", productsTypeSelector: nil, products: [
             .init(logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardClassic, paymentSystem:  Image(uiImage: UIImage(named: "card_visa_logo")!), status: .notActivated, backgroundImage: Image("")),
             .init(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .blocked, backgroundImage: Image("")),
             .init(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .active, backgroundImage: Image(""))
@@ -136,6 +136,6 @@ struct MainBlockProductsView_Previews: PreviewProvider {
 
 //MARK: - Preview Content
 
-extension MainBlockProductsView {
+extension MainSectionProductsView {
     
 }
