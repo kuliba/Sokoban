@@ -43,7 +43,7 @@ class AuthLockViewModel: ObservableObject {
             }
         }
         
-        self.state = .pincode(.init(model, mode: .unlock(attempt: 0), backAction: pincodeBackAction, dismissAction: dismissAction))
+        self.state = .pincode(.init(model, mode: .unlock(attempt: 1), backAction: pincodeBackAction, dismissAction: dismissAction))
     }
     
     enum State {

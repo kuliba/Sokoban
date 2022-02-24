@@ -38,6 +38,9 @@ struct AuthPinCodeView: View {
         }
         .background(Color.white)
         .navigationBarHidden(true)
+        .alert(item: $viewModel.alert, content: { alertViewModel in
+            Alert(with: alertViewModel)
+        })
     }
 }
 

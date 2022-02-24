@@ -99,35 +99,25 @@ class AuthPinCodeViewModel: ObservableObject {
                         }
                         
                     case .incorrect(remain: let remainAttempts):
+                        guard case .unlock(attempt: let lastAttempt) = mode else {
+                            return
+                        }
+                        mode = .unlock(attempt: lastAttempt + 1)
+                        
                         withAnimation {
                             // show incorrect pincode state
                             pinCode.style = .incorrect
                             numpad.isEnabled = false
                         }
-                        
-                        alert = .init(title: "Введен некорректный пин-код.", message: "Осталось попыток: \(remainAttempts)", primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.alert = nil }))
+                        alert = .init(title: "Введен некорректный пин-код.", message: "Осталось попыток: \(remainAttempts)", primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.action.send(AuthPinCodeViewModelAction.Unlock.Attempt()) }))
      
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(400)) {
-                            
-                            withAnimation {
-                                // back to editing
-                                self.stage = .editing
-                                pinCode.style = .normal
-                                pinCode.value = ""
-                                numpad.isEnabled = true
-                            }
-                        }
-                        
                     case .restricted:
                         withAnimation {
                             // show incorrect pincode state
                             pinCode.style = .incorrect
                             numpad.isEnabled = false
                         }
-                        alert = .init(title: "Введен некорректный пин-код.", message: "Все попытки исчерпаны.", primary: .init(type: .default, title: "Ok", action: { [weak self] in
-                            self?.alert = nil
-                            self?.model.action.send(ModelAction.Auth.Logout.Request())
-                        }))
+                        alert = .init(title: "Введен некорректный пин-код.", message: "Все попытки исчерпаны.", primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.action.send(AuthPinCodeViewModelAction.Unlock.Failed()) }))
                         
                     case .error(let error):
                         //TODO: Handle error
@@ -169,7 +159,7 @@ class AuthPinCodeViewModel: ObservableObject {
                         self.numpad.update(button: .init(type: .empty, action: .none), left: true)
 
                     case .exit:
-                        print("exit account action")
+                        alert = .init(title: "Внимание!", message: "Вы действительно хотите выйти из аккаунта?", primary: .init(type: .cancel, title: "Отмена", action: {}), secondary: .init(type: .distructive, title: "Выйти", action: { [weak self] in self?.action.send(AuthPinCodeViewModelAction.Exit())}))
                         
                     default:
                         break
@@ -313,6 +303,25 @@ class AuthPinCodeViewModel: ObservableObject {
                     let currentAttempt = attempt + 1
                     mode = .unlock(attempt: currentAttempt)
                     model.action.send(ModelAction.Auth.Pincode.Check.Request(pincode: payload.code, attempt: currentAttempt))
+                    
+                case _ as AuthPinCodeViewModelAction.Unlock.Attempt:
+                    alert = nil
+                    withAnimation {
+                        // back to editing
+                        self.stage = .editing
+                        pinCode.style = .normal
+                        pinCode.value = ""
+                        numpad.isEnabled = true
+                    }
+                    
+                case _ as AuthPinCodeViewModelAction.Unlock.Failed:
+                    alert = nil
+                    model.action.send(ModelAction.Auth.Logout())
+                    backAction()
+                    
+                case _ as AuthPinCodeViewModelAction.Exit:
+                    model.action.send(ModelAction.Auth.Logout())
+                    backAction()
                 
                 default:
                     break
@@ -562,5 +571,14 @@ enum AuthPinCodeViewModelAction {
     struct Continue: Action {
 
         let code: String
+    }
+    
+    struct Exit: Action {}
+    
+    enum Unlock {
+        
+        struct Attempt: Action {}
+        
+        struct Failed: Action {}
     }
 }

@@ -16,7 +16,7 @@ extension Alert {
         let title: String
         let message: String? 
         let primary: ButtonViewModel
-        let secondary: ButtonViewModel? = nil
+        var secondary: ButtonViewModel? = nil
 
         struct ButtonViewModel {
             

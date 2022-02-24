@@ -16,7 +16,7 @@ struct AuthLockVew: View {
         switch viewModel.state {
         case .pincode(let pincodeViewModel):
             AuthPinCodeView(viewModel: pincodeViewModel)
-                .transition(.asymmetric(insertion: .opacity.combined(with: .scale), removal: .move(edge: .bottom)))
+                .transition(.opacity.combined(with: .scale))
             
         case .login(let loginViewModel):
             NavigationView {
@@ -25,7 +25,6 @@ struct AuthLockVew: View {
                     .navigationBarTitle("")
                     .navigationBarHidden(true)
             }
-            .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .bottom)))
         }
     }
 }

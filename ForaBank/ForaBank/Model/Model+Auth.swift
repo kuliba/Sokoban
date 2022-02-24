@@ -73,10 +73,11 @@ internal extension Model {
             
         } else {
             
-            let remainAttempts = max(unlockAttemptsAvailable - payload.attempt, 0)
+            let remainAttempts = unlockAttemptsAvailable - payload.attempt
             if remainAttempts > 0 {
                 
                 action.send(ModelAction.Auth.Pincode.Check.Response.incorrect(remain: remainAttempts))
+                
             } else {
                 
                 action.send(ModelAction.Auth.Pincode.Check.Response.restricted)
@@ -104,7 +105,6 @@ internal extension Model {
     func handleAuthLogoutRequest() {
         
         //TODO: real implementation required
-        action.send(ModelAction.Auth.Logout.Response.success)
     }
 }
 
@@ -231,15 +231,6 @@ extension ModelAction {
             }
         }
         
-        enum Logout {
-        
-            struct Request: Action {}
-            
-            enum Response: Action {
-                
-                case success
-                case error(Error)
-            }
-        }
+        struct Logout: Action {}
     }
 }
