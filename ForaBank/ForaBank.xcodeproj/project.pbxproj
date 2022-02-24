@@ -3023,13 +3023,6 @@
 			path = Main;
 			sourceTree = "<group>";
 		};
-		7772978327C38F470099EF91 /* Product */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Product;
-			sourceTree = "<group>";
-		};
 		77925573279AF3AA00A85723 /* Encryption */ = {
 			isa = PBXGroup;
 			children = (
@@ -3260,7 +3253,6 @@
 		77EA0DB92779B04A00C6ED12 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				7772978327C38F470099EF91 /* Product */,
 				7772978227C38F2F0099EF91 /* Main */,
 				77EA0DBA2779B06D00C6ED12 /* OperationDetailHeaderComponentView.swift */,
 				A5156424277CBB7C00F5ED73 /* PermissionHelper.swift */,

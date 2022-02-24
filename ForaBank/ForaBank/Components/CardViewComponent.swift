@@ -34,14 +34,7 @@ extension MainCardComponentView {
             self.backgroundColor = backgroundColor
             self.status = status
             self.backgroundImage = backgroundImage
-            
-            if let paymentSystem = paymentSystem {
-                
-                self.paymentSystem = paymentSystem
-            } else {
-                
-                self.paymentSystem = nil
-            }
+            self.paymentSystem = paymentSystem
             
         }
         
