@@ -537,6 +537,8 @@
 		776C6C1C279D58A800253581 /* CSRFAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776C6C1B279D58A800253581 /* CSRFAgent.swift */; };
 		776C6C1E279D5D8800253581 /* CSRFAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776C6C1D279D5D8800253581 /* CSRFAgentTests.swift */; };
 		7772978527C38FEC0099EF91 /* MainBlockProductsViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772978427C38FEC0099EF91 /* MainBlockProductsViewComponent.swift */; };
+		7772979327C77C190099EF91 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772979227C77C190099EF91 /* MainViewModel.swift */; };
+		7772979527C781420099EF91 /* MainViewSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772979427C781420099EF91 /* MainViewSectionViewModel.swift */; };
 		77925575279AF54F00A85723 /* ECKeysProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77925574279AF54F00A85723 /* ECKeysProvider.swift */; };
 		7792557E279B1A5400A85723 /* JSONDecoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */; };
 		77925580279B1BCB00A85723 /* JSONEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */; };
@@ -1433,6 +1435,8 @@
 		776C6C1B279D58A800253581 /* CSRFAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFAgent.swift; sourceTree = "<group>"; };
 		776C6C1D279D5D8800253581 /* CSRFAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFAgentTests.swift; sourceTree = "<group>"; };
 		7772978427C38FEC0099EF91 /* MainBlockProductsViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainBlockProductsViewComponent.swift; sourceTree = "<group>"; };
+		7772979227C77C190099EF91 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		7772979427C781420099EF91 /* MainViewSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewSectionViewModel.swift; sourceTree = "<group>"; };
 		77925574279AF54F00A85723 /* ECKeysProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKeysProvider.swift; sourceTree = "<group>"; };
 		7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONDecoder+Extensions.swift"; sourceTree = "<group>"; };
 		7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONEncoder+Extensions.swift"; sourceTree = "<group>"; };
@@ -3028,6 +3032,15 @@
 			path = Product;
 			sourceTree = "<group>";
 		};
+		7772979127C77BFF0099EF91 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				7772979227C77C190099EF91 /* MainViewModel.swift */,
+				7772979427C781420099EF91 /* MainViewSectionViewModel.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
 		77925573279AF3AA00A85723 /* Encryption */ = {
 			isa = PBXGroup;
 			children = (
@@ -3107,6 +3120,7 @@
 			isa = PBXGroup;
 			children = (
 				770DCE9027BBF7F4004099C1 /* RootViewModel.swift */,
+				7772979127C77BFF0099EF91 /* Main */,
 				6862B54B27B688CC006E833F /* Auth */,
 				77EA0DBC2779B40100C6ED12 /* OperationDetail */,
 				EDE70902279716DF0048CA94 /* Templates */,
@@ -5601,6 +5615,7 @@
 				7705408F27BD1C6900094006 /* BiometricService.swift in Sources */,
 				0BA14E1C2715628A0098E422 /* GetAllLatestPaymentsDecodableModel.swift in Sources */,
 				0B8BE091266FDA1B00E96CAA /* CheckClientDecodebleModel.swift in Sources */,
+				7772979327C77C190099EF91 /* MainViewModel.swift in Sources */,
 				EDB16595266A4438007E6030 /* DevelopViewController.swift in Sources */,
 				6820928C27AB0FD7003DCAFD /* FastPaymentContractAttributeTypeData.swift in Sources */,
 				6833E0B22732B69E004C070F /* DetailOperationViewController.swift in Sources */,
@@ -5850,6 +5865,7 @@
 				68D099D9273B5D110017D777 /* PaymentByPhoneCoordinator.swift in Sources */,
 				6820929D27AC04B3003DCAFD /* SuggestBankData.swift in Sources */,
 				774E318927A0509C005A067B /* ServerAgentEmptyMock.swift in Sources */,
+				7772979527C781420099EF91 /* MainViewSectionViewModel.swift in Sources */,
 				77E1805A27AC8BE20006ACC9 /* main.swift in Sources */,
 				6849888227BBB41400E84E6B /* AuthProductsViewModel.swift in Sources */,
 				6820928E27AB0FEF003DCAFD /* FastPaymentContractAccountAttributeTypeData.swift in Sources */,
