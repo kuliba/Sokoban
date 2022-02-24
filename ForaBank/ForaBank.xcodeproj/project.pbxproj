@@ -233,6 +233,7 @@
 		5ADDC85227984CEF00488139 /* ServerCommands+AccountController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADDC85127984CEF00488139 /* ServerCommands+AccountController.swift */; };
 		5ADDC85727997CF800488139 /* GetAccountStatementResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 5ADDC85627997CF800488139 /* GetAccountStatementResponseGeneric.json */; };
 		5AF3D73A27A948C400F0BB81 /* GetAccountStatementResponseGenericMin.json in Resources */ = {isa = PBXBuildFile; fileRef = 5AF3D73927A948C400F0BB81 /* GetAccountStatementResponseGenericMin.json */; };
+		681142DD27C7D729008D3D67 /* MainSectionProductsViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681142DC27C7D729008D3D67 /* MainSectionProductsViewComponent.swift */; };
 		681E073D273D3FCF00551FAD /* ProductViewControllerRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E073C273D3FCF00551FAD /* ProductViewControllerRequest.swift */; };
 		681E073F273D478700551FAD /* ProductViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E073E273D478700551FAD /* ProductViewControllerDelegate.swift */; };
 		6820922C27A9781E003DCAFD /* ServerCommands+FastPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6820922B27A9781E003DCAFD /* ServerCommands+FastPayment.swift */; };
@@ -537,8 +538,6 @@
 		77674A4027A02D86008101B5 /* CircleProgressViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77674A3F27A02D86008101B5 /* CircleProgressViewComponent.swift */; };
 		776C6C1C279D58A800253581 /* CSRFAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776C6C1B279D58A800253581 /* CSRFAgent.swift */; };
 		776C6C1E279D5D8800253581 /* CSRFAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776C6C1D279D5D8800253581 /* CSRFAgentTests.swift */; };
-		7772978527C38FEC0099EF91 /* MainSectionProductsViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772978427C38FEC0099EF91 /* MainSectionProductsViewComponent.swift */; };
-		7772978527C38FEC0099EF91 /* MainBlockProductsViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772978427C38FEC0099EF91 /* MainBlockProductsViewComponent.swift */; };
 		7772979327C77C190099EF91 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772979227C77C190099EF91 /* MainViewModel.swift */; };
 		7772979527C781420099EF91 /* MainViewSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772979427C781420099EF91 /* MainViewSectionViewModel.swift */; };
 		77925575279AF54F00A85723 /* ECKeysProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77925574279AF54F00A85723 /* ECKeysProvider.swift */; };
@@ -1137,6 +1136,7 @@
 		5ADDC85127984CEF00488139 /* ServerCommands+AccountController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServerCommands+AccountController.swift"; sourceTree = "<group>"; };
 		5ADDC85627997CF800488139 /* GetAccountStatementResponseGeneric.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GetAccountStatementResponseGeneric.json; sourceTree = "<group>"; };
 		5AF3D73927A948C400F0BB81 /* GetAccountStatementResponseGenericMin.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GetAccountStatementResponseGenericMin.json; sourceTree = "<group>"; };
+		681142DC27C7D729008D3D67 /* MainSectionProductsViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainSectionProductsViewComponent.swift; sourceTree = "<group>"; };
 		681E073C273D3FCF00551FAD /* ProductViewControllerRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductViewControllerRequest.swift; sourceTree = "<group>"; };
 		681E073E273D478700551FAD /* ProductViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductViewControllerDelegate.swift; sourceTree = "<group>"; };
 		6820922B27A9781E003DCAFD /* ServerCommands+FastPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServerCommands+FastPayment.swift"; sourceTree = "<group>"; };
@@ -1437,8 +1437,6 @@
 		77674A3F27A02D86008101B5 /* CircleProgressViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressViewComponent.swift; sourceTree = "<group>"; };
 		776C6C1B279D58A800253581 /* CSRFAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFAgent.swift; sourceTree = "<group>"; };
 		776C6C1D279D5D8800253581 /* CSRFAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFAgentTests.swift; sourceTree = "<group>"; };
-		7772978427C38FEC0099EF91 /* MainSectionProductsViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSectionProductsViewComponent.swift; sourceTree = "<group>"; };
-		7772978427C38FEC0099EF91 /* MainBlockProductsViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainBlockProductsViewComponent.swift; sourceTree = "<group>"; };
 		7772979227C77C190099EF91 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		7772979427C781420099EF91 /* MainViewSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewSectionViewModel.swift; sourceTree = "<group>"; };
 		77925574279AF54F00A85723 /* ECKeysProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKeysProvider.swift; sourceTree = "<group>"; };
@@ -3024,16 +3022,9 @@
 		7772978227C38F2F0099EF91 /* Main */ = {
 			isa = PBXGroup;
 			children = (
-				7772978427C38FEC0099EF91 /* MainSectionProductsViewComponent.swift */,
+				681142DC27C7D729008D3D67 /* MainSectionProductsViewComponent.swift */,
 			);
 			path = Main;
-			sourceTree = "<group>";
-		};
-		7772978327C38F470099EF91 /* Product */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Product;
 			sourceTree = "<group>";
 		};
 		7772979127C77BFF0099EF91 /* Main */ = {
@@ -5742,6 +5733,7 @@
 				6820922C27A9781E003DCAFD /* ServerCommands+FastPayment.swift in Sources */,
 				EDB14381265FDA410028EF5A /* AppDelegate.swift in Sources */,
 				0BDE453526E5385900B64A0A /* GetPaymentSystemList.swift in Sources */,
+				681142DD27C7D729008D3D67 /* MainSectionProductsViewComponent.swift in Sources */,
 				77499C3A27738F6200F6C079 /* ProductType.swift in Sources */,
 				A5C7A1BD275C0B15003BEF6D /* InternetTVLatestOperationsViewModel.swift in Sources */,
 				EDB1658C266A18C3007E6030 /* PaymentsViewControllerDelegate.swift in Sources */,
@@ -5824,7 +5816,6 @@
 				6841932127A28A4C00B4E184 /* ChoosePhoneNumber.swift in Sources */,
 				6833E0CE273920CE004C070F /* FaceTouchIDCoordinator.swift in Sources */,
 				EDB1656C26681F0E007E6030 /* MainTabBarViewController.swift in Sources */,
-				7772978527C38FEC0099EF91 /* MainSectionProductsViewComponent.swift in Sources */,
 				ED3A96742690FC8300252857 /* BankCell.swift in Sources */,
 				77517FE227A98CC3005CFB77 /* UserSettingData.swift in Sources */,
 				68E6A29726A033F200A1D9A1 /* GetProductTemplateListDecodableModel.swift in Sources */,
