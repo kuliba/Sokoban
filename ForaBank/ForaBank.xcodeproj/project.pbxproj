@@ -540,6 +540,8 @@
 		7772978E27C4ABCE0099EF91 /* AlertViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772978D27C4ABCE0099EF91 /* AlertViewComponent.swift */; };
 		7772979727C789030099EF91 /* AuthLockViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772979627C789030099EF91 /* AuthLockViewModel.swift */; };
 		7772979927C78C5C0099EF91 /* AuthLockVew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772979827C78C5C0099EF91 /* AuthLockVew.swift */; };
+		7772979B27C7B6AE0099EF91 /* AuthCardScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772979A27C7B6AE0099EF91 /* AuthCardScannerView.swift */; };
+		7772979D27C7B6D10099EF91 /* AuthCardScannerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772979C27C7B6D10099EF91 /* AuthCardScannerViewModel.swift */; };
 		77925575279AF54F00A85723 /* ECKeysProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77925574279AF54F00A85723 /* ECKeysProvider.swift */; };
 		7792557E279B1A5400A85723 /* JSONDecoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */; };
 		77925580279B1BCB00A85723 /* JSONEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */; };
@@ -1439,6 +1441,8 @@
 		7772978D27C4ABCE0099EF91 /* AlertViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewComponent.swift; sourceTree = "<group>"; };
 		7772979627C789030099EF91 /* AuthLockViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthLockViewModel.swift; sourceTree = "<group>"; };
 		7772979827C78C5C0099EF91 /* AuthLockVew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthLockVew.swift; sourceTree = "<group>"; };
+		7772979A27C7B6AE0099EF91 /* AuthCardScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthCardScannerView.swift; sourceTree = "<group>"; };
+		7772979C27C7B6D10099EF91 /* AuthCardScannerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthCardScannerViewModel.swift; sourceTree = "<group>"; };
 		77925574279AF54F00A85723 /* ECKeysProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKeysProvider.swift; sourceTree = "<group>"; };
 		7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONDecoder+Extensions.swift"; sourceTree = "<group>"; };
 		7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONEncoder+Extensions.swift"; sourceTree = "<group>"; };
@@ -2557,6 +2561,7 @@
 			isa = PBXGroup;
 			children = (
 				6862B53C27B6886A006E833F /* AuthLoginView.swift */,
+				7772979A27C7B6AE0099EF91 /* AuthCardScannerView.swift */,
 				6849887827BAD8B100E84E6B /* AuthConfirmView.swift */,
 				6849887E27BAD96C00E84E6B /* AuthPinCodeView.swift */,
 				687AD14827B69A6600C6F251 /* AuthPermissionsView.swift */,
@@ -2570,6 +2575,7 @@
 			isa = PBXGroup;
 			children = (
 				6862B54C27B688CC006E833F /* AuthLoginViewModel.swift */,
+				7772979C27C7B6D10099EF91 /* AuthCardScannerViewModel.swift */,
 				6862B55027B688CC006E833F /* AuthConfirmViewModel.swift */,
 				6862B54E27B688CC006E833F /* AuthPinCodeViewModel.swift */,
 				6862B55227B688CC006E833F /* AuthPermissionsViewModel.swift */,
@@ -5544,6 +5550,7 @@
 				ED0B489C267D41A60037EA06 /* PaymentsDetailsView.swift in Sources */,
 				6833E0CB273920CE004C070F /* LockerCoordinator.swift in Sources */,
 				0B8C1C56273B4F9F00BA5CAC /* GKHInfoView.swift in Sources */,
+				7772979D27C7B6D10099EF91 /* AuthCardScannerViewModel.swift in Sources */,
 				6867F43D2769AFF60039A0EE /* ResultOperationView.swift in Sources */,
 				7792557E279B1A5400A85723 /* JSONDecoder+Extensions.swift in Sources */,
 				682092A227AC04DE003DCAFD /* ClientInfoData.swift in Sources */,
@@ -5913,6 +5920,7 @@
 				EDB1452226661C3F0028EF5A /* MaskedTextField.swift in Sources */,
 				ED4FC5EF266B70A00092B4AB /* PartialTransparentView.swift in Sources */,
 				ED302A3126D3E56600161243 /* UIImage.swift in Sources */,
+				7772979B27C7B6AE0099EF91 /* AuthCardScannerView.swift in Sources */,
 				0B51D87626D959BB00FC7B6B /* ExtensionGKHInputNav.swift in Sources */,
 				774A82C727BAE4BF00E5A5E9 /* SettingType.swift in Sources */,
 				ED0B48AC26812F450037EA06 /* LoginViewModel.swift in Sources */,

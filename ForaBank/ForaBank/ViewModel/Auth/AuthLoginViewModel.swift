@@ -24,6 +24,7 @@ class AuthLoginViewModel: ObservableObject {
     @Published var isProductsViewPresented: Bool
     var productsViewModel: AuthProductsViewModel?
     
+    @Published var cardScanner: AuthCardScannerViewModel?
     @Published var alert: Alert.ViewModel?
     
     private let dismissAction: () -> Void
@@ -101,8 +102,9 @@ class AuthLoginViewModel: ObservableObject {
                     isProductsViewPresented = true
                     
                 case _ as AuthLoginViewModelAction.Show.Scaner:
-                    //TODO: show scanner view here
-                    break
+                    cardScanner = .init(scannedAction: { [weak self] cardNumber in self?.card.textField.text = cardNumber
+                        self?.cardScanner = nil
+                    }, dismissAction: { [weak self] in self?.cardScanner = nil })
                     
                 case _ as AuthLoginViewModelAction.Dismiss.Confirm:
                     confirmViewModel = nil

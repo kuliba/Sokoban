@@ -53,6 +53,14 @@ struct AuthLoginView: View {
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })
+        .sheet(item: $viewModel.cardScanner, onDismiss: {
+            
+            viewModel.cardScanner = nil
+            
+        }, content: { cardScannerViewModel in
+            
+            AuthCardScannerView(viewModel: cardScannerViewModel)
+        })
         .padding(.top, 24)
         .background(
             Image.imgRegistrationBg
