@@ -7,7 +7,13 @@
 
 import Foundation
 
-struct FSSPData: Codable, Equatable, Cachable {
+struct FSSPDebtData: Codable, Equatable, Cachable {
+    
+    let text: String
+    let value: String
+}
+
+struct FSSPDocumentData: Codable, Equatable, Cachable {
     
     let text: String
     let value: String

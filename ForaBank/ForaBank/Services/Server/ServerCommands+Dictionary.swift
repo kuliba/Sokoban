@@ -249,19 +249,19 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: FSSPDebtData?
+                let data: Data?
                 
-                struct FSSPDebtData: Decodable, Equatable {
+                struct Data: Decodable, Equatable {
                     
                     enum CodingKeys : String, CodingKey {
                         
-                        case FsspDebtList = "FSSPDebtList"
+                        case fsspDebtList = "FSSPDebtList"
                         case id
                         case puref
                         case serial
                     }
                     
-                    let FsspDebtList: [FSSPData]
+                    let fsspDebtList: [FSSPDebtData]
                     let id: String
                     let puref: String
                     let serial: String
@@ -301,19 +301,19 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: FSSPDocumentData?
+                let data: Data?
                 
-                struct FSSPDocumentData: Decodable, Equatable {
+                struct Data: Decodable, Equatable {
                     
                     enum CodingKeys : String, CodingKey {
                         
-                        case FsspDocumentList = "FSSPDocumentList"
+                        case fsspDocumentList = "FSSPDocumentList"
                         case id
                         case puref
                         case serial
                     }
                     
-                    let FsspDocumentList: [FSSPData]
+                    let fsspDocumentList: [FSSPDocumentData]
                     let id: String
                     let puref: String
                     let serial: String
@@ -414,7 +414,7 @@ extension ServerCommands {
                 }
             }
             
-            internal init(bic: String, name: String?, engName: String?, type: String?, account: String?, swift: String?, serviceType: String?, serial: String?) {
+            internal init(bic: String = "", name: String? = nil, engName: String? = nil, type: String? = nil, account: String? = nil, swift: String? = nil, serviceType: String? = nil, serial: String?) {
                 
                 var parameters = [ServerCommandParameter]()
                 parameters.append(.init(name: "bic", value: bic))

@@ -12,139 +12,27 @@ import Foundation
 extension ModelAction {
     
     enum Dictionary {
-
-        enum AnywayOperators {
+        
+        struct Request: Action {
             
-            struct Requested: Action {
-                
-                let serial: String?
-            }
-            
-            struct Failed: Action {
-                
-                let error: Error
-            }
+            let type: Kind
+            let serial: String?
         }
-        enum Banks {
+        
+        enum Kind: CaseIterable {
             
-            struct Requested: Action {
-                
-                let serial: String?
-            }
-            
-            struct Failed: Action {
-                
-                let error: Error
-            }
-        }
-        enum Countries {
-            
-            struct Requested: Action {
-                
-                let serial: String?
-            }
-            
-            struct Failed: Action {
-                
-                let error: Error
-            }
-        }
-        enum CurrencyList {
-            
-            struct Requested: Action {
-                
-                let serial: String?
-            }
-            
-            struct Failed: Action {
-                
-                let error: Error
-            }
-        }
-        enum FMSList {
-            
-            struct Requested: Action {
-                
-                let serial: String?
-            }
-            
-            struct Failed: Action {
-                
-                let error: Error
-            }
-        }
-        enum FSSPList {
-            
-            struct Requested: Action {
-                
-                let serial: String?
-            }
-            
-            struct Failed: Action {
-                
-                let error: Error
-            }
-        }
-        enum FTSList {
-            
-            struct Requested: Action {
-                
-                let serial: String?
-            }
-            
-            struct Failed: Action {
-                
-                let error: Error
-            }
-        }
-        enum FullBankInfoList {
-            
-            struct Requested: Action {
-                
-                let serial: String?
-                let bic: String
-            }
-            
-            struct Failed: Action {
-                
-                let error: Error
-            }
-        }
-        enum MobileList {
-            
-            struct Requested: Action {
-                
-                let serial: String?
-            }
-            
-            struct Failed: Action {
-                
-                let error: Error
-            }
-        }
-        enum MosParkingList {
-            
-            struct Requested: Action {
-                
-                let serial: String?
-            }
-            
-            struct Failed: Action {
-                
-                let error: Error
-            }
-        }
-        enum PaymentSystemList {
-            
-            struct Requested: Action {
-                
-                let serial: String?
-            }
-            
-            struct Failed: Action {
-                
-                let error: Error
-            }
+            case anywayOperators
+            case banks
+            case countries
+            case currencyList
+            case fmsList
+            case fsspDebtList
+            case fsspDocumentList
+            case ftsList
+            case fullBankInfoList
+            case mobileList
+            case mosParkingList
+            case paymentSystemList
         }
     }
 }
@@ -154,10 +42,9 @@ extension ModelAction {
 extension Model {
     
     // Anyway Operators
-    
-    func handleDictionaryAnywayOperatorsRequest(serial: String?) {
+    func handleDictionaryAnywayOperatorsRequest(_ payload: ModelAction.Dictionary.Request) {
         
-        let command = ServerCommands.DictionaryController.GetAnywayOperatorsList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetAnywayOperatorsList(serial: payload.serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -189,11 +76,10 @@ extension Model {
         }
     }
     
-    //GetBanks
-    
-    func handleDictionaryGetBanks(serial: String?) {
+    // Banks
+    func handleDictionaryBanks(_ payload: ModelAction.Dictionary.Request) {
         
-        let command = ServerCommands.DictionaryController.GetBanks(serial: serial)
+        let command = ServerCommands.DictionaryController.GetBanks(serial: payload.serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -211,7 +97,7 @@ extension Model {
                         try self.localAgent.store(data.banksList, serial: data.serial)
                         
                     } catch {
-                    
+                        
                         handleDictionaryCachingError(error: error, command: command)
                     }
                     
@@ -225,11 +111,10 @@ extension Model {
         }
     }
     
-    //Countries
-    
-    func handleDictionaryCountries(serial: String?) {
+    // Countries
+    func handleDictionaryCountries(_ payload: ModelAction.Dictionary.Request) {
         
-        let command = ServerCommands.DictionaryController.GetCountries(serial: serial)
+        let command = ServerCommands.DictionaryController.GetCountries(serial: payload.serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -261,11 +146,10 @@ extension Model {
         }
     }
     
-    //CurrencyList
-    
-    func handleDictionaryCurrencyList(serial: String?) {
+    // CurrencyList
+    func handleDictionaryCurrencyList(_ payload: ModelAction.Dictionary.Request) {
         
-        let command = ServerCommands.DictionaryController.GetCurrencyList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetCurrencyList(serial: payload.serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -297,11 +181,10 @@ extension Model {
         }
     }
     
-    //GetFMSList
-    
-    func handleDictionaryFMSList(serial: String?) {
+    // FMSList
+    func handleDictionaryFMSList(_ payload: ModelAction.Dictionary.Request) {
         
-        let command = ServerCommands.DictionaryController.GetFMSList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetFMSList(serial: payload.serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -333,11 +216,10 @@ extension Model {
         }
     }
     
-    //GetFSSPList
-    
-    func handleDictionaryFSSPList(serial: String?) {
+    // FSSPDebtList
+    func handleDictionaryFSSPDebtList(_ payload: ModelAction.Dictionary.Request) {
         
-        let command = ServerCommands.DictionaryController.GetFSSPList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetFSSPDebtList(serial: payload.serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -352,7 +234,7 @@ extension Model {
                     
                     do {
                         
-                        try self.localAgent.store(data.fsspList, serial: data.serial)
+                        try self.localAgent.store(data.fsspDebtList, serial: data.serial)
                         
                     } catch {
                         
@@ -369,11 +251,45 @@ extension Model {
         }
     }
     
-    //GetFTSList
-    
-    func handleDictionaryFTSList(serial: String?) {
+    // FSSPDocumentList
+    func handleDictionaryFSSPDocumentList(_ payload: ModelAction.Dictionary.Request) {
         
-        let command = ServerCommands.DictionaryController.GetFTSList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetFSSPDocumentList(serial: payload.serial)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    guard let data = response.data else {
+                        
+                        handleDictionaryDownloadEmptyData(command: command)
+                        return
+                    }
+                    
+                    do {
+                        
+                        try self.localAgent.store(data.fsspDocumentList, serial: data.serial)
+                        
+                    } catch {
+                        
+                        handleDictionaryCachingError(error: error, command: command)
+                    }
+                    
+                default:
+                    self.handle(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                
+            case .failure(let error):
+                handleDictionaryDownloadError(error: error, command: command)
+            }
+        }
+    }
+    
+    // FTSList
+    func handleDictionaryFTSList(_ payload: ModelAction.Dictionary.Request) {
+        
+        let command = ServerCommands.DictionaryController.GetFTSList(serial: payload.serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -401,52 +317,50 @@ extension Model {
                 
             case .failure(let error):
                 handleDictionaryDownloadError(error: error, command: command)
-
+                
             }
         }
     }
     
-    //GetFullBankInfoList
-    
-    func handleDictionaryFullBankInfoList(bic: String, serial: String?) {
+    // FullBankInfoList
+    func handleDictionaryFullBankInfoList(_ payload: ModelAction.Dictionary.Request) {
         
-            let command = ServerCommands.DictionaryController.GetFullBankInfoList(bic: bic, name: nil, engName: nil, type: nil, account: nil, swift: nil, serviceType: nil, serial: serial)
-            serverAgent.executeCommand(command: command) {[unowned self] result in
-                
-                switch result {
-                case .success(let response):
-                    switch response.statusCode {
-                    case .ok:
-                        guard let data = response.data else {
-                            
-                            handleDictionaryDownloadEmptyData(command: command)
-                            return
-                        }
+        let command = ServerCommands.DictionaryController.GetFullBankInfoList(serial: payload.serial)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    guard let data = response.data else {
                         
-                        do {
-                            
-                            try self.localAgent.store(data.bankFullInfoList, serial: data.serial)
-                            
-                        } catch {
-                            
-                            handleDictionaryCachingError(error: error, command: command)
-                        }
-                        
-                    default:
-                        self.handle(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                        handleDictionaryDownloadEmptyData(command: command)
+                        return
                     }
                     
-                case .failure(let error):
-                    handleDictionaryDownloadError(error: error, command: command)
+                    do {
+                        
+                        try self.localAgent.store(data.bankFullInfoList, serial: data.serial)
+                        
+                    } catch {
+                        
+                        handleDictionaryCachingError(error: error, command: command)
+                    }
+                    
+                default:
+                    self.handle(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
+                
+            case .failure(let error):
+                handleDictionaryDownloadError(error: error, command: command)
             }
         }
+    }
     
-    //GetMobileList
-    
-    func handleDictionaryMobileList(serial: String?) {
+    // MobileList
+    func handleDictionaryMobileList(_ payload: ModelAction.Dictionary.Request) {
         
-        let command = ServerCommands.DictionaryController.GetMobileList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetMobileList(serial: payload.serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -473,16 +387,15 @@ extension Model {
                 
             case .failure(let error):
                 handleDictionaryDownloadError(error: error, command: command)
-
+                
             }
         }
     }
     
-    //GetMosParkingList
-    
-    func handleDictionaryMosParkingList(serial: String?) {
+    // MosParkingList
+    func handleDictionaryMosParkingList(_ payload: ModelAction.Dictionary.Request) {
         
-        let command = ServerCommands.DictionaryController.GetMosParkingList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetMosParkingList(serial: payload.serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -508,16 +421,15 @@ extension Model {
                 
             case .failure(let error):
                 handleDictionaryDownloadError(error: error, command: command)
-
+                
             }
         }
     }
     
-    //GetPaymentSystemList
-    
-    func handleDictionaryPaymentSystemList(serial: String?) {
+    // PaymentSystemList
+    func handleDictionaryPaymentSystemList(_ payload: ModelAction.Dictionary.Request) {
         
-        let command = ServerCommands.DictionaryController.GetPaymentSystemList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetPaymentSystemList(serial: payload.serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -543,7 +455,7 @@ extension Model {
                 
             case .failure(let error):
                 handleDictionaryDownloadError(error: error, command: command)
-
+                
             }
         }
     }

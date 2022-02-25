@@ -230,39 +230,44 @@ class Model {
                     }
                     
                 //MARK: - Dictionaries Actions
-                    
-                case let payload as ModelAction.Dictionary.AnywayOperators.Requested:
-                    handleDictionaryAnywayOperatorsRequest(serial: payload.serial)
-                 
-                case let payload as ModelAction.Dictionary.Banks.Requested:
-                    handleDictionaryGetBanks(serial: payload.serial)
-                    
-                case let payload as ModelAction.Dictionary.Countries.Requested:
-                    handleDictionaryCountries(serial: payload.serial)
-                    
-                case let payload as ModelAction.Dictionary.CurrencyList.Requested:
-                    handleDictionaryCurrencyList(serial: payload.serial)
-                    
-                case let payload as ModelAction.Dictionary.FMSList.Requested:
-                    handleDictionaryFMSList(serial: payload.serial)
-                    
-                case let payload as ModelAction.Dictionary.FSSPList.Requested:
-                    handleDictionaryFSSPList(serial: payload.serial)
-                    
-                case let payload as ModelAction.Dictionary.FTSList.Requested:
-                    handleDictionaryFTSList(serial: payload.serial)
-                    
-                case let payload as ModelAction.Dictionary.FullBankInfoList.Requested:
-                    handleDictionaryFullBankInfoList(bic: payload.bic, serial: payload.serial)
-                    
-                case let payload as ModelAction.Dictionary.MobileList.Requested:
-                    handleDictionaryMobileList(serial: payload.serial)
-                    
-                case let payload as ModelAction.Dictionary.MosParkingList.Requested:
-                    handleDictionaryMosParkingList(serial: payload.serial)
-                    
-                case let payload as ModelAction.Dictionary.PaymentSystemList.Requested:
-                    handleDictionaryPaymentSystemList(serial: payload.serial)
+                case let payload as ModelAction.Dictionary.Request:
+                    switch payload.type {
+                    case .anywayOperators:
+                        handleDictionaryAnywayOperatorsRequest(payload)
+                        
+                    case .banks:
+                        handleDictionaryBanks(payload)
+                        
+                    case .countries:
+                        handleDictionaryCountries(payload)
+                        
+                    case .currencyList:
+                        handleDictionaryCurrencyList(payload)
+                        
+                    case .fmsList:
+                        handleDictionaryFMSList(payload)
+                        
+                    case .fsspDebtList:
+                        handleDictionaryFSSPDebtList(payload)
+                        
+                    case .fsspDocumentList:
+                        handleDictionaryFSSPDocumentList(payload)
+                        
+                    case .ftsList:
+                        handleDictionaryFTSList(payload)
+                        
+                    case .fullBankInfoList:
+                        handleDictionaryFullBankInfoList(payload)
+                        
+                    case .mobileList:
+                        handleDictionaryMobileList(payload)
+                        
+                    case .mosParkingList:
+                        handleDictionaryMosParkingList(payload)
+                        
+                    case .paymentSystemList:
+                        handleDictionaryPaymentSystemList(payload)
+                    }
                     
                 default:
                     break
@@ -278,17 +283,51 @@ private extension Model {
     
     func requestDictionariesFromServer() {
         
-        action.send(ModelAction.Dictionary.AnywayOperators.Requested(serial: localAgent.serial(for: [OperatorGroupData].self)))
-        action.send(ModelAction.Dictionary.Banks.Requested(serial: localAgent.serial(for: [BankData].self)))
-        action.send(ModelAction.Dictionary.Countries.Requested(serial: localAgent.serial(for: [CountryData].self)))
-        action.send(ModelAction.Dictionary.CurrencyList.Requested(serial: localAgent.serial(for: [CurrencyData].self)))
-        action.send(ModelAction.Dictionary.FMSList.Requested(serial: localAgent.serial(for: [FMSData].self)))
-        action.send(ModelAction.Dictionary.FSSPList.Requested(serial: localAgent.serial(for: [FSSPData].self)))
-        action.send(ModelAction.Dictionary.FTSList.Requested(serial: localAgent.serial(for: [FTSData].self)))
-        action.send(ModelAction.Dictionary.FullBankInfoList.Requested(serial: localAgent.serial(for: [BankFullInfoData].self), bic: ""))
-        action.send(ModelAction.Dictionary.MobileList.Requested(serial: localAgent.serial(for: [MobileData].self)))
-        action.send(ModelAction.Dictionary.MosParkingList.Requested(serial: localAgent.serial(for: [MosParkingData].self)))
-        action.send(ModelAction.Dictionary.PaymentSystemList.Requested(serial: localAgent.serial(for: [PaymentSystemData].self)))
+        for type in ModelAction.Dictionary.Kind.allCases {
+            
+            action.send(ModelAction.Dictionary.Request(type: type, serial: serial(for: type)))
+        }
+    }
+    
+    func serial(for dictionaryType: ModelAction.Dictionary.Kind) -> String? {
+        
+        switch dictionaryType {
+        case .anywayOperators:
+            return localAgent.serial(for: [OperatorGroupData].self)
+            
+        case .banks:
+            return localAgent.serial(for: [BankData].self)
+            
+        case .countries:
+            return localAgent.serial(for: [CountryData].self)
+            
+        case .currencyList:
+            return localAgent.serial(for: [CurrencyData].self)
+            
+        case .fmsList:
+            return localAgent.serial(for: [FMSData].self)
+            
+        case .fsspDebtList:
+            return localAgent.serial(for: [FSSPDebtData].self)
+            
+        case .fsspDocumentList:
+            return localAgent.serial(for: [FSSPDocumentData].self)
+            
+        case .ftsList:
+            return localAgent.serial(for: [FTSData].self)
+            
+        case .fullBankInfoList:
+            return localAgent.serial(for: [BankFullInfoData].self)
+            
+        case .mobileList:
+            return localAgent.serial(for: [MobileData].self)
+            
+        case .mosParkingList:
+            return localAgent.serial(for: [MosParkingData].self)
+            
+        case .paymentSystemList:
+            return localAgent.serial(for: [PaymentSystemData].self)
+        }
     }
     
     func loadCachedData() {
