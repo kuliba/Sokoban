@@ -102,8 +102,17 @@ class AuthLoginViewModel: ObservableObject {
                     isProductsViewPresented = true
                     
                 case _ as AuthLoginViewModelAction.Show.Scaner:
-                    cardScanner = .init(scannedAction: { [weak self] cardNumber in self?.card.textField.text = cardNumber
-                        self?.cardScanner = nil
+                    cardScanner = .init(scannedAction: { [weak self] value in
+                        
+                        guard let self = self else {
+                            return
+                        }
+                        
+                        let filterredValue = (try? value.filterred(regEx: self.card.textField.regExp)) ?? value
+                        let maskedValue = filterredValue.masked(masks: self.card.textField.masks)
+                        self.card.textField.text = maskedValue
+                        self.cardScanner = nil
+                        
                     }, dismissAction: { [weak self] in self?.cardScanner = nil })
                     
                 case _ as AuthLoginViewModelAction.Dismiss.Confirm:

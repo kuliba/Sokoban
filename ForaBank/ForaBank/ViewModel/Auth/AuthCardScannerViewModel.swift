@@ -21,7 +21,7 @@ class AuthCardScannerViewModel: ObservableObject, Identifiable {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3)) {
             
-            scannedAction("1111 1111 1111 1111")
+            scannedAction("1111111111111111")
         }
     }
 }

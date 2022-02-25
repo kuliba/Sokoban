@@ -46,13 +46,13 @@ extension AuthProductsView {
     struct ProductView: View {
         
         let viewModel: AuthProductsViewModel.ProductCard
-
+        
         var body: some View {
             
             ZStack {
-
+                
                 viewModel.style.backgroundColor
-
+                
                 VStack(alignment: .leading, spacing: 0) {
                     
                     Text(viewModel.title)
@@ -89,56 +89,101 @@ extension AuthProductsView {
     }
     
     struct InfoButtonView: View {
-
+        
         let viewModel: AuthProductsViewModel.ProductCard.InfoButton
-
+        
         let color: Color
-
+        
         var body: some View {
             
-            Button(action: viewModel.action) {
+            if #available(iOS 14.0, *) {
                 
-                HStack {
+                Link(destination: URL(string: "https://www.forabank.ru/private/cards/")!) {
                     
-                    viewModel.icon
-                        .foregroundColor(color)
+                    HStack {
+                        
+                        viewModel.icon
+                            .foregroundColor(color)
+                        
+                        Text(viewModel.title)
+                            .foregroundColor(color)
+                            .multilineTextAlignment(.leading)
+                    }
+                }
+                
+            } else {
+                
+                Button{
                     
-                    Text(viewModel.title)
-                        .foregroundColor(color)
-                        .multilineTextAlignment(.leading)
+                    if let url = URL(string: "https://www.forabank.ru/private/cards/") {
+                        UIApplication.shared.open(url)
+                    }
+                    
+                } label: {
+                    
+                    HStack {
+                        
+                        viewModel.icon
+                            .foregroundColor(color)
+                        
+                        Text(viewModel.title)
+                            .foregroundColor(color)
+                            .multilineTextAlignment(.leading)
+                    }
                 }
             }
         }
     }
-
+    
     struct OrderButtonView: View {
-
+        
         let viewModel: AuthProductsViewModel.ProductCard.OrderButton
         
         var body: some View {
             
-            Button(action: viewModel.action) {
-               
-                Text(viewModel.title)
-                    .foregroundColor(.textWhite)
-                    .padding(.vertical, 12)
-                    .frame(width: 166)
-                    .background(Color.buttonPrimary)
-                    .cornerRadius(8)
+            if #available(iOS 14.0, *) {
                 
+                Link(destination: URL(string: "https://www.forabank.ru/private/cards/")!) {
+                    
+                    Text(viewModel.title)
+                        .foregroundColor(.textWhite)
+                        .padding(.vertical, 12)
+                        .frame(width: 166)
+                        .background(Color.buttonPrimary)
+                        .cornerRadius(8)
+                }
+                
+            } else {
+                
+                Button{
+                    
+                    if let url = URL(string: "https://www.forabank.ru/private/cards/") {
+                        UIApplication.shared.open(url)
+                    }
+                    
+                } label: {
+                    
+                    Text(viewModel.title)
+                        .foregroundColor(.textWhite)
+                        .padding(.vertical, 12)
+                        .frame(width: 166)
+                        .background(Color.buttonPrimary)
+                        .cornerRadius(8)
+                    
+                }
             }
         }
     }
 }
 
 struct AuthProductsView_Previews: PreviewProvider {
-
+    
     static var previews: some View {
-
+        
         NavigationView {
             
             AuthProductsView(viewModel: .mockData)
         }
-
+        
     }
 }
