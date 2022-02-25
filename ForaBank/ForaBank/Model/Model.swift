@@ -16,7 +16,7 @@ class Model {
     let auth: CurrentValueSubject<AuthorizationState, Never>
     
     //MARK: Dictionaries
-
+    let catalogProducts: CurrentValueSubject<[CatalogProductData], Never>
     
     //MARK: Templates
     let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
@@ -47,6 +47,7 @@ class Model {
         
         self.action = .init()
         self.auth = .init(.notAuthorized)
+        self.catalogProducts = .init([])
         self.paymentTemplates = .init([])
         self.paymentTemplatesViewSettings = .init(.initial)
         self.serverAgent = serverAgent

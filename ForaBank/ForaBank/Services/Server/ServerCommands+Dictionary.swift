@@ -540,31 +540,13 @@ extension ServerCommands {
                  
                  struct ProductCatalog: Decodable, Equatable {
                      
-                     let productCatalogList: [Product]
+                     let productCatalogList: [CatalogProductData]
                      let serial: String
                      
                      enum CodingKeys : String, CodingKey {
                          
                          case productCatalogList = "ProductCatalogList"
                          case serial
-                     }
-                 }
-
-                 struct Product: Decodable, Equatable {
-
-                     let name: String
-                     let deescription: [String]
-                     let imageEndpoint: String
-                     let infoURL: URL
-                     let orderURL: URL
-                     
-                     enum CodingKeys : String, CodingKey {
-                         
-                         case name = "productName"
-                         case deescription = "txtСondition"
-                         case imageEndpoint = "imageLink"
-                         case infoURL = "conditionLink"
-                         case orderURL = "orderLink"
                      }
                  }
              }

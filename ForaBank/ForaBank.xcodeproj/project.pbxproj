@@ -542,6 +542,7 @@
 		7772979927C78C5C0099EF91 /* AuthLockVew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772979827C78C5C0099EF91 /* AuthLockVew.swift */; };
 		7772979B27C7B6AE0099EF91 /* AuthCardScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772979A27C7B6AE0099EF91 /* AuthCardScannerView.swift */; };
 		7772979D27C7B6D10099EF91 /* AuthCardScannerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772979C27C7B6D10099EF91 /* AuthCardScannerViewModel.swift */; };
+		7772979F27C8EADF0099EF91 /* CatalogProductData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772979E27C8EADF0099EF91 /* CatalogProductData.swift */; };
 		77925575279AF54F00A85723 /* ECKeysProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77925574279AF54F00A85723 /* ECKeysProvider.swift */; };
 		7792557E279B1A5400A85723 /* JSONDecoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */; };
 		77925580279B1BCB00A85723 /* JSONEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */; };
@@ -1443,6 +1444,7 @@
 		7772979827C78C5C0099EF91 /* AuthLockVew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthLockVew.swift; sourceTree = "<group>"; };
 		7772979A27C7B6AE0099EF91 /* AuthCardScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthCardScannerView.swift; sourceTree = "<group>"; };
 		7772979C27C7B6D10099EF91 /* AuthCardScannerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthCardScannerViewModel.swift; sourceTree = "<group>"; };
+		7772979E27C8EADF0099EF91 /* CatalogProductData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogProductData.swift; sourceTree = "<group>"; };
 		77925574279AF54F00A85723 /* ECKeysProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKeysProvider.swift; sourceTree = "<group>"; };
 		7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONDecoder+Extensions.swift"; sourceTree = "<group>"; };
 		7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONEncoder+Extensions.swift"; sourceTree = "<group>"; };
@@ -3023,6 +3025,7 @@
 				68AD33FF27996E4F00647665 /* ProductStatementData.swift */,
 				5A5ABF8927AAF53000D548AA /* OperationDetailData.swift */,
 				5A5ABFB227ABCA5100D548AA /* DepositInfoDataItem.swift */,
+				7772979E27C8EADF0099EF91 /* CatalogProductData.swift */,
 			);
 			path = Product;
 			sourceTree = "<group>";
@@ -5893,6 +5896,7 @@
 				5A5ABFB327ABCA5100D548AA /* DepositInfoDataItem.swift in Sources */,
 				EDBEEA1726B1AE7300265683 /* FullBankInfoListView.swift in Sources */,
 				77517FE027A98A94005CFB77 /* ServerCommands+User.swift in Sources */,
+				7772979F27C8EADF0099EF91 /* CatalogProductData.swift in Sources */,
 				0B7A18C326852D6B0007CC75 /* CreatTransferDecodableModel.swift in Sources */,
 				77517F9B27A858F8005CFB77 /* TransferAnywayResponseData.swift in Sources */,
 				ED7866B2279EF2FB006B4F5A /* ContextMenuViewComponent.swift in Sources */,
