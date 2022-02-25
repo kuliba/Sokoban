@@ -12,6 +12,7 @@ extension MainCardComponentView {
     
     class ViewModel: Identifiable, ObservableObject {
         
+        let id = UUID()
         let logo: Image
         @Published var name: String
         @Published var balance: String
@@ -21,10 +22,12 @@ extension MainCardComponentView {
         let backgroundColor: Color
         let paymentSystem: Image?
         let backgroundImage: Image?
+        let productType: ProductType
+        let style: Style
         
         
         
-        internal init(logo: Image, name: String, balance: String, fontColor: Color, cardNumber: String, backgroundColor: Color, paymentSystem: Image?, status: Status, backgroundImage: Image?) {
+        internal init(logo: Image, name: String, balance: String, fontColor: Color, cardNumber: String, backgroundColor: Color, paymentSystem: Image?, status: Status, backgroundImage: Image?, productType: ProductType, style: Style) {
             
             self.logo = logo
             self.name = name
@@ -35,6 +38,8 @@ extension MainCardComponentView {
             self.status = status
             self.backgroundImage = backgroundImage
             self.paymentSystem = paymentSystem
+            self.productType = productType
+            self.style = style
             
         }
         
@@ -42,14 +47,21 @@ extension MainCardComponentView {
             case active
             case notActivated
             case blocked
+            case plug
             
             var image: Image? {
                 switch self {
                     case .active: return nil
-                    case .notActivated: return Image.ic16ArrowRight
-                    case .blocked: return Image.ic16Lock
+                case .notActivated: return Image.ic24ArrowRight
+                    case .blocked: return Image.ic24Lock
+                    case .plug: return Image.ic24ArrowRight
                 }
             }
+        }
+        
+        enum Style {
+            case main
+            case profile
         }
     }
 }
@@ -67,8 +79,7 @@ struct MainCardComponentView: View {
                 if let backgtoundImage = viewModel.backgroundImage {
                    
                     backgtoundImage
-                        .renderingMode(.original)
-                        .scaledToFill()
+                        .frame(width: .infinity, height: .infinity, alignment: .center)
                 }
                 
                 VStack(alignment: .leading) {
@@ -89,7 +100,8 @@ struct MainCardComponentView: View {
                     }
                     .padding(.leading, 5)
                     
-                    
+                    VStack(alignment: .leading, spacing: 4){
+                        
                         Spacer()
                     
                         Text(viewModel.name)
@@ -99,7 +111,7 @@ struct MainCardComponentView: View {
                             .opacity(0.5)
                             .multilineTextAlignment(.leading)
 
-                        HStack(alignment: .center){
+                        HStack(alignment: .center) {
                             
                             Text(viewModel.balance)
                                 .font(.system(size: 14))
@@ -115,40 +127,65 @@ struct MainCardComponentView: View {
                                     .frame(width: 28, height: 28, alignment: .center)
                             }
                         }
+                    }
                 }
                 .padding(.leading, 12)
                 .padding(.trailing, 16)
                 .padding(.top, 12)
                 .padding(.bottom, 11)
-                .frame(width: 164, height: 104)
                 
-                if let stutus = viewModel.status.image{
+                if let status = viewModel.status.image {
                     
                     ZStack{
                         
                         Rectangle()
                             .opacity(0.2)
                             
-                        Button {
+                        if viewModel.style == .main {
                             
-                        } label: {
+                            Button {
+                                
+                            } label: {
+                                
+                                status
+                                    .renderingMode(.original)
+                                    .resizable()
+                                    .frame(width: 16, height: 16)
+                                    .foregroundColor(viewModel.backgroundColor)
+                            }
+                            .frame(width: 24, height: 24, alignment: .center)
+                            .background(Color.white)
+                            .cornerRadius(90)
+                        } else {
                             
-                            stutus
-                                .renderingMode(.original)
-                                .foregroundColor(viewModel.backgroundColor)
+                            if viewModel.status == .notActivated {
+                                
+                                SliderButtonComponent(viewModel: SliderButtonComponent.ViewModel(alertPresented: false, sliderState: .normal, foregroundColor: viewModel.backgroundColor))
+                            } else {
+                             
+                                Button {
+                                    
+                                } label: {
+                                    
+                                    status
+                                        .renderingMode(.original)
+                                        .resizable()
+                                        .frame(width: 40, height: 40)
+                                        .foregroundColor(viewModel.backgroundColor)
+                                }
+                                .frame(width: 64, height: 64, alignment: .center)
+                                .background(Color.white)
+                                .cornerRadius(90)
+                            }
                         }
-                        .frame(width: 24, height: 24, alignment: .center)
-                        .background(Color.white)
-                        .cornerRadius(90)
                     }
                 }
             }
-            .frame(width: 164, height: 104)
             .background(viewModel.backgroundColor)
             .cornerRadius(12)
         }
         .foregroundColor(.black)
-        .background(Color.white
+        .background(Color.clear
                         .cornerRadius(12)
                         .shadow(color: Color.black.opacity(0.2), radius: 12, x: 0, y: 15))
     }
@@ -161,29 +198,48 @@ struct MainCardView_Previews: PreviewProvider {
         
         Group{
             MainCardComponentView(viewModel: .notActivate)
-                .previewLayout(.fixed(width: 170, height: 120))
+                .previewLayout(.fixed(width: 164, height: 104))
             
             MainCardComponentView(viewModel: .blocked)
-                .previewLayout(.fixed(width: 170, height: 120))
-            
+                .previewLayout(.fixed(width: 164, height: 104))
+
             MainCardComponentView(viewModel: .classic)
-                            .previewLayout(.fixed(width: 170, height: 120))
-            
+                .previewLayout(.fixed(width: 164, height: 104))
+
             MainCardComponentView(viewModel: .account)
-                            .previewLayout(.fixed(width: 170, height: 120))
+                .previewLayout(.fixed(width: 164, height: 104))
+            
+            MainCardComponentView(viewModel: .notActivateProfile)
+                .previewLayout(.fixed(width: 268, height: 160))
+            
+            MainCardComponentView(viewModel: .blockedProfile)
+                .previewLayout(.fixed(width: 268, height: 160))
+
+            MainCardComponentView(viewModel: .classicProfile)
+                .previewLayout(.fixed(width: 268, height: 160))
+
+            MainCardComponentView(viewModel: .accountProfile)
+                .previewLayout(.fixed(width: 268, height: 160))
         }
     }
 }
 
 extension MainCardComponentView.ViewModel {
 
-    static let notActivate = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardClassic, paymentSystem:  Image(uiImage: UIImage(named: "card_visa_logo")!), status: .notActivated, backgroundImage: Image(""))
+    static let notActivate = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardClassic, paymentSystem:  Image(uiImage: UIImage(named: "card_visa_logo")!), status: .notActivated, backgroundImage: Image(""), productType: .card, style: .main)
     
-    static let blocked = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .blocked, backgroundImage: Image(""))
+    static let blocked = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .blocked, backgroundImage: Image(""), productType: .card, style: .main)
     
-    static let classic = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Rio", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardRIO, paymentSystem: Image(uiImage: UIImage(named: "card_visa_logo")!), status: .active, backgroundImage: Image(""))
+    static let classic = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Rio", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardRIO, paymentSystem: Image(uiImage: UIImage(named: "card_visa_logo")!), status: .active, backgroundImage: Image(""), productType: .card, style: .main)
     
-    static let account = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Текущий зарплатный счет", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardAccount, paymentSystem: .init(systemName: "card_mastercard_logo"), status: .active ,backgroundImage: Image(""))
-
+    static let account = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Текущий зарплатный счет", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardAccount, paymentSystem: .init(systemName: "card_mastercard_logo"), status: .plug ,backgroundImage: Image(""), productType: .card, style: .main)
+    
+    static let notActivateProfile = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardClassic, paymentSystem:  Image(uiImage: UIImage(named: "card_visa_logo")!), status: .notActivated, backgroundImage: Image(""), productType: .card, style: .profile)
+    
+    static let blockedProfile = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .blocked, backgroundImage: Image(""), productType: .card, style: .profile)
+    
+    static let classicProfile = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Rio", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardRIO, paymentSystem: Image(uiImage: UIImage(named: "card_visa_logo")!), status: .active, backgroundImage: Image(""), productType: .card, style: .profile)
+    
+    static let accountProfile = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Текущий зарплатный счет", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardAccount, paymentSystem: .init(systemName: "card_mastercard_logo"), status: .notActivated ,backgroundImage: Image(""), productType: .card, style: .profile)
 }
 

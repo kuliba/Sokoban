@@ -55,6 +55,7 @@ struct MainSectionProductsView: View {
                     ForEach(viewModel.products) { product in
                         
                         MainCardComponentView(viewModel: product)
+                            .frame(width: 164, height: 104)
                             .padding(.bottom, 32)
                     }
                 }
@@ -130,9 +131,9 @@ struct MainBlockProductsView_Previews: PreviewProvider {
 extension MainSectionProductsView.ViewModel {
     
     static let sample = MainSectionProductsView.ViewModel(title: "Мои продукты", productsTypeSelector: .init(options: [.init(id: "all", name: "Карты"), .init(id: "", name: "Счета")], selected: "all", style: .products), products: [
-        .init(logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardClassic, paymentSystem:  Image(uiImage: UIImage(named: "card_visa_logo")!), status: .notActivated, backgroundImage: Image("")),
-        .init(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .blocked, backgroundImage: Image("")),
-        .init(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .active, backgroundImage: Image(""))
+        .init(logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardClassic, paymentSystem:  Image(uiImage: UIImage(named: "card_visa_logo")!), status: .notActivated, backgroundImage: Image(""), productType: .card, style: .main),
+            .init(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .blocked, backgroundImage: Image(""), productType: .card, style: .main),
+        .init(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .active, backgroundImage: Image(""), productType: .card, style: .main)
     ])
     
 }

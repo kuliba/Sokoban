@@ -234,6 +234,8 @@
 		5ADDC85727997CF800488139 /* GetAccountStatementResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 5ADDC85627997CF800488139 /* GetAccountStatementResponseGeneric.json */; };
 		5AF3D73A27A948C400F0BB81 /* GetAccountStatementResponseGenericMin.json in Resources */ = {isa = PBXBuildFile; fileRef = 5AF3D73927A948C400F0BB81 /* GetAccountStatementResponseGenericMin.json */; };
 		681142DD27C7D729008D3D67 /* MainSectionProductsViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681142DC27C7D729008D3D67 /* MainSectionProductsViewComponent.swift */; };
+		681142E027C7D805008D3D67 /* ProfileCardViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681142DF27C7D805008D3D67 /* ProfileCardViewComponent.swift */; };
+		681142E227C90B35008D3D67 /* SliderButtonComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681142E127C90B35008D3D67 /* SliderButtonComponent.swift */; };
 		681E073D273D3FCF00551FAD /* ProductViewControllerRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E073C273D3FCF00551FAD /* ProductViewControllerRequest.swift */; };
 		681E073F273D478700551FAD /* ProductViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E073E273D478700551FAD /* ProductViewControllerDelegate.swift */; };
 		6820922C27A9781E003DCAFD /* ServerCommands+FastPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6820922B27A9781E003DCAFD /* ServerCommands+FastPayment.swift */; };
@@ -1137,6 +1139,8 @@
 		5ADDC85627997CF800488139 /* GetAccountStatementResponseGeneric.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GetAccountStatementResponseGeneric.json; sourceTree = "<group>"; };
 		5AF3D73927A948C400F0BB81 /* GetAccountStatementResponseGenericMin.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = GetAccountStatementResponseGenericMin.json; sourceTree = "<group>"; };
 		681142DC27C7D729008D3D67 /* MainSectionProductsViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainSectionProductsViewComponent.swift; sourceTree = "<group>"; };
+		681142DF27C7D805008D3D67 /* ProfileCardViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCardViewComponent.swift; sourceTree = "<group>"; };
+		681142E127C90B35008D3D67 /* SliderButtonComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderButtonComponent.swift; sourceTree = "<group>"; };
 		681E073C273D3FCF00551FAD /* ProductViewControllerRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductViewControllerRequest.swift; sourceTree = "<group>"; };
 		681E073E273D478700551FAD /* ProductViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductViewControllerDelegate.swift; sourceTree = "<group>"; };
 		6820922B27A9781E003DCAFD /* ServerCommands+FastPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServerCommands+FastPayment.swift"; sourceTree = "<group>"; };
@@ -2423,6 +2427,15 @@
 			path = AccountStatement;
 			sourceTree = "<group>";
 		};
+		681142DE27C7D784008D3D67 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				681142DF27C7D805008D3D67 /* ProfileCardViewComponent.swift */,
+				681142E127C90B35008D3D67 /* SliderButtonComponent.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
 		681E073A273D3F3E00551FAD /* DetailOperation */ = {
 			isa = PBXGroup;
 			children = (
@@ -3267,6 +3280,7 @@
 		77EA0DB92779B04A00C6ED12 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				681142DE27C7D784008D3D67 /* Profile */,
 				7772978227C38F2F0099EF91 /* Main */,
 				77EA0DBA2779B06D00C6ED12 /* OperationDetailHeaderComponentView.swift */,
 				A5156424277CBB7C00F5ED73 /* PermissionHelper.swift */,
@@ -5814,6 +5828,7 @@
 				6822EFD226B935DB00125EEC /* BaseTableViewViewController.swift in Sources */,
 				EDF68213266F9EC800FD5C07 /* URLHostType.swift in Sources */,
 				6841932127A28A4C00B4E184 /* ChoosePhoneNumber.swift in Sources */,
+				681142E227C90B35008D3D67 /* SliderButtonComponent.swift in Sources */,
 				6833E0CE273920CE004C070F /* FaceTouchIDCoordinator.swift in Sources */,
 				EDB1656C26681F0E007E6030 /* MainTabBarViewController.swift in Sources */,
 				ED3A96742690FC8300252857 /* BankCell.swift in Sources */,
@@ -5898,6 +5913,7 @@
 				0B7A18C326852D6B0007CC75 /* CreatTransferDecodableModel.swift in Sources */,
 				77517F9B27A858F8005CFB77 /* TransferAnywayResponseData.swift in Sources */,
 				ED7866B2279EF2FB006B4F5A /* ContextMenuViewComponent.swift in Sources */,
+				681142E027C7D805008D3D67 /* ProfileCardViewComponent.swift in Sources */,
 				ED0B48A5267E72130037EA06 /* CSRFToken.swift in Sources */,
 				0B7A18CB268648030007CC75 /* GetProductListDecodableModel.swift in Sources */,
 				0BA251F526C270A100AD087A /* UpdateFastPaymentContractDecodableModel.swift in Sources */,
