@@ -360,11 +360,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         }
         
         let json = try Data(contentsOf: url)
-        
-        let productCatalogList = [ServerCommands.DictionaryController.GetProductCatalogList.Response.ProductCatalogList(conditionLink: "https://www.forabank.ru/", imageLink: "dict/getProductCatalogImage?image=1", orderLink: "https://www.forabank.ru/", productName: "Карта 'Миг'", txtСondition: ["string"])]
-        
-        let data = ServerCommands.DictionaryController.GetProductCatalogList.Response.ProductCatalog(ProductCatalogList: productCatalogList,
-                                                                                                         serial: "bea36075a58954199a6b8980549f6b69")
+        let data = ServerCommands.DictionaryController.GetProductCatalogList.Response.ProductCatalog(productCatalogList: [.init(name: "Карта 'Миг'", deescription: ["string"], imageEndpoint: "dict/getProductCatalogImage?image=1", infoURL: URL(string: "https://www.forabank.ru/")!, orderURL: URL(string: "https://www.forabank.ru/")!)], serial: "bea36075a58954199a6b8980549f6b69")
         let expected = ServerCommands.DictionaryController.GetProductCatalogList.Response(statusCode: .ok,
                                                                                           data: data,
                                                                                           errorMessage: "string")
@@ -377,16 +373,19 @@ class ServerCommandsDictionaryTests: XCTestCase {
     }
 
     //MARK: - GetProductCatalogImage
+    
     func testGetProductCatalogImage_Response_Encoding() throws {
-        // given
         
-        let command = ServerCommands.DictionaryController.GetProductCatalogImage.init(imageEndpoint: "Ic128Icon")
+        // given
+        let imageEndpoint = "dict/getProductCatalogImage?image=1"
+        
+        // when
+        let command = ServerCommands.DictionaryController.GetProductCatalogImage.init(imageEndpoint: imageEndpoint)
+       
         // then
         XCTAssertNotNil(command.parameters)
         XCTAssertEqual(command.parameters?.count, 1)
-        
         XCTAssertEqual(command.parameters?[0].name, "image")
-        
-        XCTAssertEqual(command.parameters?[0].value, "Ic128Icon")
+        XCTAssertEqual(command.parameters?[0].value, imageEndpoint)
     }
 }

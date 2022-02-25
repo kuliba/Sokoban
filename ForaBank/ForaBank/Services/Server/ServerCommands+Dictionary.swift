@@ -540,17 +540,32 @@ extension ServerCommands {
                  
                  struct ProductCatalog: Decodable, Equatable {
                      
-                     let ProductCatalogList: [ProductCatalogList]
+                     let productCatalogList: [Product]
                      let serial: String
+                     
+                     enum CodingKeys : String, CodingKey {
+                         
+                         case productCatalogList = "ProductCatalogList"
+                         case serial
+                     }
                  }
 
-                 struct ProductCatalogList: Decodable, Equatable {
+                 struct Product: Decodable, Equatable {
 
-                     let conditionLink: String
-                     let imageLink: String
-                     let orderLink: String
-                     let productName: String
-                     let txtСondition: [String]
+                     let name: String
+                     let deescription: [String]
+                     let imageEndpoint: String
+                     let infoURL: URL
+                     let orderURL: URL
+                     
+                     enum CodingKeys : String, CodingKey {
+                         
+                         case name = "productName"
+                         case deescription = "txtСondition"
+                         case imageEndpoint = "imageLink"
+                         case infoURL = "conditionLink"
+                         case orderURL = "orderLink"
+                     }
                  }
              }
          }
@@ -571,10 +586,7 @@ extension ServerCommands {
 
              internal init(imageEndpoint: String) {
 
-                 var parameters = [ServerCommandParameter]()
-
-                 parameters.append(.init(name: "image", value: imageEndpoint))
-                 self.parameters = parameters
+                 self.parameters = [ServerCommandParameter(name: "image", value: imageEndpoint)]
              }
          }
      }
