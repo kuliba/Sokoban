@@ -266,12 +266,15 @@ private extension Model {
     
     func loadCachedData() {
         
+        if let catalogProducts = localAgent.load(type: [CatalogProductData].self) {
+            
+            self.catalogProducts.value = catalogProducts
+        }
+        
         if let paymentTemplates = localAgent.load(type: [PaymentTemplateData].self) {
             
             self.paymentTemplates.value = paymentTemplates
         }
-        
-        //TODO: load paymentTemplatesViewSettings from cache
     }
     
     func clearCachedData() {
