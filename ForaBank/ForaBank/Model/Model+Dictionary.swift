@@ -477,6 +477,12 @@ extension Model {
                         return
                     }
                     
+                    guard data.productCatalogList.count > 0 else {
+                        return
+                    }
+                    
+                    self.catalogProducts.value = data.productCatalogList
+                    
                     do {
                         
                         try self.localAgent.store(data.productCatalogList, serial: data.serial)

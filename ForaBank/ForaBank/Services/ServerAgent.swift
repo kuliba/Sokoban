@@ -198,6 +198,9 @@ internal extension ServerAgent {
             request.timeoutInterval = timeout
         }
         
+        // cache policy
+        request.cachePolicy = command.cachePolicy
+        
         return request
     }
     
@@ -225,11 +228,23 @@ extension ServerAgent {
         
         init(for env: Environment) {
             
+            // enviroment
             self.env = env
-            //TODO: configure session
-            self.session = URLSession.shared
-            self.encoder = JSONEncoder()
-            self.decoder = JSONDecoder()
+            
+            // session configuration
+            let memoryCapacity = 50 * 1024 * 1024
+            let diskCapacity = 500 * 1024 * 1024
+
+            let configuration = URLSessionConfiguration.default
+            configuration.urlCache = URLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath: nil)
+            
+            self.session = URLSession(configuration: configuration)
+            
+            // encoder
+            self.encoder = JSONEncoder.serverDate
+            
+            // decoder
+            self.decoder = JSONDecoder.serverDate
         }
     }
     

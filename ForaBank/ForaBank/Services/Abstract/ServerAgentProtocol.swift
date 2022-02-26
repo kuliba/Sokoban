@@ -40,6 +40,7 @@ protocol ServerDownloadCommand {
     var parameters: [ServerCommandParameter]? { get }
     var payload: Payload? { get }
     var timeout: TimeInterval? { get }
+    var cachePolicy: URLRequest.CachePolicy { get }
 }
 
 /// Regular server request response
