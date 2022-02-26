@@ -90,7 +90,7 @@ class AuthLoginViewModel: ObservableObject {
                     //TODO: start spinner here and block user taps
                     
                 case _ as AuthLoginViewModelAction.Show.Products:
-                    productsViewModel = AuthProductsViewModel(products: model.catalogProducts.value, dismissAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Dismiss.Products())})
+                    productsViewModel = AuthProductsViewModel(model, products: model.catalogProducts.value, dismissAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Dismiss.Products())})
                     isProductsViewPresented = true
                     
                 case _ as AuthLoginViewModelAction.Show.Scaner:

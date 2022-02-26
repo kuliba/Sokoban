@@ -13,14 +13,18 @@ class AuthProductsViewModel: ObservableObject {
 
     let navigationBar: NavigationBarViewModel
     @Published var productCards: [ProductCard]
+    
+    private let model: Model
+    private var bindings = Set<AnyCancellable>()
 
-    init(productCards: [ProductCard], dismissAction: @escaping () -> Void = {}) {
+    init(_ model: Model = .emptyMock, productCards: [ProductCard], dismissAction: @escaping () -> Void = {}) {
 
         self.navigationBar = NavigationBarViewModel(title: "Выберите продукт", action: dismissAction)
         self.productCards = productCards
+        self.model = model
     }
     
-    init(products: [CatalogProductData], dismissAction: @escaping () -> Void = {}) {
+    init(_ model: Model, products: [CatalogProductData], dismissAction: @escaping () -> Void = {}) {
 
         self.navigationBar = NavigationBarViewModel(title: "Выберите продукт", action: dismissAction)
     
@@ -28,6 +32,64 @@ class AuthProductsViewModel: ObservableObject {
             
             ProductCard(with: product.element, style: .init(number: product.offset))
         })
+        self.model = model
+        
+        bind()
+        requestImages(for: products)
+    }
+    
+    private func bind() {
+        
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                switch action {
+                case let payload as ModelAction.Auth.ProductImage.Response:
+                    switch payload.result {
+                    case .success(let data):
+      
+                        guard let image = Image(data: data) else {
+                            //TODO: log
+                            print("AuthProductsViewModel: unable create product image from data for endpoint: \(payload.endpoint)")
+                            return
+                        }
+                        
+                        guard let productCard = productCards.first(where: { productCard in
+                            
+                            guard case .endpoint(let endpoint) = productCard.image else {
+                                return false
+                            }
+                            
+                            return endpoint == payload.endpoint
+                            
+                        }) else {
+                            
+                            return
+                        }
+                        
+                        withAnimation {
+                            
+                            productCard.image = .image(image)
+                        }
+                        
+                    case .failure(let error):
+                        //TODO: log
+                        print("AuthProductsViewModel: product image download failed for endpoint: \(payload.endpoint) with error: \(error.localizedDescription)")
+                    }
+    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+    }
+    
+    func requestImages(for products: [CatalogProductData]) {
+        
+        for product in products {
+        
+            model.action.send(ModelAction.Auth.ProductImage.Request(endpoint: product.imageEndpoint))
+        }
     }
 }
 
@@ -50,17 +112,17 @@ extension AuthProductsViewModel {
         }
     }
     
-    struct ProductCard: Identifiable {
+    class ProductCard: Identifiable, ObservableObject {
 
         let id = UUID()
         let style: Style
         let title: String
         let subtitle: [String]
-        let image: Image
+        @Published var image: ImageData
         let infoButton: InfoButton
         let orderButton: OrderButton
         
-        internal init(style: Style, title: String, subtitle: [String], image: Image, infoButton: InfoButton, orderButton: OrderButton) {
+        internal init(style: Style, title: String, subtitle: [String], image: ImageData, infoButton: InfoButton, orderButton: OrderButton) {
             
             self.style = style
             self.title = title
@@ -74,11 +136,16 @@ extension AuthProductsViewModel {
             
             self.style = style
             self.title = product.name
-            self.subtitle = product.deescription
-            //TODO: real implementation here
-            self.image = Image("icCardMir")
+            self.subtitle = product.description
+            self.image = .endpoint(product.imageEndpoint)
             self.infoButton = InfoButton(url: product.infoURL)
             self.orderButton = OrderButton(url: product.orderURL)
+        }
+        
+        enum ImageData {
+            
+            case endpoint(String)
+            case image(Image)
         }
 
         struct InfoButton {

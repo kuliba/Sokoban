@@ -10,7 +10,7 @@ import Foundation
 struct CatalogProductData: Decodable, Equatable, Cachable {
 
     let name: String
-    let deescription: [String]
+    let description: [String]
     let imageEndpoint: String
     let infoURL: URL
     let orderURL: URL
@@ -18,7 +18,7 @@ struct CatalogProductData: Decodable, Equatable, Cachable {
     enum CodingKeys : String, CodingKey {
         
         case name = "productName"
-        case deescription = "txtСondition"
+        case description = "txtСondition"
         case imageEndpoint = "imageLink"
         case infoURL = "conditionLink"
         case orderURL = "orderLink"

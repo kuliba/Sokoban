@@ -64,12 +64,12 @@ class Model {
        
         // server agent
         #if DEBUG
-        let serverContext = ServerAgent.Context(for: .test)
+        let enviroment = ServerAgent.Environment.test
         #else
-        let serverContext = ServerAgent.Context(for: .prod)
+        let enviroment = ServerAgent.Environment.prod
         #endif
         
-        let serverAgent = ServerAgent(context: serverContext)
+        let serverAgent = ServerAgent(enviroment: enviroment)
         
         // local agent
         let localContext = LocalAgent.Context(cacheFolderName: "cache", encoder: .serverDate, decoder: .serverDate, fileManager: FileManager.default)
@@ -113,6 +113,9 @@ class Model {
                 case _ as ModelAction.LoggedOut:
                     clearCachedData()
                     paymentTemplates.value = []
+                    
+                case let payload as ModelAction.Auth.ProductImage.Request:
+                    handleAuthProductImageRequest(payload)
                     
                 case let payload as ModelAction.Auth.Register.Request:
                     handleAuthRegisterRequest(payload: payload)

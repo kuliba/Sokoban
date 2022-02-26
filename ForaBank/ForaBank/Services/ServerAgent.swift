@@ -7,14 +7,34 @@
 
 import Foundation
 
-class ServerAgent: ServerAgentProtocol {
+class ServerAgent: NSObject, ServerAgentProtocol {
 
-    private let context: Context
-    private var baseURL: String { context.env.baseURL }
+    private var baseURL: String { enviroment.baseURL }
+    private let enviroment: Environment
+    private let delegateQueue: OperationQueue
     
-    internal init(context: Context) {
+    private lazy var session: URLSession = {
         
-        self.context = context
+        // session configuration
+        let memoryCapacity = 50 * 1024 * 1024
+        let diskCapacity = 500 * 1024 * 1024
+
+        let configuration = URLSessionConfiguration.default
+        configuration.urlCache = URLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath: nil)
+        
+        return URLSession(configuration: configuration, delegate: self, delegateQueue: delegateQueue)
+        
+    }()
+    
+    private let encoder: JSONEncoder
+    private let decoder: JSONDecoder
+    
+    internal init(enviroment: Environment) {
+        
+        self.enviroment = enviroment
+        self.delegateQueue = OperationQueue()
+        self.encoder = JSONEncoder.serverDate
+        self.decoder = JSONDecoder.serverDate
     }
     
     func executeCommand<Command>(command: Command, completion: @escaping (Result<Command.Response, ServerAgentError>) -> Void) where Command : ServerCommand {
@@ -22,7 +42,7 @@ class ServerAgent: ServerAgentProtocol {
         do {
             
             let request = try request(with: command)
-            context.session.dataTask(with: request) {[unowned self] data, _, error in
+            session.dataTask(with: request) {[unowned self] data, _, error in
                 
                 if let error = error {
                     
@@ -39,7 +59,7 @@ class ServerAgent: ServerAgentProtocol {
                 
                 do {
                     
-                    let response = try context.decoder.decode(Command.Response.self, from: data)
+                    let response = try decoder.decode(Command.Response.self, from: data)
                     completion(.success(response))
                     
                 } catch {
@@ -60,7 +80,7 @@ class ServerAgent: ServerAgentProtocol {
         do {
             
             let request = try downloadRequest(with: command)
-            context.session.downloadTask(with: request) { localFileURL, _, error in
+            session.downloadTask(with: request) { localFileURL, _, error in
                 
                 if let error = error {
                     
@@ -84,7 +104,8 @@ class ServerAgent: ServerAgentProtocol {
                     
                     completion(.failure(.curruptedData(error)))
                 }
-            }
+                
+            }.resume()
             
         } catch {
             
@@ -132,7 +153,7 @@ internal extension ServerAgent {
             
             do {
                 
-                request.httpBody = try context.encoder.encode(payload)
+                request.httpBody = try encoder.encode(payload)
                 
             } catch {
                 
@@ -184,7 +205,7 @@ internal extension ServerAgent {
             
             do {
                 
-                request.httpBody = try context.encoder.encode(payload)
+                request.httpBody = try encoder.encode(payload)
                 
             } catch {
                 
@@ -215,38 +236,9 @@ internal extension ServerAgent {
     }
 }
 
-//MARK: - Context
+//MARK: - Types
 
 extension ServerAgent {
-    
-    class Context {
-        
-        let env: Environment
-        let session: URLSession
-        let encoder: JSONEncoder
-        let decoder: JSONDecoder
-        
-        init(for env: Environment) {
-            
-            // enviroment
-            self.env = env
-            
-            // session configuration
-            let memoryCapacity = 50 * 1024 * 1024
-            let diskCapacity = 500 * 1024 * 1024
-
-            let configuration = URLSessionConfiguration.default
-            configuration.urlCache = URLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath: nil)
-            
-            self.session = URLSession(configuration: configuration)
-            
-            // encoder
-            self.encoder = JSONEncoder.serverDate
-            
-            // decoder
-            self.decoder = JSONDecoder.serverDate
-        }
-    }
     
     enum Environment {
         
@@ -263,4 +255,21 @@ extension ServerAgent {
             }
         }
     }
+}
+
+//MARK: - URLSessionDelegate
+
+extension ServerAgent: URLSessionDelegate {
+    
+}
+
+//MARK: - URLSessionTaskDelegate
+
+extension ServerAgent: URLSessionTaskDelegate {
+    
+}
+
+//MARK: - URLSessionDataDelegate
+extension ServerAgent: URLSessionDataDelegate {
+    
 }

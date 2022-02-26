@@ -634,18 +634,18 @@ extension ServerCommands {
          struct GetProductCatalogImage: ServerDownloadCommand {
 
              var token: String? = nil
-             let endpoint = "/dict/getProductCatalogList"
+             let endpoint: String
              let method: ServerCommandMethod = .get
-             let parameters: [ServerCommandParameter]?
+             let parameters: [ServerCommandParameter]? = nil
              var payload: Payload? = nil
              let timeout: TimeInterval? = nil
              let cachePolicy: URLRequest.CachePolicy = .returnCacheDataElseLoad
 
              struct Payload: Encodable {}
 
-             internal init(imageEndpoint: String) {
+             internal init(endpoint: String) {
 
-                 self.parameters = [ServerCommandParameter(name: "image", value: imageEndpoint)]
+                 self.endpoint = endpoint
              }
          }
      }

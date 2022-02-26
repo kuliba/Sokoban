@@ -559,6 +559,7 @@
 		7772979B27C7B6AE0099EF91 /* AuthCardScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772979A27C7B6AE0099EF91 /* AuthCardScannerView.swift */; };
 		7772979D27C7B6D10099EF91 /* AuthCardScannerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772979C27C7B6D10099EF91 /* AuthCardScannerViewModel.swift */; };
 		7772979F27C8EADF0099EF91 /* CatalogProductData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772979E27C8EADF0099EF91 /* CatalogProductData.swift */; };
+		777297A327CA3AB70099EF91 /* Image+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777297A227CA3AB70099EF91 /* Image+Extensions.swift */; };
 		77925575279AF54F00A85723 /* ECKeysProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77925574279AF54F00A85723 /* ECKeysProvider.swift */; };
 		7792557E279B1A5400A85723 /* JSONDecoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */; };
 		77925580279B1BCB00A85723 /* JSONEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */; };
@@ -1476,6 +1477,7 @@
 		7772979A27C7B6AE0099EF91 /* AuthCardScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthCardScannerView.swift; sourceTree = "<group>"; };
 		7772979C27C7B6D10099EF91 /* AuthCardScannerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthCardScannerViewModel.swift; sourceTree = "<group>"; };
 		7772979E27C8EADF0099EF91 /* CatalogProductData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogProductData.swift; sourceTree = "<group>"; };
+		777297A227CA3AB70099EF91 /* Image+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Image+Extensions.swift"; sourceTree = "<group>"; };
 		77925574279AF54F00A85723 /* ECKeysProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKeysProvider.swift; sourceTree = "<group>"; };
 		7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONDecoder+Extensions.swift"; sourceTree = "<group>"; };
 		7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONEncoder+Extensions.swift"; sourceTree = "<group>"; };
@@ -3138,7 +3140,6 @@
 				77EC58E6277236E90054D75C /* Model.swift */,
 				77EC58E8277237190054D75C /* ModelAction.swift */,
 				770DCE8E27BBE6AB004099C1 /* Model+Auth.swift */,
-				77EC58ED27723A5A0054D75C /* ModelAction+PaymentTemplate.swift */,
 				77583FFB27AED77F00251969 /* Model+General.swift */,
 				77583FF827AED4E700251969 /* Model+Dictionary.swift */,
 				77EC58ED27723A5A0054D75C /* Model+Templates.swift */,
@@ -3539,6 +3540,7 @@
 				77EC58F827738B5E0054D75C /* DateFormatter+Extensions.swift */,
 				77499C3B27739B1A00F6C079 /* NumberFormatter+Extensions.swift */,
 				77499C422773A96500F6C079 /* Color+Extensions.swift */,
+				777297A227CA3AB70099EF91 /* Image+Extensions.swift */,
 				7758754E27996E610080115D /* FileManager+Extensions.swift */,
 				7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */,
 				7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */,
@@ -5965,6 +5967,7 @@
 				0B7A18CB268648030007CC75 /* GetProductListDecodableModel.swift in Sources */,
 				0BA251F526C270A100AD087A /* UpdateFastPaymentContractDecodableModel.swift in Sources */,
 				EDF68217266F9EC800FD5C07 /* RouterSassionConfiguration.swift in Sources */,
+				777297A327CA3AB70099EF91 /* Image+Extensions.swift in Sources */,
 				6849887927BAD8B100E84E6B /* AuthConfirmView.swift in Sources */,
 				0BDE453826E53AEF00B64A0A /* AddAllUserCardtList.swift in Sources */,
 				77925575279AF54F00A85723 /* ECKeysProvider.swift in Sources */,

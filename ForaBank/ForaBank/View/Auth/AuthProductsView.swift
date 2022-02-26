@@ -45,7 +45,7 @@ extension AuthProductsView {
     
     struct ProductView: View {
         
-        let viewModel: AuthProductsViewModel.ProductCard
+        @ObservedObject var viewModel: AuthProductsViewModel.ProductCard
         
         var body: some View {
             
@@ -72,12 +72,23 @@ extension AuthProductsView {
                         
                     }.padding(.top, 24)
  
-                    viewModel.image
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .cornerRadius(12)
-                        .padding(.top, 20)
-                    
+                    switch viewModel.image {
+                    case .image(let image):
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .cornerRadius(12)
+                            .padding(.top, 20)
+                        
+                    case .endpoint:
+                        Color
+                            .mainColorsGrayMedium
+                            .opacity(0.5)
+                            .frame(height: 236)
+                            .cornerRadius(12)
+                            .padding(.top, 20)
+                    }
+         
                     HStack(alignment: .center, spacing: 20) {
                         
                         AuthProductsView.InfoButtonView(viewModel: viewModel.infoButton, color: viewModel.style.textColor)
