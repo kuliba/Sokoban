@@ -590,7 +590,7 @@ extension ServerCommands {
              var token: String? = nil
              let endpoint = "/dict/getProductCatalogList"
              let method: ServerCommandMethod = .get
-             let parameters: [ServerCommandParameter]? = nil
+             let parameters: [ServerCommandParameter]?
              var payload: Payload? = nil
              let timeout: TimeInterval? = nil
 
@@ -612,6 +612,18 @@ extension ServerCommands {
                          case productCatalogList = "ProductCatalogList"
                          case serial
                      }
+                 }
+             }
+             
+             internal init(serial: String?) {
+                 
+                 if let serial = serial {
+                     
+                     self.parameters = [.init(name: "serial", value: serial)]
+                     
+                 } else {
+                     
+                     self.parameters = nil
                  }
              }
          }

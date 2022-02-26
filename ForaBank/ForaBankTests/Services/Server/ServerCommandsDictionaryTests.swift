@@ -70,6 +70,22 @@ class ServerCommandsDictionaryTests: XCTestCase {
         XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetAnywayOperatorsList.Response.self, from: Data(contentsOf: url)))
     }
     
+    func testGetAnywayOperatorsList_Parameters() throws {
+        
+        // given
+        let serial = UUID().uuidString
+        
+        // when
+        let command = ServerCommands.DictionaryController.GetAnywayOperatorsList(serial: serial)
+        
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 1)
+        
+        XCTAssertEqual(command.parameters?[0].name, "serial")
+        XCTAssertEqual(command.parameters?[0].value, serial)
+    }
+    
     //MARK: - GetBanks
     
     func testGetBanks_Response_Decoding() throws {
@@ -124,6 +140,22 @@ class ServerCommandsDictionaryTests: XCTestCase {
         XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetBanks.Response.self, from: Data(contentsOf: url)))
     }
     
+    func testGetBanks_Parameters() throws {
+        
+        // given
+        let serial = UUID().uuidString
+        
+        // when
+        let command = ServerCommands.DictionaryController.GetBanks(serial: serial)
+        
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 1)
+        
+        XCTAssertEqual(command.parameters?[0].name, "serial")
+        XCTAssertEqual(command.parameters?[0].value, serial)
+    }
+    
     //MARK: - GetCountries
     
     func testGetCountries_Response_Decoding() throws {
@@ -171,6 +203,22 @@ class ServerCommandsDictionaryTests: XCTestCase {
         
         // then
         XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetCountries.Response.self, from: Data(contentsOf: url)))
+    }
+    
+    func testGetCountries_Parameters() throws {
+        
+        // given
+        let serial = UUID().uuidString
+        
+        // when
+        let command = ServerCommands.DictionaryController.GetCountries(serial: serial)
+        
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 1)
+        
+        XCTAssertEqual(command.parameters?[0].name, "serial")
+        XCTAssertEqual(command.parameters?[0].value, serial)
     }
     
     //MARK: - GetCurrencyList
@@ -227,6 +275,22 @@ class ServerCommandsDictionaryTests: XCTestCase {
         XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetCurrencyList.Response.self, from: Data(contentsOf: url)))
     }
     
+    func testGetCurrencyList_Parameters() throws {
+        
+        // given
+        let serial = UUID().uuidString
+        
+        // when
+        let command = ServerCommands.DictionaryController.GetCurrencyList(serial: serial)
+        
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 1)
+        
+        XCTAssertEqual(command.parameters?[0].name, "serial")
+        XCTAssertEqual(command.parameters?[0].value, serial)
+    }
+    
     //MARK: - GetFMSList
     
     func testGetFMSList_Response_Decoding() throws {
@@ -251,6 +315,22 @@ class ServerCommandsDictionaryTests: XCTestCase {
         
         // then
         XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetFMSList.Response.self, from: Data(contentsOf: url)))
+    }
+    
+    func testGetFMSList_Parameters() throws {
+        
+        // given
+        let serial = UUID().uuidString
+        
+        // when
+        let command = ServerCommands.DictionaryController.GetFMSList(serial: serial)
+        
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 1)
+        
+        XCTAssertEqual(command.parameters?[0].name, "serial")
+        XCTAssertEqual(command.parameters?[0].value, serial)
     }
     
     //MARK: - GetFSSPDebtList
@@ -279,6 +359,22 @@ class ServerCommandsDictionaryTests: XCTestCase {
         XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetFSSPDebtList.Response.self, from: Data(contentsOf: url)))
     }
     
+    func testGetFSSPDebtList_Parameters() throws {
+        
+        // given
+        let serial = UUID().uuidString
+        
+        // when
+        let command = ServerCommands.DictionaryController.GetFSSPDebtList(serial: serial)
+        
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 1)
+        
+        XCTAssertEqual(command.parameters?[0].name, "serial")
+        XCTAssertEqual(command.parameters?[0].value, serial)
+    }
+    
     //MARK: - getFSSPDocumentList
     
     func testGetFSSPDocumentList_Response_Decoding() throws {
@@ -305,6 +401,22 @@ class ServerCommandsDictionaryTests: XCTestCase {
         XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetFSSPDocumentList.Response.self, from: Data(contentsOf: url)))
     }
     
+    func testGetFSSPDocumentList_Parameters() throws {
+        
+        // given
+        let serial = UUID().uuidString
+        
+        // when
+        let command = ServerCommands.DictionaryController.GetFSSPDocumentList(serial: serial)
+        
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 1)
+        
+        XCTAssertEqual(command.parameters?[0].name, "serial")
+        XCTAssertEqual(command.parameters?[0].value, serial)
+    }
+    
     //MARK: - GetFTSList
     
     func testGetFTSList_Response_Decoding() throws {
@@ -329,6 +441,22 @@ class ServerCommandsDictionaryTests: XCTestCase {
         
         // then
         XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetFTSList.Response.self, from: Data(contentsOf: url)))
+    }
+    
+    func testGetFTSList_Parameters() throws {
+        
+        // given
+        let serial = UUID().uuidString
+        
+        // when
+        let command = ServerCommands.DictionaryController.GetFTSList(serial: serial)
+        
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 1)
+        
+        XCTAssertEqual(command.parameters?[0].name, "serial")
+        XCTAssertEqual(command.parameters?[0].value, serial)
     }
     
     //MARK: - GetFullBankInfoList
@@ -381,9 +509,27 @@ class ServerCommandsDictionaryTests: XCTestCase {
         XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetFullBankInfoList.Response.self, from: Data(contentsOf: url)))
     }
     
-    //MARK: - GetMobileData
+    func testGetFullBankInfoList_Parameters() throws {
+        
+        // given
+        let serial = UUID().uuidString
+        
+        // when
+        let command = ServerCommands.DictionaryController.GetFullBankInfoList(serial: serial)
+        
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 2)
+        
+        XCTAssertEqual(command.parameters?[0].name, "bic")
+        XCTAssertEqual(command.parameters?[0].value, "")
+        XCTAssertEqual(command.parameters?[1].name, "serial")
+        XCTAssertEqual(command.parameters?[1].value, serial)
+    }
     
-    func testGetMobileData_Response_Decoding() throws {
+    //MARK: - GetMobileList
+    
+    func testGetMobileList_Response_Decoding() throws {
         
         // given
         guard let url = bundle.url(forResource: "GetMobileDataResponseGeneric", withExtension: "json") else {
@@ -401,7 +547,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         XCTAssertEqual(result, expected)
     }
     
-    func testGetMobileData_Response_Server_Decoding() throws {
+    func testGetMobileList_Response_Server_Decoding() throws {
         
         // given
         guard let url = bundle.url(forResource: "GetMobileDataResponseServerGeneric", withExtension: "json") else {
@@ -411,6 +557,22 @@ class ServerCommandsDictionaryTests: XCTestCase {
         
         // then
         XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetMobileList.Response.self, from: Data(contentsOf: url)))
+    }
+    
+    func testGetMobileList_Parameters() throws {
+        
+        // given
+        let serial = UUID().uuidString
+        
+        // when
+        let command = ServerCommands.DictionaryController.GetMobileList(serial: serial)
+        
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 1)
+        
+        XCTAssertEqual(command.parameters?[0].name, "serial")
+        XCTAssertEqual(command.parameters?[0].value, serial)
     }
     
     //MARK: - GetMosParkingList
@@ -463,6 +625,22 @@ class ServerCommandsDictionaryTests: XCTestCase {
         XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetMosParkingList.Response.self, from: Data(contentsOf: url)))
     }
     
+    func testGetMosParkingList_Parameters() throws {
+        
+        // given
+        let serial = UUID().uuidString
+        
+        // when
+        let command = ServerCommands.DictionaryController.GetMosParkingList(serial: serial)
+        
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 1)
+        
+        XCTAssertEqual(command.parameters?[0].name, "serial")
+        XCTAssertEqual(command.parameters?[0].value, serial)
+    }
+    
     //MARK: - GetPaymentSystemList
     
     func testGetPaymentSystemList_Response_Decoding() throws {
@@ -496,12 +674,27 @@ class ServerCommandsDictionaryTests: XCTestCase {
         // then
         XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetPaymentSystemList.Response.self, from: Data(contentsOf: url)))
     }
+    
+    func testGetPaymentSystemList_Parameters() throws {
+        
+        // given
+        let serial = UUID().uuidString
+        
+        // when
+        let command = ServerCommands.DictionaryController.GetPaymentSystemList(serial: serial)
+        
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 1)
+        
+        XCTAssertEqual(command.parameters?[0].name, "serial")
+        XCTAssertEqual(command.parameters?[0].value, serial)
+    }
 
     //MARK: - GetProductCatalogList
     
     func testGetProductCatalogList_Response_Decoding() throws {
 
-        
         // given
         guard let url = bundle.url(forResource: "GetProductCatalogList", withExtension: "json") else {
             XCTFail("testGetProductCatalogList_Response_Decoding : Missing file: GetProductCatalogList.json")
@@ -519,6 +712,22 @@ class ServerCommandsDictionaryTests: XCTestCase {
         
         // then
         XCTAssertEqual(result, expected)
+    }
+    
+    func testGetProductCatalogLists_Parameters() throws {
+        
+        // given
+        let serial = UUID().uuidString
+        
+        // when
+        let command = ServerCommands.DictionaryController.GetProductCatalogList(serial: serial)
+        
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 1)
+        
+        XCTAssertEqual(command.parameters?[0].name, "serial")
+        XCTAssertEqual(command.parameters?[0].value, serial)
     }
 
     //MARK: - GetProductCatalogImage

@@ -195,6 +195,9 @@ class Model {
                         
                     case .paymentSystemList:
                         handleDictionaryPaymentSystemList(payload)
+                        
+                    case .productCatalogList:
+                        handleDictionaryProductCatalogList(payload)
                     }
                     
                 default:
@@ -255,6 +258,9 @@ private extension Model {
             
         case .paymentSystemList:
             return localAgent.serial(for: [PaymentSystemData].self)
+            
+        case .productCatalogList:
+            return localAgent.serial(for: [CatalogProductData].self)
         }
     }
     

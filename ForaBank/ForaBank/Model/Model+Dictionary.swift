@@ -13,7 +13,7 @@ extension ModelAction {
     
     enum Dictionary {
         
-        static let cached: [Kind] = []
+        static let cached: [Kind] = [.productCatalogList]
         
         struct Request: Action {
             
@@ -35,6 +35,7 @@ extension ModelAction {
             case mobileList
             case mosParkingList
             case paymentSystemList
+            case productCatalogList
         }
     }
 }
@@ -445,6 +446,40 @@ extension Model {
                     do {
                         
                         try self.localAgent.store(data.paymentSystemList, serial: data.serial)
+                        
+                    } catch {
+                        
+                        handleServerCommandCachingError(error: error, command: command)
+                    }
+                    
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                
+            case .failure(let error):
+                handleServerCommandError(error: error, command: command)
+                
+            }
+        }
+    }
+    
+    // ProductCatalogList
+    func handleDictionaryProductCatalogList(_ payload: ModelAction.Dictionary.Request) {
+        
+        let command = ServerCommands.DictionaryController.GetProductCatalogList(serial: payload.serial)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    guard let data = response.data else {
+                        return
+                    }
+                    
+                    do {
+                        
+                        try self.localAgent.store(data.productCatalogList, serial: data.serial)
                         
                     } catch {
                         
