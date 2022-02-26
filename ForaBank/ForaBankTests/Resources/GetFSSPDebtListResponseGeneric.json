@@ -1,13 +1,13 @@
 {
   "data": {
-    "FSSPList": [
+    "FSSPDebtList": [
       {
-        "md5hash": "366e1c4043eb433b82a6ab4988e80862",
-        "svgImage": "string",
-        "text": "Паспорт РФ",
+        "text": "Документ",
         "value": "20"
       }
     ],
+    "id": "a3_dutyCategory_1_1",
+    "puref": "iFora||6273",
     "serial": "bea36075a58954199a6b8980549f6b69"
   },
   "errorMessage": "string",
