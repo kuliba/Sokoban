@@ -512,7 +512,7 @@
 		7757624B276FEC4F00B902BF /* URLHostTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7757624A276FEC4F00B902BF /* URLHostTests.swift */; };
 		7757624D276FEE2400B902BF /* ForaBankUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7757624C276FEE2400B902BF /* ForaBankUITests.swift */; };
 		77583FF927AED4E700251969 /* Model+Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77583FF827AED4E700251969 /* Model+Dictionary.swift */; };
-		77583FFC27AED77F00251969 /* Model+Handlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77583FFB27AED77F00251969 /* Model+Handlers.swift */; };
+		77583FFC27AED77F00251969 /* Model+General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77583FFB27AED77F00251969 /* Model+General.swift */; };
 		775875472798C87B0080115D /* Option.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775875462798C87B0080115D /* Option.swift */; };
 		7758754927996D510080115D /* LocalAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7758754827996D510080115D /* LocalAgentProtocol.swift */; };
 		7758754B27996D8B0080115D /* Cachable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7758754A27996D8B0080115D /* Cachable.swift */; };
@@ -591,7 +591,7 @@
 		77EC58E7277236E90054D75C /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58E6277236E90054D75C /* Model.swift */; };
 		77EC58E9277237190054D75C /* ModelAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58E8277237190054D75C /* ModelAction.swift */; };
 		77EC58EC277237720054D75C /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58EB277237720054D75C /* Action.swift */; };
-		77EC58EE27723A5A0054D75C /* ModelAction+PaymentTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58ED27723A5A0054D75C /* ModelAction+PaymentTemplate.swift */; };
+		77EC58EE27723A5A0054D75C /* Model+Templates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58ED27723A5A0054D75C /* Model+Templates.swift */; };
 		77EC58F027723C840054D75C /* AuthorizationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58EF27723C840054D75C /* AuthorizationState.swift */; };
 		77EC58F4277381970054D75C /* OperationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58F3277381970054D75C /* OperationType.swift */; };
 		77EC58F6277382A60054D75C /* OperationEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58F5277382A60054D75C /* OperationEnvironment.swift */; };
@@ -1391,7 +1391,7 @@
 		7757624A276FEC4F00B902BF /* URLHostTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLHostTests.swift; sourceTree = "<group>"; };
 		7757624C276FEE2400B902BF /* ForaBankUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForaBankUITests.swift; sourceTree = "<group>"; };
 		77583FF827AED4E700251969 /* Model+Dictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Dictionary.swift"; sourceTree = "<group>"; };
-		77583FFB27AED77F00251969 /* Model+Handlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Handlers.swift"; sourceTree = "<group>"; };
+		77583FFB27AED77F00251969 /* Model+General.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+General.swift"; sourceTree = "<group>"; };
 		775875462798C87B0080115D /* Option.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Option.swift; sourceTree = "<group>"; };
 		7758754827996D510080115D /* LocalAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAgentProtocol.swift; sourceTree = "<group>"; };
 		7758754A27996D8B0080115D /* Cachable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cachable.swift; sourceTree = "<group>"; };
@@ -1469,7 +1469,7 @@
 		77EC58E6277236E90054D75C /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		77EC58E8277237190054D75C /* ModelAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelAction.swift; sourceTree = "<group>"; };
 		77EC58EB277237720054D75C /* Action.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
-		77EC58ED27723A5A0054D75C /* ModelAction+PaymentTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModelAction+PaymentTemplate.swift"; sourceTree = "<group>"; };
+		77EC58ED27723A5A0054D75C /* Model+Templates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Templates.swift"; sourceTree = "<group>"; };
 		77EC58EF27723C840054D75C /* AuthorizationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationState.swift; sourceTree = "<group>"; };
 		77EC58F3277381970054D75C /* OperationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationType.swift; sourceTree = "<group>"; };
 		77EC58F5277382A60054D75C /* OperationEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationEnvironment.swift; sourceTree = "<group>"; };
@@ -3008,10 +3008,10 @@
 			isa = PBXGroup;
 			children = (
 				77EC58E6277236E90054D75C /* Model.swift */,
-				77583FFB27AED77F00251969 /* Model+Handlers.swift */,
 				77EC58E8277237190054D75C /* ModelAction.swift */,
+				77583FFB27AED77F00251969 /* Model+General.swift */,
 				77583FF827AED4E700251969 /* Model+Dictionary.swift */,
-				77EC58ED27723A5A0054D75C /* ModelAction+PaymentTemplate.swift */,
+				77EC58ED27723A5A0054D75C /* Model+Templates.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -5473,7 +5473,7 @@
 				0BF3486426943DFB005138A8 /* SuggestCompanyDecodableModel.swift in Sources */,
 				EDB1452026661B030028EF5A /* StringMask.swift in Sources */,
 				EDB16586266A0883007E6030 /* NSDirectionalEdgeInsets.swift in Sources */,
-				77583FFC27AED77F00251969 /* Model+Handlers.swift in Sources */,
+				77583FFC27AED77F00251969 /* Model+General.swift in Sources */,
 				EDE212F82742ED2B005D9821 /* ChooseCurrencyTableViewCell.swift in Sources */,
 				0B931B4F26DE334500CA8017 /* GKHHistoryHeaderView.swift in Sources */,
 				77E1804727AC3AD30006ACC9 /* FSSPData.swift in Sources */,
@@ -5807,7 +5807,7 @@
 				0B931B1C26DCD69900CA8017 /* GKHHistoryModel.swift in Sources */,
 				EDB165782668C76A007E6030 /* SelfConfiguringCell.swift in Sources */,
 				EDB165622667A571007E6030 /* ForaInputModel.swift in Sources */,
-				77EC58EE27723A5A0054D75C /* ModelAction+PaymentTemplate.swift in Sources */,
+				77EC58EE27723A5A0054D75C /* Model+Templates.swift in Sources */,
 				ED75CE0726E2BA600074F5D5 /* TarifView.swift in Sources */,
 				0BB24AB726F0C6AC00DDA4F6 /* UnBlockCardDecodableModel.swift in Sources */,
 				0BB24AA626F0024B00DDA4F6 /* GetLatestPayments.swift in Sources */,

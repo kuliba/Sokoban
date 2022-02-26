@@ -67,7 +67,7 @@ extension Model {
                     }
                     
                 default:
-                    self.handle(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleUnexpected(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
                 
             case .failure(let error):
@@ -102,7 +102,7 @@ extension Model {
                     }
                     
                 default:
-                    self.handle(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleUnexpected(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
                 
             case .failure(let error):
@@ -137,7 +137,7 @@ extension Model {
                     }
                     
                 default:
-                    self.handle(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleUnexpected(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
                 
             case .failure(let error):
@@ -172,7 +172,7 @@ extension Model {
                     }
                     
                 default:
-                    self.handle(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleUnexpected(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
                 
             case .failure(let error):
@@ -207,7 +207,7 @@ extension Model {
                     }
                     
                 default:
-                    self.handle(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleUnexpected(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
                 
             case .failure(let error):
@@ -242,7 +242,7 @@ extension Model {
                     }
                     
                 default:
-                    self.handle(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleUnexpected(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
                 
             case .failure(let error):
@@ -277,7 +277,7 @@ extension Model {
                     }
                     
                 default:
-                    self.handle(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleUnexpected(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
                 
             case .failure(let error):
@@ -312,7 +312,7 @@ extension Model {
                     }
                     
                 default:
-                    self.handle(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleUnexpected(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
                 
             case .failure(let error):
@@ -348,7 +348,7 @@ extension Model {
                     }
                     
                 default:
-                    self.handle(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleUnexpected(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
                 
             case .failure(let error):
@@ -382,7 +382,7 @@ extension Model {
                     }
                     
                 default:
-                    self.handle(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleUnexpected(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
                 
             case .failure(let error):
@@ -416,7 +416,7 @@ extension Model {
                     }
                     
                 default:
-                    self.handle(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleUnexpected(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
                 
             case .failure(let error):
@@ -450,7 +450,7 @@ extension Model {
                     }
                     
                 default:
-                    self.handle(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleUnexpected(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
                 
             case .failure(let error):
