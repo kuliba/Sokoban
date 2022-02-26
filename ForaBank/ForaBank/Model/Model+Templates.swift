@@ -89,7 +89,7 @@ extension Model {
     func handleTemplatesListRequest() {
         
         guard let token = token else {
-            handleUnauthorizedRequestAttempt()
+            handledUnauthorizedCommandAttempt()
             return
         }
         let command = ServerCommands.PaymentTemplateController.GetPaymentTemplateList(token: token)
@@ -103,26 +103,42 @@ extension Model {
                         
                         //TODO: remove when all templates will be implemented
                         let allowed = templates.filter{ self.paymentTemplatesDisplayed.contains($0.type) }
+                        
+                        // update model data
                         self.paymentTemplates.value = allowed
+                       
                         do {
                             
+                            // cache tempates data
                             try self.localAgent.store(allowed, serial: nil)
                             
                         } catch {
-                            //TODO: os log
-                            print(error.localizedDescription)
+                            
+                            self.handleServerCommandCachingError(error: error, command: command)
                         }
+                        
                         self.action.send(ModelAction.PaymentTemplate.List.Complete(paymentTemplates: templates))
                         
                     } else {
                         
                         self.paymentTemplates.value = []
-                        //TODO: delete cache data
+                        
+                        do {
+                            
+                            // delete cached templates data
+                            try self.localAgent.clear(type: [PaymentTemplateData].self)
+                            
+                        } catch {
+                            
+                            //TODO: log
+                            print("Model: handleTemplatesListRequest: deleting templates cache data error: \(error)")
+                        }
+                        
                         self.action.send(ModelAction.PaymentTemplate.List.Complete(paymentTemplates: []))
                     }
 
                 default:
-                    self.handleUnexpected(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
             case .failure(let error):
                 self.action.send(ModelAction.PaymentTemplate.List.Failed(error: error))
@@ -133,7 +149,7 @@ extension Model {
     func handleTemplatesSaveRequest(_ payload: ModelAction.PaymentTemplate.Save.Requested) {
         
         guard let token = token else {
-            handleUnauthorizedRequestAttempt()
+            handledUnauthorizedCommandAttempt()
             return
         }
         let command = ServerCommands.PaymentTemplateController.SavePaymentTemplate(token: token, payload: .init(name: payload.name, paymentOperationDetailId: payload.paymentOperationDetailId))
@@ -149,7 +165,7 @@ extension Model {
                     self.action.send(ModelAction.PaymentTemplate.List.Requested())
                     
                 default:
-                    self.handleUnexpected(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
             case .failure(let error):
                 self.action.send(ModelAction.PaymentTemplate.Save.Failed(error: error))
@@ -160,7 +176,7 @@ extension Model {
     func handleTemplatesUpdateRequest(_ payload: ModelAction.PaymentTemplate.Update.Requested) {
         
         guard let token = token else {
-            handleUnauthorizedRequestAttempt()
+            handledUnauthorizedCommandAttempt()
             return
         }
         let command = ServerCommands.PaymentTemplateController.UpdatePaymentTemplate(token: token, payload: .init(name: payload.name, parameterList: payload.parameterList, paymentTemplateId: payload.paymentTemplateId))
@@ -176,7 +192,7 @@ extension Model {
                     self.action.send(ModelAction.PaymentTemplate.List.Requested())
                     
                 default:
-                    self.handleUnexpected(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
             case .failure(let error):
                 self.action.send(ModelAction.PaymentTemplate.Update.Failed(error: error))
@@ -187,7 +203,7 @@ extension Model {
     func handleTemplatesDeleteRequest(_ payload: ModelAction.PaymentTemplate.Delete.Requested) {
         
         guard let token = token else {
-            handleUnauthorizedRequestAttempt()
+            handledUnauthorizedCommandAttempt()
             return
         }
         let command = ServerCommands.PaymentTemplateController.DeletePaymentTemplates(token: token, payload: .init(paymentTemplateIdList: payload.paymentTemplateIdList))
@@ -203,7 +219,7 @@ extension Model {
                     self.action.send(ModelAction.PaymentTemplate.List.Requested())
                     
                 default:
-                    self.handleUnexpected(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
             case .failure(let error):
                 self.action.send(ModelAction.PaymentTemplate.Delete.Failed(error: error))

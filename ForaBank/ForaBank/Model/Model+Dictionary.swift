@@ -53,7 +53,7 @@ extension Model {
                 case .ok:
                     guard let data = response.data else {
                         
-                        handleDictionaryDownloadEmptyData(command: command)
+                        handleServerCommandEmptyData(command: command)
                         return
                     }
                     
@@ -63,15 +63,15 @@ extension Model {
                         
                     } catch {
                         
-                        handleDictionaryCachingError(error: error, command: command)
+                        handleServerCommandCachingError(error: error, command: command)
                     }
                     
                 default:
-                    self.handleUnexpected(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
                 
             case .failure(let error):
-                handleDictionaryDownloadError(error: error, command: command)
+                handleServerCommandError(error: error, command: command)
             }
         }
     }
@@ -88,7 +88,7 @@ extension Model {
                 case .ok:
                     guard let data = response.data else {
                         
-                        handleDictionaryDownloadEmptyData(command: command)
+                        handleServerCommandEmptyData(command: command)
                         return
                     }
                     
@@ -98,15 +98,15 @@ extension Model {
                         
                     } catch {
                         
-                        handleDictionaryCachingError(error: error, command: command)
+                        handleServerCommandCachingError(error: error, command: command)
                     }
                     
                 default:
-                    self.handleUnexpected(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
                 
             case .failure(let error):
-                handleDictionaryDownloadError(error: error, command: command)
+                handleServerCommandError(error: error, command: command)
             }
         }
     }
@@ -123,7 +123,7 @@ extension Model {
                 case .ok:
                     guard let data = response.data else {
                         
-                        handleDictionaryDownloadEmptyData(command: command)
+                        handleServerCommandEmptyData(command: command)
                         return
                     }
                     
@@ -133,15 +133,15 @@ extension Model {
                         
                     } catch {
                         
-                        handleDictionaryCachingError(error: error, command: command)
+                        handleServerCommandCachingError(error: error, command: command)
                     }
                     
                 default:
-                    self.handleUnexpected(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
                 
             case .failure(let error):
-                handleDictionaryDownloadError(error: error, command: command)
+                handleServerCommandError(error: error, command: command)
             }
         }
     }
@@ -158,7 +158,7 @@ extension Model {
                 case .ok:
                     guard let data = response.data else {
                         
-                        handleDictionaryDownloadEmptyData(command: command)
+                        handleServerCommandEmptyData(command: command)
                         return
                     }
                     
@@ -168,15 +168,15 @@ extension Model {
                         
                     } catch {
                         
-                        handleDictionaryCachingError(error: error, command: command)
+                        handleServerCommandCachingError(error: error, command: command)
                     }
                     
                 default:
-                    self.handleUnexpected(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
                 
             case .failure(let error):
-                handleDictionaryDownloadError(error: error, command: command)
+                handleServerCommandError(error: error, command: command)
             }
         }
     }
@@ -193,7 +193,7 @@ extension Model {
                 case .ok:
                     guard let data = response.data else {
                         
-                        handleDictionaryDownloadEmptyData(command: command)
+                        handleServerCommandEmptyData(command: command)
                         return
                     }
                     
@@ -203,15 +203,15 @@ extension Model {
                         
                     } catch {
                         
-                        handleDictionaryCachingError(error: error, command: command)
+                        handleServerCommandCachingError(error: error, command: command)
                     }
                     
                 default:
-                    self.handleUnexpected(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
                 
             case .failure(let error):
-                handleDictionaryDownloadError(error: error, command: command)
+                handleServerCommandError(error: error, command: command)
             }
         }
     }
@@ -228,7 +228,7 @@ extension Model {
                 case .ok:
                     guard let data = response.data else {
                         
-                        handleDictionaryDownloadEmptyData(command: command)
+                        handleServerCommandEmptyData(command: command)
                         return
                     }
                     
@@ -238,15 +238,15 @@ extension Model {
                         
                     } catch {
                         
-                        handleDictionaryCachingError(error: error, command: command)
+                        handleServerCommandCachingError(error: error, command: command)
                     }
                     
                 default:
-                    self.handleUnexpected(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
                 
             case .failure(let error):
-                handleDictionaryDownloadError(error: error, command: command)
+                handleServerCommandError(error: error, command: command)
             }
         }
     }
@@ -263,7 +263,7 @@ extension Model {
                 case .ok:
                     guard let data = response.data else {
                         
-                        handleDictionaryDownloadEmptyData(command: command)
+                        handleServerCommandEmptyData(command: command)
                         return
                     }
                     
@@ -273,15 +273,15 @@ extension Model {
                         
                     } catch {
                         
-                        handleDictionaryCachingError(error: error, command: command)
+                        handleServerCommandCachingError(error: error, command: command)
                     }
                     
                 default:
-                    self.handleUnexpected(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
                 
             case .failure(let error):
-                handleDictionaryDownloadError(error: error, command: command)
+                handleServerCommandError(error: error, command: command)
             }
         }
     }
@@ -298,7 +298,7 @@ extension Model {
                 case .ok:
                     guard let data = response.data else {
                         
-                        handleDictionaryDownloadEmptyData(command: command)
+                        handleServerCommandEmptyData(command: command)
                         return
                     }
                     
@@ -308,15 +308,15 @@ extension Model {
                         
                     } catch {
                         
-                        handleDictionaryCachingError(error: error, command: command)
+                        handleServerCommandCachingError(error: error, command: command)
                     }
                     
                 default:
-                    self.handleUnexpected(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
                 
             case .failure(let error):
-                handleDictionaryDownloadError(error: error, command: command)
+                handleServerCommandError(error: error, command: command)
                 
             }
         }
@@ -334,7 +334,7 @@ extension Model {
                 case .ok:
                     guard let data = response.data else {
                         
-                        handleDictionaryDownloadEmptyData(command: command)
+                        handleServerCommandEmptyData(command: command)
                         return
                     }
                     
@@ -344,15 +344,15 @@ extension Model {
                         
                     } catch {
                         
-                        handleDictionaryCachingError(error: error, command: command)
+                        handleServerCommandCachingError(error: error, command: command)
                     }
                     
                 default:
-                    self.handleUnexpected(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
                 
             case .failure(let error):
-                handleDictionaryDownloadError(error: error, command: command)
+                handleServerCommandError(error: error, command: command)
             }
         }
     }
@@ -378,15 +378,15 @@ extension Model {
                         
                     } catch {
                         
-                        handleDictionaryCachingError(error: error, command: command)
+                        handleServerCommandCachingError(error: error, command: command)
                     }
                     
                 default:
-                    self.handleUnexpected(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
                 
             case .failure(let error):
-                handleDictionaryDownloadError(error: error, command: command)
+                handleServerCommandError(error: error, command: command)
                 
             }
         }
@@ -412,15 +412,15 @@ extension Model {
                         
                     } catch {
                         
-                        handleDictionaryCachingError(error: error, command: command)
+                        handleServerCommandCachingError(error: error, command: command)
                     }
                     
                 default:
-                    self.handleUnexpected(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
                 
             case .failure(let error):
-                handleDictionaryDownloadError(error: error, command: command)
+                handleServerCommandError(error: error, command: command)
                 
             }
         }
@@ -446,33 +446,17 @@ extension Model {
                         
                     } catch {
                         
-                        handleDictionaryCachingError(error: error, command: command)
+                        handleServerCommandCachingError(error: error, command: command)
                     }
                     
                 default:
-                    self.handleUnexpected(serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
                 
             case .failure(let error):
-                handleDictionaryDownloadError(error: error, command: command)
+                handleServerCommandError(error: error, command: command)
                 
             }
         }
-    }
-    
-    func handleDictionaryDownloadError<Command: ServerCommand>(error: Error, command: Command) {
-        
-        print("DownloadError: \(error.localizedDescription), command: \(command)")
-        
-    }
-    
-    func handleDictionaryCachingError<Command: ServerCommand>(error: Error, command: Command) {
-        
-        print("CachingError: \(error.localizedDescription), command: \(command)")
-    }
-    
-    func handleDictionaryDownloadEmptyData<Command: ServerCommand>(command: Command){
-        
-        print("DownloadEmptyData command: \(command)")
     }
 }

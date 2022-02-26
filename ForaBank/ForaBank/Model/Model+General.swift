@@ -9,15 +9,30 @@ import Foundation
 
 extension Model {
     
-    func handleUnexpected(serverStatusCode: ServerStatusCode, errorMessage: String?) {
+    func handledUnauthorizedCommandAttempt(_ method: String = #function) {
         
-        //TODO: implementation required
-        print("Unexpected status code: \(serverStatusCode), errorMessage: \(String(describing: errorMessage))")
+        print("Unauthorized Request Attempt, method: \(method)")
     }
     
-    func handleUnauthorizedRequestAttempt(_ method: String = #function) {
+    func handleServerCommandStatus<Command: ServerCommand>(command: Command, serverStatusCode: ServerStatusCode, errorMessage: String?) {
         
-        //TODO: log
-        print("Unauthorized Request Attempt, method: \(method)")
+        //TODO: handle unexpected server status
+        print("Unexpected status code: \(serverStatusCode), errorMessage: \(String(describing: errorMessage))")
+    }
+
+    func handleServerCommandError<Command: ServerCommand>(error: Error, command: Command) {
+        
+        print("DownloadError: \(error.localizedDescription), command: \(command)")
+        
+    }
+    
+    func handleServerCommandCachingError<Command: ServerCommand>(error: Error, command: Command) {
+        
+        print("CachingError: \(error.localizedDescription), command: \(command)")
+    }
+    
+    func handleServerCommandEmptyData<Command: ServerCommand>(command: Command){
+        
+        print("DownloadEmptyData command: \(command)")
     }
 }
