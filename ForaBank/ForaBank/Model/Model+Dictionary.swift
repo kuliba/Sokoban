@@ -13,6 +13,8 @@ extension ModelAction {
     
     enum Dictionary {
         
+        static let cached: [Kind] = []
+        
         struct Request: Action {
             
             let type: Kind

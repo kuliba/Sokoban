@@ -50,7 +50,7 @@ class Model {
         
         loadCachedData()
         bind()
-        requestDictionariesFromServer()
+        cacheDictionaries()
     }
     
     //FIXME: remove after refactoring
@@ -174,9 +174,9 @@ class Model {
 
 private extension Model {
     
-    func requestDictionariesFromServer() {
+    func cacheDictionaries() {
         
-        for type in ModelAction.Dictionary.Kind.allCases {
+        for type in ModelAction.Dictionary.cached {
             
             action.send(ModelAction.Dictionary.Request(type: type, serial: serial(for: type)))
         }
