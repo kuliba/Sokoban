@@ -11,8 +11,6 @@ import Combine
 
 class AuthProductsViewModel: ObservableObject {
 
-    let action: PassthroughSubject<Action, Never> = .init()
-
     let navigationBar: NavigationBarViewModel
     @Published var productCards: [ProductCard]
 
@@ -22,11 +20,14 @@ class AuthProductsViewModel: ObservableObject {
         self.productCards = productCards
     }
     
-    //TODO: init with real products data
-    init(products: [String], dismissAction: @escaping () -> Void = {}) {
+    init(products: [CatalogProductData], dismissAction: @escaping () -> Void = {}) {
 
         self.navigationBar = NavigationBarViewModel(title: "Выберите продукт", action: dismissAction)
-        self.productCards = []
+    
+        self.productCards = products.enumerated().map({ product in
+            
+            ProductCard(with: product.element, style: .init(number: product.offset))
+        })
     }
 }
 
@@ -51,31 +52,64 @@ extension AuthProductsViewModel {
     
     struct ProductCard: Identifiable {
 
-        let id: Int
+        let id = UUID()
         let style: Style
-        let title: LocalizedStringKey
-        let subtitle: String
+        let title: String
+        let subtitle: [String]
         let image: Image
         let infoButton: InfoButton
         let orderButton: OrderButton
+        
+        internal init(style: Style, title: String, subtitle: [String], image: Image, infoButton: InfoButton, orderButton: OrderButton) {
+            
+            self.style = style
+            self.title = title
+            self.subtitle = subtitle
+            self.image = image
+            self.infoButton = infoButton
+            self.orderButton = orderButton
+        }
+        
+        init(with product: CatalogProductData, style: Style) {
+            
+            self.style = style
+            self.title = product.name
+            self.subtitle = product.deescription
+            //TODO: real implementation here
+            self.image = Image("icCardMir")
+            self.infoButton = InfoButton(url: product.infoURL)
+            self.orderButton = OrderButton(url: product.orderURL)
+        }
 
         struct InfoButton {
 
             let title: String = "Подробные условия"
             let icon: Image = .ic24Info
-            let action: () -> Void
+            let url: URL
         }
 
         struct OrderButton {
 
             let title: String = "Заказать"
-            let action: () -> Void
+            let url: URL
         }
         
         enum Style {
 
             case light
             case dark
+            
+            init(number: Int) {
+                
+                if number % 2 == 0 {
+                    
+                    self = .light
+                    
+                } else {
+                    
+                    self = .dark
+                }
+            }
             
             var backgroundColor: Color {
 
@@ -98,9 +132,4 @@ extension AuthProductsViewModel {
             }
         }
     }
-}
-
-enum AuthProductsViewModelAction {
-
-    struct Dismiss: Action {}
 }

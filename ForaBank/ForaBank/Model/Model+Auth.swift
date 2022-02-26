@@ -13,8 +13,6 @@ extension Model {
     var unlockAttemptsAvailable: Int { 3 }
     var availableBiometricSensorType: BiometricSensorType? { .face }
     var isBiometricSensorEnabled: Bool { true }
-    //TODO: real products data type
-    var promoProducts: [String] { [] }
 }
 
 //MARK: - Handlers
@@ -114,8 +112,6 @@ extension ModelAction {
     
     enum Auth {
         
-        struct ProductsReady: Action {}
- 
         enum Register {
             
             struct Request: Action {

@@ -50,9 +50,6 @@ class AuthLoginViewModel: ObservableObject {
         self.dismissAction = dismissAction
         
         bind()
-        
-        //FIXME: REMOVE AFTER TESTS
-        model.action.send(ModelAction.Auth.ProductsReady())
     }
     
     private func bind() {
@@ -76,9 +73,6 @@ class AuthLoginViewModel: ObservableObject {
                         //TODO: handle error
                         break
                     }
-                    
-                case _ as ModelAction.Auth.ProductsReady:
-                    productsButton = ProductsButtonViewModel(action: { self.action.send(AuthLoginViewModelAction.Show.Products()) })
     
                 default:
                     break
@@ -96,9 +90,7 @@ class AuthLoginViewModel: ObservableObject {
                     //TODO: start spinner here and block user taps
                     
                 case _ as AuthLoginViewModelAction.Show.Products:
-                    //TODO: load products from model:
-                    //productsViewModel = AuthProductsViewModel(products: model.promoProducts)
-                    productsViewModel = AuthProductsViewModel(productCards: AuthProductsViewModel.sampleProducts, dismissAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Dismiss.Products())})
+                    productsViewModel = AuthProductsViewModel(products: model.catalogProducts.value, dismissAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Dismiss.Products())})
                     isProductsViewPresented = true
                     
                 case _ as AuthLoginViewModelAction.Show.Scaner:
@@ -143,6 +135,20 @@ class AuthLoginViewModel: ObservableObject {
                 
             }.store(in: &bindings)
         
+        model.catalogProducts
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] catalogProducts in
+                
+                if catalogProducts.count > 0 {
+                    
+                    productsButton = ProductsButtonViewModel(action: { self.action.send(AuthLoginViewModelAction.Show.Products()) })
+                    
+                } else {
+                    
+                    productsButton = nil
+                }
+                
+            }.store(in: &bindings)
     }
 }
 

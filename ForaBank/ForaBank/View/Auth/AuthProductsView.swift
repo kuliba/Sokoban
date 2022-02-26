@@ -60,11 +60,18 @@ extension AuthProductsView {
                         .foregroundColor(viewModel.style.textColor)
                         .padding(.top, 32)
                     
-                    Text(viewModel.subtitle)
-                        .font(.textBodyMR14200())
-                        .foregroundColor(viewModel.style.textColor)
-                        .padding(.top, 24)
-                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        
+                        ForEach(viewModel.subtitle, id: \.self) { line in
+                           
+                            Text(line)
+                                .font(.textBodyMR14200())
+                                .foregroundColor(viewModel.style.textColor)
+                                
+                        }
+                        
+                    }.padding(.top, 24)
+ 
                     viewModel.image
                         .resizable()
                         .aspectRatio(contentMode: .fit)
@@ -98,7 +105,7 @@ extension AuthProductsView {
             
             if #available(iOS 14.0, *) {
                 
-                Link(destination: URL(string: "https://www.forabank.ru/private/cards/")!) {
+                Link(destination: viewModel.url) {
                     
                     HStack {
                         
@@ -115,9 +122,7 @@ extension AuthProductsView {
                 
                 Button{
                     
-                    if let url = URL(string: "https://www.forabank.ru/private/cards/") {
-                        UIApplication.shared.open(url)
-                    }
+                    UIApplication.shared.open(viewModel.url)
                     
                 } label: {
                     
@@ -143,7 +148,7 @@ extension AuthProductsView {
             
             if #available(iOS 14.0, *) {
                 
-                Link(destination: URL(string: "https://www.forabank.ru/private/cards/")!) {
+                Link(destination: viewModel.url) {
                     
                     Text(viewModel.title)
                         .foregroundColor(.textWhite)
@@ -157,9 +162,7 @@ extension AuthProductsView {
                 
                 Button{
                     
-                    if let url = URL(string: "https://www.forabank.ru/private/cards/") {
-                        UIApplication.shared.open(url)
-                    }
+                    UIApplication.shared.open(viewModel.url)
                     
                 } label: {
                     
@@ -169,7 +172,6 @@ extension AuthProductsView {
                         .frame(width: 166)
                         .background(Color.buttonPrimary)
                         .cornerRadius(8)
-                    
                 }
             }
         }
@@ -184,6 +186,5 @@ struct AuthProductsView_Previews: PreviewProvider {
             
             AuthProductsView(viewModel: .mockData)
         }
-        
     }
 }
