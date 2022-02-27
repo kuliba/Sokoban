@@ -60,6 +60,11 @@ extension Model {
                         return
                     }
                     
+                    // check if we have updated data
+                    guard data.operatorGroupList.count > 0 else {
+                        return
+                    }
+                    
                     do {
                         
                         try self.localAgent.store(data.operatorGroupList, serial: data.serial)
@@ -92,6 +97,11 @@ extension Model {
                     guard let data = response.data else {
                         
                         handleServerCommandEmptyData(command: command)
+                        return
+                    }
+                    
+                    // check if we have updated data
+                    guard data.banksList.count > 0 else {
                         return
                     }
                     
@@ -130,6 +140,11 @@ extension Model {
                         return
                     }
                     
+                    // check if we have updated data
+                    guard data.countriesList.count > 0 else {
+                        return
+                    }
+                    
                     do {
                         
                         try self.localAgent.store(data.countriesList, serial: data.serial)
@@ -162,6 +177,11 @@ extension Model {
                     guard let data = response.data else {
                         
                         handleServerCommandEmptyData(command: command)
+                        return
+                    }
+                    
+                    // check if we have updated data
+                    guard data.currencyList.count > 0 else {
                         return
                     }
                     
@@ -200,6 +220,11 @@ extension Model {
                         return
                     }
                     
+                    // check if we have updated data
+                    guard data.fmsList.count > 0 else {
+                        return
+                    }
+                    
                     do {
                         
                         try self.localAgent.store(data.fmsList, serial: data.serial)
@@ -232,6 +257,11 @@ extension Model {
                     guard let data = response.data else {
                         
                         handleServerCommandEmptyData(command: command)
+                        return
+                    }
+                    
+                    // check if we have updated data
+                    guard data.fsspDebtList.count > 0 else {
                         return
                     }
                     
@@ -270,6 +300,11 @@ extension Model {
                         return
                     }
                     
+                    // check if we have updated data
+                    guard data.fsspDocumentList.count > 0 else {
+                        return
+                    }
+                    
                     do {
                         
                         try self.localAgent.store(data.fsspDocumentList, serial: data.serial)
@@ -302,6 +337,11 @@ extension Model {
                     guard let data = response.data else {
                         
                         handleServerCommandEmptyData(command: command)
+                        return
+                    }
+                    
+                    // check if we have updated data
+                    guard data.ftsList.count > 0 else {
                         return
                     }
                     
@@ -341,6 +381,11 @@ extension Model {
                         return
                     }
                     
+                    // check if we have updated data
+                    guard data.bankFullInfoList.count > 0 else {
+                        return
+                    }
+                    
                     do {
                         
                         try self.localAgent.store(data.bankFullInfoList, serial: data.serial)
@@ -372,6 +417,11 @@ extension Model {
                 case .ok:
                     guard let data = response.data else {
                         
+                        return
+                    }
+                    
+                    // check if we have updated data
+                    guard data.mobileList.count > 0 else {
                         return
                     }
                     
@@ -409,6 +459,11 @@ extension Model {
                         return
                     }
                     
+                    // check if we have updated data
+                    guard data.mosParkingList.count > 0 else {
+                        return
+                    }
+                    
                     do {
                         
                         try self.localAgent.store(data.mosParkingList, serial: data.serial)
@@ -440,6 +495,11 @@ extension Model {
                 switch response.statusCode {
                 case .ok:
                     guard let data = response.data else {
+                        return
+                    }
+                    
+                    // check if we have updated data
+                    guard data.paymentSystemList.count > 0 else {
                         return
                     }
                     
@@ -477,6 +537,7 @@ extension Model {
                         return
                     }
                     
+                    // check if we have updated data
                     guard data.productCatalogList.count > 0 else {
                         return
                     }
