@@ -10,7 +10,7 @@ import SwiftUI
 
 extension MainCardComponentView {
     
-    class ViewModel: Identifiable, ObservableObject {
+    class ViewModel: Identifiable, Hashable, ObservableObject {
         
         let id = UUID()
         let logo: Image
@@ -21,13 +21,13 @@ extension MainCardComponentView {
         let cardNumber: String
         let backgroundColor: Color
         let paymentSystem: Image?
-        let backgroundImage: Image?
+        let backgroundImage: Image
         let productType: ProductType
         let style: Style
         
         
         
-        internal init(logo: Image, name: String, balance: String, fontColor: Color, cardNumber: String, backgroundColor: Color, paymentSystem: Image?, status: Status, backgroundImage: Image?, productType: ProductType, style: Style) {
+        internal init(logo: Image, name: String, balance: String, fontColor: Color, cardNumber: String, backgroundColor: Color, paymentSystem: Image?, status: Status, backgroundImage: Image, productType: ProductType, style: Style) {
             
             self.logo = logo
             self.name = name
@@ -43,13 +43,23 @@ extension MainCardComponentView {
             
         }
         
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(ObjectIdentifier(self))
+        }
+
+        static func ==(lhs: MainCardComponentView.ViewModel, rhs: MainCardComponentView.ViewModel) -> Bool {
+            return lhs === rhs
+        }
+        
         enum Status {
+            
             case active
             case notActivated
             case blocked
             case plug
             
             var image: Image? {
+                
                 switch self {
                     case .active: return nil
                 case .notActivated: return Image.ic24ArrowRight
@@ -60,6 +70,7 @@ extension MainCardComponentView {
         }
         
         enum Style {
+            
             case main
             case profile
         }
@@ -76,11 +87,6 @@ struct MainCardComponentView: View {
         } label: {
             
             ZStack {
-                if let backgtoundImage = viewModel.backgroundImage {
-                   
-                    backgtoundImage
-                        .frame(width: .infinity, height: .infinity, alignment: .center)
-                }
                 
                 VStack(alignment: .leading) {
                     
@@ -161,6 +167,7 @@ struct MainCardComponentView: View {
                             if viewModel.status == .notActivated {
                                 
                                 SliderButtonComponent(viewModel: SliderButtonComponent.ViewModel(alertPresented: false, sliderState: .normal, foregroundColor: viewModel.backgroundColor))
+                                
                             } else {
                              
                                 Button {
@@ -226,20 +233,20 @@ struct MainCardView_Previews: PreviewProvider {
 
 extension MainCardComponentView.ViewModel {
 
-    static let notActivate = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardClassic, paymentSystem:  Image(uiImage: UIImage(named: "card_visa_logo")!), status: .notActivated, backgroundImage: Image(""), productType: .card, style: .main)
+    static let notActivate = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardClassic, paymentSystem:  Image(uiImage: UIImage(named: "card_visa_logo")!), status: .notActivated, backgroundImage: Image("card_sample"), productType: .card, style: .main)
     
-    static let blocked = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .blocked, backgroundImage: Image(""), productType: .card, style: .main)
+    static let blocked = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .blocked, backgroundImage: Image("card_sample"), productType: .card, style: .main)
     
-    static let classic = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Rio", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardRIO, paymentSystem: Image(uiImage: UIImage(named: "card_visa_logo")!), status: .active, backgroundImage: Image(""), productType: .card, style: .main)
+    static let classic = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Rio", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardRIO, paymentSystem: Image(uiImage: UIImage(named: "card_visa_logo")!), status: .active, backgroundImage: Image("card_sample"), productType: .card, style: .main)
     
-    static let account = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Текущий зарплатный счет", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardAccount, paymentSystem: .init(systemName: "card_mastercard_logo"), status: .plug ,backgroundImage: Image(""), productType: .card, style: .main)
+    static let account = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Текущий зарплатный счет", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardAccount, paymentSystem: .init(systemName: "card_mastercard_logo"), status: .plug ,backgroundImage: Image("card_sample"), productType: .card, style: .main)
     
-    static let notActivateProfile = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardClassic, paymentSystem:  Image(uiImage: UIImage(named: "card_visa_logo")!), status: .notActivated, backgroundImage: Image(""), productType: .card, style: .profile)
+    static let notActivateProfile = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardClassic, paymentSystem:  Image(uiImage: UIImage(named: "card_visa_logo")!), status: .notActivated, backgroundImage: Image("card_sample"), productType: .card, style: .profile)
     
-    static let blockedProfile = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .blocked, backgroundImage: Image(""), productType: .card, style: .profile)
+    static let blockedProfile = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .blocked, backgroundImage: Image("card_sample"), productType: .card, style: .profile)
     
-    static let classicProfile = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Rio", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardRIO, paymentSystem: Image(uiImage: UIImage(named: "card_visa_logo")!), status: .active, backgroundImage: Image(""), productType: .card, style: .profile)
+    static let classicProfile = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Rio", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardRIO, paymentSystem: Image(uiImage: UIImage(named: "card_visa_logo")!), status: .active, backgroundImage: Image("card_sample"), productType: .card, style: .profile)
     
-    static let accountProfile = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Текущий зарплатный счет", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardAccount, paymentSystem: .init(systemName: "card_mastercard_logo"), status: .notActivated ,backgroundImage: Image(""), productType: .card, style: .profile)
+    static let accountProfile = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Текущий зарплатный счет", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardAccount, paymentSystem: .init(systemName: "card_mastercard_logo"), status: .plug ,backgroundImage: Image("card_sample"), productType: .card, style: .profile)
 }
 

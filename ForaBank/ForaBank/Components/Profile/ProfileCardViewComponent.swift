@@ -11,17 +11,13 @@ import SwiftUI
 
 extension ProfileCardViewComponent {
     
-    class ViewModel: Identifiable, ObservableObject {
+    class ViewModel: ObservableObject {
         
-        @Published var product: MainCardComponentView.ViewModel
         @Published var products: [MainCardComponentView.ViewModel]
-        @Published var selected: Option.ID
 
-        init( product: MainCardComponentView.ViewModel, products: [MainCardComponentView.ViewModel], selected: Option.ID) {
+        init( products: [MainCardComponentView.ViewModel]) {
             
-            self.product = product
             self.products = products
-            self.selected = selected
         }
     }
 }
@@ -30,7 +26,10 @@ extension ProfileCardViewComponent {
         
     struct MiniCardViewModel {
         
+        let id = UUID()
         let background: Image
+        let product: MainCardComponentView.ViewModel
+        let action: (MainCardComponentView.ViewModel) -> Void
     }
 }
 
@@ -38,6 +37,7 @@ extension ProfileCardViewComponent {
 struct ProfileCardViewComponent: View {
     
     @ObservedObject var viewModel: ProfileCardViewComponent.ViewModel
+    @State var currentItem: MainCardComponentView.ViewModel
 
     public var tabBar: some View {
         
@@ -46,8 +46,12 @@ struct ProfileCardViewComponent: View {
             Spacer()
             
             HStack(spacing: 8) {
+                
                 ForEach(viewModel.products) { product in
-                    MiniCardView(viewModel: MiniCardViewModel( background: Image("card_sample", bundle: nil)), isSelected: product.id == viewModel.product.id)
+                        
+                    MiniCardView(viewModel: MiniCardViewModel( background: product.backgroundImage, product: product, action: { productItem in
+                        currentItem = productItem
+                    }), isSelected: currentItem == product)
 
                 }
             }
@@ -62,7 +66,7 @@ struct ProfileCardViewComponent: View {
             
             ZStack(alignment: .top) {
                 
-                viewModel.product.backgroundColor
+                currentItem.backgroundColor
                     .frame(height: 170, alignment: .top)
                     .edgesIgnoringSafeArea(.top)
             
@@ -72,7 +76,7 @@ struct ProfileCardViewComponent: View {
                         tabBar
                             .padding(.top, 20)
                         
-                        TabView {
+                        TabView(selection: $currentItem) {
                             
                             ForEach(viewModel.products) { product in
                                 
@@ -80,11 +84,13 @@ struct ProfileCardViewComponent: View {
                                         
                                         MainCardComponentView(viewModel: product)
                                             .frame(width: 228, height: 160)
+                                            .tag(product)
 
                                 } else {
                                     
                                         MainCardComponentView(viewModel: product)
                                         .frame(width: 268, height: 160, alignment: .top)
+                                        .tag(product)
 
                                 }
                             }
@@ -114,6 +120,7 @@ extension ProfileCardViewComponent {
             
                 
                 Button {
+                    
                     
                 } label: {
                     
@@ -145,12 +152,6 @@ extension ProfileCardViewComponent {
 
 struct ProfileCardViewComponent_Previews: PreviewProvider {
     static var previews: some View {
-//        ProfileCardViewComponent(viewModel: .init(product: .init(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .blocked, backgroundImage: Image("card_sample"), productType: .account, style: .profile), products:  [.init(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .blocked, backgroundImage: Image("card_sample"), productType: .account, style: .profile), .init(logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardClassic, paymentSystem:  Image(uiImage: UIImage(named: "card_visa_logo")!), status: .active, backgroundImage: Image("card_sample"), productType: .deposit, style: .profile), .notActivateProfile]))
-        ProfileCardViewComponent(viewModel: .init(product: .init(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .blocked, backgroundImage: Image("card_sample"), productType: .account, style: .profile), products:  [.init(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .blocked, backgroundImage: Image("card_sample"), productType: .account, style: .profile), .init(logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardClassic, paymentSystem:  Image(uiImage: UIImage(named: "card_visa_logo")!), status: .active, backgroundImage: Image("card_sample"), productType: .deposit, style: .profile), .notActivateProfile], selected: "1"))
+        ProfileCardViewComponent(viewModel: .init(products: [.blockedProfile ,.classicProfile, .accountProfile, .notActivateProfile]), currentItem: MainCardComponentView.ViewModel.classicProfile)
     }
-}
-
-extension ProfileCardViewComponent.ViewModel {
-
-    static let notActivateProfile = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardClassic, paymentSystem:  Image(uiImage: UIImage(named: "card_visa_logo")!), status: .notActivated, backgroundImage: Image("card_sample"), productType: .card, style: .profile)
 }

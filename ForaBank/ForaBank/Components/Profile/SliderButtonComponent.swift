@@ -17,12 +17,12 @@ extension SliderButtonComponent {
         @State var sliderState: SliderState
         let foregroundColor: Color
         
-        init(position: CGFloat = 0.0, alertPresented: Bool, sliderState: SliderState, foregraundColor: Color) {
+        init(position: CGFloat = 0.0, alertPresented: Bool, sliderState: SliderState, foregroundColor: Color) {
             
             self.position = position
             self.alertPresented = alertPresented
             self.sliderState = sliderState
-            self.foregroundColor = foregraundColor
+            self.foregroundColor = foregroundColor
         }
 
         enum SliderState {
@@ -69,7 +69,7 @@ struct SliderButtonComponent: View {
 
 struct SliderButton_Previews: PreviewProvider {
     static var previews: some View {
-        SliderButtonComponent(viewModel: SliderButtonComponent.ViewModel(alertPresented: false, sliderState: .normal, foregraundColor: Color.black))
+        SliderButtonComponent(viewModel: SliderButtonComponent.ViewModel(alertPresented: false, sliderState: .normal, foregroundColor: Color.black))
     }
 }
 
