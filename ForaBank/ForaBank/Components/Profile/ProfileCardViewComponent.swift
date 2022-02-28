@@ -26,7 +26,6 @@ extension ProfileCardViewComponent {
         
     struct MiniCardViewModel {
         
-        let id = UUID()
         let background: Image
         let product: MainCardComponentView.ViewModel
         let action: (MainCardComponentView.ViewModel) -> Void
@@ -121,6 +120,7 @@ extension ProfileCardViewComponent {
                 
                 Button {
                     
+                    viewModel.action(viewModel.product)
                     
                 } label: {
                     
