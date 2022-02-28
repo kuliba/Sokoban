@@ -27,27 +27,27 @@ class AuthLoginViewModel: ObservableObject {
     @Published var cardScanner: AuthCardScannerViewModel?
     @Published var alert: Alert.ViewModel?
     
-    private let dismissAction: () -> Void
+    private let parentActions: ParentActions
     private let model: Model
     private var bindings = Set<AnyCancellable>()
 
-    init(header: HeaderViewModel = HeaderViewModel(), productsButton: ProductsButtonViewModel? = nil,  isConfirmViewPresented: Bool = false, isProductsViewPresented: Bool = false, dismissAction: @escaping () -> Void, model: Model = .emptyMock) {
+    init(header: HeaderViewModel = HeaderViewModel(), productsButton: ProductsButtonViewModel? = nil,  isConfirmViewPresented: Bool = false, isProductsViewPresented: Bool = false, parentActions: ParentActions, model: Model = .emptyMock) {
 
         self.header = header
         self.productsButton = productsButton
         self.isConfirmViewPresented = isConfirmViewPresented
         self.isProductsViewPresented = isProductsViewPresented
-        self.dismissAction = dismissAction
+        self.parentActions = parentActions
         self.model = model
     }
     
-    init(_ model: Model, dismissAction: @escaping () -> Void) {
+    init(_ model: Model, parentActions: ParentActions) {
         
         self.model = model
         self.header = HeaderViewModel()
         self.isConfirmViewPresented = false
         self.isProductsViewPresented = false
-        self.dismissAction = dismissAction
+        self.parentActions = parentActions
         
         bind()
     }
@@ -60,9 +60,10 @@ class AuthLoginViewModel: ObservableObject {
                 
                 switch action {
                 case let payload as ModelAction.Auth.Register.Response:
+                    self.action.send(AuthLoginViewModelAction.Spinner.Hide())
                     switch payload {
                     case .success(codeLength: let codeLength, phone: let phone, resendCodeDelay: let resendCodeDelay):
-                        confirmViewModel = AuthConfirmViewModel(model, confirmCodeLength: codeLength, phoneNumber: phone, resendCodeDelay: resendCodeDelay, backAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Dismiss.Confirm())}, dismissAction: dismissAction)
+                        confirmViewModel = AuthConfirmViewModel(model, confirmCodeLength: codeLength, phoneNumber: phone, resendCodeDelay: resendCodeDelay, backAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Dismiss.Confirm())}, dismissAction: parentActions.dismiss)
                         isConfirmViewPresented = true
                         
                     case .fail(message: let message):
@@ -80,9 +81,10 @@ class AuthLoginViewModel: ObservableObject {
             .sink { [unowned self] action in
                 
                 switch action {
-                case let payload as AuthLoginViewModelAction.Auth:
+                case let payload as AuthLoginViewModelAction.Register:
                     model.action.send(ModelAction.Auth.Register.Request(number: payload.cardNumber))
-                    //TODO: start spinner here and block user taps
+                    card.textField.dismissKeyboard()
+                    self.action.send(AuthLoginViewModelAction.Spinner.Show())
                     
                 case _ as AuthLoginViewModelAction.Show.Products:
                     productsViewModel = AuthProductsViewModel(model, products: model.catalogProducts.value, dismissAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Dismiss.Products())})
@@ -110,6 +112,12 @@ class AuthLoginViewModel: ObservableObject {
                     productsViewModel = nil
                     isProductsViewPresented = false
                     
+                case _ as AuthLoginViewModelAction.Spinner.Show:
+                    parentActions.spinner.show()
+                    
+                case _ as AuthLoginViewModelAction.Spinner.Hide:
+                    parentActions.spinner.hide()
+                    
                 default:
                     break
                 }
@@ -122,7 +130,7 @@ class AuthLoginViewModel: ObservableObject {
                 
                 switch state {
                 case .ready(let cardNumber):
-                    card.nextButton = CardViewModel.NextButtonViewModel(action: {[weak self] in self?.action.send(AuthLoginViewModelAction.Auth.init(cardNumber: cardNumber))})
+                    card.nextButton = CardViewModel.NextButtonViewModel(action: {[weak self] in self?.action.send(AuthLoginViewModelAction.Register.init(cardNumber: cardNumber))})
                     
                 case .editing:
                     card.nextButton = nil
@@ -233,13 +241,25 @@ extension AuthLoginViewModel {
         let arrowRight: Image = .ic24ArrowRight
         let action: () -> Void
     }
+    
+    struct ParentActions {
+        
+        let dismiss: () -> Void
+        let spinner: Spinner
+        
+        struct Spinner {
+            
+            let show: () -> Void
+            let hide: () -> Void
+        }
+    }
 }
 
 //MARK: - Actions
 
 enum AuthLoginViewModelAction {
 
-    struct Auth: Action {
+    struct Register: Action {
 
         let cardNumber: String
     }
@@ -256,6 +276,13 @@ enum AuthLoginViewModelAction {
         struct Confirm: Action {}
         
         struct Products: Action { }
+    }
+    
+    enum Spinner {
+    
+        struct Show: Action {}
+        
+        struct Hide: Action {}
     }
 }
 

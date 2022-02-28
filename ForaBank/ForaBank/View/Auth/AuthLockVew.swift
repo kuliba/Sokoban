@@ -33,6 +33,6 @@ struct AuthLockVew_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        AuthLockVew(viewModel: .init(state: .pincode(.sample), dismissAction: {}))
+        AuthLockVew(viewModel: .init(state: .pincode(.sample), parentActions: .init(dismiss: {}, spinner: .init(show: {}, hide: {}))))
     }
 }

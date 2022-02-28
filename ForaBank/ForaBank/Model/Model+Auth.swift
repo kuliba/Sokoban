@@ -177,10 +177,17 @@ internal extension Model {
         //TODO: real implementation required
         if payload.number == "1111111111111111" {
            
-            action.send(ModelAction.Auth.Register.Response.success(codeLength: 6, phone: "+79255557799", resendCodeDelay: 5))
+            DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(3)) {
+                
+                self.action.send(ModelAction.Auth.Register.Response.success(codeLength: 6, phone: "+79255557799", resendCodeDelay: 5))
+            }
+            
         } else {
             
-            action.send(ModelAction.Auth.Register.Response.fail(message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения."))
+            DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(3)) {
+                
+                self.action.send(ModelAction.Auth.Register.Response.fail(message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения."))
+            }
         }
     }
     

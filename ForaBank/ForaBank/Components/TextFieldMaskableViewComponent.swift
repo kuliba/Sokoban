@@ -18,6 +18,7 @@ extension TextFieldMaskableView {
         let regExp: String
         @Published var text: String?
         @Published var isEnabled: Bool
+        var dismissKeyboard: () -> Void
         
         internal init(masks: [StringValueMask], regExp: String, text: String? = nil, isEnabled: Bool = true) {
             
@@ -25,6 +26,7 @@ extension TextFieldMaskableView {
             self.regExp = regExp
             self.text = text
             self.isEnabled = isEnabled
+            self.dismissKeyboard = {}
         }
     }
 }
@@ -41,10 +43,10 @@ struct TextFieldMaskableView: UIViewRepresentable {
     var textColor: Color = .white
     var tintColor: Color = .white
     var keyboardType: UIKeyboardType = .numberPad
+    
+    private let textField = UITextField()
 
     func makeUIView(context: Context) -> UITextField {
-        
-        let textField = UITextField()
         
         textField.delegate = context.coordinator
         textField.font = font
@@ -52,6 +54,8 @@ struct TextFieldMaskableView: UIViewRepresentable {
         textField.textColor = textColor.uiColor()
         textField.tintColor = tintColor.uiColor()
         textField.keyboardType = keyboardType
+        
+        viewModel.dismissKeyboard = { textField.resignFirstResponder() }
  
         return textField
     }

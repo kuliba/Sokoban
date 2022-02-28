@@ -12,6 +12,7 @@ class RootViewModel: ObservableObject {
     
     @Published var login: AuthLoginViewModel?
     @Published var lock: AuthLockViewModel?
+    @Published var spinner: SpinnerView.ViewModel?
     
     private let model: Model
     
@@ -22,21 +23,38 @@ class RootViewModel: ObservableObject {
     
     func showLogin() {
         
-        login = AuthLoginViewModel(model, dismissAction: {[weak self] in
+        login = AuthLoginViewModel(model, parentActions: .init(dismiss: {[weak self] in
             withAnimation {
                 self?.login = nil
-            }})
+            }
+        }, spinner: .init(show: {[weak self] in
+            withAnimation {
+                self?.spinner = SpinnerView.ViewModel()
+            }
+        }, hide: {[weak self] in
+            withAnimation {
+                self?.spinner = nil
+            }
+        })))
     }
     
     func showLock() {
         
         withAnimation {
             
-            lock = AuthLockViewModel(model, dismissAction: {[weak self] in
+            lock = AuthLockViewModel(model, parentActions: .init(dismiss: {[weak self] in
                 withAnimation {
                     self?.lock = nil
                 }
-            })
+            }, spinner: .init(show: {[weak self] in
+                withAnimation {
+                    self?.spinner = SpinnerView.ViewModel()
+                }
+            }, hide: {[weak self] in
+                withAnimation {
+                    self?.spinner = nil
+                }
+            })))
         }
     }
 }

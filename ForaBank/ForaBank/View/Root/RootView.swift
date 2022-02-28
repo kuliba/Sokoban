@@ -46,6 +46,11 @@ struct RootView: View {
                 
                 AuthLockVew(viewModel: lockViewModel)
             }
+            
+            if let spinnerViewModel = viewModel.spinner {
+                
+                SpinnerView(viewModel: spinnerViewModel)
+            }
         }
     }
 }

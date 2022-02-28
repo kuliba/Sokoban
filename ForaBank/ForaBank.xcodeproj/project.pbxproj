@@ -560,6 +560,7 @@
 		7772979D27C7B6D10099EF91 /* AuthCardScannerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772979C27C7B6D10099EF91 /* AuthCardScannerViewModel.swift */; };
 		7772979F27C8EADF0099EF91 /* CatalogProductData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772979E27C8EADF0099EF91 /* CatalogProductData.swift */; };
 		777297A327CA3AB70099EF91 /* Image+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777297A227CA3AB70099EF91 /* Image+Extensions.swift */; };
+		777297A527CD389E0099EF91 /* SpinnerViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777297A427CD389E0099EF91 /* SpinnerViewComponent.swift */; };
 		77925575279AF54F00A85723 /* ECKeysProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77925574279AF54F00A85723 /* ECKeysProvider.swift */; };
 		7792557E279B1A5400A85723 /* JSONDecoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */; };
 		77925580279B1BCB00A85723 /* JSONEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */; };
@@ -1478,6 +1479,7 @@
 		7772979C27C7B6D10099EF91 /* AuthCardScannerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthCardScannerViewModel.swift; sourceTree = "<group>"; };
 		7772979E27C8EADF0099EF91 /* CatalogProductData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogProductData.swift; sourceTree = "<group>"; };
 		777297A227CA3AB70099EF91 /* Image+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Image+Extensions.swift"; sourceTree = "<group>"; };
+		777297A427CD389E0099EF91 /* SpinnerViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerViewComponent.swift; sourceTree = "<group>"; };
 		77925574279AF54F00A85723 /* ECKeysProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKeysProvider.swift; sourceTree = "<group>"; };
 		7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONDecoder+Extensions.swift"; sourceTree = "<group>"; };
 		7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONEncoder+Extensions.swift"; sourceTree = "<group>"; };
@@ -3310,6 +3312,7 @@
 				77674A3F27A02D86008101B5 /* CircleProgressViewComponent.swift */,
 				68CB3B0D27BCFE83000B3EBF /* TextFieldMaskableViewComponent.swift */,
 				7772978D27C4ABCE0099EF91 /* AlertViewComponent.swift */,
+				777297A427CD389E0099EF91 /* SpinnerViewComponent.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -5856,6 +5859,7 @@
 				0BB24AAD26F0053A00DDA4F6 /* DownloadQueue.swift in Sources */,
 				0BE270B026B76B9700FA958C /* ExtensionCustomPopUpSetup.swift in Sources */,
 				0BEC8939267231D500D8BD22 /* InstallPushDeviceDecodebleModel.swift in Sources */,
+				777297A527CD389E0099EF91 /* SpinnerViewComponent.swift in Sources */,
 				EDB1655C2667A2C8007E6030 /* LoginCardEntryViewController UI.swift in Sources */,
 				0B797C9426E6AD0700589DBF /* BanksListSaved.swift in Sources */,
 				ED0B48AF2681CC6D0037EA06 /* CodeVerificationViewModel.swift in Sources */,
