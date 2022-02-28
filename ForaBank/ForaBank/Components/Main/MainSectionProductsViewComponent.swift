@@ -12,19 +12,21 @@ import SwiftUI
 
 extension MainSectionProductsView {
     
-    class ViewModel: ObservableObject {
+    class ViewModel: MainSectionCollapsableViewModel {
         
         let title: String
         @Published var productsTypeSelector: OptionSelectorViewModel?
         @Published var products: [MainCardComponentView.ViewModel]
         
-        init(title: String, productsTypeSelector: OptionSelectorViewModel?, products: [MainCardComponentView.ViewModel]) {
+        init(title: String, productsTypeSelector: OptionSelectorViewModel?, products: [MainCardComponentView.ViewModel], isCollapsed: Bool) {
             
             self.title = title
             self.products = products
             if let productsTypeSelector = productsTypeSelector {
+                
                 self.productsTypeSelector = productsTypeSelector
             }
+            super.init(isCollapsed: isCollapsed)
         }
     }
 }
@@ -134,6 +136,6 @@ extension MainSectionProductsView.ViewModel {
         .init(logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardClassic, paymentSystem:  Image(uiImage: UIImage(named: "card_visa_logo")!), status: .notActivated, backgroundImage: Image(""), productType: .card, style: .main),
             .init(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .blocked, backgroundImage: Image(""), productType: .card, style: .main),
         .init(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .active, backgroundImage: Image(""), productType: .card, style: .main)
-    ])
+    ], isCollapsed: false)
     
 }

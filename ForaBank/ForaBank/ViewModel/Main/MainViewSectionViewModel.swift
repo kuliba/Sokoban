@@ -9,7 +9,7 @@ import Foundation
 
 class MainSectionViewModel {}
 
-class MainSectionCollapsableViewModel: MainSectionViewModel {
+class MainSectionCollapsableViewModel: MainSectionViewModel, ObservableObject {
     
     @Published var isCollapsed: Bool
     
