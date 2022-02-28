@@ -39,14 +39,13 @@ extension ModelAction {
             
             struct Request: Action {
                 
-                let cardNumber: String
+                let number: String
             }
             
             enum Response: Action {
                 
-                case correct(codeLength: Int, phone: String, resendCodeDelay: TimeInterval)
-                case incorrect(message: String)
-                case error(Error)
+                case success(codeLength: Int, phone: String, resendCodeDelay: TimeInterval)
+                case fail(message: String)
             }
         }
         
@@ -176,12 +175,12 @@ internal extension Model {
     func handleAuthRegisterRequest(payload: ModelAction.Auth.Register.Request) {
         
         //TODO: real implementation required
-        if payload.cardNumber == "1111111111111111" {
+        if payload.number == "1111111111111111" {
            
-            action.send(ModelAction.Auth.Register.Response.correct(codeLength: 6, phone: "+79255557799", resendCodeDelay: 5))
+            action.send(ModelAction.Auth.Register.Response.success(codeLength: 6, phone: "+79255557799", resendCodeDelay: 5))
         } else {
             
-            action.send(ModelAction.Auth.Register.Response.incorrect(message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения."))
+            action.send(ModelAction.Auth.Register.Response.fail(message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения."))
         }
     }
     

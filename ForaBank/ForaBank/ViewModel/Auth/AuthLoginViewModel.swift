@@ -61,17 +61,12 @@ class AuthLoginViewModel: ObservableObject {
                 switch action {
                 case let payload as ModelAction.Auth.Register.Response:
                     switch payload {
-                    case .correct(codeLength: let codeLength, phone: let phone, resendCodeDelay: let resendCodeDelay):
+                    case .success(codeLength: let codeLength, phone: let phone, resendCodeDelay: let resendCodeDelay):
                         confirmViewModel = AuthConfirmViewModel(model, confirmCodeLength: codeLength, phoneNumber: phone, resendCodeDelay: resendCodeDelay, backAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Dismiss.Confirm())}, dismissAction: dismissAction)
                         isConfirmViewPresented = true
                         
-                    case .incorrect(message: let message):
+                    case .fail(message: let message):
                         alert = .init(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.alert = nil }))
-                        break
-                        
-                    case .error(let error):
-                        //TODO: handle error
-                        break
                     }
     
                 default:
@@ -86,7 +81,7 @@ class AuthLoginViewModel: ObservableObject {
                 
                 switch action {
                 case let payload as AuthLoginViewModelAction.Auth:
-                    model.action.send(ModelAction.Auth.Register.Request(cardNumber: payload.cardNumber))
+                    model.action.send(ModelAction.Auth.Register.Request(number: payload.cardNumber))
                     //TODO: start spinner here and block user taps
                     
                 case _ as AuthLoginViewModelAction.Show.Products:
@@ -151,6 +146,8 @@ class AuthLoginViewModel: ObservableObject {
             }.store(in: &bindings)
     }
 }
+
+//MARK: - Types
 
 extension AuthLoginViewModel {
     
