@@ -77,6 +77,7 @@ extension AuthProductsView {
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fit)
+                            .frame(height: 236)
                             .cornerRadius(12)
                             .padding(.top, 20)
                         

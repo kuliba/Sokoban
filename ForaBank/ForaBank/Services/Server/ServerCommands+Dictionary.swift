@@ -645,7 +645,7 @@ extension ServerCommands {
 
              internal init(endpoint: String) {
 
-                 self.endpoint = endpoint
+                 self.endpoint = "/" + endpoint
              }
          }
      }
