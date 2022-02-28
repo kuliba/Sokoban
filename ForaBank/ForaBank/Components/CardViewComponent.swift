@@ -43,14 +43,6 @@ extension MainCardComponentView {
             
         }
         
-        func hash(into hasher: inout Hasher) {
-            hasher.combine(ObjectIdentifier(self))
-        }
-
-        static func ==(lhs: MainCardComponentView.ViewModel, rhs: MainCardComponentView.ViewModel) -> Bool {
-            return lhs === rhs
-        }
-        
         enum Status {
             
             case active
@@ -62,7 +54,7 @@ extension MainCardComponentView {
                 
                 switch self {
                     case .active: return nil
-                case .notActivated: return Image.ic24ArrowRight
+                    case .notActivated: return Image.ic24ArrowRight
                     case .blocked: return Image.ic24Lock
                     case .plug: return Image.ic24ArrowRight
                 }
@@ -77,11 +69,25 @@ extension MainCardComponentView {
     }
 }
 
+extension MainCardComponentView.ViewModel {
+    
+    func hash(into hasher: inout Hasher) {
+        
+        hasher.combine(id)
+    }
+
+    static func == (lhs: MainCardComponentView.ViewModel, rhs: MainCardComponentView.ViewModel) -> Bool {
+        
+        return lhs.id == rhs.id
+    }
+}
+
 struct MainCardComponentView: View {
     
     @ObservedObject var viewModel: MainCardComponentView.ViewModel
     
     var body: some View {
+        
         Button {
             
         } label: {
@@ -105,35 +111,45 @@ struct MainCardComponentView: View {
                             .foregroundColor(viewModel.fontColor)
                     }
                     .padding(.leading, 5)
-                    
-                    VStack(alignment: .leading, spacing: 4){
-                        
-                        Spacer()
-                    
-                        Text(viewModel.name)
-                            .font(.system(size: 14))
-                            .foregroundColor(viewModel.fontColor)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .opacity(0.5)
-                            .multilineTextAlignment(.leading)
 
-                        HStack(alignment: .center) {
-                            
-                            Text(viewModel.balance)
-                                .font(.system(size: 14))
-                                .fontWeight(.semibold)
-                                .foregroundColor(viewModel.fontColor)
-                            
+                    Spacer()
+                    
+                    HStack(alignment: .bottom){
+                        
+                        VStack(alignment: .leading, spacing: 0) {
                             
                             Spacer()
                             
-                            if let paymentSystem = viewModel.paymentSystem {
+                            Text(viewModel.name)
+                                .font(.system(size: 14))
+                                .foregroundColor(viewModel.fontColor)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .opacity(0.5)
+                                .multilineTextAlignment(.leading)
+
+                            HStack(alignment: .bottom) {
                                 
-                                paymentSystem
-                                    .frame(width: 28, height: 28, alignment: .center)
+                                Text(viewModel.balance)
+                                    .font(.system(size: 14))
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(viewModel.fontColor)
+                                    
+                                
+                                
+                                Spacer()
+                                
+                                if let paymentSystem = viewModel.paymentSystem {
+                                    
+                                    paymentSystem
+                                        .frame(width: 28, height: 20, alignment: .bottom)
+                                    
+                                }
                             }
+                            .padding(0)
                         }
+                        
                     }
+                    
                 }
                 .padding(.leading, 12)
                 .padding(.trailing, 16)
@@ -162,6 +178,7 @@ struct MainCardComponentView: View {
                             .frame(width: 24, height: 24, alignment: .center)
                             .background(Color.white)
                             .cornerRadius(90)
+                            
                         } else {
                             
                             if viewModel.status == .notActivated {

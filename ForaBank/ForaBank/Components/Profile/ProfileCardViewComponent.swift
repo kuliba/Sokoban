@@ -68,6 +68,7 @@ struct ProfileCardViewComponent: View {
                 currentItem.backgroundColor
                     .frame(height: 170, alignment: .top)
                     .edgesIgnoringSafeArea(.top)
+                    .brightness(-0.2)
             
                 VStack(spacing: 15) {
                     if #available(iOS 14.0, *) {
@@ -141,7 +142,7 @@ extension ProfileCardViewComponent {
                             
                             viewModel.background
                                 .frame(width: 24, height: 24, alignment: .center)
-                                .opacity(0.4)
+                                .opacity(0.3)
                         }
                         .padding(.all, 14)
                 }
