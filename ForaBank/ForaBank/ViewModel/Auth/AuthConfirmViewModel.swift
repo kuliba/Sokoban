@@ -125,6 +125,13 @@ class AuthConfirmViewModel: ObservableObject {
                     case .failure(message: let message):
                         alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
                     }
+                    
+                case let payload as ModelAction.Auth.VerificationCode.PushRecieved:
+                    guard payload.code.count == code.codeLenght else {
+                        return
+                    }
+                    code.textField.text = payload.code
+                    
     
                 default:
                     break
@@ -200,8 +207,8 @@ extension AuthConfirmViewModel {
     
     class CodeViewModel: ObservableObject {
 
-        var title: String
-        var codeLenght: Int
+        let title: String
+        let codeLenght: Int
         @Published var code: [String?]
         let textField: TextFieldViewModel
         @Published var state: State

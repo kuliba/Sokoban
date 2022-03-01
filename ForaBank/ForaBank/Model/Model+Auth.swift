@@ -88,6 +88,11 @@ extension ModelAction {
 
                 }
             }
+            
+            struct PushRecieved: Action {
+                
+                let code: String
+            }
         }
 
         enum Pincode {
