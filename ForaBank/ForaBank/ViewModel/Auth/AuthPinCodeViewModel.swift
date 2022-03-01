@@ -119,9 +119,8 @@ class AuthPinCodeViewModel: ObservableObject {
                         }
                         alert = .init(title: "Введен некорректный пин-код.", message: "Все попытки исчерпаны.", primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.action.send(AuthPinCodeViewModelAction.Unlock.Failed()) }))
                         
-                    case .error(let error):
-                        //TODO: Handle error
-                        break
+                    case .failure(message: let message):
+                        alert = .init(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
                     }
      
                 default:

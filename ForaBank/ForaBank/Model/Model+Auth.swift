@@ -112,7 +112,7 @@ extension ModelAction {
                     case correct
                     case incorrect(remain: Int)
                     case restricted
-                    case error(Error)
+                    case failure(message: String)
                 }
             }
         }
