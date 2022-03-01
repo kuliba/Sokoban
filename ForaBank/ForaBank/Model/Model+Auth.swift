@@ -95,7 +95,7 @@ extension ModelAction {
                 enum Response: Action {
                     
                     case success
-                    case error(Error)
+                    case failure(message: String)
                 }
             }
             
@@ -225,28 +225,49 @@ internal extension Model {
     
     func handleAuthPincodeSetRequest(payload: ModelAction.Auth.Pincode.Set.Request) {
         
-        //TODO: real implementation required
-        action.send(ModelAction.Auth.Pincode.Set.Response.success)
+        do {
+            
+            try keychainAgent.store(payload.pincode, type: .pincode)
+            action.send(ModelAction.Auth.Pincode.Set.Response.success)
+            
+        } catch {
+            
+            //TODO: log error
+            print("Model: handleAuthPincodeSetRequest: error \(error.localizedDescription)")
+            
+            action.send(ModelAction.Auth.Pincode.Set.Response.failure(message: "Невозможно сохранит пин-код в крипто-хранилище. Попробуйте переустановить приложение. В случае, если ошибка повториться, обратитесь в службу поддержки."))
+        }
     }
     
     func handleAuthPincodeCheckRequest(payload: ModelAction.Auth.Pincode.Check.Request) {
         
-        //TODO: real implementation required
-        if payload.pincode == "1111" {
+        do {
             
-            action.send(ModelAction.Auth.Pincode.Check.Response.correct)
-            
-        } else {
-            
-            let remainAttempts = unlockAttemptsAvailable - payload.attempt
-            if remainAttempts > 0 {
+            let storedPincode: String = try keychainAgent.load(type: .pincode)
+
+            if payload.pincode == storedPincode {
                 
-                action.send(ModelAction.Auth.Pincode.Check.Response.incorrect(remain: remainAttempts))
+                action.send(ModelAction.Auth.Pincode.Check.Response.correct)
                 
             } else {
                 
-                action.send(ModelAction.Auth.Pincode.Check.Response.restricted)
+                let remainAttempts = unlockAttemptsAvailable - payload.attempt
+                if remainAttempts > 0 {
+                    
+                    action.send(ModelAction.Auth.Pincode.Check.Response.incorrect(remain: remainAttempts))
+                    
+                } else {
+                    
+                    action.send(ModelAction.Auth.Pincode.Check.Response.restricted)
+                }
             }
+            
+        } catch {
+            
+            //TODO: log error
+            print("Model: handleAuthPincodeCheckRequest: error \(error.localizedDescription)")
+            
+            action.send(ModelAction.Auth.Pincode.Check.Response.failure(message: "Невозможно прочитать данные пинкода из крипто-хранилища. Необходимо выйти из аккаунта и заново пройти процедуру авторизации."))
         }
     }
     

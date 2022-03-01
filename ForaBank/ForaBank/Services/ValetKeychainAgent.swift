@@ -28,10 +28,9 @@ class ValetKeychainAgent: KeychainAgentProtocol {
         try valet.setObject(encoded, forKey: type.rawValue)
     }
     
-    func load<Value>(type: KeychainValueType) throws -> Value? where Value : Decodable, Value : Encodable {
+    func load<Value>(type: KeychainValueType) throws -> Value where Value : Decodable, Value : Encodable {
         
         let data = try valet.object(forKey: type.rawValue)
-        
         return try decoder.decode(Value.self, from: data)
     }
     

@@ -550,6 +550,7 @@
 		77674A4027A02D86008101B5 /* CircleProgressViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77674A3F27A02D86008101B5 /* CircleProgressViewComponent.swift */; };
 		776C6C1C279D58A800253581 /* CSRFAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776C6C1B279D58A800253581 /* CSRFAgent.swift */; };
 		776C6C1E279D5D8800253581 /* CSRFAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776C6C1D279D5D8800253581 /* CSRFAgentTests.swift */; };
+		777167D427CE759200655D60 /* KeychainAgentMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777167D327CE759200655D60 /* KeychainAgentMock.swift */; };
 		7772978727C39E2D0099EF91 /* StringValueMask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772978627C39E2D0099EF91 /* StringValueMask.swift */; };
 		7772978927C39EF70099EF91 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772978827C39EF70099EF91 /* String+Extensions.swift */; };
 		7772978C27C3B7840099EF91 /* TextFieldMaskableViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772978B27C3B7840099EF91 /* TextFieldMaskableViewComponentTests.swift */; };
@@ -1469,6 +1470,7 @@
 		77674A3F27A02D86008101B5 /* CircleProgressViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressViewComponent.swift; sourceTree = "<group>"; };
 		776C6C1B279D58A800253581 /* CSRFAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFAgent.swift; sourceTree = "<group>"; };
 		776C6C1D279D5D8800253581 /* CSRFAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFAgentTests.swift; sourceTree = "<group>"; };
+		777167D327CE759200655D60 /* KeychainAgentMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainAgentMock.swift; sourceTree = "<group>"; };
 		7772978627C39E2D0099EF91 /* StringValueMask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringValueMask.swift; sourceTree = "<group>"; };
 		7772978827C39EF70099EF91 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		7772978B27C3B7840099EF91 /* TextFieldMaskableViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldMaskableViewComponentTests.swift; sourceTree = "<group>"; };
@@ -3032,6 +3034,7 @@
 				F8E529AC27B67F7B00222394 /* Assets.xcassets */,
 				774E318827A0509C005A067B /* ServerAgentEmptyMock.swift */,
 				774E318C27A05112005A067B /* LocalAgentEmptyMock.swift */,
+				777167D327CE759200655D60 /* KeychainAgentMock.swift */,
 				774E318A27A050DB005A067B /* Model+Preview.swift */,
 				774E318E27A05197005A067B /* TemplatesListViewModel+Preview.swift */,
 				F8E529B327BBABF600222394 /* AuthProductsViewModel+Preview.swift */,
@@ -6004,6 +6007,7 @@
 				EDB14383265FDA410028EF5A /* SceneDelegate.swift in Sources */,
 				EDB1658F266A1942007E6030 /* PaymentsModel.swift in Sources */,
 				0B931B1C26DCD69900CA8017 /* GKHHistoryModel.swift in Sources */,
+				777167D427CE759200655D60 /* KeychainAgentMock.swift in Sources */,
 				EDB165782668C76A007E6030 /* SelfConfiguringCell.swift in Sources */,
 				EDB165622667A571007E6030 /* ForaInputModel.swift in Sources */,
 				77EC58EE27723A5A0054D75C /* Model+Templates.swift in Sources */,

@@ -30,6 +30,7 @@ class Model {
     // services
     internal let serverAgent: ServerAgentProtocol
     internal let localAgent: LocalAgentProtocol
+    internal let keychainAgent: KeychainAgentProtocol
     
     // private
     private var bindings: Set<AnyCancellable>
@@ -43,7 +44,7 @@ class Model {
         return token
     }
     
-    init(serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol) {
+    init(serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol) {
         
         self.action = .init()
         self.auth = .init(.notAuthorized)
@@ -52,6 +53,7 @@ class Model {
         self.paymentTemplatesViewSettings = .init(.initial)
         self.serverAgent = serverAgent
         self.localAgent = localAgent
+        self.keychainAgent = keychainAgent
         self.bindings = []
         
         loadCachedData()
@@ -75,7 +77,10 @@ class Model {
         let localContext = LocalAgent.Context(cacheFolderName: "cache", encoder: .serverDate, decoder: .serverDate, fileManager: FileManager.default)
         let localAgent = LocalAgent(context: localContext)
         
-        return Model(serverAgent: serverAgent, localAgent: localAgent)
+        // keychain agent
+        let keychainAgent = KeychainAgentMock()
+        
+        return Model(serverAgent: serverAgent, localAgent: localAgent, keychainAgent: keychainAgent)
     }()
     
     private func bind() {
