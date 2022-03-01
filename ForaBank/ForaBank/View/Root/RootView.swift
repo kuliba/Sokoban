@@ -39,7 +39,7 @@ struct RootView: View {
                         .navigationBarTitle("")
                         .navigationBarHidden(true)
                 }
-                .transition(.asymmetric(insertion: .opacity, removal: .move(edge: .bottom)))
+                .transition(.asymmetric(insertion: .opacity, removal: .move(edge: .leading)))
             }
             
             if let lockViewModel = viewModel.lock {

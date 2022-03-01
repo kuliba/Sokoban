@@ -27,15 +27,13 @@ class UserDefaultsSettingsAgent: SettingsAgentProtocol {
         defaults.synchronize()
     }
     
-    func load<Setting>(type: SettingType) throws -> Setting? where Setting : Decodable, Setting : Encodable {
+    func load<Setting>(type: SettingType) throws -> Setting where Setting : Decodable, Setting : Encodable {
         
         guard let data = defaults.data(forKey: type.identifier) else {
-            return nil
+            throw SettingsAgentError.unableLoadDataType(type)
         }
         
-        let decoded = try decoder.decode(Setting.self, from: data)
-        
-        return decoded
+        return try decoder.decode(Setting.self, from: data)
     }
     
     func clear(type: SettingType) {

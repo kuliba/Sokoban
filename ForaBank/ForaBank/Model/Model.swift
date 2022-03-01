@@ -31,6 +31,7 @@ class Model {
     internal let serverAgent: ServerAgentProtocol
     internal let localAgent: LocalAgentProtocol
     internal let keychainAgent: KeychainAgentProtocol
+    internal let settingsAgent: SettingsAgentProtocol
     
     // private
     private var bindings: Set<AnyCancellable>
@@ -44,7 +45,7 @@ class Model {
         return token
     }
     
-    init(serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol) {
+    init(serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol, settingsAgent: SettingsAgentProtocol) {
         
         self.action = .init()
         self.auth = .init(.notAuthorized)
@@ -54,6 +55,7 @@ class Model {
         self.serverAgent = serverAgent
         self.localAgent = localAgent
         self.keychainAgent = keychainAgent
+        self.settingsAgent = settingsAgent
         self.bindings = []
         
         loadCachedData()
@@ -80,7 +82,10 @@ class Model {
         // keychain agent
         let keychainAgent = KeychainAgentMock()
         
-        return Model(serverAgent: serverAgent, localAgent: localAgent, keychainAgent: keychainAgent)
+        // settings agent
+        let settingsAgent = SettingsAgentMock()
+        
+        return Model(serverAgent: serverAgent, localAgent: localAgent, keychainAgent: keychainAgent, settingsAgent: settingsAgent)
     }()
     
     private func bind() {

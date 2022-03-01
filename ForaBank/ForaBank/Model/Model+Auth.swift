@@ -273,8 +273,20 @@ internal extension Model {
     
     func handleAuthSensorSettings(payload: ModelAction.Auth.Sensor.Settings) {
         
-        //TODO: real implementation required
-        // nothing implement for mock
+        do {
+            switch payload {
+            case .allow:
+                try settingsAgent.store(true, type: .security(.sensor))
+            
+            case .desideLater:
+                try settingsAgent.store(false, type: .security(.sensor))
+            }
+            
+        } catch {
+            
+            //TODO: log error
+            print("Model: handleAuthSensorSettings: error \(error.localizedDescription)")
+        }
     }
     
     func handleAuthSensorEvaluateRequest(payload: ModelAction.Auth.Sensor.Evaluate.Request) {
