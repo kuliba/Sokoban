@@ -63,6 +63,11 @@ class AuthConfirmViewModel: ObservableObject {
         bind()
         
         self.info = InfoViewModel(phoneNumber: phoneNumber, resendCodeDelay: resendCodeDelay, completeTimerAction: { [weak self] in self?.action.send(AuthConfirmViewModelAction.RepeatCode.DelayFinished()) })
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(400)) {
+            
+            self.code.state = .edit
+        }
     }
     
     func bind() {
@@ -132,9 +137,6 @@ class AuthConfirmViewModel: ObservableObject {
             .sink { [unowned self] action in
                 
                 switch action {
-                case _ as AuthConfirmViewModelAction.ViewDidAppear:
-                    code.state = .edit
-                    
                 case _ as AuthConfirmViewModelAction.RepeatCode.DelayFinished:
                     withAnimation {
                         info?.state = .button(.init(action: { [weak self] in self?.action.send(AuthConfirmViewModelAction.RepeatCode.Requested())}))
@@ -159,10 +161,6 @@ class AuthConfirmViewModel: ObservableObject {
             .sink { [unowned self] state in
                 
                 switch state {
-                case .openening:
-//                    code.showKeyboard = false
-                    break
-                    
                 case .edit:
                     code.textField.showKeyboard()
                     code.code = code.setupCode(codeLenght: code.codeLenght)
@@ -173,6 +171,9 @@ class AuthConfirmViewModel: ObservableObject {
                     rootActions.spinner.show()
                     currentCheckCodeAttempt += 1
                     model.action.send(ModelAction.Auth.VerificationCode.Confirm.Request(code: code.textField.text, attempt: currentCheckCodeAttempt))
+                    
+                default:
+                    break
                 }
                 
             }.store(in: &bindings)
@@ -383,8 +384,7 @@ extension AuthConfirmViewModel {
 enum AuthConfirmViewModelAction {
     
     struct Dismiss: Action {}
-    struct ViewDidAppear: Action {}
-    
+
     enum RepeatCode {
         
         struct DelayFinished: Action {}

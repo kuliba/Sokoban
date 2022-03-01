@@ -52,10 +52,6 @@ struct AuthConfirmView: View {
             viewModel.navigationBar.backButton.action() }) { viewModel.navigationBar.backButton.icon })
         .navigationBarBackButtonHidden(true)
         .navigationBarTitle(Text(viewModel.navigationBar.title), displayMode: .inline)
-        .onAppear {
-            
-            viewModel.action.send(AuthConfirmViewModelAction.ViewDidAppear())
-        }
     }
 }
 
