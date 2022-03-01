@@ -88,7 +88,7 @@ class Model {
         let settingsAgent = SettingsAgentMock()
         
         // biometric agent
-        let biometricAgent = BiometricAgentMock()
+        let biometricAgent = BiometricAgent()
         
         return Model(serverAgent: serverAgent, localAgent: localAgent, keychainAgent: keychainAgent, settingsAgent: settingsAgent, biometricAgent: biometricAgent)
     }()
