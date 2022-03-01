@@ -24,13 +24,14 @@ class AuthPinCodeViewModel: ObservableObject {
     var permissionsViewModel: AuthPermissionsViewModel?
     
     @Published var alert: Alert.ViewModel?
+    @Published var mistakes: Int
     
     private let model: Model
     private let backAction: () -> Void
     private let dismissAction: () -> Void
     private var bindings = Set<AnyCancellable>()
 
-    init(pinCode: PinCodeViewModel, numpad: NumPadViewModel, footer: FooterViewModel, backAction: @escaping () -> Void, dismissAction: @escaping () -> Void, model: Model = .emptyMock, mode: Mode = .unlock(attempt: 3), stage: Stage = .editing, isPermissionsViewPresented: Bool = false) {
+    init(pinCode: PinCodeViewModel, numpad: NumPadViewModel, footer: FooterViewModel, backAction: @escaping () -> Void, dismissAction: @escaping () -> Void, model: Model = .emptyMock, mode: Mode = .unlock(attempt: 3), stage: Stage = .editing, isPermissionsViewPresented: Bool = false, mistakes: Int = 0) {
         
         self.pinCode = pinCode
         self.numpad = numpad
@@ -41,6 +42,7 @@ class AuthPinCodeViewModel: ObservableObject {
         self.mode = mode
         self.stage = stage
         self.isPermissionsViewPresented = isPermissionsViewPresented
+        self.mistakes = mistakes
     }
     
     init(_ model: Model, mode: Mode, backAction: @escaping () -> Void, dismissAction: @escaping () -> Void) {
@@ -72,6 +74,7 @@ class AuthPinCodeViewModel: ObservableObject {
         self.dismissAction = dismissAction
         self.stage = .editing
         self.isPermissionsViewPresented = false
+        self.mistakes = 0
         self.model = model
         
         bind()
@@ -106,6 +109,7 @@ class AuthPinCodeViewModel: ObservableObject {
                         
                         withAnimation {
                             // show incorrect pincode state
+                            mistakes += 1
                             pinCode.style = .incorrect
                             numpad.isEnabled = false
                         }
@@ -239,6 +243,7 @@ class AuthPinCodeViewModel: ObservableObject {
                 case .mistake:
                     withAnimation {
                         // show incorrect pincode state
+                        mistakes += 1
                         pinCode.style = .incorrect
                         numpad.isEnabled = false
                     }

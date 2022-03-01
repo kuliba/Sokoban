@@ -15,7 +15,7 @@ struct AuthPinCodeView: View {
         
         VStack(spacing: 0) {
             
-            PinCodeView(viewModel: viewModel.pinCode)
+            PinCodeView(viewModel: viewModel.pinCode, mistakes: $viewModel.mistakes)
                 .padding(.top, 80)
             
             NumPadView(viewModel: viewModel.numpad)
@@ -51,6 +51,7 @@ extension AuthPinCodeView {
     struct PinCodeView: View {
         
         @ObservedObject var viewModel: AuthPinCodeViewModel.PinCodeViewModel
+        @Binding var mistakes: Int
         
         var body: some View {
             
@@ -67,6 +68,7 @@ extension AuthPinCodeView {
                         DotView(viewModel: dotViewModel, style: viewModel.style)
                     }
                 }
+                .modifier(Shake(animatableData: CGFloat(mistakes)))
             }
         }
         
@@ -255,6 +257,25 @@ extension AuthPinCodeView {
     }
 }
 
+//MARK: - Shake
+
+extension AuthPinCodeView {
+    
+    struct Shake: GeometryEffect {
+        
+        var amount: CGFloat = 10
+        var shakesPerUnit = 3
+        var animatableData: CGFloat
+
+        func effectValue(size: CGSize) -> ProjectionTransform {
+            
+            ProjectionTransform(CGAffineTransform(translationX:
+                amount * sin(animatableData * .pi * CGFloat(shakesPerUnit)),
+                y: 0))
+        }
+    }
+}
+
 //MARK: - Preview
 
 struct PinCodeView_Previews: PreviewProvider {
@@ -265,19 +286,19 @@ struct PinCodeView_Previews: PreviewProvider {
             
             AuthPinCodeView(viewModel: .sample)
             
-            AuthPinCodeView.PinCodeView(viewModel: .empty)
+            AuthPinCodeView.PinCodeView(viewModel: .empty, mistakes: .constant(0))
                 .previewLayout(.fixed(width: 375, height: 100))
                 .previewDisplayName("Pincode Empty")
             
-            AuthPinCodeView.PinCodeView(viewModel: .editing)
+            AuthPinCodeView.PinCodeView(viewModel: .editing, mistakes: .constant(0))
                 .previewLayout(.fixed(width: 375, height: 100))
                 .previewDisplayName("Pincode Empty")
             
-            AuthPinCodeView.PinCodeView(viewModel: .correct)
+            AuthPinCodeView.PinCodeView(viewModel: .correct, mistakes: .constant(0))
                 .previewLayout(.fixed(width: 375, height: 100))
                 .previewDisplayName("Pincode Empty")
             
-            AuthPinCodeView.PinCodeView(viewModel: .incorrect)
+            AuthPinCodeView.PinCodeView(viewModel: .incorrect, mistakes: .constant(0))
                 .previewLayout(.fixed(width: 375, height: 100))
                 .previewDisplayName("Pincode Empty")
         }
