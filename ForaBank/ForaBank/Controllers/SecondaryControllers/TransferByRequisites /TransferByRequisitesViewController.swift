@@ -227,12 +227,16 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
             self.nameCompanyField.isHidden = false
             
             if let bik = parameter.payeeExternal?.bankBIC {
+                bikBankField.text = bik
                 bikBankField.textField.text = bik
             }
+            let mask = StringMask(mask: "00000 000 0 0000 0000000")
             
-            if let account = parameter.payeeExternal?.accountNumber {
-                let mask = StringMask(mask: "00000 000 0 0000 0000000")
-                accountNumber.textField.text = mask.mask(string: account)
+            if let account = parameter.payeeExternal?.accountNumber,
+                let accountMasked = mask.mask(string: account) {
+                
+                accountNumber.text = accountMasked
+                accountNumber.textField.text = accountMasked
             }
             
             if let fullName = parameter.payeeExternal?.name,
@@ -241,6 +245,11 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
 
                 sendData(kpp: kpp, name: fullName)
                 innField.textField.text = inn
+                innField.text = inn
+            }
+            if let comment = parameter.comment {
+                commentField.text = comment
+                commentField.textField.text = comment
             }
         }
     }
@@ -282,7 +291,9 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
     }
     
     func sendData(kpp: String, name: String) {
+        
         kppField.text = kpp
+        nameCompanyField.text = name
         nameCompanyField.textField.text = name
     }
     
@@ -831,9 +842,11 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
     
     func suggestCompany() {
         showActivity()
-        nameCompanyField.textField.text = ""
-        kppField.textField.text = ""
-        commentField.textField.text = ""
+        if paymentTemplate == nil {
+            nameCompanyField.textField.text = ""
+            kppField.textField.text = ""
+            commentField.textField.text = ""
+        }
         let body = [
             "query": innField.textField.text
         ] as [String: AnyObject]
