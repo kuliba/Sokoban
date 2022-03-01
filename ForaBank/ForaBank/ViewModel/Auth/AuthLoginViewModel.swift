@@ -27,27 +27,27 @@ class AuthLoginViewModel: ObservableObject {
     @Published var cardScanner: AuthCardScannerViewModel?
     @Published var alert: Alert.ViewModel?
     
-    private let parentActions: ParentActions
+    private let rootActions: RootViewModel.AuthActions
     private let model: Model
     private var bindings = Set<AnyCancellable>()
 
-    init(header: HeaderViewModel = HeaderViewModel(), productsButton: ProductsButtonViewModel? = nil,  isConfirmViewPresented: Bool = false, isProductsViewPresented: Bool = false, parentActions: ParentActions, model: Model = .emptyMock) {
+    init(header: HeaderViewModel = HeaderViewModel(), productsButton: ProductsButtonViewModel? = nil,  isConfirmViewPresented: Bool = false, isProductsViewPresented: Bool = false, rootActions: RootViewModel.AuthActions, model: Model = .emptyMock) {
 
         self.header = header
         self.productsButton = productsButton
         self.isConfirmViewPresented = isConfirmViewPresented
         self.isProductsViewPresented = isProductsViewPresented
-        self.parentActions = parentActions
+        self.rootActions = rootActions
         self.model = model
     }
     
-    init(_ model: Model, parentActions: ParentActions) {
+    init(_ model: Model, rootActions: RootViewModel.AuthActions) {
         
         self.model = model
         self.header = HeaderViewModel()
         self.isConfirmViewPresented = false
         self.isProductsViewPresented = false
-        self.parentActions = parentActions
+        self.rootActions = rootActions
         
         bind()
     }
@@ -63,7 +63,7 @@ class AuthLoginViewModel: ObservableObject {
                     self.action.send(AuthLoginViewModelAction.Spinner.Hide())
                     switch payload {
                     case .success(codeLength: let codeLength, phone: let phone, resendCodeDelay: let resendCodeDelay):
-                        confirmViewModel = AuthConfirmViewModel(model, confirmCodeLength: codeLength, phoneNumber: phone, resendCodeDelay: resendCodeDelay, backAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Dismiss.Confirm())}, dismissAction: parentActions.dismiss)
+                        confirmViewModel = AuthConfirmViewModel(model, confirmCodeLength: codeLength, phoneNumber: phone, resendCodeDelay: resendCodeDelay, backAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Dismiss.Confirm())}, rootActions: rootActions)
                         isConfirmViewPresented = true
                         
                     case .fail(message: let message):
@@ -113,10 +113,10 @@ class AuthLoginViewModel: ObservableObject {
                     isProductsViewPresented = false
                     
                 case _ as AuthLoginViewModelAction.Spinner.Show:
-                    parentActions.spinner.show()
+                    rootActions.spinner.show()
                     
                 case _ as AuthLoginViewModelAction.Spinner.Hide:
-                    parentActions.spinner.hide()
+                    rootActions.spinner.hide()
                     
                 default:
                     break
@@ -240,18 +240,6 @@ extension AuthLoginViewModel {
         let subTitle = "Доставим в любую точку"
         let arrowRight: Image = .ic24ArrowRight
         let action: () -> Void
-    }
-    
-    struct ParentActions {
-        
-        let dismiss: () -> Void
-        let spinner: Spinner
-        
-        struct Spinner {
-            
-            let show: () -> Void
-            let hide: () -> Void
-        }
     }
 }
 

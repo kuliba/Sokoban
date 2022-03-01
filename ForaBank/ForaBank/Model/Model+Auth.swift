@@ -63,7 +63,7 @@ extension ModelAction {
                     
                     case correct
                     case incorrect(remain: Int)
-                    case error(Error)
+                    case failure(message: String)
                 }
             }
             
@@ -74,10 +74,11 @@ extension ModelAction {
                     let attempt: Int
                 }
                 
-                struct Response: Action {
+                enum Response: Action {
                     
-                    // remain code resends count
-                    let result: Result<Int, Error>
+                    case success(remain: Int)
+                    case failure(message: String)
+
                 }
             }
         }
@@ -196,14 +197,20 @@ internal extension Model {
         //TODO: real implementation required
         if payload.code == "111111" {
             
-            action.send(ModelAction.Auth.VerificationCode.Confirm.Response.correct)
+            DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(3)) {
+                
+                self.action.send(ModelAction.Auth.VerificationCode.Confirm.Response.correct)
+            }
             
         } else {
             
-            let totalAttempts = 3
-            let remain = totalAttempts - payload.attempt
-            
-            action.send(ModelAction.Auth.VerificationCode.Confirm.Response.incorrect(remain: remain))
+            DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(3)) {
+                
+                let totalAttempts = 3
+                let remain = totalAttempts - payload.attempt
+                
+                self.action.send(ModelAction.Auth.VerificationCode.Confirm.Response.incorrect(remain: remain))
+            }
         }
     }
     
@@ -213,7 +220,7 @@ internal extension Model {
         let totalAttempts = 3
         let remain = totalAttempts - payload.attempt
         
-        action.send(ModelAction.Auth.VerificationCode.Resend.Response(result: .success(remain)))
+        action.send(ModelAction.Auth.VerificationCode.Resend.Response.success(remain: remain))
     }
     
     func handleAuthPincodeSetRequest(payload: ModelAction.Auth.Pincode.Set.Request) {

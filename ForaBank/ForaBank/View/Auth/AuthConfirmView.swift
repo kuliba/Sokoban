@@ -24,7 +24,7 @@ struct AuthConfirmView: View {
             
             ZStack {
                 
-                CustomTextField(text: $viewModel.code.textFieldCode, isFirstResponder: $viewModel.code.showKeyboard)
+                CustomTextField(viewModel: viewModel.code.textField)
                 
                 Color.white
             }
@@ -48,7 +48,7 @@ struct AuthConfirmView: View {
         })
         .padding(EdgeInsets(top: 12, leading: 20, bottom: 20, trailing: 20))
         .navigationBarItems(leading: Button(action: {
-            viewModel.code.showKeyboard = false
+            viewModel.code.textField.dismissKeyboard()
             viewModel.navigationBar.backButton.action() }) { viewModel.navigationBar.backButton.icon })
         .navigationBarBackButtonHidden(true)
         .navigationBarTitle(Text(viewModel.navigationBar.title), displayMode: .inline)
@@ -169,45 +169,44 @@ extension AuthConfirmView {
 }
 
 struct CustomTextField: UIViewRepresentable {
-
-    class Coordinator: NSObject, UITextFieldDelegate {
-
-        @Binding var text: String
-        @Binding var didBecomeFirstResponder: Bool
-
-        init(text: Binding<String>, didBecomeFirstResponder: Binding<Bool>) {
-            _text = text
-            _didBecomeFirstResponder = didBecomeFirstResponder
-        }
-
-        func textFieldDidChangeSelection(_ textField: UITextField) {
-            text = textField.text ?? ""
-        }
-    }
-
-    @Binding var text: String
-    @Binding var isFirstResponder: Bool
-
+    
+    @ObservedObject var viewModel: AuthConfirmViewModel.CodeViewModel.TextFieldViewModel
+    
     func makeUIView(context: UIViewRepresentableContext<CustomTextField>) -> UITextField {
+        
         let textField = UITextField(frame: .zero)
+        
         textField.delegate = context.coordinator
+        textField.keyboardType = .numberPad
+        
+        viewModel.dismissKeyboard = { textField.resignFirstResponder() }
+        viewModel.showKeyboard = { textField.becomeFirstResponder() }
+        
         return textField
     }
 
     func makeCoordinator() -> CustomTextField.Coordinator {
-        return Coordinator(text: $text, didBecomeFirstResponder: $isFirstResponder)
+        
+        return Coordinator(text: $viewModel.text)
     }
 
-    func updateUIView(_ uiView: UITextField, context: UIViewRepresentableContext<CustomTextField>) {
-        uiView.text = text
-        uiView.keyboardType = .numberPad
-        if isFirstResponder && !context.coordinator.didBecomeFirstResponder  {
+    func updateUIView(_ uiView: UITextField, context: Context) {
+        
+        uiView.text = viewModel.text
+    }
+    
+    class Coordinator: NSObject, UITextFieldDelegate {
+
+        @Binding var text: String
+ 
+        init(text: Binding<String>) {
             
-            uiView.becomeFirstResponder()
-            context.coordinator.didBecomeFirstResponder = true
-        } else {
-            uiView.resignFirstResponder()
-            context.coordinator.didBecomeFirstResponder = false
+            _text = text
+        }
+
+        func textFieldDidChangeSelection(_ textField: UITextField) {
+            
+            text = textField.text ?? ""
         }
     }
 }

@@ -13,21 +13,21 @@ class AuthLockViewModel: ObservableObject {
     
     @Published var state: State
     
-    private let parentActions: AuthLoginViewModel.ParentActions
+    private let rootActions: RootViewModel.AuthActions
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
-    init(state: State, parentActions: AuthLoginViewModel.ParentActions, model: Model = .emptyMock) {
+    init(state: State, rootActions: RootViewModel.AuthActions, model: Model = .emptyMock) {
         
         self.state = state
-        self.parentActions = parentActions
+        self.rootActions = rootActions
         self.model = model
     }
     
-    init(_ model: Model, parentActions: AuthLoginViewModel.ParentActions) {
+    init(_ model: Model, rootActions: RootViewModel.AuthActions) {
         
         self.state = .pincode(.init(model, mode: .unlock(attempt: 0), backAction: {}, dismissAction: {}))
-        self.parentActions = parentActions
+        self.rootActions = rootActions
         self.model = model
         
         let pincodeBackAction: () -> Void = { [weak self] in
@@ -38,11 +38,11 @@ class AuthLockViewModel: ObservableObject {
             
             withAnimation {
                 
-                self.state = .login(AuthLoginViewModel(self.model, parentActions: parentActions))
+                self.state = .login(AuthLoginViewModel(self.model, rootActions: rootActions))
             }
         }
         
-        self.state = .pincode(.init(model, mode: .unlock(attempt: 1), backAction: pincodeBackAction, dismissAction: parentActions.dismiss))
+        self.state = .pincode(.init(model, mode: .unlock(attempt: 1), backAction: pincodeBackAction, dismissAction: rootActions.dismiss))
     }
     
     enum State {

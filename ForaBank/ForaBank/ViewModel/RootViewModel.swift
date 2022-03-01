@@ -23,7 +23,7 @@ class RootViewModel: ObservableObject {
     
     func showLogin() {
         
-        login = AuthLoginViewModel(model, parentActions: .init(dismiss: {[weak self] in
+        login = AuthLoginViewModel(model, rootActions: .init(dismiss: {[weak self] in
             withAnimation {
                 self?.login = nil
             }
@@ -42,7 +42,7 @@ class RootViewModel: ObservableObject {
         
         withAnimation {
             
-            lock = AuthLockViewModel(model, parentActions: .init(dismiss: {[weak self] in
+            lock = AuthLockViewModel(model, rootActions: .init(dismiss: {[weak self] in
                 withAnimation {
                     self?.lock = nil
                 }
@@ -55,6 +55,21 @@ class RootViewModel: ObservableObject {
                     self?.spinner = nil
                 }
             })))
+        }
+    }
+}
+
+extension RootViewModel {
+    
+    struct AuthActions {
+        
+        let dismiss: () -> Void
+        let spinner: Spinner
+        
+        struct Spinner {
+            
+            let show: () -> Void
+            let hide: () -> Void
         }
     }
 }
