@@ -85,7 +85,7 @@ class Model {
         let keychainAgent = KeychainAgentMock()
         
         // settings agent
-        let settingsAgent = SettingsAgentMock()
+        let settingsAgent = UserDefaultsSettingsAgent()
         
         // biometric agent
         let biometricAgent = BiometricAgent()
