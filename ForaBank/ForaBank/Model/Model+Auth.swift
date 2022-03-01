@@ -9,10 +9,17 @@ import Foundation
 
 extension Model {
     
-    var pincodeLength: Int { 4 }
-    var unlockAttemptsAvailable: Int { 3 }
-    var availableBiometricSensorType: BiometricSensorType? { .face }
-    var isBiometricSensorEnabled: Bool { true }
+    var authPincodeLength: Int { 4 }
+    var authUnlockAttemptsAvailable: Int { 3 }
+    var authAvailableBiometricSensorType: BiometricSensorType? { biometricAgent.availableSensor }
+    var authIsBiometricSensorEnabled: Bool {
+        
+        guard let isSensorEnabled: Bool = try? settingsAgent.load(type: .security(.sensor)) else {
+            return false
+        }
+        
+        return isSensorEnabled
+    }
 }
 
 //MARK: - Actions
@@ -132,9 +139,10 @@ extension ModelAction {
                     let sensor: BiometricSensorType
                 }
                 
-                struct Response: Action {
+                enum Response: Action {
                     
-                    let result: Result<Bool, Error>
+                    case success
+                    case failure(message: String)
                 }
             }
         }
@@ -251,7 +259,7 @@ internal extension Model {
                 
             } else {
                 
-                let remainAttempts = unlockAttemptsAvailable - payload.attempt
+                let remainAttempts = authUnlockAttemptsAvailable - payload.attempt
                 if remainAttempts > 0 {
                     
                     action.send(ModelAction.Auth.Pincode.Check.Response.incorrect(remain: remainAttempts))
@@ -291,7 +299,24 @@ internal extension Model {
     
     func handleAuthSensorEvaluateRequest(payload: ModelAction.Auth.Sensor.Evaluate.Request) {
         
-        action.send(ModelAction.Auth.Sensor.Evaluate.Response(result: .success(true)))
+        biometricAgent.unlock(with: payload.sensor) { result in
+            
+            switch result {
+            case .success(let isUnlocked):
+                if isUnlocked == true {
+                    
+                    self.action.send(ModelAction.Auth.Sensor.Evaluate.Response.success)
+                    
+                } else {
+                    
+                    self.action.send(ModelAction.Auth.Sensor.Evaluate.Response.failure(message: "Произошел сбой при попытке разблокировки приложения при помощи сенсора. Попробуйте полностью выгрузить приложение и повторить заново. Если ошибка повториться, обратитесь в службу поддержки."))
+                }
+                
+            case .failure(let error):
+  
+                self.action.send(ModelAction.Auth.Sensor.Evaluate.Response.failure(message: error.localizedDescription))
+            }
+        }
     }
     
     func handleAuthLoginRequest() {

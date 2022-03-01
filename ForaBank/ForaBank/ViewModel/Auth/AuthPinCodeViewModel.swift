@@ -51,9 +51,9 @@ class AuthPinCodeViewModel: ObservableObject {
  
         switch mode {
         case .unlock:
-            self.pinCode = PinCodeViewModel(title: "Введите код", pincodeLength: model.pincodeLength)
+            self.pinCode = PinCodeViewModel(title: "Введите код", pincodeLength: model.authPincodeLength)
             
-            if let sensor = model.availableBiometricSensorType, model.isBiometricSensorEnabled == true {
+            if let sensor = model.authAvailableBiometricSensorType, model.authIsBiometricSensorEnabled == true {
                 
                 self.numpad = NumPadViewModel(leftButton: .init(type: .text("Выход"), action: .exit), rightButton: .init(type: .icon(sensor.icon), action: .sensor))
                 
@@ -66,7 +66,7 @@ class AuthPinCodeViewModel: ObservableObject {
             self.mode = mode
 
         case .create:
-            self.pinCode = PinCodeViewModel(title: "Придумайте код", pincodeLength: model.pincodeLength)
+            self.pinCode = PinCodeViewModel(title: "Придумайте код", pincodeLength: model.authPincodeLength)
             self.numpad = NumPadViewModel(leftButton: .init(type: .empty, action: .none), rightButton: .init(type: .icon(.ic40Delete), action: .delete))
             self.footer = FooterViewModel(continueButton: nil, cancelButton: nil)
             self.mode = .create(step: .one)
@@ -134,6 +134,15 @@ class AuthPinCodeViewModel: ObservableObject {
                     case .failure(message: let message):
                         alert = .init(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
                     }
+                    
+                case let payload as ModelAction.Auth.Sensor.Evaluate.Response:
+                    switch payload {
+                    case .success:
+                        dismissAction()
+                        
+                    case .failure(message: let message):
+                        alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.alert = nil}))
+                    }
      
                 default:
                     break
@@ -162,7 +171,7 @@ class AuthPinCodeViewModel: ObservableObject {
                         AudioServicesPlaySystemSound(1155)
                         
                     case .sensor:
-                        guard let sensor = model.availableBiometricSensorType, model.isBiometricSensorEnabled == true else {
+                        guard let sensor = model.authAvailableBiometricSensorType, model.authIsBiometricSensorEnabled == true else {
                             return
                         }
                         model.action.send(ModelAction.Auth.Sensor.Evaluate.Request(sensor: sensor))
@@ -235,7 +244,7 @@ class AuthPinCodeViewModel: ObservableObject {
                             
                         } else {
                             
-                            if let sensor = model.availableBiometricSensorType, model.isBiometricSensorEnabled == true {
+                            if let sensor = model.authAvailableBiometricSensorType, model.authIsBiometricSensorEnabled == true {
                                 
                                 self.numpad.update(button: .init(type: .icon(sensor.icon), action: .sensor), left: false)
                                 
@@ -298,7 +307,7 @@ class AuthPinCodeViewModel: ObservableObject {
                             
                             model.action.send(ModelAction.Auth.Pincode.Set.Request(pincode: pinCode.value))
                             
-                            if let sensor = model.availableBiometricSensorType {
+                            if let sensor = model.authAvailableBiometricSensorType {
                                 
                                 permissionsViewModel = .init(model, sensorType: sensor, dismissAction: dismissAction)
                                 isPermissionsViewPresented = true

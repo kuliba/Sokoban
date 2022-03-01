@@ -1,5 +1,5 @@
 //
-//  BiometricService.swift
+//  BiometricAgent.swift
 //  ForaBank
 //
 //  Created by Max Gribov on 16.02.2022.
@@ -8,7 +8,7 @@
 import Foundation
 import LocalAuthentication
 
-class BiometricService: BiometricServiceProtocol {
+class BiometricAgent: BiometricAgentProtocol {
     
     let reason: String
     
@@ -28,7 +28,7 @@ class BiometricService: BiometricServiceProtocol {
         }
     }
     
-    func unlock(with sensor: BiometricSensorType, completion: @escaping (Result<Bool, BiometricServiceError>) -> Void) {
+    func unlock(with sensor: BiometricSensorType, completion: @escaping (Result<Bool, BiometricAgentError>) -> Void) {
 
         // Get a fresh context for each login. If you use the same context on multiple attempts
         //  (by commenting out the next line), then a previously successful authentication

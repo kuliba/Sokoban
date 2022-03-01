@@ -455,8 +455,8 @@
 		7538D9ADE22F0BF6C08AC91F /* Color+Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BDBA5E8E5B98668466191C /* Color+Assets.swift */; };
 		7701B27127A42BC300FBF5E3 /* GetPeymentTemlpateListResponseSFP.json in Resources */ = {isa = PBXBuildFile; fileRef = 7701B27027A42BC300FBF5E3 /* GetPeymentTemlpateListResponseSFP.json */; };
 		7705408B27BD1B1100094006 /* BiometricSensorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7705408A27BD1B1100094006 /* BiometricSensorType.swift */; };
-		7705408D27BD1B4C00094006 /* BiometricServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7705408C27BD1B4C00094006 /* BiometricServiceProtocol.swift */; };
-		7705408F27BD1C6900094006 /* BiometricService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7705408E27BD1C6900094006 /* BiometricService.swift */; };
+		7705408D27BD1B4C00094006 /* BiometricAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7705408C27BD1B4C00094006 /* BiometricAgentProtocol.swift */; };
+		7705408F27BD1C6900094006 /* BiometricAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7705408E27BD1C6900094006 /* BiometricAgent.swift */; };
 		77067CD9275FBB70000C442B /* StringExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77067CD8275FBB70000C442B /* StringExtensionsTests.swift */; };
 		77067CDD275FCBA5000C442B /* DownloadQueueSerialsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77067CDC275FCBA5000C442B /* DownloadQueueSerialsStorage.swift */; };
 		770DCE8F27BBE6AB004099C1 /* Model+Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770DCE8E27BBE6AB004099C1 /* Model+Auth.swift */; };
@@ -552,6 +552,7 @@
 		776C6C1E279D5D8800253581 /* CSRFAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776C6C1D279D5D8800253581 /* CSRFAgentTests.swift */; };
 		777167D427CE759200655D60 /* KeychainAgentMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777167D327CE759200655D60 /* KeychainAgentMock.swift */; };
 		777167D627CE858500655D60 /* SettingsAgentMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777167D527CE858500655D60 /* SettingsAgentMock.swift */; };
+		777167D827CE88E800655D60 /* BiometricAgentMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777167D727CE88E800655D60 /* BiometricAgentMock.swift */; };
 		7772978727C39E2D0099EF91 /* StringValueMask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772978627C39E2D0099EF91 /* StringValueMask.swift */; };
 		7772978927C39EF70099EF91 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772978827C39EF70099EF91 /* String+Extensions.swift */; };
 		7772978C27C3B7840099EF91 /* TextFieldMaskableViewComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7772978B27C3B7840099EF91 /* TextFieldMaskableViewComponentTests.swift */; };
@@ -1376,8 +1377,8 @@
 		6F88A9A4DBEADB3F8E16A822 /* Image+Illustrations.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; fileEncoding = 4; path = "Image+Illustrations.swift"; sourceTree = "<group>"; };
 		7701B27027A42BC300FBF5E3 /* GetPeymentTemlpateListResponseSFP.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetPeymentTemlpateListResponseSFP.json; sourceTree = "<group>"; };
 		7705408A27BD1B1100094006 /* BiometricSensorType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricSensorType.swift; sourceTree = "<group>"; };
-		7705408C27BD1B4C00094006 /* BiometricServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricServiceProtocol.swift; sourceTree = "<group>"; };
-		7705408E27BD1C6900094006 /* BiometricService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricService.swift; sourceTree = "<group>"; };
+		7705408C27BD1B4C00094006 /* BiometricAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricAgentProtocol.swift; sourceTree = "<group>"; };
+		7705408E27BD1C6900094006 /* BiometricAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricAgent.swift; sourceTree = "<group>"; };
 		77067CD8275FBB70000C442B /* StringExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensionsTests.swift; sourceTree = "<group>"; };
 		77067CDC275FCBA5000C442B /* DownloadQueueSerialsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadQueueSerialsStorage.swift; sourceTree = "<group>"; };
 		770DCE8E27BBE6AB004099C1 /* Model+Auth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Auth.swift"; sourceTree = "<group>"; };
@@ -1473,6 +1474,7 @@
 		776C6C1D279D5D8800253581 /* CSRFAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFAgentTests.swift; sourceTree = "<group>"; };
 		777167D327CE759200655D60 /* KeychainAgentMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainAgentMock.swift; sourceTree = "<group>"; };
 		777167D527CE858500655D60 /* SettingsAgentMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsAgentMock.swift; sourceTree = "<group>"; };
+		777167D727CE88E800655D60 /* BiometricAgentMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricAgentMock.swift; sourceTree = "<group>"; };
 		7772978627C39E2D0099EF91 /* StringValueMask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringValueMask.swift; sourceTree = "<group>"; };
 		7772978827C39EF70099EF91 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		7772978B27C3B7840099EF91 /* TextFieldMaskableViewComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldMaskableViewComponentTests.swift; sourceTree = "<group>"; };
@@ -3038,6 +3040,7 @@
 				774E318C27A05112005A067B /* LocalAgentEmptyMock.swift */,
 				777167D327CE759200655D60 /* KeychainAgentMock.swift */,
 				777167D527CE858500655D60 /* SettingsAgentMock.swift */,
+				777167D727CE88E800655D60 /* BiometricAgentMock.swift */,
 				774E318A27A050DB005A067B /* Model+Preview.swift */,
 				774E318E27A05197005A067B /* TemplatesListViewModel+Preview.swift */,
 				F8E529B327BBABF600222394 /* AuthProductsViewModel+Preview.swift */,
@@ -3186,7 +3189,7 @@
 				7758754C27996DCB0080115D /* LocalAgent.swift */,
 				77FF670C27BABFD3009FEA09 /* ValetKeychainAgent.swift */,
 				774A82C827BAE74800E5A5E9 /* UserDefaultsSettingsAgent.swift */,
-				7705408E27BD1C6900094006 /* BiometricService.swift */,
+				7705408E27BD1C6900094006 /* BiometricAgent.swift */,
 				77DC12682770F63400C917B0 /* Abstract */,
 				77DC126B2770F83400C917B0 /* Server */,
 				77925573279AF3AA00A85723 /* Encryption */,
@@ -3203,7 +3206,7 @@
 				7763A68F279DAFD10064B037 /* EncryptionProtocols.swift */,
 				77FF670A27BABCD9009FEA09 /* KeychainAgentProtocol.swift */,
 				774A82C227BAD58300E5A5E9 /* SettingsAgentProtocol.swift */,
-				7705408C27BD1B4C00094006 /* BiometricServiceProtocol.swift */,
+				7705408C27BD1B4C00094006 /* BiometricAgentProtocol.swift */,
 			);
 			path = Abstract;
 			sourceTree = "<group>";
@@ -5682,7 +5685,7 @@
 				0BDE453326E3EA4A00B64A0A /* ExtensionQRReadPDF.swift in Sources */,
 				EDB14533266667140028EF5A /* OrderProductsCollectionViewCell.swift in Sources */,
 				68368BAE272FDAA200A435B1 /* OperationDetailViewController.swift in Sources */,
-				7705408F27BD1C6900094006 /* BiometricService.swift in Sources */,
+				7705408F27BD1C6900094006 /* BiometricAgent.swift in Sources */,
 				0BA14E1C2715628A0098E422 /* GetAllLatestPaymentsDecodableModel.swift in Sources */,
 				0B8BE091266FDA1B00E96CAA /* CheckClientDecodebleModel.swift in Sources */,
 				EDB16595266A4438007E6030 /* DevelopViewController.swift in Sources */,
@@ -5735,6 +5738,7 @@
 				ED51D6702688B287005FD655 /* SeparatorView.swift in Sources */,
 				5A5ABF8427AAF4DE00D548AA /* PaymentGeneralData.swift in Sources */,
 				0B2A8D2726E7837300651BCB /* IsLoginDecodableModel.swift in Sources */,
+				777167D827CE88E800655D60 /* BiometricAgentMock.swift in Sources */,
 				0B66E8D626CC5D6500FD735D /* NetDetectAlert.swift in Sources */,
 				6880D32926A5CC7D008FBCB4 /* Encription.swift in Sources */,
 				77EC58AC27711EFA0054D75C /* TransferAnywayData.swift in Sources */,
@@ -5811,7 +5815,7 @@
 				A5C7A1BD275C0B15003BEF6D /* InternetTVLatestOperationsViewModel.swift in Sources */,
 				EDB1658C266A18C3007E6030 /* PaymentsViewControllerDelegate.swift in Sources */,
 				6820928327AB0E6F003DCAFD /* CurrencyData.swift in Sources */,
-				7705408D27BD1B4C00094006 /* BiometricServiceProtocol.swift in Sources */,
+				7705408D27BD1B4C00094006 /* BiometricAgentProtocol.swift in Sources */,
 				0B7A18B6268373890007CC75 /* NetworkPDFManagerExtension.swift in Sources */,
 				EDF68215266F9EC800FD5C07 /* URLConstruct.swift in Sources */,
 				68FFA5402682C6CF002DADFA /* LastPaymentsCollectionViewCell.swift in Sources */,
