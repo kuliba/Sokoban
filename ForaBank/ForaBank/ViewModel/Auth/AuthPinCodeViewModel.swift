@@ -31,6 +31,7 @@ class AuthPinCodeViewModel: ObservableObject {
     private let backAction: () -> Void
     private let dismissAction: () -> Void
     private var bindings = Set<AnyCancellable>()
+    private let feedbackGenerator = UINotificationFeedbackGenerator()
 
     init(pinCode: PinCodeViewModel, numpad: NumPadViewModel, footer: FooterViewModel, backAction: @escaping () -> Void, dismissAction: @escaping () -> Void, model: Model = .emptyMock, mode: Mode = .unlock(attempt: 3), stage: Stage = .editing, isPermissionsViewPresented: Bool = false, mistakes: Int = 0) {
         
@@ -96,7 +97,8 @@ class AuthPinCodeViewModel: ObservableObject {
                             pinCode.style = .correct
                             numpad.isEnabled = false
                         }
-                        
+                        // taptic feedback
+                        feedbackGenerator.notificationOccurred(.success)
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(400)) {
                             
                             self.dismissAction()
@@ -116,6 +118,8 @@ class AuthPinCodeViewModel: ObservableObject {
                         }
                         // error sound
                         AudioServicesPlaySystemSound(1109)
+                        // taptic feedback
+                        feedbackGenerator.notificationOccurred(.error)
                         alert = .init(title: "Введен некорректный пин-код.", message: "Осталось попыток: \(remainAttempts)", primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.action.send(AuthPinCodeViewModelAction.Unlock.Attempt()) }))
                         
      
@@ -262,6 +266,8 @@ class AuthPinCodeViewModel: ObservableObject {
                     }
                     // error sound
                     AudioServicesPlaySystemSound(1109)
+                    // taptic feedback
+                    feedbackGenerator.notificationOccurred(.error)
                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(400)) {
                         
                         withAnimation {
@@ -286,7 +292,8 @@ class AuthPinCodeViewModel: ObservableObject {
                         withAnimation {
                             pinCode.style = .correct
                         }
-                        
+                        // taptic feedback
+                        feedbackGenerator.notificationOccurred(.success)
                         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(200)) {
                             
                             model.action.send(ModelAction.Auth.Pincode.Set.Request(pincode: pinCode.value))
