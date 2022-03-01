@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Combine
+import AudioToolbox
 
 class AuthPinCodeViewModel: ObservableObject {
 
@@ -113,7 +114,10 @@ class AuthPinCodeViewModel: ObservableObject {
                             pinCode.style = .incorrect
                             numpad.isEnabled = false
                         }
+                        // error sound
+                        AudioServicesPlaySystemSound(1109)
                         alert = .init(title: "Введен некорректный пин-код.", message: "Осталось попыток: \(remainAttempts)", primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.action.send(AuthPinCodeViewModelAction.Unlock.Attempt()) }))
+                        
      
                     case .restricted:
                         withAnimation {
@@ -142,27 +146,36 @@ class AuthPinCodeViewModel: ObservableObject {
                     switch payload {
                     case .digit(let number):
                         pinCode.value = pinCode.value + String(number)
+                        // button click sound
+                        AudioServicesPlaySystemSound(1104)
                     
                     case .delete:
                         guard pinCode.value.count > 0 else {
                             return
                         }
                         pinCode.value = String(pinCode.value.dropLast())
+                        // delete click sound
+                        AudioServicesPlaySystemSound(1155)
                         
                     case .sensor:
                         guard let sensor = model.availableBiometricSensorType, model.isBiometricSensorEnabled == true else {
                             return
                         }
                         model.action.send(ModelAction.Auth.Sensor.Evaluate.Request(sensor: sensor))
+                        // option click sound
+                        AudioServicesPlaySystemSound(1156)
       
                     case .back:
                         self.mode = .create(step: .one)
                         self.pinCode.title = "Придумайте код"
                         self.pinCode.value = ""
                         self.numpad.update(button: .init(type: .empty, action: .none), left: true)
+                        // option click sound
+                        AudioServicesPlaySystemSound(1156)
 
                     case .exit:
                         alert = .init(title: "Внимание!", message: "Вы действительно хотите выйти из аккаунта?", primary: .init(type: .cancel, title: "Отмена", action: {}), secondary: .init(type: .distructive, title: "Выйти", action: { [weak self] in self?.action.send(AuthPinCodeViewModelAction.Exit())}))
+                        AudioServicesPlaySystemSound(1156)
                         
                     default:
                         break
@@ -247,7 +260,8 @@ class AuthPinCodeViewModel: ObservableObject {
                         pinCode.style = .incorrect
                         numpad.isEnabled = false
                     }
-                    
+                    // error sound
+                    AudioServicesPlaySystemSound(1109)
                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(400)) {
                         
                         withAnimation {
