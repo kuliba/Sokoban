@@ -82,7 +82,7 @@ class Model {
         let localAgent = LocalAgent(context: localContext)
         
         // keychain agent
-        let keychainAgent = KeychainAgentMock()
+        let keychainAgent = ValetKeychainAgent(valetName: "ru.forabank.sense.valet")
         
         // settings agent
         let settingsAgent = UserDefaultsSettingsAgent()
