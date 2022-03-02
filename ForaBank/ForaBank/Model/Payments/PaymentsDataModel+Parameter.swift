@@ -92,7 +92,7 @@ extension Payments {
             super.init(id: value.id, value: value.value)
         }
         
-        struct Option {
+        struct Option: Identifiable {
             
             let id: String
             let name: String
