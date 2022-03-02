@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B01073427C55E23006462E6 /* PaymentsPopUpSelectViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B01073327C55E23006462E6 /* PaymentsPopUpSelectViewComponent.swift */; };
 		0B04EBC627B068BB00893687 /* PaymentsParameterSelectViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B04EBC527B068BB00893687 /* PaymentsParameterSelectViewComponent.swift */; };
 		0B04EBCC27B07F6700893687 /* PaymentsParameterInfoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B04EBCB27B07F6700893687 /* PaymentsParameterInfoViewComponent.swift */; };
 		0B04EBD227B1568D00893687 /* PaymentsParameterInputViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B04EBD127B1568D00893687 /* PaymentsParameterInputViewComponent.swift */; };
@@ -920,6 +921,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0B01073327C55E23006462E6 /* PaymentsPopUpSelectViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsPopUpSelectViewComponent.swift; sourceTree = "<group>"; };
 		0B04EBC527B068BB00893687 /* PaymentsParameterSelectViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsParameterSelectViewComponent.swift; sourceTree = "<group>"; };
 		0B04EBCB27B07F6700893687 /* PaymentsParameterInfoViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsParameterInfoViewComponent.swift; sourceTree = "<group>"; };
 		0B04EBD127B1568D00893687 /* PaymentsParameterInputViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsParameterInputViewComponent.swift; sourceTree = "<group>"; };
@@ -1847,6 +1849,7 @@
 				0BF43D4727B466C2004DF248 /* PaymentsParameterNameViewComponent.swift */,
 				0BD7879E27B9A6F30073DA1A /* PaymentsParameterCardViewComponent.swift */,
 				0BD787A027B9AF290073DA1A /* PaymentsParameterAmountViewComponent.swift */,
+				0B01073327C55E23006462E6 /* PaymentsPopUpSelectViewComponent.swift */,
 			);
 			path = Payments;
 			sourceTree = "<group>";
@@ -5808,6 +5811,7 @@
 				ED84995926A8831E005205C6 /* EPContactCell.swift in Sources */,
 				A5662694275D3CD000FFE31A /* InternetTVSelectDialog.swift in Sources */,
 				68673B6026F4B87900F67A8C /* PayTableViewCell.swift in Sources */,
+				0B01073427C55E23006462E6 /* PaymentsPopUpSelectViewComponent.swift in Sources */,
 				EDF6820E266F9EC800FD5C07 /* NetworkModelProtocol.swift in Sources */,
 				0BDE452D26E298F600B64A0A /* ExtensionQRViewController.swift in Sources */,
 				7758754B27996D8B0080115D /* Cachable.swift in Sources */,
