@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B01073827CD4D4B006462E6 /* PaymentsParameterPaymentButtonViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B01073727CD4D4B006462E6 /* PaymentsParameterPaymentButtonViewComponent.swift */; };
 		0B04EBC627B068BB00893687 /* PaymentsParameterSelectViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B04EBC527B068BB00893687 /* PaymentsParameterSelectViewComponent.swift */; };
 		0B04EBCC27B07F6700893687 /* PaymentsParameterInfoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B04EBCB27B07F6700893687 /* PaymentsParameterInfoViewComponent.swift */; };
 		0B04EBD227B1568D00893687 /* PaymentsParameterInputViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B04EBD127B1568D00893687 /* PaymentsParameterInputViewComponent.swift */; };
@@ -920,6 +921,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0B01073727CD4D4B006462E6 /* PaymentsParameterPaymentButtonViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsParameterPaymentButtonViewComponent.swift; sourceTree = "<group>"; };
 		0B04EBC527B068BB00893687 /* PaymentsParameterSelectViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsParameterSelectViewComponent.swift; sourceTree = "<group>"; };
 		0B04EBCB27B07F6700893687 /* PaymentsParameterInfoViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsParameterInfoViewComponent.swift; sourceTree = "<group>"; };
 		0B04EBD127B1568D00893687 /* PaymentsParameterInputViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsParameterInputViewComponent.swift; sourceTree = "<group>"; };
@@ -1847,6 +1849,7 @@
 				0BF43D4727B466C2004DF248 /* PaymentsParameterNameViewComponent.swift */,
 				0BD7879E27B9A6F30073DA1A /* PaymentsParameterCardViewComponent.swift */,
 				0BD787A027B9AF290073DA1A /* PaymentsParameterAmountViewComponent.swift */,
+				0B01073727CD4D4B006462E6 /* PaymentsParameterPaymentButtonViewComponent.swift */,
 			);
 			path = Payments;
 			sourceTree = "<group>";
@@ -6034,6 +6037,7 @@
 				0B931B2226DCDA1800CA8017 /* GetLatestServicePaymentsDecodableModel.swift in Sources */,
 				68FFA561268DD2CF002DADFA /* CountriesCodeButton.swift in Sources */,
 				EDFFCACD2681F975004EE095 /* CardListView.swift in Sources */,
+				0B01073827CD4D4B006462E6 /* PaymentsParameterPaymentButtonViewComponent.swift in Sources */,
 				0BF3485D26931254005138A8 /* SuggestBankDecodableModel.swift in Sources */,
 				0BAD4D3B274417E700FDF9B6 /*  ExtensionPushHistoryNav.swift in Sources */,
 				0B95C40A26B6D88000AA57E6 /* BottomLableModel.swift in Sources */,
