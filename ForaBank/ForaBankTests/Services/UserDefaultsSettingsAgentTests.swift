@@ -43,10 +43,17 @@ class UserDefaultsSettingsAgentTests: XCTestCase {
         // when
         try settingsAgent.store(setting, type: .security(.sensor))
         settingsAgent.clear(type: .security(.sensor))
-        let result: Bool? = try settingsAgent.load(type: .security(.sensor))
         
         // then
-        XCTAssertNil(result)
+        do {
+            
+            let _: Bool = try settingsAgent.load(type: .security(.sensor))
+            XCTFail()
+            
+        } catch {
+            
+            XCTAssertTrue(true)
+        }
     }
 }
 

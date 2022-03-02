@@ -738,9 +738,9 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let imageEndpoint = "dict/getProductCatalogImage?image=1"
         
         // when
-        let command = ServerCommands.DictionaryController.GetProductCatalogImage.init(endpoint: imageEndpoint)
+        let command = ServerCommands.DictionaryController.GetProductCatalogImage(endpoint: imageEndpoint)
        
         // then
-        XCTAssertEqual(command.endpoint, imageEndpoint)
+        XCTAssertEqual(command.endpoint, "/\(imageEndpoint)")
     }
 }
