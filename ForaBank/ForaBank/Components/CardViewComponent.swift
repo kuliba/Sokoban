@@ -65,6 +65,7 @@ extension MainCardComponentView {
             
             case main
             case profile
+            
         }
     }
 }

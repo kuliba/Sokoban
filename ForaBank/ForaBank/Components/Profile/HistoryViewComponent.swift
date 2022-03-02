@@ -23,42 +23,42 @@ extension HistoryViewComponent {
         }
         
         struct DateOperations: Identifiable {
+            
+            let id = UUID()
+            let date: String
+            let operations: [Operation]
+            
+            internal init(date: String, operations: [Operation]) {
+                
+                self.date = date
+                self.operations = operations
+            }
+            
+            struct Operation: Identifiable {
                 
                 let id = UUID()
-                let date: String
-                let operations: [Operation]
+                let title: String
+                let image: Image
+                let subtitle: String
+                let amount: String
+                let type: OperationType
                 
-                internal init(date: String, operations: [Operation]) {
+                internal init(title: String, image: Image, subtitle: String, amount: String, type: OperationType) {
                     
-                    self.date = date
-                    self.operations = operations
+                    self.title = title
+                    self.image = image
+                    self.subtitle = subtitle
+                    self.amount = amount
+                    self.type = type
                 }
                 
-                struct Operation: Identifiable {
+                enum OperationType {
                     
-                    let id = UUID()
-                    let title: String
-                    let image: Image
-                    let subtitle: String
-                    let amount: String
-                    let type: OperationType
-                    
-                    internal init(title: String, image: Image, subtitle: String, amount: String, type: OperationType) {
-                        
-                        self.title = title
-                        self.image = image
-                        self.subtitle = subtitle
-                        self.amount = amount
-                        self.type = type
-                    }
-                    
-                    enum OperationType {
-                        
-                        case debit
-                        case credit
-                    }
+                    case debit
+                    case credit
                 }
             }
+        }
     }
 }
 
@@ -101,48 +101,78 @@ struct HistoryViewComponent: View {
                     .padding(.bottom, 32)
             }
             
-            ForEach(viewModel.dateOperations) { operation in
-
-                VStack(alignment: .leading, spacing: 0){
+            if !viewModel.dateOperations.isEmpty {
+                
+                ForEach(viewModel.dateOperations) { operation in
                     
-                    Text(operation.date)
-                        .font(.system(size: 14))
-                        .fontWeight(.semibold)
-                        .padding(.bottom, 16)
-                    
-                    ForEach(operation.operations) { item in
+                    VStack(alignment: .leading, spacing: 0){
                         
-                        HStack(alignment: .top, spacing: 20) {
+                        Text(operation.date)
+                            .font(.system(size: 14))
+                            .fontWeight(.semibold)
+                            .padding(.bottom, 16)
+                        
+                        ForEach(operation.operations) { item in
                             
-                            item.image
-                                .resizable()
-                                .frame(width: 40, height: 40)
-                            
-                            VStack(alignment: .leading, spacing: 8) {
+                            HStack(alignment: .top, spacing: 20) {
                                 
-                                Text(item.title)
-                                    .font(.system(size: 16))
-                                    .fontWeight(.regular)
-
+                                item.image
+                                    .resizable()
+                                    .frame(width: 40, height: 40)
                                 
-                                Text(item.subtitle)
-                                    .font(.system(size: 12))
-                                    .foregroundColor(.mainColorsGray)
-                                    .fontWeight(.light)
+                                VStack(alignment: .leading, spacing: 8) {
+                                    
+                                    Text(item.title)
+                                        .font(.system(size: 16))
+                                        .fontWeight(.regular)
+                                    
+                                    
+                                    Text(item.subtitle)
+                                        .font(.system(size: 12))
+                                        .foregroundColor(.mainColorsGray)
+                                        .fontWeight(.light)
+                                }
+                                
+                                Spacer()
+                                
+                                Text(item.amount)
+                                
                             }
-                            
-                            Spacer()
-                            
-                            Text(item.amount)
-                            
+                            .padding(.vertical, 8)
                         }
-                        .padding(.vertical, 8)
                     }
                 }
+                .padding(.bottom, 32)
+            } else {
+                
+                Spacer()
+                
+                EmptyOperationsView()
+                
+                Spacer()
             }
-            .padding(.bottom, 32)
         }
         .padding(.horizontal, 20)
+    }
+    
+    struct EmptyOperationsView: View {
+        
+        var body: some View {
+            
+            VStack(spacing: 24) {
+                
+                Image.ic24Search
+                    .foregroundColor(.mainColorsGray)
+                    .frame(width: 64, height: 64)
+                    .background(Color.mainColorsGrayLightest)
+                    .cornerRadius(90)
+
+                
+                Text("Нет операций")
+                    .font(Font.system(size: 14, weight: .light))
+                    .foregroundColor(.mainColorsGray)
+            }
+        }
     }
 }
 
@@ -151,10 +181,12 @@ struct HistoryViewComponent_Previews: PreviewProvider {
     static var previews: some View {
         
         Group {
-         
+            
             HistoryViewComponent(viewModel: .init(title: "История операций", dateOperations: [.init(date: "25 августа, ср", operations: [.init(title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .debit), .init(title: "Selhozmarket", image: Image.init("GKH", bundle: nil), subtitle: "Магазин", amount: "-230 Р", type: .credit)]), .init(date: "26 августа, ср", operations: [.init(title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .debit)])], spending: .spending))
             
-            HistoryViewComponent(viewModel: .init(title: "История операци", dateOperations: [.init(date: "25 августа, ср", operations: [.init(title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .debit)]), .init(date: "26 августа, ср", operations: [.init(title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .debit)])], spending: nil))
+            HistoryViewComponent(viewModel: .init(title: "История операций", dateOperations: [.init(date: "25 августа, ср", operations: [.init(title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .debit)]), .init(date: "26 августа, ср", operations: [.init(title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .debit)])], spending: nil))
+            
+            HistoryViewComponent(viewModel: .init(title: "История операций", dateOperations: [], spending: nil))
         }
     }
 }
