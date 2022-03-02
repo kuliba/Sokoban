@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import RealmSwift
 import Combine
 
 //MARK: - ViewModel
@@ -20,6 +19,7 @@ extension PaymentsParameterSelectView {
         @Published var state: State
     
         private var bindings: Set<AnyCancellable> = []
+        
         //TODO: real placeholder required
         private static let itemIconPlaceholder = Image("Payments Icon Placeholder")
         
