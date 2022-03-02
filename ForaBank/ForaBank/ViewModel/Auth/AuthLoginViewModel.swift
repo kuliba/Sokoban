@@ -124,17 +124,19 @@ class AuthLoginViewModel: ObservableObject {
                 
             }.store(in: &bindings)
         
+        model.auth
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] authState in
+                
+                updateNextButton(authState: authState, cardState: card.state)
+                
+            }.store(in: &bindings)
+        
         card.$state
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] state in
+            .sink { [unowned self] cardState in
                 
-                switch state {
-                case .ready(let cardNumber):
-                    card.nextButton = CardViewModel.NextButtonViewModel(action: {[weak self] in self?.action.send(AuthLoginViewModelAction.Register.init(cardNumber: cardNumber))})
-                    
-                case .editing:
-                    card.nextButton = nil
-                }
+                updateNextButton(authState: model.auth.value, cardState: cardState)
                 
             }.store(in: &bindings)
         
@@ -152,6 +154,17 @@ class AuthLoginViewModel: ObservableObject {
                 }
                 
             }.store(in: &bindings)
+    }
+    
+    func updateNextButton(authState: AuthorizationState, cardState: CardViewModel.State) {
+        
+        guard case .authorized(_, _) = authState, case .ready(let cardNumber) = cardState else {
+            
+            card.nextButton = nil
+            return
+        }
+        
+        card.nextButton = CardViewModel.NextButtonViewModel(action: {[weak self] in self?.action.send(AuthLoginViewModelAction.Register.init(cardNumber: cardNumber))})
     }
 }
 

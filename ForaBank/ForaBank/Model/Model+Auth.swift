@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import UIKit
+import FirebaseMessaging
 
 extension Model {
     
@@ -22,11 +24,32 @@ extension Model {
     }
 }
 
+enum ModelAuthError: Error {
+    
+    case emptyCSRFData(status: ServerStatusCode, message: String?)
+    case identifierForVendorObtainFailed
+    case fcmTokenObtainFailed
+    case installPushDeviceFailed(status: ServerStatusCode, message: String?)
+    case keyExchangeFailed(status: ServerStatusCode, message: String?)
+    case checkClientFailed(status: ServerStatusCode, message: String?)
+}
+
 //MARK: - Actions
 
 extension ModelAction {
     
     enum Auth {
+        
+        enum ExchangeKeys {
+        
+            struct Request: Action {}
+            
+            enum Response: Action {
+                
+                case success
+                case failure(Error)
+            }
+        }
         
         enum ProductImage {
             
@@ -59,7 +82,7 @@ extension ModelAction {
         enum VerificationCode {
             
             enum Confirm {
-            
+                
                 struct Request: Action {
                     
                     let code: String
@@ -85,7 +108,7 @@ extension ModelAction {
                     
                     case success(remain: Int)
                     case failure(message: String)
-
+                    
                 }
             }
             
@@ -94,7 +117,7 @@ extension ModelAction {
                 let code: String
             }
         }
-
+        
         enum Pincode {
             
             enum Set {
@@ -138,7 +161,7 @@ extension ModelAction {
             }
             
             enum Evaluate {
-            
+                
                 struct Request: Action {
                     
                     let sensor: BiometricSensorType
@@ -148,6 +171,20 @@ extension ModelAction {
                     
                     case success
                     case failure(message: String)
+                }
+            }
+        }
+        
+        enum Push {
+            
+            enum Register {
+                
+                struct Request: Action {}
+                
+                enum Response: Action {
+                    
+                    case success
+                    case failure(Error)
                 }
             }
         }
@@ -171,6 +208,74 @@ extension ModelAction {
 
 internal extension Model {
     
+    func handleAuthExchangeKeysRequest(payload: ModelAction.Auth.ExchangeKeys.Request) {
+        
+        let command = ServerCommands.UtilityController.Csrf()
+        serverAgent.executeCommand(command: command) { result in
+            
+            switch result {
+            case .success(let response):
+                if let data = response.data {
+                    
+                    do {
+                        
+                        let csrfAgent = try CSRFAgent<AESEncryptionAgent>(ECKeysProvider(), data.cert, data.pk)
+                        let token = data.token
+                        
+                        
+                        //FIXME: debug key exchange
+                        self.auth.value = .authorized(token: token, csrfAgent: csrfAgent)
+                   
+                        /*
+                        let keyExchangeCommand = ServerCommands.UtilityController.KeyExchange(token: token, payload: .init(data: csrfAgent.publicKeyData, token: token, type: ""))
+                        self.serverAgent.executeCommand(command: keyExchangeCommand) { result in
+                            
+                            switch result {
+                            case .success(let response):
+                                switch response.statusCode {
+                                case .ok:
+                                    self.auth.value = .authorized(token: token, csrfAgent: csrfAgent)
+                                    
+                                default:
+                                    //TODO: log error
+                                    print("Model: handleAuthRegisterRequest: key exchange failed status \(response.statusCode), message: \(String(describing: response.errorMessage))")
+                                    self.action.send(ModelAction.Auth.ExchangeKeys.Response.failure(ModelAuthError.keyExchangeFailed(status: response.statusCode, message: response.errorMessage)))
+                                }
+                                
+                            case .failure(let error):
+                                //TODO: log error
+                                print("Model: handleAuthRegisterRequest: key exchange failed error \(error.localizedDescription)")
+                                self.action.send(ModelAction.Auth.ExchangeKeys.Response.failure(error))
+                            }
+                        }
+                         */
+                     
+
+                    } catch {
+                        
+                        //TODO: log error
+                        print("Model: handleAuthRegisterRequest: CSRF agent init error \(error.localizedDescription)")
+                        self.action.send(ModelAction.Auth.ExchangeKeys.Response.failure(error))
+                    }
+                    
+                } else {
+                    
+                    //TODO: log error
+                    print("Model: handleAuthRegisterRequest: empty CSRF data status \(response.statusCode), message: \(String(describing: response.errorMessage))")
+                    
+                    self.action.send(ModelAction.Auth.ExchangeKeys.Response.failure(ModelAuthError.emptyCSRFData(status: response.statusCode, message: response.errorMessage)))
+                }
+                
+            case .failure(let error):
+                
+                //TODO: log error
+                print("Model: handleAuthRegisterRequest: error \(error.localizedDescription)")
+                
+                self.action.send(ModelAction.Auth.ExchangeKeys.Response.failure(error))
+            }
+        }
+    }
+    
     func handleAuthProductImageRequest(_ payload: ModelAction.Auth.ProductImage.Request) {
         
         let command = ServerCommands.DictionaryController.GetProductCatalogImage(endpoint: payload.endpoint)
@@ -185,27 +290,113 @@ internal extension Model {
             }
         }
     }
-        
+    
     func handleAuthRegisterRequest(payload: ModelAction.Auth.Register.Request) {
         
-        //TODO: real implementation required
-        if payload.number == "1111111111111111" {
-           
-            DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(3)) {
-                
-                self.action.send(ModelAction.Auth.Register.Response.success(codeLength: 6, phone: "+79255557799", resendCodeDelay: 5))
+        guard case .authorized(let token, let csrfAgent) = auth.value else {
+            
+            //TODO: log error
+            print("Model: handleAuthRegisterRequest: not authorized.")
+            
+            self.action.send(ModelAction.Auth.Register.Response.fail(message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения."))
+            
+            return
+        }
+        
+        do {
+            
+            let encryptedNumber = payload.number
+            let cryptoVersion = "0.0"
+            
+            //FIXME: debug encryption
+            /*
+             let encryptedNumber = try csrfAgent.encrypt(payload.number)
+             let cryptoVersion = "1.0"
+             */
+            
+            let command = ServerCommands.RegistrationContoller.CheckClient(token: token, payload: .init(cardNumber: encryptedNumber, cryptoVersion: cryptoVersion))
+            self.serverAgent.executeCommand(command: command) { result in
+                switch result {
+                case .success(let response):
+                    if let data = response.data {
+                        
+                        self.action.send(ModelAction.Auth.Register.Response.success(codeLength: 6, phone: data.phone, resendCodeDelay: 30))
+                        
+                    } else {
+                        
+                        //TODO: log error
+                        print("Model: handleAuthRegisterRequest: empty data status \(response.statusCode), message: \(String(describing: response.errorMessage))")
+                        
+                        self.action.send(ModelAction.Auth.Register.Response.fail(message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения."))
+                    }
+                    
+                case .failure(let error):
+                    //TODO: log error
+                    print("Model: handleAuthRegisterRequest: error \(error.localizedDescription)")
+                    
+                    self.action.send(ModelAction.Auth.Register.Response.fail(message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения."))
+                }
             }
             
-        } else {
+        } catch {
             
-            DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(3)) {
-                
-                self.action.send(ModelAction.Auth.Register.Response.fail(message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения."))
-            }
+            //TODO: log error
+            print("Model: handleAuthRegisterRequest: encryption number error \(error.localizedDescription)")
+            
+            self.action.send(ModelAction.Auth.Register.Response.fail(message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения."))
         }
     }
     
     func handleAuthVerificationCodeConfirmRequest(payload: ModelAction.Auth.VerificationCode.Confirm.Request) {
+        
+        guard let token = token else {
+            
+            //TODO: log error
+            print("Model: handleAuthVerificationCodeConfirmRequest: not authorized.")
+            
+            self.action.send(ModelAction.Auth.VerificationCode.Confirm.Response.failure(message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения."))
+            
+            return
+        }
+        
+        //FIXME: debug encryption
+        let verificationCode = payload.code
+        let cryptoVersion = "0"
+        
+        let command = ServerCommands.RegistrationContoller.VerifyCode(token: token, payload: .init(cryptoVersion: cryptoVersion, verificationCode: verificationCode))
+        serverAgent.executeCommand(command: command) { result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    self.action.send(ModelAction.Auth.VerificationCode.Confirm.Response.correct)
+                    
+                default:
+                    
+                    //TODO: log error
+                    print("Model: handleAuthVerificationCodeConfirmRequest: data status \(response.statusCode), message: \(String(describing: response.errorMessage))")
+                    
+                    if let message = response.errorMessage {
+                        
+                        self.action.send(ModelAction.Auth.VerificationCode.Confirm.Response.failure(message: message))
+                        
+                    } else {
+                        
+                        self.action.send(ModelAction.Auth.VerificationCode.Confirm.Response.failure(message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения."))
+                    }
+                }
+                
+            case .failure(let error):
+                
+                //TODO: log error
+                print("Model: handleAuthVerificationCodeConfirmRequest: error \(error.localizedDescription)")
+                
+                self.action.send(ModelAction.Auth.VerificationCode.Confirm.Response.failure(message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения."))
+            }
+        }
+        
+        /*
         
         //TODO: real implementation required
         if payload.code == "111111" {
@@ -225,6 +416,7 @@ internal extension Model {
                 self.action.send(ModelAction.Auth.VerificationCode.Confirm.Response.incorrect(remain: remain))
             }
         }
+         */
     }
     
     func handleAuthVerificationCodeResendRequest(payload: ModelAction.Auth.VerificationCode.Resend.Request) {
@@ -248,7 +440,7 @@ internal extension Model {
             //TODO: log error
             print("Model: handleAuthPincodeSetRequest: error \(error.localizedDescription)")
             
-            action.send(ModelAction.Auth.Pincode.Set.Response.failure(message: "Невозможно сохранит пин-код в крипто-хранилище. Попробуйте переустановить приложение. В случае, если ошибка повториться, обратитесь в службу поддержки."))
+            action.send(ModelAction.Auth.Pincode.Set.Response.failure(message: "Невозможно сохранить пин-код в крипто-хранилище. Попробуйте переустановить приложение. В случае, если ошибка повториться, обратитесь в службу поддержки."))
         }
     }
     
@@ -257,7 +449,7 @@ internal extension Model {
         do {
             
             let storedPincode: String = try keychainAgent.load(type: .pincode)
-
+            
             if payload.pincode == storedPincode {
                 
                 action.send(ModelAction.Auth.Pincode.Check.Response.correct)
@@ -290,7 +482,7 @@ internal extension Model {
             switch payload {
             case .allow:
                 try settingsAgent.store(true, type: .security(.sensor))
-            
+                
             case .desideLater:
                 try settingsAgent.store(false, type: .security(.sensor))
             }
@@ -318,10 +510,78 @@ internal extension Model {
                 }
                 
             case .failure(let error):
-  
+                
                 self.action.send(ModelAction.Auth.Sensor.Evaluate.Response.failure(message: error.localizedDescription))
             }
         }
+    }
+    
+    func handleAuthPushRegisterRequest() {
+        
+        /*
+        guard let identifierForVendor = UIDevice.current.identifierForVendor?.uuidString else {
+            
+            //TODO: log error
+            print("Model: handleAuthRegisterRequest: identifierForVendor obtain failed")
+            self.action.send(ModelAction.Auth.ExchangeKeys.Response.failure(ModelAuthError.identifierForVendorObtainFailed))
+            
+            return
+        }
+        
+        guard let fcmToken = Messaging.messaging().fcmToken else {
+            
+            //TODO: log error
+            print("Model: handleAuthRegisterRequest: fcmToken obtain failed")
+            self.action.send(ModelAction.Auth.ExchangeKeys.Response.failure(ModelAuthError.fcmTokenObtainFailed))
+            return
+        }
+        
+        let model = UIDevice.current.model
+        
+        let installPushDeviceCommand = ServerCommands.PushDeviceController.InstallPushDevice(token: token, payload: .init(cryptoVersion: "1.0", model: model, pushDeviceId: identifierForVendor, pushFcmToken: fcmToken))
+        self.serverAgent.executeCommand(command: installPushDeviceCommand) { result in
+          
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    
+                    let keyExchangeCommand = ServerCommands.UtilityController.KeyExchange(token: token, payload: .init(data: csrfAgent.publicKeyData, token: token, type: ""))
+                    self.serverAgent.executeCommand(command: keyExchangeCommand) { result in
+                        
+                        switch result {
+                        case .success(let response):
+                            switch response.statusCode {
+                            case .ok:
+                                self.auth.value = .authorized(token: token, csrfAgent: csrfAgent)
+                                
+                            default:
+                                //TODO: log error
+                                print("Model: handleAuthRegisterRequest: key exchange failed status \(response.statusCode), message: \(String(describing: response.errorMessage))")
+                                self.action.send(ModelAction.Auth.ExchangeKeys.Response.failure(ModelAuthError.keyExchangeFailed(status: response.statusCode, message: response.errorMessage)))
+                            }
+                            
+                        case .failure(let error):
+                            //TODO: log error
+                            print("Model: handleAuthRegisterRequest: key exchange failed error \(error.localizedDescription)")
+                            self.action.send(ModelAction.Auth.ExchangeKeys.Response.failure(error))
+                        }
+                    }
+
+                default:
+                    //TODO: log error
+                    print("Model: handleAuthRegisterRequest: install push device failed status \(response.statusCode), message: \(String(describing: response.errorMessage))")
+                    self.action.send(ModelAction.Auth.ExchangeKeys.Response.failure(ModelAuthError.installPushDeviceFailed(status: response.statusCode, message: response.errorMessage)))
+                }
+                
+            case .failure(let error):
+                //TODO: log error
+                print("Model: handleAuthRegisterRequest: install push device failed error \(error.localizedDescription)")
+                self.action.send(ModelAction.Auth.ExchangeKeys.Response.failure(error))
+            }
+        }
+        
+        */
     }
     
     func handleAuthLoginRequest() {

@@ -29,7 +29,7 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: CsrfData
+                let data: CsrfData?
             }
         }
         
@@ -83,12 +83,13 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: EmptyData
+                let data: EmptyData?
             }
             
             internal init(token: String, payload: Payload) {
-                self.payload = payload
+                
                 self.token = token
+                self.payload = payload
             }
         }
         

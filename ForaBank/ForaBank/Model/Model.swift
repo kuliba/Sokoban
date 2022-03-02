@@ -39,7 +39,7 @@ class Model {
     private let queue = DispatchQueue(label: "ru.forabank.sense.model", qos: .userInitiated, attributes: .concurrent)
     internal var token: String? {
         
-        guard case .authorized(let token) = auth.value else {
+        guard case .authorized(let token, _) = auth.value else {
             return nil
         }
         
@@ -62,6 +62,7 @@ class Model {
         
         loadCachedData()
         bind()
+//        action.send(ModelAction.Auth.ExchangeKeys.Request())
         cacheDictionaries()
     }
     
@@ -95,22 +96,6 @@ class Model {
     
     private func bind() {
         
-        //FIXME: remove after refactoring
-        CSRFToken.tokenPublisher
-            .receive(on: queue)
-            .sink {[unowned self] token in
-                
-                if let token = token {
-                    
-                    auth.value = .authorized(token: token)
-                    
-                } else {
-                    
-                    auth.value = .notAuthorized
-                }
-                
-            }.store(in: &bindings)
-        
         action
             .receive(on: queue)
             .sink {[unowned self] action in
@@ -118,16 +103,9 @@ class Model {
                 switch action {
                 
                 //MARK: - Auth Actions
-                
-                //FIXME: - remove after refactoring login screens
-                case _ as ModelAction.LoggedIn:
-                    loadCachedData()
-                    self.action.send(ModelAction.PaymentTemplate.List.Requested())
-                
-                //FIXME: - remove after refactoring login screens
-                case _ as ModelAction.LoggedOut:
-                    clearCachedData()
-                    paymentTemplates.value = []
+                    
+                case let payload as ModelAction.Auth.ExchangeKeys.Request:
+                    handleAuthExchangeKeysRequest(payload: payload)
                     
                 case let payload as ModelAction.Auth.ProductImage.Request:
                     handleAuthProductImageRequest(payload)
@@ -152,6 +130,9 @@ class Model {
                     
                 case let payload as ModelAction.Auth.Sensor.Evaluate.Request:
                     handleAuthSensorEvaluateRequest(payload: payload)
+                    
+                case _ as ModelAction.Auth.Push.Register.Request:
+                    handleAuthPushRegisterRequest()
                     
                 case _ as ModelAction.Auth.Login.Request:
                     handleAuthLoginRequest()
