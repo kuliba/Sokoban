@@ -62,8 +62,8 @@ class Model {
         
         loadCachedData()
         bind()
-//        action.send(ModelAction.Auth.ExchangeKeys.Request())
-        cacheDictionaries()
+        action.send(ModelAction.Auth.ExchangeKeys.Request())
+//        cacheDictionaries()
     }
     
     //FIXME: remove after refactoring

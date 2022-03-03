@@ -464,6 +464,7 @@
 		770DCE9327BBF93B004099C1 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770DCE9227BBF93B004099C1 /* RootView.swift */; };
 		770DCE9627BBFA6D004099C1 /* RootViewHostingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770DCE9527BBFA6D004099C1 /* RootViewHostingViewController.swift */; };
 		770DCE9827BC0475004099C1 /* AuthPinCodeViewModel+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770DCE9727BC0475004099C1 /* AuthPinCodeViewModel+Preview.swift */; };
+		773E49AA27D0C72900D8264E /* URLCache+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 773E49A927D0C72900D8264E /* URLCache+Extensions.swift */; };
 		774706A3277DD4E400B524F1 /* OperationDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774706A1277DD4E400B524F1 /* OperationDetailViewModel.swift */; };
 		774706A4277DD4E400B524F1 /* OperationDetailViewModelAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774706A2277DD4E400B524F1 /* OperationDetailViewModelAction.swift */; };
 		774706AE277DD53100B524F1 /* OperationDetailInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774706AD277DD53100B524F1 /* OperationDetailInfoView.swift */; };
@@ -1386,6 +1387,7 @@
 		770DCE9227BBF93B004099C1 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		770DCE9527BBFA6D004099C1 /* RootViewHostingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewHostingViewController.swift; sourceTree = "<group>"; };
 		770DCE9727BC0475004099C1 /* AuthPinCodeViewModel+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthPinCodeViewModel+Preview.swift"; sourceTree = "<group>"; };
+		773E49A927D0C72900D8264E /* URLCache+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLCache+Extensions.swift"; sourceTree = "<group>"; };
 		774706A1277DD4E400B524F1 /* OperationDetailViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OperationDetailViewModel.swift; sourceTree = "<group>"; };
 		774706A2277DD4E400B524F1 /* OperationDetailViewModelAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OperationDetailViewModelAction.swift; sourceTree = "<group>"; };
 		774706AD277DD53100B524F1 /* OperationDetailInfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OperationDetailInfoView.swift; sourceTree = "<group>"; };
@@ -3557,6 +3559,7 @@
 				7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */,
 				7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */,
 				7772978827C39EF70099EF91 /* String+Extensions.swift */,
+				773E49A927D0C72900D8264E /* URLCache+Extensions.swift */,
 				E34B29CF263A08B9A2BA3560 /* Assets */,
 			);
 			path = Extensions;
@@ -5680,6 +5683,7 @@
 				68FFA55326857530002DADFA /* Extension.swift in Sources */,
 				EDB16597266A576A007E6030 /* CardScannerController.swift in Sources */,
 				0BB015D626C8892700E7A85B /* GKHMainViewController.swift in Sources */,
+				773E49AA27D0C72900D8264E /* URLCache+Extensions.swift in Sources */,
 				EDB165662667A741007E6030 /* ContactInputViewController.swift in Sources */,
 				686857D8274FA73C00BBF562 /* PaymentsViewCoordinator.swift in Sources */,
 				0BDE453326E3EA4A00B64A0A /* ExtensionQRReadPDF.swift in Sources */,

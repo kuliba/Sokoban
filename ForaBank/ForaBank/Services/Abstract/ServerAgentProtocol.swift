@@ -58,6 +58,7 @@ enum ServerAgentError: Error {
     
     case requestCreationError(Error)
     case sessionError(Error)
+    case emptyResponse
     case emptyResponseData
     case curruptedData(Error)
     case serverStatus(ServerStatusCode, errorMessage: String?)

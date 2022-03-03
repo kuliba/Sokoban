@@ -316,6 +316,7 @@ internal extension Model {
             
             let command = ServerCommands.RegistrationContoller.CheckClient(token: token, payload: .init(cardNumber: encryptedNumber, cryptoVersion: cryptoVersion))
             self.serverAgent.executeCommand(command: command) { result in
+                
                 switch result {
                 case .success(let response):
                     if let data = response.data {
@@ -324,10 +325,18 @@ internal extension Model {
                         
                     } else {
                         
+                        if let errorMessage = response.errorMessage {
+                            
+                            self.action.send(ModelAction.Auth.Register.Response.fail(message: errorMessage))
+                            
+                        } else {
+                            
+                            self.action.send(ModelAction.Auth.Register.Response.fail(message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения."))
+                            
+                        }
+                        
                         //TODO: log error
                         print("Model: handleAuthRegisterRequest: empty data status \(response.statusCode), message: \(String(describing: response.errorMessage))")
-                        
-                        self.action.send(ModelAction.Auth.Register.Response.fail(message: "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения."))
                     }
                     
                 case .failure(let error):

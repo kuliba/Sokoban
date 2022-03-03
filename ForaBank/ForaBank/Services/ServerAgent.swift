@@ -11,28 +11,32 @@ class ServerAgent: NSObject, ServerAgentProtocol {
 
     private var baseURL: String { enviroment.baseURL }
     private let enviroment: Environment
-    private let delegateQueue: OperationQueue
-    
+  
     private lazy var session: URLSession = {
         
-        // session configuration
-        let memoryCapacity = 50 * 1024 * 1024
-        let diskCapacity = 500 * 1024 * 1024
-
         let configuration = URLSessionConfiguration.default
-        configuration.urlCache = URLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath: nil)
+        configuration.httpShouldSetCookies = false
+        configuration.httpCookieAcceptPolicy = .never
         
-        return URLSession(configuration: configuration, delegate: self, delegateQueue: delegateQueue)
+        return URLSession(configuration: configuration)
+    }()
+    
+    private lazy var sessionCached: URLSession = {
+        
+        let configuration = URLSessionConfiguration.default
+        configuration.urlCache = URLCache.downloadCache
+        
+        return URLSession(configuration: configuration)
         
     }()
     
     private let encoder: JSONEncoder
     private let decoder: JSONDecoder
+    private var cookies: [HTTPCookie]?
     
     internal init(enviroment: Environment) {
         
         self.enviroment = enviroment
-        self.delegateQueue = OperationQueue()
         self.encoder = JSONEncoder.serverDate
         self.decoder = JSONDecoder.serverDate
     }
@@ -42,12 +46,27 @@ class ServerAgent: NSObject, ServerAgentProtocol {
         do {
             
             let request = try request(with: command)
-            session.dataTask(with: request) {[unowned self] data, _, error in
+            session.dataTask(with: request) {[unowned self] data, response, error in
                 
                 if let error = error {
                     
                     completion(.failure(.sessionError(error)))
                     return
+                }
+                
+                guard let response = response as? HTTPURLResponse else {
+                    
+                    completion(.failure(.emptyResponse))
+                    return
+                }
+                
+                if let headers = response.allHeaderFields as? [String: String], let url = request.url {
+                    
+                    let responseCookies = HTTPCookie.cookies(withResponseHeaderFields: headers, for: url)
+                    if responseCookies.count > 0 {
+                        
+                        self.cookies = responseCookies
+                    }
                 }
                 
                 guard let data = data else {
@@ -80,7 +99,7 @@ class ServerAgent: NSObject, ServerAgentProtocol {
         do {
             
             let request = try downloadRequest(with: command)
-            session.downloadTask(with: request) { localFileURL, _, error in
+            sessionCached.downloadTask(with: request) { localFileURL, response, error in
                 
                 if let error = error {
                     
@@ -88,9 +107,14 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                     return
                 }
                 
+                guard let response = response else {
+                    
+                    completion(.failure(.emptyResponse))
+                    return
+                }
+                
                 guard let localFileURL = localFileURL else {
                     
-                    //TODO: handle serever response ststus if no localFileURL
                     completion(.failure(.emptyResponseData))
                     return
                 }
@@ -98,6 +122,13 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                 do {
                     
                     let data = try Data(contentsOf: localFileURL)
+                    
+                    // store data in cache
+                    if self.sessionCached.configuration.urlCache?.cachedResponse(for: request) == nil {
+                        
+                        self.sessionCached.configuration.urlCache?.storeCachedResponse(CachedURLResponse(response: response, data: data), for: request)
+                    }
+                    
                     completion(.success(data))
                     
                 } catch {
@@ -124,9 +155,18 @@ internal extension ServerAgent {
         let url = try url(with: command.endpoint)
         
         var request = URLRequest(url: url)
+
+        // http method
+        request.httpMethod = command.method.rawValue
+        
+        // cookies headers
+        request.httpShouldHandleCookies = false
+        if let cookies = self.cookies {
+           
+            request.allHTTPHeaderFields = HTTPCookie.requestHeaderFields(with: cookies)
+        }
         
         // headers
-        request.httpMethod = command.method.rawValue
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         // token

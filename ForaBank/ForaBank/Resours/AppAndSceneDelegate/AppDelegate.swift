@@ -52,7 +52,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         self.initRealmTimerParameters()
         // Зарузка кэша
-        downloadCash.download()
+//        downloadCash.download()
 
         return true
     }
