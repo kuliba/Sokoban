@@ -26,6 +26,12 @@ protocol ServerCommand {
     var parameters: [ServerCommandParameter]? { get }
     var payload: Payload? { get }
     var timeout: TimeInterval? { get }
+    var cookiesProvider: Bool { get }
+}
+
+extension ServerCommand {
+    
+    var cookiesProvider: Bool { false }
 }
 
 /// Multipart download server request

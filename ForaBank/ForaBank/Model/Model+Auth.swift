@@ -221,12 +221,7 @@ internal extension Model {
                         
                         let csrfAgent = try CSRFAgent<AESEncryptionAgent>(ECKeysProvider(), data.cert, data.pk)
                         let token = data.token
-                        
-                        
-                        //FIXME: debug key exchange
-                        self.auth.value = .authorized(token: token, csrfAgent: csrfAgent)
-                   
-                        /*
+    
                         let keyExchangeCommand = ServerCommands.UtilityController.KeyExchange(token: token, payload: .init(data: csrfAgent.publicKeyData, token: token, type: ""))
                         self.serverAgent.executeCommand(command: keyExchangeCommand) { result in
                             
@@ -248,8 +243,6 @@ internal extension Model {
                                 self.action.send(ModelAction.Auth.ExchangeKeys.Response.failure(error))
                             }
                         }
-                         */
-                     
 
                     } catch {
                         
@@ -305,15 +298,16 @@ internal extension Model {
         
         do {
             
+            /*
             let encryptedNumber = payload.number
             let cryptoVersion = "0.0"
-            
-            //FIXME: debug encryption
-            /*
-             let encryptedNumber = try csrfAgent.encrypt(payload.number)
-             let cryptoVersion = "1.0"
              */
             
+            //FIXME: debug encryption
+        
+             let encryptedNumber = try csrfAgent.encrypt(payload.number)
+             let cryptoVersion = "1.0"
+
             let command = ServerCommands.RegistrationContoller.CheckClient(token: token, payload: .init(cardNumber: encryptedNumber, cryptoVersion: cryptoVersion))
             self.serverAgent.executeCommand(command: command) { result in
                 

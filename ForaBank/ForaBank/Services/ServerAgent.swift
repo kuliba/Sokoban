@@ -60,7 +60,9 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                     return
                 }
                 
-                if let headers = response.allHeaderFields as? [String: String], let url = request.url {
+                if command.cookiesProvider == true,
+                    let headers = response.allHeaderFields as? [String: String],
+                    let url = request.url {
                     
                     let responseCookies = HTTPCookie.cookies(withResponseHeaderFields: headers, for: url)
                     if responseCookies.count > 0 {

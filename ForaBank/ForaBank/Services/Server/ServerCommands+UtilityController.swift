@@ -17,11 +17,12 @@ extension ServerCommands {
         struct Csrf: ServerCommand {
             
             let token: String? = nil
-            let endpoint = "/csrf"
+            let endpoint = "/csrf/"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload? = nil
             let timeout: TimeInterval? = nil
+            var cookiesProvider: Bool { true }
 
             struct Payload: Encodable {}
             
