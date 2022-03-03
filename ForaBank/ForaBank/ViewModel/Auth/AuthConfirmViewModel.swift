@@ -25,7 +25,6 @@ class AuthConfirmViewModel: ObservableObject {
     private let phoneNumber: String
     private let resendCodeDelay: TimeInterval
     
-    private var currentCheckCodeAttempt = 0
     private var currentResendCodeAttempt = 0
     private let backAction: () -> Void
     private let rootActions: RootViewModel.AuthActions
@@ -84,20 +83,16 @@ class AuthConfirmViewModel: ObservableObject {
                         pincodeViewModel = AuthPinCodeViewModel(model, mode: .create(step: .one), backAction: backAction, dismissAction: rootActions.dismiss)
                         isPincodeViewPresented = true
                         
-                    case .incorrect(remain: let remain):
-                        if remain > 0 {
-                            
-                            alert = Alert.ViewModel(title: "Введен некорректный код. Попробуйте еще раз.", message: "Осталось попыток: \(remain)", primary: .init(type: .default, title: "Ok", action: { [weak self] in
-                                self?.alert = nil
-                                self?.code.state = .edit
-                                self?.code.textField.text = ""
-                                self?.code.textField.showKeyboard()
-                            }))
-                            
-                        } else {
-                            
-                            alert = Alert.ViewModel(title: "Ошибка.", message: "Вы исчерпали все попытки :(", primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.action.send(AuthConfirmViewModelAction.Dismiss())}))
-                        }
+                    case .incorrect(let message):
+                        alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in
+                            self?.alert = nil
+                            self?.code.state = .edit
+                            self?.code.textField.text = ""
+                            self?.code.textField.showKeyboard()
+                        }))
+                        
+                    case .restricted(let message):
+                        alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.action.send(AuthConfirmViewModelAction.Dismiss())}))
                         
                     case .failure(message: let message):
                         alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in
@@ -131,8 +126,7 @@ class AuthConfirmViewModel: ObservableObject {
                         return
                     }
                     code.textField.text = payload.code
-                    
-    
+ 
                 default:
                     break
                 }
@@ -176,8 +170,7 @@ class AuthConfirmViewModel: ObservableObject {
                 case .check:
                     code.textField.dismissKeyboard()
                     rootActions.spinner.show()
-                    currentCheckCodeAttempt += 1
-                    model.action.send(ModelAction.Auth.VerificationCode.Confirm.Request(code: code.textField.text, attempt: currentCheckCodeAttempt))
+                    model.action.send(ModelAction.Auth.VerificationCode.Confirm.Request(code: code.textField.text))
                     
                 default:
                     break

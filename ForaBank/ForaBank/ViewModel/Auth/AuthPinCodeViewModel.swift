@@ -500,7 +500,7 @@ extension AuthPinCodeViewModel {
                              [.init(type: leftButton.type,
                                     action: { [weak self] in self?.action.send(leftButton.action) }),
                               .init(type: .digit("0"),
-                                    action: { [weak self] in self?.action.send(NumPadViewModelAction.Button.digit(9)) }),
+                                    action: { [weak self] in self?.action.send(NumPadViewModelAction.Button.digit(0)) }),
                               .init(type: rightButton.type,
                                     action: { [weak self] in self?.action.send(rightButton.action) })]]
         }

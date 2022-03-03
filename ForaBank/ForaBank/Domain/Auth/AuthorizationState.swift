@@ -10,5 +10,5 @@ import Foundation
 enum AuthorizationState {
     
     case notAuthorized
-    case authorized(token: String, csrfAgent: CSRFAgent<AESEncryptionAgent>)
+    case authorized(credentials: CSRFCredentials)
 }

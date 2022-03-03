@@ -569,6 +569,7 @@
 		7792557E279B1A5400A85723 /* JSONDecoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */; };
 		77925580279B1BCB00A85723 /* JSONEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */; };
 		77AC9159277A518B00E49D5D /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = 77AC9158277A518B00E49D5D /* Shimmer */; };
+		77B751FF27D10F9900FB51C7 /* CSRFCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B751FE27D10F9900FB51C7 /* CSRFCredentials.swift */; };
 		77C026E6275E6299002BE1F6 /* GKHHistoryModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C026E5275E6299002BE1F6 /* GKHHistoryModelTests.swift */; };
 		77D2D9AE275AB90A0097234D /* RealmResults+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D2D9AC275AB9090097234D /* RealmResults+Extension.swift */; };
 		77D2D9AF275AB90A0097234D /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D2D9AD275AB90A0097234D /* Array+Extensions.swift */; };
@@ -1491,6 +1492,7 @@
 		77925574279AF54F00A85723 /* ECKeysProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKeysProvider.swift; sourceTree = "<group>"; };
 		7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONDecoder+Extensions.swift"; sourceTree = "<group>"; };
 		7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONEncoder+Extensions.swift"; sourceTree = "<group>"; };
+		77B751FE27D10F9900FB51C7 /* CSRFCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFCredentials.swift; sourceTree = "<group>"; };
 		77C026E5275E6299002BE1F6 /* GKHHistoryModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHHistoryModelTests.swift; sourceTree = "<group>"; };
 		77D2D9AC275AB9090097234D /* RealmResults+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RealmResults+Extension.swift"; sourceTree = "<group>"; };
 		77D2D9AD275AB90A0097234D /* Array+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
@@ -3258,6 +3260,7 @@
 				774A82CC27BAF5B600E5A5E9 /* KeychainValueType.swift */,
 				7705408A27BD1B1100094006 /* BiometricSensorType.swift */,
 				7772978627C39E2D0099EF91 /* StringValueMask.swift */,
+				77B751FE27D10F9900FB51C7 /* CSRFCredentials.swift */,
 			);
 			path = General;
 			sourceTree = "<group>";
@@ -5734,6 +5737,7 @@
 				0B283FBD26FBC9F100B5E925 /* Presentable.swift in Sources */,
 				0B8C1C58273C599A00BA5CAC /* GKHNavigationController.swift in Sources */,
 				77499C432773A96500F6C079 /* Color+Extensions.swift in Sources */,
+				77B751FF27D10F9900FB51C7 /* CSRFCredentials.swift in Sources */,
 				0BAC674126D408DC005AAD91 /* CreateDirectTransferDecodableModel.swift in Sources */,
 				770DCE9327BBF93B004099C1 /* RootView.swift in Sources */,
 				0BF348A1269E0CDA005138A8 /* LogoutDecodableModel.swift in Sources */,

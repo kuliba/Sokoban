@@ -39,11 +39,11 @@ class Model {
     private let queue = DispatchQueue(label: "ru.forabank.sense.model", qos: .userInitiated, attributes: .concurrent)
     internal var token: String? {
         
-        guard case .authorized(let token, _) = auth.value else {
+        guard case .authorized(let credentials) = auth.value else {
             return nil
         }
         
-        return token
+        return credentials.token
     }
     
     init(serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol, settingsAgent: SettingsAgentProtocol, biometricAgent: BiometricAgentProtocol) {
@@ -63,7 +63,6 @@ class Model {
         loadCachedData()
         bind()
         cacheDictionaries()
-        action.send(ModelAction.Auth.ExchangeKeys.Request())
     }
     
     //FIXME: remove after refactoring
@@ -103,9 +102,6 @@ class Model {
                 switch action {
                 
                 //MARK: - Auth Actions
-                    
-                case let payload as ModelAction.Auth.ExchangeKeys.Request:
-                    handleAuthExchangeKeysRequest(payload: payload)
                     
                 case let payload as ModelAction.Auth.ProductImage.Request:
                     handleAuthProductImageRequest(payload)

@@ -24,6 +24,8 @@ class ServerAgent: NSObject, ServerAgentProtocol {
     private lazy var sessionCached: URLSession = {
         
         let configuration = URLSessionConfiguration.default
+        configuration.httpShouldSetCookies = false
+        configuration.httpCookieAcceptPolicy = .never
         configuration.urlCache = URLCache.downloadCache
         
         return URLSession(configuration: configuration)
@@ -73,7 +75,6 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                 
                 guard let data = data else {
                     
-                    //TODO: handle serever response ststus if no data
                     completion(.failure(.emptyResponseData))
                     return
                 }

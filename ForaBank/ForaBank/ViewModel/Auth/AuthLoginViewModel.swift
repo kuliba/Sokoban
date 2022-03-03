@@ -66,7 +66,7 @@ class AuthLoginViewModel: ObservableObject {
                         confirmViewModel = AuthConfirmViewModel(model, confirmCodeLength: codeLength, phoneNumber: phone, resendCodeDelay: resendCodeDelay, backAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Dismiss.Confirm())}, rootActions: rootActions)
                         isConfirmViewPresented = true
                         
-                    case .fail(message: let message):
+                    case .failure(message: let message):
                         alert = .init(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.alert = nil }))
                     }
     
@@ -123,20 +123,18 @@ class AuthLoginViewModel: ObservableObject {
                 }
                 
             }.store(in: &bindings)
-        
-        model.auth
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] authState in
                 
-                updateNextButton(authState: authState, cardState: card.state)
-                
-            }.store(in: &bindings)
-        
         card.$state
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] cardState in
                 
-                updateNextButton(authState: model.auth.value, cardState: cardState)
+                guard case .ready(let cardNumber) = cardState else {
+                    
+                    card.nextButton = nil
+                    return
+                }
+                
+                card.nextButton = CardViewModel.NextButtonViewModel(action: {[weak self] in self?.action.send(AuthLoginViewModelAction.Register.init(cardNumber: cardNumber))})
                 
             }.store(in: &bindings)
         
@@ -154,17 +152,6 @@ class AuthLoginViewModel: ObservableObject {
                 }
                 
             }.store(in: &bindings)
-    }
-    
-    func updateNextButton(authState: AuthorizationState, cardState: CardViewModel.State) {
-        
-        guard case .authorized(_, _) = authState, case .ready(let cardNumber) = cardState else {
-            
-            card.nextButton = nil
-            return
-        }
-        
-        card.nextButton = CardViewModel.NextButtonViewModel(action: {[weak self] in self?.action.send(AuthLoginViewModelAction.Register.init(cardNumber: cardNumber))})
     }
 }
 
