@@ -12,6 +12,8 @@ import FirebaseMessaging
 extension Model {
     
     var authPincodeLength: Int { 4 }
+    var authVerificationCodeLength: Int { 6 }
+    var authVerificationCodeResendDelay: TimeInterval { 30 }
     var authUnlockAttemptsAvailable: Int { 3 }
     var authAvailableBiometricSensorType: BiometricSensorType? { biometricAgent.availableSensor }
     var authIsBiometricSensorEnabled: Bool {
@@ -96,7 +98,8 @@ extension ModelAction {
                 
                 enum Response: Action {
                     
-                    case success(remain: Int)
+                    case success
+                    case restricted(message: String)
                     case failure(message: String)
                     
                 }
@@ -282,7 +285,7 @@ internal extension Model {
                                 do {
                                     
                                     let decryptedPhone = try credentials.csrfAgent.decrypt(data.phone)
-                                    self.action.send(ModelAction.Auth.Register.Response.success(codeLength: 6, phone: decryptedPhone, resendCodeDelay: 30))
+                                    self.action.send(ModelAction.Auth.Register.Response.success(codeLength: self.authVerificationCodeLength, phone: decryptedPhone, resendCodeDelay: self.authVerificationCodeResendDelay))
                                     
                                 } catch {
                                     
@@ -390,11 +393,46 @@ internal extension Model {
     
     func handleAuthVerificationCodeResendRequest(payload: ModelAction.Auth.VerificationCode.Resend.Request) {
         
-        //TODO: real implementation required
-        let totalAttempts = 3
-        let remain = totalAttempts - payload.attempt
+        guard let token = self.token else {
+            
+            //TODO: log error
+            print("Model: handleAuthVerificationCodeResendRequest: not authorized.")
+            
+            self.action.send(ModelAction.Auth.VerificationCode.Resend.Response.failure(message: self.authDefaultErrorMessage))
+            
+            return
+        }
         
-        action.send(ModelAction.Auth.VerificationCode.Resend.Response.success(remain: remain))
+        let command = ServerCommands.RegistrationContoller.GetCode(token: token)
+        serverAgent.executeCommand(command: command) { result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    self.action.send(ModelAction.Auth.VerificationCode.Resend.Response.success)
+                    
+                case .serverError:
+                    let message = response.errorMessage ?? "Вы исчерпали все попытки :("
+                    self.action.send(ModelAction.Auth.VerificationCode.Resend.Response.restricted(message: message))
+                    
+                default:
+                    
+                    //TODO: log error
+                    print("Model: handleAuthVerificationCodeResendRequest: data status \(response.statusCode), message: \(String(describing: response.errorMessage))")
+                    
+                    let message = response.errorMessage ?? self.authDefaultErrorMessage
+                    self.action.send(ModelAction.Auth.VerificationCode.Resend.Response.failure(message: message))
+                }
+                
+            case .failure(let error):
+                
+                //TODO: log error
+                print("Model: handleAuthVerificationCodeResendRequest: error \(error.localizedDescription)")
+                
+                self.action.send(ModelAction.Auth.VerificationCode.Resend.Response.failure(message: self.authDefaultErrorMessage))
+            }
+        }
     }
     
     func handleAuthPincodeSetRequest(payload: ModelAction.Auth.Pincode.Set.Request) {

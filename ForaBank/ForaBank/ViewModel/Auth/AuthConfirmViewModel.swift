@@ -105,17 +105,11 @@ class AuthConfirmViewModel: ObservableObject {
                     
                 case let payload as ModelAction.Auth.VerificationCode.Resend.Response:
                     switch payload {
-                    case .success(remain: let remain):
-                        if remain > 0 {
-                            withAnimation {
-                                
-                                info?.state = .timer(.init(delay: resendCodeDelay, description: "Осталось попыток запросить код повторно: \(remain)", completeAction: { [weak self] in self?.action.send(AuthConfirmViewModelAction.RepeatCode.DelayFinished()) }))
-                            }
+                    case .success:
+                        info?.state = .timer(.init(delay: resendCodeDelay, description: "Запросить повторно можно через:", completeAction: { [weak self] in self?.action.send(AuthConfirmViewModelAction.RepeatCode.DelayFinished()) }))
                         
-                        } else {
-                            
-                            alert = Alert.ViewModel(title: "Вы исчерпали все попытки.", message: "Попробуйте позже.", primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.action.send(AuthConfirmViewModelAction.Dismiss())}))
-                        }
+                    case .restricted(let message):
+                        alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.action.send(AuthConfirmViewModelAction.Dismiss())}))
                         
                     case .failure(message: let message):
                         alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))

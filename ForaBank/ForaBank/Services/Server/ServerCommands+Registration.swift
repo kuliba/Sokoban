@@ -104,7 +104,7 @@ extension ServerCommands {
                 let data: EmptyData
             }
             
-            internal init(token: String, payload: Payload) {
+            internal init(token: String) {
                 
                 self.token = token
             }
