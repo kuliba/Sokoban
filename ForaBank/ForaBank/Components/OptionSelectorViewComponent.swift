@@ -12,18 +12,26 @@ class OptionSelectorViewModel: ObservableObject {
     @Published var options: [OptionViewModel]
     @Published var selected: Option.ID
  
-    internal init(options: [Option], selected: Option.ID) {
+    internal init(options: [Option], selected: Option.ID, style: Style) {
         self.options = []
         self.selected = selected
-        self.options = options.map{ OptionViewModel(id: $0.id, title: $0.name, action: { [weak self] optionId in self?.selected = optionId })}
+        self.options = options.map{ OptionViewModel(id: $0.id, title: $0.name, style: style, action: { [weak self] optionId in self?.selected = optionId })}
+    }
+    
+    enum Style {
+        
+        case template
+        case products
     }
 }
 
 extension OptionSelectorViewModel {
         
     struct OptionViewModel: Identifiable {
+        
         let id: Option.ID
         let title: String
+        let style: Style
         let action: (OptionViewModel.ID) -> Void
     }
 }
@@ -56,27 +64,65 @@ extension OptionSelectorView {
         
         var body: some View {
             
-            Button {
+            if viewModel.style == .template{
                 
-                viewModel.action(viewModel.id)
-                
-            } label: {
-                
-                if isSelected {
+                Button {
                     
-                    Text(viewModel.title)
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 6)
-                        .background(Capsule().foregroundColor(Color(hex: "#3D3D45")))
-                } else {
+                    viewModel.action(viewModel.id)
                     
-                    Text(viewModel.title)
-                        .foregroundColor(Color(hex: "#3D3D45"))
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 6)
-                        .background(Capsule().foregroundColor(Color(hex: "#F6F6F7")))
+                } label: {
+                    
+                    if isSelected {
+                        
+                        Text(viewModel.title)
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(Capsule().foregroundColor(Color(hex: "#3D3D45")))
+                    } else {
+                        
+                        Text(viewModel.title)
+                            .foregroundColor(Color(hex: "#3D3D45"))
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(Capsule().foregroundColor(Color(hex: "#F6F6F7")))
+                    }
                 }
+            } else {
+                
+                Button {
+                    
+                    viewModel.action(viewModel.id)
+                    
+                } label: {
+                    
+                    if isSelected {
+                        
+                        HStack(spacing: 6) {
+                            
+                            Circle()
+                                .frame(width: 4, height: 4, alignment: .center)
+                                .foregroundColor(.mainColorsRed)
+                            
+                            Text(viewModel.title)
+                                .foregroundColor(.textSecondary)
+                                .padding(.vertical, 6)
+                        }
+                    } else {
+                        
+                        HStack(spacing: 6) {
+
+                        Circle()
+                            .frame(width: 4, height: 4, alignment: .center)
+                            .foregroundColor(.mainColorsGrayLightest)
+                            
+                        Text(viewModel.title)
+                                .foregroundColor(.mainColorsGray)
+                            .padding(.vertical, 6)
+                        }
+                    }
+                }
+                .padding(.trailing, 12)
             }
             //TODO: add custom button style
         }
@@ -85,8 +131,14 @@ extension OptionSelectorView {
 
 struct OptionSelectorView_Previews: PreviewProvider {
     static var previews: some View {
-        OptionSelectorView(viewModel: .sample)
-            .previewLayout(.fixed(width: 375, height: 40))
+        Group {
+            
+            OptionSelectorView(viewModel: .sample)
+                .previewLayout(.fixed(width: 375, height: 40))
+            
+            OptionSelectorView(viewModel: .mainSample)
+                .previewLayout(.fixed(width: 375, height: 40))
+        }
     }
 }
 
@@ -98,6 +150,14 @@ extension OptionSelectorViewModel {
         .init(id: "addit", name: "Переводы"),
         .init(id: "additi", name: "Пополнение"),
         .init(id: "additio", name: "Пополнение")
-    ], selected: "all")
+    ], selected: "all", style: .template)
+    
+    static let mainSample = OptionSelectorViewModel(options: [
+        .init(id: "all", name: "Карты" ),
+        .init(id: "add", name: "Счета"),
+        .init(id: "addi", name: "Вклады"),
+        .init(id: "addit", name: "Кредиты"),
+        .init(id: "additi", name: "Страховка")
+    ], selected: "all", style: .products)
     
 }
