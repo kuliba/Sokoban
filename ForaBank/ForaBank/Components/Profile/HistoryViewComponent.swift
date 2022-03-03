@@ -143,6 +143,7 @@ struct HistoryViewComponent: View {
                     }
                 }
                 .padding(.bottom, 32)
+                
             } else {
                 
                 Spacer()
@@ -166,8 +167,7 @@ struct HistoryViewComponent: View {
                     .frame(width: 64, height: 64)
                     .background(Color.mainColorsGrayLightest)
                     .cornerRadius(90)
-
-                
+                    
                 Text("Нет операций")
                     .font(Font.system(size: 14, weight: .light))
                     .foregroundColor(.mainColorsGray)
@@ -183,10 +183,13 @@ struct HistoryViewComponent_Previews: PreviewProvider {
         Group {
             
             HistoryViewComponent(viewModel: .init(title: "История операций", dateOperations: [.init(date: "25 августа, ср", operations: [.init(title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .debit), .init(title: "Selhozmarket", image: Image.init("GKH", bundle: nil), subtitle: "Магазин", amount: "-230 Р", type: .credit)]), .init(date: "26 августа, ср", operations: [.init(title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .debit)])], spending: .spending))
-            
+                .previewLayout(.fixed(width: 400, height: 500))
+
             HistoryViewComponent(viewModel: .init(title: "История операций", dateOperations: [.init(date: "25 августа, ср", operations: [.init(title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .debit)]), .init(date: "26 августа, ср", operations: [.init(title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .debit)])], spending: nil))
-            
+                .previewLayout(.fixed(width: 400, height: 400))
+
             HistoryViewComponent(viewModel: .init(title: "История операций", dateOperations: [], spending: nil))
+                .previewLayout(.fixed(width: 400, height: 400))
         }
     }
 }

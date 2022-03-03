@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 //MARK: - ViewModel
 
@@ -16,9 +17,9 @@ extension MainSectionProductsView {
         
         let title: String
         @Published var productsTypeSelector: OptionSelectorViewModel?
-        @Published var products: [MainCardComponentView.ViewModel]
+        @Published var products: [[MainCardComponentView.ViewModel]]
         
-        init(title: String, productsTypeSelector: OptionSelectorViewModel?, products: [MainCardComponentView.ViewModel], isCollapsed: Bool) {
+        internal init(title: String, productsTypeSelector: OptionSelectorViewModel?, products: [[MainCardComponentView.ViewModel]], isCollapsed: Bool) {
             
             self.title = title
             self.products = products
@@ -48,22 +49,42 @@ struct MainSectionProductsView: View {
                 OptionSelectorView(viewModel: productSelectorViewModel)
                     .frame(height: 24)
                     .padding(.top, 12)
+
             }
             
             ScrollView(.horizontal, showsIndicators: false) {
-                
-                HStack (spacing: 8) {
-                    
-                    ForEach(viewModel.products) { product in
-                        
-                        MainCardComponentView(viewModel: product)
-                            .frame(width: 164, height: 104)
-                            .padding(.bottom, 32)
-                    }
-                }
-                .padding(.leading, 20)
+                            
+                        HStack {
+
+                            ForEach(viewModel.products, id: \.self) { products in
+                                                                    
+                                HStack(alignment: .center) {
+
+                                        ForEach(products.indices) { index in
+                                        
+                                            if products[index].style == .additional {
+                                                
+                                                MainCardComponentView(viewModel: products[index])
+                                                    .frame(height: 104)
+                                                    .id(index)
+                                                
+                                            } else {
+                                                
+                                                MainCardComponentView(viewModel: products[index])
+                                                    .frame(width: 164, height: 104)
+                                                    .id(index)
+                                            }
+                              
+                                        }  
+
+                                            Divider().background(Color(hex: "F6F6F7"))
+                                                .frame(width: 1, height: 48, alignment: .center)
+                                    }
+                                }
+                        }
+                        .padding(.leading, 20)
+                        .padding(.trailing, 20)
             }
-            .padding(.top, 16)
             
             Spacer()
         }
@@ -132,10 +153,15 @@ struct MainBlockProductsView_Previews: PreviewProvider {
 
 extension MainSectionProductsView.ViewModel {
     
-    static let sample = MainSectionProductsView.ViewModel(title: "Мои продукты", productsTypeSelector: .init(options: [.init(id: "all", name: "Карты"), .init(id: "", name: "Счета")], selected: "all", style: .products), products: [
-        .init(logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardClassic, paymentSystem:  Image(uiImage: UIImage(named: "card_visa_logo")!), status: .notActivated, backgroundImage: Image(""), productType: .card, style: .main),
-            .init(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .blocked, backgroundImage: Image(""), productType: .card, style: .main),
-        .init(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .active, backgroundImage: Image(""), productType: .card, style: .main)
-    ], isCollapsed: false)
+    static let sample = MainSectionProductsView.ViewModel(title: "Мои продукты", productsTypeSelector: .init(options: [.init(id: "0", name: "Карты"), .init(id: "1", name: "Счета")], selected: "0", style: .products), products: [[
+        .init(logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardClassic, paymentSystem:  Image(uiImage: UIImage(named: "card_visa_logo")!), status: .notActivated, backgroundImage: Image(""), productType: .card, style: .main, kind: .card),
+        .init(logo: .ic24LogoForaColor, name: "Текущий счет", balance: "170 897 ₽", fontColor: .white, cardNumber: "1234", backgroundColor: .cardAccount, paymentSystem:  nil, status: .active, backgroundImage: Image(""), productType: .card, style: .additional, kind: .want)
+    ], [
+        .init(logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardClassic, paymentSystem:  Image(uiImage: UIImage(named: "card_visa_logo")!), status: .notActivated, backgroundImage: Image(""), productType: .card, style: .main, kind: .card),
+        .init(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .blocked, backgroundImage: Image(""), productType: .card, style: .main, kind: .card),
+        .init(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .active, backgroundImage: Image(""), productType: .card, style: .main, kind: .card),
+        .init(logo: .ic24LogoForaColor, name: "Текущий счет", balance: "170 897 ₽", fontColor: .white, cardNumber: "1234", backgroundColor: .cardAccount, paymentSystem:  nil, status: .active, backgroundImage: Image(""), productType: .card, style: .main, kind: .card),
+        .init(logo: .ic24LogoForaColor, name: "+5", balance: "170 897 ₽", fontColor: .white, cardNumber: "1234", backgroundColor: .cardAccount, paymentSystem:  nil, status: .active, backgroundImage: Image(""), productType: .card, style: .additional, kind: .more)
+    ]], isCollapsed: false)
     
 }
