@@ -124,11 +124,21 @@ extension CustomPopUpWithRateView {
         switch paymentTemplate.type {
         case .betweenTheir:
             if let transfer = paymentTemplate.parameterList.first as? TransferGeneralData {
+                
                 let object = realm?.objects(UserAllCardsModel.self)
-                let cardId = transfer.payeeInternal?.cardId
-                let card = object?.first(where: { $0.id == cardId })
-                self.cardToField.model = card
-                self.viewModel.cardToRealm = card
+                
+                if let cardId = transfer.payeeInternal?.cardId {
+                    
+                    let card = object?.first(where: { $0.id == cardId })
+                    self.cardToField.model = card
+                    self.viewModel.cardToRealm = card
+                    
+                } else if let accountId = transfer.payeeInternal?.accountId {
+                    
+                    let card = object?.first(where: { $0.accountID == accountId })
+                    self.cardToField.model = card
+                    self.viewModel.cardToRealm = card
+                }
             }
 //            cardFromField.choseButton.isHidden = true
 //            cardToField.choseButton.isHidden = true
@@ -183,23 +193,21 @@ extension CustomPopUpWithRateView {
             let card = object?.first(where: { $0.id == cardId })
             self.cardFromField.model = card
             self.viewModel.cardFromRealm = card
-//            self.reversCard = ""
-        } else {
-            let cards = realm?.objects(UserAllCardsModel.self)
-            token = cards?.observe { [weak self] changes in
-                
-                guard let self = self else { return }
-                switch changes {
-                case .initial:
-                    print("REALM Initial")
-                    self.allCardsFromRealm = self.updateCardsList(with: cards)
-                case .update:
-                    print("REALM Update")
-                    self.allCardsFromRealm = self.updateCardsList(with: cards)
-                case .error(let error):
-                    print("DEBUG token fatalError:", error)
-                    fatalError("\(error)")
-                }
+        }
+        
+        token = object?.observe { [weak self] changes in
+            
+            guard let self = self else { return }
+            switch changes {
+            case .initial:
+                print("REALM Initial")
+                self.allCardsFromRealm = self.updateCardsList(with: object)
+            case .update:
+                print("REALM Update")
+                self.allCardsFromRealm = self.updateCardsList(with: object)
+            case .error(let error):
+                print("DEBUG token fatalError:", error)
+                fatalError("\(error)")
             }
         }
     }
