@@ -1,5 +1,5 @@
 //
-//  MainSectionPromotionsViewComponent.swift
+//  MainSectionPromoViewComponent.swift
 //  ForaBank
 //
 //  Created by Андрей Лятовец on 04.03.2022.
@@ -10,7 +10,7 @@ import SwiftUI
 
 //MARK: - ViewModel
 
-extension MainSectionPromotionsView {
+extension MainSectionPromoView {
     
     class ViewModel: MainSectionViewModel {
         
@@ -40,7 +40,7 @@ extension MainSectionPromotionsView {
 
 //MARK: - View
 
-struct MainSectionPromotionsView: View {
+struct MainSectionPromoView: View {
     
     @ObservedObject var viewModel: ViewModel
     
@@ -70,13 +70,14 @@ struct MainSectionPromotionsView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        MainSectionPromotionsView(viewModel: .sample)
+        MainSectionPromoView(viewModel: .sample)
+            .previewLayout(.fixed(width: 375, height: 300))
     }
 }
 
 //MARK: - Preview Content
 
-extension MainSectionPromotionsView.ViewModel {
+extension MainSectionPromoView.ViewModel {
 
-    static let sample = MainSectionPromotionsView.ViewModel(items: [.init(image: .imgMainBanner1, action: {}), .init(image: .imgMainBanner2, action: {})])
+    static let sample = MainSectionPromoView.ViewModel(items: [.init(image: .imgMainBanner1, action: {}), .init(image: .imgMainBanner2, action: {})])
 }

@@ -1,8 +1,8 @@
 //
-//  MainSectionFastOperationViewComponent.swift
+//  MainSectionOpenProductViewComponent.swift
 //  ForaBank
 //
-//  Created by Андрей Лятовец on 21.02.2022.
+//  Created by Андрей Лятовец on 04.03.2022.
 //
 
 import Foundation
@@ -10,26 +10,25 @@ import SwiftUI
 
 //MARK: - ViewModel
 
-extension MainSectionFastOperationView {
+extension MainSectionOpenProductView {
     
     class ViewModel: MainSectionCollapsableViewModel {
-        
-        let items: [ButtonIconTextView.ViewModel]
+
+        let items: [ButtonNewProduct.ViewModel]
         let title: String
         
-        internal init(items: [ButtonIconTextView.ViewModel], title: String, isCollapsed: Bool) {
-            
+        internal init(items: [ButtonNewProduct.ViewModel], title: String, isCollapsed: Bool) {
             self.items = items
             self.title = title
+
             super.init(isCollapsed: isCollapsed)
         }
     }
 }
 
-
 //MARK: - View
 
-struct MainSectionFastOperationView: View {
+struct MainSectionOpenProductView: View {
     
     @ObservedObject var viewModel: ViewModel
     
@@ -38,13 +37,17 @@ struct MainSectionFastOperationView: View {
         VStack {
             
             Button {
+
                 viewModel.isCollapsed.toggle()
+
             } label: {
+
                 HStack {
+
                     Text(viewModel.title)
                         .font(.textH2SB20282())
                         .foregroundColor(.textSecondary)
-                    
+
                     if viewModel.isCollapsed {
                         Image.ic24ChevronUp
                             .foregroundColor(.iconGray)
@@ -52,17 +55,18 @@ struct MainSectionFastOperationView: View {
                         Image.ic24ChevronDown
                             .foregroundColor(.iconGray)
                     }
-                    
+
                     Spacer()
                 }
             }
             .padding(.leading, 20)
-            
+            .padding(.bottom, 20)
+
             if !viewModel.isCollapsed {
                 ScrollView(.horizontal) {
-                    HStack(spacing: 4) {
+                    HStack(spacing: 8) {
                         ForEach(viewModel.items) { itemViewModel in
-                            ButtonIconTextView(viewModel: itemViewModel)
+                            ButtonNewProduct(viewModel: itemViewModel)
                         }
                     }
                 }
@@ -71,25 +75,25 @@ struct MainSectionFastOperationView: View {
         }
     }
 }
-
 //MARK: - Preview
 
-struct MainSectionFastOperationView_Previews: PreviewProvider {
+struct MainBlockOpenProductsView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        MainSectionFastOperationView(viewModel: .sample)
+        MainSectionOpenProductView(viewModel: .sample)
+            .previewLayout(.fixed(width: 375, height: 300))
     }
 }
 
 //MARK: - Preview Content
 
-extension MainSectionFastOperationView.ViewModel {
-    
-    static let sample = MainSectionFastOperationView.ViewModel(items:
-                                                                [ButtonIconTextView.ViewModel.qrPayment,
-                                                                 ButtonIconTextView.ViewModel.telephoneTranslation,
-                                                                 ButtonIconTextView.ViewModel.templates],
-                                                               title: "Быстрые операции",
-                                                               isCollapsed: false)
+extension MainSectionOpenProductView.ViewModel {
+
+    static let sample = MainSectionOpenProductView.ViewModel(items: [.sample,
+                                                                    .sample,
+                                                                    .sample,
+                                                                    .sample],
+                                                            title: "Открыть продукт",
+                                                            isCollapsed: false)
 }

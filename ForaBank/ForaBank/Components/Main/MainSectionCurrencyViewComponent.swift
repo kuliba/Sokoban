@@ -1,5 +1,5 @@
 //
-//  MainBlockCurrencyExchangeViewComponent.swift
+//  MainSectionCurrencyViewComponent.swift
 //  ForaBank
 //
 //  Created by Андрей Лятовец on 04.03.2022.
@@ -10,7 +10,7 @@ import SwiftUI
 
 //MARK: - ViewModel
 
-extension MainBlockCurrencyExchangeView {
+extension MainSectionCurrencyView {
 
     class ViewModel: MainSectionCollapsableViewModel {
         
@@ -28,7 +28,7 @@ extension MainBlockCurrencyExchangeView {
 
 //MARK: - View
 
-struct MainBlockCurrencyExchangeView: View {
+struct MainSectionCurrencyView: View {
 
     @ObservedObject var viewModel: ViewModel
 
@@ -75,15 +75,16 @@ struct MainBlockCurrencyExchangeView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        MainBlockCurrencyExchangeView(viewModel: .sample)
+        MainSectionCurrencyView(viewModel: .sample)
+            .previewLayout(.fixed(width: 375, height: 300))
     }
 }
 
 //MARK: - Preview Content
 
-extension MainBlockCurrencyExchangeView.ViewModel {
+extension MainSectionCurrencyView.ViewModel {
     
-    static let sample = MainBlockCurrencyExchangeView.ViewModel(item: .sample,
+    static let sample = MainSectionCurrencyView.ViewModel(item: .sample,
                                                                 title: "Обмен валют",
                                                                 isCollapsed: false)
 

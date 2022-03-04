@@ -130,7 +130,6 @@ struct MainSectionProductsView: View {
             }
             .padding([.leading, .trailing], 20)
             .padding(.bottom, 8)
-            
         }
     }
 }
@@ -141,10 +140,8 @@ struct MainBlockProductsView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        NavigationView {
-
-            MainSectionProductsView(viewModel: .sample)
-        }
+        MainSectionProductsView(viewModel: .sample)
+            .previewLayout(.fixed(width: 375, height: 300))
     }
         
 }
