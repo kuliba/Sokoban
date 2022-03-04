@@ -14,13 +14,12 @@ extension MainSectionOpenProductView {
     
     class ViewModel: MainSectionCollapsableViewModel {
 
+        override var type: MainSectionType { .openProduct }
         let items: [ButtonNewProduct.ViewModel]
-        let title: String
-        
-        internal init(items: [ButtonNewProduct.ViewModel], title: String, isCollapsed: Bool) {
-            self.items = items
-            self.title = title
 
+        internal init(items: [ButtonNewProduct.ViewModel], isCollapsed: Bool) {
+            
+            self.items = items
             super.init(isCollapsed: isCollapsed)
         }
     }
@@ -90,10 +89,5 @@ struct MainBlockOpenProductsView_Previews: PreviewProvider {
 
 extension MainSectionOpenProductView.ViewModel {
 
-    static let sample = MainSectionOpenProductView.ViewModel(items: [.sample,
-                                                                    .sample,
-                                                                    .sample,
-                                                                    .sample],
-                                                            title: "Открыть продукт",
-                                                            isCollapsed: false)
+    static let sample = MainSectionOpenProductView.ViewModel(items: [.sample, .sample, .sample,.sample], isCollapsed: false)
 }

@@ -14,13 +14,12 @@ extension MainSectionFastOperationView {
     
     class ViewModel: MainSectionCollapsableViewModel {
         
+        override var type: MainSectionType { .fastOperations }
         let items: [ButtonIconTextView.ViewModel]
-        let title: String
-        
-        internal init(items: [ButtonIconTextView.ViewModel], title: String, isCollapsed: Bool) {
+
+        internal init(items: [ButtonIconTextView.ViewModel], isCollapsed: Bool) {
             
             self.items = items
-            self.title = title
             super.init(isCollapsed: isCollapsed)
         }
     }
@@ -90,7 +89,5 @@ extension MainSectionFastOperationView.ViewModel {
     static let sample = MainSectionFastOperationView.ViewModel(items:
                                                                 [ButtonIconTextView.ViewModel.qrPayment,
                                                                  ButtonIconTextView.ViewModel.telephoneTranslation,
-                                                                 ButtonIconTextView.ViewModel.templates],
-                                                               title: "Быстрые операции",
-                                                               isCollapsed: false)
+                                                                 ButtonIconTextView.ViewModel.templates], isCollapsed: false)
 }

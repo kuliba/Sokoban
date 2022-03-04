@@ -14,13 +14,12 @@ extension MainSectionCurrencyView {
 
     class ViewModel: MainSectionCollapsableViewModel {
         
+        override var type: MainSectionType { .currencyExchange }
         let item: CurrencyExchangeView.ViewModel
-        let title: String
         
-        internal init(item: CurrencyExchangeView.ViewModel, title: String, isCollapsed: Bool) {
+        internal init(item: CurrencyExchangeView.ViewModel, isCollapsed: Bool) {
             
             self.item = item
-            self.title = title
             super.init(isCollapsed: isCollapsed)
         }
     }
@@ -84,8 +83,6 @@ struct MainBlockCurrencyExchangeView_Previews: PreviewProvider {
 
 extension MainSectionCurrencyView.ViewModel {
     
-    static let sample = MainSectionCurrencyView.ViewModel(item: .sample,
-                                                                title: "Обмен валют",
-                                                                isCollapsed: false)
+    static let sample = MainSectionCurrencyView.ViewModel(item: .sample, isCollapsed: false)
 
 }

@@ -15,13 +15,12 @@ extension MainSectionProductsView {
     
     class ViewModel: MainSectionCollapsableViewModel {
         
-        let title: String
+        override var type: MainSectionType { .products }
         @Published var productsTypeSelector: OptionSelectorViewModel?
         @Published var products: [[MainCardComponentView.ViewModel]]
         
-        internal init(title: String, productsTypeSelector: OptionSelectorViewModel?, products: [[MainCardComponentView.ViewModel]], isCollapsed: Bool) {
+        internal init(productsTypeSelector: OptionSelectorViewModel?, products: [[MainCardComponentView.ViewModel]], isCollapsed: Bool) {
             
-            self.title = title
             self.products = products
             if let productsTypeSelector = productsTypeSelector {
                 
@@ -150,7 +149,7 @@ struct MainBlockProductsView_Previews: PreviewProvider {
 
 extension MainSectionProductsView.ViewModel {
     
-    static let sample = MainSectionProductsView.ViewModel(title: "Мои продукты", productsTypeSelector: .init(options: [.init(id: "0", name: "Карты"), .init(id: "1", name: "Счета")], selected: "0", style: .products), products: [[
+    static let sample = MainSectionProductsView.ViewModel(productsTypeSelector: .init(options: [.init(id: "0", name: "Карты"), .init(id: "1", name: "Счета")], selected: "0", style: .products), products: [[
         .init(logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardClassic, paymentSystem:  Image(uiImage: UIImage(named: "card_visa_logo")!), status: .notActivated, backgroundImage: Image(""), productType: .card, style: .main, kind: .card),
         .init(logo: .ic24LogoForaColor, name: "Текущий счет", balance: "170 897 ₽", fontColor: .white, cardNumber: "1234", backgroundColor: .cardAccount, paymentSystem:  nil, status: .active, backgroundImage: Image(""), productType: .card, style: .additional, kind: .want)
     ], [

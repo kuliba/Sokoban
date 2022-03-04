@@ -14,11 +14,12 @@ extension MainSectionPromoView {
     
     class ViewModel: MainSectionViewModel {
         
+        override var type: MainSectionType { .promo }
         let items: [PromotionViewModel]
         
         internal init(items: [PromotionViewModel]) {
-            self.items = items
             
+            self.items = items
             super.init()
         }
     }
