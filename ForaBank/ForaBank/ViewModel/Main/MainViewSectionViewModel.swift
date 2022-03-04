@@ -7,9 +7,9 @@
 
 import Foundation
 
-class MainSectionViewModel {}
+class MainSectionViewModel: ObservableObject {}
 
-class MainSectionCollapsableViewModel: MainSectionViewModel, ObservableObject {
+class MainSectionCollapsableViewModel: MainSectionViewModel {
     
     @Published var isCollapsed: Bool
     
