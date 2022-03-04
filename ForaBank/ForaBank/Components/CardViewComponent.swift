@@ -81,8 +81,6 @@ struct MainCardComponentView: View {
     @ObservedObject var viewModel: MainCardComponentView.ViewModel
     
     var body: some View {
-        
-        if viewModel.kind == .card {
             
         Button {
             
@@ -207,32 +205,27 @@ struct MainCardComponentView: View {
         .background(Color.clear
                         .cornerRadius(12)
                         .shadow(color: Color.black.opacity(0.2), radius: 12, x: 0, y: 15))
+    }
+}
+
+extension MainCardComponentView {
+    
+    class CollapsedButtonViewModel: MainSectionProductsListItemViewModel, ObservableObject {
+    
+        var title: String
+        
+        internal init(id: UUID = UUID(), title: String) {
             
-        } else if viewModel.kind == .want {
-            
-            Button {
-                
-            } label: {
-                
-                VStack(alignment: .leading) {
-                    
-                    Image.ic24NewCardColor
-                    
-                    Spacer()
-                    
-                    Text("Хочу карту")
-                        .font(.system(size: 14))
-                    
-                    Text("Бесплатно")
-                        .foregroundColor(.mainColorsGray)
-                        .font(.system(size: 14, weight: .light))
-                }
-                .padding(12)
-                .foregroundColor(.black)
-                .background(Color.mainColorsGrayLightest
-                                .cornerRadius(12))
-            }
-        } else {
+            self.title = title
+            super.init(id: id)
+        }
+    }
+    
+    struct CollapsedButtonView: View {
+        
+        @ObservedObject var viewModel: CollapsedButtonViewModel
+        
+        var body: some View {
             
             Button {
                 
@@ -242,7 +235,7 @@ struct MainCardComponentView: View {
                     
                     Spacer()
                     
-                    Text(viewModel.name)
+                    Text(viewModel.title)
                         .font(.system(size: 14))
                     
                     Spacer()
@@ -253,10 +246,9 @@ struct MainCardComponentView: View {
                                 .cornerRadius(12))
                 .frame(width: 48, height: 104)
             }
-            
+        
         }
     }
-    
 }
 
 struct MainCardView_Previews: PreviewProvider {
@@ -288,10 +280,7 @@ struct MainCardView_Previews: PreviewProvider {
             MainCardComponentView(viewModel: .accountProfile)
                 .previewLayout(.fixed(width: 268, height: 160))
             
-            MainCardComponentView(viewModel: .wantCard)
-                .previewLayout(.fixed(width: 112, height: 104))
-            
-            MainCardComponentView(viewModel: .moreCards)
+            MainCardComponentView.CollapsedButtonView(viewModel: .moreCards)
                 .previewLayout(.fixed(width: 50, height: 104))
         }
     }
@@ -314,9 +303,10 @@ extension MainCardComponentView.ViewModel {
     static let classicProfile = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Rio", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardRIO, paymentSystem: Image(uiImage: UIImage(named: "card_visa_logo")!), status: .active, backgroundImage: Image("card_sample"), productType: .card, style: .profile, kind: .card)
     
     static let accountProfile = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Текущий зарплатный счет", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardAccount, paymentSystem: .init(systemName: "card_mastercard_logo"), status: .plug ,backgroundImage: Image("card_sample"), productType: .card, style: .profile, kind: .card)
+}
+
+extension MainCardComponentView.CollapsedButtonViewModel {
     
-    static let wantCard = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "Хочу карту", balance: "", fontColor: .white, cardNumber: "7854", backgroundColor: .cardAccount, paymentSystem: .init(systemName: "card_mastercard_logo"), status: .plug ,backgroundImage: Image("card_sample"), productType: .card, style: .profile, kind: .want)
-    
-    static let moreCards = MainCardComponentView.ViewModel(logo: .ic24LogoForaColor, name: "+5", balance: "", fontColor: .white, cardNumber: "7854", backgroundColor: .cardAccount, paymentSystem: .init(systemName: "card_mastercard_logo"), status: .plug ,backgroundImage: Image("card_sample"), productType: .card, style: .profile, kind: .more)
+    static let moreCards = MainCardComponentView.CollapsedButtonViewModel(id: UUID(), title: "+ 5")
 }
 
