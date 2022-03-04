@@ -889,6 +889,7 @@
 		F63D4C7CF864543AD9AABF9A /* InternetTVInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F63D42CEA742F58D23C97218 /* InternetTVInputCell.swift */; };
 		F81EF91527D212990096DC70 /* MainBlockOpenProductsViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F81EF91427D212990096DC70 /* MainBlockOpenProductsViewComponent.swift */; };
 		F81EF91727D212BE0096DC70 /* ButtonNewProductComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F81EF91627D212BE0096DC70 /* ButtonNewProductComponent.swift */; };
+		F81EF91A27D2180E0096DC70 /* MainSectionPromotionsViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F81EF91927D2180E0096DC70 /* MainSectionPromotionsViewComponent.swift */; };
 		F87F9B1E27C3A0FD007E3D94 /* MainSectionFastOperationViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87F9B1D27C3A0FD007E3D94 /* MainSectionFastOperationViewComponent.swift */; };
 		F87F9B2027C3B1B2007E3D94 /* ButtonIconTextViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87F9B1F27C3B1B2007E3D94 /* ButtonIconTextViewComponent.swift */; };
 		F8E529AD27B67F7B00222394 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F8E529AC27B67F7B00222394 /* Assets.xcassets */; };
@@ -1799,6 +1800,7 @@
 		F63D4DD4905E8BA594B990E1 /* InternetTVDetailsFormController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InternetTVDetailsFormController.swift; sourceTree = "<group>"; };
 		F81EF91427D212990096DC70 /* MainBlockOpenProductsViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainBlockOpenProductsViewComponent.swift; sourceTree = "<group>"; };
 		F81EF91627D212BE0096DC70 /* ButtonNewProductComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonNewProductComponent.swift; sourceTree = "<group>"; };
+		F81EF91927D2180E0096DC70 /* MainSectionPromotionsViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSectionPromotionsViewComponent.swift; sourceTree = "<group>"; };
 		F87F9B1D27C3A0FD007E3D94 /* MainSectionFastOperationViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSectionFastOperationViewComponent.swift; sourceTree = "<group>"; };
 		F87F9B1F27C3B1B2007E3D94 /* ButtonIconTextViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonIconTextViewComponent.swift; sourceTree = "<group>"; };
 		F8E529AC27B67F7B00222394 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -3303,6 +3305,7 @@
 				681142DE27C7D784008D3D67 /* Profile */,
 				F87F9B1C27C3A0E1007E3D94 /* FastOperation */,
 				F81EF91327D212840096DC70 /* OpenProducts */,
+				F81EF91827D217FA0096DC70 /* Promotions */,
 				7772978227C38F2F0099EF91 /* Main */,
 				77EA0DBA2779B06D00C6ED12 /* OperationDetailHeaderComponentView.swift */,
 				F87F9B1F27C3B1B2007E3D94 /* ButtonIconTextViewComponent.swift */,
@@ -5101,6 +5104,14 @@
 			path = OpenProducts;
 			sourceTree = "<group>";
 		};
+		F81EF91827D217FA0096DC70 /* Promotions */ = {
+			isa = PBXGroup;
+			children = (
+				F81EF91927D2180E0096DC70 /* MainSectionPromotionsViewComponent.swift */,
+			);
+			path = Promotions;
+			sourceTree = "<group>";
+		};
 		F87F9B1C27C3A0E1007E3D94 /* FastOperation */ = {
 			isa = PBXGroup;
 			children = (
@@ -5767,6 +5778,7 @@
 				ED75CDFD26E2AA5B0074F5D5 /* RequestMeToMeModel.swift in Sources */,
 				6820922E27A978D0003DCAFD /* ServerCommands+Dictionary.swift in Sources */,
 				EDA0DCD72739BAB00013F47E /* UIControl.swift in Sources */,
+				F81EF91A27D2180E0096DC70 /* MainSectionPromotionsViewComponent.swift in Sources */,
 				77DC12612770F03D00C917B0 /* TransferData.swift in Sources */,
 				EDDFE3C12757D8F800F57C71 /* SelectDepositPeriodViewCell.swift in Sources */,
 				EDDFE39F2756A99E00F57C71 /* GCDHelper.swift in Sources */,

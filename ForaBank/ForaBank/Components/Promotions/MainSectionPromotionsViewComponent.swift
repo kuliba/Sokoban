@@ -1,0 +1,82 @@
+//
+//  MainSectionPromotionsViewComponent.swift
+//  ForaBank
+//
+//  Created by Андрей Лятовец on 04.03.2022.
+//
+
+import Foundation
+import SwiftUI
+
+//MARK: - ViewModel
+
+extension MainSectionPromotionsView {
+    
+    class ViewModel: MainSectionViewModel {
+        
+        let items: [PromotionViewModel]
+        
+        internal init(items: [PromotionViewModel]) {
+            self.items = items
+            
+            super.init()
+        }
+    }
+    
+    struct PromotionViewModel: Identifiable {
+
+        let id: UUID
+        let image: Image
+        let action: () -> Void
+
+        internal init(id: UUID = UUID(), image: Image, action: @escaping () -> Void) {
+
+            self.id = id
+            self.image = image
+            self.action = action
+        }
+    }
+}
+
+//MARK: - View
+
+struct MainSectionPromotionsView: View {
+    
+    @ObservedObject var viewModel: ViewModel
+    
+    var body: some View {
+        
+        ScrollView(.horizontal) {
+            HStack(spacing: 8) {
+                ForEach(viewModel.items) { promotionViewModel in
+                    Button {
+                        
+                        promotionViewModel.action()
+                        
+                    } label: {
+                        
+                        promotionViewModel.image
+                            .frame(width: 288, height: 124)
+                            .cornerRadius(12)
+                    }
+                }
+            }
+        }
+    }
+}
+//MARK: - Preview
+
+struct MainSectionPromotionsView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        
+        MainSectionPromotionsView(viewModel: .sample)
+    }
+}
+
+//MARK: - Preview Content
+
+extension MainSectionPromotionsView.ViewModel {
+
+    static let sample = MainSectionPromotionsView.ViewModel(items: [.init(image: .imgMainBanner1, action: {}), .init(image: .imgMainBanner2, action: {})])
+}
