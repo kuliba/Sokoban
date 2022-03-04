@@ -773,6 +773,7 @@ extension TemplatesListView {
                 Text(title)
                     .font(Font.custom("Inter-Medium", size: 16))
                     .foregroundColor(Color(hex: "#1C1C1C"))
+                    .lineLimit(1)
                 
             case .tiles:
                 Text(title)
@@ -797,11 +798,13 @@ extension TemplatesListView {
                 Text(subtitle)
                     .font(Font.custom("Inter-Regular", size: 12))
                     .foregroundColor(Color(hex: "#999999"))
+                    .lineLimit(1)
                 
             case .tiles:
                 Text(subtitle)
                     .font(Font.custom("Inter-Regular", size: 12))
                     .foregroundColor(Color(hex: "#999999"))
+                    .lineLimit(1)
                     .truncationMode(.tail)
                     .padding(.horizontal)
                     .multilineTextAlignment(.center)

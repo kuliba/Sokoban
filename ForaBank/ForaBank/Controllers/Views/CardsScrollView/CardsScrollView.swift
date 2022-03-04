@@ -72,34 +72,36 @@ final class CardsScrollView: UIView {
         commonInit(onlyMy: true)
     }
     
-    required init(frame: CGRect = .zero, onlyMy: Bool, onlyCard: Bool = false, deleteDeposit: Bool = false) {
+    required init(frame: CGRect = .zero, onlyMy: Bool, onlyCard: Bool = false, deleteDeposit: Bool = false, loadProducts: Bool = true) {
         super.init(frame: frame)
-        commonInit(onlyMy: onlyMy, onlyCard: onlyCard, deleteDeposit: deleteDeposit)
+        commonInit(onlyMy: onlyMy, onlyCard: onlyCard, deleteDeposit: deleteDeposit, loadProducts: loadProducts)
     }
     
     deinit {
         token?.invalidate()
     }
 
-    func commonInit(onlyMy: Bool, onlyCard: Bool = false, deleteDeposit: Bool = false) {
+    func commonInit(onlyMy: Bool, onlyCard: Bool = false, deleteDeposit: Bool = false, loadProducts: Bool = true) {
         self.onlyMy = onlyMy
         self.onlyCard = onlyCard
-        updateObjectWithNotification()
-        cardListRealm?.forEach({ op in
-            if onlyCard {
-                if op.productType == "CARD" {
-                    cardList.append(op)
-                }
-            } else {
-                if deleteDeposit {
-                    if op.productType != "DEPOSIT" {
+        if loadProducts {
+            updateObjectWithNotification()
+            cardListRealm?.forEach({ op in
+                if onlyCard {
+                    if op.productType == "CARD" {
                         cardList.append(op)
                     }
                 } else {
-                    cardList.append(op)
+                    if deleteDeposit {
+                        if op.productType != "DEPOSIT" {
+                            cardList.append(op)
+                        }
+                    } else {
+                        cardList.append(op)
+                    }
                 }
-            }
-        })
+            })
+        }
 //        let height: CGFloat = self.onlyMy ? 110 : 80
         changeCardButtonCollection.isHidden = !self.onlyMy
         self.translatesAutoresizingMaskIntoConstraints = false

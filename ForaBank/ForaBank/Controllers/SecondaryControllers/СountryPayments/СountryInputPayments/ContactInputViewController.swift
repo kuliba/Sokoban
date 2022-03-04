@@ -101,7 +101,7 @@ class ContactInputViewController: UIViewController {
             
     var cardFromField = CardChooseView()
     
-    var cardListView = CardsScrollView(onlyMy: false, deleteDeposit: true)
+    var cardListView = CardsScrollView(onlyMy: false, deleteDeposit: true, loadProducts: false)
     
     var bottomView = BottomInputView()
     
@@ -447,23 +447,39 @@ class ContactInputViewController: UIViewController {
         DispatchQueue.main.async {
 
             let cards = ReturnAllCardList.cards()
-            let filterProduct = cards.filter{
-                ($0.productType == "CARD" || $0.productType == "ACCOUNT") &&
-                
-                type == .contact
-                ? ($0.currency == "RUB" || $0.currency == "USD" || $0.currency == "EUR")
-                : ($0.currency == "RUB")
-            }
+            var filterProduct: [UserAllCardsModel] = []
+            cards.forEach({ card in
+                if (card.productType == "CARD" || card.productType == "ACCOUNT") {
+                    
+                    if type == .contact
+                        ? (card.currency == "RUB" || card.currency == "USD" || card.currency == "EUR")
+                        : (card.currency == "RUB") {
+                        
+                        filterProduct.append(card)
+                    }
+                }
+            })
             
             self.cardListView.cardList = filterProduct
             if filterProduct.count > 0 {
                 if let cardId = self.paymentTemplate?.parameterList.first?.payer.cardId {
+                    
                     let card = filterProduct.first(where: { $0.id == cardId })
                     self.cardFromField.model = card
                     guard let cardNumber = card?.number else { return }
                     self.selectedCardNumber = cardNumber
                     self.cardIsSelect = true
+                    
+                } else if let accountId = self.paymentTemplate?.parameterList.first?.payer.accountId {
+                    
+                    let card = filterProduct.first(where: { $0.id == accountId })
+                    self.cardFromField.model = card
+                    guard let cardNumber = card?.number else { return }
+                    self.selectedCardNumber = cardNumber
+                    self.cardIsSelect = true
+                    
                 } else {
+                    
                     self.cardFromField.model = filterProduct.first
                     guard let cardNumber  = filterProduct.first?.number else { return }
                     self.selectedCardNumber = cardNumber
