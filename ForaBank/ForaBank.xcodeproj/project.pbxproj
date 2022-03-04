@@ -890,6 +890,8 @@
 		F81EF91527D212990096DC70 /* MainBlockOpenProductsViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F81EF91427D212990096DC70 /* MainBlockOpenProductsViewComponent.swift */; };
 		F81EF91727D212BE0096DC70 /* ButtonNewProductComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F81EF91627D212BE0096DC70 /* ButtonNewProductComponent.swift */; };
 		F81EF91A27D2180E0096DC70 /* MainSectionPromotionsViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F81EF91927D2180E0096DC70 /* MainSectionPromotionsViewComponent.swift */; };
+		F81EF91D27D21A240096DC70 /* MainBlockCurrencyExchangeViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F81EF91C27D21A240096DC70 /* MainBlockCurrencyExchangeViewComponent.swift */; };
+		F81EF91F27D21A410096DC70 /* CurrencyExchangeViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F81EF91E27D21A410096DC70 /* CurrencyExchangeViewComponent.swift */; };
 		F87F9B1E27C3A0FD007E3D94 /* MainSectionFastOperationViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87F9B1D27C3A0FD007E3D94 /* MainSectionFastOperationViewComponent.swift */; };
 		F87F9B2027C3B1B2007E3D94 /* ButtonIconTextViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87F9B1F27C3B1B2007E3D94 /* ButtonIconTextViewComponent.swift */; };
 		F8E529AD27B67F7B00222394 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F8E529AC27B67F7B00222394 /* Assets.xcassets */; };
@@ -1801,6 +1803,8 @@
 		F81EF91427D212990096DC70 /* MainBlockOpenProductsViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainBlockOpenProductsViewComponent.swift; sourceTree = "<group>"; };
 		F81EF91627D212BE0096DC70 /* ButtonNewProductComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonNewProductComponent.swift; sourceTree = "<group>"; };
 		F81EF91927D2180E0096DC70 /* MainSectionPromotionsViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSectionPromotionsViewComponent.swift; sourceTree = "<group>"; };
+		F81EF91C27D21A240096DC70 /* MainBlockCurrencyExchangeViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainBlockCurrencyExchangeViewComponent.swift; sourceTree = "<group>"; };
+		F81EF91E27D21A410096DC70 /* CurrencyExchangeViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyExchangeViewComponent.swift; sourceTree = "<group>"; };
 		F87F9B1D27C3A0FD007E3D94 /* MainSectionFastOperationViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSectionFastOperationViewComponent.swift; sourceTree = "<group>"; };
 		F87F9B1F27C3B1B2007E3D94 /* ButtonIconTextViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonIconTextViewComponent.swift; sourceTree = "<group>"; };
 		F8E529AC27B67F7B00222394 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -3306,8 +3310,10 @@
 				F87F9B1C27C3A0E1007E3D94 /* FastOperation */,
 				F81EF91327D212840096DC70 /* OpenProducts */,
 				F81EF91827D217FA0096DC70 /* Promotions */,
+				F81EF91B27D21A0F0096DC70 /* CurrencyExchange */,
 				7772978227C38F2F0099EF91 /* Main */,
 				77EA0DBA2779B06D00C6ED12 /* OperationDetailHeaderComponentView.swift */,
+				F81EF91E27D21A410096DC70 /* CurrencyExchangeViewComponent.swift */,
 				F87F9B1F27C3B1B2007E3D94 /* ButtonIconTextViewComponent.swift */,
 				A5156424277CBB7C00F5ED73 /* PermissionHelper.swift */,
 				F81EF91627D212BE0096DC70 /* ButtonNewProductComponent.swift */,
@@ -5112,6 +5118,14 @@
 			path = Promotions;
 			sourceTree = "<group>";
 		};
+		F81EF91B27D21A0F0096DC70 /* CurrencyExchange */ = {
+			isa = PBXGroup;
+			children = (
+				F81EF91C27D21A240096DC70 /* MainBlockCurrencyExchangeViewComponent.swift */,
+			);
+			path = CurrencyExchange;
+			sourceTree = "<group>";
+		};
 		F87F9B1C27C3A0E1007E3D94 /* FastOperation */ = {
 			isa = PBXGroup;
 			children = (
@@ -5600,6 +5614,7 @@
 				EDB1657C2668C8D5007E6030 /* PayCell.swift in Sources */,
 				0BD1CAA426E6C7E400CFE993 /* CreateSFPTransferDecodableModel.swift in Sources */,
 				0BAD4D33273EDA9B00FDF9B6 /* GetNotificationsDecodableModel.swift in Sources */,
+				F81EF91D27D21A240096DC70 /* MainBlockCurrencyExchangeViewComponent.swift in Sources */,
 				68673B5C26F4B84900F67A8C /* PayViewController.swift in Sources */,
 				0B283FBB26FBC9C800B5E925 /* Coordinator.swift in Sources */,
 				6820928727AB0EC3003DCAFD /* MosParkingData.swift in Sources */,
@@ -5726,6 +5741,7 @@
 				770DCE9327BBF93B004099C1 /* RootView.swift in Sources */,
 				0BF348A1269E0CDA005138A8 /* LogoutDecodableModel.swift in Sources */,
 				0BDCF00D274A8B0F00AAA1C3 /* IsSingleServiceDecodableModel.swift in Sources */,
+				F81EF91F27D21A410096DC70 /* CurrencyExchangeViewComponent.swift in Sources */,
 				0B7A18D02689C51A0007CC75 /* AppHeaderProtocol.swift in Sources */,
 				ED51D6702688B287005FD655 /* SeparatorView.swift in Sources */,
 				5A5ABF8427AAF4DE00D548AA /* PaymentGeneralData.swift in Sources */,
