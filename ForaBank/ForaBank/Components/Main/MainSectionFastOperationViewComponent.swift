@@ -34,38 +34,17 @@ struct MainSectionFastOperationView: View {
     
     var body: some View {
         
-        VStack {
+        MainSectionCollapsableView(title: viewModel.title, isCollapsed: $viewModel.isCollapsed) {
             
-            Button {
-                viewModel.isCollapsed.toggle()
-            } label: {
-                HStack {
-                    Text(viewModel.title)
-                        .font(.textH2SB20282())
-                        .foregroundColor(.textSecondary)
+            ScrollView(.horizontal) {
+                
+                HStack(spacing: 4) {
                     
-                    if viewModel.isCollapsed {
-                        Image.ic24ChevronUp
-                            .foregroundColor(.iconGray)
-                    } else {
-                        Image.ic24ChevronDown
-                            .foregroundColor(.iconGray)
-                    }
-                    
-                    Spacer()
-                }
-            }
-            .padding(.leading, 20)
-            
-            if !viewModel.isCollapsed {
-                ScrollView(.horizontal) {
-                    HStack(spacing: 4) {
-                        ForEach(viewModel.items) { itemViewModel in
-                            ButtonIconTextView(viewModel: itemViewModel)
-                        }
+                    ForEach(viewModel.items) { itemViewModel in
+                       
+                        ButtonIconTextView(viewModel: itemViewModel)
                     }
                 }
-                .frame(height: 96)
             }
         }
     }
@@ -86,8 +65,5 @@ struct MainSectionFastOperationView_Previews: PreviewProvider {
 
 extension MainSectionFastOperationView.ViewModel {
     
-    static let sample = MainSectionFastOperationView.ViewModel(items:
-                                                                [ButtonIconTextView.ViewModel.qrPayment,
-                                                                 ButtonIconTextView.ViewModel.telephoneTranslation,
-                                                                 ButtonIconTextView.ViewModel.templates], isCollapsed: false)
+    static let sample = MainSectionFastOperationView.ViewModel(items:[.qrPayment, .telephoneTranslation, .templates], isCollapsed: false)
 }

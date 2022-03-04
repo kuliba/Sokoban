@@ -50,7 +50,7 @@ struct ProfileCardViewComponent: View {
                         
                     MiniCardView(viewModel: MiniCardViewModel( background: product.backgroundImage, product: product, action: { productItem in
                         currentItem = productItem
-                    }), isSelected: currentItem == product)
+                    }), isSelected: currentItem.id == product.id)
 
                 }
             }
@@ -76,6 +76,7 @@ struct ProfileCardViewComponent: View {
                         tabBar
                             .padding(.top, 20)
                         
+                        /*
                         TabView(selection: $currentItem) {
                             
                             ForEach(viewModel.products) { product in
@@ -97,6 +98,7 @@ struct ProfileCardViewComponent: View {
                         }
                         .tabViewStyle(.page(indexDisplayMode: .never))
                         .frame( height: 160, alignment: .top)
+                         */
                         
                     } else {
                         // Fallback on earlier versions

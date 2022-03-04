@@ -15,11 +15,11 @@ extension MainSectionCurrencyView {
     class ViewModel: MainSectionCollapsableViewModel {
         
         override var type: MainSectionType { .currencyExchange }
-        let item: CurrencyExchangeView.ViewModel
+        let currencyExchange: CurrencyExchangeView.ViewModel
         
-        internal init(item: CurrencyExchangeView.ViewModel, isCollapsed: Bool) {
+        internal init(currencyExchange: CurrencyExchangeView.ViewModel, isCollapsed: Bool) {
             
-            self.item = item
+            self.currencyExchange = currencyExchange
             super.init(isCollapsed: isCollapsed)
         }
     }
@@ -33,37 +33,9 @@ struct MainSectionCurrencyView: View {
 
     var body: some View {
         
-        VStack(spacing: 0) {
+        MainSectionCollapsableView(title: viewModel.title, isCollapsed: $viewModel.isCollapsed) {
             
-            Button {
-
-                viewModel.isCollapsed.toggle()
-
-            } label: {
-
-                HStack {
-
-                    Text(viewModel.title)
-                        .font(.textH2SB20282())
-                        .foregroundColor(.textSecondary)
-
-                    if viewModel.isCollapsed {
-                        Image.ic24ChevronUp
-                            .foregroundColor(.iconGray)
-                    } else {
-                        Image.ic24ChevronDown
-                            .foregroundColor(.iconGray)
-                    }
-
-                    Spacer()
-                }
-            }
-            .padding(.leading, 20)
-            .padding(.bottom, 20)
-
-            if !viewModel.isCollapsed {
-                CurrencyExchangeView(viewModel: viewModel.item)
-            }
+            CurrencyExchangeView(viewModel: viewModel.currencyExchange)
         }
     }
 }
@@ -83,6 +55,6 @@ struct MainBlockCurrencyExchangeView_Previews: PreviewProvider {
 
 extension MainSectionCurrencyView.ViewModel {
     
-    static let sample = MainSectionCurrencyView.ViewModel(item: .sample, isCollapsed: false)
+    static let sample = MainSectionCurrencyView.ViewModel(currencyExchange: .sample, isCollapsed: false)
 
 }

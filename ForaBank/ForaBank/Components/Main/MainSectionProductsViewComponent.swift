@@ -12,20 +12,17 @@ import Combine
 //MARK: - ViewModel
 
 extension MainSectionProductsView {
-    
+
     class ViewModel: MainSectionCollapsableViewModel {
         
         override var type: MainSectionType { .products }
         @Published var productsTypeSelector: OptionSelectorViewModel?
-        @Published var products: [[MainCardComponentView.ViewModel]]
+        @Published var products: [MainSectionProductsListItemViewModel]
         
-        internal init(productsTypeSelector: OptionSelectorViewModel?, products: [[MainCardComponentView.ViewModel]], isCollapsed: Bool) {
+        internal init(productsTypeSelector: OptionSelectorViewModel?, products: [MainSectionProductsListItemViewModel], isCollapsed: Bool) {
             
+            self.productsTypeSelector = productsTypeSelector
             self.products = products
-            if let productsTypeSelector = productsTypeSelector {
-                
-                self.productsTypeSelector = productsTypeSelector
-            }
             super.init(isCollapsed: isCollapsed)
         }
     }
@@ -48,45 +45,27 @@ struct MainSectionProductsView: View {
                 OptionSelectorView(viewModel: productSelectorViewModel)
                     .frame(height: 24)
                     .padding(.top, 12)
-
             }
             
             ScrollView(.horizontal, showsIndicators: false) {
                             
                         HStack {
 
-                            ForEach(viewModel.products, id: \.self) { products in
-                                                                    
-                                HStack(alignment: .center) {
-
-                                        ForEach(products.indices) { index in
-                                        
-                                            if products[index].style == .additional {
-                                                
-                                                MainCardComponentView(viewModel: products[index])
-                                                    .frame(height: 104)
-                                                    .id(index)
-                                                
-                                            } else {
-                                                
-                                                MainCardComponentView(viewModel: products[index])
-                                                    .frame(width: 164, height: 104)
-                                                    .id(index)
-                                            }
-                              
-                                        }  
-
-                                            Divider().background(Color(hex: "F6F6F7"))
-                                                .frame(width: 1, height: 48, alignment: .center)
-                                    }
+                            ForEach(viewModel.products) { itemViewModel in
+                                
+                                switch itemViewModel {
+                                case let cardViewModel as MainCardComponentView.ViewModel:
+                                    MainCardComponentView(viewModel: cardViewModel)
+                                    
+                                default:
+                                    EmptyView()
                                 }
                         }
-                        .padding(.leading, 20)
-                        .padding(.trailing, 20)
             }
             
             Spacer()
         }
+    }
     }
     
     struct HeaderView: View {
@@ -94,8 +73,7 @@ struct MainSectionProductsView: View {
         @ObservedObject var viewModel: ViewModel
         
         var body: some View {
-            
-            
+
             HStack(alignment: .center) {
                 
                 Text(viewModel.title)
@@ -142,22 +120,12 @@ struct MainBlockProductsView_Previews: PreviewProvider {
         MainSectionProductsView(viewModel: .sample)
             .previewLayout(.fixed(width: 375, height: 300))
     }
-        
 }
 
 //MARK: - Preview Content
 
 extension MainSectionProductsView.ViewModel {
     
-    static let sample = MainSectionProductsView.ViewModel(productsTypeSelector: .init(options: [.init(id: "0", name: "Карты"), .init(id: "1", name: "Счета")], selected: "0", style: .products), products: [[
-        .init(logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardClassic, paymentSystem:  Image(uiImage: UIImage(named: "card_visa_logo")!), status: .notActivated, backgroundImage: Image(""), productType: .card, style: .main, kind: .card),
-        .init(logo: .ic24LogoForaColor, name: "Текущий счет", balance: "170 897 ₽", fontColor: .white, cardNumber: "1234", backgroundColor: .cardAccount, paymentSystem:  nil, status: .active, backgroundImage: Image(""), productType: .card, style: .additional, kind: .want)
-    ], [
-        .init(logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardClassic, paymentSystem:  Image(uiImage: UIImage(named: "card_visa_logo")!), status: .notActivated, backgroundImage: Image(""), productType: .card, style: .main, kind: .card),
-        .init(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .blocked, backgroundImage: Image(""), productType: .card, style: .main, kind: .card),
-        .init(logo: .ic24LogoForaColor, name: "Infinity", balance: "170 897 ₽", fontColor: .white, cardNumber: "7854", backgroundColor: .cardInfinite, paymentSystem:  Image(uiImage: UIImage(named: "card_mastercard_logo")!), status: .active, backgroundImage: Image(""), productType: .card, style: .main, kind: .card),
-        .init(logo: .ic24LogoForaColor, name: "Текущий счет", balance: "170 897 ₽", fontColor: .white, cardNumber: "1234", backgroundColor: .cardAccount, paymentSystem:  nil, status: .active, backgroundImage: Image(""), productType: .card, style: .main, kind: .card),
-        .init(logo: .ic24LogoForaColor, name: "+5", balance: "170 897 ₽", fontColor: .white, cardNumber: "1234", backgroundColor: .cardAccount, paymentSystem:  nil, status: .active, backgroundImage: Image(""), productType: .card, style: .additional, kind: .more)
-    ]], isCollapsed: false)
+    static let sample = MainSectionProductsView.ViewModel(productsTypeSelector: .init(options: [.init(id: "0", name: "Карты"), .init(id: "1", name: "Счета")], selected: "0", style: .products), products: [MainCardComponentView.ViewModel.classic], isCollapsed: false)
     
 }

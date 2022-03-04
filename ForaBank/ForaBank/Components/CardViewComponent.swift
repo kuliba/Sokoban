@@ -10,9 +10,8 @@ import SwiftUI
 
 extension MainCardComponentView {
     
-    class ViewModel: Identifiable, Hashable, ObservableObject {
+    class ViewModel: MainSectionProductsListItemViewModel, ObservableObject {
         
-        let id = UUID()
         let logo: Image
         @Published var name: String
         @Published var balance: String
@@ -25,9 +24,7 @@ extension MainCardComponentView {
         let productType: ProductType
         let style: Style
         let kind: Kind
-        
-        
-        
+
         internal init(logo: Image, name: String, balance: String, fontColor: Color, cardNumber: String, backgroundColor: Color, paymentSystem: Image?, status: Status, backgroundImage: Image, productType: ProductType, style: Style, kind: Kind) {
             
             self.logo = logo
@@ -76,19 +73,6 @@ extension MainCardComponentView {
             case profile
             case additional
         }
-    }
-}
-
-extension MainCardComponentView.ViewModel {
-    
-    func hash(into hasher: inout Hasher) {
-        
-        hasher.combine(id)
-    }
-
-    static func == (lhs: MainCardComponentView.ViewModel, rhs: MainCardComponentView.ViewModel) -> Bool {
-        
-        return lhs.id == rhs.id
     }
 }
 

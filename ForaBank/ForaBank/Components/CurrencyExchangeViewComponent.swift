@@ -97,7 +97,6 @@ struct CurrencyExchangeView: View {
         .padding(.horizontal, 12)
         .background(Color.mainColorsGrayLightest)
         .cornerRadius(12)
-        .padding(.horizontal, 20)
     }
     
     struct HeaderView: View {

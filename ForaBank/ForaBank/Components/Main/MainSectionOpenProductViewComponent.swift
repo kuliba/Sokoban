@@ -33,43 +33,17 @@ struct MainSectionOpenProductView: View {
     
     var body: some View {
         
-        VStack {
+        MainSectionCollapsableView(title: viewModel.title, isCollapsed: $viewModel.isCollapsed) {
             
-            Button {
-
-                viewModel.isCollapsed.toggle()
-
-            } label: {
-
-                HStack {
-
-                    Text(viewModel.title)
-                        .font(.textH2SB20282())
-                        .foregroundColor(.textSecondary)
-
-                    if viewModel.isCollapsed {
-                        Image.ic24ChevronUp
-                            .foregroundColor(.iconGray)
-                    } else {
-                        Image.ic24ChevronDown
-                            .foregroundColor(.iconGray)
-                    }
-
-                    Spacer()
-                }
-            }
-            .padding(.leading, 20)
-            .padding(.bottom, 20)
-
-            if !viewModel.isCollapsed {
-                ScrollView(.horizontal) {
-                    HStack(spacing: 8) {
-                        ForEach(viewModel.items) { itemViewModel in
-                            ButtonNewProduct(viewModel: itemViewModel)
-                        }
+            ScrollView(.horizontal) {
+                
+                HStack(spacing: 8) {
+                    
+                    ForEach(viewModel.items) { itemViewModel in
+                        
+                        ButtonNewProduct(viewModel: itemViewModel)
                     }
                 }
-                .frame(height: 96)
             }
         }
     }
