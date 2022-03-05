@@ -14,48 +14,83 @@ extension ProductView {
     
     class ViewModel: MainSectionProductsListItemViewModel, ObservableObject {
 
-        let style: Style
-        let logo: Image
+        let header: HeaderViewModel
         @Published var name: String
-        @Published var balance: String
-        @Published var status: Status
-        let cardNumber: String
-        let paymentSystem: Image?
+        var footer: FooterViewModel
+        @Published var statusAction: StatusActionViewModel?
         let appearance: Appearance
         let action: () -> Void
         
-        internal init(style: Style, logo: Image, name: String, balance: String, status: Status, cardNumber: String, paymentSystem: Image?, appearance: Appearance, action: @escaping () -> Void) {
+        internal init(header: HeaderViewModel, name: String, footer: FooterViewModel, statusAction: StatusActionViewModel?, appearance: Appearance, action: @escaping () -> Void) {
             
-            self.style = style
-            self.logo = logo
+            self.header = header
             self.name = name
-            self.balance = balance
-            self.status = status
-            self.cardNumber = cardNumber
-            self.paymentSystem = paymentSystem
+            self.footer = footer
+            self.statusAction = statusAction
             self.appearance = appearance
             self.action = action
         }
-
-        enum Style {
+        
+        struct HeaderViewModel {
             
-            case main
-            case profile
+            let logo: Image
+            let number: String
+            let period: String?
         }
         
-        enum Status {
+        class FooterViewModel: ObservableObject {
             
-            case active
-            case notActivated
-            case blocked
+            @Published var balance: String
+            let paymentSystem: Image?
             
-            var image: Image? {
+            init(balance: String, paymentSystem: Image?) {
                 
-                switch self {
-                    case .active: return nil
-                    case .notActivated: return Image.ic24ArrowRight
-                    case .blocked: return Image.ic24Lock
+                self.balance = balance
+                self.paymentSystem = paymentSystem
+            }
+        }
+
+        struct StatusActionViewModel {
+            
+            let status: Status
+            let style: Style
+            let action: () -> Void
+            
+            var icon: Image {
+                
+                switch status {
+                case .activation:
+                    switch style {
+                    case .main: return .ic16ArrowRight
+                    case .profile: return .ic24ArrowRight
+                    }
+                    
+                case .unblock:
+                    switch style {
+                    case .main: return .ic16Lock
+                    case .profile: return .ic24Lock
+                    }
                 }
+            }
+            
+            var iconSize: CGSize {
+                
+                switch style {
+                case .main: return .init(width: 24, height: 24)
+                case .profile: return .init(width: 64, height: 64)
+                }
+            }
+    
+            enum Status {
+                
+                case activation
+                case unblock
+            }
+            
+            enum Style {
+                
+                case main
+                case profile
             }
         }
         
@@ -79,20 +114,12 @@ struct ProductView: View {
     
     @ObservedObject var viewModel: ViewModel
     
-    var size: CGSize {
-        switch viewModel.style {
-        case .main: return .init(width: 164, height: 104)
-        case .profile: return .init(width: 268, height: 160)
-        }
-    }
-    
     var body: some View {
             
         Button(action: viewModel.action) {
             
             ZStack {
                 
-                // background
                 if let backgroundImage = viewModel.appearance.background.image {
                     
                     backgroundImage
@@ -106,124 +133,144 @@ struct ProductView: View {
  
                 VStack(alignment: .leading) {
                     
-                    HStack(alignment: .center, spacing: 8) {
-                        
-                        viewModel.logo
-                            .frame(width: 18.8, height: 18.8, alignment: .center)
-                            .foregroundColor(viewModel.appearance.textColor)
-                        
-                        Circle()
-                            .frame(width: 2.27, height: 2.38, alignment: .center)
-                            .foregroundColor(viewModel.appearance.textColor)
-                        
-                        Text(viewModel.cardNumber)
-                            .font(.system(size: 12))
-                            .foregroundColor(viewModel.appearance.textColor)
-                    }
-                    .padding(.leading, 5)
+                    HeaderView(viewModel: viewModel.header, textColor: viewModel.appearance.textColor)
 
                     Spacer()
                     
-                    HStack(alignment: .bottom){
+                    VStack(alignment: .leading, spacing: 0) {
                         
-                        VStack(alignment: .leading, spacing: 0) {
-                            
-                            Spacer()
-                            
-                            Text(viewModel.name)
-                                .font(.system(size: 14))
-                                .foregroundColor(viewModel.appearance.textColor)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .opacity(0.5)
-                                .multilineTextAlignment(.leading)
-
-                            HStack(alignment: .bottom) {
-                                
-                                Text(viewModel.balance)
-                                    .font(.system(size: 14))
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(viewModel.appearance.textColor)
-                                
-                                Spacer()
-                                
-                                if let paymentSystem = viewModel.paymentSystem {
-                                    
-                                    paymentSystem
-                                        .frame(width: 28, height: 20, alignment: .bottom)
-                                    
-                                }
-                            }
-                        }
+                        Text(viewModel.name)
+                            .font(.textBodyMR14200())
+                            .foregroundColor(viewModel.appearance.textColor)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .opacity(0.5)
+                            .multilineTextAlignment(.leading)
+                        
+                        FooterView(viewModel: viewModel.footer, textColor: viewModel.appearance.textColor)
                     }
                 }
                 .padding(.leading, 12)
                 .padding(.trailing, 16)
-                .padding(.top, 12)
-                .padding(.bottom, 11)
+                .padding(.vertical, 12)
 
-                switch viewModel.status {
-                case .active:
-                    EmptyView()
+                if let statusActionViewModel = viewModel.statusAction {
                     
-                case .notActivated:
-                    switch viewModel.style {
-                    case .main:
-                        Button {
-                            
-                        } label: {
-                            
-                            ZStack {
-                                
-                                Circle()
-                                    .frame(width: 24, height: 24)
-                                    .foregroundColor(.iconWhite)
-                                
-                                Image.ic16ArrowRight
-                                    .renderingMode(.template)
-                                    .foregroundColor(viewModel.appearance.background.color)
-                            }
-                        }
-                        
-                    case .profile:
-                        SliderButtonComponent(viewModel: SliderButtonComponent.ViewModel(alertPresented: false, sliderState: .normal, foregroundColor: viewModel.appearance.background.color))
-                    }
+                    ProductView.StatusActionView(viewModel: statusActionViewModel, color: viewModel.appearance.background.color)
+                }
+            }
+        }
+    }
+}
+
+//MARK: - Internal Views
+
+extension ProductView {
+    
+    struct HeaderView: View {
+        
+        let viewModel: ViewModel.HeaderViewModel
+        let textColor: Color
+        
+        var body: some View {
+            
+            HStack(alignment: .center, spacing: 8) {
+                
+                viewModel.logo
+                    .frame(width: 18.8, height: 18.8)
+                    .foregroundColor(textColor)
+                
+                Circle()
+                    .frame(width: 2.38, height: 2.38)
+                    .foregroundColor(textColor)
+                
+                Text(viewModel.number)
+                    .font(.textBodySR12160())
+                    .foregroundColor(textColor)
+                
+                if let period = viewModel.period {
                     
-                case .blocked:
-                    switch viewModel.style {
-                    case .main:
-                        Button {
-                            
-                        } label: {
-                            
-                            ZStack {
-                                
-                                Circle()
-                                    .frame(width: 24, height: 24)
-                                    .foregroundColor(.iconWhite)
-                                
-                                Image.ic16Lock
-                                    .renderingMode(.template)
-                                    .foregroundColor(viewModel.appearance.background.color)
-                            }
-                        }
-                        
-                    case .profile:
-                        Button {
-                            
-                        } label: {
-                            
-                            ZStack {
-                                
-                                Circle()
-                                    .frame(width: 64, height: 64)
-                                    .foregroundColor(.iconWhite)
-                                
-                                Image.ic24Lock
-                                    .renderingMode(.template)
-                                    .foregroundColor(viewModel.appearance.background.color)
-                            }
-                        }
-                    }
+                    Rectangle()
+                        .frame(width: 1, height: 16)
+                        .foregroundColor(textColor)
+                    
+                    Text(period)
+                        .font(.textBodySR12160())
+                        .foregroundColor(textColor)
+                }
+            }
+        }
+    }
+    
+    struct FooterView: View {
+        
+        @ObservedObject var viewModel: ViewModel.FooterViewModel
+        let textColor: Color
+        
+        var body: some View {
+            
+            HStack(alignment: .bottom) {
+                
+                Text(viewModel.balance)
+                    .font(.textBodyMSB14200())
+                    .fontWeight(.semibold)
+                    .foregroundColor(textColor)
+                
+                Spacer()
+                
+                if let paymentSystem = viewModel.paymentSystem {
+                    
+                    paymentSystem
+                        .renderingMode(.template)
+                        .frame(width: 28, height: 20)
+                        .foregroundColor(textColor)
+                }
+            }
+        }
+    }
+    
+    struct StatusActionView: View {
+        
+        let viewModel: ViewModel.StatusActionViewModel
+        let color: Color
+        
+        var body: some View {
+            
+            switch viewModel.status {
+            case .activation:
+                switch viewModel.style {
+                case .main:
+                    ProductView.StatusButtonView(icon: viewModel.icon, color: color, size: viewModel.iconSize, action: viewModel.action)
+                    
+                case .profile:
+                    SliderButtonComponent(viewModel: .init(alertPresented: false, sliderState: .normal, foregroundColor: color))
+                }
+                
+            case .unblock:
+                ProductView.StatusButtonView(icon: viewModel.icon, color: color, size: viewModel.iconSize, action: viewModel.action)
+            }
+        }
+    }
+    
+    struct StatusButtonView: View {
+        
+        let icon: Image
+        let color: Color
+        let size: CGSize
+        let action: () -> Void
+    
+        var body: some View {
+            
+            Button(action: action){
+                
+                ZStack {
+                    
+                    Circle()
+                        .frame(width: size.width, height: size.height)
+                        .foregroundColor(.iconWhite)
+                    
+                    icon
+                        .renderingMode(.template)
+                        .foregroundColor(color)
                 }
             }
         }
@@ -310,21 +357,21 @@ struct MainCardView_Previews: PreviewProvider {
 
 extension ProductView.ViewModel {
     
-    static let notActivate = ProductView.ViewModel(style: .main, logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", status: .notActivated, cardNumber: "7854", paymentSystem: Image("card_visa_logo"), appearance: .init(textColor: .white, background: .init(color: .cardInfinite, image: Image("Product Background Sample"))), action: {})
+    static let notActivate = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Visa")), statusAction: .init(status: .activation, style: .main, action: {}), appearance: .init(textColor: .white, background: .init(color: .cardInfinite, image: Image("Product Background Sample"))), action: {})
 
-    static let blocked = ProductView.ViewModel(style: .main, logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", status: .blocked, cardNumber: "7854", paymentSystem: Image("card_mastercard_logo"), appearance: .init(textColor: .white, background: .init(color: .cardInfinite, image: nil)), action: {})
-
-    static let classic = ProductView.ViewModel(style: .main, logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", status: .active, cardNumber: "7854", paymentSystem: Image("card_visa_logo"), appearance: .init(textColor: .white, background: .init(color: .cardRIO, image: nil)), action: {})
+    static let blocked = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: .init(status: .unblock, style: .main, action: {}), appearance: .init(textColor: .white, background: .init(color: .cardInfinite, image: nil)), action: {})
     
-    static let account = ProductView.ViewModel(style: .main, logo: .ic24LogoForaColor, name: "Текущий зарплатный счет", balance: "170 897 ₽", status: .active, cardNumber: "7854", paymentSystem: Image("card_mastercard_logo"), appearance: .init(textColor: .white, background: .init(color: .cardRIO, image: nil)), action: {})
+    static let classic = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardRIO, image: nil)), action: {})
     
-    static let notActivateProfile = ProductView.ViewModel(style: .profile, logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", status: .notActivated, cardNumber: "7854", paymentSystem: Image("card_visa_logo"), appearance: .init(textColor: .white, background: .init(color: .cardRIO, image: Image("Product Background Large Sample"))), action: {})
+    static let account = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Текущий зарплатный счет", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardRIO, image: nil)), action: {})
     
-    static let blockedProfile = ProductView.ViewModel(style: .profile, logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", status: .blocked, cardNumber: "7854", paymentSystem: Image("card_mastercard_logo"), appearance: .init(textColor: .white, background: .init(color: .cardInfinite, image: nil)), action: {})
+    static let notActivateProfile = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: "12/24"), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Visa")), statusAction: .init(status: .activation, style: .profile, action: {}), appearance: .init(textColor: .white, background: .init(color: .cardInfinite, image: Image("Product Background Large Sample"))), action: {})
     
-    static let classicProfile = ProductView.ViewModel(style: .profile, logo: .ic24LogoForaColor, name: "Classic", balance: "170 897 ₽", status: .active, cardNumber: "7854", paymentSystem: Image("card_visa_logo"), appearance: .init(textColor: .white, background: .init(color: .cardRIO, image: nil)), action: {})
+    static let blockedProfile = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: "12/24"), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: .init(status: .unblock, style: .profile, action: {}), appearance: .init(textColor: .white, background: .init(color: .cardInfinite, image: nil)), action: {})
     
-    static let accountProfile = ProductView.ViewModel(style: .main, logo: .ic24LogoForaColor, name: "Текущий зарплатный счет", balance: "170 897 ₽", status: .active, cardNumber: "7854", paymentSystem: Image("card_mastercard_logo"), appearance: .init(textColor: .white, background: .init(color: .cardRIO, image: nil)), action: {})
+    static let classicProfile = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: "12/24"), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardRIO, image: nil)), action: {})
+    
+    static let accountProfile = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: "12/24"), name: "Текущий зарплатный счет", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardRIO, image: nil)), action: {})
 }
 
 extension ProductView.CollapsedButtonViewModel {
