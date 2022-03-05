@@ -279,50 +279,6 @@ extension ProductView {
 
 //MARK: - Preview
 
-extension ProductView {
-    
-    class CollapsedButtonViewModel: MainSectionProductsListItemViewModel, ObservableObject {
-    
-        var title: String
-        
-        internal init(id: UUID = UUID(), title: String) {
-            
-            self.title = title
-            super.init(id: id)
-        }
-    }
-    
-    struct CollapsedButtonView: View {
-        
-        @ObservedObject var viewModel: CollapsedButtonViewModel
-        
-        var body: some View {
-            
-            Button {
-                
-            } label: {
-                
-                VStack(alignment: .center) {
-                    
-                    Spacer()
-                    
-                    Text(viewModel.title)
-                        .font(.system(size: 14))
-                    
-                    Spacer()
-                }
-                .padding(12)
-                .foregroundColor(.black)
-                .background(Color.mainColorsGrayLightest
-                                .cornerRadius(12))
-                .frame(width: 48, height: 104)
-            }
-        }
-    }
-}
-
-//MARK: - Preview Content
-
 struct MainCardView_Previews: PreviewProvider {
     
     static var previews: some View {
@@ -355,6 +311,8 @@ struct MainCardView_Previews: PreviewProvider {
     }
 }
 
+//MARK: - Preview Content
+
 extension ProductView.ViewModel {
     
     static let notActivate = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Visa")), statusAction: .init(status: .activation, style: .main, action: {}), appearance: .init(textColor: .white, background: .init(color: .cardInfinite, image: Image("Product Background Sample"))), action: {})
@@ -372,10 +330,5 @@ extension ProductView.ViewModel {
     static let classicProfile = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: "12/24"), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardRIO, image: nil)), action: {})
     
     static let accountProfile = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: "12/24"), name: "Текущий зарплатный счет", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardRIO, image: nil)), action: {})
-}
-
-extension ProductView.CollapsedButtonViewModel {
-    
-    static let moreCards = ProductView.CollapsedButtonViewModel(id: UUID(), title: "+ 5")
 }
 
