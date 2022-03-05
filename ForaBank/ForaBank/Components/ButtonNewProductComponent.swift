@@ -11,9 +11,8 @@ import SwiftUI
 
 extension ButtonNewProduct {
     
-    struct ViewModel: Identifiable {
+    class ViewModel: MainSectionProductsListItemViewModel {
         
-        var id: UUID
         let icon: Image
         let title: String
         let subTitle: String
@@ -21,11 +20,12 @@ extension ButtonNewProduct {
         
         internal init(id: UUID = UUID(), icon: Image, title: String, subTitle: String, action: @escaping () -> Void) {
             
-            self.id = id
             self.icon = icon
             self.title = title
             self.subTitle = subTitle
             self.action = action
+            
+            super.init(id: id)
         }
         
         static func == (lhs: ViewModel, rhs: ViewModel) -> Bool {
@@ -81,7 +81,6 @@ struct ButtonNewProduct: View {
                     .padding(.bottom, 12)
                 }
             }
-            .frame(width: 112, height: 124)
         }
     }
 }
@@ -94,6 +93,7 @@ struct ButtonNewProduct_Previews: PreviewProvider {
         
         Group {
             ButtonNewProduct(viewModel: .sample)
+                .previewLayout(.fixed(width: 112, height: 124))
         }
     }
 }

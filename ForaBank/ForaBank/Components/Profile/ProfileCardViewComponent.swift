@@ -13,9 +13,9 @@ extension ProfileCardViewComponent {
     
     class ViewModel: ObservableObject {
         
-        @Published var products: [MainCardComponentView.ViewModel]
+        @Published var products: [ProductView.ViewModel]
 
-        init( products: [MainCardComponentView.ViewModel]) {
+        init( products: [ProductView.ViewModel]) {
             
             self.products = products
         }
@@ -27,8 +27,8 @@ extension ProfileCardViewComponent {
     struct MiniCardViewModel {
         
         let background: Image
-        let product: MainCardComponentView.ViewModel
-        let action: (MainCardComponentView.ViewModel) -> Void
+        let product: ProductView.ViewModel
+        let action: (ProductView.ViewModel) -> Void
     }
 }
 
@@ -36,7 +36,7 @@ extension ProfileCardViewComponent {
 struct ProfileCardViewComponent: View {
     
     @ObservedObject var viewModel: ProfileCardViewComponent.ViewModel
-    @State var currentItem: MainCardComponentView.ViewModel
+    @State var currentItem: ProductView.ViewModel
 
     public var tabBar: some View {
         
@@ -44,16 +44,18 @@ struct ProfileCardViewComponent: View {
             
             Spacer()
             
+            /*
             HStack(spacing: 8) {
                 
                 ForEach(viewModel.products) { product in
                         
                     MiniCardView(viewModel: MiniCardViewModel( background: product.backgroundImage, product: product, action: { productItem in
                         currentItem = productItem
-                    }), isSelected: currentItem == product)
+                    }), isSelected: currentItem.id == product.id)
 
                 }
             }
+             */
             
             Spacer()
         }
@@ -65,10 +67,12 @@ struct ProfileCardViewComponent: View {
             
             ZStack(alignment: .top) {
                 
+                /*
                 currentItem.backgroundColor
                     .frame(height: 170, alignment: .top)
                     .edgesIgnoringSafeArea(.top)
                     .brightness(-0.2)
+                 */
             
                 VStack(spacing: 15) {
                     if #available(iOS 14.0, *) {
@@ -76,6 +80,7 @@ struct ProfileCardViewComponent: View {
                         tabBar
                             .padding(.top, 20)
                         
+                        /*
                         TabView(selection: $currentItem) {
                             
                             ForEach(viewModel.products) { product in
@@ -97,6 +102,7 @@ struct ProfileCardViewComponent: View {
                         }
                         .tabViewStyle(.page(indexDisplayMode: .never))
                         .frame( height: 160, alignment: .top)
+                         */
                         
                     } else {
                         // Fallback on earlier versions
@@ -153,6 +159,6 @@ extension ProfileCardViewComponent {
 
 struct ProfileCardViewComponent_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileCardViewComponent(viewModel: .init(products: [.blockedProfile ,.classicProfile, .accountProfile, .notActivateProfile]), currentItem: MainCardComponentView.ViewModel.classicProfile)
+        ProfileCardViewComponent(viewModel: .init(products: [.blockedProfile ,.classicProfile, .accountProfile, .notActivateProfile]), currentItem: ProductView.ViewModel.classicProfile)
     }
 }
