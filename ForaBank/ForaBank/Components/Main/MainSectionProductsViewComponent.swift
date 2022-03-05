@@ -12,18 +12,26 @@ import Combine
 //MARK: - ViewModel
 
 extension MainSectionProductsView {
-
+    
     class ViewModel: MainSectionCollapsableViewModel {
         
         override var type: MainSectionType { .products }
         @Published var productsTypeSelector: OptionSelectorViewModel?
         @Published var products: [MainSectionProductsListItemViewModel]
+        let moreButton: MoreButtonViewModel
         
-        internal init(productsTypeSelector: OptionSelectorViewModel?, products: [MainSectionProductsListItemViewModel], isCollapsed: Bool) {
+        internal init(productsTypeSelector: OptionSelectorViewModel?, products: [MainSectionProductsListItemViewModel], moreButton: MoreButtonViewModel, isCollapsed: Bool) {
             
             self.productsTypeSelector = productsTypeSelector
             self.products = products
+            self.moreButton = moreButton
             super.init(isCollapsed: isCollapsed)
+        }
+        
+        struct MoreButtonViewModel {
+            
+            let icon: Image
+            let action: () -> Void
         }
     }
 }
@@ -36,77 +44,67 @@ struct MainSectionProductsView: View {
     
     var body: some View {
         
-        VStack {
-
-            HeaderView(viewModel: viewModel)
+        MainSectionCollapsableView(title: viewModel.title, isCollapsed: $viewModel.isCollapsed) {
             
-            if let productSelectorViewModel = viewModel.productsTypeSelector {
+            VStack {
                 
-                OptionSelectorView(viewModel: productSelectorViewModel)
-                    .frame(height: 24)
-                    .padding(.top, 12)
-            }
-            
-            ScrollView(.horizontal, showsIndicators: false) {
+                if let productSelectorViewModel = viewModel.productsTypeSelector {
+                    
+                    OptionSelectorView(viewModel: productSelectorViewModel)
+                        .frame(height: 24)
+                        .padding(.top, 12)
+                }
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                    
+                    HStack(spacing: 8) {
+                        
+                        ForEach(viewModel.products) { itemViewModel in
                             
-                        HStack {
-
-                            ForEach(viewModel.products) { itemViewModel in
+                            switch itemViewModel {
+                            case let cardViewModel as MainCardComponentView.ViewModel:
+                                MainCardComponentView(viewModel: cardViewModel)
                                 
-                                switch itemViewModel {
-                                case let cardViewModel as MainCardComponentView.ViewModel:
-                                    MainCardComponentView(viewModel: cardViewModel)
-                                    
-                                default:
-                                    EmptyView()
-                                }
+                            default:
+                                EmptyView()
+                            }
                         }
+                    }
+                }
             }
             
-            Spacer()
         }
-    }
+        .overlay(MoreButtonView(viewModel: viewModel.moreButton))
     }
     
-    struct HeaderView: View {
+    struct MoreButtonView: View {
         
-        @ObservedObject var viewModel: ViewModel
+        let viewModel: ViewModel.MoreButtonViewModel
         
         var body: some View {
-
-            HStack(alignment: .center) {
+            
+            VStack {
                 
-                Text(viewModel.title)
-                    .font(.system(size: 24))
-                    .fontWeight(.semibold)
-                
-                Button {
+                HStack {
                     
-                } label: {
+                    Spacer()
+                    
+                    Button(action: viewModel.action){
                         
-                    Image.ic24ChevronDown
-                        .renderingMode(.original)
-                        .foregroundColor(.red)
+                        ZStack{
+                            
+                            Circle()
+                                .frame(width: 32, height: 32, alignment: .center)
+                                .foregroundColor(.mainColorsGrayLightest)
+                            
+                            viewModel.icon
+                                .renderingMode(.original)
+                        }
+                    }
                 }
                 
                 Spacer()
-                
-                Button {
-                    
-                } label: {
-
-                    ZStack{
-                        Image.ic24MoreHorizontal
-                            .renderingMode(.original)
-                    }
-                    .frame(width: 32, height: 32, alignment: .center)
-                    .background(Color.mainColorsGrayLightest)
-                    .cornerRadius(90)
-
-                }
             }
-            .padding([.leading, .trailing], 20)
-            .padding(.bottom, 8)
         }
     }
 }
@@ -126,6 +124,6 @@ struct MainBlockProductsView_Previews: PreviewProvider {
 
 extension MainSectionProductsView.ViewModel {
     
-    static let sample = MainSectionProductsView.ViewModel(productsTypeSelector: .init(options: [.init(id: "0", name: "Карты"), .init(id: "1", name: "Счета")], selected: "0", style: .products), products: [MainCardComponentView.ViewModel.classic], isCollapsed: false)
+    static let sample = MainSectionProductsView.ViewModel(productsTypeSelector: .init(options: [.init(id: "0", name: "Карты"), .init(id: "1", name: "Счета")], selected: "0", style: .products), products: [MainCardComponentView.ViewModel.classic, MainCardComponentView.ViewModel.classic], moreButton: .init(icon: .ic24MoreHorizontal, action: {}), isCollapsed: false)
     
 }

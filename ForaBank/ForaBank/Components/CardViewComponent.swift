@@ -37,7 +37,6 @@ extension MainCardComponentView {
             self.paymentSystem = paymentSystem
             self.productType = productType
             self.style = style
-            
         }
         
         enum Status {
@@ -131,9 +130,7 @@ struct MainCardComponentView: View {
                                 }
                             }
                         }
-                        
                     }
-                    
                 }
                 .padding(.leading, 12)
                 .padding(.trailing, 16)
