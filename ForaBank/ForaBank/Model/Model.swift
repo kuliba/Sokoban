@@ -11,6 +11,8 @@ import os
 
 class Model {
     
+    //MARK: Products
+    
     //MARK: Templates
     let action: PassthroughSubject<Action, Never>
     let auth: CurrentValueSubject<AuthorizationState, Never>
