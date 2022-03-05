@@ -62,8 +62,8 @@ struct MainSectionProductsView: View {
                         ForEach(viewModel.products) { itemViewModel in
                             
                             switch itemViewModel {
-                            case let cardViewModel as MainCardComponentView.ViewModel:
-                                MainCardComponentView(viewModel: cardViewModel)
+                            case let cardViewModel as ProductView.ViewModel:
+                                ProductView(viewModel: cardViewModel)
                                 
                             default:
                                 EmptyView()
@@ -124,6 +124,6 @@ struct MainBlockProductsView_Previews: PreviewProvider {
 
 extension MainSectionProductsView.ViewModel {
     
-    static let sample = MainSectionProductsView.ViewModel(productsTypeSelector: .init(options: [.init(id: "0", name: "Карты"), .init(id: "1", name: "Счета")], selected: "0", style: .products), products: [MainCardComponentView.ViewModel.classic, MainCardComponentView.ViewModel.classic], moreButton: .init(icon: .ic24MoreHorizontal, action: {}), isCollapsed: false)
+    static let sample = MainSectionProductsView.ViewModel(productsTypeSelector: .init(options: [.init(id: "0", name: "Карты"), .init(id: "1", name: "Счета")], selected: "0", style: .products), products: [ProductView.ViewModel.classic, ProductView.ViewModel.classic], moreButton: .init(icon: .ic24MoreHorizontal, action: {}), isCollapsed: false)
     
 }
