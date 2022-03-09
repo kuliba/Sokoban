@@ -38,18 +38,10 @@ struct MainSectionCollapsableView<Content: View>: View {
                     Text(title)
                         .font(.textH2SB20282())
                         .foregroundColor(.textSecondary)
-
-                    if isCollapsed {
-                        
-                        Image.ic24ChevronDown
-                            .rotationEffect(.degrees(-90))
-                            .foregroundColor(.iconGray)
-                        
-                    } else {
-                        
-                        Image.ic24ChevronDown
-                            .foregroundColor(.iconGray)
-                    }
+                    
+                    Image.ic24ChevronDown
+                        .rotationEffect(isCollapsed ? .degrees(-90) : .degrees(0))
+                        .foregroundColor(.iconGray)
 
                     Spacer()
                 }

@@ -47,7 +47,7 @@ struct MainSectionPromoView: View {
     
     var body: some View {
         
-        ScrollView(.horizontal) {
+        ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
                 ForEach(viewModel.items) { promotionViewModel in
                     Button {

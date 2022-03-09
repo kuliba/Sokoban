@@ -26,6 +26,6 @@ class RootViewHostingViewController: UIHostingController<RootView> {
     
     func showLogin() {
         
-        viewModel.showLogin()
+//        viewModel.showLogin()
     }
 }

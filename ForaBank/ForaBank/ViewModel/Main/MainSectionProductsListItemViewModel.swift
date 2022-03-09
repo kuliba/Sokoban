@@ -9,9 +9,10 @@ import Foundation
 
 class MainSectionProductsListItemViewModel: Identifiable {
 
-    let id: UUID
+    let id: String
     
-    internal init(id: UUID = UUID()) {
+    internal init(id: String = UUID().uuidString) {
+        
         self.id = id
     }
 }

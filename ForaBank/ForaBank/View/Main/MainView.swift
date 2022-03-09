@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import ScrollViewProxy
 
 struct MainView: View {
     
@@ -13,35 +14,47 @@ struct MainView: View {
     
     var body: some View {
         
-        ScrollView(showsIndicators: false) {
+        VStack {
             
-            VStack(spacing: 20) {
+            if viewModel.isRefreshing == true {
                 
-                ForEach(viewModel.sections) { section in
+                RefreshView()
+            }
+            
+            ScrollView(showsIndicators: false) {
+                
+                ScrollViewReader { proxy in
                     
-                    switch section {
-                    case let productsSectionViewModel as MainSectionProductsView.ViewModel:
-                        MainSectionProductsView(viewModel: productsSectionViewModel)
+                    VStack(spacing: 20) {
                         
-                    case let fastOperationViewModel as MainSectionFastOperationView.ViewModel:
-                        MainSectionFastOperationView(viewModel: fastOperationViewModel)
-                        
-                    case let promoViewModel  as MainSectionPromoView.ViewModel:
-                        MainSectionPromoView(viewModel: promoViewModel)
-                        
-                    case let currencyViewModel as MainSectionCurrencyView.ViewModel:
-                        MainSectionCurrencyView(viewModel: currencyViewModel)
-                        
-                    case let openProductViewModel as MainSectionOpenProductView.ViewModel:
-                        MainSectionOpenProductView(viewModel: openProductViewModel)
-                        
-                    default:
-                        EmptyView()
+                        ForEach(viewModel.sections) { section in
+                            
+                            switch section {
+                            case let productsSectionViewModel as MainSectionProductsView.ViewModel:
+                                MainSectionProductsView(viewModel: productsSectionViewModel)
+                                
+                            case let fastOperationViewModel as MainSectionFastOperationView.ViewModel:
+                                MainSectionFastOperationView(viewModel: fastOperationViewModel)
+                                
+                            case let promoViewModel  as MainSectionPromoView.ViewModel:
+                                MainSectionPromoView(viewModel: promoViewModel)
+                                
+                            case let currencyViewModel as MainSectionCurrencyView.ViewModel:
+                                MainSectionCurrencyView(viewModel: currencyViewModel)
+                                
+                            case let openProductViewModel as MainSectionOpenProductView.ViewModel:
+                                MainSectionOpenProductView(viewModel: openProductViewModel)
+                                
+                            default:
+                                EmptyView()
+                            }
+                        }
                     }
                 }
+
             }
+            .padding(20)
         }
-        .padding(20)
     }
 }
 
@@ -54,5 +67,5 @@ struct MainView_Previews: PreviewProvider {
 
 extension MainViewModel {
     
-    static let sample = MainViewModel(sections: [MainSectionProductsView.ViewModel.sample, MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample])
+    static let sample = MainViewModel(sections: [MainSectionProductsView.ViewModel.sample, MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample], isRefreshing: true)
 }

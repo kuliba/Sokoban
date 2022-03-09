@@ -18,7 +18,7 @@ struct RefreshView: View {
             AnimatedRectView(color: .mainColorsBlack, width: 200, duration: 2.0, delay: 0.3)
             AnimatedRectView(color: .mainColorsBlack, width: 100, duration: 2.0, delay: 1.3)
         }
-        .frame(height: 5)
+        .frame(height: 3)
     }
 }
 

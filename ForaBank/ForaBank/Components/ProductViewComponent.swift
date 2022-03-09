@@ -22,7 +22,7 @@ extension ProductView {
         @Published var isUpdating: Bool
         let action: () -> Void
         
-        internal init(header: HeaderViewModel, name: String, footer: FooterViewModel, statusAction: StatusActionViewModel?, appearance: Appearance, isUpdating: Bool, action: @escaping () -> Void) {
+        internal init(id: String = UUID().uuidString, header: HeaderViewModel, name: String, footer: FooterViewModel, statusAction: StatusActionViewModel?, appearance: Appearance, isUpdating: Bool, action: @escaping () -> Void) {
             
             self.header = header
             self.name = name
@@ -31,6 +31,7 @@ extension ProductView {
             self.appearance = appearance
             self.isUpdating = isUpdating
             self.action = action
+            super.init(id: id)
         }
         
         struct HeaderViewModel {
@@ -126,6 +127,7 @@ struct ProductView: View {
                 AnimatedGradientView(duration: 3.0)
                     .blendMode(.colorDodge)
             }
+            .clipped()
             
         } else {
             
@@ -405,9 +407,9 @@ extension ProductView.ViewModel {
     
     static let notActivate = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Visa")), statusAction: .init(status: .activation, style: .main, action: {}), appearance: .init(textColor: .white, background: .init(color: .cardInfinite, image: Image("Product Background Sample"))), isUpdating: false, action: {})
 
-    static let blocked = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: .init(status: .unblock, style: .main, action: {}), appearance: .init(textColor: .white, background: .init(color: .cardInfinite, image: nil)), isUpdating: false, action: {})
+    static let blocked = ProductView.ViewModel(id: "1", header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: .init(status: .unblock, style: .main, action: {}), appearance: .init(textColor: .white, background: .init(color: .cardInfinite, image: nil)), isUpdating: true, action: {})
     
-    static let classic = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardRIO, image: nil)), isUpdating: false, action: {})
+    static let classic = ProductView.ViewModel(id: "2", header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .mainColorsRed, image: nil)), isUpdating: false, action: {})
     
     static let account = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Текущий зарплатный счет", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardRIO, image: nil)), isUpdating: false, action: {})
     
@@ -419,6 +421,6 @@ extension ProductView.ViewModel {
     
     static let accountProfile = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: "12/24"), name: "Текущий зарплатный счет", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardRIO, image: nil)), isUpdating: false, action: {})
     
-    static let updating = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Visa")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardInfinite, image: Image("Product Background Sample"))), isUpdating: true, action: {})
+    static let updating = ProductView.ViewModel(id: "0", header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Visa")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardInfinite, image: Image("Product Background Sample"))), isUpdating: true, action: {})
 }
 

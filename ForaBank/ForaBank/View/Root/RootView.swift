@@ -15,7 +15,7 @@ struct RootView: View {
         
         ZStack {
             
-            Text("Main Screen Here")
+            MainView(viewModel: .sample)
             
             if let loginViewModel = viewModel.login {
                 
