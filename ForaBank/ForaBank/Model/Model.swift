@@ -17,6 +17,11 @@ class Model {
     let action: PassthroughSubject<Action, Never>
     let auth: CurrentValueSubject<AuthorizationState, Never>
     
+    //MARK: Products
+    let products: CurrentValueSubject<[ProductType: ProductData], Never>
+    let productsUpdateState: CurrentValueSubject<ProductsUpdateState, Never>
+    var productsAllowed: Set<ProductType> { [.card, .account, .deposit] }
+    
     //MARK: Dictionaries
 
     
@@ -49,6 +54,8 @@ class Model {
         
         self.action = .init()
         self.auth = .init(.notAuthorized)
+        self.products = .init([:])
+        self.productsUpdateState = .init(.idle)
         self.paymentTemplates = .init([])
         self.paymentTemplatesViewSettings = .init(.initial)
         self.serverAgent = serverAgent
