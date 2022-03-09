@@ -144,6 +144,20 @@ class Model {
                     
                 case _ as ModelAction.Auth.Login.Request:
                     handleAuthLoginRequest()
+                    
+                //MARK: - Products Actions
+                    
+                case _ as ModelAction.Products.Update.Fast.All:
+                    handleProductsUpdateFastAll()
+                    
+                case let payload as ModelAction.Products.Update.Fast.Single.Request:
+                    handleProductsUpdateFastSingleRequest(payload)
+                    
+                case _ as ModelAction.Products.Update.Total.All:
+                    handleProductsUpdateTotalAll()
+                    
+                case let payload as ModelAction.Products.Update.Total.Single.Request:
+                    handleProductsUpdateTotalSingleRequest(payload)
 
                 //MARK: - Templates Actions
                     

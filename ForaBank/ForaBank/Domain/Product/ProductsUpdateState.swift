@@ -10,6 +10,6 @@ import Foundation
 enum ProductsUpdateState {
     
     case idle
-    case fast(Set<ProductType>)
-    case total(Set<ProductType>)
+    case fast(complete: [ProductType: Set<ProductData.ID>])
+    case total(complete: Set<ProductType>)
 }

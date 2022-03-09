@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ProductData: Equatable {
+struct ProductData: Equatable, Identifiable {
 
     let id: Int
     
