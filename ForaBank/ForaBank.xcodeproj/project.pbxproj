@@ -294,6 +294,10 @@
 		6822EFD226B935DB00125EEC /* BaseTableViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6822EFD126B935DB00125EEC /* BaseTableViewViewController.swift */; };
 		6822EFD626B935FF00125EEC /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6822EFD426B935FF00125EEC /* BaseTableViewCell.swift */; };
 		6822EFD726B935FF00125EEC /* BaseTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6822EFD526B935FF00125EEC /* BaseTableViewCell.xib */; };
+		6830A02227D37821003CA4F1 /* DepositProductData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6830A02127D37821003CA4F1 /* DepositProductData.swift */; };
+		6830A02427D37E87003CA4F1 /* BannerCatalogListData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6830A02327D37E87003CA4F1 /* BannerCatalogListData.swift */; };
+		6830A02627D3858E003CA4F1 /* GetDepositProductListResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 6830A02527D3858E003CA4F1 /* GetDepositProductListResponseGeneric.json */; };
+		6830A02827D392CB003CA4F1 /* GetBannerCatalogListResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 6830A02727D392CB003CA4F1 /* GetBannerCatalogListResponseGeneric.json */; };
 		6833E0AB27303E8F004C070F /* GetOperationDetailDecodebleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6833E0AA27303E8F004C070F /* GetOperationDetailDecodebleModel.swift */; };
 		6833E0B027322878004C070F /* SkeletonView in Frameworks */ = {isa = PBXBuildFile; productRef = 6833E0AF27322878004C070F /* SkeletonView */; };
 		6833E0B22732B69E004C070F /* DetailOperationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6833E0B12732B69E004C070F /* DetailOperationViewController.swift */; };
@@ -1212,6 +1216,10 @@
 		6822EFD126B935DB00125EEC /* BaseTableViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewViewController.swift; sourceTree = "<group>"; };
 		6822EFD426B935FF00125EEC /* BaseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewCell.swift; sourceTree = "<group>"; };
 		6822EFD526B935FF00125EEC /* BaseTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BaseTableViewCell.xib; sourceTree = "<group>"; };
+		6830A02127D37821003CA4F1 /* DepositProductData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositProductData.swift; sourceTree = "<group>"; };
+		6830A02327D37E87003CA4F1 /* BannerCatalogListData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerCatalogListData.swift; sourceTree = "<group>"; };
+		6830A02527D3858E003CA4F1 /* GetDepositProductListResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetDepositProductListResponseGeneric.json; sourceTree = "<group>"; };
+		6830A02727D392CB003CA4F1 /* GetBannerCatalogListResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetBannerCatalogListResponseGeneric.json; sourceTree = "<group>"; };
 		6833E0AA27303E8F004C070F /* GetOperationDetailDecodebleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetOperationDetailDecodebleModel.swift; sourceTree = "<group>"; };
 		6833E0B12732B69E004C070F /* DetailOperationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailOperationViewController.swift; sourceTree = "<group>"; };
 		6833E0B42732B763004C070F /* DetailOperationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailOperationTableViewCell.swift; sourceTree = "<group>"; };
@@ -2440,6 +2448,7 @@
 				5A5ABFB627ABCDC700D548AA /* GetDepositStatement.json */,
 				5A5ABFB527ABCDC700D548AA /* OpenDeposit.json */,
 				5A5ABFB827ABCDC700D548AA /* SaveDepositCustomName.json */,
+				6830A02527D3858E003CA4F1 /* GetDepositProductListResponseGeneric.json */,
 			);
 			path = DepositController;
 			sourceTree = "<group>";
@@ -2490,6 +2499,7 @@
 				77E1804427AC39840006ACC9 /* FMSData.swift */,
 				77E1804627AC3AD30006ACC9 /* FSSPData.swift */,
 				77E1804827AC3B810006ACC9 /* FTSData.swift */,
+				6830A02327D37E87003CA4F1 /* BannerCatalogListData.swift */,
 			);
 			path = Dictionary;
 			sourceTree = "<group>";
@@ -3058,6 +3068,7 @@
 				68AD33FF27996E4F00647665 /* ProductStatementData.swift */,
 				5A5ABF8927AAF53000D548AA /* OperationDetailData.swift */,
 				5A5ABFB227ABCA5100D548AA /* DepositInfoDataItem.swift */,
+				6830A02127D37821003CA4F1 /* DepositProductData.swift */,
 			);
 			path = Product;
 			sourceTree = "<group>";
@@ -3486,6 +3497,7 @@
 				77E1804A27AC3C710006ACC9 /* GetFMSListResponseGeneric.json */,
 				77E1804C27AC3CA80006ACC9 /* GetFSSPListResponseGeneric.json */,
 				77E1804E27AC3CD10006ACC9 /* GetFTSListResponseGeneric.json */,
+				6830A02727D392CB003CA4F1 /* GetBannerCatalogListResponseGeneric.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -5355,6 +5367,7 @@
 				77517FA327A94BA5005CFB77 /* CheckCardResponseGeneric.json in Resources */,
 				5A5ABFA927AAF7DD00D548AA /* GetAllLatestPayments.json in Resources */,
 				5A5ABFB927ABCDC700D548AA /* OpenDeposit.json in Resources */,
+				6830A02627D3858E003CA4F1 /* GetDepositProductListResponseGeneric.json in Resources */,
 				6820924827A97C4B003DCAFD /* CreateFastPaymentContractResponseGeneric.json in Resources */,
 				68AD340B27998A5D00647665 /* GetCardStatementResponseGeneric.json in Resources */,
 				684193002799C98F00B4E184 /* ConsentMe2MePullResponseDataDecodingGeneric.json in Resources */,
@@ -5381,6 +5394,7 @@
 				684193042799D6A800B4E184 /* Me2MeDebitConsentDataDecodingGeneric.json in Resources */,
 				77517FE827A98EE8005CFB77 /* SetUserSettingResponseGeneric.json in Resources */,
 				5A5ABFA327AAF7DD00D548AA /* GetLatestPhonePayments.json in Resources */,
+				6830A02827D392CB003CA4F1 /* GetBannerCatalogListResponseGeneric.json in Resources */,
 				6820925027A9D365003DCAFD /* GetCurrencyListResponseGenericMin.json in Resources */,
 				77EC58B9277125000054D75C /* TransferEncodingMin.json in Resources */,
 				77EC58C327712EDD0054D75C /* TransferMe2MeDecodingGeneric.json in Resources */,
@@ -5569,6 +5583,7 @@
 				0BE270B626B9DA4800FA958C /* ExtensionBottomInputViewRevers.swift in Sources */,
 				0BB24A9926EFE71C00DDA4F6 /* GetPaymentCountriesListSaved.swift in Sources */,
 				EDA563AE26F881AF0093F0C8 /* BanksView.swift in Sources */,
+				6830A02227D37821003CA4F1 /* DepositProductData.swift in Sources */,
 				0B37F97C2678EC69007728FC /* AnywayPaymentDecodableModel.swift in Sources */,
 				0BDCF00A2749A5A900AAA1C3 /* GKHInputModel.swift in Sources */,
 				0B7A18AD2681CF160007CC75 /* CastomPopUpView.swift in Sources */,
@@ -5822,6 +5837,7 @@
 				0BD2177926A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift in Sources */,
 				EDF68210266F9EC800FD5C07 /* LoginDoCodableModel.swift in Sources */,
 				0B283FC52703722900B5E925 /* GetSessionTimeoutDecodableModel.swift in Sources */,
+				6830A02427D37E87003CA4F1 /* BannerCatalogListData.swift in Sources */,
 				0BBAFAAA277CB748006D9323 /* PhoneNumberKitHelper.swift in Sources */,
 				EDFFCAFB2683C135004EE095 /* PaymentType.swift in Sources */,
 				0B283FCE2704D0D600B5E925 /* GetAccountStatementDecodableModel.swift in Sources */,

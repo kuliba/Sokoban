@@ -389,4 +389,45 @@ class ServerCommandsDictionaryTests: XCTestCase {
         
         XCTAssertEqual(command.parameters?[0].value, "Ic128Icon")
     }
+    
+    //MARK: - GetBannerCatalogList
+    
+    func testGetBannerCatalogList_Response_Decoding() throws {
+
+        
+        // given
+        guard let url = bundle.url(forResource: "GetBannerCatalogListResponseGeneric", withExtension: "json") else {
+            XCTFail("testGetBannerCatalogList_Response_Decoding : Missing file: GetBannerCatalogList.json")
+            return
+        }
+        
+        let json = try Data(contentsOf: url)
+        
+        guard let conditionalLink = URL(string: "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/") else { return }
+        guard let imageLink = URL(string: "dict/getBannerCatalogImage?image=banner_1") else { return }
+        guard let orderLink = URL(string: "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/") else { return }
+        
+        let expected = ServerCommands.DictionaryController.GetBannerCatalogList.Response(statusCode: .ok, data: .init(bannerCatalogList: [.init(conditionLink: conditionalLink, imageLink: imageLink, orderLink: orderLink, productName: "Кэшбек", txtСondition: ["string"])], serial: "bea36075a58954199a6b8980549f6b69"), errorMessage: "string")
+        
+        // when
+        let result = try decoder.decode(ServerCommands.DictionaryController.GetBannerCatalogList.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
+    
+    //MARK: - GetBannerCatalogImage
+    
+    func testGetBannerCatalogImage_Response_Encoding() throws {
+        // given
+        
+        let command = ServerCommands.DictionaryController.GetBannerCatalogImage.init(imageEndpoint: "Ic128Icon")
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 1)
+        
+        XCTAssertEqual(command.parameters?[0].name, "image")
+        
+        XCTAssertEqual(command.parameters?[0].value, "Ic128Icon")
+    }
 }
