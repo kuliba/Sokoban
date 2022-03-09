@@ -195,7 +195,7 @@ struct MainSectionProductsView_Previews: PreviewProvider {
 
 extension MainSectionProductsView.ViewModel {
     
-    static let sample = MainSectionProductsView.ViewModel(productsTypeSelector: .init(options: [.init(id: "0", name: "Карты"), .init(id: "1", name: "Счета"), .init(id: "2", name: "Вклады")], selected: "0", style: .products), products: [ProductView.ViewModel.classic, MainSectionProductsView.ExpandButtonViewModel(title: "+5"), MainSectionProductsView.SeparatorViewModel(), ProductView.ViewModel.blocked], moreButton: .init(icon: .ic24MoreHorizontal, action: {}), isCollapsed: false)
+    static let sample = MainSectionProductsView.ViewModel(productsTypeSelector: .init(options: [.init(id: "0", name: "Карты"), .init(id: "1", name: "Счета"), .init(id: "2", name: "Вклады")], selected: "0", style: .products), products: [ProductView.ViewModel.updating, MainSectionProductsView.ExpandButtonViewModel(title: "+5"), MainSectionProductsView.SeparatorViewModel(), ProductView.ViewModel.blocked], moreButton: .init(icon: .ic24MoreHorizontal, action: {}), isCollapsed: false)
     
 }
 
