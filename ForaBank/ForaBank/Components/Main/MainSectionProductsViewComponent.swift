@@ -16,14 +16,14 @@ extension MainSectionProductsView {
     class ViewModel: MainSectionCollapsableViewModel {
         
         override var type: MainSectionType { .products }
-        @Published var productsTypeSelector: OptionSelectorViewModel?
-        @Published var products: [MainSectionProductsListItemViewModel]
+        @Published var typeSelector: OptionSelectorViewModel?
+        @Published var items: [MainSectionProductsListItemViewModel]
         let moreButton: MoreButtonViewModel
         
         internal init(productsTypeSelector: OptionSelectorViewModel?, products: [MainSectionProductsListItemViewModel], moreButton: MoreButtonViewModel, isCollapsed: Bool) {
             
-            self.productsTypeSelector = productsTypeSelector
-            self.products = products
+            self.typeSelector = productsTypeSelector
+            self.items = products
             self.moreButton = moreButton
             super.init(isCollapsed: isCollapsed)
         }
@@ -46,30 +46,37 @@ struct MainSectionProductsView: View {
         
         MainSectionCollapsableView(title: viewModel.title, isCollapsed: $viewModel.isCollapsed) {
             
-            VStack {
+            VStack(spacing: 16) {
                 
-                if let productSelectorViewModel = viewModel.productsTypeSelector {
+                if let productSelectorViewModel = viewModel.typeSelector {
                     
                     OptionSelectorView(viewModel: productSelectorViewModel)
                         .frame(height: 24)
-                        .padding(.top, 12)
                 }
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     
                     HStack(spacing: 8) {
                         
-                        ForEach(viewModel.products) { itemViewModel in
+                        ForEach(viewModel.items) { itemViewModel in
                             
                             switch itemViewModel {
                             case let cardViewModel as ProductView.ViewModel:
                                 ProductView(viewModel: cardViewModel)
+                                    .frame(width: 164)
+                                
+                            case let expandButtonViewModel as ExpandButtonViewModel:
+                                ExpandButtonView(viewModel: expandButtonViewModel)
+                                
+                            case let separatorViewModel as SeparatorViewModel:
+                                SeparatorView(viewModel: separatorViewModel)
                                 
                             default:
                                 EmptyView()
                             }
                         }
                     }
+                    .frame(height: 104)
                 }
             }
             
@@ -109,9 +116,73 @@ struct MainSectionProductsView: View {
     }
 }
 
+//MARK: - Expand Button View
+
+extension MainSectionProductsView {
+    
+    class ExpandButtonViewModel: MainSectionProductsListItemViewModel, ObservableObject {
+    
+        @Published var title: String
+        
+        internal init(id: UUID = UUID(), title: String) {
+            
+            self.title = title
+            super.init(id: id)
+        }
+    }
+    
+    struct ExpandButtonView: View {
+        
+        @ObservedObject var viewModel: ExpandButtonViewModel
+        
+        var body: some View {
+            
+            Button {
+                
+            } label: {
+                
+                VStack(alignment: .center) {
+                    
+                    Spacer()
+                    
+                    Text(viewModel.title)
+                        .font(.system(size: 14))
+                    
+                    Spacer()
+                }
+                .padding(12)
+                .foregroundColor(.black)
+                .background(Color.mainColorsGrayLightest
+                                .cornerRadius(12))
+                .frame(width: 48)
+            }
+        }
+    }
+}
+
+//MARK: - Separator View
+
+extension MainSectionProductsView {
+    
+    class SeparatorViewModel: MainSectionProductsListItemViewModel {}
+    
+    struct SeparatorView: View {
+        
+        let viewModel: SeparatorViewModel
+        
+        var body: some View {
+            
+            Capsule()
+                .frame(width: 1, height: 60)
+                .foregroundColor(.mainColorsGrayLightest)
+        }
+    }
+    
+}
+
 //MARK: - Preview
 
-struct MainBlockProductsView_Previews: PreviewProvider {
+struct MainSectionProductsView_Previews: PreviewProvider {
     
     static var previews: some View {
         
@@ -124,6 +195,8 @@ struct MainBlockProductsView_Previews: PreviewProvider {
 
 extension MainSectionProductsView.ViewModel {
     
-    static let sample = MainSectionProductsView.ViewModel(productsTypeSelector: .init(options: [.init(id: "0", name: "Карты"), .init(id: "1", name: "Счета")], selected: "0", style: .products), products: [ProductView.ViewModel.classic, ProductView.ViewModel.classic], moreButton: .init(icon: .ic24MoreHorizontal, action: {}), isCollapsed: false)
+    static let sample = MainSectionProductsView.ViewModel(productsTypeSelector: .init(options: [.init(id: "0", name: "Карты"), .init(id: "1", name: "Счета"), .init(id: "2", name: "Вклады")], selected: "0", style: .products), products: [ProductView.ViewModel.classic, MainSectionProductsView.ExpandButtonViewModel(title: "+5"), MainSectionProductsView.SeparatorViewModel(), ProductView.ViewModel.blocked], moreButton: .init(icon: .ic24MoreHorizontal, action: {}), isCollapsed: false)
     
 }
+
+

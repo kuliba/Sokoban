@@ -80,5 +80,5 @@ struct MainSectionPromotionsView_Previews: PreviewProvider {
 
 extension MainSectionPromoView.ViewModel {
 
-    static let sample = MainSectionPromoView.ViewModel(items: [.init(image: .imgMainBanner1, action: {}), .init(image: .imgMainBanner2, action: {})])
+    static let sample = MainSectionPromoView.ViewModel(items: [.init(image: Image("Promo Banner Cashback"), action: {}), .init(image: Image("Promo Banner Mig"), action: {})])
 }

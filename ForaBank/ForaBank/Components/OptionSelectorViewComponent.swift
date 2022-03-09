@@ -11,10 +11,14 @@ class OptionSelectorViewModel: ObservableObject {
     
     @Published var options: [OptionViewModel]
     @Published var selected: Option.ID
+    let style: Style
  
     internal init(options: [Option], selected: Option.ID, style: Style) {
+       
         self.options = []
         self.selected = selected
+        self.style = style
+        
         self.options = options.map{ OptionViewModel(id: $0.id, title: $0.name, style: style, action: { [weak self] optionId in self?.selected = optionId })}
     }
     
@@ -40,17 +44,25 @@ struct OptionSelectorView: View {
     
     @ObservedObject var viewModel: OptionSelectorViewModel
     
+    var spacing: CGFloat {
+        
+        switch viewModel.style {
+        case .template: return 8
+        case .products: return 12
+        }
+    }
+    
     var body: some View {
+        
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
+            
+            HStack(spacing: spacing) {
+                
                 ForEach(viewModel.options) { optionViewModel in
-                    OptionButtonView(
-                        viewModel: optionViewModel,
-                        isSelected: viewModel.selected == optionViewModel.id
-                    )
+                    
+                    OptionButtonView(viewModel: optionViewModel, isSelected: viewModel.selected == optionViewModel.id)
                 }
             }
-            .padding(.leading, 20)
         }
     }
 }
@@ -64,8 +76,8 @@ extension OptionSelectorView {
         
         var body: some View {
             
-            if viewModel.style == .template{
-                
+            switch viewModel.style {
+            case .template:
                 Button {
                     
                     viewModel.action(viewModel.id)
@@ -79,6 +91,7 @@ extension OptionSelectorView {
                             .padding(.horizontal, 12)
                             .padding(.vertical, 6)
                             .background(Capsule().foregroundColor(Color(hex: "#3D3D45")))
+                        
                     } else {
                         
                         Text(viewModel.title)
@@ -88,8 +101,8 @@ extension OptionSelectorView {
                             .background(Capsule().foregroundColor(Color(hex: "#F6F6F7")))
                     }
                 }
-            } else {
                 
+            case .products:
                 Button {
                     
                     viewModel.action(viewModel.id)
@@ -98,7 +111,7 @@ extension OptionSelectorView {
                     
                     if isSelected {
                         
-                        HStack(spacing: 6) {
+                        HStack(spacing: 4) {
                             
                             Circle()
                                 .frame(width: 4, height: 4, alignment: .center)
@@ -108,9 +121,10 @@ extension OptionSelectorView {
                                 .foregroundColor(.textSecondary)
                                 .padding(.vertical, 6)
                         }
+                        
                     } else {
                         
-                        HStack(spacing: 6) {
+                        HStack(spacing: 4) {
 
                         Circle()
                             .frame(width: 4, height: 4, alignment: .center)
@@ -122,9 +136,7 @@ extension OptionSelectorView {
                         }
                     }
                 }
-                .padding(.trailing, 12)
             }
-            //TODO: add custom button style
         }
     }
 }
