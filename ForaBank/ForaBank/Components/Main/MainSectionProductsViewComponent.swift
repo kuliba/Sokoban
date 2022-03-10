@@ -62,6 +62,19 @@ extension MainSectionProductsView {
                     
                     //TODO: update products view models
                     
+                    var items = [MainSectionProductsListItemViewModel]()
+                    
+                    for productType in ProductType.allCases {
+                        
+                        guard let productTypeItems = products[productType] else {
+                            continue
+                        }
+                        
+                        items.append(contentsOf: productTypeItems.map({ ProductView.ViewModel(with: $0, statusAction: {}, action: {})}))
+                    }
+                    
+                    self.items = items
+                    
                 }.store(in: &bindings)
             
             $isCollapsed

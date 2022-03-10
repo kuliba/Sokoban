@@ -14,16 +14,18 @@ extension ProductView {
     
     class ViewModel: MainSectionProductsListItemViewModel, ObservableObject {
 
+        let productId: Int
         let header: HeaderViewModel
         @Published var name: String
-        var footer: FooterViewModel
+        @Published var footer: FooterViewModel
         @Published var statusAction: StatusActionViewModel?
         let appearance: Appearance
         @Published var isUpdating: Bool
         let action: () -> Void
         
-        internal init(id: String = UUID().uuidString, header: HeaderViewModel, name: String, footer: FooterViewModel, statusAction: StatusActionViewModel?, appearance: Appearance, isUpdating: Bool, action: @escaping () -> Void) {
+        internal init(id: String = UUID().uuidString, productId: Int = 0, header: HeaderViewModel, name: String, footer: FooterViewModel, statusAction: StatusActionViewModel?, appearance: Appearance, isUpdating: Bool, action: @escaping () -> Void) {
             
+            self.productId = productId
             self.header = header
             self.name = name
             self.footer = footer
@@ -32,6 +34,19 @@ extension ProductView {
             self.isUpdating = isUpdating
             self.action = action
             super.init(id: id)
+        }
+        
+        convenience init(with productData: ProductData, statusAction: @escaping () -> Void, action: @escaping () -> Void) {
+            
+            let logo = Image.ic24LogoForaColor
+            let number = productData.productViewNumber
+            let name = productData.customName ?? productData.mainField
+            let balance = "\(productData.balance)"
+            let textColor = productData.fontDesignColor.color
+            let backgroundColor = productData.background.first?.color ?? .cardClassic
+            let backgroundImage = productData.largeDesign.image
+    
+            self.init(productId: productData.id, header: .init(logo: logo, number: number, period: nil), name: name, footer: .init(balance: balance, paymentSystem: nil), statusAction: nil, appearance: .init(textColor: textColor, background: .init(color: backgroundColor, image: backgroundImage)), isUpdating: false, action: action)
         }
         
         struct HeaderViewModel {
@@ -162,6 +177,8 @@ extension ProductView {
                 VStack(alignment: .leading) {
                     
                     ProductView.HeaderView(viewModel: viewModel.header, textColor: viewModel.appearance.textColor)
+                        .padding(.leading, 43)
+                        .padding(.top, 4)
 
                     Spacer()
                     
@@ -177,10 +194,8 @@ extension ProductView {
                         ProductView.FooterView(viewModel: viewModel.footer, textColor: viewModel.appearance.textColor)
                     }
                 }
-                .padding(.leading, 12)
-                .padding(.trailing, 16)
-                .padding(.vertical, 12)
-                
+                .padding(12)
+    
                 if viewModel.isUpdating == true {
                     
                     HStack(spacing: 3) {
@@ -200,7 +215,6 @@ extension ProductView {
                 viewModel.action()
             }
         }
-        
     }
     
     struct HeaderView: View {
@@ -211,14 +225,6 @@ extension ProductView {
         var body: some View {
             
             HStack(alignment: .center, spacing: 8) {
-                
-                viewModel.logo
-                    .frame(width: 18.8, height: 18.8)
-                    .foregroundColor(textColor)
-                
-                Circle()
-                    .frame(width: 2.38, height: 2.38)
-                    .foregroundColor(textColor)
                 
                 Text(viewModel.number)
                     .font(.textBodySR12160())

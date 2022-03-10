@@ -121,3 +121,18 @@ extension ProductData {
         return ProductData(id: id, productType: productType, number: number, numberMasked: numberMasked, accountNumber: accountNumber, balance: params.dynamicParams.balance, balanceRub: params.dynamicParams.balanceRUB, currency: currency, mainField: mainField, additionalField: additionalField, customName: params.dynamicParams.customName, productName: productName, openDate: openDate, ownerId: ownerId, branchId: branchId, allowCredit: allowCredit, allowDebit: allowDebit, extraLargeDesign: extraLargeDesign, largeDesign: largeDesign, mediumDesign: mediumDesign, smallDesign: smallDesign, fontDesignColor: fontDesignColor, background: background)
     }
 }
+
+
+extension ProductData {
+    
+    var productViewNumber: String {
+        
+        switch productType {
+        case .deposit:
+            return String(accountNumber.suffix(4))
+            
+        default:
+            return String(number.suffix(4))
+        }
+    }
+}
