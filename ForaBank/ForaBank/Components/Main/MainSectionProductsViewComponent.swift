@@ -22,13 +22,17 @@ extension MainSectionProductsView {
         @Published var items: [MainSectionProductsListItemViewModel]
         let moreButton: MoreButtonViewModel
         
+        private var productsViewModels: CurrentValueSubject<[ProductType: [ProductView.ViewModel]], Never> = .init([:])
+        private var productsGroupsState: CurrentValueSubject<[ProductType: Bool], Never> = .init([:])
+        private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        internal init(productsTypeSelector: OptionSelectorViewModel?, products: [MainSectionProductsListItemViewModel], moreButton: MoreButtonViewModel, isCollapsed: Bool) {
+        internal init(productsTypeSelector: OptionSelectorViewModel?, products: [MainSectionProductsListItemViewModel], moreButton: MoreButtonViewModel, model: Model = .emptyMock, isCollapsed: Bool) {
             
             self.typeSelector = productsTypeSelector
             self.items = products
             self.moreButton = moreButton
+            self.model = model
             super.init(isCollapsed: isCollapsed)
             
             bind()
@@ -39,7 +43,26 @@ extension MainSectionProductsView {
             }
         }
         
+        init(_ model: Model) {
+            
+            self.typeSelector = nil
+            self.items = []
+            self.moreButton = .init(icon: .ic24MoreHorizontal, action: {})
+            self.model = model
+            super.init(isCollapsed: false)
+            
+            bind()
+        }
+        
         private func bind() {
+            
+            model.products
+                .receive(on: DispatchQueue.main)
+                .sink {[unowned self] products in
+                    
+                    //TODO: update products view models
+                    
+                }.store(in: &bindings)
             
             $isCollapsed
                 .receive(on: DispatchQueue.main)

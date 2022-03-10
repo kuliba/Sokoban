@@ -30,6 +30,53 @@ extension Model {
         
         
     }
+    
+    func reduce(products: [ProductType: [ProductData]], with productsData: [ProductData]) -> [ProductType: [ProductData]] {
+        
+        var productsUpdated = products
+        
+        for productType in ProductType.allCases {
+            
+            let productsTypeData = productsData.filter{ $0.productType == productType }
+            
+            guard productsTypeData.isEmpty == false else {
+                continue
+            }
+            
+            productsUpdated[productType] = productsTypeData
+        }
+        
+        return productsUpdated
+    }
+    
+    func reduce(products: [ProductType: [ProductData]], with params: ProductDynamicParams) -> [ProductType: [ProductData]] {
+        
+        let productType = params.type
+        
+        guard let productsTypeData = products[productType] else {
+            return products
+        }
+        
+        var productsUpdated = products
+        var productsTypeDataUpdated = [ProductData]()
+        
+        for product in productsTypeData {
+            
+            if product.id == params.id  {
+                
+                let productUpdated = product.updated(with: params)
+                productsTypeDataUpdated.append(productUpdated)
+                
+            } else {
+                
+                productsTypeDataUpdated.append(product)
+            }
+        }
+       
+        productsUpdated[productType] = productsTypeDataUpdated
+        
+        return productsUpdated
+    }
 }
 
 //MARK: - Actions

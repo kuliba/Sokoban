@@ -18,7 +18,7 @@ class Model {
     let auth: CurrentValueSubject<AuthorizationState, Never>
     
     //MARK: Products
-    let products: CurrentValueSubject<[ProductType: ProductData], Never>
+    let products: CurrentValueSubject<[ProductType: [ProductData]], Never>
     let productsUpdateState: CurrentValueSubject<ProductsUpdateState, Never>
     var productsAllowed: Set<ProductType> { [.card, .account, .deposit] }
     
