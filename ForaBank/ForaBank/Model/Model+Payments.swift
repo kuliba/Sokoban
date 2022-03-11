@@ -158,23 +158,26 @@ extension Model {
     
     func handlePaymentsContinueRequest(_ payload: ModelAction.Payment.Continue.Request) {
         
+        print("Payments: continue request")
+        
         let operation = payload.operation
         let historyUpdated = operation.historyUpdated()
         
         parameters(for: operation.service, parameters: operation.parameters, history: operation.history) { result in
-            
-            //TODO: return data for confirm state
-            
+
             switch result {
             case .success(let parameters):
                 let continueOperation = Operation(service: operation.service, parameters: parameters, history: historyUpdated)
-                
-                // TODO: завести парамерт типа final
-                // TODO: если нашли парамерт final то отправляем в модель
-//                 self.action.send(ModelAction.Payment.Continue.Response(result: .confirm(continueOperation)))
-                
-                self.action.send(ModelAction.Payment.Continue.Response(result: .step(continueOperation)))
-                
+
+                if parameters.filter({ $0 is Payments.ParameterFinal }).count > 0 {
+                    
+                    self.action.send(ModelAction.Payment.Continue.Response(result: .confirm(continueOperation)))
+                    
+                } else {
+                    
+                    self.action.send(ModelAction.Payment.Continue.Response(result: .step(continueOperation)))
+                }
+
             case .failure(let error):
                 self.action.send(ModelAction.Payment.Continue.Response(result: .fail(error)))
             }
@@ -244,13 +247,13 @@ extension Model {
         
         switch service {
         case .fns:
-            return.init(service: service, title: service.name, description: "Налоги", icon: .empty)
+            return .init(service: service, title: service.name, description: "Налоги", icon: .empty)
 
         case .fms:
-            return.init(service: service, title: service.name, description: "Госпошлины", icon: .serviceSample)
+            return .init(service: service, title: service.name, description: "Госпошлины", icon: .serviceSample)
             
         case .fssp:
-            return.init(service: service, title: service.name, description: "Задолженность", icon: .empty)
+            return .init(service: service, title: service.name, description: "Задолженность", icon: .empty)
         }
     }
 }

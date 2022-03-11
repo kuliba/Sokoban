@@ -159,7 +159,7 @@ extension Model {
                           value: "123456789"),
                     icon: .parameterSample,
                     title: "УНН",
-                    validator: .init(minLength: 5, maxLength: 5, regEx: ""),
+                    validator: .init(minLength: 2, maxLength: 5, regEx: nil),
                     collapsable: true)
                 
 //                let cardParemertet = Payments.Parameter

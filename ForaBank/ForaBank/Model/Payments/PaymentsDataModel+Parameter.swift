@@ -16,6 +16,7 @@ extension Payments.Parameter {
         case `operator`     = "ru.forabank.sense.operator"
         case template       = "ru.forabank.sense.template"
         case mock           = "ru.forabank.sense.mock"
+        case final          = "ru.forabank.sense.final"
     }
     
     static let emptyMock = Payments.Parameter(id: Identifier.mock.rawValue, value: nil)
@@ -396,6 +397,21 @@ extension Payments {
                 return true
             }
         }
+    }
+    
+    struct ParameterFinal: ParameterRepresentable {
+        
+        let parameter: Parameter
+        let collapsable: Bool
+    
+        internal init() {
+            
+            self.parameter = Parameter(id: Payments.Parameter.Identifier.mock.rawValue, value: nil)
+            self.collapsable = false
+        }
+     
+        func updated(value: String?) -> ParameterRepresentable { self }
+        func updated(collapsable: Bool) -> ParameterRepresentable { self }
     }
     
     struct ParameterMock: ParameterRepresentable {
