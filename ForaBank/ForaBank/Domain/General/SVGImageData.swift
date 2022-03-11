@@ -33,7 +33,15 @@ extension SVGImageData: Codable {
 extension SVGImageData {
     
     var imageData: Data? { description.data(using: .utf8) }
-    var uiImage: UIImage? { SVGKImage(data: imageData).uiImage }
+    var uiImage: UIImage? {
+        
+        guard let svgImage = SVGKImage(data: imageData) else {
+            return nil
+        }
+        
+        return svgImage.uiImage
+    }
+    
     var image: Image? {
         
         guard let uiImage = uiImage else {

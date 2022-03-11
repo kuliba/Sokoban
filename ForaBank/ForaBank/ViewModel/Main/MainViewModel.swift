@@ -11,10 +11,12 @@ import Combine
 class MainViewModel: ObservableObject {
     
     @Published var sections: [MainSectionViewModel]
+    @Published var isRefreshing: Bool
     
-    init(sections: [MainSectionViewModel]) {
+    init(sections: [MainSectionViewModel], isRefreshing: Bool) {
         
         self.sections = sections
+        self.isRefreshing = isRefreshing
     }
 }
 

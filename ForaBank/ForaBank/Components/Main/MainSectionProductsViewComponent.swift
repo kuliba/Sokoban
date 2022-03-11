@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Combine
+import ScrollViewProxy
 
 //MARK: - ViewModel
 
@@ -17,15 +18,99 @@ extension MainSectionProductsView {
         
         override var type: MainSectionType { .products }
         @Published var typeSelector: OptionSelectorViewModel?
+        @Published var selectedTypeId: Option.ID = ""
         @Published var items: [MainSectionProductsListItemViewModel]
         let moreButton: MoreButtonViewModel
         
-        internal init(productsTypeSelector: OptionSelectorViewModel?, products: [MainSectionProductsListItemViewModel], moreButton: MoreButtonViewModel, isCollapsed: Bool) {
+        private var productsViewModels: CurrentValueSubject<[ProductType: [ProductView.ViewModel]], Never> = .init([:])
+        private var productsGroupsState: CurrentValueSubject<[ProductType: Bool], Never> = .init([:])
+        private let model: Model
+        private var bindings = Set<AnyCancellable>()
+        
+        internal init(productsTypeSelector: OptionSelectorViewModel?, products: [MainSectionProductsListItemViewModel], moreButton: MoreButtonViewModel, model: Model = .emptyMock, isCollapsed: Bool) {
             
             self.typeSelector = productsTypeSelector
             self.items = products
             self.moreButton = moreButton
+            self.model = model
             super.init(isCollapsed: isCollapsed)
+            
+            bind()
+            
+            if let typeSelector = typeSelector {
+                
+                bind(typeSelector: typeSelector)
+            }
+        }
+        
+        init(_ model: Model) {
+            
+            self.typeSelector = nil
+            self.items = []
+            self.moreButton = .init(icon: .ic24MoreHorizontal, action: {})
+            self.model = model
+            super.init(isCollapsed: false)
+            
+            bind()
+        }
+        
+        private func bind() {
+            
+            model.products
+                .receive(on: DispatchQueue.main)
+                .sink {[unowned self] products in
+                    
+                    //TODO: update products view models
+                    
+                    var items = [MainSectionProductsListItemViewModel]()
+                    
+                    for productType in ProductType.allCases {
+                        
+                        guard let productTypeItems = products[productType] else {
+                            continue
+                        }
+                        
+                        if let currentProductTypeItems = self.productsViewModels.value[productType] {
+                            
+                            //TODO: update view models if exists or add new
+                            
+                            
+                        } else {
+          
+                            items.append(contentsOf: productTypeItems.map({ ProductView.ViewModel(with: $0, statusAction: {}, action: {})}))
+                        }
+                    }
+                    
+                    self.items = items
+                    
+                }.store(in: &bindings)
+            
+            $isCollapsed
+                .receive(on: DispatchQueue.main)
+                .sink {[unowned self] isCollapsed in
+                    
+                    if let typeSelector = typeSelector {
+                        
+                        selectedTypeId = typeSelector.selected
+                    }
+                    
+                }.store(in: &bindings)
+        }
+        
+        private func bind(typeSelector: OptionSelectorViewModel) {
+            
+            typeSelector.$selected
+                .receive(on: DispatchQueue.main)
+                .sink {[unowned self] selectedId in
+                    
+                    selectedTypeId = selectedId
+                    
+                }.store(in: &bindings)
+        }
+
+        func updateSelector(with offset: CGFloat) {
+            
+            //TODO: implementation required
         }
         
         struct MoreButtonViewModel {
@@ -41,7 +126,7 @@ extension MainSectionProductsView {
 struct MainSectionProductsView: View {
     
     @ObservedObject var viewModel: ViewModel
-    
+
     var body: some View {
         
         MainSectionCollapsableView(title: viewModel.title, isCollapsed: $viewModel.isCollapsed) {
@@ -56,32 +141,59 @@ struct MainSectionProductsView: View {
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     
-                    HStack(spacing: 8) {
+                    ScrollViewReader { proxy in
                         
-                        ForEach(viewModel.items) { itemViewModel in
-                            
-                            switch itemViewModel {
-                            case let cardViewModel as ProductView.ViewModel:
-                                ProductView(viewModel: cardViewModel)
-                                    .frame(width: 164)
+                        ContentView(items: viewModel.items)
+                            .frame(height: 104)
+                            .onReceive(viewModel.$selectedTypeId) { selectedId in
+
+                                proxy.scrollTo(selectedId, alignment: .leading, animated: true)
                                 
-                            case let expandButtonViewModel as ExpandButtonViewModel:
-                                ExpandButtonView(viewModel: expandButtonViewModel)
-                                
-                            case let separatorViewModel as SeparatorViewModel:
-                                SeparatorView(viewModel: separatorViewModel)
-                                
-                            default:
-                                EmptyView()
                             }
-                        }
+                            .onReceive(proxy.offset) { offset in
+                                
+                                viewModel.updateSelector(with: offset.x)
+                            }
                     }
-                    .frame(height: 104)
                 }
             }
-            
         }
         .overlay(MoreButtonView(viewModel: viewModel.moreButton))
+    }
+}
+
+//MARK: - Views
+
+extension MainSectionProductsView {
+    
+    struct ContentView: View {
+        
+        let items: [MainSectionProductsListItemViewModel]
+        
+        var body: some View {
+            
+            HStack(spacing: 8) {
+                
+                ForEach(items) { itemViewModel in
+                    
+                    switch itemViewModel {
+                    case let cardViewModel as ProductView.ViewModel:
+                        ProductView(viewModel: cardViewModel)
+                            .frame(width: 164)
+                            .scrollId(itemViewModel.id)
+   
+                    case let expandButtonViewModel as ExpandButtonViewModel:
+                        MainSectionProductsView.ExpandButtonView(viewModel: expandButtonViewModel)
+                        
+                    case let separatorViewModel as SeparatorViewModel:
+                        MainSectionProductsView.SeparatorView(viewModel: separatorViewModel)
+                        
+                    default:
+                        EmptyView()
+                    }
+                }
+            }
+        }
     }
     
     struct MoreButtonView: View {
@@ -124,7 +236,7 @@ extension MainSectionProductsView {
     
         @Published var title: String
         
-        internal init(id: UUID = UUID(), title: String) {
+        internal init(id: String = UUID().uuidString, title: String) {
             
             self.title = title
             super.init(id: id)
@@ -177,7 +289,6 @@ extension MainSectionProductsView {
                 .foregroundColor(.mainColorsGrayLightest)
         }
     }
-    
 }
 
 //MARK: - Preview
@@ -195,7 +306,7 @@ struct MainSectionProductsView_Previews: PreviewProvider {
 
 extension MainSectionProductsView.ViewModel {
     
-    static let sample = MainSectionProductsView.ViewModel(productsTypeSelector: .init(options: [.init(id: "0", name: "Карты"), .init(id: "1", name: "Счета"), .init(id: "2", name: "Вклады")], selected: "0", style: .products), products: [ProductView.ViewModel.classic, MainSectionProductsView.ExpandButtonViewModel(title: "+5"), MainSectionProductsView.SeparatorViewModel(), ProductView.ViewModel.blocked], moreButton: .init(icon: .ic24MoreHorizontal, action: {}), isCollapsed: false)
+    static let sample = MainSectionProductsView.ViewModel(productsTypeSelector: .init(options: [.init(id: "0", name: "Карты"), .init(id: "1", name: "Счета"), .init(id: "2", name: "Вклады")], selected: "0", style: .products), products: [ProductView.ViewModel.updating, MainSectionProductsView.ExpandButtonViewModel(title: "+5"), ProductView.ViewModel.blocked, ProductView.ViewModel.account, ProductView.ViewModel.account, MainSectionProductsView.SeparatorViewModel(), ProductView.ViewModel.classic], moreButton: .init(icon: .ic24MoreHorizontal, action: {}), isCollapsed: false)
     
 }
 

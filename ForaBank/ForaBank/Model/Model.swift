@@ -18,7 +18,7 @@ class Model {
     let auth: CurrentValueSubject<AuthorizationState, Never>
     
     //MARK: Products
-    let products: CurrentValueSubject<[ProductType: ProductData], Never>
+    let products: CurrentValueSubject<[ProductType: [ProductData]], Never>
     let productsUpdateState: CurrentValueSubject<ProductsUpdateState, Never>
     var productsAllowed: Set<ProductType> { [.card, .account, .deposit] }
     
@@ -144,6 +144,20 @@ class Model {
                     
                 case _ as ModelAction.Auth.Login.Request:
                     handleAuthLoginRequest()
+                    
+                //MARK: - Products Actions
+                    
+                case _ as ModelAction.Products.Update.Fast.All:
+                    handleProductsUpdateFastAll()
+                    
+                case let payload as ModelAction.Products.Update.Fast.Single.Request:
+                    handleProductsUpdateFastSingleRequest(payload)
+                    
+                case _ as ModelAction.Products.Update.Total.All:
+                    handleProductsUpdateTotalAll()
+                    
+                case let payload as ModelAction.Products.Update.Total.Single.Request:
+                    handleProductsUpdateTotalSingleRequest(payload)
 
                 //MARK: - Templates Actions
                     

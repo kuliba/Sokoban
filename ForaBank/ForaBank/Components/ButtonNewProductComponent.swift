@@ -18,13 +18,12 @@ extension ButtonNewProduct {
         let subTitle: String
         let action: () -> Void
         
-        internal init(id: UUID = UUID(), icon: Image, title: String, subTitle: String, action: @escaping () -> Void) {
+        internal init(id: String = UUID().uuidString, icon: Image, title: String, subTitle: String, action: @escaping () -> Void) {
             
             self.icon = icon
             self.title = title
             self.subTitle = subTitle
             self.action = action
-            
             super.init(id: id)
         }
         
