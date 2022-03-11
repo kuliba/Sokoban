@@ -29,24 +29,31 @@ extension Payments {
         let parameter: Parameter
         let category: Category
         let options: [Option]
+        let editable: Bool
         let collapsable: Bool
         
-        internal init(value: String? = nil, category: Category, options: [Option], collapsable: Bool = false) {
+        internal init(value: String? = nil, category: Category, options: [Option], editable: Bool = true, collapsable: Bool = false) {
             
             self.parameter = Parameter(id: Payments.Parameter.Identifier.category.rawValue, value: value)
             self.category = category
             self.options = options
+            self.editable = editable
             self.collapsable = collapsable
         }
         
         func updated(value: String?) -> ParameterRepresentable {
             
-            ParameterSelectService(value: value, category: category, options: options, collapsable: collapsable)
+            ParameterSelectService(value: value, category: category, options: options, editable: editable, collapsable: collapsable)
+        }
+        
+        func updated(editable: Bool) -> ParameterRepresentable {
+            
+            ParameterSelectService(value: parameter.value, category: category, options: options, editable: editable, collapsable: collapsable)
         }
         
         func updated(collapsable: Bool) -> ParameterRepresentable {
             
-            ParameterSelectService(value: parameter.value, category: category, options: options, collapsable: collapsable)
+            ParameterSelectService(value: parameter.value, category: category, options: options, editable: editable, collapsable: collapsable)
         }
         
         struct Option: Identifiable {
@@ -62,7 +69,8 @@ extension Payments {
     struct ParameterTemplate: ParameterRepresentable {
         
         let parameter: Parameter
-        let collapsable: Bool
+        let editable: Bool = false
+        let collapsable: Bool = false
         var templateId: PaymentTemplateData.ID? {
             
             guard let value = parameter.value else {
@@ -75,13 +83,11 @@ extension Payments {
         internal init(templateId: PaymentTemplateData.ID) {
             
             self.parameter = Parameter(id: Payments.Parameter.Identifier.template.rawValue, value: String(templateId))
-            self.collapsable = false
         }
         
         internal init(value: String?) {
             
             self.parameter = Parameter(id: Payments.Parameter.Identifier.template.rawValue, value: value)
-            self.collapsable = false
         }
         
         func updated(value: String?) -> ParameterRepresentable {
@@ -89,16 +95,15 @@ extension Payments {
             ParameterTemplate(value: value)
         }
         
-        func updated(collapsable: Bool) -> ParameterRepresentable {
-            
-            self
-        }
+        func updated(editable: Bool) -> ParameterRepresentable { self }
+        func updated(collapsable: Bool) -> ParameterRepresentable { self }
     }
     
     struct ParameterOperator: ParameterRepresentable {
         
         let parameter: Parameter
-        let collapsable: Bool
+        let editable: Bool = false
+        let collapsable: Bool = false
         var `operator`: Operator? {
             
             guard let value = parameter.value else {
@@ -111,13 +116,11 @@ extension Payments {
         internal init(operatorType: Operator) {
             
             self.parameter = Parameter(id: Payments.Parameter.Identifier.operator.rawValue, value: operatorType.rawValue)
-            self.collapsable = false
         }
         
         internal init(value: String?) {
             
             self.parameter = Parameter(id: Payments.Parameter.Identifier.operator.rawValue, value: value)
-            self.collapsable = false
         }
         
         func updated(value: String?) -> ParameterRepresentable {
@@ -125,10 +128,8 @@ extension Payments {
             ParameterOperator(value: value)
         }
         
-        func updated(collapsable: Bool) -> ParameterRepresentable {
-            
-            self
-        }
+        func updated(editable: Bool) -> ParameterRepresentable { self }
+        func updated(collapsable: Bool) -> ParameterRepresentable { self }
     }
     
     struct ParameterSelect: ParameterRepresentable {
@@ -136,24 +137,31 @@ extension Payments {
         let parameter: Parameter
         let title: String
         let options: [Option]
+        let editable: Bool
         let collapsable: Bool
         
-        internal init(_ parameter: Parameter, title: String, options: [Option], collapsable: Bool = false) {
+        internal init(_ parameter: Parameter, title: String, options: [Option], editable: Bool = true, collapsable: Bool = false) {
             
             self.parameter = parameter
             self.title = title
             self.options = options
+            self.editable = editable
             self.collapsable = collapsable
         }
         
         func updated(value: String?) -> ParameterRepresentable {
             
-            ParameterSelect(.init(id: parameter.id, value: value), title: title, options: options, collapsable: collapsable)
+            ParameterSelect(.init(id: parameter.id, value: value), title: title, options: options, editable: editable, collapsable: collapsable)
+        }
+        
+        func updated(editable: Bool) -> ParameterRepresentable {
+            
+            ParameterSelect(parameter, title: title, options: options, editable: editable, collapsable: collapsable)
         }
         
         func updated(collapsable: Bool) -> ParameterRepresentable {
             
-            ParameterSelect(parameter, title: title, options: options, collapsable: collapsable)
+            ParameterSelect(parameter, title: title, options: options, editable: editable, collapsable: collapsable)
         }
         
         struct Option: Identifiable {
@@ -172,9 +180,10 @@ extension Payments {
         let selectionTitle: String
         let description: String?
         let options: [Option]
+        let editable: Bool
         let collapsable: Bool
         
-        internal init(_ parameter: Parameter, icon: ImageData, title: String, selectionTitle: String, description: String? = nil, options: [Option], collapsable: Bool = false) {
+        internal init(_ parameter: Parameter, icon: ImageData, title: String, selectionTitle: String, description: String? = nil, options: [Option], editable: Bool = true, collapsable: Bool = false) {
             
             self.parameter = parameter
             self.icon = icon
@@ -182,17 +191,23 @@ extension Payments {
             self.selectionTitle = selectionTitle
             self.description = description
             self.options = options
+            self.editable = editable
             self.collapsable = collapsable
         }
         
         func updated(value: String?) -> ParameterRepresentable {
             
-            ParameterSelectSimple(.init(id: parameter.id, value: value), icon: icon, title: title, selectionTitle: selectionTitle, description: description, options: options, collapsable: collapsable)
+            ParameterSelectSimple(.init(id: parameter.id, value: value), icon: icon, title: title, selectionTitle: selectionTitle, description: description, options: options, editable: editable, collapsable: collapsable)
+        }
+        
+        func updated(editable: Bool) -> ParameterRepresentable {
+            
+            ParameterSelectSimple(parameter, icon: icon, title: title, selectionTitle: selectionTitle, description: description, options: options, editable: editable, collapsable: collapsable)
         }
         
         func updated(collapsable: Bool) -> ParameterRepresentable {
             
-            ParameterSelectSimple(parameter, icon: icon, title: title, selectionTitle: selectionTitle, description: description, options: options, collapsable: collapsable)
+            ParameterSelectSimple(parameter, icon: icon, title: title, selectionTitle: selectionTitle, description: description, options: options, editable: editable, collapsable: collapsable)
         }
         
         struct Option: Identifiable {
@@ -206,23 +221,30 @@ extension Payments {
         
         let parameter: Parameter
         let options: [Option]
+        let editable: Bool
         let collapsable: Bool
         
-        internal init(_ parameter: Parameter, options: [Option], collapsable: Bool = false) {
+        internal init(_ parameter: Parameter, options: [Option],editable: Bool = true, collapsable: Bool = false) {
             
             self.parameter = parameter
             self.options = options
+            self.editable = editable
             self.collapsable = collapsable
         }
         
         func updated(value: String?) -> ParameterRepresentable {
             
-            ParameterSelectSwitch(.init(id: parameter.id, value: value), options: options, collapsable: collapsable)
+            ParameterSelectSwitch(.init(id: parameter.id, value: value), options: options, editable: editable, collapsable: collapsable)
+        }
+        
+        func updated(editable: Bool) -> ParameterRepresentable {
+            
+            ParameterSelectSwitch(parameter, options: options, editable: editable, collapsable: collapsable)
         }
         
         func updated(collapsable: Bool) -> ParameterRepresentable {
             
-            ParameterSelectSwitch(parameter, options: options, collapsable: collapsable)
+            ParameterSelectSwitch(parameter, options: options, editable: editable, collapsable: collapsable)
         }
         
         struct Option: Identifiable {
@@ -238,25 +260,32 @@ extension Payments {
         let icon: ImageData
         let title: String
         let validator: Validator
+        let editable: Bool
         let collapsable: Bool
         
-        internal init(_ parameter: Parameter, icon: ImageData, title: String, validator: Validator, collapsable: Bool = false) {
+        internal init(_ parameter: Parameter, icon: ImageData, title: String, validator: Validator, editable: Bool = true, collapsable: Bool = false) {
             
             self.parameter = parameter
             self.icon = icon
             self.title = title
             self.validator = validator
+            self.editable = editable
             self.collapsable = collapsable
         }
         
         func updated(value: String?) -> ParameterRepresentable {
             
-            ParameterInput(.init(id: parameter.id, value: value), icon: icon, title: title, validator: validator, collapsable: collapsable)
+            ParameterInput(.init(id: parameter.id, value: value), icon: icon, title: title, validator: validator,editable: editable, collapsable: collapsable)
+        }
+        
+        func updated(editable: Bool) -> ParameterRepresentable {
+            
+            ParameterInput(parameter, icon: icon, title: title, validator: validator, editable: editable, collapsable: collapsable)
         }
         
         func updated(collapsable: Bool) -> ParameterRepresentable {
             
-            ParameterInput(parameter, icon: icon, title: title, validator: validator, collapsable: collapsable)
+            ParameterInput(parameter, icon: icon, title: title, validator: validator, editable: editable, collapsable: collapsable)
         }
         
         struct Validator: ValidatorProtocol {
@@ -295,6 +324,7 @@ extension Payments {
         let icon: ImageData
         let title: String
         let content: String
+        let editable: Bool = false
         let collapsable: Bool
         
         internal init(_ parameter: Parameter, icon: ImageData, title: String, content: String, collapsable: Bool = false) {
@@ -311,6 +341,11 @@ extension Payments {
             ParameterInfo(.init(id: parameter.id, value: value), icon: icon, title: title, content: content, collapsable: collapsable)
         }
         
+        func updated(editable: Bool) -> ParameterRepresentable {
+            
+            self
+        }
+        
         func updated(collapsable: Bool) -> ParameterRepresentable {
             
             ParameterInfo(parameter, icon: icon, title: title, content: content, collapsable: collapsable)
@@ -324,26 +359,33 @@ extension Payments {
         let lastName: Name
         let firstName: Name
         let middleName: Name
+        let editable: Bool
         let collapsable: Bool
         
-        internal init(_ parameter: Parameter, title: String, lastName: Name, firstName: Name, middleName: Name, collapsable: Bool = false) {
+        internal init(_ parameter: Parameter, title: String, lastName: Name, firstName: Name, middleName: Name, editable: Bool = true, collapsable: Bool = false) {
             
             self.parameter = parameter
             self.title = title
             self.lastName = lastName
             self.firstName = firstName
             self.middleName = middleName
+            self.editable = editable
             self.collapsable = collapsable
         }
         
         func updated(value: String?) -> ParameterRepresentable {
             
-            ParameterName(.init(id: parameter.id, value: value), title: title, lastName: lastName, firstName: firstName, middleName: middleName, collapsable: collapsable)
+            ParameterName(.init(id: parameter.id, value: value), title: title, lastName: lastName, firstName: firstName, middleName: middleName, editable: editable, collapsable: collapsable)
+        }
+        
+        func updated(editable: Bool) -> ParameterRepresentable {
+            
+            ParameterName(parameter, title: title, lastName: lastName, firstName: firstName, middleName: middleName, editable: editable, collapsable: collapsable)
         }
         
         func updated(collapsable: Bool) -> ParameterRepresentable {
             
-            ParameterName(parameter, title: title, lastName: lastName, firstName: firstName, middleName: middleName, collapsable: collapsable)
+            ParameterName(parameter, title: title, lastName: lastName, firstName: firstName, middleName: middleName, editable: editable, collapsable: collapsable)
         }
         
         struct Name {
@@ -359,29 +401,38 @@ extension Payments {
         let title: String
         let currency: Currency
         let validator: Validator
+        let editable: Bool
+        let collapsable: Bool
+        
         var amount: Double {
             //TODO: double from value
             return 0
         }
-        let collapsable: Bool
+
         
-        internal init(_ parameter: Parameter, title: String, currency: Currency, validator: Validator, collapsable: Bool = false) {
+        internal init(_ parameter: Parameter, title: String, currency: Currency, validator: Validator, editable: Bool = true, collapsable: Bool = false) {
             
             self.parameter = parameter
             self.title = title
             self.currency = currency
             self.validator = validator
+            self.editable = editable
             self.collapsable = collapsable
         }
         
         func updated(value: String?) -> ParameterRepresentable {
             
-            ParameterAmount(.init(id: parameter.id, value: value), title: title, currency: currency, validator: validator, collapsable: collapsable)
+            ParameterAmount(.init(id: parameter.id, value: value), title: title, currency: currency, validator: validator, editable: editable, collapsable: collapsable)
+        }
+        
+        func updated(editable: Bool) -> ParameterRepresentable {
+            
+            ParameterAmount(parameter, title: title, currency: currency, validator: validator, editable: editable, collapsable: collapsable)
         }
         
         func updated(collapsable: Bool) -> ParameterRepresentable {
             
-            ParameterAmount(parameter, title: title, currency: currency, validator: validator, collapsable: collapsable)
+            ParameterAmount(parameter, title: title, currency: currency, validator: validator, editable: editable, collapsable: collapsable)
         }
         
         struct Validator: ValidatorProtocol {
@@ -402,30 +453,32 @@ extension Payments {
     struct ParameterFinal: ParameterRepresentable {
         
         let parameter: Parameter
-        let collapsable: Bool
+        let editable: Bool = false
+        let collapsable: Bool = false
     
         internal init() {
             
             self.parameter = Parameter(id: Payments.Parameter.Identifier.mock.rawValue, value: nil)
-            self.collapsable = false
         }
      
         func updated(value: String?) -> ParameterRepresentable { self }
+        func updated(editable: Bool) -> ParameterRepresentable { self }
         func updated(collapsable: Bool) -> ParameterRepresentable { self }
     }
     
     struct ParameterMock: ParameterRepresentable {
         
         let parameter: Parameter
-        let collapsable: Bool
+        let editable: Bool = false
+        let collapsable: Bool = false
     
         internal init() {
             
             self.parameter = Parameter(id: Payments.Parameter.Identifier.mock.rawValue, value: nil)
-            self.collapsable = false
         }
      
         func updated(value: String?) -> ParameterRepresentable { self }
+        func updated(editable: Bool) -> ParameterRepresentable { self }
         func updated(collapsable: Bool) -> ParameterRepresentable { self }
     }
 }
