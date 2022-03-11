@@ -20,29 +20,20 @@ extension PaymentsParameterInfoView {
         //TODO: real placeholder required
         private static let iconPlaceholder = Image("Payments Icon Placeholder")
 
-        internal init(icon: Image, title: String, content: String, parameter: Payments.Parameter = .init(id: UUID().uuidString, value: "")) {
+        internal init(icon: Image, title: String, content: String) {
             
             self.icon = icon
             self.title = title
             self.content = content
-            super.init(parameter: parameter)
+            super.init(source: Payments.ParameterMock())
         }
         
         init(with parameterInfo: Payments.ParameterInfo) throws {
             
-            guard let content = parameterInfo.value else {
-                throw PaymentsParameterInfoView.ViewModel.Error.emptyValue
-            }
-            
             self.icon = parameterInfo.icon.image ?? Self.iconPlaceholder
             self.title = parameterInfo.title
-            self.content = content
-            super.init(parameter: parameterInfo)
-        }
-        
-        enum Error: Swift.Error {
-            
-            case emptyValue
+            self.content = parameterInfo.content
+            super.init(source: parameterInfo)
         }
     }
 }
@@ -102,5 +93,5 @@ extension PaymentsParameterInfoView.ViewModel {
     
     static let sample = PaymentsParameterInfoView.ViewModel(icon: Image("Payments List Sample"), title: "Основание", content: "Налог на имущество физических лиц, взимаемый по ставкам, применяемым к объектам налогообложения, расположенным в границах внутригородских муниципальных образований городов федерального значения (сумма платеж...)")
     
-    static let sampleParameter = try! PaymentsParameterInfoView.ViewModel(with: .init(value: .init(id: UUID().uuidString, value: "УФК по г. Москве (ИФНС России №26 по г. Москве)"), icon: .empty, title: "Получатель платежа"))
+    static let sampleParameter = try! PaymentsParameterInfoView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "a3_address_2_2"), icon: .empty, title: "Получатель платежа", content: "УФК по г. Москве (ИФНС России №26 по г. Москве)"))
 }

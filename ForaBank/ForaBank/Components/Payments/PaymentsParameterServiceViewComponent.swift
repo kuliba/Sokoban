@@ -16,16 +16,16 @@ extension PaymentsParameterSelectServiceView {
 
         @Published var items: [ItemViewModel]
         
-        internal init(items: [ItemViewModel], parameter: Payments.Parameter = .init(id: UUID().uuidString, value: "")) {
+        internal init(items: [ItemViewModel]) {
             
             self.items = items
-            super.init(parameter: parameter)
+            super.init(source: Payments.ParameterMock())
         }
         
         init(with parameter: Payments.ParameterSelectService, action: @escaping (Payments.Parameter.ID) -> Void) {
             
             self.items = []
-            super.init(parameter: parameter)
+            super.init(source: parameter)
             
             self.items = parameter.options.map { ItemViewModel(with: $0, action: { itemId in action(itemId) })}
         }

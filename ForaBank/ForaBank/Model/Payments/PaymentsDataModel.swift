@@ -43,36 +43,20 @@ enum Payments {
         case fnsUin     = "iFora||7069"
     }
     
-    class Parameter: Identifiable {
-
-        let id: String
-        var value: String?
+    struct Parameter: Equatable {
         
-        var result: Payments.Parameter.Result { Result(id: id, value: value) }
+        typealias ID = String
+        typealias Value = String?
         
-        internal init(id: String, value: String?) {
-            
-            self.id = id
-            self.value = value
-        }
-        
-        convenience init(value: Parameter.Result) {
-            
-            self.init(id: value.id, value: value.value)
-        }
-        
-        struct Result {
-            
-            let id: String
-            let value: String?
-        }
+        let id: ID
+        let value: Value
     }
     
     struct Operation {
         
         let service: Service
-        let parameters: [Parameter]
-        let history: [[Parameter.Result]]
+        let parameters: [ParameterRepresentable]
+        let history: [[Parameter]]
         
         enum Kind {
             
@@ -85,4 +69,13 @@ enum Payments {
         case unsupported
         case unableCreateOperationForService(Service)
     }
+}
+
+protocol ParameterRepresentable {
+
+    var parameter: Payments.Parameter { get }
+    var collapsable: Bool { get }
+    
+    func updated(value: String?) -> ParameterRepresentable
+    func updated(collapsable: Bool) -> ParameterRepresentable
 }

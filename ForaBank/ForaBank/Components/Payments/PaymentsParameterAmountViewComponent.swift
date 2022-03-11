@@ -24,7 +24,7 @@ extension PaymentsParameterAmountView {
         
         private var bindings = Set<AnyCancellable>()
         
-        init(description: String, content: String, transferButton: TransferButtonViewModel, info: InfoViewModel? = nil, currencySwitch: CurrencySwitchViewModel? = nil, alert: AlertViewModel? = nil, parameter: Payments.Parameter = .init(id: UUID().uuidString, value: "")) {
+        init(description: String, content: String, transferButton: TransferButtonViewModel, info: InfoViewModel? = nil, currencySwitch: CurrencySwitchViewModel? = nil, alert: AlertViewModel? = nil) {
             
             self.description = description
             self.content = content
@@ -32,10 +32,24 @@ extension PaymentsParameterAmountView {
             self.info = info
             self.currencySwitch = currencySwitch
             self.alert = alert
-            super.init(parameter: parameter)
+            super.init(source: Payments.ParameterMock())
             
             bind()
         }
+        
+        init(with parameterAmount: Payments.ParameterAmount) {
+            
+            self.description = parameterAmount.title
+            self.content = parameterAmount.parameter.value ?? ""
+            self.transferButton = .inactive(title: "Перевести")
+            self.info = nil
+            self.currencySwitch = nil
+            self.alert = nil
+            super.init(source: parameterAmount)
+            
+            bind()
+        }
+        
         
         private func bind() {
             
@@ -49,6 +63,19 @@ extension PaymentsParameterAmountView {
                     }
                     
                 }.store(in: &bindings)
+        }
+        
+        func updateTranferButton(isEnabled: Bool) {
+            
+            if isEnabled {
+                //TODO: завести свойство title
+                transferButton = .active(title: "Продолжить", action: {
+                    print("Переход на платеж")
+                })
+            } else {
+                
+                transferButton = .inactive(title: "Продолжить")
+            }
         }
         
         enum TransferButtonViewModel {

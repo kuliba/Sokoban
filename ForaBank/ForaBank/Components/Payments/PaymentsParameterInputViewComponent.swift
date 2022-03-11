@@ -18,24 +18,50 @@ extension PaymentsParameterInputView {
         let description: String
         @Published var content: String
         @Published var title: String?
-        
+        let validator: Payments.ParameterInput.Validator
         private var bindings = Set<AnyCancellable>()
         
-        internal init(logo: Image, description: String, content: String? = nil, parameter: Payments.Parameter = .init(id: UUID().uuidString, value: "")) {
+        private static let iconPlaceholder = Image("Payments Icon Placeholder")
+        
+        override var isValid: Bool {
+            guard let inputParemetr = source as? Payments.ParameterInput else { return false }
+            
+            return inputParemetr.validator.isValid(value: content)
+        }
+        
+        internal init(logo: Image, description: String, content: String? = nil) {
             
             self.logo = logo
             self.description = description
             self.content = content ?? ""
-            super.init(parameter: parameter)
+            self.validator = .init(minLength: 0, maxLength: 50, regEx: nil)
+            
+            super.init(source: Payments.ParameterMock())
             
             bind()
         }
+        
+        init(with parameterInput: Payments.ParameterInput) throws {
+            
+            self.logo = parameterInput.icon.image ?? Self.iconPlaceholder
+            self.content = parameterInput.parameter.value ?? ""
+            self.description = parameterInput.title
+            self.validator = parameterInput.validator
+            
+            super.init(source: parameterInput)
+            
+            bind()
+        }
+        
+        
         
         private func bind() {
             
             $content
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] content in
+                    
+                    value = value.updated(with: content)
                     
                     withAnimation(.easeInOut(duration: 0.2)) {
                         

@@ -14,23 +14,38 @@ extension Payments.Parameter {
         case category       = "ru.forabank.sense.category"
         case service        = "ru.forabank.sense.service"
         case `operator`     = "ru.forabank.sense.operator"
+        case template       = "ru.forabank.sense.template"
+        case mock           = "ru.forabank.sense.mock"
     }
     
-    static let emptyMock = Payments.Parameter(id: UUID().uuidString, value: "")
+    static let emptyMock = Payments.Parameter(id: Identifier.mock.rawValue, value: nil)
 }
 
 extension Payments {
-   
-    class ParameterSelectService: Parameter {
+    
+    struct ParameterSelectService: ParameterRepresentable {
         
+        let parameter: Parameter
         let category: Category
         let options: [Option]
+        let collapsable: Bool
         
-        internal init(category: Category, options: [Option]) {
+        internal init(value: String? = nil, category: Category, options: [Option], collapsable: Bool = false) {
             
+            self.parameter = Parameter(id: Payments.Parameter.Identifier.category.rawValue, value: value)
             self.category = category
             self.options = options
-            super.init(id: Payments.Parameter.Identifier.category.rawValue, value: nil)
+            self.collapsable = collapsable
+        }
+        
+        func updated(value: String?) -> ParameterRepresentable {
+            
+            ParameterSelectService(value: value, category: category, options: options, collapsable: collapsable)
+        }
+        
+        func updated(collapsable: Bool) -> ParameterRepresentable {
+            
+            ParameterSelectService(value: parameter.value, category: category, options: options, collapsable: collapsable)
         }
         
         struct Option: Identifiable {
@@ -43,27 +58,101 @@ extension Payments {
         }
     }
     
-    class ParameterTemplate: Parameter {
+    struct ParameterTemplate: ParameterRepresentable {
         
-        let templateId: PaymentTemplateData.ID
-        
-        internal init(value: Parameter.Result, templateId: PaymentTemplateData.ID) {
+        let parameter: Parameter
+        let collapsable: Bool
+        var templateId: PaymentTemplateData.ID? {
             
-            self.templateId = templateId
-            super.init(id: value.id, value: value.value)
+            guard let value = parameter.value else {
+                return nil
+            }
+            
+            return PaymentTemplateData.ID(value)
+        }
+        
+        internal init(templateId: PaymentTemplateData.ID) {
+            
+            self.parameter = Parameter(id: Payments.Parameter.Identifier.template.rawValue, value: String(templateId))
+            self.collapsable = false
+        }
+        
+        internal init(value: String?) {
+            
+            self.parameter = Parameter(id: Payments.Parameter.Identifier.template.rawValue, value: value)
+            self.collapsable = false
+        }
+        
+        func updated(value: String?) -> ParameterRepresentable {
+            
+            ParameterTemplate(value: value)
+        }
+        
+        func updated(collapsable: Bool) -> ParameterRepresentable {
+            
+            self
         }
     }
     
-    class ParameterSelect: Parameter {
+    struct ParameterOperator: ParameterRepresentable {
         
+        let parameter: Parameter
+        let collapsable: Bool
+        var `operator`: Operator? {
+            
+            guard let value = parameter.value else {
+                return nil
+            }
+            
+            return Operator(rawValue: value)
+        }
+        
+        internal init(operatorType: Operator) {
+            
+            self.parameter = Parameter(id: Payments.Parameter.Identifier.operator.rawValue, value: operatorType.rawValue)
+            self.collapsable = false
+        }
+        
+        internal init(value: String?) {
+            
+            self.parameter = Parameter(id: Payments.Parameter.Identifier.operator.rawValue, value: value)
+            self.collapsable = false
+        }
+        
+        func updated(value: String?) -> ParameterRepresentable {
+            
+            ParameterOperator(value: value)
+        }
+        
+        func updated(collapsable: Bool) -> ParameterRepresentable {
+            
+            self
+        }
+    }
+    
+    struct ParameterSelect: ParameterRepresentable {
+        
+        let parameter: Parameter
         let title: String
         let options: [Option]
+        let collapsable: Bool
         
-        internal init(value: Parameter.Result, title: String, options: [Option]) {
+        internal init(_ parameter: Parameter, title: String, options: [Option], collapsable: Bool = false) {
             
+            self.parameter = parameter
             self.title = title
             self.options = options
-            super.init(id: value.id, value: value.value)
+            self.collapsable = collapsable
+        }
+        
+        func updated(value: String?) -> ParameterRepresentable {
+            
+            ParameterSelect(.init(id: parameter.id, value: value), title: title, options: options, collapsable: collapsable)
+        }
+        
+        func updated(collapsable: Bool) -> ParameterRepresentable {
+            
+            ParameterSelect(parameter, title: title, options: options, collapsable: collapsable)
         }
         
         struct Option: Identifiable {
@@ -74,22 +163,35 @@ extension Payments {
         }
     }
     
-    class ParameterSelectSimple: Parameter {
+    struct ParameterSelectSimple: ParameterRepresentable {
         
+        let parameter: Parameter
         let icon: ImageData
         let title: String
         let selectionTitle: String
         let description: String?
         let options: [Option]
+        let collapsable: Bool
         
-        internal init(value: Parameter.Result, icon: ImageData, title: String, selectionTitle: String, description: String? = nil, options: [Option]) {
+        internal init(_ parameter: Parameter, icon: ImageData, title: String, selectionTitle: String, description: String? = nil, options: [Option], collapsable: Bool = false) {
             
+            self.parameter = parameter
             self.icon = icon
             self.title = title
             self.selectionTitle = selectionTitle
             self.description = description
             self.options = options
-            super.init(id: value.id, value: value.value)
+            self.collapsable = collapsable
+        }
+        
+        func updated(value: String?) -> ParameterRepresentable {
+            
+            ParameterSelectSimple(.init(id: parameter.id, value: value), icon: icon, title: title, selectionTitle: selectionTitle, description: description, options: options, collapsable: collapsable)
+        }
+        
+        func updated(collapsable: Bool) -> ParameterRepresentable {
+            
+            ParameterSelectSimple(parameter, icon: icon, title: title, selectionTitle: selectionTitle, description: description, options: options, collapsable: collapsable)
         }
         
         struct Option: Identifiable {
@@ -99,14 +201,27 @@ extension Payments {
         }
     }
     
-    class ParameterSelectSwitch: Parameter {
+    struct ParameterSelectSwitch: ParameterRepresentable {
         
+        let parameter: Parameter
         let options: [Option]
+        let collapsable: Bool
         
-        internal init(value: Parameter.Result, options: [Option]) {
+        internal init(_ parameter: Parameter, options: [Option], collapsable: Bool = false) {
             
+            self.parameter = parameter
             self.options = options
-            super.init(id: value.id, value: value.value)
+            self.collapsable = collapsable
+        }
+        
+        func updated(value: String?) -> ParameterRepresentable {
+            
+            ParameterSelectSwitch(.init(id: parameter.id, value: value), options: options, collapsable: collapsable)
+        }
+        
+        func updated(collapsable: Bool) -> ParameterRepresentable {
+            
+            ParameterSelectSwitch(parameter, options: options, collapsable: collapsable)
         }
         
         struct Option: Identifiable {
@@ -116,18 +231,31 @@ extension Payments {
         }
     }
     
-    class ParameterInput: Parameter {
+    struct ParameterInput: ParameterRepresentable {
         
+        let parameter: Parameter
         let icon: ImageData
         let title: String
         let validator: Validator
+        let collapsable: Bool
         
-        internal init(value: Parameter.Result, icon: ImageData, title: String, validator: Validator) {
+        internal init(_ parameter: Parameter, icon: ImageData, title: String, validator: Validator, collapsable: Bool = false) {
             
+            self.parameter = parameter
             self.icon = icon
             self.title = title
             self.validator = validator
-            super.init(id: value.id, value: value.value)
+            self.collapsable = collapsable
+        }
+        
+        func updated(value: String?) -> ParameterRepresentable {
+            
+            ParameterInput(.init(id: parameter.id, value: value), icon: icon, title: title, validator: validator, collapsable: collapsable)
+        }
+        
+        func updated(collapsable: Bool) -> ParameterRepresentable {
+            
+            ParameterInput(parameter, icon: icon, title: title, validator: validator, collapsable: collapsable)
         }
         
         struct Validator: ValidatorProtocol {
@@ -144,45 +272,74 @@ extension Payments {
                 
                 if let maxLength = maxLength {
                     
-                    guard value.count < maxLength else {
+                    guard value.count <= maxLength else {
                         return false
                     }
                 }
                 
                 //TODO: validate with regex if present
+//                let result = value.range(of: regEx, options: .regularExpression)
                 
                 return true
             }
         }
     }
     
-    class ParameterInfo: Parameter {
+    struct ParameterInfo: ParameterRepresentable {
         
+        let parameter: Parameter
         let icon: ImageData
         let title: String
+        let content: String
+        let collapsable: Bool
         
-        internal init(value: Parameter.Result, icon: ImageData, title: String) {
+        internal init(_ parameter: Parameter, icon: ImageData, title: String, content: String, collapsable: Bool = false) {
             
+            self.parameter = parameter
             self.icon = icon
             self.title = title
-            super.init(id: value.id, value: value.value)
+            self.content = content
+            self.collapsable = collapsable
+        }
+        
+        func updated(value: String?) -> ParameterRepresentable {
+            
+            ParameterInfo(.init(id: parameter.id, value: value), icon: icon, title: title, content: content, collapsable: collapsable)
+        }
+        
+        func updated(collapsable: Bool) -> ParameterRepresentable {
+            
+            ParameterInfo(parameter, icon: icon, title: title, content: content, collapsable: collapsable)
         }
     }
     
-    class ParameterName: Parameter {
+    struct ParameterName: ParameterRepresentable {
         
+        let parameter: Parameter
         let title: String
         let lastName: Name
         let firstName: Name
         let middleName: Name
+        let collapsable: Bool
         
-        internal init(value: Parameter.Result, title: String, lastName: Name, firstName: Name, middleName: Name) {
+        internal init(_ parameter: Parameter, title: String, lastName: Name, firstName: Name, middleName: Name, collapsable: Bool = false) {
             
+            self.parameter = parameter
             self.title = title
             self.lastName = lastName
             self.firstName = firstName
             self.middleName = middleName
-            super.init(id: value.id, value: value.value)
+            self.collapsable = collapsable
+        }
+        
+        func updated(value: String?) -> ParameterRepresentable {
+            
+            ParameterName(.init(id: parameter.id, value: value), title: title, lastName: lastName, firstName: firstName, middleName: middleName, collapsable: collapsable)
+        }
+        
+        func updated(collapsable: Bool) -> ParameterRepresentable {
+            
+            ParameterName(parameter, title: title, lastName: lastName, firstName: firstName, middleName: middleName, collapsable: collapsable)
         }
         
         struct Name {
@@ -192,8 +349,9 @@ extension Payments {
         }
     }
     
-    class ParameterAmount: Parameter {
+    struct ParameterAmount: ParameterRepresentable {
         
+        let parameter: Parameter
         let title: String
         let currency: Currency
         let validator: Validator
@@ -201,13 +359,25 @@ extension Payments {
             //TODO: double from value
             return 0
         }
+        let collapsable: Bool
         
-        internal init(value: Parameter.Result, title: String, currency: Currency, validator: Validator) {
+        internal init(_ parameter: Parameter, title: String, currency: Currency, validator: Validator, collapsable: Bool = false) {
             
+            self.parameter = parameter
             self.title = title
             self.currency = currency
             self.validator = validator
-            super.init(id: value.id, value: value.value)
+            self.collapsable = collapsable
+        }
+        
+        func updated(value: String?) -> ParameterRepresentable {
+            
+            ParameterAmount(.init(id: parameter.id, value: value), title: title, currency: currency, validator: validator, collapsable: collapsable)
+        }
+        
+        func updated(collapsable: Bool) -> ParameterRepresentable {
+            
+            ParameterAmount(parameter, title: title, currency: currency, validator: validator, collapsable: collapsable)
         }
         
         struct Validator: ValidatorProtocol {
@@ -223,5 +393,20 @@ extension Payments {
                 return true
             }
         }
+    }
+    
+    struct ParameterMock: ParameterRepresentable {
+        
+        let parameter: Parameter
+        let collapsable: Bool
+    
+        internal init() {
+            
+            self.parameter = Parameter(id: Payments.Parameter.Identifier.mock.rawValue, value: nil)
+            self.collapsable = false
+        }
+     
+        func updated(value: String?) -> ParameterRepresentable { self }
+        func updated(collapsable: Bool) -> ParameterRepresentable { self }
     }
 }

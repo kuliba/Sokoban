@@ -161,13 +161,18 @@ extension Model {
         let operation = payload.operation
         let historyUpdated = operation.historyUpdated()
         
-        parameters(for: operation.service, parameters: operation.parameters, history: historyUpdated) { result in
+        parameters(for: operation.service, parameters: operation.parameters, history: operation.history) { result in
             
             //TODO: return data for confirm state
             
             switch result {
             case .success(let parameters):
                 let continueOperation = Operation(service: operation.service, parameters: parameters, history: historyUpdated)
+                
+                // TODO: завести парамерт типа final
+                // TODO: если нашли парамерт final то отправляем в модель
+//                 self.action.send(ModelAction.Payment.Continue.Response(result: .confirm(continueOperation)))
+                
                 self.action.send(ModelAction.Payment.Continue.Response(result: .step(continueOperation)))
                 
             case .failure(let error):
@@ -185,18 +190,18 @@ extension Model {
     
     func operation(for service: Service, completion: @escaping (Result<Operation, Error>) -> Void) {
         
-        parameters(for: service, parameters: [], history: [[]]) { result in
+        parameters(for: service, parameters: [], history: []) { result in
             
             switch result {
             case .success(let parameters):
 
                 // selected operator required
-                guard parameters.contains(where: { $0.id == Parameter.Identifier.operator.rawValue}) else {
+                guard parameters.contains(where: { $0.parameter.id == Parameter.Identifier.operator.rawValue}) else {
                     completion(.failure(Payments.Operation.Error.operatorNotSelectedForService(service)))
                     return
                 }
                 
-                let historyValues = parameters.map{ $0.result }
+                let historyValues = Operation.history(for: parameters)
                 let operation = Operation(service: service, parameters: parameters, history: [historyValues])
                 completion(.success(operation))
                 
@@ -219,11 +224,14 @@ extension Model {
     
     //MARK: - Parameters
     
-    func parameters(for service: Service, parameters: [Parameter], history: [[Parameter.Result]] , completion: @escaping (Result<[Parameter], Error>) -> Void) {
+    func parameters(for service: Service, parameters: [ParameterRepresentable], history: [[Parameter]] , completion: @escaping (Result<[ParameterRepresentable], Error>) -> Void) {
         
-        let step = history.count - 1
+        let step = history.count
         
         switch service {
+        case .fns:
+            parametersFNS(parameters, step, completion)
+            
         case .fms:
             parametersFMS(parameters, step, completion)
             
@@ -235,12 +243,12 @@ extension Model {
     func selectServiceParameterOption(for service: Service) -> Payments.ParameterSelectService.Option {
         
         switch service {
-        case .fms:
-            return.init(service: service, title: service.name, description: "Госпошлины", icon: .serviceSample)
-            
         case .fns:
             return.init(service: service, title: service.name, description: "Налоги", icon: .empty)
 
+        case .fms:
+            return.init(service: service, title: service.name, description: "Госпошлины", icon: .serviceSample)
+            
         case .fssp:
             return.init(service: service, title: service.name, description: "Задолженность", icon: .empty)
         }
