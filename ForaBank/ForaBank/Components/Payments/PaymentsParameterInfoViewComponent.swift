@@ -50,7 +50,7 @@ struct PaymentsParameterInfoView: View {
             
             viewModel.icon
                 .resizable()
-                .frame(width: 40, height: 40)
+                .frame(width: 24, height: 24)
                 .padding(.top, 12)
             
             VStack(alignment: .leading, spacing: 4)  {
