@@ -277,8 +277,11 @@ extension Payments {
                     }
                 }
                 
-                //TODO: validate with regex if present
-//                let result = value.range(of: regEx, options: .regularExpression)
+                if let regEx = regEx {
+                    
+                    let predicate = NSPredicate(format:"SELF MATCHES %@", regEx)
+                    return predicate.evaluate(with: value)
+                }
                 
                 return true
             }
