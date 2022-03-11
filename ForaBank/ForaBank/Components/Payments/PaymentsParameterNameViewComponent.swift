@@ -32,15 +32,34 @@ extension PaymentsParameterNameView {
         
         var buttonIcon: Image { isEditing ? Image("Payments Minus Squares") : Image("Payments Plus Squares")}
         
+        private static let iconPlaceholder = Image("accountImage")
         private var bindings = Set<AnyCancellable>()
         
-        init(icon: Image, title: String, person: PersonViewModel, isEditing: Bool, parameter: Payments.Parameter = .init(id: UUID().uuidString, value: "")) {
+        init(with parameterName: Payments.ParameterName) throws {
+            
+            self.icon = Self.iconPlaceholder
+            self.title = parameterName.title
+            self.person = PersonViewModel(
+                lastName: .init(
+                    title: parameterName.lastName.title,
+                    value: parameterName.lastName.value),
+                firstName: .init(
+                    title: parameterName.firstName.title,
+                    value: parameterName.firstName.value),
+                middleName: .init(
+                    title: parameterName.middleName.title,
+                    value: parameterName.middleName.value))
+            self.isEditing = false
+            super.init(source: parameterName)
+        }
+        
+        init(icon: Image, title: String, person: PersonViewModel, isEditing: Bool) {
             
             self.icon = icon
             self.title = title
             self.person = person
             self.isEditing = isEditing
-            super.init(parameter: parameter)
+            super.init(source: Payments.ParameterMock())
         }
         
         struct PersonViewModel {
@@ -78,7 +97,7 @@ struct PaymentsParameterNameView: View {
             
             viewModel.icon
                 .resizable()
-                .frame(width: 40, height: 40)
+                .frame(width: 32, height: 32)
             
             VStack(alignment: .leading, spacing: 30)  {
                 

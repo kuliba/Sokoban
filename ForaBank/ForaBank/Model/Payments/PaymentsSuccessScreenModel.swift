@@ -60,19 +60,24 @@ struct PaymentsSuccessScreenView_Previews: PreviewProvider {
 
 extension PaymentsSuccessScreenView_Previews {
     
-    static let headerView = PaymentsSuccessOptionHeaderView.init(viewModel:
-                                                                        .init(stateIcon: Image("OkOperators"),
-                                                                              title: "Успешный перевод",
-                                                                              description: "1 000,00 ₽",
-                                                                              operatorIcon: Image("Payments Service Sample")))
+    static let headerView = PaymentsSuccessOptionHeaderView.init(
+        viewModel:
+                .init(stateIcon: Image("OkOperators"),
+                      title: "Успешный перевод",
+                      description: "1 000,00 ₽",
+                      operatorIcon: Image("Payments Service Sample")))
     
-    static let optionButtons = [ PaymentsSuccessOptionButtonView.ViewModel(id: UUID(), icon: Image("Operation Details Info"),
-                                                                           title: "Детали",
-                                                                           action: {}),
-                                 
-                                 PaymentsSuccessOptionButtonView.ViewModel(id: UUID(), icon: Image("Payments Input Sample"),
-                                                                           title: "Документ",
-                                                                           action: {}) ]
+    static let optionButtons = [
+        PaymentsSuccessOptionButtonView.ViewModel(
+            id: UUID(), icon: Image("Operation Details Info"),
+            title: "Детали",
+            action: {}),
+        
+        PaymentsSuccessOptionButtonView.ViewModel(
+            id: UUID(), icon: Image("Payments Input Sample"),
+            title: "Документ",
+            action: {}) ]
     
-    static let actionButton = ButtonSimpleView(viewModel: .init(state: .active(title: "На главную", action: {})))
+    static let actionButton = ButtonSimpleView(
+        viewModel: .init(title: "На главную", isEnabled: true, action: {}))
 }

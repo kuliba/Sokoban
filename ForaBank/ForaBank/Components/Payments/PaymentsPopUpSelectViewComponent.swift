@@ -13,35 +13,43 @@ import Combine
 extension PaymentsPopUpSelectView {
     
     class ViewModel: PaymentsParameterViewModel {
-        
-        let action: PassthroughSubject<Action, Never> = .init()
-        
+                
         var title: String
         let description: String?
         var items: [ItemViewModel]
         
         @Published var selected: Payments.ParameterSelectSimple.Option.ID?
+        
+        let action: (Payments.ParameterSelectSimple.Option.ID) -> Void
+        
         private var bindings: Set<AnyCancellable> = []
         
-        internal init(title: String, description: String, items: [ItemViewModel], parameter: Payments.Parameter = .init(id: UUID().uuidString, value: "")) {
+        internal init(title: String, description: String, items: [ItemViewModel],
+                      action: @escaping (Payments.ParameterSelectSimple.Option.ID) -> Void,
+                      parameter: Payments.Parameter = .init(id: UUID().uuidString, value: "")) {
             
             self.title = title
             self.description = description
             self.items = items
-            super.init(parameter: parameter)
+            self.action = action
+            super.init(source: Payments.ParameterMock())
             self.bind()
         }
         
-        init(with parameterSelect: Payments.ParameterSelectSimple, selectedID: Payments.ParameterSelectSimple.Option.ID? = nil) {
+        init(with parameterSelect: Payments.ParameterSelectSimple,
+             selectedID: Payments.ParameterSelectSimple.Option.ID? = nil,
+             action: @escaping (Payments.ParameterSelectSimple.Option.ID) -> Void) {
             
             self.title = parameterSelect.title
             self.description = parameterSelect.description
             self.selected = selectedID
             self.items = []
-            super.init(parameter: parameterSelect)
+            self.action = action
+            super.init(source: parameterSelect)
             self.items = parameterSelect.options.map { ItemViewModel(id: $0.id, name: $0.name, isSelected: false, action: {[weak self] itemId in
                 self?.selected = itemId
             }) }
+            self.bind()
         }
         
         func bind() {
@@ -54,6 +62,16 @@ extension PaymentsPopUpSelectView {
                         
                         item.isSelected = item.id == id ? true : false
                     }
+                    
+                }.store(in: &bindings)
+            
+            $selected
+                .dropFirst()
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] selected in
+                    
+                    guard let selected = selected else { return }
+                    action(selected)
                     
                 }.store(in: &bindings)
         }
@@ -83,28 +101,43 @@ struct PaymentsPopUpSelectView: View {
     var viewModel: PaymentsPopUpSelectView.ViewModel
     
     var body: some View {
-        
-        VStack(alignment: .leading, spacing: 20) {
-            
-            Text(viewModel.title)
-                .foregroundColor(Color(hex: "#1C1C1C"))
-                .font(Font.custom("Inter-SemiBold", size: 18))
-            
-            if let description = viewModel.description {
-                Text(description)
-                    .foregroundColor(Color(hex: "#999999"))
-                    .font(Font.custom("Inter-Regular", size: 14))
-            }
-            ScrollView {
                 
-                VStack(spacing: 30) {
+        ZStack {
+            
+            Color.clear
+            
+            VStack {
+                
+                Spacer()
+                
+                VStack(alignment: .leading, spacing: 20) {
                     
-                    ForEach(viewModel.items) { item in
-                        ItemView(viewModel: item)
+                    Text(viewModel.title)
+                        .foregroundColor(Color(hex: "#1C1C1C"))
+                        .font(Font.custom("Inter-SemiBold", size: 18))
+                    
+                    if let description = viewModel.description {
+                        Text(description)
+                            .foregroundColor(Color(hex: "#999999"))
+                            .font(Font.custom("Inter-Regular", size: 14))
+                    }
+                    VStack(spacing: 30) {
+                        
+                        ForEach(viewModel.items) { item in
+                            ItemView(viewModel: item)
+                        }
                     }
                 }
+                .padding()
+                .background(RoundedCorner(radius: 16,
+                                          corners: [.topLeft, .topRight])
+                                .foregroundColor(.white)
+                                .shadow(color: .black.opacity(0.1),
+                                        radius: 1, x: 0, y: -2))
+                
             }
-        } .padding()
+        }
+        .transition(.scale)
     }
     
     struct ItemView: View {
@@ -157,5 +190,5 @@ extension PaymentsPopUpSelectView_Previews {
                 .init(id: "1", name: "В возрасте до 14 лет", isSelected: false, action: {_ in }),
                 .init(id: "2", name: "В возрасте до 14 лет (новый образец)", isSelected: false, action: {_ in }),
                 .init(id: "3", name: "Содержащего электронный носитель информации (паспорта нового поколения)", isSelected: false, action: {_ in }),
-                .init(id: "4", name: "За внесение изменений в паспорт", isSelected: false, action: {_ in })])
+                .init(id: "4", name: "За внесение изменений в паспорт", isSelected: false, action: {_ in })], action: { _ in })
 }

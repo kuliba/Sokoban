@@ -16,7 +16,7 @@ struct PaymentsOperationView: View {
         
         ZStack {
             
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 
                 VStack(spacing: 20) {
                     
@@ -41,6 +41,9 @@ struct PaymentsOperationView: View {
                         case let cardViewModel as PaymentsParameterCardView.ViewModel:
                             PaymentsParameterCardView(viewModel: cardViewModel)
                             
+                        case let selectViewModels as PaymentsParameterSelectSimpleView.ViewModel:
+                            PaymentsParameterSelectSimpleView(viewModel: selectViewModels)
+                            
                         default:
                             Color.clear
                             
@@ -51,15 +54,45 @@ struct PaymentsOperationView: View {
             .padding(.horizontal, 20)
             
             
-            if let amountViewModel = viewModel.amount {
+            if let footerViewModel = viewModel.footer {
                 
                 VStack {
                     
                     Spacer()
                     
-                    PaymentsParameterAmountView(viewModel: amountViewModel)
-                        .edgesIgnoringSafeArea(.bottom)
+                    switch footerViewModel {
+                    case .button(let continueButtonViewModel):
+
+                        ButtonSimpleView(viewModel: .init(buttonModel: continueButtonViewModel))
+                            .frame(height: 42)
+                            .padding(.horizontal, 20)
+                        
+//                        if continueButtonViewModel.isEnabled {
+//                            ButtonSimpleView(
+//                                viewModel: ButtonSimpleView.ViewModel(
+//                                    state: .active(
+//                                        title: continueButtonViewModel.title,
+//                                        action: continueButtonViewModel.action)))
+//                                .frame(height: 42)
+//                                .padding(.horizontal, 20)
+//                        } else {
+//                            ButtonSimpleView(
+//                                viewModel: ButtonSimpleView.ViewModel(
+//                                    state: .inactive(title: continueButtonViewModel.title)))
+//                                .frame(height: 42)
+//                                .padding(.horizontal, 20)
+//                        }
+                        
+                    case .amount(let amountViewModel):
+                        PaymentsParameterAmountView(viewModel: amountViewModel)
+                            .edgesIgnoringSafeArea(.bottom)
+                    }
                 }
+            }
+            
+            if let popUpSelectViewModel = viewModel.popUpSelector {
+                
+                PaymentsPopUpSelectView(viewModel: popUpSelectViewModel)
             }
         }
         .navigationBarTitle(Text(viewModel.header.title), displayMode: .inline)
@@ -86,6 +119,6 @@ extension PaymentsOperationViewModel {
         
         let items: [PaymentsParameterViewModel] = [PaymentsParameterSwitchView.ViewModel.sample, PaymentsParameterSelectView.ViewModel.selectedMock, PaymentsParameterInfoView.ViewModel.sample, PaymentsParameterNameView.ViewModel.normal, PaymentsParameterNameView.ViewModel.edit, PaymentsParameterCardView.ViewModel.sample]
         
-        return PaymentsOperationViewModel(header: .init(title: "Налоги и услуги", action: {}), items: items, amount: PaymentsParameterAmountView.ViewModel.amountCurrencyInfoAlert)
+        return PaymentsOperationViewModel(header: .init(title: "Налоги и услуги", action: {}), items: items, footer: .amount(PaymentsParameterAmountView.ViewModel.amountCurrencyInfoAlert))
     }()
 }

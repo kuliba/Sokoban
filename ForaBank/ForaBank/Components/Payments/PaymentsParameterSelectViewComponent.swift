@@ -23,7 +23,7 @@ extension PaymentsParameterSelectView {
         //TODO: real placeholder required
         private static let itemIconPlaceholder = Image("Payments Icon Placeholder")
         
-        internal init(items: [ItemViewModel], description: String, selected: (item: ItemViewModel, action: () -> Void)? = nil, parameter: Payments.Parameter = .init(id: UUID().uuidString, value: "")) {
+        internal init(items: [ItemViewModel], description: String, selected: (item: ItemViewModel, action: () -> Void)? = nil) {
             
             if let selected = selected {
                 
@@ -34,15 +34,15 @@ extension PaymentsParameterSelectView {
                 self.state = .list(items)
             }
 
-            super.init(parameter: parameter)
+            super.init(source: Payments.ParameterMock())
         }
         
         init(with parameterSelect: Payments.ParameterSelect) throws {
 
             self.state = .list([])
-            super.init(parameter: parameterSelect)
+            super.init(source: parameterSelect)
             
-            if let selectedOptionId = parameterSelect.value {
+            if let selectedOptionId = parameterSelect.parameter.value {
                 
                 self.state = .selected(try selected(options: parameterSelect.options, selectedId: selectedOptionId, title: parameterSelect.title))
                 
@@ -59,9 +59,10 @@ extension PaymentsParameterSelectView {
             action
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] action in
+                    
                     switch action {
                     case let payload as PaymentsParameterSelectView.ViewModelAction.ItemSelected:
-                        guard let parameterSelect = parameter as? Payments.ParameterSelect else {
+                        guard let parameterSelect = source as? Payments.ParameterSelect else {
                             return
                         }
                         do {
@@ -76,6 +77,20 @@ extension PaymentsParameterSelectView {
   
                     default:
                         break
+                    }
+                }
+                .store(in: &bindings)
+            
+            $state
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] state in
+                    
+                    switch state {
+                    case .selected(let selected):
+                        update(value: selected.id)
+                        
+                    case .list:
+                        update(value: nil)
                     }
                 }
                 .store(in: &bindings)
@@ -312,7 +327,7 @@ extension PaymentsParameterSelectView.ViewModel {
     static var notSelectedParameter: PaymentsParameterSelectView.ViewModel = {
         
         let icon = ImageData(with: UIImage(named: "Payments List Sample")!)!
-        let parameter = Payments.ParameterSelect(value: .init(id: UUID().uuidString, value: nil), title: "Категория платежа", options: [.init(id: "1", name: "Имущественный налог", icon: icon), .init(id: "2", name: "Транспортный налог", icon: icon), .init(id: "3", name: "Сбор за пользовние объектами водными биологическими ресурсами", icon: icon)])
+        let parameter = Payments.ParameterSelect( .init(id: UUID().uuidString, value: nil), title: "Категория платежа", options: [.init(id: "1", name: "Имущественный налог", icon: icon), .init(id: "2", name: "Транспортный налог", icon: icon), .init(id: "3", name: "Сбор за пользовние объектами водными биологическими ресурсами", icon: icon)])
         
         var viewModel = try! PaymentsParameterSelectView.ViewModel(with: parameter)
         
@@ -322,7 +337,7 @@ extension PaymentsParameterSelectView.ViewModel {
     static var selectedParameter: PaymentsParameterSelectView.ViewModel = {
         
         let icon = ImageData(with: UIImage(named: "Payments List Sample")!)!
-        let parameter = Payments.ParameterSelect(value: .init(id: UUID().uuidString, value: "3"), title: "Категория платежа", options: [.init(id: "1", name: "Имущественный налог", icon: icon), .init(id: "2", name: "Транспортный налог", icon: icon), .init(id: "3", name: "Сбор за пользовние объектами водными биологическими ресурсами", icon: icon)])
+        let parameter = Payments.ParameterSelect(.init(id: UUID().uuidString, value: "3"), title: "Категория платежа", options: [.init(id: "1", name: "Имущественный налог", icon: icon), .init(id: "2", name: "Транспортный налог", icon: icon), .init(id: "3", name: "Сбор за пользовние объектами водными биологическими ресурсами", icon: icon)])
         
         var viewModel = try! PaymentsParameterSelectView.ViewModel(with: parameter)
         

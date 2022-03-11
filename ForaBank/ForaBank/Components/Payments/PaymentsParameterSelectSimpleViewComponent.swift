@@ -14,14 +14,14 @@ extension PaymentsParameterSelectSimpleView {
     
     class ViewModel: PaymentsParameterViewModel {
         
-        let action: PassthroughSubject<Action, Never> = .init()
-      
         let icon: Image
         let title: String
         
         @Published var content: String
         @Published var description: String?
         @Published var selectedOptionId: Payments.ParameterSelectSimple.Option.ID?
+        
+        let action: () -> Void
         
         //TODO: real placeholder required
         private static let iconPlaceholder = Image("Payments Icon Placeholder")
@@ -32,24 +32,26 @@ extension PaymentsParameterSelectSimpleView {
                       content: String,
                       description: String?,
                       selectedOptionId: Payments.ParameterSelectSimple.Option.ID? = nil,
-                      parameter: Payments.Parameter = .init(id: UUID().uuidString, value: "")) {
+                      action: @escaping () -> Void) {
             
             self.icon = icon
             self.title = title
             self.content = content
             self.description = description
             self.selectedOptionId = selectedOptionId
-            super.init(parameter: parameter)
+            self.action = action
+            super.init(source: Payments.ParameterMock())
         }
         
-        init(with parameterSelect: Payments.ParameterSelectSimple) throws {
+        init(with parameterSelect: Payments.ParameterSelectSimple, action: @escaping () -> Void) throws {
             
             self.icon = parameterSelect.icon.image ?? Self.iconPlaceholder
             self.title = parameterSelect.title
             self.content = parameterSelect.selectionTitle
             self.description = parameterSelect.description
-            self.selectedOptionId = parameterSelect.value
-            super.init(parameter: parameterSelect)
+            self.selectedOptionId = parameterSelect.parameter.value
+            self.action = action
+            super.init(source: parameterSelect)
             bind()
         }
         
@@ -59,7 +61,7 @@ extension PaymentsParameterSelectSimpleView {
                 .receive(on: DispatchQueue.main)
                 .sink {[unowned self] selectedOptionId in
                     
-                    if let parameterSelect = parameter as? Payments.ParameterSelectSimple, let selectedOptionId = selectedOptionId, let selectedOption = parameterSelect.options.first(where: { $0.id == selectedOptionId })  {
+                    if let parameterSelect = source as? Payments.ParameterSelectSimple, let selectedOptionId = selectedOptionId, let selectedOption = parameterSelect.options.first(where: { $0.id == selectedOptionId })  {
                         self.content = selectedOption.name
                         self.description = parameterSelect.description
                     } else {
@@ -67,6 +69,14 @@ extension PaymentsParameterSelectSimpleView {
                         self.description = nil
                     }
                     
+                }
+                .store(in: &bindings)
+            
+            $value
+                .receive(on: DispatchQueue.main)
+                .sink {[unowned self] value in
+                    
+                    selectedOptionId = value.current
                 }
                 .store(in: &bindings)
         }
@@ -86,7 +96,7 @@ extension PaymentsParameterSelectSimpleView {
 
 struct PaymentsParameterSelectSimpleView: View {
     
-    let viewModel: PaymentsParameterSelectSimpleView.ViewModel
+    @ObservedObject var viewModel: PaymentsParameterSelectSimpleView.ViewModel
     
     var body: some View {
         
@@ -125,6 +135,8 @@ struct PaymentsParameterSelectSimpleView: View {
                     .background(Color(hex: "#EAEBEB"))
                     .padding(.top, 1)
             }
+        }.onTapGesture {
+            viewModel.action()
         }
     }
 }
@@ -149,14 +161,14 @@ struct PaymentsParameterSelectSimpleView_Previews: PreviewProvider {
 
 extension PaymentsParameterSelectSimpleView.ViewModel {
     
-    static let sample = PaymentsParameterSelectSimpleView.ViewModel(icon: Image("Payments List Sample"), title: "Тип услуги", content: "Выберите услугу", description: nil)
+    static let sample = PaymentsParameterSelectSimpleView.ViewModel(icon: Image("Payments List Sample"), title: "Тип услуги", content: "Выберите услугу", description: nil, action: { } )
     
     static let selectedSimple_1 = PaymentsParameterSelectSimpleView.ViewModel(
         icon: Image("Payments List Sample"),
         title: "Тип услуги",
         content: "В возрасте до 14 лет (новый образец)",
         description: "Государственная пошлина за выдачу паспорта удостоверяющего личность гражданина РФ за пределами территории РФ гражданину РФ",
-        selectedOptionId: "0")
+        selectedOptionId: "0", action: { } )
     
 }
 

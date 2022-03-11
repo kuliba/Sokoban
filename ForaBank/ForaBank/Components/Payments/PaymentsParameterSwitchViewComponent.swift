@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 //MARK: - ViewModel
 
@@ -16,16 +17,18 @@ extension PaymentsParameterSwitchView {
         let options: [OptionViewModel]
         @Published var selected: OptionViewModel.ID
         
-        internal init(options: [OptionViewModel], selected: OptionViewModel.ID, parameter: Payments.Parameter = .init(id: UUID().uuidString, value: "")) {
+        private var bindings = Set<AnyCancellable>()
+        
+        internal init(options: [OptionViewModel], selected: OptionViewModel.ID) {
             
             self.options = options
             self.selected = selected
-            super.init(parameter: parameter)
+            super.init(source: Payments.ParameterMock())
         }
         
         init(with parameterSwitch: Payments.ParameterSelectSwitch) throws {
             
-            guard let selectedOptionId = parameterSwitch.value else {
+            guard let selectedOptionId = parameterSwitch.parameter.value else {
                 throw PaymentsParameterSwitchView.ViewModel.Error.noAnyOptionSelected
             }
             
@@ -35,7 +38,20 @@ extension PaymentsParameterSwitchView {
             
             self.options = parameterSwitch.options.map{ OptionViewModel(id: $0.id, title: $0.name) }
             self.selected = selectedOptionId
-            super.init(parameter: parameterSwitch)
+            super.init(source: parameterSwitch)
+            
+            bind()
+        }
+        
+        private func bind() {
+            
+            $selected
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] selected in
+                    
+                    update(value: selected)
+                }
+                .store(in: &bindings)
         }
         
         struct OptionViewModel: Identifiable {
@@ -105,7 +121,7 @@ extension PaymentsParameterSwitchView.ViewModel {
     
     static let sampleParameter: PaymentsParameterSwitchView.ViewModel = {
         
-        let parameter = Payments.ParameterSelectSwitch(value: .init(id: UUID().uuidString, value: "2"), options: [.init(id: "1", name: "Документ"), .init(id: "2", name: "УИН"), .init(id: "3", name: "ИП")])
+        let parameter = Payments.ParameterSelectSwitch( .init(id: UUID().uuidString, value: "2"), options: [.init(id: "1", name: "Документ"), .init(id: "2", name: "УИН"), .init(id: "3", name: "ИП")])
         return try! PaymentsParameterSwitchView.ViewModel(with: parameter)
     }()
 }

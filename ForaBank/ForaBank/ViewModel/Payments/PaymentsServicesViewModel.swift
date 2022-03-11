@@ -110,7 +110,7 @@ class PaymentsServicesViewModel: ObservableObject {
                 
                 switch action {
                 case let payload as PaymentsServicesViewModelAction.ItemTapped:
-                    guard let selectServiceParameter = select?.parameter as? Payments.ParameterSelectService,
+                    guard let selectServiceParameter = select?.source as? Payments.ParameterSelectService,
                             let selectedService = selectServiceParameter.options.first(where: { $0.id == payload.itemId})?.service else {
                         return
                     }
