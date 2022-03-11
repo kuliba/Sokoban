@@ -59,8 +59,10 @@ struct ProfileButtonView: View {
             } label: {
                 
                 HStack(spacing: 12) {
+                    
                     viewModel.image
                         .foregroundColor(.iconBlack)
+                    
                     Text(viewModel.title)
                         .font(.system(size: 14))
                         .foregroundColor(.buttonBlack)

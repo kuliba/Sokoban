@@ -12,12 +12,11 @@ extension SegmentedBar {
     class ViewModel: ObservableObject {
         
         @Published var value: [Double]
-        @Published var colors: [Color]
+        @Published var colors = [Color.bGIconRedLight, Color.bGIconPurpleLight, Color.bGIconPinkLight, Color.bGIconPinkLightest, Color.bGIconDeepPurpleMedium, Color.bGIconDeepPurpleLight, Color.bGIconDeepPurpleLightest, Color.bGIconIndigoLight, Color.bGIconIndigoLightest, Color.bGIconBlueLight, Color.bGIconBlueLightest, Color.bGIconTealLight, Color.bGIconGreenLight, Color.bGIconGreenLightest, Color.bGIconLimeLight, Color.bGIconDeepOrangeLight, Color.bGIconOrangeLight, Color.bGIconOrangeLightest, Color.bGIconAmberLight, Color.bGIconYellowLight, Color.bGIconDeepIndigoLight, Color.bGIconDeepBlueLight, Color.bGIconCyanLight, Color.bGIconDeepLimeLight]
         
-        internal init(value: [Double], colors: [Color]) {
+        internal init(value: [Double]) {
             
             self.value = value
-            self.colors = colors
         }
     }
 }
@@ -77,5 +76,5 @@ struct SegmentedBarTest_Previews: PreviewProvider {
 
 extension SegmentedBar.ViewModel {
     
-    static let spending = SegmentedBar.ViewModel(value: [100, 400, 50, 200], colors: [Color.bGIconDeepIndigoLight, Color.bGIconDeepLimeLight, Color.bGIconBlueLight, Color.bGIconDeepOrangeLight])
+    static let spending = SegmentedBar.ViewModel(value: [100, 400, 50, 200, 500, 100, 300, 10, 100, 300])
 }

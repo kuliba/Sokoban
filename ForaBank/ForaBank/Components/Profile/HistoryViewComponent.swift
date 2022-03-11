@@ -11,13 +11,12 @@ extension HistoryViewComponent {
     
     class ViewModel: ObservableObject {
         
-        let title: String
+        let title = "История операций"
         let dateOperations: [DateOperations]
         let spending: SegmentedBar.ViewModel?
         
-        internal init(title: String, dateOperations: [HistoryViewComponent.ViewModel.DateOperations], spending: SegmentedBar.ViewModel?) {
+        internal init( dateOperations: [HistoryViewComponent.ViewModel.DateOperations], spending: SegmentedBar.ViewModel?) {
             
-            self.title = title
             self.dateOperations = dateOperations
             self.spending = spending
         }
@@ -182,13 +181,13 @@ struct HistoryViewComponent_Previews: PreviewProvider {
         
         Group {
             
-            HistoryViewComponent(viewModel: .init(title: "История операций", dateOperations: [.init(date: "25 августа, ср", operations: [.init(title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .debit), .init(title: "Selhozmarket", image: Image.init("GKH", bundle: nil), subtitle: "Магазин", amount: "-230 Р", type: .credit)]), .init(date: "26 августа, ср", operations: [.init(title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .debit)])], spending: .spending))
+            HistoryViewComponent(viewModel: .init(dateOperations: [.init(date: "25 августа, ср", operations: [.init(title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .debit), .init(title: "Selhozmarket", image: Image.init("GKH", bundle: nil), subtitle: "Магазин", amount: "-230 Р", type: .credit)]), .init(date: "26 августа, ср", operations: [.init(title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .debit)])], spending: .spending))
                 .previewLayout(.fixed(width: 400, height: 500))
 
-            HistoryViewComponent(viewModel: .init(title: "История операций", dateOperations: [.init(date: "25 августа, ср", operations: [.init(title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .debit)]), .init(date: "26 августа, ср", operations: [.init(title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .debit)])], spending: nil))
+            HistoryViewComponent(viewModel: .init(dateOperations: [.init(date: "25 августа, ср", operations: [.init(title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .debit)]), .init(date: "26 августа, ср", operations: [.init(title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .debit)])], spending: nil))
                 .previewLayout(.fixed(width: 400, height: 400))
 
-            HistoryViewComponent(viewModel: .init(title: "История операций", dateOperations: [], spending: nil))
+            HistoryViewComponent(viewModel: .init(dateOperations: [], spending: nil))
                 .previewLayout(.fixed(width: 400, height: 400))
         }
     }

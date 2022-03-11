@@ -11,8 +11,8 @@ import SwiftUI
 //MARK: - ViewModel
 
 extension ProductView {
-    
-    class ViewModel: MainSectionProductsListItemViewModel, ObservableObject {
+
+    class ViewModel: MainSectionProductsListItemViewModel, ObservableObject, Hashable {
 
         let productId: Int
         let header: HeaderViewModel
@@ -21,9 +21,10 @@ extension ProductView {
         @Published var statusAction: StatusActionViewModel?
         let appearance: Appearance
         @Published var isUpdating: Bool
+        let productType: ProductType
         let action: () -> Void
         
-        internal init(id: String = UUID().uuidString, productId: Int = 0, header: HeaderViewModel, name: String, footer: FooterViewModel, statusAction: StatusActionViewModel?, appearance: Appearance, isUpdating: Bool, action: @escaping () -> Void) {
+        internal init(id: String = UUID().uuidString, productId: Int = 0, header: HeaderViewModel, name: String, footer: FooterViewModel, statusAction: StatusActionViewModel?, appearance: Appearance, isUpdating: Bool, productType: ProductType, action: @escaping () -> Void) {
             
             self.productId = productId
             self.header = header
@@ -32,6 +33,7 @@ extension ProductView {
             self.statusAction = statusAction
             self.appearance = appearance
             self.isUpdating = isUpdating
+            self.productType = productType
             self.action = action
             super.init(id: id)
         }
@@ -46,10 +48,11 @@ extension ProductView {
             let textColor = productData.fontDesignColor.color
             let backgroundColor = productData.background.first?.color ?? .cardClassic
             let backgroundImage = productData.largeDesign.image
+            let productType = productData.productType
 
             //TODO: update status
     
-            self.init(productId: productData.id, header: .init(logo: logo, number: number, period: nil), name: name, footer: .init(balance: balance, paymentSystem: nil), statusAction: nil, appearance: .init(textColor: textColor, background: .init(color: backgroundColor, image: backgroundImage)), isUpdating: false, action: action)
+            self.init(productId: productData.id, header: .init(logo: logo, number: number, period: nil), name: name, footer: .init(balance: balance, paymentSystem: nil), statusAction: nil, appearance: .init(textColor: textColor, background: .init(color: backgroundColor, image: backgroundImage)), isUpdating: false, productType: productType, action: action)
         }
         
         func update(with productData: ProductData) {
@@ -67,39 +70,39 @@ extension ProductView {
         }
         
         struct HeaderViewModel {
-            
+
             let logo: Image
             let number: String
             let period: String?
         }
-        
+
         class FooterViewModel: ObservableObject {
-            
+
             @Published var balance: String
             let paymentSystem: Image?
-            
+
             init(balance: String, paymentSystem: Image?) {
-                
+
                 self.balance = balance
                 self.paymentSystem = paymentSystem
             }
         }
 
         struct StatusActionViewModel {
-            
+
             let status: Status
             let style: Style
             let action: () -> Void
-            
+
             var icon: Image {
-                
+
                 switch status {
                 case .activation:
                     switch style {
                     case .main: return .ic16ArrowRight
                     case .profile: return .ic24ArrowRight
                     }
-                    
+
                 case .unblock:
                     switch style {
                     case .main: return .ic16Lock
@@ -107,35 +110,35 @@ extension ProductView {
                     }
                 }
             }
-            
+
             var iconSize: CGSize {
-                
+
                 switch style {
                 case .main: return .init(width: 24, height: 24)
                 case .profile: return .init(width: 64, height: 64)
                 }
             }
-    
+
             enum Status {
-                
+
                 case activation
                 case unblock
             }
-            
+
             enum Style {
-                
+
                 case main
                 case profile
             }
         }
-        
+
         struct Appearance {
-            
+
             let textColor: Color
             let background: Background
-            
+
             struct Background {
-                
+
                 let color: Color
                 let image: Image?
             }
@@ -143,12 +146,25 @@ extension ProductView {
     }
 }
 
+extension ProductView.ViewModel {
+    
+    func hash(into hasher: inout Hasher) {
+        
+        hasher.combine(id)
+    }
+    
+    static func == (lhs: ProductView.ViewModel, rhs: ProductView.ViewModel) -> Bool {
+        
+        return lhs.id == rhs.id
+    }
+}
+
 //MARK: - View
 
 struct ProductView: View {
-    
+
     @ObservedObject var viewModel: ViewModel
-    
+
     var body: some View {
             
         if viewModel.isUpdating == true {
@@ -181,16 +197,16 @@ extension ProductView {
             ZStack {
                 
                 if let backgroundImage = viewModel.appearance.background.image {
-                    
+
                     backgroundImage
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                 } else {
-                    
+
                     RoundedRectangle(cornerRadius: 12)
                         .foregroundColor(viewModel.appearance.background.color)
                 }
- 
+
                 VStack(alignment: .leading) {
                     
                     ProductView.HeaderView(viewModel: viewModel.header, textColor: viewModel.appearance.textColor)
@@ -198,9 +214,9 @@ extension ProductView {
                         .padding(.top, 4)
 
                     Spacer()
-                    
+
                     VStack(alignment: .leading, spacing: 0) {
-                        
+
                         Text(viewModel.name)
                             .font(.textBodyMR14200())
                             .foregroundColor(viewModel.appearance.textColor)
@@ -224,7 +240,7 @@ extension ProductView {
                 }
 
                 if let statusActionViewModel = viewModel.statusAction {
-                    
+
                     ProductView.StatusActionView(viewModel: statusActionViewModel, color: viewModel.appearance.background.color)
                 }
             }
@@ -235,24 +251,24 @@ extension ProductView {
     }
     
     struct HeaderView: View {
-        
+
         let viewModel: ViewModel.HeaderViewModel
         let textColor: Color
-        
+
         var body: some View {
-            
+
             HStack(alignment: .center, spacing: 8) {
                 
                 Text(viewModel.number)
                     .font(.textBodySR12160())
                     .foregroundColor(textColor)
-                
+
                 if let period = viewModel.period {
-                    
+
                     Rectangle()
                         .frame(width: 1, height: 16)
                         .foregroundColor(textColor)
-                    
+
                     Text(period)
                         .font(.textBodySR12160())
                         .foregroundColor(textColor)
@@ -260,25 +276,25 @@ extension ProductView {
             }
         }
     }
-    
+
     struct FooterView: View {
-        
+
         @ObservedObject var viewModel: ViewModel.FooterViewModel
         let textColor: Color
-        
+
         var body: some View {
-            
+
             HStack(alignment: .bottom) {
-                
+
                 Text(viewModel.balance)
                     .font(.textBodyMSB14200())
                     .fontWeight(.semibold)
                     .foregroundColor(textColor)
-                
+
                 Spacer()
-                
+
                 if let paymentSystem = viewModel.paymentSystem {
-                    
+
                     paymentSystem
                         .renderingMode(.template)
                         .frame(width: 28, height: 20)
@@ -287,47 +303,47 @@ extension ProductView {
             }
         }
     }
-    
+
     struct StatusActionView: View {
-        
+
         let viewModel: ViewModel.StatusActionViewModel
         let color: Color
-        
+
         var body: some View {
-            
+
             switch viewModel.status {
             case .activation:
                 switch viewModel.style {
                 case .main:
                     ProductView.StatusButtonView(icon: viewModel.icon, color: color, size: viewModel.iconSize, action: viewModel.action)
-                    
+
                 case .profile:
                     SliderButtonComponent(viewModel: .init(alertPresented: false, sliderState: .normal, foregroundColor: color))
                 }
-                
+
             case .unblock:
                 ProductView.StatusButtonView(icon: viewModel.icon, color: color, size: viewModel.iconSize, action: viewModel.action)
             }
         }
     }
-    
+
     struct StatusButtonView: View {
-        
+
         let icon: Image
         let color: Color
         let size: CGSize
         let action: () -> Void
-    
+
         var body: some View {
-            
+
             Button(action: action){
-                
+
                 ZStack {
-                    
+
                     Circle()
                         .frame(width: size.width, height: size.height)
                         .foregroundColor(.iconWhite)
-                    
+
                     icon
                         .renderingMode(.template)
                         .foregroundColor(color)
@@ -399,7 +415,7 @@ struct ProductView_Previews: PreviewProvider {
             
             ProductView(viewModel: .notActivate)
                 .previewLayout(.fixed(width: 164, height: 104))
-            
+
             ProductView(viewModel: .blocked)
                 .previewLayout(.fixed(width: 164, height: 104))
 
@@ -408,10 +424,10 @@ struct ProductView_Previews: PreviewProvider {
 
             ProductView(viewModel: .account)
                 .previewLayout(.fixed(width: 164, height: 104))
-            
+
             ProductView(viewModel: .notActivateProfile)
                 .previewLayout(.fixed(width: 268, height: 160))
-            
+
             ProductView(viewModel: .blockedProfile)
                 .previewLayout(.fixed(width: 268, height: 160))
 
@@ -428,22 +444,22 @@ struct ProductView_Previews: PreviewProvider {
 
 extension ProductView.ViewModel {
     
-    static let notActivate = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Visa")), statusAction: .init(status: .activation, style: .main, action: {}), appearance: .init(textColor: .white, background: .init(color: .cardInfinite, image: Image("Product Background Sample"))), isUpdating: false, action: {})
+    static let notActivate = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Visa")), statusAction: .init(status: .activation, style: .main, action: {}), appearance: .init(textColor: .white, background: .init(color: .cardInfinite, image: Image("Product Background Sample"))), isUpdating: false, productType: .card, action: {})
 
-    static let blocked = ProductView.ViewModel(id: "1", header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: .init(status: .unblock, style: .main, action: {}), appearance: .init(textColor: .white, background: .init(color: .cardInfinite, image: nil)), isUpdating: true, action: {})
+    static let blocked = ProductView.ViewModel(id: "1", header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: .init(status: .unblock, style: .main, action: {}), appearance: .init(textColor: .white, background: .init(color: .cardInfinite, image: nil)), isUpdating: true, productType: .card, action: {})
     
-    static let classic = ProductView.ViewModel(id: "2", header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .mainColorsRed, image: nil)), isUpdating: false, action: {})
+    static let classic = ProductView.ViewModel(id: "2", header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .mainColorsRed, image: nil)), isUpdating: false,  productType: .card, action: {})
     
-    static let account = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Текущий зарплатный счет", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardRIO, image: nil)), isUpdating: false, action: {})
+    static let account = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Текущий зарплатный счет", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardRIO, image: nil)), isUpdating: false, productType: .card, action: {})
     
-    static let notActivateProfile = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: "12/24"), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Visa")), statusAction: .init(status: .activation, style: .profile, action: {}), appearance: .init(textColor: .white, background: .init(color: .cardInfinite, image: Image("Product Background Large Sample"))), isUpdating: false, action: {})
+    static let notActivateProfile = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: "12/24"), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Visa")), statusAction: .init(status: .activation, style: .profile, action: {}), appearance: .init(textColor: .white, background: .init(color: .cardInfinite, image: Image("Product Background Large Sample"))), isUpdating: false, productType: .card, action: {})
     
-    static let blockedProfile = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: "12/24"), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: .init(status: .unblock, style: .profile, action: {}), appearance: .init(textColor: .white, background: .init(color: .cardInfinite, image: nil)), isUpdating: false, action: {})
+    static let blockedProfile = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: "12/24"), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: .init(status: .unblock, style: .profile, action: {}), appearance: .init(textColor: .white, background: .init(color: .cardInfinite, image: nil)), isUpdating: false, productType: .card, action: {})
     
-    static let classicProfile = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: "12/24"), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardRIO, image: nil)), isUpdating: false, action: {})
+    static let classicProfile = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: "12/24"), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardRIO, image: nil)), isUpdating: false, productType: .card, action: {})
     
-    static let accountProfile = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: "12/24"), name: "Текущий зарплатный счет", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardRIO, image: nil)), isUpdating: false, action: {})
+    static let accountProfile = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: "12/24"), name: "Текущий зарплатный счет", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardRIO, image: nil)), isUpdating: false, productType: .card, action: {})
     
-    static let updating = ProductView.ViewModel(id: "0", header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Visa")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardInfinite, image: Image("Product Background Sample"))), isUpdating: true, action: {})
+    static let updating = ProductView.ViewModel(id: "0", header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Visa")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardInfinite, image: Image("Product Background Sample"))), isUpdating: true, productType: .card, action: {})
 }
 

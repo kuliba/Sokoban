@@ -53,14 +53,18 @@ struct ProfileButtonsSectionView: View {
                     }
                 }
             }
-            .padding(20)
     }
 }
 
 struct ProfileButtonsSectionView_Previews: PreviewProvider {
     static var previews: some View {
         
-        ProfileButtonsSectionView(viewModel: .init(buttons: [[.ussualyButton, .transferButton],[ .requisitsButton, .disableButton]]))
+        ProfileButtonsSectionView(viewModel: .sample)
                 .previewLayout(.fixed(width: 350, height: 104))
     }
+}
+
+extension ProfileButtonsSectionView.ViewModel {
+    
+    static let sample = ProfileButtonsSectionView.ViewModel(buttons: [[.ussualyButton, .transferButton],[ .requisitsButton, .disableButton]])
 }

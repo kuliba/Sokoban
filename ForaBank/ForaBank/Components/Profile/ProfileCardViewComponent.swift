@@ -26,12 +26,11 @@ extension ProfileCardViewComponent {
         
     struct MiniCardViewModel {
         
-        let background: Image
+        let background: Image?
         let product: ProductView.ViewModel
         let action: (ProductView.ViewModel) -> Void
     }
 }
-
 
 struct ProfileCardViewComponent: View {
     
@@ -40,24 +39,24 @@ struct ProfileCardViewComponent: View {
 
     public var tabBar: some View {
         
-        HStack(alignment: .center, spacing: 16) {
-            
-            Spacer()
-            
-            /*
-            HStack(spacing: 8) {
+        HStack(alignment: .center, spacing: 8) {
                 
                 ForEach(viewModel.products) { product in
-                        
-                    MiniCardView(viewModel: MiniCardViewModel( background: product.backgroundImage, product: product, action: { productItem in
-                        currentItem = productItem
-                    }), isSelected: currentItem.id == product.id)
 
-                }
+                    if let backgroundImage = product.appearance.background.image {
+                        
+                        MiniCardView(viewModel: MiniCardViewModel( background: backgroundImage, product: product, action: { productItem in
+                            currentItem = productItem
+                            }), isSelected: currentItem.id == product.id)
+                        
+              
+                    } else {
+                        
+                        MiniCardView(viewModel: MiniCardViewModel( background: nil, product: product, action: { productItem in
+                            currentItem = productItem
+                            }), isSelected: currentItem.id == product.id)
+                    }
             }
-             */
-            
-            Spacer()
         }
     }
     
@@ -67,33 +66,29 @@ struct ProfileCardViewComponent: View {
             
             ZStack(alignment: .top) {
                 
-                /*
-                currentItem.backgroundColor
-                    .frame(height: 170, alignment: .top)
-                    .edgesIgnoringSafeArea(.top)
-                    .brightness(-0.2)
-                 */
+//                currentItem.appearance.background.color
+//                    .frame(height: 170, alignment: .top)
+//                    .edgesIgnoringSafeArea(.top)
+//                    .brightness(-0.2)
             
                 VStack(spacing: 15) {
                     if #available(iOS 14.0, *) {
 
                         tabBar
-                            .padding(.top, 20)
                         
-                        /*
                         TabView(selection: $currentItem) {
                             
                             ForEach(viewModel.products) { product in
                                 
                                 if product.productType == .deposit {
                                         
-                                        MainCardComponentView(viewModel: product)
+                                    ProductView(viewModel: product)
                                             .frame(width: 228, height: 160)
                                             .tag(product)
 
                                 } else {
-                                    
-                                        MainCardComponentView(viewModel: product)
+
+                                    ProductView(viewModel: product)
                                         .frame(width: 268, height: 160, alignment: .top)
                                         .tag(product)
 
@@ -102,7 +97,6 @@ struct ProfileCardViewComponent: View {
                         }
                         .tabViewStyle(.page(indexDisplayMode: .never))
                         .frame( height: 160, alignment: .top)
-                         */
                         
                     } else {
                         // Fallback on earlier versions
@@ -135,9 +129,21 @@ extension ProfileCardViewComponent {
                         
                         HStack(spacing: 6) {
                             
-                            viewModel.background
-                                .frame(width: 24, height: 24, alignment: .center)
+                            if let backgroundImage =                             viewModel.product.appearance.background.image {
+                                
+                                backgroundImage
+                                    .resizable()
+                                    .frame(width: 32, height: 24, alignment: .center)
+                                    .cornerRadius(3)
+
+                            } else {
+                                
+                                viewModel.product.appearance.background.color
+                                    .frame(width: 32, height: 24, alignment: .center)
+                                    .cornerRadius(3)
+                            }
                         }
+                        .frame(width: 32, height: 32, alignment: .center)
                         .padding(.all, 14)
                         .background(Color.black.opacity(0.2))
                         .cornerRadius(90)
@@ -146,9 +152,22 @@ extension ProfileCardViewComponent {
                         
                         HStack(spacing: 6) {
                             
-                            viewModel.background
-                                .frame(width: 24, height: 24, alignment: .center)
-                                .opacity(0.3)
+                            if let backgroundImage =                             viewModel.product.appearance.background.image {
+                                
+                                backgroundImage
+                                    .resizable()
+                                    .frame(width: 32, height: 24, alignment: .center)
+                                    .cornerRadius(3)                              .opacity(0.3)
+
+                                
+                            } else {
+                                
+                                viewModel.product.appearance.background.color
+                                    .frame(width: 32, height: 24, alignment: .center)
+                                    .cornerRadius(3)
+                                    .opacity(0.3)
+
+                            }
                         }
                         .padding(.all, 14)
                 }
