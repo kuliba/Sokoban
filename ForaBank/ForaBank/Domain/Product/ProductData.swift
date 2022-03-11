@@ -125,7 +125,7 @@ extension ProductData {
 
 extension ProductData {
     
-    var productViewNumber: String {
+    var viewNumber: String {
         
         switch productType {
         case .deposit:
@@ -135,4 +135,6 @@ extension ProductData {
             return String(number.suffix(4))
         }
     }
+    
+    var viewName: String { customName ?? mainField }
 }

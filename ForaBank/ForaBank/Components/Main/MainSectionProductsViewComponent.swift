@@ -70,7 +70,15 @@ extension MainSectionProductsView {
                             continue
                         }
                         
-                        items.append(contentsOf: productTypeItems.map({ ProductView.ViewModel(with: $0, statusAction: {}, action: {})}))
+                        if let currentProductTypeItems = self.productsViewModels.value[productType] {
+                            
+                            //TODO: update view models if exists or add new
+                            
+                            
+                        } else {
+          
+                            items.append(contentsOf: productTypeItems.map({ ProductView.ViewModel(with: $0, statusAction: {}, action: {})}))
+                        }
                     }
                     
                     self.items = items

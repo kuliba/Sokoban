@@ -39,14 +39,31 @@ extension ProductView {
         convenience init(with productData: ProductData, statusAction: @escaping () -> Void, action: @escaping () -> Void) {
             
             let logo = Image.ic24LogoForaColor
-            let number = productData.productViewNumber
-            let name = productData.customName ?? productData.mainField
+            let number = productData.viewNumber
+            let name = productData.viewName
+            //TODO: balance formatting
             let balance = "\(productData.balance)"
             let textColor = productData.fontDesignColor.color
             let backgroundColor = productData.background.first?.color ?? .cardClassic
             let backgroundImage = productData.largeDesign.image
+
+            //TODO: update status
     
             self.init(productId: productData.id, header: .init(logo: logo, number: number, period: nil), name: name, footer: .init(balance: balance, paymentSystem: nil), statusAction: nil, appearance: .init(textColor: textColor, background: .init(color: backgroundColor, image: backgroundImage)), isUpdating: false, action: action)
+        }
+        
+        func update(with productData: ProductData) {
+            
+            if let customName = productData.customName {
+                
+                name = customName
+            }
+            
+            //TODO: balance formatting
+            //TODO: balance update animation
+            footer.balance = "\(productData.balance)"
+            
+            //TODO: update status
         }
         
         struct HeaderViewModel {
