@@ -901,6 +901,10 @@
 		F81EF91A27D2180E0096DC70 /* MainSectionPromoViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F81EF91927D2180E0096DC70 /* MainSectionPromoViewComponent.swift */; };
 		F81EF91D27D21A240096DC70 /* MainSectionCurrencyViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F81EF91C27D21A240096DC70 /* MainSectionCurrencyViewComponent.swift */; };
 		F81EF91F27D21A410096DC70 /* CurrencyExchangeViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F81EF91E27D21A410096DC70 /* CurrencyExchangeViewComponent.swift */; };
+		F82ED54F27D7B933008485AB /* AssetBalanceViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82ED54E27D7B933008485AB /* AssetBalanceViewComponent.swift */; };
+		F82ED55227D7B979008485AB /* AllMoneyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82ED55127D7B979008485AB /* AllMoneyView.swift */; };
+		F82ED55627D7B9BA008485AB /* AllMoneyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82ED55527D7B9BA008485AB /* AllMoneyViewModel.swift */; };
+		F82ED55827D7BA6F008485AB /* MyProductsSectionAllMoneyViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82ED55727D7BA6F008485AB /* MyProductsSectionAllMoneyViewComponent.swift */; };
 		F87F9B1E27C3A0FD007E3D94 /* MainSectionFastOperationViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87F9B1D27C3A0FD007E3D94 /* MainSectionFastOperationViewComponent.swift */; };
 		F87F9B2027C3B1B2007E3D94 /* ButtonIconTextViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F87F9B1F27C3B1B2007E3D94 /* ButtonIconTextViewComponent.swift */; };
 		F8E529AD27B67F7B00222394 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F8E529AC27B67F7B00222394 /* Assets.xcassets */; };
@@ -1823,6 +1827,10 @@
 		F81EF91927D2180E0096DC70 /* MainSectionPromoViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSectionPromoViewComponent.swift; sourceTree = "<group>"; };
 		F81EF91C27D21A240096DC70 /* MainSectionCurrencyViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSectionCurrencyViewComponent.swift; sourceTree = "<group>"; };
 		F81EF91E27D21A410096DC70 /* CurrencyExchangeViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyExchangeViewComponent.swift; sourceTree = "<group>"; };
+		F82ED54E27D7B933008485AB /* AssetBalanceViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetBalanceViewComponent.swift; sourceTree = "<group>"; };
+		F82ED55127D7B979008485AB /* AllMoneyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllMoneyView.swift; sourceTree = "<group>"; };
+		F82ED55527D7B9BA008485AB /* AllMoneyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllMoneyViewModel.swift; sourceTree = "<group>"; };
+		F82ED55727D7BA6F008485AB /* MyProductsSectionAllMoneyViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProductsSectionAllMoneyViewComponent.swift; sourceTree = "<group>"; };
 		F87F9B1D27C3A0FD007E3D94 /* MainSectionFastOperationViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSectionFastOperationViewComponent.swift; sourceTree = "<group>"; };
 		F87F9B1F27C3B1B2007E3D94 /* ButtonIconTextViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonIconTextViewComponent.swift; sourceTree = "<group>"; };
 		F8E529AC27B67F7B00222394 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -3191,6 +3199,7 @@
 			isa = PBXGroup;
 			children = (
 				770DCE9027BBF7F4004099C1 /* RootViewModel.swift */,
+				F82ED55427D7B9AA008485AB /* MyProducts */,
 				7772979127C77BFF0099EF91 /* Main */,
 				6862B54B27B688CC006E833F /* Auth */,
 				77EA0DBC2779B40100C6ED12 /* OperationDetail */,
@@ -3203,6 +3212,7 @@
 		77DC125D277098D500C917B0 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				F82ED55027D7B966008485AB /* MyProducts */,
 				770DCE9427BBFA49004099C1 /* Root */,
 				7769F5BA27D3A2D900F80607 /* Main */,
 				6862B53B27B6886A006E833F /* Auth */,
@@ -3346,7 +3356,9 @@
 			children = (
 				7772978227C38F2F0099EF91 /* Main */,
 				681142DE27C7D784008D3D67 /* Profile */,
+				F82ED55927D7BA77008485AB /* MyProduct */,
 				77EA0DBA2779B06D00C6ED12 /* OperationDetailHeaderComponentView.swift */,
+				F82ED54E27D7B933008485AB /* AssetBalanceViewComponent.swift */,
 				F81EF91E27D21A410096DC70 /* CurrencyExchangeViewComponent.swift */,
 				F87F9B1F27C3B1B2007E3D94 /* ButtonIconTextViewComponent.swift */,
 				A5156424277CBB7C00F5ED73 /* PermissionHelper.swift */,
@@ -5137,6 +5149,30 @@
 			path = detailsOperator;
 			sourceTree = "<group>";
 		};
+		F82ED55027D7B966008485AB /* MyProducts */ = {
+			isa = PBXGroup;
+			children = (
+				F82ED55127D7B979008485AB /* AllMoneyView.swift */,
+			);
+			path = MyProducts;
+			sourceTree = "<group>";
+		};
+		F82ED55427D7B9AA008485AB /* MyProducts */ = {
+			isa = PBXGroup;
+			children = (
+				F82ED55527D7B9BA008485AB /* AllMoneyViewModel.swift */,
+			);
+			path = MyProducts;
+			sourceTree = "<group>";
+		};
+		F82ED55927D7BA77008485AB /* MyProduct */ = {
+			isa = PBXGroup;
+			children = (
+				F82ED55727D7BA6F008485AB /* MyProductsSectionAllMoneyViewComponent.swift */,
+			);
+			path = MyProduct;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -5530,6 +5566,7 @@
 				0B2A8D2C26E8D9B600651BCB /* GetLatestPhonePayments.swift in Sources */,
 				EDDFE3BA2756ED7A00F57C71 /* DepositCalculatorViewControllerDataSource.swift in Sources */,
 				ED2BE17F26A0498400647CB1 /* AllCardListViewController.swift in Sources */,
+				F82ED55227D7B979008485AB /* AllMoneyView.swift in Sources */,
 				EDBEEA1D26B1AF2F00265683 /* FullBankInfoCell.swift in Sources */,
 				A578AA842795F70900F1867B /* MosParkingViewController.swift in Sources */,
 				EDCF8A1826CEFF2100DC9F54 /* TextFieldWithPadding.swift in Sources */,
@@ -5544,6 +5581,7 @@
 				ED7866B427A015E3006B4F5A /* PaymentByPhoneViewModel.swift in Sources */,
 				0B37F9882680A0A8007728FC /* GetLatestPaymentsDecodableModel.swift in Sources */,
 				0BD1CA9B26E6B55F00CFE993 /* GetCountriesList.swift in Sources */,
+				F82ED54F27D7B933008485AB /* AssetBalanceViewComponent.swift in Sources */,
 				688B9BAC26DE7D7E00407A75 /* ProductViewController.swift in Sources */,
 				77E1804927AC3B810006ACC9 /* FTSData.swift in Sources */,
 				0BB24AB526F0C62500DDA4F6 /* BlockCardDecodableModel.swift in Sources */,
@@ -5659,6 +5697,7 @@
 				68CB3B1827C39D03000B3EBF /* ProductViewComponent.swift in Sources */,
 				6863EF6B2716D095008FD522 /* MTSlideToOpenControl.swift in Sources */,
 				ED234CD2276BA08300B23985 /* JSONCodingKeyJSONAny.swift in Sources */,
+				F82ED55627D7B9BA008485AB /* AllMoneyViewModel.swift in Sources */,
 				0B931B4726DE2DF700CA8017 /* GKHHistoryCarusel.swift in Sources */,
 				EDF6821A266F9EC800FD5C07 /* RouterUrlList.swift in Sources */,
 				0B8C1C44273ADF7E00BA5CAC /* QRCoordinator.swift in Sources */,
@@ -5905,6 +5944,7 @@
 				0BA14E18270DF8F60098E422 /* AppLockerHelper.swift in Sources */,
 				EDFA7525277D181500EEB4AE /* TermsDepositTableViewCell.swift in Sources */,
 				0BA09E3426B08E1A0065D623 /* GetFullBankInfoListDecodableModel.swift in Sources */,
+				F82ED55827D7BA6F008485AB /* MyProductsSectionAllMoneyViewComponent.swift in Sources */,
 				77499C412773A40100F6C079 /* OperationDetailView.swift in Sources */,
 				ED84994B26A6FEE3005205C6 /* CountryListCell.swift in Sources */,
 				6820928527AB0E9D003DCAFD /* MobileData.swift in Sources */,
