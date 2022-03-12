@@ -46,11 +46,13 @@ struct PaymentsParameterInfoView: View {
     
     var body: some View {
         
+        VStack {
+        
         HStack(alignment: .top, spacing: 16) {
             
             viewModel.icon
                 .resizable()
-                .frame(width: 24, height: 24)
+                .frame(width: 32, height: 32)
                 .padding(.top, 12)
             
             VStack(alignment: .leading, spacing: 4)  {
@@ -65,6 +67,14 @@ struct PaymentsParameterInfoView: View {
             }
             
             Spacer()
+        }
+            
+            Divider()
+                .frame(height: 1)
+                .background(Color(hex: "#EAEBEB"))
+                .opacity(0.2)
+                .padding(.top, 12)
+                .padding(.leading, 48)
         }
     }
 }

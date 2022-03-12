@@ -17,8 +17,6 @@ extension PaymentsParameterCardView {
             
             super.init(source: Payments.ParameterMock())
         }
-        
-        
     }
 }
 

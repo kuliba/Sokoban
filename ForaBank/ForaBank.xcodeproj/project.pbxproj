@@ -9,8 +9,8 @@
 /* Begin PBXBuildFile section */
 		0B01073227C3DE00006462E6 /* PaymentsParameterSelectSimpleViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B01073127C3DE00006462E6 /* PaymentsParameterSelectSimpleViewComponent.swift */; };
 		0B01073427C55E23006462E6 /* PaymentsPopUpSelectViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B01073327C55E23006462E6 /* PaymentsPopUpSelectViewComponent.swift */; };
-		0B01073627CD3273006462E6 /* PaymentsParameterAdditionalButtonViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B01073527CD3273006462E6 /* PaymentsParameterAdditionalButtonViewComponent.swift */; };
-		0B01073827CD4D4B006462E6 /* PaymentsParameterPaymentButtonViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B01073727CD4D4B006462E6 /* PaymentsParameterPaymentButtonViewComponent.swift */; };
+		0B01073627CD3273006462E6 /* PaymentsButtonAdditionalViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B01073527CD3273006462E6 /* PaymentsButtonAdditionalViewComponent.swift */; };
+		0B01073827CD4D4B006462E6 /* ButtonSimpleViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B01073727CD4D4B006462E6 /* ButtonSimpleViewComponent.swift */; };
 		0B01073A27D10D2D006462E6 /* PaymentsSuccessOptionButtonViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B01073927D10D2D006462E6 /* PaymentsSuccessOptionButtonViewComponent.swift */; };
 		0B01073C27D1159D006462E6 /* PaymentsSuccessScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B01073B27D1159D006462E6 /* PaymentsSuccessScreenViewModel.swift */; };
 		0B01073E27D118F3006462E6 /* PaymentsSuccessScreenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B01073D27D118F3006462E6 /* PaymentsSuccessScreenModel.swift */; };
@@ -216,7 +216,7 @@
 		0BF3486426943DFB005138A8 /* SuggestCompanyDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF3486326943DFB005138A8 /* SuggestCompanyDecodableModel.swift */; };
 		0BF34866269444D9005138A8 /* AllCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF34865269444D9005138A8 /* AllCardCell.swift */; };
 		0BF348A1269E0CDA005138A8 /* LogoutDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF348A0269E0CDA005138A8 /* LogoutDecodableModel.swift */; };
-		0BF43D4627B2D3F3004DF248 /* PaymentsParameterServiceViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF43D4527B2D3F3004DF248 /* PaymentsParameterServiceViewComponent.swift */; };
+		0BF43D4627B2D3F3004DF248 /* PaymentsParameterSelectServiceViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF43D4527B2D3F3004DF248 /* PaymentsParameterSelectServiceViewComponent.swift */; };
 		0BF43D4827B466C2004DF248 /* PaymentsParameterNameViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF43D4727B466C2004DF248 /* PaymentsParameterNameViewComponent.swift */; };
 		5A5ABF8227AAF4BF00D548AA /* PaymentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5ABF8127AAF4BF00D548AA /* PaymentData.swift */; };
 		5A5ABF8427AAF4DE00D548AA /* PaymentGeneralData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5ABF8327AAF4DE00D548AA /* PaymentGeneralData.swift */; };
@@ -932,8 +932,8 @@
 /* Begin PBXFileReference section */
 		0B01073127C3DE00006462E6 /* PaymentsParameterSelectSimpleViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsParameterSelectSimpleViewComponent.swift; sourceTree = "<group>"; };
 		0B01073327C55E23006462E6 /* PaymentsPopUpSelectViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsPopUpSelectViewComponent.swift; sourceTree = "<group>"; };
-		0B01073527CD3273006462E6 /* PaymentsParameterAdditionalButtonViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsParameterAdditionalButtonViewComponent.swift; sourceTree = "<group>"; };
-		0B01073727CD4D4B006462E6 /* PaymentsParameterPaymentButtonViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsParameterPaymentButtonViewComponent.swift; sourceTree = "<group>"; };
+		0B01073527CD3273006462E6 /* PaymentsButtonAdditionalViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsButtonAdditionalViewComponent.swift; sourceTree = "<group>"; };
+		0B01073727CD4D4B006462E6 /* ButtonSimpleViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonSimpleViewComponent.swift; sourceTree = "<group>"; };
 		0B01073927D10D2D006462E6 /* PaymentsSuccessOptionButtonViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSuccessOptionButtonViewComponent.swift; sourceTree = "<group>"; };
 		0B01073B27D1159D006462E6 /* PaymentsSuccessScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSuccessScreenViewModel.swift; sourceTree = "<group>"; };
 		0B01073D27D118F3006462E6 /* PaymentsSuccessScreenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSuccessScreenModel.swift; sourceTree = "<group>"; };
@@ -1134,7 +1134,7 @@
 		0BF3486326943DFB005138A8 /* SuggestCompanyDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestCompanyDecodableModel.swift; sourceTree = "<group>"; };
 		0BF34865269444D9005138A8 /* AllCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllCardCell.swift; sourceTree = "<group>"; };
 		0BF348A0269E0CDA005138A8 /* LogoutDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutDecodableModel.swift; sourceTree = "<group>"; };
-		0BF43D4527B2D3F3004DF248 /* PaymentsParameterServiceViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsParameterServiceViewComponent.swift; sourceTree = "<group>"; };
+		0BF43D4527B2D3F3004DF248 /* PaymentsParameterSelectServiceViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsParameterSelectServiceViewComponent.swift; sourceTree = "<group>"; };
 		0BF43D4727B466C2004DF248 /* PaymentsParameterNameViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsParameterNameViewComponent.swift; sourceTree = "<group>"; };
 		5A5ABF8127AAF4BF00D548AA /* PaymentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentData.swift; sourceTree = "<group>"; };
 		5A5ABF8327AAF4DE00D548AA /* PaymentGeneralData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentGeneralData.swift; sourceTree = "<group>"; };
@@ -1859,7 +1859,7 @@
 		0B04EBC427B0682C00893687 /* Payments */ = {
 			isa = PBXGroup;
 			children = (
-				0BF43D4527B2D3F3004DF248 /* PaymentsParameterServiceViewComponent.swift */,
+				0BF43D4527B2D3F3004DF248 /* PaymentsParameterSelectServiceViewComponent.swift */,
 				0B04EBC527B068BB00893687 /* PaymentsParameterSelectViewComponent.swift */,
 				0BBDFBDD27BAE25700A30D6D /* PaymentsParameterSwitchViewComponent.swift */,
 				0B04EBCB27B07F6700893687 /* PaymentsParameterInfoViewComponent.swift */,
@@ -1867,10 +1867,10 @@
 				0BF43D4727B466C2004DF248 /* PaymentsParameterNameViewComponent.swift */,
 				0BD7879E27B9A6F30073DA1A /* PaymentsParameterCardViewComponent.swift */,
 				0BD787A027B9AF290073DA1A /* PaymentsParameterAmountViewComponent.swift */,
-				0B01073527CD3273006462E6 /* PaymentsParameterAdditionalButtonViewComponent.swift */,
-				0B01073727CD4D4B006462E6 /* PaymentsParameterPaymentButtonViewComponent.swift */,
-				0B01073327C55E23006462E6 /* PaymentsPopUpSelectViewComponent.swift */,
 				0B01073127C3DE00006462E6 /* PaymentsParameterSelectSimpleViewComponent.swift */,
+				0B01073327C55E23006462E6 /* PaymentsPopUpSelectViewComponent.swift */,
+				0B01073727CD4D4B006462E6 /* ButtonSimpleViewComponent.swift */,
+				0B01073527CD3273006462E6 /* PaymentsButtonAdditionalViewComponent.swift */,
 				0B01073927D10D2D006462E6 /* PaymentsSuccessOptionButtonViewComponent.swift */,
 				0B01073F27D225F6006462E6 /* PaymentsSuccessOptionHeaderViewComponent.swift */,
 			);
@@ -5752,7 +5752,7 @@
 				A5F15C0B27495F7C00DC91DA /* GlobalModule.swift in Sources */,
 				0B7A18AF268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift in Sources */,
 				0B37F980267A11FB007728FC /* GetOwnerPhoneNumberPhoneDecodableModel.swift in Sources */,
-				0BF43D4627B2D3F3004DF248 /* PaymentsParameterServiceViewComponent.swift in Sources */,
+				0BF43D4627B2D3F3004DF248 /* PaymentsParameterSelectServiceViewComponent.swift in Sources */,
 				ED07FA5E27DA063400734E37 /* PaymentsConfirmViewModel.swift in Sources */,
 				EDDFE3CA275E1C4100F57C71 /* OpenDepositDecodableModel.swift in Sources */,
 				0BB24AB326F0C59900DDA4F6 /* SaveCardNameDecodableModel.swift in Sources */,
@@ -5785,7 +5785,7 @@
 				684192F92799C43900B4E184 /* ConsentMe2MeDebitData.swift in Sources */,
 				0B37F9782678EA95007728FC /* AnywayPaymentBeginDecodebleModel.swift in Sources */,
 				77EC58AE277120CE0054D75C /* TransferMe2MeData.swift in Sources */,
-				0B01073627CD3273006462E6 /* PaymentsParameterAdditionalButtonViewComponent.swift in Sources */,
+				0B01073627CD3273006462E6 /* PaymentsButtonAdditionalViewComponent.swift in Sources */,
 				EDB1453C2666AEB90028EF5A /* AppDelegate UI extension.swift in Sources */,
 				ED4B5444270345D400C87A1A /* CardsScrollCell.swift in Sources */,
 				0B66E8DC26CC5F4D00FD735D /* QRScannerCodeDelegate.swift in Sources */,
@@ -6072,7 +6072,7 @@
 				0B931B2226DCDA1800CA8017 /* GetLatestServicePaymentsDecodableModel.swift in Sources */,
 				68FFA561268DD2CF002DADFA /* CountriesCodeButton.swift in Sources */,
 				EDFFCACD2681F975004EE095 /* CardListView.swift in Sources */,
-				0B01073827CD4D4B006462E6 /* PaymentsParameterPaymentButtonViewComponent.swift in Sources */,
+				0B01073827CD4D4B006462E6 /* ButtonSimpleViewComponent.swift in Sources */,
 				0BF3485D26931254005138A8 /* SuggestBankDecodableModel.swift in Sources */,
 				0BAD4D3B274417E700FDF9B6 /*  ExtensionPushHistoryNav.swift in Sources */,
 				0B95C40A26B6D88000AA57E6 /* BottomLableModel.swift in Sources */,

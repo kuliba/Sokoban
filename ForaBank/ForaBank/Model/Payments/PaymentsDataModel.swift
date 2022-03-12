@@ -74,8 +74,10 @@ enum Payments {
 protocol ParameterRepresentable {
 
     var parameter: Payments.Parameter { get }
+    var editable: Bool { get }
     var collapsable: Bool { get }
     
     func updated(value: String?) -> ParameterRepresentable
+    func updated(editable: Bool) -> ParameterRepresentable
     func updated(collapsable: Bool) -> ParameterRepresentable
 }

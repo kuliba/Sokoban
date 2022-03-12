@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Combine
 
 //MARK: - ViewModel
 
@@ -15,12 +14,7 @@ extension ButtonSimpleView {
     class ViewModel: ObservableObject {
         
         let title: String
-        @Published var isEnabled: Bool {
-            didSet {
-                print("ButtonSimpleView change", isEnabled)
-            }
-        }
-        
+        @Published var isEnabled: Bool
         let action: () -> Void
 
         internal init(title: String, isEnabled: Bool, action: @escaping () -> Void) {
@@ -61,7 +55,7 @@ struct ButtonSimpleView: View {
                         .foregroundColor(Color(hex: "#FF3636"))
                     
                     Text(viewModel.title)
-                        .font(Font.custom("Inter-Regular", size: 16))
+                        .font(Font.custom("Inter-SemiBold", size: 16))
                         .foregroundColor(Color(hex: "#FFFFFF"))
                 }
             }
@@ -74,8 +68,8 @@ struct ButtonSimpleView: View {
                     .foregroundColor(Color(hex: "#D3D3D3"))
                 
                 Text(viewModel.title)
-                    .font(Font.custom("Inter-Regular", size: 16))
-                    .foregroundColor(Color(hex: "#FFFFFF"))
+                    .font(Font.custom("Inter-SemiBold", size: 16))
+                    .foregroundColor(Color(hex: "#898989"))
             }
         }
     }
@@ -92,22 +86,7 @@ struct ButtonSimpleView_Previews: PreviewProvider {
             ButtonSimpleView(viewModel: .init(title: "Оплатить", isEnabled: false, action: {} ))
                 .previewLayout(.fixed(width: 375, height: 70))
             
-            ButtonSimpleView(viewModel: .init(title: "Перевести", isEnabled: false, action: {}))
-                .previewLayout(.fixed(width: 375, height: 70))
-            
-            ButtonSimpleView(viewModel: .init(title: "Продолжить", isEnabled: false, action: {}))
-                .previewLayout(.fixed(width: 375, height: 70))
-            
             ButtonSimpleView(viewModel: .init(title: "Оплатить", isEnabled: true, action: {}))
-                .previewLayout(.fixed(width: 375, height: 70))
-            
-            ButtonSimpleView(viewModel: .init(title: "На главную", isEnabled: true, action: {}))
-                .previewLayout(.fixed(width: 375, height: 70))
-            
-            ButtonSimpleView(viewModel: .init(title: "Перевести", isEnabled: true, action: {}))
-                .previewLayout(.fixed(width: 375, height: 70))
-            
-            ButtonSimpleView(viewModel: .init(title: "Продолжить", isEnabled: true, action: {}))
                 .previewLayout(.fixed(width: 375, height: 70))
         }
     }

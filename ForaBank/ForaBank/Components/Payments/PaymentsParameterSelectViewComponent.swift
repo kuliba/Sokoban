@@ -74,7 +74,10 @@ extension PaymentsParameterSelectView {
                            //TODO: log error
                             print(error.localizedDescription)
                         }
-  
+                        
+                    case _ as PaymentsParameterSelectView.ViewModelAction.ShowItemsList:
+                        update(value: nil)
+     
                     default:
                         break
                     }
@@ -198,7 +201,7 @@ struct PaymentsParameterSelectView: View {
                 }
                 
             case .selected(let selectedItemViewModel):
-                SelectedItemView(viewModel: selectedItemViewModel)
+                SelectedItemView(viewModel: selectedItemViewModel, isEditable: viewModel.isEditable)
                     .frame(minHeight: 56)
             }
         }
@@ -210,11 +213,11 @@ struct PaymentsParameterSelectView: View {
         
         var body: some View {
             
-            HStack(spacing: 21) {
+            HStack(spacing: 16) {
                 
                 viewModel.icon
                     .resizable()
-                    .frame(width: 40, height: 40)
+                    .frame(width: 32, height: 32)
                 
                 Text(viewModel.name)
                     .font(.custom("Inter-Medium", size: 16))
@@ -232,38 +235,78 @@ struct PaymentsParameterSelectView: View {
     struct SelectedItemView: View {
         
         let viewModel: PaymentsParameterSelectView.ViewModel.SelectedItemViewModel
+        let isEditable: Bool
         
         var body: some View {
             
-            HStack(spacing: 16) {
+            if isEditable == true {
                 
-                viewModel.icon
-                    .resizable()
-                    .frame(width: 40, height: 40)
-                
-                VStack(alignment: .leading, spacing: 0) {
+                HStack(spacing: 16) {
                     
-                    Text(viewModel.title)
-                        .font(Font.custom("Inter-Regular", size: 12))
-                        .foregroundColor(Color(hex: "#999999"))
-                        .padding(.bottom, 4)
+                    viewModel.icon
+                        .resizable()
+                        .frame(width: 32, height: 32)
                     
-                    HStack {
+                    VStack(alignment: .leading, spacing: 0) {
                         
-                        Text(viewModel.name)
-                            .font(Font.custom("Inter-Medium", size: 14))
-                            .foregroundColor(Color(hex: "#1C1C1C"))
+                        Text(viewModel.title)
+                            .font(Font.custom("Inter-Regular", size: 12))
+                            .foregroundColor(Color(hex: "#999999"))
+                            .padding(.bottom, 4)
                         
-                        Spacer()
+                        HStack {
+                            
+                            Text(viewModel.name)
+                                .font(Font.custom("Inter-Medium", size: 14))
+                                .foregroundColor(Color(hex: "#1C1C1C"))
+                            
+                            Spacer()
+                            
+                            Image("chevron-downnew")
+                                .frame(width: 24, height: 24)
+                        }
                         
-                        Image("chevron-downnew")
-                            .frame(width: 24, height: 24)
+                        Divider()
+                            .frame(height: 1)
+                            .background(Color(hex: "#EAEBEB"))
+                            .padding(.top, 12)
                     }
+                }
+                .onTapGesture {
                     
-                    Divider()
-                        .frame(height: 1)
-                        .foregroundColor(Color(hex: "#EAEBEB"))
-                        .padding(.top, 12)
+                    viewModel.action()
+                }
+                
+            } else {
+                
+                HStack(spacing: 16) {
+                    
+                    viewModel.icon
+                        .resizable()
+                        .frame(width: 32, height: 32)
+                    
+                    VStack(alignment: .leading, spacing: 0) {
+                        
+                        Text(viewModel.title)
+                            .font(Font.custom("Inter-Regular", size: 12))
+                            .foregroundColor(Color(hex: "#999999"))
+                            .padding(.bottom, 4)
+                        
+                        HStack {
+                            
+                            Text(viewModel.name)
+                                .font(Font.custom("Inter-Medium", size: 14))
+                                .foregroundColor(Color(hex: "#1C1C1C"))
+                            
+                            Spacer()
+                        }
+                        
+                        Divider()
+                            .frame(height: 1)
+                            .background(Color(hex: "#EAEBEB"))
+                            .opacity(0.2)
+                            .padding(.top, 12)
+                    }
                 }
             }
         }
@@ -285,6 +328,10 @@ struct PaymentsParameterSelectView_Previews: PreviewProvider {
             PaymentsParameterSelectView(viewModel: .selectedParameter)
                 .previewLayout(.fixed(width: 375, height: 100))
                 .previewDisplayName("Parameter Selected")
+            
+            PaymentsParameterSelectView(viewModel: .selectedParameterNotEditable)
+                .previewLayout(.fixed(width: 375, height: 100))
+                .previewDisplayName("Parameter Selected Not Editable")
             
             PaymentsParameterSelectView(viewModel: .notSelectedMock)
                 .previewLayout(.fixed(width: 375, height: 200))
@@ -338,6 +385,16 @@ extension PaymentsParameterSelectView.ViewModel {
         
         let icon = ImageData(with: UIImage(named: "Payments List Sample")!)!
         let parameter = Payments.ParameterSelect(.init(id: UUID().uuidString, value: "3"), title: "Категория платежа", options: [.init(id: "1", name: "Имущественный налог", icon: icon), .init(id: "2", name: "Транспортный налог", icon: icon), .init(id: "3", name: "Сбор за пользовние объектами водными биологическими ресурсами", icon: icon)])
+        
+        var viewModel = try! PaymentsParameterSelectView.ViewModel(with: parameter)
+        
+        return viewModel
+    }()
+    
+    static var selectedParameterNotEditable: PaymentsParameterSelectView.ViewModel = {
+        
+        let icon = ImageData(with: UIImage(named: "Payments List Sample")!)!
+        let parameter = Payments.ParameterSelect(.init(id: UUID().uuidString, value: "3"), title: "Категория платежа", options: [.init(id: "1", name: "Имущественный налог", icon: icon), .init(id: "2", name: "Транспортный налог", icon: icon), .init(id: "3", name: "Сбор за пользовние объектами водными биологическими ресурсами", icon: icon)], editable: false)
         
         var viewModel = try! PaymentsParameterSelectView.ViewModel(with: parameter)
         

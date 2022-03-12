@@ -35,6 +35,15 @@ extension PaymentsParameterNameView {
         private static let iconPlaceholder = Image("accountImage")
         private var bindings = Set<AnyCancellable>()
         
+        init(icon: Image, title: String, person: PersonViewModel, isEditing: Bool) {
+            
+            self.icon = icon
+            self.title = title
+            self.person = person
+            self.isEditing = isEditing
+            super.init(source: Payments.ParameterMock())
+        }
+        
         init(with parameterName: Payments.ParameterName) throws {
             
             self.icon = Self.iconPlaceholder
@@ -51,15 +60,6 @@ extension PaymentsParameterNameView {
                     value: parameterName.middleName.value))
             self.isEditing = false
             super.init(source: parameterName)
-        }
-        
-        init(icon: Image, title: String, person: PersonViewModel, isEditing: Bool) {
-            
-            self.icon = icon
-            self.title = title
-            self.person = person
-            self.isEditing = isEditing
-            super.init(source: Payments.ParameterMock())
         }
         
         struct PersonViewModel {
@@ -93,43 +93,46 @@ struct PaymentsParameterNameView: View {
     
     var body: some View {
         
-        HStack(alignment: .top, spacing: 22) {
-            
-            viewModel.icon
-                .resizable()
-                .frame(width: 32, height: 32)
+        if viewModel.isEditable == true {
             
             VStack(alignment: .leading, spacing: 30)  {
                 
                 if viewModel.isEditing == false {
                     
-                    FieldView(title: viewModel.title, value: .constant(viewModel.fullName), button: (viewModel.buttonIcon, viewModel.action))
-                        .frame(height: 56)
+                    FieldView(icon: viewModel.icon, title: viewModel.title, value: .constant(viewModel.fullName), button: (viewModel.buttonIcon, viewModel.action))
                     
                 } else {
                     
-                    VStack(spacing: 0) {
+                    VStack(spacing: 8) {
                         
-                        FieldView(title: viewModel.person.lastName.title, value: $viewModel.person.lastName.value, isEditable: true, button: (viewModel.buttonIcon, viewModel.action))
-                            .frame(height: 56)
+                        FieldView(icon: viewModel.icon, title: viewModel.person.lastName.title, value: $viewModel.person.lastName.value, isEditing: true, button: (viewModel.buttonIcon, viewModel.action))
                         
-                        FieldView(title: viewModel.person.firstName.title, value: $viewModel.person.firstName.value, isEditable: true)
-                            .frame(height: 56)
+                        FieldView(title: viewModel.person.firstName.title, value: $viewModel.person.firstName.value, isEditing: true)
                         
-                        FieldView(title: viewModel.person.middleName.title, value: $viewModel.person.middleName.value, isEditable: true)
-                            .frame(height: 56)
+                        FieldView(title: viewModel.person.middleName.title, value: $viewModel.person.middleName.value, isEditing: true)
                     }
                 }
+            }
+            
+        } else {
+            
+            HStack(spacing: 0) {
+                
+                FieldView(icon: viewModel.icon, title: viewModel.title, value: .constant(viewModel.fullName), isDivider: false)
+                
+                Spacer()
             }
         }
     }
     
     struct FieldView: View {
         
+        var icon: Image? = nil
         let title: String
         @Binding var value: String
-        var isEditable: Bool = false
-        var button: (icon: Image, action: () -> Void)?
+        var isEditing: Bool = false
+        var button: (icon: Image, action: () -> Void)? = nil
+        var isDivider: Bool = true
         
         private var displayTitle: String { value.count > 0 ? title : "" }
         private var displayValue: String { value.count > 0 ? value : title }
@@ -137,25 +140,43 @@ struct PaymentsParameterNameView: View {
         
         var body: some View {
             
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 0) {
                 
                 Text(displayTitle)
                     .font(Font.custom("Inter-Regular", size: 12))
                     .foregroundColor(Color(hex: "#999999"))
+                    .padding(.leading, 48)
+                    .padding(.bottom, 4)
                 
                 HStack(spacing: 0) {
                     
-                    if isEditable == true {
+                    if let icon = icon {
+                        
+                        icon
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .padding(.leading, 4)
+                        
+                    } else {
+                        
+                        Color.clear
+                            .frame(width: 24, height: 24)
+                            .padding(.leading, 4)
+                    }
+ 
+                    if isEditing == true {
                         
                         TextField(title, text: $value)
                             .foregroundColor(Color(hex: "#1C1C1C"))
                             .font(Font.custom("Inter-Medium", size: 14))
+                            .padding(.leading, 20)
                         
                     } else {
                         
                         Text(displayValue)
                             .font(Font.custom("Inter-Regular", size: 14))
                             .foregroundColor(displayValueColor)
+                            .padding(.leading, 20)
                     }
      
                     if let button = button {
@@ -176,7 +197,9 @@ struct PaymentsParameterNameView: View {
                 Divider()
                     .frame(height: 1)
                     .background(Color(hex: "#EAEBEB"))
-                    .padding(.top, 8)
+                    .opacity(isDivider ? 1.0 : 0.2)
+                    .padding(.top, 12)
+                    .padding(.leading, 48)
             }
         }
     }
@@ -191,6 +214,9 @@ struct PaymentsParameterNameView_Previews: PreviewProvider {
         Group {
             
             PaymentsParameterNameView(viewModel: .normal)
+                .previewLayout(.fixed(width: 375, height: 100))
+            
+            PaymentsParameterNameView(viewModel: .normalNotEditable)
                 .previewLayout(.fixed(width: 375, height: 100))
             
             PaymentsParameterNameView(viewModel: .edit)
@@ -208,10 +234,10 @@ struct PaymentsParameterNameView_Previews: PreviewProvider {
             PaymentsParameterNameView.FieldView(title: "Фамилия", value: .constant(""))
                 .previewLayout(.fixed(width: 375, height: 56))
             
-            PaymentsParameterNameView.FieldView(title: "Фамилия", value: .constant("Иванов"), isEditable: true)
+            PaymentsParameterNameView.FieldView(title: "Фамилия", value: .constant("Иванов"), isEditing: true)
                 .previewLayout(.fixed(width: 375, height: 56))
             
-            PaymentsParameterNameView.FieldView(title: "Имя", value: .constant("Иван"), isEditable: true)
+            PaymentsParameterNameView.FieldView(title: "Имя", value: .constant("Иван"), isEditing: true)
                 .previewLayout(.fixed(width: 375, height: 56))
         }
     }
@@ -221,9 +247,26 @@ struct PaymentsParameterNameView_Previews: PreviewProvider {
 
 extension PaymentsParameterNameView.ViewModel {
     
-    static let normal = PaymentsParameterNameView.ViewModel(icon: Image("accountImage"), title: "ФИО", person: .init(lastName: .init(title: "Фамилия", value: "Иванов"), firstName: .init(title: "Имя", value: "Иван"), middleName: .init(title: "Отчество", value: "Иванович")), isEditing: false)
+    static let normal = try! PaymentsParameterNameView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иванов Иван Иванович"), title: "ФИО", lastName: .init(title: "Фамилия", value: "Иванов"), firstName: .init(title: "Имя", value: "Иван"), middleName: .init(title: "Отчество", value: "Иванович")))
     
-    static let edit = PaymentsParameterNameView.ViewModel(icon: Image("accountImage"), title: "ФИО", person: .init(lastName: .init(title: "Фамилия", value: "Иванов"), firstName: .init(title: "Имя", value: "Иван"), middleName: .init(title: "Отчество", value: "Иванович")), isEditing: true)
+    static let normalNotEditable = try! PaymentsParameterNameView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иванов Иван Иванович"), title: "ФИО", lastName: .init(title: "Фамилия", value: "Иванов"), firstName: .init(title: "Имя", value: "Иван"), middleName: .init(title: "Отчество", value: "Иванович"), editable: false))
     
-    static let editPart = PaymentsParameterNameView.ViewModel(icon: Image("accountImage"), title: "ФИО", person: .init(lastName: .init(title: "Фамилия", value: "Иванов"), firstName: .init(title: "Имя", value: ""), middleName: .init(title: "Отчество", value: "")), isEditing: true)
+    static let edit: PaymentsParameterNameView.ViewModel = {
+        
+        var viewModel = try! PaymentsParameterNameView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иванов Иван Иванович"), title: "ФИО", lastName: .init(title: "Фамилия", value: "Иванов"), firstName: .init(title: "Имя", value: "Иван"), middleName: .init(title: "Отчество", value: "Иванович")))
+        
+        viewModel.isEditing = true
+        
+        return viewModel
+    }()
+    
+    
+    static let editPart: PaymentsParameterNameView.ViewModel = {
+        
+        var viewModel = try! PaymentsParameterNameView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иванов Иван Иванович"), title: "ФИО", lastName: .init(title: "Фамилия", value: "Иванов"), firstName: .init(title: "Имя", value: ""), middleName: .init(title: "Отчество", value: "")))
+        
+        viewModel.isEditing = true
+        
+        return viewModel
+    }()
 }

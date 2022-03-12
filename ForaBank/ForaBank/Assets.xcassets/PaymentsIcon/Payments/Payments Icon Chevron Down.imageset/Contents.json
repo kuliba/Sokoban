@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "Payments Icon Chevron Down.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

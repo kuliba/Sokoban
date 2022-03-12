@@ -52,9 +52,7 @@ extension PaymentsParameterInputView {
             
             bind()
         }
-        
-        
-        
+
         private func bind() {
             
             $content
@@ -81,41 +79,49 @@ struct PaymentsParameterInputView: View {
     
     var body: some View {
         
-        HStack(spacing: 20) {
+        VStack(alignment: .leading, spacing: 0) {
             
-            viewModel.logo
-                .resizable()
-                .frame(width: 24, height: 24)
-            
-            VStack(alignment: .leading, spacing: 0)  {
+            if let title = viewModel.title {
                 
-                if let title = viewModel.title {
+                Text(title)
+                    .font(Font.custom("Inter-Regular", size: 12))
+                    .foregroundColor(Color(hex: "#999999"))
+                    .padding(.bottom, 4)
+                    .padding(.leading, 48)
+                    .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .opacity))
+                
+            }
+            
+            HStack(spacing: 20) {
+                
+                viewModel.logo
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .padding(.leading, 4)
+                
+                if viewModel.isEditable == true {
                     
-                    Text(title)
-                        .font(Font.custom("Inter-Regular", size: 12))
-                        .foregroundColor(Color(hex: "#999999"))
-                        .padding(.bottom, 4)
-                        .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .opacity))
+                    TextField(viewModel.description, text: $viewModel.content)
+                        .foregroundColor(Color(hex: "#1C1C1C"))
+                        .font(Font.custom("Inter-Medium", size: 14))
+                        .textFieldStyle(DefaultTextFieldStyle())
                     
                 } else {
                     
-                    Text("")
-                        .font(Font.custom("Inter-Regular", size: 12))
-                        .foregroundColor(Color(hex: "#999999"))
-                        .padding(.bottom, 4)
-                        
+                    Text(viewModel.description)
+                        .foregroundColor(Color(hex: "#1C1C1C"))
+                        .font(Font.custom("Inter-Medium", size: 14))
                 }
                 
-                TextField(viewModel.description, text: $viewModel.content)
-                    .foregroundColor(Color(hex: "#1C1C1C"))
-                    .font(Font.custom("Inter-Medium", size: 14))
-                
-                Divider()
-                    .frame(height: 1)
-                    .background(Color(hex: "#EAEBEB"))
-                    .padding(.top, 12)
-                
-            } .textFieldStyle(DefaultTextFieldStyle())
+                Spacer()
+            }
+            
+            Divider()
+                .frame(height: 1)
+                .background(Color(hex: "#EAEBEB"))
+                .opacity(viewModel.isEditable ? 1.0 : 0.2)
+                .padding(.top, 12)
+                .padding(.leading, 48)
         }
     }
 }
@@ -133,6 +139,9 @@ struct PaymentsParameterInputView_Previews: PreviewProvider {
             
             PaymentsParameterInputView(viewModel: .sampleValue)
                 .previewLayout(.fixed(width: 375, height: 80))
+            
+            PaymentsParameterInputView(viewModel: .sampleValueNotEditable)
+                .previewLayout(.fixed(width: 375, height: 80))
         }
     }
 }
@@ -140,8 +149,10 @@ struct PaymentsParameterInputView_Previews: PreviewProvider {
 //Payments Input Sample
 extension PaymentsParameterInputView.ViewModel {
     
-    static let sampleEmpty = PaymentsParameterInputView.ViewModel(logo: Image("Payments Input Sample"), description: "ИНН подразделения")
+    static let sampleEmpty = try! PaymentsParameterInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: nil), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .init(minLength: 5, maxLength: nil, regEx: nil)))
     
-    static let sampleValue = PaymentsParameterInputView.ViewModel(logo: Image("Payments Input Sample"),description: "ИНН подразделения", content: "0016196314")
+    static let sampleValue = try! PaymentsParameterInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0016196314"), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .init(minLength: 5, maxLength: nil, regEx: nil)))
+    
+    static let sampleValueNotEditable = try! PaymentsParameterInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0016196314"), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .init(minLength: 5, maxLength: nil, regEx: nil), editable: false))
 }
 
