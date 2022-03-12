@@ -42,7 +42,7 @@ class PaymentsOperationViewModel: ObservableObject {
         self.items = []
         self.operation = operation
         
-        try createItemsAndFooter(from: operation.parameters)
+        try createItemsAndFooter(from: operation.parameters, isCollapsed: true)
         bind()
         
         print("Payments: init")
@@ -64,7 +64,7 @@ class PaymentsOperationViewModel: ObservableObject {
                     case .step(let operation):
                         do {
                             
-                            try createItemsAndFooter(from: operation.parameters)
+                            try createItemsAndFooter(from: operation.parameters, isCollapsed: true)
                             self.operation = operation
                             
                         } catch {
@@ -176,6 +176,26 @@ class PaymentsOperationViewModel: ObservableObject {
                         
                     }.store(in: &itemsBindings)
             }
+            
+            if let additionalButtonItem = item as? PaymentsButtonAdditionalView.ViewModel {
+                
+                additionalButtonItem.$isSelected
+                    .dropFirst()
+                    .receive(on: DispatchQueue.main)
+                    .sink {[unowned self] selected in
+                        
+                        do {
+                            
+                            try createItemsAndFooter(from: operation.parameters, isCollapsed: selected)
+                            
+                        } catch {
+                            
+                            //TODO: log error
+                            print(error.localizedDescription)
+                        }
+       
+                    }.store(in: &itemsBindings)
+            }
         }
     }
 
@@ -229,18 +249,21 @@ class PaymentsOperationViewModel: ObservableObject {
         }
     }
     
-    func createItemsAndFooter(from parameters: [ParameterRepresentable]) throws {
+    func createItemsAndFooter(from parameters: [ParameterRepresentable], isCollapsed: Bool) throws {
         
         let updatedItems = try Self.createItems(from: parameters)
+        let collapsableItems = updateCollapsable(items: updatedItems, isCollapsed: isCollapsed)
         
         withAnimation {
             
-            items = updatedItems
+            items = collapsableItems
             footer = createFooter(from: parameters)
         }
         
         itemsBindings = Set<AnyCancellable>()
         bind(items: items)
+        
+        updateFooter(isContinueEnabled: isAllItemsValid())
     }
     
     static func createItems(from parameters: [ParameterRepresentable]) throws -> [PaymentsParameterViewModel] {
@@ -278,6 +301,40 @@ class PaymentsOperationViewModel: ObservableObject {
         }
         
         return result
+    }
+    
+    func updateCollapsable(items: [PaymentsParameterViewModel], isCollapsed: Bool) -> [PaymentsParameterViewModel] {
+        
+        guard let lastCollapsableItem = items.filter({ $0.isCollapsable == true }).last,
+        let lastCollapsableItemIndex = items.firstIndex(where: { $0.source.parameter.id == lastCollapsableItem.id}) else {
+ 
+            return items
+        }
+        
+        var mutableItems = items
+        
+        let additionalButtonItem = PaymentsButtonAdditionalView.ViewModel(title: "Дополнительные данные", isSelected: isCollapsed)
+        mutableItems.insert(additionalButtonItem, at: lastCollapsableItemIndex + 1)
+        
+        if isCollapsed == true {
+            
+            // remove all collapsable items
+            var updatedItems = [PaymentsParameterViewModel]()
+            for item in mutableItems {
+                
+                guard item.isCollapsable == false else {
+                    continue
+                }
+                
+                updatedItems.append(item)
+            }
+            
+            return updatedItems
+            
+        } else {
+            
+            return mutableItems
+        }
     }
     
     func createFooter(from parameters: [ParameterRepresentable]) -> FooterViewModel? {

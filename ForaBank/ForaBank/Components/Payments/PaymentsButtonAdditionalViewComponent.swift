@@ -11,7 +11,7 @@ import SwiftUI
 
 extension PaymentsButtonAdditionalView {
     
-    class ViewModel: ObservableObject {
+    class ViewModel: PaymentsParameterViewModel {
         
         let title: String
         @Published var isSelected: Bool
@@ -21,6 +21,7 @@ extension PaymentsButtonAdditionalView {
             
             self.title = title
             self.isSelected = isSelected
+            super.init(source: Payments.ParameterMock())
         }
     }
 }
@@ -46,7 +47,7 @@ struct PaymentsButtonAdditionalView: View {
                     viewModel.icon
                         .resizable()
                         .frame(width: 24, height: 24)
-                        .rotationEffect(viewModel.isSelected ? .degrees(180) : .degrees(0))
+                        .rotationEffect(viewModel.isSelected ? .degrees(0) : .degrees(180))
 
                     Text(viewModel.title)
                         .font(Font.custom("Inter-Medium", size: 14))

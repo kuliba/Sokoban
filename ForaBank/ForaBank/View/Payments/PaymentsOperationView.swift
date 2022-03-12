@@ -44,6 +44,9 @@ struct PaymentsOperationView: View {
                         case let selectViewModels as PaymentsParameterSelectSimpleView.ViewModel:
                             PaymentsParameterSelectSimpleView(viewModel: selectViewModels)
                             
+                        case let additionButtonViewModel as PaymentsButtonAdditionalView.ViewModel:
+                            PaymentsButtonAdditionalView(viewModel: additionButtonViewModel)
+                            
                         default:
                             Color.clear
                             
@@ -51,7 +54,7 @@ struct PaymentsOperationView: View {
                     }
                     
                     Color.clear
-                        .frame(height: 60)
+                        .frame(height: 80)
                 }
             }
             .padding(.horizontal, 20)
