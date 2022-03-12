@@ -13,9 +13,9 @@ extension PaymentsParameterCardView {
     
     class ViewModel: PaymentsParameterViewModel {
 
-        init() {
+        init(with parameterCard: Payments.ParameterCard) {
             
-            super.init(source: Payments.ParameterMock())
+            super.init(source: parameterCard)
         }
     }
 }
@@ -79,6 +79,6 @@ struct PaymentsParameterCardView_Previews: PreviewProvider {
 
 extension PaymentsParameterCardView.ViewModel {
     
-    static let sample = PaymentsParameterCardView.ViewModel()
+    static let sample = PaymentsParameterCardView.ViewModel(with: .init())
 }
 

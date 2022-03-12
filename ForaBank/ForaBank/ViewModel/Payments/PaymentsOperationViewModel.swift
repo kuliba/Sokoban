@@ -74,6 +74,8 @@ class PaymentsOperationViewModel: ObservableObject {
                         
                     case .confirm(let operation):
                         //TODO: open confirm operation screen
+                        
+                        print("Payments: open confirm view")
                         break
                         
                     case .fail(_):
@@ -124,14 +126,6 @@ class PaymentsOperationViewModel: ObservableObject {
                     
                     print("Payments: item value changed")
 
-                    guard isAllItemsValid() == true else {
-                        
-                        updateFooter(isContinueEnabled: false)
-                        return
-                    }
-                    
-                    updateFooter(isContinueEnabled: true)
-                    
                     let results = items.map{ $0.result }
                     let update = operation.update(with: results)
                     
@@ -147,6 +141,7 @@ class PaymentsOperationViewModel: ObservableObject {
                         } else {
                             
                             operation = update.operation
+                            updateFooter(isContinueEnabled: isAllItemsValid())
                         }
                         
                     case .historyChanged:
@@ -201,12 +196,13 @@ class PaymentsOperationViewModel: ObservableObject {
         guard let footer = footer else { return }
 
         switch footer {
-            
         case .button(let continueButtonViewModel):
+            print("Payments: footer button updated", isContinueEnabled)
             continueButtonViewModel.isEnabled = isContinueEnabled
             self.footer = .button(continueButtonViewModel)
             
         case .amount(let amountViewModel):
+            print("Payments: footer amount updated", isContinueEnabled)
             amountViewModel.updateTranferButton(isEnabled: isContinueEnabled)
             self.footer = .amount(amountViewModel)
         }
@@ -273,6 +269,9 @@ class PaymentsOperationViewModel: ObservableObject {
                 result.append(try PaymentsParameterSelectSimpleView.ViewModel(
                     with: parameterSelectSimple))
                 
+            case let parameterCard as Payments.ParameterCard:
+                result.append(PaymentsParameterCardView.ViewModel(with: parameterCard))
+                
             default:
                 break
             }
@@ -297,7 +296,9 @@ class PaymentsOperationViewModel: ObservableObject {
                 }
 
             case let parameterAmount as Payments.ParameterAmount:
-                footer = .amount(.init(with: parameterAmount))
+                footer = .amount(.init(with: parameterAmount,actionTitle: "Перевести", action: { [weak self] in
+                    self?.action.send(PaymentsOperationViewModelAction.Continue())
+                }))
                                 
             default:
                 break

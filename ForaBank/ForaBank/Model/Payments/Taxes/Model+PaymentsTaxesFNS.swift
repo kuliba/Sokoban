@@ -12,8 +12,8 @@ extension Model {
     func parametersFNS(_ parameters: [ParameterRepresentable], _ step: Int, _ completion: @escaping (Result<[ParameterRepresentable], Error>) -> Void) {
         
         let paramOperator = Payments.Parameter.Identifier.operator.rawValue
-        let paramCategory = "a3_dutyCategory_1_1"
-        let paramDivision = "a3_divisionSelect_2_1"
+//        let paramCategory = "a3_dutyCategory_1_1"
+//        let paramDivision = "a3_divisionSelect_2_1"
         let paramService = "a3_categorySelect_3_1"
         let paramDivisionINN = "a3_INN_4_1"
         let paramDivisionOKTMO = "a3_OKTMO_5_1"
@@ -30,7 +30,7 @@ extension Model {
                     
                     // category
                     let categoryParameter = Payments.ParameterSelect(
-                        Parameter(id: paramCategory, value: nil),
+                        Parameter(id: "a3_dutyCategory_1_1", value: nil),
                         title: "Категория платежа",
                         options: [
                             .init(id: "1", name: "Имущественный налог", icon: .parameterSample),
@@ -52,21 +52,22 @@ extension Model {
                             .init(id: "17", name: "Страховые взносы", icon: .parameterSample),
                             .init(id: "18", name: "Патенты", icon: .parameterSample)
                         ])
+                    
                     completion(.success( parameters + [categoryParameter]))
                     
                 case .fnsUin:
                     
                     // category
                     let categoryParameter = Payments.ParameterInput(
-                        Parameter(id: paramCategory, value: nil),
+                        Parameter(id: "a3_BillNumber_1_1", value: nil),
                         icon: .parameterSample,
                         title: "УИН",
-                        validator: .init(minLength: 2, maxLength: 5, regEx: "[0-9]*"))
+                        validator: .init(minLength: 1, maxLength: nil, regEx: nil))
                     
                     completion(.success( parameters + [categoryParameter]))
                     
                 default:
-                    break
+                    completion(.failure(Payments.Error.unexpectedOperatorValue))
                 }
                 
             } else {
@@ -81,7 +82,7 @@ extension Model {
                 
                 // category
                 let categoryParameter = Payments.ParameterSelect(
-                    Parameter(id: paramCategory, value: nil),
+                    Parameter(id: "a3_dutyCategory_1_1", value: nil),
                     title: "Категория платежа",
                     options: [
                         .init(id: "1", name: "Имущественный налог", icon: .parameterSample),
@@ -110,13 +111,24 @@ extension Model {
         case 1:
             guard let operatorParameter = parameters.first(where: { $0.parameter.id == paramOperator }),
                   let operatorValue = operatorParameter.parameter.value,
-                  let operatorSelected = Operator(rawValue: operatorValue) else { return }
+                  let operatorSelected = Operator(rawValue: operatorValue) else {
+                      
+                      completion(.failure(Payments.Error.missingOperatorParameter))
+                      return
+                  }
             
             switch operatorSelected {
             case .fns:
                 
                 // division
-                // TODO: Из бека для поля minLength может придти nil
+                let divisionParameter = Payments.ParameterSelectSimple(
+                    .init(id: "a3_divisionSelect_2_1", value: "inn_oktmo"),
+                    icon: .parameterSample, title: "Данные о подразделении ФНС",
+                    selectionTitle: "Выберете подразделение",
+                    description: nil,
+                    options: [.init(id: "inn_oktmo", name: "ИНН и ОКТМО подразделения"),
+                              .init(id: "inn", name: "Какой то другой воариант")])
+                
                 let unnParameter = Payments.ParameterInput(
                     .init(id: "a3_INN_4_1",
                           value: nil),
@@ -133,51 +145,78 @@ extension Model {
                     validator: .init(minLength: 1, maxLength: nil, regEx: nil),
                     collapsable: true)
                 
-                completion(.success( parameters + [unnParameter, oktmoParameter]))
+                completion(.success( parameters + [divisionParameter, unnParameter, oktmoParameter]))
                 
             case .fnsUin:
                 
-                let divisionParameter = Payments.ParameterInfo(
-                    .init(id: paramDivision, value: "inn_oktmo"),
+                var updatedParameters = [ParameterRepresentable]()
+                for parameter in parameters {
+                    
+                    switch parameter.parameter.id {
+                    case "a3_BillNumber_1_1":
+                        updatedParameters.append(parameter.updated(editable: false))
+                    
+                    default:
+                        updatedParameters.append( parameter)
+                    }
+                }
+                
+                let infoParameter = Payments.ParameterInfo(
+                    .init(id: "a3_iComment_6_1", value: "Налог на имущество физических лиц, взимаемый по ставкам, применяемым к объектам налогообложения, расположенным  в границах внутригородских муниципальных образований городов федерального значения (сумма платеж...)"),
                     icon: .parameterSample,
-                    title: "Адрес получателя",
-                    content: "г. Москва, ул. Профсоюзная fnsUin 124")
+                    title: "Основание")
                 
                 let fioParameter = Payments.ParameterName(
-                    .init(id: "fio", value: "fio"),
-                    title: "ФИО",
+                    .init(id: "a3_Name_6_1", value: "Иванов Иван Иванович"),
+                    title: "ФИО:",
                     lastName: .init(title: "Фамилия", value: "Иванов"),
                     firstName: .init(title: "Имя", value: "Иван"),
                     middleName: .init(title: "Отчество", value: "Петрович"))
                 
-                let unnParameter = Payments.ParameterInput(
-                    .init(id: "unn",
-                          value: "123456789"),
+                let cardParameter = Payments.ParameterCard()
+                
+                let innParameter = Payments.ParameterInput(
+                    .init(id: UUID().uuidString,
+                          value: "7726062105"),
                     icon: .parameterSample,
-                    title: "УНН",
-                    validator: .init(minLength: 2, maxLength: 5, regEx: nil),
+                    title: "ИНН Получателя",
+                    validator: .init(minLength: 1, maxLength: nil, regEx: nil),
                     collapsable: true)
                 
-                //TODO: Нужна модель для ввода карт
-//                let cardParameter = Payments.Parameter
+                let oktmoParameter = Payments.ParameterInput(
+                    .init(id: UUID().uuidString,
+                          value: "20701000"),
+                    icon: .parameterSample,
+                    title: "ОКТМО (ОКАТО)",
+                    validator: .init(minLength: 1, maxLength: nil, regEx: nil),
+                    collapsable: true)
+                
+                let adressParameter = Payments.ParameterInfo(
+                    .init(id: "a3_address_2_2", value: "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 432011, Ульяновская обл, Ульяновск г, Радищева ул ,  д. 124,  кв. 28"),
+                    icon: .parameterSample,
+                    title: "Адрес проживания", collapsable: true)
                 
                 let amountParameter = Payments.ParameterAmount(
-                    .init(id: "amount", value: "100"),
+                    .init(id: "amount", value: "1234"),
                     title: "Сумма перевода",
                     currency: .init(description: "RUB"),
                     validator: .init(minAmount: 10))
                 
-                completion(.success( parameters + [divisionParameter, fioParameter, unnParameter, amountParameter]))
+                completion(.success( updatedParameters + [infoParameter, fioParameter, cardParameter, innParameter, oktmoParameter, adressParameter, amountParameter]))
                 
             default:
-                break
+                completion(.failure(Payments.Error.unexpectedOperatorValue))
             }
             
         case 2:
             
             guard let operatorParameter = parameters.first(where: { $0.parameter.id == paramOperator }),
                   let operatorValue = operatorParameter.parameter.value,
-                  let operatorSelected = Operator(rawValue: operatorValue) else { return }
+                  let operatorSelected = Operator(rawValue: operatorValue) else {
+                      
+                      completion(.failure(Payments.Error.missingOperatorParameter))
+                      return
+                  }
             
             switch operatorSelected {
             case .fns:
@@ -191,40 +230,34 @@ extension Model {
                 // из бэка для Info приходят 4 поля id, Value, Title и svgImage?
                 
                 let division0Parameter = Payments.ParameterInfo(
-                    .init(id: "a3_iRecipientName_6_1", value: "inn_oktmo"),
+                    .init(id: "a3_iRecipientName_6_1", value: "Управление Федерального казначейства по г. Москве (Инспекция ФНС России № 23 по г.Москве)"),
                     icon: .parameterSample,
-                    title: "Получатель платежа:",
-                    content: "Управление Федерального казначейства по г. Москве (Инспекция ФНС России № 23 по г.Москве)")
+                    title: "Получатель платежа:")
                 
                 let division1Parameter = Payments.ParameterInfo(
-                    .init(id: "a3_iRecipientKPP_8_1", value: "inn_oktmo"),
+                    .init(id: "a3_iRecipientKPP_8_1", value: "772301001"),
                     icon: .parameterSample,
-                    title: "КПП:",
-                    content: "772301001")
+                    title: "КПП:")
                 
                 let division2Parameter = Payments.ParameterInfo(
-                    .init(id: "a3_iRecipientAccount_9_1", value: "inn_oktmo"),
+                    .init(id: "a3_iRecipientAccount_9_1", value: "03100643000000017300"),
                     icon: .parameterSample,
-                    title: "Расчетный счет:",
-                    content: "03100643000000017300")
+                    title: "Расчетный счет:")
                 
                 let division3Parameter = Payments.ParameterInfo(
-                    .init(id: "a3_iRecipientBankName_10_1", value: "inn_oktmo"),
+                    .init(id: "a3_iRecipientBankName_10_1", value: "ГУ БАНКА РОССИИ ПО ЦФО//УФК ПО Г. МОСКВЕ г. Москва"),
                     icon: .parameterSample,
-                    title: "Банк получателя:",
-                    content: "ГУ БАНКА РОССИИ ПО ЦФО//УФК ПО Г. МОСКВЕ г. Москва")
+                    title: "Банк получателя:")
                 
                 let division4Parameter = Payments.ParameterInfo(
-                    .init(id: "a3_iRecipientBIC_11_1", value: "inn_oktmo"),
+                    .init(id: "a3_iRecipientBIC_11_1", value: "004525988"),
                     icon: .parameterSample,
-                    title: "БИК:",
-                    content: "004525988")
+                    title: "БИК:")
                 
                 let division5Parameter = Payments.ParameterInfo(
-                    .init(id: "a3_iRecipientKBK_13_1", value: "inn_oktmo"),
+                    .init(id: "a3_iRecipientKBK_13_1", value: "18210606041031000110"),
                     icon: .parameterSample,
-                    title: "КБК:",
-                    content: "18210606041031000110")
+                    title: "КБК:")
                 
                 // parameterListForNextStep
                 
@@ -265,21 +298,24 @@ extension Model {
                 
             case .fnsUin:
                 
-                let serviceParameter = Payments.ParameterSelectSimple(
-                    .init(id: paramService, value: nil),
-                    icon: .parameterSample,
-                    title: "Тип услуги",
-                    selectionTitle: "Выберете услугу",
-                    description: "Государственная пошлина за выдачу паспорта удостоверяющего личность гражданина РФ за пределами территории РФ гражданину РФ",
-                    options: [
-                        .init(id: "1", name: "В возрасте от 14 лет"),
-                        .init(id: "2", name: "В возрасте до 14 лет"),
-                        .init(id: "3", name: "В возрасте до 14 лет (новый образец)")])
+                // make all parameters not editable
+                var updatedParameters = [ParameterRepresentable]()
+                for parameter in parameters {
+                    
+                    updatedParameters.append(parameter.updated(editable: false))
+                }
                 
-                completion(.success( parameters + [serviceParameter]))
+                let codeParameter = Payments.ParameterInput(
+                    .init(id: Payments.Parameter.Identifier.code.rawValue, value: nil),
+                    icon: .parameterSample,
+                    title: "Введите код из СМС", validator: .init(minLength: 6, maxLength: 6, regEx: nil))
+    
+                let finalParameter = Payments.ParameterFinal()
+
+                completion(.success(updatedParameters + [codeParameter, finalParameter]))
                 
             default:
-                break
+                completion(.failure(Payments.Error.unexpectedOperatorValue))
             }
             
             

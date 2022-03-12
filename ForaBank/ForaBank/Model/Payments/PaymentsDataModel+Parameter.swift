@@ -15,8 +15,10 @@ extension Payments.Parameter {
         case service        = "ru.forabank.sense.service"
         case `operator`     = "ru.forabank.sense.operator"
         case template       = "ru.forabank.sense.template"
-        case mock           = "ru.forabank.sense.mock"
+        case card          = "ru.forabank.sense.card"
         case final          = "ru.forabank.sense.final"
+        case code          = "ru.forabank.sense.code"
+        case mock           = "ru.forabank.sense.mock"
     }
     
     static let emptyMock = Payments.Parameter(id: Identifier.mock.rawValue, value: nil)
@@ -314,29 +316,27 @@ extension Payments {
         let parameter: Parameter
         let icon: ImageData
         let title: String
-        let content: String
         let editable: Bool = false
         let collapsable: Bool
         
-        internal init(_ parameter: Parameter, icon: ImageData, title: String, content: String, collapsable: Bool = false) {
+        internal init(_ parameter: Parameter, icon: ImageData, title: String, collapsable: Bool = false) {
             
             self.parameter = parameter
             self.icon = icon
             self.title = title
-            self.content = content
             self.collapsable = collapsable
         }
         
         func updated(value: String?) -> ParameterRepresentable {
             
-            ParameterInfo(.init(id: parameter.id, value: value), icon: icon, title: title, content: content, collapsable: collapsable)
+            ParameterInfo(.init(id: parameter.id, value: value), icon: icon, title: title, collapsable: collapsable)
         }
         
         func updated(editable: Bool) -> ParameterRepresentable { self }
         
         func updated(collapsable: Bool) -> ParameterRepresentable {
             
-            ParameterInfo(parameter, icon: icon, title: title, content: content, collapsable: collapsable)
+            ParameterInfo(parameter, icon: icon, title: title, collapsable: collapsable)
         }
     }
     
@@ -428,6 +428,22 @@ extension Payments {
         }
     }
     
+    struct ParameterCard: ParameterRepresentable {
+        
+        let parameter: Parameter
+        let editable: Bool = false
+        let collapsable: Bool = false
+    
+        internal init() {
+            
+            self.parameter = Parameter(id: Payments.Parameter.Identifier.card.rawValue, value: nil)
+        }
+     
+        func updated(value: String?) -> ParameterRepresentable { self }
+        func updated(editable: Bool) -> ParameterRepresentable { self }
+        func updated(collapsable: Bool) -> ParameterRepresentable { self }
+    }
+    
     struct ParameterFinal: ParameterRepresentable {
         
         let parameter: Parameter
@@ -436,7 +452,7 @@ extension Payments {
     
         internal init() {
             
-            self.parameter = Parameter(id: Payments.Parameter.Identifier.mock.rawValue, value: nil)
+            self.parameter = Parameter(id: Payments.Parameter.Identifier.final.rawValue, value: nil)
         }
      
         func updated(value: String?) -> ParameterRepresentable { self }

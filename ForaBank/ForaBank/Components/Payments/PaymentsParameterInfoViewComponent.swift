@@ -32,7 +32,7 @@ extension PaymentsParameterInfoView {
             
             self.icon = parameterInfo.icon.image ?? Self.iconPlaceholder
             self.title = parameterInfo.title
-            self.content = parameterInfo.content
+            self.content = parameterInfo.parameter.value ?? ""
             super.init(source: parameterInfo)
         }
     }
@@ -103,5 +103,5 @@ extension PaymentsParameterInfoView.ViewModel {
     
     static let sample = PaymentsParameterInfoView.ViewModel(icon: Image("Payments List Sample"), title: "Основание", content: "Налог на имущество физических лиц, взимаемый по ставкам, применяемым к объектам налогообложения, расположенным в границах внутригородских муниципальных образований городов федерального значения (сумма платеж...)")
     
-    static let sampleParameter = try! PaymentsParameterInfoView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "a3_address_2_2"), icon: .empty, title: "Получатель платежа", content: "УФК по г. Москве (ИФНС России №26 по г. Москве)"))
+    static let sampleParameter = try! PaymentsParameterInfoView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "УФК по г. Москве (ИФНС России №26 по г. Москве)"), icon: .empty, title: "Получатель платежа"))
 }

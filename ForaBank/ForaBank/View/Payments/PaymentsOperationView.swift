@@ -49,6 +49,9 @@ struct PaymentsOperationView: View {
                             
                         }
                     }
+                    
+                    Color.clear
+                        .frame(height: 60)
                 }
             }
             .padding(.horizontal, 20)
@@ -67,22 +70,6 @@ struct PaymentsOperationView: View {
                             .frame(height: 42)
                             .padding(.horizontal, 20)
                         
-//                        if continueButtonViewModel.isEnabled {
-//                            ButtonSimpleView(
-//                                viewModel: ButtonSimpleView.ViewModel(
-//                                    state: .active(
-//                                        title: continueButtonViewModel.title,
-//                                        action: continueButtonViewModel.action)))
-//                                .frame(height: 42)
-//                                .padding(.horizontal, 20)
-//                        } else {
-//                            ButtonSimpleView(
-//                                viewModel: ButtonSimpleView.ViewModel(
-//                                    state: .inactive(title: continueButtonViewModel.title)))
-//                                .frame(height: 42)
-//                                .padding(.horizontal, 20)
-//                        }
-                        
                     case .amount(let amountViewModel):
                         PaymentsParameterAmountView(viewModel: amountViewModel)
                             .edgesIgnoringSafeArea(.bottom)
@@ -100,7 +87,6 @@ struct PaymentsOperationView: View {
         .navigationBarItems(leading: Button(action: viewModel.header.action, label: {
             viewModel.header.backButtonIcon
         }))
-        
     }
 }
 

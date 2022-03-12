@@ -22,9 +22,11 @@ extension PaymentsParameterAmountView {
         @Published var alert: AlertViewModel?
         @Published var title: String?
         
+        private let actionTitle: String
+        private let action: () -> Void
         private var bindings = Set<AnyCancellable>()
         
-        init(description: String, content: String, transferButton: TransferButtonViewModel, info: InfoViewModel? = nil, currencySwitch: CurrencySwitchViewModel? = nil, alert: AlertViewModel? = nil) {
+        init(description: String, content: String, transferButton: TransferButtonViewModel, info: InfoViewModel? = nil, currencySwitch: CurrencySwitchViewModel? = nil, alert: AlertViewModel? = nil, actionTitle: String = "", action: @escaping () -> Void = {}) {
             
             self.description = description
             self.content = content
@@ -32,12 +34,14 @@ extension PaymentsParameterAmountView {
             self.info = info
             self.currencySwitch = currencySwitch
             self.alert = alert
+            self.actionTitle = actionTitle
+            self.action = action
             super.init(source: Payments.ParameterMock())
             
             bind()
         }
         
-        init(with parameterAmount: Payments.ParameterAmount) {
+        init(with parameterAmount: Payments.ParameterAmount, actionTitle: String, action: @escaping () -> Void) {
             
             self.description = parameterAmount.title
             self.content = parameterAmount.parameter.value ?? ""
@@ -45,11 +49,17 @@ extension PaymentsParameterAmountView {
             self.info = nil
             self.currencySwitch = nil
             self.alert = nil
+            self.actionTitle = actionTitle
+            self.action = action
             super.init(source: parameterAmount)
             
             bind()
         }
         
+        override var isValid: Bool {
+            
+            return true
+        }
         
         private func bind() {
             
@@ -68,13 +78,12 @@ extension PaymentsParameterAmountView {
         func updateTranferButton(isEnabled: Bool) {
             
             if isEnabled {
-                //TODO: завести свойство title
-                transferButton = .active(title: "Продолжить", action: {
-                    print("Переход на платеж")
-                })
+                
+                transferButton = .active(title: actionTitle, action: action)
+                
             } else {
                 
-                transferButton = .inactive(title: "Продолжить")
+                transferButton = .inactive(title: actionTitle)
             }
         }
         
@@ -334,6 +343,10 @@ struct PaymentsParameterAmountView_Previews: PreviewProvider {
         
         Group {
             
+            PaymentsParameterAmountView(viewModel: .amountParameter)
+                .previewLayout(.fixed(width: 375, height: 160))
+                .previewDisplayName("Parameter Amount")
+            
             PaymentsParameterAmountView(viewModel: .empty)
                 .previewLayout(.fixed(width: 375, height: 160))
             
@@ -372,4 +385,12 @@ extension PaymentsParameterAmountView.ViewModel {
     
     static let amountCurrencyInfoAlert = PaymentsParameterAmountView.ViewModel(description: "Сумма перевода", content: "1 000 ₽", transferButton: .active(title: "Перевести", action: {}), info: .text("13.75 $   |   1$ - 72.72 ₽"), currencySwitch: .init(from: "₽", to: "$", icon: Image("Payments Refresh CW"), action: {}), alert: .init(title: "Недостаточно средств"))
     
+    static let amountParameter: PaymentsParameterAmountView.ViewModel = {
+        
+        let viewModel = PaymentsParameterAmountView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "100"), title: "Сумма перевода", currency: .init(description: "RUB"), validator: .init(minAmount: 1)), actionTitle: "Перевести", action: {})
+        
+        viewModel.updateTranferButton(isEnabled: true)
+        
+        return viewModel
+    }()
 }

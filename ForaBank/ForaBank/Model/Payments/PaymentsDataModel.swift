@@ -66,8 +66,11 @@ enum Payments {
     }
     
     enum Error: Swift.Error {
+        
         case unsupported
         case unableCreateOperationForService(Service)
+        case unexpectedOperatorValue
+        case missingOperatorParameter
     }
 }
 

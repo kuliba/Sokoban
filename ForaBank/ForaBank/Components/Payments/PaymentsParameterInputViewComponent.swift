@@ -108,7 +108,7 @@ struct PaymentsParameterInputView: View {
                     
                 } else {
                     
-                    Text(viewModel.description)
+                    Text(viewModel.content)
                         .foregroundColor(Color(hex: "#1C1C1C"))
                         .font(Font.custom("Inter-Medium", size: 14))
                 }
