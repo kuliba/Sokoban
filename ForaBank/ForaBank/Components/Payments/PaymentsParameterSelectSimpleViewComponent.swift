@@ -83,11 +83,6 @@ extension PaymentsParameterSelectSimpleView {
     
     enum ViewModelAction {
         
-//            struct ItemSelected: Action {
-//
-//                let itemId: Option.ID
-//            }
-        
         struct SelectOptionExternal: Action {}
     }
 }
@@ -100,52 +95,84 @@ struct PaymentsParameterSelectSimpleView: View {
     
     var body: some View {
         
-        HStack(alignment: .top) {
+        if viewModel.isEditable == true {
             
-            viewModel.icon
-                .resizable()
-                .frame(width: 32, height: 32)
-                .padding(.top, 20)
-            
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 0) {
                 
-                HStack(alignment: .top) {
+                Text(viewModel.title)
+                    .font(Font.custom("Inter-Regular", size: 12))
+                    .foregroundColor(Color(hex: "#999999"))
+                    .padding(.leading, 48)
+                
+                HStack(spacing: 16) {
                     
-                    VStack(alignment: .leading, spacing: 0)  {
-                        
-                        Text(viewModel.title)
-                            .font(Font.custom("Inter-Regular", size: 12))
-                            .foregroundColor(Color(hex: "#999999"))
-                            .padding(.bottom, 4)
-                        
-                        Text(viewModel.content)
-                            .font(Font.custom("Inter-Medium", size: 14))
-                            .foregroundColor(Color(hex: "#1C1C1C"))
-                        
-                        if let description = viewModel.description {
-                            
-                            Text(description)
-                                .font(Font.custom("Inter-Medium", size: 14))
-                                .foregroundColor(Color(hex: "#999999"))
-                        }
-                    }
-                    .padding()
+                    viewModel.icon
+                        .resizable()
+                        .frame(width: 32, height: 32)
+                    
+                    Text(viewModel.content)
+                        .font(Font.custom("Inter-Medium", size: 14))
+                        .foregroundColor(Color(hex: "#1C1C1C"))
                     
                     Spacer()
                     
                     Image("chevron-downnew")
-                        .padding()
-                        .padding(.top, 10)
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                }
+                
+                if let description = viewModel.description {
+                    
+                    Text(description)
+                        .font(Font.custom("Inter-Medium", size: 14))
+                        .foregroundColor(Color(hex: "#999999"))
+                        .padding(.leading, 48)
+                        .padding(.trailing, 28)
                 }
                 
                 Divider()
+                    .frame(height: 1)
                     .background(Color(hex: "#EAEBEB"))
-                    .padding(.top, 1)
+                    .padding(.top, 12)
+                    .padding(.leading, 48)
+                
+            }
+            .onTapGesture {
+                
+                viewModel.action.send(ViewModelAction.SelectOptionExternal())
             }
             
-        }.onTapGesture {
+        } else {
             
-            viewModel.action.send(ViewModelAction.SelectOptionExternal())
+            VStack(alignment: .leading, spacing: 0) {
+                
+                Text(viewModel.title)
+                    .font(Font.custom("Inter-Regular", size: 12))
+                    .foregroundColor(Color(hex: "#999999"))
+                    .padding(.leading, 48)
+                
+                HStack(spacing: 16) {
+                    
+                    viewModel.icon
+                        .resizable()
+                        .frame(width: 32, height: 32)
+                    
+                    Text(viewModel.content)
+                        .font(Font.custom("Inter-Medium", size: 14))
+                        .foregroundColor(Color(hex: "#1C1C1C"))
+                    
+                    Spacer()
+                }
+                
+                if let description = viewModel.description {
+                    
+                    Text(description)
+                        .font(Font.custom("Inter-Medium", size: 14))
+                        .foregroundColor(Color(hex: "#999999"))
+                        .padding(.leading, 48)
+                        .padding(.trailing, 28)
+                }
+            }
         }
     }
 }
@@ -157,10 +184,13 @@ struct PaymentsParameterSelectSimpleView_Previews: PreviewProvider {
     static var previews: some View {
         
     Group {
-            PaymentsParameterSelectSimpleView(viewModel:.sample)
-                .previewLayout(.fixed(width: 375, height: 80))
+            PaymentsParameterSelectSimpleView(viewModel: .sample)
+                .previewLayout(.fixed(width: 375, height: 100))
             
-            PaymentsParameterSelectSimpleView(viewModel:.selectedSimple_1)
+            PaymentsParameterSelectSimpleView(viewModel: .sampleSelected)
+                .previewLayout(.fixed(width: 375, height: 200))
+        
+            PaymentsParameterSelectSimpleView(viewModel: .sampleSelectedNotEditable)
                 .previewLayout(.fixed(width: 375, height: 200))
         }
     }
@@ -170,14 +200,11 @@ struct PaymentsParameterSelectSimpleView_Previews: PreviewProvider {
 
 extension PaymentsParameterSelectSimpleView.ViewModel {
     
-    static let sample = PaymentsParameterSelectSimpleView.ViewModel(icon: Image("Payments List Sample"), title: "Тип услуги", content: "Выберите услугу", description: nil)
+    static let sample = try! PaymentsParameterSelectSimpleView.ViewModel(with: .init(.init(id: UUID().uuidString, value: nil), icon: .init(with: UIImage(named: "Payments List Sample")!)!, title: "Тип услуги", selectionTitle: "Выберите услугу", description: nil, options: []))
     
-    static let selectedSimple_1 = PaymentsParameterSelectSimpleView.ViewModel(
-        icon: Image("Payments List Sample"),
-        title: "Тип услуги",
-        content: "В возрасте до 14 лет (новый образец)",
-        description: "Государственная пошлина за выдачу паспорта удостоверяющего личность гражданина РФ за пределами территории РФ гражданину РФ",
-        selectedOptionId: "0")
     
+    static let sampleSelected = try! PaymentsParameterSelectSimpleView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0"), icon: .init(with: UIImage(named: "Payments List Sample")!)!, title: "Тип услуги", selectionTitle: "Выберите услугу", description: "Государственная пошлина за выдачу паспорта удостоверяющего личность гражданина РФ за пределами территории РФ гражданину РФ", options: [.init(id: "0", name: "В возрасте до 14 лет (новый образец)")]))
+    
+    static let sampleSelectedNotEditable = try! PaymentsParameterSelectSimpleView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0"), icon: .init(with: UIImage(named: "Payments List Sample")!)!, title: "Тип услуги", selectionTitle: "Выберите услугу", description: "Государственная пошлина за выдачу паспорта удостоверяющего личность гражданина РФ за пределами территории РФ гражданину РФ", options: [.init(id: "0", name: "В возрасте до 14 лет (новый образец)")], editable: false))
 }
 

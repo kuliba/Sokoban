@@ -1,6 +1,5 @@
-
 //
-//  PaymentsParameterServiceViewComponent.swift
+//  PaymentsParameterSelectServiceView.swift
 //  ForaBank
 //
 //  Created by Константин Савялов on 08.02.2022.

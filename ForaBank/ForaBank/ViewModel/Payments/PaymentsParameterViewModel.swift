@@ -9,14 +9,11 @@ import Foundation
 
 class PaymentsParameterViewModel: Identifiable, ObservableObject {
     
-    //TODO: добавить свойство let isEditable: Bool
-    
-    
     @Published var value: Value
-    var isValid: Bool {
-        
-        return true
-    }
+    
+    var isValid: Bool { true }
+    var isEditable: Bool { source.editable }
+    var isCollapsable: Bool { source.collapsable }
     
     var id: Payments.Parameter.ID { source.parameter.id }
     var result: Payments.Parameter { .init(id: id, value: value.current)}

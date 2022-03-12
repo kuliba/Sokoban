@@ -221,31 +221,22 @@ extension Payments {
         
         let parameter: Parameter
         let options: [Option]
-        let editable: Bool
-        let collapsable: Bool
+        let editable: Bool = true
+        let collapsable: Bool = false
         
-        internal init(_ parameter: Parameter, options: [Option],editable: Bool = true, collapsable: Bool = false) {
+        internal init(_ parameter: Parameter, options: [Option]) {
             
             self.parameter = parameter
             self.options = options
-            self.editable = editable
-            self.collapsable = collapsable
         }
         
         func updated(value: String?) -> ParameterRepresentable {
             
-            ParameterSelectSwitch(.init(id: parameter.id, value: value), options: options, editable: editable, collapsable: collapsable)
+            ParameterSelectSwitch(.init(id: parameter.id, value: value), options: options)
         }
         
-        func updated(editable: Bool) -> ParameterRepresentable {
-            
-            ParameterSelectSwitch(parameter, options: options, editable: editable, collapsable: collapsable)
-        }
-        
-        func updated(collapsable: Bool) -> ParameterRepresentable {
-            
-            ParameterSelectSwitch(parameter, options: options, editable: editable, collapsable: collapsable)
-        }
+        func updated(editable: Bool) -> ParameterRepresentable { self }
+        func updated(collapsable: Bool) -> ParameterRepresentable { self }
         
         struct Option: Identifiable {
             
@@ -341,10 +332,7 @@ extension Payments {
             ParameterInfo(.init(id: parameter.id, value: value), icon: icon, title: title, content: content, collapsable: collapsable)
         }
         
-        func updated(editable: Bool) -> ParameterRepresentable {
-            
-            self
-        }
+        func updated(editable: Bool) -> ParameterRepresentable { self }
         
         func updated(collapsable: Bool) -> ParameterRepresentable {
             
@@ -401,39 +389,29 @@ extension Payments {
         let title: String
         let currency: Currency
         let validator: Validator
-        let editable: Bool
-        let collapsable: Bool
+        let editable: Bool = true
+        let collapsable: Bool = false
         
         var amount: Double {
             //TODO: double from value
             return 0
         }
 
-        
-        internal init(_ parameter: Parameter, title: String, currency: Currency, validator: Validator, editable: Bool = true, collapsable: Bool = false) {
+        internal init(_ parameter: Parameter, title: String, currency: Currency, validator: Validator) {
             
             self.parameter = parameter
             self.title = title
             self.currency = currency
             self.validator = validator
-            self.editable = editable
-            self.collapsable = collapsable
         }
         
         func updated(value: String?) -> ParameterRepresentable {
             
-            ParameterAmount(.init(id: parameter.id, value: value), title: title, currency: currency, validator: validator, editable: editable, collapsable: collapsable)
+            ParameterAmount(.init(id: parameter.id, value: value), title: title, currency: currency, validator: validator)
         }
         
-        func updated(editable: Bool) -> ParameterRepresentable {
-            
-            ParameterAmount(parameter, title: title, currency: currency, validator: validator, editable: editable, collapsable: collapsable)
-        }
-        
-        func updated(collapsable: Bool) -> ParameterRepresentable {
-            
-            ParameterAmount(parameter, title: title, currency: currency, validator: validator, editable: editable, collapsable: collapsable)
-        }
+        func updated(editable: Bool) -> ParameterRepresentable { self }
+        func updated(collapsable: Bool) -> ParameterRepresentable { self }
         
         struct Validator: ValidatorProtocol {
             
