@@ -1,5 +1,5 @@
 //
-//  PaymentsParameterSelectSimpleViewComponent.swift
+//  PaymentsSelectSimpleViewComponent.swift
 //  ForaBank
 //
 //  Created by Константин Савялов on 21.02.2022.
@@ -10,7 +10,7 @@ import Combine
 
 //MARK: - ViewModel
 
-extension PaymentsParameterSelectSimpleView {
+extension PaymentsSelectSimpleView {
     
     class ViewModel: PaymentsParameterViewModel {
         
@@ -89,9 +89,9 @@ extension PaymentsParameterSelectSimpleView {
 
 //MARK: - View
 
-struct PaymentsParameterSelectSimpleView: View {
+struct PaymentsSelectSimpleView: View {
     
-    @ObservedObject var viewModel: PaymentsParameterSelectSimpleView.ViewModel
+    @ObservedObject var viewModel: PaymentsSelectSimpleView.ViewModel
     
     var body: some View {
         
@@ -179,18 +179,18 @@ struct PaymentsParameterSelectSimpleView: View {
 
 //MARK: - Preview
 
-struct PaymentsParameterSelectSimpleView_Previews: PreviewProvider {
+struct PaymentsSelectSimpleView_Previews: PreviewProvider {
     
     static var previews: some View {
         
     Group {
-            PaymentsParameterSelectSimpleView(viewModel: .sample)
+            PaymentsSelectSimpleView(viewModel: .sample)
                 .previewLayout(.fixed(width: 375, height: 100))
             
-            PaymentsParameterSelectSimpleView(viewModel: .sampleSelected)
+            PaymentsSelectSimpleView(viewModel: .sampleSelected)
                 .previewLayout(.fixed(width: 375, height: 200))
         
-            PaymentsParameterSelectSimpleView(viewModel: .sampleSelectedNotEditable)
+            PaymentsSelectSimpleView(viewModel: .sampleSelectedNotEditable)
                 .previewLayout(.fixed(width: 375, height: 200))
         }
     }
@@ -198,13 +198,13 @@ struct PaymentsParameterSelectSimpleView_Previews: PreviewProvider {
 
 //MARK: - Preview Content
 
-extension PaymentsParameterSelectSimpleView.ViewModel {
+extension PaymentsSelectSimpleView.ViewModel {
     
-    static let sample = try! PaymentsParameterSelectSimpleView.ViewModel(with: .init(.init(id: UUID().uuidString, value: nil), icon: .init(with: UIImage(named: "Payments List Sample")!)!, title: "Тип услуги", selectionTitle: "Выберите услугу", description: nil, options: []))
+    static let sample = try! PaymentsSelectSimpleView.ViewModel(with: .init(.init(id: UUID().uuidString, value: nil), icon: .init(with: UIImage(named: "Payments List Sample")!)!, title: "Тип услуги", selectionTitle: "Выберите услугу", description: nil, options: []))
     
     
-    static let sampleSelected = try! PaymentsParameterSelectSimpleView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0"), icon: .init(with: UIImage(named: "Payments List Sample")!)!, title: "Тип услуги", selectionTitle: "Выберите услугу", description: "Государственная пошлина за выдачу паспорта удостоверяющего личность гражданина РФ за пределами территории РФ гражданину РФ", options: [.init(id: "0", name: "В возрасте до 14 лет (новый образец)")]))
+    static let sampleSelected = try! PaymentsSelectSimpleView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0"), icon: .init(with: UIImage(named: "Payments List Sample")!)!, title: "Тип услуги", selectionTitle: "Выберите услугу", description: "Государственная пошлина за выдачу паспорта удостоверяющего личность гражданина РФ за пределами территории РФ гражданину РФ", options: [.init(id: "0", name: "В возрасте до 14 лет (новый образец)")]))
     
-    static let sampleSelectedNotEditable = try! PaymentsParameterSelectSimpleView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0"), icon: .init(with: UIImage(named: "Payments List Sample")!)!, title: "Тип услуги", selectionTitle: "Выберите услугу", description: "Государственная пошлина за выдачу паспорта удостоверяющего личность гражданина РФ за пределами территории РФ гражданину РФ", options: [.init(id: "0", name: "В возрасте до 14 лет (новый образец)")], editable: false))
+    static let sampleSelectedNotEditable = try! PaymentsSelectSimpleView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0"), icon: .init(with: UIImage(named: "Payments List Sample")!)!, title: "Тип услуги", selectionTitle: "Выберите услугу", description: "Государственная пошлина за выдачу паспорта удостоверяющего личность гражданина РФ за пределами территории РФ гражданину РФ", options: [.init(id: "0", name: "В возрасте до 14 лет (новый образец)")], editable: false))
 }
 

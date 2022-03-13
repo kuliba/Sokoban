@@ -1,5 +1,5 @@
 //
-//  PaymentsParameterCardViewComponent.swift
+//  PaymentsCardViewComponent.swift
 //  ForaBank
 //
 //  Created by Константин Савялов on 13.02.2022.
@@ -9,7 +9,7 @@ import SwiftUI
 
 //MARK: - ViewModel
 
-extension PaymentsParameterCardView {
+extension PaymentsCardView {
     
     class ViewModel: PaymentsParameterViewModel {
 
@@ -22,7 +22,7 @@ extension PaymentsParameterCardView {
 
 //MARK: - View
 
-struct PaymentsParameterCardView: View {
+struct PaymentsCardView: View {
     
     @ObservedObject var viewModel: ViewModel
     
@@ -68,17 +68,19 @@ struct PaymentsParameterCardView: View {
 
 //MARK: - Preview
 
-struct PaymentsParameterCardView_Previews: PreviewProvider {
+struct PaymentsCardView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        PaymentsParameterCardView(viewModel: .sample)
+        PaymentsCardView(viewModel: .sample)
             .previewLayout(.fixed(width: 375, height: 90))
     }
 }
 
-extension PaymentsParameterCardView.ViewModel {
+//MARK: - Preview Content
+
+extension PaymentsCardView.ViewModel {
     
-    static let sample = PaymentsParameterCardView.ViewModel(with: .init())
+    static let sample = PaymentsCardView.ViewModel(with: .init())
 }
 

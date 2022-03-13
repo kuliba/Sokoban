@@ -153,14 +153,14 @@ class PaymentsOperationViewModel: ObservableObject {
                 }.store(in: &itemsBindings)
             
             
-            if let simpleSelectItem = item as? PaymentsParameterSelectSimpleView.ViewModel {
+            if let simpleSelectItem = item as? PaymentsSelectSimpleView.ViewModel {
                 
                 simpleSelectItem.action
                     .receive(on: DispatchQueue.main)
                     .sink {[unowned self] action in
                         
                         switch action {
-                        case _ as PaymentsParameterSelectSimpleView.ViewModelAction.SelectOptionExternal:
+                        case _ as PaymentsSelectSimpleView.ViewModelAction.SelectOptionExternal:
                             
                             guard let simpleSelectParameter = simpleSelectItem.source as? Payments.ParameterSelectSimple else {
                                 return
@@ -274,26 +274,26 @@ class PaymentsOperationViewModel: ObservableObject {
             //TODO: add rest parameters view models
             switch parameter {
             case let parameterSelect as Payments.ParameterSelect:
-                result.append(try PaymentsParameterSelectView.ViewModel(with: parameterSelect))
+                result.append(try PaymentsSelectView.ViewModel(with: parameterSelect))
                 
             case let parameterSwitch as Payments.ParameterSelectSwitch:
-                result.append(try PaymentsParameterSwitchView.ViewModel(with: parameterSwitch))
+                result.append(try PaymentsSwitchView.ViewModel(with: parameterSwitch))
                 
             case let parameterInfo as Payments.ParameterInfo:
-                result.append(try PaymentsParameterInfoView.ViewModel(with: parameterInfo))
+                result.append(try PaymentsInfoView.ViewModel(with: parameterInfo))
                 
             case let parameterInput as Payments.ParameterInput:
-                result.append(try PaymentsParameterInputView.ViewModel(with: parameterInput))
+                result.append(try PaymentsInputView.ViewModel(with: parameterInput))
                 
             case let paremetrName as Payments.ParameterName:
-                result.append(try PaymentsParameterNameView.ViewModel(with: paremetrName))
+                result.append(try PaymentsNameView.ViewModel(with: paremetrName))
                 
             case let parameterSelectSimple as Payments.ParameterSelectSimple:
-                result.append(try PaymentsParameterSelectSimpleView.ViewModel(
+                result.append(try PaymentsSelectSimpleView.ViewModel(
                     with: parameterSelectSimple))
                 
             case let parameterCard as Payments.ParameterCard:
-                result.append(PaymentsParameterCardView.ViewModel(with: parameterCard))
+                result.append(PaymentsCardView.ViewModel(with: parameterCard))
                 
             default:
                 break
@@ -374,7 +374,7 @@ extension PaymentsOperationViewModel {
     enum FooterViewModel {
         
         case button(ContinueButtonViewModel)
-        case amount(PaymentsParameterAmountView.ViewModel)
+        case amount(PaymentsAmountView.ViewModel)
     }
     
     class ContinueButtonViewModel: ObservableObject {

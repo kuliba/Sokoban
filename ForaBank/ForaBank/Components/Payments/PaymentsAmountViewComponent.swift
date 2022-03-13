@@ -1,5 +1,5 @@
 //
-//  PaymentsParameterAmountViewComponent.swift
+//  PaymentsAmountViewComponent.swift
 //  ForaBank
 //
 //  Created by Константин Савялов on 14.02.2022.
@@ -10,7 +10,7 @@ import Combine
 
 //MARK: - ViewModel
 
-extension PaymentsParameterAmountView {
+extension PaymentsAmountView {
     
     class ViewModel: PaymentsParameterViewModel {
         
@@ -114,7 +114,9 @@ extension PaymentsParameterAmountView {
     }
 }
 
-struct PaymentsParameterAmountView: View {
+//MARK: - View
+
+struct PaymentsAmountView: View {
     
     @ObservedObject var viewModel: ViewModel
     
@@ -221,7 +223,7 @@ struct PaymentsParameterAmountView: View {
     
     struct TransferButtonView: View {
         
-        let viewModel: PaymentsParameterAmountView.ViewModel.TransferButtonViewModel
+        let viewModel: PaymentsAmountView.ViewModel.TransferButtonViewModel
         
         var body: some View {
             
@@ -256,7 +258,7 @@ struct PaymentsParameterAmountView: View {
     
     struct InfoView: View {
         
-        let viewModel: PaymentsParameterAmountView.ViewModel.InfoViewModel
+        let viewModel: PaymentsAmountView.ViewModel.InfoViewModel
         
         var body: some View {
             
@@ -289,7 +291,7 @@ struct PaymentsParameterAmountView: View {
     
     struct CurrencySwitchView: View {
         
-        let viewModel: PaymentsParameterAmountView.ViewModel.CurrencySwitchViewModel
+        let viewModel: PaymentsAmountView.ViewModel.CurrencySwitchViewModel
         
         var body: some View {
             
@@ -320,9 +322,10 @@ struct PaymentsParameterAmountView: View {
             }
         }
     }
+    
     struct AlertView: View {
         
-        let viewModel: PaymentsParameterAmountView.ViewModel.AlertViewModel
+        let viewModel: PaymentsAmountView.ViewModel.AlertViewModel
         
         var body: some View {
             
@@ -337,32 +340,34 @@ struct PaymentsParameterAmountView: View {
     }
 }
 
-struct PaymentsParameterAmountView_Previews: PreviewProvider {
+//MARK: - Preview
+
+struct PaymentsAmountView_Previews: PreviewProvider {
     
     static var previews: some View {
         
         Group {
             
-            PaymentsParameterAmountView(viewModel: .amountParameter)
+            PaymentsAmountView(viewModel: .amountParameter)
                 .previewLayout(.fixed(width: 375, height: 160))
                 .previewDisplayName("Parameter Amount")
             
-            PaymentsParameterAmountView(viewModel: .empty)
+            PaymentsAmountView(viewModel: .empty)
                 .previewLayout(.fixed(width: 375, height: 160))
             
-            PaymentsParameterAmountView(viewModel: .emptyInfo)
+            PaymentsAmountView(viewModel: .emptyInfo)
                 .previewLayout(.fixed(width: 375, height: 160))
             
-            PaymentsParameterAmountView(viewModel: .amount)
+            PaymentsAmountView(viewModel: .amount)
                 .previewLayout(.fixed(width: 375, height: 160))
             
-            PaymentsParameterAmountView(viewModel: .amountZeroCurrencyInfo)
+            PaymentsAmountView(viewModel: .amountZeroCurrencyInfo)
                 .previewLayout(.fixed(width: 375, height: 160))
             
-            PaymentsParameterAmountView(viewModel: .amountCurrencyInfo)
+            PaymentsAmountView(viewModel: .amountCurrencyInfo)
                 .previewLayout(.fixed(width: 375, height: 160))
             
-            PaymentsParameterAmountView(viewModel: .amountCurrencyInfoAlert)
+            PaymentsAmountView(viewModel: .amountCurrencyInfoAlert)
                 .previewLayout(.fixed(width: 375, height: 160))
             
         }
@@ -371,23 +376,23 @@ struct PaymentsParameterAmountView_Previews: PreviewProvider {
 
 //MARK: - Preview Content
 
-extension PaymentsParameterAmountView.ViewModel {
+extension PaymentsAmountView.ViewModel {
     
-    static let empty = PaymentsParameterAmountView.ViewModel(description: "Сумма перевода", content: "", transferButton: .inactive(title: "Перевести"))
+    static let empty = PaymentsAmountView.ViewModel(description: "Сумма перевода", content: "", transferButton: .inactive(title: "Перевести"))
     
-    static let emptyInfo =  PaymentsParameterAmountView.ViewModel(description: "Сумма перевода", content: "", transferButton: .inactive(title: "Перевести"), info: .button(title: "Возможна комиссия", icon: Image("infoBlack"), action: {}))
+    static let emptyInfo =  PaymentsAmountView.ViewModel(description: "Сумма перевода", content: "", transferButton: .inactive(title: "Перевести"), info: .button(title: "Возможна комиссия", icon: Image("infoBlack"), action: {}))
     
-    static let amount = PaymentsParameterAmountView.ViewModel(description: "Сумма перевода", content: "1 000 ₽", transferButton: .active(title: "Перевести", action: {}))
+    static let amount = PaymentsAmountView.ViewModel(description: "Сумма перевода", content: "1 000 ₽", transferButton: .active(title: "Перевести", action: {}))
     
-    static let amountZeroCurrencyInfo = PaymentsParameterAmountView.ViewModel(description: "Сумма перевода", content: "0 ₽", transferButton: .active(title: "Перевести", action: {}), info: .text("1$ - 72.72 ₽"), currencySwitch: .init(from: "₽", to: "$", icon: Image("Payments Refresh CW"), action: {}))
+    static let amountZeroCurrencyInfo = PaymentsAmountView.ViewModel(description: "Сумма перевода", content: "0 ₽", transferButton: .active(title: "Перевести", action: {}), info: .text("1$ - 72.72 ₽"), currencySwitch: .init(from: "₽", to: "$", icon: Image("Payments Refresh CW"), action: {}))
     
-    static let amountCurrencyInfo = PaymentsParameterAmountView.ViewModel(description: "Сумма перевода", content: "1 000 ₽", transferButton: .active(title: "Перевести", action: {}), info: .text("13.75 $   |   1$ - 72.72 ₽"), currencySwitch: .init(from: "₽", to: "$", icon: Image("Payments Refresh CW"), action: {}))
+    static let amountCurrencyInfo = PaymentsAmountView.ViewModel(description: "Сумма перевода", content: "1 000 ₽", transferButton: .active(title: "Перевести", action: {}), info: .text("13.75 $   |   1$ - 72.72 ₽"), currencySwitch: .init(from: "₽", to: "$", icon: Image("Payments Refresh CW"), action: {}))
     
-    static let amountCurrencyInfoAlert = PaymentsParameterAmountView.ViewModel(description: "Сумма перевода", content: "1 000 ₽", transferButton: .active(title: "Перевести", action: {}), info: .text("13.75 $   |   1$ - 72.72 ₽"), currencySwitch: .init(from: "₽", to: "$", icon: Image("Payments Refresh CW"), action: {}), alert: .init(title: "Недостаточно средств"))
+    static let amountCurrencyInfoAlert = PaymentsAmountView.ViewModel(description: "Сумма перевода", content: "1 000 ₽", transferButton: .active(title: "Перевести", action: {}), info: .text("13.75 $   |   1$ - 72.72 ₽"), currencySwitch: .init(from: "₽", to: "$", icon: Image("Payments Refresh CW"), action: {}), alert: .init(title: "Недостаточно средств"))
     
-    static let amountParameter: PaymentsParameterAmountView.ViewModel = {
+    static let amountParameter: PaymentsAmountView.ViewModel = {
         
-        let viewModel = PaymentsParameterAmountView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "100"), title: "Сумма перевода", currency: .init(description: "RUB"), validator: .init(minAmount: 1)), actionTitle: "Перевести", action: {})
+        let viewModel = PaymentsAmountView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "100"), title: "Сумма перевода", currency: .init(description: "RUB"), validator: .init(minAmount: 1)), actionTitle: "Перевести", action: {})
         
         viewModel.updateTranferButton(isEnabled: true)
         

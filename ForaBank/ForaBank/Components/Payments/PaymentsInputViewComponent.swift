@@ -1,5 +1,5 @@
 //
-//  PaymentsParameterInputViewComponent.swift
+//  PaymentsInputViewComponent.swift
 //  ForaBank
 //
 //  Created by Константин Савялов on 07.02.2022.
@@ -10,7 +10,7 @@ import Combine
 
 //MARK: - ViewModel
 
-extension PaymentsParameterInputView {
+extension PaymentsInputView {
     
     class ViewModel: PaymentsParameterViewModel {
         
@@ -73,9 +73,9 @@ extension PaymentsParameterInputView {
 
 //MARK: - View
 
-struct PaymentsParameterInputView: View {
+struct PaymentsInputView: View {
     
-    @ObservedObject var viewModel: PaymentsParameterInputView.ViewModel
+    @ObservedObject var viewModel: PaymentsInputView.ViewModel
     
     var body: some View {
         
@@ -128,31 +128,32 @@ struct PaymentsParameterInputView: View {
 
 //MARK: - Preview
 
-struct PaymentsParameterInputView_Previews: PreviewProvider {
+struct PaymentsInputView_Previews: PreviewProvider {
     
     static var previews: some View {
         
         Group {
             
-            PaymentsParameterInputView(viewModel: .sampleEmpty)
+            PaymentsInputView(viewModel: .sampleEmpty)
                 .previewLayout(.fixed(width: 375, height: 80))
             
-            PaymentsParameterInputView(viewModel: .sampleValue)
+            PaymentsInputView(viewModel: .sampleValue)
                 .previewLayout(.fixed(width: 375, height: 80))
             
-            PaymentsParameterInputView(viewModel: .sampleValueNotEditable)
+            PaymentsInputView(viewModel: .sampleValueNotEditable)
                 .previewLayout(.fixed(width: 375, height: 80))
         }
     }
 }
 
-//Payments Input Sample
-extension PaymentsParameterInputView.ViewModel {
+//MARK: - Preview Content
+
+extension PaymentsInputView.ViewModel {
     
-    static let sampleEmpty = try! PaymentsParameterInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: nil), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .init(minLength: 5, maxLength: nil, regEx: nil)))
+    static let sampleEmpty = try! PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: nil), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .init(minLength: 5, maxLength: nil, regEx: nil)))
     
-    static let sampleValue = try! PaymentsParameterInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0016196314"), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .init(minLength: 5, maxLength: nil, regEx: nil)))
+    static let sampleValue = try! PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0016196314"), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .init(minLength: 5, maxLength: nil, regEx: nil)))
     
-    static let sampleValueNotEditable = try! PaymentsParameterInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0016196314"), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .init(minLength: 5, maxLength: nil, regEx: nil), editable: false))
+    static let sampleValueNotEditable = try! PaymentsInputView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0016196314"), icon: .init(with: UIImage(named: "Payments Input Sample")!)!, title: "ИНН подразделения", validator: .init(minLength: 5, maxLength: nil, regEx: nil), editable: false))
 }
 

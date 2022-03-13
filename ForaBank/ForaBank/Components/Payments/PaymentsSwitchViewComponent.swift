@@ -1,5 +1,5 @@
 //
-//  PaymentsParameterSwitchViewComponent.swift
+//  PaymentsSwitchViewComponent.swift
 //  ForaBank
 //
 //  Created by Константин Савялов on 14.02.2022.
@@ -10,7 +10,7 @@ import Combine
 
 //MARK: - ViewModel
 
-extension PaymentsParameterSwitchView {
+extension PaymentsSwitchView {
     
     class ViewModel: PaymentsParameterViewModel {
         
@@ -29,11 +29,11 @@ extension PaymentsParameterSwitchView {
         init(with parameterSwitch: Payments.ParameterSelectSwitch) throws {
             
             guard let selectedOptionId = parameterSwitch.parameter.value else {
-                throw PaymentsParameterSwitchView.ViewModel.Error.noAnyOptionSelected
+                throw PaymentsSwitchView.ViewModel.Error.noAnyOptionSelected
             }
             
             guard parameterSwitch.options.map({ $0.id }).contains(selectedOptionId) else {
-                throw PaymentsParameterSwitchView.ViewModel.Error.selectedNonExistentOption
+                throw PaymentsSwitchView.ViewModel.Error.selectedNonExistentOption
             }
             
             self.options = parameterSwitch.options.map{ OptionViewModel(id: $0.id, title: $0.name) }
@@ -70,7 +70,7 @@ extension PaymentsParameterSwitchView {
 
 //MARK: - View
 
-struct PaymentsParameterSwitchView: View {
+struct PaymentsSwitchView: View {
     
     @ObservedObject var viewModel: ViewModel
     
@@ -92,17 +92,17 @@ struct PaymentsParameterSwitchView: View {
 
 //MARK: - Preview
 
-struct PaymentsParameterSwitchView_Previews: PreviewProvider {
+struct PaymentsSwitchView_Previews: PreviewProvider {
     
     static var previews: some View {
         
         Group {
             
-            PaymentsParameterSwitchView(viewModel: .sampleParameter)
+            PaymentsSwitchView(viewModel: .sampleParameter)
                 .previewLayout(.fixed(width: 375, height: 56))
                 .previewDisplayName("Parameter")
             
-            PaymentsParameterSwitchView(viewModel: .sample)
+            PaymentsSwitchView(viewModel: .sample)
                 .previewLayout(.fixed(width: 375, height: 56))
         }
     }
@@ -110,19 +110,19 @@ struct PaymentsParameterSwitchView_Previews: PreviewProvider {
 
 //MARK: - Preview Content
 
-extension PaymentsParameterSwitchView.ViewModel {
+extension PaymentsSwitchView.ViewModel {
     
-    static let sample: PaymentsParameterSwitchView.ViewModel = {
+    static let sample: PaymentsSwitchView.ViewModel = {
         
-        let firstOption = PaymentsParameterSwitchView.ViewModel.OptionViewModel(title: "Документ")
+        let firstOption = PaymentsSwitchView.ViewModel.OptionViewModel(title: "Документ")
         
-        return PaymentsParameterSwitchView.ViewModel(options: [firstOption, .init(title: "УИН"), .init(title: "ИП")], selected: firstOption.id)
+        return PaymentsSwitchView.ViewModel(options: [firstOption, .init(title: "УИН"), .init(title: "ИП")], selected: firstOption.id)
     }()
     
-    static let sampleParameter: PaymentsParameterSwitchView.ViewModel = {
+    static let sampleParameter: PaymentsSwitchView.ViewModel = {
         
         let parameter = Payments.ParameterSelectSwitch( .init(id: UUID().uuidString, value: "2"), options: [.init(id: "1", name: "Документ"), .init(id: "2", name: "УИН"), .init(id: "3", name: "ИП")])
-        return try! PaymentsParameterSwitchView.ViewModel(with: parameter)
+        return try! PaymentsSwitchView.ViewModel(with: parameter)
     }()
 }
 

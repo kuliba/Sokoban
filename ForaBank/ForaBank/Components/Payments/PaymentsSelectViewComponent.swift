@@ -1,5 +1,5 @@
 //
-//  PaymentsParameterSelectViewComponent.swift
+//  PaymentsSelectViewComponent.swift
 //  ForaBank
 //
 //  Created by Константин Савялов on 06.02.2022.
@@ -10,7 +10,7 @@ import Combine
 
 //MARK: - ViewModel
 
-extension PaymentsParameterSelectView {
+extension PaymentsSelectView {
     
     class ViewModel: PaymentsParameterViewModel {
         
@@ -61,7 +61,7 @@ extension PaymentsParameterSelectView {
                 .sink { [unowned self] action in
                     
                     switch action {
-                    case let payload as PaymentsParameterSelectView.ViewModelAction.ItemSelected:
+                    case let payload as PaymentsSelectView.ViewModelAction.ItemSelected:
                         guard let parameterSelect = source as? Payments.ParameterSelect else {
                             return
                         }
@@ -75,7 +75,7 @@ extension PaymentsParameterSelectView {
                             print(error.localizedDescription)
                         }
                         
-                    case _ as PaymentsParameterSelectView.ViewModelAction.ShowItemsList:
+                    case _ as PaymentsSelectView.ViewModelAction.ShowItemsList:
                         update(value: nil)
      
                     default:
@@ -104,7 +104,7 @@ extension PaymentsParameterSelectView {
             return options.map { option in
                 
                 let icon = option.icon.image ?? Self.itemIconPlaceholder
-                let action: (ItemViewModel.ID) -> Void = { [weak self] itemId in self?.action.send(PaymentsParameterSelectView.ViewModelAction.ItemSelected(itemId: itemId)) }
+                let action: (ItemViewModel.ID) -> Void = { [weak self] itemId in self?.action.send(PaymentsSelectView.ViewModelAction.ItemSelected(itemId: itemId)) }
                 
                 return ItemViewModel(id: option.id, icon: icon, name: option.name, action: action)
             }
@@ -117,7 +117,7 @@ extension PaymentsParameterSelectView {
             }
             
             let icon = selectedOption.icon.image ?? Self.itemIconPlaceholder
-            return SelectedItemViewModel(id: selectedOption.id, icon: icon, title: title, name: selectedOption.name, action: { [weak self] in self?.action.send(PaymentsParameterSelectView.ViewModelAction.ShowItemsList()) })
+            return SelectedItemViewModel(id: selectedOption.id, icon: icon, title: title, name: selectedOption.name, action: { [weak self] in self?.action.send(PaymentsSelectView.ViewModelAction.ShowItemsList()) })
         }
         
         //MARK: ViewModel Types
@@ -182,7 +182,7 @@ extension PaymentsParameterSelectView {
 
 //MARK: - View
 
-struct PaymentsParameterSelectView: View {
+struct PaymentsSelectView: View {
     
     @ObservedObject var viewModel: ViewModel
     
@@ -209,7 +209,7 @@ struct PaymentsParameterSelectView: View {
     
     struct ItemView: View {
         
-        let viewModel: PaymentsParameterSelectView.ViewModel.ItemViewModel
+        let viewModel: PaymentsSelectView.ViewModel.ItemViewModel
         
         var body: some View {
             
@@ -234,7 +234,7 @@ struct PaymentsParameterSelectView: View {
     
     struct SelectedItemView: View {
         
-        let viewModel: PaymentsParameterSelectView.ViewModel.SelectedItemViewModel
+        let viewModel: PaymentsSelectView.ViewModel.SelectedItemViewModel
         let isEditable: Bool
         
         var body: some View {
@@ -315,28 +315,28 @@ struct PaymentsParameterSelectView: View {
 
 //MARK: - Preview
 
-struct PaymentsParameterSelectView_Previews: PreviewProvider {
+struct PaymentsSelectView_Previews: PreviewProvider {
     
     static var previews: some View {
         
         Group {
             
-            PaymentsParameterSelectView(viewModel: .notSelectedParameter)
+            PaymentsSelectView(viewModel: .notSelectedParameter)
                 .previewLayout(.fixed(width: 375, height: 200))
                 .previewDisplayName("Parameter Not Selected")
             
-            PaymentsParameterSelectView(viewModel: .selectedParameter)
+            PaymentsSelectView(viewModel: .selectedParameter)
                 .previewLayout(.fixed(width: 375, height: 100))
                 .previewDisplayName("Parameter Selected")
             
-            PaymentsParameterSelectView(viewModel: .selectedParameterNotEditable)
+            PaymentsSelectView(viewModel: .selectedParameterNotEditable)
                 .previewLayout(.fixed(width: 375, height: 100))
                 .previewDisplayName("Parameter Selected Not Editable")
             
-            PaymentsParameterSelectView(viewModel: .notSelectedMock)
+            PaymentsSelectView(viewModel: .notSelectedMock)
                 .previewLayout(.fixed(width: 375, height: 200))
             
-            PaymentsParameterSelectView(viewModel: .selectedMock)
+            PaymentsSelectView(viewModel: .selectedMock)
                 .previewLayout(.fixed(width: 375, height: 100))
             
         }
@@ -345,11 +345,11 @@ struct PaymentsParameterSelectView_Previews: PreviewProvider {
 
 //MARK: - Preview Content
 
-extension PaymentsParameterSelectView.ViewModel {
+extension PaymentsSelectView.ViewModel {
     
-    static var notSelectedMock: PaymentsParameterSelectView.ViewModel = {
+    static var notSelectedMock: PaymentsSelectView.ViewModel = {
         
-        var viewModel = PaymentsParameterSelectView.ViewModel(items: [
+        var viewModel = PaymentsSelectView.ViewModel(items: [
             .init(icon: Image("Payments List Sample"), name: "Имущественный налог", action: { _ in }),
             .init(icon: Image("Payments List Sample"), name: "Транспортный налог", action: { _ in }),
             .init(icon: Image("Payments List Sample"), name: "Сбор за пользовние объектами водными биологическими ресурсами", action: { _ in })], description: "Категория платежа")
@@ -357,11 +357,11 @@ extension PaymentsParameterSelectView.ViewModel {
         return viewModel
     }()
     
-    static var selectedMock: PaymentsParameterSelectView.ViewModel = {
+    static var selectedMock: PaymentsSelectView.ViewModel = {
         
-        let firstItem = PaymentsParameterSelectView.ViewModel.ItemViewModel(icon: Image("Payments List Sample"), name: "Имущественный налог", action: { _ in })
+        let firstItem = PaymentsSelectView.ViewModel.ItemViewModel(icon: Image("Payments List Sample"), name: "Имущественный налог", action: { _ in })
         
-        var viewModel = PaymentsParameterSelectView.ViewModel(items: [
+        var viewModel = PaymentsSelectView.ViewModel(items: [
             firstItem,
             .init(icon: Image("Payments List Sample"), name: "Транспортный налог", action: { _ in }),
             .init(icon: Image("Payments List Sample"), name: "Земельный налог", action: { _ in })], description: "Категория платежа", selected: (firstItem, {}))
@@ -371,32 +371,32 @@ extension PaymentsParameterSelectView.ViewModel {
    
     //MARK: Parameter
     
-    static var notSelectedParameter: PaymentsParameterSelectView.ViewModel = {
+    static var notSelectedParameter: PaymentsSelectView.ViewModel = {
         
         let icon = ImageData(with: UIImage(named: "Payments List Sample")!)!
         let parameter = Payments.ParameterSelect( .init(id: UUID().uuidString, value: nil), title: "Категория платежа", options: [.init(id: "1", name: "Имущественный налог", icon: icon), .init(id: "2", name: "Транспортный налог", icon: icon), .init(id: "3", name: "Сбор за пользовние объектами водными биологическими ресурсами", icon: icon)])
         
-        var viewModel = try! PaymentsParameterSelectView.ViewModel(with: parameter)
+        var viewModel = try! PaymentsSelectView.ViewModel(with: parameter)
         
         return viewModel
     }()
     
-    static var selectedParameter: PaymentsParameterSelectView.ViewModel = {
+    static var selectedParameter: PaymentsSelectView.ViewModel = {
         
         let icon = ImageData(with: UIImage(named: "Payments List Sample")!)!
         let parameter = Payments.ParameterSelect(.init(id: UUID().uuidString, value: "3"), title: "Категория платежа", options: [.init(id: "1", name: "Имущественный налог", icon: icon), .init(id: "2", name: "Транспортный налог", icon: icon), .init(id: "3", name: "Сбор за пользовние объектами водными биологическими ресурсами", icon: icon)])
         
-        var viewModel = try! PaymentsParameterSelectView.ViewModel(with: parameter)
+        var viewModel = try! PaymentsSelectView.ViewModel(with: parameter)
         
         return viewModel
     }()
     
-    static var selectedParameterNotEditable: PaymentsParameterSelectView.ViewModel = {
+    static var selectedParameterNotEditable: PaymentsSelectView.ViewModel = {
         
         let icon = ImageData(with: UIImage(named: "Payments List Sample")!)!
         let parameter = Payments.ParameterSelect(.init(id: UUID().uuidString, value: "3"), title: "Категория платежа", options: [.init(id: "1", name: "Имущественный налог", icon: icon), .init(id: "2", name: "Транспортный налог", icon: icon), .init(id: "3", name: "Сбор за пользовние объектами водными биологическими ресурсами", icon: icon)], editable: false)
         
-        var viewModel = try! PaymentsParameterSelectView.ViewModel(with: parameter)
+        var viewModel = try! PaymentsSelectView.ViewModel(with: parameter)
         
         return viewModel
     }()

@@ -1,5 +1,5 @@
 //
-//  PaymentsParameterInfoViewComponent.swift
+//  PaymentsInfoViewComponent.swift
 //  ForaBank
 //
 //  Created by Константин Савялов on 07.02.2022.
@@ -9,7 +9,7 @@ import SwiftUI
 
 //MARK: - ViewModel
 
-extension PaymentsParameterInfoView {
+extension PaymentsInfoView {
     
     class ViewModel: PaymentsParameterViewModel {
         
@@ -40,9 +40,9 @@ extension PaymentsParameterInfoView {
 
 //MARK: - View
 
-struct PaymentsParameterInfoView: View {
+struct PaymentsInfoView: View {
     
-    let viewModel: PaymentsParameterInfoView.ViewModel
+    let viewModel: PaymentsInfoView.ViewModel
     
     var body: some View {
         
@@ -81,17 +81,17 @@ struct PaymentsParameterInfoView: View {
 
 //MARK: - Preview
 
-struct PaymentsParameterInfoView_Previews: PreviewProvider {
+struct PaymentsInfoView_Previews: PreviewProvider {
     
     static var previews: some View {
         
         Group {
             
-            PaymentsParameterInfoView(viewModel:.sampleParameter)
+            PaymentsInfoView(viewModel:.sampleParameter)
                 .previewLayout(.fixed(width: 375, height: 156))
                 .previewDisplayName("Parameter")
             
-            PaymentsParameterInfoView(viewModel:.sample)
+            PaymentsInfoView(viewModel:.sample)
                 .previewLayout(.fixed(width: 375, height: 156))
         }
     }
@@ -99,9 +99,9 @@ struct PaymentsParameterInfoView_Previews: PreviewProvider {
 
 //MARK: - Preview Content
 
-extension PaymentsParameterInfoView.ViewModel {
+extension PaymentsInfoView.ViewModel {
     
-    static let sample = PaymentsParameterInfoView.ViewModel(icon: Image("Payments List Sample"), title: "Основание", content: "Налог на имущество физических лиц, взимаемый по ставкам, применяемым к объектам налогообложения, расположенным в границах внутригородских муниципальных образований городов федерального значения (сумма платеж...)")
+    static let sample = PaymentsInfoView.ViewModel(icon: Image("Payments List Sample"), title: "Основание", content: "Налог на имущество физических лиц, взимаемый по ставкам, применяемым к объектам налогообложения, расположенным в границах внутригородских муниципальных образований городов федерального значения (сумма платеж...)")
     
-    static let sampleParameter = try! PaymentsParameterInfoView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "УФК по г. Москве (ИФНС России №26 по г. Москве)"), icon: .empty, title: "Получатель платежа"))
+    static let sampleParameter = try! PaymentsInfoView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "УФК по г. Москве (ИФНС России №26 по г. Москве)"), icon: .empty, title: "Получатель платежа"))
 }

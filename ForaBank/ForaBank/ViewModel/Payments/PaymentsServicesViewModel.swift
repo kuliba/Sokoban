@@ -13,7 +13,7 @@ class PaymentsServicesViewModel: ObservableObject {
     let action: PassthroughSubject<Action, Never> = .init()
     
     @Published var header: HeaderViewModel
-    @Published var select: PaymentsParameterSelectServiceView.ViewModel?
+    @Published var select: PaymentsSelectServiceView.ViewModel?
     @Published var isOperationViewActive: Bool
     var operationViewModel: PaymentsOperationViewModel?
     
@@ -23,7 +23,7 @@ class PaymentsServicesViewModel: ObservableObject {
     private var bindings = Set<AnyCancellable>()
     
     internal init(header: HeaderViewModel,
-                  select: PaymentsParameterSelectServiceView.ViewModel?,
+                  select: PaymentsSelectServiceView.ViewModel?,
                   isOperationViewActive: Bool = false,
                   category: Payments.Category,
                   selectedService: Payments.Service? = nil,
@@ -70,7 +70,7 @@ class PaymentsServicesViewModel: ObservableObject {
                     switch payload {
                     case .select(let selectServiceParameter):
                         // multiple services for category
-                        select = PaymentsParameterSelectServiceView.ViewModel(with: selectServiceParameter, action: { [weak self] id in self?.action.send(PaymentsServicesViewModelAction.ItemTapped(itemId: id)) })
+                        select = PaymentsSelectServiceView.ViewModel(with: selectServiceParameter, action: { [weak self] id in self?.action.send(PaymentsServicesViewModelAction.ItemTapped(itemId: id)) })
                         
                     case .selected(let service):
                         // single service for category
@@ -132,7 +132,7 @@ enum PaymentsServicesViewModelAction {
     
     struct ItemTapped: Action {
         
-        let itemId: PaymentsParameterSelectServiceView.ViewModel.ID
+        let itemId: PaymentsSelectServiceView.ViewModel.ID
     }
     
     struct DissmissOperationView: Action {}

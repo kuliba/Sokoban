@@ -22,7 +22,7 @@ struct PaymentsServicesView: View {
                     
                     if let selectViewModel = viewModel.select {
                         
-                        PaymentsParameterSelectServiceView(viewModel: selectViewModel)
+                        PaymentsSelectServiceView(viewModel: selectViewModel)
                     }
                     
                     NavigationLink("", isActive: $viewModel.isOperationViewActive) {

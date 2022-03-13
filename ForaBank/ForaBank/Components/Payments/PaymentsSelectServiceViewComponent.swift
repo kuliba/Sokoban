@@ -1,5 +1,5 @@
 //
-//  PaymentsParameterSelectServiceView.swift
+//  PaymentsSelectServiceViewComponent.swift
 //  ForaBank
 //
 //  Created by Константин Савялов on 08.02.2022.
@@ -9,7 +9,7 @@ import SwiftUI
 
 //MARK: - ViewModel
 
-extension PaymentsParameterSelectServiceView {
+extension PaymentsSelectServiceView {
     
     class ViewModel: PaymentsParameterViewModel {
 
@@ -62,9 +62,9 @@ extension PaymentsParameterSelectServiceView {
 
 //MARK: - View
 
-struct PaymentsParameterSelectServiceView: View {
+struct PaymentsSelectServiceView: View {
     
-    let viewModel: PaymentsParameterSelectServiceView.ViewModel
+    let viewModel: PaymentsSelectServiceView.ViewModel
     
     var body: some View {
         
@@ -80,7 +80,7 @@ struct PaymentsParameterSelectServiceView: View {
     
     struct ItemView: View {
         
-        let viewModel: PaymentsParameterSelectServiceView.ViewModel.ItemViewModel
+        let viewModel: PaymentsSelectServiceView.ViewModel.ItemViewModel
         
         var body: some View {
             
@@ -116,11 +116,11 @@ struct PaymentsParameterSelectServiceView: View {
 
 //MARK: - Preview
 
-struct PaymentsParameterServiceView_Previews: PreviewProvider {
+struct PaymentsSelectServiceView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        PaymentsParameterSelectServiceView(viewModel: .samplePlaceholder)
+        PaymentsSelectServiceView(viewModel: .samplePlaceholder)
             .previewLayout(.fixed(width: 375, height: 56 * 4))
             .padding(.horizontal, 20)
     }
@@ -128,7 +128,7 @@ struct PaymentsParameterServiceView_Previews: PreviewProvider {
 
 //MARK: - Preview Content
 
-extension PaymentsParameterSelectServiceView.ViewModel {
+extension PaymentsSelectServiceView.ViewModel {
     
-    static let samplePlaceholder = PaymentsParameterSelectServiceView.ViewModel(with: .init(category: .taxes, options: [.init(service: .fns, title: "ФНС", description: "Налоги", icon: ImageData(with: UIImage(named: "Payments Service Sample")!)!)]), action: { _ in })
+    static let samplePlaceholder = PaymentsSelectServiceView.ViewModel(with: .init(category: .taxes, options: [.init(service: .fns, title: "ФНС", description: "Налоги", icon: ImageData(with: UIImage(named: "Payments Service Sample")!)!)]), action: { _ in })
 }

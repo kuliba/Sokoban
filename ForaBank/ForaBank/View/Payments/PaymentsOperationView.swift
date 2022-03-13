@@ -23,26 +23,26 @@ struct PaymentsOperationView: View {
                     ForEach(viewModel.items, id: \.self.id) { item in
                         
                         switch item {
-                        case let selectViewModel as PaymentsParameterSelectView.ViewModel:
-                            PaymentsParameterSelectView(viewModel: selectViewModel)
+                        case let selectViewModel as PaymentsSelectView.ViewModel:
+                            PaymentsSelectView(viewModel: selectViewModel)
                             
-                        case let switchViewModel as PaymentsParameterSwitchView.ViewModel:
-                            PaymentsParameterSwitchView(viewModel: switchViewModel)
+                        case let switchViewModel as PaymentsSwitchView.ViewModel:
+                            PaymentsSwitchView(viewModel: switchViewModel)
                             
-                        case let inputViewModel as PaymentsParameterInputView.ViewModel:
-                            PaymentsParameterInputView(viewModel: inputViewModel)
+                        case let inputViewModel as PaymentsInputView.ViewModel:
+                            PaymentsInputView(viewModel: inputViewModel)
                             
-                        case let infoViewModel as PaymentsParameterInfoView.ViewModel:
-                            PaymentsParameterInfoView(viewModel: infoViewModel)
+                        case let infoViewModel as PaymentsInfoView.ViewModel:
+                            PaymentsInfoView(viewModel: infoViewModel)
                             
-                        case let nameViewModel as PaymentsParameterNameView.ViewModel:
-                            PaymentsParameterNameView(viewModel: nameViewModel)
+                        case let nameViewModel as PaymentsNameView.ViewModel:
+                            PaymentsNameView(viewModel: nameViewModel)
                             
-                        case let cardViewModel as PaymentsParameterCardView.ViewModel:
-                            PaymentsParameterCardView(viewModel: cardViewModel)
+                        case let cardViewModel as PaymentsCardView.ViewModel:
+                            PaymentsCardView(viewModel: cardViewModel)
                             
-                        case let selectViewModels as PaymentsParameterSelectSimpleView.ViewModel:
-                            PaymentsParameterSelectSimpleView(viewModel: selectViewModels)
+                        case let selectViewModels as PaymentsSelectSimpleView.ViewModel:
+                            PaymentsSelectSimpleView(viewModel: selectViewModels)
                             
                         case let additionButtonViewModel as PaymentsButtonAdditionalView.ViewModel:
                             PaymentsButtonAdditionalView(viewModel: additionButtonViewModel)
@@ -74,7 +74,7 @@ struct PaymentsOperationView: View {
                             .padding(.horizontal, 20)
                         
                     case .amount(let amountViewModel):
-                        PaymentsParameterAmountView(viewModel: amountViewModel)
+                        PaymentsAmountView(viewModel: amountViewModel)
                             .edgesIgnoringSafeArea(.bottom)
                     }
                 }
@@ -106,8 +106,8 @@ extension PaymentsOperationViewModel {
     
     static let sample: PaymentsOperationViewModel = {
         
-        let items: [PaymentsParameterViewModel] = [PaymentsParameterSwitchView.ViewModel.sample, PaymentsParameterSelectView.ViewModel.selectedMock, PaymentsParameterInfoView.ViewModel.sample, PaymentsParameterNameView.ViewModel.normal, PaymentsParameterNameView.ViewModel.edit, PaymentsParameterCardView.ViewModel.sample]
+        let items: [PaymentsParameterViewModel] = [PaymentsSwitchView.ViewModel.sample, PaymentsSelectView.ViewModel.selectedMock, PaymentsInfoView.ViewModel.sample, PaymentsNameView.ViewModel.normal, PaymentsNameView.ViewModel.edit, PaymentsCardView.ViewModel.sample]
         
-        return PaymentsOperationViewModel(header: .init(title: "Налоги и услуги", action: {}), items: items, footer: .amount(PaymentsParameterAmountView.ViewModel.amountCurrencyInfoAlert))
+        return PaymentsOperationViewModel(header: .init(title: "Налоги и услуги", action: {}), items: items, footer: .amount(PaymentsAmountView.ViewModel.amountCurrencyInfoAlert))
     }()
 }

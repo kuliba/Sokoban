@@ -1,5 +1,5 @@
 //
-//  PaymentsParameterNameViewComponent.swift
+//  PaymentsNameViewComponent.swift
 //  ForaBank
 //
 //  Created by Константин Савялов on 10.02.2022.
@@ -10,7 +10,7 @@ import Combine
 
 //MARK: - ViewModel
 
-extension PaymentsParameterNameView {
+extension PaymentsNameView {
     
     class ViewModel: PaymentsParameterViewModel {
         
@@ -87,9 +87,9 @@ extension PaymentsParameterNameView {
 
 //MARK: - View
 
-struct PaymentsParameterNameView: View {
+struct PaymentsNameView: View {
     
-    @ObservedObject var viewModel: PaymentsParameterNameView.ViewModel
+    @ObservedObject var viewModel: PaymentsNameView.ViewModel
     
     var body: some View {
         
@@ -207,37 +207,37 @@ struct PaymentsParameterNameView: View {
 
 //MARK: - Preview
 
-struct PaymentsParameterNameView_Previews: PreviewProvider {
+struct PaymentsNameView_Previews: PreviewProvider {
     
     static var previews: some View {
        
         Group {
             
-            PaymentsParameterNameView(viewModel: .normal)
+            PaymentsNameView(viewModel: .normal)
                 .previewLayout(.fixed(width: 375, height: 100))
             
-            PaymentsParameterNameView(viewModel: .normalNotEditable)
+            PaymentsNameView(viewModel: .normalNotEditable)
                 .previewLayout(.fixed(width: 375, height: 100))
             
-            PaymentsParameterNameView(viewModel: .edit)
+            PaymentsNameView(viewModel: .edit)
                 .previewLayout(.fixed(width: 375, height: 200))
             
-            PaymentsParameterNameView(viewModel: .editPart)
+            PaymentsNameView(viewModel: .editPart)
                 .previewLayout(.fixed(width: 375, height: 200))
             
-            PaymentsParameterNameView.FieldView(title: "ФИО", value: .constant(""))
+            PaymentsNameView.FieldView(title: "ФИО", value: .constant(""))
                 .previewLayout(.fixed(width: 375, height: 56))
             
-            PaymentsParameterNameView.FieldView(title: "ФИО", value: .constant("Иванов Иван Иванович"))
+            PaymentsNameView.FieldView(title: "ФИО", value: .constant("Иванов Иван Иванович"))
                 .previewLayout(.fixed(width: 375, height: 56))
             
-            PaymentsParameterNameView.FieldView(title: "Фамилия", value: .constant(""))
+            PaymentsNameView.FieldView(title: "Фамилия", value: .constant(""))
                 .previewLayout(.fixed(width: 375, height: 56))
             
-            PaymentsParameterNameView.FieldView(title: "Фамилия", value: .constant("Иванов"), isEditing: true)
+            PaymentsNameView.FieldView(title: "Фамилия", value: .constant("Иванов"), isEditing: true)
                 .previewLayout(.fixed(width: 375, height: 56))
             
-            PaymentsParameterNameView.FieldView(title: "Имя", value: .constant("Иван"), isEditing: true)
+            PaymentsNameView.FieldView(title: "Имя", value: .constant("Иван"), isEditing: true)
                 .previewLayout(.fixed(width: 375, height: 56))
         }
     }
@@ -245,15 +245,15 @@ struct PaymentsParameterNameView_Previews: PreviewProvider {
 
 //MARK: - Preview Content
 
-extension PaymentsParameterNameView.ViewModel {
+extension PaymentsNameView.ViewModel {
     
-    static let normal = try! PaymentsParameterNameView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иванов Иван Иванович"), title: "ФИО", lastName: .init(title: "Фамилия", value: "Иванов"), firstName: .init(title: "Имя", value: "Иван"), middleName: .init(title: "Отчество", value: "Иванович")))
+    static let normal = try! PaymentsNameView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иванов Иван Иванович"), title: "ФИО", lastName: .init(title: "Фамилия", value: "Иванов"), firstName: .init(title: "Имя", value: "Иван"), middleName: .init(title: "Отчество", value: "Иванович")))
     
-    static let normalNotEditable = try! PaymentsParameterNameView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иванов Иван Иванович"), title: "ФИО", lastName: .init(title: "Фамилия", value: "Иванов"), firstName: .init(title: "Имя", value: "Иван"), middleName: .init(title: "Отчество", value: "Иванович"), editable: false))
+    static let normalNotEditable = try! PaymentsNameView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иванов Иван Иванович"), title: "ФИО", lastName: .init(title: "Фамилия", value: "Иванов"), firstName: .init(title: "Имя", value: "Иван"), middleName: .init(title: "Отчество", value: "Иванович"), editable: false))
     
-    static let edit: PaymentsParameterNameView.ViewModel = {
+    static let edit: PaymentsNameView.ViewModel = {
         
-        var viewModel = try! PaymentsParameterNameView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иванов Иван Иванович"), title: "ФИО", lastName: .init(title: "Фамилия", value: "Иванов"), firstName: .init(title: "Имя", value: "Иван"), middleName: .init(title: "Отчество", value: "Иванович")))
+        var viewModel = try! PaymentsNameView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иванов Иван Иванович"), title: "ФИО", lastName: .init(title: "Фамилия", value: "Иванов"), firstName: .init(title: "Имя", value: "Иван"), middleName: .init(title: "Отчество", value: "Иванович")))
         
         viewModel.isEditing = true
         
@@ -261,9 +261,9 @@ extension PaymentsParameterNameView.ViewModel {
     }()
     
     
-    static let editPart: PaymentsParameterNameView.ViewModel = {
+    static let editPart: PaymentsNameView.ViewModel = {
         
-        var viewModel = try! PaymentsParameterNameView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иванов Иван Иванович"), title: "ФИО", lastName: .init(title: "Фамилия", value: "Иванов"), firstName: .init(title: "Имя", value: ""), middleName: .init(title: "Отчество", value: "")))
+        var viewModel = try! PaymentsNameView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "Иванов Иван Иванович"), title: "ФИО", lastName: .init(title: "Фамилия", value: "Иванов"), firstName: .init(title: "Имя", value: ""), middleName: .init(title: "Отчество", value: "")))
         
         viewModel.isEditing = true
         
