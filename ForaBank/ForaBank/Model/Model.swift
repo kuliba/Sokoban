@@ -19,8 +19,8 @@ class Model {
     let paymentTemplatesViewSettings: CurrentValueSubject<TemplatesListViewModel.Settings, Never>
     
     //TODO: remove when all templates will be implemented
-    let paymentTemplatesAllowed: [PaymentDetailType] = [.sfp]
-    let paymentTemplatesDisplayed: [PaymentTemplateData.Kind] = [.sfp]
+    let paymentTemplatesAllowed: [ProductStatementData.Kind] = [.sfp, .insideBank, .betweenTheir, .direct, .contactAddressless, .externalIndivudual, .externalEntity]
+    let paymentTemplatesDisplayed: [PaymentTemplateData.Kind] = [.sfp, .byPhone, .insideBank, .betweenTheir, .direct, .contactAdressless, .externalIndividual, .externalEntity]
     
     // services
     private let serverAgent: ServerAgentProtocol
@@ -65,7 +65,7 @@ class Model {
         let serverAgent = ServerAgent(context: serverContext)
         
         // local agent
-        let localContext = LocalAgent.Context(cacheFolderName: "cache", encoder: JSONEncoder(), decoder: JSONDecoder(), fileManager: FileManager.default)
+        let localContext = LocalAgent.Context(cacheFolderName: "cache", encoder: .serverDate, decoder: .serverDate, fileManager: FileManager.default)
         let localAgent = LocalAgent(context: localContext)
         
         return Model(serverAgent: serverAgent, localAgent: localAgent)
@@ -242,7 +242,7 @@ private extension Model {
     
     func loadCachedData() {
         
-        if let paymentTemplates = localAgent.load(type: PaymentTemplateData.self) {
+        if let paymentTemplates = localAgent.load(type: [PaymentTemplateData].self) {
             
             self.paymentTemplates.value = paymentTemplates
         }

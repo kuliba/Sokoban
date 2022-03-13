@@ -59,7 +59,8 @@ struct CreateServiceTransferDataClass: Codable {
     let needSum: Bool?
     let amount, creditAmount, fee, currencyAmount: JSONNull?
     let currencyPayer, currencyPayee, currencyRate, debitAmount: JSONNull?
-    let payeeName, paymentOperationDetailID, documentStatus: JSONNull?
+    let payeeName, paymentOperationDetailID: JSONNull?
+    let documentStatus: String?
     let additionalList: [CreateServiceTransferAdditionalList]?
     let parameterListForNextStep: [ParameterListForNextStep]?
     /// Параметр, который указывает на то, есть ли еще запросы по оператору
@@ -104,7 +105,7 @@ extension CreateServiceTransferDataClass {
         debitAmount: JSONNull?? = nil,
         payeeName: JSONNull?? = nil,
         paymentOperationDetailID: JSONNull?? = nil,
-        documentStatus: JSONNull?? = nil,
+        documentStatus: String?? = nil,
         additionalList: [CreateServiceTransferAdditionalList]?? = nil,
         parameterListForNextStep: [ParameterListForNextStep]?? = nil,
         finalStep: Bool?? = nil

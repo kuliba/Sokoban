@@ -35,7 +35,7 @@ class TransferMe2MeTests: XCTestCase {
     func testEncoding_Min() throws {
         
         // given
-        let payer = TransferAbstractData.Payer(inn: nil, accountId: nil, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
+        let payer = TransferData.Payer(inn: nil, accountId: nil, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
         let transfer = TransferMe2MeData(amount: nil, check: false, comment: nil, currencyAmount: "RUB", payer: payer, bankId: "12345678")
         
         // when

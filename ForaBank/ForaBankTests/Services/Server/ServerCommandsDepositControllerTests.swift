@@ -1,0 +1,305 @@
+//
+//  ServerCommandsDepositControllerTests.swift
+//  ForaBankTests
+//
+//  Created by Андрей Лятовец on 1/31/22.
+//
+
+import XCTest
+@testable import ForaBank
+
+class ServerCommandsDepositControllerTests: XCTestCase {
+
+	let bundle = Bundle(for: ServerCommandsDepositControllerTests.self)
+
+	let decoder = JSONDecoder.serverDate
+	let encoder = JSONEncoder.serverDate
+	let formatter = DateFormatter.iso8601
+
+	//MARK: - GetDepositInfo
+
+	func testGetDepositInfo_Response_Encoding() throws {
+
+		// given
+		let endDate = formatter.date(from: "2022-02-03T08:37:44.633Z")
+		let startDate = formatter.date(from: "2022-02-03T08:37:44.633Z")
+
+		let command = ServerCommands.DepositController.GetDepositInfo(token: "",
+																	  endDate: endDate,
+																	  id: 10000184511,
+																	  name: "string",
+																	  startDate: startDate,
+																	  statementFormat: .csv)
+
+		let expected = "{\"statementFormat\":\"CSV\",\"id\":10000184511,\"endDate\":\"2022-02-03T08:37:44.633Z\",\"name\":\"string\",\"startDate\":\"2022-02-03T08:37:44.633Z\"}"
+
+		// when
+		let result = try encoder.encode(command.payload)
+		let resultString = String(decoding: result, as: UTF8.self)
+
+		// then
+		XCTAssertEqual(resultString, expected)
+	}
+
+	func testGetDepositInfo_Response_Decoding() throws {
+
+		// given
+		let url = bundle.url(forResource: "GetDepositInfo", withExtension: "json")!
+		let json = try Data(contentsOf: url)
+		let dateEnd = formatter.date(from: "2022-02-03T08:37:44.634Z")!
+		let dateNext = formatter.date(from: "2022-02-03T08:37:44.634Z")!
+		let dateOpen = formatter.date(from: "2022-02-03T08:37:44.634Z")!
+
+		let data = DepositInfoDataItem(balance: 1000,
+									   dateEnd: dateEnd,
+									   dateNext: dateNext,
+									   dateOpen: dateOpen,
+									   id: 10000184511,
+									   initialAmount: 1000,
+									   interestRate: 10000184511,
+									   sumAccInt: 1000,
+									   sumCredit: 1000,
+									   sumDebit: 1000,
+									   sumPayInt: 1000,
+									   termDay: "540")
+
+		let expected = ServerCommands.DepositController.GetDepositInfo.Response(statusCode: .ok,
+																				errorMessage: "string",
+																				data: data)
+
+		// when
+		let result = try decoder.decode(ServerCommands.DepositController.GetDepositInfo.Response.self, from: json)
+
+		// then
+		XCTAssertEqual(result, expected)
+	}
+
+	func testGetDepositInfo_MinResponse_Decoding() throws {
+
+		// given
+		let url = bundle.url(forResource: "GetDepositInfoMin", withExtension: "json")!
+		let json = try Data(contentsOf: url)
+		let dateEnd = formatter.date(from: "2022-02-03T08:37:44.634Z")!
+		let dateNext = formatter.date(from: "2022-02-03T08:37:44.634Z")!
+		let dateOpen = formatter.date(from: "2022-02-03T08:37:44.634Z")!
+
+		let data = DepositInfoDataItem(balance: 1000,
+									   dateEnd: dateEnd,
+									   dateNext: dateNext,
+									   dateOpen: dateOpen,
+									   id: 10000184511,
+									   initialAmount: 1000,
+									   interestRate: 10000184511,
+									   sumAccInt: 1000,
+									   sumCredit: nil,
+									   sumDebit: nil,
+									   sumPayInt: 1000,
+									   termDay: "540")
+
+		let expected = ServerCommands.DepositController.GetDepositInfo.Response(statusCode: .ok,
+																				errorMessage: "string",
+																				data: data)
+
+		// when
+		let result = try decoder.decode(ServerCommands.DepositController.GetDepositInfo.Response.self, from: json)
+
+		// then
+		XCTAssertEqual(result, expected)
+	}
+
+	//MARK: - GetDepositStatement
+
+	func testGetDepositStatement_Response_Encoding() throws {
+
+		// given
+		let endDate = formatter.date(from: "2022-01-31T08:41:30.815Z")
+		let startDate = formatter.date(from: "2022-01-31T08:41:30.816Z")
+
+		let command = ServerCommands.DepositController.GetDepositStatement(token: "",
+																		   endDate: endDate,
+																		   id: 10000184511,
+																		   name: "string",
+																		   startDate: startDate,
+																		   statementFormat: .csv)
+
+		let expected = "{\"statementFormat\":\"CSV\",\"id\":10000184511,\"endDate\":\"2022-01-31T08:41:30.815Z\",\"name\":\"string\",\"startDate\":\"2022-01-31T08:41:30.816Z\"}"
+
+		// when
+		let result = try encoder.encode(command.payload)
+		let resultString = String(decoding: result, as: UTF8.self)
+
+		// then
+		XCTAssertEqual(resultString, expected)
+	}
+
+	func testGetDepositStatement_Response_Decoding() throws {
+
+		// given
+		let url = bundle.url(forResource: "GetDepositStatement", withExtension: "json")!
+		let json = try Data(contentsOf: url)
+		let date = formatter.date(from: "2022-01-31T10:14:01.684Z")!
+		let tranDate = formatter.date(from: "2022-01-31T10:14:01.685Z")!
+
+		let data = ProductStatementData(MCC: 3245,
+										accountID: 10004111477,
+										accountNumber: "70601810711002740401",
+										amount: 144.21,
+										cardTranNumber: "4256901080508437",
+										city: "string",
+										comment: "Перевод денежных средств. НДС не облагается.",
+										country: "string",
+										currencyCodeNumeric: 810,
+										date: date,
+										deviceCode: "string",
+										documentAmount: 144.21,
+										documentID: 10230444722,
+										fastPayment: .init(documentComment: "string",
+														   foreignBankBIC: "044525491",
+														   foreignBankID: "10000001153",
+														   foreignBankName: "КУ ООО ПИР Банк - ГК \\\"АСВ\\\"",
+														   foreignName: "Петров Петр Петрович",
+														   foreignPhoneNumber: "70115110217",
+														   opkcid: "A1355084612564010000057CAFC75755"),
+										groupName: "Прочие операции",
+										isCancellation: false,
+										md5hash: "75f3ee3b2d44e5808f41777c613f23c9",
+										merchantName: "DBO MERCHANT FORA, Zubovskiy 2",
+										merchantNameRus: "DBO MERCHANT FORA, Zubovskiy 2",
+										opCode: 1,
+										operationId: "909743",
+										operationType: .debit,
+										paymentDetailType: .betweenTheir,
+										svgImage: .init(description: "string"),
+										terminalCode: "41010601",
+										tranDate: tranDate,
+										type: .inside)
+
+		let expected = ServerCommands.DepositController.GetDepositStatement.Response(statusCode: .ok,
+																					 errorMessage: "string",
+																					 data: [data])
+
+		// when
+		let result = try decoder.decode(ServerCommands.DepositController.GetDepositStatement.Response.self, from: json)
+
+		// then
+		XCTAssertEqual(result, expected)
+	}
+
+	func testGetDepositStatement_MinResponse_Decoding() throws {
+
+		// given
+		let url = bundle.url(forResource: "GetDepositStatementMin", withExtension: "json")!
+		let json = try Data(contentsOf: url)
+		let date = formatter.date(from: "2022-02-03T08:52:38.454Z")!
+		let tranDate = formatter.date(from: "2022-02-03T08:52:38.454Z")!
+
+		let data = ProductStatementData(MCC: nil,
+										accountID: nil,
+										accountNumber: "70601810711002740401",
+										amount: 144.21,
+										cardTranNumber: nil,
+										city: nil,
+										comment: "Перевод денежных средств. НДС не облагается.",
+										country: nil,
+										currencyCodeNumeric: 810,
+										date: date,
+										deviceCode: nil,
+										documentAmount: nil,
+										documentID: nil,
+										fastPayment: .init(documentComment: "string",
+														   foreignBankBIC: "044525491",
+														   foreignBankID: "10000001153",
+														   foreignBankName: "КУ ООО ПИР Банк - ГК \\\"АСВ\\\"",
+														   foreignName: "Петров Петр Петрович",
+														   foreignPhoneNumber: "70115110217",
+														   opkcid: "A1355084612564010000057CAFC75755"),
+										groupName: "Прочие операции",
+										isCancellation: false,
+										md5hash: "75f3ee3b2d44e5808f41777c613f23c9",
+										merchantName: "DBO MERCHANT FORA, Zubovskiy 2",
+										merchantNameRus: nil,
+										opCode: nil,
+										operationId: nil,
+										operationType: .debit,
+										paymentDetailType: .betweenTheir,
+										svgImage: .init(description: "string"),
+										terminalCode: nil,
+										tranDate: tranDate,
+										type: .inside)
+
+		let expected = ServerCommands.DepositController.GetDepositStatement.Response(statusCode: .ok,
+																					 errorMessage: "string",
+																					 data: [data])
+
+		// when
+		let result = try decoder.decode(ServerCommands.DepositController.GetDepositStatement.Response.self, from: json)
+
+		// then
+		XCTAssertEqual(result, expected)
+	}
+
+	//MARK: - OpenDeposit
+
+	func testOpenDeposit_Response_Decoding() throws {
+
+		// given
+		let url = bundle.url(forResource: "OpenDeposit", withExtension: "json")!
+		let json = try Data(contentsOf: url)
+
+		let data = EmptyData()
+
+		let expected = ServerCommands.DepositController.OpenDeposit.Response(statusCode: .ok,
+																			 errorMessage: "string",
+																			 data: data)
+
+		// when
+		let result = try decoder.decode(ServerCommands.DepositController.OpenDeposit.Response.self, from: json)
+
+		// then
+		XCTAssertEqual(result, expected)
+	}
+
+	//MARK: - SaveDepositCustomName
+
+	func testSaveDepositCustomName_Response_Encoding() throws {
+
+		// given
+		let endDate = formatter.date(from: "2022-01-31T12:27:22.223Z")
+		let startDate = formatter.date(from: "2022-01-31T12:27:22.223Z")
+
+		let command = ServerCommands.DepositController.SaveDepositCustomName(token: "",
+																			 endDate: endDate,
+																			 id: 10000184511,
+																			 name: "string",
+																			 startDate: startDate,
+																			 statementFormat: .csv)
+
+		let expected = "{\"statementFormat\":\"CSV\",\"id\":10000184511,\"endDate\":\"2022-01-31T12:27:22.223Z\",\"name\":\"string\",\"startDate\":\"2022-01-31T12:27:22.223Z\"}"
+
+		// when
+		let result = try encoder.encode(command.payload)
+		let resultString = String(decoding: result, as: UTF8.self)
+
+		// then
+		XCTAssertEqual(resultString, expected)
+	}
+
+	func testSaveDepositCustomName_Response_Decoding() throws {
+
+		// given
+		let url = bundle.url(forResource: "SaveDepositCustomName", withExtension: "json")!
+		let json = try Data(contentsOf: url)
+
+		let data = EmptyData()
+
+		let expected = ServerCommands.DepositController.SaveDepositCustomName.Response(statusCode: .ok,
+																					   errorMessage: "string",
+																					   data: data)
+
+		// when
+		let result = try decoder.decode(ServerCommands.DepositController.SaveDepositCustomName.Response.self, from: json)
+
+		// then
+		XCTAssertEqual(result, expected)
+	}
+}

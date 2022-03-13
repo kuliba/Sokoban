@@ -13,7 +13,7 @@ class ContactInputViewController: UIViewController {
     lazy var realm = try? Realm()
     var typeOfPay: PaymentType = .contact {
         didSet {
-            print("DEBUG: typeOfPay: ", typeOfPay)
+            readAndSetupCard(type: typeOfPay)
         }
     }
     var cardIsSelect = false
@@ -25,6 +25,7 @@ class ContactInputViewController: UIViewController {
             setupCurrencyButton(system: system)
         }
     }
+    var paymentTemplate: PaymentTemplateData? = nil
     var trnPickupPoint = ""
     var selectedBank: BanksList? {
         didSet {
@@ -62,7 +63,6 @@ class ContactInputViewController: UIViewController {
         didSet {
             guard let paymentSystem = paymentSystem else { return }
             setupPaymentsUI(system: paymentSystem)
-            print("DEBUG: payment system: ", paymentSystem.name ?? "nil")
         }
     }
     
@@ -101,7 +101,7 @@ class ContactInputViewController: UIViewController {
             
     var cardFromField = CardChooseView()
     
-    var cardListView = CardsScrollView(onlyMy: false, deleteDeposit: true)
+    var cardListView = CardsScrollView(onlyMy: false, deleteDeposit: true, loadProducts: false)
     
     var bottomView = BottomInputView()
     
@@ -110,18 +110,88 @@ class ContactInputViewController: UIViewController {
     var stackView = UIStackView(arrangedSubviews: [])
     
     //MARK: - Viewlifecicle
+    init() {
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    init(paymentTemplate: PaymentTemplateData) {
+        super.init(nibName: nil, bundle: nil)
+        self.paymentTemplate = paymentTemplate
+        
+        switch paymentTemplate.type {
+        case .direct:
+            if let model = paymentTemplate.parameterList.first as? TransferAnywayData {
+                country = getCountry(code: "AM")
+                typeOfPay = .mig
+                configure(with: country, byPhone: true)
+                
+                if let bank = findBankByPuref(purefString: model.puref ?? "") {
+                    selectedBank = bank
+                    setupBankField(bank: bank)
+                }
+                
+                let mask = StringMask(mask: "+000-0000-00-00")
+                let phone = model.additional.first(where: { $0.fieldname == "RECP" })
+                let maskPhone = mask.mask(string: phone?.fieldvalue)
+                phoneField.text = maskPhone ?? ""
+            }
+            
+        case .contactAdressless:
+            if let model = paymentTemplate.parameterList.first as? TransferAnywayData {
+                typeOfPay = .contact
+                if let countryCode = model.additional.first(where: { $0.fieldname == "trnPickupPoint" })?.fieldvalue {
+                    country = getCountry(code: countryCode)
+                    configure(with: country, byPhone: false)
+                }
+                
+                self.foraSwitchView.bankByPhoneSwitch.isOn = false
+                self.foraSwitchView.bankByPhoneSwitch.layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                self.foraSwitchView.bankByPhoneSwitch.thumbTintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            
+                if let surName = model.additional.first(where: { $0.fieldname == "bName" })?.fieldvalue {
+                    self.surnameField.text = surName
+                }
+                if let  firstName = model.additional.first(where: { $0.fieldname == "bLastName" })?.fieldvalue {
+                    self.nameField.text = firstName
+                }
+                if let middleName = model.additional.first(where: { $0.fieldname == "bSurName" })?.fieldvalue {
+                    self.secondNameField.text = middleName
+                }                
+            }
+                
+        default :
+            break
+        }
+        
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         hideKeyboardWhenTappedAround()
         setupActions()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.view.backgroundColor = UIColor(red: 0.973, green: 0.973, blue: 0.973, alpha: 0.82)
         navigationController?.navigationBar.backgroundColor = UIColor(red: 0.973, green: 0.973, blue: 0.973, alpha: 0.82)
+        if let template = paymentTemplate {
+            runBlockAfterDelay(0.2) {
+                self.setupAmount(amount: template.amount)
+                
+                if let model = self.paymentTemplate?.parameterList.first as? TransferAnywayData,
+                   let currencyAmount = model.additional.first(where: { $0.fieldname == "CURR" }) {
+                    
+                    self.currency = currencyAmount.fieldvalue
+                    
+                }
+            }
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -131,8 +201,6 @@ class ContactInputViewController: UIViewController {
 
     //MARK: - Actions
     @objc func titleDidTaped() {
-        print("countryField didChooseButtonTapped")
-        
         UIView.animate(withDuration: 0.2) {
             if self.countryListView.isHidden == true {
                 self.countryListView.isHidden = false
@@ -142,7 +210,6 @@ class ContactInputViewController: UIViewController {
                 self.countryListView.alpha = 0
             }
         }
-        
     }
 
     func setupContactCountryCode(codeList: String) -> String {
@@ -166,11 +233,8 @@ class ContactInputViewController: UIViewController {
     
     func setupActions() {
         
-        setupCardList { error in
-            guard let error = error else { return }
-            self.showAlert(with: "Ошибка", and: error)
-        }
         
+        readAndSetupCard(type: typeOfPay)
         setupBankList()
         
         countryListView.didCountryTapped = { [weak self] country in
@@ -195,18 +259,12 @@ class ContactInputViewController: UIViewController {
             self?.present(navVc, animated: true, completion: nil)
         }
         phoneField.didChooseButtonTapped = {() in
-            print("phoneField didChooseButtonTapped")
-//            self.dismiss(animated: true, completion: nil)
-            
             let contactPickerScene = EPContactsPicker(
                 delegate: self,
                 multiSelection: false,
                 subtitleCellType: SubtitleCellValue.phoneNumber)
-//            contactPickerScene.addCloseButton()
             let navigationController = UINavigationController(rootViewController: contactPickerScene)
             self.present(navigationController, animated: true, completion: nil)
-            
-            
         }
         
         bankListView.didBankTapped = { (bank) in
@@ -225,7 +283,6 @@ class ContactInputViewController: UIViewController {
         }
         
         cardFromField.didChooseButtonTapped = { () in
-            print("cardField didChooseButtonTapped")
             self.openOrHideView(self.cardListView)
             if self.bankListView.isHidden == false {
                 self.hideView(self.bankListView, needHide: true)
@@ -233,7 +290,6 @@ class ContactInputViewController: UIViewController {
         }
         
         bankField.didChooseButtonTapped = { () in
-            print("bankField didChooseButtonTapped")
             self.openOrHideView(self.bankListView)
             self.bankListView.collectionView.reloadData()
             if self.cardListView.isHidden == false {
@@ -256,15 +312,14 @@ class ContactInputViewController: UIViewController {
                         }
                     }
                 })
-            }
-                      
+            }    
         }
         
         cardListView.lastItemTap = {
+//        TODO: Открывать все карты доработать
             print("Открывать все карты доработать")
-            
-            
         }
+        
         bottomView.buttonIsTapped = {
             var cur = self.country?.sendCurr?.components(separatedBy: ";").compactMap { $0 } ?? []
             if cur.count  > 1  {
@@ -295,7 +350,6 @@ class ContactInputViewController: UIViewController {
                 self.migPayment(with: self.selectedCardNumber, phone: phone, amount: Double(amount) ?? 0) { model, error in
                     self.dismissActivity()
                     if error != nil {
-                        print("DEBUG: Error: endContactPayment ", error ?? "")
                         self.showAlert(with: "Ошибка", and: error!)
                     } else {
                         guard let model = model else { return }
@@ -306,13 +360,11 @@ class ContactInputViewController: UIViewController {
                 self.contaktPayment(with: self.selectedCardNumber, surname: surname, name: name, secondName: secondName, amount: Double(amount) ?? 0) { model, error in
                     self.dismissActivity()
                     if error != nil {
-                        print("DEBUG: Error: endContactPayment ", error ?? "")
                         self.showAlert(with: "Ошибка", and: error!)
                     } else {
                         guard let model = model else { return }
                         self.goToConfurmVC(with: model)
                     }
-                    
                 }
             }
         }
@@ -329,8 +381,51 @@ class ContactInputViewController: UIViewController {
         }
     }
     
+    func getCountry(code: String) -> CountriesList {
+        var countryValue: CountriesList?
+        let list = Dict.shared.countries
+        list?.forEach({ country in
+            if country.code == code || country.contactCode == code {
+                countryValue = country
+            }
+        })
+        return countryValue!
+    }
+    
+    func findBankByPuref(purefString: String) -> BanksList? {
+        var bankValue: BanksList?
+        let paymentSystems = Dict.shared.paymentList
+        paymentSystems?.forEach({ paymentSystem in
+            if paymentSystem.code == "DIRECT" {
+                let purefList = paymentSystem.purefList
+                purefList?.forEach({ puref in
+                    puref.forEach({ (key, value) in
+                        value.forEach { purefList in
+                            if purefList.puref == purefString {
+                                let bankList = Dict.shared.banks
+                                bankList?.forEach({ bank in
+                                    if bank.memberID == key {
+                                        bankValue = bank
+                                    }
+                                })
+                            }
+                        }
+                    })
+                })
+            }
+        })
+        return bankValue
+    }
+    
+    func setupAmount(amount: Double?) {
+        guard let moneyFormatter = bottomView.moneyFormatter else { return }
+        let newText = moneyFormatter.format("\(amount ?? 0)") ?? ""
+        bottomView.amountTextField.text = newText
+        bottomView.doneButtonIsEnabled(newText.isEmpty)
+    }
+    
     private func setupBankField(bank: BanksList) {
-        self.bankField.text = bank.memberNameRus ?? "" //"АйДиБанк"
+        self.bankField.text = bank.memberNameRus ?? ""
         self.bankField.imageView.image = bank.svgImage?.convertSVGStringToImage()
         
         guard let paymentSystem = self.paymentSystem else { return }
@@ -348,29 +443,48 @@ class ContactInputViewController: UIViewController {
         })
     }
     
-    func setupCardList(completion: @escaping ( _ error: String?) ->() ) {
-        self.readAndSetupCard()
-//        AddAllUserCardtList.add() {
-//            self.readAndSetupCard()
-//        }
-    }
-    
-    private func readAndSetupCard() {
+    private func readAndSetupCard(type: PaymentType) {
         DispatchQueue.main.async {
-            var filterProduct: [UserAllCardsModel] = []
+
             let cards = ReturnAllCardList.cards()
-            cards.forEach { product in
-                if (product.productType == "CARD"
-                        || product.productType == "ACCOUNT") && product.currency == "RUB" {
-                    filterProduct.append(product)
+            var filterProduct: [UserAllCardsModel] = []
+            cards.forEach({ card in
+                if (card.productType == "CARD" || card.productType == "ACCOUNT") {
+                    
+                    if type == .contact
+                        ? (card.currency == "RUB" || card.currency == "USD" || card.currency == "EUR")
+                        : (card.currency == "RUB") {
+                        
+                        filterProduct.append(card)
+                    }
                 }
-            }
-//            self.cardListView.cardList = filterProduct
+            })
+            
+            self.cardListView.cardList = filterProduct
             if filterProduct.count > 0 {
-                self.cardFromField.model = filterProduct.first
-                guard let cardNumber  = filterProduct.first?.number else { return }
-                self.selectedCardNumber = cardNumber
-                self.cardIsSelect = true
+                if let cardId = self.paymentTemplate?.parameterList.first?.payer.cardId {
+                    
+                    let card = filterProduct.first(where: { $0.id == cardId })
+                    self.cardFromField.model = card
+                    guard let cardNumber = card?.number else { return }
+                    self.selectedCardNumber = cardNumber
+                    self.cardIsSelect = true
+                    
+                } else if let accountId = self.paymentTemplate?.parameterList.first?.payer.accountId {
+                    
+                    let card = filterProduct.first(where: { $0.id == accountId })
+                    self.cardFromField.model = card
+                    guard let cardNumber = card?.number else { return }
+                    self.selectedCardNumber = cardNumber
+                    self.cardIsSelect = true
+                    
+                } else {
+                    
+                    self.cardFromField.model = filterProduct.first
+                    guard let cardNumber  = filterProduct.first?.number else { return }
+                    self.selectedCardNumber = cardNumber
+                    self.cardIsSelect = true
+                }
             }
         }
     }

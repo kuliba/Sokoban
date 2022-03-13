@@ -22,10 +22,21 @@ extension DateFormatter {
         return formatter
     }
     
-    static let utc: DateFormatter = {
+    static let iso8601: DateFormatter = {
         
         let formatter = DateFormatter()
+        formatter.timeZone = TimeZone(identifier: "UTC")
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        
+        return formatter
+    }()
+    
+    
+    static let dateAndTime: DateFormatter = {
+        
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone(identifier: "UTC")
+        formatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
         
         return formatter
     }()

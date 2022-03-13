@@ -104,7 +104,7 @@ class MockItems {
             PaymentsModel(id: 98, name: "Вклад",
                           iconName: "openDeposit",
                           controllerName: "https://www.forabank.ru/private/deposits/",
-                          description: "9,25% годовых"),
+                          description: "24,5% годовых"),
             //
             //            PaymentsModel(id: 97, name: "Кредит",
             //                          iconName: "loanIcon",
@@ -215,8 +215,11 @@ class MockItems {
             //                          avatarImageName: nil,
             //                          controllerName: "DevelopViewController",
             //                          description: "QR"),
-            
             PaymentsModel(id: 33, name: "Перевод по\nтелефону",
+                          iconName: "BannerDep",
+                          controllerName: "https://www.forabank.ru/private/deposits/",
+                          description: "Что то"),
+            PaymentsModel(id: 34, name: "Перевод по\nтелефону",
                           iconName: "bannerNG",
                           controllerName: "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/",
                           description: "Что то"),

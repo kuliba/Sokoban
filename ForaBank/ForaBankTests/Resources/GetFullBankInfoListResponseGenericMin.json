@@ -1,0 +1,44 @@
+{
+  "data": {
+    "bankFullInfoList": [
+      {
+        "accountList": [
+          {
+            "CBRBIC": "044525000",
+            "account": "30101810145250000974",
+            "ck": "37",
+            "dateIn": "16.06.2016 00:00:00",
+            "regulationAccountType": "CRSA",
+            "status": "ACAC"
+          }
+        ],
+        "address": "127287, г Москва, Ул. 2-я Хуторская, д.38А, стр.26",
+        "bankServiceType": "Сервис срочного перевода и сервис быстрых платежей",
+        "bankServiceTypeCode": "5",
+        "bankType": "20",
+        "bankTypeCode": "Кредитная организация",
+        "bic": "044525974",
+        "engName": "TINKOFF BANK",
+        "fullName": "АО \"ТИНЬКОФФ БАНК\"",
+        "md5hash": "a97d3153c1172f0c5333c9eadb5696f3",
+        "receiverList": [
+          "string"
+        ],
+        "registrationDate": "16.06.2016 00:00:00",
+        "rusName": "Тинькофф Банк",
+        "senderList": [
+          "string"
+        ],
+        "svgImage": "string",
+        "swiftList": [
+          {
+            "swift": "TICSRUMMXXX"
+          }
+        ]
+      }
+    ],
+    "serial": "bea36075a58954199a6b8980549f6b69"
+  },
+  "errorMessage": "string",
+  "statusCode": 0
+}

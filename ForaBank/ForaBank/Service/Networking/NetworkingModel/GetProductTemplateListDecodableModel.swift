@@ -59,8 +59,30 @@ extension GetProductTemplateListDecodableModel {
 
 // MARK: - GetProductTemplateDatum
 struct GetProductTemplateDatum: Codable {
+    
+    internal init(id: Int?, numberMask: String?, customName: String?, currency: String?, type: String?, smallDesign: SVGImageData?, paymentSystemImage: SVGImageData?) {
+        self.id = id
+        self.numberMask = numberMask
+        self.customName = customName
+        self.currency = currency
+        self.type = type
+        self.smallDesign = smallDesign
+        self.paymentSystemImage = paymentSystemImage
+    }
+    
+    init(with productTemplateData: ProductTemplateData) {
+        self.id = productTemplateData.id
+        self.numberMask = productTemplateData.numberMask
+        self.customName = productTemplateData.customName
+        self.currency = productTemplateData.currency
+        self.type = productTemplateData.type.rawValue
+        self.smallDesign = productTemplateData.smallDesign
+        self.paymentSystemImage = productTemplateData.paymentSystemImage
+    }
+    
     let id: Int?
     let numberMask, customName, currency, type: String?
+    let smallDesign, paymentSystemImage: SVGImageData?
 }
 
 extension GetProductTemplateDatum {
@@ -84,14 +106,18 @@ extension GetProductTemplateDatum {
         numberMask: String?? = nil,
         customName: String?? = nil,
         currency: String?? = nil,
-        type: String?? = nil
+        type: String?? = nil,
+        smallDesign: SVGImageData?? = nil,
+        paymentSystemImage: SVGImageData?? = nil
     ) -> GetProductTemplateDatum {
         return GetProductTemplateDatum(
             id: id ?? self.id,
             numberMask: numberMask ?? self.numberMask,
             customName: customName ?? self.customName,
             currency: currency ?? self.currency,
-            type: type ?? self.type
+            type: type ?? self.type,
+            smallDesign: smallDesign ?? self.smallDesign,
+            paymentSystemImage: paymentSystemImage ?? self.paymentSystemImage
         )
     }
 

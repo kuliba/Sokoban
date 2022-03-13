@@ -297,7 +297,7 @@ class ConfurmOpenDepositViewController: PaymentViewController {
     
     private func makeDepositPayment(amount: String) {
         guard let initialAmount = Double(amount) else { return }
-        guard let sourceCardId = self.cardFromField.model?.cardID else { return }
+        guard let card = self.cardFromField.model else { return }
         guard let finOperID = self.product?.depositProductID else { return }
         guard let term = self.choosenRate?.term else { return }
         guard var code = smsCodeField.textField.text else { return }
@@ -305,15 +305,20 @@ class ConfurmOpenDepositViewController: PaymentViewController {
             code = "0"
         }
         
-        let body = [
+        var body = [
             "finOperID": finOperID,
             "term": term,
             "currencyCode": "810",
-            "sourceCardId": sourceCardId,
             "initialAmount": initialAmount,
             "verificationCode": code
         ] as [String: AnyObject]
         
+        if card.productType == "CARD" {
+            body["sourceCardId"] = card.cardID as AnyObject
+        } else if card.productType == "ACCOUNT" {
+            body["sourceAccountId"] = card.accountID as AnyObject
+        }
+        print(body)
         showActivity()
         
         NetworkManager<MakeDepositDecodableModel>.addRequest(.makeDepositPayment, [:], body) { respons, error in

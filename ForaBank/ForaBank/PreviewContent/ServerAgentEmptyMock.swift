@@ -13,4 +13,9 @@ class ServerAgentEmptyMock: ServerAgentProtocol {
         
         completion(.failure(.emptyResponseData))
     }
+    
+    func executeDownloadCommand<Command>(command: Command, completion: @escaping (Result<Command.Response, ServerAgentError>) -> Void) where Command : ServerDownloadCommand {
+        
+        completion(.failure(.emptyResponseData))
+    }
 }

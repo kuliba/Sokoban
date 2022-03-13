@@ -16,11 +16,12 @@ enum ServerCommands {
          */
         struct DeletePaymentTemplates: ServerCommand {
 
-            let token: String
+            let token: String?
             let endpoint = "/rest/deletePaymentTemplates"
             let method: ServerCommandMethod = .delete
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {
                 
@@ -46,11 +47,12 @@ enum ServerCommands {
          */
         struct GetPaymentTemplateList: ServerCommand {
             
-            let token: String
+            let token: String?
             let endpoint = "/rest/getPaymentTemplateList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -72,11 +74,12 @@ enum ServerCommands {
          */
         struct SavePaymentTemplate: ServerCommand {
             
-            let token: String
+            let token: String?
             let endpoint = "/rest/savePaymentTemplate"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {
                 
@@ -108,11 +111,12 @@ enum ServerCommands {
          */
         struct SortingPaymentTemplates: ServerCommand {
             
-            let token: String
+            let token: String?
             let endpoint = "/rest/sortingPaymentTemplates"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {
                 
@@ -138,16 +142,17 @@ enum ServerCommands {
          */
         struct UpdatePaymentTemplate: ServerCommand{
             
-            let token: String
+            let token: String?
             let endpoint = "/rest/updatePaymentTemplate"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {
                 
                 let name: String?
-                let parameterList: [TransferAbstractData]?
+                let parameterList: [TransferData]?
                 let paymentTemplateId: Int
             }
             

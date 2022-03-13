@@ -1,0 +1,37 @@
+{
+  "data": {
+    "paymentSystemList": [
+      {
+        "code": "CONTACT",
+        "md5hash": "178a385607bc45fc30bd66573d4d2c67",
+        "name": "Contact",
+        "purefList": [
+          {
+            "additionalProp1": [
+              {
+                "puref": "iFora||Addressless",
+                "type": "addressless"
+              }
+            ],
+            "additionalProp2": [
+              {
+                "puref": "iFora||Addressless",
+                "type": "addressless"
+              }
+            ],
+            "additionalProp3": [
+              {
+                "puref": "iFora||Addressless",
+                "type": "addressless"
+              }
+            ]
+          }
+        ],
+        "svgImage": "string"
+      }
+    ],
+    "serial": "bea36075a58954199a6b8980549f6b69"
+  },
+  "errorMessage": "string",
+  "statusCode": 0
+}

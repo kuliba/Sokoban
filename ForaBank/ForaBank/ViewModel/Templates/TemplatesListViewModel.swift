@@ -123,6 +123,56 @@ private extension TemplatesListViewModel {
             .sink { [unowned self] action in
                 
                 switch action {
+                    
+                    
+                case let payload as TemplatesListViewModelAction.ItemTapped:
+                    guard let temp = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == payload.itemId}) else { return }
+                    switch temp.type {
+                        
+                    case .otherBank:
+                        print("Скорее всего не будет сделано в ближайшее время")
+                        
+                    case .betweenTheir:
+                        self.action.send(TemplatesListViewModelAction.Present.PaymentToMyCard(viewModel: temp))
+                        
+                    case .insideBank:
+                        self.action.send(TemplatesListViewModelAction.Present.PaymentInsideBankByCard(viewModel: temp))
+                        
+                    case .byPhone:
+                        let paymentViewModel = PaymentByPhoneViewModel(insideByPhone: temp)
+                        self.action.send(TemplatesListViewModelAction.Present.PaymentInsideBankByPhone(viewModel: paymentViewModel))
+                        
+                    case .sfp:
+                        let paymentViewModel = PaymentByPhoneViewModel(spf: temp)
+                        self.action.send(TemplatesListViewModelAction.Present.PaymentSFP(viewModel: paymentViewModel))
+                        
+                    case .direct:
+                        self.action.send(TemplatesListViewModelAction.Present.PaymentMig(viewModel: temp))
+                        
+                    case .contactAdressless:
+                        self.action.send(TemplatesListViewModelAction.Present.PaymentContact(viewModel: temp))
+                        
+                    case .housingAndCommunalService:
+                        print("Action Present HousingAndCommunalService")
+                        
+                    case .mobile:
+                        print("Action Present MobilePayment")
+                        
+                    case .internet:
+                        print("Action Present Internet")
+                        
+                    case .transport:
+                        print("Action Present Transport")
+                        
+                    case .externalEntity:
+                        self.action.send(TemplatesListViewModelAction.Present.OrgPaymentRequisites(viewModel: temp))
+                        
+                    case .externalIndividual:
+                        self.action.send(TemplatesListViewModelAction.Present.PaymentRequisites(viewModel: temp))
+                    }
+                   
+                                        
+                    
                 case _ as TemplatesListViewModelAction.ToggleStyle:
                     
                     withAnimation {
@@ -334,12 +384,20 @@ private extension TemplatesListViewModel {
     func amount(for template: PaymentTemplateData) -> String? {
         
         guard let transfer = template.parameterList.first,
-              let amount = template.spfAmount else {
+              let amount = template.amount else {
                     
             return nil
         }
-        
-        return amount.currencyFormatter(symbol: transfer.currencyAmount)
+        if template.type == .contactAdressless ,
+           let parameterList = template.parameterList.first as? TransferAnywayData,
+           let currencyAmount = parameterList.additional.first(where: { $0.fieldname == "CURR" }) {
+            
+            return amount.currencyFormatter(symbol: currencyAmount.fieldvalue)
+            
+        } else {
+            
+            return amount.currencyFormatter(symbol: transfer.currencyAmount)
+        }
     }
 }
 

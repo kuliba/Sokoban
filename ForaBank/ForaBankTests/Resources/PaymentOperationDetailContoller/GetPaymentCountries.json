@@ -1,0 +1,19 @@
+{
+  "data": [
+    {
+      "countryCode": "AM",
+      "countryName": "Армения",
+      "date": "2022-01-24T15:04:59.652Z",
+      "firstName": "Иван",
+      "middleName": "Иванович",
+      "paymentDate": "21.12.2021 11:04:26",
+      "phoneNumber": "37491040486",
+      "puref": "iFora||TransferArmBBClientP",
+      "shortName": "Иванов И.",
+      "surName": "Иванов",
+      "type": "phone"
+    }
+  ],
+  "errorMessage": "string",
+  "statusCode": 0
+}

@@ -35,7 +35,7 @@ extension ModelAction {
             struct Requested: Action {
                 
                 let name: String?
-                let parameterList: [TransferAbstractData]?
+                let parameterList: [TransferData]?
                 let paymentTemplateId: Int
             }
             

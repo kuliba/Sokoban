@@ -17,6 +17,7 @@ class BottomInputView: UIView {
     let moneyInputController = TextFieldStartInputController()
     var currencySymbol = "₽" {
         didSet {
+            guard moneyFormatter != nil else { return }
             setupMoneyController()
         }
     }

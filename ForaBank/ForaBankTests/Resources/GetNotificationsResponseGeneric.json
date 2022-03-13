@@ -1,0 +1,12 @@
+{
+  "data": [
+    {
+      "date": "27.12.2021 18:22:58",
+      "state": "SENT",
+      "text": "27.12.2022 18:22:58: Успешный вход в приложение",
+      "type": "PUSH"
+    }
+  ],
+  "errorMessage": "string",
+  "statusCode": 0
+}

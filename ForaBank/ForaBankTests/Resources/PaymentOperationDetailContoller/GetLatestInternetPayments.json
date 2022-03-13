@@ -1,0 +1,21 @@
+{
+  "data": [
+    {
+      "additionalList": [
+        {
+          "fieldName": "a3_PERSONAL_ACCOUNT_5_5",
+          "fieldTitle": "Лицевой счет у Получателя",
+          "fieldValue": "1234567890",
+          "svgImage": "string"
+        }
+      ],
+      "amount": 100,
+      "date": "2022-01-24T15:00:50.853Z",
+      "paymentDate": "21.12.2021 11:04:26",
+      "puref": "iFora||4285",
+      "type": "phone"
+    }
+  ],
+  "errorMessage": "string",
+  "statusCode": 0
+}

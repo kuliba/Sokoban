@@ -111,7 +111,6 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
         phoneField.textField.delegate = self
         phoneField.textField.maskString = "+0 000 000-00-00"
         
-        
         phoneField.rightButton.setImage(UIImage(named: "user-plus"), for: .normal)
         
         if let maskPhoneNumber = viewModel.maskPhoneNumber {
@@ -120,24 +119,7 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
         
         setupUI()
         
-        DispatchQueue.main.async {
-            var filterProduct: [UserAllCardsModel] = []
-            let cards = ReturnAllCardList.cards()
-            cards.forEach { product in
-                if (product.productType == "CARD" || product.productType == "ACCOUNT")
-                    && product.currency == "RUB" {
-                    filterProduct.append(product)
-                }
-            }
-            if filterProduct.count > 0 {
-                if let template = self.viewModel.template {
-                    let card = filterProduct.first(where: { $0.id == template.psfCardId })
-                    self.cardField.model = card
-                } else {
-                    self.cardField.model = filterProduct.first
-                }
-            }
-        }
+        self.cardField.model = viewModel.userCard
         
         setupBankList()
         setupActions()
@@ -428,8 +410,9 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
                             model.summTransction = data.debitAmount?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
                             model.summInCurrency = data.creditAmount?.currencyFormatter(symbol: data.currencyPayee ?? "RUB") ?? ""
                             model.taxTransction = data.fee?.currencyFormatter(symbol: data.currencyPayer ?? "RUB") ?? ""
-                            model.fullName = data.payeeName ?? "Получатель не оперделен"
+                            model.fullName = data.payeeName ?? "Получатель не определен"
                             model.status = .succses
+                            model.template = self?.viewModel.template
                             
                             let vc = ContactConfurmViewController()
                             vc.confurmVCModel = model
@@ -501,6 +484,8 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
                     model.taxTransction = data.data?.fee?.currencyFormatter(symbol: data.data?.currencyAmount ?? "") ?? ""
                     model.comment = self?.commentField.textField.text ?? ""
                     model.status = .succses
+                    model.template = self?.viewModel.template
+                    
                     let statusValue = data.data?.additionalList?.filter({$0.fieldName == "AFResponse"})
                     let numberTransaction = data.data?.additionalList?.filter({$0.fieldName == "BizMsgIdr"})
                     

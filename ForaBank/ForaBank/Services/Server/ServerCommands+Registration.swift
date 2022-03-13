@@ -16,11 +16,12 @@ extension ServerCommands {
          */
         struct CheckClient: ServerCommand {
             
-            let token: String
+            let token: String?
             let endpoint = "/registration/checkClient"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
 
             struct Payload: Encodable {
                 
@@ -46,11 +47,12 @@ extension ServerCommands {
          */
         struct DoRegistration: ServerCommand {
             
-            let token: String
+            let token: String?
             let endpoint = "/registration/doRegistration"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {
                 
@@ -80,11 +82,12 @@ extension ServerCommands {
          */
         struct GetCode: ServerCommand {
             
-            let token: String
+            let token: String?
             let endpoint = "/registration/getCode"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
 
@@ -106,11 +109,12 @@ extension ServerCommands {
          */
         struct SetDeviceSettings: ServerCommand {
             
-            let token: String
+            let token: String?
             let endpoint = "/registration/setDeviceSettings"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
 
             
             struct Payload: Encodable {
@@ -147,11 +151,12 @@ extension ServerCommands {
          */
         struct VerifyCode: ServerCommand {
 
-            let token: String
+            let token: String?
             let endpoint = "/registration/verifyCode"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
+            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {
                 let cryptoVersion: String

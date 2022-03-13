@@ -7,18 +7,16 @@
 
 import UIKit
 import RealmSwift
-//import SwiftEntryKit
-
-//protocol CutomViewProtocol: UIView {
-//    
-//}
+import AnyFormatKit
 
 class MemeDetailVC : AddHeaderImageViewController {
 
     var titleLabel = UILabel(text: "Между своими", font: .boldSystemFont(ofSize: 18), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
     
-    var onlyMy = true
-    var onlyCard = false
+    var onlyMy = false
+    var onlyCard = true
+    
+    var paymentTemplate: PaymentTemplateData? = nil
     
     var viewModel = ConfirmViewControllerModel(type: .card2card) {
         didSet {
@@ -31,13 +29,29 @@ class MemeDetailVC : AddHeaderImageViewController {
     var cardFromListView: CardsScrollView!
     var cardToField = CardChooseView()
     var cardToListView: CardsScrollView!
-    var bottomView = BottomInputView()
+    var bottomView = BottomInputView(formater: SumTextInputFormatter(textPattern: "# ###,## ₽"))
     lazy var cardView = CastomCardView()
     
     var stackView = UIStackView(arrangedSubviews: [])
     
     lazy var realm = try? Realm()
     var token: NotificationToken?
+    
+    
+    
+    init() {
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    init(paymentTemplate: PaymentTemplateData) {
+        super.init(nibName: nil, bundle: nil)
+        self.paymentTemplate = paymentTemplate
+        
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,7 +63,22 @@ class MemeDetailVC : AddHeaderImageViewController {
         AddAllUserCardtList.add() {
             print("REALM Add")
         }
-        updateObjectWithNotification()
+        if let template = paymentTemplate {
+            updateObjectWithTamplate(paymentTemplate: template)
+            let cardId = template.parameterList.first?.payer.cardId
+            updateObjectWithNotification(cardId: cardId)
+        } else {
+            updateObjectWithNotification()
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let template = paymentTemplate {
+            runBlockAfterDelay(0.2) {
+                self.setupAmount(amount: template.amount)
+            }
+        }
     }
     
     deinit {
@@ -61,21 +90,20 @@ class MemeDetailVC : AddHeaderImageViewController {
         setupFieldTo()
         setupListFrom()
         setupListTo()
+                
+        paymentTemplate == nil ? self.addHeaderImage() : nil
         
-        bottomView.currencySymbol = "₽"
-        
-        self.addHeaderImage()
         self.view.layer.cornerRadius = 16
         self.view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         self.view.clipsToBounds = true
         self.view.backgroundColor = .white
-        self.view.anchor(width: UIScreen.main.bounds.width, height: 490)
         
-        stackView = UIStackView(arrangedSubviews: [cardFromField,
-                                                   seporatorView,
-                                                   cardFromListView,
-                                                   cardToField,
-                                                   cardToListView])
+        stackView = UIStackView(
+            arrangedSubviews: [cardFromField,
+                               seporatorView,
+                               cardFromListView,
+                               cardToField,
+                               cardToListView])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fillProportionally
@@ -86,39 +114,126 @@ class MemeDetailVC : AddHeaderImageViewController {
     
     private func setupConstraint() {
         view.addSubview(titleLabel)
-        titleLabel.anchor(top: view.topAnchor, left: view.leftAnchor,
-                          paddingTop: 28, paddingLeft: 20)
+        titleLabel.anchor(
+            top: view.topAnchor,
+            left: view.leftAnchor,
+            paddingTop: 28,
+            paddingLeft: 20)
         
         view.addSubview(bottomView)
-        bottomView.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
-                          right: view.rightAnchor)
+        bottomView.anchor(
+            left: view.leftAnchor,
+            bottom: view.safeAreaLayoutGuide.bottomAnchor,
+            right: view.rightAnchor)
+        
         let saveAreaView = UIView()
         saveAreaView.backgroundColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1)
         view.addSubview(saveAreaView)
-        saveAreaView.anchor(top: view.safeAreaLayoutGuide.bottomAnchor, left: view.leftAnchor,
-                            bottom: view.bottomAnchor, right: view.rightAnchor)
+        saveAreaView.anchor(
+            top: view.safeAreaLayoutGuide.bottomAnchor,
+            left: view.leftAnchor,
+            bottom: view.bottomAnchor,
+            right: view.rightAnchor)
         
-        stackView.anchor(top: titleLabel.bottomAnchor, left: view.leftAnchor,
-                         right: view.rightAnchor, paddingTop: 16)
+        stackView.anchor(
+            top: titleLabel.bottomAnchor,
+            left: view.leftAnchor,
+            right: view.rightAnchor,
+            paddingTop: 16)
     }
     
-    func updateObjectWithNotification() {
+    func updateObjectWithTamplate(paymentTemplate: PaymentTemplateData) {
+        title = paymentTemplate.name
+        titleLabel.text = ""
+        
+        
+        let button = UIBarButtonItem(image: UIImage(named: "edit-2"),
+                                     landscapeImagePhone: nil,
+                                     style: .done,
+                                     target: self,
+                                     action: #selector(updateNameTemplate))
+        button.tintColor = .black
+        navigationItem.rightBarButtonItem = button
+        
+        
+        switch paymentTemplate.type {
+        case .insideBank:
+            
+            //FIXME: GetProductTemplateDatum и PaymentTemplateData идентичны и используются одинаково нужно изучить
+            
+            if let cardTemp = paymentTemplate.productTemplate {
+                let card = GetProductTemplateDatum(with: cardTemp)
+                cardToField.tempCardModel = card
+                viewModel.customCardTo = CastomCardViewModel(cardNumber: card.numberMask ?? "", cardName: card.customName, cardId: card.id)
+            }
+            
+//            cardToField.choseButton.isHidden = true
+            
+        default:
+            break
+        }
+    }
+    
+    @objc private func updateNameTemplate() {
+        self.showInputDialog(title: "Название шаблона",
+                             actionTitle: "Сохранить",
+                             cancelTitle: "Отмена",
+                             inputText: paymentTemplate?.name,
+                             inputPlaceholder: "Введите название шаблона",
+                             actionHandler:  { text in
+            
+            guard let text = text else { return }
+            guard let templateId = self.paymentTemplate?.paymentTemplateId else { return }
+            
+            if text.isEmpty != true {
+                if text.count < 20 {
+                Model.shared.action.send(ModelAction.PaymentTemplate.Update.Requested(
+                    name: text,
+                    parameterList: nil,
+                    paymentTemplateId: templateId))
+                    
+                // FIXME: В рефактре нужно слушатель на обновление title
+                self.title = text
+                
+                } else {
+                    self.showAlert(with: "Ошибка", and: "В названии шаблона не должно быть более 20 символов")
+                }
+            } else {
+                self.showAlert(with: "Ошибка", and: "Название шаблона не должно быть пустым")
+            }
+        })
+    }
+    
+    func setupAmount(amount: Double?) {
+        guard let moneyFormatter = bottomView.moneyFormatter else { return }
+        let newText = moneyFormatter.format("\(amount ?? 0)") ?? ""
+        bottomView.amountTextField.text = newText
+        bottomView.doneButtonIsEnabled(newText.isEmpty)
+    }
+    
+    func updateObjectWithNotification(cardId: Int? = nil) {
         let object = realm?.objects(UserAllCardsModel.self)
-        token = object?.observe { ( changes: RealmCollectionChange) in
-            switch changes {
-            case .initial:
-//                print("REALM Initial")
-//                self.cardFromListView.cardList = self.updateCardsList(with: object)
-                self.cardFromField.model = self.updateCardsList(with: object).first
-                self.viewModel.cardFromRealm = self.updateCardsList(with: object).first
-//                self.cardToListView.cardList = self.updateCardsList(with: object)
-            case .update:
-//                print("REALM Update")
-//                self.cardFromListView.cardList = self.updateCardsList(with: object)
-                self.cardFromField.model = self.updateCardsList(with: object).first
-//                self.cardToListView.cardList = self.updateCardsList(with: object)
-            case .error(let error):
-                fatalError("\(error)")
+        if let cardId = cardId {
+            let card = object?.first(where: { $0.id == cardId })
+            self.cardFromField.model = card
+            self.viewModel.cardFromRealm = card
+        } else {
+            token = object?.observe { ( changes: RealmCollectionChange) in
+                switch changes {
+                case .initial:
+                    //                print("REALM Initial")
+                    //                self.cardFromListView.cardList = self.updateCardsList(with: object)
+                    self.cardFromField.model = self.updateCardsList(with: object).first
+                    self.viewModel.cardFromRealm = self.updateCardsList(with: object).first
+                    //                self.cardToListView.cardList = self.updateCardsList(with: object)
+                case .update:
+                    //                print("REALM Update")
+                    //                self.cardFromListView.cardList = self.updateCardsList(with: object)
+                    self.cardFromField.model = self.updateCardsList(with: object).first
+                    //                self.cardToListView.cardList = self.updateCardsList(with: object)
+                case .error(let error):
+                    fatalError("\(error)")
+                }
             }
         }
     }
@@ -133,17 +248,6 @@ class MemeDetailVC : AddHeaderImageViewController {
             }
         }
         return cardsArray
-    }
-    
-    private func createTopLabel(title: String) -> UIView {
-        let view = UIView()
-        let label = UILabel(text: title, font: .systemFont(ofSize: 12), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
-        
-        view.addSubview(label)
-        label.centerY(inView: view, leftAnchor: view.leftAnchor, paddingLeft: 20)
-        view.anchor(height: 20)
-        
-        return view
     }
     
     func setupActions() {
@@ -209,6 +313,9 @@ class MemeDetailVC : AddHeaderImageViewController {
         cardToField.titleLabel.text = "На карту"
         cardToField.numberCardLabel.text = "Номер карты получателя"
         cardToField.didChooseButtonTapped = { [weak self]  () in
+            
+//            guard self?.paymentTemplate == nil else { return }
+            
             DispatchQueue.main.async {
                 UIView.animate(withDuration: 0.2) {
                     if self?.cardToListView.isHidden == true {
@@ -235,6 +342,7 @@ class MemeDetailVC : AddHeaderImageViewController {
     
     private func setupListFrom() {
         cardFromListView = CardsScrollView(onlyMy: onlyMy, onlyCard: true)
+        
         cardFromListView.didCardTapped = { (cardId) in
             DispatchQueue.main.async {
                 let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
@@ -460,6 +568,7 @@ class MemeDetailVC : AddHeaderImageViewController {
                                 viewModel.summTransction = model.data?.debitAmount?.currencyFormatter(symbol: model.data?.currencyPayer ?? "RUB") ?? ""
                                 viewModel.summInCurrency = model.data?.creditAmount?.currencyFormatter(symbol: model.data?.currencyPayee ?? "RUB") ?? ""
                                 viewModel.taxTransction = model.data?.fee?.currencyFormatter(symbol: model.data?.currencyPayer ?? "RUB") ?? ""
+                                viewModel.template = self?.paymentTemplate
                                 vc.smsCodeField.isHidden = !(model.data?.needOTP ?? true)
                                 vc.confurmVCModel = viewModel
                                 vc.addCloseButton()
@@ -474,6 +583,7 @@ class MemeDetailVC : AddHeaderImageViewController {
                                     viewModel.taxTransction = model.data?.fee?.currencyFormatter(symbol: model.data?.currencyAmount ?? "RUB") ?? ""
                                     viewModel.summTransction = model.data?.debitAmount?.currencyFormatter(symbol: model.data?.currencyAmount ?? "RUB") ?? ""
                                     viewModel.paymentOperationDetailId = model.data?.paymentOperationDetailID ?? 0
+                                    viewModel.template = self?.paymentTemplate
                                     vc.printFormType = "internal"
                                   
                                 }

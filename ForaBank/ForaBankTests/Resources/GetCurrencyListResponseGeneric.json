@@ -1,0 +1,19 @@
+{
+  "data": {
+    "currencyList": [
+      {
+        "code": "USD",
+        "codeISO": 840,
+        "codeNumeric": 840,
+        "cssCode": "\\062F\\002E\\0625",
+        "htmlCode": "&#1583;.&#1573;",
+        "id": "1",
+        "name": "Доллар США",
+        "unicode": "U+062F\\U+002E\\U+0625"
+      }
+    ],
+    "serial": "bea36075a58954199a6b8980549f6b69"
+  },
+  "errorMessage": "string",
+  "statusCode": 0
+}

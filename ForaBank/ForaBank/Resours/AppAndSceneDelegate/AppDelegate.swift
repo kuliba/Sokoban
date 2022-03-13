@@ -10,7 +10,7 @@ import Firebase
 import FirebaseMessaging
 import RealmSwift
 
-@main
+//@main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     //FIXME: remove singletone after refactoring
@@ -107,50 +107,59 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     fileprivate func RealmConfiguration() {
-        // Версия БД (изменить на большую если меняем БД)
-        let schemaVersion: UInt64 = 10
+         // Версия БД (изменить на большую если меняем БД)
+         let schemaVersion: UInt64 = 22
 
-        let config = Realm.Configuration(
-            // Set the new schema version. This must be greater than the previously used
-            // version (if you've never set a schema version before, the version is 0).
-            schemaVersion: schemaVersion,
-            
-            // Set the block which will be called automatically when opening a Realm with
-            // a schema version lower than the one set above
-            migrationBlock: { migration, oldSchemaVersion in
-                // We haven’t migrated anything yet, so oldSchemaVersion == 0
-                if (oldSchemaVersion < schemaVersion) {
-                    if oldSchemaVersion < 4 {
-                        migration.deleteData(forType: "GKHOperatorsModel")
-                    }
-                    if oldSchemaVersion < 6 {
-                        migration.deleteData(forType: "GKHOperatorsModel")
-                        migration.deleteData(forType: "AdditionalListModel")
-                    }
-                    if oldSchemaVersion < 7 {
-                        migration.deleteData(forType: "Parameters")
-                        migration.deleteData(forType: "GKHOperatorsModel")
-                        migration.deleteData(forType: "LogotypeData")
-                        migration.deleteData(forType: "UserAllCardsModel")
-                    }
+         let config = Realm.Configuration(
+                 // Set the new schema version. This must be greater than the previously used
+                 // version (if you've never set a schema version before, the version is 0).
+                 schemaVersion: schemaVersion,
+                 // Set the block which will be called automatically when opening a Realm with
+                 // a schema version lower than the one set above
+                 migrationBlock: { migration, oldSchemaVersion in
+                     print("Oldschemeversion : \(oldSchemaVersion)")
+                     // We haven’t migrated anything yet, so oldSchemaVersion == 0
+                     if (oldSchemaVersion < schemaVersion) {
+                         if oldSchemaVersion < 4 {
+                             migration.deleteData(forType: "GKHOperatorsModel")
+                         }
+                         if oldSchemaVersion < 6 {
+                             migration.deleteData(forType: "GKHOperatorsModel")
+                             migration.deleteData(forType: "AdditionalListModel")
+                         }
+                         if oldSchemaVersion < 7 {
+                             migration.deleteData(forType: "Parameters")
+                             migration.deleteData(forType: "GKHOperatorsModel")
+                             migration.deleteData(forType: "LogotypeData")
+                             migration.deleteData(forType: "UserAllCardsModel")
+                         }
 
-                    if oldSchemaVersion < 8 {
-                        migration.deleteData(forType: "GKHOperatorsModel")
-                        migration.deleteData(forType: "Parameters")
-                    }
-                    if oldSchemaVersion < 9 {
-                        migration.deleteData(forType: "UserAllCardsModel")
-                    }
-                    if oldSchemaVersion < 10 {
-                        migration.deleteData(forType: "GetNotificationsEntitytModel")
-                        migration.deleteData(forType: "GetNotificationsModel")
-                    }
+                         if oldSchemaVersion < 8 {
+                             migration.deleteData(forType: "GKHOperatorsModel")
+                             migration.deleteData(forType: "Parameters")
+                         }
+                         if oldSchemaVersion < 22 {
+                             migration.deleteData(forType: "UserAllCardsModel")
+                         }
+                         if oldSchemaVersion < 10 {
+                             migration.deleteData(forType: "GetNotificationsEntitytModel")
+                             migration.deleteData(forType: "GetNotificationsModel")
+                         }
+                         if oldSchemaVersion < 21 {
+                             migration.deleteData(forType: "GKHOperatorsModel")
+                             migration.deleteData(forType: "AdditionalListModel")
+                             migration.deleteData(forType: "Parameters")
 
-                    // Nothing to do!
-                    // Realm will automatically detect new properties and removed properties
-                    // And will update the schema on disk automatically
-                }
-            })
+                             let defaults = UserDefaults.standard
+                             defaults.set("", forKey: DownloadQueue.Kind.operatorList.key)
+                             //"DownloadQueueStorage_operatorList_Key"
+                         }
+
+                         // Nothing to do!
+                         // Realm will automatically detect new properties and removed properties
+                         // And will update the schema on disk automatically
+                     }
+                 })
         // Tell Realm to use this new configuration object for the default Realm
         Realm.Configuration.defaultConfiguration = config
     }

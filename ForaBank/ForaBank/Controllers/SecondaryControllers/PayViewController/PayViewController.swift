@@ -129,8 +129,6 @@ class PayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
             self.present(popView, animated: true, completion: nil)
         case 3:
             let popView = MemeDetailVC()
-            popView.onlyMy = false
-            popView.onlyCard = true
             popView.titleLabel.text = "На другую карту"
             popView.modalPresentationStyle = .custom
             popView.transitioningDelegate = self

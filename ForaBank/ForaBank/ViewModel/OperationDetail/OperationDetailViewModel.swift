@@ -300,6 +300,9 @@ private extension OperationDetailViewModel {
 
         switch productStatement.paymentDetailType {
         case .betweenTheir, .insideBank, .housingAndCommunalService, .internet, .mobile, .direct, .sfp, .contactAddressless:
+            
+            //TODO:  проверка на productStatement.merchantNameRus
+            
             return productStatement.merchantName
         
         case .externalIndivudual, .externalEntity:
@@ -764,7 +767,7 @@ extension OperationDetailViewModel {
 //FIXME: remove after refactoring server API models
 struct ProductStatementProxy {
     
-    let paymentDetailType: PaymentDetailType
+    let paymentDetailType: ProductStatementData.Kind
     let documentId: Int?
     let svgImage: Image
     let merchantName: String
@@ -776,6 +779,6 @@ struct ProductStatementProxy {
     let foreignPhoneNumber: String?
     let documentComment: String?
     let operationType: OperationType
-    let fastPayment: FastPaymentData?
+    let fastPayment: ProductStatementData.FastPayment?
     let comment: String?
 }

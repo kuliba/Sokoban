@@ -11,7 +11,8 @@ import XCTest
 class ServerCommandsConsentTests: XCTestCase {
 
     let bundle = Bundle(for: ServerCommandsConsentTests.self)
-    let decoder = JSONDecoder()
+    let decoder = JSONDecoder.serverDate
+    let encoder = JSONEncoder.serverDate
 
     //MARK: - ChangeClientConsentMe2MePull
     
@@ -81,8 +82,7 @@ class ServerCommandsConsentTests: XCTestCase {
         }
         let json = try Data(contentsOf: url)
         let consentMe2MePullData = ConsentMe2MePullData(active: true, bankId: "1crt88888881", beginDate: "01.01.2022 00:00:00", consentId: 1, endDate: "01.01.2022 00:00:00", oneTimeConsent: true)
-        let consentMe2MePullResponseData = ConsentMe2MePullResponseData(consentList: [consentMe2MePullData])
-        let expected = ServerCommands.ConsentController.GetClientConsentMe2MePull.Response(statusCode: .ok, errorMessage: "string", data: consentMe2MePullResponseData)
+        let expected = ServerCommands.ConsentController.GetClientConsentMe2MePull.Response(statusCode: .ok, errorMessage: "string", data: .init(consentList: [consentMe2MePullData]))
         
         // when
         let result = try decoder.decode(ServerCommands.ConsentController.GetClientConsentMe2MePull.Response.self, from: json)
@@ -100,8 +100,7 @@ class ServerCommandsConsentTests: XCTestCase {
         }
         let json = try Data(contentsOf: url)
         let consentMe2MePullData = ConsentMe2MePullData(active: nil, bankId: "1crt88888881", beginDate: "01.01.2022 00:00:00", consentId: 1, endDate: "01.01.2022 00:00:00", oneTimeConsent: nil)
-        let consentMe2MePullResponseData = ConsentMe2MePullResponseData(consentList: [consentMe2MePullData])
-        let expected = ServerCommands.ConsentController.GetClientConsentMe2MePull.Response(statusCode: .ok, errorMessage: "string", data: consentMe2MePullResponseData)
+        let expected = ServerCommands.ConsentController.GetClientConsentMe2MePull.Response(statusCode: .ok, errorMessage: "string", data: .init(consentList: [consentMe2MePullData]))
         
         // when
         let result = try decoder.decode(ServerCommands.ConsentController.GetClientConsentMe2MePull.Response.self, from: json)
@@ -120,7 +119,7 @@ class ServerCommandsConsentTests: XCTestCase {
             return
         }
         let json = try Data(contentsOf: url)
-        let me2MeDebitConsentData = Me2MeDebitConsentData(accountId: 10000184511, amount: 100, bankRecipientID: "string", cardId: 10000184511, fee: 10, rcvrMsgId: "string", recipientID: "string", refTrnId: "string")
+        let me2MeDebitConsentData = ConsentMe2MeDebitData(accountId: 10000184511, amount: 100, bankRecipientID: "string", cardId: 10000184511, fee: 10, rcvrMsgId: "string", recipientID: "string", refTrnId: "string")
         let expected = ServerCommands.ConsentController.GetMe2MeDebitConsent.Response(statusCode: .ok, errorMessage: "string", data: me2MeDebitConsentData)
         
         // when
@@ -138,7 +137,7 @@ class ServerCommandsConsentTests: XCTestCase {
             return
         }
         let json = try Data(contentsOf: url)
-        let me2MeDebitConsentData = Me2MeDebitConsentData(accountId: 10000184511, amount: 100, bankRecipientID: "string", cardId: 10000184511, fee: 10, rcvrMsgId: nil, recipientID: nil, refTrnId: nil)
+        let me2MeDebitConsentData = ConsentMe2MeDebitData(accountId: 10000184511, amount: 100, bankRecipientID: "string", cardId: 10000184511, fee: 10, rcvrMsgId: nil, recipientID: nil, refTrnId: nil)
         let expected = ServerCommands.ConsentController.GetMe2MeDebitConsent.Response(statusCode: .ok, errorMessage: "string", data: me2MeDebitConsentData)
         
         // when

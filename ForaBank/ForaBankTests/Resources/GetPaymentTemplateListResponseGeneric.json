@@ -12,6 +12,15 @@
             "payeeExternal": null
         }],
         "paymentTemplateId": 1,
+        "productTemplate": {
+          "currency": "RUB",
+          "customName": "Новая карта",
+          "id": 1,
+          "numberMask": "4444 **** **** 1234",
+          "paymentSystemImage": "string",
+          "smallDesign": "string",
+          "type": "CARD"
+        },
         "sort": 1,
         "svgImage": "string",
         "type": "SFP"

@@ -1,0 +1,19 @@
+{
+  "data": {
+    "banksList": [
+      {
+        "md5hash": "257108d9f58bc12ece63986ba17428eb",
+        "memberId": "100000000001",
+        "memberName": "Gazprombank",
+        "memberNameRus": "Газпромбанк",
+        "paymentSystemCodeList": [
+          "string"
+        ],
+        "svgImage": "string"
+      }
+    ],
+    "serial": "bea36075a58954199a6b8980549f6b69"
+  },
+  "errorMessage": "string",
+  "statusCode": 0
+}

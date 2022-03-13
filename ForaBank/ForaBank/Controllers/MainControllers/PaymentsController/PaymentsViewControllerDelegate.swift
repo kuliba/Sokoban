@@ -79,8 +79,6 @@ extension PaymentsViewController: UICollectionViewDelegate {
 //                delegate?.goToCountryPayments()
             } else if indexPath.row == 3 {
                 let popView = MemeDetailVC()
-                popView.onlyMy = false
-                popView.onlyCard = true
                 popView.titleLabel.text = "На другую карту"
                 popView.modalPresentationStyle = .custom
                 popView.transitioningDelegate = self

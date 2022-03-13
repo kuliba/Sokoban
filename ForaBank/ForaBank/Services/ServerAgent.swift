@@ -32,6 +32,7 @@ class ServerAgent: ServerAgentProtocol {
                 
                 guard let data = data else {
                     
+                    //TODO: handle serever response ststus if no data
                     completion(.failure(.emptyResponseData))
                     return
                 }
@@ -54,18 +55,64 @@ class ServerAgent: ServerAgentProtocol {
         }
     }
     
-    internal func request<Command>(with command: Command) throws -> URLRequest where Command : ServerCommand {
+    func executeDownloadCommand<Command>(command: Command, completion: @escaping (Result<Command.Response, ServerAgentError>) -> Void) where Command : ServerDownloadCommand {
         
-        guard let url = URL(string: baseURL + command.endpoint) else {
-            throw ServerRequestCreationError.unableConstructURL
+        do {
+            
+            let request = try downloadRequest(with: command)
+            context.session.downloadTask(with: request) { localFileURL, _, error in
+                
+                if let error = error {
+                    
+                    completion(.failure(.sessionError(error)))
+                    return
+                }
+                
+                guard let localFileURL = localFileURL else {
+                    
+                    //TODO: handle serever response ststus if no localFileURL
+                    completion(.failure(.emptyResponseData))
+                    return
+                }
+  
+                do {
+                    
+                    let data = try Data(contentsOf: localFileURL)
+                    completion(.success(data))
+                    
+                } catch {
+                    
+                    completion(.failure(.curruptedData(error)))
+                }
+            }
+            
+        } catch {
+            
+            completion(.failure(ServerAgentError.requestCreationError(error)))
         }
+    }
+}
+
+//MARK: - Request
+
+internal extension ServerAgent {
+    
+    //TODO: tests
+    func request<Command>(with command: Command) throws -> URLRequest where Command : ServerCommand {
+        
+        let url = try url(with: command.endpoint)
         
         var request = URLRequest(url: url)
+        
+        // headers
         request.httpMethod = command.method.rawValue
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         // token
-        request.setValue(command.token, forHTTPHeaderField: "X-XSRF-TOKEN")
+        if let token = command.token {
+            
+            request.setValue(token, forHTTPHeaderField: "X-XSRF-TOKEN")
+        }
         
         // parameters
         if let parameters = command.parameters, parameters.isEmpty == false {
@@ -93,7 +140,75 @@ class ServerAgent: ServerAgentProtocol {
             }
         }
         
+        // timeout
+        if let timeout = command.timeout {
+            
+            request.timeoutInterval = timeout
+        }
+        
         return request
+    }
+    
+    //TODO: tests
+    func downloadRequest<Command>(with command: Command) throws -> URLRequest where Command : ServerDownloadCommand {
+        
+        let url = try url(with: command.endpoint)
+        
+        var request = URLRequest(url: url)
+        
+        // headers
+        request.httpMethod = command.method.rawValue
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        // token
+        if let token = command.token {
+            
+            request.setValue(token, forHTTPHeaderField: "X-XSRF-TOKEN")
+        }
+
+        // parameters
+        if let parameters = command.parameters, parameters.isEmpty == false {
+            
+            var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
+            urlComponents?.queryItems = parameters.map{ URLQueryItem(name: $0.name, value: $0.value) }
+            
+            guard let updatedURL = urlComponents?.url else {
+                throw ServerRequestCreationError.unableCounstructURLWithParameters
+            }
+            
+            request.url = updatedURL
+        }
+        
+        // body
+        if let payload = command.payload {
+            
+            do {
+                
+                request.httpBody = try context.encoder.encode(payload)
+                
+            } catch {
+                
+                throw ServerRequestCreationError.unableEncodePayload(error)
+            }
+        }
+        
+        // timeout
+        if let timeout = command.timeout {
+            
+            request.timeoutInterval = timeout
+        }
+        
+        return request
+    }
+    
+    //TODO: tests
+    func url(with endpoint: String) throws -> URL {
+        
+        guard let url = URL(string: baseURL + endpoint) else {
+            throw ServerRequestCreationError.unableConstructURL
+        }
+        
+        return url
     }
 }
 
@@ -111,6 +226,7 @@ extension ServerAgent {
         init(for env: Environment) {
             
             self.env = env
+            //TODO: configure session
             self.session = URLSession.shared
             self.encoder = JSONEncoder()
             self.decoder = JSONDecoder()
