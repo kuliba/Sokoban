@@ -13,6 +13,8 @@ struct PaymentsSuccessView: View {
     
     let viewModel: PaymentsSuccessViewModel
     
+    @Environment(\.presentationMode) var presentationMode
+    
     var body: some View {
         
         VStack(alignment:.center, spacing: 20) {

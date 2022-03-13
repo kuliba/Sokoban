@@ -187,6 +187,7 @@ extension Model {
     func handlePaymentsCompleteRequest(_ payload: ModelAction.Payment.Complete.Request) {
         
         //TODO: make transfer
+        self.action.send(ModelAction.Payment.Complete.Response(result: .success(.init())))
     }
     
     //MARK: - Operation

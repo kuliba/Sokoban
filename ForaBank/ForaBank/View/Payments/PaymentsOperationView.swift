@@ -98,6 +98,9 @@ struct PaymentsOperationView: View {
             }
         }
         .navigationBarTitle(Text(viewModel.header.title), displayMode: .inline)
+        .fullScreenCoverLegacy(viewModel: $viewModel.successViewModel) { successViewModel in
+            PaymentsSuccessView(viewModel: successViewModel)
+        }
 //        .navigationBarBackButtonHidden(true)
 //        .navigationBarItems(leading: Button(action: viewModel.header.action, label: {
 //            viewModel.header.backButtonIcon

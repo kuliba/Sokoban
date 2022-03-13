@@ -20,6 +20,8 @@ class PaymentsOperationViewModel: ObservableObject {
     @Published var isConfirmViewActive: Bool
     var confirmViewModel: PaymentsConfirmViewModel?
     
+    @Published var successViewModel: PaymentsSuccessViewModel?
+    
     var operation: Payments.Operation
     private var items: CurrentValueSubject<[PaymentsParameterViewModel], Never> = .init([])
     private var isAdditionalItemsCollapsed: CurrentValueSubject<Bool, Never> = .init(true)
@@ -68,9 +70,7 @@ class PaymentsOperationViewModel: ObservableObject {
                 
                 switch action {
                 case let payload as ModelAction.Payment.Continue.Response:
-                    
-                    let result = payload.result
-                    switch result {
+                    switch payload.result {
                     case .step(let operation):
                         print("Payments: step")
                         createItemsAndFooter(from: operation.parameters)
@@ -86,7 +86,21 @@ class PaymentsOperationViewModel: ObservableObject {
                         isConfirmViewActive = true
                         
                     case .fail(_):
-                        print("Payments: fail")
+                        print("Payments: continue fail")
+                        break
+                    }
+                    
+                case let payload as ModelAction.Payment.Complete.Response:
+                    switch payload.result {
+                    case .success:
+                        withAnimation {
+                            
+                            successViewModel = PaymentsSuccessViewModel(header: .init(stateIcon: Image("OkOperators"), title: "Успешный перевод", description: "1 000,00 ₽", operatorIcon: Image("Payments Service Sample")), optionButtons: [.init(id: UUID(), icon: Image("Operation Details Info"), title: "Детали", action: {}), .init(id: UUID(), icon: Image("Payments Input Sample"),title: "Документ", action: {}) ], actionButton: .init(title: "На главную", isEnabled: true, action: {}))
+                        }
+                        
+                        
+                    case .failure:
+                        print("Payments: continue fail")
                         break
                     }
                     
@@ -135,7 +149,9 @@ class PaymentsOperationViewModel: ObservableObject {
                     model.action.send(ModelAction.Payment.Continue.Request(operation: update.operation))
                     
                 case _ as PaymentsOperationViewModelAction.Confirm:
-                    print("Payments: confirm action")
+                    let results = items.value.map{ $0.result }
+                    let update = operation.update(with: results)
+                    model.action.send(ModelAction.Payment.Complete.Request(operation: update.operation))
      
                 case let payload as PaymentsOperationViewModelAction.ShowPopUpSelectView:
                     popUpSelector = PaymentsPopUpSelectView.ViewModel(

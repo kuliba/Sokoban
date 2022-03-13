@@ -551,6 +551,7 @@
 		77674A4027A02D86008101B5 /* CircleProgressViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77674A3F27A02D86008101B5 /* CircleProgressViewComponent.swift */; };
 		776C6C1C279D58A800253581 /* CSRFAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776C6C1B279D58A800253581 /* CSRFAgent.swift */; };
 		776C6C1E279D5D8800253581 /* CSRFAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776C6C1D279D5D8800253581 /* CSRFAgentTests.swift */; };
+		776C846927DE451000F8F7E1 /* FullScreenCoverLagacyModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776C846827DE451000F8F7E1 /* FullScreenCoverLagacyModifier.swift */; };
 		77925575279AF54F00A85723 /* ECKeysProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77925574279AF54F00A85723 /* ECKeysProvider.swift */; };
 		77925577279AF5AD00A85723 /* Decryptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77925576279AF5AD00A85723 /* Decryptor.swift */; };
 		77925579279AF61000A85723 /* Encryptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77925578279AF61000A85723 /* Encryptor.swift */; };
@@ -1464,6 +1465,7 @@
 		77674A3F27A02D86008101B5 /* CircleProgressViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressViewComponent.swift; sourceTree = "<group>"; };
 		776C6C1B279D58A800253581 /* CSRFAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFAgent.swift; sourceTree = "<group>"; };
 		776C6C1D279D5D8800253581 /* CSRFAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFAgentTests.swift; sourceTree = "<group>"; };
+		776C846827DE451000F8F7E1 /* FullScreenCoverLagacyModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenCoverLagacyModifier.swift; sourceTree = "<group>"; };
 		77925574279AF54F00A85723 /* ECKeysProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKeysProvider.swift; sourceTree = "<group>"; };
 		77925576279AF5AD00A85723 /* Decryptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decryptor.swift; sourceTree = "<group>"; };
 		77925578279AF61000A85723 /* Encryptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Encryptor.swift; sourceTree = "<group>"; };
@@ -3320,6 +3322,7 @@
 				EDE70927279AC4BA0048CA94 /* OptionSelectorViewComponent.swift */,
 				ED7866B1279EF2FB006B4F5A /* ContextMenuViewComponent.swift */,
 				77674A3F27A02D86008101B5 /* CircleProgressViewComponent.swift */,
+				776C846827DE451000F8F7E1 /* FullScreenCoverLagacyModifier.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -5762,6 +5765,7 @@
 				77517FD227A97B51005CFB77 /* ProductDetailsData.swift in Sources */,
 				0B216FBE26D15BDF0023C878 /* GKHInputCell.swift in Sources */,
 				0BBDFC3A27BE48EE00A30D6D /* PaymentsOperationViewModel.swift in Sources */,
+				776C846927DE451000F8F7E1 /* FullScreenCoverLagacyModifier.swift in Sources */,
 				0B3FE8E32705C86200CBDB4E /* GetMobileListDecodableModel.swift in Sources */,
 				77E1804527AC39840006ACC9 /* FMSData.swift in Sources */,
 				0B283FC927038C2600B5E925 /* GetSessionTimeout.swift in Sources */,
