@@ -20,7 +20,7 @@ struct PaymentsOperationView: View {
                 
                 VStack(spacing: 20) {
                     
-                    ForEach(viewModel.items, id: \.self.id) { item in
+                    ForEach(viewModel.itemsVisible, id: \.self.id) { item in
                         
                         switch item {
                         case let selectViewModel as PaymentsSelectView.ViewModel:

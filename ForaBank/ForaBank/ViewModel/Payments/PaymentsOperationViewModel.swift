@@ -13,7 +13,7 @@ class PaymentsOperationViewModel: ObservableObject {
     let action: PassthroughSubject<Action, Never> = .init()
 
     @Published var header: HeaderViewModel
-    @Published var items: [PaymentsParameterViewModel]
+    @Published var itemsVisible: [PaymentsParameterViewModel]
     @Published var footer: FooterViewModel?
     @Published var popUpSelector: PaymentsPopUpSelectView.ViewModel?
     
@@ -21,6 +21,8 @@ class PaymentsOperationViewModel: ObservableObject {
     var confirmViewModel: PaymentsConfirmViewModel?
     
     var operation: Payments.Operation
+    private var items: CurrentValueSubject<[PaymentsParameterViewModel], Never> = .init([])
+    private var isAdditionalItemsCollapsed: CurrentValueSubject<Bool, Never> = .init(true)
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     private var itemsBindings = Set<AnyCancellable>()
@@ -35,7 +37,7 @@ class PaymentsOperationViewModel: ObservableObject {
                   model: Model = .emptyMock) {
         
         self.header = header
-        self.items = items
+        self.itemsVisible = items
         self.footer = footer
         self.popUpSelector = popUpSelector
         self.isConfirmViewActive = isConfirmViewActive
@@ -48,11 +50,11 @@ class PaymentsOperationViewModel: ObservableObject {
         
         self.model = model
         self.header = .init(title: operation.service.name, action: dismissAction)
-        self.items = []
+        self.itemsVisible = []
         self.isConfirmViewActive = false
         self.operation = operation
         
-        createItemsAndFooter(from: operation.parameters, isCollapsed: true)
+        createItemsAndFooter(from: operation.parameters)
         bind()
         
         print("Payments: init")
@@ -71,7 +73,7 @@ class PaymentsOperationViewModel: ObservableObject {
                     switch result {
                     case .step(let operation):
                         print("Payments: step")
-                        createItemsAndFooter(from: operation.parameters, isCollapsed: true)
+                        createItemsAndFooter(from: operation.parameters)
                         self.operation = operation
                         
                     case .confirm(let operation):
@@ -94,14 +96,41 @@ class PaymentsOperationViewModel: ObservableObject {
                 
             }.store(in: &bindings)
         
+        items
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] items in
+                
+                withAnimation {
+                    
+                    itemsVisible = updateCollapsable(items: items, isCollapsed: isAdditionalItemsCollapsed.value)
+                }
+                
+                itemsBindings = Set<AnyCancellable>()
+                bind(items: itemsVisible)
+                
+            }.store(in: &bindings)
+        
+        isAdditionalItemsCollapsed
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] isCollapsed in
+                
+                withAnimation {
+                    
+                    itemsVisible = updateCollapsable(items: items.value, isCollapsed: isCollapsed)
+                }
+                
+                itemsBindings = Set<AnyCancellable>()
+                bind(items: itemsVisible)
+   
+            }.store(in: &bindings)
+        
         action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 
                 switch action {
                 case _ as PaymentsOperationViewModelAction.Continue:
-                    
-                    let results = items.map{ $0.result }
+                    let results = items.value.map{ $0.result }
                     let update = operation.update(with: results)
                     model.action.send(ModelAction.Payment.Continue.Request(operation: update.operation))
                     
@@ -113,13 +142,15 @@ class PaymentsOperationViewModel: ObservableObject {
                         with: payload.parameter,
                         selectedID: payload.selectedId, action: { [weak self] selectedId in
                             
-                            let item = self?.items.first(where: { $0.id == payload.parameter.parameter.id })
+                            let item = self?.itemsVisible.first(where: { $0.id == payload.parameter.parameter.id })
                             item?.update(value: selectedId)
                             self?.popUpSelector = nil
                         })
                     
-                default: break
+                default:
+                    break
                 }
+                
             }.store(in: &bindings)
     }
     
@@ -137,7 +168,7 @@ class PaymentsOperationViewModel: ObservableObject {
                     
                     print("Payments: item value changed")
 
-                    let results = items.map{ $0.result }
+                    let results = self.items.value.map{ $0.result }
                     let update = operation.update(with: results)
                     
                     switch update.type {
@@ -152,7 +183,7 @@ class PaymentsOperationViewModel: ObservableObject {
                         } else {
                             
                             operation = update.operation
-                            updateFooter(isContinueEnabled: isAllItemsValid())
+                            updateFooter(isContinueEnabled: isItemsValuesValid())
                         }
                         
                     case .historyChanged:
@@ -195,16 +226,16 @@ class PaymentsOperationViewModel: ObservableObject {
                     .receive(on: DispatchQueue.main)
                     .sink {[unowned self] selected in
                         
-                        createItemsAndFooter(from: operation.parameters, isCollapsed: selected)
+                        isAdditionalItemsCollapsed.value = selected
 
                     }.store(in: &itemsBindings)
             }
         }
     }
 
-    func isAllItemsValid() -> Bool {
+    func isItemsValuesValid() -> Bool {
         
-        for item in items {
+        for item in items.value {
             
             guard item.isValid == true else {
                 return false
@@ -233,7 +264,7 @@ class PaymentsOperationViewModel: ObservableObject {
 
     func isContinueOperationRequired(for parameterId: Payments.Parameter.ID) -> Bool {
         
-        guard let parameterViewModel = items.first(where: { $0.id == parameterId}) else {
+        guard let parameterViewModel = items.value.first(where: { $0.id == parameterId}) else {
             return false
         }
  
@@ -252,21 +283,16 @@ class PaymentsOperationViewModel: ObservableObject {
         }
     }
     
-    func createItemsAndFooter(from parameters: [ParameterRepresentable], isCollapsed: Bool) {
+    func createItemsAndFooter(from parameters: [ParameterRepresentable]) {
         
-        let updatedItems = createItems(from: parameters)
-        let collapsableItems = updateCollapsable(items: updatedItems, isCollapsed: isCollapsed)
-        
+        items.value = createItems(from: parameters)
+
         withAnimation {
-            
-            items = collapsableItems
+      
             footer = createFooter(from: parameters)
         }
-        
-        itemsBindings = Set<AnyCancellable>()
-        bind(items: items)
-        
-        updateFooter(isContinueEnabled: isAllItemsValid())
+    
+        updateFooter(isContinueEnabled: isItemsValuesValid())
     }
     
     func createItems(from parameters: [ParameterRepresentable]) -> [PaymentsParameterViewModel] {
