@@ -9,23 +9,6 @@ import SwiftUI
 
 //MARK: - ViewModel
 
-class PaymentsSuccessOptionButtonViewModel: Identifiable {
-    
-    let id: UUID
-    let icon: Image
-    let title: String
-    let action: () -> Void
-    
-    internal init(id: UUID, icon: Image, title: String, action: @escaping () -> Void) {
-        self.id = id
-        self.icon = icon
-        self.title = title
-        self.action = action
-    }
-}
-
-//MARK: - View
-
 extension PaymentsSuccessOptionButtonView {
     
     class ViewModel: PaymentsSuccessOptionButtonViewModel {
@@ -33,6 +16,7 @@ extension PaymentsSuccessOptionButtonView {
     }
 }
 
+//MARK: - View
 struct PaymentsSuccessOptionButtonView: View {
     
     let viewModel: ViewModel
@@ -54,7 +38,6 @@ struct PaymentsSuccessOptionButtonView: View {
 
         }
     }
-    
 }
 
 //MARK: - Preview
