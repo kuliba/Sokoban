@@ -35,14 +35,14 @@ class PaymentsOperationViewModel: ObservableObject {
         self.model = model
     }
     
-    internal init(_ model: Model, operation: Payments.Operation, dismissAction: @escaping () -> Void) throws {
+    internal init(_ model: Model, operation: Payments.Operation, dismissAction: @escaping () -> Void) {
         
         self.model = model
         self.header = .init(title: operation.service.name, action: dismissAction)
         self.items = []
         self.operation = operation
         
-        try createItemsAndFooter(from: operation.parameters, isCollapsed: true)
+        createItemsAndFooter(from: operation.parameters, isCollapsed: true)
         bind()
         
         print("Payments: init")
@@ -62,15 +62,8 @@ class PaymentsOperationViewModel: ObservableObject {
                     let result = payload.result
                     switch result {
                     case .step(let operation):
-                        do {
-                            
-                            try createItemsAndFooter(from: operation.parameters, isCollapsed: true)
-                            self.operation = operation
-                            
-                        } catch {
-                            //TODO: log error
-                            print(error.localizedDescription)
-                        }
+                        createItemsAndFooter(from: operation.parameters, isCollapsed: true)
+                        self.operation = operation
                         
                     case .confirm(let operation):
                         //TODO: open confirm operation screen
@@ -184,16 +177,8 @@ class PaymentsOperationViewModel: ObservableObject {
                     .receive(on: DispatchQueue.main)
                     .sink {[unowned self] selected in
                         
-                        do {
-                            
-                            try createItemsAndFooter(from: operation.parameters, isCollapsed: selected)
-                            
-                        } catch {
-                            
-                            //TODO: log error
-                            print(error.localizedDescription)
-                        }
-       
+                        createItemsAndFooter(from: operation.parameters, isCollapsed: selected)
+
                     }.store(in: &itemsBindings)
             }
         }
@@ -249,9 +234,9 @@ class PaymentsOperationViewModel: ObservableObject {
         }
     }
     
-    func createItemsAndFooter(from parameters: [ParameterRepresentable], isCollapsed: Bool) throws {
+    func createItemsAndFooter(from parameters: [ParameterRepresentable], isCollapsed: Bool) {
         
-        let updatedItems = try Self.createItems(from: parameters)
+        let updatedItems = Self.createItems(from: parameters)
         let collapsableItems = updateCollapsable(items: updatedItems, isCollapsed: isCollapsed)
         
         withAnimation {
@@ -266,7 +251,7 @@ class PaymentsOperationViewModel: ObservableObject {
         updateFooter(isContinueEnabled: isAllItemsValid())
     }
     
-    static func createItems(from parameters: [ParameterRepresentable]) throws -> [PaymentsParameterViewModel] {
+    static func createItems(from parameters: [ParameterRepresentable]) -> [PaymentsParameterViewModel] {
 
         var result = [PaymentsParameterViewModel]()
         for parameter in parameters {
@@ -274,22 +259,22 @@ class PaymentsOperationViewModel: ObservableObject {
             //TODO: add rest parameters view models
             switch parameter {
             case let parameterSelect as Payments.ParameterSelect:
-                result.append(try PaymentsSelectView.ViewModel(with: parameterSelect))
+                result.append(PaymentsSelectView.ViewModel(with: parameterSelect))
                 
             case let parameterSwitch as Payments.ParameterSelectSwitch:
-                result.append(try PaymentsSwitchView.ViewModel(with: parameterSwitch))
+                result.append(PaymentsSwitchView.ViewModel(with: parameterSwitch))
                 
             case let parameterInfo as Payments.ParameterInfo:
-                result.append(try PaymentsInfoView.ViewModel(with: parameterInfo))
+                result.append(PaymentsInfoView.ViewModel(with: parameterInfo))
                 
             case let parameterInput as Payments.ParameterInput:
-                result.append(try PaymentsInputView.ViewModel(with: parameterInput))
+                result.append(PaymentsInputView.ViewModel(with: parameterInput))
                 
             case let paremetrName as Payments.ParameterName:
-                result.append(try PaymentsNameView.ViewModel(with: paremetrName))
+                result.append(PaymentsNameView.ViewModel(with: paremetrName))
                 
             case let parameterSelectSimple as Payments.ParameterSelectSimple:
-                result.append(try PaymentsSelectSimpleView.ViewModel(
+                result.append(PaymentsSelectSimpleView.ViewModel(
                     with: parameterSelectSimple))
                 
             case let parameterCard as Payments.ParameterCard:

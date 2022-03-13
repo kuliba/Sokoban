@@ -41,7 +41,7 @@ extension PaymentsInputView {
             bind()
         }
         
-        init(with parameterInput: Payments.ParameterInput) throws {
+        init(with parameterInput: Payments.ParameterInput) {
             
             self.logo = parameterInput.icon.image ?? Self.iconPlaceholder
             self.content = parameterInput.parameter.value ?? ""

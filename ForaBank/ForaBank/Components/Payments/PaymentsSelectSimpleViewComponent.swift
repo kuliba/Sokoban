@@ -41,7 +41,7 @@ extension PaymentsSelectSimpleView {
             super.init(source: Payments.ParameterMock())
         }
         
-        init(with parameterSelect: Payments.ParameterSelectSimple) throws {
+        init(with parameterSelect: Payments.ParameterSelectSimple) {
             
             self.icon = parameterSelect.icon.image ?? Self.iconPlaceholder
             self.title = parameterSelect.title

@@ -26,18 +26,10 @@ extension PaymentsSwitchView {
             super.init(source: Payments.ParameterMock())
         }
         
-        init(with parameterSwitch: Payments.ParameterSelectSwitch) throws {
-            
-            guard let selectedOptionId = parameterSwitch.parameter.value else {
-                throw PaymentsSwitchView.ViewModel.Error.noAnyOptionSelected
-            }
-            
-            guard parameterSwitch.options.map({ $0.id }).contains(selectedOptionId) else {
-                throw PaymentsSwitchView.ViewModel.Error.selectedNonExistentOption
-            }
-            
+        init(with parameterSwitch: Payments.ParameterSelectSwitch) {
+        
             self.options = parameterSwitch.options.map{ OptionViewModel(id: $0.id, title: $0.name) }
-            self.selected = selectedOptionId
+            self.selected = parameterSwitch.parameter.value ?? ""
             super.init(source: parameterSwitch)
             
             bind()

@@ -83,15 +83,8 @@ class PaymentsServicesViewModel: ObservableObject {
                 case let payload as ModelAction.Payment.Begin.Response:
                     switch payload.result {
                     case .success(let operation):
-                        do {
-                            
-                            operationViewModel = try PaymentsOperationViewModel(model, operation: operation, dismissAction: { [weak self] in self?.action.send(PaymentsServicesViewModelAction.DissmissOperationView())})
-                            isOperationViewActive = true
-                            
-                        } catch {
-                            //TODO: log error
-                            print(error.localizedDescription)
-                        }
+                        operationViewModel = PaymentsOperationViewModel(model, operation: operation, dismissAction: { [weak self] in self?.action.send(PaymentsServicesViewModelAction.DissmissOperationView())})
+                        isOperationViewActive = true
                         
                     case .failure(let error):
                         //TODO: log error

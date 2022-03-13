@@ -28,7 +28,7 @@ extension PaymentsInfoView {
             super.init(source: Payments.ParameterMock())
         }
         
-        init(with parameterInfo: Payments.ParameterInfo) throws {
+        init(with parameterInfo: Payments.ParameterInfo) {
             
             self.icon = parameterInfo.icon.image ?? Self.iconPlaceholder
             self.title = parameterInfo.title

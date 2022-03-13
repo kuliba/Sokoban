@@ -37,15 +37,22 @@ extension PaymentsSelectView {
             super.init(source: Payments.ParameterMock())
         }
         
-        init(with parameterSelect: Payments.ParameterSelect) throws {
+        init(with parameterSelect: Payments.ParameterSelect) {
 
             self.state = .list([])
             super.init(source: parameterSelect)
             
             if let selectedOptionId = parameterSelect.parameter.value {
                 
-                self.state = .selected(try selected(options: parameterSelect.options, selectedId: selectedOptionId, title: parameterSelect.title))
-                
+                if let selectedViewModel = selected(options: parameterSelect.options, selectedId: selectedOptionId, title: parameterSelect.title)  {
+                    
+                    self.state = .selected(selectedViewModel )
+                    
+                } else {
+                    
+                    self.state = .list(items(options: parameterSelect.options))
+                }
+
             } else {
                 
                 self.state = .list(items(options: parameterSelect.options))
@@ -62,18 +69,13 @@ extension PaymentsSelectView {
                     
                     switch action {
                     case let payload as PaymentsSelectView.ViewModelAction.ItemSelected:
-                        guard let parameterSelect = source as? Payments.ParameterSelect else {
+                        guard let parameterSelect = source as? Payments.ParameterSelect,
+                        let selectedViewModel = selected(options: parameterSelect.options, selectedId: payload.itemId, title: parameterSelect.title) else {
                             return
                         }
-                        do {
-                            
-                            state = .selected(try selected(options: parameterSelect.options, selectedId: payload.itemId, title: parameterSelect.title))
-                            
-                        } catch {
-                            
-                           //TODO: log error
-                            print(error.localizedDescription)
-                        }
+                        
+                        state = .selected(selectedViewModel)
+                        
                         
                     case _ as PaymentsSelectView.ViewModelAction.ShowItemsList:
                         update(value: nil)
@@ -110,10 +112,10 @@ extension PaymentsSelectView {
             }
         }
         
-        func selected(options: [Payments.ParameterSelect.Option], selectedId: Payments.Parameter.ID, title: String) throws -> SelectedItemViewModel {
+        func selected(options: [Payments.ParameterSelect.Option], selectedId: Payments.Parameter.ID, title: String) -> SelectedItemViewModel? {
             
             guard let selectedOption = options.first(where: { $0.id == selectedId }) else {
-                throw Error.unableSelectItemWithId(selectedId)
+                return nil
             }
             
             let icon = selectedOption.icon.image ?? Self.itemIconPlaceholder
@@ -161,11 +163,6 @@ extension PaymentsSelectView {
                 self.title = description
                 self.action = action
             }
-        }
-        
-        enum Error: Swift.Error {
-            
-            case unableSelectItemWithId(Payments.Parameter.ID)
         }
     }
     
