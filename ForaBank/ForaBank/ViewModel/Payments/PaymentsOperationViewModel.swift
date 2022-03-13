@@ -17,6 +17,9 @@ class PaymentsOperationViewModel: ObservableObject {
     @Published var footer: FooterViewModel?
     @Published var popUpSelector: PaymentsPopUpSelectView.ViewModel?
     
+    @Published var isConfirmViewActive: Bool
+    var confirmViewModel: PaymentsConfirmViewModel?
+    
     var operation: Payments.Operation
     private let model: Model
     private var bindings = Set<AnyCancellable>()
@@ -25,12 +28,18 @@ class PaymentsOperationViewModel: ObservableObject {
     internal init(header: HeaderViewModel,
                   items: [PaymentsParameterViewModel],
                   footer: FooterViewModel?,
+                  popUpSelector: PaymentsPopUpSelectView.ViewModel? = nil,
+                  isConfirmViewActive: Bool = false,
+                  confirmViewModel: PaymentsConfirmViewModel? = nil,
                   operation: Payments.Operation = .emptyMock,
                   model: Model = .emptyMock) {
         
         self.header = header
         self.items = items
         self.footer = footer
+        self.popUpSelector = popUpSelector
+        self.isConfirmViewActive = isConfirmViewActive
+        self.confirmViewModel = confirmViewModel
         self.operation = operation
         self.model = model
     }
@@ -40,6 +49,7 @@ class PaymentsOperationViewModel: ObservableObject {
         self.model = model
         self.header = .init(title: operation.service.name, action: dismissAction)
         self.items = []
+        self.isConfirmViewActive = false
         self.operation = operation
         
         createItemsAndFooter(from: operation.parameters, isCollapsed: true)
@@ -57,25 +67,31 @@ class PaymentsOperationViewModel: ObservableObject {
                 switch action {
                 case let payload as ModelAction.Payment.Continue.Response:
                     
-                    print("Payments: continue response")
-                    
                     let result = payload.result
                     switch result {
                     case .step(let operation):
+                        print("Payments: step")
                         createItemsAndFooter(from: operation.parameters, isCollapsed: true)
                         self.operation = operation
                         
                     case .confirm(let operation):
-                        //TODO: open confirm operation screen
-                        
-                        print("Payments: open confirm view")
-                        break
+                        print("Payments: confirm")
+                        confirmViewModel = PaymentsConfirmViewModel(model, operation: operation, dismissAction: {[weak self] in
+                            print("Payments: confirm dismiss action")
+                            self?.isConfirmViewActive = false
+                            self?.confirmViewModel = nil
+                        })
+                        isConfirmViewActive = true
                         
                     case .fail(_):
+                        print("Payments: fail")
                         break
                     }
-                default: break
+                    
+                default:
+                    break
                 }
+                
             }.store(in: &bindings)
         
         action
@@ -89,8 +105,10 @@ class PaymentsOperationViewModel: ObservableObject {
                     let update = operation.update(with: results)
                     model.action.send(ModelAction.Payment.Continue.Request(operation: update.operation))
                     
+                case _ as PaymentsOperationViewModelAction.Confirm:
+                    print("Payments: confirm action")
+     
                 case let payload as PaymentsOperationViewModelAction.ShowPopUpSelectView:
-                    
                     popUpSelector = PaymentsPopUpSelectView.ViewModel(
                         with: payload.parameter,
                         selectedID: payload.selectedId, action: { [weak self] selectedId in
@@ -236,7 +254,7 @@ class PaymentsOperationViewModel: ObservableObject {
     
     func createItemsAndFooter(from parameters: [ParameterRepresentable], isCollapsed: Bool) {
         
-        let updatedItems = Self.createItems(from: parameters)
+        let updatedItems = createItems(from: parameters)
         let collapsableItems = updateCollapsable(items: updatedItems, isCollapsed: isCollapsed)
         
         withAnimation {
@@ -251,12 +269,11 @@ class PaymentsOperationViewModel: ObservableObject {
         updateFooter(isContinueEnabled: isAllItemsValid())
     }
     
-    static func createItems(from parameters: [ParameterRepresentable]) -> [PaymentsParameterViewModel] {
+    func createItems(from parameters: [ParameterRepresentable]) -> [PaymentsParameterViewModel] {
 
         var result = [PaymentsParameterViewModel]()
         for parameter in parameters {
 
-            //TODO: add rest parameters view models
             switch parameter {
             case let parameterSelect as Payments.ParameterSelect:
                 result.append(PaymentsSelectView.ViewModel(with: parameterSelect))
@@ -391,6 +408,8 @@ enum PaymentsOperationViewModelAction {
     
     struct Continue: Action {}
     
+    struct Confirm: Action {}
+
     struct ShowPopUpSelectView: Action {
         
         let parameter: Payments.ParameterSelectSimple

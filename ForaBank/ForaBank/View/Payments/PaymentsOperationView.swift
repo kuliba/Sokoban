@@ -84,12 +84,24 @@ struct PaymentsOperationView: View {
                 
                 PaymentsPopUpSelectView(viewModel: popUpSelectViewModel)
             }
+            
+            NavigationLink("", isActive: $viewModel.isConfirmViewActive) {
+                
+                if let confirmViewModel = viewModel.confirmViewModel {
+                    
+                    PaymentsOperationView(viewModel: confirmViewModel)
+                    
+                } else {
+                    
+                    EmptyView()
+                }
+            }
         }
         .navigationBarTitle(Text(viewModel.header.title), displayMode: .inline)
-        .navigationBarBackButtonHidden(true)
-        .navigationBarItems(leading: Button(action: viewModel.header.action, label: {
-            viewModel.header.backButtonIcon
-        }))
+//        .navigationBarBackButtonHidden(true)
+//        .navigationBarItems(leading: Button(action: viewModel.header.action, label: {
+//            viewModel.header.backButtonIcon
+//        }))
     }
 }
 
@@ -102,7 +114,6 @@ struct PaymentsOperationView_Previews: PreviewProvider {
 }
 
 extension PaymentsOperationViewModel {
-    
     
     static let sample: PaymentsOperationViewModel = {
         
