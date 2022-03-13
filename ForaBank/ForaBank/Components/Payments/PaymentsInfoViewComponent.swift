@@ -16,15 +16,17 @@ extension PaymentsInfoView {
         let icon: Image
         let title: String
         let content: String
+        let iconStyle: IconStyle
         
         //TODO: real placeholder required
         private static let iconPlaceholder = Image("Payments Icon Placeholder")
 
-        internal init(icon: Image, title: String, content: String) {
+        internal init(icon: Image, title: String, content: String, iconStyle: IconStyle) {
             
             self.icon = icon
             self.title = title
             self.content = content
+            self.iconStyle = iconStyle
             super.init(source: Payments.ParameterMock())
         }
         
@@ -33,7 +35,26 @@ extension PaymentsInfoView {
             self.icon = parameterInfo.icon.image ?? Self.iconPlaceholder
             self.title = parameterInfo.title
             self.content = parameterInfo.parameter.value ?? ""
+            self.iconStyle = .init(with: parameterInfo.icon)
             super.init(source: parameterInfo)
+        }
+        
+        enum IconStyle {
+            
+            case small
+            case large
+            
+            init(with imageData: ImageData) {
+                
+                if let uiImage = imageData.uiImage, uiImage.size.width / UIScreen.main.scale < 32 {
+                    
+                    self = .small
+                    
+                } else {
+                    
+                    self = .large
+                }
+            }
         }
     }
 }
@@ -46,35 +67,71 @@ struct PaymentsInfoView: View {
     
     var body: some View {
         
-        VStack {
-        
-        HStack(alignment: .top, spacing: 16) {
-            
-            viewModel.icon
-                .resizable()
-                .frame(width: 32, height: 32)
-                .padding(.top, 12)
-            
-            VStack(alignment: .leading, spacing: 4)  {
+        switch viewModel.iconStyle {
+        case .small:
+            VStack {
                 
-                Text(viewModel.title)
-                    .font(Font.custom("Inter-Regular", size: 12))
-                    .foregroundColor(Color(hex: "#999999"))
+                HStack(alignment: .top, spacing: 20) {
+                    
+                    viewModel.icon
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                        .padding(.top, 16)
+                        .padding(.leading, 4)
+                    
+                    VStack(alignment: .leading, spacing: 4)  {
+                        
+                        Text(viewModel.title)
+                            .font(Font.custom("Inter-Regular", size: 12))
+                            .foregroundColor(Color(hex: "#999999"))
+                        
+                        Text(viewModel.content)
+                            .font(Font.custom("Inter-Medium", size: 14))
+                            .foregroundColor(Color(hex: "#1C1C1C"))
+                    }
+                    
+                    Spacer()
+                }
                 
-                Text(viewModel.content)
-                    .font(Font.custom("Inter-Medium", size: 14))
-                    .foregroundColor(Color(hex: "#1C1C1C"))
+                Divider()
+                    .frame(height: 1)
+                    .background(Color(hex: "#EAEBEB"))
+                    .opacity(0.2)
+                    .padding(.top, 12)
+                    .padding(.leading, 44)
             }
             
-            Spacer()
-        }
-            
-            Divider()
-                .frame(height: 1)
-                .background(Color(hex: "#EAEBEB"))
-                .opacity(0.2)
-                .padding(.top, 12)
-                .padding(.leading, 48)
+        case .large:
+            VStack {
+                
+                HStack(alignment: .top, spacing: 16) {
+                    
+                    viewModel.icon
+                        .resizable()
+                        .frame(width: 32, height: 32)
+                        .padding(.top, 12)
+                    
+                    VStack(alignment: .leading, spacing: 4)  {
+                        
+                        Text(viewModel.title)
+                            .font(Font.custom("Inter-Regular", size: 12))
+                            .foregroundColor(Color(hex: "#999999"))
+                        
+                        Text(viewModel.content)
+                            .font(Font.custom("Inter-Medium", size: 14))
+                            .foregroundColor(Color(hex: "#1C1C1C"))
+                    }
+                    
+                    Spacer()
+                }
+                
+                Divider()
+                    .frame(height: 1)
+                    .background(Color(hex: "#EAEBEB"))
+                    .opacity(0.2)
+                    .padding(.top, 12)
+                    .padding(.leading, 48)
+            }
         }
     }
 }
@@ -101,7 +158,7 @@ struct PaymentsInfoView_Previews: PreviewProvider {
 
 extension PaymentsInfoView.ViewModel {
     
-    static let sample = PaymentsInfoView.ViewModel(icon: Image("Payments List Sample"), title: "Основание", content: "Налог на имущество физических лиц, взимаемый по ставкам, применяемым к объектам налогообложения, расположенным в границах внутригородских муниципальных образований городов федерального значения (сумма платеж...)")
+    static let sample = PaymentsInfoView.ViewModel(icon: Image("Payments List Sample"), title: "Основание", content: "Налог на имущество физических лиц, взимаемый по ставкам, применяемым к объектам налогообложения, расположенным в границах внутригородских муниципальных образований городов федерального значения (сумма платеж...)", iconStyle: .large)
     
-    static let sampleParameter = try! PaymentsInfoView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "УФК по г. Москве (ИФНС России №26 по г. Москве)"), icon: .empty, title: "Получатель платежа"))
+    static let sampleParameter = PaymentsInfoView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "УФК по г. Москве (ИФНС России №26 по г. Москве)"), icon: .parameterLocation, title: "Получатель платежа"))
 }

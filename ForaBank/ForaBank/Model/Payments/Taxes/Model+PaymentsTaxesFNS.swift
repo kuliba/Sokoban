@@ -60,7 +60,7 @@ extension Model {
                     // category
                     let categoryParameter = Payments.ParameterInput(
                         Parameter(id: "a3_BillNumber_1_1", value: nil),
-                        icon: .parameterSample,
+                        icon: .parameterDocument,
                         title: "УИН",
                         validator: .init(minLength: 1, maxLength: nil, regEx: nil))
                     
@@ -178,7 +178,7 @@ extension Model {
                 let innParameter = Payments.ParameterInput(
                     .init(id: UUID().uuidString,
                           value: "7726062105"),
-                    icon: .parameterSample,
+                    icon: .parameterDocument,
                     title: "ИНН Получателя",
                     validator: .init(minLength: 1, maxLength: nil, regEx: nil),
                     collapsable: true)
@@ -186,14 +186,14 @@ extension Model {
                 let oktmoParameter = Payments.ParameterInput(
                     .init(id: UUID().uuidString,
                           value: "20701000"),
-                    icon: .parameterSample,
+                    icon: .parameterHash,
                     title: "ОКТМО (ОКАТО)",
                     validator: .init(minLength: 1, maxLength: nil, regEx: nil),
                     collapsable: true)
                 
                 let adressParameter = Payments.ParameterInfo(
                     .init(id: "a3_address_2_2", value: "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 432011, Ульяновская обл, Ульяновск г, Радищева ул ,  д. 124,  кв. 28"),
-                    icon: .parameterSample,
+                    icon: .parameterLocation,
                     title: "Адрес проживания", collapsable: true)
                 
                 let amountParameter = Payments.ParameterAmount(
@@ -307,7 +307,7 @@ extension Model {
                 
                 let codeParameter = Payments.ParameterInput(
                     .init(id: Payments.Parameter.Identifier.code.rawValue, value: nil),
-                    icon: .parameterSample,
+                    icon: .parameterSMS,
                     title: "Введите код из СМС", validator: .init(minLength: 6, maxLength: 6, regEx: nil))
     
                 let finalParameter = Payments.ParameterFinal()

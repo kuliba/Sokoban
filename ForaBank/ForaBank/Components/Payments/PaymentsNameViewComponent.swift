@@ -32,7 +32,7 @@ extension PaymentsNameView {
         
         var buttonIcon: Image { isEditing ? Image("Payments Minus Squares") : Image("Payments Plus Squares")}
         
-        private static let iconPlaceholder = Image("accountImage")
+        private static let iconPlaceholder = Image("Payments Icon Person")
         private var bindings = Set<AnyCancellable>()
         
         init(icon: Image, title: String, person: PersonViewModel, isEditing: Bool) {
