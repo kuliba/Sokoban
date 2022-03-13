@@ -13,7 +13,7 @@ class PaymentsConfirmViewModel: PaymentsOperationViewModel {
     
     override func createFooter(from parameters: [ParameterRepresentable]) -> PaymentsOperationViewModel.FooterViewModel? {
         
-        return .button(.init(title: "Продолжить", isEnabled: false, action: { [weak self] in
+        return .button(.init(title: "Оплатить", isEnabled: false, action: { [weak self] in
             self?.action.send(PaymentsOperationViewModelAction.Confirm())
         }))
     }

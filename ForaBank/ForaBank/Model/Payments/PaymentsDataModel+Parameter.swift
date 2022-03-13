@@ -223,22 +223,31 @@ extension Payments {
         
         let parameter: Parameter
         let options: [Option]
-        let editable: Bool = true
-        let collapsable: Bool = false
+        let editable: Bool
+        let collapsable: Bool
         
-        internal init(_ parameter: Parameter, options: [Option]) {
+        internal init(_ parameter: Parameter, options: [Option], editable: Bool = true, collapsable: Bool = false) {
             
             self.parameter = parameter
             self.options = options
+            self.editable = editable
+            self.collapsable = collapsable
         }
         
         func updated(value: String?) -> ParameterRepresentable {
             
-            ParameterSelectSwitch(.init(id: parameter.id, value: value), options: options)
+            ParameterSelectSwitch(.init(id: parameter.id, value: value), options: options, editable: editable, collapsable: collapsable)
         }
         
-        func updated(editable: Bool) -> ParameterRepresentable { self }
-        func updated(collapsable: Bool) -> ParameterRepresentable { self }
+        func updated(editable: Bool) -> ParameterRepresentable {
+            
+            ParameterSelectSwitch(parameter, options: options, editable: editable, collapsable: collapsable)
+        }
+        
+        func updated(collapsable: Bool) -> ParameterRepresentable {
+            
+            ParameterSelectSwitch(parameter, options: options, editable: editable, collapsable: collapsable)
+        }
         
         struct Option: Identifiable {
             

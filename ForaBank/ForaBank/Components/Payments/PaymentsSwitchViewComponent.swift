@@ -68,17 +68,15 @@ struct PaymentsSwitchView: View {
     
     var body: some View {
         
-        HStack {
+        Picker("", selection: $viewModel.selected) {
             
-            Picker("", selection: $viewModel.selected, content: {
-                
-                ForEach(viewModel.options, content: { options in
-                    
-                    Text(options.title)
-                })
-                
-            }).pickerStyle(.segmented)
+            ForEach(viewModel.options) { option in
+               
+                Text(option.title)
+            }
         }
+        .pickerStyle(.segmented)
+        .disabled(viewModel.isEditable == false)
     }
 }
 
