@@ -317,15 +317,10 @@ extension Model {
             default:
                 completion(.failure(Payments.Error.unexpectedOperatorValue))
             }
-            
-            
+
         case 3:
-             
-            
-            //TODO: добавить в список параметер final
-            
-            
             break
+            
         default:
             completion(.failure(Payments.Error.unsupported))
         }
