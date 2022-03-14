@@ -194,7 +194,7 @@ class PaymentsOperationViewModel: ObservableObject {
                         
                         print("Payments: normal update")
                         
-                        if isContinueOperationRequired(for: value.id) {
+                        if isAutoContinueRequired(for: value.id) {
                             
                             model.action.send(ModelAction.Payment.Continue.Request(operation: update.operation))
                             
@@ -306,25 +306,13 @@ class PaymentsOperationViewModel: ObservableObject {
         }
     }
 
-    func isContinueOperationRequired(for parameterId: Payments.Parameter.ID) -> Bool {
+    func isAutoContinueRequired(for parameterId: Payments.Parameter.ID) -> Bool {
         
         guard let parameterViewModel = items.value.first(where: { $0.id == parameterId}) else {
             return false
         }
  
-        switch parameterViewModel.source {
-        case _ as Payments.ParameterSelect:
-            return true
-            
-        case _ as Payments.ParameterSelectSwitch:
-            return true
-            
-        case _ as Payments.ParameterSelectSimple:
-            return true
-            
-        default:
-            return false
-        }
+        return parameterViewModel.source.autoContinue
     }
     
     func createItemsAndFooter(from parameters: [ParameterRepresentable]) {
@@ -432,7 +420,6 @@ class PaymentsOperationViewModel: ObservableObject {
             default:
                 break
             }
-            
         }
         
         return footer

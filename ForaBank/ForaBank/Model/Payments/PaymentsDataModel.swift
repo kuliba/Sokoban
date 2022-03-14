@@ -87,12 +87,21 @@ protocol ParameterRepresentable {
     /// the parameter affects the history and the operation is reset to the step at which the value was originally set
     var affectsHistory: Bool { get }
     
+    /// the paramreter after value update requests auto continue operation
+    var autoContinue: Bool { get }
+    
     func updated(value: String?) -> ParameterRepresentable
     func updated(editable: Bool) -> ParameterRepresentable
     func updated(collapsable: Bool) -> ParameterRepresentable
 }
 
 extension ParameterRepresentable {
+    
+    
+    var editable: Bool { false }
+    var collapsable: Bool { false }
+    var affectsHistory: Bool { false }
+    var autoContinue: Bool { false }
     
     func updated(value: String?) -> ParameterRepresentable { self }
     func updated(editable: Bool) -> ParameterRepresentable { self }

@@ -133,36 +133,10 @@ extension Model {
                     .init(id: "2", name: "В возрасте до 14 лет"),
                     .init(id: "3", name: "В возрасте до 14 лет (новый образец)"),
                     .init(id: "4", name: "Содержащего электронный носитель информации (паспорта нового поколения)"),
-                    .init(id: "4", name: "За внесение изменений в паспорт")])
+                    .init(id: "4", name: "За внесение изменений в паспорт")], autoContinue: false)
             
             completion(.success( updatedParameters + [serviceParameter]))
             
-            /*
-            if parameters.first(where: { $0.parameter.id == "a3_categorySelect_3_1" }) != nil {
-                
-                completion(.success(updatedParameters))
-                
-            } else {
-                
-                //  service
-                let serviceParameter = Payments.ParameterSelectSimple(
-                    Parameter(id: "a3_categorySelect_3_1", value: nil),
-                    icon: .parameterSample,
-                    title: "Тип услуги",
-                    selectionTitle: "Выберете услугу",
-                    description: "Государственная пошлина за выдачу паспорта удостоверяющего личность гражданина РФ за пределами территории РФ гражданину РФ",
-                    options: [
-                        .init(id: "1", name: "В возрасте от 14 лет"),
-                        .init(id: "2", name: "В возрасте до 14 лет"),
-                        .init(id: "3", name: "В возрасте до 14 лет (новый образец)"),
-                        .init(id: "4", name: "Содержащего электронный носитель информации (паспорта нового поколения)"),
-                        .init(id: "4", name: "За внесение изменений в паспорт")],
-                    affectsHistory: true)
-                
-                completion(.success( updatedParameters + [serviceParameter]))
-            }
-             */
- 
         case 3:
                       
             let cardParameter = Payments.ParameterCard()
@@ -196,5 +170,4 @@ extension Model {
             completion(.failure(Payments.Error.unsupported))
         }
     }
-    
 }
