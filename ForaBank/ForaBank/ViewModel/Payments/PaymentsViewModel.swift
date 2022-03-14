@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 import Combine
 
 class PaymentsViewModel: ObservableObject {
@@ -13,6 +14,7 @@ class PaymentsViewModel: ObservableObject {
     let action: PassthroughSubject<Action, Never> = .init()
     
     @Published var content: ContentType
+    @Published var successViewModel: PaymentsSuccessViewModel?
     
     private let category: Payments.Category
     private let model: Model
@@ -77,6 +79,17 @@ class PaymentsViewModel: ObservableObject {
                     case .failure(let error):
                         //TODO: log error
                         print(error.localizedDescription)
+                    }
+                    
+                case let payload as ModelAction.Payment.Complete.Response:
+                    switch payload.result {
+                    case .success:
+                        successViewModel = PaymentsSuccessViewModel(header: .init(stateIcon: Image("OkOperators"), title: "Успешный перевод", description: "1 000,00 ₽", operatorIcon: Image("Payments Service Sample")), optionButtons: [.init(id: UUID(), icon: Image("Operation Details Info"), title: "Детали", action: {}), .init(id: UUID(), icon: Image("Payments Input Sample"),title: "Документ", action: {}) ], actionButton: .init(title: "На главную", isEnabled: true, action: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())}))
+                        
+                        
+                    case .failure:
+                        print("Payments: continue fail")
+                        break
                     }
                     
                 default:

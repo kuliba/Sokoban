@@ -24,13 +24,16 @@ struct FullScreenCoverLegacy<ViewModel, CoverContent: View>: ViewModifier {
                 
                 if let viewModel = viewModel {
                     
-                    ZStack {
+                    withAnimation {
                         
-                        Color.white
-                        coverContent(viewModel)
+                        ZStack {
+                            
+                            Color.white
+                            coverContent(viewModel)
+                        }
+                        .animation(.spring())
+                        .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .move(edge: .top)))
                     }
-                    .animation(.spring())
-                    .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .move(edge: .top)))
                 }
             }
         }

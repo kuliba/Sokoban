@@ -12,20 +12,26 @@ struct PaymentsView: View {
     @ObservedObject var viewModel: PaymentsViewModel
     
     var body: some View {
-
-        switch viewModel.content {
-        case .services(let servicesViewModel):
-            NavigationView {
-                PaymentsServicesView(viewModel: servicesViewModel)
-            }
+        
+        Group {
             
-        case .operation(let operationViewModel):
-            NavigationLink("", isActive: .constant(true)) {
-                PaymentsOperationView(viewModel: operationViewModel)
+            switch viewModel.content {
+            case .services(let servicesViewModel):
+                NavigationView {
+                    PaymentsServicesView(viewModel: servicesViewModel)
+                }
+                
+            case .operation(let operationViewModel):
+                NavigationLink("", isActive: .constant(true)) {
+                    PaymentsOperationView(viewModel: operationViewModel)
+                }
+                
+            case .idle:
+                Text("Loading..")
             }
-            
-        case .idle:
-            Text("Loading..")
+        }
+        .fullScreenCoverLegacy(viewModel: $viewModel.successViewModel) { successViewModel in
+            PaymentsSuccessView(viewModel: successViewModel)
         }
     }
 }

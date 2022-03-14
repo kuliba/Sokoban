@@ -20,8 +20,6 @@ class PaymentsOperationViewModel: ObservableObject {
     @Published var isConfirmViewActive: Bool
     var confirmViewModel: PaymentsConfirmViewModel?
     
-    @Published var successViewModel: PaymentsSuccessViewModel?
-    
     var operation: Payments.Operation
     private var items: CurrentValueSubject<[PaymentsParameterViewModel], Never> = .init([])
     private var isAdditionalItemsCollapsed: CurrentValueSubject<Bool, Never> = .init(true)
@@ -89,21 +87,7 @@ class PaymentsOperationViewModel: ObservableObject {
                         print("Payments: continue fail")
                         break
                     }
-                    
-                case let payload as ModelAction.Payment.Complete.Response:
-                    switch payload.result {
-                    case .success:
-                        withAnimation {
-                            
-                            successViewModel = PaymentsSuccessViewModel(header: .init(stateIcon: Image("OkOperators"), title: "Успешный перевод", description: "1 000,00 ₽", operatorIcon: Image("Payments Service Sample")), optionButtons: [.init(id: UUID(), icon: Image("Operation Details Info"), title: "Детали", action: {}), .init(id: UUID(), icon: Image("Payments Input Sample"),title: "Документ", action: {}) ], actionButton: .init(title: "На главную", isEnabled: true, action: {}))
-                        }
-                        
-                        
-                    case .failure:
-                        print("Payments: continue fail")
-                        break
-                    }
-                    
+
                 default:
                     break
                 }
