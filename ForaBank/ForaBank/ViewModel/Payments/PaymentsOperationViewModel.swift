@@ -20,12 +20,12 @@ class PaymentsOperationViewModel: ObservableObject {
     @Published var isConfirmViewActive: Bool
     var confirmViewModel: PaymentsConfirmViewModel?
     
-    var operation: Payments.Operation
-    private var items: CurrentValueSubject<[PaymentsParameterViewModel], Never> = .init([])
-    private var isAdditionalItemsCollapsed: CurrentValueSubject<Bool, Never> = .init(true)
-    private let model: Model
-    private var bindings = Set<AnyCancellable>()
-    private var itemsBindings = Set<AnyCancellable>()
+    internal var operation: Payments.Operation
+    internal var items: CurrentValueSubject<[PaymentsParameterViewModel], Never> = .init([])
+    internal var isAdditionalItemsCollapsed: CurrentValueSubject<Bool, Never> = .init(true)
+    internal let model: Model
+    internal var bindings = Set<AnyCancellable>()
+    internal var itemsBindings = Set<AnyCancellable>()
     
     internal init(header: HeaderViewModel,
                   items: [PaymentsParameterViewModel],
@@ -48,6 +48,8 @@ class PaymentsOperationViewModel: ObservableObject {
     
     internal init(_ model: Model, operation: Payments.Operation, dismissAction: @escaping () -> Void) {
         
+        print("Payments: init operation")
+        
         self.model = model
         self.header = .init(title: operation.service.name, action: dismissAction)
         self.itemsVisible = []
@@ -56,11 +58,18 @@ class PaymentsOperationViewModel: ObservableObject {
         
         createItemsAndFooter(from: operation.parameters)
         bind()
-        
-        print("Payments: init")
     }
     
-    private func bind() {
+    internal func bind() {
+        
+        bind(model: model)
+        bindAction()
+        bindItems()
+        
+        print("Payments: bind operation")
+    }
+    
+    internal func bind(model: Model) {
         
         model.action
             .receive(on: DispatchQueue.main)
@@ -77,9 +86,7 @@ class PaymentsOperationViewModel: ObservableObject {
                     case .confirm(let operation):
                         print("Payments: confirm")
                         confirmViewModel = PaymentsConfirmViewModel(model, operation: operation, dismissAction: {[weak self] in
-                            print("Payments: confirm dismiss action")
-                            self?.isConfirmViewActive = false
-                            self?.confirmViewModel = nil
+                            self?.action.send(PaymentsOperationViewModelAction.DismissConfirm())
                         })
                         isConfirmViewActive = true
                         
@@ -93,6 +100,48 @@ class PaymentsOperationViewModel: ObservableObject {
                 }
                 
             }.store(in: &bindings)
+    }
+    
+    internal func bindAction() {
+        
+        action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as PaymentsOperationViewModelAction.Continue:
+                    let results = items.value.map{ $0.result }
+                    let update = operation.update(with: results)
+                    model.action.send(ModelAction.Payment.Continue.Request(operation: update.operation))
+                    
+                case _ as PaymentsOperationViewModelAction.Confirm:
+                    let results = items.value.map{ $0.result }
+                    let update = operation.update(with: results)
+                    model.action.send(ModelAction.Payment.Complete.Request(operation: update.operation))
+     
+                case let payload as PaymentsOperationViewModelAction.ShowPopUpSelectView:
+                    popUpSelector = PaymentsPopUpSelectView.ViewModel(
+                        with: payload.parameter,
+                        selectedID: payload.selectedId, action: { [weak self] selectedId in
+                            
+                            let item = self?.itemsVisible.first(where: { $0.id == payload.parameter.parameter.id })
+                            item?.update(value: selectedId)
+                            self?.popUpSelector = nil
+                        })
+                    
+                case _ as PaymentsOperationViewModelAction.DismissConfirm:
+                    print("Payments: confirm dismiss action: \(String(describing: self))", isConfirmViewActive)
+                    isConfirmViewActive = false
+                    confirmViewModel = nil
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+    }
+    
+    internal func bindItems() {
         
         items
             .receive(on: DispatchQueue.main)
@@ -120,37 +169,6 @@ class PaymentsOperationViewModel: ObservableObject {
                 itemsBindings = Set<AnyCancellable>()
                 bind(items: itemsVisible)
    
-            }.store(in: &bindings)
-        
-        action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                
-                switch action {
-                case _ as PaymentsOperationViewModelAction.Continue:
-                    let results = items.value.map{ $0.result }
-                    let update = operation.update(with: results)
-                    model.action.send(ModelAction.Payment.Continue.Request(operation: update.operation))
-                    
-                case _ as PaymentsOperationViewModelAction.Confirm:
-                    let results = items.value.map{ $0.result }
-                    let update = operation.update(with: results)
-                    model.action.send(ModelAction.Payment.Complete.Request(operation: update.operation))
-     
-                case let payload as PaymentsOperationViewModelAction.ShowPopUpSelectView:
-                    popUpSelector = PaymentsPopUpSelectView.ViewModel(
-                        with: payload.parameter,
-                        selectedID: payload.selectedId, action: { [weak self] selectedId in
-                            
-                            let item = self?.itemsVisible.first(where: { $0.id == payload.parameter.parameter.id })
-                            item?.update(value: selectedId)
-                            self?.popUpSelector = nil
-                        })
-                    
-                default:
-                    break
-                }
-                
             }.store(in: &bindings)
     }
     
@@ -399,6 +417,13 @@ class PaymentsOperationViewModel: ObservableObject {
 
 extension PaymentsOperationViewModel {
     
+    struct HeaderViewModel {
+        
+        let title: String
+        let backButtonIcon = Image("back_button")
+        let action: () -> Void
+    }
+    
     enum FooterViewModel {
         
         case button(ContinueButtonViewModel)
@@ -420,15 +445,7 @@ extension PaymentsOperationViewModel {
     }
 }
 
-extension PaymentsOperationViewModel {
-    
-    struct HeaderViewModel {
-        
-        let title: String
-        let backButtonIcon = Image("back_button")
-        let action: () -> Void
-    }
-}
+//MARK: - Action
 
 enum PaymentsOperationViewModelAction {
     
@@ -441,4 +458,6 @@ enum PaymentsOperationViewModelAction {
         let parameter: Payments.ParameterSelectSimple
         let selectedId: Payments.ParameterSelectSimple.Option.ID?
     }
+    
+    struct DismissConfirm: Action {}
 }

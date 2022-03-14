@@ -13,18 +13,14 @@ struct PaymentsView: View {
     
     var body: some View {
         
-        Group {
+        NavigationView {
             
             switch viewModel.content {
             case .services(let servicesViewModel):
-                NavigationView {
-                    PaymentsServicesView(viewModel: servicesViewModel)
-                }
+                PaymentsServicesView(viewModel: servicesViewModel)
                 
             case .operation(let operationViewModel):
-                NavigationLink("", isActive: .constant(true)) {
-                    PaymentsOperationView(viewModel: operationViewModel)
-                }
+                PaymentsOperationView(viewModel: operationViewModel)
                 
             case .idle:
                 Text("Loading..")

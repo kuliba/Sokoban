@@ -11,6 +11,7 @@ import Combine
 struct PaymentsOperationView: View {
     
     @ObservedObject var viewModel: PaymentsOperationViewModel
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     var body: some View {
         
@@ -20,7 +21,7 @@ struct PaymentsOperationView: View {
                 
                 VStack(spacing: 20) {
                     
-                    ForEach(viewModel.itemsVisible, id: \.self.id) { item in
+                    ForEach(viewModel.itemsVisible) { item in
                         
                         switch item {
                         case let selectViewModel as PaymentsSelectView.ViewModel:
@@ -59,7 +60,6 @@ struct PaymentsOperationView: View {
             }
             .padding(.horizontal, 20)
             
-            
             if let footerViewModel = viewModel.footer {
                 
                 VStack {
@@ -88,8 +88,8 @@ struct PaymentsOperationView: View {
             NavigationLink("", isActive: $viewModel.isConfirmViewActive) {
                 
                 if let confirmViewModel = viewModel.confirmViewModel {
-                    
-                    PaymentsOperationView(viewModel: confirmViewModel)
+
+                        PaymentsOperationView(viewModel: confirmViewModel)
                     
                 } else {
                     
@@ -98,11 +98,9 @@ struct PaymentsOperationView: View {
             }
         }
         .navigationBarTitle(Text(viewModel.header.title), displayMode: .inline)
-
-//        .navigationBarBackButtonHidden(true)
-//        .navigationBarItems(leading: Button(action: viewModel.header.action, label: {
-//            viewModel.header.backButtonIcon
-//        }))
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: Button(action: { self.presentationMode.wrappedValue.dismiss()}, label: {
+            viewModel.header.backButtonIcon }))
     }
 }
 
