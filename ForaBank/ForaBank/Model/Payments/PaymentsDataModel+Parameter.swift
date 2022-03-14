@@ -15,9 +15,10 @@ extension Payments.Parameter {
         case service        = "ru.forabank.sense.service"
         case `operator`     = "ru.forabank.sense.operator"
         case template       = "ru.forabank.sense.template"
-        case card          = "ru.forabank.sense.card"
+        case card           = "ru.forabank.sense.card"
+        case amount         = "ru.forabank.sense.amount"
         case final          = "ru.forabank.sense.final"
-        case code          = "ru.forabank.sense.code"
+        case code           = "ru.forabank.sense.code"
         case mock           = "ru.forabank.sense.mock"
     }
     
