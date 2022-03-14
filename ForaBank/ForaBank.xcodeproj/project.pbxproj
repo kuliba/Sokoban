@@ -552,6 +552,9 @@
 		776C6C1C279D58A800253581 /* CSRFAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776C6C1B279D58A800253581 /* CSRFAgent.swift */; };
 		776C6C1E279D5D8800253581 /* CSRFAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776C6C1D279D5D8800253581 /* CSRFAgentTests.swift */; };
 		776C846927DE451000F8F7E1 /* FullScreenCoverLagacyModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776C846827DE451000F8F7E1 /* FullScreenCoverLagacyModifier.swift */; };
+		776C846B27DF1CBC00F8F7E1 /* PaymentsHoustingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776C846A27DF1CBC00F8F7E1 /* PaymentsHoustingViewController.swift */; };
+		776C846D27DF1D4300F8F7E1 /* PaymentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776C846C27DF1D4300F8F7E1 /* PaymentsViewModel.swift */; };
+		776C846F27DF215F00F8F7E1 /* PaymentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776C846E27DF215F00F8F7E1 /* PaymentsView.swift */; };
 		77925575279AF54F00A85723 /* ECKeysProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77925574279AF54F00A85723 /* ECKeysProvider.swift */; };
 		77925577279AF5AD00A85723 /* Decryptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77925576279AF5AD00A85723 /* Decryptor.swift */; };
 		77925579279AF61000A85723 /* Encryptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77925578279AF61000A85723 /* Encryptor.swift */; };
@@ -1466,6 +1469,9 @@
 		776C6C1B279D58A800253581 /* CSRFAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFAgent.swift; sourceTree = "<group>"; };
 		776C6C1D279D5D8800253581 /* CSRFAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFAgentTests.swift; sourceTree = "<group>"; };
 		776C846827DE451000F8F7E1 /* FullScreenCoverLagacyModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenCoverLagacyModifier.swift; sourceTree = "<group>"; };
+		776C846A27DF1CBC00F8F7E1 /* PaymentsHoustingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsHoustingViewController.swift; sourceTree = "<group>"; };
+		776C846C27DF1D4300F8F7E1 /* PaymentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsViewModel.swift; sourceTree = "<group>"; };
+		776C846E27DF215F00F8F7E1 /* PaymentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsView.swift; sourceTree = "<group>"; };
 		77925574279AF54F00A85723 /* ECKeysProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKeysProvider.swift; sourceTree = "<group>"; };
 		77925576279AF5AD00A85723 /* Decryptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decryptor.swift; sourceTree = "<group>"; };
 		77925578279AF61000A85723 /* Encryptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Encryptor.swift; sourceTree = "<group>"; };
@@ -1879,6 +1885,7 @@
 		0B04EBC727B071FD00893687 /* Payments */ = {
 			isa = PBXGroup;
 			children = (
+				776C846C27DF1D4300F8F7E1 /* PaymentsViewModel.swift */,
 				0BBDFBE127BBF75600A30D6D /* PaymentsServicesViewModel.swift */,
 				0BBDFC3927BE48EE00A30D6D /* PaymentsOperationViewModel.swift */,
 				ED07FA5D27DA063400734E37 /* PaymentsConfirmViewModel.swift */,
@@ -1891,9 +1898,11 @@
 		0B04EBCE27B0847000893687 /* Payments */ = {
 			isa = PBXGroup;
 			children = (
+				776C846E27DF215F00F8F7E1 /* PaymentsView.swift */,
 				0BBDFBDF27BBF71200A30D6D /* PaymentsServicesView.swift */,
 				0BBDFBE327BD05FD00A30D6D /* PaymentsOperationView.swift */,
 				0B01073D27D118F3006462E6 /* PaymentsSuccessView.swift */,
+				776C846A27DF1CBC00F8F7E1 /* PaymentsHoustingViewController.swift */,
 			);
 			path = Payments;
 			sourceTree = "<group>";
@@ -5552,6 +5561,7 @@
 				77A1466427C12B52006CC112 /* PaymentsParameterViewModel.swift in Sources */,
 				68E3462227033D9100D6FE37 /* LaunchViewController.swift in Sources */,
 				68D06F2A26C3C19800F9BE4C /* MainViewControllerSearchBarDelegate.swift in Sources */,
+				776C846B27DF1CBC00F8F7E1 /* PaymentsHoustingViewController.swift in Sources */,
 				0B22AEA526CDB48F00B11E7F /* GKHDataType.swift in Sources */,
 				ED5F2885273BE78F006A10BF /* AccountStatementController.swift in Sources */,
 				0B8BE0972670D53600E96CAA /* DoRegistrationDecodebleModel.swift in Sources */,
@@ -5702,6 +5712,7 @@
 				687ADF1026B07721005A239B /* DataExtension.swift in Sources */,
 				77EC58F927738B5E0054D75C /* DateFormatter+Extensions.swift in Sources */,
 				EDE709042797172E0048CA94 /* TemplatesListViewModel.swift in Sources */,
+				776C846F27DF215F00F8F7E1 /* PaymentsView.swift in Sources */,
 				ED75CDFB26E27F150074F5D5 /* UIApplication.swift in Sources */,
 				A50869E027690E53004C5E17 /* InternetTVConfirmViewModel.swift in Sources */,
 				0B8C1C4E273B2BB000BA5CAC /* TransferByRequisitesCoordinator.swift in Sources */,
@@ -5862,6 +5873,7 @@
 				6833E0CC273920CE004C070F /* CodeVerificationCoordinator.swift in Sources */,
 				0BB015DA26C9378200E7A85B /* GKHOperatorsModel.swift in Sources */,
 				EDFFCAFD2683C18B004EE095 /* ContactInputViewController API.swift in Sources */,
+				776C846D27DF1D4300F8F7E1 /* PaymentsViewModel.swift in Sources */,
 				EDB1451E26652F170028EF5A /* UIView.swift in Sources */,
 				68FFA565269464FF002DADFA /* TransferByRequisitesConfirmViewController.swift in Sources */,
 				ED353B6A26FB5ADA00F17F00 /* SetUserSettingDecodableModel.swift in Sources */,
