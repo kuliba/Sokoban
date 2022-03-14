@@ -232,6 +232,8 @@ extension Model {
         
         let step = history.count
         
+        print("Payments: step \(step)")
+        
         switch service {
         case .fns:
             parametersFNS(parameters, step, completion)

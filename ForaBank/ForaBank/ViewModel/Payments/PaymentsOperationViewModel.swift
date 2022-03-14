@@ -120,15 +120,13 @@ class PaymentsOperationViewModel: ObservableObject {
                     model.action.send(ModelAction.Payment.Complete.Request(operation: update.operation))
      
                 case let payload as PaymentsOperationViewModelAction.ShowPopUpSelectView:
-                    popUpSelector = PaymentsPopUpSelectView.ViewModel(
-                        with: payload.parameter,
-                        selectedID: payload.selectedId, action: { [weak self] selectedId in
-                            
-                            let item = self?.itemsVisible.first(where: { $0.id == payload.parameter.parameter.id })
-                            item?.update(value: selectedId)
-                            self?.popUpSelector = nil
-                        })
-                    
+                    popUpSelector = PaymentsPopUpSelectView.ViewModel(title: payload.title, description: payload.description, options: payload.options, selected: payload.selected, action: { [weak self] selectedId in
+                        
+                        let item = self?.itemsVisible.first(where: { $0.id == payload.parameterId })
+                        item?.update(value: selectedId)
+                        self?.popUpSelector = nil
+                    })
+
                 case _ as PaymentsOperationViewModelAction.DismissConfirm:
                     print("Payments: confirm dismiss action: \(String(describing: self))", isConfirmViewActive)
                     isConfirmViewActive = false
@@ -212,6 +210,31 @@ class PaymentsOperationViewModel: ObservableObject {
                     
                 }.store(in: &itemsBindings)
             
+            if let selectItem = item as? PaymentsSelectView.ViewModel,
+                selectItem.value.current != nil {
+                
+                selectItem.action
+                    .receive(on: DispatchQueue.main)
+                    .sink {[unowned self] action in
+                        
+                        switch action {
+                        case _ as PaymentsSelectView.ViewModelAction.SelectOptionExternal:
+                            
+                            guard let parameter = selectItem.source as? Payments.ParameterSelect,
+                                    let selected = parameter.parameter.value else {
+                                return
+                            }
+                            
+                            let options = parameter.options.map{ Option(id: $0.id, name: $0.name)}
+                            
+                            self.action.send(PaymentsOperationViewModelAction.ShowPopUpSelectView(parameterId: parameter.parameter.id, title: parameter.title, description: nil, options: options, selected: selected))
+                            
+                        default:
+                            break
+                        }
+                        
+                    }.store(in: &itemsBindings)
+            }
             
             if let simpleSelectItem = item as? PaymentsSelectSimpleView.ViewModel {
                 
@@ -222,13 +245,14 @@ class PaymentsOperationViewModel: ObservableObject {
                         switch action {
                         case _ as PaymentsSelectSimpleView.ViewModelAction.SelectOptionExternal:
                             
-                            guard let simpleSelectParameter = simpleSelectItem.source as? Payments.ParameterSelectSimple else {
+                            guard let parameter = simpleSelectItem.source as? Payments.ParameterSelectSimple else {
                                 return
                             }
                             
-                            self.action.send(PaymentsOperationViewModelAction.ShowPopUpSelectView(
-                                parameter: simpleSelectParameter,
-                                selectedId: simpleSelectParameter.parameter.value))
+                            let options = parameter.options.map{ Option(id: $0.id, name: $0.name)}
+                            let selected = parameter.parameter.value
+                            
+                            self.action.send(PaymentsOperationViewModelAction.ShowPopUpSelectView(parameterId: parameter.parameter.id, title: parameter.title, description: parameter.description, options: options, selected: selected))
                             
                         default:
                             break
@@ -455,8 +479,11 @@ enum PaymentsOperationViewModelAction {
 
     struct ShowPopUpSelectView: Action {
         
-        let parameter: Payments.ParameterSelectSimple
-        let selectedId: Payments.ParameterSelectSimple.Option.ID?
+        let parameterId: Payments.Parameter.ID
+        let title: String
+        let description: String?
+        let options: [Option]
+        let selected: Option.ID?
     }
     
     struct DismissConfirm: Action {}

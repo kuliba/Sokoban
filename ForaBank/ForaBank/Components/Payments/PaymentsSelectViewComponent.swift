@@ -68,17 +68,13 @@ extension PaymentsSelectView {
                 .sink { [unowned self] action in
                     
                     switch action {
-                    case let payload as PaymentsSelectView.ViewModelAction.ItemSelected:
+                    case let payload as PaymentsSelectView.ViewModelAction.OptionSelected:
                         guard let parameterSelect = source as? Payments.ParameterSelect,
                         let selectedViewModel = selected(options: parameterSelect.options, selectedId: payload.itemId, title: parameterSelect.title) else {
                             return
                         }
                         
                         state = .selected(selectedViewModel)
-                        
-                        
-                    case _ as PaymentsSelectView.ViewModelAction.ShowItemsList:
-                        update(value: nil)
      
                     default:
                         break
@@ -106,7 +102,7 @@ extension PaymentsSelectView {
             return options.map { option in
                 
                 let icon = option.icon.image ?? Self.itemIconPlaceholder
-                let action: (ItemViewModel.ID) -> Void = { [weak self] itemId in self?.action.send(PaymentsSelectView.ViewModelAction.ItemSelected(itemId: itemId)) }
+                let action: (ItemViewModel.ID) -> Void = { [weak self] itemId in self?.action.send(PaymentsSelectView.ViewModelAction.OptionSelected(itemId: itemId)) }
                 
                 return ItemViewModel(id: option.id, icon: icon, name: option.name, action: action)
             }
@@ -119,7 +115,7 @@ extension PaymentsSelectView {
             }
             
             let icon = selectedOption.icon.image ?? Self.itemIconPlaceholder
-            return SelectedItemViewModel(id: selectedOption.id, icon: icon, title: title, name: selectedOption.name, action: { [weak self] in self?.action.send(PaymentsSelectView.ViewModelAction.ShowItemsList()) })
+            return SelectedItemViewModel(id: selectedOption.id, icon: icon, title: title, name: selectedOption.name, action: { [weak self] in self?.action.send(PaymentsSelectView.ViewModelAction.SelectOptionExternal()) })
         }
         
         //MARK: ViewModel Types
@@ -168,12 +164,12 @@ extension PaymentsSelectView {
     
     enum ViewModelAction {
         
-        struct ItemSelected: Action {
+        struct OptionSelected: Action {
             
             let itemId: Payments.ParameterSelect.Option.ID
         }
         
-        struct ShowItemsList: Action {}
+        struct SelectOptionExternal: Action {}
     }
 }
 
@@ -373,7 +369,7 @@ extension PaymentsSelectView.ViewModel {
         let icon = ImageData(with: UIImage(named: "Payments List Sample")!)!
         let parameter = Payments.ParameterSelect( .init(id: UUID().uuidString, value: nil), title: "Категория платежа", options: [.init(id: "1", name: "Имущественный налог", icon: icon), .init(id: "2", name: "Транспортный налог", icon: icon), .init(id: "3", name: "Сбор за пользовние объектами водными биологическими ресурсами", icon: icon)])
         
-        var viewModel = try! PaymentsSelectView.ViewModel(with: parameter)
+        var viewModel = PaymentsSelectView.ViewModel(with: parameter)
         
         return viewModel
     }()
@@ -383,7 +379,7 @@ extension PaymentsSelectView.ViewModel {
         let icon = ImageData(with: UIImage(named: "Payments List Sample")!)!
         let parameter = Payments.ParameterSelect(.init(id: UUID().uuidString, value: "3"), title: "Категория платежа", options: [.init(id: "1", name: "Имущественный налог", icon: icon), .init(id: "2", name: "Транспортный налог", icon: icon), .init(id: "3", name: "Сбор за пользовние объектами водными биологическими ресурсами", icon: icon)])
         
-        var viewModel = try! PaymentsSelectView.ViewModel(with: parameter)
+        var viewModel = PaymentsSelectView.ViewModel(with: parameter)
         
         return viewModel
     }()
@@ -393,7 +389,7 @@ extension PaymentsSelectView.ViewModel {
         let icon = ImageData(with: UIImage(named: "Payments List Sample")!)!
         let parameter = Payments.ParameterSelect(.init(id: UUID().uuidString, value: "3"), title: "Категория платежа", options: [.init(id: "1", name: "Имущественный налог", icon: icon), .init(id: "2", name: "Транспортный налог", icon: icon), .init(id: "3", name: "Сбор за пользовние объектами водными биологическими ресурсами", icon: icon)], editable: false)
         
-        var viewModel = try! PaymentsSelectView.ViewModel(with: parameter)
+        var viewModel = PaymentsSelectView.ViewModel(with: parameter)
         
         return viewModel
     }()

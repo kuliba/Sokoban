@@ -12,38 +12,35 @@ import Combine
 
 extension PaymentsPopUpSelectView {
     
-    class ViewModel: PaymentsParameterViewModel {
-                
-        var title: String
+    class ViewModel: ObservableObject {
+    
+        let title: String
         let description: String?
         var items: [ItemViewModel]
-        @Published var selected: Payments.ParameterSelectSimple.Option.ID?
-        let action: (Payments.ParameterSelectSimple.Option.ID) -> Void
+        @Published var selected: Option.ID?
+        let action: (Option.ID) -> Void
         
         private var bindings: Set<AnyCancellable> = []
         
-        internal init(title: String, description: String, items: [ItemViewModel], selected: Payments.ParameterSelectSimple.Option.ID?, action: @escaping (Payments.ParameterSelectSimple.Option.ID) -> Void, parameter: Payments.ParameterMock = .init()) {
+        internal init(title: String, description: String?, items: [ItemViewModel], selected: Option.ID?, action: @escaping (Option.ID) -> Void) {
             
             self.title = title
             self.description = description
             self.items = items
             self.selected = selected
             self.action = action
-            super.init(source: parameter)
-            self.bind()
         }
         
-        init(with parameterSelect: Payments.ParameterSelectSimple,
-             selectedID: Payments.ParameterSelectSimple.Option.ID? = nil,
-             action: @escaping (Payments.ParameterSelectSimple.Option.ID) -> Void) {
+        init(title: String, description: String?, options: [Option],
+             selected: Option.ID? = nil,
+             action: @escaping (Option.ID) -> Void) {
             
-            self.title = parameterSelect.title
-            self.description = parameterSelect.description
-            self.selected = selectedID
+            self.title = title
+            self.description = description
+            self.selected = selected
             self.items = []
             self.action = action
-            super.init(source: parameterSelect)
-            self.items = parameterSelect.options.map { ItemViewModel(id: $0.id, name: $0.name, isSelected: false, action: {[weak self] itemId in
+            self.items = options.map { ItemViewModel(id: $0.id, name: $0.name, isSelected: false, action: {[weak self] itemId in
                 self?.selected = itemId
             }) }
             self.bind()
@@ -75,12 +72,12 @@ extension PaymentsPopUpSelectView {
         
         class ItemViewModel: Identifiable, ObservableObject {
             
-            let id: Payments.ParameterSelectSimple.Option.ID
+            let id: Option.ID
             let name: String
-            let action: (Payments.ParameterSelectSimple.Option.ID?) -> Void
+            let action: (Option.ID?) -> Void
             @Published var isSelected: Bool
             
-            init(id: Payments.ParameterSelectSimple.Option.ID, name: String, isSelected: Bool, action: @escaping (Payments.ParameterSelectSimple.Option.ID?) -> Void) {
+            init(id: String, name: String, isSelected: Bool, action: @escaping (String?) -> Void) {
                 
                 self.id = id
                 self.name = name
