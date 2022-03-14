@@ -13,51 +13,39 @@ class PaymentsServicesViewModel: ObservableObject {
     let action: PassthroughSubject<Action, Never> = .init()
     
     @Published var header: HeaderViewModel
-    @Published var select: PaymentsSelectServiceView.ViewModel?
+    lazy var select: PaymentsSelectServiceView.ViewModel = PaymentsSelectServiceView.ViewModel(with: parameter, action: { [weak self] id in self?.action.send(PaymentsServicesViewModelAction.ItemTapped(itemId: id)) })
     @Published var isOperationViewActive: Bool
     var operationViewModel: PaymentsOperationViewModel?
     
-    private let category: Payments.Category
-    private var selectedService: Payments.Service?
+    private let parameter: Payments.ParameterSelectService
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
     internal init(header: HeaderViewModel,
-                  select: PaymentsSelectServiceView.ViewModel?,
+                  parameter: Payments.ParameterSelectService,
                   isOperationViewActive: Bool = false,
-                  category: Payments.Category,
-                  selectedService: Payments.Service? = nil,
                   model: Model = .emptyMock
     ) {
         self.header = header
-        self.select = select
+        self.parameter = parameter
         self.isOperationViewActive = isOperationViewActive
-        self.category = category
-        self.selectedService = selectedService
         self.model = model
     }
     
-    internal init(_ model: Model, category: Payments.Category) {
+    internal init(_ model: Model, category: Payments.Category, parameter: Payments.ParameterSelectService, dismissAction: @escaping () -> Void) {
         
-        self.header = HeaderViewModel(title: category.name)
-        self.select = nil
+        self.header = HeaderViewModel(title: category.name, dismissAction: dismissAction)
+        self.parameter = parameter
         self.isOperationViewActive = false
-        self.category = category
-        self.selectedService = nil
         self.model = model
         
         bind()
-        model.action.send(ModelAction.Payment.Services.Request(category: category))
     }
     
-    class HeaderViewModel: ObservableObject {
+    struct HeaderViewModel {
         
-        var title: String
-        
-        internal init(title: String) {
-            
-            self.title = title
-        }
+        let title: String
+        let dismissAction: () -> Void
     }
     
     func bind() {
@@ -66,20 +54,6 @@ class PaymentsServicesViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 switch action {
-                case let payload as ModelAction.Payment.Services.Response:
-                    switch payload {
-                    case .select(let selectServiceParameter):
-                        // multiple services for category
-                        select = PaymentsSelectServiceView.ViewModel(with: selectServiceParameter, action: { [weak self] id in self?.action.send(PaymentsServicesViewModelAction.ItemTapped(itemId: id)) })
-                        
-                    case .selected(let service):
-                        // single service for category
-                        model.action.send(ModelAction.Payment.Begin.Request(source: .service(service)))
-
-                    case .failed(let error):
-                        print(error.localizedDescription)
-                    }
-                    
                 case let payload as ModelAction.Payment.Begin.Response:
                     switch payload.result {
                     case .success(let operation):
@@ -103,7 +77,7 @@ class PaymentsServicesViewModel: ObservableObject {
                 
                 switch action {
                 case let payload as PaymentsServicesViewModelAction.ItemTapped:
-                    guard let selectServiceParameter = select?.source as? Payments.ParameterSelectService,
+                    guard let selectServiceParameter = select.source as? Payments.ParameterSelectService,
                             let selectedService = selectServiceParameter.options.first(where: { $0.id == payload.itemId})?.service else {
                         return
                     }

@@ -14,34 +14,31 @@ struct PaymentsServicesView: View {
     
     var body: some View {
         
-        NavigationView {
+        VStack {
             
-            VStack {
+            ScrollView {
                 
-                ScrollView {
+                if let selectViewModel = viewModel.select {
                     
-                    if let selectViewModel = viewModel.select {
-                        
-                        PaymentsSelectServiceView(viewModel: selectViewModel)
-                    }
+                    PaymentsSelectServiceView(viewModel: selectViewModel)
+                }
+                
+                NavigationLink("", isActive: $viewModel.isOperationViewActive) {
                     
-                    NavigationLink("", isActive: $viewModel.isOperationViewActive) {
+                    if let operationViewModel = viewModel.operationViewModel {
                         
-                        if let operationViewModel = viewModel.operationViewModel {
-                            
-                            PaymentsOperationView(viewModel: operationViewModel)
-                            
-                        } else {
-                            
-                            EmptyView()
-                        }
+                        PaymentsOperationView(viewModel: operationViewModel)
+                        
+                    } else {
+                        
+                        EmptyView()
                     }
                 }
-                .padding(.horizontal, 20)
-                .padding(.top, 20)
             }
-            .navigationBarTitle(Text(viewModel.header.title), displayMode: .inline)
+            .padding(.horizontal, 20)
+            .padding(.top, 20)
         }
+        .navigationBarTitle(Text(viewModel.header.title), displayMode: .inline)
     }
 }
 
@@ -60,5 +57,5 @@ struct PaymentsServicesView_Previews: PreviewProvider {
 
 extension PaymentsServicesViewModel {
     
-    static let sample = PaymentsServicesViewModel(header: .init(title: "Налоги и услуги"), select: .samplePlaceholder, category: .taxes)
+    static let sample = PaymentsServicesViewModel(header: .init(title: "Налоги и услуги", dismissAction: {}), parameter: .init(category: .taxes, options: []))
 }

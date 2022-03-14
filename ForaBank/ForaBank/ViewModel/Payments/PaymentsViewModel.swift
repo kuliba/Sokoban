@@ -51,14 +51,14 @@ class PaymentsViewModel: ObservableObject {
                 case let payload as ModelAction.Payment.Services.Response:
                     switch payload {
                     case .select(let selectServiceParameter):
-                        break
                         // multiple services for category
-//                        select = PaymentsSelectServiceView.ViewModel(with: selectServiceParameter, action: { [weak self] id in self?.action.send(PaymentsServicesViewModelAction.ItemTapped(itemId: id)) })
+                        let servicesViewModel = PaymentsServicesViewModel(model, category: category, parameter: selectServiceParameter, dismissAction: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())})
+                        content = .services(servicesViewModel)
                         
                     case .selected(let service):
                         // single service for category
                         model.action.send(ModelAction.Payment.Begin.Request(source: .service(service)))
-
+                        
                     case .failed(let error):
                         print(error.localizedDescription)
                     }
@@ -66,15 +66,19 @@ class PaymentsViewModel: ObservableObject {
                 case let payload as ModelAction.Payment.Begin.Response:
                     switch payload.result {
                     case .success(let operation):
-                        break
-//                        operationViewModel = PaymentsOperationViewModel(model, operation: operation, dismissAction: { [weak self] in self?.action.send(PaymentsServicesViewModelAction.DissmissOperationView())})
-//                        isOperationViewActive = true
                         
+                        guard case .idle = content else {
+                            return
+                        }
+                        
+                        let operationViewModel = PaymentsOperationViewModel(model, operation: operation, dismissAction: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())})
+                        content = .operation(operationViewModel)
+
                     case .failure(let error):
                         //TODO: log error
                         print(error.localizedDescription)
                     }
-
+                    
                 default:
                     break
                 }
@@ -84,6 +88,6 @@ class PaymentsViewModel: ObservableObject {
 }
 
 enum PaymentsViewModelAction {
-
+    
     struct Dismiss: Action {}
 }

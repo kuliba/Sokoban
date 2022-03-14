@@ -12,7 +12,7 @@ struct PaymentsView: View {
     @ObservedObject var viewModel: PaymentsViewModel
     
     var body: some View {
-        
+
         switch viewModel.content {
         case .services(let servicesViewModel):
             NavigationView {
@@ -20,7 +20,7 @@ struct PaymentsView: View {
             }
             
         case .operation(let operationViewModel):
-            NavigationView {
+            NavigationLink("", isActive: .constant(true)) {
                 PaymentsOperationView(viewModel: operationViewModel)
             }
             
