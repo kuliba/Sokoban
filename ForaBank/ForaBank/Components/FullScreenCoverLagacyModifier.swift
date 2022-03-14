@@ -10,7 +10,15 @@ import SwiftUI
 struct FullScreenCoverLegacy<ViewModel, CoverContent: View>: ViewModifier {
     
     @Binding var viewModel: ViewModel?
+    let coverBackgroundColor: Color
     let coverContent: (ViewModel) -> CoverContent
+    
+    init(viewModel: Binding<ViewModel?>, coverBackgroundColor: Color = .white, @ViewBuilder  coverContent: @escaping (ViewModel) -> CoverContent) {
+        
+        self._viewModel = viewModel
+        self.coverBackgroundColor = coverBackgroundColor
+        self.coverContent = coverContent
+    }
     
     func body(content: Content) -> some View {
         
@@ -28,11 +36,11 @@ struct FullScreenCoverLegacy<ViewModel, CoverContent: View>: ViewModifier {
                         
                         ZStack {
                             
-                            Color.white
+                            coverBackgroundColor
                             coverContent(viewModel)
                         }
                         .animation(.spring())
-                        .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .move(edge: .top)))
+                        .transition(.move(edge: .bottom))
                     }
                 }
             }
@@ -42,8 +50,8 @@ struct FullScreenCoverLegacy<ViewModel, CoverContent: View>: ViewModifier {
 
 extension View {
     
-    func fullScreenCoverLegacy<ViewModel, Content: View>(viewModel: Binding<ViewModel?>, content: @escaping (ViewModel) -> Content) -> some View {
+    func fullScreenCoverLegacy<ViewModel, Content: View>(viewModel: Binding<ViewModel?>, coverBackgroundColor: Color = .white, @ViewBuilder content: @escaping (ViewModel) -> Content) -> some View {
         
-        modifier(FullScreenCoverLegacy(viewModel: viewModel, coverContent: content))
+        modifier(FullScreenCoverLegacy(viewModel: viewModel, coverBackgroundColor: coverBackgroundColor, coverContent: content))
     }
 }

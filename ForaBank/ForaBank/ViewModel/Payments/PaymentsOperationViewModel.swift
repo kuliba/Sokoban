@@ -118,14 +118,16 @@ class PaymentsOperationViewModel: ObservableObject {
                     let results = items.value.map{ $0.result }
                     let update = operation.update(with: results)
                     model.action.send(ModelAction.Payment.Complete.Request(operation: update.operation))
-     
+                    
                 case let payload as PaymentsOperationViewModelAction.ShowPopUpSelectView:
                     popUpSelector = PaymentsPopUpSelectView.ViewModel(title: payload.title, description: payload.description, options: payload.options, selected: payload.selected, action: { [weak self] selectedId in
                         
                         let item = self?.itemsVisible.first(where: { $0.id == payload.parameterId })
                         item?.update(value: selectedId)
+                        
                         self?.popUpSelector = nil
                     })
+                    
 
                 case _ as PaymentsOperationViewModelAction.DismissConfirm:
                     print("Payments: confirm dismiss action: \(String(describing: self))", isConfirmViewActive)

@@ -80,10 +80,10 @@ struct PaymentsOperationView: View {
                 }
             }
             
-            if let popUpSelectViewModel = viewModel.popUpSelector {
-                
-                PaymentsPopUpSelectView(viewModel: popUpSelectViewModel)
-            }
+//            if let popUpSelectViewModel = viewModel.popUpSelector {
+//
+//                PaymentsPopUpSelectView(viewModel: popUpSelectViewModel)
+//            }
             
             NavigationLink("", isActive: $viewModel.isConfirmViewActive) {
                 
@@ -101,6 +101,9 @@ struct PaymentsOperationView: View {
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: Button(action: { self.presentationMode.wrappedValue.dismiss()}, label: {
             viewModel.header.backButtonIcon }))
+        .fullScreenCoverLegacy(viewModel: $viewModel.popUpSelector, coverBackgroundColor: .clear) { popUpSelectViewModel in
+            PaymentsPopUpSelectView(viewModel: popUpSelectViewModel)
+        }
     }
 }
 

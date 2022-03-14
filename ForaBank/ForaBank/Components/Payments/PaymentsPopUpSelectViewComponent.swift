@@ -102,7 +102,7 @@ struct PaymentsPopUpSelectView: View {
             
             VStack {
                 
-                Spacer()
+                Spacer(minLength: 120)
                 
                 VStack(spacing: 0) {
                     
@@ -125,11 +125,14 @@ struct PaymentsPopUpSelectView: View {
                                 .font(Font.custom("Inter-Regular", size: 14))
                         }
                         
-                        VStack(spacing: 24) {
-                            
-                            ForEach(viewModel.items) { item in
+                        ScrollView {
+                        
+                            VStack(spacing: 24) {
                                 
-                                ItemView(viewModel: item)
+                                ForEach(viewModel.items) { item in
+                                    
+                                    ItemView(viewModel: item)
+                                }
                             }
                         }
                     }
@@ -143,7 +146,6 @@ struct PaymentsPopUpSelectView: View {
                 
             }
         }
-        .transition(.scale)
     }
     
     struct ItemView: View {
