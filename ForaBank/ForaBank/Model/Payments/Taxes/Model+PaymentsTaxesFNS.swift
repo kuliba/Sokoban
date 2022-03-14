@@ -73,7 +73,7 @@ extension Model {
                     options: [
                         .init(id: Operator.fns.rawValue, name: Operator.fns.name),
                         .init(id: Operator.fnsUin.rawValue, name: Operator.fnsUin.name)
-                    ])
+                    ], affectsHistory: true)
                 
                 // category
                 let categoryParameter = Payments.ParameterSelect(

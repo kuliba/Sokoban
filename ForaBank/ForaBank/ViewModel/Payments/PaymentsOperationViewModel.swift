@@ -110,12 +110,12 @@ class PaymentsOperationViewModel: ObservableObject {
                 
                 switch action {
                 case _ as PaymentsOperationViewModelAction.Continue:
-                    let results = items.value.map{ $0.result }
+                    let results = items.value.map{ ($0.result, $0.source.affectsHistory) }
                     let update = operation.update(with: results)
                     model.action.send(ModelAction.Payment.Continue.Request(operation: update.operation))
                     
                 case _ as PaymentsOperationViewModelAction.Confirm:
-                    let results = items.value.map{ $0.result }
+                    let results = items.value.map{ ($0.result, $0.source.affectsHistory) }
                     let update = operation.update(with: results)
                     model.action.send(ModelAction.Payment.Complete.Request(operation: update.operation))
                     
@@ -186,7 +186,7 @@ class PaymentsOperationViewModel: ObservableObject {
                     
                     print("Payments: item value changed")
 
-                    let results = self.items.value.map{ $0.result }
+                    let results = self.items.value.map{ ($0.result, $0.source.affectsHistory) }
                     let update = operation.update(with: results)
                     
                     switch update.type {

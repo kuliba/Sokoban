@@ -21,7 +21,7 @@ extension Payments.Operation {
     }
     
     //TODO: Tests
-    func update(with results: [Parameter]) -> Update {
+    func update(with results: [(param: Parameter, affectsHistory: Bool)]) -> Update {
         
         if let historyChangedStep = historyChangedStep(history: history, results: results) {
             
@@ -32,7 +32,7 @@ extension Payments.Operation {
             var updatedHistoryStepParameters = [ParameterRepresentable]()
             for param in historyStepParameters {
                 
-                guard let value = results.first(where: { $0.id == param.parameter.id })?.value else {
+                guard let value = results.first(where: { $0.param.id == param.parameter.id })?.param.value else {
                     continue
                 }
                 
@@ -53,11 +53,11 @@ extension Payments.Operation {
             
             for result in results {
                 
-                guard let index = parameters.firstIndex(where: { $0.parameter.id == result.id }) else {
+                guard let index = parameters.firstIndex(where: { $0.parameter.id == result.param.id }) else {
                     continue
                 }
                 
-                updatedParameters.append(parameters[index].updated(value: result.value))
+                updatedParameters.append(parameters[index].updated(value: result.param.value))
             }
             
             return .init(operation: .init(service: service, parameters: updatedParameters, history: history), type: .normal)
@@ -70,7 +70,11 @@ extension Payments.Operation {
         parameters.map{ $0.parameter }.filter{ $0.value != nil }
     }
         
-    func historyChangedStep(history: [[Parameter]], result: Parameter) -> Int? {
+    func historyChangedStep(history: [[Parameter]], result: (param: Parameter, affectsHistory: Bool)) -> Int? {
+        
+        guard result.affectsHistory == true else {
+            return nil
+        }
         
         guard history.count > 0 else {
             return nil
@@ -80,7 +84,7 @@ extension Payments.Operation {
             
             var updated = partialResult
             
-            if let historyValue = historyStep.first(where: { $0.id == result.id }) {
+            if let historyValue = historyStep.first(where: { $0.id == result.param.id }) {
                 
                 updated.append(historyValue)
             }
@@ -94,7 +98,7 @@ extension Payments.Operation {
         
         let lastHistoryParameter = historyForParameter[historyForParameter.count - 1]
         
-        guard lastHistoryParameter.value != result.value else {
+        guard lastHistoryParameter.value != result.param.value else {
             return nil
         }
         
@@ -103,7 +107,7 @@ extension Payments.Operation {
         return history.count - historyForParameterDepth
     }
     
-    func historyChangedStep(history: [[Parameter]], results: [Parameter]) -> Int? {
+    func historyChangedStep(history: [[Parameter]], results: [(param: Parameter, affectsHistory: Bool)]) -> Int? {
         
         return results.compactMap{ historyChangedStep(history: history, result: $0)}.min()
     }

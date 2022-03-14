@@ -77,10 +77,24 @@ enum Payments {
 protocol ParameterRepresentable {
 
     var parameter: Payments.Parameter { get }
+    
+    /// the paramreter can be edited
     var editable: Bool { get }
+    
+    /// the parameter can be collapsed
     var collapsable: Bool { get }
+    
+    /// the parameter affects the history and the operation is reset to the step at which the value was originally set
+    var affectsHistory: Bool { get }
     
     func updated(value: String?) -> ParameterRepresentable
     func updated(editable: Bool) -> ParameterRepresentable
     func updated(collapsable: Bool) -> ParameterRepresentable
+}
+
+extension ParameterRepresentable {
+    
+    func updated(value: String?) -> ParameterRepresentable { self }
+    func updated(editable: Bool) -> ParameterRepresentable { self }
+    func updated(collapsable: Bool) -> ParameterRepresentable { self }
 }

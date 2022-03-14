@@ -24,9 +24,9 @@ extension PaymentsInputView {
         private static let iconPlaceholder = Image("Payments Icon Placeholder")
         
         override var isValid: Bool {
-            guard let inputParemetr = source as? Payments.ParameterInput else { return false }
+            guard let inputParemeter = source as? Payments.ParameterInput else { return false }
             
-            return inputParemetr.validator.isValid(value: content)
+            return inputParemeter.validator.isValid(value: content)
         }
         
         internal init(logo: Image, description: String, content: String? = nil) {

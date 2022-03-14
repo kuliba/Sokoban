@@ -161,12 +161,17 @@ extension Model {
         print("Payments: continue request")
         
         let operation = payload.operation
-        let historyUpdated = operation.historyUpdated()
+//        let historyUpdated = operation.historyUpdated()
         
         parameters(for: operation.service, parameters: operation.parameters, history: operation.history) { result in
 
             switch result {
             case .success(let parameters):
+                
+                var historyUpdated = operation.history
+                let historyValues = Operation.history(for: parameters)
+                historyUpdated.append(historyValues)
+                
                 let continueOperation = Operation(service: operation.service, parameters: parameters, history: historyUpdated)
 
                 if parameters.filter({ $0 is Payments.ParameterFinal }).count > 0 {

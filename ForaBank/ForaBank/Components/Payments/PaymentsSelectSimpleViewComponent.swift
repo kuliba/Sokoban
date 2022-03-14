@@ -23,6 +23,8 @@ extension PaymentsSelectSimpleView {
         @Published var description: String?
         @Published var selectedOptionId: Payments.ParameterSelectSimple.Option.ID?
         
+        override var isValid: Bool { value.current != nil }
+        
         //TODO: real placeholder required
         private static let iconPlaceholder = Image("Payments Icon Placeholder")
         private var bindings: Set<AnyCancellable> = []
