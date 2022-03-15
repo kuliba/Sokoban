@@ -18,6 +18,8 @@ struct PaymentsView: View {
             switch viewModel.content {
             case .services(let servicesViewModel):
                 PaymentsServicesView(viewModel: servicesViewModel)
+                    .navigationBarItems(leading: Button(action: { viewModel.action.send(PaymentsViewModelAction.Dismiss())}, label: {
+                        Image("Payments Icon Close") }))
                 
             case .operation(let operationViewModel):
                 PaymentsOperationView(viewModel: operationViewModel)
