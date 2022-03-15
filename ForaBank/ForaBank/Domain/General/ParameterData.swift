@@ -10,17 +10,17 @@ import Foundation
 struct ParameterData: Codable, Equatable {
     
     let content: String?
-    let dataType: String
+    let dataType: String?
     let id: String
     let isPrint: Bool?
-    let isRequired: Bool
-    let mask: String
+    let isRequired: Bool?
+    let mask: String?
     let maxLength: Int?
     let minLength: Int?
     let order: Int?
     let rawLength: Int
-    let readOnly: Bool
-    let regExp: String
+    let readOnly: Bool?
+    let regExp: String?
     let subTitle: String?
     let title: String
     let type: String

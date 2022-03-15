@@ -204,10 +204,14 @@ extension ServerCommands {
                     enum CodingKeys : String, CodingKey {
                         
                         case fmsList = "FMSList"
+                        case id
+                        case puref
                         case serial
                     }
                     
                     let fmsList: [FMSData]
+                    let id: String
+                    let puref: String
                     let serial: String
                 }
             }
@@ -228,12 +232,12 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getFSSPListUsingGET
+         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/dict/getFSSPDebtList
          */
-        struct GetFSSPList: ServerCommand {
+        struct GetFSSPDebtList: ServerCommand {
             
             let token: String? = nil
-            let endpoint = "/dict/getFSSPList"
+            let endpoint = "/dict/getFSSPDebtList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
             let payload: Payload? = nil
@@ -245,17 +249,21 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: FSSPListData?
+                let data: Data?
                 
-                struct FSSPListData: Decodable, Equatable {
+                struct Data: Decodable, Equatable {
                     
                     enum CodingKeys : String, CodingKey {
                         
-                        case fsspList = "FSSPList"
+                        case fsspDebtList = "FSSPDebtList"
+                        case id
+                        case puref
                         case serial
                     }
                     
-                    let fsspList: [FSSPData]
+                    let fsspDebtList: [FSSPDebtData]
+                    let id: String
+                    let puref: String
                     let serial: String
                 }
             }
@@ -275,6 +283,58 @@ extension ServerCommands {
             }
         }
         
+        /*
+         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/dict/getFSSPDocumentList
+         */
+        struct GetFSSPDocumentList: ServerCommand {
+            
+            let token: String? = nil
+            let endpoint = "/dict/getFSSPDocumentList"
+            let method: ServerCommandMethod = .get
+            let parameters: [ServerCommandParameter]?
+            let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
+            
+            struct Payload: Encodable {}
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: Data?
+                
+                struct Data: Decodable, Equatable {
+                    
+                    enum CodingKeys : String, CodingKey {
+                        
+                        case fsspDocumentList = "FSSPDocumentList"
+                        case id
+                        case puref
+                        case serial
+                    }
+                    
+                    let fsspDocumentList: [FSSPDocumentData]
+                    let id: String
+                    let puref: String
+                    let serial: String
+                }
+            }
+            
+            internal init(serial: String?) {
+                
+                if let serial = serial{
+                    
+                    var parameters = [ServerCommandParameter]()
+                    parameters.append(.init(name: "serial", value: serial))
+                    self.parameters = parameters
+                    
+                } else {
+                    
+                    self.parameters = nil
+                }
+            }
+        }
+                
         /*
          https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getFTSListUsingGET
          */
@@ -300,10 +360,14 @@ extension ServerCommands {
                     enum CodingKeys : String, CodingKey {
                         
                         case ftsList = "FTSList"
+                        case id
+                        case puref
                         case serial
                     }
                     
                     let ftsList: [FTSData]
+                    let id: String
+                    let puref: String
                     let serial: String
                 }
             }
@@ -350,7 +414,7 @@ extension ServerCommands {
                 }
             }
             
-            internal init(bic: String, name: String?, engName: String?, type: String?, account: String?, swift: String?, serviceType: String?, serial: String?) {
+            internal init(bic: String = "", name: String? = nil, engName: String? = nil, type: String? = nil, account: String? = nil, swift: String? = nil, serviceType: String? = nil, serial: String?) {
                 
                 var parameters = [ServerCommandParameter]()
                 parameters.append(.init(name: "bic", value: bic))
@@ -517,6 +581,72 @@ extension ServerCommands {
                 }
             }
         }
-    }
-}
+        
+         /*
+          https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getProductCatalogListUsingGET
+          */
+         struct GetProductCatalogList: ServerCommand {
 
+             var token: String? = nil
+             let endpoint = "/dict/getProductCatalogList"
+             let method: ServerCommandMethod = .get
+             let parameters: [ServerCommandParameter]?
+             var payload: Payload? = nil
+             let timeout: TimeInterval? = nil
+
+             struct Payload: Encodable {}
+
+             struct Response: ServerResponse {
+                 
+                 let statusCode: ServerStatusCode
+                 let data: ProductCatalog?
+                 let errorMessage: String?
+                 
+                 struct ProductCatalog: Decodable, Equatable {
+                     
+                     let productCatalogList: [CatalogProductData]
+                     let serial: String
+                     
+                     enum CodingKeys : String, CodingKey {
+                         
+                         case productCatalogList = "ProductCatalogList"
+                         case serial
+                     }
+                 }
+             }
+             
+             internal init(serial: String?) {
+                 
+                 if let serial = serial {
+                     
+                     self.parameters = [.init(name: "serial", value: serial)]
+                     
+                 } else {
+                     
+                     self.parameters = nil
+                 }
+             }
+         }
+         
+         /*
+          https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getProductCatalogImageUsingGET
+          */
+         struct GetProductCatalogImage: ServerDownloadCommand {
+
+             var token: String? = nil
+             let endpoint: String
+             let method: ServerCommandMethod = .get
+             let parameters: [ServerCommandParameter]? = nil
+             var payload: Payload? = nil
+             let timeout: TimeInterval? = nil
+             let cachePolicy: URLRequest.CachePolicy = .returnCacheDataElseLoad
+
+             struct Payload: Encodable {}
+
+             internal init(endpoint: String) {
+
+                 self.endpoint = "/" + endpoint
+             }
+         }
+     }
+ }

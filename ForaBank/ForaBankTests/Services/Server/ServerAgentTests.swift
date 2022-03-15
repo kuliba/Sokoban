@@ -10,7 +10,7 @@ import XCTest
 
 class ServerAgentTests: XCTestCase {
     
-    let serverAgent = ServerAgent(context: .init(for: .test))
+    let serverAgent = ServerAgent(enviroment: .test)
     let token = UUID().uuidString
 
     func testRequest_With_ServerCommand() throws {

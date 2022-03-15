@@ -8,7 +8,76 @@
 import Foundation
 
 struct OperationDetailData: Codable, Equatable {
+    
+    enum CodingKeys : String, CodingKey {
+        
+        case oktmo = "OKTMO"
+        case account
+        case accountTitle
+        case amount
+        case billDate
+        case billNumber
+        case claimId
+        case comment
+        case countryName
+        case currencyAmount
+        case dateForDetail
+        case division
+        case driverLicense
+        case externalTransferType
+        case isForaBank
+        case isTrafficPoliceService
+        case memberId
+        case operation
+        case payeeAccountId
+        case payeeAccountNumber
+        case payeeAmount
+        case payeeBankBIC
+        case payeeBankCorrAccount
+        case payeeBankName
+        case payeeCardId
+        case payeeCardNumber
+        case payeeCurrency
+        case payeeFirstName
+        case payeeFullName
+        case payeeINN
+        case payeeKPP
+        case payeeMiddleName
+        case payeePhone
+        case payeeSurName
+        case payerAccountId
+        case payerAccountNumber
+        case payerAddress
+        case payerAmount
+        case payerCardId
+        case payerCardNumber
+        case payerCurrency
+        case payerDocument
+        case payerFee
+        case payerFirstName
+        case payerFullName
+        case payerINN
+        case payerMiddleName
+        case payerPhone
+        case payerSurName
+        case paymentOperationDetailId
+        case paymentTemplateId
+        case period
+        case printFormType
+        case provider
+        case puref
+        case regCert
+        case requestDate
+        case responseDate
+        case returned
+        case transferDate
+        case transferEnum
+        case transferNumber
+        case transferReference
+    }
+    
 
+    let oktmo: String?
 	let account: String?
 	let accountTitle: String?
 	let amount: Double
@@ -19,6 +88,7 @@ struct OperationDetailData: Codable, Equatable {
 	let countryName: String?
 	let currencyAmount: String
 	let dateForDetail: String
+    let division: String?
 	let driverLicense: String?
 	let externalTransferType: ExternalTransferType?
 	let isForaBank: Bool?

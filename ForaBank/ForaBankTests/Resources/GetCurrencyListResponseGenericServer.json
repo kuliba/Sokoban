@@ -1,0 +1,969 @@
+{
+    "statusCode": 0,
+    "errorMessage": null,
+    "data": {
+        "serial": "bea36075a58954199a6b8980549f6b69",
+        "currencyList": [
+            {
+                "id": "10000000022",
+                "code": "AED",
+                "name": "Дирхам (ОАЭ)",
+                "codeNumeric": 784,
+                "unicode": "U+062F\\U+002E\\U+0625",
+                "htmlCode": "&#1583;.&#1573;",
+                "cssCode": "\\062F\\002E\\0625",
+                "codeISO": 784
+            },
+            {
+                "id": "10000000060",
+                "code": "ALL",
+                "name": "Лек",
+                "codeNumeric": 8,
+                "unicode": "U+0041\\U+004C\\U+004C",
+                "htmlCode": null,
+                "cssCode": "\\0041\\004C\\004C",
+                "codeISO": 8
+            },
+            {
+                "id": "10000000001",
+                "code": "AMD",
+                "name": "Армянский драм",
+                "codeNumeric": 51,
+                "unicode": "U+058F",
+                "htmlCode": "&#1423;",
+                "cssCode": "\\058F",
+                "codeISO": 51
+            },
+            {
+                "id": "10000000020",
+                "code": "ANG",
+                "name": "Нидерландский антильский гульден",
+                "codeNumeric": 532,
+                "unicode": "U+0192",
+                "htmlCode": null,
+                "cssCode": "\\0192",
+                "codeISO": 532
+            },
+            {
+                "id": "10000000071",
+                "code": "ARS",
+                "name": "Аргентинское песо",
+                "codeNumeric": 32,
+                "unicode": "U+0024",
+                "htmlCode": "&#36;",
+                "cssCode": "\\0024",
+                "codeISO": 32
+            },
+            {
+                "id": "90001303",
+                "code": "ATS",
+                "name": "Австрийские шиллинги",
+                "codeNumeric": 40,
+                "unicode": null,
+                "htmlCode": null,
+                "cssCode": null,
+                "codeISO": 40
+            },
+            {
+                "id": "90001304",
+                "code": "AUD",
+                "name": "Австралийский доллар",
+                "codeNumeric": 36,
+                "unicode": "U+0024",
+                "htmlCode": "&#36;",
+                "cssCode": "\\0024",
+                "codeISO": 36
+            },
+            {
+                "id": "10000000028",
+                "code": "AWG",
+                "name": "Арубанский гульден",
+                "codeNumeric": 533,
+                "unicode": null,
+                "htmlCode": null,
+                "cssCode": null,
+                "codeISO": 533
+            },
+            {
+                "id": "10000000044",
+                "code": "AZN",
+                "name": "Азербайджанский манат",
+                "codeNumeric": 944,
+                "unicode": "U+20BC",
+                "htmlCode": "&#8380;",
+                "cssCode": "\\20BC",
+                "codeISO": 944
+            },
+            {
+                "id": "10000000006",
+                "code": "BBD",
+                "name": "Барбадосский доллар",
+                "codeNumeric": 52,
+                "unicode": "U+0024",
+                "htmlCode": "&#36;",
+                "cssCode": "\\0024",
+                "codeISO": 52
+            },
+            {
+                "id": "90001305",
+                "code": "BEF",
+                "name": "Бельгийские франки",
+                "codeNumeric": 56,
+                "unicode": null,
+                "htmlCode": null,
+                "cssCode": null,
+                "codeISO": 56
+            },
+            {
+                "id": "10000000043",
+                "code": "BGN",
+                "name": "Болгарский лев",
+                "codeNumeric": 975,
+                "unicode": "U+043b\\U+0432",
+                "htmlCode": null,
+                "cssCode": "\\043b\\0432",
+                "codeISO": 975
+            },
+            {
+                "id": "10000000007",
+                "code": "BHD",
+                "name": "Бахрейнский динар",
+                "codeNumeric": 48,
+                "unicode": "U+0024",
+                "htmlCode": "&#36;",
+                "cssCode": "\\0024",
+                "codeISO": 48
+            },
+            {
+                "id": "10000000010",
+                "code": "BMD",
+                "name": "Бермудский доллар",
+                "codeNumeric": 60,
+                "unicode": "U+0024",
+                "htmlCode": "&#36;",
+                "cssCode": "\\0024",
+                "codeISO": 60
+            },
+            {
+                "id": "10000000009",
+                "code": "BND",
+                "name": "Брунейский доллар",
+                "codeNumeric": 96,
+                "unicode": "U+0024",
+                "htmlCode": "&#36;",
+                "cssCode": "\\0024",
+                "codeISO": 96
+            },
+            {
+                "id": "10000000050",
+                "code": "BRL",
+                "name": "Бразильский реал",
+                "codeNumeric": 986,
+                "unicode": "U+0052\\U+0024",
+                "htmlCode": "&#82;&#36;",
+                "cssCode": "\\0052\\0024",
+                "codeISO": 986
+            },
+            {
+                "id": "10000000005",
+                "code": "BSD",
+                "name": "Багмский доллар",
+                "codeNumeric": 44,
+                "unicode": "U+0024",
+                "htmlCode": "&#36;",
+                "cssCode": "\\0024",
+                "codeISO": 44
+            },
+            {
+                "id": "10000000042",
+                "code": "BYN",
+                "name": "Белорусский рубль",
+                "codeNumeric": 933,
+                "unicode": "U+0042\\U+0072",
+                "htmlCode": null,
+                "cssCode": "\\0042\\0072",
+                "codeISO": 933
+            },
+            {
+                "id": "10000000008",
+                "code": "BZD",
+                "name": "Белизский доллар",
+                "codeNumeric": 84,
+                "unicode": "U+0024",
+                "htmlCode": "&#36;",
+                "cssCode": "\\0024",
+                "codeISO": 84
+            },
+            {
+                "id": "90001301",
+                "code": "CAD",
+                "name": "Канадские доллары",
+                "codeNumeric": 124,
+                "unicode": "U+0024",
+                "htmlCode": "&#36;",
+                "cssCode": "\\0024",
+                "codeISO": 124
+            },
+            {
+                "id": "90001292",
+                "code": "CHF",
+                "name": "Швейцарские франки",
+                "codeNumeric": 756,
+                "unicode": "U+20A3",
+                "htmlCode": "&#8355;",
+                "cssCode": "\\20A3",
+                "codeISO": 756
+            },
+            {
+                "id": "10000000072",
+                "code": "CLP",
+                "name": "Чилийское песо",
+                "codeNumeric": 152,
+                "unicode": "U+20B1",
+                "htmlCode": "&#8369;",
+                "cssCode": "\\20B1",
+                "codeISO": 152
+            },
+            {
+                "id": "10000000014",
+                "code": "CNY",
+                "name": "Юань",
+                "codeNumeric": 156,
+                "unicode": "U+00A5",
+                "htmlCode": "&#165;",
+                "cssCode": "\\00A5",
+                "codeISO": 156
+            },
+            {
+                "id": "10000000015",
+                "code": "CRC",
+                "name": "Колон",
+                "codeNumeric": 188,
+                "unicode": "U+20A1",
+                "htmlCode": "&#8353;",
+                "cssCode": "\\20A1",
+                "codeISO": 188
+            },
+            {
+                "id": "10000000033",
+                "code": "CZK",
+                "name": "Чешская крона",
+                "codeNumeric": 203,
+                "unicode": "U+004B\\U+010D",
+                "htmlCode": "&#75;&#269;",
+                "cssCode": "\\004B\\010D",
+                "codeISO": 203
+            },
+            {
+                "id": "276",
+                "code": "DEM",
+                "name": "Немецкие марки",
+                "codeNumeric": 276,
+                "unicode": "U+2133",
+                "htmlCode": "&#8499;",
+                "cssCode": "\\2133",
+                "codeISO": 276
+            },
+            {
+                "id": "280",
+                "code": "DEM1",
+                "name": "Немецкие марки",
+                "codeNumeric": 280,
+                "unicode": "U+2133",
+                "htmlCode": "&#8499;",
+                "cssCode": "\\2133",
+                "codeISO": 280
+            },
+            {
+                "id": "10000000013",
+                "code": "DJF",
+                "name": "Франк Джибути",
+                "codeNumeric": 268,
+                "unicode": "U+0044\\U+004A\\U+0046",
+                "htmlCode": null,
+                "cssCode": "\\0044\\004A\\0046",
+                "codeISO": 268
+            },
+            {
+                "id": "90001300",
+                "code": "DKK",
+                "name": "Датские кроны",
+                "codeNumeric": 208,
+                "unicode": "U+006B\\U+0072",
+                "htmlCode": "&#107;&#114;",
+                "cssCode": "\\006B\\0072",
+                "codeISO": 208
+            },
+            {
+                "id": "10000000059",
+                "code": "DOP",
+                "name": "Доминиканское песо",
+                "codeNumeric": 214,
+                "unicode": "U+0052\\U+0044\\U+0024",
+                "htmlCode": null,
+                "cssCode": "\\0052\\0044\\0024",
+                "codeISO": 214
+            },
+            {
+                "id": "10000000052",
+                "code": "EGP",
+                "name": "Египетский фунт",
+                "codeNumeric": 818,
+                "unicode": "U+00A3",
+                "htmlCode": "&#163;",
+                "cssCode": "\\00A3",
+                "codeISO": 818
+            },
+            {
+                "id": "90001306",
+                "code": "ESP",
+                "name": "Испанские песеты",
+                "codeNumeric": 724,
+                "unicode": "U+20A7",
+                "htmlCode": "&#8359;",
+                "cssCode": "\\20A7",
+                "codeISO": 724
+            },
+            {
+                "id": "90001299",
+                "code": "EUR",
+                "name": "Евро",
+                "codeNumeric": 978,
+                "unicode": "U+20AC",
+                "htmlCode": "&#8364;",
+                "cssCode": "\\20AC",
+                "codeISO": 978
+            },
+            {
+                "id": "90001296",
+                "code": "FIM",
+                "name": "Финляндские марки",
+                "codeNumeric": 246,
+                "unicode": null,
+                "htmlCode": null,
+                "cssCode": null,
+                "codeISO": 246
+            },
+            {
+                "id": "90001295",
+                "code": "FRF",
+                "name": "Французские франки",
+                "codeNumeric": 250,
+                "unicode": "U+20A3",
+                "htmlCode": "&#8355;",
+                "cssCode": "\\20A3",
+                "codeISO": 250
+            },
+            {
+                "id": "90001290",
+                "code": "GBP",
+                "name": "Фунты стерлингов",
+                "codeNumeric": 826,
+                "unicode": "U+00A3",
+                "htmlCode": "&#163;",
+                "cssCode": "\\00A3",
+                "codeISO": 826
+            },
+            {
+                "id": "10000000046",
+                "code": "GEL",
+                "name": "Лари",
+                "codeNumeric": 981,
+                "unicode": "U+0047\\U+0045\\U+004C",
+                "htmlCode": null,
+                "cssCode": "\\0047\\0045\\004C",
+                "codeISO": 981
+            },
+            {
+                "id": "10000000011",
+                "code": "GIP",
+                "name": "Гибралтарский фунт",
+                "codeNumeric": 292,
+                "unicode": "U+00A3",
+                "htmlCode": "&#163;",
+                "cssCode": "\\00A3",
+                "codeISO": 292
+            },
+            {
+                "id": "10000000070",
+                "code": "HKD",
+                "name": "Гонконгский доллар",
+                "codeNumeric": 344,
+                "unicode": "U+0024",
+                "htmlCode": "&#36;",
+                "cssCode": "\\0024",
+                "codeISO": 344
+            },
+            {
+                "id": "10000000051",
+                "code": "HRK",
+                "name": "Хорватская куна",
+                "codeNumeric": 191,
+                "unicode": "U+006B\\U+006E",
+                "htmlCode": null,
+                "cssCode": "\\006B\\006E",
+                "codeISO": 191
+            },
+            {
+                "id": "10000000034",
+                "code": "HUF",
+                "name": "Форинт",
+                "codeNumeric": 348,
+                "unicode": "U+0192",
+                "htmlCode": "&#402;",
+                "cssCode": "\\0192",
+                "codeISO": 348
+            },
+            {
+                "id": "10000000035",
+                "code": "IDR",
+                "name": "Рупия",
+                "codeNumeric": 360,
+                "unicode": "U+20A8",
+                "htmlCode": "&#8360;",
+                "cssCode": "\\20A8",
+                "codeISO": 360
+            },
+            {
+                "id": "90003427",
+                "code": "IEP",
+                "name": "Ирландский фунт",
+                "codeNumeric": 372,
+                "unicode": null,
+                "htmlCode": null,
+                "cssCode": null,
+                "codeISO": 372
+            },
+            {
+                "id": "10000000036",
+                "code": "ILS",
+                "name": "Новый израильский шекель",
+                "codeNumeric": 376,
+                "unicode": "U+20AA",
+                "htmlCode": "&#8362;",
+                "cssCode": "\\20AA",
+                "codeISO": 376
+            },
+            {
+                "id": "10000000054",
+                "code": "INR",
+                "name": "Индийская рупия",
+                "codeNumeric": 356,
+                "unicode": "U+20B9",
+                "htmlCode": "&#8377;",
+                "cssCode": "\\20B9",
+                "codeISO": 356
+            },
+            {
+                "id": "10000000003",
+                "code": "IRR",
+                "name": "Иранский реал",
+                "codeNumeric": 364,
+                "unicode": "U+FDFC",
+                "htmlCode": "&#65020;",
+                "cssCode": "\\FDFC",
+                "codeISO": 364
+            },
+            {
+                "id": "10000000063",
+                "code": "ISK",
+                "name": "Исландская крона",
+                "codeNumeric": 352,
+                "unicode": "U+006B\\U+0072",
+                "htmlCode": "&#107;&#114;",
+                "cssCode": "\\006B\\0072",
+                "codeISO": 352
+            },
+            {
+                "id": "90001294",
+                "code": "ITL",
+                "name": "Итальянские лиры",
+                "codeNumeric": 380,
+                "unicode": "U+20A4",
+                "htmlCode": "&#8356;",
+                "cssCode": "\\20A4",
+                "codeISO": 380
+            },
+            {
+                "id": "10000000064",
+                "code": "JOD",
+                "name": "Иорданский динар",
+                "codeNumeric": 400,
+                "unicode": "U+004A\\U+004F\\U+0044",
+                "htmlCode": null,
+                "cssCode": "\\004A\\004F\\0044",
+                "codeISO": 400
+            },
+            {
+                "id": "90001302",
+                "code": "JPY",
+                "name": "Японские иены",
+                "codeNumeric": 392,
+                "unicode": "U+00A5",
+                "htmlCode": "&#165;",
+                "cssCode": "\\00A5",
+                "codeISO": 392
+            },
+            {
+                "id": "10000000037",
+                "code": "KGS",
+                "name": "Сом",
+                "codeNumeric": 417,
+                "unicode": "U+0441\\U+043E\\U+043C",
+                "htmlCode": null,
+                "cssCode": "\\0441\\043E\\043C",
+                "codeISO": 417
+            },
+            {
+                "id": "10000000027",
+                "code": "KMF",
+                "name": "Франк Комор",
+                "codeNumeric": 174,
+                "unicode": "U+004B\\U+004D\\U+0046",
+                "htmlCode": null,
+                "cssCode": "\\004B\\004D\\0046",
+                "codeISO": 174
+            },
+            {
+                "id": "10000000002",
+                "code": "KPW",
+                "name": "Корейская вона",
+                "codeNumeric": 408,
+                "unicode": "U+C6D0",
+                "htmlCode": "&#50896;",
+                "cssCode": "\\C6D0",
+                "codeISO": 408
+            },
+            {
+                "id": "10000000047",
+                "code": "KRW",
+                "name": "Вона",
+                "codeNumeric": 410,
+                "unicode": "U+FFE6",
+                "htmlCode": "&#65510;",
+                "cssCode": "\\FFE6",
+                "codeISO": 410
+            },
+            {
+                "id": "10000000012",
+                "code": "KYD",
+                "name": "Доллар Островов Кайман",
+                "codeNumeric": 136,
+                "unicode": "U+0024",
+                "htmlCode": "&#36;",
+                "cssCode": "\\0024",
+                "codeISO": 136
+            },
+            {
+                "id": "90001669",
+                "code": "KZT",
+                "name": "Казахские тенге",
+                "codeNumeric": 398,
+                "unicode": "U+20B8",
+                "htmlCode": "&#8376;",
+                "cssCode": "\\20B8",
+                "codeISO": 398
+            },
+            {
+                "id": "10000000016",
+                "code": "LBP",
+                "name": "Ливанский фунт",
+                "codeNumeric": 422,
+                "unicode": "U+00A3",
+                "htmlCode": "&#163;",
+                "cssCode": "\\00A3",
+                "codeISO": 422
+            },
+            {
+                "id": "10000000026",
+                "code": "LKR",
+                "name": "Шри-Ланкийская рупия",
+                "codeNumeric": 144,
+                "unicode": "U+20A8",
+                "htmlCode": "&#8360;",
+                "cssCode": "\\20A8",
+                "codeISO": 144
+            },
+            {
+                "id": "10000000030",
+                "code": "LRD",
+                "name": "Либерийский доллар",
+                "codeNumeric": 430,
+                "unicode": "U+0024",
+                "htmlCode": "&#36;",
+                "cssCode": "\\0024",
+                "codeISO": 430
+            },
+            {
+                "id": "10000000058",
+                "code": "MAD",
+                "name": "Марокканский дирхам",
+                "codeNumeric": 504,
+                "unicode": "U+004D\\U+0041\\U+0044",
+                "htmlCode": null,
+                "cssCode": "\\004D\\0041\\0044",
+                "codeISO": 504
+            },
+            {
+                "id": "10000000055",
+                "code": "MDL",
+                "name": "Молдавский лей",
+                "codeNumeric": 498,
+                "unicode": "U+004d\\U+0044\\U+004c",
+                "htmlCode": null,
+                "cssCode": "\\004D\\0044\\004C",
+                "codeISO": 498
+            },
+            {
+                "id": "10000000061",
+                "code": "MKD",
+                "name": "Македонский денар",
+                "codeNumeric": 807,
+                "unicode": "U+0434\\U+0435\\U+043D",
+                "htmlCode": null,
+                "cssCode": "\\0434\\0435\\043D",
+                "codeISO": 807
+            },
+            {
+                "id": "10000000067",
+                "code": "MNT",
+                "name": "Тугрик",
+                "codeNumeric": 496,
+                "unicode": "U+20AE",
+                "htmlCode": "&#8366;",
+                "cssCode": "\\20AE",
+                "codeISO": 496
+            },
+            {
+                "id": "10000000017",
+                "code": "MUR",
+                "name": "Маврикийская рупия",
+                "codeNumeric": 480,
+                "unicode": "U+20A8",
+                "htmlCode": "&#8360;",
+                "cssCode": "\\20A8",
+                "codeISO": 480
+            },
+            {
+                "id": "10000000019",
+                "code": "MVR",
+                "name": "Руфия",
+                "codeNumeric": 462,
+                "unicode": "U+004D\\U+0056\\U+0052",
+                "htmlCode": null,
+                "cssCode": "\\004D\\0056\\0052",
+                "codeISO": 462
+            },
+            {
+                "id": "10000000069",
+                "code": "MXN",
+                "name": "Мексиканское песо",
+                "codeNumeric": 484,
+                "unicode": "U+0024",
+                "htmlCode": "&#36;",
+                "cssCode": "\\0024",
+                "codeISO": 484
+            },
+            {
+                "id": "10000000018",
+                "code": "MYR",
+                "name": "Малайзийский ринггит",
+                "codeNumeric": 458,
+                "unicode": "U+0052\\U+004D",
+                "htmlCode": null,
+                "cssCode": "\\0052\\004D",
+                "codeISO": 458
+            },
+            {
+                "id": "90001291",
+                "code": "NLG",
+                "name": "Голландские гульдены",
+                "codeNumeric": 528,
+                "unicode": "U+0192",
+                "htmlCode": "&#402;",
+                "cssCode": "\\0192",
+                "codeISO": 528
+            },
+            {
+                "id": "90001297",
+                "code": "NOK",
+                "name": "Норвежские кроны",
+                "codeNumeric": 578,
+                "unicode": "U+006B\\U+0072",
+                "htmlCode": "&#107;&#114;",
+                "cssCode": "\\006B\\0072",
+                "codeISO": 578
+            },
+            {
+                "id": "10000000021",
+                "code": "NZD",
+                "name": "Новозеландский доллар",
+                "codeNumeric": 554,
+                "unicode": "U+0024",
+                "htmlCode": "&#36;",
+                "cssCode": "\\0024",
+                "codeISO": 554
+            },
+            {
+                "id": "90001771",
+                "code": "PKR",
+                "name": "Пакистанская рупия",
+                "codeNumeric": 586,
+                "unicode": "U+20A8",
+                "htmlCode": "&#8360;",
+                "cssCode": "\\20A8",
+                "codeISO": 586
+            },
+            {
+                "id": "90001632",
+                "code": "PZL",
+                "name": "Польский злотый",
+                "codeNumeric": 98,
+                "unicode": "U+007a\\U+0142",
+                "htmlCode": "z&#322;",
+                "cssCode": "\\007A\\0142",
+                "codeISO": 98
+            },
+            {
+                "id": "10000000048",
+                "code": "QAR",
+                "name": "Катарский риал",
+                "codeNumeric": 634,
+                "unicode": "U+FDFC",
+                "htmlCode": "&#65020;",
+                "cssCode": "\\FDFC",
+                "codeISO": 634
+            },
+            {
+                "id": "10000000056",
+                "code": "RON",
+                "name": "Новый румынский лей",
+                "codeNumeric": 946,
+                "unicode": "U+006C\\U+0065\\U+0069",
+                "htmlCode": null,
+                "cssCode": "\\006C\\0065\\0069",
+                "codeISO": 946
+            },
+            {
+                "id": "10000000045",
+                "code": "RSD",
+                "name": "Сербский динар",
+                "codeNumeric": 941,
+                "unicode": "U+0414\\U+0438\\U+043D\\U+002E",
+                "htmlCode": null,
+                "cssCode": "\\0414\\0438\\043D\\002E",
+                "codeISO": 941
+            },
+            {
+                "id": "2",
+                "code": "RUB",
+                "name": "Российский рубль",
+                "codeNumeric": 810,
+                "unicode": "U+20BD",
+                "htmlCode": "&#8381;",
+                "cssCode": "\\20BD",
+                "codeISO": 643
+            },
+            {
+                "id": "2",
+                "code": "RUR",
+                "name": "Российский рубль",
+                "codeNumeric": 810,
+                "unicode": "U+20BD",
+                "htmlCode": "&#8381;",
+                "cssCode": "\\20BD",
+                "codeISO": 643
+            },
+            {
+                "id": "10000000068",
+                "code": "SAR",
+                "name": "Саудовский риял",
+                "codeNumeric": 682,
+                "unicode": "U+FDFC",
+                "htmlCode": "&#65020;",
+                "cssCode": "\\FDFC",
+                "codeISO": 682
+            },
+            {
+                "id": "10000000024",
+                "code": "SCR",
+                "name": "Сейшельская рупия",
+                "codeNumeric": 690,
+                "unicode": "U+20A8",
+                "htmlCode": "&#8360;",
+                "cssCode": "\\20A8",
+                "codeISO": 690
+            },
+            {
+                "id": "90001293",
+                "code": "SEK",
+                "name": "Шведские кроны",
+                "codeNumeric": 752,
+                "unicode": "U+006B\\U+0072",
+                "htmlCode": "&#107;&#114;",
+                "cssCode": "\\006B\\0072",
+                "codeISO": 752
+            },
+            {
+                "id": "10000000049",
+                "code": "SGD",
+                "name": "Сингапурский доллар",
+                "codeNumeric": 702,
+                "unicode": "U+0024",
+                "htmlCode": "&#36;",
+                "cssCode": "\\0024",
+                "codeISO": 702
+            },
+            {
+                "id": "10000000000",
+                "code": "SKK",
+                "name": "Словацкая крона",
+                "codeNumeric": 703,
+                "unicode": null,
+                "htmlCode": null,
+                "cssCode": null,
+                "codeISO": 703
+            },
+            {
+                "id": "10000000040",
+                "code": "THB",
+                "name": "Бат",
+                "codeNumeric": 764,
+                "unicode": "U+0E3F",
+                "htmlCode": "&#3647;",
+                "cssCode": "\\0E3F",
+                "codeISO": 764
+            },
+            {
+                "id": "10000000065",
+                "code": "TJS",
+                "name": "Сомони",
+                "codeNumeric": 972,
+                "unicode": "U+0441\\U+043C\\U+043D\\U+002E",
+                "htmlCode": null,
+                "cssCode": "\\0441\\043C\\043D\\002E",
+                "codeISO": 972
+            },
+            {
+                "id": "10000000057",
+                "code": "TND",
+                "name": "Тунисский динар",
+                "codeNumeric": 788,
+                "unicode": "U+0054\\U+004E\\U+0044",
+                "htmlCode": null,
+                "cssCode": "\\0054\\004E\\0044",
+                "codeISO": 788
+            },
+            {
+                "id": "10000000025",
+                "code": "TOP",
+                "name": "Паанга",
+                "codeNumeric": 776,
+                "unicode": "U+0054\\U+004F\\U+0050",
+                "htmlCode": null,
+                "cssCode": "\\0054\\004F\\0050",
+                "codeISO": 776
+            },
+            {
+                "id": "10000000053",
+                "code": "TRY",
+                "name": "Новая турецкая лира",
+                "codeNumeric": 949,
+                "unicode": "U+20BA",
+                "htmlCode": "&#8378;",
+                "cssCode": "\\20BA",
+                "codeISO": 949
+            },
+            {
+                "id": "90001307",
+                "code": "UAH",
+                "name": "Украинские гривны",
+                "codeNumeric": 980,
+                "unicode": "U+20B4",
+                "htmlCode": "&#8372;",
+                "cssCode": "\\20B4",
+                "codeISO": 980
+            },
+            {
+                "id": "1",
+                "code": "USD",
+                "name": "Доллар США",
+                "codeNumeric": 840,
+                "unicode": "U+0024",
+                "htmlCode": "&#36;",
+                "cssCode": "\\0024",
+                "codeISO": 840
+            },
+            {
+                "id": "10000000066",
+                "code": "UZS",
+                "name": "Узбекский сум",
+                "codeNumeric": 860,
+                "unicode": "U+0441\\U+045E\\U+043C",
+                "htmlCode": null,
+                "cssCode": "\\0441\\045E\\043C",
+                "codeISO": 860
+            },
+            {
+                "id": "10000000038",
+                "code": "VND",
+                "name": "Донг",
+                "codeNumeric": 704,
+                "unicode": "U+20AB",
+                "htmlCode": "&#8363;",
+                "cssCode": "\\20AB",
+                "codeISO": 704
+            },
+            {
+                "id": "10000000029",
+                "code": "VUV",
+                "name": "Вату",
+                "codeNumeric": 548,
+                "unicode": "U+0056\\U+0055\\U+0056",
+                "htmlCode": null,
+                "cssCode": "\\0056\\0055\\0056",
+                "codeISO": 548
+            },
+            {
+                "id": "10000000023",
+                "code": "WST",
+                "name": "Тала",
+                "codeNumeric": 882,
+                "unicode": "U+0057\\U+0053\\U+0054",
+                "htmlCode": null,
+                "cssCode": "\\0057\\0053\\0054",
+                "codeISO": 882
+            },
+            {
+                "id": "10000000004",
+                "code": "XCD",
+                "name": "Восточно-карибский доллар",
+                "codeNumeric": 951,
+                "unicode": "U+0024",
+                "htmlCode": "&#36;",
+                "cssCode": "\\0024",
+                "codeISO": 951
+            },
+            {
+                "id": "10000000031",
+                "code": "YUM",
+                "name": "Югославский динар",
+                "codeNumeric": 891,
+                "unicode": null,
+                "htmlCode": null,
+                "cssCode": null,
+                "codeISO": 891
+            },
+            {
+                "id": "10000000039",
+                "code": "ZAR",
+                "name": "Рэнд",
+                "codeNumeric": 710,
+                "unicode": "U+0052",
+                "htmlCode": null,
+                "cssCode": "\\0052",
+                "codeISO": 710
+            }
+        ]
+    }
+}

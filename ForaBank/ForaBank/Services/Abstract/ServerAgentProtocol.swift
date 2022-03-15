@@ -26,6 +26,12 @@ protocol ServerCommand {
     var parameters: [ServerCommandParameter]? { get }
     var payload: Payload? { get }
     var timeout: TimeInterval? { get }
+    var cookiesProvider: Bool { get }
+}
+
+extension ServerCommand {
+    
+    var cookiesProvider: Bool { false }
 }
 
 /// Multipart download server request
@@ -40,6 +46,7 @@ protocol ServerDownloadCommand {
     var parameters: [ServerCommandParameter]? { get }
     var payload: Payload? { get }
     var timeout: TimeInterval? { get }
+    var cachePolicy: URLRequest.CachePolicy { get }
 }
 
 /// Regular server request response
@@ -57,6 +64,7 @@ enum ServerAgentError: Error {
     
     case requestCreationError(Error)
     case sessionError(Error)
+    case emptyResponse
     case emptyResponseData
     case curruptedData(Error)
     case serverStatus(ServerStatusCode, errorMessage: String?)

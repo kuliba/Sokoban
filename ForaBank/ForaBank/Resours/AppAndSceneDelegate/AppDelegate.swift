@@ -48,11 +48,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         application.registerForRemoteNotifications()
         
         requestNotificationAuthorization(application: application)
-        customizeUiInApp()
+//        customizeUiInApp()
         
         self.initRealmTimerParameters()
         // Зарузка кэша
-        downloadCash.download()
+//        downloadCash.download()
 
         return true
     }
@@ -199,6 +199,12 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         if (userInfo["otp"] as? String) != nil {
             NotificationCenter.default.post(name: Notification.Name("otpCode"), object: nil, userInfo: userInfo)
         }
+        
+        if let otpCode = userInfo["otp"] as? String {
+            
+            Model.shared.action.send(ModelAction.Auth.VerificationCode.PushRecieved(code: otpCode))
+        }
+        
         completionHandler([[.alert, .sound]])
     }
     func userNotificationCenter(_ center: UNUserNotificationCenter,
