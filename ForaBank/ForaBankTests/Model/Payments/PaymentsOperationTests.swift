@@ -26,7 +26,7 @@ class PaymentsOperationTests: XCTestCase {
         let parameterResult = Parameter(id: "01", value: "200")
         
         // when
-        let result = operation.historyChangedStep(history: history, result: parameterResult)
+        let result = operation.historyChangedStep(history: history, result: (parameterResult, true))
         
         // then
         XCTAssertNotNil(result)
@@ -44,7 +44,7 @@ class PaymentsOperationTests: XCTestCase {
         let parameterResult = Parameter(id: "02", value: "300")
         
         // when
-        let result = operation.historyChangedStep(history: history, result: parameterResult)
+        let result = operation.historyChangedStep(history: history, result: (parameterResult, true))
         
         // then
         XCTAssertNotNil(result)
@@ -62,7 +62,7 @@ class PaymentsOperationTests: XCTestCase {
         let parameterResult = Parameter(id: "05", value: "300")
         
         // when
-        let result = operation.historyChangedStep(history: history, result: parameterResult)
+        let result = operation.historyChangedStep(history: history, result: (parameterResult, true))
         
         // then
         XCTAssertNil(result)
@@ -82,7 +82,7 @@ class PaymentsOperationTests: XCTestCase {
                                                 .init(id: "02", value: "300")]
         
         // when
-        let result = operation.historyChangedStep(history: history, results: results)
+        let result = operation.historyChangedStep(history: history, results: results.map{($0, true)})
         
         // then
         XCTAssertNotNil(result)
@@ -101,7 +101,7 @@ class PaymentsOperationTests: XCTestCase {
                                                 .init(id: "02", value: "300")]
         
         // when
-        let result = operation.historyChangedStep(history: history, results: results)
+        let result = operation.historyChangedStep(history: history, results: results.map{($0, true)})
         
         // then
         XCTAssertNotNil(result)
@@ -120,7 +120,7 @@ class PaymentsOperationTests: XCTestCase {
                                                 .init(id: "05", value: "300")]
         
         // when
-        let result = operation.historyChangedStep(history: history, results: results)
+        let result = operation.historyChangedStep(history: history, results: results.map{($0, true)})
         
         // then
         XCTAssertNil(result)
