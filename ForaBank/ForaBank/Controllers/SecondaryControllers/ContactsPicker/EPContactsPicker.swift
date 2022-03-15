@@ -33,7 +33,7 @@ public enum SubtitleCellValue{
     case organization
 }
 
-open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource {
+open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, UIViewControllerTransitioningDelegate {
     
     let searchContact: SearchContact = UIView.fromNib()
     let tableView = UITableView(frame: .zero, style: .plain)
@@ -52,7 +52,8 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
             }
         }
     }
-    
+    var counterNumbers = 0
+    var selectPhoneNumber: String?
     var subtitleCellValue = SubtitleCellValue.phoneNumber
     var multiSelectEnabled: Bool = false //Default is single selection contact
     var isSearch = false
@@ -64,7 +65,6 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
         configureTableView()
         registerContactCell()
         inititlizeBarButtons()
-        
         
         self.view.addSubview(searchContact)
         self.view.addSubview(tableView)
@@ -98,6 +98,7 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
         tableView.tableFooterView = UIView()
         tableView.separatorStyle = .none
         tableView.sectionIndexColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1)
+        tableView.keyboardDismissMode = .onDrag
     }
     
     fileprivate func registerContactCell() {
@@ -295,30 +296,58 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
      open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let cell = tableView.cellForRow(at: indexPath) as! EPContactCell
-        let selectedContact =  cell.contact!
-        if multiSelectEnabled {
-            //Keeps track of enable=ing and disabling contacts
-            if cell.accessoryType == UITableViewCell.AccessoryType.checkmark {
-                cell.accessoryType = UITableViewCell.AccessoryType.none
-                selectedContacts = selectedContacts.filter(){
-                    return selectedContact.contactId != $0.contactId
-                }
-            }
-            else {
-                cell.accessoryType = UITableViewCell.AccessoryType.checkmark
-                selectedContacts.append(selectedContact)
-            }
-        }
-        else {
-            //Single selection code
-            isSearch = false
+         let selectedContact =  cell.contact!
+         if multiSelectEnabled {
+             //Keeps track of enable=ing and disabling contacts
+             if cell.accessoryType == UITableViewCell.AccessoryType.checkmark {
+                 cell.accessoryType = UITableViewCell.AccessoryType.none
+                 selectedContacts = selectedContacts.filter(){
+                     return selectedContact.contactId != $0.contactId
+                 }
+             }
+             else {
+                 cell.accessoryType = UITableViewCell.AccessoryType.checkmark
+                 selectedContacts.append(selectedContact)
+             }
+         } else {
+             //Single selection code
+             isSearch = false
+             
+             if selectedContact.phoneNumbers.count > 1 {
 
-			self.dismiss(animated: true, completion: {
-				DispatchQueue.main.async {
-					self.contactDelegate?.epContactPicker(self, didSelectContact: selectedContact)
-				}
-			})
-        }
+                 let controller = ChoosePhoneNumberController()
+                 var numbers = [String]()
+                 for i in selectedContact.phoneNumbers{
+                     numbers.append(i.phoneNumber)
+                 }
+                 controller.elements = numbers
+                 counterNumbers = numbers.count
+                 controller.itemIsSelect = { currency in
+                     self.selectPhoneNumber = currency
+                     let newNumber = currency.dropFirst(2)
+                     self.searchContact.numberTextField.text  = newNumber.description
+                     tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: UITableView.ScrollPosition.top , animated: false)
+                     tableView.reloadData()
+                     
+                     controller.dismiss(animated: true, completion: {
+                         DispatchQueue.main.async {
+                             self.contactDelegate?.epContactPicker(self, didSelectContact: selectedContact)
+                         }
+                     })
+
+                 }
+                 let navController = UINavigationController(rootViewController: controller)
+                 navController.modalPresentationStyle = .custom
+                 navController.transitioningDelegate = self
+                 self.present(navController, animated: true)
+             } else {
+                 self.dismiss(animated: true, completion: {
+                     DispatchQueue.main.async {
+                         self.contactDelegate?.epContactPicker(self, didSelectContact: selectedContact)
+                     }
+                 })
+             }
+         }
     }
     
      open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -466,5 +495,13 @@ extension EPContactsPicker: PassTextFieldText {
             searchForContactUsingName(text: searchText)
         }
         
+    }
+}
+
+extension EPContactsPicker {
+    public func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        let presenter = PresentationController(presentedViewController: presented, presenting: presenting)
+        presenter.height = (counterNumbers * 40) + 160
+        return presenter
     }
 }

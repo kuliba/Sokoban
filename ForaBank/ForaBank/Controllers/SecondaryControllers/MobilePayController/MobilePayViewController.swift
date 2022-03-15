@@ -33,6 +33,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupNavBar()
         phoneField.textField.delegate = self
         phoneField.rightButton.setImage(UIImage(imageLiteralResourceName: "user-plus"), for: .normal)
@@ -46,7 +47,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                 delegate: self,
                 multiSelection: false,
                 subtitleCellType: SubtitleCellValue.phoneNumber)
-            //            contactPickerScene.addCloseButton()
+            
             let navigationController = UINavigationController(rootViewController: contactPickerScene)
             self.present(navigationController, animated: true, completion: nil)
         }
@@ -305,15 +306,15 @@ extension MobilePayViewController: EPPickerDelegate {
             let mask = StringMask(mask: "+0 (000) 000-00-00")
             let maskPhone = mask.mask(string: numbers)
             phoneField.text = maskPhone ?? ""
+            phoneField.textField.text = maskPhone ?? ""
             selectNumber = maskPhone ?? ""
         } else if numbers?.first == "8" {
             numbers?.removeFirst()
             let mask = StringMask(mask: "+7 (000) 000-00-00")
             let maskPhone = mask.mask(string: numbers)
             phoneField.text = maskPhone ?? ""
+            phoneField.textField.text = maskPhone ?? ""
             selectNumber = maskPhone ?? ""
-        } else {
-            
         }
     }
     
