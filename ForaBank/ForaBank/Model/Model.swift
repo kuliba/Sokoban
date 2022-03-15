@@ -159,6 +159,22 @@ class Model {
                 case let payload as ModelAction.Products.Update.Total.Single.Request:
                     handleProductsUpdateTotalSingleRequest(payload)
 
+                //MARK: - Payments
+                    
+                case let payload as ModelAction.Payment.Services.Request:
+                    handlePaymentsServicesRequest(payload)
+                    
+                case let payload as ModelAction.Payment.Begin.Request:
+                    handlePaymentsBeginRequest(payload)
+                    
+                case let payload as ModelAction.Payment.Continue.Request:
+                    handlePaymentsContinueRequest(payload)
+                    
+                case let payload as ModelAction.Payment.Complete.Request:
+                    handlePaymentsCompleteRequest(payload)
+                    
+                //MARK: - Templates Actions
+
                 //MARK: - Templates Actions
                     
                 case _ as ModelAction.PaymentTemplate.List.Requested:
