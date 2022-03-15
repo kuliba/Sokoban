@@ -310,6 +310,12 @@ class ContactInputViewController: UIViewController {
                         if self.cardListView.isHidden == false {
                             self.hideView(self.cardListView, needHide: true)
                         }
+                        if let cardCurrency = card.currency {
+                            self.bottomView.currencySwitchButton.setAttributedTitle(self.setupButtonTitle(title: cardCurrency.getSymbol() ?? "₽"), for: .normal)
+                            self.bottomView.currencyButtonWidth.constant = 40
+                            self.bottomView.currencySymbol = cardCurrency.getSymbol() ?? "₽"
+                            self.currency = cardCurrency
+                        }
                     }
                 })
             }    
@@ -326,6 +332,23 @@ class ContactInputViewController: UIViewController {
                 cur.removeLast()
             }
             
+            if let cardCurrency = self.cardFromField.model?.currency {
+                if cardCurrency == "RUB" {
+                    
+                    self.currency = cardCurrency
+                    
+                } else {
+                    let currArr = Dict.shared.currencyList
+                    currArr?.forEach({ currency in
+                        if currency.code == cardCurrency {
+
+                            cur = [cardCurrency, "RUR"]
+                            self.currency = cardCurrency
+                        }
+                    })
+                }
+            }
+            //
             let controller = ChooseCurrencyPaymentController()
             controller.elements = cur
             controller.itemIsSelect = { currency in

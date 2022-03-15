@@ -321,7 +321,7 @@ class ConfurmOpenDepositViewController: PaymentViewController {
         if card.productType == "CARD" {
             body["sourceCardId"] = card.cardID as AnyObject
         } else if card.productType == "ACCOUNT" {
-            body["sourceAccountId"] = card.accountID as AnyObject
+            body["sourceAccountId"] = card.id as AnyObject
         }
         print(body)
         showActivity()

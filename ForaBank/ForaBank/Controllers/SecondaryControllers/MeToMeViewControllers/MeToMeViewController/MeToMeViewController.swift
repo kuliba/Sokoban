@@ -29,7 +29,7 @@ class MeToMeViewController: UIViewController {
         viewModel: ForaInputModel(
             title: "Из банка",
             image: #imageLiteral(resourceName: "BankIcon"),
-            isEditable: false,
+            isEditable: true,
             showChooseButton: true)
     )
     var bankListView = FullBankInfoListView()
@@ -254,6 +254,11 @@ class MeToMeViewController: UIViewController {
                 }
                 self.stackView.layoutIfNeeded()
             }
+        }
+        
+        bankField.didChangeValueField = { (field) in
+            self.hideView(self.bankListView, needHide: false)
+            self.bankListView.textFieldDidChanchedValue(textField: field)
         }
         
         cardListView.didCardTapped = { card in
