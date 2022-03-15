@@ -339,6 +339,7 @@ class ContactInputViewController: UIViewController {
         }
         
         bottomView.didDoneButtonTapped = { (amount) in
+            guard let card = self.cardFromField.model else { return }
             self.showActivity()
             let phone = self.phoneField.textField.unmaskedText ?? ""
             let surname = self.surnameField.textField.text ?? ""
@@ -347,7 +348,7 @@ class ContactInputViewController: UIViewController {
             
             switch self.typeOfPay {
             case .mig:
-                self.migPayment(with: self.selectedCardNumber, phone: phone, amount: Double(amount) ?? 0) { model, error in
+                self.migPayment(with: card, phone: phone, amount: Double(amount) ?? 0) { model, error in
                     self.dismissActivity()
                     if error != nil {
                         self.showAlert(with: "Ошибка", and: error!)
@@ -357,7 +358,7 @@ class ContactInputViewController: UIViewController {
                     }
                 }
             default:
-                self.contaktPayment(with: self.selectedCardNumber, surname: surname, name: name, secondName: secondName, amount: Double(amount) ?? 0) { model, error in
+                self.contaktPayment(with: card, surname: surname, name: name, secondName: secondName, amount: Double(amount) ?? 0) { model, error in
                     self.dismissActivity()
                     if error != nil {
                         self.showAlert(with: "Ошибка", and: error!)

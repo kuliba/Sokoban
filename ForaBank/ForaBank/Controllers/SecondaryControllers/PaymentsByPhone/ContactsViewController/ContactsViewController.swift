@@ -979,7 +979,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
         
         let cell = tableView.cellForRow(at: indexPath) as! EPContactCell
         resultSearchController = false
-        if banksActive{
+        if banksActive {
             let banks = orderedBanks[sortedContactKeys[indexPath.section]]
             let vc = PaymentByPhoneViewController(
                 viewModel: PaymentByPhoneViewModel(

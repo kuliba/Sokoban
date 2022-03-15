@@ -347,7 +347,16 @@ class ContactConfurmViewController: UIViewController {
     
     
     @objc func setOtpCode(_ notification: NSNotification) {
-        let otpCode = notification.userInfo?["body"] as! String
+
+        let otpCode: String
+
+        if let code = notification.userInfo?["otp"] as? String {
+            otpCode = code
+        } else if let code = notification.userInfo?["body"] as? String {
+            otpCode = code
+        } else {
+            return
+        }
         self.otpCode = otpCode.filter { "0"..."9" ~= $0 }
         smsCodeField.text =  self.otpCode
         
