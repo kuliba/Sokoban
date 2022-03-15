@@ -46,7 +46,7 @@ extension Model {
                             .init(id: "16", name: "УСН", icon: .parameterSample),
                             .init(id: "17", name: "Страховые взносы", icon: .parameterSample),
                             .init(id: "18", name: "Патенты", icon: .parameterSample)
-                        ])
+                        ], affectsHistory: true)
                     
                     completion(.success( parameters + [categoryParameter]))
                     
@@ -98,7 +98,7 @@ extension Model {
                         .init(id: "16", name: "УСН", icon: .parameterSample),
                         .init(id: "17", name: "Страховые взносы", icon: .parameterSample),
                         .init(id: "18", name: "Патенты", icon: .parameterSample)
-                    ])
+                    ], affectsHistory: true)
                 
                 completion(.success( parameters + [operatorParameter, categoryParameter]))
             }
@@ -115,29 +115,78 @@ extension Model {
             switch operatorSelected {
             case .fns:
                 
-                // division
-                let divisionParameter = Payments.ParameterSelectSimple(
-                    .init(id: "a3_divisionSelect_2_1", value: "inn_oktmo"),
-                    icon: .parameterSample, title: "Данные о подразделении ФНС",
-                    selectionTitle: "Выберете подразделение",
-                    description: nil,
-                    options: [.init(id: "inn_oktmo", name: "ИНН и ОКТМО подразделения"),
-                              .init(id: "inn", name: "Какой то другой воариант")])
-                
-                let unnParameter = Payments.ParameterInput(
-                    .init(id: "a3_INN_4_1", value: "7723013452"),
-                    icon: .parameterSample,
-                    title: "ИНН подразделения",
-                    validator: .init(minLength: 1, maxLength: nil, regEx: nil))
-                
-                let oktmoParameter = Payments.ParameterInput(
-                    .init(id: "a3_OKTMO_5_1", value: nil),
-                    icon: .parameterSample,
-                    title: "ОКТМО подразделения",
-                    validator: .init(minLength: 1, maxLength: nil, regEx: nil))
-                
-                completion(.success( parameters + [divisionParameter, unnParameter, oktmoParameter]))
-                
+                if let divisionParameter = parameters.first(where: { $0.parameter.id == "a3_divisionSelect_2_1" }),
+                   let divisionParameterValue = divisionParameter.parameter.value {
+                    
+                    var updatedParameters = [ParameterRepresentable]()
+                    for parameter in parameters {
+                        
+                        switch parameter.parameter.id {
+                        case "a3_INN_4_1", "a3_OKTMO_5_1", "a3_NUMBER_4_1":
+                            continue
+                            
+                        default:
+                            updatedParameters.append( parameter)
+                        }
+                    }
+                    
+                    switch divisionParameterValue {
+                    case "inn_oktmo":
+                        let unnParameter = Payments.ParameterInput(
+                            .init(id: "a3_INN_4_1", value: "7723013452"),
+                            icon: .parameterDocument,
+                            title: "ИНН подразделения",
+                            validator: .init(minLength: 1, maxLength: nil, regEx: nil))
+                        
+                        let oktmoParameter = Payments.ParameterInput(
+                            .init(id: "a3_OKTMO_5_1", value: nil),
+                            icon: .parameterDocument,
+                            title: "ОКТМО подразделения",
+                            validator: .init(minLength: 1, maxLength: nil, regEx: nil))
+                        
+                        completion(.success(updatedParameters + [unnParameter, oktmoParameter]))
+                        
+                    case "number":
+                        let numberParameter = Payments.ParameterInput(
+                            .init(id: "a3_NUMBER_4_1", value: nil),
+                            icon: .parameterDocument,
+                            title: "Номер подразделения",
+                            validator: .init(minLength: 1, maxLength: nil, regEx: nil))
+                        
+                        completion(.success(updatedParameters + [numberParameter]))
+                        
+                    default:
+                        completion(.failure(Payments.Error.unexpectedOperatorValue))
+                        
+                    }
+                    
+                } else {
+                    
+                    // division
+                    let divisionParameter = Payments.ParameterSelectSimple(
+                        .init(id: "a3_divisionSelect_2_1", value: "inn_oktmo"),
+                        icon: .parameterSample, title: "Данные о подразделении ФНС",
+                        selectionTitle: "Выберете подразделение",
+                        description: nil,
+                        options: [.init(id: "inn_oktmo", name: "ИНН и ОКТМО подразделения"),
+                                  .init(id: "number", name: "Номер подразделения")], affectsHistory: true)
+                    
+                    let unnParameter = Payments.ParameterInput(
+                        .init(id: "a3_INN_4_1", value: "7723013452"),
+                        icon: .parameterDocument,
+                        title: "ИНН подразделения",
+                        validator: .init(minLength: 1, maxLength: nil, regEx: nil))
+                    
+                    let oktmoParameter = Payments.ParameterInput(
+                        .init(id: "a3_OKTMO_5_1", value: nil),
+                        icon: .parameterDocument,
+                        title: "ОКТМО подразделения",
+                        validator: .init(minLength: 1, maxLength: nil, regEx: nil))
+                    
+                    completion(.success( parameters + [divisionParameter, unnParameter, oktmoParameter]))
+                    
+                }
+
             case .fnsUin:
                 
                 var updatedParameters = [ParameterRepresentable]()

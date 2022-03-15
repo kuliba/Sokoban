@@ -196,8 +196,9 @@ struct PaymentsAmountView: View {
             }.padding(.horizontal, 20)
              
         }
-        .background(Color(hex: "#3D3D45"))
-        
+        .background(
+            Color(hex: "#3D3D45")
+                .edgesIgnoringSafeArea(.bottom))
     }
     
     struct TitleView: View {

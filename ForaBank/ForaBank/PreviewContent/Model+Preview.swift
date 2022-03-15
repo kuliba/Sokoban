@@ -16,6 +16,9 @@ extension Model {
 extension ImageData {
     
     static let serviceSample = ImageData(with: UIImage(named: "Payments Service Sample")!)!
+    static let serviceFMS = ImageData(with: UIImage(named: "Payments Service FMS")!)!
+    static let serviceFNS = ImageData(with: UIImage(named: "Payments Service FNS")!)!
+    static let serviceFSSP = ImageData(with: UIImage(named: "Payments Service FSSP")!)!
     static let parameterSample = ImageData(with: UIImage(named: "Payments List Sample")!)!
     static let parameterDocument = ImageData(with: UIImage(named: "Payments Icon Document")!)!
     static let parameterHash = ImageData(with: UIImage(named: "Payments Icon Hash")!)!

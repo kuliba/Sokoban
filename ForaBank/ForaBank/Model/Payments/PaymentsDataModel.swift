@@ -16,7 +16,7 @@ enum Payments {
         var services: [Service] {
             
             switch self {
-            case .taxes: return [.fms, .fns, .fssp]
+            case .taxes: return [.fns, .fms, .fssp]
             }
         }
         

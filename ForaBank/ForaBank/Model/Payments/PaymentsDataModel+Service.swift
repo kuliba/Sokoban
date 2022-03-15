@@ -13,8 +13,8 @@ extension Payments.Service {
     var operators: [Payments.Operator] {
         
         switch self {
-        case .fms: return [.fms]
         case .fns: return [.fns, .fnsUin]
+        case .fms: return [.fms]
         case .fssp: return [.fssp]
         }
     }
@@ -24,8 +24,8 @@ extension Payments.Service {
     var name: String {
         
         switch self {
-        case .fms: return "ФМС"
         case .fns: return "ФНС"
+        case .fms: return "ФМС"
         case .fssp: return "ФССП"
         }
     }

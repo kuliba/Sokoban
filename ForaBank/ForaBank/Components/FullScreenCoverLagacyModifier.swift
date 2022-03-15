@@ -13,6 +13,8 @@ struct FullScreenCoverLegacy<ViewModel, CoverContent: View>: ViewModifier {
     let coverBackgroundColor: Color
     let coverContent: (ViewModel) -> CoverContent
     
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
     init(viewModel: Binding<ViewModel?>, coverBackgroundColor: Color = .white, @ViewBuilder  coverContent: @escaping (ViewModel) -> CoverContent) {
         
         self._viewModel = viewModel

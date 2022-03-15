@@ -161,8 +161,7 @@ extension Model {
         print("Payments: continue request")
         
         let operation = payload.operation
-//        let historyUpdated = operation.historyUpdated()
-        
+     
         parameters(for: operation.service, parameters: operation.parameters, history: operation.history) { result in
 
             switch result {
@@ -255,13 +254,13 @@ extension Model {
         
         switch service {
         case .fns:
-            return .init(service: service, title: service.name, description: "Налоги", icon: .empty)
+            return .init(service: service, title: service.name, description: "Налоги", icon: .serviceFNS)
 
         case .fms:
-            return .init(service: service, title: service.name, description: "Госпошлины", icon: .serviceSample)
+            return .init(service: service, title: service.name, description: "Госпошлины", icon: .serviceFMS)
             
         case .fssp:
-            return .init(service: service, title: service.name, description: "Задолженность", icon: .empty)
+            return .init(service: service, title: service.name, description: "Задолженность", icon: .serviceFSSP)
         }
     }
 }

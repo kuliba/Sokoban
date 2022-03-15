@@ -55,7 +55,7 @@ struct PaymentsOperationView: View {
                     }
                     
                     Color.clear
-                        .frame(height: 80)
+                        .frame(height: 120)
                 }
             }
             .padding(.horizontal, 20)
@@ -69,9 +69,18 @@ struct PaymentsOperationView: View {
                     switch footerViewModel {
                     case .button(let continueButtonViewModel):
 
-                        ButtonSimpleView(viewModel: .init(buttonModel: continueButtonViewModel))
-                            .frame(height: 42)
+                        
+                        ZStack {
+                            
+                            Color.white
+                                .opacity(0.9)
+                                .edgesIgnoringSafeArea(.bottom)
+
+                            ButtonSimpleView(viewModel: .init(buttonModel: continueButtonViewModel))
+                                .frame(height: 42)
                             .padding(.horizontal, 20)
+                            
+                        }.frame(height: 60)
                         
                     case .amount(let amountViewModel):
                         PaymentsAmountView(viewModel: amountViewModel)
@@ -79,12 +88,7 @@ struct PaymentsOperationView: View {
                     }
                 }
             }
-            
-//            if let popUpSelectViewModel = viewModel.popUpSelector {
-//
-//                PaymentsPopUpSelectView(viewModel: popUpSelectViewModel)
-//            }
-            
+                    
             NavigationLink("", isActive: $viewModel.isConfirmViewActive) {
                 
                 if let confirmViewModel = viewModel.confirmViewModel {

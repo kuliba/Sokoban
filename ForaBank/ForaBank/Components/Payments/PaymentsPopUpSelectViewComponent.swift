@@ -102,7 +102,7 @@ struct PaymentsPopUpSelectView: View {
             
             VStack {
                 
-                Spacer(minLength: 120)
+                Spacer(minLength: 240)
                 
                 VStack(spacing: 0) {
                     
