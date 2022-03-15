@@ -3355,6 +3355,8 @@
 				7769F5B827D27CA200F80607 /* MainSectionProductsListItemViewModel.swift */,
 			);
 			path = Main;
+			sourceTree = "<group>";
+		};
 		77583FFE27B13C1600251969 /* Payments */ = {
 			isa = PBXGroup;
 			children = (
