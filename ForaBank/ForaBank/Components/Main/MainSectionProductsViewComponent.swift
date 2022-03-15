@@ -17,7 +17,7 @@ extension MainSectionProductsView {
     class ViewModel: MainSectionCollapsableViewModel {
         
         override var type: MainSectionType { .products }
-        @Published var typeSelector: OptionSelectorViewModel?
+        @Published var typeSelector: OptionSelectorView.ViewModel?
         @Published var selectedTypeId: Option.ID = ""
         @Published var items: [MainSectionProductsListItemViewModel]
         let moreButton: MoreButtonViewModel
@@ -27,7 +27,7 @@ extension MainSectionProductsView {
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        internal init(productsTypeSelector: OptionSelectorViewModel?, products: [MainSectionProductsListItemViewModel], moreButton: MoreButtonViewModel, model: Model = .emptyMock, isCollapsed: Bool) {
+        internal init(productsTypeSelector: OptionSelectorView.ViewModel?, products: [MainSectionProductsListItemViewModel], moreButton: MoreButtonViewModel, model: Model = .emptyMock, isCollapsed: Bool) {
             
             self.typeSelector = productsTypeSelector
             self.items = products
@@ -97,7 +97,7 @@ extension MainSectionProductsView {
                 }.store(in: &bindings)
         }
         
-        private func bind(typeSelector: OptionSelectorViewModel) {
+        private func bind(typeSelector: OptionSelectorView.ViewModel) {
             
             typeSelector.$selected
                 .receive(on: DispatchQueue.main)

@@ -7,42 +7,47 @@
 
 import SwiftUI
 
-class OptionSelectorViewModel: ObservableObject {
+//MARK: - View Model
+
+extension OptionSelectorView {
     
-    @Published var options: [OptionViewModel]
-    @Published var selected: Option.ID
-    let style: Style
- 
-    internal init(options: [Option], selected: Option.ID, style: Style) {
-       
-        self.options = []
-        self.selected = selected
-        self.style = style
+    class ViewModel: ObservableObject {
         
-        self.options = options.map{ OptionViewModel(id: $0.id, title: $0.name, style: style, action: { [weak self] optionId in self?.selected = optionId })}
-    }
-    
-    enum Style {
+        @Published var options: [OptionViewModel]
+        @Published var selected: Option.ID
+        let style: Style
+     
+        internal init(options: [Option], selected: Option.ID, style: Style) {
+           
+            self.options = []
+            self.selected = selected
+            self.style = style
+            
+            self.options = options.map{ OptionViewModel(id: $0.id, title: $0.name, style: style, action: { [weak self] optionId in self?.selected = optionId })}
+        }
         
-        case template
-        case products
+        enum Style {
+            
+            case template
+            case products
+        }
+        
+        struct OptionViewModel: Identifiable {
+            
+            let id: Option.ID
+            let title: String
+            let style: Style
+            let action: (OptionViewModel.ID) -> Void
+        }
     }
 }
 
-extension OptionSelectorViewModel {
-        
-    struct OptionViewModel: Identifiable {
-        
-        let id: Option.ID
-        let title: String
-        let style: Style
-        let action: (OptionViewModel.ID) -> Void
-    }
-}
+
+//MARK: - View
 
 struct OptionSelectorView: View {
     
-    @ObservedObject var viewModel: OptionSelectorViewModel
+    @ObservedObject var viewModel: ViewModel
     
     var spacing: CGFloat {
         
@@ -67,11 +72,13 @@ struct OptionSelectorView: View {
     }
 }
 
+//MARK: - Subviews
+
 extension OptionSelectorView {
     
     struct OptionButtonView: View {
         
-        let viewModel: OptionSelectorViewModel.OptionViewModel
+        let viewModel: ViewModel.OptionViewModel
         let isSelected: Bool
         
         var body: some View {
@@ -141,6 +148,8 @@ extension OptionSelectorView {
     }
 }
 
+//MARK: - Preview
+
 struct OptionSelectorView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
@@ -154,8 +163,11 @@ struct OptionSelectorView_Previews: PreviewProvider {
     }
 }
 
-extension OptionSelectorViewModel {
-    static let sample = OptionSelectorViewModel(options: [
+//MARK: - Preview Content
+
+extension OptionSelectorView.ViewModel {
+    
+    static let sample = OptionSelectorView.ViewModel(options: [
         .init(id: "all", name: "Все" ),
         .init(id: "add", name: "Пополнение"),
         .init(id: "addi", name: "Коммунальные"),
@@ -164,7 +176,7 @@ extension OptionSelectorViewModel {
         .init(id: "additio", name: "Пополнение")
     ], selected: "all", style: .template)
     
-    static let mainSample = OptionSelectorViewModel(options: [
+    static let mainSample = OptionSelectorView.ViewModel(options: [
         .init(id: "all", name: "Карты" ),
         .init(id: "add", name: "Счета"),
         .init(id: "addi", name: "Вклады"),

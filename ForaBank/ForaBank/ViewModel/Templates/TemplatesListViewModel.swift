@@ -17,7 +17,7 @@ class TemplatesListViewModel: ObservableObject {
     @Published var style: Style
     @Published var title: String
     @Published var navButtonsRight: [NavigationBarButtonViewModel]
-    @Published var categorySelector: OptionSelectorViewModel?
+    @Published var categorySelector: OptionSelectorView.ViewModel?
     @Published var items: [ItemViewModel]
     @Published var onboarding: OnboardingViewModel?
     @Published var contextMenu: ContextMenuViewModel?
@@ -41,7 +41,7 @@ class TemplatesListViewModel: ObservableObject {
         bind()
     }
     
-    internal init(state: State, style: Style, title: String, navButtonsRight: [NavigationBarButtonViewModel], categorySelector: OptionSelectorViewModel, items: [ItemViewModel], contextMenu: ContextMenuViewModel?, deletePannel: DeletePannelViewModel?, model: Model) {
+    internal init(state: State, style: Style, title: String, navButtonsRight: [NavigationBarButtonViewModel], categorySelector: OptionSelectorView.ViewModel, items: [ItemViewModel], contextMenu: ContextMenuViewModel?, deletePannel: DeletePannelViewModel?, model: Model) {
         
         self.state = state
         self.style = style
@@ -456,7 +456,7 @@ private extension TemplatesListViewModel {
 
 private extension TemplatesListViewModel {
     
-    func categorySelectorViewModel(with templates: [PaymentTemplateData]) -> OptionSelectorViewModel {
+    func categorySelectorViewModel(with templates: [PaymentTemplateData]) -> OptionSelectorView.ViewModel {
         
         let groupNames = templates.map{ $0.groupName }
         let groupNamesUnique = Set(groupNames)
@@ -465,7 +465,7 @@ private extension TemplatesListViewModel {
         let optionAll = Option(id: categoryIndexAll, name: "Все")
         options.insert(optionAll, at: 0)
         
-        return OptionSelectorViewModel(options: options, selected: optionAll.id, style: .template)
+        return OptionSelectorView.ViewModel(options: options, selected: optionAll.id, style: .template)
     }
     
     func isCategorySelectorContainsCategory(categoryId: Option.ID) -> Bool {

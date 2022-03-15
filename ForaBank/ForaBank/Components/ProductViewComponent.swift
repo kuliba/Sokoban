@@ -136,11 +136,18 @@ extension ProductView {
 
             let textColor: Color
             let background: Background
+            var size: Size = .normal
 
             struct Background {
 
                 let color: Color
                 let image: Image?
+            }
+            
+            enum Size {
+                
+                case normal
+                case small
             }
         }
     }
@@ -192,6 +199,46 @@ extension ProductView {
         
         @ObservedObject var viewModel: ViewModel
         
+        var headerPaddingLeading: CGFloat {
+            
+            switch viewModel.appearance.size {
+            case .normal: return 43
+            case .small: return 29
+            }
+        }
+        
+        var cardPadding: CGFloat {
+            
+            switch viewModel.appearance.size {
+            case .normal: return 12
+            case .small: return 8
+            }
+        }
+        
+        var nameFont: Font {
+            
+            switch viewModel.appearance.size {
+            case .normal: return .textBodyMR14200()
+            case .small: return .textBodyXSR11140()
+            }
+        }
+        
+        var nameSpacing: CGFloat {
+            
+            switch viewModel.appearance.size {
+            case .normal: return 6
+            case .small: return 4
+            }
+        }
+        
+        var cornerRadius: CGFloat {
+            
+            switch viewModel.appearance.size {
+            case .normal: return 12
+            case .small: return 8
+            }
+        }
+        
         var body: some View {
             
             ZStack {
@@ -203,31 +250,29 @@ extension ProductView {
                         .aspectRatio(contentMode: .fit)
                 } else {
 
-                    RoundedRectangle(cornerRadius: 12)
+                    RoundedRectangle(cornerRadius: cornerRadius)
                         .foregroundColor(viewModel.appearance.background.color)
                 }
 
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 0) {
                     
-                    ProductView.HeaderView(viewModel: viewModel.header, textColor: viewModel.appearance.textColor)
-                        .padding(.leading, 43)
+                    ProductView.HeaderView(viewModel: viewModel.header, appearance: viewModel.appearance)
+                        .padding(.leading, headerPaddingLeading)
                         .padding(.top, 4)
-
+     
                     Spacer()
 
-                    VStack(alignment: .leading, spacing: 0) {
+                    VStack(alignment: .leading, spacing: nameSpacing) {
 
                         Text(viewModel.name)
-                            .font(.textBodyMR14200())
+                            .font(nameFont)
                             .foregroundColor(viewModel.appearance.textColor)
-                            .fixedSize(horizontal: false, vertical: true)
                             .opacity(0.5)
-                            .multilineTextAlignment(.leading)
                         
-                        ProductView.FooterView(viewModel: viewModel.footer, textColor: viewModel.appearance.textColor)
+                        ProductView.FooterView(viewModel: viewModel.footer, appearance: viewModel.appearance)
                     }
                 }
-                .padding(12)
+                .padding(cardPadding)
     
                 if viewModel.isUpdating == true {
                     
@@ -253,25 +298,33 @@ extension ProductView {
     struct HeaderView: View {
 
         let viewModel: ViewModel.HeaderViewModel
-        let textColor: Color
+        let appearance: ViewModel.Appearance
+        
+        var textFont: Font {
+            
+            switch appearance.size {
+            case .normal: return .textBodySR12160()
+            case .small: return .textBodyXSR11140()
+            }
+        }
 
         var body: some View {
 
             HStack(alignment: .center, spacing: 8) {
                 
                 Text(viewModel.number)
-                    .font(.textBodySR12160())
-                    .foregroundColor(textColor)
+                    .font(textFont)
+                    .foregroundColor(appearance.textColor)
 
                 if let period = viewModel.period {
 
                     Rectangle()
                         .frame(width: 1, height: 16)
-                        .foregroundColor(textColor)
+                        .foregroundColor(appearance.textColor)
 
                     Text(period)
-                        .font(.textBodySR12160())
-                        .foregroundColor(textColor)
+                        .font(textFont)
+                        .foregroundColor(appearance.textColor)
                 }
             }
         }
@@ -280,25 +333,59 @@ extension ProductView {
     struct FooterView: View {
 
         @ObservedObject var viewModel: ViewModel.FooterViewModel
-        let textColor: Color
+        let appearance: ViewModel.Appearance
 
+        var textFont: Font {
+            
+            switch appearance.size {
+            case .normal: return .textBodyMSB14200()
+            case .small: return .textBodyXSR11140()
+            }
+        }
+        
+        var paymentSystemIconSize: CGSize {
+            
+            switch appearance.size {
+            case .normal: return .init(width: 28, height: 28)
+            case .small: return .init(width: 20, height: 20)
+            }
+        }
+        
         var body: some View {
-
-            HStack(alignment: .bottom) {
-
-                Text(viewModel.balance)
-                    .font(.textBodyMSB14200())
-                    .fontWeight(.semibold)
-                    .foregroundColor(textColor)
-
-                Spacer()
-
-                if let paymentSystem = viewModel.paymentSystem {
-
-                    paymentSystem
-                        .renderingMode(.template)
-                        .frame(width: 28, height: 20)
-                        .foregroundColor(textColor)
+            
+            if let paymentSystem = viewModel.paymentSystem {
+                
+                HStack {
+                    
+                    Text(viewModel.balance)
+                        .font(textFont)
+                        .fontWeight(.semibold)
+                        .foregroundColor(appearance.textColor)
+                    
+                    Spacer()
+                    
+                }.overlay(
+                    
+                    HStack {
+                        Spacer()
+                        paymentSystem
+                            .renderingMode(.template)
+                            .resizable()
+                            .frame(width: paymentSystemIconSize.width, height: paymentSystemIconSize.height)
+                            .foregroundColor(appearance.textColor)
+                    }
+                )
+                
+            } else {
+                
+                HStack {
+                    
+                    Text(viewModel.balance)
+                        .font(textFont)
+                        .fontWeight(.semibold)
+                        .foregroundColor(appearance.textColor)
+                    
+                    Spacer()
                 }
             }
         }
@@ -436,6 +523,15 @@ struct ProductView_Previews: PreviewProvider {
 
             ProductView(viewModel: .accountProfile)
                 .previewLayout(.fixed(width: 268, height: 160))
+            
+            Group {
+                
+                ProductView(viewModel: .classicSmall)
+                    .previewLayout(.fixed(width: 112, height: 72))
+                
+                ProductView(viewModel: .accountSmall)
+                    .previewLayout(.fixed(width: 112, height: 72))
+            }
         }
     }
 }
@@ -461,5 +557,9 @@ extension ProductView.ViewModel {
     static let accountProfile = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: "12/24"), name: "Текущий зарплатный счет", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardRIO, image: nil)), isUpdating: false, productType: .card, action: {})
     
     static let updating = ProductView.ViewModel(id: "0", header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Visa")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardInfinite, image: Image("Product Background Sample"))), isUpdating: true, productType: .card, action: {})
+    
+    static let classicSmall = ProductView.ViewModel(id: "2", header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .mainColorsRed, image: nil), size: .small), isUpdating: false,  productType: .card, action: {})
+    
+    static let accountSmall = ProductView.ViewModel(id: "3", header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Текущий зарплатный счет", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardRIO, image: nil), size: .small), isUpdating: false, productType: .card, action: {})
 }
 
