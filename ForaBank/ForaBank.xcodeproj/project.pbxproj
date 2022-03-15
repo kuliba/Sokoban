@@ -3197,6 +3197,8 @@
 				7772978B27C3B7840099EF91 /* TextFieldMaskableViewComponentTests.swift */,
 			);
 			path = Components;
+			sourceTree = "<group>";
+		};
 		7769F5BA27D3A2D900F80607 /* Main */ = {
 			isa = PBXGroup;
 			children = (
