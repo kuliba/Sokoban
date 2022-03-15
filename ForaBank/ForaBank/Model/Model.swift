@@ -11,9 +11,16 @@ import os
 
 class Model {
     
+    //MARK: Products
+    
     //MARK: Templates
     let action: PassthroughSubject<Action, Never>
     let auth: CurrentValueSubject<AuthorizationState, Never>
+    
+    //MARK: Products
+    let products: CurrentValueSubject<[ProductType: [ProductData]], Never>
+    let productsUpdateState: CurrentValueSubject<ProductsUpdateState, Never>
+    var productsAllowed: Set<ProductType> { [.card, .account, .deposit] }
     
     //MARK: Dictionaries
     let catalogProducts: CurrentValueSubject<[CatalogProductData], Never>
@@ -50,6 +57,8 @@ class Model {
         
         self.action = .init()
         self.auth = .init(.notAuthorized)
+        self.products = .init([:])
+        self.productsUpdateState = .init(.idle)
         self.catalogProducts = .init([])
         self.paymentTemplates = .init([])
         self.paymentTemplatesViewSettings = .init(.initial)
@@ -135,6 +144,20 @@ class Model {
                     
                 case _ as ModelAction.Auth.Logout:
                     handleAuthLogoutRequest()
+                    
+                //MARK: - Products Actions
+                    
+                case _ as ModelAction.Products.Update.Fast.All:
+                    handleProductsUpdateFastAll()
+                    
+                case let payload as ModelAction.Products.Update.Fast.Single.Request:
+                    handleProductsUpdateFastSingleRequest(payload)
+                    
+                case _ as ModelAction.Products.Update.Total.All:
+                    handleProductsUpdateTotalAll()
+                    
+                case let payload as ModelAction.Products.Update.Total.Single.Request:
+                    handleProductsUpdateTotalSingleRequest(payload)
 
                 //MARK: - Templates Actions
                     

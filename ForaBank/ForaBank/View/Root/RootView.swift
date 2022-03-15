@@ -15,20 +15,7 @@ struct RootView: View {
         
         ZStack {
             
-            VStack {
-                
-                Text("Главный эаран")
-                
-                Button {
-                    
-                    viewModel.showLock()
-                    
-                } label: {
-                    
-                    Text("Окно блокировки")
-                }
-                .padding()
-            }
+            MainView(viewModel: .sampleProducts)
             
             
             if let loginViewModel = viewModel.login {

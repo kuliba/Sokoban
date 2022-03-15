@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 extension ServerCommands {
     
@@ -634,7 +635,7 @@ extension ServerCommands {
          struct GetProductCatalogImage: ServerDownloadCommand {
 
              var token: String? = nil
-             let endpoint: String
+             let endpoint = "/dict/getProductCatalogImage"
              let method: ServerCommandMethod = .get
              let parameters: [ServerCommandParameter]? = nil
              var payload: Payload? = nil
@@ -648,5 +649,70 @@ extension ServerCommands {
                  self.endpoint = "/" + endpoint
              }
          }
+        
+        /*
+         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getBannerCatalogListUsingGet
+         */
+        struct GetBannerCatalogList: ServerCommand {
+
+            var token: String? = nil
+            let endpoint = "/dict/getBannerCatalogList"
+            let method: ServerCommandMethod = .get
+            let parameters: [ServerCommandParameter]?
+            var payload: Payload? = nil
+            let timeout: TimeInterval? = nil
+
+            struct Payload: Encodable {}
+
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let data: BannerCatalogData?
+                let errorMessage: String?
+                
+                struct BannerCatalogData: Codable, Equatable {
+                    
+                    let bannerCatalogList: [BannerCatalogListData]
+                    let serial: String
+                }
+            }
+            
+            internal init(serial: String?) {
+                
+                if let serial = serial{
+                    
+                    var parameters = [ServerCommandParameter]()
+                    parameters.append(.init(name: "serial", value: serial))
+                    self.parameters = parameters
+                    
+                } else {
+                    
+                    self.parameters = nil
+                }
+            }
+        }
+        
+        /*
+         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController//dict/getBannerCatalogImageUsingGet
+         */
+        struct GetBannerCatalogImage: ServerDownloadCommand {
+
+            var token: String? = nil
+            let endpoint = "/dict/getBannerCatalogImage"
+            let method: ServerCommandMethod = .get
+            let parameters: [ServerCommandParameter]?
+            var payload: Payload? = nil
+            let timeout: TimeInterval? = nil
+
+            struct Payload: Encodable {}
+
+            internal init(imageEndpoint: String) {
+
+                var parameters = [ServerCommandParameter]()
+
+                parameters.append(.init(name: "image", value: imageEndpoint))
+                self.parameters = parameters
+            }
+        }
      }
  }
