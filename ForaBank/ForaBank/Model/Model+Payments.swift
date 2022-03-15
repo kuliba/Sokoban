@@ -245,8 +245,8 @@ extension Model {
         case .fms:
             parametersFMS(parameters, step, completion)
             
-        default:
-            completion(.failure(Payments.Error.unsupported))
+        case .fssp:
+            parametersFSSP(parameters, step, completion)
         }
     }
     

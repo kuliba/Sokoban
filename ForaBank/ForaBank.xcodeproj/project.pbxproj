@@ -629,6 +629,7 @@
 		77EC58F4277381970054D75C /* OperationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58F3277381970054D75C /* OperationType.swift */; };
 		77EC58F6277382A60054D75C /* OperationEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58F5277382A60054D75C /* OperationEnvironment.swift */; };
 		77EC58F927738B5E0054D75C /* DateFormatter+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58F827738B5E0054D75C /* DateFormatter+Extensions.swift */; };
+		77F4C8BD27E077D70095820E /* Model+PaymentsTaxesFSSP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F4C8BC27E077D70095820E /* Model+PaymentsTaxesFSSP.swift */; };
 		77FF66CD27B42DD5009FEA09 /* Model+PaymentsTaxesFMS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FF66CC27B42DD5009FEA09 /* Model+PaymentsTaxesFMS.swift */; };
 		77FF670327B446D7009FEA09 /* AsyncAwaitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FF670227B446D7009FEA09 /* AsyncAwaitTests.swift */; };
 		77FF670527B4B07B009FEA09 /* PaymentsDataModel+Parameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FF670427B4B07B009FEA09 /* PaymentsDataModel+Parameter.swift */; };
@@ -1545,6 +1546,7 @@
 		77EC58F3277381970054D75C /* OperationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationType.swift; sourceTree = "<group>"; };
 		77EC58F5277382A60054D75C /* OperationEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationEnvironment.swift; sourceTree = "<group>"; };
 		77EC58F827738B5E0054D75C /* DateFormatter+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+Extensions.swift"; sourceTree = "<group>"; };
+		77F4C8BC27E077D70095820E /* Model+PaymentsTaxesFSSP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTaxesFSSP.swift"; sourceTree = "<group>"; };
 		77FF66CC27B42DD5009FEA09 /* Model+PaymentsTaxesFMS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTaxesFMS.swift"; sourceTree = "<group>"; };
 		77FF670227B446D7009FEA09 /* AsyncAwaitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncAwaitTests.swift; sourceTree = "<group>"; };
 		77FF670427B4B07B009FEA09 /* PaymentsDataModel+Parameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsDataModel+Parameter.swift"; sourceTree = "<group>"; };
@@ -3569,8 +3571,9 @@
 		77FF66CB27B42DAF009FEA09 /* Taxes */ = {
 			isa = PBXGroup;
 			children = (
-				77FF66CC27B42DD5009FEA09 /* Model+PaymentsTaxesFMS.swift */,
 				EDCE659427C4FFDD006C2C3E /* Model+PaymentsTaxesFNS.swift */,
+				77FF66CC27B42DD5009FEA09 /* Model+PaymentsTaxesFMS.swift */,
+				77F4C8BC27E077D70095820E /* Model+PaymentsTaxesFSSP.swift */,
 			);
 			path = Taxes;
 			sourceTree = "<group>";
@@ -5705,6 +5708,7 @@
 				0BE270B326B9959900FA958C /* ExtensionBottomLableModel.swift in Sources */,
 				775875472798C87B0080115D /* Option.swift in Sources */,
 				77517F9927A858C2005CFB77 /* TransferResponseData.swift in Sources */,
+				77F4C8BD27E077D70095820E /* Model+PaymentsTaxesFSSP.swift in Sources */,
 				77517FEC27A99279005CFB77 /* ServerCommands+Rates.swift in Sources */,
 				6820929F27AC04BF003DCAFD /* SuggestCompanyData.swift in Sources */,
 				0B37F97A2678EAB6007728FC /* AnywayPaymentMakeDecodableModel.swift in Sources */,
