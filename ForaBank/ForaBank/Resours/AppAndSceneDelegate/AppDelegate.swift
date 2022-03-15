@@ -48,11 +48,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         application.registerForRemoteNotifications()
         
         requestNotificationAuthorization(application: application)
-//        customizeUiInApp()
+        customizeUiInApp()
         
         self.initRealmTimerParameters()
         // Зарузка кэша
-//        downloadCash.download()
+        downloadCash.download()
 
         return true
     }

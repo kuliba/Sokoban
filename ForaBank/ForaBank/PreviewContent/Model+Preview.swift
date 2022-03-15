@@ -14,7 +14,7 @@ extension Model {
     
     static let productsMock: Model = {
         
-        let model = Model(serverAgent: ServerAgentEmptyMock(), localAgent: LocalAgentEmptyMock())
+        let model = Model(serverAgent: ServerAgentEmptyMock(), localAgent: LocalAgentEmptyMock(), keychainAgent: KeychainAgentMock(), settingsAgent: SettingsAgentMock(), biometricAgent: BiometricAgentMock())
         
         let bundle = Bundle(for: Model.self)
         let url = bundle.url(forResource: "ProductsListSample", withExtension: "json")!

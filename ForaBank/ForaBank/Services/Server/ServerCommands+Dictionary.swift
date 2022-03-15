@@ -635,7 +635,7 @@ extension ServerCommands {
          struct GetProductCatalogImage: ServerDownloadCommand {
 
              var token: String? = nil
-             let endpoint = "/dict/getProductCatalogImage"
+             let endpoint: String
              let method: ServerCommandMethod = .get
              let parameters: [ServerCommandParameter]? = nil
              var payload: Payload? = nil
@@ -703,6 +703,7 @@ extension ServerCommands {
             let parameters: [ServerCommandParameter]?
             var payload: Payload? = nil
             let timeout: TimeInterval? = nil
+            let cachePolicy: URLRequest.CachePolicy = .returnCacheDataElseLoad
 
             struct Payload: Encodable {}
 
