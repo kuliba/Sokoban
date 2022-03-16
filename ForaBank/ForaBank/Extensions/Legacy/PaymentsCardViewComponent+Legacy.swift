@@ -32,6 +32,7 @@ extension PaymentsCardView.ViewModel {
  
         self.init(title: title, cardIcon: cardIcon, paymentSystemIcon: paymentSystemIcon, name: name, amount: amount, captionItems: [.init(title: String(cardNumber))], state: .normal, model: .emptyMock, parameterCard: parameterCard)
         
+        update(value: "\(productObject.id)")
         bindLegacy()
     }
     
@@ -85,8 +86,9 @@ extension PaymentsCardView.ViewModel {
                     
                     if update(with: productObject) == true {
                         
+                        update(value: "\(productObject.id)")
+                        
                         withAnimation {
-                            
                             state = .normal
                         }
                     }
