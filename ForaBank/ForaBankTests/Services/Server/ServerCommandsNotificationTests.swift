@@ -15,6 +15,37 @@ class ServerCommandsNotificationTests: XCTestCase {
     let encoder = JSONEncoder.serverDate
     let formatter = DateFormatter.dateAndTime
 
+    //MARK: - ChangeNotificationStatus
+
+    func testChangeNotificationStatus_Response_Decoding() throws {
+
+        // given
+        let url = bundle.url(forResource: "ChangeNotificationStatusGeneric", withExtension: "json")!
+        let json = try Data(contentsOf: url)
+        let expected = ServerCommands.NotificationController.ChangeNotificationStatus.Response(statusCode: .ok, errorMessage: "string", data: nil)
+        
+        // when
+        let result = try decoder.decode(ServerCommands.NotificationController.ChangeNotificationStatus.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
+
+    func testChangeNotificationStatus_Encoding() throws {
+        // given
+
+        let command = ServerCommands.NotificationController.ChangeNotificationStatus(token: "", payload: .init(eventId: "123456", cloudId: "", status: .delivered))
+        
+        let expected = "{\"eventId\":\"123456\",\"cloudId\":\"\",\"status\":\"DELIVERED\"}"
+        // when
+        let result = try encoder.encode(command.payload)
+        let resultString = String(decoding: result, as: UTF8.self)
+
+        // then
+        XCTAssertEqual(resultString, expected)
+    }
+
+    
     //MARK: - GetNotifications
     
     func testGetNotifications_Response_Decoding() throws {

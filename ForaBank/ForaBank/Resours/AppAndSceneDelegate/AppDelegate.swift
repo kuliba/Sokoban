@@ -196,11 +196,21 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let userInfo = notification.request.content.userInfo
-        if (userInfo["otp"] as? String) != nil {
+        if (userInfo["aps"]) != nil  || (userInfo["otp"] as? String) != nil {
+
             NotificationCenter.default.post(name: Notification.Name("otpCode"), object: nil, userInfo: userInfo)
         }
+
+        if let eventId = userInfo["event_id"] as? String, let cloudId = userInfo["cloud_id"] as? String {
+
+            model.action.send(ModelAction.Notification.ChangeNotificationStatus.Requested(eventId: eventId,
+                                                                                          cloudId: cloudId,
+                                                                                          status: .delivered))
+        }
+
         completionHandler([[.alert, .sound]])
     }
+
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {

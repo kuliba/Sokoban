@@ -227,7 +227,34 @@ class Model {
                             self.action.send(ModelAction.PaymentTemplate.List.Failed(error: error))
                         }
                     }
-                    
+                
+                //MARK: - Notification Action
+                
+                case let payload as ModelAction.Notification.ChangeNotificationStatus.Requested:
+                    guard let token = token else {
+                        //TODO: handle not authoried server request attempt
+                        return
+                    }
+                    let command = ServerCommands.NotificationController.ChangeNotificationStatus (token: token,
+                                                                                                  payload: .init(eventId: payload.eventId,
+                                                                                                                 cloudId: payload.cloudId,
+                                                                                                                 status: payload.status))
+                    serverAgent.executeCommand(command: command) { result in
+                        
+                        switch result {
+                        case .success(let response):
+                            switch response.statusCode {
+                            case .ok:
+                                self.action.send(ModelAction.Notification.ChangeNotificationStatus.Complete())
+                            default:
+                                //TODO: handle not ok server status
+                                return
+                            }
+                        case .failure(let error):
+                            self.action.send(ModelAction.Notification.ChangeNotificationStatus.Failed(error: error))
+                        }
+                    }
+
                 default:
                     break
                 }
