@@ -16,18 +16,24 @@ extension PaymentsProductSelectorView {
         
         let action: PassthroughSubject<Action, Never> = .init()
         
-        @Published var categories: OptionSelectorView.ViewModel
-        @Published var products: [ProductView.ViewModel]
+        @Published var categories: OptionSelectorView.ViewModel?
+        @Published var productsFilterred: [ProductView.ViewModel]
         
-        init(categories: OptionSelectorView.ViewModel, products: [ProductView.ViewModel]) {
+        @Published internal var products: [ProductView.ViewModel]
+        
+        private var bindings = Set<AnyCancellable>()
+        
+        init(categories: OptionSelectorView.ViewModel?, products: [ProductView.ViewModel]) {
             
             self.categories = categories
+            self.productsFilterred = []
             self.products = products
         }
         
         init(_ model: Model) {
             
             self.categories = .init(options: [.init(id: "0", name: "Карты"), .init(id: "1", name: "Счета"), .init(id: "2", name: "Вклады")], selected: "0", style: .productsSmall)
+            self.productsFilterred = []
             self.products = []
             
             let classicSmall = ProductView.ViewModel(id: "2", header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardClassic, image: nil), size: .small), isUpdating: false,  productType: .card, action: {[weak self] in self?.action.send(PaymentsProductSelectorView.ViewModelAction.SelectedProduct(productId: 2))})
@@ -38,7 +44,51 @@ extension PaymentsProductSelectorView {
             
             let classicSmall3 = ProductView.ViewModel(id: "5", header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardGold, image: nil), size: .small), isUpdating: false,  productType: .card, action: {[weak self] in self?.action.send(PaymentsProductSelectorView.ViewModelAction.SelectedProduct(productId: 2))})
             
-            self.products = [classicSmall, classicSmall1, classicSmall2, classicSmall3]
+            self.productsFilterred = [classicSmall, classicSmall1, classicSmall2, classicSmall3]
+            
+            bind()
+            bindCategories()
+        }
+        
+        func bind() {
+            
+            $products
+                .receive(on: DispatchQueue.main)
+                .sink {[unowned self] productsAll in
+                    
+                    if let categories = categories, let productType = ProductType(rawValue: categories.selected) {
+                        
+                        self.productsFilterred = filterredProducts(prpductType: productType, products: productsAll)
+                        
+                    } else {
+                        
+                        self.productsFilterred = productsAll
+                    }
+                    
+                }.store(in: &bindings)
+        }
+        
+        func bindCategories() {
+            
+            categories?.$selected
+                .receive(on: DispatchQueue.main)
+                .sink {[unowned self] selected in
+                    
+                    if let productType = ProductType(rawValue: selected) {
+                        
+                        self.productsFilterred = filterredProducts(prpductType: productType, products: products)
+                        
+                    } else {
+                        
+                        self.productsFilterred = products
+                    }
+                    
+                }.store(in: &bindings)
+        }
+        
+        func filterredProducts(prpductType: ProductType, products: [ProductView.ViewModel]) -> [ProductView.ViewModel] {
+            
+            products.filter{ $0.productType == prpductType }
         }
     }
     
@@ -61,14 +111,17 @@ struct PaymentsProductSelectorView: View {
         
         VStack(alignment: .leading, spacing: 16) {
             
-            OptionSelectorView(viewModel: viewModel.categories)
-                .frame(height: 24)
-            
+            if let categoriesViewModel = viewModel.categories {
+                
+                OptionSelectorView(viewModel: categoriesViewModel)
+                    .frame(height: 24)
+            }
+
             ScrollView(.horizontal, showsIndicators: false) {
                 
                 HStack(spacing: 8) {
                     
-                    ForEach(viewModel.products) { productViewModel in
+                    ForEach(viewModel.productsFilterred) { productViewModel in
                         
                         ProductView(viewModel: productViewModel)
                             .frame(width: 112, height: 72)
