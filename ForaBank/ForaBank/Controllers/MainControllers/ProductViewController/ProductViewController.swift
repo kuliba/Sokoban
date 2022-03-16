@@ -973,7 +973,7 @@ extension ProductViewController{
                 let label = longIntToDateString(longInt: tranDate/1000)
 
                 if let month = label?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") {
-                    statusBarLabel.text = "Траты за \(month)ь"
+                    statusBarLabel.text = "Траты за \(getMonthFromLognInt(longInt: tranDate/1000))"
                     
                     let monthSort = historyArrayAccount.filter({longIntToDateString(longInt: $0.date!/1000)?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") ?? "" == month.replacingOccurrences(of: " ", with: "")})
                     let monthDebit = monthSort.filter({$0.operationType == "DEBIT"})
@@ -998,8 +998,9 @@ extension ProductViewController{
                 let label = longIntToDateString(longInt: tranDate/1000)
                 
                 if let month = label?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") {
-                    statusBarLabel.text = "Траты за \(month)ь"
                     
+                    statusBarLabel.text = "Траты за \(getMonthFromLognInt(longInt: tranDate/1000))"
+
                     let monthSort = historyArrayDeposit.filter({longIntToDateString(longInt: $0.date!/1000)?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") ?? "" == month.replacingOccurrences(of: " ", with: "")})
                     let monthDebit = monthSort.filter({$0.operationType == "DEBIT"})
                     let sumSalary = monthDebit.reduce(0.0, {
@@ -1024,8 +1025,8 @@ extension ProductViewController{
                 let label = longIntToDateString(longInt: tranDate/1000)
 
                 if let month = label?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") {
-                    statusBarLabel.text = "Траты за \(month)ь"
-                    
+                    statusBarLabel.text = "Траты за \(getMonthFromLognInt(longInt: tranDate/1000))"
+
                     let monthSort = historyArray.filter({longIntToDateString(longInt: $0.date!/1000)?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") ?? "" == month.replacingOccurrences(of: " ", with: "")})
                     let monthDebit = monthSort.filter({$0.operationType == "DEBIT"})
                     
@@ -1121,17 +1122,6 @@ extension ProductViewController{
             label.centerY(inView: headerView)
             return headerView
         }
-  
-//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        if scrollView == self.scrollView {
-//            tableView?.isScrollEnabled = (self.scrollView.contentOffset.y >= 0)
-//        }
-//
-//        if scrollView == self.tableView {
-//            self.tableView?.isScrollEnabled = (tableView?.contentOffset.y ?? 0 < 150)
-//        }
-//    }
-    
     
     func longIntToDateString(longInt: Int) -> String?{
         let date = Date(timeIntervalSince1970: TimeInterval(longInt))
@@ -1143,7 +1133,21 @@ extension ProductViewController{
             dateFormatter.timeZone = .current
             dateFormatter.locale = Locale(identifier: "ru_RU")
             let localDate = dateFormatter.string(from: date)
-            print(localDate)
+        
+        return localDate
+    }
+    
+    func getMonthFromLognInt(longInt: Int) -> String{
+        
+            let date = Date(timeIntervalSince1970: TimeInterval(longInt))
+            let dateFormatter = DateFormatter()
+            dateFormatter.timeStyle = DateFormatter.Style.none
+            dateFormatter.dateStyle = DateFormatter.Style.long
+            
+            dateFormatter.dateFormat = "LLLL"
+            dateFormatter.timeZone = .current
+            dateFormatter.locale = Locale(identifier: "ru_RU")
+            let localDate = dateFormatter.string(from: date)
         
         return localDate
     }
