@@ -30,6 +30,7 @@ extension OptionSelectorView {
             
             case template
             case products
+            case productsSmall
         }
         
         struct OptionViewModel: Identifiable {
@@ -54,6 +55,7 @@ struct OptionSelectorView: View {
         switch viewModel.style {
         case .template: return 8
         case .products: return 12
+        case .productsSmall: return 12
         }
     }
     
@@ -139,6 +141,43 @@ extension OptionSelectorView {
                             
                         Text(viewModel.title)
                                 .foregroundColor(.mainColorsGray)
+                            .padding(.vertical, 6)
+                        }
+                    }
+                }
+                
+            case .productsSmall:
+                Button {
+                    
+                    viewModel.action(viewModel.id)
+                    
+                } label: {
+                    
+                    if isSelected {
+                        
+                        HStack(spacing: 4) {
+                            
+                            Circle()
+                                .frame(width: 4, height: 4, alignment: .center)
+                                .foregroundColor(.mainColorsRed)
+                            
+                            Text(viewModel.title)
+                                .font(.textBodySM12160())
+                                .foregroundColor(.textSecondary)
+                                .padding(.vertical, 6)
+                        }
+                        
+                    } else {
+                        
+                        HStack(spacing: 4) {
+
+                        Circle()
+                            .frame(width: 4, height: 4, alignment: .center)
+                            .foregroundColor(.mainColorsGrayLightest)
+                            
+                        Text(viewModel.title)
+                                .font(.textBodySM12160())
+                                .foregroundColor(.textPlaceholder)
                             .padding(.vertical, 6)
                         }
                     }

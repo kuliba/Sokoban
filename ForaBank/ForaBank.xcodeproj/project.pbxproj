@@ -2045,12 +2045,12 @@
 				0B04EBD127B1568D00893687 /* PaymentsInputViewComponent.swift */,
 				0BF43D4727B466C2004DF248 /* PaymentsNameViewComponent.swift */,
 				0BD7879E27B9A6F30073DA1A /* PaymentsCardViewComponent.swift */,
+				77C3829227E0E19900B5246E /* PaymentsProductSelectorViewComponet.swift */,
 				0BD787A027B9AF290073DA1A /* PaymentsAmountViewComponent.swift */,
 				0B01073327C55E23006462E6 /* PaymentsPopUpSelectViewComponent.swift */,
 				0B01073727CD4D4B006462E6 /* ButtonSimpleViewComponent.swift */,
 				0B01073527CD3273006462E6 /* PaymentsButtonAdditionalViewComponent.swift */,
 				0B01073927D10D2D006462E6 /* PaymentsSuccessOptionButtonViewComponent.swift */,
-				77C3829227E0E19900B5246E /* PaymentsProductSelectorViewComponet.swift */,
 			);
 			path = Payments;
 			sourceTree = "<group>";
