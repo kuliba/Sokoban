@@ -353,7 +353,12 @@ class PaymentsOperationViewModel: ObservableObject {
                     with: parameterSelectSimple))
                 
             case let parameterCard as Payments.ParameterCard:
-                result.append(PaymentsCardView.ViewModel(with: parameterCard))
+                if let parameterCardViewModel = PaymentsCardView.ViewModel(parameterCard: parameterCard) {
+                    result.append(parameterCardViewModel)
+                } else {
+                    print("Payments: failed create parameter card")
+                }
+                
                 
             default:
                 break

@@ -33,12 +33,13 @@ extension PaymentsCardView {
             }
         }
         
-        private var bindings = Set<AnyCancellable>()
-        private var selectorBinding: AnyCancellable?
+        internal let model: Model
+        internal var bindings = Set<AnyCancellable>()
+        internal var selectorBinding: AnyCancellable?
         
         static let cardIconPlaceholder = Image("Placeholder Card Small")
         
-        init(title: String, cardIcon: Image, paymentSystemIcon: Image?, name: String, amount: String, captionItems: [CaptionItemViewModel], state: State, parameterCard: Payments.ParameterCard = .init()) {
+        init(title: String, cardIcon: Image, paymentSystemIcon: Image?, name: String, amount: String, captionItems: [CaptionItemViewModel], state: State, model: Model = .emptyMock, parameterCard: Payments.ParameterCard = .init()) {
             
             self.title = title
             self.cardIcon = cardIcon
@@ -47,12 +48,12 @@ extension PaymentsCardView {
             self.amount = amount
             self.captionItems = captionItems
             self.state = state
+            self.model = model
             
             super.init(source: parameterCard)
-            bind()
         }
 
-        init(with parameterCard: Payments.ParameterCard) {
+        init(_ model: Model, parameterCard: Payments.ParameterCard) {
             
             self.title = "Счет списания"
             self.cardIcon = Self.cardIconPlaceholder
@@ -61,12 +62,13 @@ extension PaymentsCardView {
             self.amount = "170 897 ₽"
             self.captionItems = [.init(title: "4996"), .init(title: "Корпоротивная")]
             self.state = .normal
+            self.model = model
             
             super.init(source: parameterCard)
             bind()
         }
         
-        func bind() {
+        internal func bind() {
             
             action
                 .receive(on: DispatchQueue.main)
