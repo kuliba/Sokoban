@@ -15,6 +15,7 @@ public protocol EPPickerDelegate: AnyObject {
     func epContactPicker(_: EPContactsPicker, didCancel error: NSError)
     func epContactPicker(_: EPContactsPicker, didSelectContact contact: EPContact)
 	func epContactPicker(_: EPContactsPicker, didSelectMultipleContacts contacts: [EPContact])
+    func epUserPhone(_ phone:String)
 }
 
 public extension EPPickerDelegate {
@@ -22,6 +23,7 @@ public extension EPPickerDelegate {
 	func epContactPicker(_: EPContactsPicker, didCancel error: NSError) { }
 	func epContactPicker(_: EPContactsPicker, didSelectContact contact: EPContact) { }
 	func epContactPicker(_: EPContactsPicker, didSelectMultipleContacts contacts: [EPContact]) { }
+    func epUserPhone(_ phone:String) {}
 }
 
 typealias ContactsHandler = (_ contacts : [CNContact] , _ error : NSError?) -> Void
@@ -57,6 +59,9 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
     var subtitleCellValue = SubtitleCellValue.phoneNumber
     var multiSelectEnabled: Bool = false //Default is single selection contact
     var isSearch = false
+    
+    let userPhoneView = EPContactSelfDataView()
+    
     // MARK: - Lifecycle Methods
     
     override open func viewDidLoad() {
@@ -67,12 +72,48 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
         inititlizeBarButtons()
         
         self.view.addSubview(searchContact)
+        self.view.addSubview(userPhoneView)
         self.view.addSubview(tableView)
         view.backgroundColor = .white
         searchContact.buttonStackView.isHidden = false
         searchContact.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingRight: 20, height: 44)
-        tableView.anchor(top: searchContact.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 16)
+        userPhoneView.anchor(top: searchContact.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 10, paddingLeft: 10, paddingRight: 10, height: 60)
+        
+        tableView.anchor(top: userPhoneView.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 16)
         searchContact.delegateNumber = self
+        
+        userPhoneView.tapClouser = {
+            guard var phone = UserDefaults.standard.object(forKey: "UserPhone") as? String else { return }
+            if phone.first == "7" {
+                let mask = StringMask(mask: "+0 (000) 000-00-00")
+                let maskPhone = mask.mask(string: phone)
+                
+                self.selectPhoneNumber = maskPhone
+                let newNumber = maskPhone?.dropFirst(2)
+                self.searchContact.numberTextField.text  = newNumber?.description
+                
+                self.dismiss(animated: true, completion: {
+                    DispatchQueue.main.async {
+                        self.contactDelegate?.epUserPhone(phone)
+                    }
+                })
+                
+            } else if phone.first == "8" {
+                phone.removeFirst()
+                let mask = StringMask(mask: "+7 (000) 000-00-00")
+                let maskPhone = mask.mask(string: phone)
+                
+                self.selectPhoneNumber = maskPhone
+                let newNumber = maskPhone?.dropFirst(2)
+                self.searchContact.numberTextField.text  = newNumber?.description
+                
+                self.dismiss(animated: true, completion: {
+                    DispatchQueue.main.async {
+                        self.contactDelegate?.epUserPhone(phone)
+                    }
+                })
+            }
+        }
         
         reloadContacts()
     }
@@ -329,7 +370,7 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
                      tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: UITableView.ScrollPosition.top , animated: false)
                      tableView.reloadData()
                      
-                     controller.dismiss(animated: true, completion: {
+                     self.presentingViewController?.dismiss(animated: true, completion: {
                          DispatchQueue.main.async {
                              self.contactDelegate?.epContactPicker(self, didSelectContact: selectedContact)
                          }

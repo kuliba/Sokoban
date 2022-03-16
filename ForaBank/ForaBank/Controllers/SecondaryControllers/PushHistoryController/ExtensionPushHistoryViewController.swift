@@ -24,8 +24,9 @@ extension PushHistoryViewController: UITableViewDelegate, UITableViewDataSource 
         let a = tempArray?[indexPath.section].getNotificationsEntity[indexPath.row]
         
         guard tempArray?[indexPath.section].getNotificationsEntity[indexPath.row] != nil else { return PushHistoryCell()}
+        if tempArray?[indexPath.section].getNotificationsEntity.count != 0 {
         cell.setData(a)
-        
+        }
         return cell
     }
     
@@ -46,6 +47,7 @@ extension PushHistoryViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        
         if indexPath.section == tableView.numberOfSections - 1 {
             print("Последняя секция в истории пушей 🏁")
             if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
@@ -54,7 +56,9 @@ extension PushHistoryViewController: UITableViewDelegate, UITableViewDataSource 
                 print("Последняя ячейка в истории пушей 🚩")
             }
         }
+        
     }
+    
     
     func dateFormater(_ string: String, _ formatter: String) -> String {
         let dateFormatter = DateFormatter()

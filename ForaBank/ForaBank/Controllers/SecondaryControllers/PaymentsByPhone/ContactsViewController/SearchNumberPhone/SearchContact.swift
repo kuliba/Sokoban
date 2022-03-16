@@ -33,8 +33,19 @@ class SearchContact: UIView, UITextFieldDelegate{
         guard !phoneNumber.isEmpty else { return "" }
         guard let regex = try? NSRegularExpression(pattern: "[\\s-\\(\\)]", options: .caseInsensitive) else { return "" }
         let r = NSString(string: phoneNumber).range(of: phoneNumber)
-        var number = regex.stringByReplacingMatches(in: phoneNumber, options: .init(rawValue: 0), range: r, withTemplate: "")
-
+        var number = ""
+        let b = phoneNumber.firstLetter()
+        let a = b.isStringAnInt
+        
+        if (!a && b != "(" ) {
+            number = regex.stringByReplacingMatches(in: phoneNumber, options: .init(rawValue: 0), range: r, withTemplate: " ")
+            if shouldRemoveLastDigit {
+                let end = number.index(number.startIndex, offsetBy: number.count-1)
+                number = String(number[number.startIndex..<end])
+            }
+        } else {
+        number = regex.stringByReplacingMatches(in: phoneNumber, options: .init(rawValue: 0), range: r, withTemplate: "")
+        
         if number.count > 10 {
             let tenthDigitIndex = number.index(number.startIndex, offsetBy: 10)
             number = String(number[number.startIndex..<tenthDigitIndex])
@@ -55,7 +66,7 @@ class SearchContact: UIView, UITextFieldDelegate{
             let range = number.startIndex..<end
             number = number.replacingOccurrences(of: "(\\d{3})(\\d{3})(\\d+)", with: "($1) $2-$3", options: .regularExpression, range: range)
         }
-
+        }
         return number
     }
     
@@ -131,4 +142,18 @@ extension CALayer {
 
     addSublayer(border)
   }
+}
+
+
+extension String  {
+    var isStringAnInt: Bool {
+        return !isEmpty && self.rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil
+    }
+    func firstLetter() -> String {
+        guard let firstChar = self.first else {
+            return ""
+        }
+        return String(firstChar)
+}
+
 }
