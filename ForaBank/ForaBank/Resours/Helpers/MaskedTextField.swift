@@ -15,7 +15,7 @@ class MaskedTextField: UITextField {
     override var text: String? {
         didSet {
             guard let text = text else { return }
-            if text.last == " " || text.last == "-" {
+            if  text.last == "-" {
                 self.text = String(text.dropLast())
             }
         }

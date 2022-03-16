@@ -11,7 +11,7 @@ import ContactsUI
 
 class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFieldText{
     
-    
+    let userPhoneView = EPContactSelfDataView()
     let tableView = UITableView(frame: .zero, style: .plain)
     // MARK: - Properties
     
@@ -85,7 +85,6 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
         tableView.keyboardDismissMode = .onDrag
         view.backgroundColor = .white
         
-        
         self.delegate = self
         configureTableView()
         registerContactCell()
@@ -108,7 +107,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
         lastPaymentsCollectionView.isScrollEnabled = true
         
         contactCollectionView = UICollectionView(frame: view.bounds, collectionViewLayout: flowLayout)
-        
+        contactView.addSubview(userPhoneView)
         contactView.addSubview(tableView)
         contactCollectionView.isHidden = true
         tableView.anchor()
@@ -131,12 +130,12 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
         lastPaymentsCollectionView.showsHorizontalScrollIndicator = false
         viewLine.anchor(width:  UIScreen.main.bounds.width + 20, height: 1)
         viewLine.backgroundColor = UIColor(red: 0.96, green: 0.96, blue: 0.97, alpha: 1)
-        
+        userPhoneView.anchor()
         switch seeall {
         case true:
-            stackView = UIStackView(arrangedSubviews: [searchContact, lastPaymentsCollectionView,viewLine, tableView, contactCollectionView])
+            stackView = UIStackView(arrangedSubviews: [searchContact, lastPaymentsCollectionView, viewLine, userPhoneView, tableView, contactCollectionView])
         default:
-            stackView = UIStackView(arrangedSubviews: [searchContact, lastPaymentsCollectionView,viewLine, tableView, contactCollectionView])
+            stackView = UIStackView(arrangedSubviews: [searchContact, lastPaymentsCollectionView,viewLine, userPhoneView, tableView, contactCollectionView])
         }
         
         
@@ -161,6 +160,34 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
         getLastPayments()
         reloadContacts()
         
+        userPhoneView.tapClouser = {
+            guard var phone = UserDefaults.standard.object(forKey: "UserPhone") as? String else { return }
+            if phone.first == "7" {
+                let mask = StringMask(mask: "+0 (000) 000-00-00")
+                let maskPhone = mask.mask(string: phone)
+
+                self.selectPhoneNumber = maskPhone
+                
+                self.selectPhoneNumber = maskPhone
+                let newNumber = maskPhone?.dropFirst(2)
+                self.searchContact.numberTextField.text  = newNumber?.description
+                self.banksActive = true
+                self.orderedBanks.removeAll()
+                self.getLastPhonePayments()
+                
+            } else if phone.first == "8" {
+                phone.removeFirst()
+                let mask = StringMask(mask: "+7 (000) 000-00-00")
+                let maskPhone = mask.mask(string: phone)
+                
+                self.selectPhoneNumber = maskPhone
+                let newNumber = maskPhone?.dropFirst(2)
+                self.searchContact.numberTextField.text  = newNumber?.description
+                self.banksActive = true
+                self.orderedBanks.removeAll()
+                self.getLastPhonePayments()
+            }
+        }
         
     }
     
@@ -933,7 +960,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
         cell.contactDetailTextLabel.isHidden = false
         cell.contactInitialLabel.isHidden  = false
         
-        if banksActive{
+        if banksActive {
             
             let banks = orderedBanks[sortedContactKeys[indexPath.section]]
             
@@ -946,7 +973,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
             cell.ownerImageView.isHidden = true
             cell.needChek = false
             
-        } else if banksActive == false{
+        } else if banksActive == false {
             let contact: EPContact
             if resultSearchController == true {
                 contact = EPContact(contact: filteredContacts[indexPath.row])
@@ -998,9 +1025,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource{
             let selectedContact =  cell.contact!
             selectPerson = selectedContact.displayName()
             selectPhoneNumber = selectedContact.phoneNumbers.first?.phoneNumber
-            guard let clearNumber = format(phoneNumber: selectPhoneNumber ?? "") else {
-                return
-            }
+            guard let clearNumber = format(phoneNumber: selectPhoneNumber ?? "") else { return }
             if selectedContact.phoneNumbers.count > 1{
                 counterNumbers = 0
                 let controller = ChoosePhoneNumberController()
