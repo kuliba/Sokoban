@@ -117,7 +117,7 @@ extension ServerCommands {
         struct CreateAnywayTransfer: ServerCommand {
 
             let token: String?
-            let endpoint = "/rest​/transfer​/createAnywayTransfer"
+            let endpoint = "/rest/transfer/createAnywayTransfer"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]?
             let payload: Payload?

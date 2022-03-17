@@ -46,11 +46,14 @@ class Model {
     private let queue = DispatchQueue(label: "ru.forabank.sense.model", qos: .userInitiated, attributes: .concurrent)
     internal var token: String? {
         
+        return CSRFToken.token
+        /*
         guard case .authorized(let credentials) = auth.value else {
             return nil
         }
         
         return credentials.token
+         */
     }
     
     init(serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol, settingsAgent: SettingsAgentProtocol, biometricAgent: BiometricAgentProtocol) {

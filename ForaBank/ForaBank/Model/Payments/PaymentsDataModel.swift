@@ -72,6 +72,8 @@ enum Payments {
         case unexpectedOperatorValue
         case missingOperatorParameter
         case missingParameter
+        case failedAnywayTransferWithEmptyTransferDataResponse
+        case failedAnywayTransfer(status: ServerStatusCode, message: String?)
         case unsupported
     }
 }

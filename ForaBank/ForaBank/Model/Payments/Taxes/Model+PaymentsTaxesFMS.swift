@@ -59,13 +59,103 @@ extension Model {
                 options: divisionAnywayParameterOptions,
                 affectsHistory: true)
             
-            completion(.success(parameters + [divisionParameter]))
-            
+            Task {
+                do {
+                    
+                    let transferData = try await startTransfer()
+                    print("")
+                    
+                    completion(.success(parameters + [divisionParameter]))
+                    
+                } catch {
+                    
+                    print(error.localizedDescription)
+                    completion(.failure(error))
+                }
+            }
           
         default:
             completion(.failure(Payments.Error.unsupported))
         }
     }
+    
+    func startTransfer() async throws -> TransferAnywayResponseData {
+        
+        guard let token = token else {
+            throw Payments.Error.unsupported
+        }
+        
+        let command = ServerCommands.TransferController.CreateAnywayTransfer(token: token, isNewPayment: true, payload: .init(amount: 0, check: false, comment: nil, currencyAmount: "RUB", payer: .init(inn: nil, accountId: nil, accountNumber: nil, cardId: 10000200315, cardNumber: nil, phoneNumber: nil), additional: [.init(fieldid: 1, fieldname: "a3_dutyCategory_1_1", fieldvalue: "1"),.init(fieldid: 2, fieldname: "a3_divisionSelect_2_1", fieldvalue: "inn_oktmo")], puref: "iFora||6887"))
+        
+        return try await withCheckedThrowingContinuation({ continuation in
+            
+            serverAgent.executeCommand(command: command) { result in
+                
+                switch result {
+                case .success(let response):
+                    switch response.statusCode {
+                    case .ok:
+                        guard let transferData = response.data else {
+                            continuation.resume(with: .failure(Payments.Error.failedAnywayTransferWithEmptyTransferDataResponse))
+                            return
+                        }
+                        continuation.resume(with: .success(transferData))
+                        
+                    default:
+                        continuation.resume(with: .failure(Payments.Error.failedAnywayTransfer(status: response.statusCode, message: response.errorMessage)))
+                    }
+                    
+                case .failure(let error):
+                    continuation.resume(with: .failure(error))
+                }
+            }
+        })
+    }
+    
+    /*
+     func getRequestBody(amount: String, additionalArray: [[String: String]]) -> [String: AnyObject] {
+         let productType = controller?.footerView.cardFromField.cardModel?.productType ?? ""
+         let id = controller?.footerView.cardFromField.cardModel?.id ?? -1
+
+         var request = [String: AnyObject]()
+         if productType == "ACCOUNT" {
+             request = ["check": false,
+                        "amount": amount,
+                        "currencyAmount": "RUB",
+                        "payer": ["cardId": nil,
+                                  "cardNumber": nil,
+                                  "accountId": String(id)],
+                        "puref": puref,
+                        "additional": additionalArray] as [String: AnyObject]
+
+         } else if productType == "CARD" {
+             request = ["check": false,
+                        "amount": amount,
+                        "currencyAmount": "RUB",
+                        "payer": ["cardId": String(id),
+                                  "cardNumber": nil,
+                                  "accountId": nil],
+                        "puref": puref,
+                        "additional": additionalArray] as [String: AnyObject]
+         }
+         return request
+     }
+     */
+    
+    /*
+     func downloadImageAndMetadata(imageNumber: Int) async throws -> DetailedImage {
+         return try await withCheckedThrowingContinuation({
+             (continuation: CheckedContinuation<DetailedImage, Error>) in
+             downloadImageAndMetadata(imageNumber: imageNumber) { image, error in
+                 if let image = image {
+                     continuation.resume(returning: image)
+                 } else {
+                     continuation.resume(throwing: error!)
+                 }
+             }
+         })
+     }
+     */
     
     func parametersFMSMock(_ parameters: [ParameterRepresentable], _ step: Int, _ completion: @escaping (Result<[ParameterRepresentable], Error>) -> Void) {
         
