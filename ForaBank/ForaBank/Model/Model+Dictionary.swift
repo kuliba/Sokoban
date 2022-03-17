@@ -42,13 +42,41 @@ extension ModelAction {
 
 extension Model {
     
+    func dictionaryAnywayOperatorGroups() -> [OperatorGroupData]? {
+        
+        return localAgent.load(type: [OperatorGroupData].self)
+    }
+    
+    func dictionaryAnywayOperators() -> [OperatorGroupData.OperatorData]? {
+        
+        guard let anywayOperatorGroups = dictionaryAnywayOperatorGroups() else {
+            return nil
+        }
+        
+        return anywayOperatorGroups.flatMap{ $0.operators }
+    }
+    
     func dictionaryAnywayOperatorGroup(for code: String) -> OperatorGroupData? {
         
-        guard let anywayOperators = localAgent.load(type: [OperatorGroupData].self) else {
+        guard let anywayOperatorGroups = dictionaryAnywayOperatorGroups() else {
+            return nil
+        }
+        
+        return anywayOperatorGroups.first(where: { $0.code == code })
+    }
+    
+    func dictionaryAnywayOperator(for code: String) -> OperatorGroupData.OperatorData? {
+        
+        guard let anywayOperators = dictionaryAnywayOperators() else {
             return nil
         }
         
         return anywayOperators.first(where: { $0.code == code })
+    }
+    
+    func dictionaryFMSList() -> [FMSData]? {
+        
+        return localAgent.load(type: [FMSData].self)
     }
 }
 

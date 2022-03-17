@@ -21,7 +21,7 @@ extension PaymentsSelectSimpleView {
         
         @Published var content: String
         @Published var description: String?
-        @Published var selectedOptionId: Payments.ParameterSelectSimple.Option.ID?
+        @Published var selectedOptionId: Option.ID?
         
         override var isValid: Bool { value.current != nil }
         
@@ -33,7 +33,7 @@ extension PaymentsSelectSimpleView {
                       title: String,
                       content: String,
                       description: String?,
-                      selectedOptionId: Payments.ParameterSelectSimple.Option.ID? = nil) {
+                      selectedOptionId: Option.ID? = nil) {
             
             self.icon = icon
             self.title = title

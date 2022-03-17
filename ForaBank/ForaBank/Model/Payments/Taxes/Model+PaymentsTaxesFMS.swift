@@ -11,6 +11,64 @@ extension Model {
     
     func parametersFMS(_ parameters: [ParameterRepresentable], _ step: Int, _ completion: @escaping (Result<[ParameterRepresentable], Error>) -> Void) {
         
+        let paramOperator = Payments.Parameter.Identifier.operator.rawValue
+        
+        switch step {
+        case 0:
+            
+            // operator
+            let operatorParameter = Payments.ParameterOperator(operatorType: .fms)
+            
+            // category
+            guard let fmsCategoriesList = dictionaryFMSList()  else {
+                completion(.failure(Payments.Error.unableLoadFMSCategoryOptions))
+                return
+            }
+            
+            let categoryParameter = Payments.ParameterSelect(
+                Parameter(id: "a3_dutyCategory_1_1", value: nil),
+                title: "Категория платежа",
+                options: fmsCategoriesList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample)}, affectsHistory: true)
+            
+            completion(.success( parameters + [operatorParameter, categoryParameter]))
+            
+        case 1:
+            guard let operatorParameter = parameters.first(where: { $0.parameter.id == paramOperator }),
+                  let operatorValue = operatorParameter.parameter.value,
+                  let anywayOperator = dictionaryAnywayOperator(for: operatorValue) else {
+                      
+                      completion(.failure(Payments.Error.missingOperatorParameter))
+                      return
+                  }
+            
+            let divisionParameterId = "a3_divisionSelect_2_1"
+            guard let divisionAnywayParameter = anywayOperator.parameterList.first(where: { $0.id == divisionParameterId }),
+                  let divisionAnywayParameterOptions = divisionAnywayParameter.options,
+                  let divisionAnywayParameterValue = divisionAnywayParameter.value else {
+                      
+                      completion(.failure(Payments.Error.missingParameter))
+                      return
+                  }
+            
+            // division
+            let divisionParameter = Payments.ParameterSelectSimple(
+                Parameter(id: divisionParameterId, value: divisionAnywayParameterValue),
+                icon: divisionAnywayParameter.iconData ?? .parameterSample,
+                title: divisionAnywayParameter.title,
+                selectionTitle: "Выберете услугу",
+                options: divisionAnywayParameterOptions,
+                affectsHistory: true)
+            
+            completion(.success(parameters + [divisionParameter]))
+            
+          
+        default:
+            completion(.failure(Payments.Error.unsupported))
+        }
+    }
+    
+    func parametersFMSMock(_ parameters: [ParameterRepresentable], _ step: Int, _ completion: @escaping (Result<[ParameterRepresentable], Error>) -> Void) {
+        
         switch step {
         case 0:
    

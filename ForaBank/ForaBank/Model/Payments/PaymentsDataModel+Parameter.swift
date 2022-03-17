@@ -176,12 +176,6 @@ extension Payments {
             
             ParameterSelectSimple(parameter, icon: icon, title: title, selectionTitle: selectionTitle, description: description, options: options, editable: editable, collapsable: collapsable, affectsHistory: affectsHistory, autoContinue: autoContinue)
         }
-        
-        struct Option: Identifiable {
-            
-            let id: String
-            let name: String
-        }
     }
     
     struct ParameterSelectSwitch: ParameterRepresentable {

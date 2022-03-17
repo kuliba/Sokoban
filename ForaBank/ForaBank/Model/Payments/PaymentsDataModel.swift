@@ -67,10 +67,12 @@ enum Payments {
     
     enum Error: Swift.Error {
         
-        case unsupported
+        case unableLoadFMSCategoryOptions
         case unableCreateOperationForService(Service)
         case unexpectedOperatorValue
         case missingOperatorParameter
+        case missingParameter
+        case unsupported
     }
 }
 

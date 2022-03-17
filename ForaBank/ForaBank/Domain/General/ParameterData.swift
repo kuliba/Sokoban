@@ -34,3 +34,49 @@ struct ParameterData: Codable, Equatable {
         case output = "OUTPUT"
     }
 }
+
+extension ParameterData {
+    
+    var value: String? { content }
+    
+    //"=,inn_oktmo=ИНН и ОКТМО подразделения,number=Номер подразделения"
+    var options: [Option]? {
+        
+        guard let data = dataType else {
+            return nil
+        }
+        
+        var options = [Option]()
+        let dataSplitted = data.split(separator: ",")
+        
+        for chunk in dataSplitted {
+            
+            let chunkSplitted = chunk.split(separator: "=")
+            
+            guard chunkSplitted.count == 2, chunkSplitted[0] != "", chunkSplitted[1] != "" else {
+                continue
+            }
+            
+            let id = String(chunkSplitted[0])
+            let name = String(chunkSplitted[1])
+            let option = Option(id: id, name: name)
+            
+            options.append(option)
+        }
+        
+        guard options.isEmpty == false else {
+            return nil
+        }
+        
+        return options
+    }
+    
+    var iconData: ImageData? {
+        
+        guard let svgImage = svgImage else {
+            return nil
+        }
+        
+        return ImageData(with: svgImage)
+    }
+}

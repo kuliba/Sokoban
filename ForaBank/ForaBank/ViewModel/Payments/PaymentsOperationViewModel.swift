@@ -387,9 +387,8 @@ class PaymentsOperationViewModel: ObservableObject {
                     print("Payments: failed create parameter card")
                 }
                 
-                
             default:
-                break
+                result.append(PaymentsParameterViewModel(source: parameter))
             }
         }
         
