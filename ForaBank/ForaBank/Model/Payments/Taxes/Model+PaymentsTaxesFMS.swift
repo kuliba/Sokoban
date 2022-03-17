@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import RealmSwift
 
 extension Model {
     
@@ -62,8 +63,11 @@ extension Model {
             Task {
                 do {
                     
-                    let transferData = try await startTransfer()
-                    print("")
+                    let stepParameters = parameters + [divisionParameter]
+                    let include = ["a3_dutyCategory_1_1", divisionParameterId]
+                    
+                    let transferData = try await paymentsTransferAnywayStep(with: stepParameters, include: include, step: .initial)
+                    print(transferData.parameterListForNextStep)
                     
                     completion(.success(parameters + [divisionParameter]))
                     
@@ -79,13 +83,106 @@ extension Model {
         }
     }
     
-    func startTransfer() async throws -> TransferAnywayResponseData {
+    func paymentsTransferPayer(with parameters: [ParameterRepresentable]) -> TransferData.Payer? {
         
-        guard let token = token else {
-            throw Payments.Error.unsupported
+        //TODO: extract card/account id from ParameterCard
+        
+        if let cardId = paymentsFirstProductId(of: .card) {
+            
+            return .init(inn: nil, accountId: nil, accountNumber: nil, cardId: cardId, cardNumber: nil, phoneNumber: nil)
+            
+        } else if let accountId = paymentsFirstProductId(of: .account) {
+            
+            return .init(inn: nil, accountId: accountId, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
+            
+        } else {
+            
+            return nil
+        }
+    }
+    
+    func paymentsFirstProductId(of type: ProductType) -> Int? {
+        
+        guard let realm = try? Realm()  else {
+            return nil
         }
         
-        let command = ServerCommands.TransferController.CreateAnywayTransfer(token: token, isNewPayment: true, payload: .init(amount: 0, check: false, comment: nil, currencyAmount: "RUB", payer: .init(inn: nil, accountId: nil, accountNumber: nil, cardId: 10000200315, cardNumber: nil, phoneNumber: nil), additional: [.init(fieldid: 1, fieldname: "a3_dutyCategory_1_1", fieldvalue: "1"),.init(fieldid: 2, fieldname: "a3_divisionSelect_2_1", fieldvalue: "inn_oktmo")], puref: "iFora||6887"))
+        let products = realm.objects(UserAllCardsModel.self)
+        
+        return products.first(where: { $0.productType == type.rawValue })?.id
+    }
+    
+    func paymentsTransferAmount(with parameters: [ParameterRepresentable]) -> Double? {
+        
+        guard let amountParameter = parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.amount.rawValue}) as? Payments.ParameterAmount else {
+            
+            return nil
+        }
+        
+        return amountParameter.amount
+    }
+    
+    func paymentsTransferCurrency(with parameters: [ParameterRepresentable]) -> String? {
+        
+        //TODO: real implementation required
+        return "RUB"
+    }
+    
+    func paymentsTransferPuref(with parameters: [ParameterRepresentable]) -> String? {
+        
+        guard let operatorParameter = parameters.first(where: { $0.parameter.id ==  Payments.Parameter.Identifier.operator.rawValue}) else {
+            
+            return nil
+        }
+        
+        return operatorParameter.parameter.value
+    }
+    
+    func paymentsTransferAnywayAdditional(with parameters: [ParameterRepresentable], _ include: [Payments.Parameter.ID]) -> [TransferAnywayData.Additional]? {
+        
+        guard include.isEmpty == false else {
+            return []
+        }
+        
+        var additional = [TransferAnywayData.Additional]()
+        for (index, paraneterId) in include.enumerated() {
+            
+            guard let parameter = parameters.first(where: { $0.parameter.id == paraneterId})?.parameter,
+                  let parameterValue = parameter.value else {
+                      return nil
+                  }
+            
+            additional.append(.init(fieldid: index + 1, fieldname: parameter.id, fieldvalue: parameterValue))
+        }
+        
+        return additional
+    }
+    
+    func paymentsTransferAnywayStep(with parameters: [ParameterRepresentable], include: [Payments.Parameter.ID], step: TransferData.Step) async throws -> TransferAnywayResponseData {
+        
+        guard let token = token else {
+            throw Payments.Error.notAuthorized
+        }
+        
+        guard let puref = paymentsTransferPuref(with: parameters) else {
+            throw Payments.Error.missingOperatorParameter
+        }
+        
+        let amount = paymentsTransferAmount(with: parameters)
+        
+        guard let currency = paymentsTransferCurrency(with: parameters) else {
+            throw Payments.Error.missingCurrency
+        }
+        
+        guard let payer = paymentsTransferPayer(with: parameters) else {
+            throw Payments.Error.missingPayer
+        }
+        
+        guard let additional = paymentsTransferAnywayAdditional(with: parameters, include) else {
+            throw Payments.Error.missingAnywayTransferAdditional
+        }
+        
+        let command = ServerCommands.TransferController.CreateAnywayTransfer(token: token, isNewPayment: step.isNewPayment, payload: .init(amount: amount, check: step.check, comment: nil, currencyAmount: currency, payer: payer, additional: additional, puref: puref))
         
         return try await withCheckedThrowingContinuation({ continuation in
             
