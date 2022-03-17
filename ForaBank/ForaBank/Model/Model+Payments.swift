@@ -110,19 +110,34 @@ extension Model {
     
     func handlePaymentsServicesRequest(_ payload: ModelAction.Payment.Services.Request) {
         
-        if payload.category.services.count > 1 {
-            
-            let selectServiceParameter = Payments.ParameterSelectService(category: payload.category, options: payload.category.services.map { selectServiceParameterOption(for: $0)})
-            
-            action.send(ModelAction.Payment.Services.Response.select(selectServiceParameter))
-            
-        } else if let service = payload.category.services.first {
-            
-            action.send(ModelAction.Payment.Services.Response.selected(service))
-            
-        } else {
-            
-            action.send(ModelAction.Payment.Services.Response.failed(Payments.Operation.Error.unableSelectServiceForCategory(payload.category)))
+        let category = payload.category
+        
+        switch category {
+        case .taxes:
+            let services = category.services
+            if services.count > 1 {
+                
+                guard let anywayGroup = dictionaryAnywayOperatorGroup(for: category.rawValue) else {
+                    
+                    action.send(ModelAction.Payment.Services.Response.failed(Payments.Operation.Error.failedLoadServicesForCategory(category)))
+                    return
+                }
+                
+                let operatorsCodes = services.compactMap{ $0.operators.first?.rawValue }
+                let anywayOperators = anywayGroup.operators.filter{ operatorsCodes.contains($0.code)}
+                
+                let selectServiceParameter = Payments.ParameterSelectService(category: payload.category, options: payload.category.services.compactMap { paymentsAnywayOperatorOption(for: $0, with: anywayOperators)})
+                
+                action.send(ModelAction.Payment.Services.Response.select(selectServiceParameter))
+                
+            } else if let service = payload.category.services.first {
+                
+                action.send(ModelAction.Payment.Services.Response.selected(service))
+                
+            } else {
+                
+                action.send(ModelAction.Payment.Services.Response.failed(Payments.Operation.Error.unableSelectServiceForCategory(payload.category)))
+            }
         }
     }
     
@@ -250,17 +265,44 @@ extension Model {
         }
     }
     
-    func selectServiceParameterOption(for service: Service) -> Payments.ParameterSelectService.Option {
+    func paymentsAnywayOperatorOption(for service: Service, with operators: [OperatorGroupData.OperatorData]) -> Payments.ParameterSelectService.Option? {
         
         switch service {
         case .fns:
-            return .init(service: service, title: service.name, description: "Налоги", icon: .serviceFNS)
+            
+            guard let anywayOperator = operators.first(where: { $0.code == service.operators.first?.rawValue })  else {
+               return nil
+            }
+            
+            let title = anywayOperator.title
+            let description = anywayOperator.description ?? "Налоги"
+            let icon = anywayOperator.iconImageData ?? .serviceFNS
+            
+            return .init(service: service, title: title, description: description, icon: icon)
 
         case .fms:
-            return .init(service: service, title: service.name, description: "Госпошлины", icon: .serviceFMS)
             
+            guard let anywayOperator = operators.first(where: { $0.code == service.operators.first?.rawValue })  else {
+               return nil
+            }
+            
+            let title = anywayOperator.title
+            let description = anywayOperator.description ?? "Госпошлины"
+            let icon = anywayOperator.iconImageData ?? .serviceFMS
+            
+            return .init(service: service, title: title, description: description, icon: icon)
+
         case .fssp:
-            return .init(service: service, title: service.name, description: "Задолженность", icon: .serviceFSSP)
+            
+            guard let anywayOperator = operators.first(where: { $0.code == service.operators.first?.rawValue })  else {
+               return nil
+            }
+            
+            let title = anywayOperator.title
+            let description = anywayOperator.description ?? "Задолженность"
+            let icon = anywayOperator.iconImageData ?? .serviceFSSP
+            
+            return .init(service: service, title: title, description: description, icon: icon)
         }
     }
 }

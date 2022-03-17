@@ -40,6 +40,18 @@ extension ModelAction {
     }
 }
 
+extension Model {
+    
+    func dictionaryAnywayOperatorGroup(for code: String) -> OperatorGroupData? {
+        
+        guard let anywayOperators = localAgent.load(type: [OperatorGroupData].self) else {
+            return nil
+        }
+        
+        return anywayOperators.first(where: { $0.code == code })
+    }
+}
+
 //MARK: - Handlers
 
 extension Model {

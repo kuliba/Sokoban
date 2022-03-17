@@ -42,3 +42,19 @@ extension OperatorGroupData {
         let svgImage: SVGImageData?
     }
 }
+
+extension OperatorGroupData.OperatorData {
+    
+    var title: String { name }
+    
+    var description: String? { synonymList.first }
+    
+    var iconImageData: ImageData? {
+        
+        guard let logotypeData = logotypeList.first, let logotypeSVGImage = logotypeData.svgImage else {
+            return nil
+        }
+        
+        return ImageData(with: logotypeSVGImage)
+    }
+}

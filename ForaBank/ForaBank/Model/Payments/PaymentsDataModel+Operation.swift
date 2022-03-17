@@ -131,6 +131,7 @@ extension Payments.Operation {
     
     enum Error: Swift.Error {
         
+        case failedLoadServicesForCategory(Payments.Category)
         case unableSelectServiceForCategory(Payments.Category)
         case operatorNotSelectedForService(Payments.Service)
     }
