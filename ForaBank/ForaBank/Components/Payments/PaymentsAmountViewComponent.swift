@@ -61,8 +61,6 @@ extension PaymentsAmountView {
                     
                     update(value: String(textField.value))
                     
-                    print("Payments: amount value: \(textField.value)")
-                    
                 }.store(in: &bindings)
         }
         

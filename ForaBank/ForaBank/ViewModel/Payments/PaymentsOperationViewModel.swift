@@ -27,6 +27,18 @@ class PaymentsOperationViewModel: ObservableObject {
     internal var bindings = Set<AnyCancellable>()
     internal var itemsBindings = Set<AnyCancellable>()
     
+    var itemsAll: [PaymentsParameterViewModel] {
+        
+        if case .amount(let amountItem) = footer {
+            
+            return items.value + [amountItem]
+            
+        } else {
+            
+            return items.value
+        }
+    }
+    
     internal init(header: HeaderViewModel,
                   items: [PaymentsParameterViewModel],
                   footer: FooterViewModel?,
@@ -180,35 +192,7 @@ class PaymentsOperationViewModel: ObservableObject {
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] value in
                     
-                    guard value.isChanged == true else {
-                        return
-                    }
-                    
-                    print("Payments: item value changed")
-
-                    let results = self.items.value.map{ ($0.result, $0.source.affectsHistory) }
-                    let update = operation.update(with: results)
-                    
-                    switch update.type {
-                    case .normal:
-                        
-                        print("Payments: normal update")
-                        
-                        if isAutoContinueRequired(for: value.id) {
-                            
-                            model.action.send(ModelAction.Payment.Continue.Request(operation: update.operation))
-                            
-                        } else {
-                            
-                            operation = update.operation
-                            updateFooter(isContinueEnabled: isItemsValuesValid())
-                        }
-                        
-                    case .historyChanged:
-                        
-                        print("Payments: history changed")
-                        model.action.send(ModelAction.Payment.Continue.Request(operation: update.operation))
-                    }
+                   reduce(value: value)
                     
                 }.store(in: &itemsBindings)
             
@@ -275,11 +259,55 @@ class PaymentsOperationViewModel: ObservableObject {
                     }.store(in: &itemsBindings)
             }
         }
+        
+        if case .amount(let amount) = footer {
+            
+            amount.$value
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] value in
+                    
+                   reduce(value: value)
+                    
+                }.store(in: &itemsBindings)
+        }
+    }
+    
+    func reduce(value: PaymentsParameterViewModel.Value) {
+        
+        guard value.isChanged == true else {
+            return
+        }
+        
+        print("Payments: item value changed")
+
+        let results = self.itemsAll.map{ ($0.result, $0.source.affectsHistory) }
+        let update = operation.update(with: results)
+        
+        switch update.type {
+        case .normal:
+            
+            print("Payments: normal update")
+            
+            if isAutoContinueRequired(for: value.id) {
+                
+                model.action.send(ModelAction.Payment.Continue.Request(operation: update.operation))
+                
+            } else {
+                
+                operation = update.operation
+                updateFooter(isContinueEnabled: isItemsValuesValid())
+            }
+            
+        case .historyChanged:
+            
+            print("Payments: history changed")
+            model.action.send(ModelAction.Payment.Continue.Request(operation: update.operation))
+        }
     }
 
     func isItemsValuesValid() -> Bool {
         
-        for item in items.value {
+        for item in itemsAll {
             
             guard item.isValid == true else {
                 return false
