@@ -184,6 +184,7 @@ class ChangeReturnCountryController: UIViewController {
                     let controller = PaymentsDetailsSuccessViewController()
                     model.status = .returnRequest
                     controller.confurmVCModel = model
+                    controller.printFormType = "returnOutgoing"
                     controller.modalPresentationStyle = .fullScreen
                     self.present(controller, animated: true, completion: nil)
                 } else {
@@ -210,6 +211,7 @@ class ChangeReturnCountryController: UIViewController {
                     let controller = PaymentsDetailsSuccessViewController()
                     model.status = .changeRequest
                     controller.confurmVCModel = model
+                    controller.printFormType = "changeOutgoing"
                     controller.modalPresentationStyle = .fullScreen
                     self.present(controller, animated: true, completion: nil)
                 } else {
