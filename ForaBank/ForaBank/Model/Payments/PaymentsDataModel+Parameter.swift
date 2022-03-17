@@ -370,8 +370,12 @@ extension Payments {
         let validator: Validator
         
         var amount: Double {
-            //TODO: double from value
-            return 0
+ 
+            guard let value = parameter.value, let amount = Double(value) else {
+                return 0
+            }
+            
+            return amount
         }
 
         internal init(_ parameter: Parameter, title: String, currency: Currency, validator: Validator) {

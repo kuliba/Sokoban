@@ -14,22 +14,21 @@ extension PaymentsAmountView {
     
     class ViewModel: PaymentsParameterViewModel {
         
-        let description: String
-        @Published var content: String
+        @Published var title: String
+        var textField: TextFieldFormatableView.ViewModel
+        @Published var currencySwitch: CurrencySwitchViewModel?
         @Published var transferButton: TransferButtonViewModel
         @Published var info: InfoViewModel?
-        @Published var currencySwitch: CurrencySwitchViewModel?
         @Published var alert: AlertViewModel?
-        @Published var title: String?
         
         private let actionTitle: String
         private let action: () -> Void
         private var bindings = Set<AnyCancellable>()
         
-        init(description: String, content: String, transferButton: TransferButtonViewModel, info: InfoViewModel? = nil, currencySwitch: CurrencySwitchViewModel? = nil, alert: AlertViewModel? = nil, actionTitle: String = "", action: @escaping () -> Void = {}) {
+        init(title: String, amount: Double, transferButton: TransferButtonViewModel, info: InfoViewModel? = nil, currencySwitch: CurrencySwitchViewModel? = nil, alert: AlertViewModel? = nil, formatter: NumberFormatter = .currency(with: "₽"), actionTitle: String = "", action: @escaping () -> Void = {}) {
             
-            self.description = description
-            self.content = content
+            self.title = title
+            self.textField = .init(value: amount, formatter: formatter)
             self.transferButton = transferButton
             self.info = info
             self.currencySwitch = currencySwitch
@@ -37,42 +36,39 @@ extension PaymentsAmountView {
             self.actionTitle = actionTitle
             self.action = action
             super.init(source: Payments.ParameterMock())
-            
-            bind()
         }
         
         init(with parameterAmount: Payments.ParameterAmount, actionTitle: String, action: @escaping () -> Void) {
             
-            self.description = parameterAmount.title
-            self.content = parameterAmount.parameter.value ?? ""
+            self.title = parameterAmount.title
+            self.textField = .init(value: parameterAmount.amount, formatter: .currency(with: "₽"))
             self.transferButton = .inactive(title: "Перевести")
             self.info = nil
             self.currencySwitch = nil
             self.alert = nil
             self.actionTitle = actionTitle
             self.action = action
-            super.init(source: parameterAmount)
             
+            super.init(source: parameterAmount)
             bind()
+        }
+        
+        func bind() {
+            
+            textField.$text
+                .receive(on: DispatchQueue.main)
+                .sink {[unowned self] _ in
+                    
+                    update(value: String(textField.value))
+                    
+                    print("Payments: amount value: \(textField.value)")
+                    
+                }.store(in: &bindings)
         }
         
         override var isValid: Bool {
             
-            return true
-        }
-        
-        private func bind() {
-            
-            $content
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] content in
-                    
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        
-                        title = content.count > 0 ? description : nil
-                    }
-                    
-                }.store(in: &bindings)
+            textField.value > 0
         }
         
         func updateTranferButton(isEnabled: Bool) {
@@ -136,35 +132,22 @@ struct PaymentsAmountView: View {
                     
                     VStack(alignment: .leading, spacing: 4) {
                         
-                        if let title = viewModel.title {
-                            
-                            Text(title)
-                                .font(Font.custom("Inter-Regular", size: 12))
-                                .foregroundColor(Color(hex: "#999999"))
-                                .padding(.top, 4)
-                            
-                        } else {
-                            
-                            Color.clear
-                                .frame(height: 16)
-                        }
+                        Text(viewModel.title)
+                            .font(Font.custom("Inter-Regular", size: 12))
+                            .foregroundColor(Color(hex: "#999999"))
+                            .padding(.top, 4)
                         
                         HStack {
                             
-                            ZStack(alignment: .leading) {
-                                
-                                if viewModel.title == nil {
-                                    
-                                    Text(viewModel.description)
-                                        .font(Font.custom("Inter-Regular", size: 12))
-                                        .foregroundColor(Color(hex: "#999999"))
-                                }
-                                
-                                TextField(viewModel.description, text: $viewModel.content)
-                                    .font(Font.custom("Inter-SemiBold", size: 24))
-                                    .foregroundColor(Color(hex: "#FFFFFF"))
-                                    .keyboardType(.numberPad)
-                            }
+                            TextFieldFormatableView(viewModel: viewModel.textField, font: .monospacedSystemFont(ofSize: 22, weight: .regular), textColor: .white, keyboardType: .decimalPad)
+                                .frame(height: 24, alignment: .center)
+                            
+                            /*
+                            TextField("", value: $viewModel.amount, formatter: viewModel.formatter)
+                                .keyboardType(.decimalPad)
+                                .font(Font.custom("Inter-SemiBold", size: 24))
+                                .foregroundColor(Color(hex: "#FFFFFF"))
+                             */
                             
                             if let currencySwitchViewModel = viewModel.currencySwitch {
                                 
@@ -379,17 +362,17 @@ struct PaymentsAmountView_Previews: PreviewProvider {
 
 extension PaymentsAmountView.ViewModel {
     
-    static let empty = PaymentsAmountView.ViewModel(description: "Сумма перевода", content: "", transferButton: .inactive(title: "Перевести"))
+    static let empty = PaymentsAmountView.ViewModel(title: "Сумма перевода", amount: 0, transferButton: .inactive(title: "Перевести"))
     
-    static let emptyInfo =  PaymentsAmountView.ViewModel(description: "Сумма перевода", content: "", transferButton: .inactive(title: "Перевести"), info: .button(title: "Возможна комиссия", icon: Image("infoBlack"), action: {}))
+    static let emptyInfo =  PaymentsAmountView.ViewModel(title: "Сумма перевода", amount: 0, transferButton: .inactive(title: "Перевести"), info: .button(title: "Возможна комиссия", icon: Image("infoBlack"), action: {}))
     
-    static let amount = PaymentsAmountView.ViewModel(description: "Сумма перевода", content: "1 000 ₽", transferButton: .active(title: "Перевести", action: {}))
+    static let amount = PaymentsAmountView.ViewModel(title: "Сумма перевода", amount: 1000, transferButton: .active(title: "Перевести", action: {}))
     
-    static let amountZeroCurrencyInfo = PaymentsAmountView.ViewModel(description: "Сумма перевода", content: "0 ₽", transferButton: .active(title: "Перевести", action: {}), info: .text("1$ - 72.72 ₽"), currencySwitch: .init(from: "₽", to: "$", icon: Image("Payments Refresh CW"), action: {}))
+    static let amountZeroCurrencyInfo = PaymentsAmountView.ViewModel(title: "Сумма перевода", amount: 0, transferButton: .active(title: "Перевести", action: {}), info: .text("1$ - 72.72 ₽"), currencySwitch: .init(from: "₽", to: "$", icon: Image("Payments Refresh CW"), action: {}))
     
-    static let amountCurrencyInfo = PaymentsAmountView.ViewModel(description: "Сумма перевода", content: "1 000 ₽", transferButton: .active(title: "Перевести", action: {}), info: .text("13.75 $   |   1$ - 72.72 ₽"), currencySwitch: .init(from: "₽", to: "$", icon: Image("Payments Refresh CW"), action: {}))
+    static let amountCurrencyInfo = PaymentsAmountView.ViewModel(title: "Сумма перевода", amount: 10000.20, transferButton: .active(title: "Перевести", action: {}), info: .text("13.75 $   |   1$ - 72.72 ₽"), currencySwitch: .init(from: "₽", to: "$", icon: Image("Payments Refresh CW"), action: {}))
     
-    static let amountCurrencyInfoAlert = PaymentsAmountView.ViewModel(description: "Сумма перевода", content: "1 000 ₽", transferButton: .active(title: "Перевести", action: {}), info: .text("13.75 $   |   1$ - 72.72 ₽"), currencySwitch: .init(from: "₽", to: "$", icon: Image("Payments Refresh CW"), action: {}), alert: .init(title: "Недостаточно средств"))
+    static let amountCurrencyInfoAlert = PaymentsAmountView.ViewModel(title: "Сумма перевода", amount: 214.45, transferButton: .active(title: "Перевести", action: {}), info: .text("13.75 $   |   1$ - 72.72 ₽"), currencySwitch: .init(from: "₽", to: "$", icon: Image("Payments Refresh CW"), action: {}), alert: .init(title: "Недостаточно средств"))
     
     static let amountParameter: PaymentsAmountView.ViewModel = {
         
