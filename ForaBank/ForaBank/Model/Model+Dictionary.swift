@@ -13,8 +13,8 @@ extension ModelAction {
     
     enum Dictionary {
         
-        static let cached: [Kind] = [.productCatalogList]
-        
+        static let cached: [Kind] = [.anywayOperators, .fmsList, .fsspDebtList, .fsspDocumentList, .ftsList, .productCatalogList]
+
         struct Request: Action {
             
             let type: Kind
