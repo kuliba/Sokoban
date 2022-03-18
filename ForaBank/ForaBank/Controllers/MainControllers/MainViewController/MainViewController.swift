@@ -182,7 +182,8 @@ class MainViewController: UIViewController {
         }
 
         //GlobalModule.c2bURL = "https://qr.nspk.ru/AS100057J1VQQADF9F491N4US79QFUCU?type=01&bank=100000000217&sum=100&cur=RUB&crc=7F51"
-        GlobalModule.c2bURL = "https://qr.nspk.ru/AS1A004C56EKES0D9CHO5313H57OL4VE?type=01&bank=100000000217&crc=A006"
+        //GlobalModule.c2bURL = "https://qr.nspk.ru/AS1A004C56EKES0D9CHO5313H57OL4VE?type=01&bank=100000000217&crc=A006"
+        GlobalModule.c2bURL = "https://qr.nspk.ru/AS10001E28JJSL4U9O1QEVG0K99GERJ0?type=01&bank=100000000217&sum=10000&cur=RUB&crc=4E58"
         if GlobalModule.c2bURL != nil {
             let controller = C2BDetailsViewController.storyboardInstance()!
             let nc = UINavigationController(rootViewController: controller)
