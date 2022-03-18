@@ -34,4 +34,12 @@ class C2BDetailsViewModel {
             completion (model, error)
         }
     }
+
+    func updateContract(contractId: Int?, cardModel: GetProductListDatum, isOff: Bool, completion: @escaping (_ success: Bool, _ error: String?) -> ()) {
+        C2BApiRequests.updateContract(contractId: contractId, cardModel: cardModel, isOff: isOff, completion: completion)
+    }
+
+    func createContract(cardModel: GetProductListDatum, completion: @escaping (_ success: Bool, _ error: String?) -> ()) {
+        C2BApiRequests.createContract(cardModel: cardModel, completion: completion)
+    }
 }

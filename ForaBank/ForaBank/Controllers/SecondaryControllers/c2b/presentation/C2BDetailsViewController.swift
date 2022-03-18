@@ -13,6 +13,8 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
     var qrData = [String: String]()
     var viewModel = C2BDetailsViewModel()
     var amount = ""
+    var modeConsent = "update"
+    var contractId = ""
 
     @IBOutlet weak var bottomInputView: BottomInputView?
     
@@ -27,6 +29,19 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
     @IBOutlet weak var imgBank: UIImageView!
 
     @IBAction func ActionConsent(_ sender: UISwitch) {
+        showActivity()
+        switchConsent.isEnabled = false
+        if modeConsent == "update" {
+            viewModel.updateContract(contractId: contractId, cardModel: footerView.cardFromField.cardModel, isOff: true) { success, error in
+                dismissActivity()
+                checkSBMConsent()
+            }
+        } else {
+            viewModel.createContract(cardModel: footerView.cardFromField.cardModel) { success, error in
+                dismissActivity()
+                checkSBMConsent()
+            }
+        }
     }
     
     @IBOutlet weak var labelUpperText: UILabel!
@@ -244,6 +259,8 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
                     let fastPayment = item?.fastPaymentContractAttributeList?[0]
                     if (fastPayment != nil) {
                         if (fastPayment?.flagClientAgreementOut == "NO") {
+                            modeConsent = "update"
+                            contractId = fastPayment?.fpcontractID
                             switchConsent.isEnabled = true
                             switchConsent.setOn(false, animated: false)
 //                            binding.checkBoxConsent.setOnCheckedChangeListener { buttonView, isChecked ->
@@ -273,6 +290,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
                     switchConsent.isEnabled = false
                 }
             } else {
+                modeConsent = "create"
                 switchConsent.setOn(false, animated: false)
                 switchConsent.isEnabled = true
 //                binding.checkBoxConsent.setOnCheckedChangeListener { buttonView, isChecked ->
