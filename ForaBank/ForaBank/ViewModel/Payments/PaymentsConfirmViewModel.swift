@@ -11,11 +11,11 @@ import Combine
 
 class PaymentsConfirmViewModel: PaymentsOperationViewModel {
     
-    override init(_ model: Model, operation: Payments.Operation, dismissAction: @escaping () -> Void) {
+    override init(_ model: Model, operation: Payments.Operation, rootActions: PaymentsViewModel.RootActions) {
         
         print("Payments: init confirm")
         
-        super.init(model, operation: operation, dismissAction: dismissAction)
+        super.init(model, operation: operation, rootActions: rootActions)
         
     }
     

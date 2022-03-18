@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import RealmSwift
 
 //MARK: - Actions
 
@@ -306,3 +307,182 @@ extension Model {
         }
     }
 }
+
+// MARK: - Transfer
+
+extension Model {
+    
+    func paymentsTransferAnywayStep(with parameters: [ParameterRepresentable], include: [Payments.Parameter.ID], step: TransferData.Step) async throws -> TransferAnywayResponseData {
+        
+        guard let token = token else {
+            throw Payments.Error.notAuthorized
+        }
+        
+        guard let puref = paymentsTransferPuref(with: parameters) else {
+            throw Payments.Error.missingOperatorParameter
+        }
+        
+        let amount = paymentsTransferAmount(with: parameters)
+        
+        guard let currency = paymentsTransferCurrency(with: parameters) else {
+            throw Payments.Error.missingCurrency
+        }
+        
+        guard let payer = paymentsTransferPayer(with: parameters) else {
+            throw Payments.Error.missingPayer
+        }
+        
+        guard let additional = paymentsTransferAnywayAdditional(with: parameters, include) else {
+            throw Payments.Error.missingAnywayTransferAdditional
+        }
+        
+        let command = ServerCommands.TransferController.CreateAnywayTransfer(token: token, isNewPayment: step.isNewPayment, payload: .init(amount: amount, check: step.check, comment: nil, currencyAmount: currency, payer: payer, additional: additional, puref: puref))
+        
+        return try await withCheckedThrowingContinuation({ continuation in
+            
+            serverAgent.executeCommand(command: command) { result in
+                
+                switch result {
+                case .success(let response):
+                    switch response.statusCode {
+                    case .ok:
+                        guard let transferData = response.data else {
+                            continuation.resume(with: .failure(Payments.Error.failedAnywayTransferWithEmptyTransferDataResponse))
+                            return
+                        }
+                        continuation.resume(with: .success(transferData))
+                        
+                    default:
+                        continuation.resume(with: .failure(Payments.Error.failedAnywayTransfer(status: response.statusCode, message: response.errorMessage)))
+                    }
+                    
+                case .failure(let error):
+                    continuation.resume(with: .failure(error))
+                }
+            }
+        })
+    }
+    
+    
+    func paymentsTransferPayer(with parameters: [ParameterRepresentable]) -> TransferData.Payer? {
+        
+        //TODO: extract card/account id from ParameterCard
+        
+        if let cardId = paymentsFirstProductId(of: .card) {
+            
+            return .init(inn: nil, accountId: nil, accountNumber: nil, cardId: cardId, cardNumber: nil, phoneNumber: nil)
+            
+        } else if let accountId = paymentsFirstProductId(of: .account) {
+            
+            return .init(inn: nil, accountId: accountId, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
+            
+        } else {
+            
+            return nil
+        }
+    }
+    
+    func paymentsFirstProductId(of type: ProductType) -> Int? {
+        
+        guard let realm = try? Realm()  else {
+            return nil
+        }
+        
+        let products = realm.objects(UserAllCardsModel.self)
+        
+        return products.first(where: { $0.productType == type.rawValue })?.id
+    }
+    
+    func paymentsTransferAmount(with parameters: [ParameterRepresentable]) -> Double? {
+        
+        guard let amountParameter = parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.amount.rawValue}) as? Payments.ParameterAmount else {
+            
+            return nil
+        }
+        
+        return amountParameter.amount
+    }
+    
+    func paymentsTransferCurrency(with parameters: [ParameterRepresentable]) -> String? {
+        
+        //TODO: real implementation required
+        return "RUB"
+    }
+    
+    func paymentsTransferPuref(with parameters: [ParameterRepresentable]) -> String? {
+        
+        guard let operatorParameter = parameters.first(where: { $0.parameter.id ==  Payments.Parameter.Identifier.operator.rawValue}) else {
+            
+            return nil
+        }
+        
+        return operatorParameter.parameter.value
+    }
+    
+    func paymentsTransferAnywayAdditional(with parameters: [ParameterRepresentable], _ include: [Payments.Parameter.ID]) -> [TransferAnywayData.Additional]? {
+        
+        guard include.isEmpty == false else {
+            return []
+        }
+        
+        var additional = [TransferAnywayData.Additional]()
+        for (index, paraneterId) in include.enumerated() {
+            
+            guard let parameter = parameters.first(where: { $0.parameter.id == paraneterId})?.parameter,
+                  let parameterValue = parameter.value else {
+                      return nil
+                  }
+            
+            additional.append(.init(fieldid: index + 1, fieldname: parameter.id, fieldvalue: parameterValue))
+        }
+        
+        return additional
+    }
+    
+    
+}
+
+/*
+ func getRequestBody(amount: String, additionalArray: [[String: String]]) -> [String: AnyObject] {
+     let productType = controller?.footerView.cardFromField.cardModel?.productType ?? ""
+     let id = controller?.footerView.cardFromField.cardModel?.id ?? -1
+
+     var request = [String: AnyObject]()
+     if productType == "ACCOUNT" {
+         request = ["check": false,
+                    "amount": amount,
+                    "currencyAmount": "RUB",
+                    "payer": ["cardId": nil,
+                              "cardNumber": nil,
+                              "accountId": String(id)],
+                    "puref": puref,
+                    "additional": additionalArray] as [String: AnyObject]
+
+     } else if productType == "CARD" {
+         request = ["check": false,
+                    "amount": amount,
+                    "currencyAmount": "RUB",
+                    "payer": ["cardId": String(id),
+                              "cardNumber": nil,
+                              "accountId": nil],
+                    "puref": puref,
+                    "additional": additionalArray] as [String: AnyObject]
+     }
+     return request
+ }
+ */
+
+/*
+ func downloadImageAndMetadata(imageNumber: Int) async throws -> DetailedImage {
+     return try await withCheckedThrowingContinuation({
+         (continuation: CheckedContinuation<DetailedImage, Error>) in
+         downloadImageAndMetadata(imageNumber: imageNumber) { image, error in
+             if let image = image {
+                 continuation.resume(returning: image)
+             } else {
+                 continuation.resume(throwing: error!)
+             }
+         }
+     })
+ }
+ */

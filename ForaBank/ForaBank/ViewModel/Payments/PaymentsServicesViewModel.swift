@@ -18,25 +18,29 @@ class PaymentsServicesViewModel: ObservableObject {
     var operationViewModel: PaymentsOperationViewModel?
     
     private let parameter: Payments.ParameterSelectService
+    private let rootActions: PaymentsViewModel.RootActions
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
     internal init(header: HeaderViewModel,
                   parameter: Payments.ParameterSelectService,
                   isOperationViewActive: Bool = false,
-                  model: Model = .emptyMock
-    ) {
+                  rootActions: PaymentsViewModel.RootActions,
+                  model: Model = .emptyMock) {
+        
         self.header = header
         self.parameter = parameter
         self.isOperationViewActive = isOperationViewActive
+        self.rootActions = rootActions
         self.model = model
     }
     
-    internal init(_ model: Model, category: Payments.Category, parameter: Payments.ParameterSelectService, dismissAction: @escaping () -> Void) {
+    internal init(_ model: Model, category: Payments.Category, parameter: Payments.ParameterSelectService, rootActions: PaymentsViewModel.RootActions) {
         
-        self.header = HeaderViewModel(title: category.name, dismissAction: dismissAction)
+        self.header = HeaderViewModel(title: category.name, dismissAction: rootActions.dismiss)
         self.parameter = parameter
         self.isOperationViewActive = false
+        self.rootActions = rootActions
         self.model = model
         
         bind()
@@ -57,7 +61,7 @@ class PaymentsServicesViewModel: ObservableObject {
                 case let payload as ModelAction.Payment.Begin.Response:
                     switch payload.result {
                     case .success(let operation):
-                        operationViewModel = PaymentsOperationViewModel(model, operation: operation, dismissAction: { [weak self] in self?.action.send(PaymentsServicesViewModelAction.DissmissOperationView())})
+                        operationViewModel = PaymentsOperationViewModel(model, operation: operation, rootActions: .init(dismiss: { [weak self] in self?.action.send(PaymentsServicesViewModelAction.DissmissOperationView())}, spinner: rootActions.spinner))
                         isOperationViewActive = true
                         
                     case .failure(let error):

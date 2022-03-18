@@ -23,6 +23,7 @@ class PaymentsOperationViewModel: ObservableObject {
     internal var operation: Payments.Operation
     internal var items: CurrentValueSubject<[PaymentsParameterViewModel], Never> = .init([])
     internal var isAdditionalItemsCollapsed: CurrentValueSubject<Bool, Never> = .init(true)
+    private let rootActions: PaymentsViewModel.RootActions
     internal let model: Model
     internal var bindings = Set<AnyCancellable>()
     internal var itemsBindings = Set<AnyCancellable>()
@@ -46,6 +47,7 @@ class PaymentsOperationViewModel: ObservableObject {
                   isConfirmViewActive: Bool = false,
                   confirmViewModel: PaymentsConfirmViewModel? = nil,
                   operation: Payments.Operation = .emptyMock,
+                  rootActions: PaymentsViewModel.RootActions,
                   model: Model = .emptyMock) {
         
         self.header = header
@@ -55,18 +57,20 @@ class PaymentsOperationViewModel: ObservableObject {
         self.isConfirmViewActive = isConfirmViewActive
         self.confirmViewModel = confirmViewModel
         self.operation = operation
+        self.rootActions = rootActions
         self.model = model
     }
     
-    internal init(_ model: Model, operation: Payments.Operation, dismissAction: @escaping () -> Void) {
+    internal init(_ model: Model, operation: Payments.Operation, rootActions: PaymentsViewModel.RootActions) {
         
         print("Payments: init operation")
         
         self.model = model
-        self.header = .init(title: operation.service.name, action: dismissAction)
+        self.header = .init(title: operation.service.name, action: rootActions.dismiss)
         self.itemsVisible = []
         self.isConfirmViewActive = false
         self.operation = operation
+        self.rootActions = rootActions
         
         createItemsAndFooter(from: operation.parameters)
         bind()
@@ -89,6 +93,7 @@ class PaymentsOperationViewModel: ObservableObject {
                 
                 switch action {
                 case let payload as ModelAction.Payment.Continue.Response:
+                    rootActions.spinner.hide()
                     switch payload.result {
                     case .step(let operation):
                         print("Payments: step")
@@ -97,9 +102,9 @@ class PaymentsOperationViewModel: ObservableObject {
                         
                     case .confirm(let operation):
                         print("Payments: confirm")
-                        confirmViewModel = PaymentsConfirmViewModel(model, operation: operation, dismissAction: {[weak self] in
+                        confirmViewModel = PaymentsConfirmViewModel(model, operation: operation, rootActions: .init(dismiss: {[weak self] in
                             self?.action.send(PaymentsOperationViewModelAction.DismissConfirm())
-                        })
+                        }, spinner: rootActions.spinner))
                         isConfirmViewActive = true
                         
                     case .fail(_):
@@ -125,11 +130,13 @@ class PaymentsOperationViewModel: ObservableObject {
                     let results = items.value.map{ ($0.result, $0.source.affectsHistory) }
                     let update = operation.update(with: results)
                     model.action.send(ModelAction.Payment.Continue.Request(operation: update.operation))
+                    rootActions.spinner.show()
                     
                 case _ as PaymentsOperationViewModelAction.Confirm:
                     let results = items.value.map{ ($0.result, $0.source.affectsHistory) }
                     let update = operation.update(with: results)
                     model.action.send(ModelAction.Payment.Complete.Request(operation: update.operation))
+                    rootActions.spinner.show()
                     
                 case let payload as PaymentsOperationViewModelAction.ShowPopUpSelectView:
                     popUpSelector = PaymentsPopUpSelectView.ViewModel(title: payload.title, description: payload.description, options: payload.options, selected: payload.selected, action: { [weak self] selectedId in
@@ -291,6 +298,7 @@ class PaymentsOperationViewModel: ObservableObject {
             if isAutoContinueRequired(for: value.id) {
                 
                 model.action.send(ModelAction.Payment.Continue.Request(operation: update.operation))
+                rootActions.spinner.show()
                 
             } else {
                 
@@ -302,6 +310,7 @@ class PaymentsOperationViewModel: ObservableObject {
             
             print("Payments: history changed")
             model.action.send(ModelAction.Payment.Continue.Request(operation: update.operation))
+            rootActions.spinner.show()
         }
     }
 

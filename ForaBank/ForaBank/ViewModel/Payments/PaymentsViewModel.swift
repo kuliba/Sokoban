@@ -15,6 +15,7 @@ class PaymentsViewModel: ObservableObject {
     
     @Published var content: ContentType
     @Published var successViewModel: PaymentsSuccessViewModel?
+    @Published var spinner: SpinnerView.ViewModel?
     
     private let category: Payments.Category
     private let model: Model
@@ -54,7 +55,7 @@ class PaymentsViewModel: ObservableObject {
                     switch payload {
                     case .select(let selectServiceParameter):
                         // multiple services for category
-                        let servicesViewModel = PaymentsServicesViewModel(model, category: category, parameter: selectServiceParameter, dismissAction: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())})
+                        let servicesViewModel = PaymentsServicesViewModel(model, category: category, parameter: selectServiceParameter, rootActions: .init(dismiss: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())}, spinner: .init(show: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Show())}, hide: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Hide())})))
                         content = .services(servicesViewModel)
                         
                     case .selected(let service):
@@ -73,7 +74,7 @@ class PaymentsViewModel: ObservableObject {
                             return
                         }
                         
-                        let operationViewModel = PaymentsOperationViewModel(model, operation: operation, dismissAction: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())})
+                        let operationViewModel = PaymentsOperationViewModel(model, operation: operation, rootActions: .init(dismiss: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())}, spinner: .init(show: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Show())}, hide: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Hide())})))
                         content = .operation(operationViewModel)
 
                     case .failure(let error):
@@ -97,10 +98,51 @@ class PaymentsViewModel: ObservableObject {
                 }
                 
             }.store(in: &bindings)
+        
+        action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                switch action {
+                case _ as PaymentsViewModelAction.Spinner.Show:
+                    withAnimation {
+                        spinner = .init(isAnimating: true)
+                    }
+                    
+                case _ as PaymentsViewModelAction.Spinner.Hide:
+                    withAnimation {
+                        spinner = nil
+                    }
+ 
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+    }
+}
+
+extension PaymentsViewModel {
+    
+    struct RootActions {
+        
+        let dismiss: () -> Void
+        let spinner: Spinner
+        
+        struct Spinner {
+            
+            let show: () -> Void
+            let hide: () -> Void
+        }
     }
 }
 
 enum PaymentsViewModelAction {
     
     struct Dismiss: Action {}
+    
+    enum Spinner {
+        
+        struct Show: Action {}
+        struct Hide: Action {}
+    }
 }
