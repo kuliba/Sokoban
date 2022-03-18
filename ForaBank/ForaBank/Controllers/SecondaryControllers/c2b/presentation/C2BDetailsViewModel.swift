@@ -46,4 +46,9 @@ class C2BDetailsViewModel {
     func createContract(cardModel: GetProductListDatum, completion: @escaping (_ success: Bool, _ error: String?) -> ()) {
         C2BApiRequests.createContract(cardModel: cardModel, completion: completion)
     }
+
+    func makePayment(completion: @escaping (_ model: MakeTransferDecodableModel?, _ error: String?) -> ()) {
+        C2BApiRequests.makePayment(completion: completion)
+    }
+
 }

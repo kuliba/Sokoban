@@ -237,21 +237,27 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource, U
         ] as [String: AnyObject]
 
         showActivity()
-        viewModel.createC2BTransfer(body: body) { model, error in
-            self.dismissActivity()
+        viewModel.createC2BTransfer(body: body) { modelCreateC2BTransfer, error in
             if (error != nil) {
                 self.showAlert(with: "Ошибка", and: error?.description ?? "")
             } else {
-                DispatchQueue.main.async {
-                    let vc = InternetTVSuccessViewController()
-                    let viewModel = InternetTVConfirmViewModel(type: InternetTVConfirmViewModel.PaymentType.self.internetTV)
-                    viewModel.sumTransaction = self.amount
-                    viewModel.statusIsSuccess = true
-                    vc.confirmModel = viewModel
-                    vc.id = model?.data?.paymentOperationDetailID ?? 0
-                    vc.printFormType = "internet"
-                    vc.modalPresentationStyle = .fullScreen
-                    self.present(vc, animated: true, completion: nil)
+                self.viewModel.makePayment { model,error in
+                    self.dismissActivity()
+                    if (error != nil) {
+                        self.showAlert(with: "Ошибка", and: error?.description ?? "")
+                    } else {
+                        DispatchQueue.main.async {
+                            let vc = InternetTVSuccessViewController()
+                            let viewModel = InternetTVConfirmViewModel(type: InternetTVConfirmViewModel.PaymentType.self.internetTV)
+                            viewModel.sumTransaction = self.amount
+                            viewModel.statusIsSuccess = true
+                            vc.confirmModel = viewModel
+                            vc.id = modelCreateC2BTransfer?.data?.paymentOperationDetailID ?? 0
+                            vc.printFormType = "internet"
+                            vc.modalPresentationStyle = .fullScreen
+                            self.present(vc, animated: true, completion: nil)
+                        }
+                    }
                 }
             }
         }

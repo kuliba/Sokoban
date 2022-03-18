@@ -130,15 +130,24 @@ class C2BApiRequests {
         }
     }
 
-//        suspend fun getQRData(body: GetQRDataRequest): GetQRDataAnswer {
-//            return commonRepository.getQRData(body)
-//        }
-//
-//        suspend fun createC2BTransfer(body: PaymentTransferRequest): PaymentTransferResponse {
-//            return commonRepository.createC2BTransfer(body)
-//        }
-//
-//        suspend fun getRecipientImage(src: String): String? {
-//            return commonRepository.getRecipientImage(src)
-//        }
+    static func makePayment(completion: @escaping (_ model: MakeTransferDecodableModel?, _ error: String?) -> ()) {
+        let code = "0"
+        let body = ["verificationCode": code] as [String: AnyObject]
+        NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { response, error in
+            
+            if error != nil {
+                completion(nil, error)
+            }
+            guard let model = response else {
+                completion(nil, error)
+                return
+            }
+
+            if model.statusCode == 0 {
+                completion(model, nil)
+            } else {
+                completion(nil, error)
+            }
+        }
+    }
 }
