@@ -50,6 +50,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // NetMonitoring observer
         self.observeNetworkStatus()
 
+
+        if let userActivity = connectionOptions.userActivities.first,
+           userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+           let urlinfo = userActivity.webpageURL{
+
+            print ("qr5555 Universial Link Open at SceneDelegate on App Start ::::::: \(urlinfo)")
+            GlobalModule.c2bURL = "sdf"
+        }
+
+        //deeplink Open
+        if connectionOptions.urlContexts.first?.url != nil {
+            let urlinfo = connectionOptions.urlContexts.first?.url
+
+            print ("qr5555 Deeplink Open at SceneDelegate on App Start ::::::: \(String(describing: urlinfo))")
+
+            GlobalModule.c2bURL = "sdf"
+        }
     }
     
     private func observeNetworkStatus() {
@@ -88,47 +105,53 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
 
-    
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-        
+        print("qr5555 scene(_ scene 1")
+        GlobalModule.c2bURL = "244"
         guard let url = URLContexts.first?.url else { return }
         guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true),
               let params = components.queryItems else {
             return
         }
 
+        if url.description.contains("qr.nspk.ru") {
+            var strUrl = url.description.replacingOccurrences(of: "https2", with: "https")
+            strUrl = strUrl.replacingOccurrences(of:"amp;", with:"")
+            GlobalModule.c2bURL = strUrl
+            let topvc = UIApplication.topViewController()
+            let controller = C2BDetailsViewController.storyboardInstance()!
+            let nc = UINavigationController(rootViewController: controller)
+            nc.modalPresentationStyle = .fullScreen
+            topvc?.present(nc, animated: false)
+            return
+        }
+        print("qr5555 scene(_ scene 2")
+
         if let bankId = params.first?.value {
             let bankId = String(bankId.dropFirst(4))
             let isAuth = AppDelegate.shared.isAuth
             if isAuth == true {
-                
                 let body = ["bankId": bankId] as [String: AnyObject]
                 NetworkManager<GetMe2MeDebitConsentDecodableModel>.addRequest(.getMe2MeDebitConsent, [:], body) { model, error in
                     guard let model = model else { return }
                     if model.statusCode == 0 {
                         DispatchQueue.main.async {
                             if model.data != nil {
-                                
                                 let topvc = UIApplication.topViewController()
-                                
                                 let vc = MeToMeRequestController()
                                 let meToMeReq = RequestMeToMeModel(model: model)
                                 vc.viewModel = meToMeReq
                                 vc.modalPresentationStyle = .fullScreen
-                                
                                 topvc?.present(vc, animated: true, completion: {
                                     UserDefaults.standard.set(nil, forKey: "GetMe2MeDebitConsent")
                                 })
-                                
                             } else {
                                 let topvc = UIApplication.topViewController()
-                                
                                 let vc = MeToMeRequestController()
                                 let meToMeReq = RequestMeToMeModel(bank: bankId)
                                 vc.viewModel = meToMeReq
                                 vc.doneButtonTapped()
                                 vc.modalPresentationStyle = .fullScreen
-                                
                                 topvc?.present(vc, animated: true, completion: {
                                     UserDefaults.standard.set(nil, forKey: "GetMe2MeDebitConsent")
                                 })
@@ -136,9 +159,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                         }
                     }
                 }
-                
             } else {
-                
                 UserDefaults.standard.set(bankId, forKey: "GetMe2MeDebitConsent")
             }
         }

@@ -6,4 +6,5 @@ class GlobalModule {
     static let PAYMENT_TRANSPORT = "1051062"
     static var qrOperator: GKHOperatorsModel?
     static var qrData: [String: String]?
+    static var c2bURL: String? = nil
 }

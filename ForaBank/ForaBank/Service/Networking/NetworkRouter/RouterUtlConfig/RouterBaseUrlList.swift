@@ -136,7 +136,13 @@ enum RouterBaseUrlList: String {
     case getOperationDetail        = "/rest/getOperationDetail"
 
     case getPrintFormForAccountStatement = "/rest/getPrintFormForAccountStatement"
-    
+
+    case getQRData = "/rest/transfer/getQRData"
+
+    case createC2BTransfer = "/rest/transfer/createC2BTransfer"
+
+    case getRecipientImage = "/rest/getRecipientImage"
+
     case isSingleService           = "/rest/transfer/isSingleService"
 
     case getMosParkingList         = "/dict/getMosParkingList"

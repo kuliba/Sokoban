@@ -37,7 +37,6 @@ class InternetTVSourceView: UITableViewHeaderFooterView {
     }
 
     func setupActions() {
-        
         cardFromField.didChooseButtonTapped = { () in
             self.openOrHideView(self.cardListView)
         }
