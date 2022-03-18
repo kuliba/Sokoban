@@ -9,7 +9,7 @@ import Foundation
 
 class C2BApiRequests {
 
-    static func updateContract(contractId: Int?, cardModel: GetProductListDatum, isOff: Bool, completion: @escaping (_ success: Bool, _ error: String?) -> ()) {
+    static func updateContract(contractId: String?, cardModel: GetProductListDatum, isOff: Bool, completion: @escaping (_ success: Bool, _ error: String?) -> ()) {
         guard let fpcontractID = contractId else {
             return
         }

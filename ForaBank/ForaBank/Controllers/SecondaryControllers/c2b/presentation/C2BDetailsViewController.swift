@@ -32,14 +32,14 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
         showActivity()
         switchConsent.isEnabled = false
         if modeConsent == "update" {
-            viewModel.updateContract(contractId: contractId, cardModel: footerView.cardFromField.cardModel, isOff: true) { success, error in
-                dismissActivity()
-                checkSBMConsent()
+            viewModel.updateContract(contractId: contractId, cardModel: footerView.cardFromField.cardModel!, isOff: true) { success, error in
+                self.dismissActivity()
+                self.checkSBMConsent()
             }
         } else {
-            viewModel.createContract(cardModel: footerView.cardFromField.cardModel) { success, error in
-                dismissActivity()
-                checkSBMConsent()
+            viewModel.createContract(cardModel: footerView.cardFromField.cardModel!) { success, error in
+                self.dismissActivity()
+                self.checkSBMConsent()
             }
         }
     }
@@ -260,7 +260,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
                     if (fastPayment != nil) {
                         if (fastPayment?.flagClientAgreementOut == "NO") {
                             modeConsent = "update"
-                            contractId = fastPayment?.fpcontractID
+                            contractId = fastPayment?.fpcontractID?.description ?? ""
                             switchConsent.isEnabled = true
                             switchConsent.setOn(false, animated: false)
 //                            binding.checkBoxConsent.setOnCheckedChangeListener { buttonView, isChecked ->
