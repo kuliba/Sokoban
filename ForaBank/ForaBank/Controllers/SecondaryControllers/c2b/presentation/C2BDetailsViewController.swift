@@ -3,13 +3,13 @@ import RealmSwift
 import Foundation
 
 
-class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  UIPopoverPresentationControllerDelegate, UIViewControllerTransitioningDelegate {
+class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource, UIPopoverPresentationControllerDelegate, UIViewControllerTransitioningDelegate {
 
     public static func storyboardInstance() -> C2BDetailsViewController? {
         let storyboard = UIStoryboard(name: "InternetTV", bundle: nil)
         return storyboard.instantiateViewController(withIdentifier: "C2BDetails") as? C2BDetailsViewController
     }
-  
+
     var qrData = [String: String]()
     var viewModel = C2BDetailsViewModel()
     var amount = ""
@@ -17,23 +17,27 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
     var contractId = ""
 
     @IBOutlet weak var bottomInputView: BottomInputView?
-    
+
     @IBOutlet weak var labelRecipient: UILabel!
-    
+
     @IBOutlet weak var labelRecipientDesc: UILabel!
-    
+
     @IBOutlet weak var labelAmount: UILabel!
-    
+
     @IBOutlet weak var labelBank: UILabel!
-    
+
     @IBOutlet weak var imgBank: UIImageView!
 
     @IBAction func ActionConsent(_ sender: UISwitch) {
         showActivity()
         switchConsent.isEnabled = false
         if modeConsent == "update" {
-            viewModel.updateContract(contractId: contractId, cardModel: footerView.cardFromField.cardModel!, isOff: true) { success, error in
-                self.viewModel.getConsent()
+            if let source = footerView.cardFromField.cardModel {
+                viewModel.updateContract(contractId: contractId, cardModel: footerView.cardFromField.cardModel!, isOff: true) { success, error in
+                    self.viewModel.getConsent()
+                }
+            } else {
+                dismissActivity()
             }
         } else {
             viewModel.createContract(cardModel: footerView.cardFromField.cardModel!) { success, error in
@@ -41,15 +45,15 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
             }
         }
     }
-    
+
     @IBOutlet weak var labelUpperText: UILabel!
-    
+
     @IBOutlet weak var imgAmount: UIImageView!
-    
+
     @IBOutlet weak var labelConsentDescr: UILabel!
-    
+
     @IBOutlet weak var switchConsent: UISwitch!
-    
+
 
     func updateUIFromQR(_ data: GetQRDataAnswer?) {
         dismissActivity()
@@ -58,7 +62,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
         var recipientIconSrc = ""
         var recipientDescription = ""
         var bankRecipientCode = ""
-        let recepientFound = params?.filter({$0.type == "RECIPIENT"})
+        let recepientFound = params?.filter({ $0.type == "RECIPIENT" })
         if (recepientFound != nil && recepientFound?.count ?? 0 > 0) {
             recipientText = recepientFound?[0].value ?? ""
             recipientIconSrc = recepientFound?[0].icon ?? ""
@@ -67,16 +71,16 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
 //                        viewModel.getRecipientImage(recipientIconSrc)
 //                    }
         }
-        let amountFound = params?.filter({$0.type == "AMOUNT"})
+        let amountFound = params?.filter({ $0.type == "AMOUNT" })
         if (amountFound != nil && amountFound?.count ?? 0 > 0) {
             amount = amountFound?[0].value ?? ""
         }
-        let bankRecipientFound = params?.filter({$0.type == "BANK"})
+        let bankRecipientFound = params?.filter({ $0.type == "BANK" })
         if (bankRecipientFound != nil && bankRecipientFound?.count ?? 0 > 0) {
             bankRecipientCode = bankRecipientFound?[0].value ?? ""
         }
         let allBanks = Dict.shared.bankFullInfoList
-        let foundBank = allBanks?.filter({$0.memberID == bankRecipientCode})
+        let foundBank = allBanks?.filter({ $0.memberID == bankRecipientCode })
         if foundBank != nil && foundBank?.count ?? 0 > 0 {
             let bankRusName = foundBank?[0].rusName ?? ""
             let bankIconSvg = foundBank?[0].svgImage ?? ""
@@ -98,7 +102,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
             labelUpperText.isHidden = false
             imgAmount.isHidden = false
         }
-        
+
         checkSBMConsent()
     }
 
@@ -127,16 +131,19 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
         bottomInputView?.isHidden = true
         setupToolbar()
         goButton?.add_CornerRadius(5)
-        
+
         bottomInputView?.currencySymbol = "₽"
-        AddAllUserCardtList.add {}
-    
+        AddAllUserCardtList.add {
+        }
+
         bottomInputView?.didDoneButtonTapped = { amount in
             self.doPayment(amountArg: amount)
         }
 
         setupCardList { error in
-            guard let error = error else { return }
+            guard let error = error else {
+                return
+            }
             self.showAlert(with: "Ошибка", and: error)
         }
 
@@ -157,7 +164,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
             self.view.frame.origin.y = 75
         }
     }
-    
+
     func showFinalStep() {
         animationHidden(goButton ?? UIButton())
         animationShow(bottomInputView!)
@@ -165,7 +172,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
     }
 
     func doConfirmation(response: CreateTransferAnswerModel?) {
-        var ob:InternetTVConfirmViewModel? = nil
+        var ob: InternetTVConfirmViewModel? = nil
         if InternetTVMainViewModel.filter == GlobalModule.UTILITIES_CODE {
             ob = InternetTVConfirmViewModel(type: .gkh)
         }
@@ -192,7 +199,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
             tableView?.layoutIfNeeded()
         }
     }
-    
+
     @IBAction func goButton(_ sender: UIButton) {
         doPayment(amountArg: amount)
     }
@@ -249,19 +256,19 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
             }
         }
     }
-    
+
     func checkSBMConsent() {
-            if (viewModel.consent?.count ?? 0 > 0) {
-                let item = viewModel.consent?[0]
-                if (item?.fastPaymentContractAttributeList?.count ?? 0 > 0) {
-                    let fastPayment = item?.fastPaymentContractAttributeList?[0]
-                    if (fastPayment != nil) {
-                        if (fastPayment?.flagClientAgreementOut == "NO") {
-                            modeConsent = "update"
-                            contractId = fastPayment?.fpcontractID?.description ?? ""
-                            switchConsent.isEnabled = true
-                            switchConsent.setOn(false, animated: false)
-                            goButton?.isEnabled = false
+        if (viewModel.consent?.count ?? 0 > 0) {
+            let item = viewModel.consent?[0]
+            if (item?.fastPaymentContractAttributeList?.count ?? 0 > 0) {
+                let fastPayment = item?.fastPaymentContractAttributeList?[0]
+                if (fastPayment != nil) {
+                    if (fastPayment?.flagClientAgreementOut == "NO") {
+                        modeConsent = "update"
+                        contractId = fastPayment?.fpcontractID?.description ?? ""
+                        switchConsent.isEnabled = true
+                        switchConsent.setOn(false, animated: false)
+                        goButton?.isEnabled = false
 //                            binding.checkBoxConsent.setOnCheckedChangeListener { buttonView, isChecked ->
 //                                if (isChecked) {
 //                                    val request = UpdateFastPaymentContractRequest(
@@ -276,11 +283,6 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
 //                                    binding.checkBoxConsent.isEnabled = false
 //                                }
 //                            }
-                        } else {
-                            switchConsent.setOn(true, animated: false)
-                            switchConsent.isEnabled = false
-                            goButton?.isEnabled = true
-                        }
                     } else {
                         switchConsent.setOn(true, animated: false)
                         switchConsent.isEnabled = false
@@ -292,10 +294,15 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
                     goButton?.isEnabled = true
                 }
             } else {
-                modeConsent = "create"
-                switchConsent.setOn(false, animated: false)
-                switchConsent.isEnabled = true
-                goButton?.isEnabled = false
+                switchConsent.setOn(true, animated: false)
+                switchConsent.isEnabled = false
+                goButton?.isEnabled = true
+            }
+        } else {
+            modeConsent = "create"
+            switchConsent.setOn(false, animated: false)
+            switchConsent.isEnabled = true
+            goButton?.isEnabled = false
 //                binding.checkBoxConsent.setOnCheckedChangeListener { buttonView, isChecked ->
 //                    if (isChecked) {
 //                        viewModel.cardViewer.source.value?.let {
@@ -311,10 +318,10 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
 //                        }
 //                    }
 //                }
-            }
         }
+    }
 
-    final func animationHidden (_ view: UIView) {
+    final func animationHidden(_ view: UIView) {
         DispatchQueue.main.async {
             UIView.animate(withDuration: 0.3) {
                 view.alpha = 0
@@ -323,7 +330,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
         }
     }
 
-    final func animationShow (_ view: UIView) {
+    final func animationShow(_ view: UIView) {
         DispatchQueue.main.async {
             UIView.animate(withDuration: 0.3) {
                 view.alpha = 1
@@ -332,7 +339,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
         }
     }
 
-    final func animateQueue (_ view_1: UIView, _ view_2: UIView) {
+    final func animateQueue(_ view_1: UIView, _ view_2: UIView) {
         UIView.animateKeyframes(withDuration: 0.3, delay: .zero, options: []) {
             UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.3) {
                 view_1.alpha = 1.0
@@ -356,14 +363,14 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
         imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(named: "back_button")
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
-            imageView.isUserInteractionEnabled = true
-            imageView.addGestureRecognizer(tapGestureRecognizer)
+        imageView.isUserInteractionEnabled = true
+        imageView.addGestureRecognizer(tapGestureRecognizer)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: imageView)
         navigationItem.hidesSearchBarWhenScrolling = false
         definesPresentationContext = true
     }
 
-    func setTitle(title:String, subtitle:String) -> UIView {
+    func setTitle(title: String, subtitle: String) -> UIView {
         let titleLabel = UILabel(frame: CGRect(x: 0, y: -2, width: 0, height: 0))
         titleLabel.backgroundColor = .clear
         titleLabel.textColor = .black
@@ -380,13 +387,13 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
         subtitleLabel.textAlignment = .center
         subtitleLabel.sizeToFit()
 
-        let titleView = UIView(frame: CGRect(x: 0, y: 0, width: max(titleLabel.frame.size.width, subtitleLabel.frame.size.width),  height: 30))
+        let titleView = UIView(frame: CGRect(x: 0, y: 0, width: max(titleLabel.frame.size.width, subtitleLabel.frame.size.width), height: 30))
         titleView.setDimensions(height: 30, width: 250)
         titleView.addSubview(titleLabel)
         titleView.addSubview(subtitleLabel)
         titleLabel.numberOfLines = 3;
 
-        titleLabel.anchor( left: titleView.leftAnchor, right: titleView.rightAnchor)
+        titleLabel.anchor(left: titleView.leftAnchor, right: titleView.rightAnchor)
         subtitleLabel.anchor(top: titleLabel.bottomAnchor, left: titleView.leftAnchor, right: titleView.rightAnchor)
         let widthDiff = subtitleLabel.frame.size.width - titleLabel.frame.size.width
 
@@ -400,7 +407,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
         return titleView
     }
 
-    func setupCardList(completion: @escaping ( _ error: String?) ->() ) {
+    func setupCardList(completion: @escaping (_ error: String?) -> ()) {
         //showActivity()
         var userAllCardsModelArr = [UserAllCardsModel]()
         var productListDatum: [GetProductListDatum] = []
@@ -408,9 +415,9 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
 
         //dismissActivity()
         object?.forEach { product in
-            if product.productType == "CARD" || product.productType == "ACCOUNT"  {
+            if product.productType == "CARD" || product.productType == "ACCOUNT" {
                 userAllCardsModelArr.append(product)
-                let ob = GetProductListDatum.init(number: product.number, numberMasked: product.numberMasked, balance: product.balance, currency: product.currency, productType: product.productType, productName: product.productName, ownerID: product.ownerID, accountNumber: product.accountNumber, allowDebit: product.allowDebit, allowCredit: product.allowCredit, customName: product.customName, cardID: product.cardID, accountID: product.accountID, name: product.name, validThru: product.validThru, status: product.status, holderName: product.holderName, product: product.product, branch: product.branch, miniStatement: nil, mainField: product.mainField, additionalField: product.additionalField, smallDesign: product.smallDesign, mediumDesign: product.mediumDesign, largeDesign: product.largeDesign, paymentSystemName: product.paymentSystemName, paymentSystemImage: product.paymentSystemImage, fontDesignColor: product.fontDesignColor, id: product.id, background: [""], XLDesign: product.XLDesign, statusPC: product.statusPC, interestRate: nil, openDate: product.openDate, branchId: product.branchId, expireDate: product.expireDate, depositProductID: product.depositProductID , depositID: product.depositID, creditMinimumAmount: product.creditMinimumAmount, minimumBalance: product.minimumBalance, balanceRUB: product.balanceRUB)
+                let ob = GetProductListDatum.init(number: product.number, numberMasked: product.numberMasked, balance: product.balance, currency: product.currency, productType: product.productType, productName: product.productName, ownerID: product.ownerID, accountNumber: product.accountNumber, allowDebit: product.allowDebit, allowCredit: product.allowCredit, customName: product.customName, cardID: product.cardID, accountID: product.accountID, name: product.name, validThru: product.validThru, status: product.status, holderName: product.holderName, product: product.product, branch: product.branch, miniStatement: nil, mainField: product.mainField, additionalField: product.additionalField, smallDesign: product.smallDesign, mediumDesign: product.mediumDesign, largeDesign: product.largeDesign, paymentSystemName: product.paymentSystemName, paymentSystemImage: product.paymentSystemImage, fontDesignColor: product.fontDesignColor, id: product.id, background: [""], XLDesign: product.XLDesign, statusPC: product.statusPC, interestRate: nil, openDate: product.openDate, branchId: product.branchId, expireDate: product.expireDate, depositProductID: product.depositProductID, depositID: product.depositID, creditMinimumAmount: product.creditMinimumAmount, minimumBalance: product.minimumBalance, balanceRUB: product.balanceRUB)
                 productListDatum.append(ob)
             }
         }
@@ -426,12 +433,10 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let tvc = segue.destination as? InternetTVSelectController
-        {
+        if let tvc = segue.destination as? InternetTVSelectController {
             tvc.transitioningDelegate = self
             tvc.modalPresentationStyle = .custom
-            if let ppc = tvc.popoverPresentationController
-            {
+            if let ppc = tvc.popoverPresentationController {
                 //ppc.delegate = self
                 //ppc.permittedArrowDirections = UIPopoverArrowDirection(rawValue: UIPopoverArrowDirection.up.rawValue)
                 //tvc.transitioningDelegate = self
@@ -449,28 +454,30 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
     }
 
     var heightForSelectVC = 400
+
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         let presenter = PresentationController(presentedViewController: presented, presenting: presenting)
         presenter.height = heightForSelectVC
         return presenter
     }
-    
-    @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer)
-    {
+
+    @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer) {
         let tappedImage = tapGestureRecognizer.view as! UIImageView
         print("back5555")
         dismiss(animated: true, completion: nil)
     }
 }
 
-extension  C2BDetailsViewController {
+extension C2BDetailsViewController {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: InternetTVInputCell.reuseId, for: indexPath) as! InternetTVInputCell
-        guard 0 != 0 else { return cell }
+        guard 0 != 0 else {
+            return cell
+        }
         return cell
     }
 
