@@ -33,13 +33,11 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
         switchConsent.isEnabled = false
         if modeConsent == "update" {
             viewModel.updateContract(contractId: contractId, cardModel: footerView.cardFromField.cardModel!, isOff: true) { success, error in
-                self.dismissActivity()
-                self.checkSBMConsent()
+                viewModel.getConsent()
             }
         } else {
             viewModel.createContract(cardModel: footerView.cardFromField.cardModel!) { success, error in
-                self.dismissActivity()
-                self.checkSBMConsent()
+                viewModel.getConsent()
             }
         }
     }

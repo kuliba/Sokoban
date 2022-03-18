@@ -13,12 +13,16 @@ class C2BDetailsViewModel {
     var qrData: GetQRDataAnswer? = nil
 
     init() {
-        C2BApiRequests.getFastPaymentContractList { model, error in
-            self.consent = model
-            self.dataArrived()
-        }
+        getConsent()
         C2BApiRequests.getQRData(link: GlobalModule.c2bURL ?? "") { model, error in
             self.qrData = model
+            self.dataArrived()
+        }
+    }
+
+    func getConsent() {
+        C2BApiRequests.getFastPaymentContractList { model, error in
+            self.consent = model
             self.dataArrived()
         }
     }
