@@ -263,6 +263,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
                             contractId = fastPayment?.fpcontractID?.description ?? ""
                             switchConsent.isEnabled = true
                             switchConsent.setOn(false, animated: false)
+                            goButton?.isEnabled = false
 //                            binding.checkBoxConsent.setOnCheckedChangeListener { buttonView, isChecked ->
 //                                if (isChecked) {
 //                                    val request = UpdateFastPaymentContractRequest(
@@ -280,19 +281,23 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource,  
                         } else {
                             switchConsent.setOn(true, animated: false)
                             switchConsent.isEnabled = false
+                            goButton?.isEnabled = true
                         }
                     } else {
                         switchConsent.setOn(true, animated: false)
                         switchConsent.isEnabled = false
+                        goButton?.isEnabled = true
                     }
                 } else {
                     switchConsent.setOn(true, animated: false)
                     switchConsent.isEnabled = false
+                    goButton?.isEnabled = true
                 }
             } else {
                 modeConsent = "create"
                 switchConsent.setOn(false, animated: false)
                 switchConsent.isEnabled = true
+                goButton?.isEnabled = false
 //                binding.checkBoxConsent.setOnCheckedChangeListener { buttonView, isChecked ->
 //                    if (isChecked) {
 //                        viewModel.cardViewer.source.value?.let {

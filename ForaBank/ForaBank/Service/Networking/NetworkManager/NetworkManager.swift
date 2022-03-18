@@ -17,8 +17,8 @@ final class NetworkManager<T: NetworkModelProtocol> {
         
         var debuggedApi = [String]()
                 debuggedApi.append("createC2BTransfer")
-//                debuggedApi.append("isSingleService")
-//                debuggedApi.append("create")
+                debuggedApi.append("updateFastPaymentContract")
+                debuggedApi.append("createFastPaymentContract")
 //                debuggedApi.append("next")
 //                debuggedApi.append("make")
 //                debuggedApi.append("print")
