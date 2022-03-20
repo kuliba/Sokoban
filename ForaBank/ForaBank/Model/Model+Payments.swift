@@ -559,7 +559,7 @@ extension Model {
             
             guard let parameter = parameters.first(where: { $0.parameter.id == paraneterId})?.parameter,
                   let parameterValue = parameter.value else {
-                      return nil
+                      continue
                   }
             
             additional.append(.init(fieldid: index + 1, fieldname: parameter.id, fieldvalue: parameterValue))
@@ -567,51 +567,26 @@ extension Model {
         
         return additional
     }
-    
-    
 }
 
-/*
- func getRequestBody(amount: String, additionalArray: [[String: String]]) -> [String: AnyObject] {
-     let productType = controller?.footerView.cardFromField.cardModel?.productType ?? ""
-     let id = controller?.footerView.cardFromField.cardModel?.id ?? -1
+// MARK: - Parameters Helpers
 
-     var request = [String: AnyObject]()
-     if productType == "ACCOUNT" {
-         request = ["check": false,
-                    "amount": amount,
-                    "currencyAmount": "RUB",
-                    "payer": ["cardId": nil,
-                              "cardNumber": nil,
-                              "accountId": String(id)],
-                    "puref": puref,
-                    "additional": additionalArray] as [String: AnyObject]
-
-     } else if productType == "CARD" {
-         request = ["check": false,
-                    "amount": amount,
-                    "currencyAmount": "RUB",
-                    "payer": ["cardId": String(id),
-                              "cardNumber": nil,
-                              "accountId": nil],
-                    "puref": puref,
-                    "additional": additionalArray] as [String: AnyObject]
-     }
-     return request
- }
- */
-
-/*
- func downloadImageAndMetadata(imageNumber: Int) async throws -> DetailedImage {
-     return try await withCheckedThrowingContinuation({
-         (continuation: CheckedContinuation<DetailedImage, Error>) in
-         downloadImageAndMetadata(imageNumber: imageNumber) { image, error in
-             if let image = image {
-                 continuation.resume(returning: image)
-             } else {
-                 continuation.resume(throwing: error!)
-             }
-         }
-     })
- }
- */
+extension Model {
+    
+    func paymentsParametersContains(_ parameters: [ParameterRepresentable], id: Payments.Parameter.ID) -> Bool {
+        
+        let parametersIds = parameters.map{ $0.parameter.id }
+        
+        return parametersIds.contains(id)
+    }
+    
+    func paymentsParameter(_ parameters: [ParameterRepresentable], id: Payments.Parameter.ID) -> Payments.Parameter? {
+        
+        return parameters.first(where: { $0.parameter.id == id })?.parameter
+    }
+    
+    func paymentsParameterValue(_ parameters: [ParameterRepresentable], id: Payments.Parameter.ID) -> Payments.Parameter.Value? {
+        
+        return parameters.first(where: { $0.parameter.id == id })?.parameter.value
+    }
+}

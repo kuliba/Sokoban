@@ -43,13 +43,15 @@ enum Payments {
         case fnsUin     = "iFora||7069"
     }
     
-    struct Parameter: Equatable {
+    struct Parameter: Equatable, CustomDebugStringConvertible {
         
         typealias ID = String
         typealias Value = String?
         
         let id: ID
         let value: Value
+        
+        var debugDescription: String { "id: \(id), value: \(value != nil ? value! : "empty")" }
     }
     
     struct Operation {

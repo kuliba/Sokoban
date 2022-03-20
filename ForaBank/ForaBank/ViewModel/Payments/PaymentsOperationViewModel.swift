@@ -106,6 +106,7 @@ class PaymentsOperationViewModel: ObservableObject {
                             self?.action.send(PaymentsOperationViewModelAction.DismissConfirm())
                         }, spinner: rootActions.spinner, alert: rootActions.alert))
                         isConfirmViewActive = true
+                        self.operation = self.operation.finalized()
                         
                     case .failure(let errorMessage):
                         print("Payments: failure")

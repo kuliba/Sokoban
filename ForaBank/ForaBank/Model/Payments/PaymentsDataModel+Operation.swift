@@ -51,6 +51,19 @@ extension Payments.Operation {
             
             var updatedParameters = [ParameterRepresentable]()
             
+            for parameter in parameters {
+                
+                if let update = results.first(where: { $0.param.id == parameter.parameter.id }) {
+                    
+                    updatedParameters.append(parameter.updated(value: update.param.value))
+                    
+                } else {
+                    
+                    updatedParameters.append(parameter)
+                }
+            }
+            
+            /*
             for result in results {
                 
                 guard let index = parameters.firstIndex(where: { $0.parameter.id == result.param.id }) else {
@@ -59,6 +72,7 @@ extension Payments.Operation {
                 
                 updatedParameters.append(parameters[index].updated(value: result.param.value))
             }
+             */
             
             return .init(operation: .init(service: service, parameters: updatedParameters, history: history), type: .normal)
         }
@@ -110,6 +124,14 @@ extension Payments.Operation {
     func historyChangedStep(history: [[Parameter]], results: [(param: Parameter, affectsHistory: Bool)]) -> Int? {
         
         return results.compactMap{ historyChangedStep(history: history, result: $0)}.min()
+    }
+    
+    func finalized() -> Payments.Operation {
+        
+        var updatedParameters = parameters
+        updatedParameters.append(Payments.ParameterFinal())
+        
+        return Payments.Operation(service: service, parameters: updatedParameters, history: history)
     }
     
     static let emptyMock = Payments.Operation(service: .fms, parameters: [], history: [[]])
