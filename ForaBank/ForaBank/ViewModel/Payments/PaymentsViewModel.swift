@@ -16,6 +16,7 @@ class PaymentsViewModel: ObservableObject {
     @Published var content: ContentType
     @Published var successViewModel: PaymentsSuccessViewModel?
     @Published var spinner: SpinnerView.ViewModel?
+    @Published var alert: Alert.ViewModel?
     
     private let category: Payments.Category
     private let model: Model
@@ -55,7 +56,7 @@ class PaymentsViewModel: ObservableObject {
                     switch payload {
                     case .select(let selectServiceParameter):
                         // multiple services for category
-                        let servicesViewModel = PaymentsServicesViewModel(model, category: category, parameter: selectServiceParameter, rootActions: .init(dismiss: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())}, spinner: .init(show: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Show())}, hide: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Hide())})))
+                        let servicesViewModel = PaymentsServicesViewModel(model, category: category, parameter: selectServiceParameter, rootActions: .init(dismiss: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())}, spinner: .init(show: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Show())}, hide: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Hide())}), alert: {[weak self] message in self?.action.send(PaymentsViewModelAction.Alert(message: message))}))
                         content = .services(servicesViewModel)
                         
                     case .selected(let service):
@@ -67,29 +68,27 @@ class PaymentsViewModel: ObservableObject {
                     }
                     
                 case let payload as ModelAction.Payment.Begin.Response:
-                    switch payload.result {
+                    switch payload {
                     case .success(let operation):
                         
                         guard case .idle = content else {
                             return
                         }
                         
-                        let operationViewModel = PaymentsOperationViewModel(model, operation: operation, rootActions: .init(dismiss: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())}, spinner: .init(show: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Show())}, hide: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Hide())})))
+                        let operationViewModel = PaymentsOperationViewModel(model, operation: operation, rootActions: .init(dismiss: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())}, spinner: .init(show: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Show())}, hide: { [weak self] in self?.action.send(PaymentsViewModelAction.Spinner.Hide())}), alert: {[weak self] message in self?.action.send(PaymentsViewModelAction.Alert(message: message)) }))
                         content = .operation(operationViewModel)
 
-                    case .failure(let error):
-                        //TODO: log error
-                        print(error.localizedDescription)
+                    case .failure(let errorMessage):
+                        self.action.send(PaymentsViewModelAction.Alert(message: errorMessage))
                     }
                     
                 case let payload as ModelAction.Payment.Complete.Response:
-                    switch payload.result {
+                    switch payload {
                     case .success(let paymentSuccess):
                         successViewModel = PaymentsSuccessViewModel(model, paymentSuccess: paymentSuccess, dismissAction: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())})
                         
-                    case .failure:
-                        print("Payments: continue fail")
-                        break
+                    case .failure(let errorMessage):
+                        self.action.send(PaymentsViewModelAction.Alert(message: errorMessage))
                     }
                     
                 default:
@@ -111,6 +110,9 @@ class PaymentsViewModel: ObservableObject {
                     withAnimation {
                         spinner = nil
                     }
+                    
+                case let payload as PaymentsViewModelAction.Alert:
+                    alert = .init(title: "Ошибка", message: payload.message, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())}))
  
                 default:
                     break
@@ -126,6 +128,7 @@ extension PaymentsViewModel {
         
         let dismiss: () -> Void
         let spinner: Spinner
+        let alert: (String) -> Void
         
         struct Spinner {
             
@@ -143,5 +146,10 @@ enum PaymentsViewModelAction {
         
         struct Show: Action {}
         struct Hide: Action {}
+    }
+    
+    struct Alert: Action {
+        
+        let message: String
     }
 }

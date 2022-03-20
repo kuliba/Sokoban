@@ -49,9 +49,10 @@ extension ModelAction {
                 }
             }
 
-            struct Response: Action {
+            enum Response: Action {
                 
-                let result: Result<Operation, Error>
+                case success(Operation)
+                case failure(String)
             }
         }
         
@@ -71,7 +72,7 @@ extension ModelAction {
                     
                     case step(Operation)
                     case confirm(Operation)
-                    case fail(Error)
+                    case failure(String)
                 }
             }
         }
@@ -84,9 +85,10 @@ extension ModelAction {
                 let operation: Operation
             }
             
-            struct Response: Action {
+            enum Response: Action {
                 
-                let result: Result<Payments.Success, Error>
+                case success(Payments.Success)
+                case failure(String)
             }
         }
     }
@@ -145,10 +147,10 @@ extension Model {
             operation(for: service) { result in
                 switch result {
                 case .success(let operation):
-                    self.action.send(ModelAction.Payment.Begin.Response(result: .success(operation)))
+                    self.action.send(ModelAction.Payment.Begin.Response.success(operation))
                     
                 case .failure(let error):
-                    self.action.send(ModelAction.Payment.Begin.Response(result: .failure(error)))
+                    self.action.send(ModelAction.Payment.Begin.Response.failure(self.paymentsAlertMessage(with: error)))
                 }
             }
             
@@ -158,10 +160,10 @@ extension Model {
                 
                 switch result {
                 case .success(let operation):
-                    self.action.send(ModelAction.Payment.Begin.Response(result: .success(operation)))
+                    self.action.send(ModelAction.Payment.Begin.Response.success(operation))
                     
                 case .failure(let error):
-                    self.action.send(ModelAction.Payment.Begin.Response(result: .failure(error)))
+                    self.action.send(ModelAction.Payment.Begin.Response.failure(self.paymentsAlertMessage(with: error)))
                 }
             }
         }
@@ -194,7 +196,7 @@ extension Model {
                 }
 
             case .failure(let error):
-                self.action.send(ModelAction.Payment.Continue.Response(result: .fail(error)))
+                self.action.send(ModelAction.Payment.Continue.Response(result: .failure(self.paymentsAlertMessage(with: error))))
             }
         }
     }
@@ -205,20 +207,20 @@ extension Model {
         
         guard let codeParameter = payload.operation.parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.code.rawValue })?.parameter, let codeValue = codeParameter.value else {
             
-            self.action.send(ModelAction.Payment.Complete.Response(result: .failure(Payments.Error.missingCodeParameter)))
+            self.action.send(ModelAction.Payment.Complete.Response.failure(self.paymentsAlertMessage(with: Payments.Error.missingCodeParameter)))
             return
         }
         
+        //TODO: remove after tests
         DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(200)) {
             
             guard let amountParameter = payload.operation.parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.amount.rawValue}) as? Payments.ParameterAmount else {
                 
-                self.action.send(ModelAction.Payment.Complete.Response(result: .failure(Payments.Error.missingAmountParameter)))
+                self.action.send(ModelAction.Payment.Complete.Response.failure(self.paymentsAlertMessage(with: Payments.Error.missingAmountParameter)))
                 return
             }
             
-            self.action.send(ModelAction.Payment.Complete.Response(result: .success(.init(status: .complete, amount: amountParameter.amount, currency: amountParameter.currency, icon: nil, operationDetailId: 0))))
-            
+            self.action.send(ModelAction.Payment.Complete.Response.success(.init(status: .complete, amount: amountParameter.amount, currency: amountParameter.currency, icon: nil, operationDetailId: 0)))
         }
         
         /*
@@ -240,6 +242,69 @@ extension Model {
             }
         }
          */
+    }
+    
+    func paymentsAlertMessage(with error: Error) -> String {
+        
+        if let paymentsError = error as? Payments.Error {
+            
+            switch paymentsError {
+            case .unableLoadFMSCategoryOptions:
+                return "unableLoadFMSCategoryOptions"
+                
+            case .unableCreateOperationForService(let service):
+                return "unableCreateOperationForService \(service.name) "
+            
+            case .unexpectedOperatorValue:
+                return "unexpectedOperatorValue"
+                
+            case .missingOperatorParameter:
+                return "missingOperatorParameter"
+                
+            case .missingParameter:
+                return "missingParameter"
+                
+            case .missingPayer:
+                return "missingPayer"
+            
+            case .missingCurrency:
+                return "missingCurrency"
+                
+            case .missingCodeParameter:
+                return "missingCodeParameter"
+                
+            case .missingAmountParameter:
+                return "missingAmountParameter"
+                
+            case .missingAnywayTransferAdditional:
+                return "missingAnywayTransferAdditional"
+                
+            case .failedTransferWithEmptyDataResponse:
+                return "failedTransferWithEmptyDataResponse"
+                
+            case .failedTransfer(let status, let message):
+                return "failedTransfer status \(status), message: \(String(describing: message))"
+                
+            case .failedMakeTransferWithEmptyDataResponse:
+                return "failedMakeTransferWithEmptyDataResponse"
+                
+            case .failedMakeTransfer(let status, let message):
+                return "failedMakeTransfer status \(status), message: \(String(describing: message))"
+                
+            case .anywayTransferFinalStepExpected:
+                return "anywayTransferFinalStepExpected"
+                
+            case .notAuthorized:
+                return "notAuthorized"
+                
+            case .unsupported:
+                return "unsupported"
+            }
+            
+        } else {
+            
+            return "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения."
+        }
     }
     
     //MARK: - Operation

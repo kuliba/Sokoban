@@ -59,14 +59,13 @@ class PaymentsServicesViewModel: ObservableObject {
             .sink { [unowned self] action in
                 switch action {
                 case let payload as ModelAction.Payment.Begin.Response:
-                    switch payload.result {
+                    switch payload {
                     case .success(let operation):
-                        operationViewModel = PaymentsOperationViewModel(model, operation: operation, rootActions: .init(dismiss: { [weak self] in self?.action.send(PaymentsServicesViewModelAction.DissmissOperationView())}, spinner: rootActions.spinner))
+                        operationViewModel = PaymentsOperationViewModel(model, operation: operation, rootActions: .init(dismiss: { [weak self] in self?.action.send(PaymentsServicesViewModelAction.DissmissOperationView())}, spinner: rootActions.spinner, alert: rootActions.alert))
                         isOperationViewActive = true
                         
-                    case .failure(let error):
-                        //TODO: log error
-                        print(error.localizedDescription)
+                    case .failure(let errorMessage):
+                        rootActions.alert(errorMessage)
                     }
 
                 default:

@@ -39,6 +39,9 @@ struct PaymentsView: View {
                 SpinnerView(viewModel: spinnerViewModel)
             }
         }
+        .alert(item: $viewModel.alert, content: { alertViewModel in
+            Alert(with: alertViewModel)
+        })
     }
 }
 
