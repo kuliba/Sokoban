@@ -65,6 +65,46 @@ enum Payments {
         }
     }
     
+    struct Success {
+
+        let status: Status
+        let amount: Double
+        let currency: Currency
+        let icon: ImageData?
+        let operationDetailId: Int
+        
+        internal init(status: Payments.Success.Status, amount: Double, currency: Currency, icon: ImageData?, operationDetailId: Int) {
+            
+            self.status = status
+            self.amount = amount
+            self.currency = currency
+            self.icon = icon
+            self.operationDetailId = operationDetailId
+        }
+
+        init?(with transferResponse: TransferResponseBaseData) {
+            
+            //TODO: implementation required
+            return nil
+        }
+        
+        enum Status {
+            
+            case complete
+            case inProgress
+            case rejected
+            
+            var description: String {
+                
+                switch self {
+                case .complete: return "Оплата прошла успешно"
+                case .inProgress: return "Операция выполняется"
+                case .rejected: return "Отказ"
+                }
+            }
+        }
+    }
+    
     enum Error: Swift.Error {
         
         case unableLoadFMSCategoryOptions
@@ -74,9 +114,14 @@ enum Payments {
         case missingParameter
         case missingPayer
         case missingCurrency
+        case missingCodeParameter
+        case missingAmountParameter
         case missingAnywayTransferAdditional
-        case failedAnywayTransferWithEmptyTransferDataResponse
-        case failedAnywayTransfer(status: ServerStatusCode, message: String?)
+        case failedTransferWithEmptyDataResponse
+        case failedTransfer(status: ServerStatusCode, message: String?)
+        case failedMakeTransferWithEmptyDataResponse
+        case failedMakeTransfer(status: ServerStatusCode, message: String?)
+        case anywayTransferFinalStepExpected
         case notAuthorized
         case unsupported
     }

@@ -86,12 +86,7 @@ extension ModelAction {
             
             struct Response: Action {
                 
-                let result: Result<SuccessData, Error>
-                
-                struct SuccessData {
-                    
-                    //TODO: success screen data
-                }
+                let result: Result<Payments.Success, Error>
             }
         }
     }
@@ -206,8 +201,45 @@ extension Model {
     
     func handlePaymentsCompleteRequest(_ payload: ModelAction.Payment.Complete.Request) {
         
-        //TODO: make transfer
-        self.action.send(ModelAction.Payment.Complete.Response(result: .success(.init())))
+        print("Payments: complete request")
+        
+        guard let codeParameter = payload.operation.parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.code.rawValue })?.parameter, let codeValue = codeParameter.value else {
+            
+            self.action.send(ModelAction.Payment.Complete.Response(result: .failure(Payments.Error.missingCodeParameter)))
+            return
+        }
+        
+        DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(200)) {
+            
+            guard let amountParameter = payload.operation.parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.amount.rawValue}) as? Payments.ParameterAmount else {
+                
+                self.action.send(ModelAction.Payment.Complete.Response(result: .failure(Payments.Error.missingAmountParameter)))
+                return
+            }
+            
+            self.action.send(ModelAction.Payment.Complete.Response(result: .success(.init(status: .complete, amount: amountParameter.amount, currency: amountParameter.currency, icon: nil, operationDetailId: 0))))
+            
+        }
+        
+        /*
+        Task {
+            
+            do {
+                    
+                let result = try await paymentsTransferComplete(code: codeValue)
+                guard let success = Payments.Success(with: result) else {
+                    self.action.send(ModelAction.Payment.Complete.Response(result: .failure(Payments.Error.unsupported)))
+                    return
+                }
+                self.action.send(ModelAction.Payment.Complete.Response(result: .success(success)))
+                
+            } catch {
+                
+                self.action.send(ModelAction.Payment.Complete.Response(result: .failure(error)))
+                
+            }
+        }
+         */
     }
     
     //MARK: - Operation
@@ -347,13 +379,13 @@ extension Model {
                     switch response.statusCode {
                     case .ok:
                         guard let transferData = response.data else {
-                            continuation.resume(with: .failure(Payments.Error.failedAnywayTransferWithEmptyTransferDataResponse))
+                            continuation.resume(with: .failure(Payments.Error.failedTransferWithEmptyDataResponse))
                             return
                         }
                         continuation.resume(with: .success(transferData))
                         
                     default:
-                        continuation.resume(with: .failure(Payments.Error.failedAnywayTransfer(status: response.statusCode, message: response.errorMessage)))
+                        continuation.resume(with: .failure(Payments.Error.failedTransfer(status: response.statusCode, message: response.errorMessage)))
                     }
                     
                 case .failure(let error):
@@ -363,6 +395,38 @@ extension Model {
         })
     }
     
+    func paymentsTransferComplete(code: String) async throws -> TransferResponseBaseData {
+        
+        guard let token = token else {
+            throw Payments.Error.notAuthorized
+        }
+        
+        let command = ServerCommands.TransferController.MakeTransfer(token: token, payload: .init(verificationCode: code))
+        
+        return try await withCheckedThrowingContinuation({ continuation in
+            
+            serverAgent.executeCommand(command: command) { result in
+                
+                switch result {
+                case .success(let response):
+                    switch response.statusCode {
+                    case .ok:
+                        guard let transferData = response.data else {
+                            continuation.resume(with: .failure(Payments.Error.failedMakeTransferWithEmptyDataResponse))
+                            return
+                        }
+                        continuation.resume(with: .success(transferData))
+                        
+                    default:
+                        continuation.resume(with: .failure(Payments.Error.failedMakeTransfer(status: response.statusCode, message: response.errorMessage)))
+                    }
+                    
+                case .failure(let error):
+                    continuation.resume(with: .failure(error))
+                }
+            }
+        })
+    }
     
     func paymentsTransferPayer(with parameters: [ParameterRepresentable]) -> TransferData.Payer? {
         

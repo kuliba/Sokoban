@@ -11,28 +11,16 @@ import RealmSwift
 
 extension PaymentsCardView.ViewModel {
     
-    convenience init?(parameterCard: Payments.ParameterCard) {
+    convenience init(parameterCard: Payments.ParameterCard) {
         
-        guard let realm = try? Realm(),
-        let productObject = realm.objects(UserAllCardsModel.self).first,
-        let cardIconImage = productObject.smallDesign?.convertSVGStringToImage(),
-        let name = productObject.customName ?? productObject.mainField,
-        let currency = productObject.currency,
-        let cardNumber = productObject.accountNumber?.suffix(4) else {
-            return nil
+        self.init(title: "", cardIcon: Self.cardIconPlaceholder, paymentSystemIcon: nil, name: "", amount: "", captionItems: [], state: .normal, model: .emptyMock, parameterCard: parameterCard)
+        
+        if let realm = try? Realm(),
+           let product = productObject(products: realm.objects(UserAllCardsModel.self), value: parameterCard.parameter.value) {
+            
+            update(with: product)
         }
         
-        let title = "Счет списания"
-        let cardIcon = Image(uiImage: cardIconImage)
-        var paymentSystemIcon: Image? = nil
-        if let paymentSystemImage = productObject.paymentSystemImage?.convertSVGStringToImage() {
-            paymentSystemIcon = Image(uiImage: paymentSystemImage)
-        }
-        let amount = productObject.balance.currencyFormatter(symbol: currency)
- 
-        self.init(title: title, cardIcon: cardIcon, paymentSystemIcon: paymentSystemIcon, name: name, amount: amount, captionItems: [.init(title: String(cardNumber))], state: .normal, model: .emptyMock, parameterCard: parameterCard)
-        
-        update(value: "\(productObject.id)")
         bindLegacy()
     }
     
@@ -84,13 +72,9 @@ extension PaymentsCardView.ViewModel {
                     
                     guard let realm = try? Realm(), let productObject = realm.objects(UserAllCardsModel.self).first(where: { $0.id == payload.productId })  else { return }
                     
-                    if update(with: productObject) == true {
-                        
-                        update(value: "\(productObject.id)")
-                        
-                        withAnimation {
-                            state = .normal
-                        }
+                    update(with: productObject)
+                    withAnimation {
+                        state = .normal
                     }
   
                 default:
@@ -99,13 +83,13 @@ extension PaymentsCardView.ViewModel {
             }
     }
     
-    func update(with productObject: UserAllCardsModel) -> Bool {
+    func update(with productObject: UserAllCardsModel) {
         
         guard let cardIconImage = productObject.smallDesign?.convertSVGStringToImage(),
         let name = productObject.customName ?? productObject.mainField,
         let currency = productObject.currency,
         let cardNumber = productObject.accountNumber?.suffix(4) else {
-            return false
+            return
         }
         
         self.cardIcon = Image(uiImage: cardIconImage)
@@ -123,7 +107,18 @@ extension PaymentsCardView.ViewModel {
         self.amount = productObject.balance.currencyFormatter(symbol: currency)
         self.captionItems = [.init(title: String(cardNumber))]
         
-        return true
+        update(value: "\(productObject.id)")
     }
     
+    func productObject(products: Results<UserAllCardsModel>, value: String?) -> UserAllCardsModel? {
+        
+        if let value = value, let productId = Int(value) {
+            
+            return products.first(where: { $0.id == productId })
+            
+        } else {
+            
+            return products.first
+        }
+    }
 }

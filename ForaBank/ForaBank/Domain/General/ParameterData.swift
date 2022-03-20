@@ -80,3 +80,11 @@ extension ParameterData {
         return ImageData(with: svgImage)
     }
 }
+
+extension ParameterData: CustomDebugStringConvertible {
+    
+    var debugDescription: String {
+        
+        "id: \(id) value: \(value ?? "empty") title: \(title) data: \(dataType ?? "empty") type: \(type)"
+    }
+}

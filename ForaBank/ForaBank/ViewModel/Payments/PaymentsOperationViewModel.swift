@@ -127,13 +127,13 @@ class PaymentsOperationViewModel: ObservableObject {
                 
                 switch action {
                 case _ as PaymentsOperationViewModelAction.Continue:
-                    let results = items.value.map{ ($0.result, $0.source.affectsHistory) }
+                    let results = itemsAll.map{ ($0.result, $0.source.affectsHistory) }
                     let update = operation.update(with: results)
                     model.action.send(ModelAction.Payment.Continue.Request(operation: update.operation))
                     rootActions.spinner.show()
                     
                 case _ as PaymentsOperationViewModelAction.Confirm:
-                    let results = items.value.map{ ($0.result, $0.source.affectsHistory) }
+                    let results = itemsAll.map{ ($0.result, $0.source.affectsHistory) }
                     let update = operation.update(with: results)
                     model.action.send(ModelAction.Payment.Complete.Request(operation: update.operation))
                     rootActions.spinner.show()
@@ -146,7 +146,6 @@ class PaymentsOperationViewModel: ObservableObject {
                         
                         self?.popUpSelector = nil
                     })
-                    
 
                 case _ as PaymentsOperationViewModelAction.DismissConfirm:
                     print("Payments: confirm dismiss action: \(String(describing: self))", isConfirmViewActive)
@@ -297,8 +296,7 @@ class PaymentsOperationViewModel: ObservableObject {
             
             if isAutoContinueRequired(for: value.id) {
                 
-                model.action.send(ModelAction.Payment.Continue.Request(operation: update.operation))
-                rootActions.spinner.show()
+                action.send(PaymentsOperationViewModelAction.Continue())
                 
             } else {
                 
@@ -309,8 +307,7 @@ class PaymentsOperationViewModel: ObservableObject {
         case .historyChanged:
             
             print("Payments: history changed")
-            model.action.send(ModelAction.Payment.Continue.Request(operation: update.operation))
-            rootActions.spinner.show()
+            action.send(PaymentsOperationViewModelAction.Continue())
         }
     }
 
@@ -360,6 +357,9 @@ class PaymentsOperationViewModel: ObservableObject {
       
             footer = createFooter(from: parameters)
         }
+        
+        //TODO: handle amount parameter more elegant way
+        removeAmountParameterFromItemsIfRequired()
     
         updateFooter(isContinueEnabled: isItemsValuesValid())
     }
@@ -390,11 +390,7 @@ class PaymentsOperationViewModel: ObservableObject {
                     with: parameterSelectSimple))
                 
             case let parameterCard as Payments.ParameterCard:
-                if let parameterCardViewModel = PaymentsCardView.ViewModel(parameterCard: parameterCard) {
-                    result.append(parameterCardViewModel)
-                } else {
-                    print("Payments: failed create parameter card")
-                }
+                result.append(PaymentsCardView.ViewModel(parameterCard: parameterCard))
                 
             default:
                 result.append(PaymentsParameterViewModel(source: parameter))
@@ -457,6 +453,7 @@ class PaymentsOperationViewModel: ObservableObject {
                 footer = .amount(.init(with: parameterAmount,actionTitle: "Перевести", action: { [weak self] in
                     self?.action.send(PaymentsOperationViewModelAction.Continue())
                 }))
+                
                                 
             default:
                 break
@@ -464,6 +461,24 @@ class PaymentsOperationViewModel: ObservableObject {
         }
         
         return footer
+    }
+    
+    func removeAmountParameterFromItemsIfRequired() {
+        
+        guard let footer = footer else {
+            return
+        }
+        
+        switch footer {
+        case .amount:
+            guard let amountParameterIndex = items.value.firstIndex(where: { $0.source.parameter.id == Payments.Parameter.Identifier.amount.rawValue }) else {
+                return
+            }
+            items.value.remove(at: amountParameterIndex)
+            
+        default:
+            return
+        }
     }
 }
 

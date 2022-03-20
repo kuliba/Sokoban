@@ -388,7 +388,7 @@ extension ServerCommands {
             
             struct Payload: Encodable {
                 
-                let cryptoVersion: String
+                var cryptoVersion: String? = nil
                 let verificationCode: String
             }
             

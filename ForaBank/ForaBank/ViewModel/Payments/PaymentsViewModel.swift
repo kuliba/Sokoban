@@ -84,9 +84,8 @@ class PaymentsViewModel: ObservableObject {
                     
                 case let payload as ModelAction.Payment.Complete.Response:
                     switch payload.result {
-                    case .success:
-                        successViewModel = PaymentsSuccessViewModel(header: .init(stateIcon: Image("OkOperators"), title: "Успешный перевод", description: "1 000,00 ₽", operatorIcon: Image("Payments Service Sample")), optionButtons: [PaymentsSuccessOptionButtonView.ViewModel(id: UUID(), icon: Image("Payments Icon Success Star"),title: "Шаблон", action: {}),PaymentsSuccessOptionButtonView.ViewModel(id: UUID(), icon: Image("Payments Icon Success File"),title: "Документ", action: {}), PaymentsSuccessOptionButtonView.ViewModel(id: UUID(), icon: Image("Payments Icon Success Info"), title: "Детали", action: {})], actionButton: .init(title: "На главную", isEnabled: true, action: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())}))
-                        
+                    case .success(let paymentSuccess):
+                        successViewModel = PaymentsSuccessViewModel(model, paymentSuccess: paymentSuccess, dismissAction: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())})
                         
                     case .failure:
                         print("Payments: continue fail")
