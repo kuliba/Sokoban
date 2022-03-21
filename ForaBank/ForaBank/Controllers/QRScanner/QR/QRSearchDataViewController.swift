@@ -73,6 +73,7 @@ extension QRSearchDataViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         self.dismiss(animated: true) {
+            
             self.itemIsSelect?(self.elements[indexPath.row])
         }
     }
