@@ -19,8 +19,10 @@ struct CreateTransferAnswerModel: Codable, NetworkModelProtocol {
 struct CreateTransferAnswerData: Codable {
     let needMake, needOTP: Bool?
     let needSum: Bool?
-    let amount, creditAmount, currencyAmount: Double?
-    let currencyPayer, currencyPayee, currencyRate: JSONNull?
+    let currencyAmount: String?
+    let amount, creditAmount: Double?
+    let currencyPayer, currencyPayee: String?
+    let currencyRate: Double?
     let debitAmount, fee: Double?
     let payeeName, documentStatus: String?
     let paymentOperationDetailID: Int?
@@ -35,7 +37,7 @@ struct CreateTransferAnswerData: Codable {
         case documentStatus, additionalList, parameterListForNextStep, finalStep, infoMessage
     }
 
-    init(needMake: Bool?, needOTP: Bool?, needSum: Bool?, amount: Double?, creditAmount: Double?, fee: Double?, currencyAmount: Double?, currencyPayer: JSONNull?, currencyPayee: JSONNull?, currencyRate: JSONNull?, debitAmount: Double?, payeeName: String?, paymentOperationDetailID: Int?, documentStatus: String?, additionalList: [AdditionalList2]?, parameterListForNextStep: [ParameterListForNextStep2]?, finalStep: Bool?, infoMessage: String?) {
+    init(needMake: Bool?, needOTP: Bool?, needSum: Bool?, amount: Double?, creditAmount: Double?, fee: Double?, currencyAmount: String?, currencyPayer: String?, currencyPayee: String?, currencyRate: Double?, debitAmount: Double?, payeeName: String?, paymentOperationDetailID: Int?, documentStatus: String?, additionalList: [AdditionalList2]?, parameterListForNextStep: [ParameterListForNextStep2]?, finalStep: Bool?, infoMessage: String?) {
         self.needMake = needMake
         self.needOTP = needOTP
         self.needSum = needSum
