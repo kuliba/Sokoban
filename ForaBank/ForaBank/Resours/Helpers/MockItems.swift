@@ -220,7 +220,7 @@ class MockItems {
 //                          controllerName: "https://www.forabank.ru/private/deposits/",
 //                          description: "Что то"),
             PaymentsModel(id: 34, name: "Перевод по\nтелефону",
-                          iconName: "bannerNG",
+                          iconName: "Season_Banner",
                           controllerName: "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/",
                           description: "Что то"),
             PaymentsModel(id: 22, name: "Шаблоны и\nавтоплатежи",
