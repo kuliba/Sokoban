@@ -57,7 +57,8 @@ extension CreateServiceTransferDecodableModel {
 struct CreateServiceTransferDataClass: Codable {
     let needMake, needOTP: JSONNull?
     let needSum: Bool?
-    let amount, creditAmount, fee, currencyAmount: JSONNull?
+    let amount, creditAmount, fee: JSONNull?
+    let currencyAmount: String?
     let currencyPayer, currencyPayee, currencyRate, debitAmount: JSONNull?
     let payeeName, paymentOperationDetailID: JSONNull?
     let documentStatus: String?
@@ -98,7 +99,7 @@ extension CreateServiceTransferDataClass {
         amount: JSONNull?? = nil,
         creditAmount: JSONNull?? = nil,
         fee: JSONNull?? = nil,
-        currencyAmount: JSONNull?? = nil,
+        currencyAmount: String?? = nil,
         currencyPayer: JSONNull?? = nil,
         currencyPayee: JSONNull?? = nil,
         currencyRate: JSONNull?? = nil,
