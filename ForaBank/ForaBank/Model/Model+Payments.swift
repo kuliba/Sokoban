@@ -223,6 +223,7 @@ extension Model {
             self.action.send(ModelAction.Payment.Complete.Response.success(.init(status: .complete, amount: amountParameter.amount, currency: amountParameter.currency, icon: nil, operationDetailId: 0)))
         }
         
+        //FIXME: test real implementation
         /*
         Task {
             
@@ -412,6 +413,7 @@ extension Model {
 
 extension Model {
     
+    @discardableResult
     func paymentsTransferAnywayStep(with parameters: [ParameterRepresentable], include: [Payments.Parameter.ID], step: TransferData.Step, isAmountRequired: Bool = false) async throws -> TransferAnywayResponseData {
         
         guard let token = token else {
@@ -591,5 +593,27 @@ extension Model {
     func paymentsParameterValue(_ parameters: [ParameterRepresentable], id: Payments.Parameter.ID) -> Payments.Parameter.Value {
         
         return parameters.first(where: { $0.parameter.id == id })?.parameter.value
+    }
+    
+    func paymentsParametersEditable(_ parameters: [ParameterRepresentable], editable: Bool, filter: [String]? = nil) -> [ParameterRepresentable] {
+        
+        if let filter = filter {
+            
+            return parameters.map { parameter in
+                
+                if filter.contains(parameter.parameter.id) {
+                    
+                    return parameter.updated(editable: editable)
+                    
+                } else {
+                    
+                    return parameter
+                }
+            }
+     
+        } else {
+            
+            return parameters.map{ $0.updated(editable: editable) }
+        }
     }
 }

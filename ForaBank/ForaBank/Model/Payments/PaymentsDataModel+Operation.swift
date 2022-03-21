@@ -30,13 +30,17 @@ extension Payments.Operation {
             let historyStepParameters = self.parameters.filter{ historyStepParametersIds.contains($0.parameter.id) }
             
             var updatedHistoryStepParameters = [ParameterRepresentable]()
+            
             for param in historyStepParameters {
                 
-                guard let value = results.first(where: { $0.param.id == param.parameter.id })?.param.value else {
-                    continue
+                if let update = results.first(where: { $0.param.id == param.parameter.id })?.param.value {
+                    
+                    updatedHistoryStepParameters.append(param.updated(value: update))
+                    
+                } else {
+                    
+                    updatedHistoryStepParameters.append(param)
                 }
-                
-                updatedHistoryStepParameters.append(param.updated(value: value))
             }
             
             var historyTrimmed = [[Parameter]]()

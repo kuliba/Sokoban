@@ -489,6 +489,7 @@
 		7705408B27BD1B1100094006 /* BiometricSensorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7705408A27BD1B1100094006 /* BiometricSensorType.swift */; };
 		7705408D27BD1B4C00094006 /* BiometricAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7705408C27BD1B4C00094006 /* BiometricAgentProtocol.swift */; };
 		7705408F27BD1C6900094006 /* BiometricAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7705408E27BD1C6900094006 /* BiometricAgent.swift */; };
+		7705ABC927E8846E000E99CA /* Model+PaymentsTaxes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7705ABC827E8846E000E99CA /* Model+PaymentsTaxes.swift */; };
 		77067CD9275FBB70000C442B /* StringExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77067CD8275FBB70000C442B /* StringExtensionsTests.swift */; };
 		77067CDD275FCBA5000C442B /* DownloadQueueSerialsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77067CDC275FCBA5000C442B /* DownloadQueueSerialsStorage.swift */; };
 		770DCE8F27BBE6AB004099C1 /* Model+Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770DCE8E27BBE6AB004099C1 /* Model+Auth.swift */; };
@@ -586,6 +587,7 @@
 		7758754B27996D8B0080115D /* Cachable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7758754A27996D8B0080115D /* Cachable.swift */; };
 		7758754D27996DCB0080115D /* LocalAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7758754C27996DCB0080115D /* LocalAgent.swift */; };
 		7758754F27996E610080115D /* FileManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7758754E27996E610080115D /* FileManager+Extensions.swift */; };
+		775E068327E8921E006A9886 /* Model+PaymentsTaxesFMSMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775E068227E8921E006A9886 /* Model+PaymentsTaxesFMSMock.swift */; };
 		7763A690279DAFD10064B037 /* EncryptionProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7763A68F279DAFD10064B037 /* EncryptionProtocols.swift */; };
 		7763A692279DB1CB0064B037 /* CSRFAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7763A691279DB1CB0064B037 /* CSRFAgentProtocol.swift */; };
 		77674A4027A02D86008101B5 /* CircleProgressViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77674A3F27A02D86008101B5 /* CircleProgressViewComponent.swift */; };
@@ -1496,6 +1498,7 @@
 		7705408A27BD1B1100094006 /* BiometricSensorType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricSensorType.swift; sourceTree = "<group>"; };
 		7705408C27BD1B4C00094006 /* BiometricAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricAgentProtocol.swift; sourceTree = "<group>"; };
 		7705408E27BD1C6900094006 /* BiometricAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricAgent.swift; sourceTree = "<group>"; };
+		7705ABC827E8846E000E99CA /* Model+PaymentsTaxes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTaxes.swift"; sourceTree = "<group>"; };
 		77067CD8275FBB70000C442B /* StringExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensionsTests.swift; sourceTree = "<group>"; };
 		77067CDC275FCBA5000C442B /* DownloadQueueSerialsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadQueueSerialsStorage.swift; sourceTree = "<group>"; };
 		770DCE8E27BBE6AB004099C1 /* Model+Auth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Auth.swift"; sourceTree = "<group>"; };
@@ -1593,6 +1596,7 @@
 		7758754A27996D8B0080115D /* Cachable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cachable.swift; sourceTree = "<group>"; };
 		7758754C27996DCB0080115D /* LocalAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAgent.swift; sourceTree = "<group>"; };
 		7758754E27996E610080115D /* FileManager+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+Extensions.swift"; sourceTree = "<group>"; };
+		775E068227E8921E006A9886 /* Model+PaymentsTaxesFMSMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTaxesFMSMock.swift"; sourceTree = "<group>"; };
 		7763A68F279DAFD10064B037 /* EncryptionProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptionProtocols.swift; sourceTree = "<group>"; };
 		7763A691279DB1CB0064B037 /* CSRFAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFAgentProtocol.swift; sourceTree = "<group>"; };
 		77674A3F27A02D86008101B5 /* CircleProgressViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressViewComponent.swift; sourceTree = "<group>"; };
@@ -3234,6 +3238,22 @@
 			path = "TransferByRequisites ";
 			sourceTree = "<group>";
 		};
+		7705ABCA27E891B7000E99CA /* Payments */ = {
+			isa = PBXGroup;
+			children = (
+				7705ABCB27E891C6000E99CA /* Taxes */,
+			);
+			path = Payments;
+			sourceTree = "<group>";
+		};
+		7705ABCB27E891C6000E99CA /* Taxes */ = {
+			isa = PBXGroup;
+			children = (
+				775E068227E8921E006A9886 /* Model+PaymentsTaxesFMSMock.swift */,
+			);
+			path = Taxes;
+			sourceTree = "<group>";
+		};
 		77067CD7275FBB40000C442B /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -3281,6 +3301,7 @@
 		774E318727A0506D005A067B /* PreviewContent */ = {
 			isa = PBXGroup;
 			children = (
+				7705ABCA27E891B7000E99CA /* Payments */,
 				F8E529AC27B67F7B00222394 /* Assets.xcassets */,
 				774E318827A0509C005A067B /* ServerAgentEmptyMock.swift */,
 				774E318C27A05112005A067B /* LocalAgentEmptyMock.swift */,
@@ -3925,6 +3946,7 @@
 		77FF66CB27B42DAF009FEA09 /* Taxes */ = {
 			isa = PBXGroup;
 			children = (
+				7705ABC827E8846E000E99CA /* Model+PaymentsTaxes.swift */,
 				EDCE659427C4FFDD006C2C3E /* Model+PaymentsTaxesFNS.swift */,
 				77FF66CC27B42DD5009FEA09 /* Model+PaymentsTaxesFMS.swift */,
 				77F4C8BC27E077D70095820E /* Model+PaymentsTaxesFSSP.swift */,
@@ -6335,6 +6357,7 @@
 				0B8C1C49273B04DE00BA5CAC /* QRScanerInfoView.swift in Sources */,
 				68E803E627D9280B00B75D41 /* ProfileViewModel.swift in Sources */,
 				0BA14E18270DF8F60098E422 /* AppLockerHelper.swift in Sources */,
+				775E068327E8921E006A9886 /* Model+PaymentsTaxesFMSMock.swift in Sources */,
 				EDFA7525277D181500EEB4AE /* TermsDepositTableViewCell.swift in Sources */,
 				0BA09E3426B08E1A0065D623 /* GetFullBankInfoListDecodableModel.swift in Sources */,
 				F82ED55827D7BA6F008485AB /* MyProductsSectionAllMoneyViewComponent.swift in Sources */,
@@ -6576,6 +6599,7 @@
 				0BB24A9426EFCC5800DDA4F6 /* GetProductTemplateListSaved.swift in Sources */,
 				0BF34854268B2699005138A8 /* PrepareExternalDecodableModel.swift in Sources */,
 				ED3A96772690FCD700252857 /* BankViewModel.swift in Sources */,
+				7705ABC927E8846E000E99CA /* Model+PaymentsTaxes.swift in Sources */,
 				68FFA54F26853897002DADFA /* PhoneContacts.swift in Sources */,
 				77C3829A27E2061800B5246E /* PaymentsCardViewComponent+Legacy.swift in Sources */,
 				F63D42FC24C643FCB7631F83 /* InternetTVDetailsFormController.swift in Sources */,
