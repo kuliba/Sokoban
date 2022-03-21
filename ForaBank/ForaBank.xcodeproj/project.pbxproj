@@ -588,6 +588,7 @@
 		7758754D27996DCB0080115D /* LocalAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7758754C27996DCB0080115D /* LocalAgent.swift */; };
 		7758754F27996E610080115D /* FileManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7758754E27996E610080115D /* FileManager+Extensions.swift */; };
 		775E068327E8921E006A9886 /* Model+PaymentsTaxesFMSMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775E068227E8921E006A9886 /* Model+PaymentsTaxesFMSMock.swift */; };
+		775E068527E8A0D1006A9886 /* Model+PaymentsTaxesFNSMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775E068427E8A0D1006A9886 /* Model+PaymentsTaxesFNSMock.swift */; };
 		7763A690279DAFD10064B037 /* EncryptionProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7763A68F279DAFD10064B037 /* EncryptionProtocols.swift */; };
 		7763A692279DB1CB0064B037 /* CSRFAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7763A691279DB1CB0064B037 /* CSRFAgentProtocol.swift */; };
 		77674A4027A02D86008101B5 /* CircleProgressViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77674A3F27A02D86008101B5 /* CircleProgressViewComponent.swift */; };
@@ -1597,6 +1598,7 @@
 		7758754C27996DCB0080115D /* LocalAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAgent.swift; sourceTree = "<group>"; };
 		7758754E27996E610080115D /* FileManager+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+Extensions.swift"; sourceTree = "<group>"; };
 		775E068227E8921E006A9886 /* Model+PaymentsTaxesFMSMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTaxesFMSMock.swift"; sourceTree = "<group>"; };
+		775E068427E8A0D1006A9886 /* Model+PaymentsTaxesFNSMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTaxesFNSMock.swift"; sourceTree = "<group>"; };
 		7763A68F279DAFD10064B037 /* EncryptionProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptionProtocols.swift; sourceTree = "<group>"; };
 		7763A691279DB1CB0064B037 /* CSRFAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFAgentProtocol.swift; sourceTree = "<group>"; };
 		77674A3F27A02D86008101B5 /* CircleProgressViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressViewComponent.swift; sourceTree = "<group>"; };
@@ -3249,6 +3251,7 @@
 		7705ABCB27E891C6000E99CA /* Taxes */ = {
 			isa = PBXGroup;
 			children = (
+				775E068427E8A0D1006A9886 /* Model+PaymentsTaxesFNSMock.swift */,
 				775E068227E8921E006A9886 /* Model+PaymentsTaxesFMSMock.swift */,
 			);
 			path = Taxes;
@@ -6216,6 +6219,7 @@
 				68C8D57026F0DF120076246B /* HistoryTableViewCell.swift in Sources */,
 				687FB23626F0189C004A479F /* ProductViewControllerDataSource.swift in Sources */,
 				EDA5637A26F386AD0093F0C8 /* SettingTableViewController.swift in Sources */,
+				775E068527E8A0D1006A9886 /* Model+PaymentsTaxesFNSMock.swift in Sources */,
 				68673B4F26F2F29300F67A8C /* RequisitesViewController.swift in Sources */,
 				A5F15C0B27495F7C00DC91DA /* GlobalModule.swift in Sources */,
 				0B7A18AF268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift in Sources */,

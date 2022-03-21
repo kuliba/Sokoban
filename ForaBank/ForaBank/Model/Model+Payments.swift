@@ -616,4 +616,13 @@ extension Model {
             return parameters.map{ $0.updated(editable: editable) }
         }
     }
+    
+    func paymentsParametersRemove(_ parameters: [ParameterRepresentable], filter: [String]) -> [ParameterRepresentable] {
+        
+        return parameters.compactMap { parameter in
+            
+            guard filter.contains(parameter.parameter.id) == false else { return nil }
+            return parameter
+        }
+    }
 }

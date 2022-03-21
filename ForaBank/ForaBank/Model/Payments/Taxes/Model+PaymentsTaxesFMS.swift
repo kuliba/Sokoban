@@ -43,26 +43,14 @@ extension Model {
                   }
             
             let divisionParameterId = "a3_divisionSelect_2_1"
-            let parametersIds = parameters.map{ $0.parameter.id }
-            
-            if parametersIds.contains(divisionParameterId) {
+            if paymentsParametersContains(parameters, id: divisionParameterId) {
                 
-                // user updated division parameter value
+                // user did update division parameter value
                 
                 Task {
                     
                     // remove all division depended parameters
-                    var updatedParameters = [ParameterRepresentable]()
-                    for parameter in parameters {
-                        
-                        switch parameter.parameter.id {
-                        case "a3_categorySelect_3_1", "a3_INN_4_1", "a3_OKTMO_5_1", "a3_DIVISION_4_1":
-                            continue
-                            
-                        default:
-                            updatedParameters.append(parameter)
-                        }
-                    }
+                    let updatedParameters = paymentsParametersRemove(parameters, filter: ["a3_categorySelect_3_1", "a3_INN_4_1", "a3_OKTMO_5_1", "a3_DIVISION_4_1"])
                     
                     do {
                         
