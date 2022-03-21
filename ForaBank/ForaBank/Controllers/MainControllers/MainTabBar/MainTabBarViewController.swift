@@ -18,7 +18,7 @@ class MainTabBarViewController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-     
+        getFastPaymentContractList()
         tabBar.layer.backgroundColor = UIColor(red: 0.973, green: 0.973, blue: 0.973, alpha: 0.82).cgColor
 //        tabBar.tintColor = #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)
 //        tabBar.tintColor = .clear
@@ -205,6 +205,26 @@ class MainTabBarViewController: UITabBarController {
 //            print("DEBUG: Load card list... Count is: ", cardList.count)
 //        }
       
+    }
+    
+    func getFastPaymentContractList() {
+        NetworkManager<FastPaymentContractFindListDecodableModel>.addRequest(.fastPaymentContractFindList, [:], [:]) { model, error in
+            if error != nil {
+                print("DEBUG: Error: ")
+            }
+            guard let model = model else { return }
+            
+            let a = model.data?.first
+            let b = a?.fastPaymentContractAttributeList?.first?.phoneNumber ?? ""
+            if model.statusCode == 0 {
+                UserDefaults.standard.set(b, forKey: "UserPhone")
+            } else {
+                print("DEBUG: Error: ", model.errorMessage ?? "")
+
+                
+            }
+        }
+        
     }
 
 
