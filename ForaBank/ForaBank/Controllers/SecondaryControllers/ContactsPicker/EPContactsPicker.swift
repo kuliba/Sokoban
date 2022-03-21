@@ -59,27 +59,36 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
     var subtitleCellValue = SubtitleCellValue.phoneNumber
     var multiSelectEnabled: Bool = false //Default is single selection contact
     var isSearch = false
-    
     let userPhoneView = EPContactSelfDataView()
-    
+    var headerHight = 0
     // MARK: - Lifecycle Methods
+    
+    public override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        guard let headerView = tableView.tableHeaderView else {return}
+            let size = headerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+            if headerView.frame.size.height != size.height {
+                headerView.frame.size.height = size.height
+                tableView.tableHeaderView = headerView
+                tableView.layoutIfNeeded()
+            }
+    }
     
     override open func viewDidLoad() {
         super.viewDidLoad()
-//        self.title = EPGlobalConstants.Strings.contactsTitle
         configureTableView()
         registerContactCell()
         inititlizeBarButtons()
-        
+        tableView.tableHeaderView = userPhoneView
+
         self.view.addSubview(searchContact)
-        self.view.addSubview(userPhoneView)
         self.view.addSubview(tableView)
+        
         view.backgroundColor = .white
         searchContact.buttonStackView.isHidden = false
         searchContact.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingRight: 20, height: 44)
-        userPhoneView.anchor(top: searchContact.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 10, paddingLeft: 10, paddingRight: 10, height: 60)
-        
-        tableView.anchor(top: userPhoneView.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 16)
+        tableView.anchor(top: searchContact.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 16)
         searchContact.delegateNumber = self
         
         userPhoneView.tapClouser = {
@@ -140,6 +149,9 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
         tableView.separatorStyle = .none
         tableView.sectionIndexColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1)
         tableView.keyboardDismissMode = .onDrag
+        tableView.layoutIfNeeded()
+        tableView.sectionHeaderHeight = UITableView.automaticDimension
+        tableView.estimatedSectionHeaderHeight = 60
     }
     
     fileprivate func registerContactCell() {
@@ -161,11 +173,6 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
             let cellNib = UINib(nibName: EPGlobalConstants.Strings.cellNibIdentifier, bundle: nil)
             tableView.register(cellNib, forCellReuseIdentifier: "Cell")
         }
-    }
-
-    override open func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
     // MARK: - Initializers
@@ -372,7 +379,7 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
                      
                      self.presentingViewController?.dismiss(animated: true, completion: {
                          DispatchQueue.main.async {
-                             self.contactDelegate?.epContactPicker(self, didSelectContact: selectedContact)
+                             self.contactDelegate?.epUserPhone(currency)
                          }
                      })
 
@@ -395,7 +402,7 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
         return 60.0
     }
     
-    open  func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    open func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 0
     }
     
@@ -409,11 +416,6 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
         if isSearch { return nil }
         return sortedContactKeys
     }
-
-//    override open func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-//        if resultSearchController.isActive { return nil }
-//        return sortedContactKeys[section]
-//    }
     
     // MARK: - Button Actions
     
@@ -430,6 +432,7 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
     }
     
     // MARK: - Search Actions
+    
     private func searchForContactUsingName(text: String) {
         
         var predicate: NSPredicate
@@ -489,7 +492,6 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
                 
                 if contacts.count == 0 {
                     message = "No contacts were found matching the given phone number."
-                    print(message!)
                 }
                 } catch {
                     message = "Unable to fetch contacts."
@@ -503,16 +505,6 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
                     DispatchQueue.main.async {
                         
                         self.filteredContacts = contacts
-//                        let contact = contacts[0] // For just the first contact (if two contacts had the same phone number)
-//                        print(contact.givenName) // Print the "first" name
-//                        print(contact.familyName) // Print the "last" name
-//                        if contact.isKeyAvailable(CNContactImageDataKey) {
-//                            if let contactImageData = contact.imageData {
-//                                print(UIImage(data: contactImageData)) // Print the image set on the contact
-//                            }
-//                        } else {
-//                            // No Image available
-//                        }
                     }
                 }
             }
@@ -533,9 +525,18 @@ extension EPContactsPicker: PassTextFieldText {
             }
             searchForContactUsingPhoneNumber(phoneNumber: searchText)
         } else {
+            
             searchForContactUsingName(text: searchText)
         }
         
+    }
+    
+    func showSelfPhoneView(_ value: Bool) {
+        if value == true {
+            tableView.tableHeaderView = userPhoneView
+        } else {
+            self.tableView.tableHeaderView = nil
+        }
     }
 }
 
