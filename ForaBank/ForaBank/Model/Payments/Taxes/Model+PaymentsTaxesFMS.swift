@@ -28,7 +28,7 @@ extension Model {
             let categoryParameter = Payments.ParameterSelect(
                 Parameter(id: "a3_dutyCategory_1_1", value: nil),
                 title: "Категория платежа",
-                options: fmsCategoriesList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample)}, affectsHistory: true)
+                options: fmsCategoriesList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample) }, affectsHistory: true)
             
             completion(.success( parameters + [operatorParameter, categoryParameter]))
             

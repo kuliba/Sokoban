@@ -111,6 +111,7 @@ enum Payments {
         
         case unableLoadFMSCategoryOptions
         case unableLoadFTSCategoryOptions
+        case unableLoadFSSPDocumentOptions
         case unableCreateOperationForService(Service)
         case unexpectedOperatorValue
         case missingOperatorParameter

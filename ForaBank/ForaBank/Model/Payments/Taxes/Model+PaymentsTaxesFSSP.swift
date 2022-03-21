@@ -14,6 +14,275 @@ extension Model {
         switch step {
         case 0:
             
+            if let searchTypeParameterValue = paymentsParameterValue(parameters, id: "a3_SearchType_1_1") {
+                
+                switch searchTypeParameterValue {
+                case "20":
+                    
+                    // remove all search type depended parameters
+                    let updatedParameters = paymentsParametersRemove(parameters, filter: ["a3_docName_1_2", "a3_BillNumber_1_1", "a3_IPnumber_1_1"])
+                    
+                    // documents
+                    guard let fsspDocumentList = dictionaryFSSPDocumentList() else {
+                        completion(.failure(Payments.Error.unableLoadFTSCategoryOptions))
+                        return
+                    }
+                    
+                    let documentParameter = Payments.ParameterSelect(
+                        Parameter(id: "a3_docName_1_2", value: nil),
+                        title: "Тип документа",
+                        options: fsspDocumentList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample) }, affectsHistory: true)
+                    
+                    completion(.success(updatedParameters + [documentParameter]))
+                    
+                case "30":
+                    Task {
+                        
+                        // remove all search type depended parameters
+                        let updatedParameters = paymentsParametersRemove(parameters, filter: ["a3_docName_1_2", "a3_BillNumber_1_1", "a3_IPnumber_1_1"])
+                        
+                        /*
+                         Данные для теста
+                         УИН 32227009220006631003
+                         */
+                        
+                        do {
+                            
+                            let transferStepData = try await paymentsTransferAnywayStep(with: parameters, include: ["a3_SearchType_1_1"], step: .initial)
+                            let nextStepParameters = paymentsTaxesNextStepParameters(for: transferStepData, samples: ["a3_BillNumber_1_1": "32227009220006631003"])
+ 
+                            completion(.success(updatedParameters + nextStepParameters))
+                            
+                        } catch {
+                            
+                            completion(.failure(error))
+                        }
+                    }
+                    
+                case "40":
+                    Task {
+                        
+                        // remove all search type depended parameters
+                        let updatedParameters = paymentsParametersRemove(parameters, filter: ["a3_docName_1_2", "a3_BillNumber_1_1", "a3_IPnumber_1_1"])
+                        
+                        /*
+                         Данные для теста
+                         ИП 6631/22/27009-ИП
+                         */
+                        
+                        do {
+                            
+                            let transferStepData = try await paymentsTransferAnywayStep(with: parameters, include: ["a3_SearchType_1_1"], step: .initial)
+                            let nextStepParameters = paymentsTaxesNextStepParameters(for: transferStepData, samples: ["a3_IPnumber_1_1": "6631/22/27009-ИП"])
+ 
+                            completion(.success(updatedParameters + nextStepParameters))
+                            
+                        } catch {
+                            
+                            completion(.failure(error))
+                        }
+                    }
+     
+                default:
+                    completion(.failure(Payments.Error.unsupported))
+                }
+
+            } else {
+                                
+                // operator
+                let operatorParameter = Payments.ParameterOperator(operatorType: .fssp)
+                
+                // search type
+                let searchTypeParameter = Payments.ParameterSelectSwitch(
+                    .init(id: "a3_SearchType_1_1", value: "20"),
+                    options: [
+                        .init(id: "20", name: "Документ"),
+                        .init(id: "30", name: "УИН"),
+                        .init(id: "40", name: "ИП")
+                    ], affectsHistory: true)
+                
+                // documents
+                guard let fsspDocumentList = dictionaryFSSPDocumentList() else {
+                    completion(.failure(Payments.Error.unableLoadFTSCategoryOptions))
+                    return
+                }
+                
+                let documentParameter = Payments.ParameterSelect(
+                    Parameter(id: "a3_docName_1_2", value: nil),
+                    title: "Тип документа",
+                    options: fsspDocumentList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample) }, affectsHistory: true)
+                
+                completion(.success([operatorParameter, searchTypeParameter, documentParameter]))
+            }
+
+            
+        case 1:
+            guard let searchTypeParameter = paymentsParameterValue(parameters, id: "a3_SearchType_1_1") else {
+                
+                completion(.failure(Payments.Error.missingParameter))
+                return
+            }
+            
+            switch searchTypeParameter {
+            case "20":
+                Task {
+                    
+                    // remove all search type depended parameters
+                    let updatedParameters = paymentsParametersRemove(parameters, filter: ["a3_docNumber_2_2"])
+                    
+                    /*
+                     тестовые данные
+                     a3_docNumber_2_2 7816218222
+                     */
+                    
+                    do {
+                        
+                        let transferStepData = try await paymentsTransferAnywayStep(with: updatedParameters, include: ["a3_SearchType_1_1"], step: .initial)
+                        //a3_docNumber_2_2
+                        let nextStepParameters = paymentsTaxesNextStepParameters(for: transferStepData, samples: ["a3_docNumber_2_2": "7816218222"])
+                        
+                        completion(.success(updatedParameters + nextStepParameters))
+                        
+                    } catch {
+                        
+                        completion(.failure(error))
+                    }
+                }
+                
+            case "30":
+                
+                Task {
+                    
+                    let updatedParameters = paymentsParametersEditable(parameters, editable: false, filter: ["a3_BillNumber_1_1"])
+                    
+                    do {
+                        
+                        let transferStepData = try await paymentsTransferAnywayStep(with: updatedParameters, include: ["a3_BillNumber_1_1"], step: .next)
+                        print(transferStepData.parameterListForNextStep.map{ $0.debugDescription})
+                        //a3_docName_1_2, a3_docNumber_2_2
+                        let nextStepParameters = paymentsTaxesNextStepParameters(for: transferStepData)
+                        
+                        completion(.success(updatedParameters + nextStepParameters))
+                        
+                    } catch {
+                        
+                        completion(.failure(error))
+                    }
+                }
+                
+            case "40":
+                Task {
+                    
+                    let updatedParameters = paymentsParametersEditable(parameters, editable: false, filter: ["a3_IPnumber_1_1"])
+                    
+                    do {
+                        
+                        let transferStepData = try await paymentsTransferAnywayStep(with: updatedParameters, include: ["a3_IPnumber_1_1"], step: .next)
+                        print(transferStepData.parameterListForNextStep.map{ $0.debugDescription})
+                        //FIXME: debug
+//                        let nextStepParameters = paymentsTaxesNextStepParameters(for: transferStepData)
+                        
+                        completion(.failure(Payments.Error.unsupported))
+                        
+                    } catch {
+                        
+                        completion(.failure(error))
+                    }
+                }
+                
+                
+            default:
+                completion(.failure(Payments.Error.unsupported))
+                
+            }
+            
+        case 2:
+            
+            guard let searchTypeParameter = paymentsParameterValue(parameters, id: "a3_SearchType_1_1") else {
+                
+                completion(.failure(Payments.Error.missingParameter))
+                return
+            }
+            
+            switch searchTypeParameter {
+            case "20":
+                Task {
+                    
+                    // remove all search type depended parameters
+    //                    let updatedParameters = paymentsParametersRemove(parameters, filter: ["a3_docNumber_2_2"])
+                    
+                    
+                    do {
+                        
+                        let transferStepData = try await paymentsTransferAnywayStep(with: parameters, include: ["a3_docName_1_2", "a3_docNumber_2_2"], step: .initial)
+    //                        let nextStepParameters = paymentsTaxesNextStepParameters(for: transferStepData, samples: ["a3_docNumber_2_2": "7816218222"])
+                        
+                        print(transferStepData.parameterListForNextStep.map{ $0.debugDescription})
+                        completion(.failure(Payments.Error.unsupported))
+                        
+                    } catch {
+                        
+                        completion(.failure(error))
+                    }
+                }
+                
+            case "30":
+                
+                Task {
+                    
+                    let updatedParameters = paymentsParametersEditable(parameters, editable: false, filter: ["a3_docName_1_2", "a3_docNumber_2_2"])
+                    
+                    do {
+                        
+                        let transferStepData = try await paymentsTransferAnywayStep(with: updatedParameters, include: ["a3_docName_1_2", "a3_docNumber_2_2"], step: .next)
+                        print(transferStepData.parameterListForNextStep.map{ $0.debugDescription})
+                        //a3_docName_1_2, a3_docNumber_2_2
+                        let nextStepParameters = paymentsTaxesNextStepParameters(for: transferStepData)
+                        
+                        completion(.success(updatedParameters + nextStepParameters))
+                        
+                    } catch {
+                        
+                        completion(.failure(error))
+                    }
+                }
+                
+            case "40":
+                Task {
+                    
+                    let updatedParameters = paymentsParametersEditable(parameters, editable: false, filter: ["a3_IPnumber_1_1"])
+                    
+                    do {
+                        
+                        let transferStepData = try await paymentsTransferAnywayStep(with: updatedParameters, include: ["a3_IPnumber_1_1"], step: .next)
+                        print(transferStepData.parameterListForNextStep.map{ $0.debugDescription})
+                        //FIXME: debug
+                        let nextStepParameters = paymentsTaxesNextStepParameters(for: transferStepData)
+                        
+                        completion(.success(updatedParameters + nextStepParameters))
+                        
+                    } catch {
+                        
+                        completion(.failure(error))
+                    }
+                }
+                
+                
+            default:
+                completion(.failure(Payments.Error.unsupported))
+                
+            }
+            
+        default:
+            completion(.failure(Payments.Error.unsupported))
+        }
+    }
+    
+    func parametersFSSPMock(_ parameters: [ParameterRepresentable], _ step: Int, _ completion: @escaping (Result<[ParameterRepresentable], Error>) -> Void) {
+        
+        switch step {
+        case 0:
+            
             if let searchTypeParameter = parameters.first(where: { $0.parameter.id == "a3_SearchType_1_1" }),
                 let searchTypeParameterValue = searchTypeParameter.parameter.value  {
                 

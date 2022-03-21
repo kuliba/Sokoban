@@ -83,6 +83,11 @@ extension Model {
         
         return localAgent.load(type: [FTSData].self)
     }
+    
+    func dictionaryFSSPDocumentList() -> [FSSPDocumentData]? {
+        
+        return localAgent.load(type: [FSSPDocumentData].self)
+    }
 }
 
 //MARK: - Handlers

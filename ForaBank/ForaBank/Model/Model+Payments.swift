@@ -256,6 +256,9 @@ extension Model {
             case .unableLoadFTSCategoryOptions:
                 return "unableLoadFTSCategoryOptions"
                 
+            case .unableLoadFSSPDocumentOptions:
+                return "unableLoadFSSPDocumentOptions"
+                
             case .unableCreateOperationForService(let service):
                 return "unableCreateOperationForService \(service.name) "
             

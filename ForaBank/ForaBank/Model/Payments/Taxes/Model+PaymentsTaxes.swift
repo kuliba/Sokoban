@@ -30,30 +30,14 @@ extension Model {
                     options: categoryParameterOptions, autoContinue: false)
                 parameters.append(result)
                 
-            case "a3_INN_4_1":
+            case "a3_INN_4_1", "a3_OKTMO_5_1", "a3_DIVISION_4_1","a3_docValue_4_2", "a3_docNumber_2_2", "a3_BillNumber_1_1", "a3_IPnumber_1_1":
                 let result = Payments.ParameterInput(
                     .init(id: parameter.id, value: parameterValue),
                     icon: parameter.iconData ?? .parameterDocument,
                     title: parameter.title,
                     validator: .init(minLength: 1, maxLength: nil, regEx: nil))
                 parameters.append(result)
-                
-            case "a3_OKTMO_5_1":
-                let result = Payments.ParameterInput(
-                    .init(id: parameter.id, value: parameterValue),
-                    icon: parameter.iconData ?? .parameterDocument,
-                    title: parameter.title,
-                    validator: .init(minLength: 1, maxLength: nil, regEx: nil))
-                parameters.append(result)
-                
-            case "a3_DIVISION_4_1":
-                let result = Payments.ParameterInput(
-                    .init(id: parameter.id, value: parameterValue),
-                    icon: parameter.iconData ?? .parameterDocument,
-                    title: parameter.title,
-                    validator: .init(minLength: 1, maxLength: nil, regEx: nil))
-                parameters.append(result)
-                
+                                
             case "a3_fio_1_2":
                 let result = Payments.ParameterName(id: parameter.id, value: parameterValue, title: parameter.title)
                 parameters.append(result)
@@ -65,21 +49,13 @@ extension Model {
                     title: "Адрес проживания")
                 parameters.append(result)
                 
-            case "a3_docType_3_2":
+            case "a3_docType_3_2", "a3_docName_1_2":
                 let result = Payments.ParameterSelectSimple(
                     Parameter(id: parameter.id, value: parameterValue),
                     icon: parameter.iconData ?? .parameterSample,
                     title: parameter.title,
                     selectionTitle: "Выберете тип документа",
                     options: parameter.options ?? [], autoContinue: false)
-                parameters.append(result)
-                
-            case "a3_docValue_4_2":
-                let result = Payments.ParameterInput(
-                    .init(id: parameter.id, value: parameterValue),
-                    icon: parameter.iconData ?? .parameterDocument,
-                    title: parameter.title,
-                    validator: .init(minLength: 1, maxLength: nil, regEx: nil))
                 parameters.append(result)
                 
             default:
