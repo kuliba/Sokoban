@@ -138,6 +138,7 @@
 		0BAC674126D408DC005AAD91 /* CreateDirectTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAC674026D408DC005AAD91 /* CreateDirectTransferDecodableModel.swift */; };
 		0BAC674426D41C18005AAD91 /* ExtensionGKHSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAC674326D41C18005AAD91 /* ExtensionGKHSearch.swift */; };
 		0BAC674726D4F471005AAD91 /* QRCodeStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0BAC674626D4F471005AAD91 /* QRCodeStoryboard.storyboard */; };
+		0BAD466E27E7C04700569FE6 /* QRSearchDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAD466D27E7C04700569FE6 /* QRSearchDataViewController.swift */; };
 		0BAD4D33273EDA9B00FDF9B6 /* GetNotificationsDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAD4D32273EDA9B00FDF9B6 /* GetNotificationsDecodableModel.swift */; };
 		0BAD4D35273EDE8200FDF9B6 /* GetNotificationsEntitytModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAD4D34273EDE8200FDF9B6 /* GetNotificationsEntitytModel.swift */; };
 		0BAD4D37273EDF3A00FDF9B6 /* GetNotificationsModelSaved.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAD4D36273EDF3A00FDF9B6 /* GetNotificationsModelSaved.swift */; };
@@ -1011,6 +1012,7 @@
 		0BAC674026D408DC005AAD91 /* CreateDirectTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateDirectTransferDecodableModel.swift; sourceTree = "<group>"; };
 		0BAC674326D41C18005AAD91 /* ExtensionGKHSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionGKHSearch.swift; sourceTree = "<group>"; };
 		0BAC674626D4F471005AAD91 /* QRCodeStoryboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = QRCodeStoryboard.storyboard; sourceTree = "<group>"; };
+		0BAD466D27E7C04700569FE6 /* QRSearchDataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRSearchDataViewController.swift; sourceTree = "<group>"; };
 		0BAD4D32273EDA9B00FDF9B6 /* GetNotificationsDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetNotificationsDecodableModel.swift; sourceTree = "<group>"; };
 		0BAD4D34273EDE8200FDF9B6 /* GetNotificationsEntitytModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetNotificationsEntitytModel.swift; sourceTree = "<group>"; };
 		0BAD4D36273EDF3A00FDF9B6 /* GetNotificationsModelSaved.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetNotificationsModelSaved.swift; sourceTree = "<group>"; };
@@ -1888,6 +1890,7 @@
 		0B66E8D426CC5CCB00FD735D /* QR */ = {
 			isa = PBXGroup;
 			children = (
+				0BAD466D27E7C04700569FE6 /* QRSearchDataViewController.swift */,
 				0B66E8D526CC5D6500FD735D /* NetDetectAlert.swift */,
 				0B66E8D926CC5F1E00FD735D /* SquareView.swift */,
 				0B66E8DB26CC5F4D00FD735D /* QRScannerCodeDelegate.swift */,
@@ -5664,6 +5667,7 @@
 				77517FE227A98CC3005CFB77 /* UserSettingData.swift in Sources */,
 				68E6A29726A033F200A1D9A1 /* GetProductTemplateListDecodableModel.swift in Sources */,
 				EDA0DCC22739523F0013F47E /* AccountDetailsViewController.swift in Sources */,
+				0BAD466E27E7C04700569FE6 /* QRSearchDataViewController.swift in Sources */,
 				EDDFE3B52756D54800F57C71 /* CalculatorDepositCollectionViewCell.swift in Sources */,
 				0B283FB826FB7DD300B5E925 /* ExtensionMobilePayNav.swift in Sources */,
 				68FFA55F268BF2D2002DADFA /* TransferByRequisitesViewController.swift in Sources */,

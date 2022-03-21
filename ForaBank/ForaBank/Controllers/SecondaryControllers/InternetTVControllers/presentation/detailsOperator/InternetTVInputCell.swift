@@ -11,6 +11,7 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
     var showSelectView: (([String: String], String) -> ())? = nil
     var showGoButton: ((Bool) -> ())? = nil
     var currentElementUI: RequisiteDO? = nil
+    var showAlert: (() -> ())? = nil
 
     var fieldId = ""
     var fieldName = ""
@@ -30,7 +31,7 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
     
     @IBOutlet weak var textView: UITextView!
     
-    
+    var regEx = ""
     var placeholder = ""
 
     override func awakeFromNib() {
@@ -50,6 +51,7 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
     }
 
     func setupUI (_ index: Int, _ item: RequisiteDO, _ qrData: [String: String], additionalList: [AdditionalListModel], _ selectedValue: String) {
+        regEx = item.regExp ?? ""
         currentElementUI = item
         infoButon.isHidden = true
         fieldId = String(item.order)
@@ -198,11 +200,22 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
     }
 
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        let previousText:NSString = textView.text! as NSString
+        let previousText: NSString = textView.text! as NSString
         let updatedText = previousText.replacingCharacters(in: range, with: text)
         fieldValue = updatedText
         checkForEmpty()
+    
         InternetTVDetailsFormViewModel.additionalDic[fieldName] = ["fieldid" : fieldId, "fieldname" : fieldName, "fieldvalue" : fieldValue]
+        
+        return true
+    }
+    
+    func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
+        let a = textView.text ?? ""
+        if ( !isValidPassword(a) == true && a != "") {
+            showAlert!()
+            textView.text = ""
+        }
         return true
     }
 
@@ -260,5 +273,9 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
                 || str.contains("лицев")
                 || str.contains("номер")
                 || str.contains("абонент")
+    }
+    
+    func isValidPassword(_ input: String) -> Bool {
+        return NSPredicate(format: "SELF MATCHES %@", self.regEx).evaluate(with: input)
     }
 }

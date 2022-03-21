@@ -44,6 +44,7 @@ class BottomPopUpViewAdapter: UIViewController {
         view.layer.shadowColor = UIColor.black.cgColor
         view.layer.shadowOpacity = 0.1
         view.layer.shadowRadius = 10
+        
         return view
     }()
     
