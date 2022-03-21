@@ -6096,7 +6096,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 7.12.8;
+				MARKETING_VERSION = 7.12.9;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -6123,7 +6123,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 7.12.8;
+				MARKETING_VERSION = 7.12.9;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
