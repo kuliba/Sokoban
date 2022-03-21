@@ -412,7 +412,7 @@ extension Model {
 
 extension Model {
     
-    func paymentsTransferAnywayStep(with parameters: [ParameterRepresentable], include: [Payments.Parameter.ID], step: TransferData.Step) async throws -> TransferAnywayResponseData {
+    func paymentsTransferAnywayStep(with parameters: [ParameterRepresentable], include: [Payments.Parameter.ID], step: TransferData.Step, isAmountRequired: Bool = false) async throws -> TransferAnywayResponseData {
         
         guard let token = token else {
             throw Payments.Error.notAuthorized
@@ -422,7 +422,7 @@ extension Model {
             throw Payments.Error.missingOperatorParameter
         }
         
-        let amount = paymentsTransferAmount(with: parameters)
+        let amount: Double? = isAmountRequired ? paymentsTransferAmount(with: parameters) : nil
         
         guard let currency = paymentsTransferCurrency(with: parameters) else {
             throw Payments.Error.missingCurrency
