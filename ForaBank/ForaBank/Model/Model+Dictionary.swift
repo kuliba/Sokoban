@@ -78,6 +78,11 @@ extension Model {
         
         return localAgent.load(type: [FMSData].self)
     }
+    
+    func dictionaryFTSList() -> [FTSData]? {
+        
+        return localAgent.load(type: [FTSData].self)
+    }
 }
 
 //MARK: - Handlers

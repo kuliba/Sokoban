@@ -12,6 +12,449 @@ extension Model {
     func parametersFNS(_ parameters: [ParameterRepresentable], _ step: Int, _ completion: @escaping (Result<[ParameterRepresentable], Error>) -> Void) {
         
         let paramOperator = Payments.Parameter.Identifier.operator.rawValue
+        
+        switch step {
+        case 0:
+            
+            if let operatorParameterValue = paymentsParameterValue(parameters, id: paramOperator),
+                let operatorSelected = Operator(rawValue: operatorParameterValue) {
+                
+                switch operatorSelected {
+                case .fns:
+                    
+                    // category
+                    guard let fnsCategoriesList = dictionaryFTSList() else {
+                        completion(.failure(Payments.Error.unableLoadFTSCategoryOptions))
+                        return
+                    }
+                    
+                    let categoryParameter = Payments.ParameterSelect(
+                        Parameter(id: "a3_dutyCategory_1_1", value: nil),
+                        title: "Категория платежа",
+                        options: fnsCategoriesList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample)}, affectsHistory: true)
+                    
+                    completion(.success( parameters + [categoryParameter]))
+                    
+                case .fnsUin:
+                    
+                    /*
+                     УИН для теста 18200550200005071174
+
+                     Если не будет работать, попробовать из нижеперечисленных:
+                     18810192110276578924
+                     18200550200005071174
+                     18200544200017415275
+                     18207603200005987087
+                     18207580200009786004
+                     18204437200029004095
+                     18202452200028262470
+                     18207536200032541235
+                     18810150210809028577
+                     18810123210722211917
+                     18810129210809765632
+                     32277058210591378005
+                     18810171210871130401
+                     */
+                    
+                    // number
+                    let numberParameter = Payments.ParameterInput(
+                        Parameter(id: "a3_BillNumber_1_1", value: "18810192110276578924"),
+                        icon: .parameterDocument,
+                        title: "УИН",
+                        validator: .init(minLength: 1, maxLength: nil, regEx: nil))
+                    
+                    completion(.success( parameters + [numberParameter]))
+                    
+                default:
+                    completion(.failure(Payments.Error.unexpectedOperatorValue))
+                }
+                
+            } else {
+                
+                // operator
+                let operatorParameter = Payments.ParameterSelectSwitch(
+                    .init(id: paramOperator, value: Operator.fns.rawValue),
+                    options: [
+                        .init(id: Operator.fns.rawValue, name: Operator.fns.name),
+                        .init(id: Operator.fnsUin.rawValue, name: Operator.fnsUin.name)
+                    ], affectsHistory: true)
+                
+                // category
+                guard let fnsCategoriesList = dictionaryFTSList() else {
+                    completion(.failure(Payments.Error.unableLoadFTSCategoryOptions))
+                    return
+                }
+                
+                let categoryParameter = Payments.ParameterSelect(
+                    Parameter(id: "a3_dutyCategory_1_1", value: nil),
+                    title: "Категория платежа",
+                    options: fnsCategoriesList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample)}, affectsHistory: true)
+                
+                completion(.success( parameters + [operatorParameter, categoryParameter]))
+            }
+            
+        case 1:
+            guard let operatorParameterValue = paymentsParameterValue(parameters, id: paramOperator),
+                let operatorSelected = Operator(rawValue: operatorParameterValue),
+                let anywayOperator = dictionaryAnywayOperator(for: operatorParameterValue) else {
+                    
+                    completion(.failure(Payments.Error.missingOperatorParameter))
+                    return
+                }
+            
+            switch operatorSelected {
+            case .fns:
+                
+                let divisionParameterId = "a3_divisionSelect_2_1"
+                let parametersIds = parameters.map{ $0.parameter.id }
+                
+                if parametersIds.contains(divisionParameterId) {
+                    
+                    // user updated division parameter value
+                    
+                    Task {
+                        
+                        // remove all division depended parameters
+                        var updatedParameters = [ParameterRepresentable]()
+                        for parameter in parameters {
+                            
+                            switch parameter.parameter.id {
+                            case "a3_categorySelect_3_1", "a3_INN_4_1", "a3_OKTMO_5_1", "a3_DIVISION_4_1":
+                                continue
+                                
+                            default:
+                                updatedParameters.append(parameter)
+                            }
+                        }
+                        
+                        do {
+                            
+                            let include = ["a3_dutyCategory_1_1", divisionParameterId]
+                            
+                            let transferData = try await paymentsTransferAnywayStep(with: updatedParameters, include: include, step: .initial)
+                            
+                            for parameter in transferData.parameterListForNextStep {
+        
+                                /*
+                                 Данные для теста
+                                 Земельный налог, ИНН 7723013452, октмо 45390000
+                                 */
+                                
+                                switch parameter.id {
+                                case "a3_categorySelect_3_1":
+                                    guard let categoryParameterOptions = parameter.options else {
+                                        completion(.failure(Payments.Error.missingParameter))
+                                        return
+                                    }
+                                    let categoryParameter = Payments.ParameterSelectSimple(
+                                        Parameter(id: parameter.id, value: categoryParameterOptions.first?.id),
+                                        icon: parameter.iconData ?? .parameterSample,
+                                        title: parameter.title,
+                                        selectionTitle: "Выберете услугу",
+                                        options: categoryParameterOptions, autoContinue: false)
+                                        updatedParameters.append(categoryParameter)
+                                case "a3_INN_4_1":
+                                    let unnParameter = Payments.ParameterInput(
+                                        .init(id: parameter.id, value: "7723013452"),
+                                        icon: parameter.iconData ?? .parameterDocument,
+                                        title: parameter.title,
+                                        validator: .init(minLength: 1, maxLength: nil, regEx: nil))
+                                    updatedParameters.append(unnParameter)
+                                    
+                                case "a3_OKTMO_5_1":
+                                    let oktmoParameter = Payments.ParameterInput(
+                                        .init(id: parameter.id, value: "45390000"),
+                                        icon: parameter.iconData ?? .parameterDocument,
+                                        title: parameter.title,
+                                        validator: .init(minLength: 1, maxLength: nil, regEx: nil))
+                                    updatedParameters.append(oktmoParameter)
+                                    
+                                case "a3_DIVISION_4_1":
+                                    let numberParameter = Payments.ParameterInput(
+                                        .init(id: parameter.id, value: nil),
+                                        icon: parameter.iconData ?? .parameterDocument,
+                                        title: parameter.title,
+                                        validator: .init(minLength: 1, maxLength: nil, regEx: nil))
+                                    updatedParameters.append(numberParameter)
+                                    
+                                default:
+                                    continue
+                                }
+                            }
+                            
+                            completion(.success(updatedParameters))
+                            
+                        } catch {
+                            
+                            print(error.localizedDescription)
+                            completion(.failure(error))
+                        }
+                    }
+                    
+                } else {
+                    
+                    // initial division parameter selection
+                    guard let divisionAnywayParameter = anywayOperator.parameterList.first(where: { $0.id == divisionParameterId }),
+                          let divisionAnywayParameterOptions = divisionAnywayParameter.options,
+                          let divisionAnywayParameterValue = divisionAnywayParameter.value else {
+                              
+                              completion(.failure(Payments.Error.missingParameter))
+                              return
+                          }
+                    
+                    // division
+                    let divisionParameter = Payments.ParameterSelectSimple(
+                        Parameter(id: divisionParameterId, value: divisionAnywayParameterValue),
+                        icon: divisionAnywayParameter.iconData ?? .parameterSample,
+                        title: divisionAnywayParameter.title,
+                        selectionTitle: "Выберете услугу",
+                        options: divisionAnywayParameterOptions,
+                        affectsHistory: true)
+                    
+                    Task {
+                        
+                        do {
+                            
+                            var stepParameters = parameters + [divisionParameter]
+                            let include = ["a3_dutyCategory_1_1", divisionParameterId]
+                            
+                            let transferData = try await paymentsTransferAnywayStep(with: stepParameters, include: include, step: .initial)
+                            
+                            print(transferData.parameterListForNextStep.map{ $0.debugDescription })
+                            for parameter in transferData.parameterListForNextStep {
+                                
+                                /*
+                                 Данные для теста
+                                 Земельный налог, ИНН 7723013452, октмо 45390000
+                                 */
+                                
+                                switch parameter.id {
+                                case "a3_categorySelect_3_1":
+                                    guard let categoryParameterOptions = parameter.options else {
+                                        completion(.failure(Payments.Error.missingParameter))
+                                        return
+                                    }
+                                    let categoryParameter = Payments.ParameterSelectSimple(
+                                        Parameter(id: parameter.id, value: categoryParameterOptions.first?.id),
+                                        icon: parameter.iconData ?? .parameterSample,
+                                        title: parameter.title,
+                                        selectionTitle: "Выберете услугу",
+                                        options: categoryParameterOptions, autoContinue: false)
+                                        stepParameters.append(categoryParameter)
+                                    
+                                case "a3_INN_4_1":
+                                    let unnParameter = Payments.ParameterInput(
+                                        .init(id: parameter.id, value: "7723013452"),
+                                        icon: parameter.iconData ?? .parameterDocument,
+                                        title: parameter.title,
+                                        validator: .init(minLength: 1, maxLength: nil, regEx: nil))
+                                    stepParameters.append(unnParameter)
+                                    
+                                case "a3_OKTMO_5_1":
+                                    let oktmoParameter = Payments.ParameterInput(
+                                        .init(id: parameter.id, value: "45390000"),
+                                        icon: parameter.iconData ?? .parameterDocument,
+                                        title: parameter.title,
+                                        validator: .init(minLength: 1, maxLength: nil, regEx: nil))
+                                    stepParameters.append(oktmoParameter)
+                                    
+                                default:
+                                    continue
+                                }
+                            }
+                            
+                            completion(.success(stepParameters))
+                            
+                        } catch {
+                            
+                            print(error.localizedDescription)
+                            completion(.failure(error))
+                        }
+                    }
+                }
+
+            case .fnsUin:
+                Task {
+                    
+                    do {
+                        let include = ["a3_BillNumber_1_1"]
+                        
+                        let transferData = try await paymentsTransferAnywayStep(with: parameters, include: include, step: .initial)
+                        
+                        //FIXME: same parameter for nex step
+                        // ["id: a3_BillNumber_1_1 value: 18810192110276578924 title: УИН: data: %String type: Input"]
+                        print(transferData.parameterListForNextStep.map{ $0.debugDescription })
+                        for parameter in transferData.parameterListForNextStep {
+   
+                            switch parameter.id {
+ 
+                            default:
+                                continue
+                            }
+                        }
+                        
+                        completion(.success(parameters))
+                        
+                    } catch {
+                        
+                        print(error.localizedDescription)
+                        completion(.failure(error))
+                    }
+                }
+ 
+            default:
+                completion(.failure(Payments.Error.unexpectedOperatorValue))
+            }
+            
+        case 2:
+            guard let operatorParameterValue = paymentsParameterValue(parameters, id: paramOperator),
+                let operatorSelected = Operator(rawValue: operatorParameterValue) else {
+                    
+                    completion(.failure(Payments.Error.missingOperatorParameter))
+                    return
+                }
+            
+            switch operatorSelected {
+            case .fns:
+                Task {
+                    
+                    var updatedParameters = [ParameterRepresentable]()
+                    for parameter in parameters {
+                        
+                        switch parameter.parameter.id {
+                        case "a3_INN_4_1", "a3_OKTMO_5_1", "a3_DIVISION_4_1":
+                            updatedParameters.append(parameter.updated(editable: false))
+                            
+                        default:
+                            updatedParameters.append(parameter)
+                        }
+                    }
+                    
+                    do {
+ 
+                        let include = ["a3_categorySelect_3_1", "a3_INN_4_1", "a3_OKTMO_5_1", "a3_DIVISION_4_1"]
+                        
+                        let transferData = try await paymentsTransferAnywayStep(with: parameters, include: include, step: .next)
+                        
+                        print(transferData.parameterListForNextStep.map{ $0.debugDescription })
+                        for parameter in transferData.parameterListForNextStep {
+
+                            switch parameter.id {
+                            case "a3_fio_1_2":
+                                let fioParameter = Payments.ParameterName(id: parameter.id, value: parameter.value, title: parameter.title)
+                                updatedParameters.append(fioParameter)
+                                
+                            case "a3_address_2_2":
+                                let adressParameter = Payments.ParameterInfo(
+                                    .init(id: parameter.id, value: parameter.value),
+                                    icon: parameter.iconData ?? .parameterLocation,
+                                    title: "Адрес проживания")
+                                updatedParameters.append(adressParameter)
+                                
+                            case "a3_docType_3_2":
+                                let docTypeParameter = Payments.ParameterSelectSimple(
+                                    Parameter(id: parameter.id, value: parameter.value),
+                                    icon: parameter.iconData ?? .parameterSample,
+                                    title: parameter.title,
+                                    selectionTitle: "Выберете тип документа",
+                                    options: parameter.options ?? [], editable: false)
+                                updatedParameters.append(docTypeParameter)
+                                
+                            case "a3_docValue_4_2":
+                                let docValueParameter = Payments.ParameterInput(
+                                    .init(id: parameter.id, value: parameter.value),
+                                    icon: parameter.iconData ?? .parameterDocument,
+                                    title: parameter.title,
+                                    validator: .init(minLength: 1, maxLength: nil, regEx: nil))
+                                updatedParameters.append(docValueParameter)
+    
+                            default:
+                                continue
+                            }
+                        }
+                        
+                        let cardParameter = Payments.ParameterCard()
+                        updatedParameters.append(cardParameter)
+                        
+                        let amountParameter = Payments.ParameterAmount(
+                            .init(id: Payments.Parameter.Identifier.amount.rawValue, value: nil),
+                            title: "Сумма перевода",
+                            currency: .init(description: "RUB"),
+                            validator: .init(minAmount: 10))
+                        updatedParameters.append(amountParameter)
+                        
+                        completion(.success(updatedParameters))
+                        
+                    } catch {
+                        
+                        print(error.localizedDescription)
+                        completion(.failure(error))
+                    }
+                }
+                
+            default:
+                completion(.failure(Payments.Error.unexpectedOperatorValue))
+            }
+            
+            
+        case 3:
+            guard let operatorParameterValue = paymentsParameterValue(parameters, id: paramOperator),
+                let operatorSelected = Operator(rawValue: operatorParameterValue) else {
+                    
+                    completion(.failure(Payments.Error.missingOperatorParameter))
+                    return
+                }
+            
+            switch operatorSelected {
+            case .fns:
+                Task {
+                    
+                    // make all parameters not editable
+                    var updatedParameters = [ParameterRepresentable]()
+                    for parameter in parameters {
+                        
+                        updatedParameters.append(parameter.updated(editable: false))
+                    }
+                    
+                    do {
+                        
+                        let include = ["a3_fio_1_2", "a3_address_2_2", "a3_docType_3_2", "a3_docValue_4_2"]
+                        let transferData = try await paymentsTransferAnywayStep(with: updatedParameters, include: include, step: .next)
+                        
+                        if transferData.finalStep == true {
+                            
+                            let codeParameter = Payments.ParameterInput(
+                                .init(id: Payments.Parameter.Identifier.code.rawValue, value: nil),
+                                icon: .parameterSMS,
+                                title: "Введите код из СМС", validator: .init(minLength: 6, maxLength: 6, regEx: nil))
+                            
+                            let finalParameter = Payments.ParameterFinal()
+                            
+                            completion(.success(updatedParameters + [codeParameter, finalParameter]))
+                            
+                        } else {
+                            
+                            completion(.failure(Payments.Error.anywayTransferFinalStepExpected))
+                        }
+                        
+                    } catch {
+                        
+                        completion(.failure(error))
+                    }
+                }
+
+            default:
+                completion(.failure(Payments.Error.unexpectedOperatorValue))
+            }
+
+        default:
+            completion(.failure(Payments.Error.unsupported))
+        }        
+    }
+    
+    func parametersFNSMock(_ parameters: [ParameterRepresentable], _ step: Int, _ completion: @escaping (Result<[ParameterRepresentable], Error>) -> Void) {
+        
+        let paramOperator = Payments.Parameter.Identifier.operator.rawValue
      
         switch step {
         case 0:

@@ -132,7 +132,6 @@ extension Model {
             } else {
                 
                 // initial division parameter selection
-                
                 guard let divisionAnywayParameter = anywayOperator.parameterList.first(where: { $0.id == divisionParameterId }),
                       let divisionAnywayParameterOptions = divisionAnywayParameter.options,
                       let divisionAnywayParameterValue = divisionAnywayParameter.value else {

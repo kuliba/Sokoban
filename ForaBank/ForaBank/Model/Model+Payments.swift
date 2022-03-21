@@ -252,6 +252,9 @@ extension Model {
             case .unableLoadFMSCategoryOptions:
                 return "unableLoadFMSCategoryOptions"
                 
+            case .unableLoadFTSCategoryOptions:
+                return "unableLoadFTSCategoryOptions"
+                
             case .unableCreateOperationForService(let service):
                 return "unableCreateOperationForService \(service.name) "
             
@@ -585,7 +588,7 @@ extension Model {
         return parameters.first(where: { $0.parameter.id == id })?.parameter
     }
     
-    func paymentsParameterValue(_ parameters: [ParameterRepresentable], id: Payments.Parameter.ID) -> Payments.Parameter.Value? {
+    func paymentsParameterValue(_ parameters: [ParameterRepresentable], id: Payments.Parameter.ID) -> Payments.Parameter.Value {
         
         return parameters.first(where: { $0.parameter.id == id })?.parameter.value
     }

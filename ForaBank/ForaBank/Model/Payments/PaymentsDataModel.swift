@@ -110,6 +110,7 @@ enum Payments {
     enum Error: Swift.Error {
         
         case unableLoadFMSCategoryOptions
+        case unableLoadFTSCategoryOptions
         case unableCreateOperationForService(Service)
         case unexpectedOperatorValue
         case missingOperatorParameter
