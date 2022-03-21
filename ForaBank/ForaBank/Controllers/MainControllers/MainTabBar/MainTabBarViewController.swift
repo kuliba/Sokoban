@@ -59,6 +59,14 @@ class MainTabBarViewController: UITabBarController {
             let nc = UINavigationController(rootViewController: controller)
             nc.modalPresentationStyle = .fullScreen
             present(nc, animated: false)
+            return
+        }
+        if GlobalModule.c2bURL != nil {
+            let controller = C2BDetailsViewController.storyboardInstance()!
+            let nc = UINavigationController(rootViewController: controller)
+            nc.modalPresentationStyle = .fullScreen
+            present(nc, animated: false)
+            return
         }
     }
 
