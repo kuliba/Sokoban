@@ -292,7 +292,6 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
     
 }
 
-
 extension MobilePayViewController: EPPickerDelegate {
     
     func epContactPicker(_: EPContactsPicker, didContactFetchFailed error : NSError) {
@@ -325,6 +324,24 @@ extension MobilePayViewController: EPPickerDelegate {
     func epContactPicker(_: EPContactsPicker, didSelectMultipleContacts contacts: [EPContact]) {
         for contact in contacts {
             print("\(contact.displayName())")
+        }
+    }
+    
+    func epUserPhone(_ phone: String) {
+        var numbers = phone.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
+        if numbers.first == "7" {
+            let mask = StringMask(mask: "+0 (000) 000-00-00")
+            let maskPhone = mask.mask(string: numbers)
+            phoneField.text = maskPhone ?? ""
+            phoneField.textField.text = maskPhone ?? ""
+            selectNumber = maskPhone ?? ""
+        } else if numbers.first == "8" {
+            numbers.removeFirst()
+            let mask = StringMask(mask: "+7 (000) 000-00-00")
+            let maskPhone = mask.mask(string: numbers)
+            phoneField.text = maskPhone ?? ""
+            phoneField.textField.text = maskPhone ?? ""
+            selectNumber = maskPhone ?? ""
         }
     }
     

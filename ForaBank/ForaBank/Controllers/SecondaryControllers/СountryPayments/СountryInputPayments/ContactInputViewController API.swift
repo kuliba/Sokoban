@@ -25,10 +25,11 @@ extension ContactInputViewController {
     func contaktPayment(with card: UserAllCardsModel, surname: String, name: String, secondName: String, amount: Double, completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
         
         guard let countryCode = country?.contactCode else { return }
+        guard let currencyAmount = card.currency else { return }
         
         var body = ["check" : false,
                     "amount" : amount,
-                    "currencyAmount" : "RUB",
+                    "currencyAmount" : currencyAmount,
                     "payer" : [
                         "cardId" : nil,
                         "cardNumber" : nil,
@@ -117,7 +118,7 @@ extension ContactInputViewController {
         
         var body = ["check" : false,
                     "amount" : amount,
-                    "currencyAmount" : "RUB",
+                    "currencyAmount" : self.currency,
                     "payer" : [
                         "cardId" : nil,
                         "cardNumber" : nil,

@@ -310,6 +310,12 @@ class ContactInputViewController: UIViewController {
                         if self.cardListView.isHidden == false {
                             self.hideView(self.cardListView, needHide: true)
                         }
+                        if let cardCurrency = card.currency {
+                            self.bottomView.currencySwitchButton.setAttributedTitle(self.setupButtonTitle(title: cardCurrency.getSymbol() ?? "₽"), for: .normal)
+                            self.bottomView.currencyButtonWidth.constant = 40
+                            self.bottomView.currencySymbol = cardCurrency.getSymbol() ?? "₽"
+                            self.currency = cardCurrency
+                        }
                     }
                 })
             }    
@@ -326,6 +332,23 @@ class ContactInputViewController: UIViewController {
                 cur.removeLast()
             }
             
+            if let cardCurrency = self.cardFromField.model?.currency {
+                if cardCurrency == "RUB" {
+                    
+                    self.currency = cardCurrency
+                    
+                } else {
+                    let currArr = Dict.shared.currencyList
+                    currArr?.forEach({ currency in
+                        if currency.code == cardCurrency {
+
+                            cur = [cardCurrency, "RUR"]
+                            self.currency = cardCurrency
+                        }
+                    })
+                }
+            }
+            //
             let controller = ChooseCurrencyPaymentController()
             controller.elements = cur
             controller.itemIsSelect = { currency in
@@ -542,5 +565,20 @@ extension ContactInputViewController: EPPickerDelegate {
                 print("\(contact.displayName())")
             }
         }
+    
+    func epUserPhone(_ phone: String) {
+        var numbers = phone.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
+        if numbers.first == "7" {
+            let mask = StringMask(mask: "+0 (000) 000-00-00")
+            let maskPhone = mask.mask(string: numbers)
+            phoneField.text = maskPhone ?? ""
+
+        } else if numbers.first == "8" {
+            numbers.removeFirst()
+            let mask = StringMask(mask: "+7 (000) 000-00-00")
+            let maskPhone = mask.mask(string: numbers)
+            phoneField.text = maskPhone ?? ""
+        }
+    }
 
 }

@@ -101,6 +101,7 @@ struct GetProductListDatum: Codable{
     let creditMinimumAmount: Double?
     let minimumBalance: Double?
     let balanceRUB: Double?
+    let isMain: Bool?
 }
 
 // MARK: GetProductListDatum convenience initializers and mutators
@@ -162,7 +163,8 @@ extension GetProductListDatum {
         depositID: Int?? = nil,
         creditMinimumAmount: Double?? = nil,
         minimumBalance: Double?? = nil,
-        balanceRUB: Double?? = 0.0
+        balanceRUB: Double?? = 0.0,
+        isMain: Bool?? = true
         
     ) -> GetProductListDatum {
         return GetProductListDatum (
@@ -206,7 +208,8 @@ extension GetProductListDatum {
             depositID: depositID ?? self.depositID,
             creditMinimumAmount: creditMinimumAmount ?? self.creditMinimumAmount,
             minimumBalance: minimumBalance ?? self.minimumBalance,
-            balanceRUB: balanceRUB ?? self.balanceRUB
+            balanceRUB: balanceRUB ?? self.balanceRUB,
+            isMain: isMain ?? self.isMain
         )
     }
 
