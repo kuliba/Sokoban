@@ -76,6 +76,8 @@ class PaymentsOperationViewModel: ObservableObject {
         bind()
     }
     
+    //MARK: Bind
+    
     internal func bind() {
         
         bind(model: model)
@@ -84,6 +86,8 @@ class PaymentsOperationViewModel: ObservableObject {
         
         print("Payments: bind operation")
     }
+    
+    //MARK: Bind Model
     
     internal func bind(model: Model) {
         
@@ -119,6 +123,8 @@ class PaymentsOperationViewModel: ObservableObject {
                 
             }.store(in: &bindings)
     }
+    
+    //MARK: Bind Action
     
     internal func bindAction() {
         
@@ -160,6 +166,8 @@ class PaymentsOperationViewModel: ObservableObject {
             }.store(in: &bindings)
     }
     
+    //MARK: Bind Items
+    
     internal func bindItems() {
         
         items
@@ -190,6 +198,8 @@ class PaymentsOperationViewModel: ObservableObject {
    
             }.store(in: &bindings)
     }
+    
+    //MARK: Bind Visible Items
     
     private func bind(items: [PaymentsParameterViewModel]) {
         
@@ -279,76 +289,7 @@ class PaymentsOperationViewModel: ObservableObject {
         }
     }
     
-    func reduce(value: PaymentsParameterViewModel.Value) {
-        
-        guard value.isChanged == true else {
-            return
-        }
-        
-        print("Payments: item value changed")
-
-        let results = self.itemsAll.map{ ($0.result, $0.source.affectsHistory) }
-        let update = operation.update(with: results)
-        
-        switch update.type {
-        case .normal:
-            
-            print("Payments: normal update")
-            
-            if isAutoContinueRequired(for: value.id) {
-                
-                action.send(PaymentsOperationViewModelAction.Continue())
-                
-            } else {
-                
-                operation = update.operation
-                updateFooter(isContinueEnabled: isItemsValuesValid())
-            }
-            
-        case .historyChanged:
-            
-            print("Payments: history changed")
-            action.send(PaymentsOperationViewModelAction.Continue())
-        }
-    }
-
-    func isItemsValuesValid() -> Bool {
-        
-        for item in itemsAll {
-            
-            guard item.isValid == true else {
-                return false
-            }
-        }
-        
-        return true
-    }
-    
-    func updateFooter(isContinueEnabled: Bool) {
-        
-        guard let footer = footer else { return }
-
-        switch footer {
-        case .button(let continueButtonViewModel):
-            print("Payments: footer button updated", isContinueEnabled)
-            continueButtonViewModel.isEnabled = isContinueEnabled
-            self.footer = .button(continueButtonViewModel)
-            
-        case .amount(let amountViewModel):
-            print("Payments: footer amount updated", isContinueEnabled)
-            amountViewModel.updateTranferButton(isEnabled: isContinueEnabled)
-            self.footer = .amount(amountViewModel)
-        }
-    }
-
-    func isAutoContinueRequired(for parameterId: Payments.Parameter.ID) -> Bool {
-        
-        guard let parameterViewModel = items.value.first(where: { $0.id == parameterId}) else {
-            return false
-        }
- 
-        return parameterViewModel.source.autoContinue
-    }
+    //MARK: - Create Items
     
     func createItemsAndFooter(from parameters: [ParameterRepresentable]) {
         
@@ -359,9 +300,6 @@ class PaymentsOperationViewModel: ObservableObject {
             footer = createFooter(from: parameters)
         }
         
-        //TODO: handle amount parameter more elegant way
-        removeAmountParameterFromItemsIfRequired()
-    
         updateFooter(isContinueEnabled: isItemsValuesValid())
     }
     
@@ -394,11 +332,104 @@ class PaymentsOperationViewModel: ObservableObject {
                 result.append(PaymentsCardView.ViewModel(parameterCard: parameterCard))
                 
             default:
-                result.append(PaymentsParameterViewModel(source: parameter))
+                continue
             }
         }
         
         return result
+    }
+    
+    func createFooter(from parameters: [ParameterRepresentable]) -> FooterViewModel? {
+
+        var footer: FooterViewModel?  = .button(.init(title: "Продолжить", isEnabled: false, action: { [weak self] in
+            self?.action.send(PaymentsOperationViewModelAction.Continue())
+        }))
+        
+        for parameter in parameters {
+
+            switch parameter {
+            case let parameterSelect as Payments.ParameterSelect:
+                if parameterSelect.parameter.value == nil, case .button(_) = footer {
+                    
+                    footer = nil
+                }
+
+            case let parameterAmount as Payments.ParameterAmount:
+                footer = .amount(.init(with: parameterAmount,actionTitle: "Перевести", action: { [weak self] in
+                    self?.action.send(PaymentsOperationViewModelAction.Continue())
+                }))
+                
+                                
+            default:
+                break
+            }
+        }
+        
+        return footer
+    }
+}
+
+//MARK: - Conditions
+
+extension PaymentsOperationViewModel {
+    
+    func isItemsValuesValid() -> Bool {
+        
+        for item in itemsAll {
+            
+            guard item.isValid == true else {
+                return false
+            }
+        }
+        
+        return true
+    }
+    
+    func isAutoContinueRequired(for parameterId: Payments.Parameter.ID) -> Bool {
+        
+        guard let parameterViewModel = items.value.first(where: { $0.id == parameterId}) else {
+            return false
+        }
+ 
+        return parameterViewModel.source.autoContinue
+    }
+}
+
+//MARK: - Reducers and Updates
+
+extension PaymentsOperationViewModel {
+    
+    func reduce(value: PaymentsParameterViewModel.Value) {
+        
+        guard value.isChanged == true else {
+            return
+        }
+        
+        print("Payments: item value changed")
+
+        let results = self.itemsAll.map{ ($0.result, $0.source.affectsHistory) }
+        let update = operation.update(with: results)
+        
+        switch update.type {
+        case .normal:
+            
+            print("Payments: normal update")
+            
+            if isAutoContinueRequired(for: value.id) {
+                
+                action.send(PaymentsOperationViewModelAction.Continue())
+                
+            } else {
+                
+                operation = update.operation
+                updateFooter(isContinueEnabled: isItemsValuesValid())
+            }
+            
+        case .historyChanged:
+            
+            print("Payments: history changed")
+            action.send(PaymentsOperationViewModelAction.Continue())
+        }
     }
     
     func updateCollapsable(items: [PaymentsParameterViewModel], isCollapsed: Bool) -> [PaymentsParameterViewModel] {
@@ -435,53 +466,24 @@ class PaymentsOperationViewModel: ObservableObject {
         }
     }
     
-    func createFooter(from parameters: [ParameterRepresentable]) -> FooterViewModel? {
+    func updateFooter(isContinueEnabled: Bool) {
+        
+        guard let footer = footer else { return }
 
-        var footer: FooterViewModel?  = .button(.init(title: "Продолжить", isEnabled: false, action: { [weak self] in
-            self?.action.send(PaymentsOperationViewModelAction.Continue())
-        }))
-        
-        for parameter in parameters {
-
-            switch parameter {
-            case let parameterSelect as Payments.ParameterSelect:
-                if parameterSelect.parameter.value == nil, case .button(_) = footer {
-                    
-                    footer = nil
-                }
-
-            case let parameterAmount as Payments.ParameterAmount:
-                footer = .amount(.init(with: parameterAmount,actionTitle: "Перевести", action: { [weak self] in
-                    self?.action.send(PaymentsOperationViewModelAction.Continue())
-                }))
-                
-                                
-            default:
-                break
-            }
-        }
-        
-        return footer
-    }
-    
-    func removeAmountParameterFromItemsIfRequired() {
-        
-        guard let footer = footer else {
-            return
-        }
-        
         switch footer {
-        case .amount:
-            guard let amountParameterIndex = items.value.firstIndex(where: { $0.source.parameter.id == Payments.Parameter.Identifier.amount.rawValue }) else {
-                return
-            }
-            items.value.remove(at: amountParameterIndex)
+        case .button(let continueButtonViewModel):
+            print("Payments: footer button updated", isContinueEnabled)
+            continueButtonViewModel.isEnabled = isContinueEnabled
+            self.footer = .button(continueButtonViewModel)
             
-        default:
-            return
+        case .amount(let amountViewModel):
+            print("Payments: footer amount updated", isContinueEnabled)
+            amountViewModel.updateTranferButton(isEnabled: isContinueEnabled)
+            self.footer = .amount(amountViewModel)
         }
     }
 }
+
 
 //MARK: - Types
 
