@@ -465,6 +465,19 @@ extension ProductView {
         }
     }
     
+    struct AnimatedDotsView: View {
+        
+        var body: some View {
+            
+            HStack(spacing: 3) {
+                
+                ProductView.AnimatedDotView(duration: 0.6, delay: 0)
+                ProductView.AnimatedDotView(duration: 0.6, delay: 0.2)
+                ProductView.AnimatedDotView(duration: 0.6, delay: 0.4)
+            }
+        }
+    }
+    
     struct AnimatedDotView: View {
         
         var color: Color = .white
