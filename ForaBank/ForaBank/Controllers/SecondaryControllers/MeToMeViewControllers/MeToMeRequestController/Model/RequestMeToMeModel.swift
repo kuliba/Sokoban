@@ -60,20 +60,14 @@ struct RequestMeToMeModel {
     }
     
     init(bank: String) {
-//        self.model = model
-        
         self.amount =  0
         self.fee =  0
-//        let cardId = model.data?.cardId
-//        let accountId = model.data?.accountId
-//        let bank = bank
         self.RefTrnId = ""
         self.RcvrMsgId =  ""
         self.RecipientID =  ""
         
         self.bank = findBank(with: bank)
         self.card = findProduct(with: nil, with: nil)
-        
     }
     
     private func findBank(with bankId: String) -> BankFullInfoList? {
@@ -89,10 +83,8 @@ struct RequestMeToMeModel {
     
     private mutating func findProduct(with cardId: Int?, with accountId: Int?) -> UserAllCardsModel? {
         let cardList = realm?.objects(UserAllCardsModel.self)
-//        print("DEBUG UserAllCards", cardList?.count)
         var card: UserAllCardsModel?
         cardList?.forEach { product in
-//            print("DEBUG product", product.id)
             if cardId != nil {
                 if product.id == cardId {
                     card = product
@@ -102,12 +94,10 @@ struct RequestMeToMeModel {
                     card = product
                 }
             }
-            
         }
         if card == nil {
             card = cardList?.first
         }
         return card
     }
-    
 }
