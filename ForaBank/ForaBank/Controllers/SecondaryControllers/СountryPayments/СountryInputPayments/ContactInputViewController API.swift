@@ -55,7 +55,7 @@ extension ContactInputViewController {
                         ],
                         [  "fieldid": 5,
                            "fieldname": "CURR",
-                           "fieldvalue": self.currency
+                           "fieldvalue": self.currency == "RUB" ? "RUR" : self.currency
                         ]
                     ] ] as [String: AnyObject]
         
