@@ -217,10 +217,10 @@
 		0BF3486426943DFB005138A8 /* SuggestCompanyDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF3486326943DFB005138A8 /* SuggestCompanyDecodableModel.swift */; };
 		0BF34866269444D9005138A8 /* AllCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF34865269444D9005138A8 /* AllCardCell.swift */; };
 		0BF348A1269E0CDA005138A8 /* LogoutDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF348A0269E0CDA005138A8 /* LogoutDecodableModel.swift */; };
-		0BF816FA27E11E9600AC890D /* EPContactSelfDataView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0BF816F927E11E9600AC890D /* EPContactSelfDataView.xib */; };
-		0BF816FC27E122AF00AC890D /* EPContactSelfDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF816FB27E122AF00AC890D /* EPContactSelfDataView.swift */; };
 		0BF43D4627B2D3F3004DF248 /* PaymentsSelectServiceViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF43D4527B2D3F3004DF248 /* PaymentsSelectServiceViewComponent.swift */; };
 		0BF43D4827B466C2004DF248 /* PaymentsNameViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF43D4727B466C2004DF248 /* PaymentsNameViewComponent.swift */; };
+		0BF816FA27E11E9600AC890D /* EPContactSelfDataView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0BF816F927E11E9600AC890D /* EPContactSelfDataView.xib */; };
+		0BF816FC27E122AF00AC890D /* EPContactSelfDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF816FB27E122AF00AC890D /* EPContactSelfDataView.swift */; };
 		1CB9C8278920B424652C4AE2 /* Image+Illustrations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F88A9A4DBEADB3F8E16A822 /* Image+Illustrations.swift */; };
 		5A5ABF8227AAF4BF00D548AA /* PaymentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5ABF8127AAF4BF00D548AA /* PaymentData.swift */; };
 		5A5ABF8427AAF4DE00D548AA /* PaymentGeneralData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5ABF8327AAF4DE00D548AA /* PaymentGeneralData.swift */; };
@@ -1234,10 +1234,10 @@
 		0BF3486326943DFB005138A8 /* SuggestCompanyDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestCompanyDecodableModel.swift; sourceTree = "<group>"; };
 		0BF34865269444D9005138A8 /* AllCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllCardCell.swift; sourceTree = "<group>"; };
 		0BF348A0269E0CDA005138A8 /* LogoutDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutDecodableModel.swift; sourceTree = "<group>"; };
-		0BF816F927E11E9600AC890D /* EPContactSelfDataView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EPContactSelfDataView.xib; sourceTree = "<group>"; };
-		0BF816FB27E122AF00AC890D /* EPContactSelfDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPContactSelfDataView.swift; sourceTree = "<group>"; };
 		0BF43D4527B2D3F3004DF248 /* PaymentsSelectServiceViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSelectServiceViewComponent.swift; sourceTree = "<group>"; };
 		0BF43D4727B466C2004DF248 /* PaymentsNameViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsNameViewComponent.swift; sourceTree = "<group>"; };
+		0BF816F927E11E9600AC890D /* EPContactSelfDataView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EPContactSelfDataView.xib; sourceTree = "<group>"; };
+		0BF816FB27E122AF00AC890D /* EPContactSelfDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPContactSelfDataView.swift; sourceTree = "<group>"; };
 		5A5ABF8127AAF4BF00D548AA /* PaymentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentData.swift; sourceTree = "<group>"; };
 		5A5ABF8327AAF4DE00D548AA /* PaymentGeneralData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentGeneralData.swift; sourceTree = "<group>"; };
 		5A5ABF8527AAF4FB00D548AA /* PaymentPhoneData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentPhoneData.swift; sourceTree = "<group>"; };
@@ -6850,7 +6850,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 37;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
@@ -6859,7 +6859,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 7.12.9;
+				MARKETING_VERSION = 7.12.10;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -6878,7 +6878,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 37;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				INFOPLIST_FILE = ForaBank/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -6886,7 +6886,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 7.12.9;
+				MARKETING_VERSION = 7.12.10;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
