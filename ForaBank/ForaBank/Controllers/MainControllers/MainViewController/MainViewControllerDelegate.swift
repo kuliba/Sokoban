@@ -150,6 +150,23 @@ extension MainViewController: UICollectionViewDelegate {
             print()
         }
     }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        
+        if let productCell = cell as? ProductCell {
+            
+            productCell.isUpdating = isUpdating.value
+        }
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        let verticalOffset = scrollView.contentOffset.y
+        if verticalOffset < -80.0 && isUpdating.value == false {
+            
+            startUpdate()
+        }
+    }
 }
 
 extension MainViewController: UIViewControllerTransitioningDelegate {
