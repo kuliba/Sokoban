@@ -204,25 +204,6 @@ class ConfirmViewControllerModel {
 
 class ContactConfurmViewController: UIViewController {
     
-//    var netStatus = true
-//    ///Сетевое  соединение отсутствует
-//    func netEnable() {
-//        netStatus = false
-//    }
-//    ///Сетевое  соединение восстановлено
-//    func netDesable() {
-//        netStatus = true
-//    }
-//
-//    func showNetErrorAlert () {
-//        switch netStatus {
-//        case true: showActivity()
-//        case false:
-//            self.dismissActivity()
-//            self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
-//        }
-//    }
-    
     
     lazy var realm = try? Realm()
     var confurmVCModel: ConfirmViewControllerModel? {

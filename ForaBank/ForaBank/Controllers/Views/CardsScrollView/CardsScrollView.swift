@@ -88,7 +88,8 @@ final class CardsScrollView: UIView {
             updateObjectWithNotification()
             cardListRealm?.forEach({ op in
                 if onlyCard {
-                    if op.productType == "CARD" {
+                    if ( op.productType == "CARD" && op.isMain == true) {
+                    
                         cardList.append(op)
                     }
                 } else {
@@ -102,7 +103,7 @@ final class CardsScrollView: UIView {
                 }
             })
         }
-//        let height: CGFloat = self.onlyMy ? 110 : 80
+
         changeCardButtonCollection.isHidden = !self.onlyMy
         self.translatesAutoresizingMaskIntoConstraints = false
         self.heightAnchor.constraint(equalToConstant: self.onlyMy ? 125 : 95).isActive = true
@@ -130,7 +131,6 @@ final class CardsScrollView: UIView {
             guard (self?.collectionView) != nil else {return}
             switch changes {
             case .initial:
-                print("REALM Initial")
                 self?.collectionView.reloadData()
             case .update(_, _, _, _):
                 print("REALM Update")
@@ -199,11 +199,8 @@ extension CardsScrollView: UICollectionViewDataSource {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CardsScrollCell
                 
                 if isFiltered {
-                    print("DEBUG:", #function, filteredCardList.count, indexPath)
-                    
                     cell.card = filteredCardList[indexPath.item - 1]
                 } else {
-                    print("DEBUG:", #function, cardList.count, indexPath)
                     cell.card = cardList[indexPath.item - 1]
                 }
                 return cell
@@ -218,10 +215,10 @@ extension CardsScrollView: UICollectionViewDataSource {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CardsScrollCell
                 
                 if isFiltered {
-                    print("DEBUG:", #function, filteredCardList.count, indexPath)
+                    
                     cell.card = filteredCardList[indexPath.item ]
                 } else {
-                    print("DEBUG:", #function, cardList.count, indexPath)
+                    
                     cell.card = cardList[indexPath.item]
                 }
                 return cell
@@ -292,10 +289,10 @@ extension CardsScrollView: UICollectionViewDelegate {
             
             if indexPath.item == 0 {
                 firstItemTap?()
-                print("GoNew")
+                
             } else if indexPath.item == cardList.count + 1 {
                 lastItemTap?()
-                print("GoAll")
+                
             }  else {
                 if isFiltered {
                     let card = filteredCardList[indexPath.item]
@@ -308,7 +305,7 @@ extension CardsScrollView: UICollectionViewDelegate {
         } else {
             if indexPath.item == cardList.count {
                 lastItemTap?()
-                print("GoAll")
+                
             }  else {
                 if isFiltered {
                     let card = filteredCardList[indexPath.item]

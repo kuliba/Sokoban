@@ -17,16 +17,13 @@ struct AddAllUserCardtList {
         
         NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, params, [:]) { model, error in
             
-            if let error = error {
-                
-                print("DEBUG: error", error)
+            if error != nil {
                 completion()
                 return
             }
             
             guard let model = model,
                   let receivedData = model.data else {
-                      
                       completion()
                       return
                   }
@@ -50,8 +47,6 @@ struct AddAllUserCardtList {
                 completion()
                 
             } catch  {
-                
-                print(error.localizedDescription)
                 completion()
             }
         }

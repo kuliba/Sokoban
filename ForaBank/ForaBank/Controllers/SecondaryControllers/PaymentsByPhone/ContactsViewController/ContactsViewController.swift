@@ -131,6 +131,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
         viewLine.anchor(width:  UIScreen.main.bounds.width + 20, height: 1)
         viewLine.backgroundColor = UIColor(red: 0.96, green: 0.96, blue: 0.97, alpha: 1)
         userPhoneView.anchor()
+        userPhoneView.topLineView.isHidden = true
         switch seeall {
         case true:
             stackView = UIStackView(arrangedSubviews: [searchContact, lastPaymentsCollectionView, viewLine, userPhoneView, tableView, contactCollectionView])
@@ -238,6 +239,14 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
         dismiss(animated: true, completion: nil)
     }
     
+        func showSelfPhoneView(_ value: Bool) {
+            if value == true {
+                userPhoneView.isHidden = false
+            } else {
+                userPhoneView.isHidden = true
+            }
+        }
+    
     
     func passTextFieldText(textField: UITextField) {
         guard let text = textField.text else {
@@ -338,8 +347,6 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
             }
     }
     
-    
-    
     private func searchForContactUsingName(text: String) {
         
         var predicate: NSPredicate
@@ -354,8 +361,6 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
         do {
             filteredContacts = try store.unifiedContacts(matching: predicate,
                                                          keysToFetch: allowedContactKeys())
-            print(predicate)
-            print(filteredContacts)
         }
         catch {
             print("Error!")

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct BankData: Codable, Equatable {
+struct BankData: Codable, Equatable, Cachable {
     
     let md5hash: String
     let memberId: String?

@@ -75,3 +75,16 @@ extension TransferData: Equatable {
                 lhs.payer == rhs.payer
     }
 }
+
+extension TransferData {
+    
+    enum Step {
+        
+        case initial
+        case next
+        case check
+        
+        var isNewPayment: Bool { self == .initial }
+        var check: Bool { self == .check }
+    }
+}
