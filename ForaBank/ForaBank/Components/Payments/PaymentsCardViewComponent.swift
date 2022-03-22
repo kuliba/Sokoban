@@ -6,12 +6,15 @@
 //
 
 import SwiftUI
+import Combine
 
 //MARK: - ViewModel
 
 extension PaymentsCardView {
     
     class ViewModel: PaymentsParameterViewModel {
+        
+        let action: PassthroughSubject<Action, Never> = .init()
         
         let title: String
         @Published var cardIcon: Image
@@ -22,9 +25,21 @@ extension PaymentsCardView {
         
         @Published var state: State
         
+        var isExpanded: Bool {
+            
+            switch state {
+            case .normal: return false
+            case .expanded: return true
+            }
+        }
+        
+        internal let model: Model
+        internal var bindings = Set<AnyCancellable>()
+        internal var selectorBinding: AnyCancellable?
+        
         static let cardIconPlaceholder = Image("Placeholder Card Small")
         
-        init(title: String, cardIcon: Image, paymentSystemIcon: Image?, name: String, amount: String, captionItems: [CaptionItemViewModel], state: State, parameterCard: Payments.ParameterCard = .init()) {
+        init(title: String, cardIcon: Image, paymentSystemIcon: Image?, name: String, amount: String, captionItems: [CaptionItemViewModel], state: State, model: Model = .emptyMock, parameterCard: Payments.ParameterCard = .init()) {
             
             self.title = title
             self.cardIcon = cardIcon
@@ -33,21 +48,74 @@ extension PaymentsCardView {
             self.amount = amount
             self.captionItems = captionItems
             self.state = state
+            self.model = model
             
             super.init(source: parameterCard)
         }
 
-        init(with parameterCard: Payments.ParameterCard) {
+        init(_ model: Model, parameterCard: Payments.ParameterCard) {
             
-            self.title = ""
+            self.title = "Счет списания"
             self.cardIcon = Self.cardIconPlaceholder
-            self.paymentSystemIcon = nil
-            self.name = ""
-            self.amount = ""
-            self.captionItems = []
+            self.paymentSystemIcon = Image("card_mastercard_logo")
+            self.name = "Основная"
+            self.amount = "170 897 ₽"
+            self.captionItems = [.init(title: "4996"), .init(title: "Корпоротивная")]
             self.state = .normal
+            self.model = model
             
             super.init(source: parameterCard)
+            bind()
+        }
+        
+        internal func bind() {
+            
+            action
+                .receive(on: DispatchQueue.main)
+                .sink {[unowned self] action in
+                    
+                    switch action {
+                    case _ as PaymentsCardView.ViewModelAction.ToggleSelector:
+                        
+                        withAnimation {
+                            
+                            switch state {
+                            case .normal:
+                                
+                                let selectorViewModel = PaymentsProductSelectorView.ViewModel(.emptyMock)
+                                state = .expanded(selectorViewModel)
+                                bind(selector: selectorViewModel)
+                                
+                            case .expanded:
+                                state = .normal
+                            }
+                        }
+
+                    default:
+                        break
+                    }
+                    
+                }.store(in: &bindings)
+        }
+        
+        func bind(selector: PaymentsProductSelectorView.ViewModel) {
+
+            selectorBinding = selector.action
+                .receive(on: DispatchQueue.main)
+                .sink {[unowned self] action in
+                    
+                    switch action {
+                    case let payload as PaymentsProductSelectorView.ViewModelAction.SelectedProduct:
+                        //TODO: update product with id
+                        withAnimation {
+                            
+                            state = .normal
+                        }
+                    
+                    default:
+                        break
+                    }
+                }
         }
         
         enum State {
@@ -62,6 +130,11 @@ extension PaymentsCardView {
             let title: String
         }
     }
+    
+    enum ViewModelAction {
+    
+        struct ToggleSelector: Action {}
+    }
 }
 
 //MARK: - View
@@ -70,6 +143,7 @@ struct PaymentsCardView: View {
     
     @ObservedObject var viewModel: ViewModel
     
+
     var body: some View {
         
         VStack(alignment: .leading, spacing: 4) {
@@ -107,6 +181,7 @@ struct PaymentsCardView: View {
                             .resizable()
                             .frame(width: 24, height: 24)
                             .foregroundColor(.mainColorsGray)
+                            .rotationEffect(viewModel.isExpanded ? .degrees(0) : .degrees(-90))
                     }
                     
                     HStack {
@@ -117,6 +192,10 @@ struct PaymentsCardView: View {
                         }
                     }
                 }
+            }
+            .onTapGesture {
+                
+                viewModel.action.send(PaymentsCardView.ViewModelAction.ToggleSelector())
             }
             
             switch viewModel.state {

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import RealmSwift
 
 //MARK: - Actions
 
@@ -48,9 +49,10 @@ extension ModelAction {
                 }
             }
 
-            struct Response: Action {
+            enum Response: Action {
                 
-                let result: Result<Operation, Error>
+                case success(Operation)
+                case failure(String)
             }
         }
         
@@ -70,7 +72,7 @@ extension ModelAction {
                     
                     case step(Operation)
                     case confirm(Operation)
-                    case fail(Error)
+                    case failure(String)
                 }
             }
         }
@@ -83,14 +85,10 @@ extension ModelAction {
                 let operation: Operation
             }
             
-            struct Response: Action {
+            enum Response: Action {
                 
-                let result: Result<SuccessData, Error>
-                
-                struct SuccessData {
-                    
-                    //TODO: success screen data
-                }
+                case success(Payments.Success)
+                case failure(String)
             }
         }
     }
@@ -110,19 +108,34 @@ extension Model {
     
     func handlePaymentsServicesRequest(_ payload: ModelAction.Payment.Services.Request) {
         
-        if payload.category.services.count > 1 {
-            
-            let selectServiceParameter = Payments.ParameterSelectService(category: payload.category, options: payload.category.services.map { selectServiceParameterOption(for: $0)})
-            
-            action.send(ModelAction.Payment.Services.Response.select(selectServiceParameter))
-            
-        } else if let service = payload.category.services.first {
-            
-            action.send(ModelAction.Payment.Services.Response.selected(service))
-            
-        } else {
-            
-            action.send(ModelAction.Payment.Services.Response.failed(Payments.Operation.Error.unableSelectServiceForCategory(payload.category)))
+        let category = payload.category
+        
+        switch category {
+        case .taxes:
+            let services = category.services
+            if services.count > 1 {
+                
+                guard let anywayGroup = dictionaryAnywayOperatorGroup(for: category.rawValue) else {
+                    
+                    action.send(ModelAction.Payment.Services.Response.failed(Payments.Operation.Error.failedLoadServicesForCategory(category)))
+                    return
+                }
+                
+                let operatorsCodes = services.compactMap{ $0.operators.first?.rawValue }
+                let anywayOperators = anywayGroup.operators.filter{ operatorsCodes.contains($0.code)}
+                
+                let selectServiceParameter = Payments.ParameterSelectService(category: payload.category, options: payload.category.services.compactMap { paymentsAnywayOperatorOption(for: $0, with: anywayOperators)})
+                
+                action.send(ModelAction.Payment.Services.Response.select(selectServiceParameter))
+                
+            } else if let service = payload.category.services.first {
+                
+                action.send(ModelAction.Payment.Services.Response.selected(service))
+                
+            } else {
+                
+                action.send(ModelAction.Payment.Services.Response.failed(Payments.Operation.Error.unableSelectServiceForCategory(payload.category)))
+            }
         }
     }
     
@@ -134,10 +147,10 @@ extension Model {
             operation(for: service) { result in
                 switch result {
                 case .success(let operation):
-                    self.action.send(ModelAction.Payment.Begin.Response(result: .success(operation)))
+                    self.action.send(ModelAction.Payment.Begin.Response.success(operation))
                     
                 case .failure(let error):
-                    self.action.send(ModelAction.Payment.Begin.Response(result: .failure(error)))
+                    self.action.send(ModelAction.Payment.Begin.Response.failure(self.paymentsAlertMessage(with: error)))
                 }
             }
             
@@ -147,10 +160,10 @@ extension Model {
                 
                 switch result {
                 case .success(let operation):
-                    self.action.send(ModelAction.Payment.Begin.Response(result: .success(operation)))
+                    self.action.send(ModelAction.Payment.Begin.Response.success(operation))
                     
                 case .failure(let error):
-                    self.action.send(ModelAction.Payment.Begin.Response(result: .failure(error)))
+                    self.action.send(ModelAction.Payment.Begin.Response.failure(self.paymentsAlertMessage(with: error)))
                 }
             }
         }
@@ -183,15 +196,122 @@ extension Model {
                 }
 
             case .failure(let error):
-                self.action.send(ModelAction.Payment.Continue.Response(result: .fail(error)))
+                self.action.send(ModelAction.Payment.Continue.Response(result: .failure(self.paymentsAlertMessage(with: error))))
             }
         }
     }
     
     func handlePaymentsCompleteRequest(_ payload: ModelAction.Payment.Complete.Request) {
         
-        //TODO: make transfer
-        self.action.send(ModelAction.Payment.Complete.Response(result: .success(.init())))
+        print("Payments: complete request")
+        
+        guard let codeParameter = payload.operation.parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.code.rawValue })?.parameter, let codeValue = codeParameter.value else {
+            
+            self.action.send(ModelAction.Payment.Complete.Response.failure(self.paymentsAlertMessage(with: Payments.Error.missingCodeParameter)))
+            return
+        }
+        
+        //TODO: remove after tests
+        DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(200)) {
+            
+            guard let amountParameter = payload.operation.parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.amount.rawValue}) as? Payments.ParameterAmount else {
+                
+                self.action.send(ModelAction.Payment.Complete.Response.failure(self.paymentsAlertMessage(with: Payments.Error.missingAmountParameter)))
+                return
+            }
+            
+            self.action.send(ModelAction.Payment.Complete.Response.success(.init(status: .complete, amount: amountParameter.amount, currency: amountParameter.currency, icon: nil, operationDetailId: 0)))
+        }
+        
+        //FIXME: test real implementation
+        /*
+        Task {
+            
+            do {
+                    
+                let result = try await paymentsTransferComplete(code: codeValue)
+                guard let success = Payments.Success(with: result) else {
+                    self.action.send(ModelAction.Payment.Complete.Response(result: .failure(Payments.Error.unsupported)))
+                    return
+                }
+                self.action.send(ModelAction.Payment.Complete.Response(result: .success(success)))
+                
+            } catch {
+                
+                self.action.send(ModelAction.Payment.Complete.Response(result: .failure(error)))
+                
+            }
+        }
+         */
+    }
+    
+    func paymentsAlertMessage(with error: Error) -> String {
+        
+        if let paymentsError = error as? Payments.Error {
+            
+            switch paymentsError {
+            case .unableLoadFMSCategoryOptions:
+                return "unableLoadFMSCategoryOptions"
+                
+            case .unableLoadFTSCategoryOptions:
+                return "unableLoadFTSCategoryOptions"
+                
+            case .unableLoadFSSPDocumentOptions:
+                return "unableLoadFSSPDocumentOptions"
+                
+            case .unableCreateOperationForService(let service):
+                return "unableCreateOperationForService \(service.name) "
+            
+            case .unexpectedOperatorValue:
+                return "unexpectedOperatorValue"
+                
+            case .missingOperatorParameter:
+                return "missingOperatorParameter"
+                
+            case .missingParameter:
+                return "missingParameter"
+                
+            case .missingPayer:
+                return "missingPayer"
+            
+            case .missingCurrency:
+                return "missingCurrency"
+                
+            case .missingCodeParameter:
+                return "missingCodeParameter"
+                
+            case .missingAmountParameter:
+                return "missingAmountParameter"
+                
+            case .missingAnywayTransferAdditional:
+                return "missingAnywayTransferAdditional"
+                
+            case .failedTransferWithEmptyDataResponse:
+                return "failedTransferWithEmptyDataResponse"
+                
+            case .failedTransfer(let status, let message):
+                return "failedTransfer status \(status), message: \(String(describing: message))"
+                
+            case .failedMakeTransferWithEmptyDataResponse:
+                return "failedMakeTransferWithEmptyDataResponse"
+                
+            case .failedMakeTransfer(let status, let message):
+                return "failedMakeTransfer status \(status), message: \(String(describing: message))"
+                
+            case .anywayTransferFinalStepExpected:
+                return "anywayTransferFinalStepExpected"
+                
+            case .notAuthorized:
+                return "notAuthorized"
+                
+            case .unsupported:
+                return "unsupported"
+            }
+            
+        } else {
+            
+            return "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения."
+        }
     }
     
     //MARK: - Operation
@@ -250,17 +370,262 @@ extension Model {
         }
     }
     
-    func selectServiceParameterOption(for service: Service) -> Payments.ParameterSelectService.Option {
+    func paymentsAnywayOperatorOption(for service: Service, with operators: [OperatorGroupData.OperatorData]) -> Payments.ParameterSelectService.Option? {
         
         switch service {
         case .fns:
-            return .init(service: service, title: service.name, description: "Налоги", icon: .serviceFNS)
+            
+            guard let anywayOperator = operators.first(where: { $0.code == service.operators.first?.rawValue })  else {
+               return nil
+            }
+            
+            let title = anywayOperator.title
+            let description = anywayOperator.description ?? "Налоги"
+            let icon = anywayOperator.iconImageData ?? .serviceFNS
+            
+            return .init(service: service, title: title, description: description, icon: icon)
 
         case .fms:
-            return .init(service: service, title: service.name, description: "Госпошлины", icon: .serviceFMS)
             
+            guard let anywayOperator = operators.first(where: { $0.code == service.operators.first?.rawValue })  else {
+               return nil
+            }
+            
+            let title = anywayOperator.title
+            let description = anywayOperator.description ?? "Госпошлины"
+            let icon = anywayOperator.iconImageData ?? .serviceFMS
+            
+            return .init(service: service, title: title, description: description, icon: icon)
+
         case .fssp:
-            return .init(service: service, title: service.name, description: "Задолженность", icon: .serviceFSSP)
+            
+            guard let anywayOperator = operators.first(where: { $0.code == service.operators.first?.rawValue })  else {
+               return nil
+            }
+            
+            let title = anywayOperator.title
+            let description = anywayOperator.description ?? "Задолженность"
+            let icon = anywayOperator.iconImageData ?? .serviceFSSP
+            
+            return .init(service: service, title: title, description: description, icon: icon)
+        }
+    }
+}
+
+// MARK: - Transfer
+
+extension Model {
+    
+    @discardableResult
+    func paymentsTransferAnywayStep(with parameters: [ParameterRepresentable], include: [Payments.Parameter.ID], step: TransferData.Step, isAmountRequired: Bool = false) async throws -> TransferAnywayResponseData {
+        
+        guard let token = token else {
+            throw Payments.Error.notAuthorized
+        }
+        
+        guard let puref = paymentsTransferPuref(with: parameters) else {
+            throw Payments.Error.missingOperatorParameter
+        }
+        
+        let amount: Double? = isAmountRequired ? paymentsTransferAmount(with: parameters) : nil
+        
+        guard let currency = paymentsTransferCurrency(with: parameters) else {
+            throw Payments.Error.missingCurrency
+        }
+        
+        guard let payer = paymentsTransferPayer(with: parameters) else {
+            throw Payments.Error.missingPayer
+        }
+        
+        guard let additional = paymentsTransferAnywayAdditional(with: parameters, include) else {
+            throw Payments.Error.missingAnywayTransferAdditional
+        }
+        
+        let command = ServerCommands.TransferController.CreateAnywayTransfer(token: token, isNewPayment: step.isNewPayment, payload: .init(amount: amount, check: step.check, comment: nil, currencyAmount: currency, payer: payer, additional: additional, puref: puref))
+        
+        return try await withCheckedThrowingContinuation({ continuation in
+            
+            serverAgent.executeCommand(command: command) { result in
+                
+                switch result {
+                case .success(let response):
+                    switch response.statusCode {
+                    case .ok:
+                        guard let transferData = response.data else {
+                            continuation.resume(with: .failure(Payments.Error.failedTransferWithEmptyDataResponse))
+                            return
+                        }
+                        continuation.resume(with: .success(transferData))
+                        
+                    default:
+                        continuation.resume(with: .failure(Payments.Error.failedTransfer(status: response.statusCode, message: response.errorMessage)))
+                    }
+                    
+                case .failure(let error):
+                    continuation.resume(with: .failure(error))
+                }
+            }
+        })
+    }
+    
+    func paymentsTransferComplete(code: String) async throws -> TransferResponseBaseData {
+        
+        guard let token = token else {
+            throw Payments.Error.notAuthorized
+        }
+        
+        let command = ServerCommands.TransferController.MakeTransfer(token: token, payload: .init(verificationCode: code))
+        
+        return try await withCheckedThrowingContinuation({ continuation in
+            
+            serverAgent.executeCommand(command: command) { result in
+                
+                switch result {
+                case .success(let response):
+                    switch response.statusCode {
+                    case .ok:
+                        guard let transferData = response.data else {
+                            continuation.resume(with: .failure(Payments.Error.failedMakeTransferWithEmptyDataResponse))
+                            return
+                        }
+                        continuation.resume(with: .success(transferData))
+                        
+                    default:
+                        continuation.resume(with: .failure(Payments.Error.failedMakeTransfer(status: response.statusCode, message: response.errorMessage)))
+                    }
+                    
+                case .failure(let error):
+                    continuation.resume(with: .failure(error))
+                }
+            }
+        })
+    }
+    
+    func paymentsTransferPayer(with parameters: [ParameterRepresentable]) -> TransferData.Payer? {
+        
+        //TODO: extract card/account id from ParameterCard
+        
+        if let cardId = paymentsFirstProductId(of: .card) {
+            
+            return .init(inn: nil, accountId: nil, accountNumber: nil, cardId: cardId, cardNumber: nil, phoneNumber: nil)
+            
+        } else if let accountId = paymentsFirstProductId(of: .account) {
+            
+            return .init(inn: nil, accountId: accountId, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
+            
+        } else {
+            
+            return nil
+        }
+    }
+    
+    func paymentsFirstProductId(of type: ProductType) -> Int? {
+        
+        guard let realm = try? Realm()  else {
+            return nil
+        }
+        
+        let products = realm.objects(UserAllCardsModel.self)
+        
+        return products.first(where: { $0.productType == type.rawValue })?.id
+    }
+    
+    func paymentsTransferAmount(with parameters: [ParameterRepresentable]) -> Double? {
+        
+        guard let amountParameter = parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.amount.rawValue}) as? Payments.ParameterAmount else {
+            
+            return nil
+        }
+        
+        return amountParameter.amount
+    }
+    
+    func paymentsTransferCurrency(with parameters: [ParameterRepresentable]) -> String? {
+        
+        //TODO: real implementation required
+        return "RUB"
+    }
+    
+    func paymentsTransferPuref(with parameters: [ParameterRepresentable]) -> String? {
+        
+        guard let operatorParameter = parameters.first(where: { $0.parameter.id ==  Payments.Parameter.Identifier.operator.rawValue}) else {
+            
+            return nil
+        }
+        
+        return operatorParameter.parameter.value
+    }
+    
+    func paymentsTransferAnywayAdditional(with parameters: [ParameterRepresentable], _ include: [Payments.Parameter.ID]) -> [TransferAnywayData.Additional]? {
+        
+        guard include.isEmpty == false else {
+            return []
+        }
+        
+        var additional = [TransferAnywayData.Additional]()
+        for (index, paraneterId) in include.enumerated() {
+            
+            guard let parameter = parameters.first(where: { $0.parameter.id == paraneterId})?.parameter,
+                  let parameterValue = parameter.value else {
+                      continue
+                  }
+            
+            additional.append(.init(fieldid: index + 1, fieldname: parameter.id, fieldvalue: parameterValue))
+        }
+        
+        return additional
+    }
+}
+
+// MARK: - Parameters Helpers
+
+extension Model {
+    
+    func paymentsParametersContains(_ parameters: [ParameterRepresentable], id: Payments.Parameter.ID) -> Bool {
+        
+        let parametersIds = parameters.map{ $0.parameter.id }
+        
+        return parametersIds.contains(id)
+    }
+    
+    func paymentsParameter(_ parameters: [ParameterRepresentable], id: Payments.Parameter.ID) -> Payments.Parameter? {
+        
+        return parameters.first(where: { $0.parameter.id == id })?.parameter
+    }
+    
+    func paymentsParameterValue(_ parameters: [ParameterRepresentable], id: Payments.Parameter.ID) -> Payments.Parameter.Value {
+        
+        return parameters.first(where: { $0.parameter.id == id })?.parameter.value
+    }
+    
+    func paymentsParametersEditable(_ parameters: [ParameterRepresentable], editable: Bool, filter: [String]? = nil) -> [ParameterRepresentable] {
+        
+        if let filter = filter {
+            
+            return parameters.map { parameter in
+                
+                if filter.contains(parameter.parameter.id) {
+                    
+                    return parameter.updated(editable: editable)
+                    
+                } else {
+                    
+                    return parameter
+                }
+            }
+     
+        } else {
+            
+            return parameters.map{ $0.updated(editable: editable) }
+        }
+    }
+    
+    func paymentsParametersRemove(_ parameters: [ParameterRepresentable], filter: [String]) -> [ParameterRepresentable] {
+        
+        return parameters.compactMap { parameter in
+            
+            guard filter.contains(parameter.parameter.id) == false else { return nil }
+            return parameter
         }
     }
 }

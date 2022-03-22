@@ -57,5 +57,5 @@ struct PaymentsServicesView_Previews: PreviewProvider {
 
 extension PaymentsServicesViewModel {
     
-    static let sample = PaymentsServicesViewModel(header: .init(title: "Налоги и услуги", dismissAction: {}), parameter: .init(category: .taxes, options: []))
+    static let sample = PaymentsServicesViewModel(header: .init(title: "Налоги и услуги", dismissAction: {}), parameter: .init(category: .taxes, options: []), rootActions: .init(dismiss: {}, spinner: .init(show: {}, hide: {}), alert: {_ in}))
 }

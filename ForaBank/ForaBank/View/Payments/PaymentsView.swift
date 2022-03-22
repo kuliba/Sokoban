@@ -13,24 +13,35 @@ struct PaymentsView: View {
     
     var body: some View {
         
-        NavigationView {
+        ZStack {
             
-            switch viewModel.content {
-            case .services(let servicesViewModel):
-                PaymentsServicesView(viewModel: servicesViewModel)
-                    .navigationBarItems(leading: Button(action: { viewModel.action.send(PaymentsViewModelAction.Dismiss())}, label: {
-                        Image("Payments Icon Close") }))
+            NavigationView {
                 
-            case .operation(let operationViewModel):
-                PaymentsOperationView(viewModel: operationViewModel)
+                switch viewModel.content {
+                case .services(let servicesViewModel):
+                    PaymentsServicesView(viewModel: servicesViewModel)
+                        .navigationBarItems(leading: Button(action: { viewModel.action.send(PaymentsViewModelAction.Dismiss())}, label: {
+                            Image("Payments Icon Close") }))
+                    
+                case .operation(let operationViewModel):
+                    PaymentsOperationView(viewModel: operationViewModel)
+                    
+                case .idle:
+                    Text("Loading..")
+                }
+            }
+            .fullScreenCoverLegacy(viewModel: $viewModel.successViewModel) { successViewModel in
+                PaymentsSuccessView(viewModel: successViewModel)
+            }
+            
+            if let spinnerViewModel = viewModel.spinner {
                 
-            case .idle:
-                Text("Loading..")
+                SpinnerView(viewModel: spinnerViewModel)
             }
         }
-        .fullScreenCoverLegacy(viewModel: $viewModel.successViewModel) { successViewModel in
-            PaymentsSuccessView(viewModel: successViewModel)
-        }
+        .alert(item: $viewModel.alert, content: { alertViewModel in
+            Alert(with: alertViewModel)
+        })
     }
 }
 

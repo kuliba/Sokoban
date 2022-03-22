@@ -121,6 +121,8 @@ struct TextFieldMaskableView: UIViewRepresentable {
             
             // remove mask from value
             let filterredValue = (try? updatedValue.filterred(regEx: regExp)) ?? updatedValue
+            
+            // apply mask to result value
             let masked = filterredValue.masked(masks: masks)
             
             return masked.count > 0 ? masked : nil

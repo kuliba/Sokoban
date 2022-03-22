@@ -30,13 +30,17 @@ extension Payments.Operation {
             let historyStepParameters = self.parameters.filter{ historyStepParametersIds.contains($0.parameter.id) }
             
             var updatedHistoryStepParameters = [ParameterRepresentable]()
+            
             for param in historyStepParameters {
                 
-                guard let value = results.first(where: { $0.param.id == param.parameter.id })?.param.value else {
-                    continue
+                if let update = results.first(where: { $0.param.id == param.parameter.id })?.param.value {
+                    
+                    updatedHistoryStepParameters.append(param.updated(value: update))
+                    
+                } else {
+                    
+                    updatedHistoryStepParameters.append(param)
                 }
-                
-                updatedHistoryStepParameters.append(param.updated(value: value))
             }
             
             var historyTrimmed = [[Parameter]]()
@@ -51,6 +55,19 @@ extension Payments.Operation {
             
             var updatedParameters = [ParameterRepresentable]()
             
+            for parameter in parameters {
+                
+                if let update = results.first(where: { $0.param.id == parameter.parameter.id }) {
+                    
+                    updatedParameters.append(parameter.updated(value: update.param.value))
+                    
+                } else {
+                    
+                    updatedParameters.append(parameter)
+                }
+            }
+            
+            /*
             for result in results {
                 
                 guard let index = parameters.firstIndex(where: { $0.parameter.id == result.param.id }) else {
@@ -59,6 +76,7 @@ extension Payments.Operation {
                 
                 updatedParameters.append(parameters[index].updated(value: result.param.value))
             }
+             */
             
             return .init(operation: .init(service: service, parameters: updatedParameters, history: history), type: .normal)
         }
@@ -112,6 +130,14 @@ extension Payments.Operation {
         return results.compactMap{ historyChangedStep(history: history, result: $0)}.min()
     }
     
+    func finalized() -> Payments.Operation {
+        
+        var updatedParameters = parameters
+        updatedParameters.append(Payments.ParameterFinal())
+        
+        return Payments.Operation(service: service, parameters: updatedParameters, history: history)
+    }
+    
     static let emptyMock = Payments.Operation(service: .fms, parameters: [], history: [[]])
 }
 
@@ -131,6 +157,7 @@ extension Payments.Operation {
     
     enum Error: Swift.Error {
         
+        case failedLoadServicesForCategory(Payments.Category)
         case unableSelectServiceForCategory(Payments.Category)
         case operatorNotSelectedForService(Payments.Service)
     }

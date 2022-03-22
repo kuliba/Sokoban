@@ -8,19 +8,28 @@
 import SwiftUI
 import Combine
 
-struct PaymentsSuccessViewModel {
+class PaymentsSuccessViewModel: ObservableObject {
     
     let header: HeaderViewModel
-    let optionButtons: [PaymentsSuccessOptionButtonViewModel]
+    @Published var optionButtons: [PaymentsSuccessOptionButtonViewModel]
     let actionButton: ButtonSimpleView.ViewModel
+    
+    private let model: Model
+    private var bindings = Set<AnyCancellable>()
     
     internal init(header: HeaderViewModel,
                   optionButtons: [PaymentsSuccessOptionButtonViewModel],
-                  actionButton: ButtonSimpleView.ViewModel) {
+                  actionButton: ButtonSimpleView.ViewModel, model: Model = .emptyMock) {
         
         self.header = header
         self.optionButtons = optionButtons
         self.actionButton = actionButton
+        self.model = model
+    }
+    
+    convenience init(_ model: Model, paymentSuccess: Payments.Success, dismissAction: @escaping () -> Void) {
+        
+        self.init(header: .init(with: paymentSuccess), optionButtons: [], actionButton: .init(title: "На главную", isEnabled: true, action: dismissAction), model: model)
     }
 }
 
@@ -31,13 +40,20 @@ extension PaymentsSuccessViewModel {
         let stateIcon: Image
         let title: String
         let description: String
-        let operatorIcon: Image
+        let operatorIcon: Image?
         
-        internal init(stateIcon: Image, title: String, description: String, operatorIcon: Image) {
+        internal init(stateIcon: Image, title: String, description: String, operatorIcon: Image?) {
+            
             self.stateIcon = stateIcon
             self.title = title
             self.description = description
             self.operatorIcon = operatorIcon
+        }
+        
+        init(with paymentSuccess: Payments.Success) {
+            
+            //TODO: real implementation required
+            self.init(stateIcon: Image("OkOperators"), title: paymentSuccess.status.description, description: "\(paymentSuccess.amount)", operatorIcon: paymentSuccess.icon?.image)
         }
     }
 }

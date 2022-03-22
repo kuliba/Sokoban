@@ -21,7 +21,7 @@ extension PaymentsSelectSimpleView {
         
         @Published var content: String
         @Published var description: String?
-        @Published var selectedOptionId: Payments.ParameterSelectSimple.Option.ID?
+        @Published var selectedOptionId: Option.ID?
         
         override var isValid: Bool { value.current != nil }
         
@@ -33,7 +33,7 @@ extension PaymentsSelectSimpleView {
                       title: String,
                       content: String,
                       description: String?,
-                      selectedOptionId: Payments.ParameterSelectSimple.Option.ID? = nil) {
+                      selectedOptionId: Option.ID? = nil) {
             
             self.icon = icon
             self.title = title
@@ -99,45 +99,45 @@ struct PaymentsSelectSimpleView: View {
         
         if viewModel.isEditable == true {
             
-            VStack(alignment: .leading, spacing: 0) {
+            HStack(alignment: .top, spacing: 16) {
+               
+                viewModel.icon
+                    .resizable()
+                    .frame(width: 32, height: 32)
+                    .padding(.top, 8)
                 
-                Text(viewModel.title)
-                    .font(Font.custom("Inter-Regular", size: 12))
-                    .foregroundColor(Color(hex: "#999999"))
-                    .padding(.leading, 48)
-                
-                HStack(spacing: 16) {
-                    
-                    viewModel.icon
-                        .resizable()
-                        .frame(width: 32, height: 32)
-                    
-                    Text(viewModel.content)
-                        .font(Font.custom("Inter-Medium", size: 14))
-                        .foregroundColor(Color(hex: "#1C1C1C"))
-                    
-                    Spacer()
-                    
-                    Image("chevron-downnew")
-                        .resizable()
-                        .frame(width: 24, height: 24)
-                }
-                
-                if let description = viewModel.description {
-                    
-                    Text(description)
-                        .font(Font.custom("Inter-Medium", size: 14))
+                VStack(alignment: .leading, spacing: 4) {
+                   
+                    Text(viewModel.title)
+                        .font(Font.custom("Inter-Regular", size: 12))
                         .foregroundColor(Color(hex: "#999999"))
-                        .padding(.leading, 48)
-                        .padding(.trailing, 28)
+                    
+                    HStack(alignment:. top, spacing: 16) {
+        
+                        Text(viewModel.content)
+                            .font(Font.custom("Inter-Medium", size: 14))
+                            .foregroundColor(Color(hex: "#1C1C1C"))
+                        
+                        Spacer()
+                        
+                        Image("chevron-downnew")
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                    }
+                    
+                    if let description = viewModel.description {
+                        
+                        Text(description)
+                            .font(Font.custom("Inter-Medium", size: 14))
+                            .foregroundColor(Color(hex: "#999999"))
+                            .padding(.trailing, 28)
+                    }
+                    
+                    Divider()
+                        .frame(height: 1)
+                        .background(Color(hex: "#EAEBEB"))
+                        .padding(.top, 8)
                 }
-                
-                Divider()
-                    .frame(height: 1)
-                    .background(Color(hex: "#EAEBEB"))
-                    .padding(.top, 12)
-                    .padding(.leading, 48)
-                
             }
             .onTapGesture {
                 
@@ -146,33 +146,35 @@ struct PaymentsSelectSimpleView: View {
             
         } else {
             
-            VStack(alignment: .leading, spacing: 0) {
+            HStack(alignment: .top, spacing: 16) {
+               
+                viewModel.icon
+                    .resizable()
+                    .frame(width: 32, height: 32)
+                    .padding(.top, 10)
                 
-                Text(viewModel.title)
-                    .font(Font.custom("Inter-Regular", size: 12))
-                    .foregroundColor(Color(hex: "#999999"))
-                    .padding(.leading, 48)
-                
-                HStack(spacing: 16) {
-                    
-                    viewModel.icon
-                        .resizable()
-                        .frame(width: 32, height: 32)
+                VStack(alignment: .leading, spacing: 4) {
+                   
+                    Text(viewModel.title)
+                        .font(Font.custom("Inter-Regular", size: 12))
+                        .foregroundColor(Color(hex: "#999999"))
                     
                     Text(viewModel.content)
                         .font(Font.custom("Inter-Medium", size: 14))
                         .foregroundColor(Color(hex: "#1C1C1C"))
                     
-                    Spacer()
-                }
-                
-                if let description = viewModel.description {
+                    if let description = viewModel.description {
+                        
+                        Text(description)
+                            .font(Font.custom("Inter-Medium", size: 14))
+                            .foregroundColor(Color(hex: "#999999"))
+                            .padding(.trailing, 28)
+                    }
                     
-                    Text(description)
-                        .font(Font.custom("Inter-Medium", size: 14))
-                        .foregroundColor(Color(hex: "#999999"))
-                        .padding(.leading, 48)
-                        .padding(.trailing, 28)
+                    Divider()
+                        .frame(height: 1)
+                        .background(Color(hex: "#EAEBEB"))
+                        .padding(.top, 8)
                 }
             }
         }
@@ -205,7 +207,7 @@ extension PaymentsSelectSimpleView.ViewModel {
     static let sample = try! PaymentsSelectSimpleView.ViewModel(with: .init(.init(id: UUID().uuidString, value: nil), icon: .init(with: UIImage(named: "Payments List Sample")!)!, title: "Тип услуги", selectionTitle: "Выберите услугу", description: nil, options: []))
     
     
-    static let sampleSelected = try! PaymentsSelectSimpleView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0"), icon: .init(with: UIImage(named: "Payments List Sample")!)!, title: "Тип услуги", selectionTitle: "Выберите услугу", description: "Государственная пошлина за выдачу паспорта удостоверяющего личность гражданина РФ за пределами территории РФ гражданину РФ", options: [.init(id: "0", name: "В возрасте до 14 лет (новый образец)")]))
+    static let sampleSelected = try! PaymentsSelectSimpleView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0"), icon: .init(with: UIImage(named: "Payments List Sample")!)!, title: "Тип услуги", selectionTitle: "Выберите услугу", description: "Государственная пошлина за выдачу паспорта удостоверяющего личность гражданина РФ за пределами территории РФ гражданину РФ", options: [.init(id: "0", name: "В возрасте до 14 лет (новый образец) В возрасте до 14 лет (новый образец) В возрасте до 14 лет (новый образец)")]))
     
     static let sampleSelectedNotEditable = try! PaymentsSelectSimpleView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "0"), icon: .init(with: UIImage(named: "Payments List Sample")!)!, title: "Тип услуги", selectionTitle: "Выберите услугу", description: "Государственная пошлина за выдачу паспорта удостоверяющего личность гражданина РФ за пределами территории РФ гражданину РФ", options: [.init(id: "0", name: "В возрасте до 14 лет (новый образец)")], editable: false))
 }

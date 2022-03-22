@@ -176,12 +176,6 @@ extension Payments {
             
             ParameterSelectSimple(parameter, icon: icon, title: title, selectionTitle: selectionTitle, description: description, options: options, editable: editable, collapsable: collapsable, affectsHistory: affectsHistory, autoContinue: autoContinue)
         }
-        
-        struct Option: Identifiable {
-            
-            let id: String
-            let name: String
-        }
     }
     
     struct ParameterSelectSwitch: ParameterRepresentable {
@@ -340,6 +334,42 @@ extension Payments {
             self.affectsHistory = affectsHistory
         }
         
+        init(id: Parameter.ID, value: String?, title: String, editable: Bool = true, collapsable: Bool = false, affectsHistory: Bool = false) {
+            
+            self.init(.init(id: id, value: value), title: title, lastName: .init(title: "Фамилия", value: name(with: value, index: 0)), firstName: .init(title: "Имя", value: name(with: value, index: 1)), middleName: .init(title: "Отчество", value: name(with: value, index: 2)), editable: editable, collapsable: collapsable, affectsHistory: affectsHistory)
+            
+            func name(with value: String?, index: Int) -> String {
+                
+                guard let value = value else {
+                    return ""
+                }
+                
+                let valueSplitted = value.split(separator: " ")
+                switch index {
+                case 0:
+                    guard valueSplitted.count > 0 else {
+                        return ""
+                    }
+                    return String(valueSplitted[0])
+                    
+                case 1:
+                    guard valueSplitted.count > 1 else {
+                        return ""
+                    }
+                    return String(valueSplitted[1])
+                    
+                case 2:
+                    guard valueSplitted.count > 2 else {
+                        return ""
+                    }
+                    return String(valueSplitted[2])
+                    
+                default:
+                    return ""
+                }
+            }
+        }
+        
         func updated(value: String?) -> ParameterRepresentable {
             
             ParameterName(.init(id: parameter.id, value: value), title: title, lastName: lastName, firstName: firstName, middleName: middleName, editable: editable, collapsable: collapsable, affectsHistory: affectsHistory)
@@ -370,8 +400,12 @@ extension Payments {
         let validator: Validator
         
         var amount: Double {
-            //TODO: double from value
-            return 0
+ 
+            guard let value = parameter.value, let amount = Double(value) else {
+                return 0
+            }
+            
+            return amount
         }
 
         internal init(_ parameter: Parameter, title: String, currency: Currency, validator: Validator) {
@@ -405,10 +439,15 @@ extension Payments {
     struct ParameterCard: ParameterRepresentable {
         
         let parameter: Parameter
-    
-        internal init() {
+        
+        internal init(value: String? = nil) {
             
-            self.parameter = Parameter(id: Payments.Parameter.Identifier.card.rawValue, value: nil)
+            self.parameter = Parameter(id: Payments.Parameter.Identifier.card.rawValue, value: value)
+        }
+        
+        func updated(value: String?) -> ParameterRepresentable {
+            
+            ParameterCard(value: value)
         }
     }
     

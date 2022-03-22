@@ -17,4 +17,5 @@ struct FSSPDocumentData: Codable, Equatable, Cachable {
     
     let text: String
     let value: String
+    let svgImage: SVGImageData
 }

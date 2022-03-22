@@ -11,160 +11,161 @@ extension Model {
     
     func parametersFMS(_ parameters: [ParameterRepresentable], _ step: Int, _ completion: @escaping (Result<[ParameterRepresentable], Error>) -> Void) {
         
+        let paramOperator = Payments.Parameter.Identifier.operator.rawValue
+        
         switch step {
         case 0:
-   
+            
             // operator
             let operatorParameter = Payments.ParameterOperator(operatorType: .fms)
             
             // category
+            guard let fmsCategoriesList = dictionaryFMSList()  else {
+                completion(.failure(Payments.Error.unableLoadFMSCategoryOptions))
+                return
+            }
+            
             let categoryParameter = Payments.ParameterSelect(
                 Parameter(id: "a3_dutyCategory_1_1", value: nil),
                 title: "Категория платежа",
-                options: [
-                    .init(id: "1", name: "Российский паспорт", icon: .parameterSample),
-                    .init(id: "2", name: "Виза", icon: .parameterSample),
-                    .init(id: "3", name: "Загран паспорт", icon: .parameterSample),
-                    .init(id: "4", name: "Разрешения", icon: .parameterSample),
-                    .init(id: "5", name: "Бюджет (поступления/возврат)", icon: .parameterSample),
-                    .init(id: "6", name: "Штрафы", icon: .parameterSample)], affectsHistory: true)
+                options: fmsCategoriesList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample) }, affectsHistory: true)
             
             completion(.success( parameters + [operatorParameter, categoryParameter]))
             
         case 1:
             
-            if let divisionParameter = parameters.first(where: { $0.parameter.id == "a3_divisionSelect_2_1" }),
-                let divisionValue = divisionParameter.parameter.value {
+            guard let operatorParameter = parameters.first(where: { $0.parameter.id == paramOperator }),
+                  let operatorValue = operatorParameter.parameter.value,
+                  let anywayOperator = dictionaryAnywayOperator(for: operatorValue) else {
+                      
+                      completion(.failure(Payments.Error.missingOperatorParameter))
+                      return
+                  }
+            
+            let divisionParameterId = "a3_divisionSelect_2_1"
+            if paymentsParametersContains(parameters, id: divisionParameterId) {
                 
-                // remove division parameters
-                var updatedParameters = [ParameterRepresentable]()
-                for parameter in parameters {
+                // user did update division parameter value
+                
+                Task {
                     
-                    switch parameter.parameter.id {
-                    case "a3_INN_4_1", "a3_OKTMO_5_1", "a3_NUMBER_4_1":
-                        continue
+                    // remove all division depended parameters
+                    let updatedParameters = paymentsParametersRemove(parameters, filter: ["a3_categorySelect_3_1", "a3_INN_4_1", "a3_OKTMO_5_1", "a3_DIVISION_4_1"])
+                    
+                    do {
                         
-                    default:
-                        updatedParameters.append( parameter)
+                        let transferStepData = try await paymentsTransferAnywayStep(with: updatedParameters, include: ["a3_dutyCategory_1_1", divisionParameterId], step: .initial)
+                        let nextStepParameters = paymentsTaxesNextStepParameters(for: transferStepData, samples: ["a3_INN_4_1": "5503026780", "a3_OKTMO_5_1": "52643151"])
+                        
+                        completion(.success(updatedParameters + nextStepParameters))
+                        
+                    } catch {
+                        
+                        completion(.failure(error))
                     }
-                }
-                
-                switch divisionValue {
-                case "inn_oktmo":
-                    let unnParameter = Payments.ParameterInput(
-                        .init(id: "a3_INN_4_1", value: nil),
-                        icon: .parameterSample,
-                        title: "ИНН подразделения",
-                        validator: .init(minLength: 1, maxLength: nil, regEx: nil))
-                    
-                    let oktmoParameter = Payments.ParameterInput(
-                        .init(id: "a3_OKTMO_5_1", value: nil),
-                        icon: .parameterSample,
-                        title: "ОКТМО подразделения",
-                        validator: .init(minLength: 1, maxLength: nil, regEx: nil))
-                    
-                    completion(.success(updatedParameters + [unnParameter, oktmoParameter]))
-                    
-                case "number":
-                    
-                    let numberParameter = Payments.ParameterInput(
-                        .init(id: "a3_NUMBER_4_1", value: nil),
-                        icon: .parameterSample,
-                        title: "Номер подразделения",
-                        validator: .init(minLength: 1, maxLength: nil, regEx: nil))
-                    
-                    completion(.success(updatedParameters + [numberParameter]))
-                    
-                default:
-                    completion(.failure(Payments.Error.unexpectedOperatorValue))
                 }
                 
             } else {
                 
+                // initial division parameter selection
+                guard let divisionAnywayParameter = anywayOperator.parameterList.first(where: { $0.id == divisionParameterId }),
+                      let divisionAnywayParameterOptions = divisionAnywayParameter.options,
+                      let divisionAnywayParameterValue = divisionAnywayParameter.value else {
+                          
+                          completion(.failure(Payments.Error.missingParameter))
+                          return
+                      }
+                
                 // division
                 let divisionParameter = Payments.ParameterSelectSimple(
-                    Parameter(id: "a3_divisionSelect_2_1", value: "inn_oktmo"),
-                    icon: .parameterSample,
-                    title: "Данные о подразделении ФНС",
-                    selectionTitle: "Выберете услугу",
-                    options: [
-                        .init(id: "inn_oktmo", name: "ИНН и ОКТМО подразделения"),
-                        .init(id: "number", name: "Номер подразделения")],
+                    Parameter(id: divisionParameterId, value: divisionAnywayParameterValue),
+                    icon: divisionAnywayParameter.iconData ?? .parameterSample,
+                    title: divisionAnywayParameter.title,
+                    selectionTitle: "Выберете подразделение",
+                    options: divisionAnywayParameterOptions,
                     affectsHistory: true)
                 
-                let unnParameter = Payments.ParameterInput(
-                    .init(id: "a3_INN_4_1", value: "7878787878"),
-                    icon: .parameterSample,
-                    title: "ИНН подразделения",
-                    validator: .init(minLength: 1, maxLength: nil, regEx: nil))
-                
-                let oktmoParameter = Payments.ParameterInput(
-                    .init(id: "a3_OKTMO_5_1", value: nil),
-                    icon: .parameterSample,
-                    title: "ОКТМО подразделения",
-                    validator: .init(minLength: 1, maxLength: nil, regEx: nil))
-                
-                completion(.success( parameters + [divisionParameter, unnParameter, oktmoParameter]))
-            }
- 
-        case 2:
-            
-            var updatedParameters = [ParameterRepresentable]()
-            for parameter in parameters {
-                
-                switch parameter.parameter.id {
-                case "a3_INN_4_1", "a3_OKTMO_5_1", "a3_NUMBER_4_1":
-                    updatedParameters.append(parameter.updated(editable: false))
+                Task {
                     
-                default:
-                    updatedParameters.append( parameter)
+                    do {
+                        
+                        let stepParameters = parameters + [divisionParameter]
+                        
+                        let transferStepData = try await paymentsTransferAnywayStep(with: stepParameters, include: ["a3_dutyCategory_1_1", divisionParameterId], step: .initial)
+                        let nextStepParameters = paymentsTaxesNextStepParameters(for: transferStepData, samples: ["a3_INN_4_1": "5503026780", "a3_OKTMO_5_1": "52643151"])
+  
+                        completion(.success(stepParameters + nextStepParameters))
+                        
+                    } catch {
+                        
+                        completion(.failure(error))
+                    }
                 }
             }
             
-            //  service
-            let serviceParameter = Payments.ParameterSelectSimple(
-                Parameter(id: "a3_categorySelect_3_1", value: nil),
-                icon: .parameterSample,
-                title: "Тип услуги",
-                selectionTitle: "Выберете услугу",
-                description: "Государственная пошлина за выдачу паспорта удостоверяющего личность гражданина РФ за пределами территории РФ гражданину РФ",
-                options: [
-                    .init(id: "1", name: "В возрасте от 14 лет"),
-                    .init(id: "2", name: "В возрасте до 14 лет"),
-                    .init(id: "3", name: "В возрасте до 14 лет (новый образец)"),
-                    .init(id: "4", name: "Содержащего электронный носитель информации (паспорта нового поколения)"),
-                    .init(id: "4", name: "За внесение изменений в паспорт")], autoContinue: false)
+        case 2:
             
-            completion(.success( updatedParameters + [serviceParameter]))
-            
-        case 3:
-                      
-            let cardParameter = Payments.ParameterCard()
-            
-            let amountParameter = Payments.ParameterAmount(
-                .init(id: Payments.Parameter.Identifier.amount.rawValue, value: "1234"),
-                title: "Сумма перевода",
-                currency: .init(description: "RUB"),
-                validator: .init(minAmount: 10))
-            
-            completion(.success( parameters + [cardParameter, amountParameter]))
-            
-        case 4:
-            // make all parameters not editable
-            var updatedParameters = [ParameterRepresentable]()
-            for parameter in parameters {
+            Task {
                 
-                updatedParameters.append(parameter.updated(editable: false))
+                let updatedParameters = paymentsParametersEditable(parameters, editable: false, filter: ["a3_INN_4_1", "a3_OKTMO_5_1", "a3_DIVISION_4_1"])
+                
+                do {
+                    
+                    let transferStepData = try await paymentsTransferAnywayStep(with: updatedParameters, include: ["a3_categorySelect_3_1", "a3_INN_4_1", "a3_OKTMO_5_1", "a3_DIVISION_4_1"], step: .next)
+                    let nextStepParameters = paymentsTaxesNextStepParameters(for: transferStepData)
+
+                    completion(.success(updatedParameters + nextStepParameters))
+                    
+                } catch {
+                    
+                    completion(.failure(error))
+                }
             }
             
-            let codeParameter = Payments.ParameterInput(
-                .init(id: Payments.Parameter.Identifier.code.rawValue, value: nil),
-                icon: .parameterSMS,
-                title: "Введите код из СМС", validator: .init(minLength: 6, maxLength: 6, regEx: nil))
+        case 3:
             
-            let finalParameter = Payments.ParameterFinal()
-            
-            completion(.success(updatedParameters + [codeParameter, finalParameter]))
+            if paymentsParametersContains(parameters, id: Payments.Parameter.Identifier.final.rawValue) {
+
+                // repeat all transfer steps from the begining
+                
+                Task {
+                    
+                    do {
+
+                        try await paymentsTransferAnywayStep(with: parameters, include: ["a3_dutyCategory_1_1", "a3_divisionSelect_2_1"], step: .initial)
+    
+                        try await paymentsTransferAnywayStep(with: parameters, include: ["a3_categorySelect_3_1", "a3_INN_4_1", "a3_OKTMO_5_1", "a3_DIVISION_4_1"], step: .next)
+                        
+                        try await paymentsTransferAnywayStep(with: parameters, include: ["a3_fio_1_2", "a3_address_2_2", "a3_docType_3_2", "a3_docValue_4_2"], step: .next, isAmountRequired: true)
+       
+                        completion(.success(parameters))
+                        
+                    } catch {
+                        
+                        completion(.failure(error))
+                    }
+                }
+  
+            } else {
+                
+                Task {
+                    
+                    // make all parameters not editable
+                    let updatedParameters = paymentsParametersEditable(parameters, editable: false)
+                    
+                    do {
+                        
+                        let transferStepData = try await paymentsTransferAnywayStep(with: updatedParameters, include: ["a3_fio_1_2", "a3_address_2_2", "a3_docType_3_2", "a3_docValue_4_2"], step: .next, isAmountRequired: true)
+                        let nextStepParameters = paymentsTaxesNextStepParameters(for: transferStepData)
+                        
+                        completion(.success(updatedParameters + nextStepParameters))
+                    
+                    } catch {
+                        
+                        completion(.failure(error))
+                    }
+                }
+            }
             
         default:
             completion(.failure(Payments.Error.unsupported))

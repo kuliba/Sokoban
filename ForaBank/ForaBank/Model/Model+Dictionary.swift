@@ -13,8 +13,8 @@ extension ModelAction {
     
     enum Dictionary {
         
-        static let cached: [Kind] = [.productCatalogList]
-        
+        static let cached: [Kind] = [.anywayOperators, .fmsList, .fsspDebtList, .fsspDocumentList, .ftsList, .productCatalogList]
+
         struct Request: Action {
             
             let type: Kind
@@ -37,6 +37,56 @@ extension ModelAction {
             case paymentSystemList
             case productCatalogList
         }
+    }
+}
+
+extension Model {
+    
+    func dictionaryAnywayOperatorGroups() -> [OperatorGroupData]? {
+        
+        return localAgent.load(type: [OperatorGroupData].self)
+    }
+    
+    func dictionaryAnywayOperators() -> [OperatorGroupData.OperatorData]? {
+        
+        guard let anywayOperatorGroups = dictionaryAnywayOperatorGroups() else {
+            return nil
+        }
+        
+        return anywayOperatorGroups.flatMap{ $0.operators }
+    }
+    
+    func dictionaryAnywayOperatorGroup(for code: String) -> OperatorGroupData? {
+        
+        guard let anywayOperatorGroups = dictionaryAnywayOperatorGroups() else {
+            return nil
+        }
+        
+        return anywayOperatorGroups.first(where: { $0.code == code })
+    }
+    
+    func dictionaryAnywayOperator(for code: String) -> OperatorGroupData.OperatorData? {
+        
+        guard let anywayOperators = dictionaryAnywayOperators() else {
+            return nil
+        }
+        
+        return anywayOperators.first(where: { $0.code == code })
+    }
+    
+    func dictionaryFMSList() -> [FMSData]? {
+        
+        return localAgent.load(type: [FMSData].self)
+    }
+    
+    func dictionaryFTSList() -> [FTSData]? {
+        
+        return localAgent.load(type: [FTSData].self)
+    }
+    
+    func dictionaryFSSPDocumentList() -> [FSSPDocumentData]? {
+        
+        return localAgent.load(type: [FSSPDocumentData].self)
     }
 }
 

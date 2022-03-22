@@ -71,7 +71,7 @@ extension ProductView {
         
         struct HeaderViewModel {
 
-            let logo: Image
+            let logo: Image?
             let number: String
             let period: String?
         }

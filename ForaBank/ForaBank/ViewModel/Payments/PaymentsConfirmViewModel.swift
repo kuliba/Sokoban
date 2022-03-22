@@ -11,11 +11,11 @@ import Combine
 
 class PaymentsConfirmViewModel: PaymentsOperationViewModel {
     
-    override init(_ model: Model, operation: Payments.Operation, dismissAction: @escaping () -> Void) {
+    override init(_ model: Model, operation: Payments.Operation, rootActions: PaymentsViewModel.RootActions) {
         
         print("Payments: init confirm")
         
-        super.init(model, operation: operation, dismissAction: dismissAction)
+        super.init(model, operation: operation, rootActions: rootActions)
         
     }
     
@@ -42,11 +42,10 @@ class PaymentsConfirmViewModel: PaymentsOperationViewModel {
                 
                 switch action {
                 case _ as PaymentsOperationViewModelAction.Confirm:
-                    let results = items.value.map{ ($0.result, $0.source.affectsHistory) }
+                    let results = itemsAll.map{ ($0.result, $0.source.affectsHistory) }
                     let update = operation.update(with: results)
                     model.action.send(ModelAction.Payment.Complete.Request(operation: update.operation))
      
-                    
                 default:
                     break
                 }

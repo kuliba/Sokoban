@@ -43,13 +43,15 @@ enum Payments {
         case fnsUin     = "iFora||7069"
     }
     
-    struct Parameter: Equatable {
+    struct Parameter: Equatable, CustomDebugStringConvertible {
         
         typealias ID = String
         typealias Value = String?
         
         let id: ID
         let value: Value
+        
+        var debugDescription: String { "id: \(id), value: \(value != nil ? value! : "empty")" }
     }
     
     struct Operation {
@@ -65,12 +67,67 @@ enum Payments {
         }
     }
     
+    struct Success {
+
+        let status: Status
+        let amount: Double
+        let currency: Currency
+        let icon: ImageData?
+        let operationDetailId: Int
+        
+        internal init(status: Payments.Success.Status, amount: Double, currency: Currency, icon: ImageData?, operationDetailId: Int) {
+            
+            self.status = status
+            self.amount = amount
+            self.currency = currency
+            self.icon = icon
+            self.operationDetailId = operationDetailId
+        }
+
+        init?(with transferResponse: TransferResponseBaseData) {
+            
+            //TODO: implementation required
+            return nil
+        }
+        
+        enum Status {
+            
+            case complete
+            case inProgress
+            case rejected
+            
+            var description: String {
+                
+                switch self {
+                case .complete: return "Оплата прошла успешно"
+                case .inProgress: return "Операция выполняется"
+                case .rejected: return "Отказ"
+                }
+            }
+        }
+    }
+    
     enum Error: Swift.Error {
         
-        case unsupported
+        case unableLoadFMSCategoryOptions
+        case unableLoadFTSCategoryOptions
+        case unableLoadFSSPDocumentOptions
         case unableCreateOperationForService(Service)
         case unexpectedOperatorValue
         case missingOperatorParameter
+        case missingParameter
+        case missingPayer
+        case missingCurrency
+        case missingCodeParameter
+        case missingAmountParameter
+        case missingAnywayTransferAdditional
+        case failedTransferWithEmptyDataResponse
+        case failedTransfer(status: ServerStatusCode, message: String?)
+        case failedMakeTransferWithEmptyDataResponse
+        case failedMakeTransfer(status: ServerStatusCode, message: String?)
+        case anywayTransferFinalStepExpected
+        case notAuthorized
+        case unsupported
     }
 }
 
