@@ -636,7 +636,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UITable
     }
     
     @objc func showAlert(sender: AnyObject) {
-        let viewController = PayViewController()
+        let viewController = PayViewController(card: card.card)
         halfScreen = false
         let navController = UINavigationController(rootViewController: viewController)
         navController.modalPresentationStyle = .custom
