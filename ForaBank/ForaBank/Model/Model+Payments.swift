@@ -211,7 +211,25 @@ extension Model {
             return
         }
         
-        //TODO: remove after tests
+        Task {
+            
+            do {
+                    
+                let result = try await paymentsTransferComplete(code: codeValue)
+                guard let success = Payments.Success(with: result) else {
+                    self.action.send(ModelAction.Payment.Complete.Response.failure(self.paymentsAlertMessage(with: Payments.Error.missingParameter)))
+                    return
+                }
+                self.action.send(ModelAction.Payment.Complete.Response.success(success))
+                
+            } catch {
+                
+                self.action.send(ModelAction.Payment.Complete.Response.failure(self.paymentsAlertMessage(with: error)))
+            }
+        }
+        
+        //paymentsTransferComplete mock
+        /*
         DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(200)) {
             
             guard let amountParameter = payload.operation.parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.amount.rawValue}) as? Payments.ParameterAmount else {
@@ -221,26 +239,6 @@ extension Model {
             }
             
             self.action.send(ModelAction.Payment.Complete.Response.success(.init(status: .complete, amount: amountParameter.amount, currency: amountParameter.currency, icon: nil, operationDetailId: 0)))
-        }
-        
-        //FIXME: test real implementation
-        /*
-        Task {
-            
-            do {
-                    
-                let result = try await paymentsTransferComplete(code: codeValue)
-                guard let success = Payments.Success(with: result) else {
-                    self.action.send(ModelAction.Payment.Complete.Response(result: .failure(Payments.Error.unsupported)))
-                    return
-                }
-                self.action.send(ModelAction.Payment.Complete.Response(result: .success(success)))
-                
-            } catch {
-                
-                self.action.send(ModelAction.Payment.Complete.Response(result: .failure(error)))
-                
-            }
         }
          */
     }

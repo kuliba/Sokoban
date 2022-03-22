@@ -86,8 +86,18 @@ enum Payments {
 
         init?(with transferResponse: TransferResponseBaseData) {
             
-            //TODO: implementation required
-            return nil
+            guard let anywayTransferResponse = transferResponse as? TransferAnywayResponseData,
+            let documentStatus = anywayTransferResponse.documentStatus,
+            let amount = anywayTransferResponse.amount,
+            let currency = anywayTransferResponse.currencyAmount else {
+                return nil
+            }
+            
+            self.status = Status(with: documentStatus)
+            self.amount = amount
+            self.currency = Currency(description: currency)
+            self.icon = nil
+            self.operationDetailId = anywayTransferResponse.paymentOperationDetailId
         }
         
         enum Status {
@@ -102,6 +112,15 @@ enum Payments {
                 case .complete: return "Оплата прошла успешно"
                 case .inProgress: return "Операция выполняется"
                 case .rejected: return "Отказ"
+                }
+            }
+            
+            init(with documentStatus: TransferResponseBaseData.DocumentStatus){
+                
+                switch documentStatus {
+                case .complete: self = .complete
+                case .inProgress: self = .inProgress
+                case .rejected: self = .rejected
                 }
             }
         }
