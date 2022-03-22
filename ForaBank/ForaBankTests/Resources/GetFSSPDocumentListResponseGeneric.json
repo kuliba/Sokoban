@@ -3,7 +3,8 @@
     "FSSPDocumentList": [
       {
         "text": "Документ",
-        "value": "20"
+        "value": "20",
+        "svgImage": "string"
       }
     ],
     "id": "a3_dutyCategory_1_1",

@@ -383,7 +383,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let url = bundle.url(forResource: "GetFSSPDocumentListResponseGeneric", withExtension: "json")!
         
         let json = try Data(contentsOf: url)
-        let expected = ServerCommands.DictionaryController.GetFSSPDocumentList.Response(statusCode: .ok, errorMessage: "string", data: .init(fsspDocumentList: [.init(text: "Документ", value: "20")], id: "a3_dutyCategory_1_1", puref: "iFora||6273", serial: "bea36075a58954199a6b8980549f6b69"))
+        let expected = ServerCommands.DictionaryController.GetFSSPDocumentList.Response(statusCode: .ok, errorMessage: "string", data: .init(fsspDocumentList: [.init(text: "Документ", value: "20", svgImage: .init(description: "string"))], id: "a3_dutyCategory_1_1", puref: "iFora||6273", serial: "bea36075a58954199a6b8980549f6b69"))
         
         // when
         let result = try decoder.decode(ServerCommands.DictionaryController.GetFSSPDocumentList.Response.self, from: json)
