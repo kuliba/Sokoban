@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct BankFullInfoData: Codable, Equatable {
+struct BankFullInfoData: Codable, Equatable, Cachable {
     
     let accountList: [AccountData]
     let address: String
@@ -16,7 +16,7 @@ struct BankFullInfoData: Codable, Equatable {
     let bankType: String
     let bankTypeCode: String
     let bic: String
-    let engName: String
+    let engName: String?
     let fiasId: String?
     let fullName: String
     let inn: String?

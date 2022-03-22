@@ -33,7 +33,12 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: EmptyData
+                let data: Data?
+                
+                struct Data: Codable, Hashable {
+                    
+                    let phone: String
+                }
             }
             
             internal init(token: String, payload: Payload) {
@@ -99,7 +104,7 @@ extension ServerCommands {
                 let data: EmptyData
             }
             
-            internal init(token: String, payload: Payload) {
+            internal init(token: String) {
                 
                 self.token = token
             }
@@ -159,16 +164,16 @@ extension ServerCommands {
             let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {
+                
                 let cryptoVersion: String
                 let verificationCode: String
             }
 
-            
             struct Response: ServerResponse {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: EmptyData
+                let data: EmptyData?
             }
             
             internal init(token: String, payload: Payload) {

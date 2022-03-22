@@ -7,6 +7,7 @@
 
 import UIKit
 import RealmSwift
+import SwiftUI
 
 protocol PaymentsViewControllerDelegate: AnyObject {
     func toMobilePay(_ controller: UIViewController, _ phone: String)
@@ -147,6 +148,15 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 let nc = UINavigationController(rootViewController: controller)
                 nc.modalPresentationStyle = .fullScreen
                 present(nc, animated: true)
+                break
+            case 5:
+                // Налоги
+                
+                let viewModel = PaymentsViewModel(Model.shared, category: Payments.Category.taxes)
+                let vc = PaymentsHoustingViewController(with: viewModel)
+                vc.modalPresentationStyle = .fullScreen
+                present(vc, animated: true)
+
                 break
             default:
                 break
