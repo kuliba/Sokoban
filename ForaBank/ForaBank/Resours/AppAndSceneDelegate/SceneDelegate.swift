@@ -49,24 +49,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         // NetMonitoring observer
         self.observeNetworkStatus()
-
-
-        if let userActivity = connectionOptions.userActivities.first,
-           userActivity.activityType == NSUserActivityTypeBrowsingWeb,
-           let urlinfo = userActivity.webpageURL{
-
-            print ("qr5555 Universial Link Open at SceneDelegate on App Start ::::::: \(urlinfo)")
-            GlobalModule.c2bURL = "sdf"
-        }
-
-        //deeplink Open
-        if connectionOptions.urlContexts.first?.url != nil {
-            let urlinfo = connectionOptions.urlContexts.first?.url
-
-            print ("qr5555 Deeplink Open at SceneDelegate on App Start ::::::: \(String(describing: urlinfo))")
-
-            GlobalModule.c2bURL = "sdf"
-        }
     }
     
     private func observeNetworkStatus() {
@@ -107,7 +89,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         print("qr5555 scene(_ scene 1")
-        GlobalModule.c2bURL = "244"
         guard let url = URLContexts.first?.url else { return }
         guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true),
               let params = components.queryItems else {
