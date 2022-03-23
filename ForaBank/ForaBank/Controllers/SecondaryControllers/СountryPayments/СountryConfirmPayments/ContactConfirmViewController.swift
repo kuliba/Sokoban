@@ -330,17 +330,22 @@ class ContactConfurmViewController: UIViewController {
     @objc func setOtpCode(_ notification: NSNotification) {
 
         let otpCode: String
-
-        if let code = notification.userInfo?["otp"] as? String {
-            otpCode = code
-        } else if let code = notification.userInfo?["body"] as? String {
-            otpCode = code
+        
+        if let dict = notification.userInfo as NSDictionary? {
+            
+            if let code = dict["otp"] as? String {
+                
+                otpCode = code
+            } else if let code = dict["aps.alert.body"] as? String {
+                otpCode = code
+            } else {
+                return
+            }
         } else {
             return
         }
         self.otpCode = otpCode.filter { "0"..."9" ~= $0 }
         smsCodeField.text =  self.otpCode
-        
     }
     
     
