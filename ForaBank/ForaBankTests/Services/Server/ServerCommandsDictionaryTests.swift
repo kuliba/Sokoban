@@ -758,10 +758,10 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let json = try Data(contentsOf: url)
         
         guard let conditionalLink = URL(string: "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/") else { return }
-        guard let imageLink = URL(string: "dict/getBannerCatalogImage?image=banner_1") else { return }
+        let imageLink = "dict/getBannerCatalogImage?image=banner_1"
         guard let orderLink = URL(string: "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/") else { return }
         
-        let expected = ServerCommands.DictionaryController.GetBannerCatalogList.Response(statusCode: .ok, data: .init(bannerCatalogList: [.init(conditionLink: conditionalLink, imageLink: imageLink, orderLink: orderLink, productName: "Кэшбек", txtСondition: ["string"])], serial: "bea36075a58954199a6b8980549f6b69"), errorMessage: "string")
+        let expected = ServerCommands.DictionaryController.GetBannerCatalogList.Response(statusCode: .ok, data: .init(BannerCatalogList: [.init(conditionLink: conditionalLink, imageLink: imageLink, orderLink: orderLink, productName: "Кэшбек", txtСondition: ["string"])], serial: "bea36075a58954199a6b8980549f6b69"), errorMessage: "string")
         
         // when
         let result = try decoder.decode(ServerCommands.DictionaryController.GetBannerCatalogList.Response.self, from: json)

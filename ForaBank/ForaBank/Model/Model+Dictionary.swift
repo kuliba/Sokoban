@@ -13,7 +13,7 @@ extension ModelAction {
     
     enum Dictionary {
         
-        static let cached: [Kind] = [.anywayOperators, .fmsList, .fsspDebtList, .fsspDocumentList, .ftsList, .productCatalogList]
+        static let cached: [Kind] = [.anywayOperators, .fmsList, .fsspDebtList, .fsspDocumentList, .ftsList, .productCatalogList, .bannerCatalogList]
 
         struct Request: Action {
             
@@ -36,6 +36,7 @@ extension ModelAction {
             case mosParkingList
             case paymentSystemList
             case productCatalogList
+            case bannerCatalogList
         }
     }
 }
@@ -597,6 +598,47 @@ extension Model {
                     do {
                         
                         try self.localAgent.store(data.productCatalogList, serial: data.serial)
+                        
+                    } catch {
+                        
+                        handleServerCommandCachingError(error: error, command: command)
+                    }
+                    
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                
+            case .failure(let error):
+                handleServerCommandError(error: error, command: command)
+                
+            }
+        }
+    }
+    
+    //BannerCatalogListData
+    func handleDictionaryBannerCatalogList(_ payload: ModelAction.Dictionary.Request) {
+        
+        let command = ServerCommands.DictionaryController.GetBannerCatalogList(serial: payload.serial)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    guard let data = response.data else {
+                        return
+                    }
+                    
+                    // check if we have updated data
+                    guard data.BannerCatalogList.count > 0 else {
+                        return
+                    }
+                    
+                    self.catalogBanners.value = data.BannerCatalogList
+                    
+                    do {
+                        
+                        try self.localAgent.store(data.BannerCatalogList, serial: data.serial)
                         
                     } catch {
                         

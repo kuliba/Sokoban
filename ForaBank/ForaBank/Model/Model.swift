@@ -24,6 +24,7 @@ class Model {
     
     //MARK: Dictionaries
     let catalogProducts: CurrentValueSubject<[CatalogProductData], Never>
+    let catalogBanners: CurrentValueSubject<[BannerCatalogListData], Never>
     
     //MARK: Templates
     let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
@@ -63,6 +64,7 @@ class Model {
         self.products = .init([:])
         self.productsUpdateState = .init(.idle)
         self.catalogProducts = .init([])
+        self.catalogBanners = .init([])
         self.paymentTemplates = .init([])
         self.paymentTemplatesViewSettings = .init(.initial)
         self.serverAgent = serverAgent
@@ -235,6 +237,9 @@ class Model {
                         
                     case .productCatalogList:
                         handleDictionaryProductCatalogList(payload)
+                        
+                    case .bannerCatalogList:
+                        handleDictionaryBannerCatalogList(payload)
                     }
                     
                 default:
@@ -298,6 +303,9 @@ private extension Model {
             
         case .productCatalogList:
             return localAgent.serial(for: [CatalogProductData].self)
+            
+        case .bannerCatalogList:
+            return localAgent.serial(for: [BannerCatalogListData].self)
         }
     }
     
@@ -311,6 +319,11 @@ private extension Model {
         if let paymentTemplates = localAgent.load(type: [PaymentTemplateData].self) {
             
             self.paymentTemplates.value = paymentTemplates
+        }
+        
+        if let catalogBanner = localAgent.load(type: [BannerCatalogListData].self) {
+            
+            self.catalogBanners.value = catalogBanner
         }
     }
     

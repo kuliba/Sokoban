@@ -7,10 +7,10 @@
 
 import Foundation
 
-struct BannerCatalogListData: Codable, Equatable  {
+struct BannerCatalogListData: Codable, Equatable, Cachable  {
     
     let conditionLink: URL
-    let imageLink: URL
+    let imageLink: String
     let orderLink: URL
     let productName: String
     let txtСondition: [String]

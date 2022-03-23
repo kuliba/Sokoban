@@ -18,6 +18,8 @@ protocol MainViewControllerDelegate: AnyObject {
 
 class MainViewController: UIViewController {
     
+    let model = Model.shared
+    
     weak var delegate: MainViewControllerDelegate?
     var card: UserAllCardsModel?
     var alertController: UIAlertController?
@@ -171,7 +173,6 @@ class MainViewController: UIViewController {
         navigationController?.navigationBar.backgroundColor = UIColor(hexString: "F8F8F8")
         navigationController?.navigationBar.barTintColor = UIColor(hexString: "F8F8F8")
         view.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 1)
-        
         setupSearchBar()
         setupCollectionView()
         createDataSource()
@@ -287,7 +288,18 @@ class MainViewController: UIViewController {
     }
     
     func setupData() {
-        offer = MockItems.returnBanner()
+        
+        print(model.catalogBanners.value)
+        let baners = model.catalogBanners.value
+        var items: [PaymentsModel] = []
+        baners.forEach { baner in
+            let host = ServerAgent.Environment.test
+            let urlString = host.baseURL + "/" + baner.imageLink
+            print(host.baseURL + "/" + baner.imageLink)
+            let cell = PaymentsModel(id: Int.random(in: 1..<9999), name: baner.productName, iconName: urlString, controllerName: baner.orderLink.absoluteString)
+            items.append(cell)
+        }
+        offer = items
         currentsExchange = MockItems.returnCurrency()
         pay = MockItems.returnFastPay()
         openProduct = MockItems.returnOpenProduct()
