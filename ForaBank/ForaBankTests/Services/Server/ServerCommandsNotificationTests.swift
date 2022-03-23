@@ -22,7 +22,9 @@ class ServerCommandsNotificationTests: XCTestCase {
         // given
         let url = bundle.url(forResource: "ChangeNotificationStatusGeneric", withExtension: "json")!
         let json = try Data(contentsOf: url)
-        let expected = ServerCommands.NotificationController.ChangeNotificationStatus.Response(statusCode: .ok, errorMessage: "string", data: nil)
+        
+        let data = EmptyData()
+        let expected = ServerCommands.NotificationController.ChangeNotificationStatus.Response(statusCode: .ok, errorMessage: "string", data: data)
         
         // when
         let result = try decoder.decode(ServerCommands.NotificationController.ChangeNotificationStatus.Response.self, from: json)

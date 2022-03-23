@@ -10,6 +10,8 @@ import AVFoundation
 
 class PaymentsViewController: UIViewController {
     
+    var strongSelf: PaymentsServicesViewModel?
+    
     // QR data
     var qrData = [String: String]()
     var operators: GKHOperatorsModel? = nil

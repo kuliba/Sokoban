@@ -104,9 +104,8 @@ class ConfurmOpenDepositViewController: PaymentViewController {
                 print("TODO: - Validate summ")
                 
             }
-            
-            
         }
+        
         NotificationCenter.default.addObserver(forName: UITextField.textDidEndEditingNotification, object: bottomView.amountTextField, queue: .main) { _ in
             guard let text = self.bottomView.amountTextField.text else { return }
             guard let unformatText = self.bottomView.moneyFormatter?.unformat(text) else { return }
@@ -117,18 +116,25 @@ class ConfurmOpenDepositViewController: PaymentViewController {
                 self.calculateSumm(with: Float(self.product?.generalСondition?.minSum ?? 5000))
             }
         }
+        
         NotificationCenter.default.addObserver(self, selector: #selector(self.setOtpCode(_:)), name: NSNotification.Name(rawValue: "otpCode"), object: nil)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        moneyFormatter = SumTextInputFormatter(textPattern: "# ###,## ₽")
+        
+        let newText = moneyFormatter?.format("\(startAmount)") ?? ""
+        bottomView.amountTextField.text = newText
+        calculateSumm(with: startAmount)
+        
+        bottomView.doneButtonIsEnabled(newText.isEmpty)
     }
     
     //MARK: - Helper
     func setupUI() {
         
         title = "Подтвердите параметры вклада"
-        moneyFormatter = SumTextInputFormatter(textPattern: "# ###,## ₽")
-        
-        let newText = moneyFormatter?.format("\(startAmount)") ?? ""
-        bottomView.amountTextField.text = newText
-        calculateSumm(with: startAmount)
         
         incomeField.chooseButton.setImage(UIImage(named: "info"), for: .normal)
         
@@ -148,7 +154,6 @@ class ConfurmOpenDepositViewController: PaymentViewController {
         cardFromField.imageView.isHidden = false
         cardFromField.leftTitleAncor.constant = 64
         cardFromField.layoutIfNeeded()
-        
         
         termField.didChooseButtonTapped = {
             let controller = SelectDepositPeriodViewController()
@@ -331,7 +336,7 @@ class ConfurmOpenDepositViewController: PaymentViewController {
         if card.productType == "CARD" {
             body["sourceCardId"] = card.cardID as AnyObject
         } else if card.productType == "ACCOUNT" {
-            body["sourceAccountId"] = card.accountID as AnyObject
+            body["sourceAccountId"] = card.id as AnyObject
         }
         print(body)
         showActivity()

@@ -183,7 +183,9 @@ class ChangeReturnCountryController: UIViewController {
                 if modelResp?.statusCode == 0 {
                     let controller = PaymentsDetailsSuccessViewController()
                     model.status = .returnRequest
+                    model.paymentOperationDetailId = modelResp?.data?.paymentOperationDetailId ?? 0
                     controller.confurmVCModel = model
+                    controller.printFormType = "returnOutgoing"
                     controller.modalPresentationStyle = .fullScreen
                     self.present(controller, animated: true, completion: nil)
                 } else {
@@ -209,7 +211,9 @@ class ChangeReturnCountryController: UIViewController {
                 if modelResp?.statusCode == 0 {
                     let controller = PaymentsDetailsSuccessViewController()
                     model.status = .changeRequest
+                    model.paymentOperationDetailId = modelResp?.data?.paymentOperationDetailId ?? 0
                     controller.confurmVCModel = model
+                    controller.printFormType = "changeOutgoing"
                     controller.modalPresentationStyle = .fullScreen
                     self.present(controller, animated: true, completion: nil)
                 } else {

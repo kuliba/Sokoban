@@ -204,25 +204,6 @@ class ConfirmViewControllerModel {
 
 class ContactConfurmViewController: UIViewController {
     
-//    var netStatus = true
-//    ///Сетевое  соединение отсутствует
-//    func netEnable() {
-//        netStatus = false
-//    }
-//    ///Сетевое  соединение восстановлено
-//    func netDesable() {
-//        netStatus = true
-//    }
-//
-//    func showNetErrorAlert () {
-//        switch netStatus {
-//        case true: showActivity()
-//        case false:
-//            self.dismissActivity()
-//            self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
-//        }
-//    }
-    
     
     lazy var realm = try? Realm()
     var confurmVCModel: ConfirmViewControllerModel? {
@@ -730,9 +711,19 @@ class ContactConfurmViewController: UIViewController {
                           paddingLeft: 20, paddingBottom: 20, paddingRight: 20, height: 44)
     }
     
+    func doneButtonIsEnabled(_ isEnabled: Bool) {
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.2) {
+                self.doneButton.backgroundColor = isEnabled ? #colorLiteral(red: 0.2980068028, green: 0.2980631888, blue: 0.3279978037, alpha: 1) : #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)
+                self.doneButton.isEnabled = isEnabled ? false : true
+            }
+        }
+    }
+    
     @objc func doneButtonTapped() {
 //        doneButton.isEnabled = false
 //        doneButton.backgroundColor = .systemGray2
+        doneButtonIsEnabled(true)
         guard var code = smsCodeField.textField.text else { return }
         if code.isEmpty {
             code = "0"
@@ -743,6 +734,7 @@ class ContactConfurmViewController: UIViewController {
         
         self.timeOut() {
             self.dismissActivity()
+            self.doneButtonIsEnabled(false)
             return
         }
         
@@ -753,6 +745,7 @@ class ContactConfurmViewController: UIViewController {
                 if error != nil {
 //                    self.showNetErrorAlert ()
                     self.dismissActivity()
+                    self.doneButtonIsEnabled(false)
                     self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
                 }
                 
@@ -825,6 +818,7 @@ class ContactConfurmViewController: UIViewController {
                 } else {
 //                    self.showNetErrorAlert ()
                     self.dismissActivity()
+                    self.doneButtonIsEnabled(false)
                     self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
                              
                 }
@@ -836,6 +830,7 @@ class ContactConfurmViewController: UIViewController {
                 if error != nil {
 //                    self.showNetErrorAlert ()
                     self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
+                    self.doneButtonIsEnabled(false)
                 }
                 guard let model = respons else { return }
                 
@@ -901,18 +896,16 @@ class ContactConfurmViewController: UIViewController {
 //                        self.doneButton.backgroundColor = .red
                     }
                 } else if model.statusCode == 102 {
+                    self.doneButtonIsEnabled(false)
                     self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз") {
                         self.navigationController?.popViewController(animated: true)
                     }
                 } else {
-//                    self.showNetErrorAlert ()
+                    self.doneButtonIsEnabled(false)
                     self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
                 }
             }
         }
-        
-
-
     }
     
     // ЖКХ

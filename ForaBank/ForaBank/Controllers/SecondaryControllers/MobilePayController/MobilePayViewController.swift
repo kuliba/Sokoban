@@ -13,7 +13,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
     
     var recipiendId = String()
     var phoneNumber: String?
-    
+    var regEx = ""
     var phoneField = ForaInput(
         viewModel: ForaInputModel(
             title: "По номеру телефона",
@@ -33,6 +33,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupNavBar()
         phoneField.textField.delegate = self
         phoneField.rightButton.setImage(UIImage(imageLiteralResourceName: "user-plus"), for: .normal)
@@ -46,7 +47,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                 delegate: self,
                 multiSelection: false,
                 subtitleCellType: SubtitleCellValue.phoneNumber)
-            //            contactPickerScene.addCloseButton()
+            
             let navigationController = UINavigationController(rootViewController: contactPickerScene)
             self.present(navigationController, animated: true, completion: nil)
         }
@@ -97,6 +98,14 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
             bottomView.doneButtonIsEnabled(text.count < 11 ? true : false)
         }
     }
+    
+//    func textFieldDidEndEditing(_ textField: UITextField) {
+//        let a = phoneField.textField.text ?? ""
+//        if ( !isValidPassword(a) == true && a != "") {
+//            self.showAlert(with: "Ошибка", and: "Не верный формат")
+//            phoneField.textField.text = ""
+//        }
+//    }
     
     func setupActions() {
         
@@ -291,7 +300,6 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
     
 }
 
-
 extension MobilePayViewController: EPPickerDelegate {
     
     func epContactPicker(_: EPContactsPicker, didContactFetchFailed error : NSError) {
@@ -305,15 +313,15 @@ extension MobilePayViewController: EPPickerDelegate {
             let mask = StringMask(mask: "+0 (000) 000-00-00")
             let maskPhone = mask.mask(string: numbers)
             phoneField.text = maskPhone ?? ""
+            phoneField.textField.text = maskPhone ?? ""
             selectNumber = maskPhone ?? ""
         } else if numbers?.first == "8" {
             numbers?.removeFirst()
             let mask = StringMask(mask: "+7 (000) 000-00-00")
             let maskPhone = mask.mask(string: numbers)
             phoneField.text = maskPhone ?? ""
+            phoneField.textField.text = maskPhone ?? ""
             selectNumber = maskPhone ?? ""
-        } else {
-            
         }
     }
     
@@ -325,6 +333,28 @@ extension MobilePayViewController: EPPickerDelegate {
         for contact in contacts {
             print("\(contact.displayName())")
         }
+    }
+    
+    func epUserPhone(_ phone: String) {
+        var numbers = phone.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
+        if numbers.first == "7" {
+            let mask = StringMask(mask: "+0 (000) 000-00-00")
+            let maskPhone = mask.mask(string: numbers)
+            phoneField.text = maskPhone ?? ""
+            phoneField.textField.text = maskPhone ?? ""
+            selectNumber = maskPhone ?? ""
+        } else if numbers.first == "8" {
+            numbers.removeFirst()
+            let mask = StringMask(mask: "+7 (000) 000-00-00")
+            let maskPhone = mask.mask(string: numbers)
+            phoneField.text = maskPhone ?? ""
+            phoneField.textField.text = maskPhone ?? ""
+            selectNumber = maskPhone ?? ""
+        }
+    }
+    
+    func isValidPassword(_ input: String) -> Bool {
+        return NSPredicate(format: "SELF MATCHES %@", self.regEx).evaluate(with: input)
     }
     
 }

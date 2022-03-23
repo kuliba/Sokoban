@@ -22,16 +22,17 @@ extension ContactInputViewController {
         }
     }
     
-    func contaktPayment(with card: String, surname: String, name: String, secondName: String, amount: Double, completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
+    func contaktPayment(with card: UserAllCardsModel, surname: String, name: String, secondName: String, amount: Double, completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
         
         guard let countryCode = country?.contactCode else { return }
+        guard let currencyAmount = card.currency else { return }
         
-        let body = ["check" : false,
+        var body = ["check" : false,
                     "amount" : amount,
-                    "currencyAmount" : "RUB",
+                    "currencyAmount" : currencyAmount,
                     "payer" : [
                         "cardId" : nil,
-                        "cardNumber" : card,
+                        "cardNumber" : nil,
                         "accountId" : nil
                     ],
                     "puref" : puref,
@@ -54,10 +55,23 @@ extension ContactInputViewController {
                         ],
                         [  "fieldid": 5,
                            "fieldname": "CURR",
-                           "fieldvalue": self.currency
+                           "fieldvalue": self.currency == "RUB" ? "RUR" : self.currency
                         ]
                     ] ] as [String: AnyObject]
         
+        if card.productType == "CARD" {
+            body["payer"] = ["cardId": card.cardID,
+                             "cardNumber" : nil,
+                             "accountId" : nil] as AnyObject
+        } else if card.productType == "ACCOUNT" {
+            body["payer"] = ["cardId": nil,
+                             "cardNumber" : nil,
+                             "accountId" : card.id] as AnyObject
+        } else if card.productType == "DEPOSIT" {
+            body["payer"] = ["cardId": nil,
+                             "cardNumber" : nil,
+                             "accountId" : card.accountID] as AnyObject
+        }
         print("DEBUG: ContaktPaymentBegin with body:",body)
         
         NetworkManager<CreateContactAddresslessTransferDecodableModel>.addRequest(.createContactAddresslessTransfer, [:], body, completion: { respModel, error in
@@ -100,14 +114,14 @@ extension ContactInputViewController {
         })
     }
     
-    func migPayment(with card: String, phone: String, amount: Double, completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
+    func migPayment(with card: UserAllCardsModel, phone: String, amount: Double, completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
         
-        let body = ["check" : false,
+        var body = ["check" : false,
                     "amount" : amount,
-                    "currencyAmount" : "RUB",
+                    "currencyAmount" : self.currency,
                     "payer" : [
                         "cardId" : nil,
-                        "cardNumber" : card,
+                        "cardNumber" : nil,
                         "accountId" : nil
                     ],
                     "puref" : puref,
@@ -119,6 +133,19 @@ extension ContactInputViewController {
                         ]
                     ] ] as [String: AnyObject]
         
+        if card.productType == "CARD" {
+            body["payer"] = ["cardId": card.cardID,
+                             "cardNumber" : nil,
+                             "accountId" : nil] as AnyObject
+        } else if card.productType == "ACCOUNT" {
+            body["payer"] = ["cardId": nil,
+                             "cardNumber" : nil,
+                             "accountId" : card.id] as AnyObject
+        } else if card.productType == "DEPOSIT" {
+            body["payer"] = ["cardId": nil,
+                             "cardNumber" : nil,
+                             "accountId" : card.accountID] as AnyObject
+        }
         print("DEBUG: ContaktPaymentBegin with body:",body)
         
         NetworkManager<CreateDirectTransferDecodableModel>.addRequest(.createDirectTransfer, [:], body, completion: { respModel, error in

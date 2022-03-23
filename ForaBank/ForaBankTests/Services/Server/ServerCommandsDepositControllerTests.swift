@@ -302,4 +302,30 @@ class ServerCommandsDepositControllerTests: XCTestCase {
 		// then
 		XCTAssertEqual(result, expected)
 	}
+    
+    //MARK: GetDepositProductList
+    
+    func testGetDepositProductList_Response_Decoding() throws {
+
+        // given
+        guard let url = bundle.url(forResource: "GetDepositProductListResponseGeneric", withExtension: "json") else {
+            XCTFail("testGetDepositProductList_Response_Decoding : Missing file: GetDepositProductListResponseGeneric.json")
+            return
+        }
+        let json = try Data(contentsOf: url)
+        
+        guard let urlString = URL(string:"string") else { return }
+        guard let urlImage = URL(string:"rest/getDepositImage?image=10000003006") else { return }
+
+
+        let expected = ServerCommands.DepositController.GetDepositProductList.Response(statusCode: .ok, data: [.init(depositProductID: 10000003006, detailedСonditions: [.init(desc: "Капитализация процентов ко вкладу", enable: true)], documentsList: [.init(name: "string", url: urlString)], generalСondition: .init(design: .init(background: [ColorData.init(description: "1C1C1C"), ColorData.init(description: "FFFFFF"), ColorData.init(description: "999999")], textColor: [ColorData.init(description: "1C1C1C"), ColorData.init(description: "FFFFFF"), ColorData.init(description: "999999")]), formula: "(initialAmount * interestRate * termDay/AllDay) / 100", generalTxtСondition: ["string"], imageLink: urlImage, maxRate: 8.7, maxSum: 10000000, maxTerm: 731, maxTermTxt: "До 2-х лет", minSum: 5000, minSumCur: "RUB", minTerm: 31), name: "Сберегательный онлайн", termRateList: [.init(termRateSum: [.init(sum: 5000, termRateList: [.init(rate: 0.7, term: 31, termName: "1 месяц")])], сurrencyCode: "810", сurrencyCodeTxt: "RUB")], txtСondition: ["string"])], errorMessage: "string")
+        
+        // when
+        let result = try decoder.decode(ServerCommands.DepositController.GetDepositProductList.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
 }
+
+

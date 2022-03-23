@@ -110,41 +110,4 @@ extension LoginCardEntryViewController: UITextFieldDelegate {
 
         creditCardView.cardNumberTextField.maskString = cardNumber.digits.count <= 16 ? "0000 0000 0000 00000"  : "00000 000 0 0000 0000000"
     }
-    
-    func formattedNumber(number: String) -> String {
-                    let cleanPhoneNumber = number.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
-        var mask = String()
-        if cleanPhoneNumber.count <= 16{
-            mask = "#### #### #### ####"
-        } else{
-            mask = "##### #### # #### ######"
-        }
-                    var result = ""
-                    var index = cleanPhoneNumber.startIndex
-        for ch in mask where index < cleanPhoneNumber.endIndex {
-                        if ch == "#" {
-                            result.append(cleanPhoneNumber[index])
-                            index = cleanPhoneNumber.index(after: index)
-                        } else {
-                            result.append(ch)
-                        }
-                    }
-                    return result
-                }
-//
-//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string:  String) -> Bool {
-//        guard let text = textField.text else {
-//                return true
-//            }
-//            let lastText = (text as NSString).replacingCharacters(in: range, with: string) as String
-//            
-//            if creditCardView.cardNumberTextField == textField,  creditCardView.cardNumberTextField.text?.digits.count ?? 0 < 16 {
-//                textField.text = lastText.format("nnnn nnnn nnnn nnnn", oldString: text)
-//                return false
-//            } else if creditCardView == textField, creditCardView.cardNumberTextField.text?.digits.count ?? 0 > 16{
-//                textField.text = lastText.format("nnnnn nnn n nnnn nnnnnnn", oldString: text)
-//                return false
-//            }
-//            return true
-//    }
 }

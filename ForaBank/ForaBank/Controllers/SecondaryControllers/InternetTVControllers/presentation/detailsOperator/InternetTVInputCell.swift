@@ -11,6 +11,7 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
     var showSelectView: (([String: String], String) -> ())? = nil
     var showGoButton: ((Bool) -> ())? = nil
     var currentElementUI: RequisiteDO? = nil
+    var showAlert: (() -> ())? = nil
 
     var fieldId = ""
     var fieldName = ""
@@ -30,7 +31,7 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
     
     @IBOutlet weak var textView: UITextView!
     
-    
+    var regEx = ""
     var placeholder = ""
 
     override func awakeFromNib() {
@@ -49,26 +50,32 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
         fieldValue = textView.text ?? ""
     }
 
-    func setupUI (_ index: Int, _ item: RequisiteDO, _ qrData: [String: String], additionalList: [AdditionalListModel]) {
+    func setupUI (_ index: Int, _ item: RequisiteDO, _ qrData: [String: String], additionalList: [AdditionalListModel], _ selectedValue: String) {
+        regEx = item.regExp ?? ""
         currentElementUI = item
         infoButon.isHidden = true
         fieldId = String(item.order)
         fieldName = item.id ?? ""
-        //textField.placeholder = item.title
-        placeholderLable.text = item.title
-        //textView.text = item.title
-        print("setupUI5555 \(fieldName ?? "") \(item.title ?? "")")
+        if item.id  == "a3_additionalData_3_1" {
+            if selectedValue == "56" {
+                placeholderLable.text = "Номер телефона"
+            } else {
+                placeholderLable.text = "Регистрационный номер транспортного средства"
+            }
+        } else {
+            placeholderLable.text = item.title
+        }
         additionalList.forEach { model in
             print("setupUI5555__ \(model.fieldName ?? "") \(model.fieldValue ?? "")")
         }
-
+        
         if let textSubTitle = item.subTitle, !textSubTitle.isEmpty {
             info = item.subTitle ?? ""
             infoButon.isHidden = false
         } else {
             infoButon.isHidden = true
         }
-
+        
         DispatchQueue.main.async {
             if let svg = item.svgImage {
                 self.operatorsIcon.image = svg.convertSVGStringToImage()
@@ -76,7 +83,7 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
                 self.operatorsIcon.image = nil
             }
         }
-
+        
         switch (item.viewType) {
         case "INPUT":
             switch (item.type) {
@@ -112,10 +119,10 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
             btnShowSelectView.isEnabled = true
         }
     }
-
+    
     private func setupInputField(additionalList: [AdditionalListModel], item: RequisiteDO, qrData: [String: String]) {
         btnShowSelectView.isHidden = true
-
+        
         let field = additionalList.filter { it in
             it.fieldName?.contains(item.id ?? "-1") == true
         }
@@ -134,7 +141,7 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
                                                                            "fieldvalue" : item.content ?? ""]
             }
         }
-
+        
         if isPersonalAcc(strCheck: item.title ?? ""), let textValue = qrData["Лицевой счет"]  {
             textView.text = textValue
             InternetTVDetailsFormViewModel.additionalDic[fieldName] = ["fieldid" : fieldId,
@@ -193,11 +200,22 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
     }
 
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        let previousText:NSString = textView.text! as NSString
+        let previousText: NSString = textView.text! as NSString
         let updatedText = previousText.replacingCharacters(in: range, with: text)
         fieldValue = updatedText
         checkForEmpty()
+    
         InternetTVDetailsFormViewModel.additionalDic[fieldName] = ["fieldid" : fieldId, "fieldname" : fieldName, "fieldvalue" : fieldValue]
+        
+        return true
+    }
+    
+    func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
+        let a = textView.text ?? ""
+        if ( !isValidPassword(a) == true && a != "") {
+            showAlert!()
+            textView.text = ""
+        }
         return true
     }
 
@@ -255,5 +273,9 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
                 || str.contains("лицев")
                 || str.contains("номер")
                 || str.contains("абонент")
+    }
+    
+    func isValidPassword(_ input: String) -> Bool {
+        return NSPredicate(format: "SELF MATCHES %@", self.regEx).evaluate(with: input)
     }
 }

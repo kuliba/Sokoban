@@ -7,13 +7,14 @@
 
 import Foundation
 import UIKit
+import SwiftUI
 
 
 class ProductCell: UICollectionViewCell, SelfConfiguringCell {
-   
-//    var status: String?
-//    var statusPC: String?
-//
+    
+    //    var status: String?
+    //    var statusPC: String?
+    //
     func configure<U>(with value: U) where U : Hashable {
         guard let card = card else { return }
         
@@ -53,14 +54,14 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
         label.text = ""
         return label
     }()
-
+    
     private let balanceLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 14 )
         label.text = ""
         return label
     }()
-
+    
     private let cardNameLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 14 )
@@ -80,6 +81,8 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
+    
+    private var updatingAnimationsView: UIView?
     
     //MARK: - Lifecycle
     override init(frame: CGRect) {
@@ -106,7 +109,7 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
         let viewModel = CardViewModelFromRealm(card: card)
         
         backgroundImageView.image =  card.largeDesign?.convertSVGStringToImage()
-
+        
         balanceLabel.text = viewModel.balance
         balanceLabel.textColor = viewModel.colorText
         cardNameLabel.text = viewModel.cardName
@@ -155,11 +158,12 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
         
         backgroundColor = .clear
         layer.cornerRadius = 8
+        clipsToBounds = true
         layer.shadowColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1).cgColor
         layer.shadowRadius = 10
         layer.shadowOpacity = 0.4
         layer.shadowOffset = CGSize()
-//        0.785
+        //        0.785
         let shadowPath = UIBezierPath(
             rect: CGRect(x: 15, y: 20,
                          width: self.frame.width * 0.785,
@@ -172,8 +176,8 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
         addSubview(cardNameLabel)
         addSubview(balanceLabel)
         addSubview(statusImage)
-//        addSubview(slider ?? UISlider())
-
+        //        addSubview(slider ?? UISlider())
+        
         
         backgroundImageView.fillSuperview()
         balanceLabel.font = UIFont.boldSystemFont(ofSize: 14)
@@ -186,23 +190,23 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
         
         
         statusImage.center(inView: self)
-       
+        
         cardNameLabel.anchor(top: maskCardLabel.bottomAnchor, left: self.leftAnchor, right: self.rightAnchor,
                              paddingTop: 25, paddingLeft: 12, paddingRight: 8)
         cardNameLabel.font = UIFont.systemFont(ofSize: 14, weight: .light)
-
+        
         balanceLabel.anchor(left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor,
                             paddingLeft: 12, paddingBottom: 11, paddingRight: 30)
-//        if NotificationCenter.default.post(name: .deviceDidShakeNotification, object: event){
-//
-//        }
-//        if NotificationCenter.default.addObserver(self,, name: .deviceDidShakeNotification, object: nil){
-//
-//        }
-    
-
+        //        if NotificationCenter.default.post(name: .deviceDidShakeNotification, object: event){
+        //
+        //        }
+        //        if NotificationCenter.default.addObserver(self,, name: .deviceDidShakeNotification, object: nil){
+        //
+        //        }
+        
+        
         if MyVariables.onBalanceLabel == true{
-          
+            
             blurView.frame = balanceLabel.bounds
             balanceLabel.addSubview(blurView)
             balanceLabel.sendSubviewToBack(blurView)
@@ -211,40 +215,35 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
         } else {
             blurView.isHidden = true
             blurView.alpha = 0
-//            balanceLabel.textColor = .white
-
+            //            balanceLabel.textColor = .white
+            
         }
-
+        
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(handleMassage),
                                                name: .deviceDidShakeNotification,
                                                object: nil)
-
-
-
     }
-            @objc func handleMassage(notification: NSNotification) {
-                
-                
-               
+    
+    @objc func handleMassage(notification: NSNotification) {
 
-                if MyVariables.onBalanceLabel == true{
-                  
-                    blurView.frame = balanceLabel.bounds
-                    balanceLabel.addSubview(blurView)
-                    balanceLabel.sendSubviewToBack(blurView)
-                    blurView.isHidden = false
-                    blurView.alpha = 1
-                } else {
-                    blurView.removeFromSuperview()
-                    blurView.isHidden = true
-                    blurView.alpha = 0
-
-                    
-        //            balanceLabel.textColor = .white
-
-                }
-                }
+        if MyVariables.onBalanceLabel == true{
+            
+            blurView.frame = balanceLabel.bounds
+            balanceLabel.addSubview(blurView)
+            balanceLabel.sendSubviewToBack(blurView)
+            blurView.isHidden = false
+            blurView.alpha = 1
+        } else {
+            blurView.removeFromSuperview()
+            blurView.isHidden = true
+            blurView.alpha = 0
+            
+            
+            //            balanceLabel.textColor = .white
+            
+        }
+    }
 }
 
 
@@ -259,3 +258,84 @@ enum StatusPC: String{
     case notActivated = "17"
 }
 
+
+extension ProductCell {
+    
+    var isUpdating: Bool {
+        
+        get { updatingAnimationsView != nil }
+        set {
+            
+            if newValue == true {
+                
+                guard updatingAnimationsView == nil else {
+                    return
+                }
+                
+                let containerView = UIView(frame: .zero)
+                containerView.backgroundColor = .clear
+                containerView.translatesAutoresizingMaskIntoConstraints = false
+                addSubview(containerView)
+                NSLayoutConstraint.activate([
+                    containerView.leadingAnchor.constraint(equalTo: leadingAnchor),
+                    containerView.trailingAnchor.constraint(equalTo: trailingAnchor),
+                    containerView.topAnchor.constraint(equalTo: topAnchor),
+                    containerView.bottomAnchor.constraint(equalTo: bottomAnchor)
+                ])
+                
+                let animatedGradientView = createAnimatedGradientView()
+                animatedGradientView.backgroundColor = .clear
+                animatedGradientView.translatesAutoresizingMaskIntoConstraints = false
+                animatedGradientView.layer.compositingFilter = "overlayBlendMode"
+                containerView.addSubview(animatedGradientView)
+                NSLayoutConstraint.activate([
+                    animatedGradientView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+                    animatedGradientView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+                    animatedGradientView.topAnchor.constraint(equalTo: containerView.topAnchor),
+                    animatedGradientView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+                ])
+                
+                let animatedDotsView = createAnimatedDotsView()
+                animatedDotsView.backgroundColor = .clear
+                animatedDotsView.translatesAutoresizingMaskIntoConstraints = false
+                containerView.addSubview(animatedDotsView)
+                NSLayoutConstraint.activate([
+                    animatedDotsView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+                    animatedDotsView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor)
+                ])
+                
+                updatingAnimationsView = containerView
+                
+                // show up animated
+                updatingAnimationsView?.alpha = 0
+                UIView.animate(withDuration: 0.2) {
+                    
+                    self.updatingAnimationsView?.alpha = 1.0
+                }
+                
+            } else {
+                
+                // dismiss animated
+                UIView.animate(withDuration: 0.2) {
+                    
+                    self.updatingAnimationsView?.alpha = 0
+                    
+                } completion: { _ in
+                    
+                    self.updatingAnimationsView?.removeFromSuperview()
+                    self.updatingAnimationsView = nil
+                }
+            }
+        }
+    }
+
+    func createAnimatedGradientView() -> UIView {
+        
+        UIHostingController(rootView: ProductView.AnimatedGradientView(duration: 3.0)).view
+    }
+    
+    func createAnimatedDotsView() -> UIView {
+        
+        UIHostingController(rootView: ProductView.AnimatedDotsView()).view
+    }
+}

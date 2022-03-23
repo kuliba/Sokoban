@@ -58,6 +58,34 @@ class ServerCommandsDictionaryTests: XCTestCase {
         XCTAssertEqual(result, expected)
     }
     
+    func testGetAnywayOperatorsList_Response_Server_Decoding() throws {
+        
+        // given
+        guard let url = bundle.url(forResource: "GetAnywayOperatorGroupDataResponseServer", withExtension: "json") else {
+            XCTFail("testGetAnywayOperatorGroupDataGeneric_Response_Server_Decoding : Missing file: GetAnywayOperatorGroupDataResponseServer.json")
+            return
+        }
+        
+        // then
+        XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetAnywayOperatorsList.Response.self, from: Data(contentsOf: url)))
+    }
+    
+    func testGetAnywayOperatorsList_Parameters() throws {
+        
+        // given
+        let serial = UUID().uuidString
+        
+        // when
+        let command = ServerCommands.DictionaryController.GetAnywayOperatorsList(serial: serial)
+        
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 1)
+        
+        XCTAssertEqual(command.parameters?[0].name, "serial")
+        XCTAssertEqual(command.parameters?[0].value, serial)
+    }
+    
     //MARK: - GetBanks
     
     func testGetBanks_Response_Decoding() throws {
@@ -100,6 +128,34 @@ class ServerCommandsDictionaryTests: XCTestCase {
         XCTAssertEqual(result, expected)
     }
     
+    func testGetBanks_Response_Server_Decoding() throws {
+        
+        // given
+        guard let url = bundle.url(forResource: "GetBanksResponseGenericServer", withExtension: "json") else {
+            XCTFail("testGetBanks_Response_Server_Decoding : Missing file: GetBanksResponseGenericServer.json")
+            return
+        }
+        
+        // then
+        XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetBanks.Response.self, from: Data(contentsOf: url)))
+    }
+    
+    func testGetBanks_Parameters() throws {
+        
+        // given
+        let serial = UUID().uuidString
+        
+        // when
+        let command = ServerCommands.DictionaryController.GetBanks(serial: serial)
+        
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 1)
+        
+        XCTAssertEqual(command.parameters?[0].name, "serial")
+        XCTAssertEqual(command.parameters?[0].value, serial)
+    }
+    
     //MARK: - GetCountries
     
     func testGetCountries_Response_Decoding() throws {
@@ -135,6 +191,34 @@ class ServerCommandsDictionaryTests: XCTestCase {
         
         // then
         XCTAssertEqual(result, expected)
+    }
+    
+    func testGetCountries_Response_Server_Decoding() throws {
+        
+        // given
+        guard let url = bundle.url(forResource: "GetCountriesResponseGenericServer", withExtension: "json") else {
+            XCTFail("testGetCountries_Response_Decoding_Server : Missing file: GetCountriesResponseGenericServer.json")
+            return
+        }
+        
+        // then
+        XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetCountries.Response.self, from: Data(contentsOf: url)))
+    }
+    
+    func testGetCountries_Parameters() throws {
+        
+        // given
+        let serial = UUID().uuidString
+        
+        // when
+        let command = ServerCommands.DictionaryController.GetCountries(serial: serial)
+        
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 1)
+        
+        XCTAssertEqual(command.parameters?[0].name, "serial")
+        XCTAssertEqual(command.parameters?[0].value, serial)
     }
     
     //MARK: - GetCurrencyList
@@ -179,6 +263,34 @@ class ServerCommandsDictionaryTests: XCTestCase {
         XCTAssertEqual(result, expected)
     }
     
+    func testGetCurrencyList_Response_Server_Decoding() throws {
+        
+        // given
+        guard let url = bundle.url(forResource: "GetCurrencyListResponseGenericServer", withExtension: "json") else {
+            XCTFail("testGetCurrencyList_Response_Server_Decoding : Missing file: GetCurrencyListResponseGenericServer.json")
+            return
+        }
+        
+        // then
+        XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetCurrencyList.Response.self, from: Data(contentsOf: url)))
+    }
+    
+    func testGetCurrencyList_Parameters() throws {
+        
+        // given
+        let serial = UUID().uuidString
+        
+        // when
+        let command = ServerCommands.DictionaryController.GetCurrencyList(serial: serial)
+        
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 1)
+        
+        XCTAssertEqual(command.parameters?[0].name, "serial")
+        XCTAssertEqual(command.parameters?[0].value, serial)
+    }
+    
     //MARK: - GetFMSList
     
     func testGetFMSList_Response_Decoding() throws {
@@ -187,7 +299,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let url = bundle.url(forResource: "GetFMSListResponseGeneric", withExtension: "json")!
         
         let json = try Data(contentsOf: url)
-        let expected = ServerCommands.DictionaryController.GetFMSList.Response(statusCode: .ok, errorMessage: "string", data: .init(fmsList: [.init(md5hash: "366e1c4043eb433b82a6ab4988e80862", svgImage: .init(description: "string"), text: "Российский паспорт", value: "1")], serial: "bea36075a58954199a6b8980549f6b69"))
+        let expected = ServerCommands.DictionaryController.GetFMSList.Response(statusCode: .ok, errorMessage: "string", data: .init(fmsList: [.init(md5hash: "366e1c4043eb433b82a6ab4988e80862", svgImage: .init(description: "string"), text: "Российский паспорт", value: "1")], id: "a3_dutyCategory_1_1", puref: "iFora||6273", serial: "bea36075a58954199a6b8980549f6b69"))
         
         // when
         let result = try decoder.decode(ServerCommands.DictionaryController.GetFMSList.Response.self, from: json)
@@ -196,21 +308,113 @@ class ServerCommandsDictionaryTests: XCTestCase {
         XCTAssertEqual(result, expected)
     }
     
-    //MARK: - GetFSSPList
-    
-    func testGetFSSPList_Response_Decoding() throws {
+    func testGetFMSList_Response_Server_Decoding() throws {
         
         // given
-        let url = bundle.url(forResource: "GetFSSPListResponseGeneric", withExtension: "json")!
+        let url = bundle.url(forResource: "GetFMSListResponseServerGeneric", withExtension: "json")!
         
-        let json = try Data(contentsOf: url)
-        let expected = ServerCommands.DictionaryController.GetFSSPList.Response(statusCode: .ok, errorMessage: "string", data: .init(fsspList: [.init(md5hash: "366e1c4043eb433b82a6ab4988e80862", svgImage: .init(description: "string"), text: "Паспорт РФ", value: "20")], serial: "bea36075a58954199a6b8980549f6b69"))
+        // then
+        XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetFMSList.Response.self, from: Data(contentsOf: url)))
+    }
+    
+    func testGetFMSList_Parameters() throws {
+        
+        // given
+        let serial = UUID().uuidString
         
         // when
-        let result = try decoder.decode(ServerCommands.DictionaryController.GetFSSPList.Response.self, from: json)
+        let command = ServerCommands.DictionaryController.GetFMSList(serial: serial)
+        
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 1)
+        
+        XCTAssertEqual(command.parameters?[0].name, "serial")
+        XCTAssertEqual(command.parameters?[0].value, serial)
+    }
+    
+    //MARK: - GetFSSPDebtList
+    
+    func testGetFSSPDebtList_Response_Decoding() throws {
+        
+        // given
+        let url = bundle.url(forResource: "GetFSSPDebtListResponseGeneric", withExtension: "json")!
+        
+        let json = try Data(contentsOf: url)
+        let expected = ServerCommands.DictionaryController.GetFSSPDebtList.Response(statusCode: .ok, errorMessage: "string", data: .init(fsspDebtList: [.init(text: "Документ", value: "20")], id: "a3_dutyCategory_1_1", puref: "iFora||6273", serial: "bea36075a58954199a6b8980549f6b69"))
+        
+        // when
+        let result = try decoder.decode(ServerCommands.DictionaryController.GetFSSPDebtList.Response.self, from: json)
         
         // then
         XCTAssertEqual(result, expected)
+    }
+    
+    func testGetFSSPDebtList_Response_Server_Decoding() throws {
+        
+        // given
+        let url = bundle.url(forResource: "GetFSSPDebtListResponseServerGeneric", withExtension: "json")!
+        
+        // then
+        XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetFSSPDebtList.Response.self, from: Data(contentsOf: url)))
+    }
+    
+    func testGetFSSPDebtList_Parameters() throws {
+        
+        // given
+        let serial = UUID().uuidString
+        
+        // when
+        let command = ServerCommands.DictionaryController.GetFSSPDebtList(serial: serial)
+        
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 1)
+        
+        XCTAssertEqual(command.parameters?[0].name, "serial")
+        XCTAssertEqual(command.parameters?[0].value, serial)
+    }
+    
+    //MARK: - getFSSPDocumentList
+    
+    func testGetFSSPDocumentList_Response_Decoding() throws {
+        
+        // given
+        let url = bundle.url(forResource: "GetFSSPDocumentListResponseGeneric", withExtension: "json")!
+        
+        let json = try Data(contentsOf: url)
+        let expected = ServerCommands.DictionaryController.GetFSSPDocumentList.Response(statusCode: .ok, errorMessage: "string", data: .init(fsspDocumentList: [.init(text: "Документ", value: "20", svgImage: .init(description: "string"))], id: "a3_dutyCategory_1_1", puref: "iFora||6273", serial: "bea36075a58954199a6b8980549f6b69"))
+        
+        // when
+        let result = try decoder.decode(ServerCommands.DictionaryController.GetFSSPDocumentList.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
+    
+    func testGetFSSPDocumentList_Response_Server_Decoding() throws {
+        
+        // given
+        let url = bundle.url(forResource: "GetFSSPDocumentListResponseServerGeneric", withExtension: "json")!
+        
+        // then
+        XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetFSSPDocumentList.Response.self, from: Data(contentsOf: url)))
+    }
+    
+    func testGetFSSPDocumentList_Parameters() throws {
+        
+        // given
+        let serial = UUID().uuidString
+        
+        // when
+        let command = ServerCommands.DictionaryController.GetFSSPDocumentList(serial: serial)
+        
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 1)
+        
+        XCTAssertEqual(command.parameters?[0].name, "serial")
+        XCTAssertEqual(command.parameters?[0].value, serial)
     }
     
     //MARK: - GetFTSList
@@ -221,13 +425,38 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let url = bundle.url(forResource: "GetFTSListResponseGeneric", withExtension: "json")!
         
         let json = try Data(contentsOf: url)
-        let expected = ServerCommands.DictionaryController.GetFTSList.Response(statusCode: .ok, errorMessage: "string", data: .init(ftsList: [.init(md5hash: "366e1c4043eb433b82a6ab4988e80862", svgImage: .init(description: "string"), text: "Имущественный налог", value: "1")], serial: "bea36075a58954199a6b8980549f6b69"))
+        let expected = ServerCommands.DictionaryController.GetFTSList.Response(statusCode: .ok, errorMessage: "string", data: .init(ftsList: [.init(md5hash: "366e1c4043eb433b82a6ab4988e80862", svgImage: .init(description: "string"), text: "Имущественный налог", value: "1")], id: "a3_dutyCategory_1_1", puref: "iFora||6273", serial: "bea36075a58954199a6b8980549f6b69"))
         
         // when
         let result = try decoder.decode(ServerCommands.DictionaryController.GetFTSList.Response.self, from: json)
         
         // then
         XCTAssertEqual(result, expected)
+    }
+    
+    func testGetFTSList_Response_Server_Decoding() throws {
+        
+        // given
+        let url = bundle.url(forResource: "GetFTSListResponseServerGeneric", withExtension: "json")!
+        
+        // then
+        XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetFTSList.Response.self, from: Data(contentsOf: url)))
+    }
+    
+    func testGetFTSList_Parameters() throws {
+        
+        // given
+        let serial = UUID().uuidString
+        
+        // when
+        let command = ServerCommands.DictionaryController.GetFTSList(serial: serial)
+        
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 1)
+        
+        XCTAssertEqual(command.parameters?[0].name, "serial")
+        XCTAssertEqual(command.parameters?[0].value, serial)
     }
     
     //MARK: - GetFullBankInfoList
@@ -268,9 +497,39 @@ class ServerCommandsDictionaryTests: XCTestCase {
         XCTAssertEqual(result, expected)
     }
     
-    //MARK: - GetMobileData
+    func testGetFullBankInfoList_Response_Server_Decoding() throws {
+        
+        // given
+        guard let url = bundle.url(forResource: "GetFullBankInfoListResponseServerGeneric", withExtension: "json") else {
+            XCTFail("testGetFullBankInfoList_Response_Server_Decoding : Missing file: GetFullBankInfoListResponseServerGeneric.json")
+            return
+        }
+        
+        // then
+        XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetFullBankInfoList.Response.self, from: Data(contentsOf: url)))
+    }
     
-    func testGetMobileData_Response_Decoding() throws {
+    func testGetFullBankInfoList_Parameters() throws {
+        
+        // given
+        let serial = UUID().uuidString
+        
+        // when
+        let command = ServerCommands.DictionaryController.GetFullBankInfoList(serial: serial)
+        
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 2)
+        
+        XCTAssertEqual(command.parameters?[0].name, "bic")
+        XCTAssertEqual(command.parameters?[0].value, "")
+        XCTAssertEqual(command.parameters?[1].name, "serial")
+        XCTAssertEqual(command.parameters?[1].value, serial)
+    }
+    
+    //MARK: - GetMobileList
+    
+    func testGetMobileList_Response_Decoding() throws {
         
         // given
         guard let url = bundle.url(forResource: "GetMobileDataResponseGeneric", withExtension: "json") else {
@@ -286,6 +545,34 @@ class ServerCommandsDictionaryTests: XCTestCase {
         
         // then
         XCTAssertEqual(result, expected)
+    }
+    
+    func testGetMobileList_Response_Server_Decoding() throws {
+        
+        // given
+        guard let url = bundle.url(forResource: "GetMobileDataResponseServerGeneric", withExtension: "json") else {
+            XCTFail("testGetMobileData_Response_Server_Decoding : Missing file: GetMobileDataResponseServerGeneric.json")
+            return
+        }
+        
+        // then
+        XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetMobileList.Response.self, from: Data(contentsOf: url)))
+    }
+    
+    func testGetMobileList_Parameters() throws {
+        
+        // given
+        let serial = UUID().uuidString
+        
+        // when
+        let command = ServerCommands.DictionaryController.GetMobileList(serial: serial)
+        
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 1)
+        
+        XCTAssertEqual(command.parameters?[0].name, "serial")
+        XCTAssertEqual(command.parameters?[0].value, serial)
     }
     
     //MARK: - GetMosParkingList
@@ -326,6 +613,34 @@ class ServerCommandsDictionaryTests: XCTestCase {
         XCTAssertEqual(result, expected)
     }
     
+    func testGetMosParkingList_Response_Server_Decoding() throws {
+        
+        // given
+        guard let url = bundle.url(forResource: "GetMosParkingListResponseServerGeneric", withExtension: "json") else {
+            XCTFail("testGetMosParkingList_Response_Server_Decoding : Missing file: GetMosParkingListResponseServerGeneric.json")
+            return
+        }
+        
+        // then
+        XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetMosParkingList.Response.self, from: Data(contentsOf: url)))
+    }
+    
+    func testGetMosParkingList_Parameters() throws {
+        
+        // given
+        let serial = UUID().uuidString
+        
+        // when
+        let command = ServerCommands.DictionaryController.GetMosParkingList(serial: serial)
+        
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 1)
+        
+        XCTAssertEqual(command.parameters?[0].name, "serial")
+        XCTAssertEqual(command.parameters?[0].value, serial)
+    }
+    
     //MARK: - GetPaymentSystemList
     
     func testGetPaymentSystemList_Response_Decoding() throws {
@@ -346,5 +661,127 @@ class ServerCommandsDictionaryTests: XCTestCase {
         
         // then
         XCTAssertEqual(result, expected)
+    }
+    
+    func testGetPaymentSystemList_Response_Server_Decoding() throws {
+        
+        // given
+        guard let url = bundle.url(forResource: "GetPaymentSystemListResponseServerGeneric", withExtension: "json") else {
+            XCTFail("testGetPaymentSystemList_Response_Server_Decoding : Missing file: GetPaymentSystemListResponseServerGeneric.json")
+            return
+        }
+        
+        // then
+        XCTAssertNoThrow(try decoder.decode(ServerCommands.DictionaryController.GetPaymentSystemList.Response.self, from: Data(contentsOf: url)))
+    }
+    
+    func testGetPaymentSystemList_Parameters() throws {
+        
+        // given
+        let serial = UUID().uuidString
+        
+        // when
+        let command = ServerCommands.DictionaryController.GetPaymentSystemList(serial: serial)
+        
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 1)
+        
+        XCTAssertEqual(command.parameters?[0].name, "serial")
+        XCTAssertEqual(command.parameters?[0].value, serial)
+    }
+
+    //MARK: - GetProductCatalogList
+    
+    func testGetProductCatalogList_Response_Decoding() throws {
+
+        // given
+        guard let url = bundle.url(forResource: "GetProductCatalogList", withExtension: "json") else {
+            XCTFail("testGetProductCatalogList_Response_Decoding : Missing file: GetProductCatalogList.json")
+            return
+        }
+        
+        let json = try Data(contentsOf: url)
+        let data = ServerCommands.DictionaryController.GetProductCatalogList.Response.ProductCatalog(productCatalogList: [.init(name: "Карта 'Миг'", description: ["string"], imageEndpoint: "dict/getProductCatalogImage?image=1", infoURL: URL(string: "https://www.forabank.ru/")!, orderURL: URL(string: "https://www.forabank.ru/")!)], serial: "bea36075a58954199a6b8980549f6b69")
+        let expected = ServerCommands.DictionaryController.GetProductCatalogList.Response(statusCode: .ok,
+                                                                                          data: data,
+                                                                                          errorMessage: "string")
+        
+        // when
+        let result = try decoder.decode(ServerCommands.DictionaryController.GetProductCatalogList.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
+    
+    func testGetProductCatalogLists_Parameters() throws {
+        
+        // given
+        let serial = UUID().uuidString
+        
+        // when
+        let command = ServerCommands.DictionaryController.GetProductCatalogList(serial: serial)
+        
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 1)
+        
+        XCTAssertEqual(command.parameters?[0].name, "serial")
+        XCTAssertEqual(command.parameters?[0].value, serial)
+    }
+
+    //MARK: - GetProductCatalogImage
+    
+    func testGetProductCatalogImage_Response_Encoding() throws {
+        
+        // given
+        let imageEndpoint = "dict/getProductCatalogImage?image=1"
+        
+        // when
+        let command = ServerCommands.DictionaryController.GetProductCatalogImage(endpoint: imageEndpoint)
+       
+        // then
+        XCTAssertEqual(command.endpoint, "/\(imageEndpoint)")
+    }
+    
+    //MARK: - GetBannerCatalogList
+    
+    func testGetBannerCatalogList_Response_Decoding() throws {
+
+        
+        // given
+        guard let url = bundle.url(forResource: "GetBannerCatalogListResponseGeneric", withExtension: "json") else {
+            XCTFail("testGetBannerCatalogList_Response_Decoding : Missing file: GetBannerCatalogList.json")
+            return
+        }
+        
+        let json = try Data(contentsOf: url)
+        
+        guard let conditionalLink = URL(string: "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/") else { return }
+        let imageLink = "dict/getBannerCatalogImage?image=banner_1"
+        guard let orderLink = URL(string: "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/") else { return }
+        
+        let expected = ServerCommands.DictionaryController.GetBannerCatalogList.Response(statusCode: .ok, data: .init(BannerCatalogList: [.init(conditionLink: conditionalLink, imageLink: imageLink, orderLink: orderLink, productName: "Кэшбек", txtСondition: ["string"])], serial: "bea36075a58954199a6b8980549f6b69"), errorMessage: "string")
+        
+        // when
+        let result = try decoder.decode(ServerCommands.DictionaryController.GetBannerCatalogList.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
+    
+    //MARK: - GetBannerCatalogImage
+    
+    func testGetBannerCatalogImage_Response_Encoding() throws {
+        // given
+        
+        let command = ServerCommands.DictionaryController.GetBannerCatalogImage.init(imageEndpoint: "Ic128Icon")
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 1)
+        
+        XCTAssertEqual(command.parameters?[0].name, "image")
+        
+        XCTAssertEqual(command.parameters?[0].value, "Ic128Icon")
     }
 }

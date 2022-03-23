@@ -7,6 +7,8 @@
 
 import UIKit
 import RealmSwift
+import Combine
+import SwiftUI
 
 protocol MainViewControllerDelegate: AnyObject {
     func goSettingViewController()
@@ -15,6 +17,8 @@ protocol MainViewControllerDelegate: AnyObject {
 }
 
 class MainViewController: UIViewController {
+    
+    let model = Model.shared
     
     weak var delegate: MainViewControllerDelegate?
     var card: UserAllCardsModel?
@@ -160,12 +164,15 @@ class MainViewController: UIViewController {
     
     weak var templatesListViewDelegate: TemplatesListViewHostingViewControllerDelegate?
     
+    var isUpdating: CurrentValueSubject<Bool, Never> = .init(false)
+    var refreshView: UIView?
+    private var bindings = Set<AnyCancellable>()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.backgroundColor = UIColor(hexString: "F8F8F8")
         navigationController?.navigationBar.barTintColor = UIColor(hexString: "F8F8F8")
         view.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 1)
-        
         setupSearchBar()
         setupCollectionView()
         createDataSource()
@@ -176,10 +183,9 @@ class MainViewController: UIViewController {
         
         self.allProductList = self.realm?.objects(UserAllCardsModel.self)
         productList = [UserAllCardsModel]()
-        AddAllUserCardtList.add() { [weak self] in
-            self?.allProductList = self?.realm?.objects(UserAllCardsModel.self)
-            self?.productList = [UserAllCardsModel]()
-        }
+
+        bind()
+        startUpdate()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -188,10 +194,6 @@ class MainViewController: UIViewController {
             [.foregroundColor: UIColor.black], for: .selected)
         self.navigationController?.navigationBar.isHidden = true
         
-        AddAllUserCardtList.add() { [weak self] in
-            self?.allProductList = self?.realm?.objects(UserAllCardsModel.self)
-            self?.productList = [UserAllCardsModel]()
-        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -201,6 +203,18 @@ class MainViewController: UIViewController {
             let nc = UINavigationController(rootViewController: controller)
             nc.modalPresentationStyle = .fullScreen
             present(nc, animated: false)
+        }
+    }
+    
+    func startUpdate() {
+        
+        isUpdating.value = true
+        
+        AddAllUserCardtList.add() { [weak self] in
+            
+            self?.allProductList = self?.realm?.objects(UserAllCardsModel.self)
+            self?.productList = [UserAllCardsModel]()
+            self?.isUpdating.value = false
         }
     }
     
@@ -249,12 +263,43 @@ class MainViewController: UIViewController {
         
     }
     
+    func bind() {
+    
+        isUpdating
+            .receive(on: DispatchQueue.main)
+            .sink {[unowned self] isUpdating in
+                
+                setupRefreshView(isEnabled: isUpdating)
+                
+                for cell in collectionView.visibleCells {
+                
+                    guard let productCell = cell as? ProductCell else {
+                        continue
+                    }
+                    
+                    productCell.isUpdating = isUpdating
+                }
+                
+            }.store(in: &bindings)
+    }
+    
     deinit {
         self.token?.invalidate()
     }
     
     func setupData() {
-        offer = MockItems.returnBanner()
+        
+        print(model.catalogBanners.value)
+        let baners = model.catalogBanners.value
+        var items: [PaymentsModel] = []
+        baners.forEach { baner in
+            let host = ServerAgent.Environment.test
+            let urlString = host.baseURL + "/" + baner.imageLink
+            print(host.baseURL + "/" + baner.imageLink)
+            let cell = PaymentsModel(id: Int.random(in: 1..<9999), name: baner.productName, iconName: urlString, controllerName: baner.orderLink.absoluteString)
+            items.append(cell)
+        }
+        offer = items
         currentsExchange = MockItems.returnCurrency()
         pay = MockItems.returnFastPay()
         openProduct = MockItems.returnOpenProduct()
@@ -278,10 +323,57 @@ class MainViewController: UIViewController {
         collectionView.register(ProductCell.self, forCellWithReuseIdentifier: ProductCell.reuseId)
         collectionView.register(NewProductCell.self, forCellWithReuseIdentifier: NewProductCell.reuseId)
         
-        collectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0)
+        collectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 80, right: 0)
         collectionView.isScrollEnabled = true
         collectionView.delegate = self
         collectionView.dataSource = dataSource
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.showsHorizontalScrollIndicator = false
+    }
+    
+    func setupRefreshView(isEnabled: Bool) {
+        
+        if isEnabled == true {
+            
+            guard refreshView == nil else {
+                return
+            }
+            
+            let refreshView = createRefreshView()
+            refreshView.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(refreshView)
+            NSLayoutConstraint.activate([
+                refreshView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                refreshView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                refreshView.topAnchor.constraint(equalTo: view.topAnchor),
+                refreshView.heightAnchor.constraint(equalToConstant: 4)
+            ])
+
+            self.refreshView = refreshView
+            
+            refreshView.alpha = 0
+            UIView.animate(withDuration: 0.3) {
+                
+                refreshView.alpha = 1.0
+            }
+            
+        } else {
+            
+            UIView.animate(withDuration: 0.3) {
+                
+                self.refreshView?.alpha = 0
+            
+            } completion: { _ in
+                
+                self.refreshView?.removeFromSuperview()
+                self.refreshView = nil
+            }
+        }
+    }
+    
+    func createRefreshView() -> UIView {
+        
+        UIHostingController(rootView: RefreshView()).view
     }
     
     func reloadData(with searchText: String?) {
@@ -294,7 +386,6 @@ class MainViewController: UIViewController {
         snapshot.appendItems(openProduct, toSection: .openProduct)
         dataSource?.apply(snapshot, animatingDifferences: true)
         collectionView.reloadData()
-        
     }
     
     func getCurrency() {

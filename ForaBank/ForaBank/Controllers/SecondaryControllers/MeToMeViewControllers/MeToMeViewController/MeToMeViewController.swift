@@ -6,11 +6,12 @@
 //
 
 import UIKit
+import RealmSwift
 
 class MeToMeViewController: UIViewController {
     
     var meToMeContract: [FastPaymentContractFindListDatum]?
-    
+    lazy var realm = try? Realm()
     var selectedBank: BankFullInfoList? {
         didSet {
             guard let bank = selectedBank else { return }
@@ -24,12 +25,12 @@ class MeToMeViewController: UIViewController {
         }
     }
     var cardFromField = CardChooseView()
-    var cardListView = CardListView(onlyMy: false)
+    var cardListView = CardsScrollView(onlyMy: false, deleteDeposit: true, loadProducts: false)
     var bankField = ForaInput(
         viewModel: ForaInputModel(
             title: "Из банка",
             image: #imageLiteral(resourceName: "BankIcon"),
-            isEditable: false,
+            isEditable: true,
             showChooseButton: true)
     )
     var bankListView = FullBankInfoListView()
@@ -43,6 +44,15 @@ class MeToMeViewController: UIViewController {
     var stackView = UIStackView(arrangedSubviews: [])
     
     //MARK: - Viewlifecicle
+    init(card: UserAllCardsModel?) {
+        super.init(nibName: nil, bundle: nil)
+        cardFromField.model = card
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -183,7 +193,7 @@ class MeToMeViewController: UIViewController {
                                 self.showAlert(with: "Ошибка", and: "Выберите банк")
                                 return
                             }
-                            guard let cardModel = self.cardFromField.cardModel else { return }
+                            guard let cardModel = self.cardFromField.model else { return }
                             self.createMe2MePullTransfer(amount: amount, bank: bank.memberID!, cardModel: cardModel) { success, error in
                                 DispatchQueue.main.async {
                                     if error != nil {
@@ -256,9 +266,20 @@ class MeToMeViewController: UIViewController {
             }
         }
         
-        cardListView.didCardTapped = { card in
-            self.cardFromField.cardModel = card
+        bankField.didChangeValueField = { (field) in
+            self.hideView(self.bankListView, needHide: false)
+            self.bankListView.textFieldDidChanchedValue(textField: field)
+        }
+        
+        cardListView.didCardTapped = { cardId in
             DispatchQueue.main.async {
+                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
+                cardList.forEach({ card in
+                    if card.id == cardId {
+                        self.cardFromField.model = card
+                    }
+                })
+                
                 UIView.animate(withDuration: 0.2) {
                     self.bankListView.isHidden = true
                     self.bankListView.alpha = 0
@@ -307,26 +328,24 @@ class MeToMeViewController: UIViewController {
     }
     
     private func setupCardList(completion: @escaping ( _ error: String?) ->() ) {
-        getCardList { [weak self] data ,error in
-            DispatchQueue.main.async {
-                
-                if error != nil {
-                    completion(error)
-                }
-                guard let data = data else { return }
-                var filterProduct: [GetProductListDatum] = []
-                data.forEach { product in
-                    if (product.productType == "CARD" || product.productType == "ACCOUNT" || product.productType == "DEPOSIT") && product.currency == "RUB" {
-                        filterProduct.append(product)
+        
+        DispatchQueue.main.async {
+            
+            let cards = ReturnAllCardList.cards()
+            var filterProduct: [UserAllCardsModel] = []
+            cards.forEach({ card in
+                if (card.productType == "CARD" || card.productType == "ACCOUNT") {
+                    if (card.productType == "CARD" || card.productType == "ACCOUNT" || card.productType == "DEPOSIT") && card.currency == "RUB" {
+                        filterProduct.append(card)
                     }
                 }
-                
-                self?.cardListView.cardList = filterProduct
-                
-                if filterProduct.count > 0 {
-                    self?.cardFromField.cardModel = filterProduct.first
-                    completion(nil)
+            })
+            self.cardListView.cardList = filterProduct
+            if filterProduct.count > 0 {
+                if self.cardFromField.model == nil {
+                    self.cardFromField.model = filterProduct.first
                 }
+                completion(nil)
             }
         }
     }
@@ -436,7 +455,7 @@ class MeToMeViewController: UIViewController {
         }
     }
     
-    func createMe2MePullTransfer(amount: String, bank: String, cardModel: GetProductListDatum, completion: @escaping (_ success: Bool, _ error: String?) -> Void ) {
+    func createMe2MePullTransfer(amount: String, bank: String, cardModel: UserAllCardsModel, completion: @escaping (_ success: Bool, _ error: String?) -> Void ) {
         
         var body = [ "amount" : amount,
                      "currencyAmount" : "RUB",

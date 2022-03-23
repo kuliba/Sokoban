@@ -28,7 +28,7 @@ extension TemplatesListViewModel {
                 .init(id: "add", name: "Пополнение"),
                 .init(id: "addi", name: "Коммунальные"),
                 .init(id: "addit", name: "Переводы")
-            ], selected: "all"),
+            ], selected: "all", style: .template),
             items: [
                 .init(id: 0, sortOrder: 0, state: .normal, image: Image("Bank Logo Sample"),
                       title: "Маме на Сбер",
@@ -88,7 +88,7 @@ extension TemplatesListViewModel {
                 .init(id: "add", name: "Пополнение"),
                 .init(id: "addi", name: "Коммунальные"),
                 .init(id: "addit", name: "Переводы")
-            ], selected: "all"),
+            ], selected: "all", style: .template),
             items: [
                 .init(id: 0, sortOrder: 0, state: .normal,
                       image: Image("Bank Logo Sample"),
@@ -139,7 +139,7 @@ extension TemplatesListViewModel {
                 .init(id: "add", name: "Пополнение"),
                 .init(id: "addi", name: "Коммунальные"),
                 .init(id: "addit", name: "Переводы")
-            ], selected: "all"),
+            ], selected: "all", style: .template),
             items: [
                 .init(id: 0, sortOrder: 0, state: .select(.init(isSelected: false, action: { _ in })),
                       image: Image("Bank Logo Sample"),

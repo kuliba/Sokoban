@@ -48,7 +48,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         application.registerForRemoteNotifications()
         
         requestNotificationAuthorization(application: application)
-        customizeUiInApp()
+//        customizeUiInApp()
         
         self.initRealmTimerParameters()
         // Зарузка кэша
@@ -206,6 +206,11 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
             model.action.send(ModelAction.Notification.ChangeNotificationStatus.Requested(eventId: eventId,
                                                                                           cloudId: cloudId,
                                                                                           status: .delivered))
+        }
+        
+        if let otpCode = userInfo["otp"] as? String {
+            
+            Model.shared.action.send(ModelAction.Auth.VerificationCode.PushRecieved(code: otpCode))
         }
 
         completionHandler([[.alert, .sound]])

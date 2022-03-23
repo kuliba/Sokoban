@@ -117,13 +117,15 @@ class PaymentsDetailsView: UIView {
             }
             
         }
-        
+        let system = model.paymentSystem
+        let navImage: UIImage = system?.svgImage?.convertSVGStringToImage() ?? UIImage()
         summLabel.text = model.summTransction
         
         switch model.status {
         case .inProgress:
             statusLabel.text = "В обработке"
             statusImageView.image = UIImage(named: "OkOperators")
+            
         case .succses:
             statusLabel.text = "Успешный перевод"
             statusImageView.image = UIImage(named: "OkOperators")
@@ -131,25 +133,32 @@ class PaymentsDetailsView: UIView {
                 let paymentImage: UIImage = paymentSystem.svgImage?.convertSVGStringToImage() ?? UIImage()
                 operatorImageView.image = paymentImage
             }
+            
         case .error:
             statusLabel.text = "Операция неуспешна!"
             statusImageView.image = UIImage(named: "errorIcon")
+            
         case .returnRequest:
             statusLabel.text = "Запрос на возврат перевода принят в обработку"
             statusImageView.image = UIImage(named: "waiting")
             changeButtonsStackView.isHidden = true
-            detailButtonsStackView.isHidden = true
-            operatorImageView.image = #imageLiteral(resourceName: "Vector")
+            detailButtonsStackView.isHidden = false
+            templateButtonContainerView.isHidden = true
+            operatorImageView.image = navImage
+            
         case .changeRequest:
             statusLabel.text = "Запрос на изменение перевода принят в обработку"
             statusImageView.image = UIImage(named: "waiting")
             changeButtonsStackView.isHidden = true
-            detailButtonsStackView.isHidden = true
-            operatorImageView.image = #imageLiteral(resourceName: "Vector")
+            detailButtonsStackView.isHidden = false
+            templateButtonContainerView.isHidden = true
+            operatorImageView.image = navImage
+            
         case .processing:
             statusLabel.text = "Операция ожидает подтверждения"
             statusImageView.image = UIImage(named: "waiting")
             detailButtonsStackView.isHidden = true
+            
         case .timeOut:
             statusLabel.text = "Запрос принят в обработку"
             statusImageView.image = UIImage(named: "timeOutImage")

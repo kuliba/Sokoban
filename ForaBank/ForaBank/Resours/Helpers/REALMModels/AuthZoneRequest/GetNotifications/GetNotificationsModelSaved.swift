@@ -25,8 +25,10 @@ struct GetNotificationsModelSaved {
                 return
             }
             
-            let a = notificationsData.map{ $0.date?.components(separatedBy: " ").first ?? "" }.uniqued()
             
+            
+            let a = notificationsData.map{ $0.date?.components(separatedBy: " ").first ?? "" }.uniqued()
+            guard a.count != 0 else { return completion() }
             let updatedNotifications = notificationsData.map{ GetNotificationsCellModel(with: $0) }
             
             var resultArray = [GetNotificationsModel]()
@@ -49,13 +51,13 @@ struct GetNotificationsModelSaved {
                 
                 let realm = try Realm()
                 
-                let existingNotifications = realm.objects(GetNotificationsModel.self)
+//                let existingNotifications = realm.objects(GetNotificationsModel.self)
                 
                 // fitst transaction: delete items to inform subscribers in UI
-                try realm.write {
-                    realm.delete(existingNotifications)
-                }
-                
+//                try realm.write {
+//                    realm.delete(existingNotifications)
+//                }
+//
                 // second transaction: add fresh data from server
                 try realm.write {
                     realm.add(resultArray)

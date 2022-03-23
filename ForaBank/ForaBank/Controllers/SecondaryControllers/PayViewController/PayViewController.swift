@@ -11,6 +11,16 @@ class PayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
 
     
     var tableView = UITableView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+    let card: UserAllCardsModel?
+    
+    init(card: UserAllCardsModel?) {
+        self.card = card
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -83,42 +93,35 @@ class PayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.row {
         case 0:
-            self.getFastPaymentContractList { [weak self] contractList, error in
-                DispatchQueue.main.async {
-                    if error != nil {
-                        self?.showAlert(with: "Ошибка", and: error!)
-                    } else {
-                        let contr = contractList?.first?.fastPaymentContractAttributeList?.first
-                        if contr?.flagClientAgreementIn == "NO" || contr?.flagClientAgreementOut == "NO" {
-                            let vc = MeToMeSettingViewController()
-                            if contractList != nil {
-                                vc.model = contractList
-                            } else {
-                                vc.model = []
-                            }
-//                            vc.addCloseButton()
-                            self?.navigationController?.pushViewController(vc, animated: true)
-//                            let navVC = UINavigationController(rootViewController: vc)
-//                            navVC.modalPresentationStyle = .fullScreen
-//                            //                    navVC.addCloseButton()
-//                            self?.present(navVC, animated: true, completion: nil)
+            if card?.currency == "RUB" {
+                self.getFastPaymentContractList { [weak self] contractList, error in
+                    DispatchQueue.main.async {
+                        if error != nil {
+                            self?.showAlert(with: "Ошибка", and: error!)
                         } else {
-
-                            let viewController =  MeToMeViewController()
-                            viewController.meToMeContract = contractList
-                            viewController.addCloseButton()
-//                            viewController.modalPresentationStyle = .fullScreen
-//                            self?.navigationController?.pushViewController(viewController, animated: true)
-                            let navController = UINavigationController(rootViewController: viewController)
-                            navController.modalPresentationStyle = .fullScreen
-                            self?.present(navController, animated: true, completion: nil)
-//                            viewController.addCloseButton()
-//                            let navVC = UINavigationController(rootViewController: viewController)
-//                            navVC.modalPresentationStyle = .fullScreen
-//                            self?.present(navVC, animated: true)
+                            let contr = contractList?.first?.fastPaymentContractAttributeList?.first
+                            if contr?.flagClientAgreementIn == "NO" || contr?.flagClientAgreementOut == "NO" {
+                                let vc = MeToMeSettingViewController()
+                                if contractList != nil {
+                                    vc.model = contractList
+                                } else {
+                                    vc.model = []
+                                }
+                                self?.navigationController?.pushViewController(vc, animated: true)
+                            } else {
+                                let viewController = MeToMeViewController(card: self?.card)
+                                
+                                viewController.meToMeContract = contractList
+                                viewController.addCloseButton()
+                                let navController = UINavigationController(rootViewController: viewController)
+                                navController.modalPresentationStyle = .fullScreen
+                                self?.present(navController, animated: true, completion: nil)
+                            }
                         }
                     }
                 }
+            } else {
+                self.showAlert(with: "Ошибка", and: "Нельзя пополнить валютный счет")
             }
         case 1:
             let model = ConfirmViewControllerModel(type: .card2card)

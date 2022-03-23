@@ -15,6 +15,7 @@ public protocol EPPickerDelegate: AnyObject {
     func epContactPicker(_: EPContactsPicker, didCancel error: NSError)
     func epContactPicker(_: EPContactsPicker, didSelectContact contact: EPContact)
 	func epContactPicker(_: EPContactsPicker, didSelectMultipleContacts contacts: [EPContact])
+    func epUserPhone(_ phone:String)
 }
 
 public extension EPPickerDelegate {
@@ -22,6 +23,7 @@ public extension EPPickerDelegate {
 	func epContactPicker(_: EPContactsPicker, didCancel error: NSError) { }
 	func epContactPicker(_: EPContactsPicker, didSelectContact contact: EPContact) { }
 	func epContactPicker(_: EPContactsPicker, didSelectMultipleContacts contacts: [EPContact]) { }
+    func epUserPhone(_ phone:String) {}
 }
 
 typealias ContactsHandler = (_ contacts : [CNContact] , _ error : NSError?) -> Void
@@ -33,7 +35,7 @@ public enum SubtitleCellValue{
     case organization
 }
 
-open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource {
+open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, UIViewControllerTransitioningDelegate {
     
     let searchContact: SearchContact = UIView.fromNib()
     let tableView = UITableView(frame: .zero, style: .plain)
@@ -52,27 +54,75 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
             }
         }
     }
-    
+    var counterNumbers = 0
+    var selectPhoneNumber: String?
     var subtitleCellValue = SubtitleCellValue.phoneNumber
     var multiSelectEnabled: Bool = false //Default is single selection contact
     var isSearch = false
+    let userPhoneView = EPContactSelfDataView()
+    var headerHight = 0
     // MARK: - Lifecycle Methods
+    
+    public override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        guard let headerView = tableView.tableHeaderView else {return}
+            let size = headerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+            if headerView.frame.size.height != size.height {
+                headerView.frame.size.height = size.height
+                tableView.tableHeaderView = headerView
+                tableView.layoutIfNeeded()
+            }
+    }
     
     override open func viewDidLoad() {
         super.viewDidLoad()
-//        self.title = EPGlobalConstants.Strings.contactsTitle
         configureTableView()
         registerContactCell()
         inititlizeBarButtons()
-        
-        
+        tableView.tableHeaderView = userPhoneView
+
         self.view.addSubview(searchContact)
         self.view.addSubview(tableView)
+        
         view.backgroundColor = .white
         searchContact.buttonStackView.isHidden = false
         searchContact.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingRight: 20, height: 44)
         tableView.anchor(top: searchContact.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 16)
         searchContact.delegateNumber = self
+        
+        userPhoneView.tapClouser = {
+            guard var phone = UserDefaults.standard.object(forKey: "UserPhone") as? String else { return }
+            if phone.first == "7" {
+                let mask = StringMask(mask: "+0 (000) 000-00-00")
+                let maskPhone = mask.mask(string: phone)
+                
+                self.selectPhoneNumber = maskPhone
+                let newNumber = maskPhone?.dropFirst(2)
+                self.searchContact.numberTextField.text  = newNumber?.description
+                
+                self.dismiss(animated: true, completion: {
+                    DispatchQueue.main.async {
+                        self.contactDelegate?.epUserPhone(phone)
+                    }
+                })
+                
+            } else if phone.first == "8" {
+                phone.removeFirst()
+                let mask = StringMask(mask: "+7 (000) 000-00-00")
+                let maskPhone = mask.mask(string: phone)
+                
+                self.selectPhoneNumber = maskPhone
+                let newNumber = maskPhone?.dropFirst(2)
+                self.searchContact.numberTextField.text  = newNumber?.description
+                
+                self.dismiss(animated: true, completion: {
+                    DispatchQueue.main.async {
+                        self.contactDelegate?.epUserPhone(phone)
+                    }
+                })
+            }
+        }
         
         reloadContacts()
     }
@@ -98,6 +148,10 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
         tableView.tableFooterView = UIView()
         tableView.separatorStyle = .none
         tableView.sectionIndexColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1)
+        tableView.keyboardDismissMode = .onDrag
+        tableView.layoutIfNeeded()
+        tableView.sectionHeaderHeight = UITableView.automaticDimension
+        tableView.estimatedSectionHeaderHeight = 60
     }
     
     fileprivate func registerContactCell() {
@@ -119,11 +173,6 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
             let cellNib = UINib(nibName: EPGlobalConstants.Strings.cellNibIdentifier, bundle: nil)
             tableView.register(cellNib, forCellReuseIdentifier: "Cell")
         }
-    }
-
-    override open func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
     // MARK: - Initializers
@@ -295,37 +344,65 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
      open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let cell = tableView.cellForRow(at: indexPath) as! EPContactCell
-        let selectedContact =  cell.contact!
-        if multiSelectEnabled {
-            //Keeps track of enable=ing and disabling contacts
-            if cell.accessoryType == UITableViewCell.AccessoryType.checkmark {
-                cell.accessoryType = UITableViewCell.AccessoryType.none
-                selectedContacts = selectedContacts.filter(){
-                    return selectedContact.contactId != $0.contactId
-                }
-            }
-            else {
-                cell.accessoryType = UITableViewCell.AccessoryType.checkmark
-                selectedContacts.append(selectedContact)
-            }
-        }
-        else {
-            //Single selection code
-            isSearch = false
+         let selectedContact =  cell.contact!
+         if multiSelectEnabled {
+             //Keeps track of enable=ing and disabling contacts
+             if cell.accessoryType == UITableViewCell.AccessoryType.checkmark {
+                 cell.accessoryType = UITableViewCell.AccessoryType.none
+                 selectedContacts = selectedContacts.filter(){
+                     return selectedContact.contactId != $0.contactId
+                 }
+             }
+             else {
+                 cell.accessoryType = UITableViewCell.AccessoryType.checkmark
+                 selectedContacts.append(selectedContact)
+             }
+         } else {
+             //Single selection code
+             isSearch = false
+             
+             if selectedContact.phoneNumbers.count > 1 {
 
-			self.dismiss(animated: true, completion: {
-				DispatchQueue.main.async {
-					self.contactDelegate?.epContactPicker(self, didSelectContact: selectedContact)
-				}
-			})
-        }
+                 let controller = ChoosePhoneNumberController()
+                 var numbers = [String]()
+                 for i in selectedContact.phoneNumbers{
+                     numbers.append(i.phoneNumber)
+                 }
+                 controller.elements = numbers
+                 counterNumbers = numbers.count
+                 controller.itemIsSelect = { currency in
+                     self.selectPhoneNumber = currency
+                     let newNumber = currency.dropFirst(2)
+                     self.searchContact.numberTextField.text  = newNumber.description
+                     tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: UITableView.ScrollPosition.top , animated: false)
+                     tableView.reloadData()
+                     
+                     self.presentingViewController?.dismiss(animated: true, completion: {
+                         DispatchQueue.main.async {
+                             self.contactDelegate?.epUserPhone(currency)
+                         }
+                     })
+
+                 }
+                 let navController = UINavigationController(rootViewController: controller)
+                 navController.modalPresentationStyle = .custom
+                 navController.transitioningDelegate = self
+                 self.present(navController, animated: true)
+             } else {
+                 self.dismiss(animated: true, completion: {
+                     DispatchQueue.main.async {
+                         self.contactDelegate?.epContactPicker(self, didSelectContact: selectedContact)
+                     }
+                 })
+             }
+         }
     }
     
      open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60.0
     }
     
-    open  func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    open func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 0
     }
     
@@ -339,11 +416,6 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
         if isSearch { return nil }
         return sortedContactKeys
     }
-
-//    override open func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-//        if resultSearchController.isActive { return nil }
-//        return sortedContactKeys[section]
-//    }
     
     // MARK: - Button Actions
     
@@ -360,6 +432,7 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
     }
     
     // MARK: - Search Actions
+    
     private func searchForContactUsingName(text: String) {
         
         var predicate: NSPredicate
@@ -419,7 +492,6 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
                 
                 if contacts.count == 0 {
                     message = "No contacts were found matching the given phone number."
-                    print(message!)
                 }
                 } catch {
                     message = "Unable to fetch contacts."
@@ -433,16 +505,6 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
                     DispatchQueue.main.async {
                         
                         self.filteredContacts = contacts
-//                        let contact = contacts[0] // For just the first contact (if two contacts had the same phone number)
-//                        print(contact.givenName) // Print the "first" name
-//                        print(contact.familyName) // Print the "last" name
-//                        if contact.isKeyAvailable(CNContactImageDataKey) {
-//                            if let contactImageData = contact.imageData {
-//                                print(UIImage(data: contactImageData)) // Print the image set on the contact
-//                            }
-//                        } else {
-//                            // No Image available
-//                        }
                     }
                 }
             }
@@ -463,8 +525,25 @@ extension EPContactsPicker: PassTextFieldText {
             }
             searchForContactUsingPhoneNumber(phoneNumber: searchText)
         } else {
+            
             searchForContactUsingName(text: searchText)
         }
         
+    }
+    
+    func showSelfPhoneView(_ value: Bool) {
+        if value == true {
+            tableView.tableHeaderView = userPhoneView
+        } else {
+            self.tableView.tableHeaderView = nil
+        }
+    }
+}
+
+extension EPContactsPicker {
+    public func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        let presenter = PresentationController(presentedViewController: presented, presenting: presenting)
+        presenter.height = (counterNumbers * 40) + 160
+        return presenter
     }
 }

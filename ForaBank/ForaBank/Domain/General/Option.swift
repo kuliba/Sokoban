@@ -8,6 +8,7 @@
 import Foundation
 
 struct Option: Identifiable {
+    
     let id: String
     let name: String
 }
