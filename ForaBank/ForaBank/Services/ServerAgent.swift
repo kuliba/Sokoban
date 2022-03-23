@@ -87,18 +87,17 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                  */
                 
                 guard let data = data else {
-                    
                     completion(.failure(.emptyResponseData))
                     return
                 }
-                
+                print(String(data: data, encoding: .utf8) ?? "")
                 do {
                     
                     let response = try decoder.decode(Command.Response.self, from: data)
                     completion(.success(response))
                     
                 } catch {
-                    
+                    print(error.localizedDescription)
                     completion(.failure(.curruptedData(error)))
                 }
      

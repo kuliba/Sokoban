@@ -672,7 +672,7 @@ extension ServerCommands {
                 
                 struct BannerCatalogData: Codable, Equatable {
                     
-                    let bannerCatalogList: [BannerCatalogListData]
+                    let BannerCatalogList: [BannerCatalogListData]
                     let serial: String
                 }
             }

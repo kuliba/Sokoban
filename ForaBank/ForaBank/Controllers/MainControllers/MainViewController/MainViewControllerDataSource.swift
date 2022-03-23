@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import SDWebImage
 
 // MARK: - Data Source PaymentsViewControllerDataSource
 extension MainViewController {
@@ -65,7 +65,9 @@ extension MainViewController {
                 }
 //                cell.backgroundColor = .red
 //                cell.backgroundColor = UIColor(patternImage: UIImage(named: self.offer[indexPath.row].iconName!) ?? UIImage())
-                cell.backgroundImageView.image = UIImage(named: self.offer[indexPath.row].iconName ?? "")
+                let url = URL(string: self.offer[indexPath.row].iconName ?? "")
+                cell.backgroundImageView.sd_setImage(with: url)
+//                cell.backgroundImageView.image = UIImage(named: self.offer[indexPath.row].iconName ?? "")
 
                 return cell
             case .currentsExchange:
