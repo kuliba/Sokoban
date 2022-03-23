@@ -18,12 +18,14 @@ extension NumberFormatter {
         return formatter
     }
     
-    func currency(with currencyCode: String) -> NumberFormatter {
+    static func currency(with currencySymbol: String) -> NumberFormatter {
         
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
-        formatter.currencyCode = currencyCode
+        formatter.currencySymbol = currencySymbol
+        formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = 2
+        formatter.locale = Locale(identifier: "ru_RU")
         
         return formatter
     }

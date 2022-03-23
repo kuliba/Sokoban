@@ -8,27 +8,20 @@
 import Foundation
 import Security
 
+struct EncryptionKeysPair {
+    
+    let publicKey: SecKey
+    let privateKey: SecKey
+}
+
 protocol EncryptionKeysProvider {
     
-    func getPublicKey() throws -> SecKey
-    func getPrivateKey() throws -> SecKey
-    func deletePrivateKey() throws
-    
-    func publicKeyData() throws -> Data
-    func publicKey(from data: Data) throws -> SecKey
-    var algorithm: SecKeyAlgorithm { get }
+    func generateKeysPair() throws -> EncryptionKeysPair
 }
 
-protocol EncryptionEncryptor {
+protocol EncryptionAgent {
     
+    init(with keyData: Data)
     func encrypt(_ data: Data) throws -> Data
-    func encryptBlob<T: Encodable>(_ data: T) throws -> Data
-    func encryptChunked<T: Encodable>(_ data: T) throws -> Data
-}
-
-protocol EncryptionDecryptor {
-    
     func decrypt(_ data: Data) throws -> Data
-    func decryptBlob<T: Decodable>(_ data: Data) throws -> T
-    func decryptChunked<T: Decodable>(_ data: Data) throws -> T
 }
