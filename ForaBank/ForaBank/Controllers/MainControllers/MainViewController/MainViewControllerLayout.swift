@@ -20,31 +20,31 @@ extension MainViewController {
             
             switch section {
             case .products:
-                if self.productsFromRealm.count > 0 {
+                if self.productsViewModels.count > 0 {
                     return self.createProductSection(type: 1, isExpanded: isSectionExpanded)
                 } else {
                     return nil
                 }
             case .pay:
-                if self.pay.count > 0 {
+                if self.paymentsViewModels.count > 0 {
                     return self.createPaySection(isExpanded: isSectionExpanded)
                 } else {
                     return nil
                 }
             case .offer:
-                if self.offer.count > 0 {
+                if self.promoViewModels.count > 0 {
                     return self.createOffersSection(isExpanded: isSectionExpanded)
                 } else {
                     return nil
                 }
             case .currentsExchange:
-                if self.currentsExchange.count > 0 {
+                if self.exchangeRatesViewModels.count > 0 {
                     return self.createCurrencyExternalSection(isExpanded: isSectionExpanded)
                 } else {
                     return nil
                 }
             case .openProduct:
-                if self.openProduct.count > 0 {
+                if self.openProductViewModels.count > 0 {
                     return self.createOpenProduct(isExpanded: isSectionExpanded)
                 } else {
                     return nil
@@ -78,7 +78,7 @@ extension MainViewController {
             let section = NSCollectionLayoutSection(group: group)
             section.interGroupSpacing = 8
             section.contentInsets = .init(top: 8, leading: 20, bottom: 32, trailing: 20)
-            section.orthogonalScrollingBehavior = .paging
+            section.orthogonalScrollingBehavior = .continuous
             
             if productTypeSelector.productTypes.count > 1 {
                 
@@ -98,7 +98,7 @@ extension MainViewController {
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: itemSize,  subitems: [item])
             let section = NSCollectionLayoutSection(group: group)
             section.contentInsets = .init(top: 0, leading: 20, bottom: 0, trailing: 20)
-            section.orthogonalScrollingBehavior = .paging
+            section.orthogonalScrollingBehavior = .continuous
             section.boundarySupplementaryItems = [createSectionHeader()]
             
             return section

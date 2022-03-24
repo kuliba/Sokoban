@@ -16,9 +16,9 @@ extension MainViewController: UICollectionViewDelegate {
         }
         switch section {
         case .products:
-            switch productsFromRealm[indexPath.item].id {
+            switch productsViewModels[indexPath.item].id {
             case 32:
-                if productsFromRealm[indexPath.item].name == "Cм.все"{
+                if productsViewModels[indexPath.item].name == "Cм.все"{
                     let viewController = ProductsViewController()
                     viewController.addCloseButton()
                     let navVC = UINavigationController(rootViewController: viewController)
@@ -29,48 +29,27 @@ extension MainViewController: UICollectionViewDelegate {
                     UIApplication.shared.open(url, options: [:], completionHandler: nil)
                 }
             default:
-                let viewController = ProductViewController()
-                viewController.delegate = self
-                viewController.indexItem = indexPath.item
-//                viewController.product = productList[indexPath.item]
-                
-                let first3Elements :  [GetProductListDatum] // An Array of up to the first 3 elements.
-//                if productList.count >= 3 {
-//                    first3Elements = Array(productList[0 ..< 3])
-//                    viewController.products = first3Elements
-//                } else {
-//                    viewController.products = productList
-//                    first3Elements = productList
-//
-//                }
-                let allProducts =  productsCardsAndAccounts + productsDeposits
-                
-//                let navVC = UINavigationController(rootViewController: viewController)
-//                navVC.modalPresentationStyle = .fullScreen
-//                present(navVC, animated: true)
-                if isFiltered{
-                    delegate?.goProductViewController(productIndex: indexPath.item, product: productsDeposits[indexPath.item], products: allProducts)
-                } else {
-                    delegate?.goProductViewController(productIndex: indexPath.item, product: productsCardsAndAccounts[indexPath.item], products: allProducts)
-
+                let productIndex = indexPath.item
+                guard let products = self.realm?.objects(UserAllCardsModel.self), productIndex < products.count else {
+                    return
                 }
-//                delegate?.goProductViewController(productIndex: indexPath.item, product: productList[indexPath.item])
+                
+                var productsList = [UserAllCardsModel]()
+                for product in products {
+                    
+                    productsList.append(product)
+                }
+                
+                delegate?.goProductViewController(productIndex: productIndex, product: productsList[productIndex], products: productsList)
             }
+            
         case .offer:
-            guard let url = URL(string: offer[indexPath.row].controllerName ) else { return  }
+            guard let url = URL(string: promoViewModels[indexPath.row].controllerName ) else { return  }
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        
         case .currentsExchange:
             print("Currency")
 
-//        case .transfers:
-//            let viewController = ProductViewController()
-//                viewController.addCloseButton()
-//                let navVC = UINavigationController(rootViewController: viewController)
-//                navVC.modalPresentationStyle = .fullScreen
-//                present(navVC, animated: true)
-//            
-//        case .offer:
-//            print("It's transfer")
         case .pay:
             if indexPath.row == 0 {
                 checkCameraAccess(isAllowed: {
@@ -99,7 +78,7 @@ extension MainViewController: UICollectionViewDelegate {
                     }
                 })
             } else if indexPath.row == 1 {
-                if let viewController = pay[indexPath.row].controllerName.getViewController() {
+                if let viewController = paymentsViewModels[indexPath.row].controllerName.getViewController() {
                     let navVC = UINavigationController(rootViewController: viewController)
                     present(navVC, animated: true)
                 }
@@ -124,12 +103,9 @@ extension MainViewController: UICollectionViewDelegate {
                 present(navVC, animated: true)
                 
             } else {
-                guard let url = URL(string: openProduct[indexPath.row].controllerName ) else { return  }
+                guard let url = URL(string: openProductViewModels[indexPath.row].controllerName ) else { return  }
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
-        case .branches: break
-        case .investment: break
-        case .services: break
         }
     }
 
@@ -182,17 +158,22 @@ extension MainViewController: UIViewControllerTransitioningDelegate {
 extension MainViewController: TemplatesListViewHostingViewControllerDelegate {
     
     func presentProductViewController() {
-
-        let allProducts = productsCardsAndAccounts + productsDeposits
-        guard let firstProduct = allProducts.first else {
+        
+        guard let products = self.realm?.objects(UserAllCardsModel.self), let firstProduct = products.first else {
             return
+        }
+        
+        var productsList = [UserAllCardsModel]()
+        for product in products {
+            
+            productsList.append(product)
         }
                 
         let viewController = ProductViewController()
         viewController.delegate = self
         viewController.indexItem = 0
 
-        delegate?.goProductViewController(productIndex: 0, product: firstProduct, products: allProducts)
+        delegate?.goProductViewController(productIndex: 0, product: firstProduct, products: productsList)
     }
 }
 
