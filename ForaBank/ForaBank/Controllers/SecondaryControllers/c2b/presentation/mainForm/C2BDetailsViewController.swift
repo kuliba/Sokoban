@@ -231,7 +231,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource, U
                 [
                     "fieldid": 1,
                     "fieldname": "QRcode",
-                    "fieldvalue": GlobalModule.c2bURL
+                    "fieldvalue": viewModel.c2bLink
                 ]
             ]
         ] as [String: AnyObject]

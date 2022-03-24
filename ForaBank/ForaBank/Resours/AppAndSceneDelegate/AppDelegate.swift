@@ -77,6 +77,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+        GlobalModule.c2bURL = "\(url.description)  d"
         return true
     }
 

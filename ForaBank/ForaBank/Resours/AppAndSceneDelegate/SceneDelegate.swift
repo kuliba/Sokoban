@@ -49,6 +49,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         // NetMonitoring observer
         self.observeNetworkStatus()
+
+        if let urlContext = connectionOptions.urlContexts.first {
+            let sendingAppID = urlContext.options.sourceApplication
+            GlobalModule.c2bURL = urlContext.url.description
+        }
     }
     
     private func observeNetworkStatus() {
@@ -89,6 +94,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         print("qr5555 scene(_ scene 1")
+        GlobalModule.c2bURL = "244"
         guard let url = URLContexts.first?.url else { return }
         guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true),
               let params = components.queryItems else {
