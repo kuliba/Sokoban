@@ -48,7 +48,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         application.registerForRemoteNotifications()
         
         requestNotificationAuthorization(application: application)
-//        customizeUiInApp()
+        customizeUiInApp()
         
         self.initRealmTimerParameters()
         // Зарузка кэша

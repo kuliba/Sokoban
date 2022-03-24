@@ -6,42 +6,80 @@
 //
 
 import UIKit
+import SwiftUI
 
 class SectionHeader: UICollectionReusableView {
     
     static let reuseId = "SectionHeader"
     
-    let title = UILabel()
-    let arrowButton = UIButton()
-    let seeAllButton = UIButton()
-    let changeCardButtonCollection = AllCardView()
+    let container = UIStackView(frame: .zero)
+    let title = UILabel(frame: .zero)
+    let expandedIcon = UIImageView(frame: .zero)
+    let seeAllButton = UIButton(frame: .zero)
 
+    private var isExpanded: Bool = true
+    private var expandAction: (() -> Void)?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        container.axis = .vertical
+        container.distribution = .fill
+        container.alignment = .leading
+        container.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(container)
+        NSLayoutConstraint.activate([
+        
+            container.leadingAnchor.constraint(equalTo: leadingAnchor),
+            container.trailingAnchor.constraint(equalTo: trailingAnchor),
+            container.topAnchor.constraint(equalTo: topAnchor),
+            container.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
+        
+        let horizontalContainer = UIStackView(frame: .zero)
+        horizontalContainer.axis = .horizontal
+        horizontalContainer.distribution = .fill
+        horizontalContainer.alignment = .center
+        horizontalContainer.translatesAutoresizingMaskIntoConstraints = false
+        container.addArrangedSubview(horizontalContainer)
+        
+        let titleContainer = UIStackView(frame: .zero)
+        titleContainer.axis = .horizontal
+        titleContainer.distribution = .fill
+        titleContainer.spacing = 8
+        titleContainer.translatesAutoresizingMaskIntoConstraints = false
+        horizontalContainer.addArrangedSubview(titleContainer)
+        
         title.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(arrowButton)
-        addSubview(seeAllButton)
-        addSubview(title)
-//        self.backgroundColor = .green
-        arrowButton.anchor(right: title.rightAnchor, paddingRight: -30, width: 24, height: 24)
-        seeAllButton.anchor(right: self.rightAnchor, width: 32, height: 32)
+        titleContainer.addArrangedSubview(title)
+        
+        expandedIcon.image = UIImage(named: "chevron-downnew")
+        expandedIcon.translatesAutoresizingMaskIntoConstraints = false
+        titleContainer.addArrangedSubview(expandedIcon)
+        
+        let spacerView = UIView(frame: .zero)
+        spacerView.backgroundColor = .clear
+        spacerView.translatesAutoresizingMaskIntoConstraints = false
+        spacerView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        horizontalContainer.addArrangedSubview(spacerView)
+        let spacerWidthConstraint = spacerView.widthAnchor.constraint(equalToConstant: 375)
+        spacerWidthConstraint.priority = .defaultLow
+        spacerWidthConstraint.isActive = true
+
         seeAllButton.setImage(UIImage(imageLiteralResourceName: "seeall"), for: .normal)
-        arrowButton.setImage(UIImage(named: "chevron-downnew"), for: .normal)
-        arrowButton.imageView?.sizeToFit()
-        arrowButton.tintColor = .gray
-        arrowButton.centerY(inView: self.title)
-        seeAllButton.centerY(inView: self.title)
-//        title.centerY(inView: self)
-//        NSLayoutConstraint.activate([
-//            title.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-//            title.topAnchor.constraint(equalTo: self.topAnchor)
-//        ])
-//        title.anchor(height: 24)
-  
+        seeAllButton.translatesAutoresizingMaskIntoConstraints = false
+        horizontalContainer.addArrangedSubview(seeAllButton)
+        NSLayoutConstraint.activate([
+            
+            seeAllButton.heightAnchor.constraint(equalToConstant: 32),
+            seeAllButton.widthAnchor.constraint(equalToConstant: 32)
+        ])
+        
+        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(headerDidTapped)))
     }
     
-    func configure(text: String, font: UIFont?, textColor: UIColor, expandingIsHidden: Bool, seeAllIsHidden: Bool, onlyCards: Bool) {
+    func configure(text: String, font: UIFont?, textColor: UIColor, expandingIsHidden: Bool, seeAllIsHidden: Bool, onlyCards: Bool, isExpanded: Bool, expandAction: @escaping () -> Void, productSelectorViewModel: OptionSelectorView.ViewModel? = nil) {
+        
         title.textColor = textColor
         title.font = font
         title.text = text
@@ -50,27 +88,68 @@ class SectionHeader: UICollectionReusableView {
         } else {
             title.alpha = 1
         }
-        arrowButton.isHidden = expandingIsHidden
+        expandedIcon.isHidden = expandingIsHidden
         seeAllButton.isHidden = seeAllIsHidden
-        if title.text == "Мои продукты"{
-            addSubview(changeCardButtonCollection)
-            title.anchor(top: self.topAnchor, height: 24)
-            changeCardButtonCollection.isHidden = onlyCards
-            changeCardButtonCollection.anchor(left: self.leftAnchor, bottom: self.bottomAnchor, paddingLeft: -10, paddingBottom: 0, height: 24)
-            changeCardButtonCollection.button_1.setTitle("Карты и счета", for: .normal)
-            changeCardButtonCollection.button_2.setTitle("Вклады", for: .normal)
-            changeCardButtonCollection.button_3.isHidden = true
-            arrowButton.centerY(inView: title)
-            seeAllButton.centerY(inView: title)
+        
+        self.isExpanded = isExpanded
+        self.expandedIcon.transform = expandedIconTransform
+        self.expandAction = expandAction
+        
+        removeProductTypeSelectorView()
+        
+        if let productSelectorViewModel = productSelectorViewModel {
             
-        } else {
-//            title.centerY(inView: self)
-            changeCardButtonCollection.removeFromSuperview()
-            title.backgroundColor = .white
+            addProductTypeSelectorView(with: productSelectorViewModel)
         }
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc
+    func headerDidTapped() {
+        
+        guard let expandAction = expandAction else {
+            return
+        }
+        
+        expandAction()
+        isExpanded.toggle()
+        
+        UIView.animate(withDuration: 0.3) {
+            
+            self.expandedIcon.transform = self.expandedIconTransform
+        }
+    }
+    
+    var expandedIconTransform: CGAffineTransform {
+        
+        isExpanded ? .identity : .init(rotationAngle: deg2rad(-90))
+    }
+    
+    func deg2rad(_ number: CGFloat) -> CGFloat {
+        
+        return number * .pi / 180
+    }
+    
+    func removeProductTypeSelectorView() {
+        
+        guard container.arrangedSubviews.count == 2 else {
+            return
+        }
+        
+        let productTypeSelectorView = container.arrangedSubviews[1]
+        productTypeSelectorView.removeFromSuperview()
+    }
+    
+    func addProductTypeSelectorView(with viewModel: OptionSelectorView.ViewModel) {
+        
+        guard let productTypeSelectorView = UIHostingController(rootView: OptionSelectorView(viewModel: viewModel)).view else {
+            return
+        }
+        
+        productTypeSelectorView.translatesAutoresizingMaskIntoConstraints = false
+        container.addArrangedSubview(productTypeSelectorView)
     }
 }

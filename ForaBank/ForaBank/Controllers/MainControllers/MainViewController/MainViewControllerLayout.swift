@@ -11,233 +11,242 @@ extension MainViewController {
 
     func createCompositionLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { (sectionIndex, layoutEnvironment) -> NSCollectionLayoutSection? in
-            guard let section = Section(rawValue: sectionIndex) else {
-                fatalError("Unknown section kind")
+            
+            guard let section = Section(rawValue: sectionIndex),
+                  let isSectionExpanded = self.sectionsExpanded.value[section] else {
+                        
+                return nil
             }
             
             switch section {
             case .products:
-                if self.productsFromRealm.count > 0{
-                    return self.createProduct(type: 1)
+                if self.productsFromRealm.count > 0 {
+                    return self.createProductSection(type: 1, isExpanded: isSectionExpanded)
                 } else {
                     return nil
                 }
             case .pay:
                 if self.pay.count > 0 {
-                    return self.createPay()
+                    return self.createPaySection(isExpanded: isSectionExpanded)
                 } else {
                     return nil
                 }
             case .offer:
                 if self.offer.count > 0 {
-                    return self.createOffers()
+                    return self.createOffersSection(isExpanded: isSectionExpanded)
                 } else {
                     return nil
                 }
             case .currentsExchange:
                 if self.currentsExchange.count > 0 {
-                    return self.createCurrencyExternal()
+                    return self.createCurrencyExternalSection(isExpanded: isSectionExpanded)
                 } else {
                     return nil
                 }
             case .openProduct:
                 if self.openProduct.count > 0 {
-                    return self.createOpenProduct()
+                    return self.createOpenProduct(isExpanded: isSectionExpanded)
                 } else {
                     return nil
                 }
 
-            case .branches:
-//                return self.createSection()
+            default:
                 return nil
-            case .services:
-//                return self.createSection()
-                return nil
-            case .investment:
-//                return self.createSection()
-                return nil
-
             }
         }
-        let config = UICollectionViewCompositionalLayoutConfiguration()
         
+        let config = UICollectionViewCompositionalLayoutConfiguration()
         config.interSectionSpacing = 0
         layout.configuration = config
+        
         return layout
     }
-    
 
-    
-    
-    private func createProduct(type: Int?) -> NSCollectionLayoutSection {
+    private func createProductSection(type: Int?, isExpanded: Bool) -> NSCollectionLayoutSection {
 
-        let item = NSCollectionLayoutItem.withEntireSize()
-        let itemadd = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .absolute(114), heightDimension: .absolute(104)))
-        let topItem = NSCollectionLayoutItem(
-                    layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                   heightDimension: .fractionalHeight(0.3)))
-        topItem.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
-
-        var groupSize: NSCollectionLayoutSize!
-    
-        if type == 32{
-            groupSize = NSCollectionLayoutSize(
-                widthDimension: .absolute(112),
-              heightDimension: .absolute(104))
+        if isExpanded == true {
+            
+            let item = NSCollectionLayoutItem.withEntireSize()
+            var groupSize = NSCollectionLayoutSize(widthDimension: .absolute(164), heightDimension: .absolute(104))
+        
+            if type == 32 {
+                
+                groupSize = NSCollectionLayoutSize(widthDimension: .absolute(112), heightDimension: .absolute(104))
+            }
+            
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,  subitems: [item])
+            let section = NSCollectionLayoutSection(group: group)
+            section.interGroupSpacing = 8
+            section.contentInsets = .init(top: 8, leading: 20, bottom: 32, trailing: 20)
+            section.orthogonalScrollingBehavior = .paging
+            
+            if productTypeSelector.productTypes.count > 1 {
+                
+                section.boundarySupplementaryItems = [createSectionHeaderWithButtons()]
+                
+            } else {
+                
+                section.boundarySupplementaryItems = [createSectionHeader()]
+            }
+           
+            return section
+            
         } else {
-           groupSize = NSCollectionLayoutSize(
-                widthDimension: .absolute(164),
-              heightDimension: .absolute(104))
+            
+            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(0.01))
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: itemSize,  subitems: [item])
+            let section = NSCollectionLayoutSection(group: group)
+            section.contentInsets = .init(top: 0, leading: 20, bottom: 0, trailing: 20)
+            section.orthogonalScrollingBehavior = .paging
+            section.boundarySupplementaryItems = [createSectionHeader()]
+            
+            return section
         }
+    }
+    
+    private func createOffersSection(isExpanded: Bool) -> NSCollectionLayoutSection {
+        
+        if isExpanded == true {
+            
+            let item = NSCollectionLayoutItem.withEntireSize()
+            let groupSize = NSCollectionLayoutSize(
+                widthDimension: .absolute(288),
+              heightDimension: .absolute(124))
+            
+            let group = NSCollectionLayoutGroup.horizontal(
+                layoutSize: groupSize, subitems: [item])
+            let section = NSCollectionLayoutSection(group: group)
+            
+            section.interGroupSpacing = 8
+            section.contentInsets = .init(top: 0, leading: 20, bottom: 32, trailing: 20)
+            section.orthogonalScrollingBehavior = .continuous
+            return section
+            
+        } else {
+            
+            let item = NSCollectionLayoutItem.withEntireSize()
+            let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(288), heightDimension: .absolute(0.01))
+            
+            let group = NSCollectionLayoutGroup.horizontal(
+                layoutSize: groupSize, subitems: [item])
+            let section = NSCollectionLayoutSection(group: group)
+            section.contentInsets = .init(top: 0, leading: 20, bottom: 0, trailing: 20)
+            section.orthogonalScrollingBehavior = .continuous
+            return section
+        }
+    }
+
+    private func createCurrencyExternalSection(isExpanded: Bool) -> NSCollectionLayoutSection {
+
+        if isExpanded == true {
+            
+            let item = NSCollectionLayoutItem.withEntireSize()
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.95), heightDimension: .absolute(124))
+            let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitem: item, count: 1)
+            
+            let section = NSCollectionLayoutSection(group: group)
+            section.interGroupSpacing = 0
+            section.contentInsets = .init(top: 16, leading: 20, bottom: 32, trailing: 0)
+            section.orthogonalScrollingBehavior = .none
+
+            let sectionHeader = createSectionHeader()
+            section.boundarySupplementaryItems = [sectionHeader]
+            return section
+            
+        } else {
+            
+            let item = NSCollectionLayoutItem.withEntireSize()
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.95),heightDimension: .absolute(0.01))
+
+            let group = NSCollectionLayoutGroup.vertical(
+                layoutSize: groupSize, subitem: item, count: 1)
+            let section = NSCollectionLayoutSection(group: group)
+            section.contentInsets = .init(top: 16, leading: 20, bottom: 0, trailing: 0)
+            section.orthogonalScrollingBehavior = .none
+
+            let sectionHeader = createSectionHeader()
+            section.boundarySupplementaryItems = [sectionHeader]
+            return section
+        }
+    }
+
+    private func createPaySection(isExpanded: Bool) -> NSCollectionLayoutSection {
+
+        if isExpanded == true {
+            
+            let item = NSCollectionLayoutItem.withEntireSize()
+            let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(80), heightDimension: .absolute(96))
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+            let section = NSCollectionLayoutSection(group: group)
+            section.interGroupSpacing = 4
+            section.contentInsets = .init(top: 16, leading: 20, bottom: 32, trailing: 20)
+            section.orthogonalScrollingBehavior = .continuous
+            let sectionHeader = createSectionHeader()
+            section.boundarySupplementaryItems = [sectionHeader]
+            return section
+            
+        } else {
+           
+            let item = NSCollectionLayoutItem.withEntireSize()
+            let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(80), heightDimension: .absolute(0.01))
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+            let section = NSCollectionLayoutSection(group: group)
+            section.contentInsets = .init(top: 16, leading: 20, bottom: 0, trailing: 20)
+            section.orthogonalScrollingBehavior = .continuous
+            let sectionHeader = createSectionHeader()
+            section.boundarySupplementaryItems = [sectionHeader]
+            return section
+        }
+    }
+
+    private func createOpenProduct(isExpanded: Bool) -> NSCollectionLayoutSection {
+
+        if isExpanded == true {
+            
+            let item = NSCollectionLayoutItem.withEntireSize()
+            
+            let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(120), heightDimension: .absolute(124))
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+            
+            let section = NSCollectionLayoutSection(group: group)
+            section.interGroupSpacing = 8
+            section.contentInsets = .init(top: 16, leading: 20, bottom: 32, trailing: 20)
+            section.orthogonalScrollingBehavior = .continuous
+
+            let sectionHeader = createSectionHeader()
+            section.boundarySupplementaryItems = [sectionHeader]
+
+            return section
+            
+        } else {
+            
+            let item = NSCollectionLayoutItem.withEntireSize()
+            let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(120), heightDimension: .absolute(0.1))
+
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
   
+            let section = NSCollectionLayoutSection(group: group)
+            section.interGroupSpacing = 8
+            section.contentInsets = .init(top: 16, leading: 20, bottom: 0, trailing: 20)
+            section.orthogonalScrollingBehavior = .continuous
 
-        let group = NSCollectionLayoutGroup.horizontal(
-            layoutSize: groupSize,  subitems: [item, itemadd, topItem])
-        
-        let section = NSCollectionLayoutSection(group: group)
-        
-   
-        section.interGroupSpacing = 8
-        section.contentInsets = .init(top: 16, leading: 20, bottom: 32, trailing: 20)
-//        group.contentInsets = .init(top: 100, leading: 0, bottom: 40, trailing: 0)
-        section.orthogonalScrollingBehavior = .paging
-        var sectionHeader = createSectionHeaderWithButtons()
-
-        if productsDeposits.count == 0{
-            sectionHeader = createSectionHeader()
-        } else {
-            sectionHeader = createSectionHeaderWithButtons()
+            let sectionHeader = createSectionHeader()
+            section.boundarySupplementaryItems = [sectionHeader]
+            
+            return section
         }
-        sectionHeader.contentInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 0)
-
-        section.boundarySupplementaryItems = [sectionHeader]
-        
-        return section
-    }
-
-    private func createSection() -> NSCollectionLayoutSection {
-
-        let item = NSCollectionLayoutItem.withEntireSize()
-        let groupSize = NSCollectionLayoutSize(
-            widthDimension: .absolute(0),
-          heightDimension: .absolute(0))
-
-        let group = NSCollectionLayoutGroup.horizontal(
-            layoutSize: groupSize, subitems: [item])
-
-        group.contentInsets = .uniform(size: 0)
-
-        let section = NSCollectionLayoutSection(group: group)
-
-        section.interGroupSpacing = 8
-        section.contentInsets = .init(top: 0, leading: 0, bottom: 16, trailing: 0)
-
-        section.orthogonalScrollingBehavior = .continuous
-
-        let sectionHeader = createSectionHeader()
-        section.boundarySupplementaryItems = [sectionHeader]
-        return section
-    }
-    
-    private func createOffers() -> NSCollectionLayoutSection {
-        
-        let item = NSCollectionLayoutItem.withEntireSize()
-        let groupSize = NSCollectionLayoutSize(
-            widthDimension: .absolute(288),
-          heightDimension: .absolute(124))
-        
-        let group = NSCollectionLayoutGroup.horizontal(
-            layoutSize: groupSize, subitems: [item])
-        let section = NSCollectionLayoutSection(group: group)
-        
-        section.interGroupSpacing = 8
-        section.contentInsets = .init(top: 0, leading: 20, bottom: 32, trailing: 20)
-
-        section.orthogonalScrollingBehavior = .continuous
-        return section
-    }
-
-    private func createCurrencyExternal() -> NSCollectionLayoutSection {
-
-        let item = NSCollectionLayoutItem.withEntireSize()
-        let groupSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(0.95),
-            heightDimension: .absolute(124))
-
-        let group = NSCollectionLayoutGroup.vertical(
-            layoutSize: groupSize, subitem: item, count: 1)
-        let section = NSCollectionLayoutSection(group: group)
-
-        section.interGroupSpacing = 0
-        
-        section.contentInsets = .init(top: 16, leading: 20, bottom: 32, trailing: 0)
-
-
-        section.orthogonalScrollingBehavior = .none
-
-        let sectionHeader = createSectionHeader()
-        section.boundarySupplementaryItems = [sectionHeader]
-        sectionHeader.contentInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 0)
-        return section
-    }
-
-    private func createPay() -> NSCollectionLayoutSection {
-
-        let item = NSCollectionLayoutItem.withEntireSize()
-        let groupSize = NSCollectionLayoutSize(
-            widthDimension: .absolute(80),
-            heightDimension: .absolute(96))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = 4
-        section.contentInsets = .init(top: 16, leading: 8, bottom: 32, trailing: 20)
-        section.orthogonalScrollingBehavior = .continuous
-        let sectionHeader = createSectionHeader()
-        sectionHeader.contentInsets = .init(top: 0, leading: 12, bottom: 0, trailing: 0)
-        section.boundarySupplementaryItems = [sectionHeader]
-        return section
-    }
-
-    private func createOpenProduct() -> NSCollectionLayoutSection {
-
-        let item = NSCollectionLayoutItem.withEntireSize()
-        let groupSize = NSCollectionLayoutSize(
-            widthDimension: .absolute(104),
-          heightDimension: .absolute(124))
-
-        let group = NSCollectionLayoutGroup.horizontal(
-            layoutSize: groupSize, subitems: [item])
-        
-
-        let section = NSCollectionLayoutSection(group: group)
-
-        section.interGroupSpacing = 8
-        section.contentInsets = .init(top: 16, leading: 20, bottom: 32, trailing: 20)
-
-
-        section.orthogonalScrollingBehavior = .continuous
-
-        let sectionHeader = createSectionHeader()
-        
-        section.boundarySupplementaryItems = [sectionHeader]
-        sectionHeader.contentInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 0)
-
-        return section
     }
 
     
      func createSectionHeader() -> NSCollectionLayoutBoundarySupplementaryItem{
-        let sectionHeaderSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1),
-            heightDimension: .absolute(24))
+        let sectionHeaderSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(32))
         
         let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
             layoutSize: sectionHeaderSize,
             elementKind: UICollectionView.elementKindSectionHeader,
             alignment: .top)
-         
-         sectionHeader.contentInsets = .init(top: 0, leading: 20, bottom: 0, trailing: 0)
-        
+   
         return sectionHeader
     }
     func createSectionHeaderWithButtons() -> NSCollectionLayoutBoundarySupplementaryItem{
@@ -249,9 +258,7 @@ extension MainViewController {
            layoutSize: sectionHeaderSize,
            elementKind: UICollectionView.elementKindSectionHeader,
            alignment: .top)
-        
-        sectionHeader.contentInsets = .init(top: 0, leading: 20, bottom: 0, trailing: 0)
-        
+
        return sectionHeader
    }
 

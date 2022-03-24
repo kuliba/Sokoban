@@ -141,93 +141,32 @@ extension MainViewController {
                     for: indexPath) as? SectionHeader
                 else { fatalError("Can not create new section header")
             }
-            guard let section = Section(rawValue: indexPath.section)
-                else { fatalError("Unknown section kind")
+            guard let section = Section(rawValue: indexPath.section),
+                  let isSectionExpanded = self.sectionsExpanded.value[section] else {
+                        
+                        fatalError("Unknown section kind")
             }
+            
+            let toggleAction: () -> Void = { [weak self] in self?.toggleExpanded(for: section) }
             switch section {
             case .offer:
                 sectionHeader.configure(text: section.description(),
                                         font: .boldSystemFont(ofSize: 1),
-                                        textColor: .black, expandingIsHidden: true, seeAllIsHidden: true, onlyCards: true)
+                                        textColor: .black, expandingIsHidden: true, seeAllIsHidden: true, onlyCards: true, isExpanded: isSectionExpanded, expandAction: {})
                 sectionHeader.isHidden = true
             case .products:
+                let productSelectorViewModel = isSectionExpanded ? self.productTypeSelector.optionSelector : nil
                 sectionHeader.configure(text: section.description(),
                                         font: .boldSystemFont(ofSize: 20),
-                                        textColor: .black, expandingIsHidden: false, seeAllIsHidden: false, onlyCards: productsDeposits.isEmpty)
+                                        textColor: .black, expandingIsHidden: false, seeAllIsHidden: false, onlyCards: productsDeposits.isEmpty, isExpanded: isSectionExpanded, expandAction: toggleAction, productSelectorViewModel: productSelectorViewModel)
                 sectionHeader.seeAllButton.addTarget(self, action: #selector(passAllProducts), for: .touchUpInside)
-                sectionHeader.arrowButton.addTarget(self, action: #selector(expandingSection), for: .touchUpInside)
-                sectionHeader.changeCardButtonCollection.complition = { (select) in
-                    switch select {
-                    case 0:
-                        productList = productsCardsAndAccounts
-                        productsFromRealm.removeAll()
-                        for i in productList {
-                            self.productsFromRealm.append(PaymentsModel(productListFromRealm: i))
-//                            self.reloadData(with: nil)
-
-                        }
-                        var snapshot = self.dataSource?.snapshot()
-                        
-                         let items = snapshot?.itemIdentifiers(inSection: .products)
-                        
-                         snapshot?.deleteItems(items ?? [PaymentsModel]())
-                        snapshot?.appendItems(self.productsFromRealm, toSection: .products)
-//                                snapshot?.reloadSections([.products])
-                        
-                        
-                        self.dataSource?.apply(snapshot ?? NSDiffableDataSourceSnapshot<Section, PaymentsModel>())
-                        selectable = false
-                        isFiltered = false
-                    case 1:
-                        selectable = false
-                        
-//                       productList = productList.filter({$0.productType == "CARD" || $0.productType == "ACCOUNT"})
-                        productList = productsDeposits
-                        productsFromRealm.removeAll()
-                        for i in productList {
-                            self.productsFromRealm.append(PaymentsModel(productListFromRealm: i))
-//                            self.reloadData(with: nil)
-
-                        }
-                        
-                        var snapshot = self.dataSource?.snapshot()
-                        
-                         let items = snapshot?.itemIdentifiers(inSection: .products)
-                        
-                         snapshot?.deleteItems(items ?? [PaymentsModel]())
-                        snapshot?.appendItems(self.productsFromRealm, toSection: .products)
-//                                snapshot?.reloadSections([.products])
-                        
-                        
-                        self.dataSource?.apply(snapshot ?? NSDiffableDataSourceSnapshot<Section, PaymentsModel>())
-                        
-                        isFiltered = true
-                    default:
-                        isFiltered = false
-                        
-//                        productList = productList.filter({$0.productType == "DEPOSIT"})
-
-                    }
-                }
-//            case .transfers:
-//                sectionHeader.configure(text: section.description(),
-//                                        font: .boldSystemFont(ofSize: 18),
-//                                        textColor: .black, expandingIsHidden: false, seeAllIsHidden: false)
-            
+   
             default:
                 sectionHeader.configure(text: section.description(),
                                         font: .boldSystemFont(ofSize: 20),
-                                        textColor: .black, expandingIsHidden: false, seeAllIsHidden: true, onlyCards: true)
+                                        textColor: .black, expandingIsHidden: false, seeAllIsHidden: true, onlyCards: true, isExpanded: isSectionExpanded, expandAction: toggleAction)
             }
-            
-//            if sectionHeader.title.text == "Отделения и банкоматы" || sectionHeader.title.text == "Инвестиции и пенсии"  || sectionHeader.title.text == "Услуги и сервисы" {
-//                sectionHeader.title.alpha = 0.3
-//                sectionHeader.arrowButton.alpha = 0.3
-//            } else {
-//                sectionHeader.title.alpha = 1
-//                sectionHeader.arrowButton.alpha = 1
-//            }
-            
+        
             return sectionHeader
         }
     }
