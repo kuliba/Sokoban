@@ -22,7 +22,7 @@ extension ProductType {
         switch self {
         case .card: return "Карты"
         case .account: return "Счета"
-        case .deposit: return "Депозиты"
+        case .deposit: return "Вклады"
         case .loan: return "Кредиты"
         }
     }

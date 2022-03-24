@@ -19,92 +19,32 @@ protocol MainViewControllerDelegate: AnyObject {
 class MainViewController: UIViewController {
     
     weak var delegate: MainViewControllerDelegate?
-    var card: UserAllCardsModel?
     var alertController: UIAlertController?
     
     var token: NotificationToken?
-    
-    var allProductList: Results<UserAllCardsModel>? = nil
-    
-    let changeCardButtonCollection = AllCardView()
-    
-    var payments = [PaymentsModel]() {
+
+    var productsViewModels = [PaymentsModel]()
+    var paymentsViewModels = [PaymentsModel]() {
+        didSet {
+            DispatchQueue.main.async {
+            }
+        }
+    }
+    var promoViewModels = [PaymentsModel]() {
         didSet {
             DispatchQueue.main.async {
                 self.reloadData(with: nil)
             }
         }
     }
-    var selectable = true
-    
-    var productList = [UserAllCardsModel]() {
-        didSet {
-            DispatchQueue.main.async {
-                self.productsDeposits.removeAll()
-                self.productsCardsAndAccounts.removeAll()
-                guard let products = self.allProductList else {
-                    return
-                }
-                for i in products {
-                    switch i.productType {
-                    case ProductType.deposit.rawValue:
-                        self.productsDeposits.append(i)
-                    default:
-                        self.productsCardsAndAccounts.append(i)
-                    }
-                }
-                if self.selectable {
-                    self.productsFromRealm.removeAll()
-                    for i in self.productsCardsAndAccounts {
-                        self.productsFromRealm.append(PaymentsModel(productListFromRealm: i))
-                    }
-                    self.productsFromRealm.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
-                    self.reloadData(with: nil)
-                }
-                
-            }
-        }
-    }
-    
-    var filterData = [GetProductListDatum]()
-    
-    var productsFromRealm = [PaymentsModel]()
-    
-    var products = [PaymentsModel]()
-    
-    var productsCardsAndAccounts = [UserAllCardsModel]()
-    
-    var productsDeposits = [UserAllCardsModel]()
-    
-    var isFiltered = false
-    var pay = [PaymentsModel]() {
-        didSet {
-            DispatchQueue.main.async {
-            }
-        }
-    }
-    var offer = [PaymentsModel]() {
+    var exchangeRatesViewModels = [PaymentsModel]() {
         didSet {
             DispatchQueue.main.async {
                 self.reloadData(with: nil)
             }
         }
     }
-    var currentsExchange = [PaymentsModel]() {
-        didSet {
-            DispatchQueue.main.async {
-                self.reloadData(with: nil)
-            }
-        }
-    }
-    var openProduct = [PaymentsModel]() {
-        didSet {
-            DispatchQueue.main.async {
-                self.reloadData(with: nil)
-            }
-        }
-    }
-    var additionalButton = [PaymentsModel]() {
+    var openProductViewModels = [PaymentsModel]() {
         didSet {
             DispatchQueue.main.async {
                 self.reloadData(with: nil)
@@ -112,9 +52,6 @@ class MainViewController: UIViewController {
         }
     }
     
-    var branches = [PaymentsModel]()
-    var investment = [PaymentsModel]()
-    var services = [PaymentsModel]()
     var dataEuro: GetExchangeCurrencyDataClass? = nil {
         didSet {
             DispatchQueue.main.async {
@@ -129,10 +66,11 @@ class MainViewController: UIViewController {
             }
         }
     }
+    
     lazy var searchBar: NavigationBarUIView = UIView.fromNib()
     
     enum Section: Int, CaseIterable {
-        case products, pay, offer, currentsExchange, openProduct, branches, investment, services
+        case products, pay, offer, currentsExchange, openProduct
         
         func description() -> String {
             switch self {
@@ -146,12 +84,6 @@ class MainViewController: UIViewController {
                 return "Обмен валют"
             case .openProduct:
                 return "Открыть продукт"
-            case .branches:
-                return "Отделения и банкоматы"
-            case .investment:
-                return "Инвестиции и пенсии"
-            case .services:
-                return "Услуги и сервисы"
             }
         }
     }
@@ -181,16 +113,36 @@ class MainViewController: UIViewController {
         createDataSource()
         getCurrency()
         setupData()
-        reloadData(with: nil)
-        additionalButton = [PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: "")]
         
-        self.allProductList = self.realm?.objects(UserAllCardsModel.self)
-        self.productTypeSelector.update(with: self.allProductList)
-        productList = [UserAllCardsModel]()
-        
+ 
+        if let products = self.realm?.objects(UserAllCardsModel.self) {
+            
+            productTypeSelector.update(with: products)
+            updateProductsViewModels(with: products)
+            
+        } else {
+            
+            reloadData(with: nil)
+        }
+
         bind()
         startUpdate()
         model.action.send(ModelAction.Deposits.List.Request())
+    }
+    
+    func updateProductsViewModels(with products: Results<UserAllCardsModel>) {
+        
+        var productsViewModels = [PaymentsModel]()
+        
+        for product in products {
+            
+            productsViewModels.append(PaymentsModel(productListFromRealm: product))
+        }
+        productsViewModels.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
+        
+        self.productsViewModels = productsViewModels
+        
+        reloadData(with: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -217,15 +169,13 @@ class MainViewController: UIViewController {
         
         AddAllUserCardtList.add() { [weak self] in
             
-            guard let self = self else {
+            guard let self = self, let products = self.realm?.objects(UserAllCardsModel.self) else {
                 return
             }
             
-            self.allProductList = self.realm?.objects(UserAllCardsModel.self)
-            self.productTypeSelector.update(with: self.allProductList)
-            self.productList = [UserAllCardsModel]()
+            self.productTypeSelector.update(with: products)
+            self.updateProductsViewModels(with: products)
             self.isUpdating.value = false
-            
         }
     }
     
@@ -291,25 +241,6 @@ class MainViewController: UIViewController {
         }
     }
     
-    func observerRealm() {
-        allProductList = realm?.objects(UserAllCardsModel.self)
-        self.token = self.allProductList?.observe { [weak self] ( changes: RealmCollectionChange) in
-            guard (self?.collectionView) != nil else {return}
-            switch changes {
-            case .initial:
-                self?.collectionView?.reloadData()
-            case .update(_, let deletions, let insertions, let modifications):
-                self?.collectionView?.performBatchUpdates({
-                    self?.collectionView?.reloadItems(at: modifications.map { IndexPath(row: $0, section: 0) })
-                    self?.collectionView?.insertItems(at: insertions.map { IndexPath(row: $0, section: 0) })
-                    self?.collectionView?.deleteItems(at: deletions.map { IndexPath(row: $0, section: 0) })
-                })
-            case .error(let error):
-                fatalError("\(error)")
-            }
-        }
-    }
-    
     func bind() {
         
         model.action
@@ -321,7 +252,7 @@ class MainViewController: UIViewController {
                     switch payload.result {
                     case .success(let deposits):
                         guard let maxRate = deposits.map({ $0.generalСondition.maxRate }).max(),
-                        let openDepositIndex = openProduct.firstIndex(where: { $0.id == 98 }) else {
+                        let openDepositIndex = openProductViewModels.firstIndex(where: { $0.id == 98 }) else {
                             return
                         }
  
@@ -333,11 +264,11 @@ class MainViewController: UIViewController {
                             return
                         }
                         
-                        var openProductMutable = openProduct
+                        var openProductMutable = openProductViewModels
                         var depositProduct = openProductMutable[openDepositIndex]
                         depositProduct.description = "\(maxRateString) годовых"
                         openProductMutable[openDepositIndex] = depositProduct
-                        openProduct = openProductMutable
+                        openProductViewModels = openProductMutable
                         
                     case .failure(let error):
                         print("loading deposits list error: \(error)")
@@ -392,7 +323,7 @@ class MainViewController: UIViewController {
                 }
                 
                 let itemIndexPath = IndexPath(item: firstItemIndex, section: 0)
-                collectionView.scrollToItem(at: itemIndexPath, at: .centeredHorizontally, animated: true)
+                collectionView.scrollToItem(at: itemIndexPath, at: .left, animated: true)
                 
             }.store(in: &bindings)
     }
@@ -413,10 +344,10 @@ class MainViewController: UIViewController {
             let cell = PaymentsModel(id: Int.random(in: 1..<9999), name: baner.productName, iconName: urlString, controllerName: baner.orderLink.absoluteString)
             items.append(cell)
         }
-        offer = items
-        currentsExchange = MockItems.returnCurrency()
-        pay = MockItems.returnFastPay()
-        openProduct = MockItems.returnOpenProduct()
+        promoViewModels = items
+        exchangeRatesViewModels = MockItems.returnCurrency()
+        paymentsViewModels = MockItems.returnFastPay()
+        openProductViewModels = MockItems.returnOpenProduct()
     }
     
     private func setupCollectionView() {
@@ -492,12 +423,12 @@ class MainViewController: UIViewController {
     
     func reloadData(with searchText: String?) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, PaymentsModel>()
-        snapshot.appendSections([.products, .pay, .offer, .currentsExchange, .openProduct, .branches, .investment, .services])
-        snapshot.appendItems(productsFromRealm, toSection: .products)
-        snapshot.appendItems(pay, toSection: .pay)
-        snapshot.appendItems(offer, toSection: .offer)
-        snapshot.appendItems(currentsExchange, toSection: .currentsExchange)
-        snapshot.appendItems(openProduct, toSection: .openProduct)
+        snapshot.appendSections([.products, .pay, .offer, .currentsExchange, .openProduct])
+        snapshot.appendItems(productsViewModels, toSection: .products)
+        snapshot.appendItems(paymentsViewModels, toSection: .pay)
+        snapshot.appendItems(promoViewModels, toSection: .offer)
+        snapshot.appendItems(exchangeRatesViewModels, toSection: .currentsExchange)
+        snapshot.appendItems(openProductViewModels, toSection: .openProduct)
         dataSource?.apply(snapshot, animatingDifferences: true)
         collectionView.reloadData()
     }
@@ -560,22 +491,15 @@ extension MainViewController {
         
         private var bindings = Set<AnyCancellable>()
         
-        func update(with products: Results<UserAllCardsModel>?) {
+        func update(with products: Results<UserAllCardsModel>) {
             
-            if let products = products {
+            var productsArray = [UserAllCardsModel]()
+            for product in products {
                 
-                var productsArray = [UserAllCardsModel]()
-                for product in products {
-                    
-                    productsArray.append(product)
-                }
-                
-                update(with: productsArray)
-                
-            } else {
-                
-                update(with: [])
+                productsArray.append(product)
             }
+            
+            update(with: productsArray)
         }
         
         private func update(with products: [UserAllCardsModel]) {
