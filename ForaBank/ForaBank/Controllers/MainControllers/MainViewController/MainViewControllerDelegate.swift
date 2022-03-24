@@ -162,7 +162,7 @@ extension MainViewController: UICollectionViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
         let verticalOffset = scrollView.contentOffset.y
-        if verticalOffset < -80.0 && isUpdating.value == false {
+        if verticalOffset < -120.0 && isUpdating.value == false {
             
             startUpdate()
         }

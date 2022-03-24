@@ -37,6 +37,7 @@ enum SettingType {
     
     enum Interface: String {
         
+        case mainSections
         case inactiveProducts
         case tempates
     }

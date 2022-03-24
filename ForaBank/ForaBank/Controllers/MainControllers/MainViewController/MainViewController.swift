@@ -18,8 +18,6 @@ protocol MainViewControllerDelegate: AnyObject {
 
 class MainViewController: UIViewController {
     
-    let model = Model.shared
-    
     weak var delegate: MainViewControllerDelegate?
     var card: UserAllCardsModel?
     var alertController: UIAlertController?
@@ -166,6 +164,9 @@ class MainViewController: UIViewController {
     
     var isUpdating: CurrentValueSubject<Bool, Never> = .init(false)
     var refreshView: UIView?
+    var sectionsExpanded: CurrentValueSubject<[Section: Bool], Never> = .init([:])
+    let productTypeSelector = ProductTypeSelectorViewModel()
+    private let model: Model = .shared
     private var bindings = Set<AnyCancellable>()
     
     override func viewDidLoad() {
@@ -173,6 +174,8 @@ class MainViewController: UIViewController {
         navigationController?.navigationBar.backgroundColor = UIColor(hexString: "F8F8F8")
         navigationController?.navigationBar.barTintColor = UIColor(hexString: "F8F8F8")
         view.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 1)
+        
+        setupSectionsExpanded()
         setupSearchBar()
         setupCollectionView()
         createDataSource()
@@ -182,10 +185,12 @@ class MainViewController: UIViewController {
         additionalButton = [PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: "")]
         
         self.allProductList = self.realm?.objects(UserAllCardsModel.self)
+        self.productTypeSelector.update(with: self.allProductList)
         productList = [UserAllCardsModel]()
-
+        
         bind()
         startUpdate()
+        model.action.send(ModelAction.Deposits.List.Request())
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -212,14 +217,57 @@ class MainViewController: UIViewController {
         
         AddAllUserCardtList.add() { [weak self] in
             
-            self?.allProductList = self?.realm?.objects(UserAllCardsModel.self)
-            self?.productList = [UserAllCardsModel]()
-            self?.isUpdating.value = false
+            guard let self = self else {
+                return
+            }
+            
+            self.allProductList = self.realm?.objects(UserAllCardsModel.self)
+            self.productTypeSelector.update(with: self.allProductList)
+            self.productList = [UserAllCardsModel]()
+            self.isUpdating.value = false
+            
         }
     }
     
     @objc func openSetting() {
         delegate?.goSettingViewController()
+    }
+    
+    func setupSectionsExpanded() {
+        
+        let settings = model.settingsMainSections
+        var expanded = [Section: Bool]()
+        
+        for section in Section.allCases {
+            
+            if let mainSectionType = section.mainSectionType {
+                
+                expanded[section] = settings.sectionsExpanded[mainSectionType]
+                
+            } else {
+                
+                expanded[section] = true
+            }
+        }
+        
+        sectionsExpanded.value = expanded
+    }
+    
+    func toggleExpanded(for section: Section) {
+        
+        guard var expandedSectionValue = sectionsExpanded.value[section] else {
+            return
+        }
+        expandedSectionValue.toggle()
+        sectionsExpanded.value[section] = expandedSectionValue
+        
+        // updating settings
+        guard let mainSectionType = section.mainSectionType else {
+            return
+        }
+        var settings = model.settingsMainSections
+        settings.update(isExpanded: expandedSectionValue, sectionType: mainSectionType)
+        model.settingsUpdate(settings)
     }
     
     private func setupSearchBar() {
@@ -260,10 +308,46 @@ class MainViewController: UIViewController {
                 fatalError("\(error)")
             }
         }
-        
     }
     
     func bind() {
+        
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink {[unowned self] action in
+
+                switch action {
+                case let payload as ModelAction.Deposits.List.Response:
+                    switch payload.result {
+                    case .success(let deposits):
+                        guard let maxRate = deposits.map({ $0.generalСondition.maxRate }).max(),
+                        let openDepositIndex = openProduct.firstIndex(where: { $0.id == 98 }) else {
+                            return
+                        }
+ 
+                        let formatter = NumberFormatter()
+                        formatter.numberStyle = .percent
+                        formatter.maximumFractionDigits = 1
+                        
+                        guard let maxRateString = formatter.string(from: NSNumber(value: maxRate / 100)) else {
+                            return
+                        }
+                        
+                        var openProductMutable = openProduct
+                        var depositProduct = openProductMutable[openDepositIndex]
+                        depositProduct.description = "\(maxRateString) годовых"
+                        openProductMutable[openDepositIndex] = depositProduct
+                        openProduct = openProductMutable
+                        
+                    case .failure(let error):
+                        print("loading deposits list error: \(error)")
+                    }
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
     
         isUpdating
             .receive(on: DispatchQueue.main)
@@ -279,6 +363,36 @@ class MainViewController: UIViewController {
                     
                     productCell.isUpdating = isUpdating
                 }
+                
+            }.store(in: &bindings)
+        
+        sectionsExpanded
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .sink {[unowned self] _ in
+                
+                let layout = createCompositionLayout()
+                collectionView.setCollectionViewLayout(layout, animated: true) {[weak self] complete in
+                    
+                    if complete == true {
+
+                        self?.collectionView.reloadData()
+                    }
+                }
+                
+            }.store(in: &bindings)
+        
+        productTypeSelector.selected
+            .receive(on: DispatchQueue.main)
+            .sink {[unowned self] selectedProduct in
+                
+                guard let selectedProduct = selectedProduct,
+                    let firstItemIndex = productTypeSelector.firstIndexes[selectedProduct] else {
+                    return
+                }
+                
+                let itemIndexPath = IndexPath(item: firstItemIndex, section: 0)
+                collectionView.scrollToItem(at: itemIndexPath, at: .centeredHorizontally, animated: true)
                 
             }.store(in: &bindings)
     }
@@ -345,7 +459,7 @@ class MainViewController: UIViewController {
             NSLayoutConstraint.activate([
                 refreshView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                 refreshView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                refreshView.topAnchor.constraint(equalTo: view.topAnchor),
+                refreshView.topAnchor.constraint(equalTo: view.topAnchor, constant: 48),
                 refreshView.heightAnchor.constraint(equalToConstant: 4)
             ])
 
@@ -435,6 +549,117 @@ class MainViewController: UIViewController {
     }
 }
 
+extension MainViewController {
+    
+    class ProductTypeSelectorViewModel {
+        
+        var productTypes = [ProductType]()
+        var firstIndexes = [ProductType: Int]()
+        var selected: CurrentValueSubject<ProductType?, Never> = .init(nil)
+        var optionSelector: OptionSelectorView.ViewModel? = nil
+        
+        private var bindings = Set<AnyCancellable>()
+        
+        func update(with products: Results<UserAllCardsModel>?) {
+            
+            if let products = products {
+                
+                var productsArray = [UserAllCardsModel]()
+                for product in products {
+                    
+                    productsArray.append(product)
+                }
+                
+                update(with: productsArray)
+                
+            } else {
+                
+                update(with: [])
+            }
+        }
+        
+        private func update(with products: [UserAllCardsModel]) {
+            
+            if products.isEmpty == false {
+                
+                productTypes = productTypes(from: products)
+                firstIndexes = firstIndexes(for: products, and: productTypes)
+                
+                bindings = Set<AnyCancellable>()
+                if let optionSelector = optionSelector(with: productTypes, selected: selected.value) {
+                    
+                    self.optionSelector = optionSelector
+                    bind(optionSelector: optionSelector)
+                    
+                } else {
+                    
+                    optionSelector = nil
+                }
+                
+            } else {
+                
+                productTypes = [ProductType]()
+                firstIndexes = [ProductType: Int]()
+                selected = .init(nil)
+                optionSelector = nil
+            }
+        }
+        
+        func bind(optionSelector: OptionSelectorView.ViewModel) {
+            
+            optionSelector.$selected
+                .receive(on: DispatchQueue.main)
+                .sink {[unowned self] selectedId in
+                    
+                    selected.value = ProductType(rawValue: selectedId)
+                    
+                }.store(in: &bindings)
+        }
+        
+        private func productTypes(from products: [UserAllCardsModel]) -> [ProductType] {
+        
+            let productTypeStrings = products.compactMap{ $0.productType }
+            let productTypes = productTypeStrings.compactMap{ ProductType(rawValue: $0) }
+            var productTypesUnique = Set<ProductType>()
+            for productType in productTypes {
+                
+                productTypesUnique.insert(productType)
+            }
+            
+            return Array(productTypesUnique).sorted(by: { $0.order < $1.order })
+        }
+        
+        private func firstIndexes(for products: [UserAllCardsModel], and productTypes: [ProductType]) -> [ProductType: Int] {
+            
+            var firstIndexes = [ProductType: Int]()
+            for productType in productTypes {
+                
+                firstIndexes[productType] = products.firstIndex(where: { $0.productType == productType.rawValue })
+            }
+            
+            return firstIndexes
+        }
+        
+        private func optionSelector(with productTypes: [ProductType], selected: ProductType?) -> OptionSelectorView.ViewModel? {
+            
+            guard productTypes.isEmpty == false else {
+                return nil
+            }
+            
+            let options = productTypes.map{ Option(id: $0.rawValue, name: $0.pluralName) }
+            
+            if let selected = selected, productTypes.map({ $0.rawValue }).contains(selected.rawValue) {
+                
+                return .init(options: options, selected: selected.rawValue, style: .products)
+                
+            } else {
+                
+                return .init(options: options, selected: options[0].id, style: .products)
+            }
+        }
+    }
+}
+
 extension MainViewController: FirstControllerDelegate {
     
     func sendData(data: [GetProductListDatum]) {
@@ -472,5 +697,31 @@ extension UICollectionViewDiffableDataSource {
         currentSnapshot.appendItems(items, toSection: section)
         currentSnapshot.reloadSections([section])
         apply(currentSnapshot, animatingDifferences: true)
+    }
+}
+
+extension MainViewController.Section {
+    
+    init(with mainSectionType: MainSectionType) {
+        
+        switch mainSectionType {
+        case .products: self = .products
+        case .fastOperations: self = .pay
+        case .promo: self = .offer
+        case .currencyExchange: self = .currentsExchange
+        case .openProduct: self = .openProduct
+        }
+    }
+    
+    var mainSectionType: MainSectionType? {
+        
+        switch self {
+        case .products: return .products
+        case .pay: return .fastOperations
+        case .offer: return .promo
+        case .currentsExchange: return .currencyExchange
+        case .openProduct: return .openProduct
+        default: return nil
+        }
     }
 }

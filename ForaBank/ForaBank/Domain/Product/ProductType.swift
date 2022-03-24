@@ -26,4 +26,14 @@ extension ProductType {
         case .loan: return "Кредиты"
         }
     }
+    
+    var order: Int {
+        
+        switch self {
+        case .card: return 0
+        case .account: return 1
+        case .deposit: return 2
+        case .loan: return 3
+        }
+    }
 }

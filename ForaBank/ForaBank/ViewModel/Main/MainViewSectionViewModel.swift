@@ -25,7 +25,7 @@ class MainSectionCollapsableViewModel: MainSectionViewModel {
     }
 }
 
-enum MainSectionType: String {
+enum MainSectionType: String, CaseIterable, Codable {
     
     case products
     case fastOperations

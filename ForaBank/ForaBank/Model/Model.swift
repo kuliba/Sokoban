@@ -241,6 +241,12 @@ class Model {
                     case .bannerCatalogList:
                         handleDictionaryBannerCatalogList(payload)
                     }
+                    
+                    //MARK: - Deposits
+                    
+                case _ as ModelAction.Deposits.List.Request:
+                    handleDepositsListRequest()
+                    
                 
                 //MARK: - Notification Action
                 

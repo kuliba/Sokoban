@@ -630,6 +630,9 @@
 		7792557E279B1A5400A85723 /* JSONDecoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */; };
 		77925580279B1BCB00A85723 /* JSONEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */; };
 		77A1466427C12B52006CC112 /* PaymentsParameterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A1466327C12B52006CC112 /* PaymentsParameterViewModel.swift */; };
+		77A411E727EB962100D36E46 /* MainSectionsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A411E627EB962100D36E46 /* MainSectionsSettings.swift */; };
+		77A411E927EC456800D36E46 /* Model+Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A411E827EC456800D36E46 /* Model+Settings.swift */; };
+		77A411EB27EC624000D36E46 /* Model+Deposits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A411EA27EC624000D36E46 /* Model+Deposits.swift */; };
 		77AC9159277A518B00E49D5D /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = 77AC9158277A518B00E49D5D /* Shimmer */; };
 		77B751FF27D10F9900FB51C7 /* CSRFCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B751FE27D10F9900FB51C7 /* CSRFCredentials.swift */; };
 		77C026E6275E6299002BE1F6 /* GKHHistoryModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C026E5275E6299002BE1F6 /* GKHHistoryModelTests.swift */; };
@@ -1644,6 +1647,9 @@
 		7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONDecoder+Extensions.swift"; sourceTree = "<group>"; };
 		7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONEncoder+Extensions.swift"; sourceTree = "<group>"; };
 		77A1466327C12B52006CC112 /* PaymentsParameterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsParameterViewModel.swift; sourceTree = "<group>"; };
+		77A411E627EB962100D36E46 /* MainSectionsSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSectionsSettings.swift; sourceTree = "<group>"; };
+		77A411E827EC456800D36E46 /* Model+Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Settings.swift"; sourceTree = "<group>"; };
+		77A411EA27EC624000D36E46 /* Model+Deposits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Deposits.swift"; sourceTree = "<group>"; };
 		77B751FE27D10F9900FB51C7 /* CSRFCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFCredentials.swift; sourceTree = "<group>"; };
 		77C026E5275E6299002BE1F6 /* GKHHistoryModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHHistoryModelTests.swift; sourceTree = "<group>"; };
 		77C3828E27E0C9D600B5246E /* TextFieldMaskableViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldMaskableViewComponent.swift; sourceTree = "<group>"; };
@@ -3457,6 +3463,15 @@
 			path = Encryption;
 			sourceTree = "<group>";
 		};
+		77A411E527EB95EB00D36E46 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				774A82C627BAE4BF00E5A5E9 /* SettingType.swift */,
+				77A411E627EB962100D36E46 /* MainSectionsSettings.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		77C026E9275E62E4002BE1F6 /* Realm */ = {
 			isa = PBXGroup;
 			children = (
@@ -3498,6 +3513,7 @@
 				77EC58A8277114400054D75C /* Transfer */,
 				682092A027AC04CE003DCAFD /* Suggest */,
 				684192F32799C32E00B4E184 /* Consent */,
+				77A411E527EB95EB00D36E46 /* Settings */,
 				77E1805427AC7A860006ACC9 /* Template */,
 				682092A127AC04DE003DCAFD /* ClientInfoData.swift */,
 				682092BA27AC170B003DCAFD /* DaDataPhoneData.swift */,
@@ -3525,6 +3541,8 @@
 				77583FF827AED4E700251969 /* Model+Dictionary.swift */,
 				7758400C27B1442F00251969 /* Model+Payments.swift */,
 				77EC58ED27723A5A0054D75C /* Model+Templates.swift */,
+				77A411E827EC456800D36E46 /* Model+Settings.swift */,
+				77A411EA27EC624000D36E46 /* Model+Deposits.swift */,
 				77583FFE27B13C1600251969 /* Payments */,
 			);
 			path = Model;
@@ -3630,7 +3648,6 @@
 				77E1802A27AB032C0006ACC9 /* PrintFormType.swift */,
 				6820925B27AA8350003DCAFD /* FastPaymentFlag.swift */,
 				6820929127ABD46F003DCAFD /* ParameterData.swift */,
-				774A82C627BAE4BF00E5A5E9 /* SettingType.swift */,
 				774A82CC27BAF5B600E5A5E9 /* KeychainValueType.swift */,
 				7705408A27BD1B1100094006 /* BiometricSensorType.swift */,
 				7772978627C39E2D0099EF91 /* StringValueMask.swift */,
@@ -5973,6 +5990,7 @@
 				7758400027B13C3A00251969 /* PaymentsDataModel.swift in Sources */,
 				0BB24AA826F002B100DDA4F6 /* GetLatestPaymentsSaved.swift in Sources */,
 				684192F52799C34400B4E184 /* ConsentMe2MePullData.swift in Sources */,
+				77A411E727EB962100D36E46 /* MainSectionsSettings.swift in Sources */,
 				6849888627BBB8D200E84E6B /* AuthProductsView.swift in Sources */,
 				ED7866B427A015E3006B4F5A /* PaymentByPhoneViewModel.swift in Sources */,
 				0BF43D4827B466C2004DF248 /* PaymentsNameViewComponent.swift in Sources */,
@@ -6612,6 +6630,7 @@
 				ED4FC61A266EA42E0092B4AB /* AppLocker.swift in Sources */,
 				688B9BA126DD0C2500407A75 /* ProductsViewController.swift in Sources */,
 				A578AA86279601E100F1867B /* MosParkingListModel.swift in Sources */,
+				77A411E927EC456800D36E46 /* Model+Settings.swift in Sources */,
 				0BA251ED26C266A400AD087A /* CreateServiceTransferDecodableModel.swift in Sources */,
 				0BDCF0082749A56300AAA1C3 /* ExtensionGKHInputRequest.swift in Sources */,
 				0B01073227C3DE00006462E6 /* PaymentsSelectSimpleViewComponent.swift in Sources */,
@@ -6633,6 +6652,7 @@
 				EDDFE3AD2756D3FD00F57C71 /* DepositCalculatorViewControllerFlowLayout.swift in Sources */,
 				F63D4A3FB30397A82426313C /* InternetTVConfirmViewController.swift in Sources */,
 				F63D43A404CF8AA69942CCFF /* InternetTVSuccessViewController.swift in Sources */,
+				77A411EB27EC624000D36E46 /* Model+Deposits.swift in Sources */,
 				77517FD027A97AE8005CFB77 /* ProductData.swift in Sources */,
 				5A5ABF8827AAF51000D548AA /* PaymentServiceData.swift in Sources */,
 				F63D40EC3454C0DAF5DFDBC4 /* ClientInfoModel.swift in Sources */,
