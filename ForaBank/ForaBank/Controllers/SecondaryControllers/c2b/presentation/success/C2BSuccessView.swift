@@ -14,7 +14,7 @@ class C2BSuccessView: UIView {
     @IBOutlet weak var summLabel: UILabel!
     @IBOutlet weak var infoLabel: UILabel!
 
-    var confirmModel: C2BSuccessViewModel? {
+    var confirmModel: C2BDetailsFormViewModel? {
         didSet {
             guard let model = confirmModel else { return }
             setupData(with: model)
@@ -47,7 +47,7 @@ class C2BSuccessView: UIView {
         detailTapped?()
     }
 
-    func setupData(with model: C2BSuccessViewModel) {
+    func setupData(with model: C2BDetailsFormViewModel) {
         statusImageView.image = model.statusIsSuccess ? #imageLiteral(resourceName: "OkOperators") : #imageLiteral(resourceName: "errorIcon")
         if !C2BSuccessView.svgImg.isEmpty {
             operatorImageView.image = C2BSuccessView.svgImg.convertSVGStringToImage()

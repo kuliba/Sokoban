@@ -6,7 +6,7 @@ class C2BSuccessViewController: UIViewController {
     var printFormType: String?
     let mainView = C2BSuccessView()
     let button = UIButton(title: "На главную")
-    var confirmModel: C2BSuccessViewModel? {
+    var confirmModel: C2BDetailsFormViewModel? {
         didSet {
             guard let model = confirmModel else { return }
             mainView.confirmModel = model
@@ -55,7 +55,7 @@ class C2BSuccessViewController: UIViewController {
     }
 
     func openDetailVC() {
-        let vc = DetailsFormViewController()
+        let vc = C2BDetailsFormViewController()
         vc.viewModel = confirmModel
         vc.doneButton.isHidden = true
         vc.smsCodeField.isHidden = true
