@@ -324,9 +324,6 @@ class ContactConfurmViewController: UIViewController {
         }
     }
     
-
-    
-    
     @objc func setOtpCode(_ notification: NSNotification) {
 
         let otpCode: String

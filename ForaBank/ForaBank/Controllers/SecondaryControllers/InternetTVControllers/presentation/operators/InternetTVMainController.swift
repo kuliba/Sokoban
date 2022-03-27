@@ -187,7 +187,6 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        print("search5555  \(searchText)")
         if !doStringContainsNumber(_string: searchText) {
             viewModel.arrSearchedOrganizations = viewModel.arrOrganizations.filter {
                 $0.name?.lowercased().contains(searchText.lowercased()) == true

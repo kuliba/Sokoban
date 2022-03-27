@@ -101,6 +101,7 @@ struct ParameterListForNextStep2: Codable {
         self.content = content
         self.readOnly = readOnly
         self.svgImage = svgImage
+        
     }
 }
 

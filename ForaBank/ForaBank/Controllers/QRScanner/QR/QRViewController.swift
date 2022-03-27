@@ -121,11 +121,18 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
                 let value = tempArray[1]
                 if key == "persacc" {
                    key = "Лицевой счет"
+                    self?.qrData.updateValue(value, forKey: key)
                 }
                 if key == "sum" {
                     key = "Сумма"
+                    self?.qrData.updateValue(value, forKey: key)
                 }
-                self?.qrData.updateValue(value, forKey: key)
+                
+                if key == "personalacc" {
+                    key = "Pасчетный счет Получателя"
+                    self?.qrData.updateValue(value, forKey: key)
+                }
+                
             }
         }
        
@@ -148,8 +155,10 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
         if operators != nil {
             GlobalModule.qrOperator = operators
             GlobalModule.qrData = qrData
+            self.definesPresentationContext = true
             dismiss(animated: false)
-            //navigationController?.popViewController(animated: true)
+//            self.presentingViewController?.dismiss(animated: true, completion: nil)
+//            navigationController?.popViewController(animated: true)
         } else {
             performSegue(withIdentifier: "qrError", sender: nil)
         }
@@ -158,8 +167,11 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
     @IBAction func back(_ sender: UIButton) {
         qrCodesession.stopRunning()
         qrView.layer.sublayers?.removeLast()
-        dismiss(animated: false)
-        //navigationController?.popViewController(animated: true)
+//        dismiss(animated: false)
+        
+        self.definesPresentationContext = true
+        self.presentingViewController?.dismiss(animated: true, completion: nil)
+//        navigationController?.popViewController(animated: true)
     }
 }
 
@@ -199,6 +211,11 @@ extension QRViewController {
                     }
                     if key == "sum" {
                         key = "Сумма"
+                    }
+                    
+                    if key == "personalacc" {
+                        key = "Pасчетный счет Получателя"
+                        self?.qrData.updateValue(value, forKey: key)
                     }
                     self?.qrData.updateValue(value, forKey: key)
                 }

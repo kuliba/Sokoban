@@ -52,6 +52,9 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
 
     func setupUI (_ index: Int, _ item: RequisiteDO, _ qrData: [String: String], additionalList: [AdditionalListModel], _ selectedValue: String) {
         regEx = item.regExp ?? ""
+        
+        let a = item.title
+        
         currentElementUI = item
         infoButon.isHidden = true
         fieldId = String(item.order)
@@ -143,6 +146,13 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
         }
         
         if isPersonalAcc(strCheck: item.title ?? ""), let textValue = qrData["Лицевой счет"]  {
+            textView.text = textValue
+            InternetTVDetailsFormViewModel.additionalDic[fieldName] = ["fieldid" : fieldId,
+                                                                       "fieldname" : fieldName,
+                                                                       "fieldvalue" : textValue]
+        }
+        let t = qrData
+        if isPersonalAcc_1(strCheck: item.title ?? ""), let textValue = qrData["Расчетный счет Получателя"]  {
             textView.text = textValue
             InternetTVDetailsFormViewModel.additionalDic[fieldName] = ["fieldid" : fieldId,
                                                                        "fieldname" : fieldName,
@@ -269,10 +279,18 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
         if strCheck.isEmpty {return false}
         let str = strCheck.lowercased()
         if str.contains("счетч") {return false}
-        return str.contains("счет")
+        return ((str.contains("счет")
                 || str.contains("лицев")
                 || str.contains("номер")
-                || str.contains("абонент")
+                || str.contains("абонент")) && !str.contains("расчетный счет получателя"))
+    }
+    
+    func isPersonalAcc_1(strCheck: String) -> Bool {
+        if strCheck.isEmpty {return false}
+        let str = strCheck.lowercased()
+        if str.contains("расчетный счет получателя") {return false}
+        return str.contains("расчетный счет получателя")
+            
     }
     
     func isValidPassword(_ input: String) -> Bool {

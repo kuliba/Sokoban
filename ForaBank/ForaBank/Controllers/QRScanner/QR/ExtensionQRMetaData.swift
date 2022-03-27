@@ -31,6 +31,10 @@ extension QRViewController: AVCaptureMetadataOutputObjectsDelegate, CALayerDeleg
                         if key == "payeeinn" {
                             tempInn = value
                         }
+                        if key == "personalacc" {
+                            key = "Pасчетный счет Получателя"
+                            self?.qrData.updateValue(value, forKey: key)
+                        }
                     }
                 }
 

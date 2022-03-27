@@ -133,10 +133,6 @@ class GKHMainViewController: UIViewController, UITableViewDelegate {
     
     @IBAction func gkhMain(_ unwindSegue: UIStoryboardSegue) {}
     
-    deinit {
-        print("GKH Deinit")
-    }
-    
 }
 
 
