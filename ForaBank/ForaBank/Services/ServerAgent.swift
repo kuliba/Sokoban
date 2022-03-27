@@ -7,14 +7,50 @@
 
 import Foundation
 
-class ServerAgent: ServerAgentProtocol {
+class ServerAgent: NSObject, ServerAgentProtocol {
 
-    private let context: Context
-    private var baseURL: String { context.env.baseURL }
-    
-    internal init(context: Context) {
+    private var baseURL: String { enviroment.baseURL }
+    private let enviroment: Environment
+  
+    private lazy var session: URLSession = {
         
-        self.context = context
+        let configuration = URLSessionConfiguration.default
+        //TODO: Uncomment when updateted auth will be used
+        /*
+        configuration.httpShouldSetCookies = false
+        configuration.httpCookieAcceptPolicy = .never
+         */
+        
+        return URLSession(configuration: configuration)
+    }()
+    
+    private lazy var sessionCached: URLSession = {
+        
+        let configuration = URLSessionConfiguration.default
+        //TODO: Uncomment when updateted auth will be used
+        /*
+        configuration.httpShouldSetCookies = false
+        configuration.httpCookieAcceptPolicy = .never
+         */
+        configuration.urlCache = URLCache.downloadCache
+        
+        return URLSession(configuration: configuration)
+        
+    }()
+    
+    private let encoder: JSONEncoder
+    private let decoder: JSONDecoder
+    
+    //TODO: Uncomment when updateted auth will be used
+    /*
+    private var cookies: [HTTPCookie]?
+     */
+    
+    internal init(enviroment: Environment) {
+        
+        self.enviroment = enviroment
+        self.encoder = JSONEncoder.serverDate
+        self.decoder = JSONDecoder.serverDate
     }
     
     func executeCommand<Command>(command: Command, completion: @escaping (Result<Command.Response, ServerAgentError>) -> Void) where Command : ServerCommand {
@@ -22,7 +58,7 @@ class ServerAgent: ServerAgentProtocol {
         do {
             
             let request = try request(with: command)
-            context.session.dataTask(with: request) {[unowned self] data, _, error in
+            session.dataTask(with: request) {[unowned self] data, response, error in
                 
                 if let error = error {
                     
@@ -30,16 +66,35 @@ class ServerAgent: ServerAgentProtocol {
                     return
                 }
                 
+                guard let response = response as? HTTPURLResponse else {
+                    
+                    completion(.failure(.emptyResponse))
+                    return
+                }
+                
+                //TODO: Uncomment when updateted auth will be used
+                /*
+                if command.cookiesProvider == true,
+                    let headers = response.allHeaderFields as? [String: String],
+                    let url = request.url {
+                    
+                    let responseCookies = HTTPCookie.cookies(withResponseHeaderFields: headers, for: url)
+                    if responseCookies.count > 0 {
+                        
+                        self.cookies = responseCookies
+                    }
+                }
+                 */
+                
                 guard let data = data else {
                     
-                    //TODO: handle serever response ststus if no data
                     completion(.failure(.emptyResponseData))
                     return
                 }
                 
                 do {
                     
-                    let response = try context.decoder.decode(Command.Response.self, from: data)
+                    let response = try decoder.decode(Command.Response.self, from: data)
                     completion(.success(response))
                     
                 } catch {
@@ -60,7 +115,7 @@ class ServerAgent: ServerAgentProtocol {
         do {
             
             let request = try downloadRequest(with: command)
-            context.session.downloadTask(with: request) { localFileURL, _, error in
+            sessionCached.downloadTask(with: request) { localFileURL, response, error in
                 
                 if let error = error {
                     
@@ -68,9 +123,14 @@ class ServerAgent: ServerAgentProtocol {
                     return
                 }
                 
+                guard let response = response else {
+                    
+                    completion(.failure(.emptyResponse))
+                    return
+                }
+                
                 guard let localFileURL = localFileURL else {
                     
-                    //TODO: handle serever response ststus if no localFileURL
                     completion(.failure(.emptyResponseData))
                     return
                 }
@@ -78,13 +138,21 @@ class ServerAgent: ServerAgentProtocol {
                 do {
                     
                     let data = try Data(contentsOf: localFileURL)
+                    
+                    // store data in cache
+                    if self.sessionCached.configuration.urlCache?.cachedResponse(for: request) == nil {
+                        
+                        self.sessionCached.configuration.urlCache?.storeCachedResponse(CachedURLResponse(response: response, data: data), for: request)
+                    }
+                    
                     completion(.success(data))
                     
                 } catch {
                     
                     completion(.failure(.curruptedData(error)))
                 }
-            }
+                
+            }.resume()
             
         } catch {
             
@@ -103,9 +171,21 @@ internal extension ServerAgent {
         let url = try url(with: command.endpoint)
         
         var request = URLRequest(url: url)
+
+        // http method
+        request.httpMethod = command.method.rawValue
+        
+        //TODO: Uncomment when updateted auth will be used
+        /*
+        // cookies headers
+        request.httpShouldHandleCookies = false
+        if let cookies = self.cookies {
+           
+            request.allHTTPHeaderFields = HTTPCookie.requestHeaderFields(with: cookies)
+        }
+         */
         
         // headers
-        request.httpMethod = command.method.rawValue
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         // token
@@ -132,7 +212,7 @@ internal extension ServerAgent {
             
             do {
                 
-                request.httpBody = try context.encoder.encode(payload)
+                request.httpBody = try encoder.encode(payload)
                 
             } catch {
                 
@@ -184,7 +264,7 @@ internal extension ServerAgent {
             
             do {
                 
-                request.httpBody = try context.encoder.encode(payload)
+                request.httpBody = try encoder.encode(payload)
                 
             } catch {
                 
@@ -197,6 +277,9 @@ internal extension ServerAgent {
             
             request.timeoutInterval = timeout
         }
+        
+        // cache policy
+        request.cachePolicy = command.cachePolicy
         
         return request
     }
@@ -212,26 +295,9 @@ internal extension ServerAgent {
     }
 }
 
-//MARK: - Context
+//MARK: - Types
 
 extension ServerAgent {
-    
-    class Context {
-        
-        let env: Environment
-        let session: URLSession
-        let encoder: JSONEncoder
-        let decoder: JSONDecoder
-        
-        init(for env: Environment) {
-            
-            self.env = env
-            //TODO: configure session
-            self.session = URLSession.shared
-            self.encoder = JSONEncoder()
-            self.decoder = JSONDecoder()
-        }
-    }
     
     enum Environment {
         
@@ -248,4 +314,21 @@ extension ServerAgent {
             }
         }
     }
+}
+
+//MARK: - URLSessionDelegate
+
+extension ServerAgent: URLSessionDelegate {
+    
+}
+
+//MARK: - URLSessionTaskDelegate
+
+extension ServerAgent: URLSessionTaskDelegate {
+    
+}
+
+//MARK: - URLSessionDataDelegate
+extension ServerAgent: URLSessionDataDelegate {
+    
 }

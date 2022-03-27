@@ -71,6 +71,7 @@ extension ServerCommands {
 			let parameters: [ServerCommandParameter]? = nil
 			var payload: BasePayload?
             let timeout: TimeInterval? = nil
+            let cachePolicy: URLRequest.CachePolicy = .reloadIgnoringCacheData
 
 			internal init(token: String,
 						  accountNumber: String?,

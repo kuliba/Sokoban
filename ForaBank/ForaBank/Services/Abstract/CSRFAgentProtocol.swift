@@ -9,5 +9,9 @@ import Foundation
 
 protocol CSRFAgentProtocol {
     
-    func createSharedSecret(with serverCertificatesData: String, serverPublicKeyEncrypted: String) throws -> Data
+    associatedtype Agent: EncryptionAgent
+    
+    init(_ keysProvider: EncryptionKeysProvider, _ serverCertificatesData: String, _ serverPublicKeyEncrypted: String) throws
+    func encrypt(_ stringData: String) throws -> String
+    func decrypt(_ stringData: String) throws -> String
 }

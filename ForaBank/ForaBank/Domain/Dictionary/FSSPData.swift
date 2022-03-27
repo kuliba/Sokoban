@@ -7,10 +7,15 @@
 
 import Foundation
 
-struct FSSPData: Codable, Equatable {
+struct FSSPDebtData: Codable, Equatable, Cachable {
     
-    let md5hash: String
-    let svgImage: SVGImageData
     let text: String
     let value: String
+}
+
+struct FSSPDocumentData: Codable, Equatable, Cachable {
+    
+    let text: String
+    let value: String
+    let svgImage: SVGImageData
 }
