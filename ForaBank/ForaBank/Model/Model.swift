@@ -178,8 +178,10 @@ class Model {
                 case let payload as ModelAction.Payment.Complete.Request:
                     handlePaymentsCompleteRequest(payload)
                     
-                //MARK: - Templates Actions
-
+                //MARK: - Settings Actions
+                case _ as ModelAction.Settings.GetClientInfo.Requested:
+                    handleGetClientInfoRequest()
+                    
                 //MARK: - Templates Actions
                     
                 case _ as ModelAction.PaymentTemplate.List.Requested:
