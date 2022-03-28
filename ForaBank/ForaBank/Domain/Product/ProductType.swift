@@ -7,10 +7,33 @@
 
 import Foundation
 
-enum ProductType: String, Codable, Equatable {
+enum ProductType: String, Codable, Equatable, CaseIterable {
     
-    case deposit = "DEPOSIT"
     case card = "CARD"
     case account = "ACCOUNT"
+    case deposit = "DEPOSIT"
     case loan = "LOAN"
+}
+
+extension ProductType {
+    
+    var pluralName: String {
+        
+        switch self {
+        case .card: return "Карты"
+        case .account: return "Счета"
+        case .deposit: return "Вклады"
+        case .loan: return "Кредиты"
+        }
+    }
+    
+    var order: Int {
+        
+        switch self {
+        case .card: return 0
+        case .account: return 1
+        case .deposit: return 2
+        case .loan: return 3
+        }
+    }
 }

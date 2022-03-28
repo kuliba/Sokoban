@@ -22,6 +22,7 @@ extension ServerCommands {
             let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
             let timeout: TimeInterval? = nil
+            let cachePolicy: URLRequest.CachePolicy = .returnCacheDataElseLoad
             
             struct Payload: Encodable {
                 

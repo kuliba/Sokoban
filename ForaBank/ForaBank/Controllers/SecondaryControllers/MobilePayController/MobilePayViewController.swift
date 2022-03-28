@@ -13,7 +13,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
     
     var recipiendId = String()
     var phoneNumber: String?
-    
+    var regEx = ""
     var phoneField = ForaInput(
         viewModel: ForaInputModel(
             title: "По номеру телефона",
@@ -98,6 +98,14 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
             bottomView.doneButtonIsEnabled(text.count < 11 ? true : false)
         }
     }
+    
+//    func textFieldDidEndEditing(_ textField: UITextField) {
+//        let a = phoneField.textField.text ?? ""
+//        if ( !isValidPassword(a) == true && a != "") {
+//            self.showAlert(with: "Ошибка", and: "Не верный формат")
+//            phoneField.textField.text = ""
+//        }
+//    }
     
     func setupActions() {
         
@@ -343,6 +351,10 @@ extension MobilePayViewController: EPPickerDelegate {
             phoneField.textField.text = maskPhone ?? ""
             selectNumber = maskPhone ?? ""
         }
+    }
+    
+    func isValidPassword(_ input: String) -> Bool {
+        return NSPredicate(format: "SELF MATCHES %@", self.regEx).evaluate(with: input)
     }
     
 }

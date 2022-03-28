@@ -16,7 +16,10 @@ class NavigationBarUIView: UIView {
     @IBOutlet weak var textField: MaskedTextField!
     @IBOutlet weak var searchIcon: UIImageView!
     
+    @IBOutlet weak var searchIconWidth: NSLayoutConstraint!
+    @IBOutlet weak var searchIconHeight: NSLayoutConstraint!
     
+    @IBOutlet weak var foraAvatarImageView: UIImageView!
     @IBAction func bellButtonTapped(_ sender: Any) {
         bellTapped?()
     }

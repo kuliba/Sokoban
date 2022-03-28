@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -252,7 +252,7 @@
                 <constraint firstItem="N2d-Dp-bUK" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="kAE-ag-GBr"/>
                 <constraint firstAttribute="trailing" secondItem="vsX-N9-VcX" secondAttribute="trailing" constant="20" id="wlX-6i-ec1"/>
             </constraints>
-            <point key="canvasLocation" x="-5.5999999999999996" y="-23.645320197044335"/>
+            <point key="canvasLocation" x="-5.7971014492753632" y="-24.107142857142858"/>
         </view>
     </objects>
     <resources>

@@ -19,11 +19,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
     
     var byCompany = false
     var paymentTemplate: PaymentTemplateData? = nil
-    var viewModel = ConfirmViewControllerModel(type: .requisites) {
-        didSet {
-            //            checkModel(with: viewModel)
-        }
-    }
+    var viewModel = ConfirmViewControllerModel(type: .requisites)
     
     var selectedBank: BankFullInfoList? {
         didSet {
@@ -133,6 +129,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                         let nc = UINavigationController(rootViewController: controller)
                         nc.modalPresentationStyle = .fullScreen
                         self.present(nc, animated: true)
+                        
                     }
                 }
             } else {
@@ -152,8 +149,8 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         if GlobalModule.qrOperator != nil && GlobalModule.qrData != nil {
             let controller = InternetTVMainController.storyboardInstance()!
             let nc = UINavigationController(rootViewController: controller)
-            nc.modalPresentationStyle = .fullScreen
-            present(nc, animated: false)
+            self.modalPresentationStyle = .fullScreen
+            present(controller, animated: false)
         }
     }
     
@@ -281,9 +278,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        AddAllUserCardtList.add() {
-            print(" AddAllUserCardtList.add()")
-        }
+        AddAllUserCardtList.add() {}
         
         loadCard()
         setupUI()
@@ -457,7 +452,6 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
     func setupCardsAction() {
         
         cardField.didChooseButtonTapped = { () in
-            print("cardField didChooseButtonTapped")
             self.openOrHideView(self.cardListView)
             self.hideView(self.bankListView, needHide: true)
         }
@@ -554,7 +548,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         //        bottomView.currencySymbol = "₽"
         
         let item = UIBarButtonItem(image: UIImage.init(imageLiteralResourceName: "scanner"), style: .plain, target: self, action: #selector(presentScanner))
-        item.tintColor = .lightGray
+        item.tintColor = .black
         item.isEnabled = true
         navigationItem.setRightBarButton(item, animated: false)
         
@@ -769,9 +763,6 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                         "KPP": kpp
                     ]] as [String: AnyObject]
         
-        print("DEBUG: \(body)")
-        
-        
         if fioField.isHidden == false {
             guard fioField.textField.text != "" else {
                 self.dismissActivity()
@@ -796,15 +787,13 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         NetworkManager<CreatTransferDecodableModel>.addRequest(.createTransfer, [:], body) { model, error in
             self.dismissActivity()
             if error != nil {
-                guard let error = error else {
+                guard error != nil else {
                     return
                 }
-                print("DEBUG: Error: ", error)
             } else {
                 guard let model = model else {
                     return
                 }
-                print("DEBUG: Card list: ", model)
                 if model.statusCode == 0 {
                     //                self.dismissActivity()
                     guard let data = model.data else {
@@ -832,7 +821,6 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                         self.navigationController?.pushViewController(vc, animated: true)
                     }
                 } else {
-                    print("DEBUG: Error: ", model.errorMessage ?? "")
                     self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
                     
                 }
@@ -864,7 +852,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                 
             }
             guard let model = model else { return }
-            print("DEBUG: Card list: ", model)
+            
             if model.statusCode == 0 {
                 guard let data = model.data else { return }
                 //                self.selectedCardNumber = cardNumber
@@ -887,7 +875,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                 }
             } else {
                 self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
-                print("DEBUG: Error: ", model.errorMessage ?? "")
+                
             }
         }
     }

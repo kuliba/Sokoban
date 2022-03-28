@@ -82,7 +82,7 @@ class AccountStatementController: UIViewController {
     
     private func setupUI() {
         
-        let topLabel = UILabel(text: "Отражает подтвержденные оперции по счету за выбранный период.", font: .systemFont(ofSize: 12))
+        let topLabel = UILabel(text: "Отражает подтвержденные операции по счету за выбранный период.", font: .systemFont(ofSize: 12))
         topLabel.numberOfLines = 0
         
         

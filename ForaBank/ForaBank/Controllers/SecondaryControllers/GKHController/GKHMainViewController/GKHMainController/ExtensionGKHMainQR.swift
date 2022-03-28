@@ -9,7 +9,7 @@ import Foundation
 
 extension GKHMainViewController: QRProtocol {
     
-    ///  Метод делегата. При сакинировании QR возвращает данные по оператору
+    ///  Метод делегата. При сканировании QR возвращает данные по оператору
     func setResultOfBusinessLogic(_ qr: [String : String], _ model: GKHOperatorsModel) {
         self.qrData = qr
         self.operators = model

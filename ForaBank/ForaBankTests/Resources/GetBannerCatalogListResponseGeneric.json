@@ -1,0 +1,18 @@
+{
+  "data": {
+    "BannerCatalogList": [
+      {
+        "conditionLink": "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/",
+        "imageLink": "dict/getBannerCatalogImage?image=banner_1",
+        "orderLink": "https://www.forabank.ru/private/cards/sezonnoe-predlozhenie/",
+        "productName": "Кэшбек",
+        "txtСondition": [
+          "string"
+        ]
+      }
+    ],
+    "serial": "bea36075a58954199a6b8980549f6b69"
+  },
+  "errorMessage": "string",
+  "statusCode": 0
+}

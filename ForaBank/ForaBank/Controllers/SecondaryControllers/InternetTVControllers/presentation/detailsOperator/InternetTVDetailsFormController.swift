@@ -355,6 +355,10 @@ extension  InternetTVDetailsFormController {
             popView.transitioningDelegate = self
             self.present(popView, animated: true, completion: nil)
         }
+        
+        cell.showAlert = { [weak self] in
+            self?.showAlert(with: "Ошибка", and: "Поле 'Название поля' заполнено неверно.")
+        }
         return cell
     }
 

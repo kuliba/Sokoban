@@ -11,7 +11,7 @@ import Foundation
 struct ChangePaymentContactDecodableModel: Codable, NetworkModelProtocol {
     let statusCode: Int?
     let errorMessage: String?
-    let data: JSONNull?
+    let data: MakeTransferDataDecodableModel?
 }
 
 // MARK: CreateFastPaymentContractDecodableModel convenience initializers and mutators
@@ -35,7 +35,7 @@ extension ChangePaymentContactDecodableModel {
     func with(
         statusCode: Int?? = nil,
         errorMessage: String?? = nil,
-        data: JSONNull?? = nil
+        data: MakeTransferDataDecodableModel?? = nil
     ) -> ChangePaymentContactDecodableModel {
         return ChangePaymentContactDecodableModel(
             statusCode: statusCode ?? self.statusCode,

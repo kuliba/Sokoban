@@ -26,6 +26,7 @@ extension AppDelegate {
         IQKeyboardManager.shared.disabledDistanceHandlingClasses.append(CodeVerificationViewController.self)
         IQKeyboardManager.shared.disabledTouchResignedClasses.append(CodeVerificationViewController.self)
 
+
         // Настройка NavigationBar
         UINavigationBar.appearance().barTintColor = .white
         UINavigationBar.appearance().tintColor = .black
@@ -34,45 +35,22 @@ extension AppDelegate {
         UINavigationBar.appearance().titleTextAttributes =
             [.foregroundColor: UIColor.black]
         UINavigationBar.appearance().isTranslucent = false
-        fixiOS15AppearanceIssues()
-        // Убираем надписи у кнопок NavigationBar
-//        UIBarButtonItem.appearance().setTitleTextAttributes(
-//            [.foregroundColor: UIColor.clear], for: .normal)
-//        UIBarButtonItem.appearance().setTitleTextAttributes(
-//            [.foregroundColor: UIColor.clear], for: .highlighted)
-        
+
         // Настройка TabBar
-        UITabBarItem.appearance().setTitleTextAttributes(
-            [.foregroundColor: UIColor.black ], for: .selected)
-    }
-    
-    func fixiOS15AppearanceIssues() {
-//        fixiOS15NavBarIssues()
-        fixiOS15TabBarIssues()
-    }
-    
-    private func fixiOS15NavBarIssues() {
         if #available(iOS 15, *) {
-            let appearance = UINavigationBarAppearance()
-            appearance.configureWithOpaqueBackground()
-            appearance.backgroundColor = .white
-            appearance.shadowColor = .clear
-            appearance.titleTextAttributes = [.foregroundColor: UIColor.black]
-            UINavigationBar.appearance().standardAppearance = appearance
-            UINavigationBar.appearance().scrollEdgeAppearance = appearance
-        }
-    }
-    
-    private func fixiOS15TabBarIssues() {
-        if #available(iOS 15, *) {
+            
             let appearance = UITabBarAppearance()
             appearance.configureWithOpaqueBackground()
             appearance.backgroundColor = UIColor(red: 0.973, green: 0.973, blue: 0.973, alpha: 1)
             UITabBar.appearance().standardAppearance = appearance
             UITabBar.appearance().scrollEdgeAppearance = appearance
+            
+        } else {
+            
+            UITabBarItem.appearance().setTitleTextAttributes(
+                [.foregroundColor: UIColor.black ], for: .selected)
         }
     }
-    
 }
 
 

@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "Payments Icon Placeholder.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

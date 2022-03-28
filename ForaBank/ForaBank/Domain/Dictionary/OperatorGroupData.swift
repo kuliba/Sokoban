@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct OperatorGroupData: Codable, Equatable {
+struct OperatorGroupData: Codable, Equatable, Cachable {
     
     let city: String?
     let code: String
@@ -36,9 +36,25 @@ extension OperatorGroupData {
     
     struct LogotypeData: Codable, Equatable {
         
-        let content: String
-        let contentType: String
-        let name: String
-        let svgImage: SVGImageData
+        let content: String?
+        let contentType: String?
+        let name: String?
+        let svgImage: SVGImageData?
+    }
+}
+
+extension OperatorGroupData.OperatorData {
+    
+    var title: String { name }
+    
+    var description: String? { synonymList.first }
+    
+    var iconImageData: ImageData? {
+        
+        guard let logotypeData = logotypeList.first, let logotypeSVGImage = logotypeData.svgImage else {
+            return nil
+        }
+        
+        return ImageData(with: logotypeSVGImage)
     }
 }

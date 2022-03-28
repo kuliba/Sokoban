@@ -11,6 +11,7 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
     var showSelectView: (([String: String], String) -> ())? = nil
     var showGoButton: ((Bool) -> ())? = nil
     var currentElementUI: RequisiteDO? = nil
+    var showAlert: (() -> ())? = nil
 
     var fieldId = ""
     var fieldName = ""
@@ -30,7 +31,7 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
     
     @IBOutlet weak var textView: UITextView!
     
-    
+    var regEx = ""
     var placeholder = ""
 
     override func awakeFromNib() {
@@ -50,6 +51,10 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
     }
 
     func setupUI (_ index: Int, _ item: RequisiteDO, _ qrData: [String: String], additionalList: [AdditionalListModel], _ selectedValue: String) {
+        regEx = item.regExp ?? ""
+        
+        let a = item.title
+        
         currentElementUI = item
         infoButon.isHidden = true
         fieldId = String(item.order)
@@ -146,6 +151,13 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
                                                                        "fieldname" : fieldName,
                                                                        "fieldvalue" : textValue]
         }
+        let t = qrData
+        if isPersonalAcc_1(strCheck: item.title ?? ""), let textValue = qrData["Расчетный счет Получателя"]  {
+            textView.text = textValue
+            InternetTVDetailsFormViewModel.additionalDic[fieldName] = ["fieldid" : fieldId,
+                                                                       "fieldname" : fieldName,
+                                                                       "fieldvalue" : textValue]
+        }
     }
 
     private func setupSelectField(additionalList: [AdditionalListModel], elementUI: RequisiteDO, qrData: [String: String]) {
@@ -198,11 +210,22 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
     }
 
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        let previousText:NSString = textView.text! as NSString
+        let previousText: NSString = textView.text! as NSString
         let updatedText = previousText.replacingCharacters(in: range, with: text)
         fieldValue = updatedText
         checkForEmpty()
+    
         InternetTVDetailsFormViewModel.additionalDic[fieldName] = ["fieldid" : fieldId, "fieldname" : fieldName, "fieldvalue" : fieldValue]
+        
+        return true
+    }
+    
+    func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
+        let a = textView.text ?? ""
+        if ( !isValidPassword(a) == true && a != "") {
+            showAlert!()
+            textView.text = ""
+        }
         return true
     }
 
@@ -256,9 +279,21 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
         if strCheck.isEmpty {return false}
         let str = strCheck.lowercased()
         if str.contains("счетч") {return false}
-        return str.contains("счет")
+        return ((str.contains("счет")
                 || str.contains("лицев")
                 || str.contains("номер")
-                || str.contains("абонент")
+                || str.contains("абонент")) && !str.contains("расчетный счет получателя"))
+    }
+    
+    func isPersonalAcc_1(strCheck: String) -> Bool {
+        if strCheck.isEmpty {return false}
+        let str = strCheck.lowercased()
+        if str.contains("расчетный счет получателя") {return false}
+        return str.contains("расчетный счет получателя")
+            
+    }
+    
+    func isValidPassword(_ input: String) -> Bool {
+        return NSPredicate(format: "SELF MATCHES %@", self.regEx).evaluate(with: input)
     }
 }
