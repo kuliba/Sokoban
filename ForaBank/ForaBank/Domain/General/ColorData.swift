@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct ColorData: CustomStringConvertible, Equatable {
     
@@ -26,3 +27,10 @@ extension ColorData: Codable {
         try container.encode(description)
     }
 }
+
+extension ColorData {
+    
+    var color: Color { Color(hex: description) }
+}
+
+

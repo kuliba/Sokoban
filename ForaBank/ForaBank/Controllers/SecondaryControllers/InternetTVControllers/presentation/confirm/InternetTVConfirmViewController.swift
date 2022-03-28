@@ -85,7 +85,22 @@ class InternetTVConfirmViewController: UIViewController {
     }
     
     @objc func setOtpCode(_ notification: NSNotification) {
-        let otpCode = notification.userInfo?["body"] as! String
+
+        let otpCode: String
+        
+        if let dict = notification.userInfo as NSDictionary? {
+            
+            if let code = dict["otp"] as? String {
+                
+                otpCode = code
+            } else if let code = dict["aps.alert.body"] as? String {
+                otpCode = code
+            } else {
+                return
+            }
+        } else {
+            return
+        }
         self.otpCode = otpCode.filter { "0"..."9" ~= $0 }
         smsCodeField.text =  self.otpCode
     }

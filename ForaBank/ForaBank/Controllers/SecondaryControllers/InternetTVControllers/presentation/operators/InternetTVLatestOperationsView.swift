@@ -101,7 +101,7 @@ class InternetTVCollectionView: UICollectionView, UICollectionViewDelegate, UICo
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 100, height: frame.height * 0.8)
+        return CGSize(width: 110, height: frame.height)
     }
 
     required init?(coder aDecoder: NSCoder) {

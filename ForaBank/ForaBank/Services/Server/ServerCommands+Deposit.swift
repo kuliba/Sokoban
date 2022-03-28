@@ -161,6 +161,33 @@ extension ServerCommands {
 			}
 		}
         
+        /*
+         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController//dict//rest/getDepositProductListUsingGet
+         */
+        struct GetDepositProductList: ServerCommand {
+
+            let token: String?
+            let endpoint = "/rest/getDepositProductList"
+            let method: ServerCommandMethod = .get
+            let parameters: [ServerCommandParameter]? = nil
+            var payload: Payload? = nil
+            let timeout: TimeInterval? = nil
+
+            struct Payload: Encodable {}
+
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let data: [DepositProductData]?
+                let errorMessage: String?
+            }
+            
+            internal init(token: String) {
+
+                self.token = token
+            }
+        }
+        
         struct BasePayload: Encodable {
 
             let endDate: String?

@@ -38,7 +38,7 @@ class ServerCommandsRegistrationTests: XCTestCase {
             return
         }
         let json = try Data(contentsOf: url)
-        let expected = ServerCommands.RegistrationContoller.CheckClient.Response(statusCode: .ok, errorMessage: "string", data: EmptyData())
+        let expected = ServerCommands.RegistrationContoller.CheckClient.Response(statusCode: .ok, errorMessage: "string", data: .init(phone: "123456"))
         
         // when
         let result = try decoder.decode(ServerCommands.RegistrationContoller.CheckClient.Response.self, from: json)

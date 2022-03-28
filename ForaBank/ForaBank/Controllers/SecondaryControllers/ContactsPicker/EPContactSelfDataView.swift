@@ -9,6 +9,8 @@ import UIKit
 
 class EPContactSelfDataView: UIView {
 
+    @IBOutlet weak var topLineView: UIView!
+    @IBOutlet weak var bottomLineView: UIView!
     @IBOutlet var contentView: UIView!
     @IBOutlet weak var userPhone: UILabel!
     @IBOutlet weak var tapViewButton: UIButton!
@@ -32,6 +34,8 @@ class EPContactSelfDataView: UIView {
         addSubview(contentView)
         contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        topLineView.backgroundColor = UIColor(red: 0.96, green: 0.96, blue: 0.97, alpha: 1)
+        bottomLineView.backgroundColor = UIColor(red: 0.96, green: 0.96, blue: 0.97, alpha: 1)
     }
     
     private func addPhone() {

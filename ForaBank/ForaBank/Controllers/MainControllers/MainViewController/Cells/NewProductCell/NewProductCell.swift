@@ -34,44 +34,54 @@ class NewProductCell: UICollectionViewCell, SelfConfiguringCell {
         }
         
     }
-    
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupUI()
-        self.layer.cornerRadius = 10
-//        0.785
-        transferImage.setDimensions(height: 32, width: 32)
-        backgroundColor = UIColor(hexString: "F6F6F7")
+        
+        let container = UIStackView(frame: .zero)
+        container.axis = .vertical
+        container.distribution = .fill
+        container.alignment = .leading
+        container.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(container)
+        NSLayoutConstraint.activate([
+        
+            container.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+            container.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+            container.topAnchor.constraint(equalTo: topAnchor, constant: 12),
+            container.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12)
+        ])
+        
+        transferImage.contentMode = .scaleAspectFit
+        transferImage.translatesAutoresizingMaskIntoConstraints = false
+        container.addArrangedSubview(transferImage)
+        NSLayoutConstraint.activate([
+            
+            transferImage.heightAnchor.constraint(lessThanOrEqualToConstant: 32),
+            transferImage.widthAnchor.constraint(equalToConstant: 32)
+        ])
+        
+        let spacerView = UIView(frame: .zero)
+        spacerView.backgroundColor = .clear
+        spacerView.translatesAutoresizingMaskIntoConstraints = false
+        spacerView.setContentHuggingPriority(.defaultLow, for: .vertical)
+        container.addArrangedSubview(spacerView)
+        
+        transferLabel.numberOfLines = 1
         transferLabel.textColor = .black
+        transferLabel.translatesAutoresizingMaskIntoConstraints = false
+        container.addArrangedSubview(transferLabel)
+        
+        descriptionLabel.numberOfLines = 1
         descriptionLabel.textColor = .gray
-    
+        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+        container.addArrangedSubview(descriptionLabel)
+        
+        layer.cornerRadius = 10
+        backgroundColor = UIColor(hexString: "F6F6F7")
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    private func setupUI() {
-        self.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
-        transferLabel.numberOfLines = 1
-        
-        addSubview(transferImage)
-        addSubview(transferLabel)
-        addSubview(descriptionLabel)
-        
-        transferImage.contentMode = .scaleAspectFit
-//        transferImage.setDimensions(height: 32, width: 32)
-//        transferImage.centerX(inView: self, topAnchor: self.topAnchor, paddingTop: 16)
-//        descriptionLabel.anchor(left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor, paddingLeft: 12, paddingBottom: 8, paddingRight: 12)
-//        transferLabel.anchor(top: descriptionLabel.topAnchor ,left: self.leftAnchor, right: self.rightAnchor, paddingLeft: 12, paddingBottom: 0, paddingRight: 12)
-
-        transferImage.setDimensions(height: 32, width: 32)
-        backgroundColor = UIColor(hexString: "F6F6F7")
-        transferImage.anchor(top: self.topAnchor, left: self.leftAnchor, paddingTop: 12, paddingLeft: 12)
-        transferLabel.textColor = .black
-        descriptionLabel.textColor = .gray
-        descriptionLabel.anchor(left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor, paddingLeft: 12, paddingBottom: 8, paddingRight: 12)
-        transferLabel.anchor(left: self.leftAnchor, bottom: descriptionLabel.topAnchor, right: self.rightAnchor, paddingLeft: 12, paddingBottom: 4, paddingRight: 12)
     }
 }

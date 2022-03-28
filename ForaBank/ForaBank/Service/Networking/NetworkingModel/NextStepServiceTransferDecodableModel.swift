@@ -59,7 +59,8 @@ struct NextStepServiceTransferDataClass: Codable {
     let amount: Double?
     let creditAmount: JSONNull?
     let fee: Int?
-    let currencyAmount, currencyPayer, currencyPayee, currencyRate: JSONNull?
+    let currencyAmount: String?
+    let currencyPayer, currencyPayee, currencyRate: JSONNull?
     let debitAmount: Double?
     let payeeName, paymentOperationDetailID, documentStatus: JSONNull?
     let additionalList: [NextStepServiceTransferAdditionalList]?
@@ -98,7 +99,7 @@ extension NextStepServiceTransferDataClass {
         amount: Double?? = nil,
         creditAmount: JSONNull?? = nil,
         fee: Int?? = nil,
-        currencyAmount: JSONNull?? = nil,
+        currencyAmount: String?? = nil,
         currencyPayer: JSONNull?? = nil,
         currencyPayee: JSONNull?? = nil,
         currencyRate: JSONNull?? = nil,

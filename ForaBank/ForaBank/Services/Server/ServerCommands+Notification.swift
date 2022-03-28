@@ -10,6 +10,45 @@ import Foundation
 extension ServerCommands {
     
     enum NotificationController {
+
+        /*
+         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/NotificationController/changeNotificationStatus
+         */
+        struct ChangeNotificationStatus: ServerCommand {
+
+            let token: String?
+            let endpoint = "/notification/changeNotificationStatus"
+            let method: ServerCommandMethod = .post
+            let parameters: [ServerCommandParameter]? = nil
+            let payload: Payload?
+            let timeout: TimeInterval? = nil
+
+            struct Payload: Encodable {
+                
+                let eventId: String
+                let cloudId: String
+                let status: CodingKeys
+            }
+
+            enum CodingKeys: String, CodingKey, Encodable {
+                
+                case delivered = "DELIVERED"
+                case read = "READ"
+            }
+            
+            struct Response: ServerResponse {
+
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: EmptyData?
+            }
+            
+            internal init(token: String, payload: Payload) {
+                
+                self.token = token
+                self.payload = payload
+            }
+        }
         
         /*
          https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/NotificationController/getNotificationsUsingGET

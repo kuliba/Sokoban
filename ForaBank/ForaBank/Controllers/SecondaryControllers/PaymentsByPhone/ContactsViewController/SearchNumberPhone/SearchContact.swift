@@ -9,6 +9,11 @@ import UIKit
 
 protocol PassTextFieldText {
     func passTextFieldText(textField: UITextField)
+    func showSelfPhoneView(_ value: Bool)
+}
+
+extension PassTextFieldText {
+    func showSelfPhoneView(_ value: Bool) {}
 }
 
 class SearchContact: UIView, UITextFieldDelegate{
@@ -92,6 +97,15 @@ class SearchContact: UIView, UITextFieldDelegate{
         return true
     }
     
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        delegateNumber?.showSelfPhoneView(false)
+        return true
+    }
+    
+    func textFieldDidEndEditing(_: UITextField) {
+        delegateNumber?.showSelfPhoneView(true)
+    }
+
     
     override func layoutSubviews() {
         super.layoutSubviews()

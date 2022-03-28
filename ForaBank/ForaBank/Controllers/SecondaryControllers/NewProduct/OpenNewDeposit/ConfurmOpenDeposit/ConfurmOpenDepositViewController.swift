@@ -205,8 +205,23 @@ class ConfurmOpenDepositViewController: PaymentViewController {
     }
     
     @objc func setOtpCode(_ notification: NSNotification) {
-        let otpCode = notification.userInfo?["body"] as! String
-//        self.otpCode = otpCode.filter { "0"..."9" ~= $0 }
+
+        let otpCode: String
+
+        
+        if let dict = notification.userInfo as NSDictionary? {
+            
+            if let code = dict["otp"] as? String {
+                
+                otpCode = code
+            } else if let code = dict["aps.alert.body"] as? String {
+                otpCode = code
+            } else {
+                return
+            }
+        } else {
+            return
+        }
         smsCodeField.text = otpCode.filter { "0"..."9" ~= $0 }
     }
     

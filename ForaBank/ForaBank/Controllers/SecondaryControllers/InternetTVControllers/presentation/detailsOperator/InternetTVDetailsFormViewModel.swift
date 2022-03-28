@@ -32,7 +32,6 @@ class InternetTVDetailsFormViewModel {
                 item.readOnly = true
             } else {
                 item.readOnly = false
-                print("req5555 \(item.id) \(item.title)")
             }
         }
         answer.data?.additionalList?.forEach { item in
@@ -50,7 +49,7 @@ class InternetTVDetailsFormViewModel {
             }
         }
         answer.data?.parameterListForNextStep?.forEach { item in
-            print("req5555 _ \(item.id) \(item.title)")
+            
             let param = RequisiteDO.convertParameter(item)
             if (requisites.first { requisite in
                 requisite.id == param.id
@@ -88,7 +87,7 @@ class InternetTVDetailsFormViewModel {
 
     var needSum = false
     func continueRetry(amount: String) {
-        guard let controller = controller else {
+        guard controller != nil else {
             return
         }
         var additionalArray = [[String: String]]()
@@ -99,7 +98,7 @@ class InternetTVDetailsFormViewModel {
         if needSum { tempAmount = amount }
         var additionArray = firstAdditional
         if stepsPayment.count > 0 { additionArray = stepsPayment.removeFirst() }
-        var request = getRequestBody(amount: tempAmount, additionalArray: additionArray)
+        let request = getRequestBody(amount: tempAmount, additionalArray: additionArray)
         InternetTVApiRequests.createAnywayTransfer(request: request) { response, error in
             guard let controller = self.controller else {
                 return
@@ -122,7 +121,7 @@ class InternetTVDetailsFormViewModel {
     }
 
     func doFirstStep(amount: String) {
-        guard let controller = controller else {
+        guard controller != nil else {
             return
         }
         var additionalArray = [[String: String]]()
@@ -166,7 +165,7 @@ class InternetTVDetailsFormViewModel {
     }
 
     func doNextStep(amount: String) {
-        guard let controller = controller else {
+        guard controller != nil else {
             return
         }
         var additionalArray = [[String: String]]()
@@ -266,3 +265,4 @@ class InternetTVDetailsFormViewModel {
         }
     }
 }
+
