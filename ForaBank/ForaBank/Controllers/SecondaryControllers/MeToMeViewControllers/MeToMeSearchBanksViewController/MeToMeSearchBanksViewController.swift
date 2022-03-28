@@ -34,7 +34,7 @@ class MeToMeSearchBanksViewController: UIViewController {
     var didBankTapped: ((BankFullInfoList) -> Void)?
     
     let topLabel: UILabel = {
-        let label = UILabel(text: "Выберите банк(и), из которого будет разрешено запрашивать перерводы",
+        let label = UILabel(text: "Выберите банк(и), из которого будет разрешено запрашивать переводы",
                             font: UIFont(name: "Inter-Regular", size: 12),
                             color: #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1))
         label.numberOfLines = 2
