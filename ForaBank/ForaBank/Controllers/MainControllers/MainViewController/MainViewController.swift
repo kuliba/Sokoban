@@ -103,9 +103,9 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.navigationBar.backgroundColor = UIColor(hexString: "F8F8F8")
+        navigationController?.navigationBar.backgroundColor = .white
         navigationController?.navigationBar.barTintColor = UIColor(hexString: "F8F8F8")
-        view.backgroundColor = #colorLiteral(red: 0.9725490196, green: 0.9725490196, blue: 0.9725490196, alpha: 1)
+        view.backgroundColor = .white
         
         setupSectionsExpanded()
         setupSearchBar()
@@ -114,7 +114,6 @@ class MainViewController: UIViewController {
         getCurrency()
         setupData()
         
- 
         if let products = self.realm?.objects(UserAllCardsModel.self) {
             
             productTypeSelector.update(with: products)
@@ -128,6 +127,7 @@ class MainViewController: UIViewController {
         bind()
         startUpdate()
         model.action.send(ModelAction.Deposits.List.Request())
+        model.action.send(ModelAction.Settings.GetClientInfo.Requested())
     }
     
     func updateProductsViewModels(with products: Results<UserAllCardsModel>) {
@@ -222,6 +222,15 @@ class MainViewController: UIViewController {
     
     private func setupSearchBar() {
         view.addSubview(searchBar)
+        
+        searchBar.searchIcon.image = UIImage(named: "ProfileImage")
+        searchBar.textField.text = ""
+        searchBar.textField.placeholder = ""
+        searchBar.textField.isEnabled = false
+        searchBar.foraAvatarImageView.isHidden = false
+        searchBar.searchIconWidth.constant = 40
+        searchBar.searchIconHeight.constant = 40
+        
         searchBar.secondButton.image = UIImage(named: "Avatar")?.withRenderingMode(.alwaysTemplate)
         searchBar.bellIcon.tintColor = .black
         
@@ -273,6 +282,9 @@ class MainViewController: UIViewController {
                     case .failure(let error):
                         print("loading deposits list error: \(error)")
                     }
+                    
+                case let payload as ModelAction.Settings.GetClientInfo.Complete:
+                    searchBar.textField.text = payload.user.firstName
                     
                 default:
                     break

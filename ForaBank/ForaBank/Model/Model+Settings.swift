@@ -7,6 +7,27 @@
 
 import Foundation
 
+extension ModelAction {
+    
+    enum Settings {
+        
+        enum GetClientInfo {
+        
+            struct Requested: Action { }
+            
+            struct Complete: Action {
+                
+                let user: ClientInfoData
+            }
+            
+            struct Failed: Action {
+                
+                let error: Error
+            }
+        }
+    }
+}
+
 extension Model {
     
     var settingsMainSections: MainSectionSettings {
@@ -32,6 +53,30 @@ extension Model {
             
             //TODO: log
             print(error.localizedDescription)
+        }
+    }
+    
+    func handleGetClientInfoRequest() {
+        guard let token = token else {
+            return
+        }
+        
+        let command = ServerCommands.PersonController.GetClientInfo(token: token)
+        serverAgent.executeCommand(command: command) { result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    guard let clientInfo = response.data else { return }
+                    self.action.send(ModelAction.Settings.GetClientInfo.Complete(user: clientInfo))
+                default:
+                    //TODO: handle not ok server status
+                    return
+                }
+            case .failure(let error):
+                self.action.send(ModelAction.Settings.GetClientInfo.Failed(error: error))
+            }
         }
     }
 }
