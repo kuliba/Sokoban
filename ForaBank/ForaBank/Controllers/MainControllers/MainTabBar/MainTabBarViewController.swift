@@ -18,6 +18,11 @@ class MainTabBarViewController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        //GlobalModule.c2bURL = "https://qr.nspk.ru/AS100057J1VQQADF9F491N4US79QFUCU?type=01&bank=100000000217&sum=100&cur=RUB&crc=7F51"
+        //GlobalModule.c2bURL = "https://qr.nspk.ru/AS1A004C56EKES0D9CHO5313H57OL4VE?type=01&bank=100000000217&crc=A006"
+        //GlobalModule.c2bURL = "https://qr.nspk.ru/AS1A0001R4IQ00KH9T7O5SSM06F3AUHR?type=01&bank=1crt88888881&crc=4108"
+        //GlobalModule.c2bURL = "https://qr.nspk.ru/AS1A0001R4IQ00KH9T7O5SSM06F3AUHR?type=01&bank=1crt88888881&crc=4108"
+        GlobalModule.c2bURL = "https://qr.nspk.ru/AS1A001M5PFOENV49NGO1M6SHE92U47T?type=01&bank=1crt88888881&crc=8CE7"
         getFastPaymentContractList()
         tabBar.layer.backgroundColor = UIColor(red: 0.973, green: 0.973, blue: 0.973, alpha: 0.82).cgColor
 //        tabBar.tintColor = #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)

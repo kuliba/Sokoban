@@ -19,7 +19,7 @@ final class NetworkManager<T: NetworkModelProtocol> {
                 debuggedApi.append("createC2BTransfer")
                 debuggedApi.append("updateFastPaymentContract")
                 debuggedApi.append("createFastPaymentContract")
-//                debuggedApi.append("next")
+                debuggedApi.append("getQRData")
 //                debuggedApi.append("make")
 //                debuggedApi.append("print")
                 //debuggedApi.append("getLatestTransportPayments")

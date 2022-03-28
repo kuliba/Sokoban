@@ -14,6 +14,11 @@ class C2BSuccessView: UIView {
     @IBOutlet weak var summLabel: UILabel!
     @IBOutlet weak var infoLabel: UILabel!
 
+    @IBOutlet weak var imgRecipient: UIImageView!
+    @IBOutlet weak var labelNameRecipient: UILabel!
+    @IBOutlet weak var labelDescrRecipient: UILabel!
+    
+    
     var confirmModel: C2BDetailsFormViewModel? {
         didSet {
             guard let model = confirmModel else { return }
@@ -35,6 +40,31 @@ class C2BSuccessView: UIView {
         Bundle.main.loadNibNamed(kContentXibName, owner: self, options: nil)
         contentView.fixInView(self)
         layer.shadowRadius = 16
+        labelNameRecipient.text = C2BDetailsViewModel.recipientText
+        labelDescrRecipient.text = C2BDetailsViewModel.recipientDescription
+        C2BDetailsViewModel.makeTransfer
+        let docStatus = C2BDetailsViewModel.makeTransfer?.data?.documentStatus
+        C2BDetailsViewModel.modelCreateC2BTransfer
+
+        switch (docStatus) {
+        case "IN_PROGRESS":
+            statusImageView.image = #imageLiteral(resourceName: "waiting")
+            statusLabel.text = "Запрос принят в обработку"
+            break
+        case "SUCCESS":
+            statusImageView.image = #imageLiteral(resourceName: "OkOperators")
+            statusLabel.text = "Успешный перевод"
+            break
+        case .none:
+            statusImageView.image = #imageLiteral(resourceName: "errorIcon")
+            statusLabel.text = "Операция неуспешна!"
+            break
+        case .some(_):
+            statusImageView.image = #imageLiteral(resourceName: "errorIcon")
+            statusLabel.text = "Операция неуспешна!"
+            break
+        }
+        summLabel.text = C2BDetailsViewModel.sum
     }
 
     @IBAction func saveButtonTapped(_ sender: Any) {
@@ -56,5 +86,6 @@ class C2BSuccessView: UIView {
         statusLabel.text = model.statusIsSuccess
                 ? "Успешный перевод" : "Операция неуспешна!"
         summLabel.text = model.sumTransaction
+
     }
 }

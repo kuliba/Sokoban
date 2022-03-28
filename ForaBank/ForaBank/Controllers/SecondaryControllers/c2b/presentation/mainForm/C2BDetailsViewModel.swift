@@ -12,21 +12,37 @@ class C2BDetailsViewModel {
     var consent: [FastPaymentContractFindListDatum]? = nil
     var qrData: GetQRDataAnswer? = nil
     var c2bLink = ""
+    static var recipientText = ""
+    static var recipientIconSrc = ""
+    static var recipientDescription = ""
+    static var sum = ""
+    static var makeTransfer: MakeTransferDecodableModel? = nil
+    static var modelCreateC2BTransfer: CreateDirectTransferDecodableModel? = nil
 
     init() {
         c2bLink = GlobalModule.c2bURL ?? ""
         GlobalModule.c2bURL = nil
         getConsent()
         C2BApiRequests.getQRData(link: c2bLink) { model, error in
-            self.qrData = model
-            self.dataArrived()
+            if error != nil {
+                self.controller?.dismissActivity()
+                self.controller?.showAlert(with: "Ошибка", and: error!)
+            } else {
+                self.qrData = model
+                self.dataArrived()
+            }
         }
     }
 
     func getConsent() {
         C2BApiRequests.getFastPaymentContractList { model, error in
-            self.consent = model
-            self.dataArrived()
+            if error != nil {
+                self.controller?.dismissActivity()
+                self.controller?.showAlert(with: "Ошибка", and: error!)
+            } else {
+                self.consent = model
+                self.dataArrived()
+            }
         }
     }
 

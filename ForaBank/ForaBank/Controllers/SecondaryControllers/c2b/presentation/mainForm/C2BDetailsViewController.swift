@@ -9,7 +9,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource, U
         let storyboard = UIStoryboard(name: "InternetTV", bundle: nil)
         return storyboard.instantiateViewController(withIdentifier: "C2BDetails") as? C2BDetailsViewController
     }
-
+    
     var qrData = [String: String]()
     var viewModel = C2BDetailsViewModel()
     var amount = ""
@@ -54,19 +54,15 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource, U
 
     @IBOutlet weak var switchConsent: UISwitch!
 
-
     func updateUIFromQR(_ data: GetQRDataAnswer?) {
         dismissActivity()
         let params = data?.data?.parameters
-        var recipientText = ""
-        var recipientIconSrc = ""
-        var recipientDescription = ""
         var bankRecipientCode = ""
         let recepientFound = params?.filter({ $0.type == "RECIPIENT" })
         if (recepientFound != nil && recepientFound?.count ?? 0 > 0) {
-            recipientText = recepientFound?[0].value ?? ""
-            recipientIconSrc = recepientFound?[0].icon ?? ""
-            recipientDescription = recepientFound?[0].description ?? ""
+            C2BDetailsViewModel.recipientText = recepientFound?[0].value ?? ""
+            C2BDetailsViewModel.recipientIconSrc = recepientFound?[0].icon ?? ""
+            C2BDetailsViewModel.recipientDescription = recepientFound?[0].description ?? ""
 //                    if (!recipientIconSrc.isNullOrEmpty()) {
 //                        viewModel.getRecipientImage(recipientIconSrc)
 //                    }
@@ -87,8 +83,8 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource, U
             imgBank.image = bankIconSvg.convertSVGStringToImage()
             labelBank.text = bankRusName
         }
-        labelRecipient.text = recipientText
-        labelRecipientDesc.text = recipientDescription
+        labelRecipient.text = C2BDetailsViewModel.recipientText
+        labelRecipientDesc.text = C2BDetailsViewModel.recipientDescription
         labelAmount.text = amount
 
         if amount.isEmpty {
@@ -102,8 +98,9 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource, U
             labelUpperText.isHidden = false
             imgAmount.isHidden = false
         }
+        checkSBPConsent()
 
-        checkSBMConsent()
+        //openSuccessScreen(modelCreateC2BTransfer: nil)
     }
 
     @IBOutlet weak var goButton: UIButton?
@@ -206,6 +203,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource, U
 
     private func doPayment(amountArg: String) {
         amount = amountArg
+        C2BDetailsViewModel.sum = amountArg
         var cardId: String? = nil
         var accountId: String? = nil
         if let source = footerView.cardFromField.cardModel {
@@ -239,6 +237,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource, U
         showActivity()
         viewModel.createC2BTransfer(body: body) { modelCreateC2BTransfer, error in
             if (error != nil) {
+                self.dismissActivity()
                 self.showAlert(with: "Ошибка", and: error?.description ?? "")
             } else {
                 self.viewModel.makePayment { model,error in
@@ -246,24 +245,26 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UITableViewDataSource, U
                     if (error != nil) {
                         self.showAlert(with: "Ошибка", and: error?.description ?? "")
                     } else {
-                        DispatchQueue.main.async {
-                            let vc = InternetTVSuccessViewController()
-                            let viewModel = InternetTVConfirmViewModel(type: InternetTVConfirmViewModel.PaymentType.self.internetTV)
-                            viewModel.sumTransaction = self.amount
-                            viewModel.statusIsSuccess = true
-                            vc.confirmModel = viewModel
-                            vc.id = modelCreateC2BTransfer?.data?.paymentOperationDetailID ?? 0
-                            vc.printFormType = "internet"
-                            vc.modalPresentationStyle = .fullScreen
-                            self.present(vc, animated: true, completion: nil)
-                        }
+                        C2BDetailsViewModel.modelCreateC2BTransfer = modelCreateC2BTransfer
+                        C2BDetailsViewModel.makeTransfer = model
+                        self.openSuccessScreen()
                     }
                 }
             }
         }
     }
 
-    func checkSBMConsent() {
+    func openSuccessScreen() {
+        DispatchQueue.main.async {
+            let vc = C2BSuccessViewController()
+            vc.id = C2BDetailsViewModel.modelCreateC2BTransfer?.data?.paymentOperationDetailID ?? 0
+            vc.printFormType = "c2b"
+            vc.modalPresentationStyle = .fullScreen
+            self.present(vc, animated: true, completion: nil)
+        }
+    }
+
+    func checkSBPConsent() {
         if (viewModel.consent?.count ?? 0 > 0) {
             let item = viewModel.consent?[0]
             if (item?.fastPaymentContractAttributeList?.count ?? 0 > 0) {

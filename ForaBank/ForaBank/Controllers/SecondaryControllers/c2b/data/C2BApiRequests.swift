@@ -134,7 +134,6 @@ class C2BApiRequests {
         let code = "0"
         let body = ["verificationCode": code] as [String: AnyObject]
         NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { response, error in
-            
             if error != nil {
                 completion(nil, error)
             }
