@@ -10,7 +10,7 @@ import RealmSwift
 
 // MARK: - UserAllCardsModel
 class UserAllCardsModel: Object {
-
+    
     @objc dynamic var number: String?
     @objc dynamic var numberMasked: String?
     @objc dynamic var balance = 0.0
@@ -53,8 +53,23 @@ class UserAllCardsModel: Object {
     @objc dynamic var creditMinimumAmount: Double = 0.0
     @objc dynamic var minimumBalance: Double = 0.0
     @objc dynamic var balanceRUB: Double = 0.0
+    @objc dynamic var amount = 0.0
+    @objc dynamic var clientID = 0
+    @objc dynamic var currencyCode: String?
+    @objc dynamic var currencyNumber = 0
+    @objc dynamic var bankProductID = 0
+    @objc dynamic var finOperBrief: String?
+    @objc dynamic var currentInterestRate = 0.0
+    @objc dynamic var principalDebt = 0.0
+    @objc dynamic var defaultPrincipalDebt = 0.0
+    @objc dynamic var totalAmountDebt = 0.0
+    @objc dynamic var principalDebtAccount: String?
+    @objc dynamic var settlementAccount: String?
+    @objc dynamic var settlementAccountId = 0
+    @objc dynamic var dateLong = 0
     @objc dynamic var isMain: Bool = true
-
+    
+    @objc dynamic var loanBaseParam: LoanBaseParamModel? = nil
     
     override static func primaryKey() -> String? {
         return "id"
@@ -63,6 +78,24 @@ class UserAllCardsModel: Object {
 
 class UserAllCardsbackgroundModel: Object {
     @objc dynamic var color: String?
+}
+
+class LoanBaseParamModel: Object {
+    
+    @objc dynamic var loanID: Int = 0
+    @objc dynamic var clientID: Int = 0
+    @objc dynamic var number: String = ""
+    @objc dynamic var currencyID: Int = 0
+    @objc dynamic var currencyNumber: Int = 0
+    @objc dynamic var currencyCode: String = ""
+    @objc dynamic var minimumPayment: Double = 0.0
+    @objc dynamic var gracePeriodPayment: Double = 0.0
+    @objc dynamic var overduePayment: Double = 0.0
+    @objc dynamic var availableExceedLimit: Double = 0.0
+    @objc dynamic var ownFunds: Double = 0.0
+    @objc dynamic var debtAmount: Double = 0.0
+    @objc dynamic var totalAvailableAmount: Double = 0.0
+    @objc dynamic  var totalDebtAmount: Double = 0.0
 }
 
 extension UserAllCardsModel: Identifiable {
@@ -109,12 +142,27 @@ extension UserAllCardsModel: Identifiable {
         creditMinimumAmount = data.creditMinimumAmount ?? 0.0
         minimumBalance     = data.minimumBalance ?? 0.0
         balanceRUB         = data.balanceRUB ?? 0.0
+        amount             = data.amount ?? 0.0
+        clientID           = data.clientID ?? 0
+        currencyCode       = data.currencyCode
+        currencyNumber     = data.currencyNumber ?? 0
+        bankProductID      = data.bankProductID ?? 0
+        finOperBrief       = data.finOperBrief
+        currentInterestRate = data.currentInterestRate ?? 0.0
+        principalDebt      = data.principalDebt ?? 0.0
+        defaultPrincipalDebt = data.defaultPrincipalDebt ?? 0.0
+        totalAmountDebt    = data.totalAmountDebt ?? 0.0
+        principalDebtAccount = data.principalDebtAccount
+        settlementAccount  = data.settlementAccount
+        settlementAccountId = data.settlementAccountId ?? 0
+        dateLong           = data.dateLong ?? 0
         isMain             = data.isMain ?? true
-        
         data.background.forEach { color in
             
             background.append(UserAllCardsbackgroundModel(with: color))
         }
+        
+        loanBaseParam = LoanBaseParamModel(with: data.loanBaseParam)
     }
 }
 
@@ -124,6 +172,79 @@ extension UserAllCardsbackgroundModel {
         
         self.init()
         self.color = color
+    }
+}
+
+extension LoanBaseParamModel {
+    
+    convenience init(with loanBaseParam: GetProductListDatum.LoanBaseParam?) {
+        
+        self.init()
+        
+        if let clientID = loanBaseParam?.clientID {
+            
+            self.clientID = clientID
+        }
+        
+        if let number = loanBaseParam?.number {
+            
+            self.number = number
+        }
+        
+        if let currencyID = loanBaseParam?.currencyID {
+            
+            self.currencyID = currencyID
+        }
+        
+        if let currencyNumber = loanBaseParam?.currencyNumber {
+            
+            self.currencyNumber = currencyNumber
+        }
+        
+        if let currencyCode = loanBaseParam?.currencyCode {
+            
+            self.currencyCode = currencyCode
+        }
+        
+        if let minimumPayment = loanBaseParam?.minimumPayment {
+            
+            self.minimumPayment = minimumPayment
+        }
+        
+        if let gracePeriodPayment = loanBaseParam?.gracePeriodPayment {
+            
+            self.gracePeriodPayment = gracePeriodPayment
+        }
+        
+        if let overduePayment = loanBaseParam?.overduePayment {
+            
+            self.overduePayment = overduePayment
+        }
+        
+        if let availableExceedLimit = loanBaseParam?.availableExceedLimit {
+            
+            self.availableExceedLimit = availableExceedLimit
+        }
+        
+        if let ownFunds = loanBaseParam?.ownFunds {
+            
+            self.ownFunds = ownFunds
+        }
+        
+        if let debtAmount = loanBaseParam?.debtAmount {
+            
+            self.debtAmount = debtAmount
+        }
+        
+        if let totalAvailableAmount = loanBaseParam?.totalAvailableAmount {
+            
+            self.totalAvailableAmount = totalAvailableAmount
+        }
+        
+        if let totalDebtAmount = loanBaseParam?.totalDebtAmount {
+            
+            self.totalDebtAmount = totalDebtAmount
+        }
     }
 }
 

@@ -10,6 +10,8 @@ import SkeletonView
 
 class HistoryTableViewCell: UITableViewCell {
     
+    static let identifier = "HistoryTableViewCell"
+    
     @IBOutlet weak var titleLable: UILabel!
     
     @IBOutlet weak var logoImageView: UIImageView!
@@ -24,11 +26,11 @@ class HistoryTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         setupUI()
-        setupSkeleton()
+
     }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
-        //        logoImageView.image = UIImage()
         
         
         logoImageView.isHidden = false
@@ -52,26 +54,7 @@ class HistoryTableViewCell: UITableViewCell {
         logoImageView.clipsToBounds = true
     }
     
-    private func setupSkeleton() {
-        
-        isSkeletonable = true
-        
-        //
-        ////        titleLable.isSkeletonable = true
-        //        titleLable.showAnimatedGradientSkeleton()
-        //        titleLable.linesCornerRadius = 8
-        ////        amountLabel.isSkeletonable = true
-        //        amountLabel.showAnimatedGradientSkeleton()
-        //        amountLabel.linesCornerRadius = 8
-        ////        subTitleLabel.isSkeletonable = true
-        //        subTitleLabel.showAnimatedGradientSkeleton()
-        //        subTitleLabel.linesCornerRadius = 8
-        ////        logoImageView.isSkeletonable = true
-        //        logoImageView.showAnimatedGradientSkeleton()
-    }
-    
     func configure(currency: String){
-        //        self.isSkeletonable = false
         
         if operation != nil{
             switch operation?.type {
@@ -134,15 +117,10 @@ class HistoryTableViewCell: UITableViewCell {
                 }
                 
                 subTitleLabel.isHidden = true
-                //            logoImageView.image = UIImage()
-                //            logoImageView.image = operation?.svgImage?.convertSVGStringToImage()
+                
                 if operation?.merchantNameRus == ""{
                     titleLable.text = operation?.comment
                 }
-                
-                //                guard let sum = operation?.amount else {
-                //                    return
-                //                }
                 
                 if operation?.groupName != nil{
                     subTitleLabel.isHidden = false
@@ -182,9 +160,6 @@ class HistoryTableViewCell: UITableViewCell {
                 }
             case .none:
                 titleLable.text = operation?.comment
-                //                guard let sum = operation?.amount else {
-                //                    return
-                //                }
                 if operation?.operationType == "DEBIT"{
                     amountLabel.textColor = UIColor(hexString: "1C1C1C")
                     logoImageView.backgroundColor = .red
@@ -260,15 +235,10 @@ class HistoryTableViewCell: UITableViewCell {
                     }
                     
                     subTitleLabel.isHidden = true
-                    //            logoImageView.image = UIImage()
-                    //            logoImageView.image = operation?.svgImage?.convertSVGStringToImage()
+
                     if accountOperation?.merchantNameRus == ""{
                         titleLable.text = accountOperation?.comment
                     }
-                    
-                    //                    guard let sum = accountOperation?.amount else {
-                    //                        return
-                    //                    }
                     
                     if accountOperation?.groupName != nil{
                         subTitleLabel.isHidden = false

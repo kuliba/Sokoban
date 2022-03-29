@@ -104,9 +104,22 @@ struct CardViewModelFromRealm {
     var cardNumber: String? {
         return card.number
     }
+    var settlementAccount: String? {
+        return card.settlementAccount
+    }
+    
+    var totalAmountDebt: String? {
+        let cardBal: Double = card.totalAmountDebt
+        return cardBal.currencyFormatter(symbol: card.currency ?? "")
+    }
     
     var balance: String {
         let cardBal: Double = card.balance
+        return cardBal.currencyFormatter(symbol: card.currency ?? "")
+    }
+    
+    var amount: String {
+        let cardBal: Double = card.amount
         return cardBal.currencyFormatter(symbol: card.currency ?? "")
     }
     

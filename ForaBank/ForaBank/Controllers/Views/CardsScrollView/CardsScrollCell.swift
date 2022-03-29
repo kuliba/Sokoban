@@ -32,7 +32,7 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
     private let logoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-//        imageView.setDimensions(height: 20, width: 20)
+
         return imageView
     }()
     
@@ -131,11 +131,14 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
                              paddingLeft: 8, width: 18, height: 18)
         
         
-        cardNameLabel.anchor(top: maskCardLabel.bottomAnchor, left: self.leftAnchor, right: self.rightAnchor,
-                             paddingTop: 12, paddingLeft: 8, paddingRight: 8)
+        cardNameLabel.anchor(left: self.leftAnchor, bottom: balanceLabel.topAnchor, paddingTop: 25, paddingLeft: 8, paddingRight: 8)
+        cardNameLabel.anchor(width: 50)
+        cardNameLabel.lineBreakMode = .byWordWrapping
+        cardNameLabel.numberOfLines = 2
         
         balanceLabel.anchor(left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor,
                             paddingLeft: 8, paddingBottom: 8, paddingRight: 30)
+        
     }
     
 }

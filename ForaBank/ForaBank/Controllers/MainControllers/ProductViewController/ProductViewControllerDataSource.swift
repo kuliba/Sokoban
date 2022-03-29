@@ -10,119 +10,107 @@ import UIKit
 
 
 extension ProductViewController: UICollectionViewDataSource {
-
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if products.count > 3{
-            return 4
-        } else {
-            return products.count + 1
+        switch product?.productType {
+        case ProductType.card.rawValue:
+            return products.filter({ $0.productType == ProductType.card.rawValue }).prefix(3).count
+        case ProductType.account.rawValue:
+            return products.filter({ $0.productType == ProductType.account.rawValue }).prefix(3).count
+        case ProductType.deposit.rawValue:
+            return products.filter({ $0.productType == ProductType.deposit.rawValue }).prefix(3).count
+        case ProductType.loan.rawValue:
+            return products.filter({ $0.productType == ProductType.loan.rawValue }).prefix(3).count
+        default:
+            return 0
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch indexPath.row {
-        case products.count:
-            let item = collectionView.dequeueReusableCell(withReuseIdentifier: "CardCollectionViewCell", for: indexPath) as? CardCollectionViewCell
-//            item?.card = products[indexPath.item]
-            item?.cardImageView.image = UIImage(named: "cardMore")
-//            item?.backgroundColor = .gray
-//            item?.selectedView.isHidden = true
+        
+        guard  let item = collectionView.dequeueReusableCell(withReuseIdentifier: "CardCollectionViewCell", for: indexPath) as? CardCollectionViewCell  else {
+            return UICollectionViewCell()
+        }
+        
+        switch product?.productType {
+        case ProductType.card.rawValue:
+            let filterCard = products.filter({ $0.productType == ProductType.card.rawValue })
+            item.cardImageView.image = filterCard[indexPath.row].smallDesign?.convertSVGStringToImage()
+            return item
             
-//            item?.isSelected = false
-            if products.count > 0, indexPath.item > 3, product?.number == products[indexPath.row].number{
-                item?.showSelect()
-                item?.isSelected = true
-                item?.cardImageView.alpha = 1
-                item?.selectedView.isHidden = false
-                self.collectionView?.selectItem(at: indexPath, animated: true, scrollPosition: .bottom)
-                
-            } else {
-                item?.isSelected = false
-                item?.hideSelect()
-                item?.showSelect()
-                item?.cardImageView.alpha = 0.5
-                item?.selectedView.isHidden = true
-            }
-
-//            item?.showSelect()
-            return item ?? UICollectionViewCell()
+        case ProductType.account.rawValue:
+            let filterAccount = products.filter({ $0.productType == ProductType.account.rawValue })
+            item.cardImageView.image = filterAccount[indexPath.row].smallDesign?.convertSVGStringToImage()
+            return item
+            
+        case ProductType.deposit.rawValue:
+            let filterDeposit = products.filter({ $0.productType == ProductType.deposit.rawValue })
+            item.cardImageView.image = filterDeposit[indexPath.row].smallDesign?.convertSVGStringToImage()
+            return item
+            
+        case ProductType.loan.rawValue:
+            var filterLoan = products.filter({ $0.productType == ProductType.loan.rawValue })
+            let additionalAccount = products.filter({$0.number == product?.settlementAccount})
+            filterLoan += additionalAccount
+            
+            item.cardImageView.image = filterLoan[indexPath.row].smallDesign?.convertSVGStringToImage()
+            return item
+            
         default:
-            let item = collectionView.dequeueReusableCell(withReuseIdentifier: "CardCollectionViewCell", for: indexPath) as? CardCollectionViewCell
-    //        item?.card = products[indexPath.item]
-//            item?.selectedView.isHidden = true
-            item?.cardImageView.image = products[indexPath.row].smallDesign?.convertSVGStringToImage()
-//            if firstTimeLoad{
-//                item?.isSelected = false
-//            }
-            if products.count > 0, indexPath.item != 3, product?.number == products[indexPath.item].number {
-                self.collectionView?.selectItem(at: indexPath, animated: true, scrollPosition: .bottom)
-                item?.showSelect()
-                item?.isSelected = true
-                item?.cardImageView.alpha = 1
-                item?.selectedView.isHidden = false
-                
-            } else {
-                item?.isSelected = false
-                item?.hideSelect()
-                item?.showSelect()
-                item?.cardImageView.alpha = 0.5
-                item?.selectedView.isHidden = true
-            }
-
-            return item ?? UICollectionViewCell()
+            
+            return item
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-       
-        DispatchQueue.main.async {
-            self.tableView?.reloadData()
+        
+        switch product?.productType {
+        case ProductType.card.rawValue:
+            let filterCard = products.filter({ $0.productType == ProductType.card.rawValue })
+            product = filterCard[indexPath.item]
+            self.collectionView?.selectItem(at: indexPath, animated: true, scrollPosition: .bottom)
+            
+        case ProductType.account.rawValue:
+            let filterAccount = products.filter({ $0.productType == ProductType.account.rawValue })
+            product = filterAccount[indexPath.item]
+            self.collectionView?.selectItem(at: indexPath, animated: true, scrollPosition: .bottom)
+            
+        case ProductType.deposit.rawValue:
+            let filterDeposit = products.filter({ $0.productType == ProductType.deposit.rawValue })
+            product = filterDeposit[indexPath.item]
+            self.collectionView?.selectItem(at: indexPath, animated: true, scrollPosition: .bottom)
+            
+        case ProductType.loan.rawValue:
+            var filterLoan = products.filter({ $0.productType == ProductType.loan.rawValue })
+            let additionalAccount = products.filter({$0.number == product?.settlementAccount})
+            filterLoan += additionalAccount
+            
+            product = filterLoan[indexPath.item]
+            self.collectionView?.selectItem(at: indexPath, animated: true, scrollPosition: .bottom)
+            
+        default:
+            print("default")
         }
-        
-//        if firstTimeLoad, products.count != 0{
-//            firstTimeLoad = false
-////            self.collectionView?.selectItem(at: IndexPath(item: indexItem ?? 0, section: 0), animated: true, scrollPosition: .bottom)
-//            let cell = collectionView.cellForItem(at: IndexPath(item: indexItem ?? 0, section: 0)) as? CardCollectionViewCell
-//            product = products[self.indexItem ?? 0]
-//            cell?.showSelect()
-//        } else {
-            if indexPath.item < products.count{
-                historyArray.removeAll()
-                historyArrayAccount.removeAll()
-                sorted.removeAll()
-                groupByCategory.removeAll()
-                tableView?.reloadInputViews()
-                tableView?.isSkeletonable = true
-                tableView?.showAnimatedGradientSkeleton()
-                
-                statusBarView.showAnimatedGradientSkeleton()
-                if indexItem ?? 0 < 3{
-                    product = products[indexPath.item]
-                    self.collectionView?.selectItem(at: indexPath, animated: true, scrollPosition: .bottom)
-                } else {
-                    product = products[indexPath.item]
-                    self.collectionView?.selectItem(at: indexPath, animated: true, scrollPosition: .bottom)
-
-                }
-                
-//                guard let cell = collectionView.cellForItem(at: indexPath) as? CardCollectionViewCell else {return}
-//                cell.showSelect()
-            } else {
-                
-
-                self.collectionView?.deselectItem(at: indexPath, animated: true)
-                let vc = ProductsViewController()
-                vc.addCloseButton()
-                vc.delegateProducts = self
-                present(vc, animated: true, completion: nil)
-            }
-//        }
-        
     }
     
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath) as? CardCollectionViewCell
         cell?.hideSelect()
+    }
+    
+    func showSelect(item: CardCollectionViewCell, indexPath: IndexPath) {
+        self.collectionView?.selectItem(at: indexPath, animated: true, scrollPosition: .bottom)
+        item.showSelect()
+        item.isSelected = true
+        item.cardImageView.alpha = 1
+        item.selectedView.isHidden = false
+    }
+    
+    func hideSelect(item: CardCollectionViewCell, indexPath: IndexPath) {
+        item.isSelected = false
+        item.hideSelect()
+        item.cardImageView.alpha = 0.5
+        item.selectedView.isHidden = true
     }
 }

@@ -17,13 +17,18 @@ struct CardsScrollModel {
     }
     
     var balance: String {
-        let cardBal: Double = card.balance
+        var cardBal: Double = card.balance
+        if card.productType == ProductType.loan.rawValue {
+            cardBal = card.totalAmountDebt
+        }
         return cardBal.currencyFormatter(symbol: card.currency ?? "")
     }
     
     var maskedcardNumber: String {
-        if card.productType == "DEPOSIT" {
+        if card.productType == "DEPOSIT" || card.productType == ProductType.loan.rawValue {
             return "\(card.accountNumber?.suffix(4) ?? "")"
+        } else if card.productType == ProductType.loan.rawValue {
+            return "\(card.settlementAccount?.suffix(4) ?? "")"
         } else {
             return "\(cardNumber?.suffix(4) ?? "")"
         }

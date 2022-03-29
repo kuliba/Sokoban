@@ -40,4 +40,13 @@ extension DateFormatter {
         
         return formatter
     }()
+    
+    static let dateAndMonth: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone(identifier: "UTC")
+        formatter.locale = Locale(identifier: "ru_RU")
+        formatter.dateFormat = "d MMMM"
+        
+        return formatter
+    }()
 }

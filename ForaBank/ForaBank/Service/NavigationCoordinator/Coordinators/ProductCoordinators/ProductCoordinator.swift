@@ -29,9 +29,7 @@ extension ProductCoordinator: ProductViewControllerDelegate{
         addChild(productCoordinator)
         productCoordinator.start()
         router.present(productCoordinator, animated: true)
-    }
-    
-    
+    } 
 }
 
 
