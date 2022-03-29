@@ -16,7 +16,6 @@ class PaymentsViewCoordinator: Coordinator {
     override func toPresentable() -> UIViewController {
         let navVC = UINavigationController(rootViewController: paymentsViewController)
         navVC.modalPresentationStyle = .fullScreen
-//        navVC.addCloseButton()
         return navVC
     }
 }

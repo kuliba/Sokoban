@@ -134,15 +134,7 @@ final class CardsScrollView: UIView {
                 self?.collectionView.reloadData()
             case .update(_, _, _, _):
                 print("REALM Update")
-                
-//                self?.collectionView.performBatchUpdates({
-//                    self?.collectionView.reloadItems(at: modifications.map { IndexPath(row: $0, section: 0) })
-//                    self?.collectionView.insertItems(at: insertions.map { IndexPath(row: $0, section: 0) })
-//                    self?.collectionView.deleteItems(at: deletions.map { IndexPath(row: $0, section: 0) })
-//                }, completion: { (completed: Bool) in
-//                    self?.collectionView.reloadData()
-//                })
-//                break
+        
             case .error(let error):
                 fatalError("\(error)")
             }
@@ -226,27 +218,6 @@ extension CardsScrollView: UICollectionViewDataSource {
             
             
         }
-        
-//        if indexPath.item == 0 {
-//            let cellFirst = collectionView.dequeueReusableCell(withReuseIdentifier: newReuseIdentifier, for: indexPath) as! NewCardCell
-//            return cellFirst
-//        } else if indexPath.item == cardList.count + 1 {
-//            let cellLast = collectionView.dequeueReusableCell(withReuseIdentifier: allReuseIdentifier, for: indexPath) as! AllCardCell
-//            return cellLast
-//        }  else {
-//
-//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CardCell
-//
-//            if isFiltered {
-//                print("DEBUG:", #function, filteredCardList.count, indexPath)
-//
-//                cell.card = filteredCardList[indexPath.item ]
-//            } else {
-//                print("DEBUG:", #function, cardList.count, indexPath)
-//                cell.card = cardList[indexPath.item - 1]
-//            }
-//            return cell
-//        }
     }
     
 }

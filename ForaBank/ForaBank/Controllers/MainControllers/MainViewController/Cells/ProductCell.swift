@@ -11,10 +11,7 @@ import SwiftUI
 
 
 class ProductCell: UICollectionViewCell, SelfConfiguringCell {
-    
-    //    var status: String?
-    //    var statusPC: String?
-    //
+ 
     func configure<U>(with value: U) where U : Hashable {
         guard let card = card else { return }
         
@@ -28,7 +25,6 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
         maskCardLabel.text = viewModel.maskedcardNumber
         maskCardLabel.textColor = viewModel.colorText
         logoImageView.image = viewModel.logoImage
-        
     }
     
     
@@ -150,7 +146,14 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
                 return
             }
             maskCardLabel.text = number.description
-            
+        }
+        
+        if card.productType == ProductType.loan.rawValue {
+            guard let number = card.settlementAccount?.suffix(4) else {
+                return
+            }
+            maskCardLabel.text = number.description
+            balanceLabel.text = viewModel.totalAmountDebt
         }
     }
     
@@ -163,7 +166,6 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
         layer.shadowRadius = 10
         layer.shadowOpacity = 0.4
         layer.shadowOffset = CGSize()
-        //        0.785
         let shadowPath = UIBezierPath(
             rect: CGRect(x: 15, y: 20,
                          width: self.frame.width * 0.785,
@@ -176,9 +178,8 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
         addSubview(cardNameLabel)
         addSubview(balanceLabel)
         addSubview(statusImage)
-        //        addSubview(slider ?? UISlider())
-        
-        
+
+        cardNameLabel.lineBreakMode = .byWordWrapping
         backgroundImageView.fillSuperview()
         balanceLabel.font = UIFont.boldSystemFont(ofSize: 14)
         maskCardLabel.anchor(top: self.topAnchor, left: self.leftAnchor, right: self.rightAnchor, paddingTop: 17, paddingLeft: 55, paddingRight: 12)
@@ -190,72 +191,40 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
         
         
         statusImage.center(inView: self)
+       
+        cardNameLabel.anchor(left: self.leftAnchor, bottom: balanceLabel.topAnchor, paddingTop: 25, paddingLeft: 12, paddingRight: 8)
         
         cardNameLabel.anchor(top: maskCardLabel.bottomAnchor, left: self.leftAnchor, right: self.rightAnchor,
                              paddingTop: 25, paddingLeft: 12, paddingRight: 8)
         cardNameLabel.font = UIFont.systemFont(ofSize: 14, weight: .light)
-        
+        cardNameLabel.anchor(width: 80)
+        cardNameLabel.numberOfLines = 2
         balanceLabel.anchor(left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor,
                             paddingLeft: 12, paddingBottom: 11, paddingRight: 30)
-        //        if NotificationCenter.default.post(name: .deviceDidShakeNotification, object: event){
-        //
-        //        }
-        //        if NotificationCenter.default.addObserver(self,, name: .deviceDidShakeNotification, object: nil){
-        //
-        //        }
-        
-        
-        if MyVariables.onBalanceLabel == true{
-            
-            blurView.frame = balanceLabel.bounds
-            balanceLabel.addSubview(blurView)
-            balanceLabel.sendSubviewToBack(blurView)
-            blurView.isHidden = false
-            blurView.alpha = 1
-        } else {
-            blurView.isHidden = true
-            blurView.alpha = 0
-            //            balanceLabel.textColor = .white
-            
-        }
-        
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(handleMassage),
-                                               name: .deviceDidShakeNotification,
-                                               object: nil)
-    }
-    
-    @objc func handleMassage(notification: NSNotification) {
 
-        if MyVariables.onBalanceLabel == true{
-            
-            blurView.frame = balanceLabel.bounds
-            balanceLabel.addSubview(blurView)
-            balanceLabel.sendSubviewToBack(blurView)
-            blurView.isHidden = false
-            blurView.alpha = 1
-        } else {
-            blurView.removeFromSuperview()
-            blurView.isHidden = true
-            blurView.alpha = 0
-            
-            
-            //            balanceLabel.textColor = .white
-            
-        }
     }
 }
 
 
-enum Status: String {
-    case blockedByBank = "Заблокирована банком"
+enum Status: String, Codable, Equatable {
+        
     case blockedByClient = "Блокирована по решению Клиента"
-    case notActivated = ""
+    case active = "Действует"
+    case issuedToClient = "Выдано клиенту"
+    case blockedByBank = "Заблокирована банком"
+    case notBlocked = "NOT_BLOCKED"
 }
 
 enum StatusPC: String{
-    case blocked = "3"
+    
+    case active = "0"
+    case operationsBlocked = "3"
+    case blockedByBank = "5"
+    case lost = "6"
+    case stolen = "7"
     case notActivated = "17"
+    case temporarilyBlocked = "20"
+    case blockedByClient = "21"
 }
 
 

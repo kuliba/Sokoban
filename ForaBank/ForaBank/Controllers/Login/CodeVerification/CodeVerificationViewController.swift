@@ -200,6 +200,10 @@ class CodeVerificationViewController: UIViewController {
 
                         }
                         
+                    } else {
+                        
+                        self?.smsCodeView.clearnText(error: "error")
+                        self?.showAlert(with: model.errorMessage ?? "", and: "")
                     }
                 }
             } else {
@@ -210,10 +214,6 @@ class CodeVerificationViewController: UIViewController {
                 }
             }
         }
-        
-//        pin(.change)
-//        pin(.deactive)
-//        pin(.validate)
 
     }
     

@@ -77,15 +77,19 @@ final class CardChooseView: UIView {
     private func setupRealmData(with model: UserAllCardsModel) {
         hideAll(false)
         
-        if model.productType == "ACCOUNT" || model.productType == "DEPOSIT" {
+        var balance = Double(model.balance)
+
+        if model.productType == "ACCOUNT" || model.productType == "DEPOSIT" || model.productType == ProductType.loan.rawValue {
             imageView.image = model.smallDesign?.convertSVGStringToImage() ?? #imageLiteral(resourceName: "AccImage")
             cardTypeImage.isHidden = true
         }
         else if model.productType == "CARD" {
             self.imageView.image = model.smallDesign?.convertSVGStringToImage() ?? #imageLiteral(resourceName: "credit-card")
         }
-        
-        let balance = Double(model.balance)
+                
+        if model.productType == ProductType.loan.rawValue {
+            balance = model.totalAmountDebt
+        }
         self.balanceLabel.text = balance.currencyFormatter(symbol: model.currency ?? "")
         let text = NSAttributedString(
             string: model.mainField ?? "",
@@ -94,6 +98,8 @@ final class CardChooseView: UIView {
         self.numberCardLabel.attributedText = text
         if model.productType == "DEPOSIT" {
             self.maskNumberLabel.text = "• \(model.accountNumber?.suffix(4) ?? "")"
+        } else if model.productType == ProductType.loan.rawValue {
+            self.maskNumberLabel.text = "• \(model.settlementAccount?.suffix(4) ?? "")"
         } else {
             self.maskNumberLabel.text = "• \(model.number?.suffix(4) ?? "")"
         }
@@ -104,7 +110,7 @@ final class CardChooseView: UIView {
     private func setupData(with model: GetProductListDatum) {
         hideAll(false)
         
-        if model.productType == "ACCOUNT" || model.productType == "DEPOSIT" {
+        if model.productType == "ACCOUNT" || model.productType == "DEPOSIT" || model.product == ProductType.loan.rawValue {
             imageView.image = model.smallDesign?.convertSVGStringToImage() ?? #imageLiteral(resourceName: "AccImage")
             cardTypeImage.isHidden = true
         }
@@ -112,8 +118,14 @@ final class CardChooseView: UIView {
             self.imageView.image = model.smallDesign?.convertSVGStringToImage() ?? #imageLiteral(resourceName: "credit-card")
         }
         
-        let balance = Double(model.balance ?? 0)
+        var balance = Double(model.balance ?? 0)
+        
+        if model.productType == ProductType.loan.rawValue, let totalAmountDebt = model.totalAmountDebt {
+            balance = totalAmountDebt
+        }
+        
         self.balanceLabel.text = balance.currencyFormatter(symbol: model.currency ?? "")
+
         let text = NSAttributedString(
 //            string: model.mainField ?? model.productName ?? "",
             string: model.mainField ?? "",

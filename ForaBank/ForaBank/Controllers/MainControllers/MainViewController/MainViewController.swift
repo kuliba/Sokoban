@@ -596,29 +596,6 @@ extension MainViewController {
     }
 }
 
-extension MainViewController: FirstControllerDelegate {
-    
-    func sendData(data: [GetProductListDatum]) {
-        //        DispatchQueue.main.async {
-        //            self.getCardList { data, errorMessage in
-        //                guard let listProducts = data else {return}
-        //                self.products.removeAll()
-        //                self.productList.removeAll()
-        //                for i in listProducts.prefix(3) {
-        //                    self.products.append(PaymentsModel(productList: i))
-        //                }
-        //                if listProducts.prefix(3).count < 3{
-        //                    self.products.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
-        //                } else if listProducts.prefix(3).count == 3{
-        //                    self.products.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
-        //                }
-        //                self.productList = data ?? []
-        //            }
-        //        }
-    }
-    
-}
-
 extension MainViewController: ChildViewControllerDelegate {
     func childViewControllerResponse(productList: [GetProductListDatum]) {
         showAlert(with: "ОБновляет", and: "")
