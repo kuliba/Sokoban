@@ -232,7 +232,10 @@ class MainViewController: UIViewController {
     private func setupSearchBar() {
         view.addSubview(searchBar)
         
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(openSetting))
+        searchBar.searchIcon.addGestureRecognizer(gesture)
         searchBar.searchIcon.image = UIImage(named: "ProfileImage")
+        
         searchBar.textField.text = ""
         searchBar.textField.placeholder = ""
         searchBar.textField.isEnabled = false
@@ -240,18 +243,24 @@ class MainViewController: UIViewController {
         searchBar.searchIconWidth.constant = 40
         searchBar.searchIconHeight.constant = 40
         
-        searchBar.secondButton.image = UIImage(named: "Avatar")?.withRenderingMode(.alwaysTemplate)
-        searchBar.bellIcon.tintColor = .black
+        searchBar.trailingLeftButton.setImage(UIImage(named: "searchBarIcon"), for: .normal)
+        searchBar.trailingLeftButton.isEnabled = false
         
-        searchBar.secondButton.tintColor = .black
-        searchBar.secondButton.isUserInteractionEnabled = true
-        searchBar.secondButton.alpha = 1
+        searchBar.trailingRightButton.setImage(UIImage(named: "belliconsvg"), for: .normal)
+        searchBar.trailingRightButton.tintColor = .black
         
-        let gesture = UITapGestureRecognizer(target: self, action: #selector(openSetting))
-        searchBar.secondButton.addGestureRecognizer(gesture)
-        searchBar.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, height: 48)
+        searchBar.anchor(
+            top: view.safeAreaLayoutGuide.topAnchor,
+            left: view.leftAnchor,
+            right: view.rightAnchor,
+            paddingTop: 0, paddingLeft: 0,
+            paddingRight: 0, height: 48)
+
+        searchBar.trailingLeftAction = {
+            // TODO: - Func Search Button Tapped
+        }
         
-        searchBar.bellTapped = {
+        searchBar.trailingRightAction = {
             let pushHistory = PushHistoryViewController.storyboardInstance()!
             let nc = UINavigationController(rootViewController: pushHistory)
             nc.modalPresentationStyle = .fullScreen

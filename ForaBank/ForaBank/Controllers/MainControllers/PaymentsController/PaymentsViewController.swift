@@ -63,7 +63,7 @@ class PaymentsViewController: UIViewController {
         searchContact.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 48)
         searchContact.textField.alpha = 0.5
         searchContact.searchIcon.alpha = 0.5
-        searchContact.bellIcon.isHidden = true
+        searchContact.trailingLeftButton.isHidden = true
         setupData()
         setupSearchBar()
         setupCollectionView()
@@ -98,7 +98,7 @@ class PaymentsViewController: UIViewController {
     }
 
 // MARK: QR
-    @objc func openSetting() {
+    @objc func openQRCamera() {
         PermissionHelper.checkCameraAccess(isAllowed: { granted, alert in
                 if granted{
                     DispatchQueue.main.async {
@@ -118,11 +118,8 @@ class PaymentsViewController: UIViewController {
     }
     
     private func setupSearchBar() {
-        searchContact.secondButton.tintColor = .black
-        
-        let gesture = UITapGestureRecognizer(target: self, action: #selector(openSetting))
-        searchContact.secondButton.addGestureRecognizer(gesture)
-        
+        searchContact.trailingRightButton.tintColor = .black
+        searchContact.trailingRightAction = { self.openQRCamera() }
     }
     
     private func setupCollectionView() {
