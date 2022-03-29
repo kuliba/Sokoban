@@ -132,15 +132,24 @@ class MainViewController: UIViewController {
     
     func updateProductsViewModels(with products: Results<UserAllCardsModel>) {
         
-        var productsViewModels = [PaymentsModel]()
-        
-        for product in products {
+        if products.count > 0 {
+
+            var productsViewModels = [PaymentsModel]()
             
-            productsViewModels.append(PaymentsModel(productListFromRealm: product))
+            for product in products {
+                
+                productsViewModels.append(PaymentsModel(productListFromRealm: product))
+            }
+            productsViewModels.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
+            
+            self.productsViewModels = productsViewModels
+            
+            
+        } else {
+            
+            self.productsViewModels = []
+            
         }
-        productsViewModels.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
-        
-        self.productsViewModels = productsViewModels
         
         reloadData(with: nil)
     }
@@ -402,7 +411,7 @@ class MainViewController: UIViewController {
             NSLayoutConstraint.activate([
                 refreshView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                 refreshView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                refreshView.topAnchor.constraint(equalTo: view.topAnchor, constant: 48),
+                refreshView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: -4),
                 refreshView.heightAnchor.constraint(equalToConstant: 4)
             ])
 
@@ -578,7 +587,7 @@ extension MainViewController {
         
         private func optionSelector(with productTypes: [ProductType], selected: ProductType?) -> OptionSelectorView.ViewModel? {
             
-            guard productTypes.isEmpty == false else {
+            guard productTypes.count > 1 else {
                 return nil
             }
             
