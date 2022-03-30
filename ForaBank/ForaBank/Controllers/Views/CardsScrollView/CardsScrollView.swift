@@ -84,11 +84,13 @@ final class CardsScrollView: UIView {
     func commonInit(onlyMy: Bool, onlyCard: Bool = false, deleteDeposit: Bool = false, loadProducts: Bool = true) {
         self.onlyMy = onlyMy
         self.onlyCard = onlyCard
+        
+        let clientId = UserDefaults.standard.object(forKey: "clientId") as? Int
         if loadProducts {
             updateObjectWithNotification()
             cardListRealm?.forEach({ op in
                 if onlyCard {
-                    if ( op.productType == "CARD" && op.isMain == true) {
+                    if ( op.productType == "CARD" && op.isMain == true && op.ownerID == clientId ?? 0) {
                     
                         cardList.append(op)
                     }
@@ -98,7 +100,10 @@ final class CardsScrollView: UIView {
                             cardList.append(op)
                         }
                     } else {
-                        cardList.append(op)
+                        if (op.ownerID == clientId ?? 0 && op.isMain == true) {
+                            print("clientId", op.ownerID, clientId ?? 0)
+                            cardList.append(op)
+                        }
                     }
                 }
             })

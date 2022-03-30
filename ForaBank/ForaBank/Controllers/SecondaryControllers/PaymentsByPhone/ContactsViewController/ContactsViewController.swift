@@ -27,7 +27,15 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
     
     var subtitleCellValue = SubtitleCellValue.phoneNumber
     var multiSelectEnabled: Bool = false //Default is single selection contact
-    var banksActive = false
+    var banksActive = false {
+        didSet {
+            if banksActive == true {
+                userPhoneView.isHidden = true
+            } else {
+                userPhoneView.isHidden = false
+            }
+        }
+    }
     var seeall: Bool?
     var stackView = UIStackView()
     var firstTap = true
@@ -133,7 +141,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
         lastPaymentsCollectionView.showsHorizontalScrollIndicator = false
         viewLine.anchor(width:  UIScreen.main.bounds.width + 20, height: 1)
         viewLine.backgroundColor = UIColor(red: 0.96, green: 0.96, blue: 0.97, alpha: 1)
-        userPhoneView.anchor()
+    
         userPhoneView.topLineView.isHidden = true
         switch seeall {
         case true:
@@ -191,6 +199,8 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
                 self.orderedBanks.removeAll()
                 self.getLastPhonePayments()
             }
+            self.banksActive = true
+            self.tableView.reloadData()
         }
         
     }
