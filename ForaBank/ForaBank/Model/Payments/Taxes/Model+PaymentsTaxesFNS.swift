@@ -19,6 +19,9 @@ extension Model {
             if let operatorParameterValue = paymentsParameterValue(parameters, id: paramOperator),
                 let operatorSelected = Operator(rawValue: operatorParameterValue) {
                 
+                // remove all search type depended parameters
+                let updatedParameters = paymentsParametersRemove(parameters, filter: ["a3_dutyCategory_1_1", "a3_BillNumber_1_1"])
+                
                 switch operatorSelected {
                 case .fns:
                     
@@ -33,7 +36,7 @@ extension Model {
                         title: "Категория платежа",
                         options: fnsCategoriesList.map{ .init(id: $0.value, name: $0.text, icon: ImageData(with: $0.svgImage) ?? .parameterSample)}, affectsHistory: true)
                     
-                    completion(.success( parameters + [categoryParameter]))
+                    completion(.success(updatedParameters + [categoryParameter]))
                     
                 case .fnsUin:
                     
@@ -58,12 +61,12 @@ extension Model {
                     
                     // number
                     let numberParameter = Payments.ParameterInput(
-                        Parameter(id: "a3_BillNumber_1_1", value: "18810192110276578924"),
+                        Parameter(id: "a3_BillNumber_1_1", value: "18204437200029004095"),
                         icon: .parameterDocument,
                         title: "УИН",
                         validator: .init(minLength: 1, maxLength: nil, regEx: nil))
                     
-                    completion(.success( parameters + [numberParameter]))
+                    completion(.success(updatedParameters + [numberParameter]))
                     
                 default:
                     completion(.failure(Payments.Error.unexpectedOperatorValue))
@@ -120,7 +123,7 @@ extension Model {
                         do {
                             
                             let transferStepData = try await paymentsTransferAnywayStep(with: updatedParameters, include: ["a3_dutyCategory_1_1", divisionParameterId], step: .initial)
-                            let nextStepParameters = paymentsTaxesNextStepParameters(for: transferStepData, samples: ["a3_INN_4_1": "7723013452", "a3_OKTMO_5_1": "45390000"])
+                            let nextStepParameters = try paymentsTaxesNextStepParameters(for: transferStepData, samples: ["a3_INN_4_1": "7723013452", "a3_OKTMO_5_1": "45390000"])
 
                             completion(.success(updatedParameters + nextStepParameters))
                             
@@ -158,7 +161,7 @@ extension Model {
                             let stepParameters = parameters + [divisionParameter]
 
                             let transferStepData = try await paymentsTransferAnywayStep(with: stepParameters, include: ["a3_dutyCategory_1_1", divisionParameterId], step: .initial)
-                            let nextStepParameters = paymentsTaxesNextStepParameters(for: transferStepData, samples: ["a3_INN_4_1": "7723013452", "a3_OKTMO_5_1": "45390000"])
+                            let nextStepParameters = try paymentsTaxesNextStepParameters(for: transferStepData, samples: ["a3_INN_4_1": "7723013452", "a3_OKTMO_5_1": "45390000"])
 
                             completion(.success(stepParameters + nextStepParameters))
                             
@@ -174,13 +177,10 @@ extension Model {
                     
                     do {
 
-                        let transferData = try await paymentsTransferAnywayStep(with: parameters, include: ["a3_BillNumber_1_1"], step: .initial)
+                        let transferStepData = try await paymentsTransferAnywayStep(with: parameters, include: ["a3_BillNumber_1_1"], step: .initial)
+                        let nextStepParameters = try paymentsTaxesNextStepParameters(for: transferStepData)
                         
-                        //FIXME: same parameter for nex step
-                        // ["id: a3_BillNumber_1_1 value: 18810192110276578924 title: УИН: data: %String type: Input"]
-                        print(transferData.parameterListForNextStep.map{ $0.debugDescription })
-
-                        completion(.failure(Payments.Error.missingParameter))
+                        completion(.success(parameters + nextStepParameters))
                         
                     } catch {
                         
@@ -210,13 +210,30 @@ extension Model {
                     do {
  
                         let transferStepData = try await paymentsTransferAnywayStep(with: parameters, include: ["a3_categorySelect_3_1", "a3_INN_4_1", "a3_OKTMO_5_1", "a3_DIVISION_4_1"], step: .next)
-                        let nextStepParameters = paymentsTaxesNextStepParameters(for: transferStepData)
+                        let nextStepParameters = try paymentsTaxesNextStepParameters(for: transferStepData)
 
                         completion(.success(updatedParameters + nextStepParameters))
                         
                     } catch {
                         
                         print(error.localizedDescription)
+                        completion(.failure(error))
+                    }
+                }
+                
+            case .fnsUin:
+                Task {
+                    
+                    do {
+
+                        let transferStepData = try await paymentsTransferAnywayStep(with: parameters, include: ["a3_fio_4_1", "a3_address_10_1"], step: .next)
+                        print(transferStepData.parameterListForNextStep.map{ $0.debugDescription })
+                        let nextStepParameters = try paymentsTaxesNextStepParameters(for: transferStepData)
+                        
+                        completion(.success(parameters + nextStepParameters))
+                        
+                    } catch {
+                        
                         completion(.failure(error))
                     }
                 }
@@ -249,7 +266,7 @@ extension Model {
         
                             try await paymentsTransferAnywayStep(with: parameters, include: ["a3_categorySelect_3_1", "a3_INN_4_1", "a3_OKTMO_5_1", "a3_DIVISION_4_1"], step: .next)
                             
-                            try await paymentsTransferAnywayStep(with: parameters, include: ["a3_fio_1_2", "a3_address_2_2", "a3_docType_3_2", "a3_docValue_4_2"], step: .next, isAmountRequired: true)
+                            try await paymentsTransferAnywayStep(with: parameters, include: ["a3_fio_1_2", "a3_address_2_2", "a3_docType_3_2", "a3_docValue_4_2"], step: .next)
            
                             completion(.success(parameters))
                             
@@ -268,8 +285,8 @@ extension Model {
                         
                         do {
                             
-                            let transferStepData = try await paymentsTransferAnywayStep(with: updatedParameters, include: ["a3_fio_1_2", "a3_address_2_2", "a3_docType_3_2", "a3_docValue_4_2"], step: .next, isAmountRequired: true)
-                            let nextStepParameters = paymentsTaxesNextStepParameters(for: transferStepData)
+                            let transferStepData = try await paymentsTransferAnywayStep(with: updatedParameters, include: ["a3_fio_1_2", "a3_address_2_2", "a3_docType_3_2", "a3_docValue_4_2"], step: .next)
+                            let nextStepParameters = try paymentsTaxesNextStepParameters(for: transferStepData)
                             
                             completion(.success(updatedParameters + nextStepParameters))
                             

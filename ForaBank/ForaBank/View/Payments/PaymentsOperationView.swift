@@ -19,6 +19,9 @@ struct PaymentsOperationView: View {
             
             ScrollView(showsIndicators: false) {
                 
+                Color.clear
+                    .frame(height: 40)
+                
                 VStack(spacing: 20) {
                     
                     ForEach(viewModel.itemsVisible) { item in

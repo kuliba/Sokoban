@@ -53,6 +53,8 @@ class PaymentsViewModel: ObservableObject {
             .sink { [unowned self] action in
                 switch action {
                 case let payload as ModelAction.Payment.Services.Response:
+                    self.action.send(PaymentsViewModelAction.Spinner.Hide())
+                    
                     switch payload {
                     case .select(let selectServiceParameter):
                         // multiple services for category
@@ -68,6 +70,8 @@ class PaymentsViewModel: ObservableObject {
                     }
                     
                 case let payload as ModelAction.Payment.Begin.Response:
+                    self.action.send(PaymentsViewModelAction.Spinner.Hide())
+                    
                     switch payload {
                     case .success(let operation):
                         
@@ -83,6 +87,8 @@ class PaymentsViewModel: ObservableObject {
                     }
                     
                 case let payload as ModelAction.Payment.Complete.Response:
+                    self.action.send(PaymentsViewModelAction.Spinner.Hide())
+                    
                     switch payload {
                     case .success(let paymentSuccess):
                         successViewModel = PaymentsSuccessViewModel(model, paymentSuccess: paymentSuccess, dismissAction: { [weak self] in self?.action.send(PaymentsViewModelAction.Dismiss())})
