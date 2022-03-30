@@ -67,6 +67,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                 if error != nil {
                     self?.showAlert(with: "Ошибка", and: error!)
                 }
+                
                 guard let data = data else { return }
                 self?.cardListView.cardList = data
                 
@@ -253,12 +254,10 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                     }
                     
                     if data?.statusCode == 102 {
-                        self?.showAlert(with: "Ошибка", and: "Минимальная сумма платежа 10 рублей")
+                        self?.showAlert(with: "Ошибка", and: data?.errorMessage ?? "")
                         completion("")
                         return
                     }
-                    
-                    
                     
                     if data?.statusCode == 0 {
                         let model = ConfirmViewControllerModel(type: .mobilePayment)
