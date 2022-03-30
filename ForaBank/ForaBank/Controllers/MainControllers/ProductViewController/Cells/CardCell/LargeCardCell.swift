@@ -48,6 +48,19 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
         label.text = ""
         return label
     }()
+    
+    public let dateEndLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 14 )
+        label.text = ""
+        return label
+    }()
+    
+    private let dividerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        return view
+    }()
 
     public let balanceLabel: UILabel = {
         let label = UILabel()
@@ -84,6 +97,8 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
         return label
     }()
     
+    
+    
     public let backgroundImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleToFill
@@ -113,9 +128,12 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
         guard let card = card else { return }
         
         let viewModel = CardViewModelFromRealm(card: card)
+        print(viewModel)
         backgroundImageView.image = card.XLDesign?.convertSVGStringToImage()
         balanceLabel.text = viewModel.fullBalance
         balanceLabel.textColor = viewModel.colorText
+        dateEndLabel.text = viewModel.dateEnd
+        dateEndLabel.textColor = viewModel.colorText
         amountLabel.textColor = viewModel.colorText
         cardNameLabel.text = viewModel.cardName
         cardNameLabel.textColor = viewModel.colorText
@@ -144,6 +162,14 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
             amountLabel.text =  ""
         }
         
+        if card.productType != ProductType.loan.rawValue {
+            dateEndLabel.isHidden = true
+            dividerView.isHidden = true
+        } else {
+            dateEndLabel.isHidden = false
+            dividerView.isHidden = false
+        }
+        
         maskCardLabel.textColor = viewModel.colorText
         logoImageView.image = viewModel.logoImage
     }
@@ -169,10 +195,14 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
         addSubview(balanceLabel)
         addSubview(interestRate)
         addSubview(amountLabel)
+        addSubview(dateEndLabel)
+        addSubview(dividerView)
         
         backgroundImageView.fillSuperview()
         
-        maskCardLabel.anchor(top: self.topAnchor, left: self.leftAnchor, right: self.rightAnchor, paddingTop: 15, paddingLeft: 55, paddingRight: 12)
+        maskCardLabel.anchor(top: self.topAnchor, left: self.leftAnchor, paddingTop: 15, paddingLeft: 55, paddingRight: 12)
+        dividerView.anchor(top: self.topAnchor, left: maskCardLabel.rightAnchor, paddingTop: 16, paddingLeft: 10, width: 1, height: 14)
+        dateEndLabel.anchor(top: self.topAnchor, left: dividerView.rightAnchor, paddingTop: 15, paddingLeft: 10)
         
         logoImageView.centerY(inView: maskCardLabel)
         logoImageView.anchor(left: self.leftAnchor,

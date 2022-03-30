@@ -70,7 +70,6 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
                 contact.phoneNumber[0] = format(phoneNumber:  contact.phoneNumber.first!.description) ?? ""
             }
             contactCollectionView.reloadData()
-            //            setupCollectionView()
         }
     }// array of PhoneContact(It is model find it below)
     var filter: ContactsFilter = .none
@@ -83,6 +82,10 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
         
         tableView.keyboardDismissMode = .interactive
         tableView.keyboardDismissMode = .onDrag
+        if #available(iOS 15.0, *) {
+            tableView.sectionHeaderTopPadding = 0.0
+        }
+        
         view.backgroundColor = .white
         
         self.delegate = self
@@ -313,10 +316,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
                                 var phoneNumberToCompare = phoneNumberString.components(
                                     separatedBy: NSCharacterSet.decimalDigits.inverted).joined(separator: "").dropFirst()
                                 
-//                                if self.check(phoneNumberToCompare)  {
-//                                    phoneNumberToCompare = String(phoneNumberToCompare.dropFirst())
-//                                    print("phoneNumberToCompare String(phoneNumberToCompare.dropFirst()) \(String(phoneNumberToCompare.dropFirst()))")
-//                                }
+
                                 let phoneNumberFin = phoneNumberToCompare.prefix(phoneNumberToCompareAgainst.count)
                                 if phoneNumberFin == phoneNumberToCompareAgainst {
                                     self.filteredContacts.append(contact)
@@ -591,21 +591,17 @@ extension ContactsViewController: UICollectionViewDelegate, UICollectionViewData
             self.present(navController, animated: true, completion: nil)
             
         } else if collectionView == lastPaymentsCollectionView {
+            
             let vc = PaymentByPhoneViewController(viewModel: PaymentByPhoneViewModel())
             if lastPhonePayment.count > 0 {
+                
                 vc.viewModel.bankId = lastPhonePayment[indexPath.row].bankID ?? ""
+                vc.viewModel.phoneNumber = selectPhoneNumber
             } else {
+                
                 vc.viewModel.bankId = lastPayment[indexPath.row].bankID ?? ""
                 vc.viewModel.phoneNumber = lastPayment[indexPath.item].phoneNumber
                 vc.summTransctionField.text = lastPayment[indexPath.item].amount ?? ""
-            }
-            if lastPhonePayment.count > 0 {
-                let mask = StringMask(mask: "+7(000) 00-00-00")
-                var phone = mask.unmask(string: selectPhoneNumber)
-                phone?.removeFirst()
-                vc.viewModel.phoneNumber = phone
-            } else {
-                vc.viewModel.phoneNumber = lastPayment[indexPath.item].phoneNumber
             }
             
             vc.modalPresentationStyle = .fullScreen

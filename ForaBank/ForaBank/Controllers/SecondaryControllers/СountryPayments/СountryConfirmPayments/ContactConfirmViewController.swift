@@ -449,7 +449,7 @@ class ContactConfurmViewController: UIViewController {
                 currTransctionField.isHidden = false
             }
             currTransctionField.text = model.summInCurrency
-            
+            cardToField.model = model.cardToRealm
             
         case .phoneNumber, .phoneNumberSBP:
             cardToField.isHidden = true
@@ -718,8 +718,6 @@ class ContactConfurmViewController: UIViewController {
     }
     
     @objc func doneButtonTapped() {
-//        doneButton.isEnabled = false
-//        doneButton.backgroundColor = .systemGray2
         doneButtonIsEnabled(true)
         guard var code = smsCodeField.textField.text else { return }
         if code.isEmpty {
@@ -946,8 +944,6 @@ class ContactConfurmViewController: UIViewController {
                 let nav = UINavigationController(rootViewController: vc)
                 nav.modalPresentationStyle = .fullScreen
                 self.present(nav, animated: true, completion: nil)
-//                self.doneButton.isEnabled = true
-//                self.doneButton.backgroundColor = .red
                 complition()
             }
         }
