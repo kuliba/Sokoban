@@ -2,7 +2,7 @@
   "data": {
     "amount": 100,
     "creditAmount": 100,
-    "currencyAmount": "100.00",
+    "currencyAmount": "RUB",
     "currencyPayee": "RUB",
     "currencyPayer": "RUB",
     "currencyRate": 86.7,

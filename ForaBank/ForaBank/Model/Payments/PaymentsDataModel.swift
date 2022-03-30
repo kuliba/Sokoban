@@ -115,7 +115,7 @@ enum Payments {
             if let anywayTransferResponse = response as? TransferAnywayResponseData,
                 let currencyValue = anywayTransferResponse.currencyAmount {
                 
-                return Currency(description: currencyValue)
+                return currencyValue
                 
             } else if let parameter = operation.parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.amount.rawValue }) as? Payments.ParameterAmount {
                 

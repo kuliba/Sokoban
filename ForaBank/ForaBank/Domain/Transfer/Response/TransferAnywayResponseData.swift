@@ -15,7 +15,7 @@ class TransferAnywayResponseData: TransferResponseData {
     let needSum: Bool
     let parameterListForNextStep: [ParameterData]
     
-    internal init(amount: Double?, creditAmount: Double?, currencyAmount: String?, currencyPayee: String?, currencyPayer: String?, currencyRate: Double?, debitAmount: Double?,  fee: Double?, needMake: Bool?, needOTP: Bool?, payeeName: String?, documentStatus: DocumentStatus?, paymentOperationDetailId: Int, additionalList: [AdditionalData], finalStep: Bool, infoMessage: String?, needSum: Bool, parameterListForNextStep: [ParameterData]) {
+    internal init(amount: Double?, creditAmount: Double?, currencyAmount: Currency?, currencyPayee: Currency?, currencyPayer: Currency?, currencyRate: Double?, debitAmount: Double?,  fee: Double?, needMake: Bool?, needOTP: Bool?, payeeName: String?, documentStatus: DocumentStatus?, paymentOperationDetailId: Int, additionalList: [AdditionalData], finalStep: Bool, infoMessage: String?, needSum: Bool, parameterListForNextStep: [ParameterData]) {
         
         self.additionalList = additionalList
         self.finalStep = finalStep

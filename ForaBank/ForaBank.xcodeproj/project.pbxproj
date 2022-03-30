@@ -640,6 +640,7 @@
 		77A411E927EC456800D36E46 /* Model+Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A411E827EC456800D36E46 /* Model+Settings.swift */; };
 		77A411EB27EC624000D36E46 /* Model+Deposits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A411EA27EC624000D36E46 /* Model+Deposits.swift */; };
 		77A411ED27F4325100D36E46 /* Model+PaymentsTaxesFSSPMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A411EC27F4325100D36E46 /* Model+PaymentsTaxesFSSPMock.swift */; };
+		77A6A9DD27F4D5BE00CE7E28 /* MakeAnywayTransferResponseMax.json in Resources */ = {isa = PBXBuildFile; fileRef = 77A6A9DC27F4D5BE00CE7E28 /* MakeAnywayTransferResponseMax.json */; };
 		77AC9159277A518B00E49D5D /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = 77AC9158277A518B00E49D5D /* Shimmer */; };
 		77B751FF27D10F9900FB51C7 /* CSRFCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B751FE27D10F9900FB51C7 /* CSRFCredentials.swift */; };
 		77C026E6275E6299002BE1F6 /* GKHHistoryModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C026E5275E6299002BE1F6 /* GKHHistoryModelTests.swift */; };
@@ -1664,6 +1665,7 @@
 		77A411E827EC456800D36E46 /* Model+Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Settings.swift"; sourceTree = "<group>"; };
 		77A411EA27EC624000D36E46 /* Model+Deposits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Deposits.swift"; sourceTree = "<group>"; };
 		77A411EC27F4325100D36E46 /* Model+PaymentsTaxesFSSPMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTaxesFSSPMock.swift"; sourceTree = "<group>"; };
+		77A6A9DC27F4D5BE00CE7E28 /* MakeAnywayTransferResponseMax.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = MakeAnywayTransferResponseMax.json; sourceTree = "<group>"; };
 		77B751FE27D10F9900FB51C7 /* CSRFCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFCredentials.swift; sourceTree = "<group>"; };
 		77C026E5275E6299002BE1F6 /* GKHHistoryModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHHistoryModelTests.swift; sourceTree = "<group>"; };
 		77C3828E27E0C9D600B5246E /* TextFieldMaskableViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldMaskableViewComponent.swift; sourceTree = "<group>"; };
@@ -3883,6 +3885,7 @@
 				77517FC627A94FB4005CFB77 /* GetVerificationCodeResponseMin.json */,
 				77517FB427A94D4D005CFB77 /* IsSingleServiceResponseGeneric.json */,
 				77517FB627A94D76005CFB77 /* MakeTransferResponseGeneric.json */,
+				77A6A9DC27F4D5BE00CE7E28 /* MakeAnywayTransferResponseMax.json */,
 				77517FB827A94D9F005CFB77 /* ReturnOutgoingResponseGeneric.json */,
 				77517FD527A98150005CFB77 /* GetProductDetailsResponseGeneric.json */,
 				77517FD727A98189005CFB77 /* GetProductListResponseGeneric.json */,
@@ -5861,6 +5864,7 @@
 				6820924827A97C4B003DCAFD /* CreateFastPaymentContractResponseGeneric.json in Resources */,
 				68AD340B27998A5D00647665 /* GetCardStatementResponseGeneric.json in Resources */,
 				684193002799C98F00B4E184 /* ConsentMe2MePullResponseDataDecodingGeneric.json in Resources */,
+				77A6A9DD27F4D5BE00CE7E28 /* MakeAnywayTransferResponseMax.json in Resources */,
 				77EC58D32771D69E0054D75C /* DeletePaymentTemplatesResponseGeneric.json in Resources */,
 				77517FC727A94FB4005CFB77 /* GetVerificationCodeResponseMin.json in Resources */,
 				68E7653C279705E6005860FE /* SetDeviceSettingDecodingGeneric.json in Resources */,
