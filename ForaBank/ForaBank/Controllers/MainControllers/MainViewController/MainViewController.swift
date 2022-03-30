@@ -132,15 +132,24 @@ class MainViewController: UIViewController {
     
     func updateProductsViewModels(with products: Results<UserAllCardsModel>) {
         
-        var productsViewModels = [PaymentsModel]()
-        
-        for product in products {
+        if products.count > 0 {
+
+            var productsViewModels = [PaymentsModel]()
             
-            productsViewModels.append(PaymentsModel(productListFromRealm: product))
+            for product in products {
+                
+                productsViewModels.append(PaymentsModel(productListFromRealm: product))
+            }
+            productsViewModels.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
+            
+            self.productsViewModels = productsViewModels
+            
+            
+        } else {
+            
+            self.productsViewModels = []
+            
         }
-        productsViewModels.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
-        
-        self.productsViewModels = productsViewModels
         
         reloadData(with: nil)
     }
@@ -223,7 +232,10 @@ class MainViewController: UIViewController {
     private func setupSearchBar() {
         view.addSubview(searchBar)
         
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(openSetting))
+        searchBar.searchIcon.addGestureRecognizer(gesture)
         searchBar.searchIcon.image = UIImage(named: "ProfileImage")
+        
         searchBar.textField.text = ""
         searchBar.textField.placeholder = ""
         searchBar.textField.isEnabled = false
@@ -231,18 +243,24 @@ class MainViewController: UIViewController {
         searchBar.searchIconWidth.constant = 40
         searchBar.searchIconHeight.constant = 40
         
-        searchBar.secondButton.image = UIImage(named: "Avatar")?.withRenderingMode(.alwaysTemplate)
-        searchBar.bellIcon.tintColor = .black
+        searchBar.trailingLeftButton.setImage(UIImage(named: "searchBarIcon"), for: .normal)
+        searchBar.trailingLeftButton.isEnabled = false
         
-        searchBar.secondButton.tintColor = .black
-        searchBar.secondButton.isUserInteractionEnabled = true
-        searchBar.secondButton.alpha = 1
+        searchBar.trailingRightButton.setImage(UIImage(named: "belliconsvg"), for: .normal)
+        searchBar.trailingRightButton.tintColor = .black
         
-        let gesture = UITapGestureRecognizer(target: self, action: #selector(openSetting))
-        searchBar.secondButton.addGestureRecognizer(gesture)
-        searchBar.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingRight: 0, height: 48)
+        searchBar.anchor(
+            top: view.safeAreaLayoutGuide.topAnchor,
+            left: view.leftAnchor,
+            right: view.rightAnchor,
+            paddingTop: 0, paddingLeft: 0,
+            paddingRight: 0, height: 48)
+
+        searchBar.trailingLeftAction = {
+            // TODO: - Func Search Button Tapped
+        }
         
-        searchBar.bellTapped = {
+        searchBar.trailingRightAction = {
             let pushHistory = PushHistoryViewController.storyboardInstance()!
             let nc = UINavigationController(rootViewController: pushHistory)
             nc.modalPresentationStyle = .fullScreen
@@ -402,7 +420,7 @@ class MainViewController: UIViewController {
             NSLayoutConstraint.activate([
                 refreshView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                 refreshView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                refreshView.topAnchor.constraint(equalTo: view.topAnchor, constant: 48),
+                refreshView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: -4),
                 refreshView.heightAnchor.constraint(equalToConstant: 4)
             ])
 
@@ -578,7 +596,7 @@ extension MainViewController {
         
         private func optionSelector(with productTypes: [ProductType], selected: ProductType?) -> OptionSelectorView.ViewModel? {
             
-            guard productTypes.isEmpty == false else {
+            guard productTypes.count > 1 else {
                 return nil
             }
             
@@ -594,29 +612,6 @@ extension MainViewController {
             }
         }
     }
-}
-
-extension MainViewController: FirstControllerDelegate {
-    
-    func sendData(data: [GetProductListDatum]) {
-        //        DispatchQueue.main.async {
-        //            self.getCardList { data, errorMessage in
-        //                guard let listProducts = data else {return}
-        //                self.products.removeAll()
-        //                self.productList.removeAll()
-        //                for i in listProducts.prefix(3) {
-        //                    self.products.append(PaymentsModel(productList: i))
-        //                }
-        //                if listProducts.prefix(3).count < 3{
-        //                    self.products.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
-        //                } else if listProducts.prefix(3).count == 3{
-        //                    self.products.append(PaymentsModel(id: 33, name: "Cм.все", iconName: "openCard", controllerName: ""))
-        //                }
-        //                self.productList = data ?? []
-        //            }
-        //        }
-    }
-    
 }
 
 extension MainViewController: ChildViewControllerDelegate {

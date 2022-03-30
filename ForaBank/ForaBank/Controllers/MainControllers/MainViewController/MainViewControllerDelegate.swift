@@ -48,7 +48,7 @@ extension MainViewController: UICollectionViewDelegate {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         
         case .currentsExchange:
-            print("Currency")
+            break
 
         case .pay:
             if indexPath.row == 0 {
@@ -170,7 +170,6 @@ extension MainViewController: TemplatesListViewHostingViewControllerDelegate {
         }
                 
         let viewController = ProductViewController()
-        viewController.delegate = self
         viewController.indexItem = 0
 
         delegate?.goProductViewController(productIndex: 0, product: firstProduct, products: productsList)

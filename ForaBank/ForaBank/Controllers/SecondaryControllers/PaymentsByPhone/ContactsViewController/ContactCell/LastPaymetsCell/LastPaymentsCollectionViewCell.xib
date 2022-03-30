@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -15,44 +16,57 @@
                 <rect key="frame" x="0.0" y="0.0" width="100" height="108"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="phoneBackgroundImage" translatesAutoresizingMaskIntoConstraints="NO" id="NSS-Mw-wuz">
-                        <rect key="frame" x="22" y="0.0" width="56" height="56"/>
-                        <color key="backgroundColor" red="0.96470588235294119" green="0.96470588235294119" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <color key="tintColor" red="0.82745098039999998" green="0.82745098039999998" blue="0.82745098039999998" alpha="1" colorSpace="calibratedRGB"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="56" id="yda-eE-Vg3"/>
-                            <constraint firstAttribute="width" constant="56" id="zQV-tP-zmd"/>
-                        </constraints>
-                    </imageView>
-                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="h1L-yD-tqZ">
-                        <rect key="frame" x="0.0" y="62" width="100" height="40"/>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="biS-Rl-1Ex">
+                        <rect key="frame" x="0.0" y="0.0" width="100" height="108"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Андрей Крюков123" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pw5-r3-fdj">
-                                <rect key="frame" x="0.0" y="0.0" width="100" height="26.5"/>
-                                <fontDescription key="fontDescription" type="system" weight="light" pointSize="11"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Фора - Банк" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LYN-u9-OOJ">
-                                <rect key="frame" x="0.0" y="26.5" width="100" height="13.5"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                                <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="phoneBackgroundImage" translatesAutoresizingMaskIntoConstraints="NO" id="NSS-Mw-wuz">
+                                <rect key="frame" x="22" y="0.0" width="56" height="56"/>
+                                <color key="backgroundColor" red="0.96470588235294119" green="0.96470588235294119" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="tintColor" red="0.82745098039999998" green="0.82745098039999998" blue="0.82745098039999998" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="56" id="yda-eE-Vg3"/>
+                                    <constraint firstAttribute="width" constant="56" id="zQV-tP-zmd"/>
+                                </constraints>
+                            </imageView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="h1L-yD-tqZ">
+                                <rect key="frame" x="0.0" y="62" width="100" height="40"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Андрей Крюков123" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pw5-r3-fdj">
+                                        <rect key="frame" x="20.5" y="0.0" width="59.5" height="26.5"/>
+                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="11"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Фора - Банк" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LYN-u9-OOJ">
+                                        <rect key="frame" x="17" y="26.5" width="66.5" height="13.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                        <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="uVG-Tr-Zsx"/>
+                                </constraints>
+                            </stackView>
                         </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="100" id="uVG-Tr-Zsx"/>
+                            <constraint firstItem="h1L-yD-tqZ" firstAttribute="leading" secondItem="biS-Rl-1Ex" secondAttribute="leading" id="5br-qD-EAb"/>
+                            <constraint firstAttribute="top" secondItem="NSS-Mw-wuz" secondAttribute="top" id="E5N-w6-vOb"/>
+                            <constraint firstItem="NSS-Mw-wuz" firstAttribute="centerX" secondItem="biS-Rl-1Ex" secondAttribute="centerX" id="JDj-FD-mv9"/>
+                            <constraint firstItem="h1L-yD-tqZ" firstAttribute="trailing" secondItem="biS-Rl-1Ex" secondAttribute="trailing" id="JXQ-O4-461"/>
+                            <constraint firstItem="h1L-yD-tqZ" firstAttribute="centerX" secondItem="biS-Rl-1Ex" secondAttribute="centerX" id="Nlx-9b-xLW"/>
+                            <constraint firstItem="h1L-yD-tqZ" firstAttribute="top" secondItem="NSS-Mw-wuz" secondAttribute="bottom" constant="6" id="wHI-wJ-FR7"/>
                         </constraints>
-                    </stackView>
+                    </view>
                 </subviews>
             </view>
             <constraints>
-                <constraint firstAttribute="top" secondItem="NSS-Mw-wuz" secondAttribute="top" id="1zm-uz-td2"/>
-                <constraint firstItem="h1L-yD-tqZ" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="841-Gd-47C"/>
-                <constraint firstItem="h1L-yD-tqZ" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="Sqv-yh-wB0"/>
-                <constraint firstItem="h1L-yD-tqZ" firstAttribute="top" secondItem="NSS-Mw-wuz" secondAttribute="bottom" constant="6" id="bgo-o4-tbk"/>
-                <constraint firstItem="h1L-yD-tqZ" firstAttribute="trailing" secondItem="gTV-IL-0wX" secondAttribute="trailing" id="jSa-yd-F4w"/>
-                <constraint firstItem="NSS-Mw-wuz" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="ung-Q4-rtR"/>
+                <constraint firstItem="biS-Rl-1Ex" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="0Gu-If-LyR"/>
+                <constraint firstAttribute="trailing" secondItem="biS-Rl-1Ex" secondAttribute="trailing" id="BnL-aO-0Su"/>
+                <constraint firstItem="biS-Rl-1Ex" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="IN9-fu-DaU"/>
+                <constraint firstItem="biS-Rl-1Ex" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="Ljq-U4-e9S"/>
+                <constraint firstItem="biS-Rl-1Ex" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="dxm-eQ-FKr"/>
             </constraints>
             <size key="customSize" width="151" height="93"/>
             <connections>
@@ -65,5 +79,8 @@
     </objects>
     <resources>
         <image name="phoneBackgroundImage" width="56" height="56"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>

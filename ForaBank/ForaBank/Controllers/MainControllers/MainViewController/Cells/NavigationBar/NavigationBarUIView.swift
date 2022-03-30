@@ -9,10 +9,12 @@ import UIKit
 
 class NavigationBarUIView: UIView {
 
-    var bellTapped: (() -> Void)?
+    var trailingLeftAction: (() -> Void)?
+    var trailingRightAction: (() -> Void)?
     
-    @IBOutlet weak var secondButton: UIImageView!
-    @IBOutlet weak var bellIcon: UIButton!
+    @IBOutlet weak var trailingLeftButton: UIButton!
+    @IBOutlet weak var trailingRightButton: UIButton!
+    
     @IBOutlet weak var textField: MaskedTextField!
     @IBOutlet weak var searchIcon: UIImageView!
     
@@ -20,9 +22,13 @@ class NavigationBarUIView: UIView {
     @IBOutlet weak var searchIconHeight: NSLayoutConstraint!
     
     @IBOutlet weak var foraAvatarImageView: UIImageView!
-    @IBAction func bellButtonTapped(_ sender: Any) {
-        bellTapped?()
+    
+    @IBAction func trailingLeftButtonTapped(_ sender: Any) {
+        trailingLeftAction?()
     }
-
+    
+    @IBAction func trailingRightButtonTapped(_ sender: Any) {
+        trailingRightAction?()
+    }
     
 }

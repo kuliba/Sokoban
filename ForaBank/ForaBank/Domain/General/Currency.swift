@@ -26,3 +26,8 @@ extension Currency: Codable {
         try container.encode(description)
     }
 }
+
+extension Currency {
+    
+    static let rub = Currency(description: "RUB")
+}

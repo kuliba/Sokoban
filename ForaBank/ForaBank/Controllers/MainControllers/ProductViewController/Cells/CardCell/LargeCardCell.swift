@@ -28,7 +28,6 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
     //MARK: - Properties
     var card: UserAllCardsModel? {
         didSet {
-//            backgroundUnlockColor = card?.background[0] ?? "ffffff"
             configure()
             
         }
@@ -40,7 +39,6 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
     private let logoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-//        imageView.setDimensions(height: 20, width: 20)
         return imageView
     }()
     
@@ -50,11 +48,31 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
         label.text = ""
         return label
     }()
+    
+    public let dateEndLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 14 )
+        label.text = ""
+        return label
+    }()
+    
+    private let dividerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        return view
+    }()
 
     public let balanceLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "Inter-Regular", size: 14)
-//        label.font = UIFont.boldSystemFont(ofSize: 11 )
+        label.textAlignment = .left
+        label.text = ""
+        return label
+    }()
+    
+    public let amountLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "Inter-Regular", size: 12)
         label.textAlignment = .left
         label.text = ""
         return label
@@ -65,7 +83,6 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
         label.layer.masksToBounds = true
         label.layer.cornerRadius = 8
         label.font = UIFont(name: "Inter-Regular", size: 12)
-//        label.font = UIFont.boldSystemFont(ofSize: 11 )
         label.textAlignment = .left
         label.text = ""
         return label
@@ -80,15 +97,13 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
         return label
     }()
     
+    
+    
     public let backgroundImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleToFill
         return imageView
     }()
-    
-    
-
-    
     
     //MARK: - Lifecycle
     override init(frame: CGRect) {
@@ -113,20 +128,46 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
         guard let card = card else { return }
         
         let viewModel = CardViewModelFromRealm(card: card)
+        print(viewModel)
         backgroundImageView.image = card.XLDesign?.convertSVGStringToImage()
         balanceLabel.text = viewModel.fullBalance
         balanceLabel.textColor = viewModel.colorText
+        dateEndLabel.text = viewModel.dateEnd
+        dateEndLabel.textColor = viewModel.colorText
+        amountLabel.textColor = viewModel.colorText
         cardNameLabel.text = viewModel.cardName
         cardNameLabel.textColor = viewModel.colorText
         cardNameLabel.alpha = 0.5
+        
         if card.productType == "DEPOSIT"{
             guard let number = viewModel.card.accountNumber else {
                 return
             }
             maskCardLabel.text = String(number.digits.suffix(4))
         } else {
+            
             maskCardLabel.text = viewModel.maskedcardNumber
-
+        }
+        
+        if card.productType == ProductType.loan.rawValue {
+            
+            balanceLabel.text = "\(viewModel.totalAmountDebt ?? "")"
+            
+            maskCardLabel.text = viewModel.settlementAccount?.suffix(4).description
+            
+            amountLabel.text =  "/ \(viewModel.amount)"
+            
+        } else {
+            
+            amountLabel.text =  ""
+        }
+        
+        if card.productType != ProductType.loan.rawValue {
+            dateEndLabel.isHidden = true
+            dividerView.isHidden = true
+        } else {
+            dateEndLabel.isHidden = false
+            dividerView.isHidden = false
         }
         
         maskCardLabel.textColor = viewModel.colorText
@@ -140,7 +181,6 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
         layer.shadowRadius = 6
         layer.shadowOpacity = 0.3
         layer.shadowOffset = CGSize()
-//        0.785
         let shadowPath = UIBezierPath(
             rect: CGRect(x: 15, y: 20,
                          width: self.frame.width * 0.785,
@@ -154,71 +194,33 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
         addSubview(cardNameLabel)
         addSubview(balanceLabel)
         addSubview(interestRate)
-//        addSubview(customizeSlideToOpen)
-//
-//        customizeSlideToOpen.delegate = self
-//        customizeSlideToOpen.center(inView: self)
-//        customizeSlideToOpen.anchor(width: 167, height: 48)
-//        slideToUnlock.center(inView: self)
+        addSubview(amountLabel)
+        addSubview(dateEndLabel)
+        addSubview(dividerView)
         
         backgroundImageView.fillSuperview()
         
-        maskCardLabel.anchor(top: self.topAnchor, left: self.leftAnchor, right: self.rightAnchor, paddingTop: 15, paddingLeft: 55, paddingRight: 12)
-//        maskCardLabel.centerY(inView: logoImageView)
+        maskCardLabel.anchor(top: self.topAnchor, left: self.leftAnchor, paddingTop: 15, paddingLeft: 55, paddingRight: 12)
+        dividerView.anchor(top: self.topAnchor, left: maskCardLabel.rightAnchor, paddingTop: 16, paddingLeft: 10, width: 1, height: 14)
+        dateEndLabel.anchor(top: self.topAnchor, left: dividerView.rightAnchor, paddingTop: 15, paddingLeft: 10)
+        
         logoImageView.centerY(inView: maskCardLabel)
         logoImageView.anchor(left: self.leftAnchor,
                              paddingLeft: 28, width: 18, height: 18)
-        
         
         cardNameLabel.anchor(left: self.leftAnchor, bottom: balanceLabel.topAnchor, right: self.rightAnchor,
                              paddingTop: 12, paddingLeft: 12, paddingBottom: 5, paddingRight: 8)
         
         balanceLabel.font = UIFont.boldSystemFont(ofSize: 14)
-        balanceLabel.anchor(left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor,
+        balanceLabel.anchor(left: self.leftAnchor, bottom: self.bottomAnchor,
                             paddingLeft: 12, paddingBottom: 16, paddingRight: 30)
         interestRate.anchor(bottom: self.bottomAnchor, right: self.rightAnchor,
                             paddingLeft: 12, paddingBottom: 16, paddingRight: 10)
         interestRate.backgroundColor = UIColor(hexString: "e1e1e2")
         
+        amountLabel.anchor(left: balanceLabel.rightAnchor, bottom: balanceLabel.bottomAnchor, right: self.rightAnchor)
+        amountLabel.textAlignment = .left
 
-        if MyVariables.onBalanceLabel == true{
-          
-            blurView.frame = balanceLabel.bounds
-            balanceLabel.addSubview(blurView)
-            balanceLabel.sendSubviewToBack(blurView)
-            blurView.isHidden = false
-            blurView.alpha = 1
-        } else {
-            blurView.isHidden = true
-            blurView.alpha = 0
-//            balanceLabel.textColor = .white
-        }
-
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(handleMassage),
-                                               name: .deviceDidShakeNotification,
-                                               object: nil)
         
     }
-    
-    @objc func handleMassage(notification: NSNotification) {
-        if MyVariables.onBalanceLabel == true{
-          
-            blurView.frame = balanceLabel.bounds
-            balanceLabel.addSubview(blurView)
-            balanceLabel.sendSubviewToBack(blurView)
-            blurView.isHidden = false
-            blurView.alpha = 1
-        } else {
-            blurView.removeFromSuperview()
-            blurView.isHidden = true
-            blurView.alpha = 0
-
-            
-//            balanceLabel.textColor = .white
-
-        }
-        
-        }
-    
 }

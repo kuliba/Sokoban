@@ -53,7 +53,7 @@ class TransferData: Codable {
 
 extension TransferData {
     
-    struct Payer: Codable, Equatable {
+    struct Payer: Codable, Equatable, CustomDebugStringConvertible {
         
         let inn: String?
         let accountId: Int?
@@ -61,6 +61,11 @@ extension TransferData {
         let cardId: Int?
         let cardNumber: String?
         let phoneNumber: String?
+        
+        var debugDescription: String {
+            
+            "cardId: \(String(describing: cardId)), accountId: \(String(describing: accountId))"
+        }
     }
 }
 
@@ -86,5 +91,14 @@ extension TransferData {
         
         var isNewPayment: Bool { self == .initial }
         var check: Bool { self == .check }
+    }
+}
+
+extension TransferData: CustomDebugStringConvertible {
+    
+    @objc
+    var debugDescription: String {
+        
+        "TransferData | amount: \(String(describing: amount)), check: \(String(describing: check)), currencyAmount: \(String(describing: currencyAmount)), payer: \(payer.debugDescription)"
     }
 }

@@ -45,6 +45,7 @@ class PaymentsConfirmViewModel: PaymentsOperationViewModel {
                     let results = itemsAll.map{ ($0.result, $0.source.affectsHistory) }
                     let update = operation.update(with: results)
                     model.action.send(ModelAction.Payment.Complete.Request(operation: update.operation))
+                    rootActions.spinner.show()
      
                 default:
                     break

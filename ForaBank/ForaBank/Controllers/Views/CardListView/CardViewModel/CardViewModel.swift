@@ -105,9 +105,37 @@ struct CardViewModelFromRealm {
         return card.number
     }
     
+    var dateEnd: String? {
+        if card.productType == ProductType.deposit.rawValue || card.productType == ProductType.loan.rawValue {
+            let date = Date(timeIntervalSince1970: TimeInterval(card.dateLong/1000))
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "MM/dd"
+            dateFormatter.timeZone = .current
+            dateFormatter.locale = Locale(identifier: "ru_RU")
+            let localDate = dateFormatter.string(from: date)
+            return localDate
+        } else {
+            return nil
+        }
+    }
+    
+    var settlementAccount: String? {
+        return card.settlementAccount
+    }
+    
+    var totalAmountDebt: String? {
+        let cardBal: Double = card.totalAmountDebt
+        return cardBal.fullCurrencyFormatter(symbol: card.currency ?? "")
+    }
+    
     var balance: String {
         let cardBal: Double = card.balance
         return cardBal.currencyFormatter(symbol: card.currency ?? "")
+    }
+    
+    var amount: String {
+        let cardBal: Double = card.amount
+        return cardBal.fullCurrencyFormatter(symbol: card.currency ?? "")
     }
     
     var fullBalance: String {

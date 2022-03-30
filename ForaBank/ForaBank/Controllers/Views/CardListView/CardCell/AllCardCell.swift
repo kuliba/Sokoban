@@ -55,14 +55,6 @@ class AllCardCell: UICollectionViewCell, SelfConfiguringCell {
     }
     
     //MARK: - Helpers
-//    func configure() {
-//        guard let card = card else { return }
-//
-//        let viewModel = CardViewModel(card: card)
-//        balanceLabel.text = viewModel.balance
-//        maskCardLabel.text = viewModel.maskedcardNumber
-//        logoImageView.image = viewModel.logoImage
-//    }
     
     func setupUI() {
         backgroundColor = #colorLiteral(red: 0.9647058824, green: 0.9647058824, blue: 0.968627451, alpha: 1)
