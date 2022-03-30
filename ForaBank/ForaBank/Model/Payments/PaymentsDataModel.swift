@@ -84,20 +84,47 @@ enum Payments {
             self.operationDetailId = operationDetailId
         }
 
-        init?(with transferResponse: TransferResponseBaseData) {
+        init(with response: TransferResponseBaseData, operation: Payments.Operation) throws {
             
-            guard let anywayTransferResponse = transferResponse as? TransferAnywayResponseData,
-            let documentStatus = anywayTransferResponse.documentStatus,
-            let amount = anywayTransferResponse.amount,
-            let currency = anywayTransferResponse.currencyAmount else {
-                return nil
-            }
-            
-            self.status = Status(with: documentStatus)
-            self.amount = amount
-            self.currency = Currency(description: currency)
+            self.status = Status(with: response.documentStatus)
+            self.amount = try Self.amount(with: response, operation: operation)
+            self.currency = try Self.currency(with: response, operation: operation)
             self.icon = nil
-            self.operationDetailId = anywayTransferResponse.paymentOperationDetailId
+            self.operationDetailId = response.paymentOperationDetailId
+        }
+        
+        static func amount(with response: TransferResponseBaseData, operation: Payments.Operation) throws -> Double {
+        
+            if let anywayTransferResponse = response as? TransferAnywayResponseData,
+                let amount = anywayTransferResponse.amount {
+                
+                return amount
+                
+            } else if let parameter = operation.parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.amount.rawValue }) as? Payments.ParameterAmount {
+                
+                return parameter.amount
+                
+            } else {
+                
+                throw Payments.Error.missingAmountParameter
+            }
+        }
+        
+        static func currency(with response: TransferResponseBaseData, operation: Payments.Operation) throws -> Currency {
+        
+            if let anywayTransferResponse = response as? TransferAnywayResponseData,
+                let currencyValue = anywayTransferResponse.currencyAmount {
+                
+                return Currency(description: currencyValue)
+                
+            } else if let parameter = operation.parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.amount.rawValue }) as? Payments.ParameterAmount {
+                
+                return parameter.currency
+                
+            } else {
+                
+                throw Payments.Error.missingCurrency
+            }
         }
         
         enum Status {
@@ -115,7 +142,14 @@ enum Payments {
                 }
             }
             
-            init(with documentStatus: TransferResponseBaseData.DocumentStatus){
+            init(with documentStatus: TransferResponseBaseData.DocumentStatus?) {
+                
+                //FIXME: TransferResponseBaseData.DocumentStatus must be not optional
+                guard let documentStatus = documentStatus else {
+                    
+                    self = .inProgress
+                    return
+                }
                 
                 switch documentStatus {
                 case .complete: self = .complete
@@ -140,6 +174,7 @@ enum Payments {
         case missingCodeParameter
         case missingAmountParameter
         case missingAnywayTransferAdditional
+        case failedObtainProductId
         case failedTransferWithEmptyDataResponse
         case failedTransfer(status: ServerStatusCode, message: String?)
         case failedMakeTransferWithEmptyDataResponse

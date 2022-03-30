@@ -60,10 +60,31 @@ class TransferAnywayData: TransferData {
 
 extension TransferAnywayData {
     
-    struct Additional: Codable, Equatable {
+    struct Additional: Codable, Equatable, CustomDebugStringConvertible {
         
         let fieldid: Int
         let fieldname: String
         let fieldvalue: String
+        
+        var debugDescription: String {
+            
+            "id: \(fieldid), name: \(fieldname), value: \(fieldvalue)"
+        }
+    }
+}
+
+extension TransferAnywayData {
+    
+    override var debugDescription: String {
+        
+        var additionsDescription = ""
+        
+        for addition in additional {
+            
+            additionsDescription += addition.debugDescription
+            additionsDescription += " | "
+        }
+        
+        return super.debugDescription + ", puref: \(String(describing: puref))" + ", additional: " + additionsDescription
     }
 }

@@ -23,7 +23,7 @@ class PaymentsOperationViewModel: ObservableObject {
     internal var operation: Payments.Operation
     internal var items: CurrentValueSubject<[PaymentsParameterViewModel], Never> = .init([])
     internal var isAdditionalItemsCollapsed: CurrentValueSubject<Bool, Never> = .init(true)
-    private let rootActions: PaymentsViewModel.RootActions
+    internal let rootActions: PaymentsViewModel.RootActions
     internal let model: Model
     internal var bindings = Set<AnyCancellable>()
     internal var itemsBindings = Set<AnyCancellable>()

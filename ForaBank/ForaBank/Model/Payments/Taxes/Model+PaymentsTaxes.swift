@@ -9,7 +9,7 @@ import Foundation
 
 extension Model {
     
-    func paymentsTaxesNextStepParameters(for transferData: TransferAnywayResponseData, samples: [String: String] = [:]) -> [ParameterRepresentable] {
+    func paymentsTaxesNextStepParameters(for transferData: TransferAnywayResponseData, samples: [String: String] = [:]) throws -> [ParameterRepresentable] {
         
         var parameters = [ParameterRepresentable]()
         
@@ -30,7 +30,7 @@ extension Model {
                     options: categoryParameterOptions, autoContinue: false)
                 parameters.append(result)
                 
-            case "a3_INN_4_1", "a3_OKTMO_5_1", "a3_DIVISION_4_1","a3_docValue_4_2", "a3_docNumber_2_2", "a3_BillNumber_1_1", "a3_IPnumber_1_1":
+            case "a3_INN_4_1", "a3_OKTMO_5_1", "a3_DIVISION_4_1","a3_docValue_4_2", "a3_docNumber_2_2", "a3_BillNumber_1_1", "a3_IPnumber_1_1", "a3_lastName_1_2", "a3_firstName_2_2", "a3_middleName_3_2", "a3_docNumber_2_1", "a3_lastName_1_3", "a3_firstName_2_3", "a3_middleName_3_3":
                 let result = Payments.ParameterInput(
                     .init(id: parameter.id, value: parameterValue),
                     icon: parameter.iconData ?? .parameterDocument,
@@ -38,18 +38,18 @@ extension Model {
                     validator: .init(minLength: 1, maxLength: nil, regEx: nil))
                 parameters.append(result)
                                 
-            case "a3_fio_1_2":
+            case "a3_fio_1_2", "a3_fio_4_1":
                 let result = Payments.ParameterName(id: parameter.id, value: parameterValue, title: parameter.title)
                 parameters.append(result)
                 
-            case "a3_address_2_2":
+            case "a3_address_2_2", "a3_address_10_1", "a3_address_4_2", "a3_address_4_3":
                 let result = Payments.ParameterInfo(
                     .init(id: parameter.id, value: parameterValue),
                     icon: parameter.iconData ?? .parameterLocation,
                     title: "Адрес проживания")
                 parameters.append(result)
                 
-            case "a3_docType_3_2", "a3_docName_1_2":
+            case "a3_docType_3_2", "a3_docName_1_1":
                 let result = Payments.ParameterSelectSimple(
                     Parameter(id: parameter.id, value: parameterValue),
                     icon: parameter.iconData ?? .parameterSample,
@@ -63,9 +63,25 @@ extension Model {
             }
         }
         
+        func productId() -> Int? {
+            
+            if let cardId = paymentsFirstProductId(of: .card, currency: .rub) {
+                
+                return cardId
+                
+            } else {
+                
+                return paymentsFirstProductId(of: .account, currency: .rub)
+            }
+        }
+        
         if transferData.needSum == true {
             
-            parameters.append(Payments.ParameterCard())
+            guard let productId = productId() else {
+                throw Payments.Error.failedObtainProductId
+            }
+            
+            parameters.append(Payments.ParameterCard(value: "\(productId)"))
             
             let amountParameter = Payments.ParameterAmount(
                 .init(id: Payments.Parameter.Identifier.amount.rawValue, value: nil),
@@ -88,4 +104,6 @@ extension Model {
         
         return parameters
     }
+    
+    
 }
