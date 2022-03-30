@@ -11,9 +11,9 @@ class TransferResponseData: TransferResponseBaseData {
 
     let amount: Double?
     let creditAmount: Double?
-    let currencyAmount: String?
-    let currencyPayee: String?
-    let currencyPayer: String?
+    let currencyAmount: Currency?
+    let currencyPayee: Currency?
+    let currencyPayer: Currency?
     let currencyRate: Double?
     let debitAmount: Double?
     let fee: Double?
@@ -21,7 +21,7 @@ class TransferResponseData: TransferResponseBaseData {
     let needOTP: Bool?
     let payeeName: String?
 
-    internal init(amount: Double?, creditAmount: Double?, currencyAmount: String?, currencyPayee: String?, currencyPayer: String?, currencyRate: Double?, debitAmount: Double?, fee: Double?, needMake: Bool?, needOTP: Bool?, payeeName: String?, documentStatus: DocumentStatus?, paymentOperationDetailId: Int) {
+    internal init(amount: Double?, creditAmount: Double?, currencyAmount: Currency?, currencyPayee: Currency?, currencyPayer: Currency?, currencyRate: Double?, debitAmount: Double?, fee: Double?, needMake: Bool?, needOTP: Bool?, payeeName: String?, documentStatus: DocumentStatus?, paymentOperationDetailId: Int) {
         
         self.amount = amount
         self.creditAmount = creditAmount
@@ -49,9 +49,9 @@ class TransferResponseData: TransferResponseBaseData {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         amount = try container.decodeIfPresent(Double.self, forKey: .amount)
         creditAmount = try container.decodeIfPresent(Double.self, forKey: .creditAmount)
-        currencyAmount = try container.decodeIfPresent(String.self, forKey: .currencyAmount)
-        currencyPayee = try container.decodeIfPresent(String.self, forKey: .currencyPayee)
-        currencyPayer = try container.decodeIfPresent(String.self, forKey: .currencyPayer)
+        currencyAmount = try container.decodeIfPresent(Currency.self, forKey: .currencyAmount)
+        currencyPayee = try container.decodeIfPresent(Currency.self, forKey: .currencyPayee)
+        currencyPayer = try container.decodeIfPresent(Currency.self, forKey: .currencyPayer)
         currencyRate = try container.decodeIfPresent(Double.self, forKey: .currencyRate)
         debitAmount = try container.decodeIfPresent(Double.self, forKey: .debitAmount)
         fee = try container.decodeIfPresent(Double.self, forKey: .fee)
