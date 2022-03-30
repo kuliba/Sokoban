@@ -121,6 +121,12 @@ class OperationDetailViewModel: ObservableObject {
             self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: productStatement.merchantName, category: "\(productStatement.groupName)")
             let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
             self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: productStatement.tranDate)
+            
+        default:
+            //FIXME: taxes && c2b
+            self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: productStatement.merchantName, category: "\(productStatement.groupName)")
+            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
+            self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: productStatement.tranDate)
         }
         
         self.actionButtons = nil
@@ -512,6 +518,10 @@ extension OperationDetailViewModel {
                     operationViewModel = operationViewModel.updated(with: feeViewModel)
                 }
             case .outsideOther, .insideOther, .betweenTheir, .insideBank, .notFinance, .outsideCash:
+                return operationViewModel
+                
+            default:
+                //FIXME: taxes & c2b
                 return operationViewModel
             }
   

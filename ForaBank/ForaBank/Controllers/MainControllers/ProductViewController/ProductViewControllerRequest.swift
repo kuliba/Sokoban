@@ -124,8 +124,8 @@ extension ProductViewController {
     
     
     func cardHistory(){
-        let body = ["cardNumber": product?.number
-        ] as [String : AnyObject]
+        
+        let body = ["id": product?.id] as [String : AnyObject]
         
         NetworkManager<GetCardStatementDecodableModel>.addRequest(.getCardStatement, [:], body) { model, error in
             if error != nil {
