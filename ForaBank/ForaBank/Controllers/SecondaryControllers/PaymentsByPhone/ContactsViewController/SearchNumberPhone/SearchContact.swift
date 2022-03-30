@@ -21,9 +21,6 @@ class SearchContact: UIView, UITextFieldDelegate{
     
     @IBOutlet weak var numberTextField: MaskedTextField!
     
-    @IBAction func didBegin(_ sender: UITextField) {
-        print("begin")
-    }
     @IBOutlet weak var buttonStackView: UIStackView!
     @IBOutlet weak var searchView: SearchContact!
     
@@ -33,7 +30,7 @@ class SearchContact: UIView, UITextFieldDelegate{
     
     private let maxNumberCount = 10
     private let regex = try! NSRegularExpression(pattern: "[\\+ \\s-\\(\\)]", options: .caseInsensitive)
-//
+    
     func format(phoneNumber: String, shouldRemoveLastDigit: Bool = false) -> String {
         guard !phoneNumber.isEmpty else { return "" }
         guard let regex = try? NSRegularExpression(pattern: "[\\s-\\(\\)]", options: .caseInsensitive) else { return "" }
@@ -49,28 +46,28 @@ class SearchContact: UIView, UITextFieldDelegate{
                 number = String(number[number.startIndex..<end])
             }
         } else {
-        number = regex.stringByReplacingMatches(in: phoneNumber, options: .init(rawValue: 0), range: r, withTemplate: "")
-        
-        if number.count > 10 {
-            let tenthDigitIndex = number.index(number.startIndex, offsetBy: 10)
-            number = String(number[number.startIndex..<tenthDigitIndex])
-        }
-
-        if shouldRemoveLastDigit {
-            let end = number.index(number.startIndex, offsetBy: number.count-1)
-            number = String(number[number.startIndex..<end])
-        }
-
-        if number.count < 7 {
-            let end = number.index(number.startIndex, offsetBy: number.count)
-            let range = number.startIndex..<end
-            number = number.replacingOccurrences(of: "(\\d{3})(\\d+)", with: "($1) $2", options: .regularExpression, range: range)
-
-        } else {
-            let end = number.index(number.startIndex, offsetBy: number.count)
-            let range = number.startIndex..<end
-            number = number.replacingOccurrences(of: "(\\d{3})(\\d{3})(\\d+)", with: "($1) $2-$3", options: .regularExpression, range: range)
-        }
+            number = regex.stringByReplacingMatches(in: phoneNumber, options: .init(rawValue: 0), range: r, withTemplate: "")
+            
+            if number.count > 10 {
+                let tenthDigitIndex = number.index(number.startIndex, offsetBy: 10)
+                number = String(number[number.startIndex..<tenthDigitIndex])
+            }
+            
+            if shouldRemoveLastDigit {
+                let end = number.index(number.startIndex, offsetBy: number.count-1)
+                number = String(number[number.startIndex..<end])
+            }
+            
+            if number.count < 7 {
+                let end = number.index(number.startIndex, offsetBy: number.count)
+                let range = number.startIndex..<end
+                number = number.replacingOccurrences(of: "(\\d{3})(\\d+)", with: "($1) $2", options: .regularExpression, range: range)
+                
+            } else {
+                let end = number.index(number.startIndex, offsetBy: number.count)
+                let range = number.startIndex..<end
+                number = number.replacingOccurrences(of: "(\\d{3})(\\d{3})(\\d+)", with: "($1) $2-$3", options: .regularExpression, range: range)
+            }
         }
         return number
     }
@@ -80,13 +77,26 @@ class SearchContact: UIView, UITextFieldDelegate{
         var fullString = textField.text ?? ""
         fullString.append(string)
         if range.length == 1 {
+            
             textField.text = format(phoneNumber: fullString, shouldRemoveLastDigit: true)
             delegateNumber?.passTextFieldText(textField: numberTextField)
-
-        } else {
+        } else if range.length > 1 {
+            
             textField.text = format(phoneNumber: fullString)
             delegateNumber?.passTextFieldText(textField: numberTextField)
-
+        } else {
+            
+            if fullString.digits.firstLetter() == "7" || fullString.digits.firstLetter() == "8", range.length == 0 {
+                
+                var number = fullString
+                number.remove(at: number.startIndex)
+                
+                textField.text = format(phoneNumber: number)
+                delegateNumber?.passTextFieldText(textField: numberTextField)
+            } else {
+                textField.text = format(phoneNumber: fullString.digits)
+                delegateNumber?.passTextFieldText(textField: numberTextField)
+            }
         }
         return false
     }
@@ -105,7 +115,7 @@ class SearchContact: UIView, UITextFieldDelegate{
     func textFieldDidEndEditing(_: UITextField) {
         delegateNumber?.showSelfPhoneView(true)
     }
-
+    
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -117,10 +127,10 @@ class SearchContact: UIView, UITextFieldDelegate{
         
         
     }
-
+    
 }
 extension UIView {
-   func roundCorners(corners: UIRectCorner, radius: CGFloat) {
+    func roundCorners(corners: UIRectCorner, radius: CGFloat) {
         let path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
         let mask = CAShapeLayer()
         mask.path = path.cgPath
@@ -130,32 +140,32 @@ extension UIView {
 
 
 extension CALayer {
-
-  func addBorder(edge: UIRectEdge, color: UIColor, thickness: CGFloat) {
-
-    let border = CALayer()
-
-    switch edge {
-    case .top:
-        border.frame = CGRect(x: 0, y: 0, width: self.frame.width, height: thickness)
-        break
-    case .bottom:
-        border.frame = CGRect(x: 0, y: self.frame.height - thickness, width: self.frame.width, height: thickness)
-        break
-    case .left:
-        border.frame = CGRect(x: 0, y: 0, width: thickness, height: self.frame.height)
-        break
-    case .right:
-        border.frame = CGRect(x: self.frame.width - thickness, y: 0, width: thickness, height: self.frame.height)
-        break
-    default:
-        break
+    
+    func addBorder(edge: UIRectEdge, color: UIColor, thickness: CGFloat) {
+        
+        let border = CALayer()
+        
+        switch edge {
+        case .top:
+            border.frame = CGRect(x: 0, y: 0, width: self.frame.width, height: thickness)
+            break
+        case .bottom:
+            border.frame = CGRect(x: 0, y: self.frame.height - thickness, width: self.frame.width, height: thickness)
+            break
+        case .left:
+            border.frame = CGRect(x: 0, y: 0, width: thickness, height: self.frame.height)
+            break
+        case .right:
+            border.frame = CGRect(x: self.frame.width - thickness, y: 0, width: thickness, height: self.frame.height)
+            break
+        default:
+            break
+        }
+        
+        border.backgroundColor = color.cgColor;
+        
+        addSublayer(border)
     }
-
-    border.backgroundColor = color.cgColor;
-
-    addSublayer(border)
-  }
 }
 
 
@@ -168,6 +178,6 @@ extension String  {
             return ""
         }
         return String(firstChar)
-}
-
+    }
+    
 }
