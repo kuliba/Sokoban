@@ -661,6 +661,10 @@ final class OperationDetailInfoViewModel: Identifiable {
             }
             
             cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)", iconType: .date, value: tranDateString))
+            
+        default:
+            //FIXME: implement taxes & c2b
+            break
   
         }
         
