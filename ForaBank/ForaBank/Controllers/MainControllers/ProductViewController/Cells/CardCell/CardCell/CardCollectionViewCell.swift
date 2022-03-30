@@ -34,10 +34,12 @@ class CardCollectionViewCell: UICollectionViewCell {
     }
     
     func showSelect(){
+        self.isUserInteractionEnabled = false
         self.selectedView.isHidden = false
     }
     
     func hideSelect(){
+        self.isUserInteractionEnabled = true
         self.selectedView.isHidden = true
     }
 }

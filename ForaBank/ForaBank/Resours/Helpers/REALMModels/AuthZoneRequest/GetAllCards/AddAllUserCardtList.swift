@@ -13,7 +13,7 @@ struct AddAllUserCardtList {
     
     static func add(_ completion: @escaping () -> Void) {
         
-        let params = ["isCard": "true", "isAccount": "true", "isDeposit": "true", "isLoan": "false"]
+        let params = ["isCard": "true", "isAccount": "true", "isDeposit": "true", "isLoan": "true"]
         
         NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, params, [:]) { model, error in
             

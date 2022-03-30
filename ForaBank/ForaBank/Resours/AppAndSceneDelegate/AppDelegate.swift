@@ -113,7 +113,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     fileprivate func RealmConfiguration() {
          // Версия БД (изменить на большую если меняем БД)
-         let schemaVersion: UInt64 = 22
+         let schemaVersion: UInt64 = 26
 
          let config = Realm.Configuration(
                  // Set the new schema version. This must be greater than the previously used
@@ -143,7 +143,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                              migration.deleteData(forType: "GKHOperatorsModel")
                              migration.deleteData(forType: "Parameters")
                          }
-                         if oldSchemaVersion < 22 {
+                         if oldSchemaVersion < 27 {
                              migration.deleteData(forType: "UserAllCardsModel")
                          }
                          if oldSchemaVersion < 10 {
@@ -474,23 +474,4 @@ extension Bundle {
     }
 }
 
-extension UIWindow {
- open override func motionEnded(_ motion: UIEvent.EventSubtype, with event:   UIEvent?) {
-     if motion == .motionShake {
-        print("Device shaken")
-//        NotificationCenter.default.post(name: .deviceDidShakeNotification, object: event)
-//        UserDefaults.standard.set(MyVariables.onBalanceLabel.toggle(), forKey: "blurBalanceLabel")
-        MyVariables.onBalanceLabel = false
-        
-        NotificationCenter.default.post(name: .deviceDidShakeNotification, object: nil)
-    }
-  }
-}
 
-extension NSNotification.Name {
-    public static let deviceDidShakeNotification = NSNotification.Name("MyDeviceDidShakeNotification")
-}
-
-struct MyVariables {
-    static var onBalanceLabel = false
-}

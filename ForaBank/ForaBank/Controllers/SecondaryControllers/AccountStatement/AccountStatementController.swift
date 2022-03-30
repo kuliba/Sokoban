@@ -213,7 +213,7 @@ class AccountStatementController: UIViewController {
             DispatchQueue.main.async {
                 let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap {$0} ?? []
                 cardList.forEach({ card in
-                    if card.id == cardId {
+                        if card.id == cardId {
                         self.cardFromField.model = card
                         if self.cardListView.isHidden == false {
                             self.hideView(self.cardListView, needHide: true)

@@ -393,10 +393,40 @@ extension ServerCommands {
             }
             
             struct Response: ServerResponse {
-
+                
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: TransferResponseBaseData?
+                
+                private enum CodingKeys : String, CodingKey {
+                    case statusCode, errorMessage, data
+                }
+                
+                internal init(statusCode: ServerStatusCode, errorMessage: String?, data: TransferResponseBaseData?) {
+                    self.statusCode = statusCode
+                    self.errorMessage = errorMessage
+                    self.data = data
+                }
+                
+                init(from decoder: Decoder) throws {
+                    
+                    let container = try decoder.container(keyedBy: CodingKeys.self)
+                    self.statusCode = try container.decode(ServerStatusCode.self, forKey: .statusCode)
+                    self.errorMessage = try container.decodeIfPresent(String.self, forKey: .errorMessage)
+                    
+                    if let anywayTransferData = try? container.decodeIfPresent(TransferAnywayResponseData.self, forKey: .data) {
+                        
+                        self.data = anywayTransferData
+                        
+                    } else if let transferData = try? container.decodeIfPresent(TransferResponseData.self, forKey: .data) {
+                        
+                        self.data = transferData
+                        
+                    } else {
+                        
+                        self.data = try container.decodeIfPresent(TransferResponseBaseData.self, forKey: .data)
+                    }
+                }
             }
             
             internal init(token: String, payload: Payload) {

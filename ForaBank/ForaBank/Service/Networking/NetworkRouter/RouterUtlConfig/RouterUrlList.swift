@@ -90,6 +90,7 @@ enum RouterUrlList: String {
     case getLatestMobilePayments
     case getMobileList
     case getAllLatestPayments
+    case getPersonsCredit
     case getOperationDetail
     case getNotifications
     case getPrintFormForAccountStatement
@@ -942,6 +943,16 @@ enum RouterUrlList: String {
                 return .failure(.urlError)
             }
             
+        case .getPersonsCredit:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getPersonsCredit.rawValue)
+            
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
         case .getOperationDetail:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getOperationDetail.rawValue)
             

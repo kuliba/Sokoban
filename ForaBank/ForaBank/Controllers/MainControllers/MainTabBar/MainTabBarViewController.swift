@@ -221,8 +221,11 @@ class MainTabBarViewController: UITabBarController {
             
             let a = model.data?.first
             let b = a?.fastPaymentContractAttributeList?.first?.phoneNumber ?? ""
+            let clientID = a?.fastPaymentContractAttributeList?.first?.clientID ?? 0
+            
             if model.statusCode == 0 {
                 UserDefaults.standard.set(b, forKey: "UserPhone")
+                UserDefaults.standard.set(clientID, forKey: "clientId")
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
 

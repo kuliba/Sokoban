@@ -38,6 +38,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                 self.activeProduct.removeAll()
                 self.notActivated.removeAll()
                 self.deposits.removeAll()
+                self.loans.removeAll()
                 for i in self.products{
                     self.totalMoney += i.balanceRUB
                     if i.statusPC == "17", i.status == "Действует" || i.status == "Выдано клиенту"{
@@ -51,6 +52,9 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                         continue
                     } else if i.productType == "DEPOSIT"{
                         self.deposits.append(i)
+                        continue
+                    } else if i.productType == ProductType.loan.rawValue {
+                        self.loans.append(i)
                         continue
                     }
                 }
@@ -81,6 +85,13 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
             self.tableView?.reloadData()
         }
     }
+    
+    var loans = [UserAllCardsModel](){
+        didSet {
+            self.tableView?.reloadData()
+        }
+    }
+    
     let totalMoneyView: TotalMoneyView = UIView.fromNib()
     
     var tableView: UITableView!
@@ -97,12 +108,27 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
         allProductList?.forEach({ product in
             products.append(product)
         })
-        
+    
         sectionData = MockItems.returnSectionInProducts()
         
         setupUI()
+        
     }
     
+    func longIntToDateString(longInt: Int) -> String?{
+        
+        let date = Date(timeIntervalSince1970: TimeInterval(longInt))
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeStyle = DateFormatter.Style.none//Set time style
+        dateFormatter.dateStyle = DateFormatter.Style.long //Set date style
+        
+        dateFormatter.dateFormat =  "dd.MM.yy"
+        dateFormatter.timeZone = .current
+        dateFormatter.locale = Locale(identifier: "ru_RU")
+        let localDate = dateFormatter.string(from: date)
+        
+        return localDate
+    }
     
     func setupUI() {
         title = "Мои продукты"
@@ -202,6 +228,8 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
             return activeProduct.count + 1
         case "Вклады":
             return deposits.count + 1
+        case "Кредиты":
+            return loans.count
         case "Заблокированные продукты":
             return blocked.count
         default:
@@ -271,6 +299,23 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                     }
                 }
             }
+        case "Кредиты":
+        
+                if loans.count > 0 {
+                    let str = loans[indexPath.row].accountNumber ?? ""
+                    cell.titleProductLabel.text = loans[indexPath.row].customName ?? loans[indexPath.row].mainField
+                    cell.numberProductLabel.text = "\(str.suffix(4))"
+                    cell.balanceLabel.text = "\(loans[indexPath.row].totalAmountDebt.currencyFormatter(symbol: loans[indexPath.row].currency ?? "") )"
+                    cell.coverpProductImage.image = loans[indexPath.row].smallDesign?.convertSVGStringToImage()
+                    cell.cardTypeImage.isHidden = true
+                    cell.typeOfProduct.text = "· \(loans[indexPath.row].settlementAccount?.suffix(4) ?? "") · Ставка \(loans[indexPath.row].currentInterestRate)%"
+                    
+                    if let date = longIntToDateString(longInt: loans[indexPath.row].dateLong/1000) {
+                        
+                        cell.typeOfProduct.text = "· \(loans[indexPath.row].settlementAccount?.suffix(4) ?? "") · Ставка \(loans[indexPath.row].currentInterestRate)%  · \(date)"
+                    }
+                    cell.cardTypeImage.isHidden = true
+                }
         case "Заблокированные продукты":
             if blocked.count > 0 {
                 let str = blocked[indexPath.item].numberMasked ?? ""
@@ -285,7 +330,6 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                 }
             }
         default:
-            //            cell.backgroundColor = .blue
             print("nil")
         }
         
@@ -311,6 +355,8 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                     viewController.product = self.activeProduct[indexPath.row]
                 case 2:
                     viewController.product = self.deposits[indexPath.row]
+                case 3:
+                    viewController.product = self.loans[indexPath.row]
                 case 6:
                     viewController.product = self.blocked[indexPath.row]
                 default:
@@ -328,12 +374,13 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                     delegateProducts?.sendMyDataBack(product: self.activeProduct[indexPath.row])
                 case 2:
                     delegateProducts?.sendMyDataBack(product: self.deposits[indexPath.row])
+                case 3:
+                    delegateProducts?.sendMyDataBack(product: self.loans[indexPath.row])
                 case 6:
                     delegateProducts?.sendMyDataBack(product: self.blocked[indexPath.row])
                 default:
                     print("default")
                 }
-                //        delegateProducts?.sendMyDataBack(product: self.products[0])
                 dismiss(animated: true, completion: nil)
             }
         }
@@ -390,9 +437,6 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                     self.showAlert(with: "Карта активирована", and: "")
                     
                     DispatchQueue.main.async {
-                        //                               self.getCardList{ cardList,error in
-                        //                                   print("")
-                        //                               }
                         AddAllUserCardtList.add() {
                             print("REALM Add")
                         }
@@ -444,6 +488,12 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
             }
         case "Вклады":
             if deposits.count == 0 {
+                label.alpha = 0.3
+            } else {
+                label.alpha = 1
+            }
+        case "Кредиты":
+            if loans.count == 0 {
                 label.alpha = 0.3
             } else {
                 label.alpha = 1

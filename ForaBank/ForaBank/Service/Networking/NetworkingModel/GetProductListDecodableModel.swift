@@ -25,18 +25,18 @@ extension GetProductListDecodableModel {
     init(data: Data) throws {
         self = try newJSONDecoder().decode(GetProductListDecodableModel.self, from: data)
     }
-
+    
     init(_ json: String, using encoding: String.Encoding = .utf8) throws {
         guard let data = json.data(using: encoding) else {
             throw NSError(domain: "JSONDecoding", code: 0, userInfo: nil)
         }
         try self.init(data: data)
     }
-
+    
     init(fromURL url: URL) throws {
         try self.init(data: try Data(contentsOf: url))
     }
-
+    
     func with(
         statusCode: Int?? = nil,
         errorMessage: String?? = nil,
@@ -48,11 +48,11 @@ extension GetProductListDecodableModel {
             data: data ?? self.data
         )
     }
-
+    
     func jsonData() throws -> Data {
         return try newJSONEncoder().encode(self)
     }
-
+    
     func jsonString(encoding: String.Encoding = .utf8) throws -> String? {
         return String(data: try self.jsonData(), encoding: encoding)
     }
@@ -78,6 +78,7 @@ struct GetProductListDatum: Codable{
     let balance: Double?
     let currency, productType, productName: String?
     let ownerID: Int?
+    let loanID: Int?
     let accountNumber: String?
     let allowDebit, allowCredit: Bool?
     var customName: String?
@@ -101,6 +102,39 @@ struct GetProductListDatum: Codable{
     let creditMinimumAmount: Double?
     let minimumBalance: Double?
     let balanceRUB: Double?
+    let amount: Double?
+    let clientID: Int?
+    let currencyCode: String?
+    let currencyNumber: Int?
+    let bankProductID: Int?
+    let finOperBrief: String?
+    let currentInterestRate: Double?
+    let principalDebt: Double?
+    let defaultPrincipalDebt: Double?
+    let totalAmountDebt: Double?
+    let principalDebtAccount: String?
+    let settlementAccount: String?
+    let settlementAccountId: Int?
+    let dateLong: Int?
+    let loanBaseParam: LoanBaseParam?
+    
+    struct LoanBaseParam: Codable, Equatable {
+        
+        let loanID: Int
+        let clientID: Int
+        let number: String
+        let currencyID: Int?
+        let currencyNumber: Int?
+        let currencyCode: String?
+        let minimumPayment: Double?
+        let gracePeriodPayment: Double?
+        let overduePayment: Double?
+        let availableExceedLimit: Double?
+        let ownFunds: Double?
+        let debtAmount: Double?
+        let totalAvailableAmount: Double?
+        let totalDebtAmount: Double?
+    }
     let isMain: Bool?
 }
 
@@ -110,18 +144,18 @@ extension GetProductListDatum {
     init(data: Data) throws {
         self = try newJSONDecoder().decode(GetProductListDatum.self, from: data)
     }
-
+    
     init(_ json: String, using encoding: String.Encoding = .utf8) throws {
         guard let data = json.data(using: encoding) else {
             throw NSError(domain: "JSONDecoding", code: 0, userInfo: nil)
         }
         try self.init(data: data)
     }
-
+    
     init(fromURL url: URL) throws {
         try self.init(data: try Data(contentsOf: url))
     }
-
+    
     func with(
         number: String?? = nil,
         numberMasked: String?? = nil,
@@ -130,6 +164,7 @@ extension GetProductListDatum {
         productType: String?? = nil,
         productName: String?? = nil,
         ownerID: Int?? = nil,
+        loanID: Int?? = nil,
         accountNumber: String?? = nil,
         allowDebit: Bool?? = nil,
         allowCredit: Bool?? = nil,
@@ -164,6 +199,21 @@ extension GetProductListDatum {
         creditMinimumAmount: Double?? = nil,
         minimumBalance: Double?? = nil,
         balanceRUB: Double?? = 0.0,
+        amount: Double?? = nil,
+        clientID: Int?? = nil,
+        currencyCode: String?? = nil,
+        currencyNumber: Int?? = nil,
+        bankProductID: Int?? = nil,
+        finOperBrief: String?? = nil,
+        currentInterestRate: Double?? = nil,
+        principalDebt: Double?? = nil,
+        defaultPrincipalDebt: Double?? = nil,
+        totalAmountDebt: Double?? = nil,
+        principalDebtAccount: String?? = nil,
+        settlementAccount: String?? = nil,
+        settlementAccountId: Int?? = nil,
+        dateLong: Int?? = nil,
+        loanBaseParam: LoanBaseParam?? = nil,
         isMain: Bool?? = true
         
     ) -> GetProductListDatum {
@@ -175,6 +225,7 @@ extension GetProductListDatum {
             productType: productType ?? self.productType,
             productName: productName ?? self.productName,
             ownerID: ownerID ?? self.ownerID,
+            loanID: loanID ?? self.loanID,
             accountNumber: accountNumber ?? self.accountNumber,
             allowDebit: allowDebit ?? self.allowDebit,
             allowCredit: allowCredit ?? self.allowCredit,
@@ -209,14 +260,29 @@ extension GetProductListDatum {
             creditMinimumAmount: creditMinimumAmount ?? self.creditMinimumAmount,
             minimumBalance: minimumBalance ?? self.minimumBalance,
             balanceRUB: balanceRUB ?? self.balanceRUB,
+            amount: amount ?? self.amount,
+            clientID: clientID ?? self.clientID,
+            currencyCode: currencyCode ?? self.currencyCode,
+            currencyNumber: currencyNumber ?? self.currencyNumber,
+            bankProductID: bankProductID ?? self.bankProductID,
+            finOperBrief: finOperBrief ?? self.finOperBrief,
+            currentInterestRate: currentInterestRate ?? self.currentInterestRate,
+            principalDebt: principalDebt ?? self.principalDebt,
+            defaultPrincipalDebt: defaultPrincipalDebt ??  self.defaultPrincipalDebt,
+            totalAmountDebt: totalAmountDebt ?? self.totalAmountDebt,
+            principalDebtAccount: principalDebtAccount ?? self.principalDebtAccount,
+            settlementAccount: settlementAccount ?? self.settlementAccount,
+            settlementAccountId: settlementAccountId ?? self.settlementAccountId,
+            dateLong: dateLong ?? self.dateLong,
+            loanBaseParam: loanBaseParam ?? self.loanBaseParam,
             isMain: isMain ?? self.isMain
         )
     }
-
+    
     func jsonData() throws -> Data {
         return try newJSONEncoder().encode(self)
     }
-
+    
     func jsonString(encoding: String.Encoding = .utf8) throws -> String? {
         return String(data: try self.jsonData(), encoding: encoding)
     }

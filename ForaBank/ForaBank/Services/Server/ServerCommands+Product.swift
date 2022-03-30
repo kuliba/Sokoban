@@ -10,12 +10,12 @@ import Foundation
 extension ServerCommands {
     
     enum ProductController {
-    
+        
         /*
          https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/ProductController/getProductDetailsUsingPOST
          */
         struct GetProductDetails: ServerCommand {
-
+            
             let token: String?
             let endpoint = "/rest/getProductDetails"
             let method: ServerCommandMethod = .post
@@ -31,7 +31,7 @@ extension ServerCommands {
             }
             
             struct Response: ServerResponse {
-
+                
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: ProductDetailsData?
@@ -48,7 +48,7 @@ extension ServerCommands {
          https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/ProductController/getProductListUsingPOST
          */
         struct GetProductList: ServerCommand {
-
+            
             let token: String?
             let endpoint = "/rest/getProductList"
             let method: ServerCommandMethod = .post
@@ -59,7 +59,7 @@ extension ServerCommands {
             struct Payload: Encodable {}
             
             struct Response: ServerResponse {
-
+                
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: [ProductData]?
@@ -75,7 +75,7 @@ extension ServerCommands {
          https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/ProductController/getProductListByFilterUsingGET
          */
         struct GetProductListByFilter: ServerCommand {
-
+            
             let token: String?
             let endpoint = "/rest/getProductListByFilter"
             let method: ServerCommandMethod = .get
@@ -86,7 +86,7 @@ extension ServerCommands {
             struct Payload: Encodable {}
             
             struct Response: ServerResponse {
-
+                
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: [ProductData]?
@@ -101,6 +101,42 @@ extension ServerCommands {
                 parameters.append(.init(name: "isDeposit", value: isDeposit.description))
                 parameters.append(.init(name: "isLoan", value: isLoan.description))
                 self.parameters = parameters
+            }
+        }
+        
+        /*
+         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/ProductController//rest/getProductListByType
+         */
+        struct GetProductListByType: ServerCommand {
+            
+            let token: String?
+            let endpoint = "/rest/getProductListByType"
+            let method: ServerCommandMethod = .get
+            let parameters: [ServerCommandParameter]?
+            let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
+            
+            struct Payload: Encodable {}
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: [ProductData]?
+            }
+            
+            internal init(token: String, serial: String?, productType: ProductType) {
+                
+                self.token = token
+
+                var parameters = [ServerCommandParameter]()
+                if let serial = serial {
+                    
+                    parameters.append(.init(name: "serial", value: serial))
+                }
+                parameters.append(.init(name: "productType", value: productType.rawValue))
+                self.parameters = parameters
+                
             }
         }
     }

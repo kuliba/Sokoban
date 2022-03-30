@@ -216,10 +216,7 @@ extension Model {
             do {
                     
                 let result = try await paymentsTransferComplete(code: codeValue)
-                guard let success = Payments.Success(with: result) else {
-                    self.action.send(ModelAction.Payment.Complete.Response.failure(self.paymentsAlertMessage(with: Payments.Error.missingParameter)))
-                    return
-                }
+                let success = try Payments.Success(with: result, operation: payload.operation)
                 self.action.send(ModelAction.Payment.Complete.Response.success(success))
                 
             } catch {
@@ -283,6 +280,9 @@ extension Model {
                 
             case .missingAnywayTransferAdditional:
                 return "missingAnywayTransferAdditional"
+                
+            case .failedObtainProductId:
+                return "failedObtainProductId"
                 
             case .failedTransferWithEmptyDataResponse:
                 return "failedTransferWithEmptyDataResponse"
@@ -415,7 +415,7 @@ extension Model {
 extension Model {
     
     @discardableResult
-    func paymentsTransferAnywayStep(with parameters: [ParameterRepresentable], include: [Payments.Parameter.ID], step: TransferData.Step, isAmountRequired: Bool = false) async throws -> TransferAnywayResponseData {
+    func paymentsTransferAnywayStep(with parameters: [ParameterRepresentable], include: [Payments.Parameter.ID], step: TransferData.Step = .next) async throws -> TransferAnywayResponseData {
         
         guard let token = token else {
             throw Payments.Error.notAuthorized
@@ -425,13 +425,13 @@ extension Model {
             throw Payments.Error.missingOperatorParameter
         }
         
-        let amount: Double? = isAmountRequired ? paymentsTransferAmount(with: parameters) : nil
+        let amount = paymentsTransferAmount(with: parameters)
         
         guard let currency = paymentsTransferCurrency(with: parameters) else {
             throw Payments.Error.missingCurrency
         }
         
-        guard let payer = paymentsTransferPayer(with: parameters) else {
+        guard let payer = paymentsTransferPayer(with: parameters, currency: .rub) else {
             throw Payments.Error.missingPayer
         }
         
@@ -440,6 +440,8 @@ extension Model {
         }
         
         let command = ServerCommands.TransferController.CreateAnywayTransfer(token: token, isNewPayment: step.isNewPayment, payload: .init(amount: amount, check: step.check, comment: nil, currencyAmount: currency, payer: payer, additional: additional, puref: puref))
+        
+        print("Payments: command : \(command.debugDescription)")
         
         return try await withCheckedThrowingContinuation({ continuation in
             
@@ -499,15 +501,15 @@ extension Model {
         })
     }
     
-    func paymentsTransferPayer(with parameters: [ParameterRepresentable]) -> TransferData.Payer? {
+    func paymentsTransferPayer(with parameters: [ParameterRepresentable], currency: Currency) -> TransferData.Payer? {
         
         //TODO: extract card/account id from ParameterCard
         
-        if let cardId = paymentsFirstProductId(of: .card) {
+        if let cardId = paymentsFirstProductId(of: .card, currency: currency) {
             
             return .init(inn: nil, accountId: nil, accountNumber: nil, cardId: cardId, cardNumber: nil, phoneNumber: nil)
             
-        } else if let accountId = paymentsFirstProductId(of: .account) {
+        } else if let accountId = paymentsFirstProductId(of: .account, currency: currency) {
             
             return .init(inn: nil, accountId: accountId, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
             
@@ -516,8 +518,8 @@ extension Model {
             return nil
         }
     }
-    
-    func paymentsFirstProductId(of type: ProductType) -> Int? {
+        
+    func paymentsFirstProductId(of type: ProductType, currency: Currency) -> Int? {
         
         guard let realm = try? Realm()  else {
             return nil
@@ -525,7 +527,7 @@ extension Model {
         
         let products = realm.objects(UserAllCardsModel.self)
         
-        return products.first(where: { $0.productType == type.rawValue })?.id
+        return products.first(where: { $0.productType == type.rawValue && $0.currency == currency.description })?.id
     }
     
     func paymentsTransferAmount(with parameters: [ParameterRepresentable]) -> Double? {

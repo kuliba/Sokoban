@@ -55,7 +55,7 @@ extension Model {
                     do {
                         
                         let transferStepData = try await paymentsTransferAnywayStep(with: updatedParameters, include: ["a3_dutyCategory_1_1", divisionParameterId], step: .initial)
-                        let nextStepParameters = paymentsTaxesNextStepParameters(for: transferStepData, samples: ["a3_INN_4_1": "5503026780", "a3_OKTMO_5_1": "52643151"])
+                        let nextStepParameters = try paymentsTaxesNextStepParameters(for: transferStepData, samples: ["a3_INN_4_1": "5503026780", "a3_OKTMO_5_1": "52643151"])
                         
                         completion(.success(updatedParameters + nextStepParameters))
                         
@@ -92,7 +92,7 @@ extension Model {
                         let stepParameters = parameters + [divisionParameter]
                         
                         let transferStepData = try await paymentsTransferAnywayStep(with: stepParameters, include: ["a3_dutyCategory_1_1", divisionParameterId], step: .initial)
-                        let nextStepParameters = paymentsTaxesNextStepParameters(for: transferStepData, samples: ["a3_INN_4_1": "5503026780", "a3_OKTMO_5_1": "52643151"])
+                        let nextStepParameters = try paymentsTaxesNextStepParameters(for: transferStepData, samples: ["a3_INN_4_1": "5503026780", "a3_OKTMO_5_1": "52643151"])
   
                         completion(.success(stepParameters + nextStepParameters))
                         
@@ -112,7 +112,7 @@ extension Model {
                 do {
                     
                     let transferStepData = try await paymentsTransferAnywayStep(with: updatedParameters, include: ["a3_categorySelect_3_1", "a3_INN_4_1", "a3_OKTMO_5_1", "a3_DIVISION_4_1"], step: .next)
-                    let nextStepParameters = paymentsTaxesNextStepParameters(for: transferStepData)
+                    let nextStepParameters = try paymentsTaxesNextStepParameters(for: transferStepData)
 
                     completion(.success(updatedParameters + nextStepParameters))
                     
@@ -136,7 +136,7 @@ extension Model {
     
                         try await paymentsTransferAnywayStep(with: parameters, include: ["a3_categorySelect_3_1", "a3_INN_4_1", "a3_OKTMO_5_1", "a3_DIVISION_4_1"], step: .next)
                         
-                        try await paymentsTransferAnywayStep(with: parameters, include: ["a3_fio_1_2", "a3_address_2_2", "a3_docType_3_2", "a3_docValue_4_2"], step: .next, isAmountRequired: true)
+                        try await paymentsTransferAnywayStep(with: parameters, include: ["a3_fio_1_2", "a3_address_2_2", "a3_docType_3_2", "a3_docValue_4_2"], step: .next)
        
                         completion(.success(parameters))
                         
@@ -155,8 +155,8 @@ extension Model {
                     
                     do {
                         
-                        let transferStepData = try await paymentsTransferAnywayStep(with: updatedParameters, include: ["a3_fio_1_2", "a3_address_2_2", "a3_docType_3_2", "a3_docValue_4_2"], step: .next, isAmountRequired: true)
-                        let nextStepParameters = paymentsTaxesNextStepParameters(for: transferStepData)
+                        let transferStepData = try await paymentsTransferAnywayStep(with: updatedParameters, include: ["a3_fio_1_2", "a3_address_2_2", "a3_docType_3_2", "a3_docValue_4_2"], step: .next)
+                        let nextStepParameters = try paymentsTaxesNextStepParameters(for: transferStepData)
                         
                         completion(.success(updatedParameters + nextStepParameters))
                     
