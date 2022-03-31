@@ -163,9 +163,11 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
         }
         
         if card.productType != ProductType.loan.rawValue {
+            
             dateEndLabel.isHidden = true
             dividerView.isHidden = true
         } else {
+            
             dateEndLabel.isHidden = false
             dividerView.isHidden = false
         }

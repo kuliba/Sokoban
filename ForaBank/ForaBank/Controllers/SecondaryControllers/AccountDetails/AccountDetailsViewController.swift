@@ -43,14 +43,27 @@ class AccountDetailsViewController: UIViewController {
     
     func presentRequisitsVc(product: UserAllCardsModel?){
         showActivity()
-        var body = ["cardId": product?.cardID] as [String : AnyObject]
+        var body: [String : AnyObject]
         
-        if product?.productType == "ACCOUNT"{
+        switch product?.productType {
+            
+        case ProductType.card.rawValue:
+            body = ["cardId": product?.cardID] as [String : AnyObject]
+            
+        case ProductType.account.rawValue:
             body = ["accountId": product?.id] as [String : AnyObject]
-        } else if product?.productType == "DEPOSIT"{
+
+        case ProductType.deposit.rawValue:
             body = ["depositId": product?.id] as [String : AnyObject]
 
+        case ProductType.loan.rawValue:
+            body = ["accountId": product?.settlementAccountId] as [String : AnyObject]
+
+        default:
+            body = ["cardId": product?.cardID] as [String : AnyObject]
+
         }
+        
         NetworkManager<GetProductDetailsDecodableModel>.addRequest(.getProductDetails, [:], body) { model, error in
             self.dismissActivity()
             if error != nil {
