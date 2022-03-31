@@ -58,16 +58,16 @@ class C2BDetailsViewModel {
         }
     }
 
-    func updateContract(contractId: String?, cardModel: GetProductListDatum, isOff: Bool, completion: @escaping (_ success: Bool, _ error: String?) -> ()) {
+    func updateContract(contractId: String?, cardModel: UserAllCardsModel, isOff: Bool, completion: @escaping (_ success: Bool, _ error: String?) -> ()) {
         C2BApiRequests.updateContract(contractId: contractId, cardModel: cardModel, isOff: isOff, completion: completion)
     }
 
-    func createContract(cardModel: GetProductListDatum, completion: @escaping (_ success: Bool, _ error: String?) -> ()) {
+    func createContract(cardModel: UserAllCardsModel, completion: @escaping (_ success: Bool, _ error: String?) -> ()) {
         C2BApiRequests.createContract(cardModel: cardModel, completion: completion)
     }
 
-    func makePayment(completion: @escaping (_ model: MakeTransferDecodableModel?, _ error: String?) -> ()) {
-        C2BApiRequests.makePayment(completion: completion)
+    func makeTransfer(completion: @escaping (_ model: MakeTransferDecodableModel?, _ error: String?) -> ()) {
+        C2BApiRequests.makeTransfer(completion: completion)
     }
 
 }

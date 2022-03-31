@@ -9,7 +9,7 @@ import Foundation
 
 class C2BApiRequests {
 
-    static func updateContract(contractId: String?, cardModel: GetProductListDatum, isOff: Bool, completion: @escaping (_ success: Bool, _ error: String?) -> ()) {
+    static func updateContract(contractId: String?, cardModel: UserAllCardsModel, isOff: Bool, completion: @escaping (_ success: Bool, _ error: String?) -> ()) {
         guard let fpcontractID = contractId else {
             return
         }
@@ -46,11 +46,9 @@ class C2BApiRequests {
         }
     }
 
-    static func createContract(cardModel: GetProductListDatum, completion: @escaping (_ success: Bool, _ error: String?) -> ()) {
-        guard let accountId = cardModel.ownerID else {
-            return
-        }
-        let body = ["accountId": accountId,
+    static func createContract(cardModel: UserAllCardsModel, completion: @escaping (_ success: Bool, _ error: String?) -> ()) {
+     
+        let body = ["accountId": cardModel.ownerID,
                     "flagBankDefault": "YES",
                     "flagClientAgreementIn": "YES",
                     "flagClientAgreementOut": "YES"
@@ -130,7 +128,7 @@ class C2BApiRequests {
         }
     }
 
-    static func makePayment(completion: @escaping (_ model: MakeTransferDecodableModel?, _ error: String?) -> ()) {
+    static func makeTransfer(completion: @escaping (_ model: MakeTransferDecodableModel?, _ error: String?) -> ()) {
         let code = "0"
         let body = ["verificationCode": code] as [String: AnyObject]
         NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { response, error in

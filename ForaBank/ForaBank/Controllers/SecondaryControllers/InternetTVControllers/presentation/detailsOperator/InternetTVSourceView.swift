@@ -1,10 +1,13 @@
 import UIKit
+import RealmSwift
 
 class InternetTVSourceView: UITableViewHeaderFooterView {
     
+    lazy var realm = try? Realm()
+    
     var stackView = UIStackView(arrangedSubviews: [])
     var cardFromField = CardChooseView()
-    var cardListView = CardListView(onlyMy: false)
+    var cardListView = CardsScrollView(onlyMy: false, deleteDeposit: true, loadProducts: false)
 
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
@@ -41,9 +44,19 @@ class InternetTVSourceView: UITableViewHeaderFooterView {
             self.openOrHideView(self.cardListView)
         }
 
-        cardListView.didCardTapped = { card in
-            self.cardFromField.cardModel = card
-            self.hideView(self.cardListView, needHide: true)
+        cardListView.didCardTapped = { cardId in
+            DispatchQueue.main.async {
+                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
+                cardList.forEach({ card in
+                    if card.id == cardId {
+                        self.cardFromField.model = card
+                        
+                        self.hideView(self.cardListView, needHide: true)
+                        
+                    }
+                })
+            }
+        
         }
     }
     

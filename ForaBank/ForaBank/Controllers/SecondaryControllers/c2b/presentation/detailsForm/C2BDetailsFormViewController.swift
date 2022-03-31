@@ -2,6 +2,7 @@ import UIKit
 import RealmSwift
 
 
+
 class C2BDetailsFormViewController: UIViewController {
     var viewModel: C2BDetailsFormViewModel? {
         didSet {
