@@ -51,7 +51,7 @@ class C2BSuccessView: UIView {
             statusImageView.image = #imageLiteral(resourceName: "waiting")
             statusLabel.text = "Запрос принят в обработку"
             break
-        case "COMPLETE":
+        case "COMPLETED":
             statusImageView.image = #imageLiteral(resourceName: "OkOperators")
             statusLabel.text = "Успешный перевод"
             break

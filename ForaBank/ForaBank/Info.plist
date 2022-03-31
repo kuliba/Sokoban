@@ -41,7 +41,7 @@
 			<string>qr.nspk.ru</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>https2</string>
+				<string>https</string>
 			</array>
 		</dict>
 	</array>
