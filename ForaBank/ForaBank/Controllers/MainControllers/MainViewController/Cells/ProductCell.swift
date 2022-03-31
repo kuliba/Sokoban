@@ -78,6 +78,16 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
         return imageView
     }()
     
+    private var stackView: UIStackView = {
+        
+        let stackV = UIStackView(arrangedSubviews: [])
+        stackV.alignment = .center
+        stackV.axis = .horizontal
+        stackV.spacing = 18
+        stackV.distribution = .fill
+        return stackV
+    }()
+    
     private var updatingAnimationsView: UIView?
     
     //MARK: - Lifecycle
@@ -108,7 +118,7 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
         
         balanceLabel.text = viewModel.balance
         balanceLabel.textColor = viewModel.colorText
-        cardNameLabel.text = viewModel.cardName
+        cardNameLabel.text = viewModel.mainField
         cardNameLabel.textColor = viewModel.colorText
         cardNameLabel.alpha = 0.5
         maskCardLabel.text = viewModel.maskedcardNumber
@@ -153,7 +163,6 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
                 return
             }
             maskCardLabel.text = number.description
-            balanceLabel.text = viewModel.totalAmountDebt
         }
     }
     
@@ -173,34 +182,33 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
         layer.shadowPath = shadowPath.cgPath
         
         addSubview(backgroundImageView)
-        addSubview(logoImageView)
-        addSubview(maskCardLabel)
+        addSubview(stackView)
         addSubview(cardNameLabel)
         addSubview(balanceLabel)
         addSubview(statusImage)
 
-        cardNameLabel.lineBreakMode = .byWordWrapping
         backgroundImageView.fillSuperview()
-        balanceLabel.font = UIFont.boldSystemFont(ofSize: 14)
-        maskCardLabel.anchor(top: self.topAnchor, left: self.leftAnchor, right: self.rightAnchor, paddingTop: 17, paddingLeft: 55, paddingRight: 12)
+
+        stackView.anchor(top: self.topAnchor, left: self.leftAnchor, paddingTop: 14, paddingLeft: 16, height: 19)
+        stackView.addArrangedSubview(logoImageView)
+        stackView.addArrangedSubview(maskCardLabel)
         
-        logoImageView.centerY(inView: maskCardLabel)
-        logoImageView.anchor(left: self.leftAnchor,
-                             paddingLeft: 16, width: 18, height: 18)
+        maskCardLabel.anchor(height: 18)
         
-        
+        logoImageView.anchor(width: 18, height: 18)
         
         statusImage.center(inView: self)
-       
-        cardNameLabel.anchor(left: self.leftAnchor, bottom: balanceLabel.topAnchor, paddingTop: 25, paddingLeft: 12, paddingRight: 8)
         
-        cardNameLabel.anchor(top: maskCardLabel.bottomAnchor, left: self.leftAnchor, right: self.rightAnchor,
+        cardNameLabel.anchor(top: maskCardLabel.bottomAnchor, left: self.leftAnchor, bottom: balanceLabel.topAnchor, right: self.rightAnchor,
                              paddingTop: 25, paddingLeft: 12, paddingRight: 8)
         cardNameLabel.font = UIFont.systemFont(ofSize: 14, weight: .light)
         cardNameLabel.anchor(width: 80)
         cardNameLabel.numberOfLines = 2
+        cardNameLabel.lineBreakMode = .byWordWrapping
+
+        balanceLabel.font = UIFont.boldSystemFont(ofSize: 14)
         balanceLabel.anchor(left: self.leftAnchor, bottom: self.bottomAnchor, right: self.rightAnchor,
-                            paddingLeft: 12, paddingBottom: 11, paddingRight: 30)
+                            paddingLeft: 12, paddingBottom: 11, paddingRight: 30, height: 16)
 
     }
 }

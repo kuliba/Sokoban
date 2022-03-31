@@ -128,7 +128,6 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
         guard let card = card else { return }
         
         let viewModel = CardViewModelFromRealm(card: card)
-        print(viewModel)
         backgroundImageView.image = card.XLDesign?.convertSVGStringToImage()
         balanceLabel.text = viewModel.fullBalance
         balanceLabel.textColor = viewModel.colorText

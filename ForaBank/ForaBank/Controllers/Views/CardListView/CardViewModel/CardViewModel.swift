@@ -129,8 +129,13 @@ struct CardViewModelFromRealm {
     }
     
     var balance: String {
-        let cardBal: Double = card.balance
-        return cardBal.currencyFormatter(symbol: card.currency ?? "")
+        if card.productType == ProductType.loan.rawValue {
+            let cardBal: Double = card.totalAmountDebt
+            return cardBal.currencyFormatter(symbol: card.currency ?? "")
+        } else {
+            let cardBal: Double = card.balance
+            return cardBal.currencyFormatter(symbol: card.currency ?? "")
+        }
     }
     
     var amount: String {
@@ -152,6 +157,7 @@ struct CardViewModelFromRealm {
     }
     
     var cardName: String? {
+        
         if card.productType == ProductType.loan.rawValue {
             
             return card.additionalField ?? card.mainField
@@ -159,6 +165,11 @@ struct CardViewModelFromRealm {
             
             return card.customName ?? card.mainField
         }
+    }
+    
+    var mainField: String? {
+        
+        return card.mainField
     }
     
     var logoImage: UIImage {
