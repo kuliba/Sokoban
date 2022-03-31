@@ -15,9 +15,12 @@ class C2BDetailsViewModel {
     static var recipientText = ""
     static var recipientIconSrc = ""
     static var recipientDescription = ""
+    static var sourceModel: UserAllCardsModel? = nil
     static var sum = ""
     static var makeTransfer: MakeTransferDecodableModel? = nil
     static var modelCreateC2BTransfer: CreateDirectTransferDecodableModel? = nil
+    static var operationDetail: GetOperationDetailsByPaymentIdDatum? = nil
+
 
     init() {
         c2bLink = GlobalModule.c2bURL ?? ""
@@ -58,6 +61,12 @@ class C2BDetailsViewModel {
         }
     }
 
+    func getOperationDetailByPaymentId(idDoc: String, completion: @escaping (_ model: GetOperationDetailsByPaymentIdAnswer?, _ error: String?) -> ()) {
+        C2BApiRequests.getOperationDetailByPaymentId (idDoc: idDoc) { model, error in
+            completion (model, error)
+        }
+    }
+
     func updateContract(contractId: String?, cardModel: UserAllCardsModel, isOff: Bool, completion: @escaping (_ success: Bool, _ error: String?) -> ()) {
         C2BApiRequests.updateContract(contractId: contractId, cardModel: cardModel, isOff: isOff, completion: completion)
     }
@@ -69,5 +78,4 @@ class C2BDetailsViewModel {
     func makeTransfer(completion: @escaping (_ model: MakeTransferDecodableModel?, _ error: String?) -> ()) {
         C2BApiRequests.makeTransfer(completion: completion)
     }
-
 }

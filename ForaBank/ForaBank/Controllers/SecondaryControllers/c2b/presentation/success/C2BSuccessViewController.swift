@@ -56,19 +56,7 @@ class C2BSuccessViewController: UIViewController {
 
     func openDetailVC() {
         let vc = C2BDetailsFormViewController()
-        vc.viewModel = confirmModel
         vc.doneButton.isHidden = true
-        vc.smsCodeField.isHidden = true
-        vc.countryField.isHidden = true
-        vc.phoneField.isHidden = true
-        vc.nameField.isHidden = true
-        vc.bankField.isHidden = true
-        vc.numberTransactionField.isHidden = true
-        vc.cardToField.isHidden = true
-        vc.sumTransactionField.isHidden = false
-        vc.taxTransactionField.isHidden = false
-        vc.currTransactionField.isHidden = true
-        vc.currencyTransactionField.isHidden = true
         vc.addCloseButton()
         vc.title = "Детали операции"
         let navVC = UINavigationController(rootViewController: vc)

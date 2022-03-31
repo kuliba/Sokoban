@@ -300,22 +300,39 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
                 self.dismissActivity()
                 self.showAlert(with: "Ошибка", and: error?.description ?? "")
             } else {
-                self.viewModel.makeTransfer { model,error in
-                    self.dismissActivity()
-                    if (error != nil) {
-                        self.showAlert(with: "Ошибка", and: error?.description ?? "")
-                    } else {
-                        C2BDetailsViewModel.modelCreateC2BTransfer = modelCreateC2BTransfer
-                        C2BDetailsViewModel.makeTransfer = model
-                        self.openSuccessScreen()
-                    }
-                }
+                C2BDetailsViewModel.modelCreateC2BTransfer = modelCreateC2BTransfer
+                self.makeTransfer()
+            }
+        }
+    }
+
+    private func makeTransfer() {
+        viewModel.makeTransfer { model,error in
+            self.dismissActivity()
+            if (error != nil) {
+                self.showAlert(with: "Ошибка", and: error?.description ?? "")
+            } else {
+                C2BDetailsViewModel.makeTransfer = model
+                self.getOperationDetailByPaymentId()
+            }
+        }
+    }
+
+    func getOperationDetailByPaymentId() {
+        viewModel.getOperationDetailByPaymentId (idDoc: C2BDetailsViewModel.makeTransfer?.data?.paymentOperationDetailId?.description ?? "-1") { model,error in
+            self.dismissActivity()
+            if (error != nil) {
+                self.showAlert(with: "Ошибка", and: error?.description ?? "")
+            } else {
+                C2BDetailsViewModel.operationDetail = model?.data
+                self.openSuccessScreen()
             }
         }
     }
     
     func openSuccessScreen() {
         DispatchQueue.main.async {
+            C2BDetailsViewModel.sourceModel = self.cardFromField.model
             let vc = C2BSuccessViewController()
             vc.id = C2BDetailsViewModel.modelCreateC2BTransfer?.data?.paymentOperationDetailID ?? 0
             vc.printFormType = "c2b"
@@ -477,30 +494,8 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
         return .custom
     }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let tvc = segue.destination as? InternetTVSelectController {
-            tvc.transitioningDelegate = self
-            tvc.modalPresentationStyle = .custom
-            if let ppc = tvc.popoverPresentationController {
-                //ppc.delegate = self
-                //ppc.permittedArrowDirections = UIPopoverArrowDirection(rawValue: UIPopoverArrowDirection.up.rawValue)
-                //tvc.transitioningDelegate = self
-                //tvc.modalPresentationStyle = .custom
-                //let view = InternetTVSelectDialog()
-                //ppc.sourceView = view
-                //ppc.sourceRect = view.frame
-                //                dialog.modalPresentationStyle = .popover
-                //                dialog.popoverPresentationController?.delegate = self
-                //                dialog.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection(rawValue: 0)
-                //                dialog.popoverPresentationController?.sourceView = view
-                //                dialog.popoverPresentationController?.sourceRect = view.frame
-            }
-        }
-    }
-    
+
     var heightForSelectVC = 400
-    
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         let presenter = PresentationController(presentedViewController: presented, presenting: presenting)
         presenter.height = heightForSelectVC

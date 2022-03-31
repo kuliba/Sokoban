@@ -2,128 +2,99 @@ import UIKit
 import RealmSwift
 
 
-
 class C2BDetailsFormViewController: UIViewController {
-    var viewModel: C2BDetailsFormViewModel? {
-        didSet {
-            guard let model = viewModel else { return }
-            setupData(with: model)
-        }
-    }
-    var otpCode: String = ""
 
-    var phoneField = ForaInput(
+//
+//        when (answer.operationStatus) {
+//"IN_PROGRESS" -> detailsArr.add(DetailsDO(R.drawable.ic_waiting2,"Статус операции", "в обработке"))
+//"REJECTED" -> detailsArr.add(DetailsDO(R.drawable.ic_transfer_reject2,"Статус операции", "отказ"))
+//"COMPLETE" -> detailsArr.add(DetailsDO(R.drawable.ic_success2,"Статус операции", "успешно"))
+//"FAILED" -> detailsArr.add(DetailsDO(-1,"Статус операции", answer.operationStatus))
+//}
+//detailsArr.add(DetailsDO(-1, "source", ""))
+
+    var amountField = ForaInput(
             viewModel: ForaInputModel(
-                    title: "Номер телефона получателя",
+                    title: "Сумма перевода",
+                    text: C2BDetailsViewModel.operationDetail?.amount?.description ?? "",
                     image: #imageLiteral(resourceName: "Phone"),
                     type: .phone,
                     isEditable: false))
 
-    var nameField = ForaInput(
+    var dateOperation = ForaInput(
             viewModel: ForaInputModel(
-                    title: "ФИО получателя",
+                    title: "Дата и время операции (МСК)",
+                    text: C2BDetailsViewModel.operationDetail?.dateForDetail ?? "",
                     image: #imageLiteral(resourceName: "accountImage"),
+                    isEditable: false))
+
+    var nameOfRecipientField = ForaInput(
+            viewModel: ForaInputModel(
+                    title: "Наименование ТСП",
+                    text: C2BDetailsViewModel.operationDetail?.merchantSubName ?? "",
+                    image: #imageLiteral(resourceName: "BankIcon"),
+                    isEditable: false))
+
+    var nameOfRecipient2Field = ForaInput(
+            viewModel: ForaInputModel(
+                    title: "Получатель",
+                    text: C2BDetailsViewModel.operationDetail?.payeeFullName ?? "",
+                    image: UIImage(named: "map-pin")!,
                     isEditable: false))
 
     var bankField = ForaInput(
             viewModel: ForaInputModel(
-                    title: "Банк получателя",
-                    image: #imageLiteral(resourceName: "BankIcon"),
+                    title: "Банк",
+                    image: UIImage(named: "hash")!,
                     isEditable: false))
 
-    var countryField = ForaInput(
+    var commentField = ForaInput(
             viewModel: ForaInputModel(
-                    title: "Страна",
-                    image: UIImage(named: "map-pin")!,
+                    title: "Сообщение получателю",
+                    text: C2BDetailsViewModel.operationDetail?.comment ?? "",
+                    image: UIImage(named: "hash")!,
                     isEditable: false))
 
     var numberTransactionField = ForaInput(
             viewModel: ForaInputModel(
-                    title: "Номер перевода",
+                    title: "Идентификатор операции",
+                    text: C2BDetailsViewModel.operationDetail?.transferNumber ?? "",
                     image: UIImage(named: "hash")!,
                     isEditable: false))
 
     var cardFromField = CardChooseView()
-    var cardToField = CardChooseView()
-
-    var sumTransactionField = ForaInput(
-            viewModel: ForaInputModel(
-                    title: "Сумма перевода",
-                    image: UIImage(named: "coins")!,
-                    isEditable: false))
-
-    var taxTransactionField = ForaInput(
-            viewModel: ForaInputModel(
-                    title: "Комиссия",
-                    image: #imageLiteral(resourceName: "Frame 580"),
-                    isEditable: false))
-
-    var currTransactionField = ForaInput(
-            viewModel: ForaInputModel(
-                    title: "Сумма зачисления в валюте",
-                    isEditable: false))
-
-    var currencyTransactionField = ForaInput(
-            viewModel: ForaInputModel(
-                    title: "Способ выплаты",
-                    image: #imageLiteral(resourceName: "Frame 579"),
-                    isEditable: false))
-
-    var smsCodeField = ForaInput(
-            viewModel: ForaInputModel(
-                    title: "Введите код из СМС",
-                    image: UIImage(named: "message-square")!,
-                    type: .smsCode))
+    
 
     let doneButton = UIButton(title: "Оплатить")
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupData()
         setupUI()
         hideKeyboardWhenTappedAround()
-        NotificationCenter.default.addObserver(self, selector: #selector(setOtpCode(_:)), name: NSNotification.Name(rawValue: "otpCode"), object: nil)
     }
 
-    @objc func setOtpCode(_ notification: NSNotification) {
-        let otpCode = notification.userInfo?["body"] as! String
-        self.otpCode = otpCode.filter { "0"..."9" ~= $0 }
-        smsCodeField.text =  self.otpCode
-    }
 
-    func setupData(with model: C2BDetailsFormViewModel) {
-        currTransactionField.isHidden = true
-        sumTransactionField.text = model.sumTransaction
-        taxTransactionField.text = model.taxTransaction
-        if model.taxTransaction.isEmpty {
-            taxTransactionField.isHidden = true
-        }
-
+    func setupData() {
         dismissActivity()
-        cardFromField.cardModel = model.cardFrom
+        cardFromField.model = C2BDetailsViewModel.sourceModel
         cardFromField.isHidden = false
         cardFromField.choseButton.isHidden = true
         cardFromField.balanceLabel.isHidden = true
         cardFromField.titleLabel.text = "Счет списания"
         cardFromField.leftTitleAncor.constant = 64
-        smsCodeField.textField.textContentType = .oneTimeCode
     }
 
     fileprivate func setupUI() {
         view.backgroundColor = .white
 
         let stackView = UIStackView(
-                arrangedSubviews: [phoneField,
-                                   nameField,
-                                   bankField,
-                                   countryField,
+                arrangedSubviews: [amountField,
+                                   dateOperation,
+                                   nameOfRecipientField,
+                                   nameOfRecipient2Field,
                                    numberTransactionField,
-                                   cardFromField,
-                                   cardToField,
-                                   sumTransactionField,
-                                   taxTransactionField,
-                                   currTransactionField,
-                                   currencyTransactionField,
-                                   smsCodeField])
+                                   cardFromField])
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
