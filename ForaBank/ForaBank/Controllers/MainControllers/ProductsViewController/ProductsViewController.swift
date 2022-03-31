@@ -303,7 +303,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
         
                 if loans.count > 0 {
                     let str = loans[indexPath.row].accountNumber ?? ""
-                    cell.titleProductLabel.text = loans[indexPath.row].mainField ?? loans[indexPath.row].customName
+                    cell.titleProductLabel.text = loans[indexPath.row].additionalField ?? loans[indexPath.row].mainField
                     cell.numberProductLabel.text = "\(str.suffix(4))"
                     cell.balanceLabel.text = "\(loans[indexPath.row].totalAmountDebt.currencyFormatter(symbol: loans[indexPath.row].currency ?? "") )"
                     cell.coverpProductImage.image = loans[indexPath.row].smallDesign?.convertSVGStringToImage()

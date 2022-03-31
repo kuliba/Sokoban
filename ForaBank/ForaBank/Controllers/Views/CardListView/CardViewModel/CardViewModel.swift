@@ -154,7 +154,7 @@ struct CardViewModelFromRealm {
     var cardName: String? {
         if card.productType == ProductType.loan.rawValue {
             
-            return card.mainField
+            return card.additionalField ?? card.mainField
         } else {
             
             return card.customName ?? card.mainField

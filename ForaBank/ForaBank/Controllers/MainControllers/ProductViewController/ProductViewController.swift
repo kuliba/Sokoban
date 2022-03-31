@@ -456,6 +456,10 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             collectionView?.isHidden = false
         }
         
+        NotificationCenter.default.addObserver(self, selector: #selector(self.showAlert(sender:)), name: Notification.Name("openPaymentsView"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.presentBottomSheet(sender: )), name: Notification.Name("openBottomSheet"), object: nil)
+        
         switch product?.productType {
         case ProductType.card.rawValue:
             
@@ -540,10 +544,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             
         case ProductType.loan.rawValue:
             
-            NotificationCenter.default.addObserver(self, selector: #selector(self.showAlert(sender:)), name: Notification.Name("openPaymentsView"), object: nil)
-            
-            NotificationCenter.default.addObserver(self, selector: #selector(self.presentBottomSheet(sender: )), name: Notification.Name("openBottomSheet"), object: nil)
-            
             if let productId = product?.id {
                 
                 personsCredit(id: productId)
@@ -553,9 +553,12 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             
             guard let number = self.product?.settlementAccount else { return }
             
-            if let mainField = product?.mainField, let currentInterestRate = product?.currentInterestRate {
+            if let additionalField = product?.additionalField, let currentInterestRate = product?.currentInterestRate {
                 
-                self.navigationItem.setTitle(title: mainField, subtitle: "· \(String(number.suffix(4))) · \(currentInterestRate)%    ", color: "#ffffff")
+                self.navigationItem.setTitle(title: additionalField, subtitle: "· \(String(number.suffix(4))) · \(currentInterestRate)%    ", color: "#ffffff")
+            } else {
+                
+                self.navigationItem.setTitle(title: product?.mainField ?? "", subtitle: "· \(String(number.suffix(4))) · \(product?.currentInterestRate ?? 0.0)%    ", color: "#ffffff")
             }
             
             addCloseColorButton(with: UIColor(hexString: "ffffff"))

@@ -40,7 +40,7 @@ class AccountStatementController: UIViewController {
         return cardView
     }()
     
-    var cardListView = CardsScrollView(onlyMy: false)
+    var cardListView = CardsScrollView(onlyMy: false, loans: true)
     
     var stackView = UIStackView(arrangedSubviews: [])
     
@@ -122,23 +122,7 @@ class AccountStatementController: UIViewController {
         
     }
     
-    
-//    private func readAndSetupCard() {
-//        DispatchQueue.main.async {
-//            let cards = ReturnAllCardList.cards()
-//            self.cardListView.cardList = cards
-//            if cards.count > 0 {
-//                cards.forEach { card in
-//                    if card.id == self.startProduct?.id {
-//                        self.cardFromField.model = card
-//                    }
-//                }
-//            }
-//        }
-//    }
-    
     private func setupActions() {
-//        readAndSetupCard()
         
         cardFromField.didChooseButtonTapped = { () in
             self.openOrHideView(self.cardListView)
@@ -230,7 +214,6 @@ class AccountStatementController: UIViewController {
             generateButton.isHidden = true
             datePicker = UIDatePicker.init()
             datePicker!.backgroundColor = .white
-//            datePicker!.backgroundColor = UIColor.blueColor()
             datePicker!.setValue(UIColor.black, forKeyPath: "textColor")
             datePicker!.setValue(1, forKeyPath: "alpha")
             datePicker!.autoresizingMask = .flexibleWidth

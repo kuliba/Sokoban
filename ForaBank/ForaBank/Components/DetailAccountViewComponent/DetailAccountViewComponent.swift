@@ -125,9 +125,10 @@ extension DetailAccountViewComponent {
                     
                     let date = Date(timeIntervalSince1970: TimeInterval(longInt/1000))
                     let currentDate = Date()
-                    
-                    let distance = currentDate.distance(to: date)
-                    
+                    var components = Calendar.current.dateComponents([.year, .month, .day], from: date)
+                    components.day = (components.day ?? 0) + 1
+                    let endOfMonth = Calendar.current.date(from: components)!
+                    let distance = currentDate.distance(to: endOfMonth)
                     return "\(distance.stringFormatted()) Дней"
                     
                 } else {
