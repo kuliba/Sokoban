@@ -67,6 +67,15 @@ extension TransferAnywayResponseData {
         let fieldTitle: String
         let fieldValue: String
         let svgImage: SVGImageData?
+        
+        var iconData: ImageData? {
+            
+            guard let svgImage = svgImage else {
+                return nil
+            }
+            
+            return ImageData(with: svgImage)
+        }
     }
 }
 
