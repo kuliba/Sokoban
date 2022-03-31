@@ -63,7 +63,7 @@ extension DetailAccountViewComponent {
             var available: Double
             
             var colors: [Color] = [ .buttonPrimary, .white]
-                        
+            
             var circleLimit: Double {
                 
                 let percent = (debt / (available + ownFound))
@@ -125,21 +125,16 @@ extension DetailAccountViewComponent {
                     
                     let date = Date(timeIntervalSince1970: TimeInterval(longInt/1000))
                     let currentDate = Date()
-
-                    let interval = date - currentDate
                     
-                    if let interval = interval.day {
-                        
-                        return "\(interval + 1) Дней"
-                    }
-                    return "0 Дней"
+                    let distance = currentDate.distance(to: date)
+                    
+                    return "\(distance.stringFormatted()) Дней"
                     
                 } else {
                     
                     let currentDate = Date()
                     var components = Calendar.current.dateComponents([.year, .month], from: currentDate)
                     components.month = (components.month ?? 0) + 1
-                    components.day = (components.hour ?? 0) + 2
                     components.hour = (components.hour ?? 0) + 1
                     let endOfMonth = Calendar.current.date(from: components)!
                     let distance = currentDate.distance(to: endOfMonth)
@@ -162,7 +157,7 @@ extension DetailAccountViewComponent {
                         
                         let date = Date(timeIntervalSince1970: TimeInterval(longInt/1000))
                         let currentDate = Date()
-
+                        
                         let interval = date - currentDate
                         
                         guard let interval = interval.day else {
@@ -185,7 +180,7 @@ extension DetailAccountViewComponent {
                 }
                 
                 var percentage = now / Double(maxValue)
-                 
+                
                 if longInt != nil {
                     percentage = 1.0 - (Double(maxValue) / 31.0)
                 }
@@ -225,7 +220,7 @@ extension DetailAccountViewComponent {
                     case .limit: return "Кредитный лимит"
                     case .repaid: return "Уже погашено"
                     case .creditAmount: return "Сумма кредита"
-                    
+                        
                     }
                 }
             }
@@ -305,7 +300,9 @@ extension DetailAccountViewComponent {
                 self.amountViewModel = [.init(title: .debt, foregraundColor: .mainColorsBlackMedium, amount: debtAmount, availebelAmount: nil), .init(title: .available, foregraundColor: .buttonPrimary, amount: availableExceedLimit, availebelAmount: totalAvailableAmount)]
                 self.footerViewModel = [.init(amount: minimumPayment, title: .minimal, image: nil, foregraund: .white, background: .textPrimary, action: {
                     NotificationCenter.default.post(name: NSNotification.Name("openPaymentsView"), object: nil, userInfo: nil)
-                }), .init(amount: overduePayment, title: .delay, image: Image.ic24AlertCircle, foregraund: .buttonPrimary, background: .clear, action: {})]
+                }), .init(amount: overduePayment, title: .delay, image: Image.ic24AlertCircle, foregraund: .buttonPrimary, background: .clear, action: {
+                    NotificationCenter.default.post(name: NSNotification.Name("openBottomSheet"), object: nil, userInfo: nil)
+                })]
                 self.secondButtonsViewModel = [ .init(amount: totalDebtAmount, title: .totalDebt ,image: nil, foregraund: .white,  background: .clear, action: {}), .init(amount: gracePeriodPayment, title: .preferential, image: nil, foregraund: .white, background: .clear, action: {})]
             }
             
@@ -381,7 +378,9 @@ extension DetailAccountViewComponent {
                 self.amountViewModel = [.init(title: .debt, foregraundColor: .mainColorsBlackMedium, amount: debtAmount, availebelAmount: nil), .init(title: .available, foregraundColor: .buttonPrimary, amount: availableExceedLimit, availebelAmount: totalAvailableAmount)]
                 self.footerViewModel = [.init(amount: minimumPayment, title: .minimal, image: nil, foregraund: .white, background: .textPrimary, action: {
                     NotificationCenter.default.post(name: NSNotification.Name("openPaymentsView"), object: nil, userInfo: nil)
-                }), .init(amount: overduePayment, title: .delay, image: Image.ic24AlertCircle, foregraund: .buttonPrimary, background: .clear, action: {})]
+                }), .init(amount: overduePayment, title: .delay, image: Image.ic24AlertCircle, foregraund: .buttonPrimary, background: .clear, action: {
+                    NotificationCenter.default.post(name: NSNotification.Name("openBottomSheet"), object: nil, userInfo: nil)
+                })]
                 self.secondButtonsViewModel = [ .init(amount: totalDebtAmount, title: .totalDebt ,image: nil, foregraund: .white,  background: .clear, action: {}), .init(amount: gracePeriodPayment, title: .preferential, image: nil, foregraund: .white, background: .clear, action: {})]
             }
             
@@ -394,14 +393,23 @@ extension DetailAccountViewComponent {
                     
                     self.headerView = .init(subTitle: .mortgage, collapsed: false)
                 }
-    
+                
                 self.dateViewModel = .init(.init(longInt: longInt))
-
+                
                 self.amountViewModel = [.init(title: .creditAmount, foregraundColor: .mainColorsBlackMedium, amount: totalDebtAmount, availebelAmount: nil), .init(title: .repaid, foregraundColor: .buttonPrimary, amount: totalAvailableAmount, availebelAmount: nil)]
                 self.circleViewModel = .init(debt: loanBase.totalDebtAmount, ownFound: loanBase.ownFunds, available: loanBase.totalAvailableAmount)
-                self.footerViewModel = [.init(amount: minimumPayment, title: .minimalCredit, image: nil, foregraund: .white, background: .textPrimary, action: {
+                self.footerViewModel = []
+                
+                self.footerViewModel?.append(.init(amount: minimumPayment, title: .minimalCredit, image: nil, foregraund: .white, background: .textPrimary, action: {
                     NotificationCenter.default.post(name: NSNotification.Name("openPaymentsView"), object: nil, userInfo: nil)
-                }), .init(amount: overduePayment, title: .delay, image: Image.ic24AlertCircle, foregraund: .buttonPrimary, background: .clear, action: {})]
+                }))
+                
+                self.footerViewModel?.append(.init(amount: " \(overduePayment)", title: .delay, image: Image.ic24AlertCircle, foregraund: .buttonPrimary, background: .clear, action: {
+                    NotificationCenter.default.post(name: NSNotification.Name("openBottomSheet"), object: nil, userInfo: nil)
+
+                }))
+                
+                self.secondButtonsViewModel = nil
             }
             
             if isCredit, loanBase.overduePayment <= 0 {
@@ -415,12 +423,13 @@ extension DetailAccountViewComponent {
                 }
                 
                 self.dateViewModel = .init(.init(longInt: longInt))
-
+                
                 self.amountViewModel = [.init(title: .creditAmount, foregraundColor: .mainColorsBlackMedium, amount: totalDebtAmount, availebelAmount: nil), .init(title: .repaid, foregraundColor: .buttonPrimary, amount: totalAvailableAmount, availebelAmount: nil)]
                 self.circleViewModel = .init(debt: loanBase.totalDebtAmount, ownFound: loanBase.ownFunds, available: loanBase.totalAvailableAmount)
                 self.footerViewModel = [.init(amount: minimumPayment, title: .minimalCredit, image: nil, foregraund: .white, background: .textPrimary, action: {
                     NotificationCenter.default.post(name: NSNotification.Name("openPaymentsView"), object: nil, userInfo: nil)
                 })]
+                self.secondButtonsViewModel = nil
             }
             
             bind()
@@ -481,7 +490,7 @@ struct DetailAccountViewComponent: View {
                     DateProgressView(viewModel: dateProgress)
                         .padding(.horizontal, 20)
                 } else {
-                 
+                    
                     Divider()
                         .foregroundColor(.white.opacity(0.05))
                         .padding(.horizontal, 20)
@@ -500,7 +509,7 @@ struct DetailAccountViewComponent: View {
                         
                     }
                     .padding(.horizontal, 12)
-
+                    
                 }
                 
                 if let secondButtonViewModel = viewModel.secondButtonsViewModel {
@@ -520,7 +529,7 @@ struct DetailAccountViewComponent: View {
                     .padding(.horizontal, 20)
                 
                 if let dateProgress = viewModel.dateViewModel {
-
+                    
                     DateProgressView(viewModel: dateProgress)
                         .padding(.horizontal, 20)
                 }
@@ -697,14 +706,14 @@ struct DetailAccountViewComponent: View {
                 } label: {
                     
                     ZStack {
-                            
+                        
                         if let ownFound = viewModel.circleViewModel?.ownFound, let available = viewModel.circleViewModel?.available, ownFound > 0.1 {
                             
-                            DetailAccountSegmentedBar(values: [available, ownFound], colors: [.buttonPrimary, .white])
-
+                            DetailAccountSegmentedBar(values: [available, ownFound], totalDebt: nil, colors: [.buttonPrimary, .white])
+                            
                         } else if let debt = viewModel.circleViewModel?.debt, let available = viewModel.circleViewModel?.available {
                             
-                            DetailAccountSegmentedBar(values: [available, debt], colors: [.buttonPrimary, .cardInfinite])
+                            DetailAccountSegmentedBar(values: [available, debt], totalDebt: debt, colors: [.buttonPrimary, .cardInfinite])
                         }
                         
                         Image.ic24AlertCircle
@@ -757,6 +766,7 @@ struct DetailAccountViewComponent: View {
     struct FooterView: View {
         
         var viewModel: [DetailAccountViewComponent.ViewModel.FooterViewModel?]
+        @State var showInfoModalView: Bool = false
         
         var body: some View {
             
@@ -769,7 +779,12 @@ struct DetailAccountViewComponent: View {
                         if let action = button?.action {
                             
                             action()
+                            showInfoModalView = true
+                            
+                        } else {
+                            
                         }
+                        
                     } label: {
                         
                         VStack(alignment: .leading, spacing: 8) {

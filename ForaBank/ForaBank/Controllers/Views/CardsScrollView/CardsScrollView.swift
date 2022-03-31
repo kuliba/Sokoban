@@ -59,7 +59,7 @@ final class CardsScrollView: UIView {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         return collectionView
     }()
-
+    
     
     //MARK: - Viewlifecicle
     override init(frame: CGRect) {
@@ -80,7 +80,7 @@ final class CardsScrollView: UIView {
     deinit {
         token?.invalidate()
     }
-
+    
     func commonInit(onlyMy: Bool, onlyCard: Bool = false, deleteDeposit: Bool = false, loadProducts: Bool = true) {
         self.onlyMy = onlyMy
         self.onlyCard = onlyCard
@@ -108,7 +108,7 @@ final class CardsScrollView: UIView {
                 }
             })
         }
-
+        
         changeCardButtonCollection.isHidden = !self.onlyMy
         self.translatesAutoresizingMaskIntoConstraints = false
         self.heightAnchor.constraint(equalToConstant: self.onlyMy ? 125 : 95).isActive = true
@@ -130,7 +130,7 @@ final class CardsScrollView: UIView {
     }
     
     func updateObjectWithNotification() {
-
+        
         cardListRealm = realm?.objects(UserAllCardsModel.self)
         self.token = self.cardListRealm?.observe { [weak self] ( changes: RealmCollectionChange) in
             guard (self?.collectionView) != nil else {return}
@@ -139,7 +139,7 @@ final class CardsScrollView: UIView {
                 self?.collectionView.reloadData()
             case .update(_, _, _, _):
                 print("REALM Update")
-        
+                
             case .error(let error):
                 fatalError("\(error)")
             }
@@ -192,7 +192,7 @@ extension CardsScrollView: UICollectionViewDataSource {
                 let cellLast = collectionView.dequeueReusableCell(withReuseIdentifier: allReuseIdentifier, for: indexPath) as! AllCardCell
                 return cellLast
             } else {
-               
+                
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CardsScrollCell
                 
                 if isFiltered {
