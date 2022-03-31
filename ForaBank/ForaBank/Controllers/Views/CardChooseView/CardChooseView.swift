@@ -93,6 +93,13 @@ final class CardChooseView: UIView {
         self.numberCardLabel.attributedText = text
         if model.productType == "DEPOSIT" {
             self.maskNumberLabel.text = "• \(model.accountNumber?.suffix(4) ?? "")"
+        } else if model.productType == ProductType.loan.rawValue {
+            
+            if let date = longIntToDateString(longInt: model.dateLong/1000) {
+                
+                self.maskNumberLabel.text = "· \(model.settlementAccount?.suffix(4) ?? "") · Ставка \(model.currentInterestRate)%  · \(date)"
+            }
+            
         } else {
             self.maskNumberLabel.text = "• \(model.number?.suffix(4) ?? "")"
         }
@@ -188,4 +195,18 @@ final class CardChooseView: UIView {
         }
     }
     
+    func longIntToDateString(longInt: Int) -> String?{
+        
+        let date = Date(timeIntervalSince1970: TimeInterval(longInt))
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeStyle = DateFormatter.Style.none//Set time style
+        dateFormatter.dateStyle = DateFormatter.Style.long //Set date style
+        
+        dateFormatter.dateFormat =  "dd.MM.yy"
+        dateFormatter.timeZone = .current
+        dateFormatter.locale = Locale(identifier: "ru_RU")
+        let localDate = dateFormatter.string(from: date)
+        
+        return localDate
+    }
 }

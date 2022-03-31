@@ -72,16 +72,16 @@ final class CardsScrollView: UIView {
         commonInit(onlyMy: true)
     }
     
-    required init(frame: CGRect = .zero, onlyMy: Bool, onlyCard: Bool = false, deleteDeposit: Bool = false, loadProducts: Bool = true) {
+    required init(frame: CGRect = .zero, onlyMy: Bool, onlyCard: Bool = false, deleteDeposit: Bool = false, loadProducts: Bool = true, loans: Bool = false) {
         super.init(frame: frame)
-        commonInit(onlyMy: onlyMy, onlyCard: onlyCard, deleteDeposit: deleteDeposit, loadProducts: loadProducts)
+        commonInit(onlyMy: onlyMy, onlyCard: onlyCard, deleteDeposit: deleteDeposit, loadProducts: loadProducts, loans: loans)
     }
     
     deinit {
         token?.invalidate()
     }
-    
-    func commonInit(onlyMy: Bool, onlyCard: Bool = false, deleteDeposit: Bool = false, loadProducts: Bool = true) {
+
+    func commonInit(onlyMy: Bool, onlyCard: Bool = false, deleteDeposit: Bool = false, loadProducts: Bool = true, loans: Bool = false) {
         self.onlyMy = onlyMy
         self.onlyCard = onlyCard
         
@@ -101,12 +101,15 @@ final class CardsScrollView: UIView {
                         }
                     } else {
                         if (op.ownerID == clientId ?? 0 && op.isMain == true) {
-                            print("clientId", op.ownerID, clientId ?? 0)
+                            
                             cardList.append(op)
                         }
                     }
                 }
             })
+            if !loans {
+                cardList = cardList.filter({$0.productType != ProductType.loan.rawValue})
+            }
         }
         
         changeCardButtonCollection.isHidden = !self.onlyMy
@@ -139,7 +142,6 @@ final class CardsScrollView: UIView {
                 self?.collectionView.reloadData()
             case .update(_, _, _, _):
                 print("REALM Update")
-                
             case .error(let error):
                 fatalError("\(error)")
             }
