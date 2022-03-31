@@ -39,9 +39,7 @@ class PushHistoryViewController: UIViewController {
         let body = ["offset": tempOffset,
                     "limit" : "100",
                     "notificationType" : "PUSH",
-                    "notificationState" : "SENT",
-                    "notificationState" : "DELIVERED",
-                    "notificationState" : "READ"
+                    "notificationState" : "SENT"
         ]
         GetNotificationsModelSaved.add(body, [:]) {
             DispatchQueue.main.async {
