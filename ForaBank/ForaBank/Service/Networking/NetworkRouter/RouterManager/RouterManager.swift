@@ -89,6 +89,12 @@ enum RouterManager {
     case getOperationDetail
     case getNotifications
     case getPrintFormForAccountStatement
+
+
+    case getQRData
+    case createC2BTransfer
+    case getRecipientImage
+
     case isSingleService
     case getClientInfo
     case getMosParkingList
@@ -1316,7 +1322,49 @@ extension RouterManager {
             var request = URLRequest(url: resultUrl!)
             request.httpMethod = RequestMethod.post.rawValue
             return request
-            
+
+        case .getQRData:
+            let baseUrl = RouterUrlList.getQRData.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+
+        case .createC2BTransfer:
+            let baseUrl = RouterUrlList.createC2BTransfer.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+
+        case .getRecipientImage:
+            let baseUrl = RouterUrlList.getRecipientImage.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.get.rawValue
+            return request
+
         case .isSingleService:
             let baseUrl = RouterUrlList.isSingleService.returnUrl()
             switch baseUrl {

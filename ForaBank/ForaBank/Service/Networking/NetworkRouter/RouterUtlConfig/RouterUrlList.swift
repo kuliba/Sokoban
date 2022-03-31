@@ -94,6 +94,11 @@ enum RouterUrlList: String {
     case getOperationDetail
     case getNotifications
     case getPrintFormForAccountStatement
+
+    case getQRData
+    case createC2BTransfer
+    case getRecipientImage
+
     case isSingleService
     case getMosParkingList
     case getClientInfo
@@ -990,6 +995,36 @@ enum RouterUrlList: String {
                 return .failure(.urlError)
             }
             
+        case .getQRData:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getQRData.rawValue)
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .createC2BTransfer:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.createC2BTransfer.rawValue)
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .getRecipientImage:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getRecipientImage.rawValue)
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
         case .isSingleService:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.isSingleService.rawValue)
             switch result {
@@ -1098,10 +1133,7 @@ enum RouterUrlList: String {
                 debugPrint(error)
                 return .failure(.urlError)
             }
-            
         }
-        
-        
     }
 
 }

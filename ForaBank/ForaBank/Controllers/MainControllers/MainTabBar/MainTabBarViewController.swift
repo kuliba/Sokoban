@@ -18,6 +18,11 @@ class MainTabBarViewController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        //GlobalModule.c2bURL = "https://qr.nspk.ru/AS100057J1VQQADF9F491N4US79QFUCU?type=01&bank=100000000217&sum=100&cur=RUB&crc=7F51"
+        //GlobalModule.c2bURL = "https://qr.nspk.ru/AS1A004C56EKES0D9CHO5313H57OL4VE?type=01&bank=100000000217&crc=A006"
+        //GlobalModule.c2bURL = "https://qr.nspk.ru/AS1A0001R4IQ00KH9T7O5SSM06F3AUHR?type=01&bank=1crt88888881&crc=4108"
+        //GlobalModule.c2bURL = "https://qr.nspk.ru/AS1A0001R4IQ00KH9T7O5SSM06F3AUHR?type=01&bank=1crt88888881&crc=4108"
+        //GlobalModule.c2bURL = "bank100000000217://qr.nspk.ru/AS1A002B0O3J2AKC97URG6GI1HAPP6VA?type=01&bank=1crt88888881&crc=9C74"
         getFastPaymentContractList()
         tabBar.layer.backgroundColor = UIColor(red: 0.973, green: 0.973, blue: 0.973, alpha: 0.82).cgColor
 //        tabBar.tintColor = #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)
@@ -47,9 +52,7 @@ class MainTabBarViewController: UITabBarController {
                                   image: UIImage(named: "tabBar-chat")!,
                                   fillImage: UIImage(named: "tabBar-chat-fill")!),
         ]
-        
         loadCatalog()
-        
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -59,6 +62,14 @@ class MainTabBarViewController: UITabBarController {
             let nc = UINavigationController(rootViewController: controller)
             nc.modalPresentationStyle = .fullScreen
             present(nc, animated: false)
+            return
+        }
+        if GlobalModule.c2bURL != nil {
+            let controller = C2BDetailsViewController.storyboardInstance()!
+            let nc = UINavigationController(rootViewController: controller)
+            nc.modalPresentationStyle = .fullScreen
+            present(nc, animated: false)
+            return
         }
     }
 
@@ -67,9 +78,7 @@ class MainTabBarViewController: UITabBarController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             if let userInfo = UserDefaults.standard.object(forKey: "ConsentMe2MePull") as? [AnyHashable : Any] {
                 let meToMeReq = RequestMeToMeModel(userInfo: userInfo)
-                
                 let topvc = UIApplication.topViewController()
-                
                 let vc = MeToMeRequestController()
                 vc.viewModel = meToMeReq
                 vc.modalPresentationStyle = .fullScreen
@@ -98,9 +107,7 @@ class MainTabBarViewController: UITabBarController {
                             }
                         } else {
 //                            let meToMeReq = RequestMeToMeModel(model: model)
-                            
                             let topvc = UIApplication.topViewController()
-                            
                             let vc = MeToMeRequestController()
 //                            vc.viewModel = meToMeReq
                             vc.modalPresentationStyle = .fullScreen
@@ -111,10 +118,7 @@ class MainTabBarViewController: UITabBarController {
                     }
                 }
             }
-            
         }
-        
-    
     }
     
     private func generateNavController(rootViewController: UIViewController, title: String, image: UIImage, fillImage: UIImage) -> UIViewController {
@@ -126,10 +130,10 @@ class MainTabBarViewController: UITabBarController {
     }
 
     private func loadCatalog() {
-        
-        AppUpdater.shared.showUpdate(withConfirmation: true)
+        if (GlobalModule.c2bURL == nil) {
+            AppUpdater.shared.showUpdate(withConfirmation: true)
+        }
 
-        
         NetworkHelper.request(.getCountries) { model, error in
             if error != nil {
                 self.showAlert(with: "Ошибка", and: error!)
@@ -187,8 +191,7 @@ class MainTabBarViewController: UITabBarController {
 
         /// Add REALM
  //       AddAllUserCardtList.add() {}
-        
-        
+
 //        NetworkHelper.request(.getProductList) { cardList , error in
 //            if error != nil {
 //                self.showAlert(with: "Ошибка", and: error!)
@@ -196,7 +199,6 @@ class MainTabBarViewController: UITabBarController {
 //            guard let cardList = cardList as? [GetProductListDatum] else { return }
 //            print("DEBUG: Load card list... Count is: ", cardList.count)
 //        }
-      
     }
     
     func getFastPaymentContractList() {
@@ -215,14 +217,9 @@ class MainTabBarViewController: UITabBarController {
                 UserDefaults.standard.set(clientID, forKey: "clientId")
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
-
-                
             }
         }
-        
     }
-
-
 }
 
 
