@@ -48,9 +48,7 @@ class PayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         self.navigationItem.leftItemsSupplementBackButton = true
         let close = UIBarButtonItem(title: "Закрыть", style: .plain, target: self, action: #selector(backButton))
         close.tintColor = .black
-        //        self.navigationItem.setRightBarButton(close, animated: true)
-        
-        //        self.navigationItem.rightBarButtonItem?.action = #selector(backButton)
+
         self.navigationItem.rightBarButtonItem = close
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .normal)
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .highlighted)
@@ -125,7 +123,11 @@ class PayViewController: UIViewController, UITableViewDelegate, UITableViewDataS
             }
         case 1:
             let model = ConfirmViewControllerModel(type: .card2card)
-            let popView = CustomPopUpWithRateView()
+            var popView = CustomPopUpWithRateView()
+            
+            if let card = card {
+                popView = CustomPopUpWithRateView(cardTo: card)
+            }
             popView.viewModel = model
             popView.modalPresentationStyle = .custom
             popView.transitioningDelegate = self

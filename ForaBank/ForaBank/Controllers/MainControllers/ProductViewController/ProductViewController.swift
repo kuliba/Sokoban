@@ -84,6 +84,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         }
     }
     
+    var productsCount = 0
+    
     var product: UserAllCardsModel? {
         didSet{
             
@@ -156,8 +158,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             
             card.reloadInputViews()
             loadHistoryForCard()
-            
-            setNavButton()
         }
     }
     
@@ -250,6 +250,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        productsCount = products.filter({$0.productType != product?.productType}).count
         tableView.backgroundColor = .white
         scrollView.delegate = self
         tableView.isSkeletonable = true
@@ -264,7 +265,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         scrollView.addSubview(stackView2)
         scrollView.addSubview(secondStackView)
         scrollView.addSubview(headerView)
-                
+        
         secondStackView.anchor(top: stackView2.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 24, paddingLeft: 20, paddingRight: 20)
         
         headerView.anchor(height: 80)
@@ -312,6 +313,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: flowLayout)
         collectionView?.register(UINib(nibName: "CardCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "CardCollectionViewCell")
+        collectionView?.register(UINib(nibName: "MoreButtonCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "MoreButtonCollectionViewCell")
+        
         collectionView?.delegate = self
         collectionView?.dataSource = self
         collectionView?.backgroundColor = .clear
@@ -320,15 +323,26 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         
         scrollView.addSubview(collectionView!)
         
-        let width: CGFloat
+        var filteredProducts = products.filter({$0.productType == product?.productType})
         
         if product?.productType == ProductType.loan.rawValue {
             
-            width = CGFloat(products.filter({ $0.productType == product?.productType }).prefix(3).count)
+            filteredProducts = products.filter({$0.productType == product?.productType})
+            filteredProducts += products.filter({$0.number == product?.settlementAccount})
+        }
+        
+        products = Array(filteredProducts[0 ..< filteredProducts.prefix(3).count])
+        
+        let width: CGFloat
+        
+        if productsCount > 0 {
+            
+            width = CGFloat(products.count + 1)
         } else {
             
-            width = CGFloat(products.filter({ $0.productType == product?.productType }).prefix(3).count)
+            width = CGFloat(products.count)
         }
+        
         collectionView?.anchor(top: scrollView.topAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 20, paddingRight: 20, width:  width * 60, height: 65)
         
         collectionView?.centerX(inView: view)
@@ -372,7 +386,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         statusBarLabel.font = UIFont(name: "", size: 16)
         statusBarLabel.anchor(left: statusBarView.leftAnchor, paddingLeft: 10)
         statusBarLabel.centerY(inView: statusBarView)
-
+        
         amounPeriodLabel.font = UIFont(name: "", size: 16)
         amounPeriodLabel.anchor(right: statusBarView.rightAnchor, paddingRight: 10)
         amounPeriodLabel.centerY(inView: statusBarView)
@@ -394,21 +408,21 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         
         scrollView.addSubview(tableView)
         tableView.anchor(top: headerView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 20, paddingBottom: 20, paddingRight: 20, width: 300, height: 1500)
-
-        
         
         tableView.dataSource = self
         tableView.delegate = self
         
         setupButtons()
-        setNavButton()
         setupNavigationColor()
         setupProduct()
         loadHistoryForCard()
+        
     }
     
     
     fileprivate func setupProduct() {
+        
+        setNavButton()
         
         if let fontDesignColor = product?.fontDesignColor {
             
@@ -432,7 +446,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         tableView.tableHeaderView?.isSkeletonable = true
         tableView.tableHeaderView?.showAnimatedGradientSkeleton()
         
-        if products.filter({ $0.productType == product?.productType }).count == 1 && product?.productType != ProductType.loan.rawValue {
+        if productsCount == 0 {
             
             collectionView?.anchor(height: 0)
             collectionView?.isHidden = true
@@ -441,6 +455,10 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             collectionView?.anchor(height: 65)
             collectionView?.isHidden = false
         }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.showAlert(sender:)), name: Notification.Name("openPaymentsView"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.presentBottomSheet(sender: )), name: Notification.Name("openBottomSheet"), object: nil)
         
         switch product?.productType {
         case ProductType.card.rawValue:
@@ -452,7 +470,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             button3.titleLabel?.textAlignment = .center
             let btnImage3 = UIImage(named: "file-text")?.withRenderingMode(.alwaysTemplate)
             button3.setImage(btnImage3 , for: .normal)
-           
+            
             button4.alpha = 1
             button4.isUserInteractionEnabled = true
             
@@ -490,14 +508,14 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             
             tableView.isHidden = false
             headerView.isHidden = false
-
+            
         case ProductType.deposit.rawValue:
             
             guard let number = self.product?.accountNumber else { return }
             
             self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4)))", color: "#ffffff")
             
-
+            
             button2.alpha = 0.4
             button2.isUserInteractionEnabled = false
             
@@ -526,8 +544,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             
         case ProductType.loan.rawValue:
             
-            NotificationCenter.default.addObserver(self, selector: #selector(self.showAlert(sender:)), name: Notification.Name("openPaymentsView"), object: nil)
-            
             if let productId = product?.id {
                 
                 personsCredit(id: productId)
@@ -537,7 +553,14 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             
             guard let number = self.product?.settlementAccount else { return }
             
-            self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4))) · \(product?.currentInterestRate ?? 0)%    ", color: "#ffffff")
+            if let additionalField = product?.additionalField, let currentInterestRate = product?.currentInterestRate {
+                
+                self.navigationItem.setTitle(title: additionalField, subtitle: "· \(String(number.suffix(4))) · \(currentInterestRate)%    ", color: "#ffffff")
+            } else {
+                
+                self.navigationItem.setTitle(title: product?.mainField ?? "", subtitle: "· \(String(number.suffix(4))) · \(product?.currentInterestRate ?? 0.0)%    ", color: "#ffffff")
+            }
+            
             addCloseColorButton(with: UIColor(hexString: "ffffff"))
             
             card.backgroundView?.backgroundColor = UIColor(hexString: "#999999")
@@ -558,7 +581,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             button4.titleLabel?.numberOfLines = 2
             button4.titleLabel?.lineBreakMode = .byWordWrapping
             button4.addTarget(self, action: #selector(showAlert(sender:)), for: .touchUpInside)
-
+            
+            
             headerView.isHidden = true
             tableView.isHidden = true
         default:
@@ -588,7 +612,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
                     self.detailView.view = nil
                     
                     let swiftUIView = DetailAccountViewComponent(viewModel: .init(with: .init(with: .init(loanID: data.loanId ?? 0, clientID: data.clientId, number: data.number ?? "", currencyID: data.currencyId, currencyNumber: data.currencyNumber, currencyCode: data.currencyCode, minimumPayment: data.amountPayment, gracePeriodPayment: nil, overduePayment: data.overduePayment, availableExceedLimit: nil, ownFunds: nil, debtAmount: nil, totalAvailableAmount: data.amountRepaid, totalDebtAmount: data.amountCredit)), status: .active, isCredit: true, productName: self.product?.productName, longInt: data.datePayment))
-                        
+                    
                     self.detailView = SelfSizingHostingController(rootView: swiftUIView)
                     
                     self.heightConstraint = self.detailView.view.heightAnchor.constraint(equalToConstant: 0)
@@ -793,6 +817,12 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         vc.searchContact.isHidden = true
         vc.addCloseButton()
         present(vc, animated: true, completion: nil)
+    }
+    
+    @objc func presentBottomSheet(sender: AnyObject) {
+        
+        let bottomSheet = BottomSheetHostingViewController(with: InfoView.ViewModel())
+        present(bottomSheet, animated: true)
     }
     
     func presentRequisitsVc(product: UserAllCardsModel,_ openControlButtons: Bool?) {
@@ -1056,5 +1086,3 @@ class SelfSizingHostingController<Content>: UIHostingController<Content> where C
     }
     
 }
-
-

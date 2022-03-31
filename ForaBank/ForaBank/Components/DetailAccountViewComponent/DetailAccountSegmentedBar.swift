@@ -12,12 +12,17 @@ import Combine
 struct DetailAccountSegmentedBar: View {
     
     var values: [Double]
+    var totalDebt: Double?
     @State var colors: [Color]
     
     private var totalValue: Double {
         get {
-            return values.reduce(0) { (res, val) -> Double in
-                return res + val
+            if let totalDebt = totalDebt {
+                return totalDebt
+            } else {
+                return values.reduce(0) { (res, val) -> Double in
+                    return res + val
+            }
             }
         }
     }

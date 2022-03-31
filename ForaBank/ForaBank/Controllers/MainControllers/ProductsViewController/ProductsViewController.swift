@@ -17,9 +17,9 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
     
     var totalMoney: Double = 0.0 {
         didSet{
-            totalMoneyView.totalBalance.text = String(totalMoney.currencyFormatter(symbol: ""))
-            let isLong = String(totalMoney.currencyFormatter(symbol: ""))
-            if isLong.contains("Млн") {
+            totalMoneyView.totalBalance.text = String(totalMoney.fullCurrencyFormatter(symbol: ""))
+            let isLong = String(totalMoney.fullCurrencyFormatter(symbol: ""))
+            if isLong.count < 6 {
                 totalMoneyView.stackViewAxis (true)
             } else {
                 totalMoneyView.stackViewAxis (false)
@@ -303,7 +303,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
         
                 if loans.count > 0 {
                     let str = loans[indexPath.row].accountNumber ?? ""
-                    cell.titleProductLabel.text = loans[indexPath.row].customName ?? loans[indexPath.row].mainField
+                    cell.titleProductLabel.text = loans[indexPath.row].additionalField ?? loans[indexPath.row].mainField
                     cell.numberProductLabel.text = "\(str.suffix(4))"
                     cell.balanceLabel.text = "\(loans[indexPath.row].totalAmountDebt.currencyFormatter(symbol: loans[indexPath.row].currency ?? "") )"
                     cell.coverpProductImage.image = loans[indexPath.row].smallDesign?.convertSVGStringToImage()
@@ -362,6 +362,7 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
                 default:
                     print("default")
                 }
+                viewController.products = products
                 let navVC = UINavigationController(rootViewController: viewController)
                 navVC.modalPresentationStyle = .fullScreen
                 present(navVC, animated: true)

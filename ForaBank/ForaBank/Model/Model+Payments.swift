@@ -296,6 +296,9 @@ extension Model {
             case .failedMakeTransfer(let status, let message):
                 return "failedMakeTransfer status \(status), message: \(String(describing: message))"
                 
+            case .clientInfoEmptyResponse:
+                return "clientInfoEmptyResponse"
+                
             case .anywayTransferFinalStepExpected:
                 return "anywayTransferFinalStepExpected"
                 
@@ -486,6 +489,39 @@ extension Model {
                     case .ok:
                         guard let transferData = response.data else {
                             continuation.resume(with: .failure(Payments.Error.failedMakeTransferWithEmptyDataResponse))
+                            return
+                        }
+                        continuation.resume(with: .success(transferData))
+                        
+                    default:
+                        continuation.resume(with: .failure(Payments.Error.failedMakeTransfer(status: response.statusCode, message: response.errorMessage)))
+                    }
+                    
+                case .failure(let error):
+                    continuation.resume(with: .failure(error))
+                }
+            }
+        })
+    }
+    
+    func paymentsTransferClientInfo() async throws -> ClientInfoData {
+        
+        guard let token = token else {
+            throw Payments.Error.notAuthorized
+        }
+        
+        let command = ServerCommands.PersonController.GetClientInfo(token: token)
+        
+        return try await withCheckedThrowingContinuation({ continuation in
+            
+            serverAgent.executeCommand(command: command) { result in
+                
+                switch result {
+                case .success(let response):
+                    switch response.statusCode {
+                    case .ok:
+                        guard let transferData = response.data else {
+                            continuation.resume(with: .failure(Payments.Error.clientInfoEmptyResponse))
                             return
                         }
                         continuation.resume(with: .success(transferData))

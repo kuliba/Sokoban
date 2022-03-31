@@ -17,6 +17,7 @@ extension TextFieldFormatableView {
         @Published var formatter: NumberFormatter
         @Published var text: String?
         @Published var isEnabled: Bool
+        @Published var limit: Int?
         var dismissKeyboard: () -> Void
         
         var value: Double {
@@ -28,11 +29,12 @@ extension TextFieldFormatableView {
             return value.doubleValue
         }
         
-        internal init(value: Double, formatter: NumberFormatter, isEnabled: Bool = true) {
+        internal init(value: Double, formatter: NumberFormatter, isEnabled: Bool = true, limit: Int? = nil) {
             
             self.formatter = formatter
             self.text = formatter.string(from: NSNumber(value: value))
             self.isEnabled = isEnabled
+            self.limit = limit
             self.dismissKeyboard = {}
         }
     }
@@ -45,7 +47,7 @@ struct TextFieldFormatableView: UIViewRepresentable {
     @ObservedObject var viewModel: ViewModel
     
     //TODO: wrapper Font -> UIFont required
-    var font: UIFont = .monospacedSystemFont(ofSize: 19, weight: .regular)
+    var font: UIFont = .systemFont(ofSize: 19, weight: .regular)
     var backgroundColor: Color = .clear
     var textColor: Color = .white
     var tintColor: Color = .white
@@ -75,26 +77,43 @@ struct TextFieldFormatableView: UIViewRepresentable {
     
     func makeCoordinator() -> Coordinator {
         
-        Coordinator(text: $viewModel.text, formatter: viewModel.formatter)
+        Coordinator(text: $viewModel.text, formatter: viewModel.formatter, limit: viewModel.limit)
     }
     
     class Coordinator: NSObject, UITextFieldDelegate {
         
         var text: Binding<String?>
         var formatter: NumberFormatter
+        var limit: Int?
         
-        init(text: Binding<String?>, formatter: NumberFormatter) {
+        init(text: Binding<String?>, formatter: NumberFormatter, limit: Int?) {
             
             self.text = text
             self.formatter = formatter
+            self.limit = limit
+        }
+        
+        func textFieldDidChangeSelection(_ textField: UITextField) {
+            
+            updateCursorPosition(textField)
         }
         
         public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
 
-            textField.text = TextFieldFormatableView.updateFormatted(value: textField.text, inRange: range, update: string, formatter: formatter)
+            textField.text = TextFieldFormatableView.updateFormatted(value: textField.text, inRange: range, update: string, formatter: formatter, limit: limit)
             text.wrappedValue = textField.text
+            updateCursorPosition(textField)
             
             return false
+        }
+        
+        func updateCursorPosition(_ textField: UITextField) {
+            
+            let arbitraryValue: Int = 2
+            if let newPosition = textField.position(from: textField.endOfDocument, offset: -arbitraryValue) {
+
+                textField.selectedTextRange = textField.textRange(from: newPosition, to: newPosition)
+            }
         }
     }
     
@@ -106,29 +125,43 @@ struct TextFieldFormatableView: UIViewRepresentable {
     ///   - formatter: number formatter must be applyed
     ///   - regExp: regular expression string required to filter update string
     /// - Returns: formatted string result, example: `1 234.56 ₽`
-    static func updateFormatted(value: String?, inRange: NSRange, update: String, formatter: NumberFormatter) -> String? {
+    static func updateFormatted(value: String?, inRange: NSRange, update: String, formatter: NumberFormatter, limit: Int? = nil) -> String? {
         
         let expectedCharacters = "0123456789.,"
 
         if let value = value {
             
-            let originalValueRangeUpperBound = value.count
-            
-            // remove formatting from value, example: `1 234,56 ₽` -> `1234,56`
-            let valueUnformatted = value.filter{ expectedCharacters.contains($0) }
-            
-            // offset for inRange lower and upper bounds
-            let rangeOffset = originalValueRangeUpperBound - valueUnformatted.count
-            
-            var updatedValue = valueUnformatted
-            let rangeStart = value.index(valueUnformatted.startIndex, offsetBy: inRange.lowerBound - rangeOffset)
-            let rangeEnd = value.index(valueUnformatted.startIndex, offsetBy: inRange.upperBound - rangeOffset)
+            let rangeStart = value.index(value.startIndex, offsetBy: inRange.lowerBound)
+            let rangeEnd = value.index(value.startIndex, offsetBy: inRange.upperBound)
             
             // apply update to value in range
+            var updatedValue = value
             updatedValue.replaceSubrange(rangeStart..<rangeEnd, with: update)
-                        
+            // remove formatting from value, example: `1 234,56 ₽` -> `1234,56`
+            updatedValue = updatedValue.filter{ expectedCharacters.contains($0) }
+
             // filter only expected characters
             let filterredUpdate = updatedValue.filter{ expectedCharacters.contains($0) }.replacingOccurrences(of: formatter.decimalSeparator, with: ".")
+            
+            // check limit
+            if let limit = limit, limit > 0 {
+                
+                if filterredUpdate.contains(".") == true {
+                    
+                    let separated = filterredUpdate.split(separator: ".")
+                    if separated[0].count > limit, separated.count > 1 {
+                        
+                        return value
+                    }
+                    
+                } else {
+                    
+                    if updatedValue.count > limit {
+                        
+                        return value
+                    }
+                }
+            }
             
             // crop to max fraction digits, example: `1234.567` -> `1234.56`
             let filterredUpdateSplitted = filterredUpdate.split(separator: ".")
