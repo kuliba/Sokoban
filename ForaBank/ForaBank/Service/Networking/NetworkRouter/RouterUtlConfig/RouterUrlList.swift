@@ -97,6 +97,7 @@ enum RouterUrlList: String {
 
     case getQRData
     case createC2BTransfer
+    case getOperationDetailByPaymentId
     case getRecipientImage
 
     case isSingleService
@@ -1007,6 +1008,16 @@ enum RouterUrlList: String {
             
         case .createC2BTransfer:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.createC2BTransfer.rawValue)
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+
+        case .getOperationDetailByPaymentId:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getOperationDetailByPaymentId.rawValue)
             switch result {
             case .success(let url):
                 return .success(url.absoluteURL)

@@ -141,6 +141,8 @@ enum RouterBaseUrlList: String {
 
     case createC2BTransfer = "/rest/transfer/createC2BTransfer"
 
+    case getOperationDetailByPaymentId = "/rest/getOperationDetailByPaymentId"
+
     case getRecipientImage = "/rest/getRecipientImage"
 
     case isSingleService           = "/rest/transfer/isSingleService"

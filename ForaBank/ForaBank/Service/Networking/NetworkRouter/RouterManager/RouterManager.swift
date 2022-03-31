@@ -93,6 +93,7 @@ enum RouterManager {
 
     case getQRData
     case createC2BTransfer
+    case getOperationDetailByPaymentId
     case getRecipientImage
 
     case isSingleService
@@ -1339,6 +1340,20 @@ extension RouterManager {
 
         case .createC2BTransfer:
             let baseUrl = RouterUrlList.createC2BTransfer.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+
+        case .getOperationDetailByPaymentId:
+            let baseUrl = RouterUrlList.getOperationDetailByPaymentId.returnUrl()
             switch baseUrl {
             case .success(let url):
                 resultUrl = url.absoluteURL

@@ -128,6 +128,26 @@ class C2BApiRequests {
         }
     }
 
+    static func getOperationDetailByPaymentId(idDoc: String , completion: @escaping (_ model: GetOperationDetailsByPaymentIdAnswer?, _ error: String?) -> ()) {
+        let body = ["paymentOperationDetailId": idDoc] as [String: AnyObject]
+        NetworkManager<GetOperationDetailsByPaymentIdAnswer>.addRequest(.getOperationDetailByPaymentId, [:], body) { model, error in
+            if error != nil {
+                completion(nil, error)
+            }
+            guard let model = model else {
+                return
+            }
+            if model.statusCode == 0 {
+                completion(model, nil)
+            } else {
+                guard let error = model.errorMessage else {
+                    return
+                }
+                completion(nil, error)
+            }
+        }
+    }
+
     static func makeTransfer(completion: @escaping (_ model: MakeTransferDecodableModel?, _ error: String?) -> ()) {
         let code = "0"
         let body = ["verificationCode": code] as [String: AnyObject]
