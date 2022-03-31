@@ -140,8 +140,12 @@ class MainViewController: UIViewController {
                 
                 productsViewModels.append(PaymentsModel(productListFromRealm: product))
             }
-            productsViewModels.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
             
+            if products.count <= 1  {
+                
+                productsViewModels.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
+            }
+
             self.productsViewModels = productsViewModels
             
             
