@@ -16,3 +16,8 @@ struct ClientInfoData: Codable, Equatable {
     let regNumber: String
     let regSeries: String
 }
+
+extension ClientInfoData {
+    
+    var pasportNumber: String { regSeries + regNumber }
+}

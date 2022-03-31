@@ -112,7 +112,9 @@ extension Model {
                 do {
                     
                     let transferStepData = try await paymentsTransferAnywayStep(with: updatedParameters, include: ["a3_categorySelect_3_1", "a3_INN_4_1", "a3_OKTMO_5_1", "a3_DIVISION_4_1"], step: .next)
-                    let nextStepParameters = try paymentsTaxesNextStepParameters(for: transferStepData)
+                    
+                    let clientInfo = try await paymentsTransferClientInfo()
+                    let nextStepParameters = try paymentsTaxesNextStepParameters(for: transferStepData, samples: ["a3_docType_3_2": "1", "a3_docValue_4_2": clientInfo.pasportNumber ])
 
                     completion(.success(updatedParameters + nextStepParameters))
                     

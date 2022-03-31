@@ -128,7 +128,6 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
         guard let card = card else { return }
         
         let viewModel = CardViewModelFromRealm(card: card)
-        print(viewModel)
         backgroundImageView.image = card.XLDesign?.convertSVGStringToImage()
         balanceLabel.text = viewModel.fullBalance
         balanceLabel.textColor = viewModel.colorText
@@ -163,9 +162,11 @@ class LargeCardCell: UICollectionViewCell, SelfConfiguringCell {
         }
         
         if card.productType != ProductType.loan.rawValue {
+            
             dateEndLabel.isHidden = true
             dividerView.isHidden = true
         } else {
+            
             dateEndLabel.isHidden = false
             dividerView.isHidden = false
         }

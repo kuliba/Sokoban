@@ -129,8 +129,13 @@ struct CardViewModelFromRealm {
     }
     
     var balance: String {
-        let cardBal: Double = card.balance
-        return cardBal.currencyFormatter(symbol: card.currency ?? "")
+        if card.productType == ProductType.loan.rawValue {
+            let cardBal: Double = card.totalAmountDebt
+            return cardBal.currencyFormatter(symbol: card.currency ?? "")
+        } else {
+            let cardBal: Double = card.balance
+            return cardBal.currencyFormatter(symbol: card.currency ?? "")
+        }
     }
     
     var amount: String {
@@ -152,7 +157,19 @@ struct CardViewModelFromRealm {
     }
     
     var cardName: String? {
-        return card.customName ?? card.mainField
+        
+        if card.productType == ProductType.loan.rawValue {
+            
+            return card.additionalField ?? card.mainField
+        } else {
+            
+            return card.customName ?? card.mainField
+        }
+    }
+    
+    var mainField: String? {
+        
+        return card.mainField
     }
     
     var logoImage: UIImage {
@@ -163,7 +180,6 @@ struct CardViewModelFromRealm {
             label.frame = CGRect(x: 0, y: 0, width: 13, height: 13)
             label.textAlignment = .center
             label.layer.cornerRadius = 3
-//            label.layer.borderWidth = 1.25
             label.layer.borderColor = UIColor.white.cgColor
             return UIImage.imageWithLabel(label: label)
         } else {

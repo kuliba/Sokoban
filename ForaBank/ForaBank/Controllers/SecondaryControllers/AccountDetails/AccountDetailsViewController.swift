@@ -43,14 +43,27 @@ class AccountDetailsViewController: UIViewController {
     
     func presentRequisitsVc(product: UserAllCardsModel?){
         showActivity()
-        var body = ["cardId": product?.cardID] as [String : AnyObject]
+        var body: [String : AnyObject]
         
-        if product?.productType == "ACCOUNT"{
+        switch product?.productType {
+            
+        case ProductType.card.rawValue:
+            body = ["cardId": product?.cardID] as [String : AnyObject]
+            
+        case ProductType.account.rawValue:
             body = ["accountId": product?.id] as [String : AnyObject]
-        } else if product?.productType == "DEPOSIT"{
+
+        case ProductType.deposit.rawValue:
             body = ["depositId": product?.id] as [String : AnyObject]
 
+        case ProductType.loan.rawValue:
+            body = ["accountId": product?.settlementAccountId] as [String : AnyObject]
+
+        default:
+            body = ["cardId": product?.cardID] as [String : AnyObject]
+
         }
+        
         NetworkManager<GetProductDetailsDecodableModel>.addRequest(.getProductDetails, [:], body) { model, error in
             self.dismissActivity()
             if error != nil {
@@ -185,57 +198,74 @@ extension AccountDetailsViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellReuse, for: indexPath) as? PayTableViewCell else { return UITableViewCell() }
-        if product?.productType == "DEPOSIT", openControlButtons == false{
+        
+        switch product?.productType {
+        case ProductType.deposit.rawValue:
+            
+            if product?.productType == "DEPOSIT", openControlButtons == false {
+                switch indexPath.row {
+                case 0:
+                    cell.titleLabel.text = "Реквизиты счета вклада"
+                    cell.imageButton.image = UIImage(named: "requisitsButton")
+                case 1:
+                    cell.titleLabel.text = "Выписка по счету"
+                    cell.imageButton.image = UIImage(named: "dischargeButton")
+                case 2:
+                    cell.titleLabel.text = "Информация по вкладу"
+                    cell.imageButton.image = UIImage(named: "infoButton")
+                case 3:
+                    cell.titleLabel.text = "Лимиты на операции"
+                    cell.imageButton.image = UIImage(named: "limitButton")
+                    cell.alpha = 0.3
+                    cell.isUserInteractionEnabled = false
+                case 4:
+                    cell.titleLabel.text = "График выплаты % по вкладу"
+                    cell.imageButton.image = UIImage(named: "scheduleButton")
+                    cell.alpha = 0.3
+                    cell.isUserInteractionEnabled = false
+
+                case 5:
+                    cell.titleLabel.text = "Условия по вкладу"
+                    cell.imageButton.image = UIImage(named: "conditionButton")
+                    cell.alpha = 0.3
+                    cell.isUserInteractionEnabled = false
+                default:
+                    cell.titleLabel.text = "default"
+                    cell.imageButton.image = UIImage(named: "otherAccountButton")
+                }
+                cell.imageButton.tintColor = #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1)
+                cell.selectionStyle = .none
+            } else  if product?.productType == "DEPOSIT", openControlButtons == true {
+                switch indexPath.row {
+                case 0:
+                    cell.titleLabel.text = "Закрыть вклад"
+                    cell.imageButton.image = UIImage(named: "closeDeposit")
+                case 1:
+                    cell.titleLabel.text = "Скрыть с главной"
+                    cell.imageButton.image = UIImage(named: "hideDeposit")
+                case 2:
+                    cell.titleLabel.text = "Заказать справку"
+                    cell.imageButton.image = UIImage(named: "requisitsButton")
+                default:
+                    cell.titleLabel.text = "default"
+                    cell.imageButton.image = UIImage(named: "otherAccountButton")
+                }
+                cell.imageButton.tintColor = #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1)
+                cell.selectionStyle = .none
+            }
+        case ProductType.account.rawValue, ProductType.loan.rawValue:
             switch indexPath.row {
             case 0:
-                cell.titleLabel.text = "Реквизиты счета вклада"
+                cell.titleLabel.text = "Реквизиты счета"
                 cell.imageButton.image = UIImage(named: "requisitsButton")
             case 1:
                 cell.titleLabel.text = "Выписка по счету"
                 cell.imageButton.image = UIImage(named: "dischargeButton")
-            case 2:
-                cell.titleLabel.text = "Информация по вкладу"
-                cell.imageButton.image = UIImage(named: "infoButton")
-            case 3:
-                cell.titleLabel.text = "Лимиты на операции"
-                cell.imageButton.image = UIImage(named: "limitButton")
-                cell.alpha = 0.3
-                cell.isUserInteractionEnabled = false
-            case 4:
-                cell.titleLabel.text = "График выплаты % по вкладу"
-                cell.imageButton.image = UIImage(named: "scheduleButton")
-                cell.alpha = 0.3
-                cell.isUserInteractionEnabled = false
-
-            case 5:
-                cell.titleLabel.text = "Условия по вкладу"
-                cell.imageButton.image = UIImage(named: "conditionButton")
-                cell.alpha = 0.3
-                cell.isUserInteractionEnabled = false
             default:
                 cell.titleLabel.text = "default"
                 cell.imageButton.image = UIImage(named: "otherAccountButton")
             }
-            cell.imageButton.tintColor = #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1)
-            cell.selectionStyle = .none
-        } else  if product?.productType == "DEPOSIT", openControlButtons == true{
-            switch indexPath.row {
-            case 0:
-                cell.titleLabel.text = "Закрыть вклад"
-                cell.imageButton.image = UIImage(named: "closeDeposit")
-            case 1:
-                cell.titleLabel.text = "Скрыть с главной"
-                cell.imageButton.image = UIImage(named: "hideDeposit")
-            case 2:
-                cell.titleLabel.text = "Заказать справку"
-                cell.imageButton.image = UIImage(named: "requisitsButton")
-            default:
-                cell.titleLabel.text = "default"
-                cell.imageButton.image = UIImage(named: "otherAccountButton")
-            }
-            cell.imageButton.tintColor = #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1)
-            cell.selectionStyle = .none
-        } else {
+        default:
             switch indexPath.row {
             case 0:
                 cell.titleLabel.text = "Реквизиты счета карты"
@@ -247,9 +277,10 @@ extension AccountDetailsViewController: UITableViewDataSource {
                 cell.titleLabel.text = "default"
                 cell.imageButton.image = UIImage(named: "otherAccountButton")
             }
+        }
+          
             cell.imageButton.tintColor = #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1)
             cell.selectionStyle = .none
-        }
         return cell
     }
     

@@ -32,7 +32,6 @@ class RequisitesViewController: UIViewController, UITableViewDataSource, UITable
         tableView.dataSource = self
         view.addSubview(tableView)
         tableView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingRight: 20)
-//        tableView.contentInset = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
         tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
 
         tableView.register(UINib(nibName: "RequisitsTableViewCell", bundle: nil), forCellReuseIdentifier: "RequisitsTableViewCell")
@@ -44,17 +43,14 @@ class RequisitesViewController: UIViewController, UITableViewDataSource, UITable
     
     
     func setupUI(){
-//        let label = UILabel()
-//        label.textColor = UIColor.black
-//        label.font = UIFont.boldSystemFont(ofSize: 16)
-//        label.text = "Реквизиты счета карты"
-//        self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(customView: label)
-//        self.navigationItem.leftItemsSupplementBackButton = true
+        
         if modelDeposit != nil{
             title = "Информация по вкладу"
 
         } else{
             switch product?.productType {
+            case ProductType.loan.rawValue:
+                title = "Рекзвизиты счета"
             case "DEPOSIT":
                 title = "Рекзвизиты счета вклада"
             default:
@@ -79,11 +75,6 @@ class RequisitesViewController: UIViewController, UITableViewDataSource, UITable
         let close = UIBarButtonItem(title: "", style: .plain, target: self, action: #selector(backButton))
         close.tintColor = .black
         
-  
-        //        self.navigationItem.setRightBarButton(close, animated: true)
-        
-        //        self.navigationItem.rightBarButtonItem?.action = #selector(backButton)
-//        self.navigationItem.rightBarButtonItem = close
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .normal)
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .highlighted)
     }
@@ -190,13 +181,9 @@ class RequisitesViewController: UIViewController, UITableViewDataSource, UITable
             guard let description = i.description else {
                 return
             }
-//            textToShare.append(i.name + " " + description + "\n")
-//            textToShare[0] +=  String(i.name + " " + description).description
             textToShare[0].append(String(i.name + " " + description + "\n"))
         }
             
-            // set up activity view controller
-//            textToShare = [ text, text]
         let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
             activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
             

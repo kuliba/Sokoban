@@ -18,7 +18,6 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
         maskCardLabel.text = viewModel.maskedcardNumber
         logoImageView.image = viewModel.logoImage
         
-//        balanceLabel.text = contactInitials(model: payment.lastCountryPayment)
     }
     
 
@@ -131,8 +130,7 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
                              paddingLeft: 8, width: 18, height: 18)
         
         
-        cardNameLabel.anchor(left: self.leftAnchor, bottom: balanceLabel.topAnchor, paddingTop: 25, paddingLeft: 8, paddingRight: 8)
-        cardNameLabel.anchor(width: 50)
+        cardNameLabel.anchor(left: self.leftAnchor, bottom: balanceLabel.topAnchor, right: self.rightAnchor, paddingTop: 25, paddingLeft: 8, paddingRight: 8)
         cardNameLabel.lineBreakMode = .byWordWrapping
         cardNameLabel.numberOfLines = 2
         

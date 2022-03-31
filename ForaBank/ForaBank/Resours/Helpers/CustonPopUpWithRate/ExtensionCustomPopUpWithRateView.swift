@@ -53,7 +53,6 @@ extension CustomPopUpWithRateView {
         view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         view.clipsToBounds = true
         view.backgroundColor = .white
-//        view.anchor(width: UIScreen.main.bounds.width, height: 490)
         
         stackView = UIStackView(arrangedSubviews: [cardFromField,
                                                    seporatorView,
@@ -140,8 +139,6 @@ extension CustomPopUpWithRateView {
                     self.viewModel.cardToRealm = card
                 }
             }
-//            cardFromField.choseButton.isHidden = true
-//            cardToField.choseButton.isHidden = true
             self.trasfer = (viewModel.cardFromRealm?.currency ?? "", viewModel.cardToRealm?.currency ?? "")
         default:
             break
@@ -216,9 +213,9 @@ extension CustomPopUpWithRateView {
         var cardsArray = [UserAllCardsModel]()
         let cards = result?.compactMap { $0 } ?? []
         cards.forEach { card in
-            if card.productType == "CARD" {
+            if card.productType == "CARD", card.productType != ProductType.loan.rawValue {
                 cardsArray.append(card)
-            } else if !onlyCard && (card.productType == "ACCOUNT" || card.productType == "DEPOSIT" ) {
+            } else if !onlyCard && (card.productType == "ACCOUNT" || card.productType == "DEPOSIT" ), card.productType != ProductType.loan.rawValue {
                 cardsArray.append(card)
             }
         }
@@ -251,7 +248,7 @@ extension CustomPopUpWithRateView {
             ? "Номер карты или счета"
             : "Номер карты отправителя"
         cardFromField.didChooseButtonTapped = { () in
-//            guard self.paymentTemplate == nil else { return }
+
             self.openOrHideView(self.cardFromListView) {
                 self.seporatorView.curvedLineView.isHidden.toggle()
                 self.seporatorView.straightLineView.isHidden.toggle()

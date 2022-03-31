@@ -37,7 +37,7 @@ extension Model {
                     title: parameter.title,
                     validator: .init(minLength: 1, maxLength: nil, regEx: nil))
                 parameters.append(result)
-                                
+                
             case "a3_fio_1_2", "a3_fio_4_1":
                 let result = Payments.ParameterName(id: parameter.id, value: parameterValue, title: parameter.title)
                 parameters.append(result)
@@ -105,5 +105,14 @@ extension Model {
         return parameters
     }
     
-    
+    func paymentsAdditionalParameters(for transferData: TransferAnywayResponseData) -> [ParameterRepresentable] {
+        
+        transferData.additionalList.map { addition in
+            
+            Payments.ParameterInfo(
+                .init(id: addition.fieldName, value: addition.fieldValue),
+                icon: addition.iconData ?? .parameterDocument,
+                title: addition.fieldTitle, collapsable: true)
+        }
+    }
 }
