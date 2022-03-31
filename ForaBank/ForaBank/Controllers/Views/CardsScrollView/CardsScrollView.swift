@@ -59,7 +59,7 @@ final class CardsScrollView: UIView {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         return collectionView
     }()
-
+    
     
     //MARK: - Viewlifecicle
     override init(frame: CGRect) {
@@ -72,16 +72,16 @@ final class CardsScrollView: UIView {
         commonInit(onlyMy: true)
     }
     
-    required init(frame: CGRect = .zero, onlyMy: Bool, onlyCard: Bool = false, deleteDeposit: Bool = false, loadProducts: Bool = true) {
+    required init(frame: CGRect = .zero, onlyMy: Bool, onlyCard: Bool = false, deleteDeposit: Bool = false, loadProducts: Bool = true, loans: Bool = false) {
         super.init(frame: frame)
-        commonInit(onlyMy: onlyMy, onlyCard: onlyCard, deleteDeposit: deleteDeposit, loadProducts: loadProducts)
+        commonInit(onlyMy: onlyMy, onlyCard: onlyCard, deleteDeposit: deleteDeposit, loadProducts: loadProducts, loans: loans)
     }
     
     deinit {
         token?.invalidate()
     }
 
-    func commonInit(onlyMy: Bool, onlyCard: Bool = false, deleteDeposit: Bool = false, loadProducts: Bool = true) {
+    func commonInit(onlyMy: Bool, onlyCard: Bool = false, deleteDeposit: Bool = false, loadProducts: Bool = true, loans: Bool = false) {
         self.onlyMy = onlyMy
         self.onlyCard = onlyCard
         
@@ -101,14 +101,17 @@ final class CardsScrollView: UIView {
                         }
                     } else {
                         if (op.ownerID == clientId ?? 0 && op.isMain == true) {
-                            print("clientId", op.ownerID, clientId ?? 0)
+                            
                             cardList.append(op)
                         }
                     }
                 }
             })
+            if !loans {
+                cardList = cardList.filter({$0.productType != ProductType.loan.rawValue})
+            }
         }
-
+        
         changeCardButtonCollection.isHidden = !self.onlyMy
         self.translatesAutoresizingMaskIntoConstraints = false
         self.heightAnchor.constraint(equalToConstant: self.onlyMy ? 125 : 95).isActive = true
@@ -130,7 +133,7 @@ final class CardsScrollView: UIView {
     }
     
     func updateObjectWithNotification() {
-
+        
         cardListRealm = realm?.objects(UserAllCardsModel.self)
         self.token = self.cardListRealm?.observe { [weak self] ( changes: RealmCollectionChange) in
             guard (self?.collectionView) != nil else {return}
@@ -139,7 +142,6 @@ final class CardsScrollView: UIView {
                 self?.collectionView.reloadData()
             case .update(_, _, _, _):
                 print("REALM Update")
-        
             case .error(let error):
                 fatalError("\(error)")
             }
@@ -192,7 +194,7 @@ extension CardsScrollView: UICollectionViewDataSource {
                 let cellLast = collectionView.dequeueReusableCell(withReuseIdentifier: allReuseIdentifier, for: indexPath) as! AllCardCell
                 return cellLast
             } else {
-               
+                
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CardsScrollCell
                 
                 if isFiltered {

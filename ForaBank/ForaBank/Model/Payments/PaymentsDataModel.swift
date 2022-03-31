@@ -179,6 +179,7 @@ enum Payments {
         case failedTransfer(status: ServerStatusCode, message: String?)
         case failedMakeTransferWithEmptyDataResponse
         case failedMakeTransfer(status: ServerStatusCode, message: String?)
+        case clientInfoEmptyResponse
         case anywayTransferFinalStepExpected
         case notAuthorized
         case unsupported

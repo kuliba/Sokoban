@@ -9,17 +9,18 @@ import UIKit
 import RealmSwift
 
 class CustomPopUpWithRateView : AddHeaderImageViewController {
-
+    
     var titleLabel = UILabel(text: "Между счетами", font: .boldSystemFont(ofSize: 18), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
     lazy var realm = try? Realm()
     var token: NotificationToken?
     var onlyMy = true
+    var cardTo: UserAllCardsModel?
     
     var paymentTemplate: PaymentTemplateData? = nil
     
     var trasfer = ("", "") {
         didSet {
-               /// Обновляем модели в BottomView
+            /// Обновляем модели в BottomView
             self.bottomView.models = (trasfer.0, trasfer.1)
         }
     }
@@ -49,7 +50,7 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
     var cardFromListView: CardsScrollView!
     var cardToField = CardChooseView()
     var cardToListView: CardsScrollView!
-
+    
     var bottomView = BottomInputViewWithRateView()
     lazy var cardView = CastomCardView()
     
@@ -60,9 +61,14 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
         super.viewWillDisappear(animated)
         token?.invalidate()
     }
-
+    
     init() {
         super.init(nibName: nil, bundle: nil)
+    }
+    
+    init(cardTo: UserAllCardsModel) {
+        super.init(nibName: nil, bundle: nil)
+        self.cardTo = cardTo
     }
     
     init(paymentTemplate: PaymentTemplateData) {
@@ -81,7 +87,7 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
     final func checkModel(with model: ConfirmViewControllerModel) {
         guard let cardFrom = model.cardFromRealm else { return }
         guard let cardTo = model.cardToRealm else { return }
-//        guard model.cardFrom != nil, model.cardTo != nil else { return }
+        //        guard model.cardFrom != nil, model.cardTo != nil else { return }
         print("Отображаем кнопку для переворачивания списка карт")
         /// Отображаем кнопку для переворачивания списка карт
         
@@ -96,18 +102,20 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
     }
     
     func updateCards(cards: [UserAllCardsModel]) {
-        /// обновляем список карт с которой списываем
-//        self.cardFromListView.cardList = cards
+  
+        if let cardTo = cardTo, cardTo.productType != ProductType.loan.rawValue {
+            
+            self.cardToField.model = cardTo
+            self.viewModel.cardToRealm = cardTo
+        } else if cardTo?.productType == ProductType.loan.rawValue {
+            
+            let accountLoan = cards.filter({$0.accountNumber == cardTo?.settlementAccount})
+            self.cardToField.model = accountLoan.first
+            self.viewModel.cardToRealm = accountLoan.first
+        }
         
-        /// обновляем предустановленную карту по молчанию счета списания
-//        if cardFromField.model != nil { // } || cardFromField.model?.id == cards.first?.id {
-            self.cardFromField.model = cards.first
-            self.viewModel.cardFromRealm = cards.first
-//        }
-        
-        /// обновляем список карт на которую списываем
-        
-//        self.cardToListView.cardList = cards
+        self.cardFromField.model = cards.first
+        self.viewModel.cardFromRealm = cards.first
     }
     
 }

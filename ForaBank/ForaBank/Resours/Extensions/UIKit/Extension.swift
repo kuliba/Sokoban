@@ -207,7 +207,7 @@ extension TimeInterval {
         miliseconds = miliseconds.truncatingRemainder(dividingBy: 10)
         let interval = Int(self)
         let days = interval / 86400
-        return String(format: "%02d", days)
+        return String(format: "%2d", days)
     }
 }
 

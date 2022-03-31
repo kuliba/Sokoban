@@ -25,7 +25,7 @@ struct CardsScrollModel {
     }
     
     var maskedcardNumber: String {
-        if card.productType == "DEPOSIT" || card.productType == ProductType.loan.rawValue {
+        if card.productType == "DEPOSIT" {
             return "\(card.accountNumber?.suffix(4) ?? "")"
         } else if card.productType == ProductType.loan.rawValue {
             return "\(card.settlementAccount?.suffix(4) ?? "")"

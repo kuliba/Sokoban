@@ -99,7 +99,12 @@ final class CardChooseView: UIView {
         if model.productType == "DEPOSIT" {
             self.maskNumberLabel.text = "• \(model.accountNumber?.suffix(4) ?? "")"
         } else if model.productType == ProductType.loan.rawValue {
-            self.maskNumberLabel.text = "• \(model.settlementAccount?.suffix(4) ?? "")"
+            
+            if let date = longIntToDateString(longInt: model.dateLong/1000) {
+                
+                self.maskNumberLabel.text = "· \(model.settlementAccount?.suffix(4) ?? "") · Ставка \(model.currentInterestRate)%  · \(date)"
+            }
+            
         } else {
             self.maskNumberLabel.text = "• \(model.number?.suffix(4) ?? "")"
         }
@@ -127,7 +132,6 @@ final class CardChooseView: UIView {
         self.balanceLabel.text = balance.currencyFormatter(symbol: model.currency ?? "")
 
         let text = NSAttributedString(
-//            string: model.mainField ?? model.productName ?? "",
             string: model.mainField ?? "",
             attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14),
                          NSAttributedString.Key.foregroundColor : UIColor.black])
@@ -138,7 +142,6 @@ final class CardChooseView: UIView {
             self.maskNumberLabel.text = "• \(model.number?.suffix(4) ?? "")"
         }
         self.nameLabel.text = model.customName ?? model.additionalField ?? ""
-//        self.setupCardImage(with: model.number ?? "")
         self.cardTypeImage.image = model.paymentSystemImage?.convertSVGStringToImage()
     }
     
@@ -202,4 +205,18 @@ final class CardChooseView: UIView {
         }
     }
     
+    func longIntToDateString(longInt: Int) -> String?{
+        
+        let date = Date(timeIntervalSince1970: TimeInterval(longInt))
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeStyle = DateFormatter.Style.none//Set time style
+        dateFormatter.dateStyle = DateFormatter.Style.long //Set date style
+        
+        dateFormatter.dateFormat =  "dd.MM.yy"
+        dateFormatter.timeZone = .current
+        dateFormatter.locale = Locale(identifier: "ru_RU")
+        let localDate = dateFormatter.string(from: date)
+        
+        return localDate
+    }
 }

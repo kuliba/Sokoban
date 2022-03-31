@@ -17,7 +17,7 @@ class TextFieldFormatableViewComponentTests: XCTestCase {
         let amount: Double = 0
         let value: String? = formatter.string(from: NSNumber(value: amount))
         let update = "6"
-        let range = NSRange(location: 3, length: 0)
+        let range = NSRange(location: 1, length: 0)
         
         // when
         let updatedString = TextFieldFormatableView.updateFormatted(value: value, inRange: range, update: update, formatter: formatter)
@@ -33,7 +33,7 @@ class TextFieldFormatableViewComponentTests: XCTestCase {
         let amount: Double = 123
         let value: String? = formatter.string(from: NSNumber(value: amount))
         let update = "6"
-        let range = NSRange(location: 5, length: 0)
+        let range = NSRange(location: 3, length: 0)
         
         // when
         let updatedString = TextFieldFormatableView.updateFormatted(value: value, inRange: range, update: update, formatter: formatter)
@@ -49,7 +49,7 @@ class TextFieldFormatableViewComponentTests: XCTestCase {
         let amount: Double = 6
         let value: String? = formatter.string(from: NSNumber(value: amount))
         let update = ""
-        let range = NSRange(location: 2, length: 1)
+        let range = NSRange(location: 0, length: 1)
         
         // when
         let updatedString = TextFieldFormatableView.updateFormatted(value: value, inRange: range, update: update, formatter: formatter)
@@ -65,7 +65,7 @@ class TextFieldFormatableViewComponentTests: XCTestCase {
         let amount: Double = 0
         let value: String? = formatter.string(from: NSNumber(value: amount))
         let update = ","
-        let range = NSRange(location: 3, length: 0)
+        let range = NSRange(location: 1, length: 0)
         
         // when
         let updatedString = TextFieldFormatableView.updateFormatted(value: value, inRange: range, update: update, formatter: formatter)
