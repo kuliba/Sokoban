@@ -305,12 +305,15 @@ private extension OperationDetailViewModel {
     func templateName(with productStatement: ProductStatementProxy, operationDetail: OperationDetailDatum) -> String? {
 
         switch productStatement.paymentDetailType {
-        case .betweenTheir, .insideBank, .housingAndCommunalService, .internet, .mobile, .direct, .sfp, .contactAddressless:
+        case .betweenTheir, .insideBank, .housingAndCommunalService, .internet, .direct, .sfp, .contactAddressless:
             
             //TODO:  проверка на productStatement.merchantNameRus
             
             return productStatement.merchantName
-        
+            
+        case .mobile :
+            return operationDetail.payeePhone
+            
         case .externalIndivudual, .externalEntity:
             return operationDetail.payeeFullName
             
