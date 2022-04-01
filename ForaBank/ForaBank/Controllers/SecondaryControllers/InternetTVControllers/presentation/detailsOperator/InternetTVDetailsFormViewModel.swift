@@ -213,8 +213,8 @@ class InternetTVDetailsFormViewModel {
     }
 
     func getRequestBody(amount: String?, additionalArray: [[String: String]]) -> [String: AnyObject] {
-        let productType = controller?.footerView.cardFromField.cardModel?.productType ?? ""
-        let id = controller?.footerView.cardFromField.cardModel?.id ?? -1
+        let productType = controller?.footerView.cardFromField.model?.productType ?? ""
+        let id = controller?.footerView.cardFromField.model?.id ?? -1
         if cardNumber == "-1" { cardNumber = String(id) }
         if cardNumber != String(id) { cardNumber = "-2" }
 

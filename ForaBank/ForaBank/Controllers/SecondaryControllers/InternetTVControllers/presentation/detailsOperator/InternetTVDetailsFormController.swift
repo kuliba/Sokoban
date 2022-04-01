@@ -58,7 +58,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
                     self.viewModel.doFirstStep(amount: amount)
             } else {
                 if !self.viewModel.firstStep {
-                    let id = self.footerView.cardFromField.cardModel?.id ?? -1
+                    let id = self.footerView.cardFromField.model?.id ?? -1
                     if self.viewModel.cardNumber != String(id) { self.viewModel.cardNumber = "-2" }
                     if self.viewModel.cardNumber != "-2" {
                         self.viewModel.doNextStep(amount: amount)
@@ -131,7 +131,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
         ob?.sumTransaction = sum.currencyFormatter(symbol: "RUB")
         let tax = response?.data?.fee ?? 0.0
         ob?.taxTransaction = tax.currencyFormatter(symbol: "RUB")
-        ob?.cardFrom = footerView.cardFromField.cardModel
+        ob?.cardFrom = footerView.cardFromField.model
 
         DispatchQueue.main.async {
             let vc = InternetTVConfirmViewController()
