@@ -176,8 +176,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        tableView.isSkeletonable = true
-        tableView.showSkeleton(usingColor: .lightGray, transition: .crossDissolve(0.25))
+     
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -188,7 +187,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        
+        tableView.isSkeletonable = true
+        tableView.showSkeleton(usingColor: .lightGray, transition: .crossDissolve(0.25))
         productsCount = products.filter({$0.productType != product?.productType}).count
         tableView.backgroundColor = .white
         scrollView.delegate = self
