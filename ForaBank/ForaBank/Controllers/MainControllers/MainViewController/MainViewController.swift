@@ -135,23 +135,34 @@ class MainViewController: UIViewController {
         if products.count > 0 {
 
             var productsViewModels = [PaymentsModel]()
-            
+
             for product in products {
-                
+
                 productsViewModels.append(PaymentsModel(productListFromRealm: product))
             }
-            productsViewModels.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
             
+            if products.count <= 1  {
+                
+                productsViewModels.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
+            }
+
             self.productsViewModels = productsViewModels
-            
-            
+
+
         } else {
-            
+
             self.productsViewModels = []
-            
+
         }
         
         reloadData(with: nil)
+
+        if GlobalModule.c2bURL != nil {
+            let controller = C2BDetailsViewController.storyboardInstance()!
+            let nc = UINavigationController(rootViewController: controller)
+            nc.modalPresentationStyle = .fullScreen
+            present(nc, animated: false)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -169,6 +180,15 @@ class MainViewController: UIViewController {
             let nc = UINavigationController(rootViewController: controller)
             nc.modalPresentationStyle = .fullScreen
             present(nc, animated: false)
+            return
+        }
+
+        if GlobalModule.c2bURL != nil {
+            let controller = C2BDetailsViewController.storyboardInstance()!
+            let nc = UINavigationController(rootViewController: controller)
+            nc.modalPresentationStyle = .fullScreen
+            present(nc, animated: false)
+            return
         }
     }
     
@@ -231,11 +251,11 @@ class MainViewController: UIViewController {
     
     private func setupSearchBar() {
         view.addSubview(searchBar)
-        
+
         let gesture = UITapGestureRecognizer(target: self, action: #selector(openSetting))
         searchBar.searchIcon.addGestureRecognizer(gesture)
         searchBar.searchIcon.image = UIImage(named: "ProfileImage")
-        
+
         searchBar.textField.text = ""
         searchBar.textField.placeholder = ""
         searchBar.textField.isEnabled = false

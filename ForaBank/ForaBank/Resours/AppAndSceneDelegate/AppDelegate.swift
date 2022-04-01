@@ -76,13 +76,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     }
 
-    
-    
+    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+        GlobalModule.c2bURL = "\(url.description)  d"
+        return true
+    }
+
     func application(_ application: UIApplication,
                      open url: URL,
                      options: [UIApplication.OpenURLOptionsKey : Any] = [:] ) -> Bool {
 
         // Determine who sent the URL.
+        print("qr5555 application application UIApplication open")
+        GlobalModule.c2bURL = url.description
         let sendingAppID = options[.sourceApplication]
         // Process the URL.
         guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true),
@@ -219,6 +224,8 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
+
+        print("qr5555 userNotificationCenter")
         let userInfo = response.notification.request.content.userInfo
         if let type = userInfo["type"] as? String {
             if type == "сonsentMe2MePull" {

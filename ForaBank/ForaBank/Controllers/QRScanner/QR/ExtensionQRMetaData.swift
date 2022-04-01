@@ -15,6 +15,11 @@ extension QRViewController: AVCaptureMetadataOutputObjectsDelegate, CALayerDeleg
 
                 var dicQR = [String: String]()
                 a.forEach { [weak self] v in
+                    if v.contains("qr.nspk.ru") {
+                        onC2B(link: v)
+                        return
+                    }
+
                     if v.contains("=") {
                         let tempArray = v.components(separatedBy: "=")
                         var key = tempArray[0].lowercased()

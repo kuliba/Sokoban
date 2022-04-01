@@ -41,9 +41,9 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
     var qrData = [String: String]()
     var operators: GKHOperatorsModel? = nil
     var qrIsFired = false
-    
+
     var imagePicker: UIImagePickerController!
-    
+
     @IBOutlet weak var qrView: UIView!
     @IBOutlet weak var backButton: UIButton!
     
@@ -83,10 +83,10 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
         }
     }
     @IBAction func addPdfFile(_ sender: UIButton) {
-        
+
         let controller = QRSearchDataViewController()
         controller.itemIsSelect = { [weak self] item in
-            
+
             switch item {
             case "Из Фото":
                 self?.showImagePicker()
@@ -98,15 +98,15 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
             default:
                 print()
             }
-            
+
 
         }
-        
+
         let navController = UINavigationController(rootViewController: controller)
         navController.modalPresentationStyle = .custom
         navController.transitioningDelegate = self
         self.present(navController, animated: true)
-        
+
     }
     
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
@@ -115,6 +115,10 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
         let a = qrString.components(separatedBy: "|")
         
         a.forEach { [weak self] v in
+            if v.contains("qr.nspk.ru") {
+                onC2B(link: v)
+                return
+            }
             if v.contains("=") {
                 let tempArray = v.components(separatedBy: "=")
                 var key = tempArray[0].lowercased()
@@ -127,12 +131,12 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
                     key = "Сумма"
                     self?.qrData.updateValue(value, forKey: key)
                 }
-                
+
                 if key == "personalacc" {
                     key = "Pасчетный счет Получателя"
                     self?.qrData.updateValue(value, forKey: key)
                 }
-                
+
             }
         }
        
@@ -148,7 +152,14 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
             performSegue(withIdentifier: "qrError", sender: nil)
         }
     }
-    
+
+    final func onC2B(link: String) {
+        qrCodesession.stopRunning()
+        qrView.layer.sublayers?.removeLast()
+        GlobalModule.c2bURL = link
+        dismiss(animated: false)
+    }
+
     final func returnKey() {
         qrCodesession.stopRunning()
         qrView.layer.sublayers?.removeLast()
@@ -168,7 +179,7 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
         qrCodesession.stopRunning()
         qrView.layer.sublayers?.removeLast()
 //        dismiss(animated: false)
-        
+
         self.definesPresentationContext = true
         self.presentingViewController?.dismiss(animated: true, completion: nil)
 //        navigationController?.popViewController(animated: true)
@@ -185,22 +196,22 @@ extension QRViewController: UIViewControllerTransitioningDelegate {
 }
 
 extension QRViewController {
-    
+
     func showImagePicker() {
         imagePicker = UIImagePickerController()
         imagePicker.delegate = self
         imagePicker.sourceType = .photoLibrary
         present(imagePicker, animated: true, completion: nil)
     }
-    
+
     func imagePickerController(_ picker: UIImagePickerController,
       didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         imagePicker.dismiss(animated: true) { [weak self] in
             let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
-            
+
             let qrString = self?.string(from: image!)
             let a = qrString?.components(separatedBy: "|")
-            
+
             a?.forEach { [weak self] v in
                 if v.contains("=") {
                     let tempArray = v.components(separatedBy: "=")
@@ -212,7 +223,7 @@ extension QRViewController {
                     if key == "sum" {
                         key = "Сумма"
                     }
-                    
+
                     if key == "personalacc" {
                         key = "Pасчетный счет Получателя"
                         self?.qrData.updateValue(value, forKey: key)
@@ -220,7 +231,7 @@ extension QRViewController {
                     self?.qrData.updateValue(value, forKey: key)
                 }
             }
-           
+
             let inn = self?.qrData.filter { $0.key == "payeeinn" }
             if inn != [:] {
                 self?.operatorsList?.forEach({ operators in
@@ -234,5 +245,5 @@ extension QRViewController {
             }
         }
     }
-    
+
 }

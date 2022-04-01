@@ -47,9 +47,7 @@ class MainTabBarViewController: UITabBarController {
                                   image: UIImage(named: "tabBar-chat")!,
                                   fillImage: UIImage(named: "tabBar-chat-fill")!),
         ]
-        
         loadCatalog()
-        
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -59,6 +57,14 @@ class MainTabBarViewController: UITabBarController {
             let nc = UINavigationController(rootViewController: controller)
             nc.modalPresentationStyle = .fullScreen
             present(nc, animated: false)
+            return
+        }
+        if GlobalModule.c2bURL != nil {
+            let controller = C2BDetailsViewController.storyboardInstance()!
+            let nc = UINavigationController(rootViewController: controller)
+            nc.modalPresentationStyle = .fullScreen
+            present(nc, animated: false)
+            return
         }
     }
 
@@ -67,9 +73,7 @@ class MainTabBarViewController: UITabBarController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             if let userInfo = UserDefaults.standard.object(forKey: "ConsentMe2MePull") as? [AnyHashable : Any] {
                 let meToMeReq = RequestMeToMeModel(userInfo: userInfo)
-                
                 let topvc = UIApplication.topViewController()
-                
                 let vc = MeToMeRequestController()
                 vc.viewModel = meToMeReq
                 vc.modalPresentationStyle = .fullScreen
@@ -98,9 +102,7 @@ class MainTabBarViewController: UITabBarController {
                             }
                         } else {
 //                            let meToMeReq = RequestMeToMeModel(model: model)
-                            
                             let topvc = UIApplication.topViewController()
-                            
                             let vc = MeToMeRequestController()
 //                            vc.viewModel = meToMeReq
                             vc.modalPresentationStyle = .fullScreen
@@ -111,10 +113,7 @@ class MainTabBarViewController: UITabBarController {
                     }
                 }
             }
-            
         }
-        
-    
     }
     
     private func generateNavController(rootViewController: UIViewController, title: String, image: UIImage, fillImage: UIImage) -> UIViewController {
@@ -126,10 +125,10 @@ class MainTabBarViewController: UITabBarController {
     }
 
     private func loadCatalog() {
-        
-        AppUpdater.shared.showUpdate(withConfirmation: true)
+        if (GlobalModule.c2bURL == nil) {
+            AppUpdater.shared.showUpdate(withConfirmation: true)
+        }
 
-        
         NetworkHelper.request(.getCountries) { model, error in
             if error != nil {
                 self.showAlert(with: "Ошибка", and: error!)
@@ -187,8 +186,7 @@ class MainTabBarViewController: UITabBarController {
 
         /// Add REALM
  //       AddAllUserCardtList.add() {}
-        
-        
+
 //        NetworkHelper.request(.getProductList) { cardList , error in
 //            if error != nil {
 //                self.showAlert(with: "Ошибка", and: error!)
@@ -196,7 +194,6 @@ class MainTabBarViewController: UITabBarController {
 //            guard let cardList = cardList as? [GetProductListDatum] else { return }
 //            print("DEBUG: Load card list... Count is: ", cardList.count)
 //        }
-      
     }
     
     func getFastPaymentContractList() {
@@ -215,14 +212,9 @@ class MainTabBarViewController: UITabBarController {
                 UserDefaults.standard.set(clientID, forKey: "clientId")
             } else {
                 print("DEBUG: Error: ", model.errorMessage ?? "")
-
-                
             }
         }
-        
     }
-
-
 }
 
 
