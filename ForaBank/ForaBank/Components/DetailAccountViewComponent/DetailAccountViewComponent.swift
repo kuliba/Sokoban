@@ -275,7 +275,7 @@ extension DetailAccountViewComponent {
             var collapsed: Bool
         }
         
-        internal init(with loanBase: LoanBaseParamModel, status: StatusPC, availableExceedLimit: String, minimumPayment: String, gracePeriodPayment: String, overduePayment: String, ownFunds: String, debtAmount: String, totalAvailableAmount: String, totalDebtAmount: String, isCredit: Bool, productName: String?, longInt: Int?) {
+        internal init(with loanBase: LoanBaseParamModel, status: StatusPC, availableExceedLimit: String, minimumPayment: String, gracePeriodPayment: String, overduePayment: String, ownFunds: String, debtAmount: String, totalAvailableAmount: String, totalDebtAmount: String, isCredit: Bool, productName: String?, longInt: Int?, sumAvailable: String?) {
             
             self.state = .init(collapsed: false)
             
@@ -315,14 +315,14 @@ extension DetailAccountViewComponent {
                     NotificationCenter.default.post(name: NSNotification.Name("openPaymentsView"), object: nil, userInfo: nil)
                 }), .init(amount: gracePeriodPayment, title: .preferential, image: nil, foregraund: .white, background: .clear, action: {})]
                 self.secondButtonsViewModel = nil
-                
             }
             
-            if loanBase.minimumPayment <= 0.1, loanBase.overduePayment <= 0.1 {
+            if loanBase.minimumPayment <= 0, loanBase.overduePayment <= 0 {
                 
                 self.headerView = .init(subTitle: .interval, collapsed: false)
                 self.dateViewModel = .init(.init(longInt: nil))
                 self.amountViewModel = [.init(title: .debt, foregraundColor: .mainColorsBlackMedium, amount: debtAmount, availebelAmount: nil), .init(title: .available, foregraundColor: .buttonPrimary, amount: availableExceedLimit, availebelAmount: totalAvailableAmount)]
+               
                 self.footerViewModel = [.init(amount: "Внесен", title: .minimal, image: Image.ic24Check, foregraund: .white, background: .textPrimary, action: {
                     
                 }), .init(amount: totalDebtAmount, title: .totalDebt, image: nil, foregraund: .white, background: .clear, action: {})]
@@ -345,11 +345,16 @@ extension DetailAccountViewComponent {
                 self.dateViewModel = nil
                 self.amountViewModel = [.init(title: .ownfunds, foregraundColor: .white, amount: ownFunds, availebelAmount: nil), .init(title: .limit, foregraundColor: .buttonPrimary, amount: availableExceedLimit, availebelAmount: totalAvailableAmount)]
                 
-                self.footerViewModel = [.init(amount: ownFunds, title: .available, image: nil, foregraund: .white, background: .clear, action: {})]
+                self.footerViewModel = []
+                
+                if let sumAvailable = sumAvailable {
+                    footerViewModel?.append(.init(amount: sumAvailable, title: .available, image: nil, foregraund: .white, background: .clear, action: {}))
+                }
+                
                 self.secondButtonsViewModel = nil
             }
             
-            if loanBase.overduePayment == 0, loanBase.gracePeriodPayment == 0, loanBase.ownFunds < 0.1 {
+            if loanBase.overduePayment == 0, loanBase.gracePeriodPayment == 0, loanBase.ownFunds < 0 {
                 
                 self.headerView = .init(subTitle: .interval, collapsed: false)
                 self.dateViewModel = .init(.init(longInt: nil))
@@ -361,14 +366,14 @@ extension DetailAccountViewComponent {
                 
             }
             
-            if loanBase.overduePayment == 0, loanBase.gracePeriodPayment >= 0, loanBase.debtAmount > 0 {
+            if loanBase.overduePayment == 0, loanBase.gracePeriodPayment >= 0, loanBase.debtAmount > 0, loanBase.minimumPayment > 0 {
                 
                 self.headerView = .init(subTitle: .interval, collapsed: false)
                 self.dateViewModel = .init(.init(longInt: nil))
                 self.amountViewModel = [.init(title: .debt, foregraundColor: .mainColorsBlackMedium, amount: debtAmount, availebelAmount: nil), .init(title: .available, foregraundColor: .buttonPrimary, amount: availableExceedLimit, availebelAmount: totalAvailableAmount)]
                 self.footerViewModel = [.init(amount: minimumPayment, title: .minimal, image: nil, foregraund: .white, background: .textPrimary, action: {
                     NotificationCenter.default.post(name: NSNotification.Name("openPaymentsView"), object: nil, userInfo: nil)
-                }), .init(amount: gracePeriodPayment, title: .preferential, image: nil, foregraund: .white, background: .clear, action: {})]
+                }), .init(amount: totalDebtAmount, title: .totalDebt, image: nil, foregraund: .white, background: .clear, action: {})]
                 self.secondButtonsViewModel = nil
             }
             
@@ -449,8 +454,9 @@ extension DetailAccountViewComponent {
             let totalDebtAmount = loanBase.totalDebtAmount.fullCurrencyFormatter(symbol: currency)
             let isCredit = isCredit
             let longInt = longInt
+            let sumAvailable = (loanBase.totalAvailableAmount + loanBase.ownFunds).fullCurrencyFormatter(symbol: currency)
             
-            self.init(with: loanBase, status: status, availableExceedLimit: availableExceedLimit, minimumPayment: minimumPayment, gracePeriodPayment: gracePeriodPayment, overduePayment: overduePayment, ownFunds: ownFunds, debtAmount: debtAmount, totalAvailableAmount: totalAvailableAmount, totalDebtAmount: totalDebtAmount, isCredit: isCredit, productName: productName, longInt: longInt)
+            self.init(with: loanBase, status: status, availableExceedLimit: availableExceedLimit, minimumPayment: minimumPayment, gracePeriodPayment: gracePeriodPayment, overduePayment: overduePayment, ownFunds: ownFunds, debtAmount: debtAmount, totalAvailableAmount: totalAvailableAmount, totalDebtAmount: totalDebtAmount, isCredit: isCredit, productName: productName, longInt: longInt, sumAvailable: sumAvailable)
         }
         
         
@@ -710,7 +716,7 @@ struct DetailAccountViewComponent: View {
                         
                         if let ownFound = viewModel.circleViewModel?.ownFound, let available = viewModel.circleViewModel?.available, ownFound > 0.1 {
                             
-                            DetailAccountSegmentedBar(values: [available, ownFound], totalDebt: nil, colors: [.buttonPrimary, .white])
+                            DetailAccountSegmentedBar(values: [ownFound, available], totalDebt: available + ownFound, colors: [.white, .buttonPrimary])
                             
                         } else if let debt = viewModel.circleViewModel?.debt, let available = viewModel.circleViewModel?.available {
                             

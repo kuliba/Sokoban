@@ -91,6 +91,10 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
         tableView.anchor(top: searchContact.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 16)
         searchContact.delegateNumber = self
         
+        if #available(iOS 15.0, *) {
+            tableView.sectionHeaderTopPadding = 0.0
+        }
+        
         userPhoneView.tapClouser = {
             guard var phone = UserDefaults.standard.object(forKey: "UserPhone") as? String else { return }
             if phone.first == "7" {

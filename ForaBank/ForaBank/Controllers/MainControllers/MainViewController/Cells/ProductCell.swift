@@ -221,6 +221,9 @@ enum Status: String, Codable, Equatable {
     case issuedToClient = "Выдано клиенту"
     case blockedByBank = "Заблокирована банком"
     case notBlocked = "NOT_BLOCKED"
+    case blockedDebet = "BLOCKED_DEBET"
+    case blockedCredit = "BLOCKED_CREDIT"
+    case blocked = "BLOCKED"
 }
 
 enum StatusPC: String{
