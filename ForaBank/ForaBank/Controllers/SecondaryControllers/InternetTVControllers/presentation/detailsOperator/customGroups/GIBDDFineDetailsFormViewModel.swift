@@ -220,8 +220,8 @@ class GIBDDFineDetailsFormViewModel {
     }
 
     func getRequestBody(amount: String, additionalArray: [[String: String]]) -> [String: AnyObject] {
-        let productType = controller?.footerView.cardFromField.cardModel?.productType ?? ""
-        let id = controller?.footerView.cardFromField.cardModel?.id ?? -1
+        let productType = controller?.footerView.cardFromField.model?.productType ?? ""
+        let id = controller?.footerView.cardFromField.model?.id ?? -1
 
         var request = [String: AnyObject]()
         if productType == "ACCOUNT" {

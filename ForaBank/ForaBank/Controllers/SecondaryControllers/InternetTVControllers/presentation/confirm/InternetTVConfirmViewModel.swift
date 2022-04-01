@@ -16,19 +16,19 @@ class InternetTVConfirmViewModel {
             }
         }
     }
-    var cardFrom: GetProductListDatum? {
+    var cardFrom: UserAllCardsModel? {
         didSet {
             guard let cardFrom = cardFrom else { return }
             if cardFrom.productType == "CARD" {
-                if let cardID = cardFrom.id {
-                    cardFromCardId = "\(cardID)"
+                //if let cardID = cardFrom.id {
+                    cardFromCardId = "\(cardFrom.id)"
                     cardFromAccountId = ""
-                }
+                //}
             } else if cardFrom.productType == "ACCOUNT" {
-                if let accountID = cardFrom.id {
-                    cardFromAccountId = "\(accountID)"
+                //if let accountID = cardFrom.id {
+                    cardFromAccountId = "\(cardFrom.id)"
                     cardFromCardId = ""
-                }
+                //}
             }
         }
     }
