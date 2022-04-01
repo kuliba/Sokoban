@@ -7,19 +7,20 @@
 
 import UIKit
 
-class ForaInput: UIView {
+class C2BDetailsInputView: UIView {
     
     //MARK: - Property
-    let kContentXibName = "ForaInput"
+    let kContentXibName = "C2BDetailsInput"
     
     var viewModel: ForaInputModel! {
         didSet {
             guard let viewModel = viewModel else { return }
             if !viewModel.isEditable {
-                textField.text = viewModel.text
-                placeHolder.alpha = viewModel.text.isEmpty ? 0 : 1
-                placeHolder.isHidden = viewModel.text.isEmpty
-                lineView.backgroundColor = viewModel.text.isEmpty ? #colorLiteral(red: 0.9176470588, green: 0.9215686275, blue: 0.9215686275, alpha: 1) : #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1)
+                self.textField.text = viewModel.text
+                self.placeHolder.alpha = viewModel.text.isEmpty ? 0 : 1
+                self.placeHolder.isHidden = viewModel.text.isEmpty
+                self.lineView.backgroundColor = viewModel.text.isEmpty ? #colorLiteral(red: 0.9176470588, green: 0.9215686275, blue: 0.9215686275, alpha: 1) : #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1)
+
             }
             configure()
         }
@@ -73,29 +74,29 @@ class ForaInput: UIView {
     //MARK: - Viewlifecicle
     override init(frame: CGRect) {
         super.init(frame: frame)
-        commonInit(viewModel: ForaInputModel(title: ""))
+        //commonInit(viewModel: ForaInputModel(title: ""))
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        commonInit(viewModel: ForaInputModel(title: ""))
+        //commonInit(viewModel: ForaInputModel(title: ""))
     }
     
     required init(frame: CGRect = .zero, viewModel: ForaInputModel) {
         super.init(frame: frame)
-        commonInit(viewModel: viewModel)
+        //commonInit(viewModel: viewModel)
     }
 
     
-    func commonInit(viewModel: ForaInputModel) {
-        Bundle.main.loadNibNamed(kContentXibName, owner: self, options: nil)
-        contentView.fixInView(self)
-        self.viewModel = viewModel
-        
-        textField.addTarget(self, action: #selector(setupValue), for: .editingChanged)
-        textField.delegate = self
-        self.anchor(height: 58)
-    }
+//    func commonInit(viewModel: ForaInputModel) {
+//        Bundle.main.loadNibNamed(kContentXibName, owner: self, options: nil)
+//        contentView.fixInView(self)
+//        self.viewModel = viewModel
+//
+//        textField.addTarget(self, action: #selector(setupValue), for: .editingChanged)
+//        textField.delegate = self
+//        self.anchor(height: 58)
+//    }
     
     //MARK: - Helpers
     private func configure() {
@@ -122,7 +123,7 @@ class ForaInput: UIView {
             placeHolder.isHidden = false
             balanceLabel.isHidden = false
             placeHolder.alpha = text.isEmpty ? 0 : 1
-            
+
         case .amountOfTransfer:
             placeHolder.text = viewModel.title
             placeHolder.isHidden = false
@@ -134,13 +135,13 @@ class ForaInput: UIView {
             placeHolder.alpha = 1
             placeHolder.textColor = #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)
             errorLabel.isHidden = true
-            
+
         default:
             placeHolder.text = viewModel.title
             placeHolder.isHidden = text.isEmpty
             placeHolder.alpha = text.isEmpty ? 0 : 1
         }
-        
+
     }
     
     func configCardView(_ with: GetProductListDatum) {
@@ -230,28 +231,28 @@ class ForaInput: UIView {
     
 }
 
-//MARK: - UITextFieldDelegate
-extension ForaInput: UITextFieldDelegate {
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        if viewModel.needValidate {
-            UIView.animate(withDuration: TimeInterval(0.2)) {
-                self.errorLabel.alpha = !self.viewModel.text.isEmpty ? 0 : 1
-                self.lineView.backgroundColor = !self.viewModel.text.isEmpty ? #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1) : #colorLiteral(red: 0.8901960784, green: 0.003921568627, blue: 0.1058823529, alpha: 1)
-            }
-        }
-    }
+////MARK: - UITextFieldDelegate
+//extension ForaInput: UITextFieldDelegate {
+//    func textFieldDidEndEditing(_ textField: UITextField) {
+//        if viewModel.needValidate {
+//            UIView.animate(withDuration: TimeInterval(0.2)) {
+//                self.errorLabel.alpha = !self.viewModel.text.isEmpty ? 0 : 1
+//                self.lineView.backgroundColor = !self.viewModel.text.isEmpty ? #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1) : #colorLiteral(red: 0.8901960784, green: 0.003921568627, blue: 0.1058823529, alpha: 1)
+//            }
+//        }
+//    }
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        self.lineView.backgroundColor = #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1)
-    }
-    
-    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-        self.lineView.backgroundColor = #colorLiteral(red: 0.9176470588, green: 0.9215686275, blue: 0.9215686275, alpha: 1)
-        return true
-    }
-    func textFieldDidChangeSelection(_ textField: UITextField) {
-        didChangeValueField?(textField)
-    }
-}
+//    func textFieldDidBeginEditing(_ textField: UITextField) {
+//        self.lineView.backgroundColor = #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1)
+//    }
+//
+//    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+//        self.lineView.backgroundColor = #colorLiteral(red: 0.9176470588, green: 0.9215686275, blue: 0.9215686275, alpha: 1)
+//        return true
+//    }
+//    func textFieldDidChangeSelection(_ textField: UITextField) {
+//        didChangeValueField?(textField)
+//    }
+
 
 

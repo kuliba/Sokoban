@@ -85,6 +85,7 @@ class ForaInputModel {
     enum FieldType {
         case text
         case phone
+        case details
         case mail
         case number
         case amountOfTransfer
