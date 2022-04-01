@@ -173,7 +173,8 @@ extension ProductViewController: UITableViewDelegate, UITableViewDataSource, Ske
                 let label = longIntToDateString(longInt: tranDate/1000)
                 
                 if let month = label?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") {
-                    statusBarLabel.text = "Траты за \(month)ь"
+                    statusBarLabel.text = "Траты за \(getMonthFromLognInt(longInt: tranDate/1000))"
+
                     
                     let monthSort = historyArrayAccount.filter({longIntToDateString(longInt: $0.date!/1000)?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") ?? "" == month.replacingOccurrences(of: " ", with: "")})
                     let monthDebit = monthSort.filter({$0.operationType == "DEBIT"})
@@ -198,7 +199,7 @@ extension ProductViewController: UITableViewDelegate, UITableViewDataSource, Ske
                 let label = longIntToDateString(longInt: tranDate/1000)
                 
                 if let month = label?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") {
-                    statusBarLabel.text = "Траты за \(month)ь"
+                    statusBarLabel.text = "Траты за \(getMonthFromLognInt(longInt: tranDate/1000))"
                     
                     let monthSort = historyArrayDeposit.filter({longIntToDateString(longInt: $0.date!/1000)?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") ?? "" == month.replacingOccurrences(of: " ", with: "")})
                     let monthDebit = monthSort.filter({$0.operationType == "DEBIT"})
@@ -224,7 +225,7 @@ extension ProductViewController: UITableViewDelegate, UITableViewDataSource, Ske
                 let label = longIntToDateString(longInt: tranDate/1000)
                 
                 if let month = label?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") {
-                    statusBarLabel.text = "Траты за \(month)ь"
+                    statusBarLabel.text = "Траты за \(getMonthFromLognInt(longInt: tranDate/1000))"
                     
                     let monthSort = historyArray.filter({longIntToDateString(longInt: $0.date!/1000)?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") ?? "" == month.replacingOccurrences(of: " ", with: "")})
                     let monthDebit = monthSort.filter({$0.operationType == "DEBIT"})
@@ -350,4 +351,19 @@ extension ProductViewController: UITableViewDelegate, UITableViewDataSource, Ske
     func collectionSkeletonView(_ skeletonView: UITableView, identifierForHeaderInSection section: Int) -> ReusableHeaderFooterIdentifier? {
            return "HeaderIdentifier"
        }
+    
+    func getMonthFromLognInt(longInt: Int) -> String{
+        
+            let date = Date(timeIntervalSince1970: TimeInterval(longInt))
+            let dateFormatter = DateFormatter()
+            dateFormatter.timeStyle = DateFormatter.Style.none
+            dateFormatter.dateStyle = DateFormatter.Style.long
+            
+            dateFormatter.dateFormat = "LLLL"
+            dateFormatter.timeZone = .current
+            dateFormatter.locale = Locale(identifier: "ru_RU")
+            let localDate = dateFormatter.string(from: date)
+        
+        return localDate
+    }
 }

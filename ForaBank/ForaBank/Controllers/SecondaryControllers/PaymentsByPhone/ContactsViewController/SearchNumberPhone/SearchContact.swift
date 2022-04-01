@@ -94,7 +94,7 @@ class SearchContact: UIView, UITextFieldDelegate{
                 textField.text = format(phoneNumber: number)
                 delegateNumber?.passTextFieldText(textField: numberTextField)
             } else {
-                textField.text = format(phoneNumber: fullString.digits)
+                textField.text = format(phoneNumber: fullString)
                 delegateNumber?.passTextFieldText(textField: numberTextField)
             }
         }

@@ -95,67 +95,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             card.card = product
             setupNavigationColor()
             emptySpending.isHidden = true
-            
-            if product?.status == "Заблокирована банком" || product?.status == "Блокирована по решению Клиента" || product?.status == "BLOCKED_DEBET" || product?.status == "BLOCKED_CREDIT" || product?.status == "BLOCKED" || product?.statusPC == "3" || product?.statusPC == "5" || product?.statusPC == "6"  || product?.statusPC == "7"  || product?.statusPC == "20"  || product?.statusPC == "21"{
-                
-                card.addSubview(blockView)
-                button.isEnabled = false
-                button.alpha = 0.4
-                button2.isEnabled = false
-                button2.alpha = 0.4
-                button4.setTitle("Разблокирова.", for: .normal)
-                button4.titleLabel?.font = UIFont.systemFont(ofSize: 14)
-                let btnImage4 = UIImage(named: "unlock")
-                button4.tintColor = .black
-                button4.setImage(btnImage4 , for: .normal)
-                blockView.isHidden = false
-                activateSlider.isHidden = true
-                
-                guard let number = self.product?.number else { return }
-                
-                if self.product?.productType == "CARD" {
-                    
-                    self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4))) · Заблокирована", color: self.product?.fontDesignColor)
-                } else {
-                    self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4))) · Заблокирован", color: self.product?.fontDesignColor)
-                }
-                
-            } else if product?.statusPC == "17", product?.status == "Действует" || product?.status == "Выдано клиенту"{
-                
-                button.isEnabled = false
-                button.alpha = 0.4
-                button2.isEnabled = false
-                button2.alpha = 0.4
-                button4.isEnabled = false
-                button4.alpha = 0.4
-                activateSlider.isHidden = false
-                blockView.isHidden = true
-                
-                guard let number = self.product?.number else { return }
-                
-                self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4))) · Карта не активирована", color: self.product?.fontDesignColor)
-                activateSlider.isHidden = false
-            } else {
-                guard let number = self.product?.number else { return }
-                
-                self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4)))", color: self.product?.fontDesignColor)
-                
-                blockView.isHidden = true
-                button.isEnabled = true
-                button.alpha = 1
-                button2.isEnabled = true
-                button2.alpha = 1
-                button4.setTitle("Блокировать", for: .normal)
-                button4.setImage(UIImage(named: "lock"), for: .normal)
-                blockView.isHidden = true
-                button.isUserInteractionEnabled = true
-                button2.isUserInteractionEnabled = true
-                button.isEnabled = true
-                button2.isEnabled = true
-                button.alpha = 1
-                button2.alpha = 1
-            }
-            
             card.reloadInputViews()
             loadHistoryForCard()
         }
@@ -424,6 +363,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         
         setNavButton()
         
+        checkStatus()
+        
         if let fontDesignColor = product?.fontDesignColor {
             
             addCloseColorButton(with: UIColor(hexString: fontDesignColor))
@@ -446,10 +387,11 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         tableView.tableHeaderView?.isSkeletonable = true
         tableView.tableHeaderView?.showAnimatedGradientSkeleton()
         
-        if productsCount == 0 {
+        if productsCount == 0 && products.count <= 1 {
             
             collectionView?.anchor(height: 0)
             collectionView?.isHidden = true
+            
         } else {
             
             collectionView?.anchor(height: 65)
@@ -982,6 +924,69 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         } else if product?.productType == "CARD"{
             
             cardHistory()
+        }
+    }
+    
+    func checkStatus() {
+        
+        if let status = product?.status, status.contained(in: [Status.blockedByBank.rawValue, Status.blockedByClient.rawValue, Status.blockedDebet.rawValue, Status.blockedCredit.rawValue, Status.blocked.rawValue]), let statusPc = product?.statusPC, statusPc.contained(in: [StatusPC.operationsBlocked.rawValue, StatusPC.blockedByBank.rawValue, StatusPC.lost.rawValue, StatusPC.stolen.rawValue, StatusPC.temporarilyBlocked.rawValue, StatusPC.blockedByClient.rawValue]) {
+
+            card.addSubview(blockView)
+            button.isEnabled = false
+            button.alpha = 0.4
+            button2.isEnabled = false
+            button2.alpha = 0.4
+            button4.setTitle("Разблокирова.", for: .normal)
+            button4.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+            let btnImage4 = UIImage(named: "unlock")
+            button4.tintColor = .black
+            button4.setImage(btnImage4 , for: .normal)
+            blockView.isHidden = false
+            activateSlider.isHidden = true
+            
+            guard let number = self.product?.number else { return }
+            
+            if self.product?.productType == "CARD" {
+                
+                self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4))) · Заблокирована", color: self.product?.fontDesignColor)
+            } else {
+                self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4))) · Заблокирован", color: self.product?.fontDesignColor)
+            }
+            
+        } else if product?.statusPC == "17", product?.status == "Действует" || product?.status == "Выдано клиенту" {
+            
+            button.isEnabled = false
+            button.alpha = 0.4
+            button2.isEnabled = false
+            button2.alpha = 0.4
+            button4.isEnabled = false
+            button4.alpha = 0.4
+            activateSlider.isHidden = false
+            blockView.isHidden = true
+            
+            guard let number = self.product?.number else { return }
+            
+            self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4))) · Карта не активирована", color: self.product?.fontDesignColor)
+            activateSlider.isHidden = false
+        } else {
+            guard let number = self.product?.number else { return }
+            
+            self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4)))", color: self.product?.fontDesignColor)
+            
+            blockView.isHidden = true
+            button.isEnabled = true
+            button.alpha = 1
+            button2.isEnabled = true
+            button2.alpha = 1
+            button4.setTitle("Блокировать", for: .normal)
+            button4.setImage(UIImage(named: "lock"), for: .normal)
+            blockView.isHidden = true
+            button.isUserInteractionEnabled = true
+            button2.isUserInteractionEnabled = true
+            button.isEnabled = true
+            button2.isEnabled = true
+            button.alpha = 1
+            button2.alpha = 1
         }
     }
 }
