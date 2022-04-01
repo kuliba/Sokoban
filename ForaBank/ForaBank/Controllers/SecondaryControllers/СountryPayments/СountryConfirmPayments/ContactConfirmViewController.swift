@@ -560,8 +560,15 @@ class ContactConfurmViewController: UIViewController {
 
             if !model.summInCurrency.isEmpty {
                 currTransctionField.isHidden = false
+                currTransctionField.viewModel.image = UIImage(named: "coins")
+                currTransctionField.text = model.summInCurrency
             }
-            currTransctionField.text = model.summInCurrency
+            if model.paymentSystem != nil {
+                let navImage: UIImage = model.paymentSystem?.svgImage?.convertSVGStringToImage() ?? UIImage()
+                
+                let customViewItem = UIBarButtonItem(customView: UIImageView(image: navImage))
+                self.navigationItem.rightBarButtonItem = customViewItem
+            }
             
             
         case .gkh:
@@ -584,40 +591,15 @@ class ContactConfurmViewController: UIViewController {
             countryField.text = model.country?.name?.capitalizingFirstLetter() ?? ""
             if !model.summInCurrency.isEmpty {
                 currTransctionField.isHidden = false
+                currTransctionField.viewModel.image = UIImage(named: "coins")
+                currTransctionField.text = model.summInCurrency
             }
-            currTransctionField.text = model.summInCurrency
             currancyTransctionField.text = model.currancyTransction
             
-            let customViewItem = UIBarButtonItem(customView: UIImageView(image: #imageLiteral(resourceName: "Vector")))
-            self.navigationItem.rightBarButtonItem = customViewItem
-            
-        default:
-            cardFromField.isHidden = true
-            cardToField.isHidden = true
-            nameField.text =  model.fullName ?? "" //"Колотилин Михаил Алексеевич"
-            countryField.text = model.country?.name?.capitalizingFirstLetter() ?? "" // "Армения"
-            numberTransctionField.text = model.numberTransction  //"1235634790"
-            
-            
-            currancyTransctionField.text = model.currancyTransction //"Наличные"
-            
-            
-            if model.country?.code == "AM" {
-                numberTransctionField.isHidden = true
-                phoneField.isHidden = false
-                phoneField.textField.maskString = "+000-0000-00-00"
-                phoneField.text = model.phone ?? ""
+            if model.paymentSystem != nil {
+                let navImage: UIImage = model.paymentSystem?.svgImage?.convertSVGStringToImage() ?? UIImage()
                 
-                bankField.isHidden = false
-                bankField.text = model.bank?.memberNameRus ?? ""
-                bankField.imageView.image = model.bank?.svgImage?.convertSVGStringToImage()
-                let customViewItem = UIBarButtonItem(customView: UIImageView(image: #imageLiteral(resourceName: "MigAvatar")))
-                self.navigationItem.rightBarButtonItem = customViewItem
-            } else {
-                phoneField.isHidden = true
-                bankField.isHidden = true
-                numberTransctionField.isHidden = false
-                let customViewItem = UIBarButtonItem(customView: UIImageView(image: #imageLiteral(resourceName: "Vector")))
+                let customViewItem = UIBarButtonItem(customView: UIImageView(image: navImage))
                 self.navigationItem.rightBarButtonItem = customViewItem
             }
         }
