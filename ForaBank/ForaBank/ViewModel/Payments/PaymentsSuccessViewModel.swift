@@ -53,7 +53,10 @@ extension PaymentsSuccessViewModel {
         init(with paymentSuccess: Payments.Success) {
             
             //TODO: real implementation required
-            self.init(stateIcon: Image("OkOperators"), title: paymentSuccess.status.description, description: "\(paymentSuccess.amount)", operatorIcon: paymentSuccess.icon?.image)
+            let formatter: NumberFormatter = .currency(with: "₽")
+            let amount = formatter.string(from: NSNumber(value: paymentSuccess.amount)) ?? "\(paymentSuccess.amount)"
+            
+            self.init(stateIcon: Image("OkOperators"), title: paymentSuccess.status.description, description: amount, operatorIcon: paymentSuccess.icon?.image)
         }
     }
 }
