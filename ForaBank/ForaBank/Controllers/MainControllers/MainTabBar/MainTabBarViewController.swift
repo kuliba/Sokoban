@@ -22,9 +22,9 @@ class MainTabBarViewController: UITabBarController {
         tabBar.layer.backgroundColor = UIColor(red: 0.973, green: 0.973, blue: 0.973, alpha: 0.82).cgColor
 //        tabBar.tintColor = #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)
 //        tabBar.tintColor = .clear
-        self.tabBar.layer.borderWidth = 0.50
-        self.tabBar.layer.borderColor = UIColor.clear.cgColor
-        self.tabBar.clipsToBounds = true
+        tabBar.layer.borderWidth = 0.50
+        tabBar.layer.borderColor = UIColor.clear.cgColor
+        tabBar.clipsToBounds = true
 
         viewControllers = [
             generateNavController(rootViewController: mainVC,
@@ -59,6 +59,10 @@ class MainTabBarViewController: UITabBarController {
             present(nc, animated: false)
             return
         }
+        
+        //GlobalModule.c2bURL = "bank100000000217://qr.nspk.ru/AS1A002B0O3J2AKC97URG6GI1HAPP6VA?type=01&bank=1crt88888881&crc=9C74"
+        //GlobalModule.c2bURL = "https://qr.nspk.ru/AS1000285IN8NDBK8PE8PP8JECT7PP50?type=01&bank=1crt88888881&sum=1000501&cur=RUB&crc=E415"
+        
         if GlobalModule.c2bURL != nil {
             let controller = C2BDetailsViewController.storyboardInstance()!
             let nc = UINavigationController(rootViewController: controller)

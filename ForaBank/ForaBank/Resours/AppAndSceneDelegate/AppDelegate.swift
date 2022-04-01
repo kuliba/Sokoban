@@ -213,9 +213,25 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
                                                                                           status: .delivered))
         }
         
-        if let otpCode = userInfo["otp"] as? String {
+        if let otpCode = otpCode(with: userInfo) {
             
             Model.shared.action.send(ModelAction.Auth.VerificationCode.PushRecieved(code: otpCode))
+        }
+        
+        func otpCode(with info: [AnyHashable : Any]) -> String? {
+            
+            if let code = info["otp"] as? String  {
+                
+                return code.filter { "0"..."9" ~= $0 }
+                
+            } else if let code = info["aps.alert.body"] as? String {
+                
+                return code.filter { "0"..."9" ~= $0 }
+                
+            } else {
+                
+                return nil
+            }
         }
 
         completionHandler([[.alert, .sound]])

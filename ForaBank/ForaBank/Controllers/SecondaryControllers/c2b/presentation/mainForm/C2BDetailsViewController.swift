@@ -9,7 +9,10 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         let storyboard = UIStoryboard(name: "InternetTV", bundle: nil)
         return storyboard.instantiateViewController(withIdentifier: "C2BDetails") as? C2BDetailsViewController
     }
-    
+
+    lazy var realm = try? Realm()
+    var cardFromField = CardChooseView()
+    var cardListView = CardsScrollView(onlyMy: false, deleteDeposit: true, loadProducts: false)
     var qrData = [String: String]()
     var viewModel = C2BDetailsViewModel()
     var amount = ""
@@ -63,12 +66,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     @IBOutlet weak var switchConsent: UISwitch!
         
     @IBOutlet weak var goButton: UIButton?
-    
-    lazy var realm = try? Realm()
-    var cardFromField = CardChooseView()
-    var cardListView = CardsScrollView(onlyMy: false, deleteDeposit: true, loadProducts: false)
 
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         goButton?.isHidden = !(bottomInputView?.isHidden ?? false)
@@ -446,10 +444,14 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
         imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(named: "back_button")
+        let imageViewRight = UIImageView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+        imageViewRight.contentMode = .scaleAspectFit
+        imageViewRight.image = UIImage(named: "sbp-logo")
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
         imageView.isUserInteractionEnabled = true
         imageView.addGestureRecognizer(tapGestureRecognizer)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: imageView)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: imageViewRight)
         navigationItem.hidesSearchBarWhenScrolling = false
         definesPresentationContext = true
     }

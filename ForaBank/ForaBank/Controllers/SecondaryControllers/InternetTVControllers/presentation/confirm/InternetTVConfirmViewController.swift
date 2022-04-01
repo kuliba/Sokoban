@@ -114,7 +114,7 @@ class InternetTVConfirmViewController: UIViewController {
         }
 
         dismissActivity()
-        cardFromField.cardModel = model.cardFrom
+        cardFromField.model = model.cardFrom
         cardFromField.isHidden = false
         cardFromField.choseButton.isHidden = true
         cardFromField.balanceLabel.isHidden = true

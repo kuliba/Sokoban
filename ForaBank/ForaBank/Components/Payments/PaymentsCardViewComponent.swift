@@ -106,7 +106,8 @@ extension PaymentsCardView {
                     
                     switch action {
                     case let payload as PaymentsProductSelectorView.ViewModelAction.SelectedProduct:
-                        //TODO: update product with id
+                        update(value: String(payload.productId))
+                        
                         withAnimation {
                             
                             state = .normal
@@ -176,12 +177,15 @@ struct PaymentsCardView: View {
                             .font(.textBodyMM14200())
                             .foregroundColor(.textSecondary)
                         
-                        Image.ic24ChevronDown
-                            .renderingMode(.template)
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                            .foregroundColor(.mainColorsGray)
-                            .rotationEffect(viewModel.isExpanded ? .degrees(0) : .degrees(-90))
+                        if viewModel.isEditable == true {
+
+                            Image.ic24ChevronDown
+                                .renderingMode(.template)
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .foregroundColor(.mainColorsGray)
+                                .rotationEffect(viewModel.isExpanded ? .degrees(0) : .degrees(-90))
+                        }
                     }
                     
                     HStack {
@@ -195,7 +199,10 @@ struct PaymentsCardView: View {
             }
             .onTapGesture {
                 
-                viewModel.action.send(PaymentsCardView.ViewModelAction.ToggleSelector())
+                if viewModel.isEditable == true {
+
+                    viewModel.action.send(PaymentsCardView.ViewModelAction.ToggleSelector())
+                }
             }
             
             switch viewModel.state {

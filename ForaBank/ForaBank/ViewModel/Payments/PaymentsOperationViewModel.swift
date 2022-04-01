@@ -116,6 +116,13 @@ class PaymentsOperationViewModel: ObservableObject {
                         print("Payments: failure")
                         rootActions.alert(errorMessage)
                     }
+                    
+                case let payload as ModelAction.Auth.VerificationCode.PushRecieved:
+                    guard let codeParameter = items.value.first(where: { $0.id == Payments.Parameter.Identifier.code.rawValue }) as? PaymentsInputView.ViewModel else {
+                        return
+                    }
+                    
+                    codeParameter.content = payload.code
 
                 default:
                     break

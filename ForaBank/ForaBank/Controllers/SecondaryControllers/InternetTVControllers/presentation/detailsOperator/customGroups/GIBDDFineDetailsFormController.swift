@@ -63,10 +63,11 @@ class GIBDDFineDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSou
         goButton?.add_CornerRadius(5)
         tableView?.register(UINib(nibName: "InternetInputCell", bundle: nil), forCellReuseIdentifier: InternetTVInputCell.reuseId)
         AddAllUserCardtList.add {}
-        setupCardList { error in
-            guard let error = error else { return }
-            self.showAlert(with: "Ошибка", and: error)
-        }
+//        setupCardList { error in
+//            guard let error = error else { return }
+//            self.showAlert(with: "Ошибка", and: error)
+//        }
+        readAndSetupCard()
         if fromPaymentVc == false {
             viewModel.puref = operatorData?.puref ?? ""
         }
@@ -166,7 +167,7 @@ class GIBDDFineDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSou
         ob?.sumTransaction = sum.currencyFormatter(symbol: "RUB")
         let tax = response?.data?.fee ?? 0.0
         ob?.taxTransaction = tax.currencyFormatter(symbol: "RUB")
-        ob?.cardFrom = footerView.cardFromField.cardModel
+        ob?.cardFrom = footerView.cardFromField.model
 
         DispatchQueue.main.async {
             let vc = InternetTVConfirmViewController()
@@ -306,6 +307,22 @@ class GIBDDFineDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSou
             titleLabel.frame.origin.x = newX
         }
         return titleView
+    }
+
+    private func readAndSetupCard() {
+        DispatchQueue.main.async {
+            let cards = ReturnAllCardList.cards()
+            var filterProduct: [UserAllCardsModel] = []
+            cards.forEach({ card in
+                if (card.productType == "CARD" || card.productType == "ACCOUNT") {
+                    if card.currency == "RUB" {
+                        filterProduct.append(card)
+                    }
+                }
+            })
+            self.footerView.cardListView.cardList = filterProduct
+            self.footerView.cardFromField.model = filterProduct.first
+        }
     }
 
     func setupCardList(completion: @escaping ( _ error: String?) ->() ) {

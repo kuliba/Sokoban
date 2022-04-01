@@ -740,6 +740,8 @@
 		A533EDF327F643B10001B8C0 /* GetOperationDetailByPaymentIdDO.swift in Sources */ = {isa = PBXBuildFile; fileRef = A533EDF227F643B10001B8C0 /* GetOperationDetailByPaymentIdDO.swift */; };
 		A55A52D92746FC3B00641DD0 /* InternetTV.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A55A52D82746FC3B00641DD0 /* InternetTV.storyboard */; };
 		A55A52DB2746FF1700641DD0 /* InternetTVMainController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55A52DA2746FF1700641DD0 /* InternetTVMainController.swift */; };
+		A55E653827F6D7D7005CED37 /* C2BDetailsInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55E653727F6D7D7005CED37 /* C2BDetailsInputView.swift */; };
+		A55E653A27F6D9AD005CED37 /* C2BDetailsInput.xib in Resources */ = {isa = PBXBuildFile; fileRef = A55E653927F6D9AD005CED37 /* C2BDetailsInput.xib */; };
 		A5662694275D3CD000FFE31A /* InternetTVSelectDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5662693275D3CD000FFE31A /* InternetTVSelectDialog.swift */; };
 		A5662696275E945A00FFE31A /* InternetTVSelectController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5662695275E945A00FFE31A /* InternetTVSelectController.swift */; };
 		A5662698275FDD2400FFE31A /* checkBtn.xib in Resources */ = {isa = PBXBuildFile; fileRef = A5662697275FDD2300FFE31A /* checkBtn.xib */; };
@@ -1782,6 +1784,8 @@
 		A533EDF227F643B10001B8C0 /* GetOperationDetailByPaymentIdDO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetOperationDetailByPaymentIdDO.swift; sourceTree = "<group>"; };
 		A55A52D82746FC3B00641DD0 /* InternetTV.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = InternetTV.storyboard; sourceTree = "<group>"; };
 		A55A52DA2746FF1700641DD0 /* InternetTVMainController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVMainController.swift; sourceTree = "<group>"; };
+		A55E653727F6D7D7005CED37 /* C2BDetailsInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C2BDetailsInputView.swift; sourceTree = "<group>"; };
+		A55E653927F6D9AD005CED37 /* C2BDetailsInput.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = C2BDetailsInput.xib; sourceTree = "<group>"; };
 		A5662693275D3CD000FFE31A /* InternetTVSelectDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVSelectDialog.swift; sourceTree = "<group>"; };
 		A5662695275E945A00FFE31A /* InternetTVSelectController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetTVSelectController.swift; sourceTree = "<group>"; };
 		A5662697275FDD2300FFE31A /* checkBtn.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = checkBtn.xib; sourceTree = "<group>"; };
@@ -4229,8 +4233,10 @@
 		A5ECD4C827ECC193008FBEEC /* detailsForm */ = {
 			isa = PBXGroup;
 			children = (
+				A55E653927F6D9AD005CED37 /* C2BDetailsInput.xib */,
 				A5ECD4C927ECC2BE008FBEEC /* C2BDetailsFormViewController.swift */,
 				A5ECD4CB27ECC2DC008FBEEC /* C2BDetailsFormViewModel.swift */,
+				A55E653727F6D7D7005CED37 /* C2BDetailsInputView.swift */,
 			);
 			path = detailsForm;
 			sourceTree = "<group>";
@@ -5922,6 +5928,7 @@
 				EDA563B026F881D60093F0C8 /* BanksView.xib in Resources */,
 				EDB143CC265FDEC90028EF5A /* Roboto-BlackItalic.ttf in Resources */,
 				EDE212F62742E91D005D9821 /* ChooseCurrencyTableViewCell.xib in Resources */,
+				A55E653A27F6D9AD005CED37 /* C2BDetailsInput.xib in Resources */,
 				ED2BE18126A04A4300647CB1 /* CastomCardXIB.xib in Resources */,
 				ED684CF32763955E00AA7A33 /* DocDepositTableViewCell.xib in Resources */,
 				0BA09E2E26ADEBF50065D623 /* GHKCell.xib in Resources */,
@@ -6753,6 +6760,7 @@
 				EDF4F24B277249950030F087 /* ChangePaymentContactDecodableModel.swift in Sources */,
 				0B8BE08F266FBE0500E96CAA /* CSRFDecodableModel.swift in Sources */,
 				EDB14535266671580028EF5A /* MockItems.swift in Sources */,
+				A55E653827F6D7D7005CED37 /* C2BDetailsInputView.swift in Sources */,
 				0B8C1C60273DCB6200BA5CAC /* PushHistoryViewController.swift in Sources */,
 				77DC126D2770F84B00C917B0 /* ServerStatusCode.swift in Sources */,
 				77C3829C27E31EBA00B5246E /* TextFieldFormatableViewComponent.swift in Sources */,
@@ -7066,6 +7074,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 33;
 				CURRENT_PROJECT_VERSION = 30;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
@@ -7095,6 +7104,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 33;
 				CURRENT_PROJECT_VERSION = 30;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;

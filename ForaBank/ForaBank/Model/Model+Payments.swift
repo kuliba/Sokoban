@@ -539,31 +539,67 @@ extension Model {
     
     func paymentsTransferPayer(with parameters: [ParameterRepresentable], currency: Currency) -> TransferData.Payer? {
         
-        //TODO: extract card/account id from ParameterCard
-        
-        if let cardId = paymentsFirstProductId(of: .card, currency: currency) {
+        if let parameterCard = parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.card.rawValue }), let productIdValue = parameterCard.parameter.value,
+            let productId = Int(productIdValue),
+            let productType = paymentsProductType(for: productId) {
             
-            return .init(inn: nil, accountId: nil, accountNumber: nil, cardId: cardId, cardNumber: nil, phoneNumber: nil)
-            
-        } else if let accountId = paymentsFirstProductId(of: .account, currency: currency) {
-            
-            return .init(inn: nil, accountId: accountId, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
+            switch productType {
+            case .card:
+                return .init(inn: nil, accountId: nil, accountNumber: nil, cardId: productId, cardNumber: nil, phoneNumber: nil)
+            case .account:
+                return .init(inn: nil, accountId: productId, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
+            default:
+                return nil
+            }
             
         } else {
             
+            if let cardId = paymentsFirstProductId(of: .card, currency: currency) {
+                
+                return .init(inn: nil, accountId: nil, accountNumber: nil, cardId: cardId, cardNumber: nil, phoneNumber: nil)
+                
+            } else if let accountId = paymentsFirstProductId(of: .account, currency: currency) {
+                
+                return .init(inn: nil, accountId: accountId, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil)
+                
+            } else {
+                
+                return nil
+            }
+        }
+    }
+    
+    func paymentsProductType(for productId: Int) -> ProductType? {
+        
+        guard let realm = try? Realm() else {
             return nil
         }
+        
+        let products = realm.objects(UserAllCardsModel.self)
+        
+        return products.first(where: { $0.id == productId })?.productTypeEnum
     }
         
     func paymentsFirstProductId(of type: ProductType, currency: Currency) -> Int? {
         
-        guard let realm = try? Realm()  else {
+        guard let realm = try? Realm() else {
             return nil
         }
         
         let products = realm.objects(UserAllCardsModel.self)
         
         return products.first(where: { $0.productType == type.rawValue && $0.currency == currency.description })?.id
+    }
+    
+    func paymentsProduct(with id: Int) -> UserAllCardsModel? {
+        
+        guard let realm = try? Realm() else {
+            return nil
+        }
+        
+        let products = realm.objects(UserAllCardsModel.self)
+        
+        return products.first(where: { $0.id == id })
     }
     
     func paymentsTransferAmount(with parameters: [ParameterRepresentable]) -> Double? {

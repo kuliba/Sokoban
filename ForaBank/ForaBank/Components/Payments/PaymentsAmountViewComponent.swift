@@ -66,7 +66,9 @@ extension PaymentsAmountView {
         
         override var isValid: Bool {
             
-            textField.value > 0
+            guard let parameterAmount = source as? Payments.ParameterAmount else { return false }
+            
+            return parameterAmount.validator.isValid(value: textField.value)
         }
         
         func updateTranferButton(isEnabled: Bool) {
@@ -374,7 +376,7 @@ extension PaymentsAmountView.ViewModel {
     
     static let amountParameter: PaymentsAmountView.ViewModel = {
         
-        let viewModel = PaymentsAmountView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "100"), title: "Сумма перевода", currency: .init(description: "RUB"), validator: .init(minAmount: 1)), actionTitle: "Перевести", action: {})
+        let viewModel = PaymentsAmountView.ViewModel(with: .init(.init(id: UUID().uuidString, value: "100"), title: "Сумма перевода", currency: .init(description: "RUB"), validator: .init(minAmount: 1, maxAmount: 1000)), actionTitle: "Перевести", action: {})
         
         viewModel.updateTranferButton(isEnabled: true)
         

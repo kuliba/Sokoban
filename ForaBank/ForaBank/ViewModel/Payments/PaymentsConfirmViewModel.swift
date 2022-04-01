@@ -28,10 +28,32 @@ class PaymentsConfirmViewModel: PaymentsOperationViewModel {
     
     override func bind() {
         
+        bind(model: model)
         bindAction()
         bindItems()
         
         print("Payments: bind confirm")
+    }
+    
+    override func bind(model: Model) {
+        
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as ModelAction.Auth.VerificationCode.PushRecieved:
+                    guard let codeParameter = items.value.first(where: { $0.id == Payments.Parameter.Identifier.code.rawValue }) as? PaymentsInputView.ViewModel else {
+                        return
+                    }
+                    
+                    codeParameter.content = payload.code
+
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
     }
     
     override func bindAction() {

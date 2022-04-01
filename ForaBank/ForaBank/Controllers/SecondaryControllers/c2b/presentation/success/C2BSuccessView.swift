@@ -55,6 +55,10 @@ class C2BSuccessView: UIView {
             statusImageView.image = #imageLiteral(resourceName: "OkOperators")
             statusLabel.text = "Успешный перевод"
             break
+        case "COMPLETE":
+            statusImageView.image = #imageLiteral(resourceName: "OkOperators")
+            statusLabel.text = "Успешный перевод"
+            break
         case .none:
             statusImageView.image = #imageLiteral(resourceName: "errorIcon")
             statusLabel.text = "Операция неуспешна!"
