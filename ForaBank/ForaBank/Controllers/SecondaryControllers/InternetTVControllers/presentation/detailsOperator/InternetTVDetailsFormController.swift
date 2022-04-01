@@ -69,10 +69,11 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
             }
         }
 
-        setupCardList { error in
-            guard let error = error else { return }
-            self.showAlert(with: "Ошибка", and: error)
-        }
+//        setupCardList { error in
+//            guard let error = error else { return }
+//            self.showAlert(with: "Ошибка", and: error)
+//        }
+        readAndSetupCard()
 
         if let list = operatorData?.parameterList {
             list.forEach { item in
@@ -268,26 +269,44 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
         return titleView
     }
 
-    func setupCardList(completion: @escaping ( _ error: String?) ->() ) {
-//        showActivity()
-//        var userAllCardsModelArr = [UserAllCardsModel]()
-//        var productListDatum: [GetProductListDatum] = []
-//        let object = realm?.objects(UserAllCardsModel.self)
-//
-//        dismissActivity()
-//        object?.forEach { product in
-//            if product.productType == "CARD" || product.productType == "ACCOUNT"  {
-//                userAllCardsModelArr.append(product)
-//                let ob = GetProductListDatum.init(number: product.number, numberMasked: product.numberMasked, balance: product.balance, currency: product.currency, productType: product.productType, productName: product.productName, ownerID: product.ownerID, loanID: nil, accountNumber: product.accountNumber, allowDebit: product.allowDebit, allowCredit: product.allowCredit, customName: product.customName, cardID: product.cardID, accountID: product.accountID, name: product.name, validThru: product.validThru, status: product.status, holderName: product.holderName, product: product.product, branch: product.branch, miniStatement: nil, mainField: product.mainField, additionalField: product.additionalField, smallDesign: product.smallDesign, mediumDesign: product.mediumDesign, largeDesign: product.largeDesign, paymentSystemName: product.paymentSystemName, paymentSystemImage: product.paymentSystemImage, fontDesignColor: product.fontDesignColor, id: product.id, background: [""], XLDesign: product.XLDesign, statusPC: product.statusPC, interestRate: nil, openDate: product.openDate, branchId: product.branchId, expireDate: product.expireDate, depositProductID: product.depositProductID , depositID: product.depositID, creditMinimumAmount: product.creditMinimumAmount, minimumBalance: product.minimumBalance, balanceRUB: product.balanceRUB, amount: nil, clientID: nil, currencyCode: nil, currencyNumber: nil, bankProductID: nil, finOperBrief: nil, currentInterestRate: nil, principalDebt: nil, defaultPrincipalDebt: nil, totalAmountDebt: nil, principalDebtAccount: nil, settlementAccount: nil, settlementAccountId: nil, dateLong: nil, loanBaseParam: nil, isMain: nil)
-//                productListDatum.append(ob)
-//            }
-//        }
-//
-//        if (productListDatum.count > 0) {
-//            footerView.cardListView.cardList = productListDatum
-//            footerView.cardFromField.cardModel = productListDatum.first
-//        }
+    private func readAndSetupCard() {
+        DispatchQueue.main.async {
+            let cards = ReturnAllCardList.cards()
+            var filterProduct: [UserAllCardsModel] = []
+            cards.forEach({ card in
+                if (card.productType == "CARD" || card.productType == "ACCOUNT") {
+                    if card.currency == "RUB" {
+                        filterProduct.append(card)
+                    }
+                }
+            })
+            self.footerView.cardListView.cardList = filterProduct
+            self.footerView.cardFromField.model = filterProduct.first
+        }
     }
+
+
+//    func setupCardList(completion: @escaping ( _ error: String?) ->() ) {
+//
+////        showActivity()
+////        var userAllCardsModelArr = [UserAllCardsModel]()
+////        var productListDatum: [GetProductListDatum] = []
+////        let object = realm?.objects(UserAllCardsModel.self)
+////
+////        dismissActivity()
+////        object?.forEach { product in
+////            if product.productType == "CARD" || product.productType == "ACCOUNT"  {
+////                userAllCardsModelArr.append(product)
+////                let ob = GetProductListDatum.init(number: product.number, numberMasked: product.numberMasked, balance: product.balance, currency: product.currency, productType: product.productType, productName: product.productName, ownerID: product.ownerID, loanID: nil, accountNumber: product.accountNumber, allowDebit: product.allowDebit, allowCredit: product.allowCredit, customName: product.customName, cardID: product.cardID, accountID: product.accountID, name: product.name, validThru: product.validThru, status: product.status, holderName: product.holderName, product: product.product, branch: product.branch, miniStatement: nil, mainField: product.mainField, additionalField: product.additionalField, smallDesign: product.smallDesign, mediumDesign: product.mediumDesign, largeDesign: product.largeDesign, paymentSystemName: product.paymentSystemName, paymentSystemImage: product.paymentSystemImage, fontDesignColor: product.fontDesignColor, id: product.id, background: [""], XLDesign: product.XLDesign, statusPC: product.statusPC, interestRate: nil, openDate: product.openDate, branchId: product.branchId, expireDate: product.expireDate, depositProductID: product.depositProductID , depositID: product.depositID, creditMinimumAmount: product.creditMinimumAmount, minimumBalance: product.minimumBalance, balanceRUB: product.balanceRUB, amount: nil, clientID: nil, currencyCode: nil, currencyNumber: nil, bankProductID: nil, finOperBrief: nil, currentInterestRate: nil, principalDebt: nil, defaultPrincipalDebt: nil, totalAmountDebt: nil, principalDebtAccount: nil, settlementAccount: nil, settlementAccountId: nil, dateLong: nil, loanBaseParam: nil, isMain: nil)
+////                productListDatum.append(ob)
+////            }
+////        }
+////
+////        if (productListDatum.count > 0) {
+////            footerView.cardListView.cardList = productListDatum
+////            footerView.cardFromField.cardModel = productListDatum.first
+////        }
+//    }
 
     func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
         return .custom

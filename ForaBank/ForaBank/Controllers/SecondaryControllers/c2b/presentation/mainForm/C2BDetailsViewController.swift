@@ -9,7 +9,10 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         let storyboard = UIStoryboard(name: "InternetTV", bundle: nil)
         return storyboard.instantiateViewController(withIdentifier: "C2BDetails") as? C2BDetailsViewController
     }
-    
+
+    lazy var realm = try? Realm()
+    var cardFromField = CardChooseView()
+    var cardListView = CardsScrollView(onlyMy: false, deleteDeposit: true, loadProducts: false)
     var qrData = [String: String]()
     var viewModel = C2BDetailsViewModel()
     var amount = ""
@@ -63,12 +66,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     @IBOutlet weak var switchConsent: UISwitch!
         
     @IBOutlet weak var goButton: UIButton?
-    
-    lazy var realm = try? Realm()
-    var cardFromField = CardChooseView()
-    var cardListView = CardsScrollView(onlyMy: false, deleteDeposit: true, loadProducts: false)
 
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         goButton?.isHidden = !(bottomInputView?.isHidden ?? false)
