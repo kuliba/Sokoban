@@ -424,10 +424,12 @@ extension Payments {
         struct Validator: ValidatorProtocol {
             
             let minAmount: Double
+            let maxAmount: Double
             
             func isValid(value: Double) -> Bool {
                 
-                guard value >= minAmount else {
+                //FIXME: implement correct floats comparision
+                guard value >= minAmount, value <= maxAmount else {
                     return false
                 }
                 
@@ -439,15 +441,27 @@ extension Payments {
     struct ParameterCard: ParameterRepresentable {
         
         let parameter: Parameter
+        let editable: Bool
         
-        internal init(value: String? = nil) {
+        internal init(_ parameter: Parameter, editable: Bool) {
             
-            self.parameter = Parameter(id: Payments.Parameter.Identifier.card.rawValue, value: value)
+            self.parameter = parameter
+            self.editable = editable
+        }
+        
+        internal init(value: String? = nil, editable: Bool = true) {
+            
+            self.init(Parameter(id: Payments.Parameter.Identifier.card.rawValue, value: value), editable: editable)
         }
         
         func updated(value: String?) -> ParameterRepresentable {
             
             ParameterCard(value: value)
+        }
+        
+        func updated(editable: Bool) -> ParameterRepresentable {
+            
+            ParameterCard(parameter, editable: editable)
         }
     }
     

@@ -77,17 +77,17 @@ extension Model {
         
         if transferData.needSum == true {
             
-            guard let productId = productId() else {
+            guard let productId = productId(), let product = paymentsProduct(with: productId) else {
                 throw Payments.Error.failedObtainProductId
             }
             
-            parameters.append(Payments.ParameterCard(value: "\(productId)"))
+            parameters.append(Payments.ParameterCard(value: "\(productId)", editable: false))
             
             let amountParameter = Payments.ParameterAmount(
                 .init(id: Payments.Parameter.Identifier.amount.rawValue, value: nil),
                 title: "Сумма перевода",
                 currency: .init(description: "RUB"),
-                validator: .init(minAmount: 10))
+                validator: .init(minAmount: 1, maxAmount: product.balance))
             parameters.append(amountParameter)
         }
         

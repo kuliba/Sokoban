@@ -152,7 +152,7 @@ extension Model {
                     .init(id: Payments.Parameter.Identifier.amount.rawValue, value: "1234"),
                     title: "Сумма перевода",
                     currency: .init(description: "RUB"),
-                    validator: .init(minAmount: 10))
+                    validator: .init(minAmount: 10, maxAmount: 1000))
                 
                 completion(.success( parameters + [infoParameter, fioParameter, cardParameter, innParameter, oktmoParameter, adressParameter, amountParameter]))
             
@@ -209,7 +209,7 @@ extension Model {
                     .init(id: Payments.Parameter.Identifier.amount.rawValue, value: "1234"),
                     title: "Сумма перевода",
                     currency: .init(description: "RUB"),
-                    validator: .init(minAmount: 10))
+                    validator: .init(minAmount: 10, maxAmount: 1000))
                 
                 completion(.success( parameters + [infoParameter, fioParameter, cardParameter, innParameter, oktmoParameter, adressParameter, amountParameter]))
                 
