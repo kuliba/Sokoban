@@ -30,37 +30,38 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
     var bottomView = BottomInputView()
     
     var selectNumber: String?
+    var paymentTemplate: PaymentTemplateData? = nil
+    
+    init() {
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    init(paymentTemplate: PaymentTemplateData) {
+        super.init(nibName: nil, bundle: nil)
+        self.paymentTemplate = paymentTemplate
+        
+        if let model = paymentTemplate.parameterList.first as? TransferAnywayData {
+            
+            let mask = StringMask(mask: "+0 (000) 000-00-00")
+            let phone = model.additional.first(where: { $0.fieldname == "a3_NUMBER_1_2" })
+            let maskPhone = mask.mask(string: phone?.fieldvalue)
+            
+            selectNumber = maskPhone
+            phoneField.textField.text = maskPhone
+        }
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupNavBar()
-        phoneField.textField.delegate = self
-        phoneField.rightButton.setImage(UIImage(imageLiteralResourceName: "user-plus"), for: .normal)
-        if selectNumber != nil {
-            phoneField.textField.text = selectNumber ?? ""
-            phoneField.textField.maskString = selectNumber ?? ""
-        }
         setupUI()
-        phoneField.didChooseButtonTapped = {() in
-            let contactPickerScene = EPContactsPicker(
-                delegate: self,
-                multiSelection: false,
-                subtitleCellType: SubtitleCellValue.phoneNumber)
-            
-            let navigationController = UINavigationController(rootViewController: contactPickerScene)
-            self.present(navigationController, animated: true, completion: nil)
-        }
         setupActions()
         
-        bottomView.didDoneButtonTapped = { [self](amount) in
-            /// Вызвать правильный метод оплаты
-            self.startContactPayment(with: selectNumber ?? "", amount: amount) { [weak self] error in
-                if error != nil {
-                    self?.showAlert(with: "Ошибка", and: error!)
-                }
-            }
-        }
         getCardList { [weak self] data ,error in
             DispatchQueue.main.async {
                 
@@ -81,6 +82,25 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.isHidden = false
+        
+        if let template = paymentTemplate {
+            runBlockAfterDelay(0.2) {
+                
+                self.setupAmount(amount: template.amount)
+            }
+        }
+    }
+    
+    func setupAmount(amount: Double?) {
+        guard let moneyFormatter = bottomView.moneyFormatter else { return }
+        let newText = moneyFormatter.format("\(amount ?? 0)") ?? ""
+        bottomView.amountTextField.text = newText
+        bottomView.doneButtonIsEnabled(newText.isEmpty)
+    }
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if let text = textField.text,
            let textRange = Range(range, in: text) {
@@ -99,14 +119,6 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
             bottomView.doneButtonIsEnabled(text.count < 11 ? true : false)
         }
     }
-    
-//    func textFieldDidEndEditing(_ textField: UITextField) {
-//        let a = phoneField.textField.text ?? ""
-//        if ( !isValidPassword(a) == true && a != "") {
-//            self.showAlert(with: "Ошибка", and: "Не верный формат")
-//            phoneField.textField.text = ""
-//        }
-//    }
     
     func setupActions() {
         
@@ -133,6 +145,25 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
             navVc.modalPresentationStyle = .fullScreen
             self.present(navVc, animated: true, completion: nil)
         }
+        
+        phoneField.didChooseButtonTapped = {() in
+            let contactPickerScene = EPContactsPicker(
+                delegate: self,
+                multiSelection: false,
+                subtitleCellType: SubtitleCellValue.phoneNumber)
+            
+            let navigationController = UINavigationController(rootViewController: contactPickerScene)
+            self.present(navigationController, animated: true, completion: nil)
+        }
+        
+        bottomView.didDoneButtonTapped = { [self](amount) in
+            /// Вызвать правильный метод оплаты
+            self.startContactPayment(with: selectNumber ?? "", amount: amount) { [weak self] error in
+                if error != nil {
+                    self?.showAlert(with: "Ошибка", and: error!)
+                }
+            }
+        }
     }
     
     private func openOrHideView(_ view: UIView) {
@@ -158,39 +189,53 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.navigationBar.isHidden = false
-    }
     
     fileprivate func setupUI() {
-        view.addSubview(bottomView)
+        title = "Мобильная связь"
+        
+        phoneField.textField.delegate = self
+        phoneField.rightButton.setImage(UIImage(imageLiteralResourceName: "user-plus"), for: .normal)
+        if selectNumber != nil {
+            phoneField.textField.text = selectNumber ?? ""
+            phoneField.textField.maskString = selectNumber ?? ""
+        }
+        
         phoneField.textField.maskString = "+7 (000) 000-00-00"
         view.backgroundColor = .white
-        let saveAreaView = UIView()
-        saveAreaView.backgroundColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1)
-        view.addSubview(saveAreaView)
-        saveAreaView.anchor(top: view.safeAreaLayoutGuide.bottomAnchor, left: view.leftAnchor,
-                            bottom: view.bottomAnchor, right: view.rightAnchor)
         
-        bottomView.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
-                          right: view.rightAnchor)
+        let saveAreaView = UIView()
+        view.addSubview(saveAreaView)
+        saveAreaView.backgroundColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1)
+        saveAreaView.anchor(
+            top: view.safeAreaLayoutGuide.bottomAnchor,
+            left: view.leftAnchor,
+            bottom: view.bottomAnchor,
+            right: view.rightAnchor)
+        
+        view.addSubview(bottomView)
+        bottomView.anchor(
+            left: view.leftAnchor,
+            bottom: view.safeAreaLayoutGuide.bottomAnchor,
+            right: view.rightAnchor)
         bottomView.currencySymbol = "₽"
         
-        title = "Мобильная связь"
         stackView = UIStackView(arrangedSubviews: [phoneField, cardField, cardListView])
+        view.addSubview(stackView)
+        
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
         stackView.spacing = 20
-        view.addSubview(stackView)
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
+        
+        stackView.anchor(
+            top: view.safeAreaLayoutGuide.topAnchor,
+            left: view.leftAnchor,
+            right: view.rightAnchor,
+            paddingTop: 20)
         
     }
     
+    //MARK: - API
     func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?)->()) {
         let param = ["isCard": "true", "isAccount": "true", "isDeposit": "false", "isLoan": "false"]
         
@@ -210,7 +255,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
     }
     
     ///  Запрос на перевод по мобильной связи
-    func startContactPayment(with phone: String, amount: String, completion: @escaping (_ error: String?)->()) {
+    func startContactPayment(with phone: String, amount: String, completion: @escaping (_ error: String?) -> () ) {
         showActivity()
         
         let newBody = [ "phoneNumbersList" : [phone.digits] ] as [String: AnyObject]

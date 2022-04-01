@@ -51,7 +51,12 @@ extension Model {
                             let transferStepData = try await paymentsTransferAnywayStep(with: parameters, include: ["a3_SearchType_1_1"], step: .initial)
                             print(transferStepData.parameterListForNextStep.map{ $0.debugDescription})
                             //["id: a3_BillNumber_1_1 value: empty title: Индекс документа (УИН) data: %String type: Input"]
+                            #if DEBUG
                             let nextStepParameters = try paymentsTaxesNextStepParameters(for: transferStepData, samples: ["a3_BillNumber_1_1": "32227009220006631003"])
+                            #else
+                            let nextStepParameters = try paymentsTaxesNextStepParameters(for: transferStepData)
+                            #endif
+                            
                             let additionalParameters = paymentsAdditionalParameters(for: transferStepData)
  
                             completion(.success(updatedParameters + nextStepParameters + additionalParameters))
@@ -76,7 +81,12 @@ extension Model {
                         do {
                             
                             let transferStepData = try await paymentsTransferAnywayStep(with: parameters, include: ["a3_SearchType_1_1"], step: .initial)
+                            #if DEBUG
                             let nextStepParameters = try paymentsTaxesNextStepParameters(for: transferStepData, samples: ["a3_IPnumber_1_1": "6631/22/27009-ИП"])
+                            #else
+                            let nextStepParameters = try paymentsTaxesNextStepParameters(for: transferStepData)
+                            #endif
+                            
                             let additionalParameters = paymentsAdditionalParameters(for: transferStepData)
  
                             completion(.success(updatedParameters + nextStepParameters + additionalParameters))
@@ -145,7 +155,12 @@ extension Model {
                         
                         print(transferStepData.parameterListForNextStep.map{ $0.debugDescription})
                         //["id: a3_docName_1_2 value: 20 title: Тип документа: data: =,20=Паспорт РФ (серия номер),30=ИНН,40=СНИЛС,50=Водительское удостоверение,60=Свидетельство о регистрации ТС (СТС) type: Select", "id: a3_docNumber_2_2 value: empty title: Номер документа: data: %String type: Input"]
+                        #if DEBUG
                         let nextStepParameters = try paymentsTaxesNextStepParameters(for: transferStepData, samples: ["a3_docNumber_2_2": "13420742521"])
+                        #else
+                        let nextStepParameters = try paymentsTaxesNextStepParameters(for: transferStepData)
+                        #endif
+                        
                         let additionalParameters = paymentsAdditionalParameters(for: transferStepData)
                         
                         completion(.success(updatedParameters + nextStepParameters + additionalParameters))

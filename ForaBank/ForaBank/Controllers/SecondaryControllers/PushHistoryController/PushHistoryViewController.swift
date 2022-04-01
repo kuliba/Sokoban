@@ -48,8 +48,7 @@ class PushHistoryViewController: UIViewController {
         }
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
+    deinit {
         clearPushRealmData()
     }
     

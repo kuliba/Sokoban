@@ -22,8 +22,8 @@ final class NetworkManager<T: NetworkModelProtocol> {
                 debuggedApi.append("getQRData")
                 debuggedApi.append("make")
                 debuggedApi.append("getOperationDetailByPaymentId")
-                //debuggedApi.append("getLatestTransportPayments")
-                //debuggedApi.append("getAllLatestPayments")
+                debuggedApi.append("createAnywayTransfer")
+                debuggedApi.append("createAnywayTransferNew")
                 //debuggedApi.append("Operators")
 
         guard var request = requestType.request() else { return }

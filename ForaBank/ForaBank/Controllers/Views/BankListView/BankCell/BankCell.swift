@@ -56,9 +56,7 @@ class BankCell: UICollectionViewCell {
     }
     
     func setupUI() {
-//        backgroundColor = #colorLiteral(red: 0.9647058824, green: 0.9647058824, blue: 0.968627451, alpha: 1)
-//        layer.cornerRadius = 8
-//        clipsToBounds = true
+        
         addSubview(bankImageView)
         addSubview(bankNameLabel)
         
