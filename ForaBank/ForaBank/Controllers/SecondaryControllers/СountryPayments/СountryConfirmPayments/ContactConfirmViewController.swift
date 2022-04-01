@@ -798,6 +798,16 @@ class ContactConfurmViewController: UIViewController {
                             vc.printFormType = "housingAndCommunalService"
                         case .mobilePayment:
                             vc.printFormType = "mobile"
+                            
+                            if let name = self.phoneField.textField.text, let paymentOperationDetailId = model.data?.paymentOperationDetailId {
+                                
+                                if self.confurmVCModel?.template == nil {
+                                    self.confurmVCModel?.templateButtonViewModel = .sfp(name: name, paymentOperationDetailId: paymentOperationDetailId)
+                                    
+                                } else {
+                                    self.confurmVCModel?.templateButtonViewModel = .template(paymentOperationDetailId)
+                                }
+                            }
                         default:
                             break
                         }

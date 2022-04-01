@@ -73,6 +73,9 @@ private extension TemplatesListViewHostingViewController {
                     paymentViewController.viewModel = model
                     navigationController?.pushViewController(paymentViewController, animated: true)
                     
+                case let payload as TemplatesListViewModelAction.Present.MobilePayment:
+                    let paymentViewController = MobilePayViewController(paymentTemplate: payload.viewModel)
+                    navigationController?.pushViewController(paymentViewController, animated: true)
                     
                 case _ as TemplatesListViewModelAction.AddTemplate:
                     dismiss(animated: true) { [weak self] in

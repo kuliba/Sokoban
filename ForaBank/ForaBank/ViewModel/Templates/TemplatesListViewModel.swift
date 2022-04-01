@@ -156,6 +156,8 @@ private extension TemplatesListViewModel {
                         print("Action Present HousingAndCommunalService")
                         
                     case .mobile:
+                        self.action.send(TemplatesListViewModelAction.Present.MobilePayment(viewModel: temp))
+                        
                         print("Action Present MobilePayment")
                         
                     case .internet:
