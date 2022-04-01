@@ -446,10 +446,11 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         tableView.tableHeaderView?.isSkeletonable = true
         tableView.tableHeaderView?.showAnimatedGradientSkeleton()
         
-        if productsCount == 0 {
+        if productsCount == 0 && products.count <= 1 {
             
             collectionView?.anchor(height: 0)
             collectionView?.isHidden = true
+            
         } else {
             
             collectionView?.anchor(height: 65)
