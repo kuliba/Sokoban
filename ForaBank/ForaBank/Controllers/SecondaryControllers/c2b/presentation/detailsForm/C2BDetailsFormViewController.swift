@@ -18,7 +18,6 @@ class C2BDetailsFormViewController: UIViewController {
                     title: "Сумма перевода",
                     text: C2BDetailsViewModel.operationDetail?.amount?.description ?? "",
                     image: #imageLiteral(resourceName: "Phone"),
-                    type: .phone,
                     isEditable: false))
 
     var dateOperation = ForaInput(
