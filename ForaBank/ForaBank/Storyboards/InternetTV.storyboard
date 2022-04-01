@@ -1146,10 +1146,13 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sbptext" translatesAutoresizingMaskIntoConstraints="NO" id="bPu-zt-vle">
+                                <rect key="frame" x="159" y="522" width="96" height="48"/>
+                            </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="IW1-hX-2l8">
-                                <rect key="frame" x="0.0" y="378" width="414" height="152"/>
+                                <rect key="frame" x="0.0" y="378" width="414" height="140"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="152" id="3tb-br-USP"/>
+                                    <constraint firstAttribute="height" constant="140" id="3tb-br-USP"/>
                                 </constraints>
                             </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T6s-b8-m18" customClass="BottomInputView" customModule="ForaBank" customModuleProvider="target">
@@ -1165,6 +1168,7 @@
                         <constraints>
                             <constraint firstItem="T6s-b8-m18" firstAttribute="bottom" secondItem="IEM-ZD-8x0" secondAttribute="bottom" identifier="myBottomHolderConstr" id="3IV-qs-Glf"/>
                             <constraint firstItem="794-7t-DHH" firstAttribute="top" secondItem="3jP-hV-tFK" secondAttribute="top" id="7f2-PA-n8m"/>
+                            <constraint firstItem="bPu-zt-vle" firstAttribute="centerX" secondItem="3jP-hV-tFK" secondAttribute="centerX" id="AWs-d2-2Zz"/>
                             <constraint firstItem="3jP-hV-tFK" firstAttribute="trailing" secondItem="IW1-hX-2l8" secondAttribute="trailing" id="ApE-cM-TgB"/>
                             <constraint firstItem="T6s-b8-m18" firstAttribute="trailing" secondItem="IEM-ZD-8x0" secondAttribute="trailing" id="BxW-CY-Qig"/>
                             <constraint firstItem="Xdw-ex-75w" firstAttribute="top" secondItem="rma-rh-D8K" secondAttribute="bottom" constant="25" id="F1h-0C-9hZ"/>
@@ -1181,6 +1185,7 @@
                             <constraint firstItem="rma-rh-D8K" firstAttribute="leading" secondItem="3jP-hV-tFK" secondAttribute="leading" id="gyS-Zs-0r7"/>
                             <constraint firstItem="DGy-Wf-N2a" firstAttribute="leading" secondItem="3jP-hV-tFK" secondAttribute="leading" id="lzy-8d-saR"/>
                             <constraint firstAttribute="trailing" secondItem="OtM-C2-mnH" secondAttribute="trailing" constant="20" id="mcf-qY-rjj"/>
+                            <constraint firstItem="bPu-zt-vle" firstAttribute="top" secondItem="Khe-nc-kOH" secondAttribute="bottom" constant="170" id="oDy-ro-8P3"/>
                             <constraint firstItem="T6s-b8-m18" firstAttribute="leading" secondItem="IEM-ZD-8x0" secondAttribute="leading" id="oFl-j7-NPE"/>
                             <constraint firstItem="3jP-hV-tFK" firstAttribute="trailing" secondItem="794-7t-DHH" secondAttribute="trailing" id="pzk-Yl-Syf"/>
                             <constraint firstItem="DGy-Wf-N2a" firstAttribute="top" secondItem="794-7t-DHH" secondAttribute="bottom" id="rR2-0Q-i8Y"/>
@@ -1225,6 +1230,7 @@
         <image name="coins" width="32" height="32.333332061767578"/>
         <image name="gradientAvatar" width="128" height="128"/>
         <image name="radio_unchecked" width="24" height="24"/>
+        <image name="sbptext" width="96" height="48"/>
         <image name="topLine" width="32" height="4"/>
         <namedColor name="redColorFora">
             <color red="1" green="0.21199999749660492" blue="0.21199999749660492" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
