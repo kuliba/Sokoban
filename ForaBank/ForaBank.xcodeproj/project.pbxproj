@@ -4760,10 +4760,10 @@
 		ED84994C26A85A0B005205C6 /* SettingsViewController */ = {
 			isa = PBXGroup;
 			children = (
-				EDA5637826F3784E0093F0C8 /* Cell */,
 				ED84994D26A85A65005205C6 /* SettingsViewController.swift */,
 				EDA5637626F375980093F0C8 /* SettingTableViewController.storyboard */,
 				EDA5637926F386AD0093F0C8 /* SettingTableViewController.swift */,
+				EDA5637826F3784E0093F0C8 /* Cell */,
 			);
 			path = SettingsViewController;
 			sourceTree = "<group>";

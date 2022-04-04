@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="zN1-Px-RKf">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="zN1-Px-RKf">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -66,11 +66,22 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Имя" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iDn-JI-dBW">
-                                                    <rect key="frame" x="80" y="8" width="314" height="15"/>
+                                                    <rect key="frame" x="80" y="8" width="25" height="15"/>
                                                     <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
                                                     <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Vector_Pencil" translatesAutoresizingMaskIntoConstraints="NO" id="eAO-PK-Taa">
+                                                    <rect key="frame" x="374" y="18" width="20" height="20"/>
+                                                    <gestureRecognizers/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="20" id="8mR-a3-to5"/>
+                                                        <constraint firstAttribute="width" constant="20" id="Dub-U4-Y1A"/>
+                                                    </constraints>
+                                                    <connections>
+                                                        <outletCollection property="gestureRecognizers" destination="2Sa-eU-9Co" appends="YES" id="TvV-Oc-fPl"/>
+                                                    </connections>
+                                                </imageView>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="iDn-JI-dBW" firstAttribute="leading" secondItem="pCE-vX-Omp" secondAttribute="trailing" constant="20" id="Cfk-Fx-rrw"/>
@@ -78,9 +89,10 @@
                                                 <constraint firstAttribute="trailing" secondItem="12K-VH-o7W" secondAttribute="trailing" constant="20" id="Q4Y-6e-YNS"/>
                                                 <constraint firstItem="pCE-vX-Omp" firstAttribute="leading" secondItem="quR-Z0-gDN" secondAttribute="leading" constant="20" id="TWq-OX-bPe"/>
                                                 <constraint firstItem="iDn-JI-dBW" firstAttribute="top" secondItem="pCE-vX-Omp" secondAttribute="top" id="XQ0-XO-KpO"/>
+                                                <constraint firstItem="eAO-PK-Taa" firstAttribute="centerY" secondItem="quR-Z0-gDN" secondAttribute="centerY" id="aw9-0g-PC5"/>
                                                 <constraint firstItem="12K-VH-o7W" firstAttribute="leading" secondItem="pCE-vX-Omp" secondAttribute="trailing" constant="20" id="jmq-oc-8zG"/>
-                                                <constraint firstAttribute="trailing" secondItem="iDn-JI-dBW" secondAttribute="trailing" constant="20" id="nvU-3m-nUN"/>
                                                 <constraint firstItem="12K-VH-o7W" firstAttribute="bottom" secondItem="pCE-vX-Omp" secondAttribute="bottom" id="rRZ-76-xID"/>
+                                                <constraint firstAttribute="trailing" secondItem="eAO-PK-Taa" secondAttribute="trailing" constant="20" id="y1S-cI-b2G"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -140,6 +152,10 @@
                                                 <constraint firstAttribute="trailing" secondItem="AkU-iQ-TX1" secondAttribute="trailing" constant="20" id="z2x-CH-5zO"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <gestureRecognizers/>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="lXn-J5-EyN" appends="YES" id="v5B-vS-Z5W"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="56" id="Oye-Mm-hdv">
                                         <rect key="frame" x="0.0" y="156.5" width="414" height="56"/>
@@ -467,12 +483,23 @@
                         <action selector="sbpCellAction:" destination="zN1-Px-RKf" id="cBR-pN-pK6"/>
                     </connections>
                 </tapGestureRecognizer>
+                <tapGestureRecognizer id="2Sa-eU-9Co">
+                    <connections>
+                        <action selector="showChangeNameAlertButton:" destination="zN1-Px-RKf" id="FuW-pO-HCa"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="lXn-J5-EyN">
+                    <connections>
+                        <action selector="showPhoneAlert:" destination="zN1-Px-RKf" id="2JV-fa-PRC"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="926.08695652173924" y="120.53571428571428"/>
         </scene>
     </scenes>
     <resources>
         <image name="Phone" width="32" height="32"/>
+        <image name="Vector_Pencil" width="21.5" height="21.5"/>
         <image name="chevron.right" catalog="system" width="96" height="128"/>
         <image name="doc" catalog="system" width="115" height="128"/>
         <image name="ic_mail_dark" width="21" height="21"/>
