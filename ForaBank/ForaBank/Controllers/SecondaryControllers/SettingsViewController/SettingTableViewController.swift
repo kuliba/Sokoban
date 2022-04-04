@@ -7,6 +7,7 @@
 
 import UIKit
 import RealmSwift
+import LocalAuthentication
 
 protocol SettingTableViewControllerDelegate: AnyObject {
     func goLoginCardEntry()
@@ -23,6 +24,7 @@ class SettingTableViewController: UITableViewController {
     @IBOutlet weak var phoneLabel: UILabel!
     @IBOutlet weak var emailLabel: UILabel!
     @IBOutlet weak var pushSwitch: UISwitch!
+    @IBOutlet weak var faceId: UISwitch!
     
     
     
@@ -57,6 +59,10 @@ class SettingTableViewController: UITableViewController {
         return headerView
     }
     
+    
+    let context = LAContext()
+    var error: NSError?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Профиль"
@@ -65,6 +71,26 @@ class SettingTableViewController: UITableViewController {
         loadConfig()
        
         tableView.isUserInteractionEnabled = true
+        
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            let reason = "Identify yourself!"
+            
+            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) {
+                [weak self] success, authenticationError in
+                
+                DispatchQueue.main.async {
+                    if success {
+                        self?.faceId.isOn = true
+                    } else {
+                        self?.faceId.isOn = false
+                    }
+                }
+            }
+        } else {
+            DispatchQueue.main.async {
+             self.faceId.isOn = false
+            }
+        }
     }
 
     private func loadConfig() {
@@ -180,6 +206,19 @@ class SettingTableViewController: UITableViewController {
             }
         }
 
+    }
+    @IBAction func faceIdAction(_ sender: UISwitch) {
+        if faceId.isOn == false {
+            DispatchQueue.main.async {
+                self.faceId.isOn = false
+                self.context.invalidate()
+            }
+        } else {
+            self.faceId.isOn = true
+        }
+    }
+    @IBAction func faceIdSwitch(_ sender: Any) {
+        
     }
     
     @IBAction func showPhoneAlert(_ sender: Any) {
