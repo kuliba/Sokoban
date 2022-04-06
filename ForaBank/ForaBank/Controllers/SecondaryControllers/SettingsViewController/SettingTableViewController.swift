@@ -208,14 +208,15 @@ class SettingTableViewController: UITableViewController {
 
     }
     @IBAction func faceIdAction(_ sender: UISwitch) {
-        if faceId.isOn == false {
-            DispatchQueue.main.async {
-                self.faceId.isOn = false
-                self.context.invalidate()
-            }
-        } else {
-            self.faceId.isOn = true
+        
+        self.showAlertWithCancel(with: "Для изминения состояния FaceID, необходимо перейти в настройки устройства", and: "") {
+            if let appSettings = URL(string: UIApplication.openSettingsURLString + Bundle.main.bundleIdentifier!) {
+                if UIApplication.shared.canOpenURL(appSettings) {
+                  UIApplication.shared.open(appSettings)
+                }
+              }
         }
+
     }
     @IBAction func faceIdSwitch(_ sender: Any) {
         
