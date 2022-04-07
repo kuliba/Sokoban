@@ -90,6 +90,58 @@ extension ServerCommands {
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: [ProductData]?
+                
+                private enum CodingKeys : String, CodingKey {
+                    case statusCode, errorMessage, data
+                }
+                
+                internal init(statusCode: ServerStatusCode, errorMessage: String?, data: [ProductData]) {
+                    self.statusCode = statusCode
+                    self.errorMessage = errorMessage
+                    self.data = data
+                }
+                
+                init(from decoder: Decoder) throws {
+                    
+                    let container = try decoder.container(keyedBy: CodingKeys.self)
+                    self.statusCode = try container.decode(ServerStatusCode.self, forKey: .statusCode)
+                    self.errorMessage = try container.decodeIfPresent(String.self, forKey: .errorMessage)
+                    
+                    var containerItem = try container.nestedUnkeyedContainer(forKey: .data)
+                    
+                    var data = [ProductData]()
+                    var items = containerItem
+                    
+                    while containerItem.isAtEnd == false {
+                        
+                        let productData = try containerItem.decode(ProductData.self)
+                        let productType = productData.productType
+                        
+                        switch productType {
+                        case .card:
+                            
+                            let productData = try items.decode(ProductCardData.self)
+                            data.append(productData)
+                            
+                        case .account:
+                            
+                            let productData = try items.decode(ProductAccountData.self)
+                            data.append(productData)
+                            
+                        case .deposit:
+                            
+                            let productData = try items.decode(ProductDepositData.self)
+                            data.append(productData)
+                            
+                        case .loan:
+                            
+                            let productData = try items.decode(ProductLoanData.self)
+                            data.append(productData)
+                            
+                        }
+                    }
+                    self.data = data
+                }
             }
             
             internal init(token: String, isCard: Bool, isAccount: Bool, isDeposit: Bool, isLoan: Bool) {
@@ -128,7 +180,7 @@ extension ServerCommands {
             internal init(token: String, serial: String?, productType: ProductType) {
                 
                 self.token = token
-
+                
                 var parameters = [ServerCommandParameter]()
                 if let serial = serial {
                     

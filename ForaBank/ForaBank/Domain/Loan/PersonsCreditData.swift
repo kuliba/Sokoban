@@ -27,7 +27,7 @@ struct PersonsCreditItem: Codable, Equatable {
         let overduePayment: Double?
         
         enum CodingKeys: String, CodingKey {
-            case loandId = "loandID"
+            case loandId = "loanID"
             case clientId = "clientID"
             case currencyId, currencyCode, currencyNumber, number, datePayment, amountCredit, amountRepaid, amountPayment, overduePayment
         }
