@@ -6,10 +6,11 @@
 //
 
 import UIKit
+import RealmSwift
 
 class MobilePayViewController: UIViewController, UITextFieldDelegate {
     
-    var selectedCardNumber = 0
+    lazy var realm = try? Realm()
     
     var recipiendId = String()
     var phoneNumber: String?
@@ -25,7 +26,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
     
     var stackView = UIStackView(arrangedSubviews: [])
     
-    var cardListView = CardListView()
+    var cardListView = CardsScrollView(onlyMy: true)
     
     var bottomView = BottomInputView()
     
@@ -61,25 +62,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
         setupNavBar()
         setupUI()
         setupActions()
-        
-        getCardList { [weak self] data ,error in
-            DispatchQueue.main.async {
-                
-                if error != nil {
-                    self?.showAlert(with: "Ошибка", and: error!)
-                }
-                
-                guard let data = data else { return }
-                self?.cardListView.cardList = data
-                
-                if data.count > 0 {
-                    self?.cardField.cardModel = data.first
-                    guard let cardNumber  = data.first?.cardID else { return }
-                    self?.selectedCardNumber = cardNumber
-                }
-            }
-        }
-        
+        cardField.model = getUserCard()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -92,6 +75,26 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                 self.setupAmount(amount: template.amount)
             }
         }
+    }
+    
+    private func getUserCard() -> UserAllCardsModel?  {
+        let cards = ReturnAllCardList.cards()
+        let filterProduct = cards.filter({
+            ($0.productType == "CARD" || $0.productType == "ACCOUNT") && $0.currency == "RUB" })
+        
+        if filterProduct.count > 0 {
+            if let template = self.paymentTemplate,
+               let transfer = template.parameterList.first as? TransferAnywayData,
+               let cardId = transfer.payer.cardId {
+                
+                let card = filterProduct.first(where: { $0.id == cardId })
+                return card
+                
+            } else {
+                return filterProduct.first
+            }
+        }
+        return nil
     }
     
     func setupAmount(amount: Double?) {
@@ -126,10 +129,18 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
             self.openOrHideView(self.cardListView)
         }
         
-        cardListView.didCardTapped = { card in
-            self.cardField.cardModel = card
-            self.selectedCardNumber = card.cardID ?? 0
-            self.hideView(self.cardListView, needHide: true)
+        cardListView.didCardTapped = { cardId in
+            DispatchQueue.main.async {
+                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
+                cardList.forEach({ card in
+                    if card.id == cardId {
+                        self.cardField.model = card
+                        if self.cardListView.isHidden == false {
+                            self.hideView(self.cardListView, needHide: true)
+                        }
+                    }
+                })
+            }
         }
         
         cardListView.lastItemTap = {
@@ -137,7 +148,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
             vc.withTemplate = false
             vc.didCardTapped = { card in
                 self.cardField.cardModel = card
-                self.selectedCardNumber = card.cardID ?? 0
+//                self.selectedCardNumber = card.cardID ?? 0
                 self.hideView(self.cardListView, needHide: true)
                 vc.dismiss(animated: true, completion: nil)
             }
@@ -236,23 +247,6 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
     }
     
     //MARK: - API
-    func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?)->()) {
-        let param = ["isCard": "true", "isAccount": "true", "isDeposit": "false", "isLoan": "false"]
-        
-        NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
-            if error != nil {
-                completion(nil, error)
-            }
-            guard let model = model else { return }
-            if model.statusCode == 0 {
-                guard let cardList = model.data else { return }
-                completion(cardList, nil)
-            } else {
-                guard let error = model.errorMessage else { return }
-                completion(nil, error)
-            }
-        }
-    }
     
     ///  Запрос на перевод по мобильной связи
     func startContactPayment(with phone: String, amount: String, completion: @escaping (_ error: String?) -> () ) {
@@ -273,7 +267,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                 UserDefaults.standard.set(data.data?.first?.svgImage, forKey: "MobilePhoneSVGImage")
                 let puref = data.data?.first?.puref ?? ""
                 let svgImage = data.data?.first?.svgImage
-                let cardId = self?.cardField.cardModel?.id ?? 0
+                let cardId = self?.cardField.model?.id ?? 0
                 
                 let body = [
                     "check" : false,
@@ -307,7 +301,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                     if data?.statusCode == 0 {
                         let model = ConfirmViewControllerModel(type: .mobilePayment)
                         model.operatorImage = svgImage ?? ""
-                        model.cardFrom = self?.cardField.cardModel
+                        model.cardFromRealm = self?.cardField.model
                         
                         let a = data?.data?.additionalList
                         

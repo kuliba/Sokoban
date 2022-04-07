@@ -176,8 +176,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        tableView.isSkeletonable = true
-        tableView.showSkeleton(usingColor: .lightGray, transition: .crossDissolve(0.25))
+     
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -188,7 +187,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        
+        tableView.isSkeletonable = true
+        tableView.showSkeleton(usingColor: .lightGray, transition: .crossDissolve(0.25))
         productsCount = products.filter({$0.productType != product?.productType}).count
         tableView.backgroundColor = .white
         scrollView.delegate = self
@@ -851,6 +851,9 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
                     }
                     guard let model = model else { return }
                     if model.statusCode == 0 {
+                        
+                        self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4)))", color: self.product?.fontDesignColor)
+                        
                         self.showAlert(with: "Карта разблокирована", and: "")
                         
                         DispatchQueue.main.async {
@@ -929,9 +932,10 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
     
     func checkStatus() {
         
-        if let status = product?.status, let statusPC = product?.statusPC {
+        if let status = product?.status {
             
-            if status.contained(in: [Status.blockedByBank.rawValue, Status.blockedByClient.rawValue, Status.blockedDebet.rawValue, Status.blockedCredit.rawValue, Status.blocked.rawValue]) || statusPC.contained(in: [StatusPC.operationsBlocked.rawValue, StatusPC.blockedByBank.rawValue, StatusPC.lost.rawValue, StatusPC.stolen.rawValue, StatusPC.temporarilyBlocked.rawValue, StatusPC.blockedByClient.rawValue]) {
+            if status == "Заблокирована банком" || status == "Блокирована по решению Клиента" || status == "BLOCKED_DEBET" || status == "BLOCKED_CREDIT" || status == "BLOCKED" || product?.statusPC == "3" || product?.statusPC == "5" || product?.statusPC == "6"  || product?.statusPC == "7"  || product?.statusPC == "20"  || product?.statusPC == "21" {
+
                 
                 card.addSubview(blockView)
                 button.isEnabled = false
@@ -955,8 +959,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
                     self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4))) · Заблокирован", color: self.product?.fontDesignColor)
                 }
                 
-            } else if product?.statusPC == "17", product?.status == "Действует" || product?.status == "Выдано клиенту" {
-                
+            } else if product?.statusPC == "17", product?.status == "Действует" || product?.status == "Выдано клиенту"{
+
                 button.isEnabled = false
                 button.alpha = 0.4
                 button2.isEnabled = false

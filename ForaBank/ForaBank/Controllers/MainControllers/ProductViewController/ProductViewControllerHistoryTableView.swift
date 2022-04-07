@@ -334,11 +334,11 @@ extension ProductViewController: UITableViewDelegate, UITableViewDataSource, Ske
         
         cell.subTitleLabel.isHidden = false
         cell.titleLable.isSkeletonable = true
-        cell.titleLable.text = "Placeholder"
+//        cell.titleLable.text = "Placeholder"
         cell.titleLable.showAnimatedGradientSkeleton()
-        cell.amountLabel.text = "Placeholder"
+//        cell.amountLabel.text = "Placeholder"
         cell.amountLabel.showAnimatedGradientSkeleton()
-        cell.subTitleLabel.text = "Placeholder"
+//        cell.subTitleLabel.text = "Placeholder"
         cell.subTitleLabel.showAnimatedGradientSkeleton()
         cell.logoImageView.showAnimatedGradientSkeleton()
         return cell
