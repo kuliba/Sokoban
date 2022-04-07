@@ -1,0 +1,20 @@
+{
+  "statusCode": 0,
+  "errorMessage": "string",
+  "data": {
+    "original": {
+      "loanID": 10000184511,
+      "clientID": 0,
+      "currencyCode": "RUB",
+      "currencyNumber": 810,
+      "currencyId": 810,
+      "number": "КД-810",
+      "datePayment": "2022-04-07T07:58:47.623Z",
+      "amountCredit": 56305.61,
+      "amountRepaid": 56305.61,
+      "amountPayment": 56305.61,
+      "overduePayment": 56305.61
+    },
+    "customName": "Мой продукт"
+  }
+}
