@@ -13,51 +13,36 @@ struct ProfileView: View {
     
     var body: some View {
         
-        NavigationView {
+        VStack {
             
-            ZStack {
-                VStack {
+            HStack {
+            
+                Text(viewModel.productViewModel.products[0].name)
+            
+            }
+            .frame(height: 80, alignment: .center)
+            
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 32) {
                     
-                    Image("Substrate Deposit")
-                        .resizable()
-                        .frame(height: 248)
-                        .edgesIgnoringSafeArea(.all)
-                }
-                ScrollView {
-                    
-                    //                             HeaderView(viewModel: viewModel)
-                    
-                    ScrollView(showsIndicators: false) {
+                    ZStack(alignment: .top) {
                         
-                        VStack(spacing: 32) {
+                        VStack {
                             
                             ProfileCardViewComponent(viewModel: viewModel.productViewModel, currentItem: viewModel.productViewModel.products[0])
                             
-                            ProfileButtonsSectionView(viewModel: viewModel.buttonsViewModel)
-                            
-                            HistoryViewComponent(viewModel: viewModel.historyViewModel)
                         }
                     }
+                    
+                    ProfileButtonsSectionView(viewModel: viewModel.buttonsViewModel)
+                    
+                    HistoryViewComponent(viewModel: viewModel.historyViewModel)
                 }
             }
             .navigationBarTitle("title", displayMode: .inline)
-            .navigationBarBackButtonHidden(true)
-            .navigationBarTitle(Text(                viewModel.productViewModel.products[0].name), displayMode: .inline)
-            .navigationBarItems(leading: Button(action: {
-                
-            }, label: {
-                
-                Image.ic24ChevronLeft
-                
-            }), trailing: Button(action: {
-                
-            }, label: {
-                
-                Image.ic24Edit2
-            }) )
-            .navigationBarBackButtonHidden(true)
-            //                                .foregroundColor(viewModel.productViewModel.products[0].appearance.textColor)
         }
+        .background( Image("Substrate Deposit"), alignment: .top)
+        .edgesIgnoringSafeArea(.top)
     }
 }
 

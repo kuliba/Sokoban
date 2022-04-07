@@ -67,7 +67,7 @@ struct ProfileButtonView: View {
                         .font(.system(size: 14))
                         .foregroundColor(.buttonBlack)
                 }
-                .frame(width: 164, height: 48, alignment: .leading)
+                .frame(width: 150 ,height: 48, alignment: .leading)
                 .padding(.leading, 12)
             }
             .background(Color.mainColorsGrayLightest)
@@ -80,16 +80,17 @@ struct ProfileButtonView: View {
             } label: {
                 
                 HStack(spacing: 12) {
+                    
                     viewModel.image
                         .foregroundColor(.iconBlack)
+                    
                     Text(viewModel.title)
                         .font(.system(size: 14))
                         .foregroundColor(.buttonBlack)
                 }
-                .frame(width: 164, height: 48, alignment: .leading)
+                .frame(width: 150 ,height: 48, alignment: .leading)
                 .padding(.leading, 12)
             }
-
             .background(Color.mainColorsGrayLightest)
             .cornerRadius(8)
             .disabled(true)

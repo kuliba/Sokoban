@@ -89,7 +89,6 @@ struct HistoryViewComponent: View {
                 .background(Color.mainColorsGrayLightest)
                 .cornerRadius(90)
                 
-                
             }
             .padding(.bottom, 15)
             
