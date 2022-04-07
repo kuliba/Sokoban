@@ -12,9 +12,17 @@ extension ProfileButtonsSectionView {
     class ViewModel: Identifiable, Hashable, ObservableObject {
         
         let id = UUID()
-        let buttons: [[ProfileButtonView.ViewModel]]
+        var buttons: [[ProfileButtonView.ViewModel]]
+        let kind: ProductType
+        
+        internal init(buttons: [[ProfileButtonView.ViewModel]], kind: ProductType) {
+            
+            self.kind = kind
 
-        internal init(buttons: [[ProfileButtonView.ViewModel]]) {
+            if kind == .card {
+                
+                self.buttons = [[.init(title: .topUp, image: Image.ic16Sun, state: .active)]]
+            }
             
             self.buttons = buttons
         }
@@ -66,5 +74,5 @@ struct ProfileButtonsSectionView_Previews: PreviewProvider {
 
 extension ProfileButtonsSectionView.ViewModel {
     
-    static let sample = ProfileButtonsSectionView.ViewModel(buttons: [[.ussualyButton, .transferButton],[ .requisitsButton, .disableButton]])
+    static let sample = ProfileButtonsSectionView.ViewModel(buttons: [[.ussualyButton, .transferButton],[ .requisitsButton, .disableButton]], kind: .card)
 }

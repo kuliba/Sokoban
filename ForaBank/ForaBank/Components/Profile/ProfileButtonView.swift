@@ -12,11 +12,11 @@ extension ProfileButtonView {
     class ViewModel: Identifiable, Hashable, ObservableObject {
             
         let id = UUID()
-        let title: String
+        let title: Title
         let image: Image
         let state: State
         
-        internal init(title: String, image: Image, state: State) {
+        internal init(title: Title, image: Image, state: State) {
             
             self.title = title
             self.image = image
@@ -29,6 +29,16 @@ extension ProfileButtonView {
             case disable
         }
         
+        enum Title: String {
+            
+            case topUp = "Пополнить"
+            case requisites = "Реквизиты и выписка"
+            case transfer = "Перевести"
+            case control = "Управление"
+            case block = "Блокировать"
+            case unblock = "Разблокировать"
+            case repay = "Погасить досрочно"
+        }
     }
 }
 
@@ -63,7 +73,7 @@ struct ProfileButtonView: View {
                     viewModel.image
                         .foregroundColor(.iconBlack)
                     
-                    Text(viewModel.title)
+                    Text(viewModel.title.rawValue)
                         .font(.system(size: 14))
                         .foregroundColor(.buttonBlack)
                 }
@@ -84,7 +94,7 @@ struct ProfileButtonView: View {
                     viewModel.image
                         .foregroundColor(.iconBlack)
                     
-                    Text(viewModel.title)
+                    Text(viewModel.title.rawValue)
                         .font(.system(size: 14))
                         .foregroundColor(.buttonBlack)
                 }
@@ -121,12 +131,12 @@ struct ProfileButtonView_Previews: PreviewProvider {
 
 extension ProfileButtonView.ViewModel {
     
-    static let ussualyButton = ProfileButtonView.ViewModel(title: "Пополнить", image: Image.ic24Plus, state: .active)
+    static let ussualyButton = ProfileButtonView.ViewModel(title: .topUp, image: Image.ic24Plus, state: .active)
     
-    static let disableButton = ProfileButtonView.ViewModel(title: "Блокировать", image: Image.ic24Lock, state: .disable)
+    static let disableButton = ProfileButtonView.ViewModel(title: .block, image: Image.ic24Lock, state: .disable)
     
-    static let requisitsButton = ProfileButtonView.ViewModel(title: "Реквизиты", image: Image.ic24File, state: .active)
+    static let requisitsButton = ProfileButtonView.ViewModel(title: .requisites, image: Image.ic24File, state: .active)
     
-    static let transferButton = ProfileButtonView.ViewModel(title: "Перевести", image: Image.ic24ArrowUpRight, state: .active)
+    static let transferButton = ProfileButtonView.ViewModel(title: .transfer, image: Image.ic24ArrowUpRight, state: .active)
 }
 
