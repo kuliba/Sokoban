@@ -129,7 +129,7 @@ class SettingTableViewController: UITableViewController {
                                 if let userName = contractList.email {
                                 self?.emailLabel.text = userName
                                 } else {
-                                    self?.emailLabel.text = "Отсутствует"
+                                    self?.emailLabel.text = ""
                                 }
                             }
                         }
@@ -209,7 +209,7 @@ class SettingTableViewController: UITableViewController {
     }
     @IBAction func faceIdAction(_ sender: UISwitch) {
         
-        self.showAlertWithCancel(with: "Для изминения состояния FaceID, необходимо перейти в настройки устройства", and: "") {
+        self.showAlertWithCancel(with: "Для активации Face ID необходимо выполнить переход в настройки устройства.", and: "") {
             if let appSettings = URL(string: UIApplication.openSettingsURLString + Bundle.main.bundleIdentifier!) {
                 if UIApplication.shared.canOpenURL(appSettings) {
                   UIApplication.shared.open(appSettings)
