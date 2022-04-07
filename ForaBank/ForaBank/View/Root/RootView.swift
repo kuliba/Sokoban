@@ -17,7 +17,6 @@ struct RootView: View {
             
             MainView(viewModel: .sampleProducts)
             
-            
             if let loginViewModel = viewModel.login {
                 
                 NavigationView {
@@ -28,7 +27,7 @@ struct RootView: View {
                 }
                 .transition(.asymmetric(insertion: .opacity, removal: .move(edge: .leading)))
             }
-            
+
             if let lockViewModel = viewModel.lock {
                 
                 AuthLockVew(viewModel: lockViewModel)
