@@ -14,16 +14,20 @@ extension ProfileCardViewComponent {
     class ViewModel: ObservableObject {
         
         @Published var products: [ProductView.ViewModel]
-
-        init( products: [ProductView.ViewModel]) {
+        @State var product: ProductView.ViewModel
+        @Published var moreButton: Bool
+        
+        init( products: [ProductView.ViewModel], product: ProductView.ViewModel, moreButton: Bool) {
             
-            self.products = products
+            self.products = products.filter({$0.productType == product.productType})
+            self.moreButton = moreButton
+            self.product = product
         }
     }
 }
 
 extension ProfileCardViewComponent {
-        
+    
     struct MiniCardViewModel {
         
         let background: Image?
@@ -35,63 +39,70 @@ extension ProfileCardViewComponent {
 struct ProfileCardViewComponent: View {
     
     @ObservedObject var viewModel: ProfileCardViewComponent.ViewModel
-    @State var currentItem: ProductView.ViewModel
-
-    public var tabBar: some View {
+    
+    public var TabBar: some View {
         
         HStack(alignment: .center, spacing: 8) {
+            
+            ForEach(viewModel.products) { product in
                 
-                ForEach(viewModel.products) { product in
-
-                    if let backgroundImage = product.appearance.background.image {
-                        
-                        MiniCardView(viewModel: MiniCardViewModel( background: backgroundImage, product: product, action: { productItem in
-                            currentItem = productItem
-                            }), isSelected: currentItem.id == product.id)
-                        
-              
-                    } else {
-                        
-                        MiniCardView(viewModel: MiniCardViewModel( background: nil, product: product, action: { productItem in
-                            currentItem = productItem
-                            }), isSelected: currentItem.id == product.id)
-                    }
+                if let backgroundImage = product.appearance.background.image {
+                    
+                    MiniCardView(viewModel: MiniCardViewModel( background: backgroundImage, product: product, action: { productItem in
+                        viewModel.product = productItem
+                    }), isSelected: viewModel.product.id == product.id)
+                    
+                    
+                } else {
+                    
+                    MiniCardView(viewModel: MiniCardViewModel( background: nil, product: product, action: { productItem in
+                        viewModel.product = productItem
+                    }), isSelected: viewModel.product.id == product.id)
+                }
+            }
+            
+            if viewModel.moreButton {
+                
+                Button {
+                    
+                } label: {
+                    Image.ic16MoreHorizontal
+                        .foregroundColor(.black)
+                }
+                .frame(width: 32, height: 22, alignment: .center)
+                .background(Color.white)
+                .cornerRadius(3.0)
             }
         }
     }
     
     var body: some View {
-            
+        
         VStack {
             
             ZStack(alignment: .top) {
                 
-//                currentItem.appearance.background.color
-//                    .frame(height: 170, alignment: .top)
-//                    .edgesIgnoringSafeArea(.top)
-//                    .brightness(-0.2)
-            
                 VStack(spacing: 15) {
                     if #available(iOS 14.0, *) {
-
-                        tabBar
                         
-                        TabView(selection: $currentItem) {
+                        TabBar
+                        
+                        TabView(selection: $viewModel.product) {
                             
                             ForEach(viewModel.products) { product in
                                 
                                 if product.productType == .deposit {
-                                        
+                                    
                                     ProductView(viewModel: product)
-                                            .frame(width: 228, height: 160)
-                                            .tag(product)
-
+                                        .frame(width: 228, height: 160)
+                                        .tag(product)
+                                    
                                 } else {
-
+                                    
                                     ProductView(viewModel: product)
                                         .frame(width: 268, height: 160, alignment: .top)
                                         .tag(product)
-
+                                    
                                 }
                             }
                         }
@@ -118,58 +129,57 @@ extension ProfileCardViewComponent {
         
         var body: some View {
             
+            Button {
                 
-                Button {
+                viewModel.action(viewModel.product)
+                
+            } label: {
+                
+                if isSelected {
                     
-                    viewModel.action(viewModel.product)
-                    
-                } label: {
-                    
-                    if isSelected {
+                    HStack(spacing: 6) {
                         
-                        HStack(spacing: 6) {
+                        if let backgroundImage =                             viewModel.product.appearance.background.image {
                             
-                            if let backgroundImage =                             viewModel.product.appearance.background.image {
-                                
-                                backgroundImage
-                                    .resizable()
-                                    .frame(width: 32, height: 24, alignment: .center)
-                                    .cornerRadius(3)
-
-                            } else {
-                                
-                                viewModel.product.appearance.background.color
-                                    .frame(width: 32, height: 24, alignment: .center)
-                                    .cornerRadius(3)
-                            }
-                        }
-                        .frame(width: 32, height: 32, alignment: .center)
-                        .padding(.all, 14)
-                        .background(Color.black.opacity(0.2))
-                        .cornerRadius(90)
-                        
-                    } else {
-                        
-                        HStack(spacing: 6) {
+                            backgroundImage
+                                .resizable()
+                                .frame(width: 32, height: 24, alignment: .center)
+                                .cornerRadius(3)
                             
-                            if let backgroundImage =                             viewModel.product.appearance.background.image {
-                                
-                                backgroundImage
-                                    .resizable()
-                                    .frame(width: 32, height: 24, alignment: .center)
-                                    .cornerRadius(3)                              .opacity(0.3)
-
-                                
-                            } else {
-                                
-                                viewModel.product.appearance.background.color
-                                    .frame(width: 32, height: 24, alignment: .center)
-                                    .cornerRadius(3)
-                                    .opacity(0.3)
-
-                            }
+                        } else {
+                            
+                            viewModel.product.appearance.background.color
+                                .frame(width: 32, height: 24, alignment: .center)
+                                .cornerRadius(3)
                         }
-                        .padding(.all, 14)
+                    }
+                    .frame(width: 32, height: 32, alignment: .center)
+                    .padding(.all, 14)
+                    .background(Color.black.opacity(0.2))
+                    .cornerRadius(90)
+                    
+                } else {
+                    
+                    HStack(spacing: 6) {
+                        
+                        if let backgroundImage =                             viewModel.product.appearance.background.image {
+                            
+                            backgroundImage
+                                .resizable()
+                                .frame(width: 32, height: 24, alignment: .center)
+                                .cornerRadius(3)                              .opacity(0.3)
+                            
+                            
+                        } else {
+                            
+                            viewModel.product.appearance.background.color
+                                .frame(width: 32, height: 24, alignment: .center)
+                                .cornerRadius(3)
+                                .opacity(0.3)
+                            
+                        }
+                    }
+                    .padding(.all, 14)
                 }
             }
         }
@@ -178,6 +188,8 @@ extension ProfileCardViewComponent {
 
 struct ProfileCardViewComponent_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileCardViewComponent(viewModel: .init(products: [.blockedProfile ,.classicProfile, .accountProfile, .notActivateProfile]), currentItem: ProductView.ViewModel.classicProfile)
+        ProfileCardViewComponent(viewModel: .init(products: [.blockedProfile, .classicProfile, .accountProfile, .notActivateProfile, .accountSmall], product: .classicProfile, moreButton: true))
+            .previewLayout(.fixed(width: 400, height: 500))
+            .background(Color.orange)
     }
 }

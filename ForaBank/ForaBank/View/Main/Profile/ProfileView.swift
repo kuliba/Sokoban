@@ -18,31 +18,35 @@ struct ProfileView: View {
             HStack {
             
                 Text(viewModel.productViewModel.products[0].name)
-            
             }
-            .frame(height: 80, alignment: .center)
             
             ScrollView(showsIndicators: false) {
+                
                 VStack(spacing: 32) {
                     
                     ZStack(alignment: .top) {
                         
                         VStack {
                             
-                            ProfileCardViewComponent(viewModel: viewModel.productViewModel, currentItem: viewModel.productViewModel.products[0])
-                            
+                            ProfileCardViewComponent(viewModel: .init(products: viewModel.productViewModel.products, product: viewModel.productViewModel.products[0], moreButton: true))
                         }
                     }
+                    .background( Image("Substrate Deposit"), alignment: .top)
+                    .edgesIgnoringSafeArea(.top)
                     
                     ProfileButtonsSectionView(viewModel: viewModel.buttonsViewModel)
+                    
+                    if let detailAccount = viewModel.detailAccountViewModel {
+                        
+                        DetailAccountViewComponent(viewModel: detailAccount)
+                            .padding(.horizontal, 20)
+                    }
                     
                     HistoryViewComponent(viewModel: viewModel.historyViewModel)
                 }
             }
             .navigationBarTitle("title", displayMode: .inline)
         }
-        .background( Image("Substrate Deposit"), alignment: .top)
-        .edgesIgnoringSafeArea(.top)
     }
 }
 
@@ -56,5 +60,5 @@ struct ProfileView_Previews: PreviewProvider {
 
 extension ProfileViewModel {
     
-    static let sample = ProfileViewModel(productViewModel: .init(products: [.notActivateProfile, .accountProfile, .classicProfile, .blockedProfile]), buttonsViewModel: .sample, historyViewModel: .init( dateOperations: [.init(date: "12 декабря", operations: [.init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit)])], spending: .init(value: [100, 300])))
+    static let sample = ProfileViewModel(productViewModel: .init(products: [.notActivateProfile, .accountProfile, .classicProfile, .blockedProfile], product: .classicProfile, moreButton: true), buttonsViewModel: .sample, detailAccountViewModel: .init(with: .init(), status: .active, isCredit: false, productName: "", longInt: nil), historyViewModel: .init( dateOperations: [.init(date: "12 декабря", operations: [.init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit)])], spending: .init(value: [100, 300])), model: .emptyMock)
 }
