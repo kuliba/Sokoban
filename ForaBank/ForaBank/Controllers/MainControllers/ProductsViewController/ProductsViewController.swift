@@ -370,15 +370,15 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
             } else {
                 switch indexPath.section{
                 case 0:
-                    delegateProducts?.sendMyDataBack(product: self.notActivated[indexPath.row])
+                    delegateProducts?.sendMyDataBack(product: self.notActivated[indexPath.row], products: products)
                 case 1:
-                    delegateProducts?.sendMyDataBack(product: self.activeProduct[indexPath.row])
+                    delegateProducts?.sendMyDataBack(product: self.activeProduct[indexPath.row], products: products)
                 case 2:
-                    delegateProducts?.sendMyDataBack(product: self.deposits[indexPath.row])
+                    delegateProducts?.sendMyDataBack(product: self.deposits[indexPath.row], products: products)
                 case 3:
-                    delegateProducts?.sendMyDataBack(product: self.loans[indexPath.row])
+                    delegateProducts?.sendMyDataBack(product: self.loans[indexPath.row], products: products)
                 case 6:
-                    delegateProducts?.sendMyDataBack(product: self.blocked[indexPath.row])
+                    delegateProducts?.sendMyDataBack(product: self.blocked[indexPath.row], products: products)
                 default:
                     print("default")
                 }
