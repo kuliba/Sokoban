@@ -19,7 +19,7 @@ protocol ChildViewControllerDelegate{
 }
 
 protocol CtoBDelegate : AnyObject{
-    func sendMyDataBack(product: UserAllCardsModel?)
+    func sendMyDataBack(product: UserAllCardsModel?, products: [UserAllCardsModel])
 }
 
 class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrollViewDelegate, UITextFieldDelegate {
@@ -75,11 +75,11 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
     var firstTimeLoad = false
     var indexItem: Int?
     var scrollView = UIScrollView()
-    var collectionView: UICollectionView?
-    var products = [UserAllCardsModel](){
+    var collectionView = UICollectionView(frame: .init(), collectionViewLayout: .init())
+    var products = [UserAllCardsModel]() {
         didSet{
             DispatchQueue.main.async {
-                self.collectionView?.reloadData()
+                self.collectionView.reloadData()
             }
         }
     }
@@ -236,9 +236,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         
         scrollView.isScrollEnabled = true
         scrollView.contentSize.width = UIScreen.main.bounds.width
-        scrollView.contentMode = .bottom
-        scrollView.contentSize.height = UIScreen.main.bounds.height + 1500
-        scrollView.anchor(left: view.leftAnchor, right: view.rightAnchor, paddingBottom: 20, height: 2000)
+        
+        scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor)
         
         card.backgroundImageView.backgroundColor = UIColor(red: 0.667, green: 0.667, blue: 0.667, alpha: 1)
         card.backgroundImageView.layer.cornerRadius = 12
@@ -251,16 +250,16 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         flowLayout.minimumLineSpacing = 5
         flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: flowLayout)
-        collectionView?.register(UINib(nibName: "CardCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "CardCollectionViewCell")
-        collectionView?.register(UINib(nibName: "MoreButtonCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "MoreButtonCollectionViewCell")
+        collectionView.register(UINib(nibName: "CardCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "CardCollectionViewCell")
+        collectionView.register(UINib(nibName: "MoreButtonCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "MoreButtonCollectionViewCell")
         
-        collectionView?.delegate = self
-        collectionView?.dataSource = self
-        collectionView?.backgroundColor = .clear
-        collectionView?.isMultipleTouchEnabled = false
-        collectionView?.allowsMultipleSelection = false
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.backgroundColor = .clear
+        collectionView.isMultipleTouchEnabled = false
+        collectionView.allowsMultipleSelection = false
         
-        scrollView.addSubview(collectionView!)
+        scrollView.addSubview(collectionView)
         
         var filteredProducts = products.filter({$0.productType == product?.productType})
         
@@ -282,13 +281,13 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             width = CGFloat(products.count)
         }
         
-        collectionView?.anchor(top: scrollView.topAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 20, paddingRight: 20, width:  width * 60, height: 65)
+        collectionView.anchor(top: scrollView.topAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 20, paddingRight: 20, width:  width * 60, height: 65)
         
-        collectionView?.centerX(inView: view)
-        collectionView?.contentMode = .center
+        collectionView.centerX(inView: view)
+        collectionView.contentMode = .center
         
         //CardView set
-        card.anchor(top: collectionView?.bottomAnchor, paddingTop: 0,  paddingBottom: 30,  width: 268, height: 160)
+        card.anchor(top: collectionView.bottomAnchor, paddingTop: 0,  paddingBottom: 30,  width: 268, height: 160)
         card.backgroundColor = .clear
         card.centerX(inView: view)
         card.card = product
@@ -346,11 +345,13 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         tableView.showsVerticalScrollIndicator = false
         
         scrollView.addSubview(tableView)
-        tableView.anchor(top: headerView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 20, paddingBottom: 20, paddingRight: 20, width: 300, height: 1500)
+        tableView.anchor(top: headerView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingLeft: 20, paddingRight: 20, height: UIScreen.main.bounds.height - 80)
         
         tableView.dataSource = self
         tableView.delegate = self
-        
+
+        scrollView.contentSize.height = UIScreen.main.bounds.height + tableView.frame.height + 300
+
         setupButtons()
         setupNavigationColor()
         setupProduct()
@@ -358,6 +359,13 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         
     }
     
+    func centerItemsInCollectionView(cellWidth: Double, numberOfItems: Double, spaceBetweenCell: Double, collectionView: UICollectionView) -> UIEdgeInsets {
+        let totalWidth = cellWidth * numberOfItems
+        let totalSpacingWidth = spaceBetweenCell * (numberOfItems - 1)
+        let leftInset = (collectionView.frame.width - CGFloat(totalWidth + totalSpacingWidth)) / 2
+        let rightInset = leftInset
+        return UIEdgeInsets(top: 0, left: leftInset, bottom: 0, right: rightInset)
+    }
     
     fileprivate func setupProduct() {
         
@@ -379,6 +387,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         statusBarView.skeletonCornerRadius = 8
         statusBarLabel.text = ""
         
+        self.scrollView = UIScrollView()
+        
         statusBarView.isSkeletonable = true
         statusBarView.showAnimatedGradientSkeleton()
         
@@ -389,13 +399,13 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         
         if productsCount == 0 && products.count <= 1 {
             
-            collectionView?.anchor(height: 0)
-            collectionView?.isHidden = true
+            collectionView.anchor(height: 0)
+            collectionView.isHidden = true
             
         } else {
             
-            collectionView?.anchor(height: 65)
-            collectionView?.isHidden = false
+            collectionView.anchor(height: 65)
+            collectionView.isHidden = false
         }
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.showAlert(sender:)), name: Notification.Name("openPaymentsView"), object: nil)
@@ -889,12 +899,12 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             guard (self?.collectionView) != nil else {return}
             switch changes {
             case .initial:
-                self?.collectionView?.reloadData()
+                self?.collectionView.reloadData()
             case .update(_, let deletions, let insertions, let modifications):
-                self?.collectionView?.performBatchUpdates({
-                    self?.collectionView?.reloadItems(at: modifications.map { IndexPath(row: $0, section: 0) })
-                    self?.collectionView?.insertItems(at: insertions.map { IndexPath(row: $0, section: 0) })
-                    self?.collectionView?.deleteItems(at: deletions.map { IndexPath(row: $0, section: 0) })
+                self?.collectionView.performBatchUpdates({
+                    self?.collectionView.reloadItems(at: modifications.map { IndexPath(row: $0, section: 0) })
+                    self?.collectionView.insertItems(at: insertions.map { IndexPath(row: $0, section: 0) })
+                    self?.collectionView.deleteItems(at: deletions.map { IndexPath(row: $0, section: 0) })
                 })
             case .error(let error):
                 fatalError("\(error)")
@@ -1063,9 +1073,33 @@ extension ProductViewController: MTSlideToOpenDelegate {
 
 extension ProductViewController: CtoBDelegate {
     
-    func sendMyDataBack(product: UserAllCardsModel?) {
-        
+    func sendMyDataBack(product: UserAllCardsModel?, products: [UserAllCardsModel]) {
+
         self.product = product
+        
+        var filteredProducts = products.filter({$0.productType == product?.productType})
+        
+        if product?.productType == ProductType.loan.rawValue {
+            
+            filteredProducts = products.filter({$0.productType == product?.productType})
+            filteredProducts += products.filter({$0.number == product?.settlementAccount})
+        }
+        
+        self.products = Array(filteredProducts[0 ..< filteredProducts.prefix(3).count])
+        productsCount = products.filter({$0.productType != product?.productType}).count
+
+        let width: CGFloat
+        
+        if productsCount > 0 {
+            
+            width = CGFloat(products.count + 1)
+        } else {
+            
+            width = CGFloat(products.count)
+        }
+        
+        collectionView.reloadInputViews()
+        self.collectionView.anchor(width:  width * 60)
     }
 }
 
