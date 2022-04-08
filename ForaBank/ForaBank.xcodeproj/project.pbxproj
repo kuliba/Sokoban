@@ -4880,10 +4880,10 @@
 		ED84994C26A85A0B005205C6 /* SettingsViewController */ = {
 			isa = PBXGroup;
 			children = (
-				EDA5637826F3784E0093F0C8 /* Cell */,
 				ED84994D26A85A65005205C6 /* SettingsViewController.swift */,
 				EDA5637626F375980093F0C8 /* SettingTableViewController.storyboard */,
 				EDA5637926F386AD0093F0C8 /* SettingTableViewController.swift */,
+				EDA5637826F3784E0093F0C8 /* Cell */,
 			);
 			path = SettingsViewController;
 			sourceTree = "<group>";
@@ -7229,6 +7229,8 @@
 				CURRENT_PROJECT_VERSION = 47;
 				CURRENT_PROJECT_VERSION = 6;
 				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -7260,6 +7262,8 @@
 				CURRENT_PROJECT_VERSION = 47;
 				CURRENT_PROJECT_VERSION = 6;
 				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ForaBank/Info.plist;

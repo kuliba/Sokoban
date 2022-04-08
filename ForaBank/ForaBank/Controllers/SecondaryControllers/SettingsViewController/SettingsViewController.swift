@@ -61,9 +61,6 @@ class SettingsViewController: UIViewController {
                           paddingLeft: 20, paddingRight: 20)
         titleLabel.centerX(inView: view,
                            topAnchor: imageView.bottomAnchor, paddingTop: 44)
-        
-//        subTitleLabel.centerX(inView: view,
-//                           topAnchor: titleLabel.bottomAnchor, paddingTop: 16)
         subTitleLabel.anchor(top: titleLabel.bottomAnchor, left: view.leftAnchor, paddingTop: 16, paddingLeft: 20)
         
         currencySwitch.centerY(inView: subTitleLabel)
@@ -87,13 +84,6 @@ class SettingsViewController: UIViewController {
     }
     
     @objc func sbpButtonAction() {
-        print(#function)
-        
-//        let vc = MeToMeSearchBanksViewController()
-//        let navVC = UINavigationController(rootViewController: vc)
-////        navVC.modalPresentationStyle = .fullScreen
-//        navVC.addCloseButton()
-//        self.present(navVC, animated: true, completion: nil)
         #if DEBUG
         self.showActivity()
         getFastPaymentContractList { [weak self] contractList, error in
@@ -111,7 +101,6 @@ class SettingsViewController: UIViewController {
                     vc.addCloseButton()
                     let navVC = UINavigationController(rootViewController: vc)
                     navVC.modalPresentationStyle = .fullScreen
-//                    navVC.addCloseButton()
                     self?.present(navVC, animated: true, completion: nil)
                 }
             }
@@ -120,10 +109,8 @@ class SettingsViewController: UIViewController {
     }
     
     @objc func logout() {
-        print(#function)
         
         NetworkManager<LogoutDecodableModel>.addRequest(.logout, [:], [:]) { _,_  in
-//            print("Logout :", "Вышли из приложения")
             DispatchQueue.main.async {
                 self.cleanAllData()
                 Model.shared.action.send(ModelAction.LoggedOut())
@@ -133,15 +120,6 @@ class SettingsViewController: UIViewController {
             }
             
         }
-        
-        
-        
-//        DispatchQueue.main.async { [weak self] in
-//            let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
-//            self?.window?.rootViewController = navVC
-//        }
-        
-        
     }
     
     private func cleanAllData() {
