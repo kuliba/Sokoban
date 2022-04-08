@@ -240,14 +240,14 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
-
-        print("qr5555 userNotificationCenter")
+        
         let userInfo = response.notification.request.content.userInfo
+        
         if let type = userInfo["type"] as? String {
             if type == "сonsentMe2MePull" {
-                let meToMeReq = RequestMeToMeModel(userInfo: userInfo)
                 
                 if isAuth == true {
+                    let meToMeReq = RequestMeToMeModel(userInfo: userInfo)
                     let topvc = UIApplication.topViewController()
                     
                     let vc = MeToMeRequestController()
@@ -258,8 +258,18 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
                     UserDefaults.standard.set(userInfo, forKey: "ConsentMe2MePull")
                 }
             }
+        } else {
+            if isAuth == true {
+                let topvc = UIApplication.topViewController()
+                
+                let pushHistory = PushHistoryViewController.storyboardInstance()!
+                let nc = UINavigationController(rootViewController: pushHistory)
+                nc.modalPresentationStyle = .fullScreen
+                topvc?.present(nc, animated: true)
+            } else {
+                UserDefaults.standard.set(userInfo, forKey: "AnyPull")
+            }
         }
-        
         completionHandler()
     }
     
