@@ -7,6 +7,7 @@
 
 import UIKit
 import AVFoundation
+import SwiftUI
 
 extension MainViewController: UICollectionViewDelegate {
     
@@ -106,6 +107,13 @@ extension MainViewController: UICollectionViewDelegate {
                 guard let url = URL(string: openProductViewModels[indexPath.row].controllerName ) else { return  }
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
+            
+        case .atm:
+            guard let placesViewModel = PlacesViewModel(Model.shared) else {
+                return
+            }
+            let placesHoustingController = UIHostingController(rootView: PlacesView(viewModel: placesViewModel))
+            present(placesHoustingController, animated: true)
         }
     }
 

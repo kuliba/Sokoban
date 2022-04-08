@@ -13,7 +13,7 @@ extension ModelAction {
     
     enum Dictionary {
         
-        static let cached: [Kind] = [.anywayOperators, .fmsList, .fsspDebtList, .fsspDocumentList, .ftsList, .productCatalogList, .bannerCatalogList]
+        static let cached: [Kind] = [.anywayOperators, .fmsList, .fsspDebtList, .fsspDocumentList, .ftsList, .productCatalogList, .bannerCatalogList, .atmList, .atmServiceList, .atmTypeList, .atmMetroStationList]
 
         struct Request: Action {
             
@@ -37,6 +37,10 @@ extension ModelAction {
             case paymentSystemList
             case productCatalogList
             case bannerCatalogList
+            case atmList
+            case atmServiceList
+            case atmTypeList
+            case atmMetroStationList
         }
     }
 }
@@ -88,6 +92,21 @@ extension Model {
     func dictionaryFSSPDocumentList() -> [FSSPDocumentData]? {
         
         return localAgent.load(type: [FSSPDocumentData].self)
+    }
+    
+    func dictionaryAtmList() -> [AtmData]? {
+        
+        return localAgent.load(type: [AtmData].self)
+    }
+    
+    func dictionaryAtmMetroStations() -> [AtmMetroStationData]? {
+        
+        return localAgent.load(type: [AtmMetroStationData].self)
+    }
+    
+    func dictionaryAtmServices() -> [AtmServiceData]? {
+
+        return localAgent.load(type: [AtmServiceData].self)
     }
 }
 
@@ -652,6 +671,182 @@ extension Model {
             case .failure(let error):
                 handleServerCommandError(error: error, command: command)
                 
+            }
+        }
+    }
+    
+    //AtmDataList
+    func handleDictionaryAtmDataList(_ payload: ModelAction.Dictionary.Request) {
+        
+        let command = ServerCommands.AtmController.GetAtmList(serial: payload.serial)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    guard let data = response.data else {
+                        return
+                    }
+                    
+                    var updated = [AtmData]()
+                    
+                    // load items from cache if exists
+                    if let cached = self.localAgent.load(type: [AtmData].self)  {
+                        updated.append(contentsOf: cached)
+                    }
+                    
+                    // insert items
+                    let insertedItems = data.list.filter{ $0.action == .insert }
+                    updated.append(contentsOf: insertedItems)
+                    
+                    // delete items
+                    let deletedItems = data.list.filter({ $0.action == .delete }).map{ $0.id }
+                    updated = updated.filter({ deletedItems.contains($0.id) == false})
+                    
+                    // update items
+                    let updatedItems = data.list.filter({ $0.action == .update })
+                    updated = updated.map({ item in
+                        
+                        if let updatedItem = updatedItems.first(where: { $0.id == item.id }) {
+                            
+                            return updatedItem
+                            
+                        } else {
+                            
+                            return item
+                        }
+                    })
+                    
+                    do {
+ 
+                        try self.localAgent.store(updated, serial: "\(data.version)")
+                        
+                    } catch {
+                        
+                        handleServerCommandCachingError(error: error, command: command)
+                    }
+                    
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                
+            case .failure(let error):
+                handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
+    //AtmServiceDataList
+    func handleDictionaryAtmServiceDataList(_ payload: ModelAction.Dictionary.Request) {
+        
+        let command = ServerCommands.AtmController.GetAtmServiceList(serial: payload.serial)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    guard let data = response.data else {
+                        return
+                    }
+                    
+                    // check if we have updated data
+                    guard data.list.count > 0 else {
+                        return
+                    }
+                    
+                    do {
+ 
+                        try self.localAgent.store(data.list, serial: data.serial)
+                        
+                    } catch {
+                        
+                        handleServerCommandCachingError(error: error, command: command)
+                    }
+                    
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                
+            case .failure(let error):
+                handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
+    //AtmTypeDataList
+    func handleDictionaryAtmTypeDataList(_ payload: ModelAction.Dictionary.Request) {
+        
+        let command = ServerCommands.AtmController.GetAtmTypeList(serial: payload.serial)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    guard let data = response.data else {
+                        return
+                    }
+                    
+                    // check if we have updated data
+                    guard data.list.count > 0 else {
+                        return
+                    }
+                    
+                    do {
+ 
+                        try self.localAgent.store(data.list, serial: data.serial)
+                        
+                    } catch {
+                        
+                        handleServerCommandCachingError(error: error, command: command)
+                    }
+                    
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                
+            case .failure(let error):
+                handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
+    //AtmMetroStationDataList
+    func handleDictionaryAtmMetroStationDataList(_ payload: ModelAction.Dictionary.Request) {
+        
+        let command = ServerCommands.AtmController.GetMetroStationList(serial: payload.serial)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    guard let data = response.data else {
+                        return
+                    }
+                    
+                    // check if we have updated data
+                    guard data.list.count > 0 else {
+                        return
+                    }
+                    
+                    do {
+ 
+                        try self.localAgent.store(data.list, serial: data.serial)
+                        
+                    } catch {
+                        
+                        handleServerCommandCachingError(error: error, command: command)
+                    }
+                    
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                
+            case .failure(let error):
+                handleServerCommandError(error: error, command: command)
             }
         }
     }
