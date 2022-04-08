@@ -38,7 +38,8 @@ class AtmCollectionViewCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
             label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -180),
-            label.centerYAnchor.constraint(equalTo: centerYAnchor)
+            label.topAnchor.constraint(equalTo: topAnchor, constant: 30),
+            label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -30)
         ])
     }
     
