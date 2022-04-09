@@ -242,6 +242,18 @@ class Model {
                         
                     case .bannerCatalogList:
                         handleDictionaryBannerCatalogList(payload)
+                    
+                    case .atmList:
+                        handleDictionaryAtmDataList(payload)
+                        
+                    case .atmServiceList:
+                        handleDictionaryAtmServiceDataList(payload)
+                        
+                    case .atmTypeList:
+                        handleDictionaryAtmTypeDataList(payload)
+                        
+                    case .atmMetroStationList:
+                        handleDictionaryAtmMetroStationDataList(payload)
                     }
                     
                     //MARK: - Deposits
@@ -341,6 +353,18 @@ private extension Model {
             
         case .bannerCatalogList:
             return localAgent.serial(for: [BannerCatalogListData].self)
+            
+        case .atmList:
+            return localAgent.serial(for: [AtmData].self)
+        
+        case .atmTypeList:
+            return localAgent.serial(for: [AtmTypeData].self)
+            
+        case .atmServiceList:
+            return localAgent.serial(for: [AtmServiceData].self)
+            
+        case .atmMetroStationList:
+            return localAgent.serial(for: [AtmMetroStationData].self)
         }
     }
     

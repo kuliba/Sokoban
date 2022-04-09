@@ -29,4 +29,14 @@ extension NumberFormatter {
         
         return formatter
     }
+    
+    static var distance: LengthFormatter {
+        
+        let formatter = LengthFormatter()
+        formatter.unitStyle = .short
+        formatter.numberFormatter.maximumFractionDigits = 0
+        formatter.numberFormatter.locale = Locale(identifier: "ru_RU")
+        
+        return formatter
+    }
 }

@@ -1,0 +1,24 @@
+{
+  "statusCode": 0,
+  "errorMessage": "string",
+  "data": {
+    "version": 0,
+    "list": [
+      {
+        "xmlId": "10000161875",
+        "name": "Банкомат АКБ \"ФОРА-БАНК\" (АО)",
+        "type": 0,
+        "serviceIdList": [1, 2, 3],
+        "metroStationList": [1, 2, 3],
+        "region": "Москва",
+        "city": "Москва",
+        "address": "Ленинградское шоссе, дом 25",
+        "schedule": "ежедневно: 09:30 - 20:30",
+        "location": "55.828,37.4894",
+        "email": "rumyantsevo@forabank.ru",
+        "phoneNumber": "(495) 204 4612",
+        "action": "INSERT"
+      }
+    ]
+  }
+}
