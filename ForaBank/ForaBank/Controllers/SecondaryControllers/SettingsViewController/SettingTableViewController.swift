@@ -7,6 +7,7 @@
 
 import UIKit
 import RealmSwift
+import LocalAuthentication
 
 protocol SettingTableViewControllerDelegate: AnyObject {
     func goLoginCardEntry()
@@ -23,18 +24,20 @@ class SettingTableViewController: UITableViewController {
     @IBOutlet weak var phoneLabel: UILabel!
     @IBOutlet weak var emailLabel: UILabel!
     @IBOutlet weak var pushSwitch: UISwitch!
+    @IBOutlet weak var faceId: UISwitch!
+    
     
     
     var imageView = UIImageView()
     
     private var tableHeaderView: UIView? {
         //button
-        let button = UIButton(type: .system)
-        button.backgroundColor = .black
-        button.layer.cornerRadius = 32 / 2
-        button.clipsToBounds = true
-        button.setImage(UIImage(named: "edit-2"), for: .normal)
-        button.addTarget(self, action: #selector(changeImage), for: .touchUpInside)
+//        let button = UIButton(type: .system)
+//        button.backgroundColor = .black
+//        button.layer.cornerRadius = 32 / 2
+//        button.clipsToBounds = true
+//        button.setImage(UIImage(named: "edit-2"), for: .normal)
+//        button.addTarget(self, action: #selector(changeImage), for: .touchUpInside)
         
         //imageView
         imageView.image = UIImage(named: "ProfileImage")
@@ -46,24 +49,48 @@ class SettingTableViewController: UITableViewController {
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: kHeaderViewHeight))
         headerView.backgroundColor = UIColor.white
         headerView.addSubview(imageView)
-        headerView.addSubview(button)
+       // headerView.addSubview(button)
         
         imageView.centerX(inView: headerView,
                           topAnchor: headerView.topAnchor, paddingTop: 16)
-        button.anchor(top: imageView.topAnchor, right: imageView.rightAnchor,
-                      width: 32, height: 32)
+      //  button.anchor(top: imageView.topAnchor, right: imageView.rightAnchor,
+      //                width: 32, height: 32)
         
         return headerView
     }
+    
+    
+    let context = LAContext()
+    var error: NSError?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Профиль"
         tableView.tableHeaderView = tableHeaderView
-//        nameLabel.text = ""
-//        phoneLabel.text = ""
         emailLabel.text = ""
         loadConfig()
+       
+        tableView.isUserInteractionEnabled = true
+        
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            let reason = "Identify yourself!"
+            
+            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) {
+                [weak self] success, authenticationError in
+                
+                DispatchQueue.main.async {
+                    if success {
+                        self?.faceId.isOn = true
+                    } else {
+                        self?.faceId.isOn = false
+                    }
+                }
+            }
+        } else {
+            DispatchQueue.main.async {
+             self.faceId.isOn = false
+            }
+        }
     }
 
     private func loadConfig() {
@@ -84,7 +111,7 @@ class SettingTableViewController: UITableViewController {
                         }
                     }
                 }
-                self.getFastPaymentContractList { [weak self] contractList, error in
+                self.getUserAccount { [weak self] contractList, error in
                     self?.dismissActivity()
                     if error != nil {
                         self?.showAlert(with: "Ошибка", and: error!)
@@ -92,10 +119,18 @@ class SettingTableViewController: UITableViewController {
                         if let contractList = contractList {
                             DispatchQueue.main.async {
                                 let mask = StringMask(mask: "+0 (000) 000-00-00")
-                                let number = mask.mask(string: contractList.first?.fastPaymentContractAttributeList?.first?.phoneNumber)
+                                let number = mask.mask(string: contractList.phone)
                                 self?.phoneLabel.text = number
-                                self?.nameLabel.text = contractList.first?.fastPaymentContractClAttributeList?.first?.clientInfo?.name
-                                
+                                if let userName = UserDefaults.standard.object(forKey: "userName") as? String {
+                                    self?.nameLabel.text = userName
+                                } else {
+                                    self?.nameLabel.text = contractList.firstName
+                                }
+                                if let userName = contractList.email {
+                                self?.emailLabel.text = userName
+                                } else {
+                                    self?.emailLabel.text = ""
+                                }
                             }
                         }
                     }
@@ -163,6 +198,34 @@ class SettingTableViewController: UITableViewController {
         }
     }
     
+    @IBAction func showChangeNameAlertButton(_ sender: Any) {
+        self.showInputDialog(title: "Имя", subtitle: "Как к вам обращаться?", actionTitle: "Да", cancelTitle: "Отмена", inputText: self.nameLabel.text, inputPlaceholder: "Введите Имя", inputKeyboardType: .default) { _ in } actionHandler: { text in
+            if text != nil {
+            UserDefaults.standard.set(text, forKey: "userName")
+            self.nameLabel.text = text
+            }
+        }
+
+    }
+    @IBAction func faceIdAction(_ sender: UISwitch) {
+        
+        self.showAlertWithCancel(with: "Для активации Face ID необходимо выполнить переход в настройки устройства.", and: "") {
+            if let appSettings = URL(string: UIApplication.openSettingsURLString + Bundle.main.bundleIdentifier!) {
+                if UIApplication.shared.canOpenURL(appSettings) {
+                  UIApplication.shared.open(appSettings)
+                }
+              }
+        }
+
+    }
+    @IBAction func faceIdSwitch(_ sender: Any) {
+        
+    }
+    
+    @IBAction func showPhoneAlert(_ sender: Any) {
+        self.showAlert(with: "Телефон", and: "для смены номера обратитесь в колл-центр или отделение банка")
+    }
+    
     private func cleanAllData() {
         UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
         
@@ -175,16 +238,29 @@ class SettingTableViewController: UITableViewController {
     func getFastPaymentContractList(_ completion: @escaping (_ model: [FastPaymentContractFindListDatum]? ,_ error: String?) -> Void) {
         NetworkManager<FastPaymentContractFindListDecodableModel>.addRequest(.fastPaymentContractFindList, [:], [:]) { model, error in
             if error != nil {
-                print("DEBUG: Error: ", error ?? "")
                 completion(nil, error)
             }
             guard let model = model else { return }
-            print("DEBUG: fastPaymentContractFindList", model)
+            
             if model.statusCode == 0 {
                 completion(model.data, nil)
             } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
-
+                completion(nil, model.errorMessage)
+            }
+        }
+        
+    }
+    
+    func getUserAccount(_ completion: @escaping (_ model: ClintInfoModelData? ,_ error: String?) -> Void) {
+        NetworkManager<ClintInfoModel>.addRequest(.getClientInfo, [:], [:]) { model, error in
+            if error != nil {
+                completion(nil, error)
+            }
+            guard let model = model else { return }
+            
+            if model.statusCode == 0 {
+                completion(model.data, nil)
+            } else {
                 completion(nil, model.errorMessage)
             }
         }

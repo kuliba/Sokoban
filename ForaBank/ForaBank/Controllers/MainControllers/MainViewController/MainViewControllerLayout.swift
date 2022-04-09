@@ -49,9 +49,10 @@ extension MainViewController {
                 } else {
                     return nil
                 }
+                
+            case .atm:
+                return self.createAtm(isExpanded: isSectionExpanded)
 
-            default:
-                return nil
             }
         }
         
@@ -230,6 +231,42 @@ extension MainViewController {
             section.interGroupSpacing = 8
             section.contentInsets = .init(top: 16, leading: 20, bottom: 0, trailing: 20)
             section.orthogonalScrollingBehavior = .continuous
+
+            let sectionHeader = createSectionHeader()
+            section.boundarySupplementaryItems = [sectionHeader]
+            
+            return section
+        }
+    }
+    
+    private func createAtm(isExpanded: Bool) -> NSCollectionLayoutSection {
+
+        if isExpanded == true {
+            
+            let item = NSCollectionLayoutItem.withEntireSize()
+            
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(124))
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+            
+            let section = NSCollectionLayoutSection(group: group)
+            section.interGroupSpacing = 8
+            section.contentInsets = .init(top: 16, leading: 20, bottom: 32, trailing: 20)
+
+            let sectionHeader = createSectionHeader()
+            section.boundarySupplementaryItems = [sectionHeader]
+
+            return section
+            
+        } else {
+            
+            let item = NSCollectionLayoutItem.withEntireSize()
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(0.1))
+
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+  
+            let section = NSCollectionLayoutSection(group: group)
+            section.interGroupSpacing = 8
+            section.contentInsets = .init(top: 16, leading: 20, bottom: 0, trailing: 20)
 
             let sectionHeader = createSectionHeader()
             section.boundarySupplementaryItems = [sectionHeader]

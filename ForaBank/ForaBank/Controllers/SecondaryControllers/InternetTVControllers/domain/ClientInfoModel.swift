@@ -17,6 +17,10 @@ struct ClintInfoModel: Codable, NetworkModelProtocol {
 }
 
 struct ClintInfoModelData: Codable {
+    let clientId: Int?
+    let phone: String?
+    let email: String?
+    let INN: String?
     let address: String?
     let firstName: String?
     let lastName: String?
@@ -24,12 +28,16 @@ struct ClintInfoModelData: Codable {
     let regNumber: String?
     let regSeries: String?
 
-    init(address: String?, firstName: String?, lastName: String?, patronymic: String?, regNumber: String?, regSeries: String?) {
+    init(clientId: Int?, phone: String?, email: String?, INN: String?, address: String?, firstName: String?, lastName: String?, patronymic: String?, regNumber: String?, regSeries: String?) {
         self.address = address
         self.firstName = firstName
         self.lastName = lastName
         self.patronymic = patronymic
         self.regNumber = regNumber
         self.regSeries = regSeries
+        self.clientId = clientId
+        self.phone = phone
+        self.email = email
+        self.INN = INN
     }
 }

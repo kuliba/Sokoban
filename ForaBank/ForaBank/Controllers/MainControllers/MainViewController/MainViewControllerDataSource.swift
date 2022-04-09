@@ -116,6 +116,16 @@ extension MainViewController {
                 cell.configure(with: item)
                 
                 return cell
+                
+            case .atm:
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AtmCollectionViewCell.identifier, for: indexPath)
+                
+                if let atmCell = cell as? AtmCollectionViewCell {
+                    
+                    atmCell.configure(with: item)
+                }
+                
+                return cell
             }
         })
         

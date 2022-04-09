@@ -1,0 +1,17 @@
+{
+  "statusCode": 0,
+  "errorMessage": "string",
+  "data": {
+    "serial": "bea36075a58954199a6b8980549f6b69",
+    "list": [
+      {
+        "id": 0,
+        "name": "string",
+        "lineName": "string",
+        "region": "string",
+        "city": "string",
+        "color": "string"
+      }
+    ]
+  }
+}

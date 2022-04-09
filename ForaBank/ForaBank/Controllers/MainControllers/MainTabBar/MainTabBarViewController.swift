@@ -88,6 +88,18 @@ class MainTabBarViewController: UITabBarController {
                 })
             }
             
+            if UserDefaults.standard.object(forKey: "AnyPull") is [AnyHashable : Any] {
+                let topvc = UIApplication.topViewController()
+                
+                let pushHistory = PushHistoryViewController.storyboardInstance()!
+                let nc = UINavigationController(rootViewController: pushHistory)
+                nc.modalPresentationStyle = .fullScreen
+                topvc?.present(nc, animated: true, completion: {
+                    UserDefaults.standard.set(nil, forKey: "AnyPull")
+                })
+            }
+            
+            
             if let bankId = UserDefaults.standard.object(forKey: "GetMe2MeDebitConsent") as? String {
                 let body = ["bankId": bankId] as [String: AnyObject]
                 NetworkManager<GetMe2MeDebitConsentDecodableModel>.addRequest(.getMe2MeDebitConsent, [:], body) { model, error in
@@ -131,10 +143,13 @@ class MainTabBarViewController: UITabBarController {
     }
 
     private func loadCatalog() {
+        
+        #if RELEASE
         if (GlobalModule.c2bURL == nil) {
             AppUpdater.shared.showUpdate(withConfirmation: true)
         }
-
+        #endif
+        
         NetworkHelper.request(.getCountries) { model, error in
             if error != nil {
                 self.showAlert(with: "Ошибка", and: error!)
