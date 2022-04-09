@@ -653,13 +653,13 @@
 		77A411E927EC456800D36E46 /* Model+Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A411E827EC456800D36E46 /* Model+Settings.swift */; };
 		77A411EB27EC624000D36E46 /* Model+Deposits.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A411EA27EC624000D36E46 /* Model+Deposits.swift */; };
 		77A411ED27F4325100D36E46 /* Model+PaymentsTaxesFSSPMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A411EC27F4325100D36E46 /* Model+PaymentsTaxesFSSPMock.swift */; };
-		77A6A9DD27F4D5BE00CE7E28 /* MakeAnywayTransferResponseMax.json in Resources */ = {isa = PBXBuildFile; fileRef = 77A6A9DC27F4D5BE00CE7E28 /* MakeAnywayTransferResponseMax.json */; };
 		77A6A9CC27F46B3800CE7E28 /* PlacesMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A6A9CB27F46B3800CE7E28 /* PlacesMapView.swift */; };
 		77A6A9CF27F46DC200CE7E28 /* PlacesMapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A6A9CE27F46DC200CE7E28 /* PlacesMapViewModel.swift */; };
 		77A6A9D327F471EF00CE7E28 /* PlacesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A6A9D227F471EF00CE7E28 /* PlacesViewModel.swift */; };
 		77A6A9D527F4724400CE7E28 /* PlacesListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A6A9D427F4724400CE7E28 /* PlacesListViewModel.swift */; };
 		77A6A9D727F4736D00CE7E28 /* PlacesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A6A9D627F4736D00CE7E28 /* PlacesListView.swift */; };
 		77A6A9D927F473CB00CE7E28 /* PlacesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A6A9D827F473CB00CE7E28 /* PlacesView.swift */; };
+		77A6A9DD27F4D5BE00CE7E28 /* MakeAnywayTransferResponseMax.json in Resources */ = {isa = PBXBuildFile; fileRef = 77A6A9DC27F4D5BE00CE7E28 /* MakeAnywayTransferResponseMax.json */; };
 		77A76A7327FAF4E800A271B3 /* ServerCommands+AtmController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A76A7227FAF4E800A271B3 /* ServerCommands+AtmController.swift */; };
 		77A76A7627FAF8A400A271B3 /* AtmData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A76A7527FAF8A400A271B3 /* AtmData.swift */; };
 		77A76A7827FAFCEE00A271B3 /* AtmServiceData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A76A7727FAFCEE00A271B3 /* AtmServiceData.swift */; };
@@ -1731,13 +1731,13 @@
 		77A411E827EC456800D36E46 /* Model+Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Settings.swift"; sourceTree = "<group>"; };
 		77A411EA27EC624000D36E46 /* Model+Deposits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Deposits.swift"; sourceTree = "<group>"; };
 		77A411EC27F4325100D36E46 /* Model+PaymentsTaxesFSSPMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTaxesFSSPMock.swift"; sourceTree = "<group>"; };
-		77A6A9DC27F4D5BE00CE7E28 /* MakeAnywayTransferResponseMax.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = MakeAnywayTransferResponseMax.json; sourceTree = "<group>"; };
 		77A6A9CB27F46B3800CE7E28 /* PlacesMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesMapView.swift; sourceTree = "<group>"; };
 		77A6A9CE27F46DC200CE7E28 /* PlacesMapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesMapViewModel.swift; sourceTree = "<group>"; };
 		77A6A9D227F471EF00CE7E28 /* PlacesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesViewModel.swift; sourceTree = "<group>"; };
 		77A6A9D427F4724400CE7E28 /* PlacesListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesListViewModel.swift; sourceTree = "<group>"; };
 		77A6A9D627F4736D00CE7E28 /* PlacesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesListView.swift; sourceTree = "<group>"; };
 		77A6A9D827F473CB00CE7E28 /* PlacesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesView.swift; sourceTree = "<group>"; };
+		77A6A9DC27F4D5BE00CE7E28 /* MakeAnywayTransferResponseMax.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = MakeAnywayTransferResponseMax.json; sourceTree = "<group>"; };
 		77A76A7227FAF4E800A271B3 /* ServerCommands+AtmController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServerCommands+AtmController.swift"; sourceTree = "<group>"; };
 		77A76A7527FAF8A400A271B3 /* AtmData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtmData.swift; sourceTree = "<group>"; };
 		77A76A7727FAFCEE00A271B3 /* AtmServiceData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtmServiceData.swift; sourceTree = "<group>"; };
@@ -7226,11 +7226,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 47;
-				CURRENT_PROJECT_VERSION = 6;
-				CURRENT_PROJECT_VERSION = 7;
-				CURRENT_PROJECT_VERSION = 1;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -7240,7 +7236,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 7.12.11;
+				MARKETING_VERSION = 7.12.12;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -7259,11 +7255,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 47;
-				CURRENT_PROJECT_VERSION = 6;
-				CURRENT_PROJECT_VERSION = 7;
-				CURRENT_PROJECT_VERSION = 1;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ForaBank/Info.plist;
@@ -7272,7 +7264,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 7.12.11;
+				MARKETING_VERSION = 7.12.12;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
