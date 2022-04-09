@@ -10,6 +10,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         return storyboard.instantiateViewController(withIdentifier: "C2BDetails") as? C2BDetailsViewController
     }
 
+    let currencySymbol = "₽"
     lazy var realm = try? Realm()
     var cardFromField = CardChooseView()
     var cardListView = CardsScrollView(onlyMy: false, deleteDeposit: true, loadProducts: false)
@@ -18,6 +19,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     var amount = ""
     var modeConsent = "update"
     var contractId = ""
+    
     
     @IBOutlet weak var bottomInputView: BottomInputView?
     
@@ -185,11 +187,11 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         dismissActivity()
         let params = data?.data?.parameters
         var bankRecipientCode = ""
-        let recepientFound = params?.filter({ $0.type == "RECIPIENT" })
-        if (recepientFound != nil && recepientFound?.count ?? 0 > 0) {
-            C2BDetailsViewModel.recipientText = recepientFound?[0].value ?? ""
-            C2BDetailsViewModel.recipientIconSrc = recepientFound?[0].icon ?? ""
-            C2BDetailsViewModel.recipientDescription = recepientFound?[0].description ?? ""
+        let recipientFound = params?.filter({ $0.type == "RECIPIENT" })
+        if (recipientFound != nil && recipientFound?.count ?? 0 > 0) {
+            C2BDetailsViewModel.recipientText = recipientFound?[0].value ?? ""
+            C2BDetailsViewModel.recipientIconSrc = recipientFound?[0].icon ?? ""
+            C2BDetailsViewModel.recipientDescription = recipientFound?[0].description ?? ""
             //                    if (!recipientIconSrc.isNullOrEmpty()) {
             //                        viewModel.getRecipientImage(recipientIconSrc)
             //                    }
@@ -212,7 +214,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         }
         labelRecipient.text = C2BDetailsViewModel.recipientText
         labelRecipientDesc.text = C2BDetailsViewModel.recipientDescription
-        labelAmount.text = amount
+        labelAmount.text = amount  + " \(currencySymbol)"
         
         if amount.isEmpty {
             viewAmount.isHidden = true

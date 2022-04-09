@@ -11,7 +11,7 @@ class C2BDetailsViewModel {
     var controller: C2BDetailsViewController? = nil
     var consent: [FastPaymentContractFindListDatum]? = nil
     var qrData: GetQRDataAnswer? = nil
-    var c2bLink = ""
+    var c2bLink: String = ""
     static var recipientText = ""
     static var recipientIconSrc = ""
     static var recipientDescription = ""
@@ -23,7 +23,8 @@ class C2BDetailsViewModel {
 
 
     init() {
-        c2bLink = GlobalModule.c2bURL ?? ""
+        let str = GlobalModule.c2bURL ?? ""
+        c2bLink = str.replacingOccurrences(of: "amp;", with: "")
         GlobalModule.c2bURL = nil
         getConsent()
         C2BApiRequests.getQRData(link: c2bLink) { model, error in
