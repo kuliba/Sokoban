@@ -12,7 +12,7 @@ extension ServerCommands {
     enum LoanController {
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/rest/getPersonsCredit
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/rest/getPersonsCredit
          */
         struct GetPersonsCredit: ServerCommand {
 

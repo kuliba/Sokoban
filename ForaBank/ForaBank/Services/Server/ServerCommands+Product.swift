@@ -12,7 +12,7 @@ extension ServerCommands {
     enum ProductController {
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/ProductController/getProductDetailsUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/ProductController/getProductDetailsUsingPOST
          */
         struct GetProductDetails: ServerCommand {
             
@@ -45,7 +45,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/ProductController/getProductListUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/ProductController/getProductListUsingPOST
          */
         struct GetProductList: ServerCommand {
             
@@ -72,7 +72,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/ProductController/getProductListByFilterUsingGET
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/ProductController/getProductListByFilterUsingGET
          */
         struct GetProductListByFilter: ServerCommand {
             
@@ -105,7 +105,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/ProductController//rest/getProductListByType
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/ProductController//rest/getProductListByType
          */
         struct GetProductListByType: ServerCommand {
             

@@ -12,7 +12,7 @@ extension ServerCommands {
     enum SuggestController {
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/rest/suggestBank
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/rest/suggestBank
          */
         struct SuggestBank: ServerCommand {
             
@@ -45,7 +45,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/rest/suggestCompany
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/rest/suggestCompany
          */
         struct SuggestCompany: ServerCommand {
             

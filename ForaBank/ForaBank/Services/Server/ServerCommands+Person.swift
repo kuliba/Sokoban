@@ -12,7 +12,7 @@ extension ServerCommands {
     enum PersonController {
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/rest/getClientInfo
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/rest/getClientInfo
          */
         struct GetClientInfo: ServerCommand {
 

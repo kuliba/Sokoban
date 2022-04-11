@@ -13,7 +13,7 @@ extension ServerCommands {
     enum TransferController {
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/TransferController/antiFraudUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/TransferController/antiFraudUsingPOST
          */
         struct AntiFraud: ServerCommand {
 
@@ -40,7 +40,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/TransferController/changeOutgoingUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/TransferController/changeOutgoingUsingPOST
          */
         struct ChangeOutgoing: ServerCommand {
 
@@ -74,7 +74,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/TransferController/checkCardUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/TransferController/checkCardUsingPOST
          */
         struct CheckCard: ServerCommand {
 
@@ -112,7 +112,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/TransferController/createAnywayTransferUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/TransferController/createAnywayTransferUsingPOST
          */
         struct CreateAnywayTransfer: ServerCommand {
 
@@ -143,7 +143,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/TransferController/createContactAddresslessTransferUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/TransferController/createContactAddresslessTransferUsingPOST
          */
         struct CreateContactAddresslessTransfer: ServerCommand {
 
@@ -171,7 +171,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/TransferController/createContactAddresslessTransferUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/TransferController/createContactAddresslessTransferUsingPOST
          */
         struct CreateDirectTransfer: ServerCommand {
 
@@ -199,7 +199,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/TransferController/createMe2MePullCreditTransferUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/TransferController/createMe2MePullCreditTransferUsingPOST
          */
         struct CreateMe2MePullCreditTransfer: ServerCommand {
 
@@ -227,7 +227,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/TransferController/createMe2MePullDebitTransferUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/TransferController/createMe2MePullDebitTransferUsingPOST
          */
         struct CreateMe2MePullDebitTransfer: ServerCommand {
 
@@ -255,7 +255,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/TransferController/createSFPTransferUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/TransferController/createSFPTransferUsingPOST
          */
         struct CreateSFPTransfer: ServerCommand {
 
@@ -283,7 +283,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/TransferController/createTransferUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/TransferController/createTransferUsingPOST
          */
         struct CreateTransfer: ServerCommand {
 
@@ -311,7 +311,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/TransferController/getVerificationCodeUsingGET
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/TransferController/getVerificationCodeUsingGET
          */
         struct GetVerificationCode: ServerCommand {
 
@@ -344,7 +344,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/TransferController/isSingleServiceUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/TransferController/isSingleServiceUsingPOST
          */
         struct IsSingleService: ServerCommand {
 
@@ -375,7 +375,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/TransferController/makeTransferUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/TransferController/makeTransferUsingPOST
          */
         struct MakeTransfer: ServerCommand {
 
@@ -437,7 +437,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/TransferController/returnOutgoingUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/TransferController/returnOutgoingUsingPOST
          */
         struct ReturnOutgoing: ServerCommand {
 

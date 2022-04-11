@@ -12,7 +12,7 @@ extension ServerCommands {
 	enum AccountController {
 
 		/*
-		 https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/AccountController/getAccountStatementUsingPOST
+		 https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/AccountController/getAccountStatementUsingPOST
 		 */
 		struct GetAccountStatement: ServerCommand {
 
@@ -61,7 +61,7 @@ extension ServerCommands {
 		}
 
 		/*
-		 https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/AccountController/getPrintFormForAccountStatementUsingPOST
+		 https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/AccountController/getPrintFormForAccountStatementUsingPOST
 		 */
 		struct GetPrintFormForAccountStatement: ServerDownloadCommand {
 
