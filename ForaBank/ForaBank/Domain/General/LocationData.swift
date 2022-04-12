@@ -8,7 +8,7 @@
 import Foundation
 import CoreLocation
 
-struct LocationData {
+struct LocationData: Equatable {
     
     let latitude: Double
     let longitude: Double
@@ -40,6 +40,7 @@ struct LocationData {
     }
     
     var coordinate: CLLocationCoordinate2D { CLLocationCoordinate2D(latitude: latitude, longitude: longitude) }
+    var stringValue: String { "\(latitude),\(longitude)" }
 }
 
 enum LocationDataError: Error {
