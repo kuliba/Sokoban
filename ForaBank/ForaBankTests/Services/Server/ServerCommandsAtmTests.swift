@@ -25,7 +25,7 @@ class ServerCommandsAtmTests: XCTestCase {
         }
         
         let json = try Data(contentsOf: url)
-        let atmListData = ServerCommands.AtmController.GetAtmList.Response.AtmListData(version: 0, list: [.init(id: "10000161875", name: "Банкомат АКБ \"ФОРА-БАНК\" (АО)", type: 0, serviceIdList: [1, 2, 3], metroStationList: [1, 2, 3], region: "Москва", city: "Москва", address: "Ленинградское шоссе, дом 25", schedule: "ежедневно: 09:30 - 20:30", location: "55.828,37.4894", email: "rumyantsevo@forabank.ru", phoneNumber: "(495) 204 4612", action: .insert)])
+        let atmListData = ServerCommands.AtmController.GetAtmList.Response.AtmListData(version: 1, list: [.init(id: "10000161875", name: "Банкомат АКБ \"ФОРА-БАНК\" (АО)", type: 0, serviceIdList: [1, 2, 3], metroStationList: [1, 2, 3], cityId: 10000161875, address: "Ленинградское шоссе, дом 25", schedule: "ежедневно: 09:30 - 20:30", location: .init(latitude: 55.828, longitude: 37.4894), email: "rumyantsevo@forabank.ru", phoneNumber: "(495) 204 4612", action: .insert)])
         
         let expected = ServerCommands.AtmController.GetAtmList.Response(statusCode: .ok, errorMessage: "string", data: atmListData)
         

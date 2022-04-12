@@ -26,11 +26,7 @@ class PlacesMapViewModel: ObservableObject {
         
         self.items = atmList.compactMap { atmItem in
             
-            guard let coordinate = atmItem.coordinate else {
-                return nil
-            }
-            
-            return PlacesMapViewModel.ItemViewModel(id: atmItem.id, iconName: atmItem.iconName, coordinate: coordinate, category: atmItem.category)
+            return PlacesMapViewModel.ItemViewModel(id: atmItem.id, iconName: atmItem.iconName, coordinate: atmItem.coordinate, category: atmItem.category)
         }
         
         self.initialRegion = initialRegion
@@ -39,12 +35,8 @@ class PlacesMapViewModel: ObservableObject {
     func update(with atmList: [AtmData]) {
         
         self.items = atmList.compactMap { atmItem in
-            
-            guard let coordinate = atmItem.coordinate else {
-                return nil
-            }
-            
-            return PlacesMapViewModel.ItemViewModel(id: atmItem.id, iconName: atmItem.iconName, coordinate: coordinate, category: atmItem.category)
+
+            return PlacesMapViewModel.ItemViewModel(id: atmItem.id, iconName: atmItem.iconName, coordinate: atmItem.coordinate, category: atmItem.category)
         }
     }
 }
