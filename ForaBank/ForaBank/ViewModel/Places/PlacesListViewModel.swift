@@ -35,42 +35,42 @@ class PlacesListViewModel: ObservableObject {
         self.items = items
     }
     
-    init(atmList: [AtmData], metroStationsList: [AtmMetroStationData]?, filter: PlacesViewModel.Filter.Distance) {
+    init(atmList: [AtmData], metroStationsList: [AtmMetroStationData]?, radius: AtmRadius) {
         
         self.items = []
-        self.title = "В радиусе \(filter.radiusTitle)"
+        self.title = "В радиусе \(radius.radiusTitle)"
         
-        update(with: atmList, metroStationsList: metroStationsList, filter: filter)
+        update(with: atmList, metroStationsList: metroStationsList, radius: radius)
     }
     
-    static func atmItemsFilterred(atmList: [AtmData], by distance: PlacesViewModel.Filter.Distance) -> [AtmData] {
+    static func atmItemsFilterred(atmList: [AtmData], by radius: AtmRadius) -> [AtmData] {
         
         let atmItemsWithDistances: [(item: AtmData, distance: CLLocationDistance)] = atmList.compactMap { atmItem in
             
-            guard let distance = atmItem.distance(to: distance.location) else {
+            guard let distance = atmItem.distance(to: radius.location) else {
                 return nil
             }
             
             return (atmItem, distance)
         }
         
-        let atmItemsFilterred = atmItemsWithDistances.filter{ $0.distance <= distance.radius }
+        let atmItemsFilterred = atmItemsWithDistances.filter{ $0.distance <= radius.radius }
         
         return atmItemsFilterred.sorted(by: { $0.distance < $1.distance }).map{ $0.item }
     }
     
-    func update(with atmList: [AtmData], metroStationsList: [AtmMetroStationData]?, filter: PlacesViewModel.Filter.Distance) {
+    func update(with atmList: [AtmData], metroStationsList: [AtmMetroStationData]?, radius: AtmRadius) {
         
-        let atmListFilterred = Self.atmItemsFilterred(atmList: atmList, by: filter)
+        let atmListFilterred = Self.atmItemsFilterred(atmList: atmList, by: radius)
         
         var items = [ItemViewModel]()
         for atmItem in atmListFilterred {
             
-            let item = ItemViewModel(atmItem: atmItem, metroStationsList: metroStationsList, currentLoaction: filter.location, action: { [weak self] in self?.action.send(PlacesListViewModelAction.ItemDidSelected(itemId: atmItem.id))})
+            let item = ItemViewModel(atmItem: atmItem, metroStationsList: metroStationsList, currentLoaction: radius.location, action: { [weak self] in self?.action.send(PlacesListViewModelAction.ItemDidSelected(itemId: atmItem.id))})
             items.append(item)
         }
-        self.items = items
         
+        self.items = items
     }
 }
 

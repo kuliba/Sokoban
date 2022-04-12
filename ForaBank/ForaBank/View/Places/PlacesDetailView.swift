@@ -72,13 +72,13 @@ struct PlacesDetailView: View {
                             .foregroundColor(.mainColorsGray)
                     }
                 }
-                
-                //TODO: turn on after route implementation
-                /*
-                PlacesDetailView.RouteButtonView(viewModel: viewModel.routeButton)
-                    .frame(width: 200, height: 40)
-                    .padding(.top, 8)
-                 */
+
+                if let routeButtonViewModel = viewModel.routeButton {
+                    
+                    PlacesDetailView.RouteButtonView(viewModel: routeButtonViewModel)
+                        .frame(width: 200, height: 40)
+                        .padding(.top, 8)
+                }
                 
                 Text(viewModel.schedule)
                     .font(.textBodyMR14200())

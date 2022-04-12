@@ -75,7 +75,7 @@ class ServerCommandsAtmTests: XCTestCase {
         }
         
         let json = try Data(contentsOf: url)
-        let atmServiceListData = ServerCommands.AtmController.GetAtmServiceList.Response.AtmServiceListData(serial: "bea36075a58954199a6b8980549f6b69", list: [.init(id: 0, name: "string")])
+        let atmServiceListData = ServerCommands.AtmController.GetAtmServiceList.Response.AtmServiceListData(serial: "bea36075a58954199a6b8980549f6b69", list: [.init(id: 0, name: "string", type: .service)])
         
         let expected = ServerCommands.AtmController.GetAtmServiceList.Response(statusCode: .ok, errorMessage: "string", data: atmServiceListData)
         

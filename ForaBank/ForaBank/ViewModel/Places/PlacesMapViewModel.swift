@@ -75,6 +75,11 @@ enum PlacesMapViewModelAction {
         
         let region: MKCoordinateRegion
     }
+    
+    struct ShowUserLocation: Action {
+        
+        let region: MKCoordinateRegion
+    }
 }
 
 //MARK: - Sample Data

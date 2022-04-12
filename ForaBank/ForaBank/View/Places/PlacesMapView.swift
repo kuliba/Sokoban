@@ -26,6 +26,9 @@ struct PlacesMapView: UIViewRepresentable {
         
         // map type
         mapView.mapType = .mutedStandard
+        
+        // show user location
+        mapView.showsUserLocation = true
 
         // delegate
         mapView.delegate = context.coordinator
@@ -69,6 +72,10 @@ extension PlacesMapView {
                     
                     switch action {
                     case let payload as PlacesMapViewModelAction.ShowRegion:
+                        mapView.setRegion(payload.region, animated: true)
+                        
+                    case let payload as PlacesMapViewModelAction.ShowUserLocation:
+                       
                         mapView.setRegion(payload.region, animated: true)
                         
                     default:

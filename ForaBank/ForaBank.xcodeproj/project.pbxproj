@@ -756,6 +756,12 @@
 		77EC58F6277382A60054D75C /* OperationEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58F5277382A60054D75C /* OperationEnvironment.swift */; };
 		77EC58F927738B5E0054D75C /* DateFormatter+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EC58F827738B5E0054D75C /* DateFormatter+Extensions.swift */; };
 		77F4C8BD27E077D70095820E /* Model+PaymentsTaxesFSSP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F4C8BC27E077D70095820E /* Model+PaymentsTaxesFSSP.swift */; };
+		77F5CE0928049E3500611B66 /* LocationAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5CE0828049E3500611B66 /* LocationAgentProtocol.swift */; };
+		77F5CE0B2804A10500611B66 /* LocationAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5CE0A2804A10500611B66 /* LocationAgent.swift */; };
+		77F5CE0D28056BB700611B66 /* LocationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5CE0C28056BB700611B66 /* LocationData.swift */; };
+		77F5CE0F28056DC000611B66 /* LocationAgentMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5CE0E28056DC000611B66 /* LocationAgentMock.swift */; };
+		77F5CE1128056EF600611B66 /* Model+Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5CE1028056EF600611B66 /* Model+Location.swift */; };
+		77F5CE132805CD1F00611B66 /* AtmRadius.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5CE122805CD1F00611B66 /* AtmRadius.swift */; };
 		77FF66CD27B42DD5009FEA09 /* Model+PaymentsTaxesFMS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FF66CC27B42DD5009FEA09 /* Model+PaymentsTaxesFMS.swift */; };
 		77FF670327B446D7009FEA09 /* AsyncAwaitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FF670227B446D7009FEA09 /* AsyncAwaitTests.swift */; };
 		77FF670527B4B07B009FEA09 /* PaymentsDataModel+Parameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FF670427B4B07B009FEA09 /* PaymentsDataModel+Parameter.swift */; };
@@ -1832,6 +1838,12 @@
 		77EC58F5277382A60054D75C /* OperationEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationEnvironment.swift; sourceTree = "<group>"; };
 		77EC58F827738B5E0054D75C /* DateFormatter+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+Extensions.swift"; sourceTree = "<group>"; };
 		77F4C8BC27E077D70095820E /* Model+PaymentsTaxesFSSP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTaxesFSSP.swift"; sourceTree = "<group>"; };
+		77F5CE0828049E3500611B66 /* LocationAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAgentProtocol.swift; sourceTree = "<group>"; };
+		77F5CE0A2804A10500611B66 /* LocationAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAgent.swift; sourceTree = "<group>"; };
+		77F5CE0C28056BB700611B66 /* LocationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationData.swift; sourceTree = "<group>"; };
+		77F5CE0E28056DC000611B66 /* LocationAgentMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAgentMock.swift; sourceTree = "<group>"; };
+		77F5CE1028056EF600611B66 /* Model+Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Location.swift"; sourceTree = "<group>"; };
+		77F5CE122805CD1F00611B66 /* AtmRadius.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtmRadius.swift; sourceTree = "<group>"; };
 		77FF66CC27B42DD5009FEA09 /* Model+PaymentsTaxesFMS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTaxesFMS.swift"; sourceTree = "<group>"; };
 		77FF670227B446D7009FEA09 /* AsyncAwaitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncAwaitTests.swift; sourceTree = "<group>"; };
 		77FF670427B4B07B009FEA09 /* PaymentsDataModel+Parameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsDataModel+Parameter.swift"; sourceTree = "<group>"; };
@@ -3483,6 +3495,7 @@
 				777167D327CE759200655D60 /* KeychainAgentMock.swift */,
 				777167D527CE858500655D60 /* SettingsAgentMock.swift */,
 				777167D727CE88E800655D60 /* BiometricAgentMock.swift */,
+				77F5CE0E28056DC000611B66 /* LocationAgentMock.swift */,
 				774E318A27A050DB005A067B /* Model+Preview.swift */,
 				774E318E27A05197005A067B /* TemplatesListViewModel+Preview.swift */,
 				F8E529B327BBABF600222394 /* AuthProductsViewModel+Preview.swift */,
@@ -3662,6 +3675,7 @@
 				77A76A7927FAFD3E00A271B3 /* AtmTypeData.swift */,
 				77A76A7B27FAFDCB00A271B3 /* AtmMetroStationData.swift */,
 				7744944827FED1BE001E2B9E /* AtmFilter.swift */,
+				77F5CE122805CD1F00611B66 /* AtmRadius.swift */,
 			);
 			path = Atm;
 			sourceTree = "<group>";
@@ -3739,6 +3753,7 @@
 				77EC58ED27723A5A0054D75C /* Model+Templates.swift */,
 				77A411E827EC456800D36E46 /* Model+Settings.swift */,
 				77A411EA27EC624000D36E46 /* Model+Deposits.swift */,
+				77F5CE1028056EF600611B66 /* Model+Location.swift */,
 				77583FFE27B13C1600251969 /* Payments */,
 			);
 			path = Model;
@@ -3784,6 +3799,7 @@
 				77FF670C27BABFD3009FEA09 /* ValetKeychainAgent.swift */,
 				774A82C827BAE74800E5A5E9 /* UserDefaultsSettingsAgent.swift */,
 				7705408E27BD1C6900094006 /* BiometricAgent.swift */,
+				77F5CE0A2804A10500611B66 /* LocationAgent.swift */,
 				77DC12682770F63400C917B0 /* Abstract */,
 				77DC126B2770F83400C917B0 /* Server */,
 				77925573279AF3AA00A85723 /* Encryption */,
@@ -3801,6 +3817,7 @@
 				77FF670A27BABCD9009FEA09 /* KeychainAgentProtocol.swift */,
 				774A82C227BAD58300E5A5E9 /* SettingsAgentProtocol.swift */,
 				7705408C27BD1B4C00094006 /* BiometricAgentProtocol.swift */,
+				77F5CE0828049E3500611B66 /* LocationAgentProtocol.swift */,
 			);
 			path = Abstract;
 			sourceTree = "<group>";
@@ -3854,6 +3871,7 @@
 				77B751FE27D10F9900FB51C7 /* CSRFCredentials.swift */,
 				7758400127B13CF300251969 /* ImageData.swift */,
 				7758400A27B13FC100251969 /* Currency.swift */,
+				77F5CE0C28056BB700611B66 /* LocationData.swift */,
 			);
 			path = General;
 			sourceTree = "<group>";
@@ -6352,6 +6370,7 @@
 				0BBDFBE027BBF71200A30D6D /* PaymentsServicesView.swift in Sources */,
 				6820928927AB0EEC003DCAFD /* PaymentSystemData.swift in Sources */,
 				7772979727C789030099EF91 /* AuthLockViewModel.swift in Sources */,
+				77F5CE0B2804A10500611B66 /* LocationAgent.swift in Sources */,
 				ED684CF22763955E00AA7A33 /* DocDepositTableViewCell.swift in Sources */,
 				0BDCF00F274D56C500AAA1C3 /* NextStepServiceTransferDecodableModel.swift in Sources */,
 				68D06F2626C3C11700F9BE4C /* MainViewControllerDataSource.swift in Sources */,
@@ -6373,6 +6392,7 @@
 				6830A02227D37821003CA4F1 /* DepositProductData.swift in Sources */,
 				0B37F97C2678EC69007728FC /* AnywayPaymentDecodableModel.swift in Sources */,
 				0BDCF00A2749A5A900AAA1C3 /* GKHInputModel.swift in Sources */,
+				77F5CE0928049E3500611B66 /* LocationAgentProtocol.swift in Sources */,
 				0B7A18AD2681CF160007CC75 /* CastomPopUpView.swift in Sources */,
 				77517F9D27A86321005CFB77 /* TransferResponseBaseData.swift in Sources */,
 				0BE270B826B9DC4200FA958C /* ExtensionBottomInputViewExchange.swift in Sources */,
@@ -6403,9 +6423,11 @@
 				77C3829827E1FEAD00B5246E /* PaymentsProductSelectorViewComponent+Legacy.swift in Sources */,
 				7758400D27B1442F00251969 /* Model+Payments.swift in Sources */,
 				0BB24A9726EFE66900DDA4F6 /* GetPaymentCountriesList.swift in Sources */,
+				77F5CE0D28056BB700611B66 /* LocationData.swift in Sources */,
 				0BB8817026D6AE4200015E27 /* UserAllCardsModel.swift in Sources */,
 				0B9EC85D26739C0000D86EB2 /* GetCountriesDecodebleModel.swift in Sources */,
 				6820929227ABD46F003DCAFD /* ParameterData.swift in Sources */,
+				77F5CE0F28056DC000611B66 /* LocationAgentMock.swift in Sources */,
 				A5ECD4CC27ECC2DC008FBEEC /* C2BDetailsFormViewModel.swift in Sources */,
 				68FFA54C2684C854002DADFA /* PDFViewerViewController.swift in Sources */,
 				0BF0BF4C2767E337006AE967 /* NetMonitor.swift in Sources */,
@@ -6463,6 +6485,7 @@
 				EDFFCAF32682461F004EE095 /* CardCell.swift in Sources */,
 				ED60A1E626DCEA01000F3208 /* MeToMeRequestController.swift in Sources */,
 				0B8C1C4B273B09CD00BA5CAC /* QRErrorViewController.swift in Sources */,
+				77F5CE1128056EF600611B66 /* Model+Location.swift in Sources */,
 				EDB14524266624460028EF5A /* UIViewController.swift in Sources */,
 				EDCF8A1526CED86100DC9F54 /* BankTableViewCell.swift in Sources */,
 				ED84995A26A8831E005205C6 /* EPContact.swift in Sources */,
@@ -6871,6 +6894,7 @@
 				0B51D87626D959BB00FC7B6B /* ExtensionGKHInputNav.swift in Sources */,
 				774A82C727BAE4BF00E5A5E9 /* SettingType.swift in Sources */,
 				ED0B48AC26812F450037EA06 /* LoginViewModel.swift in Sources */,
+				77F5CE132805CD1F00611B66 /* AtmRadius.swift in Sources */,
 				F81EF91727D212BE0096DC70 /* ButtonNewProductComponent.swift in Sources */,
 				0B22AEA326CDB38500B11E7F /* ExtensionGKHInput.swift in Sources */,
 				EDE212FD2743265C005D9821 /* DateChooseView.swift in Sources */,

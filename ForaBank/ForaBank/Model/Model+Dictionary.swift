@@ -45,6 +45,206 @@ extension ModelAction {
     }
 }
 
+//MARK: - Cache
+
+extension Model {
+    
+    func dictionariesUpdateCache() {
+        
+        for type in ModelAction.Dictionary.cached {
+            
+            if dictionaryCheckCache(for: type) == true {
+                
+                action.send(ModelAction.Dictionary.Request(type: type, serial: dictionaryCacheSerial(for: type)))
+                
+            } else {
+                
+                dictionaryClearCache(for: type)
+                action.send(ModelAction.Dictionary.Request(type: type, serial: nil))
+            }
+        }
+    }
+    
+    func dictionaryCheckCache(for dictionaryType: ModelAction.Dictionary.Kind) -> Bool {
+        
+        switch dictionaryType {
+        case .anywayOperators:
+            return localAgent.load(type: [OperatorGroupData].self) != nil
+            
+        case .banks:
+            return localAgent.load(type: [BankData].self) != nil
+            
+        case .countries:
+            return localAgent.load(type: [CountryData].self) != nil
+            
+        case .currencyList:
+            return localAgent.load(type: [CurrencyData].self) != nil
+            
+        case .fmsList:
+            return localAgent.load(type: [FMSData].self) != nil
+            
+        case .fsspDebtList:
+            return localAgent.load(type: [FSSPDebtData].self) != nil
+            
+        case .fsspDocumentList:
+            return localAgent.load(type: [FSSPDocumentData].self) != nil
+            
+        case .ftsList:
+            return localAgent.load(type: [FTSData].self) != nil
+            
+        case .fullBankInfoList:
+            return localAgent.load(type: [BankFullInfoData].self) != nil
+            
+        case .mobileList:
+            return localAgent.load(type: [MobileData].self) != nil
+            
+        case .mosParkingList:
+            return localAgent.load(type: [MosParkingData].self) != nil
+            
+        case .paymentSystemList:
+            return localAgent.load(type: [PaymentSystemData].self) != nil
+            
+        case .productCatalogList:
+            return localAgent.load(type: [CatalogProductData].self) != nil
+            
+        case .bannerCatalogList:
+            return localAgent.load(type: [BannerCatalogListData].self) != nil
+            
+        case .atmList:
+            return localAgent.load(type: [AtmData].self) != nil
+        
+        case .atmTypeList:
+            return localAgent.load(type: [AtmTypeData].self) != nil
+            
+        case .atmServiceList:
+            return localAgent.load(type: [AtmServiceData].self) != nil
+            
+        case .atmMetroStationList:
+            return localAgent.load(type: [AtmMetroStationData].self) != nil
+        }
+    }
+    
+    func dictionaryCacheSerial(for dictionaryType: ModelAction.Dictionary.Kind) -> String? {
+        
+        switch dictionaryType {
+        case .anywayOperators:
+            return localAgent.serial(for: [OperatorGroupData].self)
+            
+        case .banks:
+            return localAgent.serial(for: [BankData].self)
+            
+        case .countries:
+            return localAgent.serial(for: [CountryData].self)
+            
+        case .currencyList:
+            return localAgent.serial(for: [CurrencyData].self)
+            
+        case .fmsList:
+            return localAgent.serial(for: [FMSData].self)
+            
+        case .fsspDebtList:
+            return localAgent.serial(for: [FSSPDebtData].self)
+            
+        case .fsspDocumentList:
+            return localAgent.serial(for: [FSSPDocumentData].self)
+            
+        case .ftsList:
+            return localAgent.serial(for: [FTSData].self)
+            
+        case .fullBankInfoList:
+            return localAgent.serial(for: [BankFullInfoData].self)
+            
+        case .mobileList:
+            return localAgent.serial(for: [MobileData].self)
+            
+        case .mosParkingList:
+            return localAgent.serial(for: [MosParkingData].self)
+            
+        case .paymentSystemList:
+            return localAgent.serial(for: [PaymentSystemData].self)
+            
+        case .productCatalogList:
+            return localAgent.serial(for: [CatalogProductData].self)
+            
+        case .bannerCatalogList:
+            return localAgent.serial(for: [BannerCatalogListData].self)
+            
+        case .atmList:
+            return localAgent.serial(for: [AtmData].self)
+        
+        case .atmTypeList:
+            return localAgent.serial(for: [AtmTypeData].self)
+            
+        case .atmServiceList:
+            return localAgent.serial(for: [AtmServiceData].self)
+            
+        case .atmMetroStationList:
+            return localAgent.serial(for: [AtmMetroStationData].self)
+        }
+    }
+    
+    func dictionaryClearCache(for dictionaryType: ModelAction.Dictionary.Kind) {
+        
+        switch dictionaryType {
+        case .anywayOperators:
+            try? localAgent.clear(type: [OperatorGroupData].self)
+            
+        case .banks:
+            try? localAgent.clear(type: [BankData].self)
+            
+        case .countries:
+            try? localAgent.clear(type: [CountryData].self)
+            
+        case .currencyList:
+            try? localAgent.clear(type: [CurrencyData].self)
+            
+        case .fmsList:
+            try? localAgent.clear(type: [FMSData].self)
+            
+        case .fsspDebtList:
+            try? localAgent.clear(type: [FSSPDebtData].self)
+            
+        case .fsspDocumentList:
+            try? localAgent.clear(type: [FSSPDocumentData].self)
+            
+        case .ftsList:
+            try? localAgent.clear(type: [FTSData].self)
+            
+        case .fullBankInfoList:
+            try? localAgent.clear(type: [BankFullInfoData].self)
+            
+        case .mobileList:
+            try? localAgent.clear(type: [MobileData].self)
+            
+        case .mosParkingList:
+            try? localAgent.clear(type: [MosParkingData].self)
+            
+        case .paymentSystemList:
+            try? localAgent.clear(type: [PaymentSystemData].self)
+            
+        case .productCatalogList:
+            try? localAgent.clear(type: [CatalogProductData].self)
+            
+        case .bannerCatalogList:
+            try? localAgent.clear(type: [BannerCatalogListData].self)
+            
+        case .atmList:
+            try? localAgent.clear(type: [AtmData].self)
+        
+        case .atmTypeList:
+            try? localAgent.clear(type: [AtmTypeData].self)
+            
+        case .atmServiceList:
+            try? localAgent.clear(type: [AtmServiceData].self)
+            
+        case .atmMetroStationList:
+            try? localAgent.clear(type: [AtmMetroStationData].self)
+        }
+    }
+}
+
+//MARK: - Data Helpers
+
 extension Model {
     
     func dictionaryAnywayOperatorGroups() -> [OperatorGroupData]? {
