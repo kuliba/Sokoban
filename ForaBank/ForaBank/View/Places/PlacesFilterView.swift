@@ -50,11 +50,11 @@ struct PlacesFilterView: View {
                     .frame(height: 32)
                 }
                 
-                VStack {
+                VStack(spacing: 24) {
                     
                     ForEach(viewModel.services) { serviceGroup in
                         
-                        PlacesFilterView.ServiceGroupView(viewModel: serviceGroup, selected: $viewModel.selectedServicesIds)
+                        PlacesFilterView.ServiceGroupView(viewModel: serviceGroup, selected: $viewModel.selectedServicesIds, available: $viewModel.availableServicesIds)
                         
                     }
                 }
@@ -113,6 +113,7 @@ extension PlacesFilterView {
         
         let viewModel: PlacesFilterViewModel.ServiceGroupViewModel
         @Binding var selected: Set<PlacesFilterViewModel.ServiceOptionViewModel.ID>
+        @Binding var available: Set<PlacesFilterViewModel.ServiceOptionViewModel.ID>
         
         var body: some View {
             
@@ -124,7 +125,7 @@ extension PlacesFilterView {
                 
                 TagsGridView(data: viewModel.options, spacing: 8, alignment: .leading) { service in
                     
-                    PlacesFilterView.ServiceOptionView(viewModel: service, isSelected: selected.contains(service.id))
+                    PlacesFilterView.ServiceOptionView(viewModel: service, isSelected: selected.contains(service.id), isAvailable: available.contains(service.id))
                 }
             }
         }
@@ -134,25 +135,54 @@ extension PlacesFilterView {
         
         let viewModel: PlacesFilterViewModel.ServiceOptionViewModel
         let isSelected: Bool
+        let isAvailable: Bool
         
         var color: Color {
             
-            isSelected ? .textSecondary : .textSecondary.opacity(0.1)
+            if isAvailable == true {
+                
+                return isSelected ? .textWhite : .textSecondary
+                
+            } else {
+                
+                return .textSecondary.opacity(0.1)
+            }
         }
         
         var backgroundColor: Color {
             
-            isSelected ? .mainColorsGrayLightest : .mainColorsGrayLightest.opacity(0.1)
+            if isAvailable == true {
+                
+                return isSelected ? .buttonBlackMedium : .mainColorsGrayLightest
+                
+            } else {
+                
+                return .mainColorsGrayLightest.opacity(0.1)
+            }
         }
         
         var body: some View {
             
-            Button {
+            if isAvailable == true {
                 
-                viewModel.action(viewModel.id)
+                Button {
+                    
+                    viewModel.action(viewModel.id)
+                    
+                } label: {
+                    
+                    HStack(spacing: 4) {
+                        
+                        Text(viewModel.name)
+                            .font(.textBodyMR14200())
+                            .foregroundColor(color)
+                    }
+                    .padding(8)
+                    .background(Capsule().foregroundColor(backgroundColor))
+                }
                 
-            } label: {
-                
+            } else {
+              
                 HStack(spacing: 4) {
                     
                     Text(viewModel.name)
@@ -161,6 +191,7 @@ extension PlacesFilterView {
                 }
                 .padding(8)
                 .background(Capsule().foregroundColor(backgroundColor))
+                
             }
         }
     }

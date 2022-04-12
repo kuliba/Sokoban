@@ -20,50 +20,51 @@ class PlacesFilterViewModel: ObservableObject, Identifiable {
     @Published var services: [ServiceGroupViewModel]
     @Published var selectedCategoriesIds: Set<CategoryOptionViewModel.ID>
     @Published var selectedServicesIds: Set<ServiceOptionViewModel.ID>
+    @Published var availableServicesIds: Set<ServiceOptionViewModel.ID>
     @Published var filter: AtmFilter
     
     private var bindings = Set<AnyCancellable>()
 
-    init(categories: [CategoryOptionViewModel], services: [ServiceGroupViewModel], selectedCategoriesIds: Set<CategoryOptionViewModel.ID>, selectedServicesIds: Set<ServiceOptionViewModel.ID>, filter: AtmFilter) {
+    init(categories: [CategoryOptionViewModel], services: [ServiceGroupViewModel], selectedCategoriesIds: Set<CategoryOptionViewModel.ID>, selectedServicesIds: Set<ServiceOptionViewModel.ID>, availableServicesIds: Set<ServiceOptionViewModel.ID>, filter: AtmFilter) {
         
         self.categories = categories
         self.services = services
         self.selectedCategoriesIds = selectedCategoriesIds
         self.selectedServicesIds = selectedServicesIds
+        self.availableServicesIds = availableServicesIds
         self.filter = filter
     }
     
-    init(atmCategories: [AtmData.Category], atmServices: [AtmServiceData], filter: AtmFilter?) {
+    init(atmCategories: [AtmData.Category], atmServices: [AtmServiceData], atmAvailableServices: [AtmData.Category: Set<AtmServiceData.ID>], filter: AtmFilter) {
         
         self.categories = []
         self.services = []
         self.selectedServicesIds = []
         self.selectedCategoriesIds = []
+        self.availableServicesIds = []
         self.filter = .init(categories: [], services: [])
         
         self.categories = atmCategories.map({ category in
             
-            CategoryOptionViewModel(category: category, action: { [weak self] optionId in self?.action.send(PlacesFilterViewModelAction.ToggleCategoryOption(id: optionId))})
+            CategoryOptionViewModel(category: category, availableServicesIds: atmAvailableServices[category], action: { [weak self] optionId in self?.action.send(PlacesFilterViewModelAction.ToggleCategoryOption(id: optionId))})
         })
         
-        let servicesOptions = atmServices.map { service in
+        var serviceGroups = [ServiceGroupViewModel]()
+        for type in AtmServiceData.Kind.allCases {
             
-            ServiceOptionViewModel(service: service, action: { [weak self] optionId in self?.action.send(PlacesFilterViewModelAction.ToggleServiceOption(id: optionId)) })
+            let typeAtmServices = atmServices.filter({ $0.type == type })
+            let servicesOptions = typeAtmServices.map { service in
+                
+                ServiceOptionViewModel(service: service, action: { [weak self] optionId in self?.action.send(PlacesFilterViewModelAction.ToggleServiceOption(id: optionId)) })
+            }
+            
+            let servicesGroup = ServiceGroupViewModel(title: type.name, options: servicesOptions)
+            serviceGroups.append(servicesGroup)
         }
-        
-        let servicesGroup = ServiceGroupViewModel(title: "Услуги", options: servicesOptions)
-        self.services = [servicesGroup]
-        
-        if let filter = filter {
-            
-            self.selectedCategoriesIds = Set(filter.categories.map{ $0.rawValue })
-            self.selectedServicesIds = filter.services
-            
-        } else {
-            
-            self.selectedCategoriesIds = Set(categories.map{ $0.id })
-            self.selectedServicesIds = Set(services.flatMap({ $0.options }).map({ $0.id }))
-        }
+
+        self.services = serviceGroups
+        self.selectedCategoriesIds = Set(filter.categories.map{ $0.rawValue })
+        self.selectedServicesIds = filter.services
         
         bind()
     }
@@ -90,12 +91,9 @@ class PlacesFilterViewModel: ObservableObject, Identifiable {
                     
                 case let payload as PlacesFilterViewModelAction.ToggleServiceOption:
                     if selectedServicesIds.contains(payload.id) {
-                        
-                        guard selectedServicesIds.count > 1 else {
-                            return
-                        }
-                        
+
                         selectedServicesIds.remove(payload.id)
+                        
                     } else {
                         
                         selectedServicesIds.insert(payload.id)
@@ -108,8 +106,14 @@ class PlacesFilterViewModel: ObservableObject, Identifiable {
         
         $selectedCategoriesIds
             .receive(on: DispatchQueue.main)
-            .sink {[unowned self] _ in
+            .sink {[unowned self] selectedCategoriesIds in
                
+                let selectedCategories = categories.filter({ selectedCategoriesIds.contains($0.id)})
+                availableServicesIds = selectedCategories.reduce(Set<ServiceOptionViewModel.ID>(), { partialResult, category in
+                    
+                    return partialResult.union(category.availableServicesIds)
+                })
+                
                 updateFilter()
                
             }.store(in: &bindings)
@@ -126,7 +130,8 @@ class PlacesFilterViewModel: ObservableObject, Identifiable {
     private func updateFilter() {
         
         let selectedCategories = Set(selectedCategoriesIds.compactMap{ AtmData.Category(rawValue: $0) })
-        self.filter = AtmFilter(categories: selectedCategories, services: selectedServicesIds)
+        let actualSelectedServicesIds = selectedServicesIds.intersection(availableServicesIds)
+        self.filter = AtmFilter(categories: selectedCategories, services: actualSelectedServicesIds)
     }
 }
 
@@ -140,13 +145,15 @@ extension PlacesFilterViewModel {
         let category: AtmData.Category
         let icon: Image
         let name: String
+        let availableServicesIds: Set<ServiceOptionViewModel.ID>
         let action: (CategoryOptionViewModel.ID) -> Void
         
-        init(category: AtmData.Category, action: @escaping (CategoryOptionViewModel.ID) -> Void) {
+        init(category: AtmData.Category, availableServicesIds: Set<ServiceOptionViewModel.ID>?, action: @escaping (CategoryOptionViewModel.ID) -> Void) {
             
             self.category = category
             self.icon = category.icon
             self.name = category.name
+            self.availableServicesIds = availableServicesIds ?? []
             self.action = action
         }
     }
@@ -204,5 +211,5 @@ enum PlacesFilterViewModelAction {
 
 extension PlacesFilterViewModel {
     
-    static let sample = PlacesFilterViewModel(atmCategories: [.office, .atm, .terminal], atmServices: [.init(id: 1, name: "Без выходных"), .init(id: 2, name: "Вклады"), .init(id: 3, name: "Потреб. кредиты"), .init(id: 4, name: "Ипотека"), .init(id: 5, name: "Выдача наличных"), .init(id: 6, name: "Прием наличных"), .init(id: 7, name: "Денежные переводы"), .init(id: 8, name: "Оплата услуг"), .init(id: 9, name: "Аккредитивы"), .init(id: 10, name: "регистрация в ЕБС"), .init(id: 11, name: "Обслуживание юридических лиц")], filter: nil)
+    static let sample = PlacesFilterViewModel(atmCategories: [.office, .atm, .terminal], atmServices: [.init(id: 1, name: "Без выходных", type: .service), .init(id: 2, name: "Вклады", type: .service), .init(id: 3, name: "Потреб. кредиты", type: .service), .init(id: 4, name: "Ипотека", type: .service), .init(id: 5, name: "Выдача наличных", type: .service), .init(id: 6, name: "Прием наличных", type: .other), .init(id: 7, name: "Денежные переводы", type: .other), .init(id: 8, name: "Оплата услуг", type: .other), .init(id: 9, name: "Аккредитивы", type: .other), .init(id: 10, name: "регистрация в ЕБС", type: .other), .init(id: 11, name: "Обслуживание юридических лиц", type: .other)], atmAvailableServices: [:], filter: .initial)
 }
