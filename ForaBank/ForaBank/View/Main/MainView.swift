@@ -13,48 +13,50 @@ struct MainView: View {
     @ObservedObject var viewModel: MainViewModel
     
     var body: some View {
-        
-        VStack {
-            
-            if viewModel.isRefreshing == true {
+        NavigationView {
+            VStack {
                 
-                RefreshView()
-            }
-            
-            ScrollView(showsIndicators: false) {
-                
-                ScrollViewReader { proxy in
+                if viewModel.isRefreshing == true {
                     
-                    VStack(spacing: 20) {
+                    RefreshView()
+                }
+                
+                ScrollView(showsIndicators: false) {
+                    
+                    ScrollViewReader { proxy in
                         
-                        ForEach(viewModel.sections) { section in
+                        VStack(spacing: 20) {
                             
-                            switch section {
-                            case let productsSectionViewModel as MainSectionProductsView.ViewModel:
-                                MainSectionProductsView(viewModel: productsSectionViewModel)
+                            ForEach(viewModel.sections) { section in
                                 
-                            case let fastOperationViewModel as MainSectionFastOperationView.ViewModel:
-                                MainSectionFastOperationView(viewModel: fastOperationViewModel)
-                                
-                            case let promoViewModel  as MainSectionPromoView.ViewModel:
-                                MainSectionPromoView(viewModel: promoViewModel)
-                                
-                            case let currencyViewModel as MainSectionCurrencyView.ViewModel:
-                                MainSectionCurrencyView(viewModel: currencyViewModel)
-                                
-                            case let openProductViewModel as MainSectionOpenProductView.ViewModel:
-                                MainSectionOpenProductView(viewModel: openProductViewModel)
-                                
-                            default:
-                                EmptyView()
+                                switch section {
+                                case let productsSectionViewModel as MainSectionProductsView.ViewModel:
+                                    MainSectionProductsView(viewModel: productsSectionViewModel)
+                                    
+                                case let fastOperationViewModel as MainSectionFastOperationView.ViewModel:
+                                    MainSectionFastOperationView(viewModel: fastOperationViewModel)
+                                    
+                                case let promoViewModel  as MainSectionPromoView.ViewModel:
+                                    MainSectionPromoView(viewModel: promoViewModel)
+                                    
+                                case let currencyViewModel as MainSectionCurrencyView.ViewModel:
+                                    MainSectionCurrencyView(viewModel: currencyViewModel)
+                                    
+                                case let openProductViewModel as MainSectionOpenProductView.ViewModel:
+                                    MainSectionOpenProductView(viewModel: openProductViewModel)
+                                    
+                                default:
+                                    EmptyView()
+                                }
                             }
                         }
                     }
+                    
                 }
-
+                .padding(20)
             }
-            .padding(20)
         }
+        .navigationBarTitle("", displayMode: .inline)
     }
 }
 

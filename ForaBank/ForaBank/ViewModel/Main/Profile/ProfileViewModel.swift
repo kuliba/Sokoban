@@ -16,20 +16,27 @@ class ProfileViewModel: ObservableObject {
     @Published var productViewModel: ProfileCardViewComponent.ViewModel
     @Published var buttonsViewModel: ProfileButtonsSectionView.ViewModel
     @Published var detailAccountViewModel: DetailAccountViewComponent.ViewModel?
-    @Published var historyViewModel: HistoryViewComponent.ViewModel
+    @Published var historyViewModel: HistoryViewComponent.ViewModel?
     
     private var bindings = Set<AnyCancellable>()
     private let model: Model
     
-    internal init(productViewModel: ProfileCardViewComponent.ViewModel, buttonsViewModel: ProfileButtonsSectionView.ViewModel, detailAccountViewModel: DetailAccountViewComponent.ViewModel?, historyViewModel: HistoryViewComponent.ViewModel, model: Model) {
+    internal init(productViewModel: ProfileCardViewComponent.ViewModel, historyViewModel: HistoryViewComponent.ViewModel?, model: Model = .emptyMock) {
         
         self.model = model
         self.productViewModel = productViewModel
-        self.buttonsViewModel = buttonsViewModel
-        self.detailAccountViewModel = detailAccountViewModel
+        
+        self.detailAccountViewModel = nil
+        
+        self.buttonsViewModel = .init(kind: productViewModel.product.productType, debit: true, credit: true)
+        
+        if productViewModel.product.productType == .loan {
+            
+            self.detailAccountViewModel = nil
+        }
+        
         self.historyViewModel = historyViewModel
         
-        model.action.send(ModelAction.Products.Update.Total.Single.Request.init(productType: .card))
         bind()
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 //MARK: - ViewModel
 
@@ -17,11 +18,51 @@ extension ProfileCardViewComponent {
         @State var product: ProductView.ViewModel
         @Published var moreButton: Bool
         
-        init( products: [ProductView.ViewModel], product: ProductView.ViewModel, moreButton: Bool) {
+        
+        private let model: Model
+        private var bindings = Set<AnyCancellable>()
+        
+        internal init( products: [ProductView.ViewModel] = [], product: ProductView.ViewModel, moreButton: Bool, model: Model = .emptyMock) {
             
-            self.products = products.filter({$0.productType == product.productType})
+            self.products = products
             self.moreButton = moreButton
             self.product = product
+            self.model = model
+            
+            bind()
+            
+        }
+        
+        init(_ model: Model) {
+            
+            self.products = []
+            self.product = .init(with: .init(id: 0, productType: .card, number: "", numberMasked: "", accountNumber: "", balance: 1, balanceRub: nil, currency: "", mainField: "", additionalField: nil, customName: "", productName: "", openDate: Date(), ownerId: 0, branchId: 0, allowCredit: true, allowDebit: true, extraLargeDesign: .init(description: ""), largeDesign: .init(description: ""), mediumDesign: .init(description: ""), smallDesign: .init(description: ""), fontDesignColor: .init(description: ""), background: [.init(description: "")]), statusAction: {}, action: {})
+            self.moreButton = false
+            self.model = model
+            
+            bind()
+        }
+        
+        private func bind() {
+            
+            model.products
+                .receive(on: DispatchQueue.main)
+                .sink {[unowned self] products in
+                    
+                    var items = [ProductView.ViewModel]()
+                    
+                    if let prodictTypeList = products[self.product.productType] {
+                        
+                        for productType in prodictTypeList {
+                            
+                            items.append(.init(with: productType, statusAction: {}, action: {}))
+                            
+                        }
+                    }
+                    
+                    self.products = items
+                    
+                }.store(in: &bindings)
         }
     }
 }
@@ -139,7 +180,7 @@ extension ProfileCardViewComponent {
                     
                     HStack(spacing: 6) {
                         
-                        if let backgroundImage =                             viewModel.product.appearance.background.image {
+                        if let backgroundImage = viewModel.product.appearance.background.image {
                             
                             backgroundImage
                                 .resizable()
@@ -162,7 +203,7 @@ extension ProfileCardViewComponent {
                     
                     HStack(spacing: 6) {
                         
-                        if let backgroundImage =                             viewModel.product.appearance.background.image {
+                        if let backgroundImage = viewModel.product.appearance.background.image {
                             
                             backgroundImage
                                 .resizable()

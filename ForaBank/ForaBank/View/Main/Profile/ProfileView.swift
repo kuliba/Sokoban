@@ -17,7 +17,7 @@ struct ProfileView: View {
             
             HStack {
             
-                Text(viewModel.productViewModel.products[0].name)
+//                Text(viewModel.productViewModel.products[0].name)
             }
             
             ScrollView(showsIndicators: false) {
@@ -28,13 +28,13 @@ struct ProfileView: View {
                         
                         VStack {
                             
-                            ProfileCardViewComponent(viewModel: .init(products: viewModel.productViewModel.products, product: viewModel.productViewModel.products[0], moreButton: true))
+                            ProfileCardViewComponent(viewModel: .init(products: [.classic], product: .classic, moreButton: true))
                         }
                     }
-                    .background( Image("Substrate Deposit"), alignment: .top)
+                    .background( viewModel.productViewModel.product.appearance.background.image, alignment: .top)
                     .edgesIgnoringSafeArea(.top)
                     
-                    ProfileButtonsSectionView(viewModel: viewModel.buttonsViewModel)
+                    ProfileButtonsSectionView(viewModel: .init(kind: viewModel.productViewModel.product.productType, debit: true, credit: true))
                     
                     if let detailAccount = viewModel.detailAccountViewModel {
                         
@@ -42,7 +42,7 @@ struct ProfileView: View {
                             .padding(.horizontal, 20)
                     }
                     
-                    HistoryViewComponent(viewModel: viewModel.historyViewModel)
+                    HistoryViewComponent(viewModel: viewModel.historyViewModel ?? .init(dateOperations: [.init(date: "", operations: [.init(title: "", image: .ic16Sun, subtitle: "", amount: "", type: .debit)])], spending: nil))
                 }
             }
             .navigationBarTitle("title", displayMode: .inline)
@@ -60,5 +60,5 @@ struct ProfileView_Previews: PreviewProvider {
 
 extension ProfileViewModel {
     
-    static let sample = ProfileViewModel(productViewModel: .init(products: [.notActivateProfile, .accountProfile, .classicProfile, .blockedProfile], product: .classicProfile, moreButton: true), buttonsViewModel: .sample, detailAccountViewModel: .init(with: .init(), status: .active, isCredit: false, productName: "", longInt: nil), historyViewModel: .init( dateOperations: [.init(date: "12 декабря", operations: [.init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit)])], spending: .init(value: [100, 300])), model: .emptyMock)
+    static let sample = ProfileViewModel(productViewModel: .init(products: [.notActivateProfile, .accountProfile, .classicProfile, .blockedProfile], product: .classicProfile, moreButton: true), historyViewModel: .init( dateOperations: [.init(date: "12 декабря", operations: [.init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit)])], spending: .init(value: [100, 300])), model: .emptyMock)
 }
