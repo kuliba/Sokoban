@@ -455,6 +455,8 @@
 		68D099D9273B5D110017D777 /* PaymentByPhoneCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D099D8273B5D110017D777 /* PaymentByPhoneCoordinator.swift */; };
 		68D3F8D327CEC34E002753BD /* ProfileButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D3F8D227CEC34D002753BD /* ProfileButtonView.swift */; };
 		68D3F8D527CECB00002753BD /* ProfileButtonsSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D3F8D427CECB00002753BD /* ProfileButtonsSectionView.swift */; };
+		68DF16CA2804F58E005D8D3E /* Model+Statement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DF16C92804F58E005D8D3E /* Model+Statement.swift */; };
+		68DF16CE2804F97E005D8D3E /* StatementSample.json in Resources */ = {isa = PBXBuildFile; fileRef = 68DF16CD2804F97E005D8D3E /* StatementSample.json */; };
 		68E3461F27030F4F00D6FE37 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E3461E27030F4F00D6FE37 /* ChatViewController.swift */; };
 		68E3462227033D9100D6FE37 /* LaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E3462127033D9100D6FE37 /* LaunchViewController.swift */; };
 		68E346242705C6FA00D6FE37 /* ProductStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 68E346232705C6FA00D6FE37 /* ProductStoryboard.storyboard */; };
@@ -1504,6 +1506,8 @@
 		68D099D8273B5D110017D777 /* PaymentByPhoneCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentByPhoneCoordinator.swift; sourceTree = "<group>"; };
 		68D3F8D227CEC34D002753BD /* ProfileButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileButtonView.swift; sourceTree = "<group>"; };
 		68D3F8D427CECB00002753BD /* ProfileButtonsSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileButtonsSectionView.swift; sourceTree = "<group>"; };
+		68DF16C92804F58E005D8D3E /* Model+Statement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Statement.swift"; sourceTree = "<group>"; };
+		68DF16CD2804F97E005D8D3E /* StatementSample.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = StatementSample.json; sourceTree = "<group>"; };
 		68E3461E27030F4F00D6FE37 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		68E3462127033D9100D6FE37 /* LaunchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchViewController.swift; sourceTree = "<group>"; };
 		68E346232705C6FA00D6FE37 /* ProductStoryboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ProductStoryboard.storyboard; sourceTree = "<group>"; };
@@ -3423,6 +3427,7 @@
 				F8E529B327BBABF600222394 /* AuthProductsViewModel+Preview.swift */,
 				770DCE9727BC0475004099C1 /* AuthPinCodeViewModel+Preview.swift */,
 				7769F5BD27D7C9ED00F80607 /* ProductsListSample.json */,
+				68DF16CD2804F97E005D8D3E /* StatementSample.json */,
 			);
 			path = PreviewContent;
 			sourceTree = "<group>";
@@ -3629,6 +3634,7 @@
 				77C3829027E0CA2200B5246E /* Model+General.swift */,
 				770DCE8E27BBE6AB004099C1 /* Model+Auth.swift */,
 				7769F5C127D8AC4800F80607 /* Model+Products.swift */,
+				68DF16C92804F58E005D8D3E /* Model+Statement.swift */,
 				77583FF827AED4E700251969 /* Model+Dictionary.swift */,
 				7758400C27B1442F00251969 /* Model+Payments.swift */,
 				77EC58ED27723A5A0054D75C /* Model+Templates.swift */,
@@ -5924,6 +5930,7 @@
 				ED51D66E2688B27E005FD655 /* SeparatorView.xib in Resources */,
 				EDE212FB27432651005D9821 /* DateChooseView.xib in Resources */,
 				ED147D4C26BAD7E0002F66C8 /* BottomInputView.xib in Resources */,
+				68DF16CE2804F97E005D8D3E /* StatementSample.json in Resources */,
 				EDDFE3A72756BEC600F57C71 /* DetailInformationViewCell.xib in Resources */,
 				EDA563B026F881D60093F0C8 /* BanksView.xib in Resources */,
 				EDB143CC265FDEC90028EF5A /* Roboto-BlackItalic.ttf in Resources */,
@@ -6585,6 +6592,7 @@
 				0BA14E18270DF8F60098E422 /* AppLockerHelper.swift in Sources */,
 				775E068327E8921E006A9886 /* Model+PaymentsTaxesFMSMock.swift in Sources */,
 				EDFA7525277D181500EEB4AE /* TermsDepositTableViewCell.swift in Sources */,
+				68DF16CA2804F58E005D8D3E /* Model+Statement.swift in Sources */,
 				0BA09E3426B08E1A0065D623 /* GetFullBankInfoListDecodableModel.swift in Sources */,
 				F82ED55827D7BA6F008485AB /* MyProductsSectionAllMoneyViewComponent.swift in Sources */,
 				77499C412773A40100F6C079 /* OperationDetailView.swift in Sources */,

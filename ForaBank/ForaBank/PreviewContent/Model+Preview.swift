@@ -26,6 +26,21 @@ extension Model {
         
         return model
     }()
+    
+    static let statementMock: Model = {
+        
+        let model = Model(serverAgent: ServerAgentEmptyMock(), localAgent: LocalAgentEmptyMock(), keychainAgent: KeychainAgentMock(), settingsAgent: SettingsAgentMock(), biometricAgent: BiometricAgentMock())
+        
+        let bundle = Bundle(for: Model.self)
+        let url = bundle.url(forResource: "StatementSample", withExtension: "json")!
+        let json = try! Data(contentsOf: url)
+        let decoder = JSONDecoder.serverDate
+        let statement = try! decoder.decode([ProductStatementData].self, from: json)
+        
+        model.statement.value = statement
+        
+        return model
+    }()
 }
 
 extension ImageData {

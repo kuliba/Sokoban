@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 extension HistoryViewComponent {
     
@@ -15,10 +16,40 @@ extension HistoryViewComponent {
         let dateOperations: [DateOperations]
         let spending: SegmentedBar.ViewModel?
         
-        internal init( dateOperations: [HistoryViewComponent.ViewModel.DateOperations], spending: SegmentedBar.ViewModel?) {
+        private let model: Model
+        private var bindings = Set<AnyCancellable>()
+        
+        internal init( dateOperations: [HistoryViewComponent.ViewModel.DateOperations], spending: SegmentedBar.ViewModel?, model: Model = .emptyMock) {
             
             self.dateOperations = dateOperations
             self.spending = spending
+            self.model = model
+            
+            bind()
+        }
+        
+        init(_ model: Model) {
+            self.dateOperations = [.init(date: "", operations: [.init(title: "", image: .ic16MoreHorizontal, subtitle: "", amount: "", type: .debit)])]
+            self.spending = nil
+            self.model = model
+            
+            bind()
+        }
+        
+        private func bind() {
+            
+            model.statement
+                .receive(on: DispatchQueue.main)
+                .sink {[unowned self] operation in
+                    
+                    var statement = [DateOperations]()
+                    
+                    for item in operation {
+                        print(item)
+                    }
+                    
+                    
+                }.store(in: &bindings)
         }
         
         struct DateOperations: Identifiable {
