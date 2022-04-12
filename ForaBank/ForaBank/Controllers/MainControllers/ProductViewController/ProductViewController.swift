@@ -292,7 +292,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         card.card = product
         card.backgroundImageView.image = product?.XLDesign?.convertSVGStringToImage()
         card.backgroundImageView.sizeToFit()
-        card.addSubview(activateSlider)
         
         activateSlider.isEnabled = true
         activateSlider.delegate = self
@@ -442,8 +441,10 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
                 activateSlider.isHidden = false
                 activateSlider.isEnabled = true
                 activateSlider.delegate = self
-                
+                card.addSubview(activateSlider)
+
             } else {
+
                 activateSlider.isHidden = true
             }
             
