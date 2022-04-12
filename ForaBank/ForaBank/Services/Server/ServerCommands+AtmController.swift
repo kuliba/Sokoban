@@ -171,5 +171,85 @@ extension ServerCommands {
                 }
             }
         }
+        
+        /*
+         http://192.168.50.113:8080/swagger-ui/index.html#/AtmController/getCity
+         */
+        
+        struct GetCityList: ServerCommand {
+
+            let endpoint = "/atm/v2/getCityList"
+            let method: ServerCommandMethod = .get
+            let parameters: [ServerCommandParameter]?
+            
+            struct Payload: Encodable {}
+                        
+            struct Response: ServerResponse {
+
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: AtmCityListData?
+                
+                struct AtmCityListData: Decodable, Equatable {
+                    
+                    let serial: String
+                    let list: [AtmCityData]
+                }
+            }
+            
+            internal init(serial: String?) {
+
+                if let serial = serial {
+                    
+                    var parameters = [ServerCommandParameter]()
+                    parameters.append(.init(name: "serial", value: serial))
+                    self.parameters = parameters
+                    
+                } else {
+                    
+                    self.parameters = nil
+                }
+            }
+        }
+        
+        /*
+         http://192.168.50.113:8080/swagger-ui/index.html#/AtmController/getRegion
+         */
+        
+        struct GetRegionList: ServerCommand {
+
+            let endpoint = "/atm/v2/getRegionList"
+            let method: ServerCommandMethod = .get
+            let parameters: [ServerCommandParameter]?
+            
+            struct Payload: Encodable {}
+                        
+            struct Response: ServerResponse {
+
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: AtmRegionListData?
+                
+                struct AtmRegionListData: Decodable, Equatable {
+                    
+                    let serial: String
+                    let list: [AtmRegionData]
+                }
+            }
+            
+            internal init(serial: String?) {
+
+                if let serial = serial {
+                    
+                    var parameters = [ServerCommandParameter]()
+                    parameters.append(.init(name: "serial", value: serial))
+                    self.parameters = parameters
+                    
+                } else {
+                    
+                    self.parameters = nil
+                }
+            }
+        }
     }
 }
