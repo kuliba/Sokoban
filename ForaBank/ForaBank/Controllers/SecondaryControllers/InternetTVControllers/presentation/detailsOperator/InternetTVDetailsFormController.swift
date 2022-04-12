@@ -11,7 +11,7 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
         let storyboard = UIStoryboard(name: "InternetTV", bundle: nil)
         return storyboard.instantiateViewController(withIdentifier: "InternetTVDetail") as? InternetTVDetailsFormController
     }
-    
+    var template: PaymentTemplateData?
     var fromPaymentVc = false
     var operatorData: GKHOperatorsModel?
     var latestOperation: InternetLatestOpsDO?
@@ -214,24 +214,68 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
     }
 
     func setupToolbar() {
-        let operatorsName = operatorData?.name ?? ""
-        let inn = operatorData?.synonymList.first ?? ""
-        navigationItem.titleView = setTitle(title: operatorsName, subtitle: "ИНН " +  inn )
-
-        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
-        imageView.contentMode = .scaleAspectFit
-
-        if let svg = operatorData?.logotypeList.first?.svgImage {
-            imageView.image = svg.convertSVGStringToImage()
-            navigationItem.rightBarButtonItem = UIBarButtonItem(customView: imageView)
+        
+        if let template = template {
+            title = template.name
+            let button = UIBarButtonItem(image: UIImage(named: "edit-2"),
+                                         landscapeImagePhone: nil,
+                                         style: .done,
+                                         target: self,
+                                         action: #selector(updateNameTemplate))
+            button.tintColor = .black
+            navigationItem.rightBarButtonItem = button
+            
         } else {
-            imageView.image = UIImage(named: "GKH")
-            navigationItem.rightBarButtonItem = UIBarButtonItem(customView: imageView)
+            
+            let operatorsName = operatorData?.name ?? ""
+            let inn = operatorData?.synonymList.first ?? ""
+            navigationItem.titleView = setTitle(title: operatorsName, subtitle: "ИНН " +  inn )
+            
+            let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+            imageView.contentMode = .scaleAspectFit
+            
+            if let svg = operatorData?.logotypeList.first?.svgImage {
+                imageView.image = svg.convertSVGStringToImage()
+                navigationItem.rightBarButtonItem = UIBarButtonItem(customView: imageView)
+            } else {
+                imageView.image = UIImage(named: "GKH")
+                navigationItem.rightBarButtonItem = UIBarButtonItem(customView: imageView)
+            }
+            navigationItem.hidesSearchBarWhenScrolling = false
+            definesPresentationContext = true
         }
-        navigationItem.hidesSearchBarWhenScrolling = false
-        definesPresentationContext = true
     }
 
+    @objc private func updateNameTemplate() {
+        self.showInputDialog(title: "Название шаблона",
+                             actionTitle: "Сохранить",
+                             cancelTitle: "Отмена",
+                             inputText: template?.name,
+                             inputPlaceholder: "Введите название шаблона",
+                             actionHandler:  { text in
+            
+            guard let text = text else { return }
+            guard let templateId = self.template?.paymentTemplateId else { return }
+            
+            if text.isEmpty != true {
+                if text.count < 20 {
+                Model.shared.action.send(ModelAction.PaymentTemplate.Update.Requested(
+                    name: text,
+                    parameterList: nil,
+                    paymentTemplateId: templateId))
+                    
+                // FIXME: В рефактре нужно слушатель на обновление title
+                self.title = text
+                
+                } else {
+                    self.showAlert(with: "Ошибка", and: "В названии шаблона не должно быть более 20 символов")
+                }
+            } else {
+                self.showAlert(with: "Ошибка", and: "Название шаблона не должно быть пустым")
+            }
+        })
+    }
+    
     func setTitle(title:String, subtitle:String) -> UIView {
         let titleLabel = UILabel(frame: CGRect(x: 0, y: -2, width: 0, height: 0))
         titleLabel.backgroundColor = .clear
@@ -281,7 +325,25 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
                 }
             })
             self.footerView.cardListView.cardList = filterProduct
-            self.footerView.cardFromField.model = filterProduct.first
+            
+            if filterProduct.count > 0 {
+                
+                if let cardId = self.template?.parameterList.first?.payer.cardId {
+                    
+                    let card = filterProduct.first(where: { $0.id == cardId })
+                    self.footerView.cardFromField.model = card
+                    
+                } else if let accountId = self.template?.parameterList.first?.payer.accountId {
+                    
+                    let card = filterProduct.first(where: { $0.id == accountId })
+                    self.footerView.cardFromField.model = card
+                    
+                } else {
+                    
+                    self.footerView.cardFromField.model = filterProduct.first
+                    
+                }
+            }
         }
     }
 
