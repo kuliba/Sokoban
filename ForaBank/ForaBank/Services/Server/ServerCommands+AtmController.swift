@@ -99,7 +99,7 @@ extension ServerCommands {
          */
         struct GetAtmTypeList: ServerCommand {
 
-            let endpoint = "/atm/getAtmTypeList"
+            let endpoint = "/atm/v2/getAtmTypeList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
             
@@ -138,7 +138,7 @@ extension ServerCommands {
          */
         struct GetMetroStationList: ServerCommand {
 
-            let endpoint = "/atm/getMetroStationList"
+            let endpoint = "/atm/v2/getMetroStationList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
             
