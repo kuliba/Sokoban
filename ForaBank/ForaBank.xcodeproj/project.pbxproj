@@ -762,6 +762,12 @@
 		77F5CE0F28056DC000611B66 /* LocationAgentMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5CE0E28056DC000611B66 /* LocationAgentMock.swift */; };
 		77F5CE1128056EF600611B66 /* Model+Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5CE1028056EF600611B66 /* Model+Location.swift */; };
 		77F5CE132805CD1F00611B66 /* AtmRadius.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5CE122805CD1F00611B66 /* AtmRadius.swift */; };
+		77F5CE1528060A9600611B66 /* AtmCityData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5CE1428060A9600611B66 /* AtmCityData.swift */; };
+		77F5CE1728060BCC00611B66 /* AtmRegionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5CE1628060BCC00611B66 /* AtmRegionData.swift */; };
+		77F5CE1928060DF100611B66 /* GetAtmCityListResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 77F5CE1828060DF100611B66 /* GetAtmCityListResponseGeneric.json */; };
+		77F5CE1B28060E1D00611B66 /* GetAtmCityListResponseServer.json in Resources */ = {isa = PBXBuildFile; fileRef = 77F5CE1A28060E1D00611B66 /* GetAtmCityListResponseServer.json */; };
+		77F5CE1D28060E4E00611B66 /* GetAtmRegionListResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 77F5CE1C28060E4E00611B66 /* GetAtmRegionListResponseGeneric.json */; };
+		77F5CE1F28060E6800611B66 /* GetAtmRegionListResponseServer.json in Resources */ = {isa = PBXBuildFile; fileRef = 77F5CE1E28060E6800611B66 /* GetAtmRegionListResponseServer.json */; };
 		77FF66CD27B42DD5009FEA09 /* Model+PaymentsTaxesFMS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FF66CC27B42DD5009FEA09 /* Model+PaymentsTaxesFMS.swift */; };
 		77FF670327B446D7009FEA09 /* AsyncAwaitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FF670227B446D7009FEA09 /* AsyncAwaitTests.swift */; };
 		77FF670527B4B07B009FEA09 /* PaymentsDataModel+Parameter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FF670427B4B07B009FEA09 /* PaymentsDataModel+Parameter.swift */; };
@@ -1844,6 +1850,12 @@
 		77F5CE0E28056DC000611B66 /* LocationAgentMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAgentMock.swift; sourceTree = "<group>"; };
 		77F5CE1028056EF600611B66 /* Model+Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Location.swift"; sourceTree = "<group>"; };
 		77F5CE122805CD1F00611B66 /* AtmRadius.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtmRadius.swift; sourceTree = "<group>"; };
+		77F5CE1428060A9600611B66 /* AtmCityData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtmCityData.swift; sourceTree = "<group>"; };
+		77F5CE1628060BCC00611B66 /* AtmRegionData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtmRegionData.swift; sourceTree = "<group>"; };
+		77F5CE1828060DF100611B66 /* GetAtmCityListResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetAtmCityListResponseGeneric.json; sourceTree = "<group>"; };
+		77F5CE1A28060E1D00611B66 /* GetAtmCityListResponseServer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetAtmCityListResponseServer.json; sourceTree = "<group>"; };
+		77F5CE1C28060E4E00611B66 /* GetAtmRegionListResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetAtmRegionListResponseGeneric.json; sourceTree = "<group>"; };
+		77F5CE1E28060E6800611B66 /* GetAtmRegionListResponseServer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetAtmRegionListResponseServer.json; sourceTree = "<group>"; };
 		77FF66CC27B42DD5009FEA09 /* Model+PaymentsTaxesFMS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTaxesFMS.swift"; sourceTree = "<group>"; };
 		77FF670227B446D7009FEA09 /* AsyncAwaitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncAwaitTests.swift; sourceTree = "<group>"; };
 		77FF670427B4B07B009FEA09 /* PaymentsDataModel+Parameter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsDataModel+Parameter.swift"; sourceTree = "<group>"; };
@@ -3674,6 +3686,8 @@
 				77A76A7727FAFCEE00A271B3 /* AtmServiceData.swift */,
 				77A76A7927FAFD3E00A271B3 /* AtmTypeData.swift */,
 				77A76A7B27FAFDCB00A271B3 /* AtmMetroStationData.swift */,
+				77F5CE1428060A9600611B66 /* AtmCityData.swift */,
+				77F5CE1628060BCC00611B66 /* AtmRegionData.swift */,
 				7744944827FED1BE001E2B9E /* AtmFilter.swift */,
 				77F5CE122805CD1F00611B66 /* AtmRadius.swift */,
 			);
@@ -4133,6 +4147,10 @@
 				77A76A8D27FB0C3C00A271B3 /* GetAtmTypeListResponseServer.json */,
 				77A76A8527FB049000A271B3 /* GetAtmMetroStationListResponseGeneric.json */,
 				77A76A8F27FB4D2200A271B3 /* GetAtmMetroStationListResponseServer.json */,
+				77F5CE1828060DF100611B66 /* GetAtmCityListResponseGeneric.json */,
+				77F5CE1A28060E1D00611B66 /* GetAtmCityListResponseServer.json */,
+				77F5CE1C28060E4E00611B66 /* GetAtmRegionListResponseGeneric.json */,
+				77F5CE1E28060E6800611B66 /* GetAtmRegionListResponseServer.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -6174,6 +6192,7 @@
 				682092C527B16316003DCAFD /* GetFSSPDocumentListResponseGeneric.json in Resources */,
 				77517FC527A94F7A005CFB77 /* CreateTransferResponseMin.json in Resources */,
 				6820925227A9D3E1003DCAFD /* GetFullBankInfoListResponseGenericMin.json in Resources */,
+				77F5CE1B28060E1D00611B66 /* GetAtmCityListResponseServer.json in Resources */,
 				68E7652F27970137005860FE /* DoRegistrationResponseGeneric.json in Resources */,
 				68E7653E279713B2005860FE /* GetCodeResponseGeneric.json in Resources */,
 				68AD33F527985B9B00647665 /* KeyExchangeResponseGeneric.json in Resources */,
@@ -6220,6 +6239,7 @@
 				5A5ABFBE27ABCF1E00D548AA /* GetDepositInfoMin.json in Resources */,
 				77517FDA27A981BC005CFB77 /* GetProductListByFilterResponseGeneric.json in Resources */,
 				77517FE427A98E8F005CFB77 /* BlockAccountResponseGeneric.json in Resources */,
+				77F5CE1F28060E6800611B66 /* GetAtmRegionListResponseServer.json in Resources */,
 				682092AC27AC06B6003DCAFD /* GetClientInfoGeneric.json in Resources */,
 				5A5ABFBB27ABCDC700D548AA /* GetDepositInfo.json in Resources */,
 				6820923427A97B44003DCAFD /* UpdateFastPaymentContractResponseGeneric.json in Resources */,
@@ -6239,8 +6259,10 @@
 				682092BF27AC184F003DCAFD /* GetPhoneInfoGeneric.json in Resources */,
 				6820924027A97BDB003DCAFD /* GetCountriesResponseGeneric.json in Resources */,
 				F8E529B827BE3DDB00222394 /* GetProductCatalogList.json in Resources */,
+				77F5CE1928060DF100611B66 /* GetAtmCityListResponseGeneric.json in Resources */,
 				77517FBB27A94E28005CFB77 /* CreateAnywayTransferResponseMin.json in Resources */,
 				68419314279ED96800B4E184 /* GetCardStatementResponseGenericMin.json in Resources */,
+				77F5CE1D28060E4E00611B66 /* GetAtmRegionListResponseGeneric.json in Resources */,
 				77517FB327A94D21005CFB77 /* GetVerificationCodeResponseGeneric.json in Resources */,
 				77A76A8627FB049000A271B3 /* GetAtmMetroStationListResponseGeneric.json in Resources */,
 				682092CB27B1C667003DCAFD /* GetCountriesResponseGenericServer.json in Resources */,
@@ -6592,6 +6614,7 @@
 				68C8D57026F0DF120076246B /* HistoryTableViewCell.swift in Sources */,
 				687FB23626F0189C004A479F /* ProductViewControllerDataSource.swift in Sources */,
 				EDA5637A26F386AD0093F0C8 /* SettingTableViewController.swift in Sources */,
+				77F5CE1528060A9600611B66 /* AtmCityData.swift in Sources */,
 				775E068527E8A0D1006A9886 /* Model+PaymentsTaxesFNSMock.swift in Sources */,
 				68673B4F26F2F29300F67A8C /* RequisitesViewController.swift in Sources */,
 				A5F15C0B27495F7C00DC91DA /* GlobalModule.swift in Sources */,
@@ -6645,6 +6668,7 @@
 				0BD1CAA026E6C3CD00CFE993 /* GetCurrencyList.swift in Sources */,
 				0BDE453126E2A8CB00B64A0A /* ExtensionGKHMainQR.swift in Sources */,
 				ED92D3A226735A0A006D47B3 /* PaymentByPhoneViewController.swift in Sources */,
+				77F5CE1728060BCC00611B66 /* AtmRegionData.swift in Sources */,
 				6833E0D1273920CE004C070F /* MainTabBarCoordinator.swift in Sources */,
 				EDDFE39D2756926000F57C71 /* GetDepositProductListDecodableModel.swift in Sources */,
 				0B7A18B226836A400007CC75 /* NetworkPDFManager.swift in Sources */,

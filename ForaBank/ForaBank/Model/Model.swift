@@ -263,6 +263,12 @@ class Model {
                         
                     case .atmMetroStationList:
                         handleDictionaryAtmMetroStationDataList(payload)
+                    
+                    case .atmCityList:
+                        handleDictionaryAtmCityDataList(payload)
+                        
+                    case .atmRegionList:
+                        handleDictionaryAtmRegionDataList(payload)
                     }
                     
                     //MARK: - Deposits
