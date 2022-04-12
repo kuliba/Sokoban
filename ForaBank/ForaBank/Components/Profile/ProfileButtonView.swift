@@ -14,19 +14,13 @@ extension ProfileButtonView {
         let id = UUID()
         let title: Title
         let image: Image
-        let state: State
+        let state: Bool?
         
-        internal init(title: Title, image: Image, state: State) {
+        internal init(title: Title, image: Image, state: Bool? = false) {
             
             self.title = title
             self.image = image
             self.state = state
-        }
-        
-        enum State {
-            
-            case active
-            case disable
         }
         
         enum Title: String {
@@ -62,7 +56,7 @@ struct ProfileButtonView: View {
     
     var body: some View {
         
-        if viewModel.state == .active {
+        if viewModel.state == true {
          
             Button {
                 
@@ -131,12 +125,12 @@ struct ProfileButtonView_Previews: PreviewProvider {
 
 extension ProfileButtonView.ViewModel {
     
-    static let ussualyButton = ProfileButtonView.ViewModel(title: .topUp, image: Image.ic24Plus, state: .active)
+    static let ussualyButton = ProfileButtonView.ViewModel(title: .topUp, image: Image.ic24Plus, state: true)
     
-    static let disableButton = ProfileButtonView.ViewModel(title: .block, image: Image.ic24Lock, state: .disable)
+    static let disableButton = ProfileButtonView.ViewModel(title: .block, image: Image.ic24Lock, state: false)
     
-    static let requisitsButton = ProfileButtonView.ViewModel(title: .requisites, image: Image.ic24File, state: .active)
+    static let requisitsButton = ProfileButtonView.ViewModel(title: .requisites, image: Image.ic24File, state: false)
     
-    static let transferButton = ProfileButtonView.ViewModel(title: .transfer, image: Image.ic24ArrowUpRight, state: .active)
+    static let transferButton = ProfileButtonView.ViewModel(title: .transfer, image: Image.ic24ArrowUpRight)
 }
 
