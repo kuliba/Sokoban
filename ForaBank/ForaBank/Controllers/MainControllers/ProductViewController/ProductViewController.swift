@@ -158,7 +158,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
     }()
     
     
-    lazy var activateSlider: MTSlideToOpenView = {
+    var activateSlider: MTSlideToOpenView = {
         let slide = MTSlideToOpenView(frame: CGRect(x: 26, y: 300, width: 317, height: 56))
         slide.sliderViewTopDistance = 0
         slide.thumbnailViewTopDistance = 4
@@ -166,7 +166,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         slide.sliderCornerRadius = 25
         slide.thumnailImageView.backgroundColor = .white
         slide.draggedView.backgroundColor = .clear
-        slide.delegate = self
         slide.thumnailImageView.image = #imageLiteral(resourceName: "sliderButton").imageFlippedForRightToLeftLayoutDirection()
         slide.showSliderText = true
         slide.textLabelLeadingDistance = 40
@@ -176,7 +175,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-     
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -295,13 +294,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         card.backgroundImageView.sizeToFit()
         card.addSubview(activateSlider)
         
-        if product?.statusPC == "17", product?.status == "Действует" || product?.status == "Выдано клиенту" {
-            
-            activateSlider.isHidden = false
-        } else {
-            activateSlider.isHidden = true
-        }
-        
+        activateSlider.isEnabled = true
         activateSlider.delegate = self
         activateSlider.center(inView: card)
         activateSlider.anchor(width: 167, height: 48)
@@ -349,9 +342,9 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         
         tableView.dataSource = self
         tableView.delegate = self
-
+        
         scrollView.contentSize.height = UIScreen.main.bounds.height + tableView.frame.height + 300
-
+        
         setupButtons()
         setupNavigationColor()
         setupProduct()
@@ -444,6 +437,17 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
                 
             }
             
+            if product?.statusPC == "17", product?.status == "Действует" || product?.status == "Выдано клиенту" {
+                
+                activateSlider.isHidden = false
+                activateSlider.isEnabled = true
+                activateSlider.delegate = self
+                
+            } else {
+                activateSlider.isHidden = true
+            }
+            
+            
         case ProductType.account.rawValue:
             
             card.interestRate.isHidden = true
@@ -460,13 +464,13 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             
             tableView.isHidden = false
             headerView.isHidden = false
+            activateSlider.isHidden = true
             
         case ProductType.deposit.rawValue:
             
             guard let number = self.product?.accountNumber else { return }
             
             self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4)))", color: "#ffffff")
-            
             
             button2.alpha = 0.4
             button2.isUserInteractionEnabled = false
@@ -475,6 +479,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             button4.setImage(UIImage(named: "server"), for: .normal)
             button4.alpha = 1
             button4.isUserInteractionEnabled = true
+            activateSlider.isHidden = true
             
             card.backgroundView?.backgroundColor = UIColor(hexString: "#999999")
             card.interestRate.isHidden = false
@@ -517,6 +522,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             
             card.backgroundView?.backgroundColor = UIColor(hexString: "#999999")
             card.interestRate.isHidden = false
+            activateSlider.isHidden = true
             
             button2.alpha = 0.4
             button2.isUserInteractionEnabled = false
@@ -841,7 +847,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             alertController.addAction(saveAction)
             self.present(alertController, animated: true, completion: nil)
             
-        } else if button4.titleLabel?.text == "Управление"{
+        } else if button4.titleLabel?.text == "Управление" {
             
             presentRequisitsVc(product: product!, true)
             
@@ -945,7 +951,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         if let status = product?.status {
             
             if status == "Заблокирована банком" || status == "Блокирована по решению Клиента" || status == "BLOCKED_DEBET" || status == "BLOCKED_CREDIT" || status == "BLOCKED" || product?.statusPC == "3" || product?.statusPC == "5" || product?.statusPC == "6"  || product?.statusPC == "7"  || product?.statusPC == "20"  || product?.statusPC == "21" {
-
+                
                 
                 card.addSubview(blockView)
                 button.isEnabled = false
@@ -970,7 +976,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
                 }
                 
             } else if product?.statusPC == "17", product?.status == "Действует" || product?.status == "Выдано клиенту"{
-
+                
                 button.isEnabled = false
                 button.alpha = 0.4
                 button2.isEnabled = false
@@ -983,7 +989,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
                 guard let number = self.product?.number else { return }
                 
                 self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4))) · Карта не активирована", color: self.product?.fontDesignColor)
-                activateSlider.isHidden = false
             } else {
                 guard let number = self.product?.number else { return }
                 
@@ -1074,7 +1079,7 @@ extension ProductViewController: MTSlideToOpenDelegate {
 extension ProductViewController: CtoBDelegate {
     
     func sendMyDataBack(product: UserAllCardsModel?, products: [UserAllCardsModel]) {
-
+        
         self.product = product
         
         var filteredProducts = products.filter({$0.productType == product?.productType})
@@ -1087,7 +1092,7 @@ extension ProductViewController: CtoBDelegate {
         
         self.products = Array(filteredProducts[0 ..< filteredProducts.prefix(3).count])
         productsCount = products.filter({$0.productType != product?.productType}).count
-
+        
         let width: CGFloat
         
         if productsCount > 0 {
