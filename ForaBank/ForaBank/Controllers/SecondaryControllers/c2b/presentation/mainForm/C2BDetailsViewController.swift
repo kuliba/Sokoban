@@ -217,6 +217,8 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
             let bankIconSvg = foundBank?[0].svgImage ?? ""
             imgBank.image = bankIconSvg.convertSVGStringToImage()
             labelBank.text = bankRusName
+            C2BSuccessView.bankImg = imgBank.image
+            C2BSuccessView.bankName = bankRusName
         }
         labelRecipient.text = C2BDetailsViewModel.recipientText
         labelRecipientDesc.text = C2BDetailsViewModel.recipientDescription
@@ -244,24 +246,6 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         animationShow(bottomInputView!)
         bottomInputView?.doneButtonIsEnabled(false)
     }
-
-//    func doConfirmation(response: CreateTransferAnswerModel?) {
-//        var ob: InternetTVConfirmViewModel? = nil
-//        if InternetTVMainViewModel.filter == GlobalModule.UTILITIES_CODE {
-//            ob = InternetTVConfirmViewModel(type: .gkh)
-//        }
-//        if InternetTVMainViewModel.filter == GlobalModule.INTERNET_TV_CODE {
-//            ob = InternetTVConfirmViewModel(type: .internetTV)
-//        }
-//        if InternetTVMainViewModel.filter == GlobalModule.PAYMENT_TRANSPORT {
-//            ob = InternetTVConfirmViewModel(type: .transport)
-//        }
-//        let sum = response?.data?.debitAmount ?? 0.0
-//        ob?.sumTransaction = sum.currencyFormatter(symbol: "RUB")
-//        let tax = response?.data?.fee ?? 0.0
-//        ob?.taxTransaction = tax.currencyFormatter(symbol: "RUB")
-//        ob?.cardFrom = cardFromField.model
-//    }
 
     @IBAction func goButton(_ sender: UIButton) {
         doPayment(amountArg: amount)

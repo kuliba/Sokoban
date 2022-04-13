@@ -116,6 +116,17 @@ extension UIViewController {
                                      action: #selector(onClose))
         button.tintColor = .black
         navigationItem.leftBarButtonItem = button
+
+//        let button2 = UIBarButtonItem(image: UIImage(named: "sbp-logo"),
+//                style: .plain,
+//                target: self,
+//                action: #selector(onClose))
+        //button2.tintColor = .black
+
+        let imageViewRight = UIImageView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+        imageViewRight.contentMode = .scaleAspectFit
+        imageViewRight.image = UIImage(named: "sbp-logo")
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: imageViewRight)
     }
     
     func addCloseButton_1() {
@@ -174,8 +185,6 @@ extension UIViewController {
             fatalError("Error: No initial view controller in \(name) storyboard!")
         }
     }
-
-    
 }
 
 extension UIWindow {
@@ -222,7 +231,6 @@ extension UIWindow {
                        width: UIScreen.main.bounds.size.width,
                        height: UIScreen.main.bounds.size.height)
             self.addSubview(UIWindow.visualEffectView)
-            
         }
     }
     
@@ -231,8 +239,6 @@ extension UIWindow {
             UIWindow.visualEffectView.removeFromSuperview()
         }
     }
-    
-    
 }
 
 public final class ObjectAssociation<T: AnyObject> {

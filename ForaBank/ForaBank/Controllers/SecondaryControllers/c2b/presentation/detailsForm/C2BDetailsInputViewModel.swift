@@ -11,12 +11,7 @@ import UIKit
 class C2BDetailsInputViewModel {
     var title: String
     var image: UIImage?
-    var text: String {
-        didSet {
-//            guard let text = self.text else { return }
-            validate(text: text)
-        }
-    }
+    var text: String
     var bottomLabel = ""
     var fieldType: FieldType!
     var isError: Bool = false
@@ -29,18 +24,8 @@ class C2BDetailsInputViewModel {
     var isEditable: Bool
     var activeCurrency: ButtonСurrency?
     var cardModel: GetProductListDatum?
-    /// Инициализирует `ForaInputModel` заданными данными
-    ///
-    /// - Parameters:
-    ///   - title: Обязательный параметр, это Имя в `Placeholder`.
-    ///   - text: Текст записывается в `TextField`, по умолчанию пустой
-    ///   - image: Не обязательный параметр, Иконка слева от `TextField`
-    ///   - type: Обязательный параметр, он конфигуриует View в зависимости от типа `FieldType`
-    ///   - needValidate: Не обязательный параметр,  указывает на то, будет ли TextField обрабатывать ошибки ввода. По умолчанию `false`
-    ///   - errorText: Не обязательный параметр, Текст выводимой ошибки
-    ///   - isEditable: Не обязательный параметр, указывает будет ли поле редактируемым. По умолчанию `true`
-    ///   - showChooseButton: Не обязательный параметр, указывает будет ли отображаться иконка выбора, и по нажатию на view вызывается тот же метод. По умолчанию `false`
-    init(title: String, text: String = "", image: UIImage = UIImage(), type: FieldType = FieldType.text, needValidate: Bool = false, errorText: String = "", isEditable: Bool = true, showChooseButton: Bool = false) {
+
+    init(title: String, text: String = "", image: UIImage? = UIImage(), type: FieldType = FieldType.text, needValidate: Bool = false, errorText: String = "", isEditable: Bool = true, showChooseButton: Bool = false) {
 
         self.isEditable = isEditable
         self.needValidate = isEditable
@@ -52,7 +37,6 @@ class C2BDetailsInputViewModel {
         self.errorText = errorText
         self.showChooseButton = showChooseButton
         configButton()
-
     }
 
     private func configButton() {
@@ -68,17 +52,7 @@ class C2BDetailsInputViewModel {
             showBottomLabel = true
 
         default:
-
-//            showChooseButton = false
             showCurrencyButton = false
-        }
-    }
-
-    private func validate(text: String) {
-        if needValidate {
-            if text.isEmpty {
-//                isError = true
-            }
         }
     }
 

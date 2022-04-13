@@ -16,9 +16,6 @@ class C2BDetailsInputView: UIView {
             guard let viewModel = viewModel else { return }
             if !viewModel.isEditable {
                 textField.text = viewModel.text
-//                placeHolder.alpha = viewModel.text.isEmpty ? 0 : 1
-//                placeHolder.isHidden = viewModel.text.isEmpty
-//                lineView.backgroundColor = viewModel.text.isEmpty ? #colorLiteral(red: 0.9176470588, green: 0.9215686275, blue: 0.9215686275, alpha: 1) : #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1)
             }
             configure()
         }
@@ -67,13 +64,8 @@ class C2BDetailsInputView: UIView {
     
     var didChooseButtonTapped: (() -> Void)?
     var didChangeValueField: ((_ field: UITextField) -> Void)?
-    
-//    //MARK: - Viewlifecicle
-//    override init(frame: CGRect) {
-//        super.init(frame: frame)
-//        //commonInit(viewModel: ForaInputModel(title: ""))
-//    }
-//
+
+
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit(viewModel: C2BDetailsInputViewModel(title: ""))
@@ -109,34 +101,6 @@ class C2BDetailsInputView: UIView {
         viewModel.isError ? showError() : nil
         placeHolder.isHidden = false
         placeHolder.text = viewModel.title
-
-//        let viewType = viewModel.fieldType.self
-//        switch viewType {
-//        case .credidCard:
-//            placeHolder.text = viewModel.title
-//            errorLabel.isHidden = true
-//            placeHolder.isHidden = false
-//            balanceLabel.isHidden = false
-//            placeHolder.alpha = text.isEmpty ? 0 : 1
-//
-//        case .amountOfTransfer:
-//            placeHolder.text = viewModel.title
-//            placeHolder.isHidden = false
-//            errorLabel.isHidden = true
-//            placeHolder.alpha = text.isEmpty ? 0 : 1
-//        case .smsCode:
-//            placeHolder.text = viewModel.title
-//            placeHolder.isHidden = false
-//            placeHolder.alpha = 1
-//            placeHolder.textColor = #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)
-//            errorLabel.isHidden = true
-//
-//        default:
-//            placeHolder.text = viewModel.title
-//            placeHolder.isHidden = text.isEmpty
-//            placeHolder.alpha = text.isEmpty ? 0 : 1
-//        }
-
     }
     
     func configCardView(_ with: GetProductListDatum) {
@@ -188,10 +152,6 @@ class C2BDetailsInputView: UIView {
     @objc private func setupValue() {
         guard let text = textField.text else { return }
         viewModel.text = text
-//        UIView.animate(withDuration: TimeInterval(0.2)) {
-//            self.placeHolder.alpha = text.isEmpty ? 0 : 1
-//            self.placeHolder.isHidden = text.isEmpty// ? true : false
-//        }
     }
     
     @IBAction func rubButtonTapped(_ sender: Any) {

@@ -6,12 +6,12 @@ class C2BSuccessViewController: UIViewController {
     var printFormType: String?
     let mainView = C2BSuccessView()
     let button = UIButton(title: "На главную")
-    var confirmModel: C2BDetailsFormViewModel? {
-        didSet {
-            guard let model = confirmModel else { return }
-            mainView.confirmModel = model
-        }
-    }
+//    var confirmModel: C2BDetailsFormViewModel? {
+//        didSet {
+//            guard let model = confirmModel else { return }
+//            mainView.confirmModel = model
+//        }
+//    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
