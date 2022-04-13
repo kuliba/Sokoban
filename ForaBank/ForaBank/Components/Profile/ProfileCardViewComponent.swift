@@ -14,31 +14,32 @@ extension ProfileCardViewComponent {
     
     class ViewModel: ObservableObject {
         
+        let action: PassthroughSubject<Action, Never> = .init()
+        
         @Published var products: [ProductView.ViewModel]
         @State var product: ProductView.ViewModel
-        @Published var moreButton: Bool
+        @Published var moreButton: Bool = false
         
         
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        internal init( products: [ProductView.ViewModel] = [], product: ProductView.ViewModel, moreButton: Bool, model: Model = .emptyMock) {
+        internal init( products: [ProductView.ViewModel] = [], product: ProductView.ViewModel, model: Model = .emptyMock) {
             
-            self.products = products
-            self.moreButton = moreButton
+            
+            self.products = products.filter({$0.productType == product.productType})
             self.product = product
             self.model = model
             
-            bind()
-            
         }
         
-        init(_ model: Model) {
+        init(_ model: Model, product: ProductView.ViewModel) {
             
             self.products = []
-            self.product = .init(with: .init(id: 0, productType: .card, number: "", numberMasked: "", accountNumber: "", balance: 1, balanceRub: nil, currency: "", mainField: "", additionalField: nil, customName: "", productName: "", openDate: Date(), ownerId: 0, branchId: 0, allowCredit: true, allowDebit: true, extraLargeDesign: .init(description: ""), largeDesign: .init(description: ""), mediumDesign: .init(description: ""), smallDesign: .init(description: ""), fontDesignColor: .init(description: ""), background: [.init(description: "")]), statusAction: {}, action: {})
+            self.product = product
             self.moreButton = false
             self.model = model
+            action.send(ModelAction.Products.Update.Total.All())
             
             bind()
         }
@@ -81,7 +82,7 @@ struct ProfileCardViewComponent: View {
     
     @ObservedObject var viewModel: ProfileCardViewComponent.ViewModel
     
-    public var TabBar: some View {
+    private var TabBar: some View {
         
         HStack(alignment: .center, spacing: 8) {
             
@@ -107,6 +108,7 @@ struct ProfileCardViewComponent: View {
                 Button {
                     
                 } label: {
+                    
                     Image.ic16MoreHorizontal
                         .foregroundColor(.black)
                 }
@@ -122,6 +124,26 @@ struct ProfileCardViewComponent: View {
         VStack {
             
             ZStack(alignment: .top) {
+                
+                if let background = viewModel.product.appearance.background.image {
+                    
+                    background
+                } else {
+                    
+                    viewModel.product.appearance.background.color.contrast(0.8)
+                        .frame(height: 155)
+                }
+                
+                GeometryReader { geometry in
+                    
+                    ZStack {
+
+                        viewModel.product.appearance.background.color.contrast(0.8)
+                            .frame(width: geometry.size.width, height: geometry.size.height + 500)
+                            .clipped()
+                            .offset(y: -550)
+                    }
+                }.frame(height: 150)
                 
                 VStack(spacing: 15) {
                     if #available(iOS 14.0, *) {
@@ -157,8 +179,6 @@ struct ProfileCardViewComponent: View {
             }
         }
     }
-    
-    
 }
 
 extension ProfileCardViewComponent {
@@ -208,7 +228,7 @@ extension ProfileCardViewComponent {
                             backgroundImage
                                 .resizable()
                                 .frame(width: 32, height: 24, alignment: .center)
-                                .cornerRadius(3)                              .opacity(0.3)
+                                .cornerRadius(3).opacity(0.3)
                             
                             
                         } else {
@@ -229,8 +249,7 @@ extension ProfileCardViewComponent {
 
 struct ProfileCardViewComponent_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileCardViewComponent(viewModel: .init(products: [.blockedProfile, .classicProfile, .accountProfile, .notActivateProfile, .accountSmall], product: .classicProfile, moreButton: true))
+        ProfileCardViewComponent(viewModel: .init(products: [.blockedProfile, .classicProfile, .accountProfile, .notActivateProfile, .accountSmall], product: .classicProfile))
             .previewLayout(.fixed(width: 400, height: 500))
-            .background(Color.orange)
     }
 }

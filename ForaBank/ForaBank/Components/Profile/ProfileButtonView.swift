@@ -15,8 +15,9 @@ extension ProfileButtonView {
         let title: Title
         let image: Image
         let state: Bool?
-        
-        internal init(title: Title, image: Image, state: Bool? = false) {
+        let action: () -> Void = {}
+
+        internal init(title: Title, image: Image, state: Bool? = true) {
             
             self.title = title
             self.image = image
@@ -29,7 +30,7 @@ extension ProfileButtonView {
             case requisites = "Реквизиты и выписка"
             case transfer = "Перевести"
             case control = "Управление"
-            case block = "Блокировать"
+            case block = "Заблокировать"
             case unblock = "Разблокировать"
             case repay = "Погасить досрочно"
         }
@@ -60,6 +61,7 @@ struct ProfileButtonView: View {
          
             Button {
                 
+                viewModel.action()
             } label: {
                 
                 HStack(spacing: 12) {

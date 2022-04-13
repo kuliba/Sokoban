@@ -15,26 +15,26 @@ extension ProfileButtonsSectionView {
         var buttons: [[ProfileButtonView.ViewModel]]
         let kind: ProductType
         
-        internal init(kind: ProductType, debit: Bool, credit: Bool) {
+        internal init(kind: ProductType) {
             
             self.kind = kind
 
             switch kind {
             case .card:
                 
-                self.buttons = [[.init(title: .topUp, image: Image.ic24Plus, state: debit), .init(title: .transfer, image: Image.ic24ArrowUpRight, state: credit)],[.init(title: .requisites, image: Image.ic24File), .init(title: .block, image: Image.ic24Lock, state: false)]]
+                self.buttons = [[.init(title: .topUp, image: Image.ic24Plus), .init(title: .transfer, image: Image.ic24ArrowUpRight)],[.init(title: .requisites, image: Image.ic24File), .init(title: .block, image: Image.ic24Lock, state: false)]]
 
             case .account:
                 
-                self.buttons = [[.init(title: .topUp, image: Image.ic24Plus, state: debit), .init(title: .transfer, image: Image.ic24ArrowUpRight, state: credit)],[.init(title: .requisites, image: Image.ic24File), .init(title: .block, image: Image.ic24Lock, state: false)]]
+                self.buttons = [[.init(title: .topUp, image: Image.ic24Plus), .init(title: .transfer, image: Image.ic24ArrowUpRight)],[.init(title: .requisites, image: Image.ic24File), .init(title: .block, image: Image.ic24Lock, state: false)]]
 
             case .deposit:
                 
-                self.buttons = [[.init(title: .topUp, image: Image.ic24Plus, state: debit), .init(title: .transfer, image: Image.ic24ArrowUpRight, state: credit)],[.init(title: .requisites, image: Image.ic24File), .init(title: .block, image: Image.ic24Lock, state: false)]]
+                self.buttons = [[.init(title: .topUp, image: Image.ic24Plus), .init(title: .transfer, image: Image.ic24ArrowUpRight)],[.init(title: .requisites, image: Image.ic24File), .init(title: .block, image: Image.ic24Lock, state: false)]]
 
             case .loan:
                 
-                self.buttons = [[.init(title: .topUp, image: Image.ic24Plus, state: debit), .init(title: .transfer, image: Image.ic24ArrowUpRight, state: credit)],[.init(title: .requisites, image: Image.ic24File), .init(title: .block, image: Image.ic24Lock, state: false)]]
+                self.buttons = [[.init(title: .topUp, image: Image.ic24Plus), .init(title: .transfer, image: Image.ic24ArrowUpRight)],[.init(title: .requisites, image: Image.ic24File), .init(title: .block, image: Image.ic24Lock, state: false)]]
 
             }
         }
@@ -86,5 +86,5 @@ struct ProfileButtonsSectionView_Previews: PreviewProvider {
 
 extension ProfileButtonsSectionView.ViewModel {
     
-    static let sample = ProfileButtonsSectionView.ViewModel(kind: .card, debit: true, credit: false)
+    static let sample = ProfileButtonsSectionView.ViewModel(kind: .card)
 }
