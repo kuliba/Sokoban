@@ -183,8 +183,8 @@ class Model {
                     handleProductsUpdateTotalSingleRequest(payload)
                     
                     //MARK: - Statement
-                case _ as ModelAction.Statement.List.Request:
-                    handleStatementListRequest()
+                case let payload as ModelAction.Statement.List.Request:
+                    handleStatementRequest(payload)
                     
                     //MARK: - Payments
                     

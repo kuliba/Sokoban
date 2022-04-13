@@ -12,10 +12,13 @@ import Foundation
 extension ModelAction {
     
     enum Statement {
-    
+        
         enum List {
             
-            struct Request: Action {}
+            struct Request: Action {
+                let productId: ProductData.ID
+                let productType: ProductType
+            }
             
             struct Response: Action {
                 
@@ -29,32 +32,43 @@ extension ModelAction {
 
 extension Model {
     
-    func handleStatementListRequest() {
-        
+    func handleStatementRequest(_ payload: ModelAction.Statement.List.Request) {
         guard let token = token else {
-            handledUnauthorizedCommandAttempt()
             return
         }
         
-        let command = ServerCommands.DepositController.GetDepositProductList(token: token)
-        serverAgent.executeCommand(command: command) { result in
+        switch payload.productType {
+        case .card:
             
-            switch result {
-            case .success(let response):
-                switch response.statusCode {
-                case .ok:
-                    guard let deposits = response.data else {
-                        self.handleServerCommandEmptyData(command: command)
+            let command = ServerCommands.CardController.GetCardStatement(token: token, payload: .init(cardNumber: nil, endDate: nil, id: payload.productId, name: nil, startDate: nil, statementFormat: nil))
+            
+            serverAgent.executeCommand(command: command) { result in
+                
+                switch result {
+                case .success(let response):
+                    switch response.statusCode {
+                    case .ok:
+                        guard let statement = response.data else { return }
+                        
+                    default:
+                        //TODO: handle not ok server status
                         return
                     }
-                    self.action.send(ModelAction.Deposits.List.Response(result: .success(deposits)))
-
-                default:
-                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                case .failure(let error):
+                    self.action.send(ModelAction.Settings.GetClientInfo.Failed(error: error))
                 }
-            case .failure(let error):
-            self.action.send(ModelAction.Deposits.List.Response(result: .failure(error)))
             }
+            
+        case .account:
+            
+            let command = ServerCommands.AccountController.GetAccountStatement(token: token, accountNumber: nil, endDate: nil, id: payload.productId, name: nil, startDate: nil, statementFormat: nil)
+            
+        case .deposit:
+            
+            let command = ServerCommands.DepositController.GetDepositStatement(token: token, endDate: nil, id: payload.productId, name: nil, startDate: nil, statementFormat: nil)
+        default:
+            
+            let command = ServerCommands.CardController.GetCardStatement(token: token, payload: .init(cardNumber: nil, endDate: nil, id: payload.productId, name: nil, startDate: nil, statementFormat: nil))
         }
     }
 }
