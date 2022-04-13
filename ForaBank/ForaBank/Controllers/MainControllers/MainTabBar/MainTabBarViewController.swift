@@ -15,17 +15,14 @@ class MainTabBarViewController: UITabBarController {
     let historyVC = DevelopViewController()
     let chatVC = ChatViewController()
     
-
     override func viewDidLoad() {
         super.viewDidLoad()
         getFastPaymentContractList()
         tabBar.layer.backgroundColor = UIColor(red: 0.973, green: 0.973, blue: 0.973, alpha: 0.82).cgColor
-//        tabBar.tintColor = #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)
-//        tabBar.tintColor = .clear
         tabBar.layer.borderWidth = 0.50
-        tabBar.layer.borderColor = UIColor.clear.cgColor
+        tabBar.layer.borderColor = UIColor(red: 211/255, green: 211/255, blue: 211/255, alpha: 0.7).cgColor
         tabBar.clipsToBounds = true
-
+        
         viewControllers = [
             generateNavController(rootViewController: mainVC,
                                   title: "Главный",
@@ -49,7 +46,7 @@ class MainTabBarViewController: UITabBarController {
         ]
         loadCatalog()
     }
-
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if GlobalModule.qrOperator != nil && GlobalModule.qrData != nil {
@@ -71,7 +68,7 @@ class MainTabBarViewController: UITabBarController {
             return
         }
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         UITabBar.appearance().tintColor = .black
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
@@ -117,10 +114,10 @@ class MainTabBarViewController: UITabBarController {
                                 })
                             }
                         } else {
-//                            let meToMeReq = RequestMeToMeModel(model: model)
+                            //                            let meToMeReq = RequestMeToMeModel(model: model)
                             let topvc = UIApplication.topViewController()
                             let vc = MeToMeRequestController()
-//                            vc.viewModel = meToMeReq
+                            //                            vc.viewModel = meToMeReq
                             vc.modalPresentationStyle = .fullScreen
                             topvc?.present(vc, animated: true, completion: {
                                 UserDefaults.standard.set(nil, forKey: "GetMe2MeDebitConsent")
@@ -139,14 +136,14 @@ class MainTabBarViewController: UITabBarController {
         navigationVC.tabBarItem.selectedImage = fillImage
         return navigationVC
     }
-
+    
     private func loadCatalog() {
         
-        #if RELEASE
+    #if RELEASE
         if (GlobalModule.c2bURL == nil) {
             AppUpdater.shared.showUpdate(withConfirmation: true)
         }
-        #endif
+    #endif
         
         NetworkHelper.request(.getCountries) { model, error in
             if error != nil {
@@ -202,17 +199,6 @@ class MainTabBarViewController: UITabBarController {
             Dict.shared.currencyList = currencySystem
             print("DEBUG: Load Currency")
         }
-
-        /// Add REALM
- //       AddAllUserCardtList.add() {}
-
-//        NetworkHelper.request(.getProductList) { cardList , error in
-//            if error != nil {
-//                self.showAlert(with: "Ошибка", and: error!)
-//            }
-//            guard let cardList = cardList as? [GetProductListDatum] else { return }
-//            print("DEBUG: Load card list... Count is: ", cardList.count)
-//        }
     }
     
     func getFastPaymentContractList() {
