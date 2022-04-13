@@ -15,11 +15,13 @@ class PlacesMapViewModel: ObservableObject {
     
     @Published var items: [ItemViewModel]
     let initialRegion: MKCoordinateRegion
+    @Published var currentRegion: MKCoordinateRegion
     
     init(items: [ItemViewModel], initialRegion: MKCoordinateRegion) {
         
         self.items = items
         self.initialRegion = initialRegion
+        self.currentRegion = initialRegion
     }
     
     init(with atmList: [AtmData], initialRegion: MKCoordinateRegion) {
@@ -30,6 +32,7 @@ class PlacesMapViewModel: ObservableObject {
         }
         
         self.initialRegion = initialRegion
+        self.currentRegion = initialRegion
     }
     
     func update(with atmList: [AtmData]) {

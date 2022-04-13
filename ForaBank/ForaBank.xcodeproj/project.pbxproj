@@ -764,7 +764,6 @@
 		77F5CE0D28056BB700611B66 /* LocationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5CE0C28056BB700611B66 /* LocationData.swift */; };
 		77F5CE0F28056DC000611B66 /* LocationAgentMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5CE0E28056DC000611B66 /* LocationAgentMock.swift */; };
 		77F5CE1128056EF600611B66 /* Model+Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5CE1028056EF600611B66 /* Model+Location.swift */; };
-		77F5CE132805CD1F00611B66 /* AtmRadius.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5CE122805CD1F00611B66 /* AtmRadius.swift */; };
 		77F5CE1528060A9600611B66 /* AtmCityData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5CE1428060A9600611B66 /* AtmCityData.swift */; };
 		77F5CE1728060BCC00611B66 /* AtmRegionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5CE1628060BCC00611B66 /* AtmRegionData.swift */; };
 		77F5CE1928060DF100611B66 /* GetAtmCityListResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 77F5CE1828060DF100611B66 /* GetAtmCityListResponseGeneric.json */; };
@@ -1855,7 +1854,6 @@
 		77F5CE0C28056BB700611B66 /* LocationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationData.swift; sourceTree = "<group>"; };
 		77F5CE0E28056DC000611B66 /* LocationAgentMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAgentMock.swift; sourceTree = "<group>"; };
 		77F5CE1028056EF600611B66 /* Model+Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Location.swift"; sourceTree = "<group>"; };
-		77F5CE122805CD1F00611B66 /* AtmRadius.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtmRadius.swift; sourceTree = "<group>"; };
 		77F5CE1428060A9600611B66 /* AtmCityData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtmCityData.swift; sourceTree = "<group>"; };
 		77F5CE1628060BCC00611B66 /* AtmRegionData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtmRegionData.swift; sourceTree = "<group>"; };
 		77F5CE1828060DF100611B66 /* GetAtmCityListResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetAtmCityListResponseGeneric.json; sourceTree = "<group>"; };
@@ -3695,7 +3693,6 @@
 				77F5CE1428060A9600611B66 /* AtmCityData.swift */,
 				77F5CE1628060BCC00611B66 /* AtmRegionData.swift */,
 				7744944827FED1BE001E2B9E /* AtmFilter.swift */,
-				77F5CE122805CD1F00611B66 /* AtmRadius.swift */,
 			);
 			path = Atm;
 			sourceTree = "<group>";
@@ -6930,7 +6927,6 @@
 				0B51D87626D959BB00FC7B6B /* ExtensionGKHInputNav.swift in Sources */,
 				774A82C727BAE4BF00E5A5E9 /* SettingType.swift in Sources */,
 				ED0B48AC26812F450037EA06 /* LoginViewModel.swift in Sources */,
-				77F5CE132805CD1F00611B66 /* AtmRadius.swift in Sources */,
 				F81EF91727D212BE0096DC70 /* ButtonNewProductComponent.swift in Sources */,
 				0B22AEA326CDB38500B11E7F /* ExtensionGKHInput.swift in Sources */,
 				EDE212FD2743265C005D9821 /* DateChooseView.swift in Sources */,

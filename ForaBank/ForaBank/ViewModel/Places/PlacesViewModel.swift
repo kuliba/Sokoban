@@ -25,10 +25,10 @@ class PlacesViewModel: ObservableObject {
     private let atmList: [AtmData]
     private let atmMetroStations: [AtmMetroStationData]?
     private let atmServices: [AtmServiceData]?
-    private var lastUserLocation: LocationData?
+    private var referenceLocation: ReferenceLocation
     private var bindings = Set<AnyCancellable>()
 
-    init(control: PlacesControlViewModel, mapViewModel: PlacesMapViewModel = .emptyMock, listViewModel: PlacesListViewModel? = nil, filter: AtmFilter = .initial, atmList: [AtmData] = [], atmMetroStations: [AtmMetroStationData]? = nil, atmServices: [AtmServiceData]? = nil, model: Model = .emptyMock) {
+    init(control: PlacesControlViewModel, mapViewModel: PlacesMapViewModel = .emptyMock, listViewModel: PlacesListViewModel? = nil, filter: AtmFilter = .initial, atmList: [AtmData] = [], atmMetroStations: [AtmMetroStationData]? = nil, atmServices: [AtmServiceData]? = nil, model: Model = .emptyMock, referenceLocation: ReferenceLocation = .user(.init(latitude: 0, longitude: 0))) {
         
         self.control = control
         self.map = mapViewModel
@@ -39,6 +39,7 @@ class PlacesViewModel: ObservableObject {
         self.atmMetroStations = atmMetroStations
         self.atmServices = atmServices
         self.model = model
+        self.referenceLocation = referenceLocation
     }
     
     init?(_ model: Model) {
@@ -53,7 +54,9 @@ class PlacesViewModel: ObservableObject {
         //TODO: load from settings
         let filter: AtmFilter = .initial
         let filterredAtmList = Self.filterred(atmList: atmList, filter: filter)
-        self.map = PlacesMapViewModel(with: filterredAtmList, initialRegion: Self.initialRegion)
+        let initialRegion = Self.initialRegion
+        self.map = PlacesMapViewModel(with: filterredAtmList, initialRegion: initialRegion)
+        self.referenceLocation = .map(initialRegion)
         
         self.filter = filter
         self.atmList = atmList
@@ -90,12 +93,24 @@ class PlacesViewModel: ObservableObject {
                               return
                           }
                     
-                    let detailViewModel = PlacesDetailViewModel(atmItem: atmItem, metroStations: metroStations(for: atmItem), services: services(for: atmItem), currentLocation: lastUserLocation?.coordinate)
+                    let detailViewModel = PlacesDetailViewModel(atmItem: atmItem, metroStations: metroStations(for: atmItem), services: services(for: atmItem), currentLocation: referenceLocation.coordinate)
                     modal = .detail(detailViewModel)
                     
                 default:
                     break
                 }
+                
+            }.store(in: &bindings)
+        
+        map.$currentRegion
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] currentRegion in
+                
+                guard model.currentUserLoaction.value == nil else {
+                    return
+                }
+                
+                referenceLocation = .map(currentRegion)
                 
             }.store(in: &bindings)
         
@@ -105,20 +120,21 @@ class PlacesViewModel: ObservableObject {
                 
                 if let location = location {
                     
-                    if lastUserLocation == nil {
+                    guard case .map = referenceLocation else {
+                        return
+                    }
+
+                    let region = MKCoordinateRegion(center: location.coordinate, span: .init(latitudeDelta: 0.1, longitudeDelta: 0.1))
+                    DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(200)) {
                         
-                        let region = MKCoordinateRegion(center: location.coordinate, span: .init(latitudeDelta: 0.1, longitudeDelta: 0.1))
-                        DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(200)) {
-                            
-                            self.map.action.send(PlacesMapViewModelAction.ShowRegion(region: region))
-                        }
+                        self.map.action.send(PlacesMapViewModelAction.ShowRegion(region: region))
                     }
                     
-                    lastUserLocation = location
+                    referenceLocation = .user(location)
                     
                 } else {
                     
-                    lastUserLocation = nil
+                    referenceLocation = .map(map.currentRegion)
                 }
 
             }.store(in: &bindings)
@@ -131,7 +147,7 @@ class PlacesViewModel: ObservableObject {
                 case .list:
                     
                     let filterredAtmList = Self.filterred(atmList: atmList, filter: filter)
-                    let listViewModel = PlacesListViewModel(atmList: filterredAtmList, metroStationsList: atmMetroStations, radius: listRadius)
+                    let listViewModel = PlacesListViewModel(atmList: filterredAtmList, metroStationsList: atmMetroStations, referenceLoaction: referenceLocation.coordinate)
                     
                     withAnimation {
                         self.list = listViewModel
@@ -173,7 +189,7 @@ class PlacesViewModel: ObservableObject {
                 
                 let filterredAtmList = Self.filterred(atmList: atmList, filter: filter)
                 map.update(with: filterredAtmList)
-                list?.update(with: filterredAtmList, metroStationsList: atmMetroStations, radius: listRadius)
+                list?.update(with: filterredAtmList, metroStationsList: atmMetroStations, referenceLoaction: referenceLocation.coordinate)
                 
             }.store(in: &bindings)
     }
@@ -210,15 +226,6 @@ class PlacesViewModel: ObservableObject {
                 self.filter = filter
                 
             }.store(in: &bindings)
-    }
-    
-    private var listRadius: AtmRadius {
-        
-        guard let lastUserLocation = lastUserLocation else {
-            return .sample
-        }
-        
-        return AtmRadius(location: lastUserLocation.coordinate, radius: 2000)
     }
     
     func metroStations(for atm: AtmData) -> [AtmMetroStationData]? {
@@ -277,9 +284,12 @@ class PlacesViewModel: ObservableObject {
     
     static var initialRegion: MKCoordinateRegion {
         
-        let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+        //ATM: region: MKCoordinateRegion(center: __C.CLLocationCoordinate2D(latitude: 55.26070129039655, longitude: 51.392643336781866), span: __C.MKCoordinateSpan(latitudeDelta: 33.52516423737643, longitudeDelta: 32.484028468055385))
         
-        return MKCoordinateRegion(center: .moscow, span: span)
+        let center = CLLocationCoordinate2D(latitude: 55.26070129039655, longitude: 51.392643336781866)
+        let span = MKCoordinateSpan(latitudeDelta: 33.52516423737643, longitudeDelta: 32.484028468055385)
+        
+        return MKCoordinateRegion(center: center, span: span)
     }
     
     deinit {
@@ -302,6 +312,23 @@ extension PlacesViewModel {
             switch self {
             case .detail(let placesDetailViewModel): return placesDetailViewModel.id
             case .filter(let placesFilterViewModel): return placesFilterViewModel.id
+            }
+        }
+    }
+    
+    enum ReferenceLocation {
+        
+        case user(LocationData)
+        case map(MKCoordinateRegion)
+        
+        var coordinate: CLLocationCoordinate2D {
+            
+            switch self {
+            case .user(let locationData):
+                return locationData.coordinate
+
+            case .map(let mKCoordinateRegion):
+                return mKCoordinateRegion.center
             }
         }
     }

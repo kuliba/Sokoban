@@ -176,7 +176,7 @@ class ServerCommandsAtmTests: XCTestCase {
         }
         
         let json = try Data(contentsOf: url)
-        let atmMetroStationListData = ServerCommands.AtmController.GetMetroStationList.Response.AtmMetroStationListData(serial: "bea36075a58954199a6b8980549f6b69", list: [.init(id: 0, name: "string", lineName: "string", region: "string", city: "string", color: ColorData(description: "string"))])
+        let atmMetroStationListData = ServerCommands.AtmController.GetMetroStationList.Response.AtmMetroStationListData(serial: "bea36075a58954199a6b8980549f6b69", list: [.init(id: 0, name: "string", lineName: "string", cityId: 10000161875, color: ColorData(description: "string"))])
         
         let expected = ServerCommands.AtmController.GetMetroStationList.Response(statusCode: .ok, errorMessage: "string", data: atmMetroStationListData)
         
