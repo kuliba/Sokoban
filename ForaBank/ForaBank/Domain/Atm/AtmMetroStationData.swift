@@ -12,7 +12,6 @@ struct AtmMetroStationData: Codable, Equatable, Cachable {
     let id: Int
     let name: String
     let lineName: String
-    let region: String
-    let city: String
+    let cityId: Int
     let color: ColorData
 }
