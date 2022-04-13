@@ -13,39 +13,97 @@ struct ProfileView: View {
     
     var body: some View {
         
-        VStack {
-            
-            HStack {
-            
-//                Text(viewModel.productViewModel.products[0].name)
-            }
+        ZStack(alignment: .top) {
             
             ScrollView(showsIndicators: false) {
                 
-                VStack(spacing: 32) {
+                ZStack {
                     
-                    ZStack(alignment: .top) {
+                    GeometryReader { geometry in
                         
-                        VStack {
+                        ZStack {
                             
-                            ProfileCardViewComponent(viewModel: .init(products: [.classic], product: .classic, moreButton: true))
+                            viewModel.productViewModel.product.appearance.background.color.contrast(0.8)
+                                .frame(width: geometry.size.width, height: 200)
+                                .clipped()
                         }
                     }
-                    .background( viewModel.productViewModel.product.appearance.background.image, alignment: .top)
-                    .edgesIgnoringSafeArea(.top)
                     
-                    ProfileButtonsSectionView(viewModel: .init(kind: viewModel.productViewModel.product.productType, debit: true, credit: true))
-                    
-                    if let detailAccount = viewModel.detailAccountViewModel {
+                    VStack(spacing: 32) {
                         
-                        DetailAccountViewComponent(viewModel: detailAccount)
-                            .padding(.horizontal, 20)
+                        ProfileCardViewComponent(viewModel: .init(products: [.classic], product: viewModel.productViewModel.product))
+                        
+                        ProfileButtonsSectionView(viewModel: .init(kind: viewModel.productViewModel.product.productType))
+                        
+                        if let detailAccount = viewModel.detailAccountViewModel {
+                            
+                            DetailAccountViewComponent(viewModel: detailAccount)
+                                .padding(.horizontal, 20)
+                        }
+                        
+                        HistoryViewComponent(viewModel: .init(dateOperations: [], spending: nil))
                     }
+                }
+                .padding(.top, 35)
+                .edgesIgnoringSafeArea(.top)
+            }
+            
+            ZStack {
+                
+                viewModel.productViewModel.product.appearance.background.color.contrast(0.8)
+                    .clipped()
+                    .edgesIgnoringSafeArea(.all)
+                    .frame(height: 50)
+                HeaderView(viewModel: viewModel)
+                    .background( viewModel.productViewModel.product.appearance.background.color.contrast(0.8))
+            }
+        }
+        .navigationBarHidden(true)
+    }
+    
+    struct HeaderView: View {
+        
+        @ObservedObject var viewModel: ProfileViewModel
+        
+        var body: some View {
+            HStack {
+                
+                Button {
                     
-                    HistoryViewComponent(viewModel: viewModel.historyViewModel ?? .init(dateOperations: [.init(date: "", operations: [.init(title: "", image: .ic16Sun, subtitle: "", amount: "", type: .debit)])], spending: nil))
+                } label: {
+                    
+                    Image.ic24ChevronLeft
+                        .foregroundColor(viewModel.productViewModel.product.appearance.textColor)
+                }
+                
+                Spacer()
+                
+                VStack {
+                    
+                    Text(viewModel.productViewModel.product.name)
+                        .foregroundColor(viewModel.productViewModel.product.appearance.textColor)
+                    
+                    Text(viewModel.productViewModel.product.header.number)
+                        .font(.system(size: 12))
+                        .foregroundColor(viewModel.productViewModel.product.appearance.textColor)
+                }
+                
+                Spacer()
+                
+                if viewModel.productViewModel.product.productType != .loan {
+                    
+                    Button {
+                        
+                    } label: {
+                        
+                        Image.ic24Edit2
+                            .foregroundColor(viewModel.productViewModel.product.appearance.textColor)
+                    }
                 }
             }
-            .navigationBarTitle("title", displayMode: .inline)
+            .padding(.horizontal, 20)
+            .padding(.bottom, 10)
+            .background(Color.clear)
         }
     }
 }
@@ -60,5 +118,6 @@ struct ProfileView_Previews: PreviewProvider {
 
 extension ProfileViewModel {
     
-    static let sample = ProfileViewModel(productViewModel: .init(products: [.notActivateProfile, .accountProfile, .classicProfile, .blockedProfile], product: .classicProfile, moreButton: true), historyViewModel: .init( dateOperations: [.init(date: "12 декабря", operations: [.init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit)])], spending: .init(value: [100, 300])), model: .emptyMock)
+    static let sample = ProfileViewModel(productViewModel: .init(products: [.notActivateProfile, .accountProfile, .classicProfile, .blockedProfile], product: .classicProfile))
 }
+
