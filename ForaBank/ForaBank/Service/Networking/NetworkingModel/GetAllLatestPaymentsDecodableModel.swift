@@ -63,8 +63,6 @@ struct GetAllLatestPaymentsDatum: Codable {
     let surName, firstName, middleName, shortName: String?
     let countryName, countryCode, puref, type: String?
     let additionalList: [GetAllLatestPaymentsAdditionalList]?
-//    var country: CountriesList?
-//    var bank: BanksList?
 
 
     enum CodingKeys: String, CodingKey {
