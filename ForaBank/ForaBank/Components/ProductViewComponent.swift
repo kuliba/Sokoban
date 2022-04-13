@@ -187,7 +187,7 @@ struct ProductView: View {
             
         } else {
             
-            NavigationLink(destination: ProfileView(viewModel: .init(productViewModel: .init(products: [.classic], product: .classicProfile, moreButton: true), historyViewModel: nil))) {
+            NavigationLink(destination: ProfileView(viewModel: .init(productViewModel: .init(products: [.classic, .account, .blockedProfile, .classicProfile], product: .classicProfile)))) {
                 ContentView(viewModel: viewModel)
             }
         }

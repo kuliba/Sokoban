@@ -21,6 +21,8 @@ struct MainView: View {
                     RefreshView()
                 }
                 
+                HeaderView()
+                
                 ScrollView(showsIndicators: false) {
                     
                     ScrollViewReader { proxy in
@@ -51,12 +53,68 @@ struct MainView: View {
                             }
                         }
                     }
-                    
                 }
-                .padding(20)
+                .padding(.horizontal, 20)
             }
+            .navigationBarHidden(true)
+            
         }
-        .navigationBarTitle("", displayMode: .inline)
+    }
+    
+    struct HeaderView: View {
+        
+        var body: some View {
+            
+            HStack {
+                
+                ZStack(alignment: .topTrailing) {
+                    
+                    ZStack(alignment: .center) {
+                        
+                        Circle()
+                            .frame(width: 40, height: 40)
+                            .foregroundColor(Color.bGIconGrayLightest)
+                        
+                        Image.ic24User
+                            .foregroundColor(Color.gray)
+                    }
+                    
+                    ZStack(alignment: .center) {
+                        
+                        Circle()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(Color.white)
+                            .frame(alignment: .topTrailing)
+                        
+                        Image.ic64ForaColor
+                            .resizable()
+                            .frame(width: 12, height: 12)
+                    }
+                    .padding(.top, -4)
+                    .padding(.trailing, -8)
+                }
+                
+                Text("Name")
+                
+                Spacer()
+                
+                Button {
+                    
+                } label: {
+                    Image.ic24Search
+                        .foregroundColor(.iconBlack)
+                }
+                
+                Button {
+                    
+                } label: {
+                    Image.ic24Bell
+                        .foregroundColor(.iconBlack)
+                }
+                
+            }
+            .padding(.horizontal, 20)
+        }
     }
 }
 
@@ -73,3 +131,4 @@ extension MainViewModel {
     
     static let sampleProducts = MainViewModel(sections: [MainSectionProductsView.ViewModel(.productsMock), MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample], isRefreshing: false)
 }
+
