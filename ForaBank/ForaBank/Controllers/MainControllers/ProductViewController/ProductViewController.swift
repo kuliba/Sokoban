@@ -293,6 +293,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         card.backgroundImageView.image = product?.XLDesign?.convertSVGStringToImage()
         card.backgroundImageView.sizeToFit()
         
+        view.addSubview(activateSlider)
         activateSlider.isEnabled = true
         activateSlider.delegate = self
         activateSlider.center(inView: card)
@@ -435,13 +436,13 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
                 secondStackView.isHidden = false
                 
             }
+
             
             if product?.statusPC == "17", product?.status == "Действует" || product?.status == "Выдано клиенту" {
                 
                 activateSlider.isHidden = false
                 activateSlider.isEnabled = true
                 activateSlider.delegate = self
-                card.addSubview(activateSlider)
 
             } else {
 
