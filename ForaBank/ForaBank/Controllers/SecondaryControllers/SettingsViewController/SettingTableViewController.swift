@@ -15,6 +15,7 @@ protocol SettingTableViewControllerDelegate: AnyObject {
 
 
 class SettingTableViewController: UITableViewController {
+    
 
     var delegate: SettingTableViewControllerDelegate?
     
@@ -27,20 +28,24 @@ class SettingTableViewController: UITableViewController {
     @IBOutlet weak var faceId: UISwitch!
     
     
-    
     var imageView = UIImageView()
     
     private var tableHeaderView: UIView? {
         //button
-//        let button = UIButton(type: .system)
-//        button.backgroundColor = .black
-//        button.layer.cornerRadius = 32 / 2
-//        button.clipsToBounds = true
-//        button.setImage(UIImage(named: "edit-2"), for: .normal)
-//        button.addTarget(self, action: #selector(changeImage), for: .touchUpInside)
+        let button = UIButton(type: .system)
+        button.backgroundColor = .black
+        button.layer.cornerRadius = 32 / 2
+        button.clipsToBounds = true
+        button.setImage(UIImage(named: "edit-2"), for: .normal)
+        button.addTarget(self, action: #selector(changeImage), for: .touchUpInside)
         
         //imageView
-        imageView.image = UIImage(named: "ProfileImage")
+        let userPhoto = loadImageFromDocumentDirectory(fileName: "userPhoto")
+        if userPhoto != nil {
+            imageView.image = userPhoto
+        } else {
+            imageView.image = UIImage(named: "ProfileImage")
+        }
         imageView.backgroundColor = UIColor.clear
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 96 / 2
@@ -49,12 +54,12 @@ class SettingTableViewController: UITableViewController {
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: kHeaderViewHeight))
         headerView.backgroundColor = UIColor.white
         headerView.addSubview(imageView)
-       // headerView.addSubview(button)
+        headerView.addSubview(button)
         
         imageView.centerX(inView: headerView,
                           topAnchor: headerView.topAnchor, paddingTop: 16)
-      //  button.anchor(top: imageView.topAnchor, right: imageView.rightAnchor,
-      //                width: 32, height: 32)
+        button.anchor(top: imageView.topAnchor, right: imageView.rightAnchor,
+                      width: 32, height: 32)
         
         return headerView
     }
@@ -91,6 +96,7 @@ class SettingTableViewController: UITableViewController {
              self.faceId.isOn = false
             }
         }
+        
     }
 
     private func loadConfig() {
@@ -142,12 +148,33 @@ class SettingTableViewController: UITableViewController {
     //MARK: - Actions
     
     @objc func changeImage() {
-        let imagePickerController = UIImagePickerController()
-        imagePickerController.delegate = self
-        imagePickerController.sourceType = .photoLibrary
-        imagePickerController.navigationController?.navigationBar.tintColor = .black
-        present(imagePickerController, animated: true, completion: nil)
-
+        let controller = SettingsPhotoViewController()
+        controller.itemIsSelect = { [weak self] item in
+            
+            switch item {
+            case "Сделать фото":
+                let vc = UIImagePickerController()
+                vc.sourceType = .camera
+                vc.allowsEditing = true
+                vc.delegate = self
+                self?.present(vc, animated: true)
+            case "Выбрать из галереи":
+                let imagePickerController = UIImagePickerController()
+                imagePickerController.delegate = self
+                imagePickerController.sourceType = .photoLibrary
+                imagePickerController.navigationController?.navigationBar.tintColor = .black
+                self?.present(imagePickerController, animated: true, completion: nil)
+            default:
+                print()
+            }
+            
+        }
+        
+        let navController = UINavigationController(rootViewController: controller)
+        navController.modalPresentationStyle = .custom
+        navController.transitioningDelegate = self
+        self.present(navController, animated: true)
+        
     }
     
     
@@ -283,6 +310,8 @@ class SettingTableViewController: UITableViewController {
         switch section {
         case 0:
             label.text = "Мои данные"
+//        case 1:
+//            label.text = "Документы"
         case 1:
             label.text = "Платежи и переводы"
         case 2:
@@ -297,10 +326,43 @@ class SettingTableViewController: UITableViewController {
 
 // MARK: - UIImagePickerControllerDelegate
 extension SettingTableViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         picker.dismiss(animated: true, completion: nil)
         guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
         imageView.image = image
+        saveImageInDocumentDirectory(image: image, fileName: "userPhoto")
+        
     }
+    
+    func saveImageInDocumentDirectory(image: UIImage, fileName: String) {
+        
+        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!;
+        let fileURL = documentsUrl.appendingPathComponent(fileName)
+        if let imageData = image.pngData() {
+            try? imageData.write(to: fileURL, options: .atomic)
+            
+        }
+    }
+    
+    func loadImageFromDocumentDirectory(fileName: String) -> UIImage? {
+        
+        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!;
+        let fileURL = documentsUrl.appendingPathComponent(fileName)
+        do {
+            let imageData = try Data(contentsOf: fileURL)
+            return UIImage(data: imageData)
+        } catch {}
+        return nil
+    }
+    
 }
 
+
+extension SettingTableViewController: UIViewControllerTransitioningDelegate {
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        let presenter = PresentationController(presentedViewController: presented, presenting: presenting)
+        presenter.height = 200
+        return presenter
+    }
+}
