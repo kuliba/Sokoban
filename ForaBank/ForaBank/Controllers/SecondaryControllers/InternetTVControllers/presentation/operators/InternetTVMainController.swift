@@ -30,7 +30,8 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
     var searching = false
     let searchController = UISearchController(searchResultsController: nil)
     let latestOperationView = InternetTVLatestOperationsView()
-
+    var template: PaymentTemplateData?
+    
     func handleMsg(what: Int) {
         switch (what) {
         case InternetTVMainController.msgHideLatestOperation:

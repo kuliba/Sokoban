@@ -32,8 +32,11 @@ class Model {
     let paymentTemplatesViewSettings: CurrentValueSubject<TemplatesListViewModel.Settings, Never>
     
     //TODO: remove when all templates will be implemented
-    let paymentTemplatesAllowed: [ProductStatementData.Kind] = [.sfp, .insideBank, .betweenTheir, .direct, .contactAddressless, .externalIndivudual, .externalEntity, .mobile]
-    let paymentTemplatesDisplayed: [PaymentTemplateData.Kind] = [.sfp, .byPhone, .insideBank, .betweenTheir, .direct, .contactAdressless, .externalIndividual, .externalEntity, .mobile]
+    let paymentTemplatesAllowed: [ProductStatementData.Kind] = [.sfp, .insideBank, .betweenTheir, .direct, .contactAddressless, .externalIndivudual, .externalEntity, .mobile, .internet, .housingAndCommunalService, .transport]
+    let paymentTemplatesDisplayed: [PaymentTemplateData.Kind] = [.sfp, .byPhone, .insideBank, .betweenTheir, .direct, .contactAdressless, .externalIndividual, .externalEntity, .mobile, .internet, .housingAndCommunalService, .transport]
+    
+    //MARK: Loacation
+    let currentUserLoaction: CurrentValueSubject<LocationData?, Never>
     
     // services
     internal let serverAgent: ServerAgentProtocol
@@ -41,6 +44,7 @@ class Model {
     internal let keychainAgent: KeychainAgentProtocol
     internal let settingsAgent: SettingsAgentProtocol
     internal let biometricAgent: BiometricAgentProtocol
+    internal let locationAgent: LocationAgentProtocol
     
     // private
     private var bindings: Set<AnyCancellable>
@@ -57,7 +61,7 @@ class Model {
          */
     }
     
-    init(serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol, settingsAgent: SettingsAgentProtocol, biometricAgent: BiometricAgentProtocol) {
+    init(serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol, settingsAgent: SettingsAgentProtocol, biometricAgent: BiometricAgentProtocol, locationAgent: LocationAgentProtocol) {
         
         self.action = .init()
         self.auth = .init(.notAuthorized)
@@ -67,16 +71,18 @@ class Model {
         self.catalogBanners = .init([])
         self.paymentTemplates = .init([])
         self.paymentTemplatesViewSettings = .init(.initial)
+        self.currentUserLoaction = .init(nil)
         self.serverAgent = serverAgent
         self.localAgent = localAgent
         self.keychainAgent = keychainAgent
         self.settingsAgent = settingsAgent
         self.biometricAgent = biometricAgent
+        self.locationAgent = locationAgent
         self.bindings = []
         
         loadCachedData()
         bind()
-        cacheDictionaries()
+        dictionariesUpdateCache()
     }
     
     //FIXME: remove after refactoring
@@ -104,7 +110,10 @@ class Model {
         // biometric agent
         let biometricAgent = BiometricAgent()
         
-        return Model(serverAgent: serverAgent, localAgent: localAgent, keychainAgent: keychainAgent, settingsAgent: settingsAgent, biometricAgent: biometricAgent)
+        // location agent
+        let locationAgent = LocationAgent()
+        
+        return Model(serverAgent: serverAgent, localAgent: localAgent, keychainAgent: keychainAgent, settingsAgent: settingsAgent, biometricAgent: biometricAgent, locationAgent: locationAgent)
     }()
     
     private func bind() {
@@ -242,6 +251,24 @@ class Model {
                         
                     case .bannerCatalogList:
                         handleDictionaryBannerCatalogList(payload)
+                    
+                    case .atmList:
+                        handleDictionaryAtmDataList(payload)
+                        
+                    case .atmServiceList:
+                        handleDictionaryAtmServiceDataList(payload)
+                        
+                    case .atmTypeList:
+                        handleDictionaryAtmTypeDataList(payload)
+                        
+                    case .atmMetroStationList:
+                        handleDictionaryAtmMetroStationDataList(payload)
+                    
+                    case .atmCityList:
+                        handleDictionaryAtmCityDataList(payload)
+                        
+                    case .atmRegionList:
+                        handleDictionaryAtmRegionDataList(payload)
                     }
                     
                     //MARK: - Deposits
@@ -257,10 +284,7 @@ class Model {
                         //TODO: handle not authoried server request attempt
                         return
                     }
-                    let command = ServerCommands.NotificationController.ChangeNotificationStatus (token: token,
-                                                                                                  payload: .init(eventId: payload.eventId,
-                                                                                                                 cloudId: payload.cloudId,
-                                                                                                                 status: payload.status))
+                    let command = ServerCommands.NotificationController.ChangeNotificationStatus (token: token, payload: .init(eventId: payload.eventId, cloudId: payload.cloudId, status: payload.status))
                     serverAgent.executeCommand(command: command) { result in
                         
                         switch result {
@@ -276,12 +300,33 @@ class Model {
                             self.action.send(ModelAction.Notification.ChangeNotificationStatus.Failed(error: error))
                         }
                     }
+                    
+                   //MARK: - Location Actions
+                    
+                case _ as ModelAction.Location.Updates.Start:
+                    handleLocationUpdatesStart()
+                    
+                case _ as ModelAction.Location.Updates.Stop:
+                    handleLocationUpdateStop()
 
                 default:
                     break
                 }
                 
             }.store(in: &bindings)
+        
+        locationAgent.currentLoaction.sink { [unowned self] coordinate in
+            
+            if let coordinate = coordinate {
+                
+                currentUserLoaction.value = LocationData(with: coordinate)
+                
+            } else {
+                
+                currentUserLoaction.value = nil
+            }
+            
+        }.store(in: &bindings)
     }
 }
 
@@ -289,60 +334,6 @@ class Model {
 
 private extension Model {
     
-    func cacheDictionaries() {
-        
-        for type in ModelAction.Dictionary.cached {
-            
-            action.send(ModelAction.Dictionary.Request(type: type, serial: serial(for: type)))
-        }
-    }
-    
-    func serial(for dictionaryType: ModelAction.Dictionary.Kind) -> String? {
-        
-        switch dictionaryType {
-        case .anywayOperators:
-            return localAgent.serial(for: [OperatorGroupData].self)
-            
-        case .banks:
-            return localAgent.serial(for: [BankData].self)
-            
-        case .countries:
-            return localAgent.serial(for: [CountryData].self)
-            
-        case .currencyList:
-            return localAgent.serial(for: [CurrencyData].self)
-            
-        case .fmsList:
-            return localAgent.serial(for: [FMSData].self)
-            
-        case .fsspDebtList:
-            return localAgent.serial(for: [FSSPDebtData].self)
-            
-        case .fsspDocumentList:
-            return localAgent.serial(for: [FSSPDocumentData].self)
-            
-        case .ftsList:
-            return localAgent.serial(for: [FTSData].self)
-            
-        case .fullBankInfoList:
-            return localAgent.serial(for: [BankFullInfoData].self)
-            
-        case .mobileList:
-            return localAgent.serial(for: [MobileData].self)
-            
-        case .mosParkingList:
-            return localAgent.serial(for: [MosParkingData].self)
-            
-        case .paymentSystemList:
-            return localAgent.serial(for: [PaymentSystemData].self)
-            
-        case .productCatalogList:
-            return localAgent.serial(for: [CatalogProductData].self)
-            
-        case .bannerCatalogList:
-            return localAgent.serial(for: [BannerCatalogListData].self)
-        }
-    }
     
     func loadCachedData() {
         

@@ -13,7 +13,8 @@ class URLHost {
     func getHost() -> String {
         var host = "bg.forabank.ru/dbo/api/v4/f437e29a3a094bcfa73cea12366de95b"
         #if DEBUG
-        host = "git.briginvest.ru/dbo/api/v3"
+        host = "test.inn4b.ru/dbo/api/v3"
+//        host = "git.briginvest.ru/dbo/api/v3"
         #endif
         return host
     }
@@ -24,6 +25,6 @@ class URLHost {
         case release  = "bg.forabank.ru/dbo/api/v4/f437e29a3a094bcfa73cea12366de95b"
         
         /// Для релизных запросов используется этот хост
-        case qa = "git.briginvest.ru/dbo/api/v3"
+        case qa = "test.inn4b.ru/dbo/api/v3"
     }
 }
