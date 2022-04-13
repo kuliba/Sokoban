@@ -36,12 +36,22 @@
 		</dict>
 		<dict>
 			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
+			<string>Viewer</string>
 			<key>CFBundleURLName</key>
 			<string>qr.nspk.ru</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>https</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>CFBundleURLName</key>
+			<string>qr.nspk.ru</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>bank100000000217</string>
 			</array>
 		</dict>
 	</array>

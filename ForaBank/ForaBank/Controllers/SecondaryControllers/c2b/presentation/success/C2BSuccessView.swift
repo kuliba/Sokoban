@@ -2,6 +2,10 @@ import UIKit
 
 class C2BSuccessView: UIView {
     static var svgImg = ""
+    static var statusImg: UIImage? = nil
+    static var statusText = ""
+    static var sourceModel = ""
+
     let kContentXibName = "C2BSuccess"
     var saveTapped: (() -> Void)?
     var detailTapped: (() -> Void)?
@@ -42,32 +46,35 @@ class C2BSuccessView: UIView {
         layer.shadowRadius = 16
         labelNameRecipient.text = C2BDetailsViewModel.recipientText
         labelDescrRecipient.text = C2BDetailsViewModel.recipientDescription
-        C2BDetailsViewModel.makeTransfer
+        //C2BDetailsViewModel.makeTransfer
         let docStatus = C2BDetailsViewModel.makeTransfer?.data?.documentStatus
-        C2BDetailsViewModel.modelCreateC2BTransfer
+        //C2BDetailsViewModel.modelCreateC2BTransfer
 
         switch (docStatus) {
         case "IN_PROGRESS":
-            statusImageView.image = #imageLiteral(resourceName: "waiting")
-            statusLabel.text = "Запрос принят в обработку"
+            C2BSuccessView.statusImg = #imageLiteral(resourceName: "waiting")
+            C2BSuccessView.statusText = "Запрос принят в обработку"
             break
         case "COMPLETED":
-            statusImageView.image = #imageLiteral(resourceName: "OkOperators")
-            statusLabel.text = "Успешный перевод"
+            C2BSuccessView.statusImg = #imageLiteral(resourceName: "OkOperators")
+            C2BSuccessView.statusText = "Успешный перевод"
             break
         case "COMPLETE":
-            statusImageView.image = #imageLiteral(resourceName: "OkOperators")
-            statusLabel.text = "Успешный перевод"
+            C2BSuccessView.statusImg = #imageLiteral(resourceName: "OkOperators")
+            C2BSuccessView.statusText = "Успешный перевод"
             break
         case .none:
-            statusImageView.image = #imageLiteral(resourceName: "errorIcon")
-            statusLabel.text = "Операция неуспешна!"
+            C2BSuccessView.statusImg = #imageLiteral(resourceName: "rejected")
+            C2BSuccessView.statusText = "Операция неуспешна!"
             break
         case .some(_):
-            statusImageView.image = #imageLiteral(resourceName: "errorIcon")
-            statusLabel.text = "Операция неуспешна!"
+            C2BSuccessView.statusImg = #imageLiteral(resourceName: "rejected")
+            C2BSuccessView.statusText = "Операция неуспешна!"
             break
         }
+
+        statusImageView.image = C2BSuccessView.statusImg
+        statusLabel.text = C2BSuccessView.statusText
         summLabel.text = C2BDetailsViewModel.sum
     }
 

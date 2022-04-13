@@ -23,6 +23,18 @@ class C2BDetailsViewModel {
 
 
     init() {
+        if GlobalModule.c2bURL ?? "" == "success" {
+            C2BDetailsViewModel.operationDetail = GetOperationDetailsByPaymentIdDatum(amount: 10.00,
+                    dateForDetail: "10.04.2020",
+                    merchantSubName: "Ромашка",
+                    operationStatus: "COMPLETE",
+                    payeeFullName: "ООО Ромашка",
+                    payeeBankName: "ФОРАБАНК",
+                    comment: "комент", 
+                    transferNumber: "#1234568779870917203123")
+            //controller?.openSuccessScreen()
+            return
+        }
         let str = GlobalModule.c2bURL ?? ""
         c2bLink = str.replacingOccurrences(of: "amp;", with: "")
         GlobalModule.c2bURL = nil

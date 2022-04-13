@@ -56,7 +56,7 @@ class C2BSuccessViewController: UIViewController {
 
     func openDetailVC() {
         let vc = C2BDetailsFormViewController()
-        vc.doneButton.isHidden = true
+//        vc.doneButton.isHidden = true
         vc.addCloseButton()
         vc.title = "Детали операции"
         let navVC = UINavigationController(rootViewController: vc)

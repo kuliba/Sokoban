@@ -118,6 +118,12 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+
+        if GlobalModule.c2bURL ?? "" == "success" {
+            dismissActivity()
+            openSuccessScreen()
+            return
+        }
     }
 
     @objc func keyboardWillShow(notification: NSNotification) {
@@ -353,55 +359,50 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
                         switchConsent.isEnabled = true
                         switchConsent.setOn(false, animated: false)
                         goButton?.isEnabled = false
-                        //                            binding.checkBoxConsent.setOnCheckedChangeListener { buttonView, isChecked ->
-                        //                                if (isChecked) {
-                        //                                    val request = UpdateFastPaymentContractRequest(
-                        //                                        fastPayment.fpcontractID.toString(),
-                        //                                        fastPayment.accountID.toString(),
-                        //                                        "EMPTY",
-                        //                                        "YES",
-                        //                                        "YES"
-                        //                                    )
-                        //                                    viewModel.updateSBPConsent(request)
-                        //                                    binding.progressBar.visibility = View.VISIBLE
-                        //                                    binding.checkBoxConsent.isEnabled = false
-                        //                                }
-                        //                            }
                     } else {
                         switchConsent.setOn(true, animated: false)
                         switchConsent.isEnabled = false
                         goButton?.isEnabled = true
+
+                        switchConsent?.isHidden = true
+                        labelConsentDescr.isHidden = true
+                        for constraint in rootView.constraints {
+                            if constraint.identifier == "mySwitchConsent" {
+                                constraint.constant = -75
+                            }
+                        }
                     }
                 } else {
                     switchConsent.setOn(true, animated: false)
                     switchConsent.isEnabled = false
                     goButton?.isEnabled = true
+
+                    switchConsent.isHidden = true
+                    labelConsentDescr.isHidden = true
+                    for constraint in rootView.constraints {
+                        if constraint.identifier == "mySwitchConsent" {
+                            constraint.constant = -75
+                        }
+                    }
                 }
             } else {
                 switchConsent.setOn(true, animated: false)
                 switchConsent.isEnabled = false
                 goButton?.isEnabled = true
+
+                switchConsent.isHidden = true
+                labelConsentDescr.isHidden = true
+                for constraint in rootView.constraints {
+                    if constraint.identifier == "mySwitchConsent" {
+                        constraint.constant = -75
+                    }
+                }
             }
         } else {
             modeConsent = "create"
             switchConsent.setOn(false, animated: false)
             switchConsent.isEnabled = true
             goButton?.isEnabled = false
-            //                binding.checkBoxConsent.setOnCheckedChangeListener { buttonView, isChecked ->
-            //                    if (isChecked) {
-            //                        viewModel.cardViewer.source.value?.let {
-            //                            val request = СreateFastPaymentContractRequest(
-            //                                it.getTransferId(),
-            //                                "EMPTY",
-            //                                "YES",
-            //                                "YES"
-            //                            )
-            //                            viewModel.createSBPConsent(request)
-            //                            binding.progressBar.visibility = View.VISIBLE
-            //                            binding.checkBoxConsent.isEnabled = false
-            //                        }
-            //                    }
-            //                }
         }
     }
     
