@@ -32,12 +32,12 @@ class SettingTableViewController: UITableViewController {
     
     private var tableHeaderView: UIView? {
         //button
-//        let button = UIButton(type: .system)
-//        button.backgroundColor = .black
-//        button.layer.cornerRadius = 32 / 2
-//        button.clipsToBounds = true
-//        button.setImage(UIImage(named: "edit-2"), for: .normal)
-//        button.addTarget(self, action: #selector(changeImage), for: .touchUpInside)
+        let button = UIButton(type: .system)
+        button.backgroundColor = .black
+        button.layer.cornerRadius = 32 / 2
+        button.clipsToBounds = true
+        button.setImage(UIImage(named: "edit-2"), for: .normal)
+        button.addTarget(self, action: #selector(changeImage), for: .touchUpInside)
         
         //imageView
         let userPhoto = loadImageFromDocumentDirectory(fileName: "userPhoto")
@@ -54,12 +54,12 @@ class SettingTableViewController: UITableViewController {
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: kHeaderViewHeight))
         headerView.backgroundColor = UIColor.white
         headerView.addSubview(imageView)
-       // headerView.addSubview(button)
+        headerView.addSubview(button)
         
         imageView.centerX(inView: headerView,
                           topAnchor: headerView.topAnchor, paddingTop: 16)
-      //  button.anchor(top: imageView.topAnchor, right: imageView.rightAnchor,
-      //                width: 32, height: 32)
+        button.anchor(top: imageView.topAnchor, right: imageView.rightAnchor,
+                      width: 32, height: 32)
         
         return headerView
     }
