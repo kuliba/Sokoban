@@ -15,36 +15,31 @@ class PlacesMapViewModel: ObservableObject {
     
     @Published var items: [ItemViewModel]
     let initialRegion: MKCoordinateRegion
+    @Published var currentRegion: MKCoordinateRegion
     
     init(items: [ItemViewModel], initialRegion: MKCoordinateRegion) {
         
         self.items = items
         self.initialRegion = initialRegion
+        self.currentRegion = initialRegion
     }
     
     init(with atmList: [AtmData], initialRegion: MKCoordinateRegion) {
         
         self.items = atmList.compactMap { atmItem in
             
-            guard let coordinate = atmItem.coordinate else {
-                return nil
-            }
-            
-            return PlacesMapViewModel.ItemViewModel(id: atmItem.id, iconName: atmItem.iconName, coordinate: coordinate, category: atmItem.category)
+            return PlacesMapViewModel.ItemViewModel(id: atmItem.id, iconName: atmItem.iconName, coordinate: atmItem.coordinate, category: atmItem.category)
         }
         
         self.initialRegion = initialRegion
+        self.currentRegion = initialRegion
     }
     
     func update(with atmList: [AtmData]) {
         
         self.items = atmList.compactMap { atmItem in
-            
-            guard let coordinate = atmItem.coordinate else {
-                return nil
-            }
-            
-            return PlacesMapViewModel.ItemViewModel(id: atmItem.id, iconName: atmItem.iconName, coordinate: coordinate, category: atmItem.category)
+
+            return PlacesMapViewModel.ItemViewModel(id: atmItem.id, iconName: atmItem.iconName, coordinate: atmItem.coordinate, category: atmItem.category)
         }
     }
 }
@@ -72,6 +67,11 @@ enum PlacesMapViewModelAction {
     }
     
     struct ShowRegion: Action {
+        
+        let region: MKCoordinateRegion
+    }
+    
+    struct ShowUserLocation: Action {
         
         let region: MKCoordinateRegion
     }

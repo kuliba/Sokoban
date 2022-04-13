@@ -67,6 +67,22 @@ class MainViewController: UIViewController {
         }
     }
     
+    func addUserName() {
+        DispatchQueue.main.async {
+            let uName = UserDefaults.standard.object(forKey: "userName") as? String
+            if uName != nil {
+                self.searchBar.textField.text = uName
+            }
+            let userPhoto = self.loadImageFromDocumentDirectory(fileName: "userPhoto")
+            
+            if userPhoto != nil {
+                self.searchBar.searchIcon.image = userPhoto
+            } else {
+                self.searchBar.searchIcon.image = UIImage(named: "ProfileImage")
+            }
+        }
+    }
+    
     lazy var searchBar: NavigationBarUIView = UIView.fromNib()
     
     enum Section: Int, CaseIterable {
@@ -180,8 +196,14 @@ class MainViewController: UIViewController {
         
     }
     
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        addUserName()
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
         if GlobalModule.qrOperator != nil && GlobalModule.qrData != nil {
             let controller = InternetTVMainController.storyboardInstance()!
             let nc = UINavigationController(rootViewController: controller)
@@ -261,14 +283,16 @@ class MainViewController: UIViewController {
 
         let gesture = UITapGestureRecognizer(target: self, action: #selector(openSetting))
         searchBar.searchIcon.addGestureRecognizer(gesture)
-        searchBar.searchIcon.image = UIImage(named: "ProfileImage")
-
+ //       searchBar.searchIcon.image = UIImage(named: "ProfileImage")
+        
         searchBar.textField.text = ""
         searchBar.textField.placeholder = ""
         searchBar.textField.isEnabled = false
         searchBar.foraAvatarImageView.isHidden = false
         searchBar.searchIconWidth.constant = 40
         searchBar.searchIconHeight.constant = 40
+        self.searchBar.searchIcon.layer.cornerRadius = 20
+        self.searchBar.searchIcon.clipsToBounds = true
         
         searchBar.trailingLeftButton.setImage(UIImage(named: "searchBarIcon"), for: .normal)
         searchBar.trailingLeftButton.isEnabled = false
@@ -329,7 +353,12 @@ class MainViewController: UIViewController {
                     }
                     
                 case let payload as ModelAction.Settings.GetClientInfo.Complete:
-                    searchBar.textField.text = payload.user.firstName
+                    let userName = UserDefaults.standard.object(forKey: "userName") as? String
+                    if userName != nil {
+                        searchBar.textField.text = userName
+                    } else {
+                        searchBar.textField.text = payload.user.firstName
+                    }
                     
                 default:
                     break
@@ -646,6 +675,17 @@ extension MainViewController {
 extension MainViewController: ChildViewControllerDelegate {
     func childViewControllerResponse(productList: [GetProductListDatum]) {
         showAlert(with: "ОБновляет", and: "")
+    }
+    
+    func loadImageFromDocumentDirectory(fileName: String) -> UIImage? {
+        
+        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!;
+        let fileURL = documentsUrl.appendingPathComponent(fileName)
+        do {
+            let imageData = try Data(contentsOf: fileURL)
+            return UIImage(data: imageData)
+        } catch {}
+        return nil
     }
 }
 

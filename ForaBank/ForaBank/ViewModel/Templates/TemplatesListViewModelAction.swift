@@ -101,5 +101,19 @@ enum TemplatesListViewModelAction {
             let viewModel: PaymentTemplateData
         }
         
+        struct InterneetPayment: Action {
+            //TODO: Сделать модель для перевода по реквизитам в рефакторинге экрана экрана платежей
+            let viewModel: PaymentTemplateData
+        }
+        
+        struct GKHPayment: Action {
+            //TODO: Сделать модель для перевода по реквизитам в рефакторинге экрана экрана платежей
+            let viewModel: PaymentTemplateData
+        }
+        
+        struct TransportPayment: Action {
+            //TODO: Сделать модель для перевода по реквизитам в рефакторинге экрана экрана платежей
+            let viewModel: PaymentTemplateData
+        }
     }
 }

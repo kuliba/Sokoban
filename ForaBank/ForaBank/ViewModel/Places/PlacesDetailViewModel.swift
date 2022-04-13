@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import CoreLocation
+import UIKit
 
 struct PlacesDetailViewModel: Identifiable {
     
@@ -17,13 +18,13 @@ struct PlacesDetailViewModel: Identifiable {
     let address: String
     let metro: MetroViewModel?
     let distance: String?
-    let routeButton: RouteButtonViewModel
+    let routeButton: RouteButtonViewModel?
     let schedule: String
     let phoneNumber: String
     let email: String
     let services: ServicesViewModel?
     
-    internal init(id: String, icon: Image, name: String, address: String, metro: MetroViewModel?, distance: String?, routeButton: RouteButtonViewModel, schedule: String, phoneNumber: String, email: String, services: ServicesViewModel?) {
+    internal init(id: String, icon: Image, name: String, address: String, metro: MetroViewModel?, distance: String?, routeButton: RouteButtonViewModel?, schedule: String, phoneNumber: String, email: String, services: ServicesViewModel?) {
         
         self.id = id
         self.icon = icon
@@ -38,19 +39,36 @@ struct PlacesDetailViewModel: Identifiable {
         self.services = services
     }
     
-    init(atmItem: AtmData, metroStations: [AtmMetroStationData]? , services: [AtmServiceData]?, currentLocation: CLLocationCoordinate2D?, routeAction: @escaping () -> Void) {
-        
+    init(atmItem: AtmData, metroStations: [AtmMetroStationData]? , services: [AtmServiceData]?, currentLocation: CLLocationCoordinate2D?) {
+
         self.init(id: atmItem.id,
                   icon: Image(atmItem.iconName),
                   name: atmItem.name,
                   address: atmItem.address,
                   metro: .init(stationsData: metroStations),
-                  distance: nil,
-                  routeButton: .init(action: routeAction),
+                  distance: atmItem.distanceFormatted(to: currentLocation),
+                  routeButton: Self.routeButtonViewModel(start: currentLocation, dest: atmItem.coordinate),
                   schedule: atmItem.schedule,
                   phoneNumber: atmItem.phoneNumber,
                   email: atmItem.email,
                   services: .init(servicesData: services))
+    }
+    
+    static func routeButtonViewModel(start: CLLocationCoordinate2D?, dest: CLLocationCoordinate2D?) -> RouteButtonViewModel? {
+    
+        guard let start = start, let dest = dest else {
+            return nil
+        }
+        
+        guard let routeURL = URL(string: "maps://?saddr=\(start.latitude),\(start.longitude)&daddr=\(dest.latitude),\(dest.longitude)") else {
+            return nil
+        }
+        
+        guard UIApplication.shared.canOpenURL(routeURL) else {
+            return nil
+        }
+        
+        return RouteButtonViewModel(action: {  UIApplication.shared.open(routeURL, options: [:], completionHandler: nil)})
     }
 }
 

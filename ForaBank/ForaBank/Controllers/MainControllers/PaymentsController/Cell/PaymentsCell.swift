@@ -17,6 +17,7 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
     var operatorsListInternet: Results<InternetTVLatestOperationsModel>? = nil
     lazy var realm = try? Realm()
     let iconImageView = UIImageView()
+    let phoneFormatter = PhoneNumberFormater()
 
     let avatarImageView: UIImageView = {
         let imageView = UIImageView()
@@ -112,10 +113,7 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
                 iconImageView.image = nil
                 initialsLabel.text = contactInitials(model: payment.lastCountryPayment)
             } else {
-                guard let avatarImage = UIImage(named: "smartphonegray") else {
-                    return
-                }
-//                self.iconImageView.images = avatarImage
+                _ = UIImage(named: "smartphonegray")
             }
             searchForContactUsingPhoneNumber(phoneNumber: String(payment.lastCountryPayment?.phoneNumber?.digits.dropFirst() ?? "")) { contact in
                 self.titleLabel.text = "\(contact.givenName) \(contact.familyName)"
@@ -142,7 +140,7 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
                 if i.puref == payment.lastGKHPayment?.puref {
                     avatarImageView.image = i.logotypeList.first?.svgImage?.convertSVGStringToImage()
                     titleLabel.text = i.name
-                    descriptionLabel.text = payment.lastGKHPayment?.amount?.string()
+                    descriptionLabel.text = payment.lastGKHPayment?.amount?.string()?.toDouble()?.currencyFormatter(symbol: payment.lastGKHPayment?.countryCode ?? "RUB")
                     descriptionLabel.isHidden = false
                     iconCountryImageView.isHidden = true
                     avatarImageView.isHidden = false
@@ -163,32 +161,35 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
                     iconCountryImageView.isHidden = false
                 }
             }
+            
             let phoneNumber = payment.lastMobilePayment?.additionalList?.filter {
                 $0.fieldName == "a3_NUMBER_1_2"
             }
-            let number = phoneNumber?.first?.fieldValue ?? ""
-            let mask = StringMask(mask: "+7 (000) 000-00-00")
-            titleLabel.text = mask.mask(string: number)
-            titleLabel.text = number.numberFormatter()
-            guard let avatarImage = UIImage(named: "smartphonegray") else {
-                return
-            }
+            
+            let avatarImage = UIImage(named: "smartphonegray")
             iconImageView.image = avatarImage
             avatarImageView.image = nil
-            searchForContactUsingPhoneNumber(phoneNumber: number) { contact in
-                self.titleLabel.text = "\(contact.givenName) \(contact.familyName)"
-                if contact.isKeyAvailable(CNContactImageDataKey) {
-                    self.iconImageView.image = nil
-                    if let contactImageData = contact.imageData {
-                        self.avatarImageView.image = UIImage(data: contactImageData)
+            
+            if  let number = phoneNumber?.first?.fieldValue {
+                
+                let formattedPhone = phoneFormatter.format(number)
+                titleLabel.text = formattedPhone
+                
+                searchForContactUsingPhoneNumber(phoneNumber: number) { contact in
+                    self.titleLabel.text = "\(contact.givenName) \(contact.familyName)"
+                    if contact.isKeyAvailable(CNContactImageDataKey) {
+                        self.iconImageView.image = nil
+                        if let contactImageData = contact.imageData {
+                            self.avatarImageView.image = UIImage(data: contactImageData)
+                        } else {
+                            self.initialsLabel.text = self.contactInitialsPhone(model: contact)
+                        }
                     } else {
-                        self.initialsLabel.text = self.contactInitialsPhone(model: contact)
+                        guard let avatarImage = UIImage(named: "smartphonegray") else {
+                            return
+                        }
+                        self.iconImageView.image = avatarImage
                     }
-                } else {
-                    guard let avatarImage = UIImage(named: "smartphonegray") else {
-                        return
-                    }
-                    self.iconImageView.image = avatarImage
                 }
             }
         case "internet":
@@ -206,7 +207,7 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
                     }
                     if let arr = found, arr.count > 0, let op = arr.first {
                         titleLabel.text = op.name?.capitalizingFirstLetter() ?? ""
-                        descriptionLabel.text = String(lastOperation.amount)
+                        descriptionLabel.text = lastOperation.amount.currencyFormatter()
                         if let svgImage = op.logotypeList.first?.svgImage, svgImage != "" {
                             avatarImageView.image = svgImage.convertSVGStringToImage()
                         } else {
@@ -229,7 +230,7 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
                 if i.puref == payment.lastGKHPayment?.puref {
                     avatarImageView.image = i.logotypeList.first?.svgImage?.convertSVGStringToImage()
                     titleLabel.text = i.name
-                    descriptionLabel.text = payment.lastGKHPayment?.amount?.string()
+                    descriptionLabel.text = payment.lastGKHPayment?.amount?.string()?.toDouble()?.currencyFormatter()
                     descriptionLabel.isHidden = false
                     iconCountryImageView.isHidden = true
                     avatarImageView.isHidden = false
@@ -290,9 +291,7 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
         iconImageView.center(inView: view)
         iconImageView.setDimensions(height: 32, width: 32)
         stackView.anchor(left: self.leftAnchor, right: self.rightAnchor)
-        stackView.centerX(
-                inView: view, topAnchor: view.bottomAnchor, paddingTop: 8)
-//        descriptionLabel.anchor(top: titleLabel.bottomAnchor)
+        stackView.centerX(inView: view, topAnchor: view.bottomAnchor, paddingTop: 8)
 
         iconCountryImageView.anchor(
                 top: view.topAnchor, right: view.rightAnchor, paddingRight: -8)
@@ -363,8 +362,7 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
                 }
                 if message != nil {
                     DispatchQueue.main.async {
-//                        guard let avatarImage = UIImage(named: "smartphonegray") else { return }
-//                        self.iconImageView.image = avatarImage
+                        
                     }
                 } else {
                     // Success
@@ -379,9 +377,7 @@ class PaymentsCell: UICollectionViewCell, SelfConfiguringCell {
                         print(contact.givenName) // Print the "first" name
                         print(contact.familyName) // Print the "last" name
                         if contact.isKeyAvailable(CNContactImageDataKey) {
-                            if let contactImageData = contact.imageData {
-                                print(UIImage(data: contactImageData)) // Print the image set on the contact
-                            }
+                            
                         } else {
                             // No Image available
                         }
