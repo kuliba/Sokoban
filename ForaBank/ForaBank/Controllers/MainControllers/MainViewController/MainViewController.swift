@@ -74,6 +74,7 @@ class MainViewController: UIViewController {
                 self.searchBar.textField.text = uName
             }
             let userPhoto = self.loadImageFromDocumentDirectory(fileName: "userPhoto")
+            
             if userPhoto != nil {
                 self.searchBar.searchIcon.image = userPhoto
             } else {
@@ -198,7 +199,6 @@ class MainViewController: UIViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         addUserName()
-
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -283,7 +283,7 @@ class MainViewController: UIViewController {
 
         let gesture = UITapGestureRecognizer(target: self, action: #selector(openSetting))
         searchBar.searchIcon.addGestureRecognizer(gesture)
-        searchBar.searchIcon.image = UIImage(named: "ProfileImage")
+ //       searchBar.searchIcon.image = UIImage(named: "ProfileImage")
         
         searchBar.textField.text = ""
         searchBar.textField.placeholder = ""
