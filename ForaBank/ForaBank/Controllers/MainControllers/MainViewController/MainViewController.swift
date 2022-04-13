@@ -85,20 +85,27 @@ class MainViewController: UIViewController {
     lazy var searchBar: NavigationBarUIView = UIView.fromNib()
     
     enum Section: Int, CaseIterable {
-        case products, pay, offer, currentsExchange, openProduct
+        case products, pay, offer, currentsExchange, openProduct, atm
         
         func description() -> String {
             switch self {
             case .products:
                 return "Мои продукты"
+                
             case .pay:
                 return "Быстрые операции"
+                
             case .offer:
                 return "123"
+                
             case .currentsExchange:
                 return "Обмен валют"
+                
             case .openProduct:
                 return "Открыть продукт"
+                
+            case .atm:
+                return "Отделения и банкоматы"
             }
         }
     }
@@ -446,6 +453,7 @@ class MainViewController: UIViewController {
         collectionView.register(OfferCollectionViewCell.self, forCellWithReuseIdentifier: OfferCollectionViewCell.reuseId)
         collectionView.register(ProductCell.self, forCellWithReuseIdentifier: ProductCell.reuseId)
         collectionView.register(NewProductCell.self, forCellWithReuseIdentifier: NewProductCell.reuseId)
+        collectionView.register(AtmCollectionViewCell.self, forCellWithReuseIdentifier: AtmCollectionViewCell.identifier)
         
         collectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 80, right: 0)
         collectionView.isScrollEnabled = true
@@ -502,12 +510,13 @@ class MainViewController: UIViewController {
     
     func reloadData(with searchText: String?) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, PaymentsModel>()
-        snapshot.appendSections([.products, .pay, .offer, .currentsExchange, .openProduct])
+        snapshot.appendSections([.products, .pay, .offer, .currentsExchange, .openProduct, .atm])
         snapshot.appendItems(productsViewModels, toSection: .products)
         snapshot.appendItems(paymentsViewModels, toSection: .pay)
         snapshot.appendItems(promoViewModels, toSection: .offer)
         snapshot.appendItems(exchangeRatesViewModels, toSection: .currentsExchange)
         snapshot.appendItems(openProductViewModels, toSection: .openProduct)
+        snapshot.appendItems([PaymentsModel(id: 0, name: "Выберите ближайшую точку на карте", iconName: "imgMainMap", controllerName: "PlacesView")], toSection: .atm)
         dataSource?.apply(snapshot, animatingDifferences: true)
         collectionView.reloadData()
     }

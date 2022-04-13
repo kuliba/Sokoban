@@ -13,6 +13,13 @@ import SwiftUI
 public extension Image {
     static var imgMainBanner1: Image { Image(#function) }
     static var imgMainBanner2: Image { Image(#function) }
+    static var imgMainBanner3: Image { Image(#function) }
+    static var imgMainBanner4: Image { Image(#function) }
+    static var imgMainBanner5: Image { Image(#function) }
+    static var imgMainMap: Image { Image(#function) }
+    static var imgMockupCardMir: Image { Image(#function) }
+    static var imgMockupPremium: Image { Image(#function) }
+    static var imgMockupVseVklVisa: Image { Image(#function) }
     static var imgRegistrationBg: Image { Image(#function) }
     static var imgSplashBg: Image { Image(#function) }
 }
