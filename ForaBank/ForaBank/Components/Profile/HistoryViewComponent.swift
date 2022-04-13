@@ -13,8 +13,8 @@ extension HistoryViewComponent {
     class ViewModel: ObservableObject {
         
         let title = "История операций"
-        let dateOperations: [DateOperations]
-        let spending: SegmentedBar.ViewModel?
+        var dateOperations: [DateOperations]
+        var spending: SegmentedBar.ViewModel?
         
         private let model: Model
         private var bindings = Set<AnyCancellable>()
@@ -24,13 +24,12 @@ extension HistoryViewComponent {
             self.dateOperations = dateOperations
             self.spending = spending
             self.model = model
-            
-            bind()
         }
         
-        init(_ model: Model) {
-            self.dateOperations = [.init(date: "", operations: [.init(title: "", image: .ic16MoreHorizontal, subtitle: "", amount: "", type: .debit)])]
-            self.spending = nil
+        init(_ model: Model = .emptyMock) {
+            
+            self.dateOperations = []
+            self.spending = nil    
             self.model = model
             
             bind()
@@ -50,6 +49,63 @@ extension HistoryViewComponent {
                     
                     
                 }.store(in: &bindings)
+            
+            let statement: [ProductStatementData]? = {
+                let bundle = Bundle(for: Model.self)
+                let url = bundle.url(forResource: "StatementSample", withExtension: "json")!
+                let json = try! Data(contentsOf: url)
+                let decoder = JSONDecoder.serverDate
+                let statement = try! decoder.decode([ProductStatementData]?.self, from: json)
+                return statement
+            }()
+            
+            if let statement = statement {
+                
+                let groupByDate = Dictionary(grouping: statement) { (operation) -> String in
+                   
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat =  "d MMMM, E"
+                    dateFormatter.timeZone = .current
+                    dateFormatter.locale = Locale(identifier: "ru_RU")
+                    let localDate = dateFormatter.string(from: operation.tranDate)
+                    
+                    return localDate
+                }
+                
+                let sortedArray = groupByDate.sorted(by: { $0.0 > $1.0 })
+
+                func sumDeifferentGroup() -> [Double] {
+                    
+                    let groupByName = Dictionary(grouping: statement) { (operation) -> String in
+                        return operation.groupName
+                    }
+                    
+                    var sumArray = [Double]()
+
+                    for operation in groupByName {
+                        sumArray.append(operation.value.reduce(0) { partialResult, y in
+                            partialResult + y.amount
+                        })
+                    }
+                    
+                    return sumArray
+                }
+                
+                self.spending = .init(value: sumDeifferentGroup())
+
+                for date in sortedArray {
+                    
+                    var operations = [DateOperations.Operation]()
+                    
+                    for operation in date.value {
+                         
+                        operations.append(HistoryViewComponent.ViewModel.DateOperations.Operation(productStatementData: operation))
+                    }
+                   
+                    self.dateOperations.append(HistoryViewComponent.ViewModel.DateOperations(date: date.key, operations: operations))
+                    
+                }
+            }
         }
         
         struct DateOperations: Identifiable {
@@ -68,7 +124,7 @@ extension HistoryViewComponent {
                 
                 let id = UUID()
                 let title: String
-                let image: Image
+                let image: Image?
                 let subtitle: String
                 let amount: String
                 let type: OperationType
@@ -82,10 +138,26 @@ extension HistoryViewComponent {
                     self.type = type
                 }
                 
-                enum OperationType {
+                init(productStatementData: ProductStatementData) {
                     
-                    case debit
-                    case credit
+                    if let name = productStatementData.merchantNameRus {
+                        
+                        title = name
+                    } else {
+                        title = productStatementData.merchantName
+                    }
+                    if let image = productStatementData.svgImage.image {
+                        
+                        self.image = image
+                    } else {
+                        
+                        self.image = nil
+                    }
+                    
+                    self.subtitle = productStatementData.groupName
+                    self.amount = productStatementData.amount.currencyFormatter()
+                    
+                    self.type = productStatementData.operationType
                 }
             }
         }
@@ -145,9 +217,16 @@ struct HistoryViewComponent: View {
                             
                             HStack(alignment: .top, spacing: 20) {
                                 
-                                item.image
-                                    .resizable()
-                                    .frame(width: 40, height: 40)
+                                if let image = item.image {
+                                    
+                                    image
+                                        .resizable()
+                                        .frame(width: 40, height: 40)
+                                } else {
+                                    
+                                    Circle()
+                                        .frame(width: 40, height: 40)
+                                }
                                 
                                 VStack(alignment: .leading, spacing: 8) {
                                     
@@ -203,6 +282,32 @@ struct HistoryViewComponent: View {
             }
         }
     }
+    
+    struct ErrorRequestView: View {
+        
+        var body: some View {
+            
+            VStack(spacing: 24) {
+                
+                Image.ic24Search
+                    .foregroundColor(.mainColorsGray)
+                    .frame(width: 64, height: 64)
+                    .background(Color.mainColorsGrayLightest)
+                    .cornerRadius(90)
+                    
+                Text("Нет операций")
+                    .font(Font.system(size: 14, weight: .light))
+                    .foregroundColor(.mainColorsGray)
+                
+                Button {
+                    
+                } label: {
+                    Text("Повторить запрос")
+                }
+
+            }
+        }
+    }
 }
 
 struct HistoryViewComponent_Previews: PreviewProvider {
@@ -212,13 +317,14 @@ struct HistoryViewComponent_Previews: PreviewProvider {
         Group {
             
             HistoryViewComponent(viewModel: .init(dateOperations: [.init(date: "25 августа, ср", operations: [.init(title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .debit), .init(title: "Selhozmarket", image: Image.init("GKH", bundle: nil), subtitle: "Магазин", amount: "-230 Р", type: .credit)]), .init(date: "26 августа, ср", operations: [.init(title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .debit)])], spending: .spending))
-                .previewLayout(.fixed(width: 400, height: 500))
+                .previewLayout(.fixed(width: 360, height: 500))
 
             HistoryViewComponent(viewModel: .init(dateOperations: [.init(date: "25 августа, ср", operations: [.init(title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .debit)]), .init(date: "26 августа, ср", operations: [.init(title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .debit)])], spending: nil))
                 .previewLayout(.fixed(width: 400, height: 400))
 
             HistoryViewComponent(viewModel: .init(dateOperations: [], spending: nil))
                 .previewLayout(.fixed(width: 400, height: 400))
+            
         }
     }
 }
@@ -229,4 +335,9 @@ extension HistoryViewComponent.ViewModel.DateOperations {
     
     static let creditOperation = Operation(title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit)
     
+}
+
+extension HistoryViewComponent.ViewModel {
+    
+    static let sampleHistory = HistoryViewComponent.ViewModel( dateOperations: [.init(date: "12 декабря", operations: [.init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit)])], spending: .init(value: [100, 300]))
 }
