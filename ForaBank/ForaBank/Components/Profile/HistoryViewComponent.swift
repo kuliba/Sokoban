@@ -29,7 +29,7 @@ extension HistoryViewComponent {
         init(_ model: Model = .emptyMock) {
             
             self.dateOperations = []
-            self.spending = nil    
+            self.spending = nil
             self.model = model
             
             bind()
@@ -39,73 +39,54 @@ extension HistoryViewComponent {
             
             model.statement
                 .receive(on: DispatchQueue.main)
-                .sink {[unowned self] operation in
+                .sink {[unowned self] operations in
                     
-                    var statement = [DateOperations]()
-                    
-                    for item in operation {
-                        print(item)
+                    let groupByDate = Dictionary(grouping: operations) { (operation) -> String in
+                        
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat =  "d MMMM, E"
+                        dateFormatter.timeZone = .current
+                        dateFormatter.locale = Locale(identifier: "ru_RU")
+                        let localDate = dateFormatter.string(from: operation.tranDate)
+                        
+                        return localDate
                     }
                     
+                    let sortedArray = groupByDate.sorted(by: { $0.0 > $1.0 })
+                    
+                    func sumDeifferentGroup() -> [Double] {
+                        
+                        let groupByName = Dictionary(grouping: operations) { (operation) -> String in
+                            return operation.groupName
+                        }
+                        
+                        var sumArray = [Double]()
+                        
+                        for operation in groupByName {
+                            sumArray.append(operation.value.reduce(0) { partialResult, y in
+                                partialResult + y.amount
+                            })
+                        }
+                        
+                        return sumArray
+                    }
+                    
+                    self.spending = .init(value: sumDeifferentGroup())
+                    
+                    for date in sortedArray {
+                        
+                        var operations = [DateOperations.Operation]()
+                        
+                        for operation in date.value {
+                            
+                            operations.append(HistoryViewComponent.ViewModel.DateOperations.Operation(productStatementData: operation))
+                        }
+                        
+                        self.dateOperations.append(HistoryViewComponent.ViewModel.DateOperations(date: date.key, operations: operations))
+                        
+                    }
                     
                 }.store(in: &bindings)
-            
-            let statement: [ProductStatementData]? = {
-                let bundle = Bundle(for: Model.self)
-                let url = bundle.url(forResource: "StatementSample", withExtension: "json")!
-                let json = try! Data(contentsOf: url)
-                let decoder = JSONDecoder.serverDate
-                let statement = try! decoder.decode([ProductStatementData]?.self, from: json)
-                return statement
-            }()
-            
-            if let statement = statement {
-                
-                let groupByDate = Dictionary(grouping: statement) { (operation) -> String in
-                   
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat =  "d MMMM, E"
-                    dateFormatter.timeZone = .current
-                    dateFormatter.locale = Locale(identifier: "ru_RU")
-                    let localDate = dateFormatter.string(from: operation.tranDate)
-                    
-                    return localDate
-                }
-                
-                let sortedArray = groupByDate.sorted(by: { $0.0 > $1.0 })
-
-                func sumDeifferentGroup() -> [Double] {
-                    
-                    let groupByName = Dictionary(grouping: statement) { (operation) -> String in
-                        return operation.groupName
-                    }
-                    
-                    var sumArray = [Double]()
-
-                    for operation in groupByName {
-                        sumArray.append(operation.value.reduce(0) { partialResult, y in
-                            partialResult + y.amount
-                        })
-                    }
-                    
-                    return sumArray
-                }
-                
-                self.spending = .init(value: sumDeifferentGroup())
-
-                for date in sortedArray {
-                    
-                    var operations = [DateOperations.Operation]()
-                    
-                    for operation in date.value {
-                         
-                        operations.append(HistoryViewComponent.ViewModel.DateOperations.Operation(productStatementData: operation))
-                    }
-                   
-                    self.dateOperations.append(HistoryViewComponent.ViewModel.DateOperations(date: date.key, operations: operations))
-                    
-                }
-            }
         }
         
         struct DateOperations: Identifiable {
@@ -275,7 +256,7 @@ struct HistoryViewComponent: View {
                     .frame(width: 64, height: 64)
                     .background(Color.mainColorsGrayLightest)
                     .cornerRadius(90)
-                    
+                
                 Text("Нет операций")
                     .font(Font.system(size: 14, weight: .light))
                     .foregroundColor(.mainColorsGray)
@@ -294,7 +275,7 @@ struct HistoryViewComponent: View {
                     .frame(width: 64, height: 64)
                     .background(Color.mainColorsGrayLightest)
                     .cornerRadius(90)
-                    
+                
                 Text("Нет операций")
                     .font(Font.system(size: 14, weight: .light))
                     .foregroundColor(.mainColorsGray)
@@ -304,7 +285,7 @@ struct HistoryViewComponent: View {
                 } label: {
                     Text("Повторить запрос")
                 }
-
+                
             }
         }
     }
@@ -318,10 +299,10 @@ struct HistoryViewComponent_Previews: PreviewProvider {
             
             HistoryViewComponent(viewModel: .init(dateOperations: [.init(date: "25 августа, ср", operations: [.init(title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .debit), .init(title: "Selhozmarket", image: Image.init("GKH", bundle: nil), subtitle: "Магазин", amount: "-230 Р", type: .credit)]), .init(date: "26 августа, ср", operations: [.init(title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .debit)])], spending: .spending))
                 .previewLayout(.fixed(width: 360, height: 500))
-
+            
             HistoryViewComponent(viewModel: .init(dateOperations: [.init(date: "25 августа, ср", operations: [.init(title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .debit)]), .init(date: "26 августа, ср", operations: [.init(title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .debit)])], spending: nil))
                 .previewLayout(.fixed(width: 400, height: 400))
-
+            
             HistoryViewComponent(viewModel: .init(dateOperations: [], spending: nil))
                 .previewLayout(.fixed(width: 400, height: 400))
             
