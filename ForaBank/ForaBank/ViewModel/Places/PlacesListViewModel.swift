@@ -14,7 +14,6 @@ class PlacesListViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
     
-    @Published var title: String?
     @Published var items: [ItemViewModel]
     
     init(items: [ItemViewModel]) {
@@ -22,51 +21,35 @@ class PlacesListViewModel: ObservableObject {
         self.items = items
     }
     
-    init(atmList: [AtmData], metroStationsList: [AtmMetroStationData]?, currentLoaction: CLLocationCoordinate2D?) {
+    init(atmList: [AtmData], metroStationsList: [AtmMetroStationData]?, referenceLoaction: CLLocationCoordinate2D) {
         
         self.items = []
-        
-        var items = [ItemViewModel]()
-        for atmItem in atmList {
-            
-            let item = ItemViewModel(atmItem: atmItem, metroStationsList: metroStationsList, currentLoaction: currentLoaction, action: { [weak self] in self?.action.send(PlacesListViewModelAction.ItemDidSelected(itemId: atmItem.id))})
-            items.append(item)
-        }
-        self.items = items
+
+        update(with: atmList, metroStationsList: metroStationsList, referenceLoaction: referenceLoaction)
     }
-    
-    init(atmList: [AtmData], metroStationsList: [AtmMetroStationData]?, radius: AtmRadius) {
         
-        self.items = []
-        self.title = "В радиусе \(radius.radiusTitle)"
-        
-        update(with: atmList, metroStationsList: metroStationsList, radius: radius)
-    }
-    
-    static func atmItemsFilterred(atmList: [AtmData], by radius: AtmRadius) -> [AtmData] {
+    static func atmItemsSorted(atmList: [AtmData], referenceLoaction: CLLocationCoordinate2D) -> [AtmData] {
         
         let atmItemsWithDistances: [(item: AtmData, distance: CLLocationDistance)] = atmList.compactMap { atmItem in
             
-            guard let distance = atmItem.distance(to: radius.location) else {
+            guard let distance = atmItem.distance(to: referenceLoaction) else {
                 return nil
             }
             
             return (atmItem, distance)
         }
-        
-        let atmItemsFilterred = atmItemsWithDistances.filter{ $0.distance <= radius.radius }
-        
-        return atmItemsFilterred.sorted(by: { $0.distance < $1.distance }).map{ $0.item }
+
+        return atmItemsWithDistances.sorted(by: { $0.distance < $1.distance }).map{ $0.item }
     }
     
-    func update(with atmList: [AtmData], metroStationsList: [AtmMetroStationData]?, radius: AtmRadius) {
+    func update(with atmList: [AtmData], metroStationsList: [AtmMetroStationData]?, referenceLoaction: CLLocationCoordinate2D) {
         
-        let atmListFilterred = Self.atmItemsFilterred(atmList: atmList, by: radius)
+        let atmListSorted = Self.atmItemsSorted(atmList: atmList, referenceLoaction: referenceLoaction)
         
         var items = [ItemViewModel]()
-        for atmItem in atmListFilterred {
+        for atmItem in atmListSorted {
             
-            let item = ItemViewModel(atmItem: atmItem, metroStationsList: metroStationsList, currentLoaction: radius.location, action: { [weak self] in self?.action.send(PlacesListViewModelAction.ItemDidSelected(itemId: atmItem.id))})
+            let item = ItemViewModel(atmItem: atmItem, metroStationsList: metroStationsList, currentLoaction: referenceLoaction, action: { [weak self] in self?.action.send(PlacesListViewModelAction.ItemDidSelected(itemId: atmItem.id))})
             items.append(item)
         }
         
