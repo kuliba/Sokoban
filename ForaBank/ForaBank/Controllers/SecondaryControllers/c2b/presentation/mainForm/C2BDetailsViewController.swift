@@ -97,6 +97,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         sourceHolder.addArrangedSubview(cardFromField)
         sourceHolder.addArrangedSubview(cardListView)
 
+        cardFromField.titleLabel.text = "Счёт списания"
         cardFromField.didChooseButtonTapped = { () in
             self.openOrHideView(self.cardListView)
         }
