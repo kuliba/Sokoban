@@ -156,9 +156,12 @@ class MainViewController: UIViewController {
         }
 
         bind()
+        startObserveRealm()
         startUpdate()
         model.action.send(ModelAction.Deposits.List.Request())
         model.action.send(ModelAction.Settings.GetClientInfo.Requested())
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(startUpdate), name: .startProductsUpdate, object: nil)
     }
     
     func updateProductsViewModels(with products: Results<UserAllCardsModel>) {
@@ -224,6 +227,7 @@ class MainViewController: UIViewController {
         }
     }
     
+    @objc
     func startUpdate() {
         
         isUpdating.value = true
@@ -418,8 +422,27 @@ class MainViewController: UIViewController {
             }.store(in: &bindings)
     }
     
+    func startObserveRealm() {
+        
+        guard let realm = try? Realm() else {
+            return
+        }
+        
+        self.token = realm.objects(UserAllCardsModel.self).observe { [weak self] _ in
+            
+            guard let self = self else { return }
+            
+            let products = realm.objects(UserAllCardsModel.self)
+            
+            self.productTypeSelector.update(with: products)
+            self.updateProductsViewModels(with: products)
+        }
+    }
+    
     deinit {
+        
         self.token?.invalidate()
+        NotificationCenter.default.removeObserver(self, name: .startProductsUpdate, object: nil)
     }
     
     func setupData() {
