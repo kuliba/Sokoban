@@ -40,21 +40,23 @@ class SettingTableViewController: UITableViewController {
         button.addTarget(self, action: #selector(changeImage), for: .touchUpInside)
         
         //imageView
-        let userPhoto = loadImageFromDocumentDirectory(fileName: "userPhoto")
-        if userPhoto != nil {
-            imageView.image = userPhoto
-        } else {
-            imageView.image = UIImage(named: "ProfileImage")
-        }
-        imageView.backgroundColor = UIColor.clear
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 96 / 2
-        imageView.setDimensions(height: 96, width: 96)
         
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: kHeaderViewHeight))
         headerView.backgroundColor = UIColor.white
         headerView.addSubview(imageView)
         headerView.addSubview(button)
+        
+        let userPhoto = loadImageFromDocumentDirectory(fileName: "userPhoto")
+        if userPhoto != nil {
+            imageView.image = userPhoto?.fixOrientation()
+        } else {
+            imageView.image = UIImage(named: "ProfileImage")
+        }
+        imageView.backgroundColor = UIColor.clear
+        imageView.setDimensions(height: 96, width: 96)
+        imageView.layer.cornerRadius = 96 / 2
+        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFill
         
         imageView.centerX(inView: headerView,
                           topAnchor: headerView.topAnchor, paddingTop: 16)
@@ -229,6 +231,7 @@ class SettingTableViewController: UITableViewController {
         self.showInputDialog(title: "Имя", subtitle: "Как к вам обращаться?", actionTitle: "Да", cancelTitle: "Отмена", inputText: self.nameLabel.text, inputPlaceholder: "Введите Имя", inputKeyboardType: .default) { _ in } actionHandler: { text in
             if text != nil {
             UserDefaults.standard.set(text, forKey: "userName")
+            NotificationCenter.default.post(name: Notification.Name("userNameNotification"), object: nil)
             self.nameLabel.text = text
             }
         }
@@ -330,8 +333,9 @@ extension SettingTableViewController: UIImagePickerControllerDelegate, UINavigat
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         picker.dismiss(animated: true, completion: nil)
         guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
-        imageView.image = image
+        self.imageView.image = image.fixOrientation()
         saveImageInDocumentDirectory(image: image, fileName: "userPhoto")
+        NotificationCenter.default.post(name: Notification.Name("userPhotoNotification"), object: nil)
         
     }
     
@@ -339,7 +343,7 @@ extension SettingTableViewController: UIImagePickerControllerDelegate, UINavigat
         
         let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!;
         let fileURL = documentsUrl.appendingPathComponent(fileName)
-        if let imageData = image.pngData() {
+        if let imageData = image.jpegData(compressionQuality: 1.0) {
             try? imageData.write(to: fileURL, options: .atomic)
             
         }
@@ -367,3 +371,23 @@ extension SettingTableViewController: UIViewControllerTransitioningDelegate {
     }
 }
 
+extension UIImage {
+    func fixOrientation() -> UIImage {
+        if self.imageOrientation == UIImage.Orientation.up {
+            return self
+            
+        }
+        
+        UIGraphicsBeginImageContextWithOptions(self.size, false, self.scale)
+        
+        self.draw(in: CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height))
+        
+        let normalizedImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+        
+        UIGraphicsEndImageContext()
+        
+        return normalizedImage
+        
+    }
+    
+}
