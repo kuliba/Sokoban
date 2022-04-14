@@ -243,6 +243,9 @@ public class AppLocker: UIViewController {
             if let error = error {
                 print(error)
             } else {
+                
+                NotificationCenter.default.post(name: .startProductsUpdate, object: nil)
+                
                 // свернуть и включить таймер
                 DispatchQueue.main.async {
                     let realm = try? Realm()

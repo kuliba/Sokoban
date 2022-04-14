@@ -15,6 +15,7 @@ protocol SettingTableViewControllerDelegate: AnyObject {
 
 
 class SettingTableViewController: UITableViewController {
+    
 
     var delegate: SettingTableViewControllerDelegate?
     
@@ -25,7 +26,6 @@ class SettingTableViewController: UITableViewController {
     @IBOutlet weak var emailLabel: UILabel!
     @IBOutlet weak var pushSwitch: UISwitch!
     @IBOutlet weak var faceId: UISwitch!
-    
     
     
     var imageView = UIImageView()
@@ -40,7 +40,12 @@ class SettingTableViewController: UITableViewController {
 //        button.addTarget(self, action: #selector(changeImage), for: .touchUpInside)
         
         //imageView
-        imageView.image = UIImage(named: "ProfileImage")
+        let userPhoto = loadImageFromDocumentDirectory(fileName: "userPhoto")
+        if userPhoto != nil {
+            imageView.image = userPhoto
+        } else {
+            imageView.image = UIImage(named: "ProfileImage")
+        }
         imageView.backgroundColor = UIColor.clear
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 96 / 2
@@ -91,6 +96,7 @@ class SettingTableViewController: UITableViewController {
              self.faceId.isOn = false
             }
         }
+        
     }
 
     private func loadConfig() {
@@ -142,12 +148,33 @@ class SettingTableViewController: UITableViewController {
     //MARK: - Actions
     
     @objc func changeImage() {
-        let imagePickerController = UIImagePickerController()
-        imagePickerController.delegate = self
-        imagePickerController.sourceType = .photoLibrary
-        imagePickerController.navigationController?.navigationBar.tintColor = .black
-        present(imagePickerController, animated: true, completion: nil)
-
+        let controller = SettingsPhotoViewController()
+        controller.itemIsSelect = { [weak self] item in
+            
+            switch item {
+            case "Сделать фото":
+                let vc = UIImagePickerController()
+                vc.sourceType = .camera
+                vc.allowsEditing = true
+                vc.delegate = self
+                self?.present(vc, animated: true)
+            case "Выбрать из галереи":
+                let imagePickerController = UIImagePickerController()
+                imagePickerController.delegate = self
+                imagePickerController.sourceType = .photoLibrary
+                imagePickerController.navigationController?.navigationBar.tintColor = .black
+                self?.present(imagePickerController, animated: true, completion: nil)
+            default:
+                print()
+            }
+            
+        }
+        
+        let navController = UINavigationController(rootViewController: controller)
+        navController.modalPresentationStyle = .custom
+        navController.transitioningDelegate = self
+        self.present(navController, animated: true)
+        
     }
     
     
@@ -283,6 +310,8 @@ class SettingTableViewController: UITableViewController {
         switch section {
         case 0:
             label.text = "Мои данные"
+//        case 1:
+//            label.text = "Документы"
         case 1:
             label.text = "Платежи и переводы"
         case 2:
@@ -297,10 +326,44 @@ class SettingTableViewController: UITableViewController {
 
 // MARK: - UIImagePickerControllerDelegate
 extension SettingTableViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         picker.dismiss(animated: true, completion: nil)
         guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
         imageView.image = image
+        saveImageInDocumentDirectory(image: image, fileName: "userPhoto")
+        
+    }
+    
+    func saveImageInDocumentDirectory(image: UIImage, fileName: String) {
+        
+        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!;
+        let fileURL = documentsUrl.appendingPathComponent(fileName)
+        if let imageData = image.pngData() {
+            try? imageData.write(to: fileURL, options: .atomic)
+            
+        }
+    }
+    
+    func loadImageFromDocumentDirectory(fileName: String) -> UIImage? {
+        
+        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!;
+        let fileURL = documentsUrl.appendingPathComponent(fileName)
+        do {
+            let imageData = try Data(contentsOf: fileURL)
+            return UIImage(data: imageData)
+        } catch {}
+        return nil
+    }
+    
+}
+
+
+extension SettingTableViewController: UIViewControllerTransitioningDelegate {
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        let presenter = PresentationController(presentedViewController: presented, presenting: presenting)
+        presenter.height = 200
+        return presenter
     }
 }
 

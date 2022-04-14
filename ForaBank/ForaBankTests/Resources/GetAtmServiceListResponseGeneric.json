@@ -6,7 +6,8 @@
     "list": [
       {
         "id": 0,
-        "name": "string"
+        "name": "string",
+        "type": "SERVICE"
       }
     ]
   }

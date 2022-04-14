@@ -17,5 +17,6 @@ struct AtmFilter {
 
 extension AtmFilter {
     
+    static let initial = AtmFilter(categories: [.office, .atm], services: [])
     static let emptyMock = AtmFilter(categories: [], services: [])
 }

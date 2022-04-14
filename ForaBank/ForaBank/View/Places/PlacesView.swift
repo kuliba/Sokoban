@@ -26,11 +26,8 @@ struct PlacesView: View {
                         .transition(.opacity)
                 }
                 
-                //TODO: turn on in full version
-                /*
                 PlacesControlView(viewModel: viewModel.control)
                     .frame(height: 60)
-                 */
             }
             .navigationBarTitle(Text(viewModel.title), displayMode: .inline)
             
@@ -45,6 +42,10 @@ struct PlacesView: View {
                 PlacesFilterView(viewModel: placesFilterViewModel)
             }
         })
+        .onAppear {
+            
+            viewModel.action.send(PlacesViewModelAction.ViewDidLoad())
+        }
     }
 }
 

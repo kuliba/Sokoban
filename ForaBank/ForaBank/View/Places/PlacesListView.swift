@@ -20,13 +20,6 @@ struct PlacesListView: View {
             
             VStack(alignment: .leading, spacing: 16) {
                 
-                if let title = viewModel.title {
-                    
-                    Text(title)
-                        .font(.textH4M16240())
-                        .foregroundColor(.textPlaceholder)
-                }
-                
                 ScrollView {
                     
                     if #available(iOS 14, *) {
@@ -49,7 +42,6 @@ struct PlacesListView: View {
                             }
                         }
                     }
-                    
                 }
             }
             .padding(.top, 80)

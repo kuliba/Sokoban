@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Combine
+import RealmSwift
 
 class TemplatesListViewHostingViewController: UIHostingController<TemplatesListView> {
     
@@ -77,6 +78,18 @@ private extension TemplatesListViewHostingViewController {
                     let paymentViewController = MobilePayViewController(paymentTemplate: payload.viewModel)
                     navigationController?.pushViewController(paymentViewController, animated: true)
                     
+                case let payload as TemplatesListViewModelAction.Present.InterneetPayment:
+                    let templateModel = payload.viewModel
+                    openLatestUtilities(template: templateModel)
+                    
+                case let payload as TemplatesListViewModelAction.Present.GKHPayment:
+                    let templateModel = payload.viewModel
+                    openLatestUtilities(template: templateModel)
+                    
+                case let payload as TemplatesListViewModelAction.Present.TransportPayment:
+                    let templateModel = payload.viewModel
+                    openLatestUtilities(template: templateModel)
+                    
                 case _ as TemplatesListViewModelAction.AddTemplate:
                     dismiss(animated: true) { [weak self] in
                         self?.delegate?.presentProductViewController()
@@ -99,6 +112,70 @@ private extension TemplatesListViewHostingViewController {
             }
         })
         return countryValue!
+    }
+    //PaymentTemplateData
+    private func openLatestUtilities(template: PaymentTemplateData) {
+        var amount = ""
+        var name = ""
+        var image: UIImage!
+        let realm = try? Realm()
+        
+        if let parameterList = template.parameterList.first as? TransferAnywayData {
+            amount = String(Int(parameterList.amount ?? 0))
+            let operators = realm?.objects(GKHOperatorsModel.self)
+            
+            if let foundedOperator = operators?.first(where: { $0.puref == parameterList.puref }) {
+                
+                name = foundedOperator.name?.capitalizingFirstLetter() ?? ""
+                
+                if let svgImage = foundedOperator.logotypeList.first?.svgImage, svgImage != "" {
+                    image = svgImage.convertSVGStringToImage()
+                } else {
+                    image = UIImage(named: "GKH")
+                }
+                var additionalList = [AdditionalListModel]()
+                
+                parameterList.additional.forEach { item in
+                    let additionalItem = AdditionalListModel()
+                    additionalItem.fieldValue = item.fieldvalue
+                    additionalItem.fieldName = item.fieldname
+                    additionalItem.fieldTitle = item.fieldname
+                    additionalList.append(additionalItem)
+                }
+                
+                let latestOpsDO = InternetLatestOpsDO(
+                    mainImage: image,
+                    name: name,
+                    amount: amount,
+                    op: foundedOperator,
+                    additionalList: additionalList)
+                
+                if "iFora||AVDТ;iFora||AVDD".contains(parameterList.puref ?? "-1" ) == true {
+                    
+                    guard let controller = AvtodorDetailsFormController.storyboardInstance() else { return }
+                    controller.operatorData = latestOpsDO.op
+                    controller.latestOperation = latestOpsDO
+                    controller.template = template
+                    navigationController?.pushViewController(controller, animated: true)
+                    
+                } else if parameterList.puref == "iFora||5173" {
+                    
+                    guard let controller = GIBDDFineDetailsFormController.storyboardInstance() else { return }
+                    controller.operatorData = latestOpsDO.op
+                    controller.latestOperation = latestOpsDO
+                    controller.template = template
+                    navigationController?.pushViewController(controller, animated: true)
+                    
+                } else {
+                    
+                    guard let controller = InternetTVDetailsFormController.storyboardInstance() else { return }
+                    controller.operatorData = latestOpsDO.op
+                    controller.latestOperation = latestOpsDO
+                    controller.template = template
+                    navigationController?.pushViewController(controller, animated: true)
+                }
+            }
+        }
     }
 }
 

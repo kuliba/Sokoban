@@ -26,6 +26,9 @@ struct PlacesMapView: UIViewRepresentable {
         
         // map type
         mapView.mapType = .mutedStandard
+        
+        // show user location
+        mapView.showsUserLocation = true
 
         // delegate
         mapView.delegate = context.coordinator
@@ -71,6 +74,10 @@ extension PlacesMapView {
                     case let payload as PlacesMapViewModelAction.ShowRegion:
                         mapView.setRegion(payload.region, animated: true)
                         
+                    case let payload as PlacesMapViewModelAction.ShowUserLocation:
+                       
+                        mapView.setRegion(payload.region, animated: true)
+                        
                     default:
                         return
                     }
@@ -114,6 +121,12 @@ extension PlacesMapView {
             }
             
             deselectAnnotations()
+        }
+        
+        func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
+            
+            viewModel.currentRegion = mapView.region
+            print("ATM: region: \(mapView.region)")
         }
         
         func deselectAnnotations() {

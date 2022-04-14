@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="zN1-Px-RKf">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="zN1-Px-RKf">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -347,39 +347,23 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="56"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hl7-9e-1K4">
-                                                    <rect key="frame" x="20" y="8" width="40" height="40"/>
-                                                    <subviews>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic24FaceId" translatesAutoresizingMaskIntoConstraints="NO" id="2w3-re-7ug">
-                                                            <rect key="frame" x="8" y="8" width="24" height="24"/>
-                                                            <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="height" constant="24" id="9qD-Y5-FUR"/>
-                                                                <constraint firstAttribute="width" constant="24" id="WGu-55-a55"/>
-                                                            </constraints>
-                                                        </imageView>
-                                                    </subviews>
-                                                    <color key="backgroundColor" red="0.96470588239999999" green="0.96470588239999999" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="face" translatesAutoresizingMaskIntoConstraints="NO" id="sec-BB-8Vq">
+                                                    <rect key="frame" x="25" y="16" width="24" height="24"/>
+                                                    <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="40" id="88P-5G-gM6"/>
-                                                        <constraint firstAttribute="width" constant="40" id="8Ks-YN-NkP"/>
-                                                        <constraint firstItem="2w3-re-7ug" firstAttribute="centerY" secondItem="hl7-9e-1K4" secondAttribute="centerY" id="jGI-sR-P8F"/>
-                                                        <constraint firstItem="2w3-re-7ug" firstAttribute="centerX" secondItem="hl7-9e-1K4" secondAttribute="centerX" id="klR-q6-tph"/>
+                                                        <constraint firstAttribute="height" constant="24" id="keX-BH-eCf"/>
+                                                        <constraint firstAttribute="width" constant="24" id="qYj-6a-Gj1"/>
                                                     </constraints>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                            <integer key="value" value="20"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                    </userDefinedRuntimeAttributes>
-                                                </view>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Вход по Face ID" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eX5-mg-H9c">
-                                                    <rect key="frame" x="84" y="17.5" width="246" height="21"/>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Вход по Face ID" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eX5-mg-H9c">
+                                                    <rect key="frame" x="84" y="17.5" width="245" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iEX-H9-zUC">
-                                                    <rect key="frame" x="347" y="12.5" width="49" height="31"/>
+                                                    <rect key="frame" x="345" y="12.5" width="51" height="31"/>
                                                     <gestureRecognizers/>
                                                     <connections>
                                                         <action selector="faceIdAction:" destination="zN1-Px-RKf" eventType="valueChanged" id="aJK-cp-QLx"/>
@@ -388,14 +372,10 @@
                                                 </switch>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="eX5-mg-H9c" firstAttribute="centerY" secondItem="hl7-9e-1K4" secondAttribute="centerY" id="1hp-mT-NfQ"/>
                                                 <constraint firstItem="iEX-H9-zUC" firstAttribute="centerY" secondItem="Q5o-ma-Dma" secondAttribute="centerY" id="BNa-SM-ohP"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="iEX-H9-zUC" secondAttribute="trailing" id="GZm-cc-xeG"/>
-                                                <constraint firstItem="hl7-9e-1K4" firstAttribute="leading" secondItem="Q5o-ma-Dma" secondAttribute="leading" constant="20" id="Mn4-HY-AJG"/>
-                                                <constraint firstItem="eX5-mg-H9c" firstAttribute="centerX" secondItem="Q5o-ma-Dma" secondAttribute="centerX" id="RRZ-mY-3eF"/>
-                                                <constraint firstItem="iEX-H9-zUC" firstAttribute="leading" secondItem="eX5-mg-H9c" secondAttribute="trailing" constant="17" id="b35-DH-7Ww"/>
-                                                <constraint firstItem="hl7-9e-1K4" firstAttribute="centerY" secondItem="Q5o-ma-Dma" secondAttribute="centerY" id="eH8-Gd-Hik"/>
-                                                <constraint firstItem="eX5-mg-H9c" firstAttribute="leading" secondItem="hl7-9e-1K4" secondAttribute="trailing" constant="24" id="vs3-MS-yCg"/>
+                                                <constraint firstItem="sec-BB-8Vq" firstAttribute="leading" secondItem="Q5o-ma-Dma" secondAttribute="leadingMargin" constant="5" id="Tem-oA-GA8"/>
+                                                <constraint firstItem="sec-BB-8Vq" firstAttribute="centerY" secondItem="Q5o-ma-Dma" secondAttribute="centerY" id="sAw-6a-aaq"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -559,7 +539,7 @@
         <image name="Vector_Pencil" width="21.5" height="21.5"/>
         <image name="chevron.right" catalog="system" width="96" height="128"/>
         <image name="doc" catalog="system" width="115" height="128"/>
-        <image name="ic24FaceId" width="24" height="24"/>
+        <image name="face" width="19" height="19"/>
         <image name="ic_mail_dark" width="21" height="21"/>
         <image name="log-out" width="24" height="24"/>
         <image name="logo-spb-mini" width="32" height="32"/>

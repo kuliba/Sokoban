@@ -25,7 +25,7 @@ class ServerCommandsAtmTests: XCTestCase {
         }
         
         let json = try Data(contentsOf: url)
-        let atmListData = ServerCommands.AtmController.GetAtmList.Response.AtmListData(version: 0, list: [.init(id: "10000161875", name: "Банкомат АКБ \"ФОРА-БАНК\" (АО)", type: 0, serviceIdList: [1, 2, 3], metroStationList: [1, 2, 3], region: "Москва", city: "Москва", address: "Ленинградское шоссе, дом 25", schedule: "ежедневно: 09:30 - 20:30", location: "55.828,37.4894", email: "rumyantsevo@forabank.ru", phoneNumber: "(495) 204 4612", action: .insert)])
+        let atmListData = ServerCommands.AtmController.GetAtmList.Response.AtmListData(version: 1, list: [.init(id: "10000161875", name: "Банкомат АКБ \"ФОРА-БАНК\" (АО)", type: 0, serviceIdList: [1, 2, 3], metroStationList: [1, 2, 3], cityId: 10000161875, address: "Ленинградское шоссе, дом 25", schedule: "ежедневно: 09:30 - 20:30", location: .init(latitude: 55.828, longitude: 37.4894), email: "rumyantsevo@forabank.ru", phoneNumber: "(495) 204 4612", action: .insert)])
         
         let expected = ServerCommands.AtmController.GetAtmList.Response(statusCode: .ok, errorMessage: "string", data: atmListData)
         
@@ -75,7 +75,7 @@ class ServerCommandsAtmTests: XCTestCase {
         }
         
         let json = try Data(contentsOf: url)
-        let atmServiceListData = ServerCommands.AtmController.GetAtmServiceList.Response.AtmServiceListData(serial: "bea36075a58954199a6b8980549f6b69", list: [.init(id: 0, name: "string")])
+        let atmServiceListData = ServerCommands.AtmController.GetAtmServiceList.Response.AtmServiceListData(serial: "bea36075a58954199a6b8980549f6b69", list: [.init(id: 0, name: "string", type: .service)])
         
         let expected = ServerCommands.AtmController.GetAtmServiceList.Response(statusCode: .ok, errorMessage: "string", data: atmServiceListData)
         
@@ -176,7 +176,7 @@ class ServerCommandsAtmTests: XCTestCase {
         }
         
         let json = try Data(contentsOf: url)
-        let atmMetroStationListData = ServerCommands.AtmController.GetMetroStationList.Response.AtmMetroStationListData(serial: "bea36075a58954199a6b8980549f6b69", list: [.init(id: 0, name: "string", lineName: "string", region: "string", city: "string", color: ColorData(description: "string"))])
+        let atmMetroStationListData = ServerCommands.AtmController.GetMetroStationList.Response.AtmMetroStationListData(serial: "bea36075a58954199a6b8980549f6b69", list: [.init(id: 0, name: "string", lineName: "string", cityId: 10000161875, color: ColorData(description: "string"))])
         
         let expected = ServerCommands.AtmController.GetMetroStationList.Response(statusCode: .ok, errorMessage: "string", data: atmMetroStationListData)
         
@@ -206,6 +206,106 @@ class ServerCommandsAtmTests: XCTestCase {
         
         // when
         let command = ServerCommands.AtmController.GetMetroStationList(serial: serial)
+        
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 1)
+        
+        XCTAssertEqual(command.parameters?[0].name, "serial")
+        XCTAssertEqual(command.parameters?[0].value, serial)
+    }
+    
+    //MARK: - GetAtmCityList
+    
+    func testGetAtmCityList_Response_Decoding() throws {
+        
+        // given
+        guard let url = bundle.url(forResource: "GetAtmCityListResponseGeneric", withExtension: "json") else {
+            XCTFail("testGetAtmCityList_Response_Decoding : Missing file: GetAtmCityListResponseGeneric.json")
+            return
+        }
+
+        let json = try Data(contentsOf: url)
+        let atmCityListData = ServerCommands.AtmController.GetCityList.Response.AtmCityListData(serial: "bea36075a58954199a6b8980549f6b69", list: [.init(id: 10000184511, name: "Москва", region: 10000161875, location: .init(latitude: 55.8416, longitude: 37.5224))])
+        
+        let expected = ServerCommands.AtmController.GetCityList.Response(statusCode: .ok, errorMessage: "string", data: atmCityListData)
+        
+        // when
+        let result = try decoder.decode(ServerCommands.AtmController.GetCityList.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
+    
+    func testGetAtmCityList_Response_Server_Decoding() throws {
+        
+        // given
+        guard let url = bundle.url(forResource: "GetAtmCityListResponseServer", withExtension: "json") else {
+            XCTFail("testGetAtmCityList_Response_Server_Decoding : Missing file: GetAtmCityListResponseServer.json")
+            return
+        }
+        
+        // then
+        XCTAssertNoThrow(try decoder.decode(ServerCommands.AtmController.GetCityList.Response.self, from: Data(contentsOf: url)))
+    }
+    
+    func testGetAtmCityList_Parameters() throws {
+        
+        // given
+        let serial = UUID().uuidString
+        
+        // when
+        let command = ServerCommands.AtmController.GetCityList(serial: serial)
+        
+        // then
+        XCTAssertNotNil(command.parameters)
+        XCTAssertEqual(command.parameters?.count, 1)
+        
+        XCTAssertEqual(command.parameters?[0].name, "serial")
+        XCTAssertEqual(command.parameters?[0].value, serial)
+    }
+    
+    //MARK: - GetAtmCityList
+    
+    func testGetAtmRegionList_Response_Decoding() throws {
+        
+        // given
+        guard let url = bundle.url(forResource: "GetAtmRegionListResponseGeneric", withExtension: "json") else {
+            XCTFail("testGetAtmRegionList_Response_Decoding : Missing file: GetAtmRegionListResponseGeneric.json")
+            return
+        }
+
+        let json = try Data(contentsOf: url)
+        let atmRegionListData = ServerCommands.AtmController.GetRegionList.Response.AtmRegionListData(serial: "bea36075a58954199a6b8980549f6b69", list: [.init(id: 10000184511, name: "Москва")])
+        
+        let expected = ServerCommands.AtmController.GetRegionList.Response(statusCode: .ok, errorMessage: "string", data: atmRegionListData)
+        
+        // when
+        let result = try decoder.decode(ServerCommands.AtmController.GetRegionList.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
+    
+    func testGetAtmRegionList_Response_Server_Decoding() throws {
+        
+        // given
+        guard let url = bundle.url(forResource: "GetAtmRegionListResponseServer", withExtension: "json") else {
+            XCTFail("testGetAtmRegionList_Response_Server_Decoding : Missing file: GetAtmRegionListResponseServer.json")
+            return
+        }
+        
+        // then
+        XCTAssertNoThrow(try decoder.decode(ServerCommands.AtmController.GetRegionList.Response.self, from: Data(contentsOf: url)))
+    }
+    
+    func testGetAtmRegionList_Parameters() throws {
+        
+        // given
+        let serial = UUID().uuidString
+        
+        // when
+        let command = ServerCommands.AtmController.GetRegionList(serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)

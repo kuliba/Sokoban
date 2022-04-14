@@ -37,6 +37,7 @@ class TemplatesListViewModel: ObservableObject {
         self.navButtonsRight = []
         self.items = []
         self.model = model
+        self.model.action.send(ModelAction.PaymentTemplate.List.Requested())
         
         bind()
     }
@@ -153,18 +154,16 @@ private extension TemplatesListViewModel {
                         self.action.send(TemplatesListViewModelAction.Present.PaymentContact(viewModel: temp))
                         
                     case .housingAndCommunalService:
-                        print("Action Present HousingAndCommunalService")
+                        self.action.send(TemplatesListViewModelAction.Present.GKHPayment(viewModel: temp))
                         
                     case .mobile:
                         self.action.send(TemplatesListViewModelAction.Present.MobilePayment(viewModel: temp))
                         
-                        print("Action Present MobilePayment")
-                        
                     case .internet:
-                        print("Action Present Internet")
+                        self.action.send(TemplatesListViewModelAction.Present.InterneetPayment(viewModel: temp))
                         
                     case .transport:
-                        print("Action Present Transport")
+                        self.action.send(TemplatesListViewModelAction.Present.TransportPayment(viewModel: temp))
                         
                     case .externalEntity:
                         self.action.send(TemplatesListViewModelAction.Present.OrgPaymentRequisites(viewModel: temp))
@@ -385,20 +384,46 @@ private extension TemplatesListViewModel {
     
     func amount(for template: PaymentTemplateData) -> String? {
         
-        guard let transfer = template.parameterList.first,
-              let amount = template.amount else {
-                    
-            return nil
-        }
         if template.type == .contactAdressless ,
            let parameterList = template.parameterList.first as? TransferAnywayData,
-           let currencyAmount = parameterList.additional.first(where: { $0.fieldname == "CURR" }) {
+           let currencyAmount = parameterList.additional.first(where: { $0.fieldname == "CURR" }),
+           let amount = template.amount {
+            
             
             return amount.currencyFormatter(symbol: currencyAmount.fieldvalue)
             
         } else {
             
-            return amount.currencyFormatter(symbol: transfer.currencyAmount)
+            if template.parameterList.count > 1 {
+                var amount: Double?
+                var currencyAmount: String?
+                
+                template.parameterList.forEach { parameter in
+                    if let paramAmount = parameter.amount {
+                        amount = paramAmount
+                    }
+                    currencyAmount = parameter.currencyAmount
+                    
+                }
+                if let amount = amount,
+                   let currencyAmount = currencyAmount {
+                    
+                    return amount.currencyFormatter(symbol: currencyAmount)
+                    
+                } else {
+                    
+                    return nil
+                }
+                
+            } else {
+                guard let transfer = template.parameterList.first,
+                      let amount = template.amount else {
+        
+                    return nil
+                }
+                return amount.currencyFormatter(symbol: transfer.currencyAmount)
+            }
+            
         }
     }
 }

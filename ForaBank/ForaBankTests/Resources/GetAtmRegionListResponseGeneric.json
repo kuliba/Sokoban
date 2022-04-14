@@ -1,0 +1,13 @@
+{
+  "statusCode": 0,
+  "errorMessage": "string",
+  "data": {
+    "serial": "bea36075a58954199a6b8980549f6b69",
+    "list": [
+      {
+        "id": 10000184511,
+        "name": "Москва"
+      }
+    ]
+  }
+}

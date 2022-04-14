@@ -67,6 +67,22 @@ class MainViewController: UIViewController {
         }
     }
     
+    func addUserName() {
+        DispatchQueue.main.async {
+            let uName = UserDefaults.standard.object(forKey: "userName") as? String
+            if uName != nil {
+                self.searchBar.textField.text = uName
+            }
+            let userPhoto = self.loadImageFromDocumentDirectory(fileName: "userPhoto")
+            
+            if userPhoto != nil {
+                self.searchBar.searchIcon.image = userPhoto
+            } else {
+                self.searchBar.searchIcon.image = UIImage(named: "ProfileImage")
+            }
+        }
+    }
+    
     lazy var searchBar: NavigationBarUIView = UIView.fromNib()
     
     enum Section: Int, CaseIterable {
@@ -132,9 +148,12 @@ class MainViewController: UIViewController {
         }
 
         bind()
+        startObserveRealm()
         startUpdate()
         model.action.send(ModelAction.Deposits.List.Request())
         model.action.send(ModelAction.Settings.GetClientInfo.Requested())
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(startUpdate), name: .startProductsUpdate, object: nil)
     }
     
     func updateProductsViewModels(with products: Results<UserAllCardsModel>) {
@@ -180,8 +199,14 @@ class MainViewController: UIViewController {
         
     }
     
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        addUserName()
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
         if GlobalModule.qrOperator != nil && GlobalModule.qrData != nil {
             let controller = InternetTVMainController.storyboardInstance()!
             let nc = UINavigationController(rootViewController: controller)
@@ -199,6 +224,7 @@ class MainViewController: UIViewController {
         }
     }
     
+    @objc
     func startUpdate() {
         
         isUpdating.value = true
@@ -261,14 +287,16 @@ class MainViewController: UIViewController {
 
         let gesture = UITapGestureRecognizer(target: self, action: #selector(openSetting))
         searchBar.searchIcon.addGestureRecognizer(gesture)
-        searchBar.searchIcon.image = UIImage(named: "ProfileImage")
-
+ //       searchBar.searchIcon.image = UIImage(named: "ProfileImage")
+        
         searchBar.textField.text = ""
         searchBar.textField.placeholder = ""
         searchBar.textField.isEnabled = false
         searchBar.foraAvatarImageView.isHidden = false
         searchBar.searchIconWidth.constant = 40
         searchBar.searchIconHeight.constant = 40
+        self.searchBar.searchIcon.layer.cornerRadius = 20
+        self.searchBar.searchIcon.clipsToBounds = true
         
         searchBar.trailingLeftButton.setImage(UIImage(named: "searchBarIcon"), for: .normal)
         searchBar.trailingLeftButton.isEnabled = false
@@ -329,7 +357,12 @@ class MainViewController: UIViewController {
                     }
                     
                 case let payload as ModelAction.Settings.GetClientInfo.Complete:
-                    searchBar.textField.text = payload.user.firstName
+                    let userName = UserDefaults.standard.object(forKey: "userName") as? String
+                    if userName != nil {
+                        searchBar.textField.text = userName
+                    } else {
+                        searchBar.textField.text = payload.user.firstName
+                    }
                     
                 default:
                     break
@@ -385,8 +418,27 @@ class MainViewController: UIViewController {
             }.store(in: &bindings)
     }
     
+    func startObserveRealm() {
+        
+        guard let realm = try? Realm() else {
+            return
+        }
+        
+        self.token = realm.objects(UserAllCardsModel.self).observe { [weak self] _ in
+            
+            guard let self = self else { return }
+            
+            let products = realm.objects(UserAllCardsModel.self)
+            
+            self.productTypeSelector.update(with: products)
+            self.updateProductsViewModels(with: products)
+        }
+    }
+    
     deinit {
+        
         self.token?.invalidate()
+        NotificationCenter.default.removeObserver(self, name: .startProductsUpdate, object: nil)
     }
     
     func setupData() {
@@ -647,6 +699,17 @@ extension MainViewController: ChildViewControllerDelegate {
     func childViewControllerResponse(productList: [GetProductListDatum]) {
         showAlert(with: "ОБновляет", and: "")
     }
+    
+    func loadImageFromDocumentDirectory(fileName: String) -> UIImage? {
+        
+        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!;
+        let fileURL = documentsUrl.appendingPathComponent(fileName)
+        do {
+            let imageData = try Data(contentsOf: fileURL)
+            return UIImage(data: imageData)
+        } catch {}
+        return nil
+    }
 }
 
 extension UICollectionViewDiffableDataSource {
@@ -684,4 +747,10 @@ extension MainViewController.Section {
         default: return nil
         }
     }
+}
+
+
+extension Notification.Name {
+    
+     static let startProductsUpdate = Notification.Name("Start Products Update")
 }
