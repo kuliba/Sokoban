@@ -25,7 +25,7 @@ extension AtmServiceData {
             
             switch self {
             case .service: return "Услуги"
-            case .other: return "Прочее"
+            case .other: return "Другое"
             }
         }
     }

@@ -118,7 +118,7 @@ class ProductCell: UICollectionViewCell, SelfConfiguringCell {
         
         balanceLabel.text = viewModel.balance
         balanceLabel.textColor = viewModel.colorText
-        cardNameLabel.text = viewModel.mainField
+        cardNameLabel.text = viewModel.cardName
         cardNameLabel.textColor = viewModel.colorText
         cardNameLabel.alpha = 0.5
         maskCardLabel.text = viewModel.maskedcardNumber

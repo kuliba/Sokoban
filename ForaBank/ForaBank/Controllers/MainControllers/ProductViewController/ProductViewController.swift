@@ -755,11 +755,24 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
                     print("DEBUG: Error: ", error ?? "")
                 }
                 guard let model = model else { return }
+                
                 if model.statusCode == 0 {
+                    
                     DispatchQueue.main.async {
+                        
                         self.card.cardNameLabel.text = name
-                        AddAllUserCardtList.add() {}
+                        
+                        // update product model
+                        guard let realm = try? Realm(), let product = self.product, product.isInvalidated == false else {
+                            return
+                        }
+
+                        try? realm.write({
+                            
+                            product.customName = name
+                        })
                     }
+
                 } else {
                     self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
                 }
