@@ -20,6 +20,7 @@ extension MobilePayViewController {
                                          action: #selector(updateNameTemplate))
             button.tintColor = .black
             navigationItem.rightBarButtonItem = button
+            addBackButton()
             
         } else {
         

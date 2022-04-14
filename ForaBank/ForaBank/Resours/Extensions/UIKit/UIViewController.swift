@@ -154,6 +154,19 @@ extension UIViewController {
         navigationItem.rightBarButtonItem = button
     }
     
+    func addBackButton() {
+        let button = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"),
+                                     landscapeImagePhone: nil,
+                                     style: .done,
+                                     target: self,
+                                     action: #selector(onBack))
+        navigationItem.leftBarButtonItem = button
+    }
+    
+    @objc func onBack(){
+        self.navigationController?.popViewController(animated: true)
+    }
+    
     @objc func onClose(){
         self.dismiss(animated: true, completion: nil)
     }
