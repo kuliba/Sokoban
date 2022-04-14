@@ -759,19 +759,20 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
                 if model.statusCode == 0 {
                     
                     DispatchQueue.main.async {
+                        
                         self.card.cardNameLabel.text = name
-                    }
-                    
-                    // update product model
-                    guard let realm = try? Realm(), let product = self.product, product.isInvalidated == false else {
-                        return
+                        
+                        // update product model
+                        guard let realm = try? Realm(), let product = self.product, product.isInvalidated == false else {
+                            return
+                        }
+
+                        try? realm.write({
+                            
+                            product.customName = name
+                        })
                     }
 
-                    try? realm.write({
-                        
-                        product.customName = name
-                    })
-                    
                 } else {
                     self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
                 }
