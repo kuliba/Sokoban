@@ -835,8 +835,10 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
             kppField.textField.text = ""
             commentField.textField.text = ""
         }
+        
+        let queryParameter = innField.textField.text ?? ""
         let body = [
-            "query": innField.textField.text
+            "query": queryParameter
         ] as [String: AnyObject]
         
         NetworkManager<SuggestCompanyDecodableModel>.addRequest(.suggestCompany, [:], body) { model, error in
