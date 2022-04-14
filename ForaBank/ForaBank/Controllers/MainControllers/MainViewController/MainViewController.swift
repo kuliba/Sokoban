@@ -152,6 +152,8 @@ class MainViewController: UIViewController {
         startUpdate()
         model.action.send(ModelAction.Deposits.List.Request())
         model.action.send(ModelAction.Settings.GetClientInfo.Requested())
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(startUpdate), name: .startProductsUpdate, object: nil)
     }
     
     func updateProductsViewModels(with products: Results<UserAllCardsModel>) {
@@ -222,6 +224,7 @@ class MainViewController: UIViewController {
         }
     }
     
+    @objc
     func startUpdate() {
         
         isUpdating.value = true
@@ -435,6 +438,7 @@ class MainViewController: UIViewController {
     deinit {
         
         self.token?.invalidate()
+        NotificationCenter.default.removeObserver(self, name: .startProductsUpdate, object: nil)
     }
     
     func setupData() {
@@ -743,4 +747,10 @@ extension MainViewController.Section {
         default: return nil
         }
     }
+}
+
+
+extension Notification.Name {
+    
+     static let startProductsUpdate = Notification.Name("Start Products Update")
 }
