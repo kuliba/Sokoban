@@ -2,7 +2,12 @@ import UIKit
 
 class C2BSuccessView: UIView {
     static var svgImg = ""
-    let kContentXibName = "C2BSuccess"
+    static var statusImg: UIImage? = nil
+    static var statusText = ""
+    static var sourceModel = ""
+    static var bankImg: UIImage? = nil
+    static var bankName = ""
+
     var saveTapped: (() -> Void)?
     var detailTapped: (() -> Void)?
 
@@ -19,12 +24,9 @@ class C2BSuccessView: UIView {
     @IBOutlet weak var labelDescrRecipient: UILabel!
     
     
-    var confirmModel: C2BDetailsFormViewModel? {
-        didSet {
-            guard let model = confirmModel else { return }
-            setupData(with: model)
-        }
-    }
+    @IBOutlet weak var layoutLink: UIStackView!
+    
+    @IBOutlet weak var labelLink: UILabel!
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -37,38 +39,50 @@ class C2BSuccessView: UIView {
     }
 
     func commonInit() {
-        Bundle.main.loadNibNamed(kContentXibName, owner: self, options: nil)
+        Bundle.main.loadNibNamed("C2BSuccess", owner: self, options: nil)
         contentView.fixInView(self)
         layer.shadowRadius = 16
         labelNameRecipient.text = C2BDetailsViewModel.recipientText
         labelDescrRecipient.text = C2BDetailsViewModel.recipientDescription
-        C2BDetailsViewModel.makeTransfer
-        let docStatus = C2BDetailsViewModel.makeTransfer?.data?.documentStatus
-        C2BDetailsViewModel.modelCreateC2BTransfer
+        
+        if let linkStr = C2BDetailsViewModel.operationDetail?.shopLink {
+            if linkStr.description.isEmpty {
+                layoutLink.isHidden = true
+            } else {
+                layoutLink.isHidden = false
+                labelLink.text = C2BDetailsViewModel.operationDetail?.shopLink
+            }
+        } else {
+            layoutLink.isHidden = true
+        }
 
+        let docStatus = C2BDetailsViewModel.makeTransfer?.data?.documentStatus
         switch (docStatus) {
         case "IN_PROGRESS":
-            statusImageView.image = #imageLiteral(resourceName: "waiting")
-            statusLabel.text = "Запрос принят в обработку"
+            C2BSuccessView.statusImg = #imageLiteral(resourceName: "waiting")
+            C2BSuccessView.statusText = "Запрос принят в обработку"
             break
         case "COMPLETED":
-            statusImageView.image = #imageLiteral(resourceName: "OkOperators")
-            statusLabel.text = "Успешный перевод"
+            C2BSuccessView.statusImg = #imageLiteral(resourceName: "OkOperators")
+            C2BSuccessView.statusText = "Успешный перевод"
             break
         case "COMPLETE":
-            statusImageView.image = #imageLiteral(resourceName: "OkOperators")
-            statusLabel.text = "Успешный перевод"
+            C2BSuccessView.statusImg = #imageLiteral(resourceName: "OkOperators")
+            C2BSuccessView.statusText = "Успешный перевод"
             break
         case .none:
-            statusImageView.image = #imageLiteral(resourceName: "errorIcon")
-            statusLabel.text = "Операция неуспешна!"
+            C2BSuccessView.statusImg = #imageLiteral(resourceName: "rejected")
+            C2BSuccessView.statusText = "Операция неуспешна!"
             break
         case .some(_):
-            statusImageView.image = #imageLiteral(resourceName: "errorIcon")
-            statusLabel.text = "Операция неуспешна!"
+            C2BSuccessView.statusImg = #imageLiteral(resourceName: "rejected")
+            C2BSuccessView.statusText = "Операция неуспешна!"
             break
         }
-        summLabel.text = C2BDetailsViewModel.sum
+
+        statusImageView.image = C2BSuccessView.statusImg
+        statusLabel.text = C2BSuccessView.statusText
+        summLabel.text = C2BDetailsViewModel.sum + " ₽"
     }
 
     @IBAction func saveButtonTapped(_ sender: Any) {
@@ -79,17 +93,5 @@ class C2BSuccessView: UIView {
     @IBAction func detailBattonTapped(_ sender: Any) {
         print(#function)
         detailTapped?()
-    }
-
-    func setupData(with model: C2BDetailsFormViewModel) {
-        statusImageView.image = model.statusIsSuccess ? #imageLiteral(resourceName: "OkOperators") : #imageLiteral(resourceName: "errorIcon")
-        if !C2BSuccessView.svgImg.isEmpty {
-            operatorImageView.image = C2BSuccessView.svgImg.convertSVGStringToImage()
-            C2BSuccessView.svgImg = ""
-        }
-        statusLabel.text = model.statusIsSuccess
-                ? "Успешный перевод" : "Операция неуспешна!"
-        summLabel.text = model.sumTransaction
-
     }
 }

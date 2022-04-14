@@ -27,4 +27,5 @@ struct GetOperationDetailsByPaymentIdDatum: Codable {
     let payeeBankName: String?
     let comment: String?
     let transferNumber: String?
+    let shopLink: String?
 }
