@@ -56,10 +56,11 @@ class MainTabBarViewController: UITabBarController {
             present(nc, animated: false)
             return
         }
-        
-        //GlobalModule.c2bURL = "bank100000000217://qr.nspk.ru/AS1A002B0O3J2AKC97URG6GI1HAPP6VA?type=01&bank=1crt88888881&crc=9C74"
-        //GlobalModule.c2bURL = "https://qr.nspk.ru/AS1000285IN8NDBK8PE8PP8JECT7PP50?type=01&bank=1crt88888881&sum=1000501&cur=RUB&crc=E415"
-        
+
+        //GlobalModule.c2bURL = "success"
+        //GlobalModule.c2bURL = "https://medium.com/wolox/ios-deep-linking-url-scheme-vs-universal-links-50abd3802f97"
+        //GlobalModule.c2bURL = "https://qr.nspk.ru/AS10006117N00V9894EA5TM4AQBK5EIS?type=01&bank=100000000217&sum=15400&cur=RUB&crc=7A15"
+        //GlobalModule.c2bURL = "https://qr.nspk.ru/AS1A002C9TTFAJG79V982J7EMG209JVB?type=01&bank=100000000217&crc=32B9"
         if GlobalModule.c2bURL != nil {
             let controller = C2BDetailsViewController.storyboardInstance()!
             let nc = UINavigationController(rootViewController: controller)
