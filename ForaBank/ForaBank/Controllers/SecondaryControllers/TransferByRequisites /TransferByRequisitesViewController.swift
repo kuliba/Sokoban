@@ -533,7 +533,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
     
     func setupUI() {
         
-        paymentTemplate == nil ? self.addCloseButton() : nil
+        paymentTemplate == nil ? self.addCloseButton() : addBackButton()
         
         view.backgroundColor = .white
         let saveAreaView = UIView()

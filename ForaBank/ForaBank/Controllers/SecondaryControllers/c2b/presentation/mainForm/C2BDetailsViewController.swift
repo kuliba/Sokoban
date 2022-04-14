@@ -10,6 +10,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         return storyboard.instantiateViewController(withIdentifier: "C2BDetails") as? C2BDetailsViewController
     }
 
+    let currencySymbol = "₽"
     lazy var realm = try? Realm()
     var cardFromField = CardChooseView()
     var cardListView = CardsScrollView(onlyMy: false, deleteDeposit: true, loadProducts: false)
@@ -18,6 +19,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     var amount = ""
     var modeConsent = "update"
     var contractId = ""
+    
     
     @IBOutlet weak var bottomInputView: BottomInputView?
     
@@ -116,6 +118,12 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+
+        if GlobalModule.c2bURL ?? "" == "success" {
+            dismissActivity()
+            openSuccessScreen()
+            return
+        }
     }
 
     @objc func keyboardWillShow(notification: NSNotification) {
@@ -185,11 +193,11 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         dismissActivity()
         let params = data?.data?.parameters
         var bankRecipientCode = ""
-        let recepientFound = params?.filter({ $0.type == "RECIPIENT" })
-        if (recepientFound != nil && recepientFound?.count ?? 0 > 0) {
-            C2BDetailsViewModel.recipientText = recepientFound?[0].value ?? ""
-            C2BDetailsViewModel.recipientIconSrc = recepientFound?[0].icon ?? ""
-            C2BDetailsViewModel.recipientDescription = recepientFound?[0].description ?? ""
+        let recipientFound = params?.filter({ $0.type == "RECIPIENT" })
+        if (recipientFound != nil && recipientFound?.count ?? 0 > 0) {
+            C2BDetailsViewModel.recipientText = recipientFound?[0].value ?? ""
+            C2BDetailsViewModel.recipientIconSrc = recipientFound?[0].icon ?? ""
+            C2BDetailsViewModel.recipientDescription = recipientFound?[0].description ?? ""
             //                    if (!recipientIconSrc.isNullOrEmpty()) {
             //                        viewModel.getRecipientImage(recipientIconSrc)
             //                    }
@@ -209,10 +217,12 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
             let bankIconSvg = foundBank?[0].svgImage ?? ""
             imgBank.image = bankIconSvg.convertSVGStringToImage()
             labelBank.text = bankRusName
+            C2BSuccessView.bankImg = imgBank.image
+            C2BSuccessView.bankName = bankRusName
         }
         labelRecipient.text = C2BDetailsViewModel.recipientText
         labelRecipientDesc.text = C2BDetailsViewModel.recipientDescription
-        labelAmount.text = amount
+        labelAmount.text = amount  + " \(currencySymbol)"
         
         if amount.isEmpty {
             viewAmount.isHidden = true
@@ -236,24 +246,6 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         animationShow(bottomInputView!)
         bottomInputView?.doneButtonIsEnabled(false)
     }
-
-//    func doConfirmation(response: CreateTransferAnswerModel?) {
-//        var ob: InternetTVConfirmViewModel? = nil
-//        if InternetTVMainViewModel.filter == GlobalModule.UTILITIES_CODE {
-//            ob = InternetTVConfirmViewModel(type: .gkh)
-//        }
-//        if InternetTVMainViewModel.filter == GlobalModule.INTERNET_TV_CODE {
-//            ob = InternetTVConfirmViewModel(type: .internetTV)
-//        }
-//        if InternetTVMainViewModel.filter == GlobalModule.PAYMENT_TRANSPORT {
-//            ob = InternetTVConfirmViewModel(type: .transport)
-//        }
-//        let sum = response?.data?.debitAmount ?? 0.0
-//        ob?.sumTransaction = sum.currencyFormatter(symbol: "RUB")
-//        let tax = response?.data?.fee ?? 0.0
-//        ob?.taxTransaction = tax.currencyFormatter(symbol: "RUB")
-//        ob?.cardFrom = cardFromField.model
-//    }
 
     @IBAction func goButton(_ sender: UIButton) {
         doPayment(amountArg: amount)
@@ -351,55 +343,50 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
                         switchConsent.isEnabled = true
                         switchConsent.setOn(false, animated: false)
                         goButton?.isEnabled = false
-                        //                            binding.checkBoxConsent.setOnCheckedChangeListener { buttonView, isChecked ->
-                        //                                if (isChecked) {
-                        //                                    val request = UpdateFastPaymentContractRequest(
-                        //                                        fastPayment.fpcontractID.toString(),
-                        //                                        fastPayment.accountID.toString(),
-                        //                                        "EMPTY",
-                        //                                        "YES",
-                        //                                        "YES"
-                        //                                    )
-                        //                                    viewModel.updateSBPConsent(request)
-                        //                                    binding.progressBar.visibility = View.VISIBLE
-                        //                                    binding.checkBoxConsent.isEnabled = false
-                        //                                }
-                        //                            }
                     } else {
                         switchConsent.setOn(true, animated: false)
                         switchConsent.isEnabled = false
                         goButton?.isEnabled = true
+
+                        switchConsent?.isHidden = true
+                        labelConsentDescr.isHidden = true
+                        for constraint in rootView.constraints {
+                            if constraint.identifier == "mySwitchConsent" {
+                                constraint.constant = -75
+                            }
+                        }
                     }
                 } else {
                     switchConsent.setOn(true, animated: false)
                     switchConsent.isEnabled = false
                     goButton?.isEnabled = true
+
+                    switchConsent.isHidden = true
+                    labelConsentDescr.isHidden = true
+                    for constraint in rootView.constraints {
+                        if constraint.identifier == "mySwitchConsent" {
+                            constraint.constant = -75
+                        }
+                    }
                 }
             } else {
                 switchConsent.setOn(true, animated: false)
                 switchConsent.isEnabled = false
                 goButton?.isEnabled = true
+
+                switchConsent.isHidden = true
+                labelConsentDescr.isHidden = true
+                for constraint in rootView.constraints {
+                    if constraint.identifier == "mySwitchConsent" {
+                        constraint.constant = -75
+                    }
+                }
             }
         } else {
             modeConsent = "create"
             switchConsent.setOn(false, animated: false)
             switchConsent.isEnabled = true
             goButton?.isEnabled = false
-            //                binding.checkBoxConsent.setOnCheckedChangeListener { buttonView, isChecked ->
-            //                    if (isChecked) {
-            //                        viewModel.cardViewer.source.value?.let {
-            //                            val request = СreateFastPaymentContractRequest(
-            //                                it.getTransferId(),
-            //                                "EMPTY",
-            //                                "YES",
-            //                                "YES"
-            //                            )
-            //                            viewModel.createSBPConsent(request)
-            //                            binding.progressBar.visibility = View.VISIBLE
-            //                            binding.checkBoxConsent.isEnabled = false
-            //                        }
-            //                    }
-            //                }
         }
     }
     
