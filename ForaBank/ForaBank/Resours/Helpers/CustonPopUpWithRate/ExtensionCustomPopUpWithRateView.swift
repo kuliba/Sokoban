@@ -136,7 +136,7 @@ extension CustomPopUpWithRateView {
                     
                 } else if let accountId = transfer.payeeInternal?.accountId {
                     
-                    let card = object?.first(where: { $0.accountID == accountId })
+                    let card = object?.first(where: { $0.id == accountId })
                     self.cardToField.model = card
                     self.viewModel.cardToRealm = card
                 }
