@@ -259,49 +259,24 @@ class ServerCommandsDepositControllerTests: XCTestCase {
 		XCTAssertEqual(result, expected)
 	}
 
-	//MARK: - SaveDepositCustomName
+    //MARK: - SaveDepositName
 
-	func testSaveDepositCustomName_Response_Encoding() throws {
+    func testSaveDepositName_Response_Decoding() throws {
 
-		// given
-		let endDate = formatter.date(from: "2022-01-31T12:27:22.223Z")
-		let startDate = formatter.date(from: "2022-01-31T12:27:22.223Z")
-
-		let command = ServerCommands.DepositController.SaveDepositCustomName(token: "",
-																			 endDate: endDate,
-																			 id: 10000184511,
-																			 name: "string",
-																			 startDate: startDate,
-																			 statementFormat: .csv)
-
-		let expected = "{\"statementFormat\":\"CSV\",\"id\":10000184511,\"endDate\":\"2022-01-31T12:27:22.223Z\",\"name\":\"string\",\"startDate\":\"2022-01-31T12:27:22.223Z\"}"
-
-		// when
-		let result = try encoder.encode(command.payload)
-		let resultString = String(decoding: result, as: UTF8.self)
-
-		// then
-		XCTAssertEqual(resultString, expected)
-	}
-
-	func testSaveDepositCustomName_Response_Decoding() throws {
-
-		// given
-		let url = bundle.url(forResource: "SaveDepositCustomName", withExtension: "json")!
-		let json = try Data(contentsOf: url)
-
-		let data = EmptyData()
-
-		let expected = ServerCommands.DepositController.SaveDepositCustomName.Response(statusCode: .ok,
-																					   errorMessage: "string",
-																					   data: data)
-
-		// when
-		let result = try decoder.decode(ServerCommands.DepositController.SaveDepositCustomName.Response.self, from: json)
-
-		// then
-		XCTAssertEqual(result, expected)
-	}
+        // given
+        guard let url = bundle.url(forResource: "SaveDepositNameResponseGeneric", withExtension: "json") else {
+            XCTFail("testSaveDepositName_Response_Decoding : Missing file: SaveDepositNameResponseGeneric.json")
+            return
+        }
+        let json = try Data(contentsOf: url)
+        let expected = ServerCommands.DepositController.SaveDepositName.Response(statusCode: .ok, errorMessage: "string", data: EmptyData())
+        
+        // when
+        let result = try decoder.decode(ServerCommands.DepositController.SaveDepositName.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
     
     //MARK: GetDepositProductList
     

@@ -119,47 +119,30 @@ extension ServerCommands {
 				self.token = token
 			}
 		}
-
-		/*
-		 https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DepositController/saveDepositCustomNameUsingPOST
-		 */
-		struct SaveDepositCustomName: ServerCommand {
-
-			let token: String?
-			let endpoint = "/rest/saveDepositCustomName"
-			let method: ServerCommandMethod = .post
-			let parameters: [ServerCommandParameter]? = nil
-			let payload: BasePayload?
-            let timeout: TimeInterval? = nil
-
-			struct Response: ServerResponse {
-
-				let statusCode: ServerStatusCode
-				let errorMessage: String?
-				let data: EmptyData?
-			}
-
-			internal init(token: String, endDate: Date?, id: Int, name: String?, startDate: Date?, statementFormat: StatementFormat?) {
-
-				let formatter = DateFormatter.iso8601
-				self.token = token
-				var endDateString: String? = nil
-				if let endDate = endDate {
-					endDateString = formatter.string(from: endDate)
-				}
-
-				var startDateString: String? = nil
-				if let startDate = startDate {
-					startDateString = formatter.string(from: startDate)
-				}
-
-				self.payload = Payload(endDate: endDateString,
-									   id: id,
-									   name: name,
-									   startDate: startDateString,
-									   statementFormat: statementFormat)
-			}
-		}
+        
+        /*
+         http://192.168.50.113:8080/swagger-ui/index.html#/DepositController/saveDepositCustomName
+         */
+        struct SaveDepositName: ServerCommand {
+            
+            let token: String?
+            let endpoint = "/rest/saveDepositName"
+            let method: ServerCommandMethod = .post
+            let payload: BasePayload?
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: EmptyData?
+            }
+            
+            internal init(token: String, payload: BasePayload) {
+                
+                self.token = token
+                self.payload = payload
+            }
+        }
         
         /*
          https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController//dict//rest/getDepositProductListUsingGet

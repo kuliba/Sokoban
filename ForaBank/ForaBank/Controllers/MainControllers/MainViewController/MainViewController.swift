@@ -67,19 +67,22 @@ class MainViewController: UIViewController {
         }
     }
     
-    func addUserName() {
+    @objc func addUserName() {
         DispatchQueue.main.async {
             let uName = UserDefaults.standard.object(forKey: "userName") as? String
             if uName != nil {
                 self.searchBar.textField.text = uName
             }
-            let userPhoto = self.loadImageFromDocumentDirectory(fileName: "userPhoto")
-            
-            if userPhoto != nil {
-                self.searchBar.searchIcon.image = userPhoto
-            } else {
-                self.searchBar.searchIcon.image = UIImage(named: "ProfileImage")
-            }
+        }
+    }
+    
+    @objc func addUserPhoto() {
+        let userPhoto = self.loadImageFromDocumentDirectory(fileName: "userPhoto")
+
+        if userPhoto != nil {
+            self.searchBar.searchIcon.image = userPhoto?.fixOrientation()
+        } else {
+            self.searchBar.searchIcon.image = UIImage(named: "ProfileImage")
         }
     }
     
@@ -136,6 +139,11 @@ class MainViewController: UIViewController {
         createDataSource()
         getCurrency()
         setupData()
+        addUserName()
+        addUserPhoto()
+        NotificationCenter.default.addObserver(self, selector: #selector(addUserPhoto), name: Notification.Name("userPhotoNotification"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(addUserName), name: Notification.Name("userNameNotification"), object: nil)
         
         if let products = self.realm?.objects(UserAllCardsModel.self) {
             
@@ -199,11 +207,6 @@ class MainViewController: UIViewController {
         
     }
     
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        addUserName()
-    }
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
@@ -252,14 +255,7 @@ class MainViewController: UIViewController {
         
         for section in Section.allCases {
             
-            if let mainSectionType = section.mainSectionType {
-                
-                expanded[section] = settings.sectionsExpanded[mainSectionType]
-                
-            } else {
-                
-                expanded[section] = true
-            }
+            expanded[section] = settings.sectionsExpanded[section.mainSectionType]
         }
         
         sectionsExpanded.value = expanded
@@ -274,11 +270,8 @@ class MainViewController: UIViewController {
         sectionsExpanded.value[section] = expandedSectionValue
         
         // updating settings
-        guard let mainSectionType = section.mainSectionType else {
-            return
-        }
         var settings = model.settingsMainSections
-        settings.update(isExpanded: expandedSectionValue, sectionType: mainSectionType)
+        settings.update(isExpanded: expandedSectionValue, sectionType: section.mainSectionType)
         model.settingsUpdate(settings)
     }
     
@@ -297,6 +290,7 @@ class MainViewController: UIViewController {
         searchBar.searchIconHeight.constant = 40
         self.searchBar.searchIcon.layer.cornerRadius = 20
         self.searchBar.searchIcon.clipsToBounds = true
+        self.searchBar.searchIcon.contentMode = .scaleToFill
         
         searchBar.trailingLeftButton.setImage(UIImage(named: "searchBarIcon"), for: .normal)
         searchBar.trailingLeftButton.isEnabled = false
@@ -443,7 +437,6 @@ class MainViewController: UIViewController {
     
     func setupData() {
         
-        print(model.catalogBanners.value)
         let baners = model.catalogBanners.value
         var items: [PaymentsModel] = []
         baners.forEach { baner in
@@ -733,10 +726,11 @@ extension MainViewController.Section {
         case .promo: self = .offer
         case .currencyExchange: self = .currentsExchange
         case .openProduct: self = .openProduct
+        case .atm: self = .atm
         }
     }
     
-    var mainSectionType: MainSectionType? {
+    var mainSectionType: MainSectionType {
         
         switch self {
         case .products: return .products
@@ -744,13 +738,8 @@ extension MainViewController.Section {
         case .offer: return .promo
         case .currentsExchange: return .currencyExchange
         case .openProduct: return .openProduct
-        default: return nil
+        case .atm: return .atm
         }
     }
 }
 
-
-extension Notification.Name {
-    
-     static let startProductsUpdate = Notification.Name("Start Products Update")
-}

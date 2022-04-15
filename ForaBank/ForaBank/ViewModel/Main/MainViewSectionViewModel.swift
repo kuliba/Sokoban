@@ -32,6 +32,7 @@ enum MainSectionType: String, CaseIterable, Codable {
     case promo
     case currencyExchange
     case openProduct
+    case atm
     
     var name: String {
         
@@ -41,6 +42,7 @@ enum MainSectionType: String, CaseIterable, Codable {
         case .promo: return ""
         case .currencyExchange: return "Обмен валют"
         case .openProduct: return "Открыть продукт"
+        case .atm: return "Отделения и банкоматы"
         }
     }
 }

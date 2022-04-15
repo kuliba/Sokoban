@@ -747,7 +747,9 @@ class ContactConfurmViewController: UIViewController {
                         case .card2card:
                             vc.printFormType = "internal"
                             // Template button view model
-                            if let name = self.confurmVCModel?.cardToCastomName, let paymentOperationDetailId = model.data?.paymentOperationDetailId {
+                            let name = self.confurmVCModel?.cardToRealm?.customName ?? self.confurmVCModel?.cardToRealm?.additionalField ?? "Перевод между счетами"
+                            
+                            if  let paymentOperationDetailId = model.data?.paymentOperationDetailId {
                                 if self.confurmVCModel?.template == nil {
                                     self.confurmVCModel?.templateButtonViewModel = .sfp(name: name, paymentOperationDetailId: paymentOperationDetailId)
                                 } else {

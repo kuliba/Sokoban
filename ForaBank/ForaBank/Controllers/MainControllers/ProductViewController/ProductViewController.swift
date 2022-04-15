@@ -9,6 +9,7 @@ import UIKit
 import SkeletonView
 import RealmSwift
 import SwiftUI
+import Combine
 
 protocol ProductViewControllerDelegate: AnyObject {
     func goPaymentsViewController()
@@ -23,6 +24,9 @@ protocol CtoBDelegate : AnyObject{
 }
 
 class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrollViewDelegate, UITextFieldDelegate {
+    
+    private let model = Model.shared
+    private var bindings = Set<AnyCancellable>()
     
     lazy var realm = try? Realm()
     var token: NotificationToken?
@@ -349,7 +353,43 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         setupNavigationColor()
         setupProduct()
         loadHistoryForCard()
+        bind()
+    }
+    
+    private func bind() {
         
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as ModelAction.Products.UpdateCustomName.Response:
+                    switch payload {
+                    case .complete(let name):
+                        DispatchQueue.main.async {
+                            
+                            self.card.cardNameLabel.text = name
+                            
+                            // update product model
+                            guard let realm = try? Realm(), let product = self.product, product.isInvalidated == false else {
+                                return
+                            }
+
+                            try? realm.write({
+                                
+                                product.customName = name
+                            })
+                        }
+                    
+                    case .failed(let message):
+                        showAlert(with: "Ошибка", and: message)
+                    }
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
     }
     
     func centerItemsInCollectionView(cellWidth: Double, numberOfItems: Double, spaceBetweenCell: Double, collectionView: UICollectionView) -> UIEdgeInsets {
@@ -744,39 +784,11 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         
         let saveAction = UIAlertAction(title: "Сохранить", style: UIAlertAction.Style.default, handler: { alert -> Void in
             
-            let nameTextField = alertController.textFields![0] as UITextField
-            guard let idCard = self.product?.cardID else { return }
-            guard let name = nameTextField.text else { return }
-            let body = [ "id" : idCard, "name" : name ] as [String : AnyObject]
-            
-            NetworkManager<SaveCardNameDecodableModel>.addRequest(.saveCardName, [:], body) { model, error in
-                
-                if error != nil {
-                    print("DEBUG: Error: ", error ?? "")
-                }
-                guard let model = model else { return }
-                
-                if model.statusCode == 0 {
-                    
-                    DispatchQueue.main.async {
-                        
-                        self.card.cardNameLabel.text = name
-                        
-                        // update product model
-                        guard let realm = try? Realm(), let product = self.product, product.isInvalidated == false else {
-                            return
-                        }
-
-                        try? realm.write({
-                            
-                            product.customName = name
-                        })
-                    }
-
-                } else {
-                    self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
-                }
+            guard let nameTextField = alertController.textFields?.first, let name = nameTextField.text, name.count > 0, let productId = self.product?.id, let productType = self.product?.productTypeEnum else {
+                return
             }
+            
+            self.model.action.send(ModelAction.Products.UpdateCustomName.Request(productId: productId, productType: productType, name: name))
         })
         
         let cancelAction = UIAlertAction(title: "Отмена", style: UIAlertAction.Style.default, handler: nil)

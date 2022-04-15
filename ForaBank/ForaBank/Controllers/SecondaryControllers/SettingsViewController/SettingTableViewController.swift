@@ -13,10 +13,8 @@ protocol SettingTableViewControllerDelegate: AnyObject {
     func goLoginCardEntry()
 }
 
-
 class SettingTableViewController: UITableViewController {
     
-
     var delegate: SettingTableViewControllerDelegate?
     
     let kHeaderViewHeight: CGFloat = 140
@@ -32,34 +30,36 @@ class SettingTableViewController: UITableViewController {
     
     private var tableHeaderView: UIView? {
         //button
-//        let button = UIButton(type: .system)
-//        button.backgroundColor = .black
-//        button.layer.cornerRadius = 32 / 2
-//        button.clipsToBounds = true
-//        button.setImage(UIImage(named: "edit-2"), for: .normal)
-//        button.addTarget(self, action: #selector(changeImage), for: .touchUpInside)
+        let button = UIButton(type: .system)
+        button.backgroundColor = .black
+        button.layer.cornerRadius = 32 / 2
+        button.clipsToBounds = true
+        button.setImage(UIImage(named: "edit-2"), for: .normal)
+        button.addTarget(self, action: #selector(changeImage), for: .touchUpInside)
         
         //imageView
-        let userPhoto = loadImageFromDocumentDirectory(fileName: "userPhoto")
-        if userPhoto != nil {
-            imageView.image = userPhoto
-        } else {
-            imageView.image = UIImage(named: "ProfileImage")
-        }
-        imageView.backgroundColor = UIColor.clear
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 96 / 2
-        imageView.setDimensions(height: 96, width: 96)
         
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: kHeaderViewHeight))
         headerView.backgroundColor = UIColor.white
         headerView.addSubview(imageView)
-       // headerView.addSubview(button)
+        headerView.addSubview(button)
+        
+        let userPhoto = loadImageFromDocumentDirectory(fileName: "userPhoto")
+        if userPhoto != nil {
+            imageView.image = userPhoto?.fixOrientation()
+        } else {
+            imageView.image = UIImage(named: "ProfileImage")
+        }
+        imageView.backgroundColor = UIColor.clear
+        imageView.setDimensions(height: 96, width: 96)
+        imageView.layer.cornerRadius = 96 / 2
+        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFill
         
         imageView.centerX(inView: headerView,
                           topAnchor: headerView.topAnchor, paddingTop: 16)
-      //  button.anchor(top: imageView.topAnchor, right: imageView.rightAnchor,
-      //                width: 32, height: 32)
+        button.anchor(top: imageView.topAnchor, right: imageView.rightAnchor,
+                      width: 32, height: 32)
         
         return headerView
     }
@@ -229,6 +229,7 @@ class SettingTableViewController: UITableViewController {
         self.showInputDialog(title: "Имя", subtitle: "Как к вам обращаться?", actionTitle: "Да", cancelTitle: "Отмена", inputText: self.nameLabel.text, inputPlaceholder: "Введите Имя", inputKeyboardType: .default) { _ in } actionHandler: { text in
             if text != nil {
             UserDefaults.standard.set(text, forKey: "userName")
+            NotificationCenter.default.post(name: Notification.Name("userNameNotification"), object: nil)
             self.nameLabel.text = text
             }
         }
@@ -286,6 +287,29 @@ class SettingTableViewController: UITableViewController {
             guard let model = model else { return }
             
             if model.statusCode == 0 {
+                
+                var loginResponse = [DocumentSettingModel]()
+                
+                let a = model.data
+                let passport = DocumentSettingModel(icon: "rus passporrt",
+                                                    title: "Паспорт РФ",
+                                                    subtitle: (a?.regSeries ?? "") + (a?.regNumber ?? ""))
+                let inn = DocumentSettingModel(icon: "INN",
+                                               title: "ИНН",
+                                               subtitle: a?.INN ?? "")
+                let address = DocumentSettingModel(icon: "property tax",
+                                                   title: "Адрес регистрации",
+                                                   subtitle: a?.address ?? "")
+                
+                loginResponse.append(passport)
+                loginResponse.append(inn)
+                loginResponse.append(address)
+                let infoData = ["value": loginResponse]
+                NotificationCenter.default
+                    .post(name: NSNotification.Name("settingDocument"),
+                          object: nil,
+                          userInfo: infoData)
+                
                 completion(model.data, nil)
             } else {
                 completion(nil, model.errorMessage)
@@ -310,11 +334,11 @@ class SettingTableViewController: UITableViewController {
         switch section {
         case 0:
             label.text = "Мои данные"
-//        case 1:
-//            label.text = "Документы"
         case 1:
-            label.text = "Платежи и переводы"
+            label.text = "Документы"
         case 2:
+            label.text = "Платежи и переводы"
+        case 3:
             label.text = "Безопасность"
         default:
             label.text = ""
@@ -330,8 +354,9 @@ extension SettingTableViewController: UIImagePickerControllerDelegate, UINavigat
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         picker.dismiss(animated: true, completion: nil)
         guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
-        imageView.image = image
+        self.imageView.image = image.fixOrientation()
         saveImageInDocumentDirectory(image: image, fileName: "userPhoto")
+        NotificationCenter.default.post(name: Notification.Name("userPhotoNotification"), object: nil)
         
     }
     
@@ -339,7 +364,7 @@ extension SettingTableViewController: UIImagePickerControllerDelegate, UINavigat
         
         let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!;
         let fileURL = documentsUrl.appendingPathComponent(fileName)
-        if let imageData = image.pngData() {
+        if let imageData = image.jpegData(compressionQuality: 1.0) {
             try? imageData.write(to: fileURL, options: .atomic)
             
         }
@@ -367,3 +392,23 @@ extension SettingTableViewController: UIViewControllerTransitioningDelegate {
     }
 }
 
+extension UIImage {
+    func fixOrientation() -> UIImage {
+        if self.imageOrientation == UIImage.Orientation.up {
+            return self
+            
+        }
+        
+        UIGraphicsBeginImageContextWithOptions(self.size, false, self.scale)
+        
+        self.draw(in: CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height))
+        
+        let normalizedImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+        
+        UIGraphicsEndImageContext()
+        
+        return normalizedImage
+        
+    }
+    
+}
