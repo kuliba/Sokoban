@@ -57,7 +57,7 @@ class MainTabBarViewController: UITabBarController {
             return
         }
 
-        //GlobalModule.c2bURL = "success"
+    //GlobalModule.c2bURL = "success"
 //        GlobalModule.c2bURL = "https://medium.com/wolox/ios-deep-linking-url-scheme-vs-universal-links-50abd3802f97"
 //        GlobalModule.c2bURL = "https://qr.nspk.ru/AS1A006386NU1ONS9NEQ62JRC5LBM7E3?type=01&amp;bank=100000000217&amp;crc=1FD6"
         
