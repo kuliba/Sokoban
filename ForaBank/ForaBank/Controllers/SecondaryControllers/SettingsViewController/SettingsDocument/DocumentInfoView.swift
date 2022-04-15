@@ -10,10 +10,12 @@ import UIKit
 struct DocumentInfoModel {
     
     let icon: String
+    let title: String
     let description: String
     
-    init(icon: String, description: String) {
+    init(icon: String, title: String, description: String) {
         self.icon = icon
+        self.title = title
         self.description = description
     }
     
@@ -43,6 +45,19 @@ class DocumentInfoView: UIView {
         return imageView
     }
     
+    var titleLable: UILabel {
+        let lable = UILabel()
+        lable.text = model?.title
+        lable.textColor = UIColor(red: 0.108, green: 0.108, blue: 0.108, alpha: 1)
+
+        lable.font = UIFont(name: "Inter-SemiBold", size: 18)
+        lable.numberOfLines = 0
+        lable.textAlignment = .center
+        lable.translatesAutoresizingMaskIntoConstraints = false
+        lable.heightAnchor.constraint(equalToConstant: 30.0).isActive = true
+        return lable
+    }
+    
     var infoLable: UILabel {
         let lable = UILabel()
         lable.text = model?.description
@@ -52,7 +67,7 @@ class DocumentInfoView: UIView {
         lable.numberOfLines = 0
         lable.textAlignment = .center
         lable.translatesAutoresizingMaskIntoConstraints = false
-        lable.heightAnchor.constraint(equalToConstant: 70.0).isActive = true
+        lable.heightAnchor.constraint(equalToConstant: 80.0).isActive = true
         return lable
     }
     
@@ -68,7 +83,12 @@ class DocumentInfoView: UIView {
         button.widthAnchor.constraint(equalToConstant: 336.0).isActive = true
         button.layer.cornerRadius = 8
         button.clipsToBounds = true
+        button.addTarget(self, action: #selector(copyDescription), for: .touchUpInside)
         return button
+    }
+    
+    @objc func copyDescription() {
+        UIPasteboard.general.string = infoLable.text
     }
 
     required init?(coder: NSCoder) {
@@ -83,10 +103,11 @@ class DocumentInfoView: UIView {
         stackView.axis          = .vertical
         stackView.distribution  = .fillProportionally
         stackView.alignment     = .center
-        stackView.spacing       = 30
+        stackView.spacing       = 10
         
         stackView.addArrangedSubview(topView)
         stackView.addArrangedSubview(infoImage)
+        stackView.addArrangedSubview(titleLable)
         stackView.addArrangedSubview(infoLable)
         stackView.addArrangedSubview(copyButton)
         stackView.translatesAutoresizingMaskIntoConstraints = false
