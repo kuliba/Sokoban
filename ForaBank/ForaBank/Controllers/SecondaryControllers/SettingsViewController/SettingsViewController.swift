@@ -36,6 +36,7 @@ class SettingsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        
     }
     
     func setupUI() {
@@ -53,6 +54,9 @@ class SettingsViewController: UIViewController {
         subTitleLabel.textAlignment = .left
         
         imageView.setDimensions(height: 250, width: 250)
+        imageView.layer.cornerRadius = 125
+        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFit
         imageView.centerX(inView: view,
                           topAnchor: view.safeAreaLayoutGuide.topAnchor,
                           paddingTop: 22)
@@ -142,3 +146,4 @@ class SettingsViewController: UIViewController {
     }
     
 }
+

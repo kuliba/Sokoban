@@ -67,19 +67,22 @@ class MainViewController: UIViewController {
         }
     }
     
-    func addUserName() {
+    @objc func addUserName() {
         DispatchQueue.main.async {
             let uName = UserDefaults.standard.object(forKey: "userName") as? String
             if uName != nil {
                 self.searchBar.textField.text = uName
             }
-            let userPhoto = self.loadImageFromDocumentDirectory(fileName: "userPhoto")
-            
-            if userPhoto != nil {
-                self.searchBar.searchIcon.image = userPhoto
-            } else {
-                self.searchBar.searchIcon.image = UIImage(named: "ProfileImage")
-            }
+        }
+    }
+    
+    @objc func addUserPhoto() {
+        let userPhoto = self.loadImageFromDocumentDirectory(fileName: "userPhoto")
+
+        if userPhoto != nil {
+            self.searchBar.searchIcon.image = userPhoto?.fixOrientation()
+        } else {
+            self.searchBar.searchIcon.image = UIImage(named: "ProfileImage")
         }
     }
     
@@ -136,6 +139,11 @@ class MainViewController: UIViewController {
         createDataSource()
         getCurrency()
         setupData()
+        addUserName()
+        addUserPhoto()
+        NotificationCenter.default.addObserver(self, selector: #selector(addUserPhoto), name: Notification.Name("userPhotoNotification"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(addUserName), name: Notification.Name("userNameNotification"), object: nil)
         
         if let products = self.realm?.objects(UserAllCardsModel.self) {
             
@@ -197,11 +205,6 @@ class MainViewController: UIViewController {
             [.foregroundColor: UIColor.black], for: .selected)
         self.navigationController?.navigationBar.isHidden = true
         
-    }
-    
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        addUserName()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -297,6 +300,7 @@ class MainViewController: UIViewController {
         searchBar.searchIconHeight.constant = 40
         self.searchBar.searchIcon.layer.cornerRadius = 20
         self.searchBar.searchIcon.clipsToBounds = true
+        self.searchBar.searchIcon.contentMode = .scaleToFill
         
         searchBar.trailingLeftButton.setImage(UIImage(named: "searchBarIcon"), for: .normal)
         searchBar.trailingLeftButton.isEnabled = false
@@ -443,7 +447,6 @@ class MainViewController: UIViewController {
     
     func setupData() {
         
-        print(model.catalogBanners.value)
         let baners = model.catalogBanners.value
         var items: [PaymentsModel] = []
         baners.forEach { baner in
@@ -749,8 +752,3 @@ extension MainViewController.Section {
     }
 }
 
-
-extension Notification.Name {
-    
-     static let startProductsUpdate = Notification.Name("Start Products Update")
-}
