@@ -14,12 +14,14 @@ extension CustomPopUpWithRateView {
         super.viewDidLoad()
         setupUI()
         setupConstraint()
-        AddAllUserCardtList.add() {
-            print("REALM Add")
-        }
+        AddAllUserCardtList.add() { }
         if let template = paymentTemplate {
-            let cardId = template.parameterList.first?.payer.cardId
-            updateObjectWithNotification(cardId: cardId)
+            
+            if let cardId = template.parameterList.first?.payer.cardId {
+                updateObjectWithNotification(cardId: cardId)
+            } else if let accountId = template.parameterList.first?.payer.accountId {
+                updateObjectWithNotification(cardId: accountId)
+            }
             updateObjectWithTamplate(paymentTemplate: template)
         } else {
             updateObjectWithNotification()
