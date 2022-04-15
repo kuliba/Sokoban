@@ -103,6 +103,32 @@ extension ServerCommands {
 			}
 		}
         
+        /*
+         http://192.168.50.113:8080/swagger-ui/index.html#/AccountController/saveAccountCustomName
+         */
+        struct SaveAccountName: ServerCommand {
+            
+            let token: String?
+            let endpoint = "/rest/saveAccountName"
+            let method: ServerCommandMethod = .post
+            let parameters: [ServerCommandParameter]? = nil
+            let payload: BasePayload?
+            let timeout: TimeInterval? = nil
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: EmptyData?
+            }
+            
+            internal init(token: String, payload: BasePayload) {
+                
+                self.token = token
+                self.payload = payload
+            }
+        }
+        
         struct BasePayload: Encodable {
             
             let accountNumber: String?

@@ -172,6 +172,9 @@ class Model {
                     
                 case let payload as ModelAction.Products.Update.Total.Single.Request:
                     handleProductsUpdateTotalSingleRequest(payload)
+                    
+                case let payload as ModelAction.Products.UpdateCustomName.Request:
+                    handleProductsUpdateCustomName(payload)
 
                 //MARK: - Payments
                     
