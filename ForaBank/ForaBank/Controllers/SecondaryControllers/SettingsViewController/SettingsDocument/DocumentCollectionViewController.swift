@@ -43,9 +43,9 @@ class DocumentCollectionViewController: UICollectionViewController, UICollection
 
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        if indexPath.row == 2 {
+//        if indexPath.row == 2 {
             let selectedItem = self.data[indexPath.row]
-            let document = DocumentInfoModel(icon: selectedItem.icon, description: selectedItem.subtitle)
+        let document = DocumentInfoModel(icon: selectedItem.icon, title: selectedItem.title, description: selectedItem.subtitle)
             let documentView = DocumentInfoView(model: document)
             let controller = DocumentInfoViewController(model: documentView)
             
@@ -53,7 +53,7 @@ class DocumentCollectionViewController: UICollectionViewController, UICollection
             navController.modalPresentationStyle = .custom
             navController.transitioningDelegate = self
             self.present(navController, animated: true)
-        }
+//        }
         
     }
 }

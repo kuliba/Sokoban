@@ -75,7 +75,7 @@ class SettingsViewController: UIViewController {
         
         logoutButton.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingLeft: 20, paddingBottom: 30, paddingRight: 20, height: 44)
         
-        addCloseButton()
+        addCloseButton_setting()
         
     }
 
