@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -1162,10 +1162,29 @@
                                     <constraint firstAttribute="height" constant="100" id="U15-Yr-2vt"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Qa-Oq-Ovg">
+                                <rect key="frame" x="0.0" y="576" width="414" height="60"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y8K-6W-9DT">
+                                        <rect key="frame" x="14" y="4" width="387" height="52"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <string key="text">Сумма операции должна быть 
+меньше 600 000 ₽</string>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="1" green="0.58823529411764708" blue="0.21176470588235294" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="t23-bh-sZQ"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="3jP-hV-tFK"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="2Qa-Oq-Ovg" firstAttribute="leading" secondItem="3jP-hV-tFK" secondAttribute="leading" id="0OG-my-4H0"/>
                             <constraint firstItem="T6s-b8-m18" firstAttribute="bottom" secondItem="IEM-ZD-8x0" secondAttribute="bottom" identifier="myBottomHolderConstr" id="3IV-qs-Glf"/>
                             <constraint firstItem="794-7t-DHH" firstAttribute="top" secondItem="3jP-hV-tFK" secondAttribute="top" id="7f2-PA-n8m"/>
                             <constraint firstItem="bPu-zt-vle" firstAttribute="centerX" secondItem="3jP-hV-tFK" secondAttribute="centerX" id="AWs-d2-2Zz"/>
@@ -1175,6 +1194,7 @@
                             <constraint firstItem="OtM-C2-mnH" firstAttribute="leading" secondItem="IEM-ZD-8x0" secondAttribute="leading" constant="20" id="Hic-mM-i8H"/>
                             <constraint firstItem="3jP-hV-tFK" firstAttribute="trailing" secondItem="rma-rh-D8K" secondAttribute="trailing" id="O9c-Y8-kzb"/>
                             <constraint firstItem="Xdw-ex-75w" firstAttribute="leading" secondItem="3jP-hV-tFK" secondAttribute="leading" constant="20" id="P3w-TB-Id7"/>
+                            <constraint firstItem="T6s-b8-m18" firstAttribute="top" secondItem="2Qa-Oq-Ovg" secondAttribute="bottom" id="VjS-dS-pz6"/>
                             <constraint firstItem="Khe-nc-kOH" firstAttribute="trailing" secondItem="3jP-hV-tFK" secondAttribute="trailing" constant="-25" id="Vym-mV-F2V"/>
                             <constraint firstItem="Xdw-ex-75w" firstAttribute="baseline" secondItem="Khe-nc-kOH" secondAttribute="firstBaseline" constant="15" id="Wiw-EP-oKe"/>
                             <constraint firstItem="IW1-hX-2l8" firstAttribute="top" secondItem="Khe-nc-kOH" secondAttribute="bottom" constant="26" id="Yz1-cb-50t"/>
@@ -1183,6 +1203,7 @@
                             <constraint firstItem="794-7t-DHH" firstAttribute="leading" secondItem="3jP-hV-tFK" secondAttribute="leading" id="cfa-Ms-Igq"/>
                             <constraint firstAttribute="bottom" secondItem="OtM-C2-mnH" secondAttribute="bottom" constant="40" id="dAD-A3-9dU"/>
                             <constraint firstItem="rma-rh-D8K" firstAttribute="leading" secondItem="3jP-hV-tFK" secondAttribute="leading" id="gyS-Zs-0r7"/>
+                            <constraint firstItem="3jP-hV-tFK" firstAttribute="trailing" secondItem="2Qa-Oq-Ovg" secondAttribute="trailing" id="hDa-fT-qRD"/>
                             <constraint firstItem="DGy-Wf-N2a" firstAttribute="leading" secondItem="3jP-hV-tFK" secondAttribute="leading" id="lzy-8d-saR"/>
                             <constraint firstAttribute="trailing" secondItem="OtM-C2-mnH" secondAttribute="trailing" constant="20" id="mcf-qY-rjj"/>
                             <constraint firstItem="bPu-zt-vle" firstAttribute="top" secondItem="Khe-nc-kOH" secondAttribute="bottom" constant="170" id="oDy-ro-8P3"/>
@@ -1213,6 +1234,7 @@
                         <outlet property="switchConsent" destination="Xdw-ex-75w" id="wnI-mT-TTS"/>
                         <outlet property="viewAmount" destination="DGy-Wf-N2a" id="peF-u8-q88"/>
                         <outlet property="viewBank" destination="rma-rh-D8K" id="vti-ql-XED"/>
+                        <outlet property="viewLimit" destination="2Qa-Oq-Ovg" id="ROG-z4-9cR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ITe-8C-1F8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

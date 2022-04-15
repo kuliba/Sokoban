@@ -80,6 +80,11 @@ class C2BDetailsFormViewController: UIViewController {
     }
 
     fileprivate func setupUI() {
+        let imageViewRight = UIImageView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+        imageViewRight.contentMode = .scaleAspectFit
+        imageViewRight.image = UIImage(named: "sbp-logo")
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: imageViewRight)
+
         view.backgroundColor = .white
         cardFromField.model = C2BDetailsViewModel.sourceModel
 

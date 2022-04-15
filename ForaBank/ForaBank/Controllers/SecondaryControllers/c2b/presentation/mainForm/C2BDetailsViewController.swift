@@ -21,6 +21,8 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     var contractId = ""
     
     
+    @IBOutlet weak var viewLimit: UIView!
+    
     @IBOutlet weak var bottomInputView: BottomInputView?
     
     @IBOutlet weak var labelRecipient: UILabel!
