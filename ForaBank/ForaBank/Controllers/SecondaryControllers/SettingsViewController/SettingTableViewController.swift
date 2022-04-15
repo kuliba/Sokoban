@@ -13,10 +13,8 @@ protocol SettingTableViewControllerDelegate: AnyObject {
     func goLoginCardEntry()
 }
 
-
 class SettingTableViewController: UITableViewController {
     
-
     var delegate: SettingTableViewControllerDelegate?
     
     let kHeaderViewHeight: CGFloat = 140
@@ -289,6 +287,29 @@ class SettingTableViewController: UITableViewController {
             guard let model = model else { return }
             
             if model.statusCode == 0 {
+                
+                var loginResponse = [DocumentSettingModel]()
+                
+                let a = model.data
+                let passport = DocumentSettingModel(icon: "rus passporrt",
+                                                    title: "Паспорт РФ",
+                                                    subtitle: (a?.regSeries ?? "") + (a?.regNumber ?? ""))
+                let inn = DocumentSettingModel(icon: "INN",
+                                               title: "ИНН",
+                                               subtitle: a?.INN ?? "")
+                let address = DocumentSettingModel(icon: "property tax",
+                                                   title: "Адрес регистрации",
+                                                   subtitle: a?.address ?? "")
+                
+                loginResponse.append(passport)
+                loginResponse.append(inn)
+                loginResponse.append(address)
+                let infoData = ["value": loginResponse]
+                NotificationCenter.default
+                    .post(name: NSNotification.Name("settingDocument"),
+                          object: nil,
+                          userInfo: infoData)
+                
                 completion(model.data, nil)
             } else {
                 completion(nil, model.errorMessage)
@@ -313,11 +334,11 @@ class SettingTableViewController: UITableViewController {
         switch section {
         case 0:
             label.text = "Мои данные"
-//        case 1:
-//            label.text = "Документы"
         case 1:
-            label.text = "Платежи и переводы"
+            label.text = "Документы"
         case 2:
+            label.text = "Платежи и переводы"
+        case 3:
             label.text = "Безопасность"
         default:
             label.text = ""
