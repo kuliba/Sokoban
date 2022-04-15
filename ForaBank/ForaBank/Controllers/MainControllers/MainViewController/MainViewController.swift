@@ -255,14 +255,7 @@ class MainViewController: UIViewController {
         
         for section in Section.allCases {
             
-            if let mainSectionType = section.mainSectionType {
-                
-                expanded[section] = settings.sectionsExpanded[mainSectionType]
-                
-            } else {
-                
-                expanded[section] = true
-            }
+            expanded[section] = settings.sectionsExpanded[section.mainSectionType]
         }
         
         sectionsExpanded.value = expanded
@@ -277,11 +270,8 @@ class MainViewController: UIViewController {
         sectionsExpanded.value[section] = expandedSectionValue
         
         // updating settings
-        guard let mainSectionType = section.mainSectionType else {
-            return
-        }
         var settings = model.settingsMainSections
-        settings.update(isExpanded: expandedSectionValue, sectionType: mainSectionType)
+        settings.update(isExpanded: expandedSectionValue, sectionType: section.mainSectionType)
         model.settingsUpdate(settings)
     }
     
@@ -736,10 +726,11 @@ extension MainViewController.Section {
         case .promo: self = .offer
         case .currencyExchange: self = .currentsExchange
         case .openProduct: self = .openProduct
+        case .atm: self = .atm
         }
     }
     
-    var mainSectionType: MainSectionType? {
+    var mainSectionType: MainSectionType {
         
         switch self {
         case .products: return .products
@@ -747,7 +738,7 @@ extension MainViewController.Section {
         case .offer: return .promo
         case .currentsExchange: return .currencyExchange
         case .openProduct: return .openProduct
-        default: return nil
+        case .atm: return .atm
         }
     }
 }
