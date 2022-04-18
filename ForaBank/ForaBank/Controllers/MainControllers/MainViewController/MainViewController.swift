@@ -157,7 +157,10 @@ class MainViewController: UIViewController {
 
         bind()
         startObserveRealm()
-        startUpdate()
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+            
+            self.startUpdate()
+        }
         model.action.send(ModelAction.Deposits.List.Request())
         model.action.send(ModelAction.Settings.GetClientInfo.Requested())
         
@@ -229,6 +232,10 @@ class MainViewController: UIViewController {
     
     @objc
     func startUpdate() {
+        
+        guard isUpdating.value == false else {
+            return
+        }
         
         isUpdating.value = true
         
@@ -397,7 +404,7 @@ class MainViewController: UIViewController {
                 
             }.store(in: &bindings)
         
-        productTypeSelector.selected
+        productTypeSelector.$selected
             .receive(on: DispatchQueue.main)
             .sink {[unowned self] selectedProduct in
                 
@@ -590,7 +597,7 @@ extension MainViewController {
         
         var productTypes = [ProductType]()
         var firstIndexes = [ProductType: Int]()
-        var selected: CurrentValueSubject<ProductType?, Never> = .init(nil)
+        @Published var selected: ProductType? = nil
         var optionSelector: OptionSelectorView.ViewModel? = nil
         
         private var bindings = Set<AnyCancellable>()
@@ -613,8 +620,8 @@ extension MainViewController {
                 productTypes = productTypes(from: products)
                 firstIndexes = firstIndexes(for: products, and: productTypes)
                 
-                bindings = Set<AnyCancellable>()
-                if let optionSelector = optionSelector(with: productTypes, selected: selected.value) {
+//                bindings = Set<AnyCancellable>()
+                if let optionSelector = optionSelector(with: productTypes, selected: selected) {
                     
                     self.optionSelector = optionSelector
                     bind(optionSelector: optionSelector)
@@ -628,7 +635,7 @@ extension MainViewController {
                 
                 productTypes = [ProductType]()
                 firstIndexes = [ProductType: Int]()
-                selected = .init(nil)
+                selected = nil
                 optionSelector = nil
             }
         }
@@ -639,7 +646,7 @@ extension MainViewController {
                 .receive(on: DispatchQueue.main)
                 .sink {[unowned self] selectedId in
                     
-                    selected.value = ProductType(rawValue: selectedId)
+                    selected = ProductType(rawValue: selectedId)
                     
                 }.store(in: &bindings)
         }
