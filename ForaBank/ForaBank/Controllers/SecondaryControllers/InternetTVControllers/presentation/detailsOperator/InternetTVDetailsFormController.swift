@@ -116,14 +116,14 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
 
     func doConfirmation(response: CreateTransferAnswerModel?) {
         var ob:InternetTVConfirmViewModel? = nil
-        if InternetTVMainViewModel.filter == GlobalModule.UTILITIES_CODE {
+        if InternetTVMainViewModel.filter.contains(GlobalModule.UTILITIES_CODE) {
             ob = InternetTVConfirmViewModel(type: .gkh)
         }
-        if InternetTVMainViewModel.filter == GlobalModule.INTERNET_TV_CODE {
+        if InternetTVMainViewModel.filter.contains(GlobalModule.INTERNET_TV_CODE) {
             ob = InternetTVConfirmViewModel(type: .internetTV)
         }
 
-        if InternetTVMainViewModel.filter == GlobalModule.PAYMENT_TRANSPORT {
+        if InternetTVMainViewModel.filter.contains(GlobalModule.PAYMENT_TRANSPORT) {
             ob = InternetTVConfirmViewModel(type: .transport)
         }
 
