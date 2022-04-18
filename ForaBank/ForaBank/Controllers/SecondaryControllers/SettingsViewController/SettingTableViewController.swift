@@ -46,7 +46,7 @@ class SettingTableViewController: UITableViewController {
         
         let userPhoto = loadImageFromDocumentDirectory(fileName: "userPhoto")
         if userPhoto != nil {
-            imageView.image = userPhoto?.fixOrientation()
+            imageView.image = userPhoto
         } else {
             imageView.image = UIImage(named: "ProfileImage")
         }
@@ -354,7 +354,7 @@ extension SettingTableViewController: UIImagePickerControllerDelegate, UINavigat
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         picker.dismiss(animated: true, completion: nil)
         guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
-        self.imageView.image = image.fixOrientation()
+        self.imageView.image = image
         saveImageInDocumentDirectory(image: image, fileName: "userPhoto")
         NotificationCenter.default.post(name: Notification.Name("userPhotoNotification"), object: nil)
         
@@ -396,19 +396,19 @@ extension UIImage {
     func fixOrientation() -> UIImage {
         if self.imageOrientation == UIImage.Orientation.up {
             return self
-            
+
         }
-        
+
         UIGraphicsBeginImageContextWithOptions(self.size, false, self.scale)
-        
+
         self.draw(in: CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height))
-        
+
         let normalizedImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
-        
+
         UIGraphicsEndImageContext()
-        
+
         return normalizedImage
-        
+
     }
-    
+
 }
