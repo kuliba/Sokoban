@@ -162,7 +162,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
     }
 
     private func openLatestUtilities(lastGKHPayment: GetAllLatestPaymentsDatum) {
-        let amount = ""
+        let amount = lastGKHPayment.amount?.string() ?? ""
         var name = ""
         var image: UIImage!
         let realm = try? Realm()

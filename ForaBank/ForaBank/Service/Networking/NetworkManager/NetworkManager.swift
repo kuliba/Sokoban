@@ -24,7 +24,7 @@ final class NetworkManager<T: NetworkModelProtocol> {
                 debuggedApi.append("getOperationDetailByPaymentId")
                 debuggedApi.append("createAnywayTransfer")
                 debuggedApi.append("createAnywayTransferNew")
-                //debuggedApi.append("Operators")
+                debuggedApi.append("getOperationDetail")
 
         guard var request = requestType.request() else { return }
 
