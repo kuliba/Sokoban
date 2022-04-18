@@ -33,10 +33,10 @@ extension Model {
     var settingsMainSections: MainSectionSettings {
         
         do {
-            
+    
             let settings: MainSectionSettings = try settingsAgent.load(type: .interface(.mainSections))
             return settings
-            
+        
         } catch {
             
             return .initial

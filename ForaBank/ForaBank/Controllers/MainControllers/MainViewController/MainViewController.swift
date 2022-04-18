@@ -262,7 +262,14 @@ class MainViewController: UIViewController {
         
         for section in Section.allCases {
             
-            expanded[section] = settings.sectionsExpanded[section.mainSectionType]
+            if let isExpanded = settings.sectionsExpanded[section.mainSectionType] {
+                
+                expanded[section] = isExpanded
+                
+            } else {
+                
+                expanded[section] = true
+            }
         }
         
         sectionsExpanded.value = expanded
