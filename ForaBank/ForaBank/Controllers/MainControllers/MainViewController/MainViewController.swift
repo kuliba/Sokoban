@@ -300,7 +300,7 @@ class MainViewController: UIViewController {
         searchBar.searchIconHeight.constant = 40
         self.searchBar.searchIcon.layer.cornerRadius = 20
         self.searchBar.searchIcon.clipsToBounds = true
-        self.searchBar.searchIcon.contentMode = .scaleToFill
+//        self.searchBar.searchIcon.contentMode = .scaleToFill
         
         searchBar.trailingLeftButton.setImage(UIImage(named: "searchBarIcon"), for: .normal)
         searchBar.trailingLeftButton.isEnabled = false
