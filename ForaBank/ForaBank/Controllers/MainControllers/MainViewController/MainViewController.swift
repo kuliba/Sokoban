@@ -80,7 +80,7 @@ class MainViewController: UIViewController {
         let userPhoto = self.loadImageFromDocumentDirectory(fileName: "userPhoto")
 
         if userPhoto != nil {
-            self.searchBar.searchIcon.image = userPhoto?.fixOrientation()
+            self.searchBar.searchIcon.image = userPhoto//?.fixOrientation()
         } else {
             self.searchBar.searchIcon.image = UIImage(named: "ProfileImage")
         }
@@ -304,7 +304,6 @@ class MainViewController: UIViewController {
         searchBar.searchIconHeight.constant = 40
         self.searchBar.searchIcon.layer.cornerRadius = 20
         self.searchBar.searchIcon.clipsToBounds = true
-//        self.searchBar.searchIcon.contentMode = .scaleToFill
         
         searchBar.trailingLeftButton.setImage(UIImage(named: "searchBarIcon"), for: .normal)
         searchBar.trailingLeftButton.isEnabled = false
