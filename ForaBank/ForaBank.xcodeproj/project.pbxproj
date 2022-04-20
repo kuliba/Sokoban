@@ -62,6 +62,8 @@
 		0B3FE8E12704DBEE00CBDB4E /* GetLatestMobilePaymentsDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3FE8E02704DBEE00CBDB4E /* GetLatestMobilePaymentsDecodableModel.swift */; };
 		0B3FE8E32705C86200CBDB4E /* GetMobileListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3FE8E22705C86200CBDB4E /* GetMobileListDecodableModel.swift */; };
 		0B3FE8E62706435C00CBDB4E /* DateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3FE8E52706435C00CBDB4E /* DateExtensions.swift */; };
+		0B4145BC281093600097430C /* MessagesHistoryItemComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4145BB281093600097430C /* MessagesHistoryItemComponentView.swift */; };
+		0B4145BE2810937C0097430C /* MessagesHistorySectionComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4145BD2810937C0097430C /* MessagesHistorySectionComponentView.swift */; };
 		0B51D87626D959BB00FC7B6B /* ExtensionGKHInputNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B51D87526D959BB00FC7B6B /* ExtensionGKHInputNav.swift */; };
 		0B66E8D626CC5D6500FD735D /* NetDetectAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B66E8D526CC5D6500FD735D /* NetDetectAlert.swift */; };
 		0B66E8D826CC5EC400FD735D /* ExtensionDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B66E8D726CC5EC400FD735D /* ExtensionDevice.swift */; };
@@ -1125,6 +1127,8 @@
 		0B3FE8E02704DBEE00CBDB4E /* GetLatestMobilePaymentsDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetLatestMobilePaymentsDecodableModel.swift; sourceTree = "<group>"; };
 		0B3FE8E22705C86200CBDB4E /* GetMobileListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMobileListDecodableModel.swift; sourceTree = "<group>"; };
 		0B3FE8E52706435C00CBDB4E /* DateExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtensions.swift; sourceTree = "<group>"; };
+		0B4145BB281093600097430C /* MessagesHistoryItemComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesHistoryItemComponentView.swift; sourceTree = "<group>"; };
+		0B4145BD2810937C0097430C /* MessagesHistorySectionComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesHistorySectionComponentView.swift; sourceTree = "<group>"; };
 		0B51D87526D959BB00FC7B6B /* ExtensionGKHInputNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionGKHInputNav.swift; sourceTree = "<group>"; };
 		0B66E8D526CC5D6500FD735D /* NetDetectAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetDetectAlert.swift; sourceTree = "<group>"; };
 		0B66E8D726CC5EC400FD735D /* ExtensionDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDevice.swift; sourceTree = "<group>"; };
@@ -2290,6 +2294,15 @@
 				0B3FE8E52706435C00CBDB4E /* DateExtensions.swift */,
 			);
 			path = DateExtansions;
+			sourceTree = "<group>";
+		};
+		0B4145BA2810931A0097430C /* Messages */ = {
+			isa = PBXGroup;
+			children = (
+				0B4145BB281093600097430C /* MessagesHistoryItemComponentView.swift */,
+				0B4145BD2810937C0097430C /* MessagesHistorySectionComponentView.swift */,
+			);
+			path = Messages;
 			sourceTree = "<group>";
 		};
 		0B6081FE268DDD0800FDB8AD /* CustomCardView */ = {
@@ -3830,6 +3843,7 @@
 		77EA0DB92779B04A00C6ED12 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				0B4145BA2810931A0097430C /* Messages */,
 				7772978227C38F2F0099EF91 /* Main */,
 				681142DE27C7D784008D3D67 /* Profile */,
 				F82ED55927D7BA77008485AB /* MyProduct */,
@@ -6587,6 +6601,7 @@
 				68673B6026F4B87900F67A8C /* PayTableViewCell.swift in Sources */,
 				0B01073427C55E23006462E6 /* PaymentsPopUpSelectViewComponent.swift in Sources */,
 				EDF6820E266F9EC800FD5C07 /* NetworkModelProtocol.swift in Sources */,
+				0B4145BC281093600097430C /* MessagesHistoryItemComponentView.swift in Sources */,
 				0BDE452D26E298F600B64A0A /* ExtensionQRViewController.swift in Sources */,
 				7758754B27996D8B0080115D /* Cachable.swift in Sources */,
 				A58F263627E12E0D00A73778 /* C2BDetailsViewController.swift in Sources */,
@@ -6598,6 +6613,7 @@
 				A5B55E9A27E2624200C0B695 /* GetQRDataDO.swift in Sources */,
 				687F9B0927FBF65F007A38A5 /* ProductAccountData.swift in Sources */,
 				A533EDF327F643B10001B8C0 /* GetOperationDetailByPaymentIdDO.swift in Sources */,
+				0B4145BE2810937C0097430C /* MessagesHistorySectionComponentView.swift in Sources */,
 				0B95C40826B6CD9000AA57E6 /* BottomInputViewWithRateView.swift in Sources */,
 				0BB24AAD26F0053A00DDA4F6 /* DownloadQueue.swift in Sources */,
 				0BE270B026B76B9700FA958C /* ExtensionCustomPopUpSetup.swift in Sources */,
