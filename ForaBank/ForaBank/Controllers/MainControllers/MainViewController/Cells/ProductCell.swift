@@ -226,7 +226,7 @@ enum Status: String, Codable, Equatable {
     case blocked = "BLOCKED"
 }
 
-enum StatusPC: String{
+enum StatusPC: String, Decodable {
     
     case active = "0"
     case operationsBlocked = "3"

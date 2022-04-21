@@ -42,17 +42,19 @@ extension ProductView {
         convenience init(with productData: ProductData, statusAction: @escaping () -> Void, action: @escaping () -> Void) {
             
             let logo = Image.ic24LogoForaColor
+            
             let number = productData.viewNumber
+            
             let name = productData.viewName
             //TODO: balance formatting
-            let balance = "\(productData.balance)"
+            
+            let balance = "\(productData.balance?.currencyFormatter(symbol: productData.currency))"
             let textColor = productData.fontDesignColor.color
             let backgroundColor = productData.background.first?.color ?? .cardClassic
             let backgroundImage = productData.largeDesign.image
             let productType = productData.productType
             
             //TODO: update status
-            
             self.init(productId: productData.id, header: .init(logo: logo, number: number, period: nil), name: name, footer: .init(balance: balance, paymentSystem: nil), statusAction: nil, appearance: .init(textColor: textColor, background: .init(color: backgroundColor, image: backgroundImage)), isUpdating: false, productType: productType, action: action)
         }
         
@@ -73,7 +75,7 @@ extension ProductView {
         struct HeaderViewModel {
             
             let logo: Image?
-            let number: String
+            let number: String?
             let period: String?
         }
         
@@ -315,10 +317,12 @@ extension ProductView {
             
             HStack(alignment: .center, spacing: 8) {
                 
-                Text(viewModel.number)
-                    .font(textFont)
-                    .foregroundColor(appearance.textColor)
-                
+                if let number = viewModel.number {
+                    Text(number)
+                        .font(textFont)
+                        .foregroundColor(appearance.textColor)
+                }
+
                 if let period = viewModel.period {
                     
                     Rectangle()
