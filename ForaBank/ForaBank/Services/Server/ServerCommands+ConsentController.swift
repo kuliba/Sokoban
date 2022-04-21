@@ -12,7 +12,7 @@ extension ServerCommands {
     enum ConsentController {
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/rest/changeClientConsentMe2MePull
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/rest/changeClientConsentMe2MePull
          */
         struct ChangeClientConsentMe2MePull: ServerCommand {
             
@@ -42,7 +42,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/rest/createIsOneTimeConsentMe2MePull
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/rest/createIsOneTimeConsentMe2MePull
          */
         struct CreateIsOneTimeConsentMe2MePull: ServerCommand {
             
@@ -72,7 +72,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/rest/createPermanentConsentMe2MePull
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/rest/createPermanentConsentMe2MePull
          */
         struct CreatePermanentConsentMe2MePull: ServerCommand {
             
@@ -102,7 +102,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/rest/getClientConsentMe2MePull
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/rest/getClientConsentMe2MePull
          */
         struct GetClientConsentMe2MePull: ServerCommand {
             
@@ -134,7 +134,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/rest/getMe2MeDebitConsent
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/rest/getMe2MeDebitConsent
          */
         struct GetMe2MeDebitConsent: ServerCommand {
             

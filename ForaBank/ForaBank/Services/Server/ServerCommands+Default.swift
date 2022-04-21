@@ -12,7 +12,7 @@ extension ServerCommands {
     enum Default {
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/default/login.doUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/default/login.doUsingPOST
          */
         struct Login: ServerCommand {
 

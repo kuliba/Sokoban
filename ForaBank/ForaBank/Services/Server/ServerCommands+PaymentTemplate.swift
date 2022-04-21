@@ -12,7 +12,7 @@ enum ServerCommands {
     enum PaymentTemplateController {
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/PaymentTemplateController/deletePaymentTemplatesUsingDELETE
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/PaymentTemplateController/deletePaymentTemplatesUsingDELETE
          */
         struct DeletePaymentTemplates: ServerCommand {
 
@@ -43,7 +43,7 @@ enum ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/PaymentTemplateController/getPaymentTemplateListUsingGET
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/PaymentTemplateController/getPaymentTemplateListUsingGET
          */
         struct GetPaymentTemplateList: ServerCommand {
             
@@ -70,7 +70,7 @@ enum ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/PaymentTemplateController/savePaymentTemplateUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/PaymentTemplateController/savePaymentTemplateUsingPOST
          */
         struct SavePaymentTemplate: ServerCommand {
             
@@ -107,7 +107,7 @@ enum ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/PaymentTemplateController/sortingPaymentTemplatesUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/PaymentTemplateController/sortingPaymentTemplatesUsingPOST
          */
         struct SortingPaymentTemplates: ServerCommand {
             
@@ -138,7 +138,7 @@ enum ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/PaymentTemplateController/updatePaymentTemplateUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/PaymentTemplateController/updatePaymentTemplateUsingPOST
          */
         struct UpdatePaymentTemplate: ServerCommand{
             

@@ -12,7 +12,7 @@ extension ServerCommands {
     enum RegistrationContoller {
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/registration/checkClient
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/registration/checkClient
          */
         struct CheckClient: ServerCommand {
             
@@ -48,7 +48,7 @@ extension ServerCommands {
             }
         }
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/registration/doRegistration
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/registration/doRegistration
          */
         struct DoRegistration: ServerCommand {
             
@@ -83,7 +83,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/registration/getCode
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/registration/getCode
          */
         struct GetCode: ServerCommand {
             
@@ -110,7 +110,7 @@ extension ServerCommands {
             }
         }
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/registration/setDeviceSettings
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/registration/setDeviceSettings
          */
         struct SetDeviceSettings: ServerCommand {
             
@@ -152,7 +152,7 @@ extension ServerCommands {
             }
         }
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/registration/verifyCode
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/registration/verifyCode
          */
         struct VerifyCode: ServerCommand {
 

@@ -12,7 +12,7 @@ extension ServerCommands {
     enum UserController {
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/UserController/blockAccountUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/UserController/blockAccountUsingPOST
          */
         struct BlockAccount: ServerCommand {
 
@@ -39,7 +39,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/UserController/getUserSettingsUsingGET
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/UserController/getUserSettingsUsingGET
          */
         struct GetUserSettings: ServerCommand {
 
@@ -71,7 +71,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/UserController/setUserSettingUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/UserController/setUserSettingUsingPOST
          */
         struct SetUserSetting: ServerCommand {
 

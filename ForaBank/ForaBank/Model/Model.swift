@@ -160,9 +160,6 @@ class Model {
                     
                 case _ as ModelAction.Products.Update.Total.All:
                     handleProductsUpdateTotalAll()
-                    
-                case let payload as ModelAction.Products.Update.Total.Single.Request:
-                    handleProductsUpdateTotalSingleRequest(payload)
 
                 //MARK: - Payments
                     
@@ -344,6 +341,11 @@ private extension Model {
         }
     }
     
+    func productSerial() -> String? {
+        
+        localAgent.serial(for: [ProductData].self)
+    }
+    
     func loadCachedData() {
         
         if let catalogProducts = localAgent.load(type: [CatalogProductData].self) {
@@ -359,6 +361,10 @@ private extension Model {
         if let catalogBanner = localAgent.load(type: [BannerCatalogListData].self) {
             
             self.catalogBanners.value = catalogBanner
+        }
+        
+        if let products = localAgent.load(type: [ProductData].self) {
+            self.products.value = reduce(products: self.products.value, with: products)
         }
     }
     

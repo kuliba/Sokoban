@@ -22,11 +22,11 @@ class ProductCardData: ProductData {
     let paymentSystemName: String?
     let paymentSystemImage: SVGImageData?
     let loanBaseParam: LoanBaseParamInfoData?
-    let statusPc: StatusPC?
+    let statusPc: ProductData.StatusPC?
     let isMain: Bool?
     let externalId: Int?
     
-    internal init(id: Int, productType: ProductType, number: String, numberMasked: String, accountNumber: String, balance: Double, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date, ownerId: Int, branchId: Int, allowCredit: Bool, allowDebit: Bool,extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], cardId: Int?, accountId: Int?, name: String, validThru: Date, status: Status, expireDate: String?, holderName: String?, product: String?, branch: String, miniStatement: [PaymentDataItem]?, paymentSystemName: String?, paymentSystemImage: SVGImageData?, loanBaseParam: LoanBaseParamInfoData?, statusPc: StatusPC?, isMain: Bool?, externalId: Int?) {
+    internal init(id: Int, productType: ProductType, number: String, numberMasked: String, accountNumber: String, balance: Double, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date, ownerId: Int, branchId: Int, allowCredit: Bool, allowDebit: Bool,extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], cardId: Int?, accountId: Int?, name: String, validThru: Date, status: Status, expireDate: String?, holderName: String?, product: String?, branch: String, miniStatement: [PaymentDataItem]?, paymentSystemName: String?, paymentSystemImage: SVGImageData?, loanBaseParam: LoanBaseParamInfoData?, statusPc: ProductData.StatusPC?, isMain: Bool?, externalId: Int?) {
         
         self.cardId = cardId
         self.accountId = accountId
@@ -74,7 +74,7 @@ class ProductCardData: ProductData {
         paymentSystemName = try container.decodeIfPresent(String.self, forKey: .paymentSystemName)
         paymentSystemImage = try container.decodeIfPresent(SVGImageData.self, forKey: .paymentSystemImage)
         loanBaseParam = try container.decodeIfPresent(LoanBaseParamInfoData.self, forKey: .loanBaseParam)
-        statusPc = try container.decodeIfPresent(StatusPC.self, forKey: .statusPc)
+        statusPc = try container.decodeIfPresent(ProductData.StatusPC.self, forKey: .statusPc)
         isMain = try container.decodeIfPresent(Bool.self, forKey: .isMain)
         externalId = try container.decodeIfPresent(Int.self, forKey: .externalId)
 

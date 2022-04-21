@@ -12,7 +12,7 @@ extension ServerCommands {
     enum PrintFormController {
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/PrintFormController/getPrintFormUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/PrintFormController/getPrintFormUsingPOST
          */
         struct GetPrintForm: ServerDownloadCommand {
 

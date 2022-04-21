@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ProductData: Identifiable {
+class ProductData: Identifiable, Cachable {
     
     let id: Int
     
@@ -17,13 +17,13 @@ class ProductData: Identifiable {
     let numberMasked: String? //4444-XXXX-XXXX-1122
     let accountNumber: String? // 40817810000000000001
     
-    let balance: Double?
-    let balanceRub: Double?
+    var balance: Double?
+    var balanceRub: Double?
     let currency: String // example: RUB
     
     let mainField: String // example: Gold
     let additionalField: String? // example: Зарплатная
-    let customName: String? // example: Моя карта
+    var customName: String? // example: Моя карта
     let productName: String // example: VISA REWARDS R-5
     
     let openDate: Date?
@@ -145,13 +145,11 @@ extension ProductData: Codable {
 
 extension ProductData {
     
-    func updated(with params: ProductDynamicParams) -> ProductData {
+    func updated(with params: ProductDynamicParamsData) {
         
-        guard self.id == params.id, self.productType == params.type else {
-            return self
-        }
-        
-        return ProductData(id: id, productType: productType, number: number, numberMasked: numberMasked, accountNumber: accountNumber, balance: params.dynamicParams.balance, balanceRub: params.dynamicParams.balanceRUB, currency: currency, mainField: mainField, additionalField: additionalField, customName: params.dynamicParams.customName, productName: productName, openDate: openDate, ownerId: ownerId, branchId: branchId, allowCredit: allowCredit, allowDebit: allowDebit, extraLargeDesign: extraLargeDesign, largeDesign: largeDesign, mediumDesign: mediumDesign, smallDesign: smallDesign, fontDesignColor: fontDesignColor, background: background)
+        self.balance = params.balance
+        self.customName = params.customName
+        self.balanceRub = params.balanceRub
     }
 }
 
