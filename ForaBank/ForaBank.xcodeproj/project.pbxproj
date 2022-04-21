@@ -431,6 +431,7 @@
 		688B9BB426E03B3000407A75 /* TotalMoneyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688B9BB326E03B3000407A75 /* TotalMoneyView.swift */; };
 		688B9BB626E03B3E00407A75 /* TotalMoneyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 688B9BB526E03B3E00407A75 /* TotalMoneyView.xib */; };
 		689A99AE2779E73600D1FDAE /* OperationDetailInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689A99AD2779E73600D1FDAE /* OperationDetailInfoViewModel.swift */; };
+		68A07C39281097C400797A54 /* GetProductListByTypeResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 68A07C38281097C400797A54 /* GetProductListByTypeResponseGeneric.json */; };
 		68A40A132771E154007333EA /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 68A40A122771E154007333EA /* FirebaseAnalytics */; };
 		68AD33F1279858E900647665 /* CsrfDtoDecodingGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 68AD33F0279858E900647665 /* CsrfDtoDecodingGeneric.json */; };
 		68AD33F327985AD500647665 /* GetSessionTimeoutResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 68AD33F227985AD500647665 /* GetSessionTimeoutResponseGeneric.json */; };
@@ -464,6 +465,9 @@
 		68D099D9273B5D110017D777 /* PaymentByPhoneCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D099D8273B5D110017D777 /* PaymentByPhoneCoordinator.swift */; };
 		68D3F8D327CEC34E002753BD /* ProfileButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D3F8D227CEC34D002753BD /* ProfileButtonView.swift */; };
 		68D3F8D527CECB00002753BD /* ProfileButtonsSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D3F8D427CECB00002753BD /* ProfileButtonsSectionView.swift */; };
+		68DF16D228084B38005D8D3E /* GetProductDynamicParamsGenericTest.json in Resources */ = {isa = PBXBuildFile; fileRef = 68DF16D128084B38005D8D3E /* GetProductDynamicParamsGenericTest.json */; };
+		68DF16D4280863A0005D8D3E /* GetProductDynamicParamsListGenericTest.json in Resources */ = {isa = PBXBuildFile; fileRef = 68DF16D3280863A0005D8D3E /* GetProductDynamicParamsListGenericTest.json */; };
+		68DF16D72808A741005D8D3E /* ProductModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68DF16D62808A741005D8D3E /* ProductModelTests.swift */; };
 		68E3461F27030F4F00D6FE37 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E3461E27030F4F00D6FE37 /* ChatViewController.swift */; };
 		68E3462227033D9100D6FE37 /* LaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E3462127033D9100D6FE37 /* LaunchViewController.swift */; };
 		68E346242705C6FA00D6FE37 /* ProductStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 68E346232705C6FA00D6FE37 /* ProductStoryboard.storyboard */; };
@@ -1490,6 +1494,7 @@
 		688B9BB526E03B3E00407A75 /* TotalMoneyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TotalMoneyView.xib; sourceTree = "<group>"; };
 		68935F71276970CF002F56C2 /* AntifraudViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AntifraudViewModel.swift; sourceTree = "<group>"; };
 		689A99AD2779E73600D1FDAE /* OperationDetailInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailInfoViewModel.swift; sourceTree = "<group>"; };
+		68A07C38281097C400797A54 /* GetProductListByTypeResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetProductListByTypeResponseGeneric.json; sourceTree = "<group>"; };
 		68AD33F0279858E900647665 /* CsrfDtoDecodingGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = CsrfDtoDecodingGeneric.json; sourceTree = "<group>"; };
 		68AD33F227985AD500647665 /* GetSessionTimeoutResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetSessionTimeoutResponseGeneric.json; sourceTree = "<group>"; };
 		68AD33F427985B9B00647665 /* KeyExchangeResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = KeyExchangeResponseGeneric.json; sourceTree = "<group>"; };
@@ -1522,6 +1527,9 @@
 		68D099D8273B5D110017D777 /* PaymentByPhoneCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentByPhoneCoordinator.swift; sourceTree = "<group>"; };
 		68D3F8D227CEC34D002753BD /* ProfileButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileButtonView.swift; sourceTree = "<group>"; };
 		68D3F8D427CECB00002753BD /* ProfileButtonsSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileButtonsSectionView.swift; sourceTree = "<group>"; };
+		68DF16D128084B38005D8D3E /* GetProductDynamicParamsGenericTest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetProductDynamicParamsGenericTest.json; sourceTree = "<group>"; };
+		68DF16D3280863A0005D8D3E /* GetProductDynamicParamsListGenericTest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetProductDynamicParamsListGenericTest.json; sourceTree = "<group>"; };
+		68DF16D62808A741005D8D3E /* ProductModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductModelTests.swift; sourceTree = "<group>"; };
 		68E3461E27030F4F00D6FE37 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		68E3462127033D9100D6FE37 /* LaunchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchViewController.swift; sourceTree = "<group>"; };
 		68E346232705C6FA00D6FE37 /* ProductStoryboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ProductStoryboard.storyboard; sourceTree = "<group>"; };
@@ -3267,6 +3275,14 @@
 			path = PaymentByPhoneCoordinator;
 			sourceTree = "<group>";
 		};
+		68DF16D52808A2B1005D8D3E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				68DF16D62808A741005D8D3E /* ProductModelTests.swift */,
+			);
+			path = Products;
+			sourceTree = "<group>";
+		};
 		68E3461D27030F2A00D6FE37 /* ChatViewControllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -3518,6 +3534,7 @@
 		7758401827B2A0A300251969 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				68DF16D52808A2B1005D8D3E /* Products */,
 				7758401927B2A0B000251969 /* Payments */,
 				77FF670227B446D7009FEA09 /* AsyncAwaitTests.swift */,
 			);
@@ -4040,6 +4057,9 @@
 				682092DC27B1CAF5003DCAFD /* GetPaymentSystemListResponseServerGeneric.json */,
 				6830A02727D392CB003CA4F1 /* GetBannerCatalogListResponseGeneric.json */,
 				687F9B1227FED3E0007A38A5 /* GetPersonsCreditResponseGeneric.json */,
+				68DF16D128084B38005D8D3E /* GetProductDynamicParamsGenericTest.json */,
+				68DF16D3280863A0005D8D3E /* GetProductDynamicParamsListGenericTest.json */,
+				68A07C38281097C400797A54 /* GetProductListByTypeResponseGeneric.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -6067,7 +6087,9 @@
 				6830A02827D392CB003CA4F1 /* GetBannerCatalogListResponseGeneric.json in Resources */,
 				6820925027A9D365003DCAFD /* GetCurrencyListResponseGenericMin.json in Resources */,
 				77EC58B9277125000054D75C /* TransferEncodingMin.json in Resources */,
+				68A07C39281097C400797A54 /* GetProductListByTypeResponseGeneric.json in Resources */,
 				77EC58C327712EDD0054D75C /* TransferMe2MeDecodingGeneric.json in Resources */,
+				68DF16D4280863A0005D8D3E /* GetProductDynamicParamsListGenericTest.json in Resources */,
 				682092C127AC1885003DCAFD /* GetPhoneInfoGenericMin.json in Resources */,
 				682092C327B1603E003DCAFD /* GetFSSPDebtListResponseGeneric.json in Resources */,
 				682092C527B16316003DCAFD /* GetFSSPDocumentListResponseGeneric.json in Resources */,
@@ -6138,6 +6160,7 @@
 				6820924027A97BDB003DCAFD /* GetCountriesResponseGeneric.json in Resources */,
 				F8E529B827BE3DDB00222394 /* GetProductCatalogList.json in Resources */,
 				77517FBB27A94E28005CFB77 /* CreateAnywayTransferResponseMin.json in Resources */,
+				68DF16D228084B38005D8D3E /* GetProductDynamicParamsGenericTest.json in Resources */,
 				68419314279ED96800B4E184 /* GetCardStatementResponseGenericMin.json in Resources */,
 				77517FB327A94D21005CFB77 /* GetVerificationCodeResponseGeneric.json in Resources */,
 				682092CB27B1C667003DCAFD /* GetCountriesResponseGenericServer.json in Resources */,
@@ -6963,6 +6986,7 @@
 				7758401B27B2A0CB00251969 /* PaymentsOperationTests.swift in Sources */,
 				77C026E6275E6299002BE1F6 /* GKHHistoryModelTests.swift in Sources */,
 				77D2D9B3275AB9280097234D /* RealmObjectsDiffTests.swift in Sources */,
+				68DF16D72808A741005D8D3E /* ProductModelTests.swift in Sources */,
 				5A5ABFB127ABC88C00D548AA /* ServerCommandsDepositControllerTests.swift in Sources */,
 				77EC58D12771D48E0054D75C /* ServerCommandsPaymentTemplateTests.swift in Sources */,
 				6845336E27984B2800104A8B /* ServerCommandsUtilityTests.swift in Sources */,

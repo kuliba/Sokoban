@@ -12,7 +12,7 @@ extension ServerCommands {
     enum NotificationController {
 
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/NotificationController/changeNotificationStatus
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/NotificationController/changeNotificationStatus
          */
         struct ChangeNotificationStatus: ServerCommand {
 
@@ -51,7 +51,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/NotificationController/getNotificationsUsingGET
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/NotificationController/getNotificationsUsingGET
          */
         struct GetNotifications: ServerCommand {
 

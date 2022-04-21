@@ -12,7 +12,7 @@ extension ServerCommands {
     enum CardController {
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/rest/blockCard
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/rest/blockCard
          */
         struct BlockCard: ServerCommand {
             
@@ -44,7 +44,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/rest/getCardStatement
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/rest/getCardStatement
          */
         struct GetCardStatement: ServerCommand {
             
@@ -70,7 +70,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/rest/getOwnerPhoneNumber
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/rest/getOwnerPhoneNumber
          */
         struct GetOwnerPhoneNumber: ServerCommand {
             
@@ -101,7 +101,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/rest/saveCardName
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/rest/saveCardName
          */
         struct SaveCardName: ServerCommand {
             
@@ -127,7 +127,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/rest/unblockCard
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/rest/unblockCard
          */
         struct UnblockCard: ServerCommand {
             

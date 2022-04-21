@@ -12,7 +12,7 @@ extension ServerCommands {
     enum ProductController {
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/ProductController/getProductDetailsUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/ProductController/getProductDetailsUsingPOST
          */
         struct GetProductDetails: ServerCommand {
             
@@ -45,7 +45,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/ProductController/getProductListUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/ProductController/getProductListUsingPOST
          */
         struct GetProductList: ServerCommand {
             
@@ -72,7 +72,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/ProductController/getProductListByFilterUsingGET
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/ProductController/getProductListByFilterUsingGET
          */
         struct GetProductListByFilter: ServerCommand {
             
@@ -157,7 +157,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/ProductController//rest/getProductListByType
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/ProductController//rest/getProductListByType
          */
         struct GetProductListByType: ServerCommand {
             
@@ -174,7 +174,13 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: [ProductData]?
+                let data: List
+                
+                struct List: Codable, Equatable {
+                    
+                    let serial: String?
+                    let productList: [ProductData]?
+                }
             }
             
             internal init(token: String, serial: String?, productType: ProductType) {
@@ -189,6 +195,107 @@ extension ServerCommands {
                 parameters.append(.init(name: "productType", value: productType.rawValue))
                 self.parameters = parameters
                 
+            }
+        }
+        
+        /*
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/ProductController//rest/getProductDynamicParams
+         */
+        struct GetProductDynamicParams: ServerCommand {
+            
+            let token: String?
+            let endpoint = "/rest/getProductDynamicParams"
+            let method: ServerCommandMethod = .post
+            let parameters: [ServerCommandParameter]? = nil
+            let payload: Payload?
+            let timeout: TimeInterval? = nil
+            
+            struct Payload: Encodable {
+                
+                let accountId: String?
+                let cardId: String?
+                let depositId: String?
+            }
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: ProductDynamicParamsData?
+            }
+            
+            internal init(token: String, payload: Payload) {
+                
+                self.token = token
+                self.payload = payload
+            }
+        }
+        
+        /*
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/ProductController/rest/getProductDynamicParamsList
+         */
+        struct GetProductDynamicParamsList: ServerCommand {
+            
+            let token: String?
+            let endpoint = "/rest/getProductDynamicParamsList"
+            let method: ServerCommandMethod = .post
+            let parameters: [ServerCommandParameter]? = nil
+            let payload: Payload?
+            let timeout: TimeInterval? = nil
+            
+            struct Payload: Encodable {
+                
+                var productList: [ProductListData]
+                
+                struct ProductListData: Encodable {
+                    
+                    let id: Int
+                    let type: ProductType
+                }
+            }
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: List?
+  
+                struct List: Codable, Equatable {
+                    
+                    let dynamicProductParamsList: [DynamicListParams]
+                    
+                    static func == (lhs: ServerCommands.ProductController.GetProductDynamicParamsList.Response.List, rhs: ServerCommands.ProductController.GetProductDynamicParamsList.Response.List) -> Bool {
+                        return lhs.dynamicProductParamsList == rhs.dynamicProductParamsList
+                    }
+                    
+                    struct DynamicListParams: Codable, Equatable {
+                        
+                        let id: Int
+                        let type: ProductType
+                        let dynamicParams: ProductDynamicParamsData
+                    }
+                }
+            }
+
+            
+            internal init(token: String, payload: Payload) {
+                
+                self.token = token
+                self.payload = payload
+            }
+            
+            init(token: String, products: [ProductData]) {
+                
+                self.token = token
+                
+                var productListData = [Payload.ProductListData]()
+                
+                for product in products {
+                    
+                    productListData.append(.init(id: product.id, type: product.productType))
+                }
+                
+                self.payload = .init(productList: productListData)
             }
         }
     }

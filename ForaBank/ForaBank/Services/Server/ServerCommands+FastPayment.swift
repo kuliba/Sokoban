@@ -13,7 +13,7 @@ extension ServerCommands {
     enum FastPaymentController {
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/rest/createFastPaymentContract
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/rest/createFastPaymentContract
          */
         struct CreateFastPaymentContract: ServerCommand {
             
@@ -39,7 +39,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/rest/fastPaymentContractFindList
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/rest/fastPaymentContractFindList
          */
         struct FastPaymentContractFindList: ServerCommand {
             
@@ -73,7 +73,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/rest/updateFastPaymentContract
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/rest/updateFastPaymentContract
          */
         struct UpdateFastPaymentContract: ServerCommand {
             
