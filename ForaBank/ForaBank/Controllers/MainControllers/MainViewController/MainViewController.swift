@@ -128,6 +128,7 @@ class MainViewController: UIViewController {
         startUpdate()
         model.action.send(ModelAction.Deposits.List.Request())
         model.action.send(ModelAction.Settings.GetClientInfo.Requested())
+//        model.action.send(ModelAction.Notification.Fetch.New.Request())
     }
     
     func updateProductsViewModels(with products: Results<UserAllCardsModel>) {

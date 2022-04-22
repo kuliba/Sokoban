@@ -31,6 +31,9 @@ class Model {
     //TODO: store in cache 
     let paymentTemplatesViewSettings: CurrentValueSubject<TemplatesListViewModel.Settings, Never>
     
+    //MARK: Notifications
+    let notifications: CurrentValueSubject<[NotificationData], Never>
+    
     //TODO: remove when all templates will be implemented
     let paymentTemplatesAllowed: [ProductStatementData.Kind] = [.sfp, .insideBank, .betweenTheir, .direct, .contactAddressless, .externalIndivudual, .externalEntity, .mobile]
     let paymentTemplatesDisplayed: [PaymentTemplateData.Kind] = [.sfp, .byPhone, .insideBank, .betweenTheir, .direct, .contactAdressless, .externalIndividual, .externalEntity, .mobile]
@@ -67,6 +70,7 @@ class Model {
         self.catalogBanners = .init([])
         self.paymentTemplates = .init([])
         self.paymentTemplatesViewSettings = .init(.initial)
+        self.notifications = .init([])
         self.serverAgent = serverAgent
         self.localAgent = localAgent
         self.keychainAgent = keychainAgent
@@ -178,6 +182,13 @@ class Model {
                 //MARK: - Settings Actions
                 case _ as ModelAction.Settings.GetClientInfo.Requested:
                     handleGetClientInfoRequest()
+                    
+               //MARK: - Notifications
+                case _ as ModelAction.Notification.Fetch.New.Request:
+                    handleNotificationsNewRequest()
+                    
+                case _ as ModelAction.Notification.Fetch.Next.Request:
+                    handleNotificationsNextRequest()
                     
                 //MARK: - Templates Actions
                     

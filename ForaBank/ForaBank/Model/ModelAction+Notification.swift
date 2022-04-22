@@ -10,9 +10,9 @@ import Foundation
 extension ModelAction {
     
     enum Notification {
-
+        
         enum ChangeNotificationStatus {
-
+            
             struct Requested: Action {
                 
                 let eventId: String
@@ -25,6 +25,29 @@ extension ModelAction {
             struct Failed: Action {
                 
                 let error: Error
+            }
+        }
+        
+        enum Fetch {
+            
+            enum New {
+                
+                struct Request: Action {}
+                
+                struct Response: Action {
+                    
+                    let result: Result<[NotificationData], Error>
+                }
+            }
+            
+            enum Next {
+                
+                struct Request: Action {}
+                
+                struct Response: Action {
+                    
+                    let result: Result<[NotificationData], Error>
+                }
             }
         }
     }

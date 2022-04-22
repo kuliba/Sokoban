@@ -181,6 +181,7 @@
 		0BBDFBE227BBF75600A30D6D /* PaymentsServicesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBDFBE127BBF75600A30D6D /* PaymentsServicesViewModel.swift */; };
 		0BBDFBE427BD05FD00A30D6D /* PaymentsOperationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBDFBE327BD05FD00A30D6D /* PaymentsOperationView.swift */; };
 		0BBDFC3A27BE48EE00A30D6D /* PaymentsOperationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBDFC3927BE48EE00A30D6D /* PaymentsOperationViewModel.swift */; };
+		0BCFBE012812DD17003F2F36 /* Model+Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCFBE002812DD17003F2F36 /* Model+Notifications.swift */; };
 		0BD1CA9B26E6B55F00CFE993 /* GetCountriesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD1CA9A26E6B55F00CFE993 /* GetCountriesList.swift */; };
 		0BD1CA9D26E6B63900CFE993 /* CountriesListSaved.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD1CA9C26E6B63900CFE993 /* CountriesListSaved.swift */; };
 		0BD1CAA026E6C3CD00CFE993 /* GetCurrencyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD1CA9F26E6C3CD00CFE993 /* GetCurrencyList.swift */; };
@@ -1245,6 +1246,7 @@
 		0BBDFBE127BBF75600A30D6D /* PaymentsServicesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesViewModel.swift; sourceTree = "<group>"; };
 		0BBDFBE327BD05FD00A30D6D /* PaymentsOperationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsOperationView.swift; sourceTree = "<group>"; };
 		0BBDFC3927BE48EE00A30D6D /* PaymentsOperationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsOperationViewModel.swift; sourceTree = "<group>"; };
+		0BCFBE002812DD17003F2F36 /* Model+Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Notifications.swift"; sourceTree = "<group>"; };
 		0BD1CA9A26E6B55F00CFE993 /* GetCountriesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCountriesList.swift; sourceTree = "<group>"; };
 		0BD1CA9C26E6B63900CFE993 /* CountriesListSaved.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountriesListSaved.swift; sourceTree = "<group>"; };
 		0BD1CA9F26E6C3CD00CFE993 /* GetCurrencyList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCurrencyList.swift; sourceTree = "<group>"; };
@@ -3689,6 +3691,7 @@
 				7758400C27B1442F00251969 /* Model+Payments.swift */,
 				77EC58ED27723A5A0054D75C /* Model+Templates.swift */,
 				77A411E827EC456800D36E46 /* Model+Settings.swift */,
+				0BCFBE002812DD17003F2F36 /* Model+Notifications.swift */,
 				77A411EA27EC624000D36E46 /* Model+Deposits.swift */,
 				77583FFE27B13C1600251969 /* Payments */,
 			);
@@ -6454,6 +6457,7 @@
 				EDE709042797172E0048CA94 /* TemplatesListViewModel.swift in Sources */,
 				776C846F27DF215F00F8F7E1 /* PaymentsView.swift in Sources */,
 				ED75CDFB26E27F150074F5D5 /* UIApplication.swift in Sources */,
+				0BCFBE012812DD17003F2F36 /* Model+Notifications.swift in Sources */,
 				A50869E027690E53004C5E17 /* InternetTVConfirmViewModel.swift in Sources */,
 				0B8C1C4E273B2BB000BA5CAC /* TransferByRequisitesCoordinator.swift in Sources */,
 				ED0B48A0267E1A2D0037EA06 /* PaymentsDetailsSuccessViewController.swift in Sources */,
