@@ -17,7 +17,8 @@ extension HistoryViewComponent {
         let title = "История операций"
         @Published var dateOperations: [DateOperations]
         @Published var spending: SegmentedBar.ViewModel?
-        
+        @Published var isLoading = true
+
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
@@ -46,50 +47,11 @@ extension HistoryViewComponent {
                 .receive(on: DispatchQueue.main)
                 .sink {[unowned self] operations in
                     
-                    let groupByDate = Dictionary(grouping: operations) { (operation) -> String in
-                        
-                        let dateFormatter = DateFormatter()
-                        dateFormatter.dateFormat =  "d MMMM, E"
-                        dateFormatter.timeZone = .current
-                        dateFormatter.locale = Locale(identifier: "ru_RU")
-                        let localDate = dateFormatter.string(from: operation.tranDate)
-                        
-                        return localDate
-                    }
+                    self.dateOperations = separationDate(operations: operations)
                     
-                    let sortedArray = groupByDate.sorted(by: { $0.0 > $1.0 })
+                    self.spending = .init(value: sumDeifferentGroup(operations: operations))
                     
-                    func sumDeifferentGroup() -> [Double] {
-                        
-                        let groupByName = Dictionary(grouping: operations) { (operation) -> String in
-                            return operation.groupName
-                        }
-                        
-                        var sumArray = [Double]()
-                        
-                        for operation in groupByName {
-                            sumArray.append(operation.value.reduce(0) { partialResult, y in
-                                partialResult + y.amount
-                            })
-                        }
-                        
-                        return sumArray
-                    }
-                    
-                    self.spending = .init(value: sumDeifferentGroup())
-                    
-                    for date in sortedArray {
-                        
-                        var operations = [DateOperations.Operation]()
-                        
-                        for operation in date.value {
-                            
-                            operations.append(HistoryViewComponent.ViewModel.DateOperations.Operation(productStatementData: operation))
-                        }
-                        
-                        self.dateOperations.append(HistoryViewComponent.ViewModel.DateOperations(date: date.key, operations: operations))
-                        
-                    }
+                    self.isLoading = false
                     
                 }.store(in: &bindings)
         }
@@ -147,6 +109,55 @@ extension HistoryViewComponent {
                 }
             }
         }
+    }
+}
+
+extension HistoryViewComponent.ViewModel {
+        
+    func separationDate(operations: [ProductStatementData]) -> [DateOperations] {
+        
+        let groupByDate = Dictionary(grouping: operations) { (operation) -> String in
+            
+            let dateFormatter = DateFormatter.historyDateFormatter
+            let localDate = dateFormatter.string(from: operation.tranDate)
+            
+            return localDate
+        }
+        
+        let sortedArray = groupByDate.sorted(by: { $0.0 > $1.0 })
+        
+        var dateOperations: [DateOperations] = []
+        
+        for date in sortedArray {
+            
+            var operations = [DateOperations.Operation]()
+            
+            for operation in date.value {
+                
+                operations.append(DateOperations.Operation(productStatementData: operation))
+            }
+        
+            dateOperations.append(DateOperations(date: date.key, operations: operations))
+        }
+        
+        return dateOperations
+    }
+    
+    func sumDeifferentGroup(operations: [ProductStatementData]) -> [Double] {
+        
+        let groupByName = Dictionary(grouping: operations) { (operation) -> String in
+            return operation.groupName
+        }
+        
+        var sumArray = [Double]()
+        
+        for operation in groupByName {
+            sumArray.append(operation.value.reduce(0) { partialResult, y in
+                partialResult + y.amount
+            })
+        }
+        
+        return sumArray
     }
 }
 
