@@ -13,19 +13,21 @@ extension HistoryViewComponent {
     class ViewModel: ObservableObject {
         
         let action: PassthroughSubject<Action, Never> = .init()
-
+        
         let title = "История операций"
-        @Published var dateOperations: [DateOperations]
-        @Published var spending: SegmentedBar.ViewModel?
+        @Published var listState: OperationsListState
+        @Published var dateOperations: [OperationsDateViewModel]
+        @Published var spendingViewModel: SegmentedBarView.ViewModel?
         @Published var isLoading = true
-
+        
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        internal init(dateOperations: [HistoryViewComponent.ViewModel.DateOperations], spending: SegmentedBar.ViewModel?, model: Model = .emptyMock) {
+        internal init(dateOperations: [OperationsDateViewModel], spendingViewModel: SegmentedBarView.ViewModel?, model: Model = .emptyMock) {
             
             self.dateOperations = dateOperations
-            self.spending = spending
+            self.listState = .list(dateOperations)
+            self.spendingViewModel = spendingViewModel
             self.model = model
             
         }
@@ -33,9 +35,9 @@ extension HistoryViewComponent {
         init(_ model: Model, productId: Int, productType: ProductType) {
             
             self.dateOperations = []
-            self.spending = nil
+            self.spendingViewModel = nil
             self.model = model
-            
+            self.listState = .loading
             bind()
             
             model.action.send(ModelAction.Statement.List.Request(productId: productId, productType: productType))
@@ -48,15 +50,47 @@ extension HistoryViewComponent {
                 .sink {[unowned self] operations in
                     
                     self.dateOperations = separationDate(operations: operations)
-                    
-                    self.spending = .init(value: sumDeifferentGroup(operations: operations))
+                    if sumDeifferentGroup(operations: operations).count > 0 {
+                        
+                        self.spendingViewModel = .init(value: sumDeifferentGroup(operations: operations))
+                    }
                     
                     self.isLoading = false
+                    self.listState = .list(self.dateOperations)
                     
                 }.store(in: &bindings)
         }
         
-        struct DateOperations: Identifiable {
+        enum OperationsListState {
+            
+            case empty(OperationsEmptyViewModel)
+            case list([OperationsDateViewModel])
+            case error(OperationsErrorViewModel)
+            case loading
+            
+        }
+        
+        struct OperationsEmptyViewModel {
+            
+            let image = Image.ic24Search
+            let title = "Нет операций"
+        }
+        
+        struct OperationsErrorViewModel {
+            
+            let errorTitle = "Превышено время ожидания"
+            let subTitle = "Попробуйте повторить запрос позже"
+            let image = Image.ic24Search
+            let button: ButtonViewModel
+            
+            struct ButtonViewModel {
+                
+                let title = "Повторить"
+                let action: (Action) -> Void
+            }
+        }
+        
+        struct OperationsDateViewModel: Identifiable {
             
             let id = UUID()
             let date: String
@@ -113,8 +147,8 @@ extension HistoryViewComponent {
 }
 
 extension HistoryViewComponent.ViewModel {
-        
-    func separationDate(operations: [ProductStatementData]) -> [DateOperations] {
+    
+    func separationDate(operations: [ProductStatementData]) -> [OperationsDateViewModel] {
         
         let groupByDate = Dictionary(grouping: operations) { (operation) -> String in
             
@@ -126,18 +160,18 @@ extension HistoryViewComponent.ViewModel {
         
         let sortedArray = groupByDate.sorted(by: { $0.0 > $1.0 })
         
-        var dateOperations: [DateOperations] = []
+        var dateOperations: [OperationsDateViewModel] = []
         
         for date in sortedArray {
             
-            var operations = [DateOperations.Operation]()
+            var operations = [OperationsDateViewModel.Operation]()
             
             for operation in date.value {
                 
-                operations.append(DateOperations.Operation(productStatementData: operation))
+                operations.append(OperationsDateViewModel.Operation(productStatementData: operation))
             }
-        
-            dateOperations.append(DateOperations(date: date.key, operations: operations))
+            
+            dateOperations.append(OperationsDateViewModel(date: date.key, operations: operations))
         }
         
         return dateOperations
@@ -184,7 +218,6 @@ struct HistoryViewComponent: View {
                         .foregroundColor(.black)
                         .frame(width: 32, height: 32)
                     
-                    
                 }
                 .background(Color.mainColorsGrayLightest)
                 .cornerRadius(90)
@@ -192,14 +225,23 @@ struct HistoryViewComponent: View {
             }
             .padding(.bottom, 15)
             
-            if let spending = viewModel.spending {
+            if let spending = viewModel.spendingViewModel {
                 
-                SegmentedBar(viewModel: spending)
+                SegmentedBarView(viewModel: spending)
                     .frame(height: 44)
                     .padding(.bottom, 32)
             }
             
-            if !viewModel.dateOperations.isEmpty {
+            switch viewModel.listState {
+            case .empty(let emptyViewModel):
+                
+                Spacer()
+                
+                EmptyOperationsView(viewModel: emptyViewModel)
+                
+                Spacer()
+                
+            case .list(let operationsViewModel):
                 
                 ForEach(viewModel.dateOperations) { operation in
                     
@@ -249,14 +291,13 @@ struct HistoryViewComponent: View {
                     }
                 }
                 .padding(.bottom, 32)
-                
-            } else {
-                
-                Spacer()
-                
-                EmptyOperationsView()
-                
-                Spacer()
+            case .error(let errorViewModel):
+                ErrorRequestView(viewModel: errorViewModel)
+            case .loading:
+                Rectangle()
+                    .fill(Color.purple)
+                    .frame(width: 200, height: 200)
+                    .animation(Animation.default.repeatCount(5).speed(6))
             }
         }
         .padding(.horizontal, 20)
@@ -264,17 +305,19 @@ struct HistoryViewComponent: View {
     
     struct EmptyOperationsView: View {
         
+        var viewModel: ViewModel.OperationsEmptyViewModel
+        
         var body: some View {
             
             VStack(spacing: 24) {
                 
-                Image.ic24Search
+                viewModel.image
                     .foregroundColor(.mainColorsGray)
                     .frame(width: 64, height: 64)
                     .background(Color.mainColorsGrayLightest)
                     .cornerRadius(90)
                 
-                Text("Нет операций")
+                Text(viewModel.title)
                     .font(Font.system(size: 14, weight: .light))
                     .foregroundColor(.mainColorsGray)
             }
@@ -283,26 +326,33 @@ struct HistoryViewComponent: View {
     
     struct ErrorRequestView: View {
         
+        var viewModel: ViewModel.OperationsErrorViewModel
+
         var body: some View {
             
             VStack(spacing: 24) {
                 
-                Image.ic24Search
+                viewModel.image
                     .foregroundColor(.mainColorsGray)
                     .frame(width: 64, height: 64)
                     .background(Color.mainColorsGrayLightest)
                     .cornerRadius(90)
+                VStack(spacing: 13) {
+                Text(viewModel.errorTitle)
+                    .font(Font.system(size: 20, weight: .semibold))
+                    .foregroundColor(.mainColorsBlackMedium)
                 
-                Text("Нет операций")
-                    .font(Font.system(size: 14, weight: .light))
-                    .foregroundColor(.mainColorsGray)
-                
-                Button {
-                    
-                } label: {
-                    Text("Повторить запрос")
+                Text(viewModel.subTitle)
+                    .font(Font.system(size: 16, weight: .light))
+                    .foregroundColor(.gray)
                 }
-                
+                Button {
+                    viewModel.button.action(ModelAction.Statement.List.Request.init(productId: 10000122929, productType: .card))
+                    print("viewModel.button.action(ModelAction.Statement.List.Request.init(productId: 123, productType: .card))")
+                } label: {
+                    Text(viewModel.button.title)
+                        .foregroundColor(.mainColorsBlackMedium)
+                }
             }
         }
     }
@@ -314,20 +364,20 @@ struct HistoryViewComponent_Previews: PreviewProvider {
         
         Group {
             
-            HistoryViewComponent(viewModel: .init(dateOperations: [.init(date: "25 августа, ср", operations: [.init(title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .debit), .init(title: "Selhozmarket", image: Image.init("GKH", bundle: nil), subtitle: "Магазин", amount: "-230 Р", type: .credit)]), .init(date: "26 августа, ср", operations: [.init(title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .debit)])], spending: .spending, model: .emptyMock))
+            HistoryViewComponent(viewModel: .init(dateOperations: [.init(date: "25 августа, ср", operations: [.init(title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .debit), .init(title: "Selhozmarket", image: Image.init("GKH", bundle: nil), subtitle: "Магазин", amount: "-230 Р", type: .credit)]), .init(date: "26 августа, ср", operations: [.init(title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .debit)])], spendingViewModel: .spending, model: .emptyMock))
                 .previewLayout(.fixed(width: 360, height: 500))
             
-            HistoryViewComponent(viewModel: .init(dateOperations: [.init(date: "25 августа, ср", operations: [.init(title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .debit)]), .init(date: "26 августа, ср", operations: [.init(title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .debit)])], spending: nil, model: .emptyMock))
+            HistoryViewComponent(viewModel: .init(dateOperations: [.init(date: "25 августа, ср", operations: [.init(title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .debit)]), .init(date: "26 августа, ср", operations: [.init(title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .debit)])], spendingViewModel: nil, model: .emptyMock))
                 .previewLayout(.fixed(width: 400, height: 400))
             
-            HistoryViewComponent(viewModel: .init(dateOperations: [], spending: nil, model: .emptyMock))
+            HistoryViewComponent(viewModel: .init(dateOperations: [], spendingViewModel: nil, model: .emptyMock))
                 .previewLayout(.fixed(width: 400, height: 400))
             
         }
     }
 }
 
-extension HistoryViewComponent.ViewModel.DateOperations {
+extension HistoryViewComponent.ViewModel.OperationsDateViewModel {
     
     static let debitOperation = Operation(title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .credit)
     
@@ -337,5 +387,5 @@ extension HistoryViewComponent.ViewModel.DateOperations {
 
 extension HistoryViewComponent.ViewModel {
     
-    static let sampleHistory = HistoryViewComponent.ViewModel( dateOperations: [.init(date: "12 декабря", operations: [.init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit)])], spending: .init(value: [100, 300]), model: .emptyMock)
+    static let sampleHistory = HistoryViewComponent.ViewModel( dateOperations: [.init(date: "12 декабря", operations: [.init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit)])], spendingViewModel: .init(value: [100, 300]), model: .emptyMock)
 }

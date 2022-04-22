@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension SegmentedBar {
+extension SegmentedBarView {
     
     class ViewModel: ObservableObject {
         
@@ -23,9 +23,9 @@ extension SegmentedBar {
     }
 }
 
-struct SegmentedBar: View {
+struct SegmentedBarView: View {
     
-    var viewModel: SegmentedBar.ViewModel
+    var viewModel: SegmentedBarView.ViewModel
     
     var body: some View {
         
@@ -63,12 +63,12 @@ struct SegmentedBar: View {
 struct SegmentedBarTest_Previews: PreviewProvider {
     static var previews: some View {
         
-        SegmentedBar(viewModel: .spending)
+        SegmentedBarView(viewModel: .spending)
             .previewLayout(.fixed(width: 335, height: 100))
     }
 }
 
-extension SegmentedBar.ViewModel {
+extension SegmentedBarView.ViewModel {
     
-    static let spending = SegmentedBar.ViewModel(value: [100, 400, 50, 200, 500, 100, 300, 10, 100, 300])
+    static let spending = SegmentedBarView.ViewModel(value: [100, 400, 50, 200, 500, 100, 300, 10, 100, 300])
 }
