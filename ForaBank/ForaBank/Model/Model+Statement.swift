@@ -49,13 +49,13 @@ extension Model {
                     switch response.statusCode {
                     case .ok:
                         guard let statement = response.data else { return }
-                        
+                        self.statement.value = statement
                     default:
-                        //TODO: handle not ok server status
+                        self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                         return
                     }
                 case .failure(let error):
-                    self.action.send(ModelAction.Settings.GetClientInfo.Failed(error: error))
+                    self.handleServerCommandError(error: error, command: command)
                 }
             }
             
@@ -63,12 +63,62 @@ extension Model {
             
             let command = ServerCommands.AccountController.GetAccountStatement(token: token, accountNumber: nil, endDate: nil, id: payload.productId, name: nil, startDate: nil, statementFormat: nil)
             
+            serverAgent.executeCommand(command: command) { result in
+                
+                switch result {
+                case .success(let response):
+                    switch response.statusCode {
+                    case .ok:
+                        guard let statement = response.data else { return }
+                        self.statement.value = statement
+                    default:
+                        self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                        return
+                    }
+                case .failure(let error):
+                    self.handleServerCommandError(error: error, command: command)
+                }
+            }
         case .deposit:
             
             let command = ServerCommands.DepositController.GetDepositStatement(token: token, endDate: nil, id: payload.productId, name: nil, startDate: nil, statementFormat: nil)
+            
+            serverAgent.executeCommand(command: command) { result in
+                
+                switch result {
+                case .success(let response):
+                    switch response.statusCode {
+                    case .ok:
+                        guard let statement = response.data else { return }
+                        self.statement.value = statement
+                    default:
+                        self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                        return
+                    }
+                case .failure(let error):
+                    self.handleServerCommandError(error: error, command: command)
+                }
+            }
         default:
             
             let command = ServerCommands.CardController.GetCardStatement(token: token, payload: .init(cardNumber: nil, endDate: nil, id: payload.productId, name: nil, startDate: nil, statementFormat: nil))
+            
+            serverAgent.executeCommand(command: command) { result in
+                
+                switch result {
+                case .success(let response):
+                    switch response.statusCode {
+                    case .ok:
+                        guard let statement = response.data else { return }
+                        self.statement.value = statement
+                    default:
+                        self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                        return
+                    }
+                case .failure(let error):
+                    self.handleServerCommandError(error: error, command: command)
+                }
+            }
         }
     }
 }

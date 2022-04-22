@@ -31,7 +31,7 @@ struct ProfileView: View {
                     
                     VStack(spacing: 32) {
                         
-                        ProfileCardViewComponent(viewModel: .init(products: [.classic], product: viewModel.productViewModel.product))
+                        ProfileCardViewComponent(viewModel: viewModel.productViewModel)
                         
                         ProfileButtonsSectionView(viewModel: .init(kind: viewModel.productViewModel.product.productType))
                         
@@ -41,7 +41,10 @@ struct ProfileView: View {
                                 .padding(.horizontal, 20)
                         }
                         
-                        HistoryViewComponent(viewModel: .init(dateOperations: [], spending: nil))
+                        if let historyViewModel = viewModel.historyViewModel {
+                            
+                            HistoryViewComponent(viewModel: historyViewModel)
+                        }
                     }
                 }
                 .padding(.top, 35)
@@ -83,9 +86,12 @@ struct ProfileView: View {
                     Text(viewModel.productViewModel.product.name)
                         .foregroundColor(viewModel.productViewModel.product.appearance.textColor)
                     
-                    Text(viewModel.productViewModel.product.header.number)
-                        .font(.system(size: 12))
-                        .foregroundColor(viewModel.productViewModel.product.appearance.textColor)
+                    if let number = viewModel.productViewModel.product.header.number {
+                        
+                        Text(number)
+                            .font(.system(size: 12))
+                            .foregroundColor(viewModel.productViewModel.product.appearance.textColor)
+                    }
                 }
                 
                 Spacer()
@@ -118,6 +124,6 @@ struct ProfileView_Previews: PreviewProvider {
 
 extension ProfileViewModel {
     
-    static let sample = ProfileViewModel(productViewModel: .init(products: [.notActivateProfile, .accountProfile, .classicProfile, .blockedProfile], product: .classicProfile))
+    static let sample = ProfileViewModel(productViewModel: .init(products: [.notActivateProfile, .accountProfile, .classicProfile, .blockedProfile], product: .classicProfile, model: .emptyMock), model: .emptyMock)
 }
 

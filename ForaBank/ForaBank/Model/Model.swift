@@ -20,7 +20,7 @@ class Model {
     //MARK: Products
     let products: CurrentValueSubject<[ProductType: [ProductData]], Never>
     let productsUpdateState: CurrentValueSubject<ProductsUpdateState, Never>
-    var productsAllowed: Set<ProductType> { [.card, .account, .deposit] }
+    var productsAllowed: Set<ProductType> { [.card, .account, .deposit, .loan] }
     
     //MARK: Statement
     var statement: CurrentValueSubject<[ProductStatementData], Never>
@@ -177,9 +177,6 @@ class Model {
                     
                 case _ as ModelAction.Products.Update.Total.All:
                     handleProductsUpdateTotalAll()
-                    
-                case let payload as ModelAction.Products.Update.Total.Single.Request:
-                    handleProductsUpdateTotalSingleRequest(payload)
                     
                     //MARK: - Statement
                 case let payload as ModelAction.Statement.List.Request:
