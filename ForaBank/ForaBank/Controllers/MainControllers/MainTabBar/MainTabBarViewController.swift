@@ -59,7 +59,7 @@ class MainTabBarViewController: UITabBarController {
 
     //GlobalModule.c2bURL = "success"
 //        GlobalModule.c2bURL = "https://medium.com/wolox/ios-deep-linking-url-scheme-vs-universal-links-50abd3802f97"
-//        GlobalModule.c2bURL = "https://qr.nspk.ru/AS1A006386NU1ONS9NEQ62JRC5LBM7E3?type=01&amp;bank=100000000217&amp;crc=1FD6"
+        GlobalModule.c2bURL = "https://qr.nspk.ru/AS1000592TVC2NHL8U7OG5A3VG0P6FEV?type=01&bank=100000000217&sum=1000701&cur=RUB&crc=65AC"
         
         if GlobalModule.c2bURL != nil {
             let controller = C2BDetailsViewController.storyboardInstance()!

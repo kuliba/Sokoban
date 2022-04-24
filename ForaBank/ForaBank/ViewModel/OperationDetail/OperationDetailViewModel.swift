@@ -116,38 +116,36 @@ class OperationDetailViewModel: ObservableObject {
                 
                 self.operation = OperationViewModel(bankLogo: productStatement.svgImage, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
             }
-            
         case .transport:
             self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: productStatement.merchantName, category: "\(productStatement.groupName)")
             let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
             self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: productStatement.tranDate)
-            
         default:
             //FIXME: taxes && c2b
             self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: productStatement.merchantName, category: "\(productStatement.groupName)")
             let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
             self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: productStatement.tranDate)
         }
-        
+
         self.actionButtons = nil
         self.featureButtons = []
         self.isLoading = true
-        
+
         if let infoFeatureButtonViewModel = infoFeatureButtonViewModel(with: productStatement, product: product) {
-            
+
             self.featureButtons = [infoFeatureButtonViewModel]
         }
         
         fetchOperationDetail(productStatement: productStatement, product: product)
         bind()
     }
-    
+
     private func bind() {
-        
+
         model.action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
-                
+
                 switch action {
                 case _ as ModelAction.PaymentTemplate.Save.Complete:
                     var featureButtonsUpdated = [FeatureButtonViewModel]()
@@ -156,104 +154,76 @@ class OperationDetailViewModel: ObservableObject {
                         case .template:
                             let templateButtonSelected = FeatureButtonViewModel(kind: .template(true), icon: "Operation Details Template Selected", name: "Шаблон", action: {})
                             featureButtonsUpdated.append(templateButtonSelected)
-                        
+
                         default:
                             featureButtonsUpdated.append(buttonViewModel)
                         }
                     }
                     featureButtons = featureButtonsUpdated
-                    
+
                 default:
                     break
                 }
-                
+
             }.store(in: &bindings)
     }
-    
+
     private func fetchOperationDetail(productStatement: ProductStatementProxy, product: UserAllCardsModel) {
-        
         guard let documentId = productStatement.documentId else {
-            
             withAnimation(.easeInOut(duration: self.animationDuration)) {
-                
                 self.isLoading = false
             }
-            
             return
         }
-        
+
         let body = [ "documentId" : documentId] as [String : AnyObject]
-        
         NetworkManager<GetOperationDetailDecodebleModel>.addRequest(.getOperationDetail, [:], body) { [weak self] model, error in
-            
             guard let self = self else {
                 return
             }
-            
             withAnimation(.easeInOut(duration: self.animationDuration)) {
-                
                 self.isLoading = false
             }
-            
             guard error == nil, let model = model, model.statusCode == 0, let operationDetail = model.data else {
                 return
             }
-            
             DispatchQueue.main.async {
-                
                 //FIXME: refactor more elegant way without self
                 withAnimation(.easeInOut(duration: self.animationDuration)) {
-                    
                     self.operation = self.operation.updated(with: productStatement, operation: operationDetail, viewModel: self)
                 }
-                
                 var actionButtonsUpdated: [ActionButtonViewModel]? = nil
                 var featureButtonsUpdated = [FeatureButtonViewModel]()
-                
+
                 switch productStatement.paymentDetailType {
-                case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp, .transport:
+                case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp, .transport, .c2b:
                     if let templateButtonViewModel = self.templateButtonViewModel(with: productStatement, operationDetail: operationDetail) {
-                        
                         featureButtonsUpdated.append(templateButtonViewModel)
                     }
-                    
                     if let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
-                        
                         featureButtonsUpdated.append(documentButtonViewModel)
                     }
-                    
                     if let infoButtonViewModel = self.infoFeatureButtonViewModel(with: productStatement, product: product, operationDetail: operationDetail) {
-                        
                         featureButtonsUpdated.append(infoButtonViewModel)
                     }
-                    
                 case .contactAddressless:
                     if let templateButtonViewModel = self.templateButtonViewModel(with: productStatement, operationDetail: operationDetail) {
-                        
                         featureButtonsUpdated.append(templateButtonViewModel)
                     }
-                    
                     if let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
-                        
                         featureButtonsUpdated.append(documentButtonViewModel)
                     }
-                    
                     if let infoButtonViewModel = self.infoFeatureButtonViewModel(with: productStatement, product: product, operationDetail: operationDetail) {
-                        
                         featureButtonsUpdated.append(infoButtonViewModel)
                     }
-                    
                     if operationDetail.transferReference != nil {
-                        
                         actionButtonsUpdated = self.actionButtons(with: operationDetail, product: product)
                     }
-                    
                 default:
                     break
                 }
 
                 withAnimation(.easeInOut(duration: self.animationDuration)) {
-                    
                     self.actionButtons = actionButtonsUpdated
                     self.featureButtons = featureButtonsUpdated
                 }
@@ -267,7 +237,15 @@ class OperationDetailViewModel: ObservableObject {
 private extension OperationDetailViewModel {
     
     func infoFeatureButtonViewModel(with productStatement: ProductStatementProxy, product: UserAllCardsModel, operationDetail: OperationDetailDatum? = nil) -> FeatureButtonViewModel? {
-        return FeatureButtonViewModel(kind: .info, icon: "Operation Details Info", name: "Детали", action: { [weak self] in self?.operationDetailInfoViewModel = OperationDetailInfoViewModel(with: productStatement, operation: operationDetail, product: product, dismissAction: { [weak self] in self?.operationDetailInfoViewModel = nil})})
+        return FeatureButtonViewModel(kind: .info, icon: "Operation Details Info", name: "Детали", action: { [weak self] in
+            self?.operationDetailInfoViewModel = OperationDetailInfoViewModel(
+                with: productStatement,
+                operation: operationDetail,
+                product: product,
+                dismissAction: { [weak self] in
+                    self?.operationDetailInfoViewModel = nil}
+            )}
+        )
     }
     
     func documentButtonViewModel(with operationDetail: OperationDetailDatum) -> FeatureButtonViewModel? {
@@ -424,9 +402,9 @@ extension OperationDetailViewModel {
         }
         
         func updated(with productStatement: ProductStatementProxy, operation: OperationDetailDatum, viewModel: OperationDetailViewModel) -> OperationViewModel {
-            
+
             var operationViewModel = self
-            
+
             switch productStatement.paymentDetailType {
             case .contactAddressless:
                 if let transferReference = operation.transferReference {
@@ -522,7 +500,6 @@ extension OperationDetailViewModel {
                 }
             case .outsideOther, .insideOther, .betweenTheir, .insideBank, .notFinance, .outsideCash:
                 return operationViewModel
-                
             default:
                 //FIXME: taxes & c2b
                 return operationViewModel

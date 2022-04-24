@@ -43,9 +43,13 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     
     @IBOutlet var rootView: UIView!
     
-    @IBAction func ActionConsent(_ sender: UISwitch) {
+    @IBOutlet weak var btnCheckBox: UIButton!
+    
+    @IBAction func btnCheckBoxAction(_ sender: Any) {
+        
+        btnCheckBox.setImage(UIImage(named: "checkbox1"), for: .normal)
         showActivity()
-        switchConsent.isEnabled = false
+        btnCheckBox.isEnabled = false
         if modeConsent == "update" {
             if let source = cardFromField.model {
                 viewModel.updateContract(contractId: contractId, cardModel: source, isOff: true) { success, error in
@@ -67,9 +71,9 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     
     @IBOutlet weak var labelConsentDescr: UILabel!
     
-    @IBOutlet weak var switchConsent: UISwitch!
-        
     @IBOutlet weak var goButton: UIButton?
+
+    @IBOutlet weak var viewReceiver: UIView!
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -99,13 +103,15 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         sourceHolder.addArrangedSubview(cardFromField)
         sourceHolder.addArrangedSubview(cardListView)
 
-        cardFromField.titleLabel.text = "Счёт списания"
+        cardFromField.titleLabel.text = "              Счёт списания"
         cardFromField.didChooseButtonTapped = { () in
+            self.viewReceiver.isHidden = !self.viewReceiver.isHidden
             self.openOrHideView(self.cardListView)
         }
 
         cardListView.didCardTapped = { cardId in
             DispatchQueue.main.async {
+                self.viewReceiver.isHidden = false
                 let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
                 cardList.forEach({ card in
                     if card.id == cardId {
@@ -343,15 +349,17 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
                     if (fastPayment?.flagClientAgreementOut == "NO") {
                         modeConsent = "update"
                         contractId = fastPayment?.fpcontractID?.description ?? ""
-                        switchConsent.isEnabled = true
-                        switchConsent.setOn(false, animated: false)
+                        btnCheckBox.isEnabled = true
+                        btnCheckBox.setImage(UIImage(named: "checkbox0"), for: .normal)
                         goButton?.isEnabled = false
+                        goButton?.backgroundColor = .lightGray
                     } else {
-                        switchConsent.setOn(true, animated: false)
-                        switchConsent.isEnabled = false
+                        btnCheckBox.setImage(UIImage(named: "checkbox1"), for: .normal)
+                        btnCheckBox.isEnabled = false
                         goButton?.isEnabled = true
+                        goButton?.backgroundColor = .red
 
-                        switchConsent?.isHidden = true
+                        btnCheckBox?.isHidden = true
                         labelConsentDescr.isHidden = true
                         for constraint in rootView.constraints {
                             if constraint.identifier == "mySwitchConsent" {
@@ -360,11 +368,12 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
                         }
                     }
                 } else {
-                    switchConsent.setOn(true, animated: false)
-                    switchConsent.isEnabled = false
+                    btnCheckBox.setImage(UIImage(named: "checkbox1"), for: .normal)
+                    btnCheckBox.isEnabled = false
                     goButton?.isEnabled = true
+                    goButton?.backgroundColor = .red
 
-                    switchConsent.isHidden = true
+                    btnCheckBox.isHidden = true
                     labelConsentDescr.isHidden = true
                     for constraint in rootView.constraints {
                         if constraint.identifier == "mySwitchConsent" {
@@ -373,11 +382,12 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
                     }
                 }
             } else {
-                switchConsent.setOn(true, animated: false)
-                switchConsent.isEnabled = false
+                btnCheckBox.setImage(UIImage(named: "checkbox1"), for: .normal)
+                btnCheckBox.isEnabled = false
                 goButton?.isEnabled = true
+                goButton?.backgroundColor = .red
 
-                switchConsent.isHidden = true
+                btnCheckBox.isHidden = true
                 labelConsentDescr.isHidden = true
                 for constraint in rootView.constraints {
                     if constraint.identifier == "mySwitchConsent" {
@@ -387,9 +397,10 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
             }
         } else {
             modeConsent = "create"
-            switchConsent.setOn(false, animated: false)
-            switchConsent.isEnabled = true
+            btnCheckBox.setImage(UIImage(named: "checkbox0"), for: .normal)
+            btnCheckBox.isEnabled = true
             goButton?.isEnabled = false
+            goButton?.backgroundColor = .lightGray
         }
     }
     
@@ -434,14 +445,14 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
         imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(named: "back_button")
-        let imageViewRight = UIImageView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
-        imageViewRight.contentMode = .scaleAspectFit
-        imageViewRight.image = UIImage(named: "sbp-logo")
+//        let imageViewRight = UIImageView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+//        imageViewRight.contentMode = .scaleAspectFit
+//        imageViewRight.image = UIImage(named: "sbp-logo")
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
         imageView.isUserInteractionEnabled = true
         imageView.addGestureRecognizer(tapGestureRecognizer)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: imageView)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: imageViewRight)
+//        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: imageViewRight)
         navigationItem.hidesSearchBarWhenScrolling = false
         definesPresentationContext = true
     }

@@ -272,7 +272,7 @@ final class OperationDetailInfoViewModel: Identifiable {
             }
             
             
-                cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)", iconType: .date, value: tranDateString))
+            cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)", iconType: .date, value: tranDateString))
             
             
         case .externalIndivudual:
@@ -661,11 +661,29 @@ final class OperationDetailInfoViewModel: Identifiable {
             }
             
             cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)", iconType: .date, value: tranDateString))
-            
+        case .c2b:
+            logo = Image("sbp-logo")
+            cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: statement.amount.currencyFormatter(symbol: currency)))
+            cells.append(BankCellViewModel(title: "Наименование ТСП", icon: statement.svgImage, name: statement.merchantName))
+            cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)", iconType: .date, value: tranDateString))
+            cells.append(BankCellViewModel(title: "Статус операции", icon: Image("OkOperators"), name: "Исполнен"))
+            if let debitAccounCell = Self.debitAccountCell(with: product, currency: currency) {
+                cells.append(debitAccounCell)
+            }
+            cells.append(BankCellViewModel(title: "Отправитель", icon: Image("hash"), name: statement.fastPayment?.foreignName ?? ""))
+            if let bankName = statement.fastPayment?.foreignBankName, statement.operationType == .debit {
+                cells.append(BankCellViewModel(title: "Банк получателя", icon:  statement.svgImage, name: bankName))
+            } else if let bankName = statement.fastPayment?.foreignBankName{
+                cells.append(BankCellViewModel(title: "Банк отправителя", icon:  statement.svgImage, name: bankName))
+            }
+            if !(statement.documentComment?.isEmpty ?? true)  {
+                cells.append(BankCellViewModel(title: "Сообщение получателю", icon: Image("hash"), name: statement.documentComment ?? ""))
+            }
+            cells.append(BankCellViewModel(title: "Идентификатор операции", icon: Image("hash"), name: statement.fastPayment?.opkcid ?? ""))
+            cells.append(IconCellViewModel(icon: Image("sbptext")))
         default:
             //FIXME: implement taxes & c2b
             break
-  
         }
         
         self.logo = logo
@@ -742,7 +760,17 @@ extension OperationDetailInfoViewModel {
             super.init(title: title)
         }
     }
-    
+
+    class IconCellViewModel: DefaultCellViewModel {
+
+        var icon: Image
+
+        internal init(icon: Image) {
+            self.icon = icon
+            super.init(title: "title")
+        }
+    }
+
     class BankCellViewModel: DefaultCellViewModel {
         
         var icon: Image
