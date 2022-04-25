@@ -89,11 +89,11 @@ class Model {
     static var shared: Model = {
        
         // server agent
-//        #if DEBUG
-//        let enviroment = ServerAgent.Environment.test
-//        #else
+        #if DEBUG
+        let enviroment = ServerAgent.Environment.test
+        #else
         let enviroment = ServerAgent.Environment.prod
-//        #endif
+        #endif
         
         let serverAgent = ServerAgent(enviroment: enviroment)
         
