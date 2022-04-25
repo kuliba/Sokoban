@@ -102,6 +102,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             UIApplication.shared.keyWindow?.addBlure()
         }
     }
+    
+    func sceneWillEnterForeground(_ scene: UIScene) {
+        
+        AppDelegate.shared.model.action.send(ModelAction.Dictionary.UpdateCache.All())
+    }
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         print("qr5555 scene(_ scene 1")

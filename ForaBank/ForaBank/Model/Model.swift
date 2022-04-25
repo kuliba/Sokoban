@@ -82,7 +82,6 @@ class Model {
         
         loadCachedData()
         bind()
-        dictionariesUpdateCache()
     }
     
     //FIXME: remove after refactoring
@@ -211,67 +210,73 @@ class Model {
                     
                 //MARK: - Dictionaries Actions
                     
-                case let payload as ModelAction.Dictionary.Request:
+                case _ as ModelAction.Dictionary.UpdateCache.All:
+                    handleDictionaryUpdateAll()
+                    
+                case let payload as ModelAction.Dictionary.UpdateCache.List:
+                    handleDictionaryUpdateList(payload)
+                    
+                case let payload as ModelAction.Dictionary.UpdateCache.Request:
                     switch payload.type {
                     case .anywayOperators:
-                        handleDictionaryAnywayOperatorsRequest(payload)
+                        handleDictionaryAnywayOperatorsRequest(payload.serial)
                         
                     case .banks:
-                        handleDictionaryBanks(payload)
+                        handleDictionaryBanks(payload.serial)
                         
                     case .countries:
-                        handleDictionaryCountries(payload)
+                        handleDictionaryCountries(payload.serial)
                         
                     case .currencyList:
-                        handleDictionaryCurrencyList(payload)
+                        handleDictionaryCurrencyList(payload.serial)
                         
                     case .fmsList:
-                        handleDictionaryFMSList(payload)
+                        handleDictionaryFMSList(payload.serial)
                         
                     case .fsspDebtList:
-                        handleDictionaryFSSPDebtList(payload)
+                        handleDictionaryFSSPDebtList(payload.serial)
                         
                     case .fsspDocumentList:
-                        handleDictionaryFSSPDocumentList(payload)
+                        handleDictionaryFSSPDocumentList(payload.serial)
                         
                     case .ftsList:
-                        handleDictionaryFTSList(payload)
+                        handleDictionaryFTSList(payload.serial)
                         
                     case .fullBankInfoList:
-                        handleDictionaryFullBankInfoList(payload)
+                        handleDictionaryFullBankInfoList(payload.serial)
                         
                     case .mobileList:
-                        handleDictionaryMobileList(payload)
+                        handleDictionaryMobileList(payload.serial)
                         
                     case .mosParkingList:
-                        handleDictionaryMosParkingList(payload)
+                        handleDictionaryMosParkingList(payload.serial)
                         
                     case .paymentSystemList:
-                        handleDictionaryPaymentSystemList(payload)
+                        handleDictionaryPaymentSystemList(payload.serial)
                         
                     case .productCatalogList:
-                        handleDictionaryProductCatalogList(payload)
+                        handleDictionaryProductCatalogList(payload.serial)
                         
                     case .bannerCatalogList:
-                        handleDictionaryBannerCatalogList(payload)
+                        handleDictionaryBannerCatalogList(payload.serial)
                     
                     case .atmList:
-                        handleDictionaryAtmDataList(payload)
+                        handleDictionaryAtmDataList(payload.serial)
                         
                     case .atmServiceList:
-                        handleDictionaryAtmServiceDataList(payload)
+                        handleDictionaryAtmServiceDataList(payload.serial)
                         
                     case .atmTypeList:
-                        handleDictionaryAtmTypeDataList(payload)
+                        handleDictionaryAtmTypeDataList(payload.serial)
                         
                     case .atmMetroStationList:
-                        handleDictionaryAtmMetroStationDataList(payload)
+                        handleDictionaryAtmMetroStationDataList(payload.serial)
                     
                     case .atmCityList:
-                        handleDictionaryAtmCityDataList(payload)
+                        handleDictionaryAtmCityDataList(payload.serial)
                         
                     case .atmRegionList:
-                        handleDictionaryAtmRegionDataList(payload)
+                        handleDictionaryAtmRegionDataList(payload.serial)
                     }
                     
                     //MARK: - Deposits
