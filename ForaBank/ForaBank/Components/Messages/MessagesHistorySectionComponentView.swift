@@ -9,7 +9,7 @@ import SwiftUI
 
 //MARK: - ViewModel
 
-extension MessagesHistorySectionView {
+extension MessagesHistorySectionView: Identifiable {
     
     class ViewModel {
         
@@ -27,6 +27,7 @@ extension MessagesHistorySectionView {
 
 struct MessagesHistorySectionView: View {
     
+    let id = UUID()
     let viewModel: MessagesHistorySectionView.ViewModel
     
     var body: some View {
@@ -34,8 +35,8 @@ struct MessagesHistorySectionView: View {
         VStack(alignment: .leading, spacing: 4)  {
             
             Text(viewModel.section)
-                .font(Font.custom("Inter-SemiBold", size: 14))
-                .foregroundColor(Color(hex: "#1C1C1C"))
+                .font(.textBodyMSB14200())
+                .foregroundColor(.textSecondary)
                 .padding(.top, 10)
                 .padding(.bottom, 20)
                 .padding(.leading, 5)
