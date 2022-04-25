@@ -633,7 +633,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
     
     fileprivate func setNavButton() {
         
-        if product?.productType != ProductType.loan.rawValue {
+        if product?.productType != ProductType.loan.rawValue, product?.productType != ProductType.deposit.rawValue {
             let item = UIBarButtonItem(image: UIImage(named: "pencil-3"), style: .done, target: self, action: #selector(customName))
             if let foregraundColor = product?.fontDesignColor {
                 
