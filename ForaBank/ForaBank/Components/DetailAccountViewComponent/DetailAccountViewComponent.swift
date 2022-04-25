@@ -338,7 +338,7 @@ extension DetailAccountViewComponent {
                 }), .init(amount: gracePeriodPayment, title: .preferential, image: nil, foregraund: .white, background: .clear, action: {})]
                 self.secondButtonsViewModel = [.init(amount: totalDebtAmount, title: .totalDebt, image: nil, foregraund: .white, background: .clear, action: {})]
             }
-            
+ 
             if loanBase.ownFunds > 0 {
                 
                 self.headerView = .init(subTitle: .paid, collapsed: false)
@@ -441,24 +441,31 @@ extension DetailAccountViewComponent {
             bind()
         }
         
-        convenience init(with loanBase: LoanBaseParamModel, status: StatusPC, isCredit: Bool, productName: String?, longInt: Int?) {
+        convenience init(with loanBase: ProductCardData.LoanBaseParamInfoData, status: StatusPC, isCredit: Bool, productName: String?, longInt: Int?) {
             
-            let currency = loanBase.currencyCode
-            let availableExceedLimit = loanBase.availableExceedLimit.fullCurrencyFormatter(symbol: currency)
-            let minimumPayment = loanBase.minimumPayment.fullCurrencyFormatter(symbol: currency)
-            let gracePeriodPayment = loanBase.gracePeriodPayment.fullCurrencyFormatter(symbol: currency)
-            let overduePayment = loanBase.overduePayment.fullCurrencyFormatter(symbol: currency)
-            let ownFunds = loanBase.ownFunds.fullCurrencyFormatter(symbol: currency)
-            let debtAmount = loanBase.debtAmount.fullCurrencyFormatter(symbol: currency)
-            let totalAvailableAmount = loanBase.totalAvailableAmount.fullCurrencyFormatter(symbol: currency)
-            let totalDebtAmount = loanBase.totalDebtAmount.fullCurrencyFormatter(symbol: currency)
-            let isCredit = isCredit
-            let longInt = longInt
-            let sumAvailable = (loanBase.totalAvailableAmount + loanBase.ownFunds).fullCurrencyFormatter(symbol: currency)
-            
-            self.init(with: loanBase, status: status, availableExceedLimit: availableExceedLimit, minimumPayment: minimumPayment, gracePeriodPayment: gracePeriodPayment, overduePayment: overduePayment, ownFunds: ownFunds, debtAmount: debtAmount, totalAvailableAmount: totalAvailableAmount, totalDebtAmount: totalDebtAmount, isCredit: isCredit, productName: productName, longInt: longInt, sumAvailable: sumAvailable)
+            if let currencyId = loanBase.currencyID, let currencyNumber = loanBase.currencyNumber, let currencyCode = loanBase.currencyCode, let minimumPayment = loanBase.minimumPayment, let gracePeriodPayment = loanBase.gracePeriodPayment, let overduePayment = loanBase.overduePayment, let availableExceedLimit = loanBase.availableExceedLimit, let ownFunds = loanBase.ownFunds, let debtAmount = loanBase.debtAmount, let totalAvailableAmount = loanBase.totalAvailableAmount, let totalDebtAmount = loanBase.totalDebtAmount {
+             
+                
+                let loanBaseConvert = LoanBaseParamModel.init(with: .init(loanID: loanBase.loanID, clientID: loanBase.clientID, number: loanBase.number, currencyID: currencyId, currencyNumber: currencyNumber, currencyCode: currencyCode, minimumPayment: minimumPayment, gracePeriodPayment: gracePeriodPayment, overduePayment: overduePayment, availableExceedLimit: availableExceedLimit, ownFunds: ownFunds, debtAmount: debtAmount, totalAvailableAmount: totalAvailableAmount, totalDebtAmount: totalDebtAmount))
+                
+                let sumAvailable = (totalAvailableAmount + ownFunds).fullCurrencyFormatter(symbol: currencyCode)
+                let availableExceedLimit = availableExceedLimit.fullCurrencyFormatter(symbol: currencyCode)
+                let minimumPayment = minimumPayment.fullCurrencyFormatter(symbol: currencyCode)
+                let gracePeriodPayment = gracePeriodPayment.fullCurrencyFormatter(symbol: currencyCode)
+                let overduePayment = overduePayment.fullCurrencyFormatter(symbol: currencyCode)
+                let ownFunds = ownFunds.fullCurrencyFormatter(symbol: currencyCode)
+                let debtAmount = debtAmount.fullCurrencyFormatter(symbol: currencyCode)
+                let totalAvailableAmount = totalAvailableAmount.fullCurrencyFormatter(symbol: currencyCode)
+                let totalDebtAmount = totalDebtAmount.fullCurrencyFormatter(symbol: currencyCode)
+                let isCredit = isCredit
+                let longInt = longInt
+                
+                self.init(with: loanBaseConvert, status: status, availableExceedLimit: availableExceedLimit, minimumPayment: minimumPayment, gracePeriodPayment: gracePeriodPayment, overduePayment: overduePayment, ownFunds: ownFunds, debtAmount: debtAmount, totalAvailableAmount: totalAvailableAmount, totalDebtAmount: totalDebtAmount, isCredit: isCredit, productName: productName, longInt: longInt, sumAvailable: sumAvailable)
+            } else {
+                
+                self.init(with: .init(), status: .notActivated, isCredit: false, productName: "", longInt: nil)
+            }
         }
-        
         
         private func bind() {
             

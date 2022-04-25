@@ -28,7 +28,8 @@ class Model {
     //MARK: Dictionaries
     let catalogProducts: CurrentValueSubject<[CatalogProductData], Never>
     let catalogBanners: CurrentValueSubject<[BannerCatalogListData], Never>
-    
+    let currencyDict: CurrentValueSubject<[CurrencyData], Never>
+
     //MARK: Templates
     let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
     //TODO: store in cache
@@ -69,6 +70,7 @@ class Model {
         self.productsUpdateState = .init(.idle)
         self.catalogProducts = .init([])
         self.catalogBanners = .init([])
+        self.currencyDict = .init([])
         self.paymentTemplates = .init([])
         self.paymentTemplatesViewSettings = .init(.initial)
         self.serverAgent = serverAgent
@@ -382,6 +384,11 @@ private extension Model {
         if let catalogBanner = localAgent.load(type: [BannerCatalogListData].self) {
             
             self.catalogBanners.value = catalogBanner
+        }
+        
+        if let currency = localAgent.load(type: [CurrencyData].self) {
+            
+            self.currencyDict.value = currency
         }
         
         if let products = localAgent.load(type: [ProductData].self) {

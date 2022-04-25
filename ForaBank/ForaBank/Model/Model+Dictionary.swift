@@ -236,6 +236,8 @@ extension Model {
                         return
                     }
                     
+                    self.currencyDict.value = data.currencyList
+                    
                     do {
                         
                         try self.localAgent.store(data.currencyList, serial: data.serial)
