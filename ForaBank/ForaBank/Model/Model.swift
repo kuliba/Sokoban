@@ -23,7 +23,7 @@ class Model {
     var productsAllowed: Set<ProductType> { [.card, .account, .deposit, .loan] }
     
     //MARK: Statement
-    var statement: CurrentValueSubject<[ProductStatementData], Never>
+    var statement: CurrentValueSubject<ProductStatementDataCacheble, Never>
     
     //MARK: Dictionaries
     let catalogProducts: CurrentValueSubject<[CatalogProductData], Never>
@@ -65,7 +65,7 @@ class Model {
         self.action = .init()
         self.auth = .init(.notAuthorized)
         self.products = .init([:])
-        self.statement = .init([])
+        self.statement = .init(.init(productStatement: [:]))
         self.productsUpdateState = .init(.idle)
         self.catalogProducts = .init([])
         self.catalogBanners = .init([])

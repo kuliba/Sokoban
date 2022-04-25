@@ -7,7 +7,13 @@
 
 import Foundation
 
-struct ProductStatementData: Codable, Equatable {
+struct ProductStatementDataCacheble: Cachable {
+    
+    var productStatement: [Int: [ProductStatementData]]
+    
+}
+
+struct ProductStatementData: Codable, Equatable, Cachable {
     
     let mcc: Int?
     let accountId: Int?

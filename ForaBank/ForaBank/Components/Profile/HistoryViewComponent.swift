@@ -19,15 +19,17 @@ extension HistoryViewComponent {
         @Published var dateOperations: [OperationsDateViewModel]
         @Published var spendingViewModel: SegmentedBarView.ViewModel?
         @Published var isLoading = true
+        let productId: Int
         
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        internal init(dateOperations: [OperationsDateViewModel], spendingViewModel: SegmentedBarView.ViewModel?, model: Model = .emptyMock) {
+        internal init(dateOperations: [OperationsDateViewModel], spendingViewModel: SegmentedBarView.ViewModel?, productId: Int, model: Model = .emptyMock) {
             
             self.dateOperations = dateOperations
             self.listState = .list(dateOperations)
             self.spendingViewModel = spendingViewModel
+            self.productId = productId
             self.model = model
             
         }
@@ -38,6 +40,7 @@ extension HistoryViewComponent {
             self.spendingViewModel = nil
             self.model = model
             self.listState = .loading
+            self.productId = productId
             bind()
             
             model.action.send(ModelAction.Statement.List.Request(productId: productId, productType: productType))
@@ -49,10 +52,11 @@ extension HistoryViewComponent {
                 .receive(on: DispatchQueue.main)
                 .sink {[unowned self] operations in
                     
-                    self.dateOperations = separationDate(operations: operations)
-                    if sumDeifferentGroup(operations: operations).count > 0 {
-                        
-                        self.spendingViewModel = .init(value: sumDeifferentGroup(operations: operations))
+                    guard let statement = operations.productStatement[productId] else { return }
+                    self.dateOperations = separationDate(operations: statement)
+                    if sumDeifferentGroup(operations: statement).count > 0 {
+
+                        self.spendingViewModel = .init(value: sumDeifferentGroup(operations: statement))
                     }
                     
                     self.isLoading = false
@@ -274,7 +278,6 @@ struct HistoryViewComponent: View {
                                         .fontWeight(.regular)
                                         .lineLimit(1)
                                     
-                                    
                                     Text(item.subtitle)
                                         .font(.system(size: 12))
                                         .foregroundColor(.mainColorsGray)
@@ -287,6 +290,9 @@ struct HistoryViewComponent: View {
                                 
                             }
                             .padding(.vertical, 8)
+                            .onTapGesture {
+                                item
+                            }
                         }
                     }
                 }
@@ -364,13 +370,13 @@ struct HistoryViewComponent_Previews: PreviewProvider {
         
         Group {
             
-            HistoryViewComponent(viewModel: .init(dateOperations: [.init(date: "25 августа, ср", operations: [.init(title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .debit), .init(title: "Selhozmarket", image: Image.init("GKH", bundle: nil), subtitle: "Магазин", amount: "-230 Р", type: .credit)]), .init(date: "26 августа, ср", operations: [.init(title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .debit)])], spendingViewModel: .spending, model: .emptyMock))
+            HistoryViewComponent(viewModel: .init(dateOperations: [.init(date: "25 августа, ср", operations: [.init(title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .debit), .init(title: "Selhozmarket", image: Image.init("GKH", bundle: nil), subtitle: "Магазин", amount: "-230 Р", type: .credit)]), .init(date: "26 августа, ср", operations: [.init(title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .debit)])], spendingViewModel: .spending, productId: 1, model: .emptyMock))
                 .previewLayout(.fixed(width: 360, height: 500))
             
-            HistoryViewComponent(viewModel: .init(dateOperations: [.init(date: "25 августа, ср", operations: [.init(title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .debit)]), .init(date: "26 августа, ср", operations: [.init(title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .debit)])], spendingViewModel: nil, model: .emptyMock))
+            HistoryViewComponent(viewModel: .init(dateOperations: [.init(date: "25 августа, ср", operations: [.init(title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .debit)]), .init(date: "26 августа, ср", operations: [.init(title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .debit)])], spendingViewModel: nil, productId: 1, model: .emptyMock))
                 .previewLayout(.fixed(width: 400, height: 400))
             
-            HistoryViewComponent(viewModel: .init(dateOperations: [], spendingViewModel: nil, model: .emptyMock))
+            HistoryViewComponent(viewModel: .init(dateOperations: [], spendingViewModel: nil, productId: 1, model: .emptyMock))
                 .previewLayout(.fixed(width: 400, height: 400))
             
         }
@@ -387,5 +393,5 @@ extension HistoryViewComponent.ViewModel.OperationsDateViewModel {
 
 extension HistoryViewComponent.ViewModel {
     
-    static let sampleHistory = HistoryViewComponent.ViewModel( dateOperations: [.init(date: "12 декабря", operations: [.init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit)])], spendingViewModel: .init(value: [100, 300]), model: .emptyMock)
+    static let sampleHistory = HistoryViewComponent.ViewModel( dateOperations: [.init(date: "12 декабря", operations: [.init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit)])], spendingViewModel: .init(value: [100, 300]), productId: 1, model: .emptyMock)
 }

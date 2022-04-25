@@ -49,7 +49,16 @@ extension Model {
                     switch response.statusCode {
                     case .ok:
                         guard let statement = response.data else { return }
-                        self.statement.value = statement
+                        self.statement.value = self.reduce(statements: self.statement.value, with: statement, productId: payload.productId)
+                        
+                        do {
+                            try self.localAgent.store(self.statement.value, serial: nil)
+                            
+                        } catch {
+                            
+                            self.handleServerCommandCachingError(error: error, command: command)
+                        }
+                        
                     default:
                         self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                         return
@@ -70,7 +79,15 @@ extension Model {
                     switch response.statusCode {
                     case .ok:
                         guard let statement = response.data else { return }
-                        self.statement.value = statement
+                        self.statement.value = self.reduce(statements: self.statement.value, with: statement, productId: payload.productId)
+                        
+                        do {
+                            try self.localAgent.store(self.statement.value, serial: nil)
+                            
+                        } catch {
+                            
+                            self.handleServerCommandCachingError(error: error, command: command)
+                        }
                     default:
                         self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                         return
@@ -90,7 +107,15 @@ extension Model {
                     switch response.statusCode {
                     case .ok:
                         guard let statement = response.data else { return }
-                        self.statement.value = statement
+                        self.statement.value = self.reduce(statements: self.statement.value, with: statement, productId: payload.productId)
+                        
+                        do {
+                            try self.localAgent.store(self.statement.value, serial: nil)
+                            
+                        } catch {
+                            
+                            self.handleServerCommandCachingError(error: error, command: command)
+                        }
                     default:
                         self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                         return
@@ -110,7 +135,15 @@ extension Model {
                     switch response.statusCode {
                     case .ok:
                         guard let statement = response.data else { return }
-                        self.statement.value = statement
+                        self.statement.value = self.reduce(statements: self.statement.value, with: statement, productId: payload.productId)
+                        
+                        do {
+                            try self.localAgent.store(self.statement.value, serial: nil)
+                            
+                        } catch {
+                            
+                            self.handleServerCommandCachingError(error: error, command: command)
+                        }
                     default:
                         self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                         return
@@ -120,6 +153,22 @@ extension Model {
                 }
             }
         }
+    }
+    
+    func reduce(statements: ProductStatementDataCacheble, with statementData: [ProductStatementData], productId: Int) -> ProductStatementDataCacheble {
+        
+        var statementUpdated = statements
+        let filteredByKeys = statementUpdated.productStatement.filter({$0.key == productId})
+        
+        if filteredByKeys.count == 0 {
+            
+        } else {
+            
+            statementUpdated.productStatement.updateValue(statementData, forKey: productId)
+        }
+        
+        return statementUpdated
+        
     }
 }
 

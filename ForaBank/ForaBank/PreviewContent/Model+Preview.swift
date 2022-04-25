@@ -37,7 +37,8 @@ extension Model {
         let decoder = JSONDecoder.serverDate
         let statement = try! decoder.decode([ProductStatementData].self, from: json)
         
-        model.statement.value = statement
+        model.statement.value = model.reduce(statements: model.statement.value, with: statement, productId: 1)
+
         
         return model
     }()
