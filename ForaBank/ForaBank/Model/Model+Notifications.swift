@@ -10,6 +10,20 @@ import Foundation
 extension Model {
     
     
+    static func dictinaryNotificationReduce(current: [NotificationData], update: [NotificationData]) -> [NotificationData] {
+        
+        if current == update {
+            
+            return current
+        } else {
+            
+           let resultSet = Set(current).intersection(update)
+           return Array(resultSet)
+        }
+        
+    }
+    
+    
     func handleNotificationsNewRequest() {
         guard let token = token else {
             return
@@ -26,14 +40,25 @@ extension Model {
                     guard let notifications = response.data else {
                         self.handleServerCommandEmptyData(command: command)
                         return }
+            
+                    let result = Model.dictinaryNotificationReduce(current: self.notifications.value, update: notifications)
                     
+                    do {
+                        
+                        try self.localAgent.store(result, serial: nil)
+                        
+                    } catch {
+                        
+                        self.handleServerCommandError(error: error, command: command)
+                    }
+                    self.action.send(ModelAction.Notification.Fetch.New.Response(result: .success(result)))
                     
                 default:
                     //TODO: handle not ok server status
                     return
                 }
             case .failure(let error):
-                self.action.send(ModelAction.Settings.GetClientInfo.Failed(error: error))
+                self.action.send(ModelAction.Notification.Fetch.New.Response(result: .failure(error)))
             }
         }
     }
@@ -58,12 +83,25 @@ extension Model {
                         self.handleServerCommandEmptyData(command: command)
                         return }
                     
+                    let result = Model.dictinaryNotificationReduce(current: self.notifications.value, update: notifications)
+                    
+                    do {
+                        
+                        try self.localAgent.store(result, serial: nil)
+                        
+                    } catch {
+                        
+                        self.handleServerCommandError(error: error, command: command)
+                    }
+                    
+                    self.action.send(ModelAction.Notification.Fetch.Next.Response(result: .success(result)))
+                    
                 default:
                     //TODO: handle not ok server status
                     return
                 }
             case .failure(let error):
-                self.action.send(ModelAction.Settings.GetClientInfo.Failed(error: error))
+                self.action.send(ModelAction.Notification.Fetch.Next.Response(result: .failure(error)))
             }
         }
     }
