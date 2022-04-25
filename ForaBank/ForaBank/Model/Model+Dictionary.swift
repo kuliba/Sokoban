@@ -15,12 +15,22 @@ extension ModelAction {
         
         static let cached: [Kind] = [.anywayOperators, .fmsList, .fsspDebtList, .fsspDocumentList, .ftsList, .productCatalogList, .bannerCatalogList, .atmList, .atmServiceList, .atmTypeList, .atmMetroStationList, .atmCityList, .atmRegionList]
 
-        struct Request: Action {
-            
-            let type: Kind
-            let serial: String?
-        }
+        enum UpdateCache {
         
+            struct All: Action {}
+            
+            struct List: Action {
+                
+                let types: [Kind]
+            }
+            
+            struct Request: Action {
+                
+                let type: Kind
+                let serial: String?
+            }
+        }
+
         enum Kind: CaseIterable {
             
             case anywayOperators
@@ -50,23 +60,7 @@ extension ModelAction {
 //MARK: - Cache
 
 extension Model {
-    
-    func dictionariesUpdateCache() {
         
-        for type in ModelAction.Dictionary.cached {
-            
-            if dictionaryCheckCache(for: type) == true {
-                
-                action.send(ModelAction.Dictionary.Request(type: type, serial: dictionaryCacheSerial(for: type)))
-                
-            } else {
-                
-                dictionaryClearCache(for: type)
-                action.send(ModelAction.Dictionary.Request(type: type, serial: nil))
-            }
-        }
-    }
-    
     func dictionaryCheckCache(for dictionaryType: ModelAction.Dictionary.Kind) -> Bool {
         
         switch dictionaryType {
@@ -330,14 +324,72 @@ extension Model {
     }
 }
 
+
+//MARK: - Reducers
+
+extension Model {
+    
+    static func dictionaryAtmReduce(current: [AtmData], update: [AtmData]) -> [AtmData] {
+        
+        var updated = current
+        
+        // insert items
+        let insertedItems = update.filter{ $0.action == .insert }
+        updated.append(contentsOf: insertedItems)
+        
+        // delete items
+        let deletedItems = update.filter({ $0.action == .delete }).map{ $0.id }
+        updated = updated.filter({ deletedItems.contains($0.id) == false})
+        
+        // update items
+        let updatedItems = update.filter({ $0.action == .update })
+        return updated.map({ item in
+            
+            if let updatedItem = updatedItems.first(where: { $0.id == item.id }) {
+                
+                return updatedItem
+                
+            } else {
+                
+                return item
+            }
+        })
+    }
+}
+
 //MARK: - Handlers
 
 extension Model {
     
-    // Anyway Operators
-    func handleDictionaryAnywayOperatorsRequest(_ payload: ModelAction.Dictionary.Request) {
+    // Update all cached
+    func handleDictionaryUpdateAll()  {
         
-        let command = ServerCommands.DictionaryController.GetAnywayOperatorsList(serial: payload.serial)
+        action.send(ModelAction.Dictionary.UpdateCache.List(types: ModelAction.Dictionary.cached))
+    }
+    
+    // Update list
+    
+    func handleDictionaryUpdateList(_ payload: ModelAction.Dictionary.UpdateCache.List) {
+        
+        for type in payload.types {
+            
+            if dictionaryCheckCache(for: type) == true {
+                
+                action.send(ModelAction.Dictionary.UpdateCache.Request(type: type, serial: dictionaryCacheSerial(for: type)))
+                
+            } else {
+                
+                dictionaryClearCache(for: type)
+                action.send(ModelAction.Dictionary.UpdateCache.Request(type: type, serial: nil))
+            }
+        }
+    }
+    
+    
+    // Anyway Operators
+    func handleDictionaryAnywayOperatorsRequest(_ serial: String?) {
+        
+        let command = ServerCommands.DictionaryController.GetAnywayOperatorsList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -375,9 +427,9 @@ extension Model {
     }
     
     // Banks
-    func handleDictionaryBanks(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryBanks(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetBanks(serial: payload.serial)
+        let command = ServerCommands.DictionaryController.GetBanks(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -415,9 +467,9 @@ extension Model {
     }
     
     // Countries
-    func handleDictionaryCountries(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryCountries(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetCountries(serial: payload.serial)
+        let command = ServerCommands.DictionaryController.GetCountries(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -455,9 +507,9 @@ extension Model {
     }
     
     // CurrencyList
-    func handleDictionaryCurrencyList(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryCurrencyList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetCurrencyList(serial: payload.serial)
+        let command = ServerCommands.DictionaryController.GetCurrencyList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -495,9 +547,9 @@ extension Model {
     }
     
     // FMSList
-    func handleDictionaryFMSList(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryFMSList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetFMSList(serial: payload.serial)
+        let command = ServerCommands.DictionaryController.GetFMSList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -535,9 +587,9 @@ extension Model {
     }
     
     // FSSPDebtList
-    func handleDictionaryFSSPDebtList(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryFSSPDebtList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetFSSPDebtList(serial: payload.serial)
+        let command = ServerCommands.DictionaryController.GetFSSPDebtList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -575,9 +627,9 @@ extension Model {
     }
     
     // FSSPDocumentList
-    func handleDictionaryFSSPDocumentList(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryFSSPDocumentList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetFSSPDocumentList(serial: payload.serial)
+        let command = ServerCommands.DictionaryController.GetFSSPDocumentList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -615,9 +667,9 @@ extension Model {
     }
     
     // FTSList
-    func handleDictionaryFTSList(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryFTSList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetFTSList(serial: payload.serial)
+        let command = ServerCommands.DictionaryController.GetFTSList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -656,9 +708,9 @@ extension Model {
     }
     
     // FullBankInfoList
-    func handleDictionaryFullBankInfoList(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryFullBankInfoList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetFullBankInfoList(serial: payload.serial)
+        let command = ServerCommands.DictionaryController.GetFullBankInfoList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -696,9 +748,9 @@ extension Model {
     }
     
     // MobileList
-    func handleDictionaryMobileList(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryMobileList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetMobileList(serial: payload.serial)
+        let command = ServerCommands.DictionaryController.GetMobileList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -736,9 +788,9 @@ extension Model {
     }
     
     // MosParkingList
-    func handleDictionaryMosParkingList(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryMosParkingList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetMosParkingList(serial: payload.serial)
+        let command = ServerCommands.DictionaryController.GetMosParkingList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -775,9 +827,9 @@ extension Model {
     }
     
     // PaymentSystemList
-    func handleDictionaryPaymentSystemList(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryPaymentSystemList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetPaymentSystemList(serial: payload.serial)
+        let command = ServerCommands.DictionaryController.GetPaymentSystemList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -814,9 +866,9 @@ extension Model {
     }
     
     // ProductCatalogList
-    func handleDictionaryProductCatalogList(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryProductCatalogList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetProductCatalogList(serial: payload.serial)
+        let command = ServerCommands.DictionaryController.GetProductCatalogList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -855,9 +907,9 @@ extension Model {
     }
     
     //BannerCatalogListData
-    func handleDictionaryBannerCatalogList(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryBannerCatalogList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetBannerCatalogList(serial: payload.serial)
+        let command = ServerCommands.DictionaryController.GetBannerCatalogList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -896,9 +948,9 @@ extension Model {
     }
     
     //AtmDataList
-    func handleDictionaryAtmDataList(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryAtmDataList(_ serial: String?) {
         
-        let command = ServerCommands.AtmController.GetAtmList(serial: payload.serial)
+        let command = ServerCommands.AtmController.GetAtmList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -909,38 +961,18 @@ extension Model {
                         return
                     }
                     
-                    var updated = [AtmData]()
+                    var atmDataSource = [AtmData]()
                     
                     // load items from cache if exists
                     if let cached = self.localAgent.load(type: [AtmData].self)  {
-                        updated.append(contentsOf: cached)
+                        atmDataSource.append(contentsOf: cached)
                     }
                     
-                    // insert items
-                    let insertedItems = data.list.filter{ $0.action == .insert }
-                    updated.append(contentsOf: insertedItems)
-                    
-                    // delete items
-                    let deletedItems = data.list.filter({ $0.action == .delete }).map{ $0.id }
-                    updated = updated.filter({ deletedItems.contains($0.id) == false})
-                    
-                    // update items
-                    let updatedItems = data.list.filter({ $0.action == .update })
-                    updated = updated.map({ item in
-                        
-                        if let updatedItem = updatedItems.first(where: { $0.id == item.id }) {
-                            
-                            return updatedItem
-                            
-                        } else {
-                            
-                            return item
-                        }
-                    })
+                    let result = Self.dictionaryAtmReduce(current: atmDataSource, update: data.list)
                     
                     do {
  
-                        try self.localAgent.store(updated, serial: "\(data.version)")
+                        try self.localAgent.store(result, serial: "\(data.version)")
                         
                     } catch {
                         
@@ -958,9 +990,9 @@ extension Model {
     }
     
     //AtmServiceDataList
-    func handleDictionaryAtmServiceDataList(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryAtmServiceDataList(_ serial: String?) {
         
-        let command = ServerCommands.AtmController.GetAtmServiceList(serial: payload.serial)
+        let command = ServerCommands.AtmController.GetAtmServiceList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -996,9 +1028,9 @@ extension Model {
     }
     
     //AtmTypeDataList
-    func handleDictionaryAtmTypeDataList(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryAtmTypeDataList(_ serial: String?) {
         
-        let command = ServerCommands.AtmController.GetAtmTypeList(serial: payload.serial)
+        let command = ServerCommands.AtmController.GetAtmTypeList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -1034,9 +1066,9 @@ extension Model {
     }
     
     //AtmMetroStationDataList
-    func handleDictionaryAtmMetroStationDataList(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryAtmMetroStationDataList(_ serial: String?) {
         
-        let command = ServerCommands.AtmController.GetMetroStationList(serial: payload.serial)
+        let command = ServerCommands.AtmController.GetMetroStationList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -1072,9 +1104,9 @@ extension Model {
     }
     
     //AtmCityDataList
-    func handleDictionaryAtmCityDataList(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryAtmCityDataList(_ serial: String?) {
         
-        let command = ServerCommands.AtmController.GetCityList(serial: payload.serial)
+        let command = ServerCommands.AtmController.GetCityList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -1110,9 +1142,9 @@ extension Model {
     }
     
     //AtmRegionDataList
-    func handleDictionaryAtmRegionDataList(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryAtmRegionDataList(_ serial: String?) {
         
-        let command = ServerCommands.AtmController.GetRegionList(serial: payload.serial)
+        let command = ServerCommands.AtmController.GetRegionList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -1147,3 +1179,4 @@ extension Model {
         }
     }
 }
+
