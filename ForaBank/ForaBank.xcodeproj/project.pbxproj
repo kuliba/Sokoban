@@ -64,6 +64,8 @@
 		0B3FE8E62706435C00CBDB4E /* DateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3FE8E52706435C00CBDB4E /* DateExtensions.swift */; };
 		0B4145BC281093600097430C /* MessagesHistoryItemComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4145BB281093600097430C /* MessagesHistoryItemComponentView.swift */; };
 		0B4145BE2810937C0097430C /* MessagesHistorySectionComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4145BD2810937C0097430C /* MessagesHistorySectionComponentView.swift */; };
+		0B4145C128116DAA0097430C /* MessagesHistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4145C028116DAA0097430C /* MessagesHistoryViewModel.swift */; };
+		0B4145C8281170FD0097430C /* MessagesHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4145C7281170FD0097430C /* MessagesHistoryView.swift */; };
 		0B51D87626D959BB00FC7B6B /* ExtensionGKHInputNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B51D87526D959BB00FC7B6B /* ExtensionGKHInputNav.swift */; };
 		0B66E8D626CC5D6500FD735D /* NetDetectAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B66E8D526CC5D6500FD735D /* NetDetectAlert.swift */; };
 		0B66E8D826CC5EC400FD735D /* ExtensionDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B66E8D726CC5EC400FD735D /* ExtensionDevice.swift */; };
@@ -1133,6 +1135,8 @@
 		0B3FE8E52706435C00CBDB4E /* DateExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtensions.swift; sourceTree = "<group>"; };
 		0B4145BB281093600097430C /* MessagesHistoryItemComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesHistoryItemComponentView.swift; sourceTree = "<group>"; };
 		0B4145BD2810937C0097430C /* MessagesHistorySectionComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesHistorySectionComponentView.swift; sourceTree = "<group>"; };
+		0B4145C028116DAA0097430C /* MessagesHistoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesHistoryViewModel.swift; sourceTree = "<group>"; };
+		0B4145C7281170FD0097430C /* MessagesHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesHistoryView.swift; sourceTree = "<group>"; };
 		0B51D87526D959BB00FC7B6B /* ExtensionGKHInputNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionGKHInputNav.swift; sourceTree = "<group>"; };
 		0B66E8D526CC5D6500FD735D /* NetDetectAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetDetectAlert.swift; sourceTree = "<group>"; };
 		0B66E8D726CC5EC400FD735D /* ExtensionDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDevice.swift; sourceTree = "<group>"; };
@@ -2309,6 +2313,22 @@
 			children = (
 				0B4145BB281093600097430C /* MessagesHistoryItemComponentView.swift */,
 				0B4145BD2810937C0097430C /* MessagesHistorySectionComponentView.swift */,
+			);
+			path = Messages;
+			sourceTree = "<group>";
+		};
+		0B4145BF28116D870097430C /* Messages */ = {
+			isa = PBXGroup;
+			children = (
+				0B4145C028116DAA0097430C /* MessagesHistoryViewModel.swift */,
+			);
+			path = Messages;
+			sourceTree = "<group>";
+		};
+		0B4145C2281170060097430C /* Messages */ = {
+			isa = PBXGroup;
+			children = (
+				0B4145C7281170FD0097430C /* MessagesHistoryView.swift */,
 			);
 			path = Messages;
 			sourceTree = "<group>";
@@ -3698,6 +3718,7 @@
 		77DC125C277098C600C917B0 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				0B4145BF28116D870097430C /* Messages */,
 				770DCE9027BBF7F4004099C1 /* RootViewModel.swift */,
 				F82ED55427D7B9AA008485AB /* MyProducts */,
 				7772979127C77BFF0099EF91 /* Main */,
@@ -3713,6 +3734,7 @@
 		77DC125D277098D500C917B0 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				0B4145C2281170060097430C /* Messages */,
 				F82ED55027D7B966008485AB /* MyProducts */,
 				770DCE9427BBFA49004099C1 /* Root */,
 				7769F5BA27D3A2D900F80607 /* Main */,
@@ -6505,6 +6527,7 @@
 				68C8D57026F0DF120076246B /* HistoryTableViewCell.swift in Sources */,
 				687FB23626F0189C004A479F /* ProductViewControllerDataSource.swift in Sources */,
 				EDA5637A26F386AD0093F0C8 /* SettingTableViewController.swift in Sources */,
+				0B4145C8281170FD0097430C /* MessagesHistoryView.swift in Sources */,
 				775E068527E8A0D1006A9886 /* Model+PaymentsTaxesFNSMock.swift in Sources */,
 				68673B4F26F2F29300F67A8C /* RequisitesViewController.swift in Sources */,
 				A5F15C0B27495F7C00DC91DA /* GlobalModule.swift in Sources */,
@@ -6661,6 +6684,7 @@
 				0BA09E3426B08E1A0065D623 /* GetFullBankInfoListDecodableModel.swift in Sources */,
 				F82ED55827D7BA6F008485AB /* MyProductsSectionAllMoneyViewComponent.swift in Sources */,
 				77499C412773A40100F6C079 /* OperationDetailView.swift in Sources */,
+				0B4145C128116DAA0097430C /* MessagesHistoryViewModel.swift in Sources */,
 				ED84994B26A6FEE3005205C6 /* CountryListCell.swift in Sources */,
 				6820928527AB0E9D003DCAFD /* MobileData.swift in Sources */,
 				ED39EC93268C9AE900158E46 /* NewCardCell.swift in Sources */,
