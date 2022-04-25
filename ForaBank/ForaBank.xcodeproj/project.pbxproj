@@ -350,7 +350,6 @@
 		6833E0CF273920CE004C070F /* MobilePayCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6833E0C8273920CD004C070F /* MobilePayCoordinator.swift */; };
 		6833E0D0273920CE004C070F /* CountryPayCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6833E0C9273920CD004C070F /* CountryPayCoordinator.swift */; };
 		6833E0D1273920CE004C070F /* MainTabBarCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6833E0CA273920CD004C070F /* MainTabBarCoordinator.swift */; };
-		68368BAE272FDAA200A435B1 /* OperationDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68368BAD272FDAA200A435B1 /* OperationDetailViewController.swift */; };
 		684192DA279998F800B4E184 /* ProductStatementDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 684192D9279998F700B4E184 /* ProductStatementDataTests.swift */; };
 		684192DC2799997800B4E184 /* ProductStatementDataDecodingGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 684192DB2799997800B4E184 /* ProductStatementDataDecodingGeneric.json */; };
 		684192E22799A15300B4E184 /* GetOwnerPhoneNumberResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 684192E12799A15300B4E184 /* GetOwnerPhoneNumberResponseGeneric.json */; };
@@ -1417,7 +1416,6 @@
 		6833E0C8273920CD004C070F /* MobilePayCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MobilePayCoordinator.swift; sourceTree = "<group>"; };
 		6833E0C9273920CD004C070F /* CountryPayCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryPayCoordinator.swift; sourceTree = "<group>"; };
 		6833E0CA273920CD004C070F /* MainTabBarCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTabBarCoordinator.swift; sourceTree = "<group>"; };
-		68368BAD272FDAA200A435B1 /* OperationDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailViewController.swift; sourceTree = "<group>"; };
 		684192D9279998F700B4E184 /* ProductStatementDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductStatementDataTests.swift; sourceTree = "<group>"; };
 		684192DB2799997800B4E184 /* ProductStatementDataDecodingGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ProductStatementDataDecodingGeneric.json; sourceTree = "<group>"; };
 		684192E12799A15300B4E184 /* GetOwnerPhoneNumberResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetOwnerPhoneNumberResponseGeneric.json; sourceTree = "<group>"; };
@@ -2824,7 +2822,6 @@
 		681E073A273D3F3E00551FAD /* DetailOperation */ = {
 			isa = PBXGroup;
 			children = (
-				68368BAD272FDAA200A435B1 /* OperationDetailViewController.swift */,
 				6833E0B12732B69E004C070F /* DetailOperationViewController.swift */,
 			);
 			path = DetailOperation;
@@ -6434,7 +6431,6 @@
 				686857D8274FA73C00BBF562 /* PaymentsViewCoordinator.swift in Sources */,
 				0BDE453326E3EA4A00B64A0A /* ExtensionQRReadPDF.swift in Sources */,
 				EDB14533266667140028EF5A /* OrderProductsCollectionViewCell.swift in Sources */,
-				68368BAE272FDAA200A435B1 /* OperationDetailViewController.swift in Sources */,
 				7705408F27BD1C6900094006 /* BiometricAgent.swift in Sources */,
 				0BA14E1C2715628A0098E422 /* GetAllLatestPaymentsDecodableModel.swift in Sources */,
 				0B8BE091266FDA1B00E96CAA /* CheckClientDecodebleModel.swift in Sources */,

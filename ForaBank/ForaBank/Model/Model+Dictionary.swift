@@ -156,6 +156,8 @@ extension Model {
                         return
                     }
                     
+                    self.bankList.value = data.banksList
+                    
                     do {
                         
                         try self.localAgent.store(data.banksList, serial: data.serial)

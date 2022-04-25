@@ -29,6 +29,7 @@ class Model {
     let catalogProducts: CurrentValueSubject<[CatalogProductData], Never>
     let catalogBanners: CurrentValueSubject<[BannerCatalogListData], Never>
     let currencyDict: CurrentValueSubject<[CurrencyData], Never>
+    let bankList: CurrentValueSubject<[BankData], Never>
 
     //MARK: Templates
     let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
@@ -71,6 +72,7 @@ class Model {
         self.catalogProducts = .init([])
         self.catalogBanners = .init([])
         self.currencyDict = .init([])
+        self.bankList = .init([])
         self.paymentTemplates = .init([])
         self.paymentTemplatesViewSettings = .init(.initial)
         self.serverAgent = serverAgent
@@ -389,6 +391,11 @@ private extension Model {
         if let currency = localAgent.load(type: [CurrencyData].self) {
             
             self.currencyDict.value = currency
+        }
+        
+        if let bankList = localAgent.load(type: [BankData].self) {
+            
+            self.bankList.value = bankList
         }
         
         if let products = localAgent.load(type: [ProductData].self) {
