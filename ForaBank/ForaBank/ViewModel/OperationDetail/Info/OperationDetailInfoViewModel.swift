@@ -15,8 +15,8 @@ final class OperationDetailInfoViewModel: Identifiable {
     
     let id = UUID()
     let title = "Детали операции"
-    let logo: Image?
-    let cells: [DefaultCellViewModel]
+    var logo: Image?
+    var cells: [DefaultCellViewModel]
     let dismissAction: () -> Void
     
     var token: NotificationToken?
@@ -32,20 +32,16 @@ final class OperationDetailInfoViewModel: Identifiable {
     
     }
     
-    init?(with statement: ProductStatementProxy, operation: OperationDetailDatum?, product: UserAllCardsModel, dismissAction: @escaping () -> Void) {
-
-
+    init?(with statement: ProductStatementProxy, operation: OperationDetailData?, product: ProductData, dismissAction: @escaping () -> Void) {
         
         let tranDateString = DateFormatter.operation.string(from: statement.tranDate)
         let foraBankName = "Фора Банк"
         let foraBankIcon = Image("foraContactImage", bundle: nil)
         let currency = statement.currencyCode
-        
+        self.dismissAction = dismissAction
         var logo: Image? = nil
-        var cells = [DefaultCellViewModel]()
-
-        lazy var realm = try? Realm()
-
+        self.cells = [DefaultCellViewModel]()
+        let bankList = Model.shared.bankList.value
         
         switch statement.paymentDetailType {
         case .otherBank:
@@ -75,45 +71,47 @@ final class OperationDetailInfoViewModel: Identifiable {
              product
              tranDate
              */
-            if let payeeCardNumber = operation?.payeeCardNumber, let productObjects = realm?.objects(UserAllCardsModel.self){
-                    for product in productObjects{
-                        if product.number?.suffix(4) == payeeCardNumber.suffix(4){
-                            print(product)
-                            if let smallDesign = product.smallDesign?.convertSVGStringToImage(),
-                                  let productName = product.mainField,
-                                  let additionalField = product.additionalField,
-                               let productCurrency = product.currency,
-                               let description = product.number?.suffix(4){
-                                let balanceString = product.balance.currencyFormatter(symbol: productCurrency)
-                            
-                                cells.append(ProductCellViewModel(title: "Счет пополнения", icon: Image(uiImage: smallDesign), name: productName, iconPaymentService: nil, balance: balanceString, description: "· \(description) · \(additionalField)"))
-                            }
-                        }
-                    }
-                }
+            
+            //TODO: make load data from cache
+//            if let payeeCardNumber = operation?.payeeCardNumber, let productObjects = realm?.objects(UserAllCardsModel.self){
+//                    for product in productObjects{
+//                        if product.number?.suffix(4) == payeeCardNumber.suffix(4){
+//                            print(product)
+//                            if let smallDesign = product.smallDesign?.convertSVGStringToImage(),
+//                                  let productName = product.mainField,
+//                                  let additionalField = product.additionalField,
+//                               let productCurrency = product.currency,
+//                               let description = product.number?.suffix(4){
+//                                let balanceString = product.balance.currencyFormatter(symbol: productCurrency)
+//
+//                                cells.append(ProductCellViewModel(title: "Счет пополнения", icon: Image(uiImage: smallDesign), name: productName, iconPaymentService: nil, balance: balanceString, description: "· \(description) · \(additionalField)"))
+//                            }
+//                        }
+//                    }
+//                }
             
             cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: statement.amount.currencyFormatter(symbol: currency)))
             
             if let payerFee = operation?.payerFee {
                 cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: payerFee.currencyFormatter(symbol: currency)))
             }
-            
-            if let payerCardNumber = operation?.payerCardNumber, let productObjects = realm?.objects(UserAllCardsModel.self){
-                for product in productObjects{
-                    if product.number?.suffix(4) == payerCardNumber.suffix(4){
-                        print(product)
-                        if let smallDesign = product.smallDesign?.convertSVGStringToImage(),
-                              let productName = product.mainField,
-                              let additionalField = product.additionalField,
-                           let productCurrency = product.currency,
-                           let description = product.number?.suffix(4){
-                            let balanceString = product.balance.currencyFormatter(symbol: productCurrency)
-                        
-                            cells.append(ProductCellViewModel(title: "Счет списания", icon: Image(uiImage: smallDesign), name: productName, iconPaymentService: nil, balance: balanceString, description: "· \(description) · \(additionalField)"))
-                        }
-                    }
-                }
-            }
+            //TODO: make load data from cache
+//            if let payerCardNumber = operation?.payerCardNumber, let productObjects = realm?.objects(UserAllCardsModel.self){
+//                for product in productObjects{
+//                    if product.number?.suffix(4) == payerCardNumber.suffix(4){
+//                        print(product)
+//                        if let smallDesign = product.smallDesign?.convertSVGStringToImage(),
+//                              let productName = product.mainField,
+//                              let additionalField = product.additionalField,
+//                           let productCurrency = product.currency,
+//                           let description = product.number?.suffix(4){
+//                            let balanceString = product.balance.currencyFormatter(symbol: productCurrency)
+//
+//                            cells.append(ProductCellViewModel(title: "Счет списания", icon: Image(uiImage: smallDesign), name: productName, iconPaymentService: nil, balance: balanceString, description: "· \(description) · \(additionalField)"))
+//                        }
+//                    }
+//                }
+//            }
 //            if let debitAccounCell = Self.debitAccountCell(with: product, currency: currency) {
 //                cells.append(debitAccounCell)
 //            }
@@ -236,11 +234,13 @@ final class OperationDetailInfoViewModel: Identifiable {
 
             cells.append(PropertyCellViewModel(title: "Получатель", iconType: .user, value: statement.merchantName))
             
-            if let memberId = operation?.memberID,
-               let bank = Dict.shared.banks?.first(where: { $0.memberID == memberId }),
-               let bankLogoSVG = bank.svgImage, let name = bank.memberNameRus {
+            if let memberId = operation?.memberId,
+               let bank = bankList.first(where: { $0.memberId == memberId }){
                 
-                let bankLogoImage = Image(uiImage: bankLogoSVG.convertSVGStringToImage())
+                let bankLogoSVG = bank.svgImage.image
+                let name = bank.memberNameRus
+                guard let bankLogoImage = bankLogoSVG else { return }
+                
                 cells.append(BankCellViewModel(title: "Банк получателя", icon: bankLogoImage, name: name))
             }
             
@@ -357,7 +357,7 @@ final class OperationDetailInfoViewModel: Identifiable {
             }
             
             if let bankBic = operation?.payeeBankBIC,
-               let memberId = operation?.memberID,
+               let memberId = operation?.memberId,
                let bank = Dict.shared.banks?.first(where: { $0.memberID == memberId }),
                let bankLogoSVG = bank.svgImage {
                 
@@ -669,8 +669,7 @@ final class OperationDetailInfoViewModel: Identifiable {
         }
         
         self.logo = logo
-        self.cells = cells
-        self.dismissAction = dismissAction
+//        self.dismissAction = dismissAction
     }
 }
 
@@ -678,42 +677,23 @@ final class OperationDetailInfoViewModel: Identifiable {
 
 private extension OperationDetailInfoViewModel {
     
-    static func debitAccountCell(with product: UserAllCardsModel, currency: String) -> DefaultCellViewModel? {
+    static func debitAccountCell(with product: ProductData, currency: String) -> DefaultCellViewModel? {
         
-        guard let smallDesign = product.smallDesign?.convertSVGStringToImage(),
-              let productName = product.mainField,
+        let productCurrency = product.currency
+        
+        guard let smallDesign = product.smallDesign.image,
               let additionalField = product.additionalField,
-              let productCurrency = product.currency,
-              let description = product.number?.suffix(4) else  {
+              let description = product.number?.suffix(4),
+              let balanceString = product.balance?.currencyFormatter(symbol: productCurrency) else  {
                   return nil
               }
-        let balanceString = product.balance.currencyFormatter(symbol: productCurrency)
         
-        return ProductCellViewModel(title: "Счет списания", icon: Image(uiImage: smallDesign), name: productName, iconPaymentService: nil, balance:balanceString, description: "· \(description) · \(additionalField)")
+        let productName = product.mainField
+        
+        return ProductCellViewModel(title: "Счет списания", icon: smallDesign, name: productName, iconPaymentService: nil, balance: balanceString, description: "· \(description) · \(additionalField)")
     }
 }
 
-extension OperationDetailInfoViewModel{
-//    func observerRealm(currency: String){
-//        guard let products = self.allProductList else {
-//            return
-//        }
-//        for product in products {
-//            if product.number?.suffix(6) == payeeCardNumber.suffix(6){
-//                print(product)
-//                if let smallDesign = product.smallDesign?.convertSVGStringToImage(),
-//                      let productName = product.mainField,
-//                      let additionalField = product.additionalField,
-//                   let description = product.number?.suffix(4){
-//                    let balanceString = product.balance.currencyFormatter(symbol: currency)
-//
-//                    cells.append(ProductCellViewModel(title: "Счет пополнения", icon: Image(uiImage: smallDesign), name: productName, iconPaymentService: nil, balance: balanceString, description: "· \(description) · \(additionalField)"))
-//                }
-//            }
-//        }
-//
-//   }
-}
 //MARK: - Type
 
 extension OperationDetailInfoViewModel {
@@ -727,7 +707,6 @@ extension OperationDetailInfoViewModel {
             self.title = title
             
         }
-        
     }
     
     class PropertyCellViewModel: DefaultCellViewModel{
