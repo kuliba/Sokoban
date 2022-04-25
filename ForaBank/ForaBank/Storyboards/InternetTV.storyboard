@@ -1236,6 +1236,7 @@
                         <outlet property="labelRecipient" destination="mBo-pf-IcA" id="EUz-a6-Swe"/>
                         <outlet property="labelRecipientDesc" destination="fvz-6f-kSU" id="5Kd-Ll-KGb"/>
                         <outlet property="labelUpperText" destination="PcS-Id-csx" id="QwR-Dl-9Qy"/>
+                        <outlet property="recipientIcon" destination="MQZ-Zf-9og" id="2If-qz-WVR"/>
                         <outlet property="rootView" destination="IEM-ZD-8x0" id="E3g-h3-eOR"/>
                         <outlet property="sourceHolder" destination="IW1-hX-2l8" id="VJc-5N-H8J"/>
                         <outlet property="viewAmount" destination="DGy-Wf-N2a" id="peF-u8-q88"/>

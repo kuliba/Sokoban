@@ -663,6 +663,14 @@ final class OperationDetailInfoViewModel: Identifiable {
             cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)", iconType: .date, value: tranDateString))
         case .c2b:
             logo = Image("sbp-logo")
+            let allBanks = Dict.shared.bankFullInfoList
+            let foundBank = allBanks?.filter({ $0.bic == statement.fastPayment?.foreignBankBIC })
+            var imageBank: Image? = nil
+            if foundBank != nil && foundBank?.count ?? 0 > 0 {
+                let bankRusName = foundBank?[0].rusName ?? ""
+                let bankIconSvg = foundBank?[0].svgImage ?? ""
+                imageBank = Image(uiImage: bankIconSvg.convertSVGStringToImage())
+            }
             cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: statement.amount.currencyFormatter(symbol: currency)))
             cells.append(BankCellViewModel(title: "Наименование ТСП", icon: statement.svgImage, name: statement.merchantName))
             cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)", iconType: .date, value: tranDateString))
@@ -672,7 +680,7 @@ final class OperationDetailInfoViewModel: Identifiable {
             }
             cells.append(BankCellViewModel(title: "Отправитель", icon: Image("hash"), name: statement.fastPayment?.foreignName ?? ""))
             if let bankName = statement.fastPayment?.foreignBankName, statement.operationType == .debit {
-                cells.append(BankCellViewModel(title: "Банк получателя", icon:  statement.svgImage, name: bankName))
+                cells.append(BankCellViewModel(title: "Банк получателя", icon:  imageBank ?? Image("bank_icon"), name: bankName))
             } else if let bankName = statement.fastPayment?.foreignBankName{
                 cells.append(BankCellViewModel(title: "Банк отправителя", icon:  statement.svgImage, name: bankName))
             }

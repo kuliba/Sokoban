@@ -120,8 +120,48 @@ class OperationDetailViewModel: ObservableObject {
             self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: productStatement.merchantName, category: "\(productStatement.groupName)")
             let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
             self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: productStatement.tranDate)
+        case .c2b:
+            let isReturn = productStatement.groupName.contains("Возврат")
+            let allBanks = Dict.shared.bankFullInfoList
+            let foundBank = allBanks?.filter({ $0.bic == productStatement.fastPayment?.foreignBankBIC })
+
+            var imageBank: Image? = nil
+            if foundBank != nil && foundBank?.count ?? 0 > 0 {
+                let bankRusName = foundBank?[0].rusName ?? ""
+                let bankIconSvg = foundBank?[0].svgImage ?? ""
+                imageBank = Image(uiImage: bankIconSvg.convertSVGStringToImage())
+            }
+            //let recipientIcon = Image(uiImage: productStatement.fastPayment..convertSVGStringToImage())
+            var comment: String? = nil
+            if  isReturn {
+                comment = "Возврат по операции"
+            } else {
+                if productStatement.documentComment?.isEmpty != true {
+                    comment = productStatement.documentComment
+                }
+            }
+
+            self.header = HeaderViewModel(
+                logo: Image("sbpindetails"),
+                status: isReturn ? StatusViewModel.purchase_return : StatusViewModel.success,
+                title: "\(productStatement.groupName)",
+                category: nil)
+            
+            let amountViewModel = AmountViewModel(
+                amount: productStatement.amount,
+                currency: productStatement.currencyCode,
+                operationType: productStatement.operationType,
+                payService: nil)
+                                                  
+            self.operation = OperationViewModel(
+                bankLogo: productStatement.svgImage ,
+                payee: .singleRow(productStatement.merchantName ?? ""),
+                amount: amountViewModel,
+                fee: nil,
+                description: comment,
+                date: productStatement.tranDate)
         default:
-            //FIXME: taxes && c2b
+            //FIXME: taxes
             self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: productStatement.merchantName, category: "\(productStatement.groupName)")
             let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
             self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: productStatement.tranDate)
@@ -579,6 +619,7 @@ extension OperationDetailViewModel {
         
         case reject
         case success
+        case purchase_return
         case processing
         
         //FIXME: localization required
@@ -587,6 +628,7 @@ extension OperationDetailViewModel {
             switch self {
             case .reject: return "Отказ!"
             case .success: return "Успешно!"
+            case .purchase_return: return "Возврат!"
             case .processing: return "В обработке"
             }
         }
@@ -597,6 +639,7 @@ extension OperationDetailViewModel {
             switch self {
             case .reject: return "#E3011B"
             case .success: return "#22C183"
+            case .purchase_return: return "#22C183"
             case .processing: return "#FF9636"
             }
         }

@@ -28,6 +28,9 @@ class C2BSuccessView: UIView {
     
     @IBOutlet weak var labelLink: UILabel!
 
+    @IBOutlet weak var recipientIcon: UIImageView!
+    
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
@@ -44,6 +47,7 @@ class C2BSuccessView: UIView {
         layer.shadowRadius = 16
         labelNameRecipient.text = C2BDetailsViewModel.recipientText
         labelDescrRecipient.text = C2BDetailsViewModel.recipientDescription
+        recipientIcon.image = C2BDetailsViewModel.recipientIcon
         
         if let linkStr = C2BDetailsViewModel.operationDetail?.shopLink {
             if linkStr.description.isEmpty {
@@ -82,7 +86,8 @@ class C2BSuccessView: UIView {
 
         statusImageView.image = C2BSuccessView.statusImg
         statusLabel.text = C2BSuccessView.statusText
-        summLabel.text = C2BDetailsViewModel.sum + " ₽"
+        let sumDouble = Double(C2BDetailsViewModel.sum)
+        summLabel.text = sumDouble?.currencyFormatter() ?? "0.0"
     }
 
     @IBAction func saveButtonTapped(_ sender: Any) {

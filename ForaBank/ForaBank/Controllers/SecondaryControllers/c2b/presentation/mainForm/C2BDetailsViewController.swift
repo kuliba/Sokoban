@@ -16,7 +16,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     var cardListView = CardsScrollView(onlyMy: false, deleteDeposit: true, loadProducts: false)
     var qrData = [String: String]()
     var viewModel = C2BDetailsViewModel()
-    var amount = ""
+    var amount = "0.0"
     var modeConsent = "update"
     var contractId = ""
     
@@ -75,6 +75,9 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
 
     @IBOutlet weak var viewReceiver: UIView!
 
+    @IBOutlet weak var recipientIcon: UIImageView!
+    
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         goButton?.isHidden = !(bottomInputView?.isHidden ?? false)
@@ -91,6 +94,8 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         bottomInputView?.isHidden = true
         setupToolbar()
         goButton?.add_CornerRadius(5)
+        goButton?.isEnabled = false
+        goButton?.backgroundColor = .lightGray
         
         bottomInputView?.currencySymbol = "₽"
         AddAllUserCardtList.add {
@@ -205,8 +210,9 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         let recipientFound = params?.filter({ $0.type == "RECIPIENT" })
         if (recipientFound != nil && recipientFound?.count ?? 0 > 0) {
             C2BDetailsViewModel.recipientText = recipientFound?[0].value ?? ""
-            C2BDetailsViewModel.recipientIconSrc = recipientFound?[0].icon ?? ""
+            C2BDetailsViewModel.recipientIcon = (recipientFound?[0].icon ?? "").convertSVGStringToImage()
             C2BDetailsViewModel.recipientDescription = recipientFound?[0].description ?? ""
+
             //                    if (!recipientIconSrc.isNullOrEmpty()) {
             //                        viewModel.getRecipientImage(recipientIconSrc)
             //                    }
@@ -230,8 +236,11 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
             C2BSuccessView.bankName = bankRusName
         }
         labelRecipient.text = C2BDetailsViewModel.recipientText
+        recipientIcon.image = C2BDetailsViewModel.recipientIcon
         labelRecipientDesc.text = C2BDetailsViewModel.recipientDescription
-        labelAmount.text = amount  + " \(currencySymbol)"
+
+        let amountDouble = Double(amount)
+        labelAmount.text = amountDouble?.currencyFormatter() //" \(currencySymbol)"
         
         if amount.isEmpty {
             viewAmount.isHidden = true

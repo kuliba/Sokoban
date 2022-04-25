@@ -15,7 +15,7 @@ class C2BDetailsFormViewController: UIViewController {
             viewModel: C2BDetailsInputViewModel(
                     title: "Наименование ТСП",
                     text: C2BDetailsViewModel.operationDetail?.merchantSubName ?? "",
-                    image: #imageLiteral(resourceName: "BankIcon"),
+                    image: C2BDetailsViewModel.recipientIcon,
                     isEditable: false))
 
     var dateOperation = C2BDetailsInputView(
