@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class C2BDetailsViewModel {
     var controller: C2BDetailsViewController? = nil
@@ -13,7 +14,7 @@ class C2BDetailsViewModel {
     var qrData: GetQRDataAnswer? = nil
     var c2bLink: String = ""
     static var recipientText = ""
-    static var recipientIconSrc = ""
+    static var recipientIcon: UIImage? = nil
     static var recipientDescription = ""
     static var sourceModel: UserAllCardsModel? = nil
     static var sum = ""

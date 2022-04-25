@@ -63,6 +63,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         if let urlContext = connectionOptions.urlContexts.first {
             let sendingAppID = urlContext.options.sourceApplication
+            
             GlobalModule.c2bURL = urlContext.url.description
         }
     }
@@ -109,8 +110,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-        print("qr5555 scene(_ scene 1")
-        GlobalModule.c2bURL = "244"
         guard let url = URLContexts.first?.url else { return }
         guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true),
               let params = components.queryItems else {
@@ -128,7 +127,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             topvc?.present(nc, animated: false)
             return
         }
-        print("qr5555 scene(_ scene 2")
 
         if let bankId = params.first?.value {
             let bankId = String(bankId.dropFirst(4))
