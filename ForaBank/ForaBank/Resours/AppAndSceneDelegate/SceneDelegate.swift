@@ -103,6 +103,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             UIApplication.shared.keyWindow?.addBlure()
         }
     }
+    
+    func sceneWillEnterForeground(_ scene: UIScene) {
+        
+        AppDelegate.shared.model.action.send(ModelAction.Dictionary.UpdateCache.All())
+    }
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         guard let url = URLContexts.first?.url else { return }
