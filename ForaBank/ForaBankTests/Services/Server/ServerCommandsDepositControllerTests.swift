@@ -137,11 +137,10 @@ class ServerCommandsDepositControllerTests: XCTestCase {
 		// given
 		let url = bundle.url(forResource: "GetDepositStatement", withExtension: "json")!
 		let json = try Data(contentsOf: url)
-		let date = formatter.date(from: "2022-01-31T10:14:01.684Z")!
-		let tranDate = formatter.date(from: "2022-01-31T10:14:01.685Z")!
+        let date = Date(timeIntervalSince1970: .init(1648512000000/1000))
 
-		let data = ProductStatementData(MCC: 3245,
-										accountID: 10004111477,
+		let data = ProductStatementData(mcc: 3245,
+										accountId: 10004111477,
 										accountNumber: "70601810711002740401",
 										amount: 144.21,
 										cardTranNumber: "4256901080508437",
@@ -152,7 +151,7 @@ class ServerCommandsDepositControllerTests: XCTestCase {
 										date: date,
 										deviceCode: "string",
 										documentAmount: 144.21,
-										documentID: 10230444722,
+										documentId: 10230444722,
 										fastPayment: .init(documentComment: "string",
 														   foreignBankBIC: "044525491",
 														   foreignBankID: "10000001153",
@@ -171,7 +170,7 @@ class ServerCommandsDepositControllerTests: XCTestCase {
 										paymentDetailType: .betweenTheir,
 										svgImage: .init(description: "string"),
 										terminalCode: "41010601",
-										tranDate: tranDate,
+										tranDate: date,
 										type: .inside)
 
 		let expected = ServerCommands.DepositController.GetDepositStatement.Response(statusCode: .ok,
@@ -190,11 +189,10 @@ class ServerCommandsDepositControllerTests: XCTestCase {
 		// given
 		let url = bundle.url(forResource: "GetDepositStatementMin", withExtension: "json")!
 		let json = try Data(contentsOf: url)
-		let date = formatter.date(from: "2022-02-03T08:52:38.454Z")!
-		let tranDate = formatter.date(from: "2022-02-03T08:52:38.454Z")!
+        let date = Date(timeIntervalSince1970: .init(1648512000000/1000))
 
-		let data = ProductStatementData(MCC: nil,
-										accountID: nil,
+		let data = ProductStatementData(mcc: nil,
+										accountId: nil,
 										accountNumber: "70601810711002740401",
 										amount: 144.21,
 										cardTranNumber: nil,
@@ -205,7 +203,7 @@ class ServerCommandsDepositControllerTests: XCTestCase {
 										date: date,
 										deviceCode: nil,
 										documentAmount: nil,
-										documentID: nil,
+										documentId: nil,
 										fastPayment: .init(documentComment: "string",
 														   foreignBankBIC: "044525491",
 														   foreignBankID: "10000001153",
@@ -224,7 +222,7 @@ class ServerCommandsDepositControllerTests: XCTestCase {
 										paymentDetailType: .betweenTheir,
 										svgImage: .init(description: "string"),
 										terminalCode: nil,
-										tranDate: tranDate,
+										tranDate: date,
 										type: .inside)
 
 		let expected = ServerCommands.DepositController.GetDepositStatement.Response(statusCode: .ok,
