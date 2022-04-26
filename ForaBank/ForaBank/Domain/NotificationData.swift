@@ -74,11 +74,17 @@ extension NotificationData: Codable {
 extension NotificationData: Hashable {
     
     static func == (lhs: NotificationData, rhs: NotificationData) -> Bool {
-        return lhs.date == rhs.date && lhs.text == rhs.text
+        return lhs.date == rhs.date
+               && lhs.text == rhs.text
+               && lhs.state == rhs.state
+               && lhs.type == rhs.type
+               
     }
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(date)
         hasher.combine(text)
+        hasher.combine(state)
+        hasher.combine(type)
     }
 }

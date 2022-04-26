@@ -185,10 +185,10 @@ class Model {
                     
                //MARK: - Notifications
                 case _ as ModelAction.Notification.Fetch.New.Request:
-                    handleNotificationsNewRequest()
+                    handleNotificationsFetchNewRequest()
                     
                 case _ as ModelAction.Notification.Fetch.Next.Request:
-                    handleNotificationsNextRequest()
+                    handleNotificationsFetchNextRequest()
                     
                 //MARK: - Templates Actions
                     
