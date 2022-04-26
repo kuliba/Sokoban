@@ -825,41 +825,43 @@ struct DetailAccountViewComponent: View {
     }
 }
 
-//struct DetailAccountComponent_Previews: PreviewProvider {
-//    static var previews: some View {
-//
-//        Group {
-//            
-//            DetailAccountViewComponent(viewModel: .start)
-//                .previewLayout(.fixed(width: 375, height: 300))
-//
-//            DetailAccountViewComponent(viewModel: .collapsed)
-//                .previewLayout(.fixed(width: 375, height: 300))
-//
-//            DetailAccountViewComponent(viewModel: .sample)
-//                .previewLayout(.fixed(width: 375, height: 300))
-//
-//            DetailAccountViewComponent(viewModel: .full)
-//                .previewLayout(.fixed(width: 375, height: 300))
-//
-//            DetailAccountViewComponent(viewModel: .fullwithButton)
-//                .previewLayout(.fixed(width: 375, height: 400))
-//        }
-//    }
-//}
+struct DetailAccountComponent_Previews: PreviewProvider {
+    static var previews: some View {
 
-//extension DetailAccountViewComponent.ViewModel {
-//
-//    let loanBase = ProductCardData.LoanBaseParamInfoData.init(loanId: 2, clientId: 2, number: "", currencyId: 2, currencyNumber: 2, currencyCode: "", minimumPayment: 2, gracePeriodPayment: 2, overduePayment: 2, availableExceedLimit: 2, ownFunds: 2, debtAmount: 2, totalAvailableAmount: 2, totalDebtAmount: 2)
-//
-//    static let start = DetailAccountViewComponent.ViewModel(with: self.loanBase, status: .notActivated, isCredit: false, productName: nil, longInt: nil)
-//
-//    static let sample = DetailAccountViewComponent.ViewModel(with: loanBase, status: .notActivated, isCredit: false, productName: nil, longInt: nil)
-//
-//    static let collapsed = DetailAccountViewComponent.ViewModel(with: loanBase, status: .notActivated, isCredit: false, productName: nil, longInt: nil)
-//
-//    static let full = DetailAccountViewComponent.ViewModel(with: loanBase, status: .notActivated, isCredit: false, productName: nil, longInt: nil)
-//
-//    static let fullwithButton = DetailAccountViewComponent.ViewModel(with: loanBase, status: .notActivated, isCredit: false, productName: nil, longInt: nil)
-//
-//}
+        Group {
+            
+            DetailAccountViewComponent(viewModel: .start)
+                .previewLayout(.fixed(width: 375, height: 300))
+
+            DetailAccountViewComponent(viewModel: .collapsed)
+                .previewLayout(.fixed(width: 375, height: 300))
+
+            DetailAccountViewComponent(viewModel: .sample)
+                .previewLayout(.fixed(width: 375, height: 300))
+
+            DetailAccountViewComponent(viewModel: .full)
+                .previewLayout(.fixed(width: 375, height: 300))
+
+            DetailAccountViewComponent(viewModel: .fullwithButton)
+                .previewLayout(.fixed(width: 375, height: 400))
+        }
+    }
+}
+
+extension DetailAccountViewComponent.ViewModel {
+
+    static let start = DetailAccountViewComponent.ViewModel(with: .sample, status: .notActivated, isCredit: false, productName: nil, longInt: nil)
+
+    static let sample = DetailAccountViewComponent.ViewModel(with: .sample, status: .notActivated, isCredit: false, productName: nil, longInt: nil)
+
+    static let collapsed = DetailAccountViewComponent.ViewModel(with: .sample, status: .notActivated, isCredit: false, productName: nil, longInt: nil)
+
+    static let full = DetailAccountViewComponent.ViewModel(with: .sample, status: .notActivated, isCredit: false, productName: nil, longInt: nil)
+
+    static let fullwithButton = DetailAccountViewComponent.ViewModel(with: .sample, status: .notActivated, isCredit: false, productName: nil, longInt: nil)
+    
+}
+
+extension ProductCardData.LoanBaseParamInfoData {
+    static let sample = ProductCardData.LoanBaseParamInfoData.init(loanId: 2, clientId: 2, number: "", currencyId: 2, currencyNumber: 2, currencyCode: "", minimumPayment: 2, gracePeriodPayment: 2, overduePayment: 2, availableExceedLimit: 2, ownFunds: 2, debtAmount: 2, totalAvailableAmount: 2, totalDebtAmount: 2)
+}
