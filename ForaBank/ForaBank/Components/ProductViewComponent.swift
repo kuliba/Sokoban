@@ -24,6 +24,7 @@ extension ProductView {
         @Published var isUpdating: Bool
         let productType: ProductType
         let action: () -> Void
+        let style: Style
         
         internal init(id: String = UUID().uuidString, productId: Int = 0, header: HeaderViewModel, name: String, footer: FooterViewModel, statusAction: StatusActionViewModel?, appearance: Appearance, isUpdating: Bool, productType: ProductType, action: @escaping () -> Void) {
             
@@ -36,27 +37,31 @@ extension ProductView {
             self.isUpdating = isUpdating
             self.productType = productType
             self.action = action
+            self.style = .main
             super.init(id: id)
         }
         
         convenience init(with productData: ProductData, statusAction: @escaping () -> Void, action: @escaping () -> Void) {
             
-            let logo = Image.ic24LogoForaColor
-            
             let number = productData.viewNumber
             
             let name = productData.viewName
-            //TODO: balance formatting
-            
-            let balance = "\(productData.balance?.currencyFormatter(symbol: productData.currency))"
             let textColor = productData.fontDesignColor.color
-            let backgroundColor = productData.background.first?.color ?? .cardClassic
-            let backgroundImage = productData.largeDesign.image
             let productType = productData.productType
             
-            //TODO: update status
-            self.init(productId: productData.id, header: .init(logo: logo, number: number, period: nil), name: name, footer: .init(balance: balance, paymentSystem: nil), statusAction: nil, appearance: .init(textColor: textColor, background: .init(color: backgroundColor, image: backgroundImage)), isUpdating: false, productType: productType, action: action)
+            self.init(header: .init(logo: nil, number: number, period: nil), name: name, footer: .init(balance: "nil", paymentSystem: nil), statusAction: nil, appearance: .init(textColor: textColor, background: .init(color: .bGIconBlack, image: nil), size: .normal), isUpdating: false, productType: productType, action: {})
+            
+            guard let balance = productData.balance?.currencyFormatter(symbol: productData.currency),
+                  let backgroundImage = productData.extraLargeDesign.image,
+                  let backgroundColor = productData.background.first?.color  else { return }
+            
+            self.init(header: .init(logo: nil, number: number, period: nil), name: name, footer: .init(balance: balance, paymentSystem: nil), statusAction: nil, appearance: .init(textColor: textColor, background: .init(color: backgroundColor, image: backgroundImage), size: .normal), isUpdating: false, productType: productType, action: {})
         }
+        
+        //        convenience init(with productData: ProductData) {
+        //
+        //            //TODO: make switch with productData subclass
+        //        }
         
         func update(with productData: ProductData) {
             
@@ -65,11 +70,10 @@ extension ProductView {
                 name = customName
             }
             
-            //TODO: balance formatting
-            //TODO: balance update animation
-            footer.balance = "\(productData.balance)"
-            
-            //TODO: update status
+            if let balance = productData.balance {
+                
+                footer.balance = balance.currencyFormatter(symbol: productData.currency)
+            }
         }
         
         struct HeaderViewModel {
@@ -127,12 +131,12 @@ extension ProductView {
                 case activation
                 case unblock
             }
+        }
+        
+        enum Style {
             
-            enum Style {
-                
-                case main
-                case profile
-            }
+            case main
+            case profile
         }
         
         struct Appearance {
@@ -189,9 +193,7 @@ struct ProductView: View {
             
         } else {
             
-            NavigationLink(destination: ProfileView(viewModel: .init(productViewModel: .init(products: [.classic, .account, .blockedProfile, .classicProfile], product: .classicProfile)))) {
-                ContentView(viewModel: viewModel)
-            }
+            ContentView(viewModel: viewModel)
         }
     }
 }
@@ -322,7 +324,7 @@ extension ProductView {
                         .font(textFont)
                         .foregroundColor(appearance.textColor)
                 }
-
+                
                 if let period = viewModel.period {
                     
                     Rectangle()
@@ -540,17 +542,19 @@ struct ProductView_Previews: PreviewProvider {
             
             ProductView(viewModel: .classicProfile)
                 .previewLayout(.fixed(width: 268, height: 160))
-            
+            Group {
+
             ProductView(viewModel: .accountProfile)
                 .previewLayout(.fixed(width: 268, height: 160))
             
-            Group {
-                
-                ProductView(viewModel: .classicSmall)
-                    .previewLayout(.fixed(width: 112, height: 72))
-                
-                ProductView(viewModel: .accountSmall)
-                    .previewLayout(.fixed(width: 112, height: 72))
+            ProductView(viewModel: .depositProfile)
+                .previewLayout(.fixed(width: 228, height: 160))
+            
+            ProductView(viewModel: .classicSmall)
+                .previewLayout(.fixed(width: 112, height: 72))
+            
+            ProductView(viewModel: .accountSmall)
+                .previewLayout(.fixed(width: 112, height: 72))
             }
         }
     }
@@ -568,7 +572,7 @@ extension ProductView.ViewModel {
     
     static let account = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Текущий зарплатный счет", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardRIO, image: nil)), isUpdating: false, productType: .card, action: {})
     
-    static let notActivateProfile = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: "12/24"), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Visa")), statusAction: .init(status: .activation, style: .profile, action: {}), appearance: .init(textColor: .white, background: .init(color: .cardInfinite, image: Image("Product Background Large Sample"))), isUpdating: false, productType: .card, action: {})
+    static let notActivateProfile = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: "12/24"), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Visa")), statusAction: .init(status: .activation, style: .profile, action: {}), appearance: .init(textColor: .white, background: .init(color: .cardInfinite, image: Image("Product Background Large Sample"))), isUpdating: false, productType: .deposit, action: {})
     
     static let blockedProfile = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: "12/24"), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: .init(status: .unblock, style: .profile, action: {}), appearance: .init(textColor: .white, background: .init(color: .cardInfinite, image: nil)), isUpdating: false, productType: .card, action: {})
     
@@ -576,10 +580,11 @@ extension ProductView.ViewModel {
     
     static let accountProfile = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: "12/24"), name: "Текущий зарплатный счет", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardRIO, image: nil)), isUpdating: false, productType: .account, action: {})
     
+    static let depositProfile = ProductView.ViewModel(header: .init(logo: .ic24LogoForaColor, number: "7854", period: "12/24"), name: "Стандарный вклад", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .mainColorsBlackMedium, background: .init(color: .cardRIO, image: Image( "Cover Deposit"))), isUpdating: false, productType: .deposit, action: {})
+    
     static let updating = ProductView.ViewModel(id: "0", header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Visa")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardInfinite, image: Image("Product Background Sample"))), isUpdating: true, productType: .card, action: {})
     
     static let classicSmall = ProductView.ViewModel(id: "2", header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .mainColorsRed, image: nil), size: .small), isUpdating: false,  productType: .card, action: {})
     
     static let accountSmall = ProductView.ViewModel(id: "3", header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Текущий зарплатный счет", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardRIO, image: nil), size: .small), isUpdating: false, productType: .account, action: {})
 }
-

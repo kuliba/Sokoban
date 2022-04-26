@@ -73,6 +73,8 @@ struct ProfileView: View {
                 
                 Button {
                     
+                        viewModel.dismissAction()
+                    
                 } label: {
                     
                     Image.ic24ChevronLeft
@@ -96,9 +98,11 @@ struct ProfileView: View {
                 
                 Spacer()
                 
-                if viewModel.productViewModel.product.productType != .loan {
+                if viewModel.productViewModel.product.productType != .loan || viewModel.productViewModel.product.productType != .deposit {
                     
                     Button {
+                        
+                        viewModel.customNameAction()
                         
                     } label: {
                         
@@ -124,6 +128,6 @@ struct ProfileView_Previews: PreviewProvider {
 
 extension ProfileViewModel {
     
-    static let sample = ProfileViewModel(productViewModel: .init(products: [.notActivateProfile, .accountProfile, .classicProfile, .blockedProfile], product: .classicProfile, model: .emptyMock), model: .emptyMock)
+    static let sample = ProfileViewModel(productViewModel: .init(products: [.notActivateProfile, .accountProfile, .classicProfile, .depositProfile], product: .depositProfile, model: .emptyMock), model: .emptyMock)
 }
 

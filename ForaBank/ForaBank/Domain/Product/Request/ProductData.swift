@@ -175,6 +175,16 @@ extension ProductData {
     }
     
     var viewName: String { customName ?? mainField }
+    
+    var viewBalance: String? {
+        
+        if let balance = balance {
+            
+            return balance.currencyFormatter(symbol: currency)
+        } else {
+            return nil
+        }
+    }
 }
 
 extension ProductData: Equatable {

@@ -29,10 +29,6 @@ extension InfoView {
             action
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] action in
-                    guard let self = self else {
-                        return
-                    }
-                    
                     switch action {
                     case _ as ViewModelAction.Dismiss:
                         

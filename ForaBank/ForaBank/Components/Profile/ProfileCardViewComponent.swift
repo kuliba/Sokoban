@@ -17,14 +17,14 @@ extension ProfileCardViewComponent {
         let action: PassthroughSubject<Action, Never> = .init()
         
         @Published var products: [ProductView.ViewModel]
-        @State var product: ProductView.ViewModel
+        @Published var product: ProductView.ViewModel
         @Published var moreButton: Bool = false
         
         
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        internal init( products: [ProductView.ViewModel] = [], product: ProductView.ViewModel, model: Model = .emptyMock) {
+        internal init( products: [ProductView.ViewModel] = [], product: ProductView.ViewModel, model: Model) {
             
             
             self.products = products.filter({$0.productType == product.productType})
@@ -33,15 +33,29 @@ extension ProfileCardViewComponent {
             
         }
         
-        init(_ model: Model, product: ProductView.ViewModel) {
+        init(_ model: Model, productId: Int, productType: ProductType) {
             
             self.products = []
-            self.product = product
-            self.moreButton = false
             self.model = model
-            action.send(ModelAction.Products.Update.Total.All())
+
+            let products = model.productForCache(products: self.model.products.value)
+            let productData = products.first(where: ({$0.id == productId}))
+    
+            if let balance = productData?.viewBalance, let fontColor = productData?.fontDesignColor.color, let name = productData?.viewName, let backgroundColor = productData?.background.first?.color {
+                
+                self.product = .init(header: .init(logo: nil, number: productData?.viewNumber, period: nil), name: name, footer: .init(balance: balance, paymentSystem: nil), statusAction: .init(status: .activation, style: .profile, action: {}), appearance: .init(textColor: fontColor, background: .init(color: backgroundColor, image: nil), size: .normal), isUpdating: false, productType: .init(rawValue: productData?.productType.rawValue ?? "card") ?? .card, action: {})
+                
+            } else {
+                
+                self.product = .init(with: productData ?? .init(id: 0, productType: .card, number: "", numberMasked: "", accountNumber: "", balance: 20, balanceRub: 20, currency: "", mainField: "", additionalField: "", customName: "", productName: "", openDate: Date(), ownerId: 20, branchId: 20, allowCredit: true, allowDebit: true, extraLargeDesign: .init(description: ""), largeDesign: .init(description: ""), mediumDesign: .init(description: ""), smallDesign: .init(description: ""), fontDesignColor: .init(description: ""), background: [.init(description: "")]), statusAction: {}, action: {})
+            }
+            
+            self.moreButton = false
             
             bind()
+            
+            action.send(ModelAction.Products.Update.Total.All())
+            action.send(ModelAction.Products.Update.Fast.Single.Request(productId: product.productId, productType: productType))
         }
         
         private func bind() {
@@ -123,7 +137,7 @@ struct ProfileCardViewComponent: View {
         
         VStack {
             
-            ZStack(alignment: .top) {
+            ZStack(alignment: .center) {
                 
                 if let background = viewModel.product.appearance.background.image {
                     
@@ -139,16 +153,16 @@ struct ProfileCardViewComponent: View {
                     ZStack {
 
                         viewModel.product.appearance.background.color.contrast(0.8)
-                            .frame(width: geometry.size.width, height: geometry.size.height + 500)
                             .clipped()
-                            .offset(y: -550)
                     }
                 }.frame(height: 150)
                 
-                VStack(spacing: 15) {
+                VStack {
+                    
                     if #available(iOS 14.0, *) {
                         
                         TabBar
+                            .frame(alignment: .bottom)
                         
                         TabView(selection: $viewModel.product) {
                             
@@ -158,19 +172,24 @@ struct ProfileCardViewComponent: View {
                                     
                                     ProductView(viewModel: product)
                                         .frame(width: 228, height: 160)
+                                        .padding(.bottom, 20)
+                                        .shadow(color: Color.mainColorsBlack.opacity(0.2), radius: 12, x: 0, y: 12)
                                         .tag(product)
                                     
                                 } else {
                                     
                                     ProductView(viewModel: product)
-                                        .frame(width: 268, height: 160, alignment: .top)
+                                        .frame(width: 268, height: 160)
+                                        .padding(.bottom, 20)
+                                        .shadow(color: Color.mainColorsBlack.opacity(0.2), radius: 12, x: 0, y: 12)
                                         .tag(product)
                                     
                                 }
                             }
                         }
                         .tabViewStyle(.page(indexDisplayMode: .never))
-                        .frame( height: 160, alignment: .top)
+                        .frame(height: 200, alignment: .top)
+                        .padding(.vertical, 20)
                         
                     } else {
                         // Fallback on earlier versions
@@ -249,7 +268,7 @@ extension ProfileCardViewComponent {
 
 struct ProfileCardViewComponent_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileCardViewComponent(viewModel: .init(products: [.blockedProfile, .classicProfile, .accountProfile, .notActivateProfile, .accountSmall], product: .classicProfile))
+        ProfileCardViewComponent(viewModel: .init(products: [.notActivateProfile, .classicProfile, .accountProfile, .blockedProfile, .depositProfile], product: .notActivateProfile, model: .emptyMock))
             .previewLayout(.fixed(width: 400, height: 500))
     }
 }
