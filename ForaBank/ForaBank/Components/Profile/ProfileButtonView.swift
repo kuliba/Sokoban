@@ -6,29 +6,37 @@
 //
 
 import SwiftUI
+import Combine
 
 extension ProfileButtonView {
     
     class ViewModel: Identifiable, Hashable, ObservableObject {
             
+        let action: PassthroughSubject<Action, Never> = .init()
+
         let id = UUID()
-        let title: String
+        let title: TitleType
         let image: Image
-        let state: State
-        
-        internal init(title: String, image: Image, state: State) {
+        let state: Bool?
+
+        internal init(title: TitleType, image: Image, state: Bool? = true) {
             
             self.title = title
             self.image = image
             self.state = state
+            self.action.send(ProductProfileViewModelAction.CustomName())
         }
         
-        enum State {
+        enum TitleType: String {
             
-            case active
-            case disable
+            case topUp = "Пополнить"
+            case requisites = "Реквизиты и выписка"
+            case transfer = "Перевести"
+            case control = "Управление"
+            case block = "Заблокировать"
+            case unblock = "Разблокировать"
+            case repay = "Погасить досрочно"
         }
-        
     }
 }
 
@@ -52,9 +60,11 @@ struct ProfileButtonView: View {
     
     var body: some View {
         
-        if viewModel.state == .active {
+        if viewModel.state == true {
          
             Button {
+                
+                viewModel.action.send(ProductProfileViewModelAction.Dismiss())
                 
             } label: {
                 
@@ -63,11 +73,11 @@ struct ProfileButtonView: View {
                     viewModel.image
                         .foregroundColor(.iconBlack)
                     
-                    Text(viewModel.title)
+                    Text(viewModel.title.rawValue)
                         .font(.system(size: 14))
                         .foregroundColor(.buttonBlack)
                 }
-                .frame(width: 164, height: 48, alignment: .leading)
+                .frame(width: 150 ,height: 48, alignment: .leading)
                 .padding(.leading, 12)
             }
             .background(Color.mainColorsGrayLightest)
@@ -77,19 +87,22 @@ struct ProfileButtonView: View {
             
             Button {
                 
+                viewModel.action.send(ProductProfileViewModelAction.CustomName())
+
             } label: {
                 
                 HStack(spacing: 12) {
+                    
                     viewModel.image
                         .foregroundColor(.iconBlack)
-                    Text(viewModel.title)
+                    
+                    Text(viewModel.title.rawValue)
                         .font(.system(size: 14))
                         .foregroundColor(.buttonBlack)
                 }
-                .frame(width: 164, height: 48, alignment: .leading)
+                .frame(width: 150 ,height: 48, alignment: .leading)
                 .padding(.leading, 12)
             }
-
             .background(Color.mainColorsGrayLightest)
             .cornerRadius(8)
             .disabled(true)
@@ -120,12 +133,12 @@ struct ProfileButtonView_Previews: PreviewProvider {
 
 extension ProfileButtonView.ViewModel {
     
-    static let ussualyButton = ProfileButtonView.ViewModel(title: "Пополнить", image: Image.ic24Plus, state: .active)
+    static let ussualyButton = ProfileButtonView.ViewModel(title: .topUp, image: Image.ic24Plus, state: true)
     
-    static let disableButton = ProfileButtonView.ViewModel(title: "Блокировать", image: Image.ic24Lock, state: .disable)
+    static let disableButton = ProfileButtonView.ViewModel(title: .block, image: Image.ic24Lock, state: false)
     
-    static let requisitsButton = ProfileButtonView.ViewModel(title: "Реквизиты", image: Image.ic24File, state: .active)
+    static let requisitsButton = ProfileButtonView.ViewModel(title: .requisites, image: Image.ic24File, state: false)
     
-    static let transferButton = ProfileButtonView.ViewModel(title: "Перевести", image: Image.ic24ArrowUpRight, state: .active)
+    static let transferButton = ProfileButtonView.ViewModel(title: .transfer, image: Image.ic24ArrowUpRight)
 }
 

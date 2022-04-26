@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct CurrencyData: Codable, Equatable, Cachable{
+struct CurrencyData: Codable, Equatable, Cachable {
     
     let code: String
     let codeISO: Int

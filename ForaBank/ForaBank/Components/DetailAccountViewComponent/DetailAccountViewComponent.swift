@@ -275,7 +275,7 @@ extension DetailAccountViewComponent {
             var collapsed: Bool
         }
         
-        internal init(with loanBase: LoanBaseParamModel, status: StatusPC, availableExceedLimit: String, minimumPayment: String, gracePeriodPayment: String, overduePayment: String, ownFunds: String, debtAmount: String, totalAvailableAmount: String, totalDebtAmount: String, isCredit: Bool, productName: String?, longInt: Int?, sumAvailable: String?) {
+        internal init(with loanBase: ProductCardData.LoanBaseParamInfoData?, status: StatusPC, availableExceedLimit: String, minimumPayment: String, gracePeriodPayment: String, overduePayment: String, ownFunds: String, debtAmount: String, totalAvailableAmount: String, totalDebtAmount: String, isCredit: Bool, productName: String?, longInt: Int?, sumAvailable: String?) {
             
             self.state = .init(collapsed: false)
             
@@ -283,7 +283,11 @@ extension DetailAccountViewComponent {
             self.footerViewModel = nil
             self.headerView = .init(subTitle: .paid, collapsed: false)
             self.amountViewModel = [.init(title: .debt, foregraundColor: .mainColorsBlackMedium, amount: debtAmount, availebelAmount: nil), .init(title: .limit, foregraundColor: .buttonPrimary, amount: availableExceedLimit, availebelAmount: totalAvailableAmount)]
-            self.circleViewModel = .init(debt: loanBase.debtAmount, ownFound: loanBase.ownFunds, available: loanBase.availableExceedLimit)
+            
+            if let debtAmount = loanBase?.debtAmount, let ownFound = loanBase?.ownFunds, let availableExceedLimit = loanBase?.availableExceedLimit {
+                
+                self.circleViewModel = .init(debt: debtAmount, ownFound: ownFound, available: availableExceedLimit)
+            }
             
             if status == .notActivated {
                 
@@ -294,7 +298,7 @@ extension DetailAccountViewComponent {
                 self.secondButtonsViewModel = nil
             }
             
-            if loanBase.overduePayment > 0.1 {
+            if let overduePaymentData = loanBase?.overduePayment, overduePaymentData > 0 {
                 
                 self.headerView = .init(subTitle: .interval, collapsed: false)
                 self.dateViewModel = .init(.init(longInt: nil))
@@ -307,7 +311,7 @@ extension DetailAccountViewComponent {
                 self.secondButtonsViewModel = [ .init(amount: totalDebtAmount, title: .totalDebt ,image: nil, foregraund: .white,  background: .clear, action: {}), .init(amount: gracePeriodPayment, title: .preferential, image: nil, foregraund: .white, background: .clear, action: {})]
             }
             
-            if loanBase.availableExceedLimit == 0 {
+            if let availableExceedLimit = loanBase?.availableExceedLimit, availableExceedLimit == 0 {
                 
                 self.headerView = .init(subTitle: .paid, collapsed: false)
                 self.dateViewModel = .init(.init(longInt: nil))
@@ -317,7 +321,7 @@ extension DetailAccountViewComponent {
                 self.secondButtonsViewModel = nil
             }
             
-            if loanBase.minimumPayment <= 0, loanBase.overduePayment <= 0 {
+            if let minimumPaymentData = loanBase?.minimumPayment, minimumPaymentData <= 0, let overduePaymenData = loanBase?.overduePayment, overduePaymenData <= 0 {
                 
                 self.headerView = .init(subTitle: .interval, collapsed: false)
                 self.dateViewModel = .init(.init(longInt: nil))
@@ -329,7 +333,7 @@ extension DetailAccountViewComponent {
                 self.secondButtonsViewModel = nil
             }
             
-            if loanBase.gracePeriodPayment > 0.1, loanBase.minimumPayment > 0.1 {
+            if let gracePeriodPaymentData = loanBase?.gracePeriodPayment, gracePeriodPaymentData > 0, let minimumPaymentData = loanBase?.minimumPayment, minimumPaymentData > 0 {
                 
                 self.headerView = .init(subTitle: .interval, collapsed: false)
                 self.dateViewModel = .init(.init(longInt: nil))
@@ -338,8 +342,8 @@ extension DetailAccountViewComponent {
                 }), .init(amount: gracePeriodPayment, title: .preferential, image: nil, foregraund: .white, background: .clear, action: {})]
                 self.secondButtonsViewModel = [.init(amount: totalDebtAmount, title: .totalDebt, image: nil, foregraund: .white, background: .clear, action: {})]
             }
-            
-            if loanBase.ownFunds > 0 {
+ 
+            if let ownFundsData = loanBase?.ownFunds, ownFundsData > 0 {
                 
                 self.headerView = .init(subTitle: .paid, collapsed: false)
                 self.dateViewModel = nil
@@ -354,7 +358,7 @@ extension DetailAccountViewComponent {
                 self.secondButtonsViewModel = nil
             }
             
-            if loanBase.overduePayment == 0, loanBase.gracePeriodPayment == 0, loanBase.ownFunds < 0 {
+            if let overduePayment = loanBase?.overduePayment, overduePayment == 0, loanBase?.gracePeriodPayment == 0, let ownFound = loanBase?.ownFunds, ownFound < 0 {
                 
                 self.headerView = .init(subTitle: .interval, collapsed: false)
                 self.dateViewModel = .init(.init(longInt: nil))
@@ -366,7 +370,7 @@ extension DetailAccountViewComponent {
                 
             }
             
-            if loanBase.overduePayment == 0, loanBase.gracePeriodPayment >= 0, loanBase.debtAmount > 0, loanBase.minimumPayment > 0 {
+            if loanBase?.overduePayment == 0, let gracePeriodPayment = loanBase?.gracePeriodPayment, gracePeriodPayment >= 0, let debtAmountData = loanBase?.debtAmount, debtAmountData > 0, let minimumPaymentData = loanBase?.minimumPayment, minimumPaymentData > 0 {
                 
                 self.headerView = .init(subTitle: .interval, collapsed: false)
                 self.dateViewModel = .init(.init(longInt: nil))
@@ -377,7 +381,7 @@ extension DetailAccountViewComponent {
                 self.secondButtonsViewModel = nil
             }
             
-            if loanBase.overduePayment > 0, loanBase.gracePeriodPayment >= 0, loanBase.debtAmount > 0 {
+            if let overduePaymentData = loanBase?.overduePayment, overduePaymentData > 0, let gracePeriodPaymentData = loanBase?.gracePeriodPayment, gracePeriodPaymentData >= 0, let debtAmountData = loanBase?.debtAmount, debtAmountData > 0 {
                 
                 self.headerView = .init(subTitle: .interval, collapsed: false)
                 self.dateViewModel = .init(.init(longInt: nil))
@@ -390,7 +394,7 @@ extension DetailAccountViewComponent {
                 self.secondButtonsViewModel = [ .init(amount: totalDebtAmount, title: .totalDebt ,image: nil, foregraund: .white,  background: .clear, action: {}), .init(amount: gracePeriodPayment, title: .preferential, image: nil, foregraund: .white, background: .clear, action: {})]
             }
             
-            if isCredit, loanBase.overduePayment > 0.1 {
+            if isCredit, let overduePayment = loanBase?.overduePayment, overduePayment > 0 {
                 
                 if let productName = productName, productName.contains(CreditType.consumer.rawValue) {
                     
@@ -403,7 +407,11 @@ extension DetailAccountViewComponent {
                 self.dateViewModel = .init(.init(longInt: longInt))
                 
                 self.amountViewModel = [.init(title: .creditAmount, foregraundColor: .mainColorsBlackMedium, amount: totalDebtAmount, availebelAmount: nil), .init(title: .repaid, foregraundColor: .buttonPrimary, amount: totalAvailableAmount, availebelAmount: nil)]
-                self.circleViewModel = .init(debt: loanBase.totalDebtAmount, ownFound: loanBase.ownFunds, available: loanBase.totalAvailableAmount)
+                
+                if let totalDebtAmount = loanBase?.totalDebtAmount, let ownFunds = loanBase?.ownFunds, let totalAvailableAmount = loanBase?.totalAvailableAmount {
+                    
+                    self.circleViewModel = .init(debt: totalDebtAmount, ownFound: ownFunds, available: totalAvailableAmount)
+                }
                 self.footerViewModel = []
                 
                 self.footerViewModel?.append(.init(amount: minimumPayment, title: .minimalCredit, image: nil, foregraund: .white, background: .textPrimary, action: {
@@ -418,7 +426,7 @@ extension DetailAccountViewComponent {
                 self.secondButtonsViewModel = nil
             }
             
-            if isCredit, loanBase.overduePayment <= 0 {
+            if isCredit, let overduePayment = loanBase?.overduePayment, overduePayment <= 0 {
                 
                 if let productName = productName, productName.contains(CreditType.consumer.rawValue) {
                     
@@ -431,7 +439,10 @@ extension DetailAccountViewComponent {
                 self.dateViewModel = .init(.init(longInt: longInt))
                 
                 self.amountViewModel = [.init(title: .creditAmount, foregraundColor: .mainColorsBlackMedium, amount: totalDebtAmount, availebelAmount: nil), .init(title: .repaid, foregraundColor: .buttonPrimary, amount: totalAvailableAmount, availebelAmount: nil)]
-                self.circleViewModel = .init(debt: loanBase.totalDebtAmount, ownFound: loanBase.ownFunds, available: loanBase.totalAvailableAmount)
+                if let totalDebtAmount = loanBase?.totalDebtAmount, let ownFunds = loanBase?.ownFunds {
+                    
+                    self.circleViewModel = .init(debt: totalDebtAmount, ownFound: ownFunds, available: totalDebtAmount)
+                }
                 self.footerViewModel = [.init(amount: minimumPayment, title: .minimalCredit, image: nil, foregraund: .white, background: .textPrimary, action: {
                     NotificationCenter.default.post(name: NSNotification.Name("openPaymentsView"), object: nil, userInfo: nil)
                 })]
@@ -441,24 +452,10 @@ extension DetailAccountViewComponent {
             bind()
         }
         
-        convenience init(with loanBase: LoanBaseParamModel, status: StatusPC, isCredit: Bool, productName: String?, longInt: Int?) {
+        convenience init(with loanBase: ProductCardData.LoanBaseParamInfoData, status: StatusPC, isCredit: Bool, productName: String?, longInt: Int?) {
             
-            let currency = loanBase.currencyCode
-            let availableExceedLimit = loanBase.availableExceedLimit.fullCurrencyFormatter(symbol: currency)
-            let minimumPayment = loanBase.minimumPayment.fullCurrencyFormatter(symbol: currency)
-            let gracePeriodPayment = loanBase.gracePeriodPayment.fullCurrencyFormatter(symbol: currency)
-            let overduePayment = loanBase.overduePayment.fullCurrencyFormatter(symbol: currency)
-            let ownFunds = loanBase.ownFunds.fullCurrencyFormatter(symbol: currency)
-            let debtAmount = loanBase.debtAmount.fullCurrencyFormatter(symbol: currency)
-            let totalAvailableAmount = loanBase.totalAvailableAmount.fullCurrencyFormatter(symbol: currency)
-            let totalDebtAmount = loanBase.totalDebtAmount.fullCurrencyFormatter(symbol: currency)
-            let isCredit = isCredit
-            let longInt = longInt
-            let sumAvailable = (loanBase.totalAvailableAmount + loanBase.ownFunds).fullCurrencyFormatter(symbol: currency)
-            
-            self.init(with: loanBase, status: status, availableExceedLimit: availableExceedLimit, minimumPayment: minimumPayment, gracePeriodPayment: gracePeriodPayment, overduePayment: overduePayment, ownFunds: ownFunds, debtAmount: debtAmount, totalAvailableAmount: totalAvailableAmount, totalDebtAmount: totalDebtAmount, isCredit: isCredit, productName: productName, longInt: longInt, sumAvailable: sumAvailable)
+            self.init(with: loanBase, status: status, isCredit: isCredit, productName: productName, longInt: longInt)
         }
-        
         
         private func bind() {
             
@@ -830,21 +827,21 @@ struct DetailAccountViewComponent: View {
 
 struct DetailAccountComponent_Previews: PreviewProvider {
     static var previews: some View {
-        
+
         Group {
             
             DetailAccountViewComponent(viewModel: .start)
                 .previewLayout(.fixed(width: 375, height: 300))
-            
+
             DetailAccountViewComponent(viewModel: .collapsed)
                 .previewLayout(.fixed(width: 375, height: 300))
-            
+
             DetailAccountViewComponent(viewModel: .sample)
                 .previewLayout(.fixed(width: 375, height: 300))
-            
+
             DetailAccountViewComponent(viewModel: .full)
                 .previewLayout(.fixed(width: 375, height: 300))
-            
+
             DetailAccountViewComponent(viewModel: .fullwithButton)
                 .previewLayout(.fixed(width: 375, height: 400))
         }
@@ -852,15 +849,19 @@ struct DetailAccountComponent_Previews: PreviewProvider {
 }
 
 extension DetailAccountViewComponent.ViewModel {
+
+    static let start = DetailAccountViewComponent.ViewModel(with: .sample, status: .notActivated, isCredit: false, productName: nil, longInt: nil)
+
+    static let sample = DetailAccountViewComponent.ViewModel(with: .sample, status: .notActivated, isCredit: false, productName: nil, longInt: nil)
+
+    static let collapsed = DetailAccountViewComponent.ViewModel(with: .sample, status: .notActivated, isCredit: false, productName: nil, longInt: nil)
+
+    static let full = DetailAccountViewComponent.ViewModel(with: .sample, status: .notActivated, isCredit: false, productName: nil, longInt: nil)
+
+    static let fullwithButton = DetailAccountViewComponent.ViewModel(with: .sample, status: .notActivated, isCredit: false, productName: nil, longInt: nil)
     
-    static let start = DetailAccountViewComponent.ViewModel(with: .init(with: nil), status: .notActivated, isCredit: false, productName: nil, longInt: nil)
-    
-    static let sample = DetailAccountViewComponent.ViewModel(with: .init(with: nil), status: .notActivated, isCredit: false, productName: nil, longInt: nil)
-    
-    static let collapsed = DetailAccountViewComponent.ViewModel(with: .init(with: nil), status: .notActivated, isCredit: false, productName: nil, longInt: nil)
-    
-    static let full = DetailAccountViewComponent.ViewModel(with: .init(with: nil), status: .notActivated, isCredit: false, productName: nil, longInt: nil)
-    
-    static let fullwithButton = DetailAccountViewComponent.ViewModel(with: .init(with: nil), status: .notActivated, isCredit: false, productName: nil, longInt: nil)
-    
+}
+
+extension ProductCardData.LoanBaseParamInfoData {
+    static let sample = ProductCardData.LoanBaseParamInfoData.init(loanId: 2, clientId: 2, number: "", currencyId: 2, currencyNumber: 2, currencyCode: "", minimumPayment: 2, gracePeriodPayment: 2, overduePayment: 2, availableExceedLimit: 2, ownFunds: 2, debtAmount: 2, totalAvailableAmount: 2, totalDebtAmount: 2)
 }

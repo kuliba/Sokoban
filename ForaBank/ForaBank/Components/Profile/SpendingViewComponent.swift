@@ -7,31 +7,25 @@
 
 import SwiftUI
 
-extension SegmentedBar {
+extension SegmentedBarView {
     
     class ViewModel: ObservableObject {
         
         @Published var value: [Double]
         @Published var colors = [Color.bGIconRedLight, Color.bGIconPurpleLight, Color.bGIconPinkLight, Color.bGIconPinkLightest, Color.bGIconDeepPurpleMedium, Color.bGIconDeepPurpleLight, Color.bGIconDeepPurpleLightest, Color.bGIconIndigoLight, Color.bGIconIndigoLightest, Color.bGIconBlueLight, Color.bGIconBlueLightest, Color.bGIconTealLight, Color.bGIconGreenLight, Color.bGIconGreenLightest, Color.bGIconLimeLight, Color.bGIconDeepOrangeLight, Color.bGIconOrangeLight, Color.bGIconOrangeLightest, Color.bGIconAmberLight, Color.bGIconYellowLight, Color.bGIconDeepIndigoLight, Color.bGIconDeepBlueLight, Color.bGIconCyanLight, Color.bGIconDeepLimeLight]
+        @Published var totalValue: Double
         
         internal init(value: [Double]) {
             
+            self.totalValue = value.reduce(0, +)
             self.value = value
         }
     }
 }
 
-struct SegmentedBar: View {
+struct SegmentedBarView: View {
     
-    var viewModel: SegmentedBar.ViewModel
-    
-    private var totalValue: Double {
-        get {
-            return viewModel.value.reduce(0) { (res, val) -> Double in
-                return res + val
-            }
-        }
-    }
+    var viewModel: SegmentedBarView.ViewModel
     
     var body: some View {
         
@@ -45,7 +39,7 @@ struct SegmentedBar: View {
                     ForEach(viewModel.value.indices) { i in
                         
                         Rectangle()
-                            .frame(width: geometry.size.width * CGFloat(viewModel.value[i] / self.totalValue), height: 44)
+                            .frame(width: geometry.size.width * CGFloat(viewModel.value[i] / viewModel.totalValue), height: 44)
                             .foregroundColor(viewModel.colors[i])
                             .animation(.easeInOut)
                     }
@@ -57,7 +51,7 @@ struct SegmentedBar: View {
                     
                     Spacer()
                     
-                    Text("\(totalValue)")
+                    Text(viewModel.totalValue.currencyFormatter())
                 }
                 .padding(.horizontal, 16)
             }
@@ -69,12 +63,12 @@ struct SegmentedBar: View {
 struct SegmentedBarTest_Previews: PreviewProvider {
     static var previews: some View {
         
-        SegmentedBar(viewModel: .spending)
+        SegmentedBarView(viewModel: .spending)
             .previewLayout(.fixed(width: 335, height: 100))
     }
 }
 
-extension SegmentedBar.ViewModel {
+extension SegmentedBarView.ViewModel {
     
-    static let spending = SegmentedBar.ViewModel(value: [100, 400, 50, 200, 500, 100, 300, 10, 100, 300])
+    static let spending = SegmentedBarView.ViewModel(value: [100, 400, 50, 200, 500, 100, 300, 10, 100, 300])
 }

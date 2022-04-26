@@ -9,8 +9,6 @@ import Foundation
 
 extension ServerCommands {
     
-    //TODO: write tests ASAP
-    
     enum LoanController {
         
         /*

@@ -49,4 +49,14 @@ extension DateFormatter {
         
         return formatter
     }()
+    
+    
+    static let historyDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat =  "d MMMM, E"
+        formatter.timeZone = .current
+        formatter.locale = Locale(identifier: "ru_RU")
+        
+        return formatter
+    }()
 }

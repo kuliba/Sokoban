@@ -20,15 +20,20 @@ class Model {
     //MARK: Products
     let products: CurrentValueSubject<[ProductType: [ProductData]], Never>
     let productsUpdateState: CurrentValueSubject<ProductsUpdateState, Never>
-    var productsAllowed: Set<ProductType> { [.card, .account, .deposit] }
+    var productsAllowed: Set<ProductType> { [.card, .account, .deposit, .loan] }
+    
+    //MARK: Statement
+    var statement: CurrentValueSubject<ProductStatementDataCacheble, Never>
     
     //MARK: Dictionaries
     let catalogProducts: CurrentValueSubject<[CatalogProductData], Never>
     let catalogBanners: CurrentValueSubject<[BannerCatalogListData], Never>
-    
+    let currencyDict: CurrentValueSubject<[CurrencyData], Never>
+    let bankList: CurrentValueSubject<[BankData], Never>
+
     //MARK: Templates
     let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
-    //TODO: store in cache 
+    //TODO: store in cache
     let paymentTemplatesViewSettings: CurrentValueSubject<TemplatesListViewModel.Settings, Never>
     
     //TODO: remove when all templates will be implemented
@@ -49,11 +54,11 @@ class Model {
         
         return CSRFToken.token
         /*
-        guard case .authorized(let credentials) = auth.value else {
-            return nil
-        }
-        
-        return credentials.token
+         guard case .authorized(let credentials) = auth.value else {
+         return nil
+         }
+         
+         return credentials.token
          */
     }
     
@@ -62,9 +67,12 @@ class Model {
         self.action = .init()
         self.auth = .init(.notAuthorized)
         self.products = .init([:])
+        self.statement = .init(.init(productStatement: [:]))
         self.productsUpdateState = .init(.idle)
         self.catalogProducts = .init([])
         self.catalogBanners = .init([])
+        self.currencyDict = .init([])
+        self.bankList = .init([])
         self.paymentTemplates = .init([])
         self.paymentTemplatesViewSettings = .init(.initial)
         self.serverAgent = serverAgent
@@ -81,13 +89,13 @@ class Model {
     
     //FIXME: remove after refactoring
     static var shared: Model = {
-       
+        
         // server agent
-        #if DEBUG
+#if DEBUG
         let enviroment = ServerAgent.Environment.test
-        #else
+#else
         let enviroment = ServerAgent.Environment.prod
-        #endif
+#endif
         
         let serverAgent = ServerAgent(enviroment: enviroment)
         
@@ -114,15 +122,15 @@ class Model {
             .sink {[unowned self] action in
                 
                 switch action {
-                
-                //MARK: - Auth Actions
+                    
+                    //MARK: - Auth Actions
                     
                 case let payload as ModelAction.Auth.ProductImage.Request:
                     handleAuthProductImageRequest(payload)
                     
                 case let payload as ModelAction.Auth.Register.Request:
                     handleAuthRegisterRequest(payload: payload)
-                
+                    
                 case let payload as ModelAction.Auth.VerificationCode.Confirm.Request:
                     handleAuthVerificationCodeConfirmRequest(payload: payload)
                     
@@ -150,7 +158,7 @@ class Model {
                 case _ as ModelAction.Auth.Logout:
                     handleAuthLogoutRequest()
                     
-                //MARK: - Products Actions
+                    //MARK: - Products Actions
                     
                 case _ as ModelAction.Products.Update.Fast.All:
                     handleProductsUpdateFastAll()
@@ -162,6 +170,23 @@ class Model {
                     handleProductsUpdateTotalAll()
 
                 //MARK: - Payments
+                    
+                    //MARK: - Products Actions
+                    
+                case _ as ModelAction.Products.Update.Fast.All:
+                    handleProductsUpdateFastAll()
+                    
+                case let payload as ModelAction.Products.Update.Fast.Single.Request:
+                    handleProductsUpdateFastSingleRequest(payload)
+                    
+                case _ as ModelAction.Products.Update.Total.All:
+                    handleProductsUpdateTotalAll()
+                    
+                    //MARK: - Statement
+                case let payload as ModelAction.Statement.List.Request:
+                    handleStatementRequest(payload)
+                    
+                    //MARK: - Payments
                     
                 case let payload as ModelAction.Payment.Services.Request:
                     handlePaymentsServicesRequest(payload)
@@ -175,11 +200,11 @@ class Model {
                 case let payload as ModelAction.Payment.Complete.Request:
                     handlePaymentsCompleteRequest(payload)
                     
-                //MARK: - Settings Actions
+                    //MARK: - Settings Actions
                 case _ as ModelAction.Settings.GetClientInfo.Requested:
                     handleGetClientInfoRequest()
                     
-                //MARK: - Templates Actions
+                    //MARK: - Templates Actions
                     
                 case _ as ModelAction.PaymentTemplate.List.Requested:
                     handleTemplatesListRequest()
@@ -191,10 +216,10 @@ class Model {
                     handleTemplatesUpdateRequest(payload)
                     
                 case let payload as ModelAction.PaymentTemplate.Delete.Requested:
-                   handleTemplatesDeleteRequest(payload)
+                    handleTemplatesDeleteRequest(payload)
                     
                     
-                //MARK: - Dictionaries Actions
+                    //MARK: - Dictionaries Actions
                     
                 case let payload as ModelAction.Dictionary.Request:
                     switch payload.type {
@@ -246,9 +271,9 @@ class Model {
                 case _ as ModelAction.Deposits.List.Request:
                     handleDepositsListRequest()
                     
-                
-                //MARK: - Notification Action
-                
+                    
+                    //MARK: - Notification Action
+                    
                 case let payload as ModelAction.Notification.ChangeNotificationStatus.Requested:
                     guard let token = token else {
                         //TODO: handle not authoried server request attempt
@@ -273,7 +298,7 @@ class Model {
                             self.action.send(ModelAction.Notification.ChangeNotificationStatus.Failed(error: error))
                         }
                     }
-
+                    
                 default:
                     break
                 }
@@ -361,6 +386,16 @@ private extension Model {
         if let catalogBanner = localAgent.load(type: [BannerCatalogListData].self) {
             
             self.catalogBanners.value = catalogBanner
+        }
+        
+        if let currency = localAgent.load(type: [CurrencyData].self) {
+            
+            self.currencyDict.value = currency
+        }
+        
+        if let bankList = localAgent.load(type: [BankData].self) {
+            
+            self.bankList.value = bankList
         }
         
         if let products = localAgent.load(type: [ProductData].self) {
