@@ -61,7 +61,12 @@ extension HistoryViewComponent {
                     }
                     
                     self.isLoading = false
-                    self.listState = .list(self.dateOperations)
+                    if self.dateOperations.count > 0 {
+                        
+                        self.listState = .list(self.dateOperations)
+                    } else {
+                        self.listState = .error(.init(button: .init(action: { [self]_ in model.action.send(ModelAction.Statement.List.Request(productId: productId, productType: .card))})))
+                    }
                     
                 }.store(in: &bindings)
         }

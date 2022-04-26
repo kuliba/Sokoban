@@ -6,11 +6,14 @@
 //
 
 import SwiftUI
+import Combine
 
 extension ProfileButtonsSectionView {
     
     class ViewModel: Identifiable, Hashable, ObservableObject {
         
+        let action: PassthroughSubject<Action, Never> = .init()
+
         let id = UUID()
         var buttons: [[ProfileButtonView.ViewModel]]
         let kind: ProductType
@@ -22,7 +25,7 @@ extension ProfileButtonsSectionView {
             switch kind {
             case .card:
                 
-                self.buttons = [[.init(title: .topUp, image: Image.ic24Plus), .init(title: .transfer, image: Image.ic24ArrowUpRight)],[.init(title: .requisites, image: Image.ic24File), .init(title: .block, image: Image.ic24Lock, state: false)]]
+                self.buttons = [[.init(title: .topUp, image: Image.ic24Plus), .init(title: .transfer, image: Image.ic24ArrowUpRight)],[.init(title: .requisites, image: Image.ic24File), .init(title: .block, image: Image.ic24Lock, state: true)]]
 
             case .account:
                 
@@ -39,6 +42,10 @@ extension ProfileButtonsSectionView {
             }
         }
     }
+}
+
+extension ProfileButtonsSectionView.ViewModel {
+    
 }
 
 extension ProfileButtonsSectionView.ViewModel {

@@ -11,8 +11,6 @@ import Combine
 
 class ProfileViewHostingViewController: UIHostingController<ProfileView> {
 
-    let action: PassthroughSubject<Action, Never> = .init()
-
     private let viewModel: ProfileViewModel
     private var bindings = Set<AnyCancellable>()
     private let model: Model
@@ -36,17 +34,17 @@ class ProfileViewHostingViewController: UIHostingController<ProfileView> {
 private extension ProfileViewHostingViewController {
     
     func bind() {
-        action
+        viewModel.action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 switch action {
+                    
+                case _ as ProductProfileViewModelAction.Dismiss:
+                    self.dismiss(animated: true)
                 case _ as ProductProfileViewModelAction.CustomName:
-                    alert = .init(title: "Активировать карту?", message: "После активации карта будет готова к использованию", primary: .init(type: .default, title: "Отмена", action: { [weak self] in
-                        self?.alert = nil
-                    }), secondary: .init(type: .default, title: "Ok", action: { [weak self] in
-                        self?.model.action.send(ModelAction.Card.Unblock.Request(cardId: 1))
-                        self?.alert = nil
-                    }))
+                    let viewController = AccountDetailsViewController()
+                    viewController.modalPresentationStyle = .custom
+                    self.present(viewController, animated: true, completion: nil)
                 default:
                     break
                 }

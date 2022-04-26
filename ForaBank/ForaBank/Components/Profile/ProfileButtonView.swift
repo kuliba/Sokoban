@@ -6,25 +6,28 @@
 //
 
 import SwiftUI
+import Combine
 
 extension ProfileButtonView {
     
     class ViewModel: Identifiable, Hashable, ObservableObject {
             
+        let action: PassthroughSubject<Action, Never> = .init()
+
         let id = UUID()
-        let title: Title
+        let title: TitleType
         let image: Image
         let state: Bool?
-        let action: () -> Void = {}
 
-        internal init(title: Title, image: Image, state: Bool? = true) {
+        internal init(title: TitleType, image: Image, state: Bool? = true) {
             
             self.title = title
             self.image = image
             self.state = state
+            self.action.send(ProductProfileViewModelAction.CustomName())
         }
         
-        enum Title: String {
+        enum TitleType: String {
             
             case topUp = "Пополнить"
             case requisites = "Реквизиты и выписка"
@@ -61,7 +64,8 @@ struct ProfileButtonView: View {
          
             Button {
                 
-                viewModel.action()
+                viewModel.action.send(ProductProfileViewModelAction.Dismiss())
+                
             } label: {
                 
                 HStack(spacing: 12) {
@@ -83,6 +87,8 @@ struct ProfileButtonView: View {
             
             Button {
                 
+                viewModel.action.send(ProductProfileViewModelAction.CustomName())
+
             } label: {
                 
                 HStack(spacing: 12) {
