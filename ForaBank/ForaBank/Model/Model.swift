@@ -204,7 +204,6 @@ class Model {
                 case let payload as ModelAction.PaymentTemplate.Delete.Requested:
                    handleTemplatesDeleteRequest(payload)
                     
-                    
                 //MARK: - Dictionaries Actions
                     
                 case let payload as ModelAction.Dictionary.Request:
@@ -257,7 +256,6 @@ class Model {
                 case _ as ModelAction.Deposits.List.Request:
                     handleDepositsListRequest()
                     
-                
                 //MARK: - Notification Action
                 
                 case let payload as ModelAction.Notification.ChangeNotificationStatus.Requested:

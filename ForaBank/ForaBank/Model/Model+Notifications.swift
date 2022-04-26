@@ -7,28 +7,24 @@
 
 import Foundation
 
+//MARK: - Handlers
+
 extension Model {
     
     static func dictinaryNotificationReduce(current: [NotificationData], update: [NotificationData]) -> [NotificationData] {
-        
-        if current == update {
-            
-            return current
-        } else {
             
             let resultSet = Set(current).union(update)
             return Array(resultSet).sorted(by: { $0.date < $1.date})
-        }
-        
     }
     
     func handleNotificationsFetchNewRequest() {
         
         guard let token = token else {
+            
             handledUnauthorizedCommandAttempt()
+            
             return
         }
-        
         
         let command = ServerCommands.NotificationController.GetNotifications(token: token, offset: 0, limit: 100, types: [.push, .sms, .email], states: [.new, .inProgress, .sent, .error, .delivered, .read])
         
@@ -43,7 +39,9 @@ extension Model {
                 case .ok:
                     
                     guard let notifications = response.data else {
+                        
                         self.handleServerCommandEmptyData(command: command)
+                        
                         return }
                     
                     self.notifications.value = Self.dictinaryNotificationReduce(current: self.notifications.value, update: notifications)
@@ -60,7 +58,10 @@ extension Model {
                     self.action.send(ModelAction.Notification.Fetch.New.Response(result: .success(notifications)))
                     
                 default:
+                    
                     //TODO: handle not ok server status
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    
                     return
                 }
                 
@@ -73,10 +74,11 @@ extension Model {
     func handleNotificationsFetchNextRequest() {
         
         guard let token = token else {
+            
             handledUnauthorizedCommandAttempt()
+            
             return
         }
-        
         
         let offset = notifications.value.count
         
@@ -93,7 +95,9 @@ extension Model {
                 case .ok:
                     
                     guard let notifications = response.data else {
+                        
                         self.handleServerCommandEmptyData(command: command)
+                        
                         return }
                     
                     self.notifications.value = Self.dictinaryNotificationReduce(current: self.notifications.value, update: notifications)
@@ -110,7 +114,10 @@ extension Model {
                     self.action.send(ModelAction.Notification.Fetch.Next.Response(result: .success(notifications)))
                     
                 default:
+                    
                     //TODO: handle not ok server status
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    
                     return
                 }
                 
@@ -121,6 +128,7 @@ extension Model {
     }
 }
 
+//MARK: - Action
 
 extension ModelAction {
     

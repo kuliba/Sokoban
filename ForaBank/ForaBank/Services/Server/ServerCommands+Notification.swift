@@ -92,7 +92,6 @@ extension ServerCommands {
                     return updated
                 }).dropLast()
                 
-                
                 let statesList = states.reduce("", { partialResult, state in
                     var updated = partialResult
                     updated += "\(state.rawValue),"
