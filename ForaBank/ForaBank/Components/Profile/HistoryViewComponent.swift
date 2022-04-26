@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import Shimmer
 
 extension HistoryViewComponent {
     
@@ -55,7 +56,7 @@ extension HistoryViewComponent {
                     guard let statement = operations.productStatement[productId] else { return }
                     self.dateOperations = separationDate(operations: statement)
                     if sumDeifferentGroup(operations: statement).count > 0 {
-
+                        
                         self.spendingViewModel = .init(value: sumDeifferentGroup(operations: statement))
                     }
                     
@@ -115,7 +116,7 @@ extension HistoryViewComponent {
                 let amount: String
                 let type: OperationType
                 
-                internal init(title: String, image: Image, subtitle: String, amount: String, type: OperationType) {
+                internal init(title: String, image: Image?, subtitle: String, amount: String, type: OperationType) {
                     
                     self.title = title
                     self.image = image
@@ -141,9 +142,9 @@ extension HistoryViewComponent {
                     }
                     
                     self.subtitle = productStatementData.groupName
-                    self.amount = productStatementData.amount.currencyFormatter()
-                    
                     self.type = productStatementData.operationType
+                    
+                    self.amount = productStatementData.amountFormattedtWithCurrency
                 }
             }
         }
@@ -238,12 +239,7 @@ struct HistoryViewComponent: View {
             
             switch viewModel.listState {
             case .empty(let emptyViewModel):
-                
-                Spacer()
-                
                 EmptyOperationsView(viewModel: emptyViewModel)
-                
-                Spacer()
                 
             case .list(let operationsViewModel):
                 
@@ -297,16 +293,60 @@ struct HistoryViewComponent: View {
                     }
                 }
                 .padding(.bottom, 32)
+                
             case .error(let errorViewModel):
                 ErrorRequestView(viewModel: errorViewModel)
+                
             case .loading:
-                Rectangle()
-                    .fill(Color.purple)
-                    .frame(width: 200, height: 200)
-                    .animation(Animation.default.repeatCount(5).speed(6))
+                LoadingPlaceholder()
             }
         }
         .padding(.horizontal, 20)
+    }
+    
+    struct LoadingPlaceholder: View {
+        
+        var body: some View {
+            
+            VStack(alignment: .leading, spacing: 20){
+                
+                ForEach(0..<3) { _ in
+                    
+                    Color.mainColorsGrayMedium
+                        .frame(width: 189, height: 20)
+                        .clipShape(RoundedRectangle(cornerRadius: 2))
+                        .shimmering(active: true, bounce: true)
+                        .frame(alignment: .leading)
+                    
+                    HStack(spacing: 20) {
+                        
+                        Color.mainColorsGrayMedium
+                            .frame(width: 40, height: 40)
+                            .clipShape(RoundedRectangle(cornerRadius: 90))
+                            .shimmering(active: true, bounce: true)
+                        
+                        VStack(spacing: 8) {
+                            
+                            Color.mainColorsGrayMedium
+                                .frame(width: 189, height: 20)
+                                .clipShape(RoundedRectangle(cornerRadius: 2))
+                                .shimmering(active: true, bounce: true)
+                            
+                            Color.mainColorsGrayMedium
+                                .frame(width: 189, height: 12)
+                                .clipShape(RoundedRectangle(cornerRadius: 2))
+                                .shimmering(active: true, bounce: true)
+                        }
+                        
+                        Color.mainColorsGrayMedium
+                            .frame(height: 20)
+                            .clipShape(RoundedRectangle(cornerRadius: 2))
+                            .shimmering(active: true, bounce: true)
+                            .frame(alignment: .top)
+                    }
+                }
+            }
+        }
     }
     
     struct EmptyOperationsView: View {
@@ -333,7 +373,7 @@ struct HistoryViewComponent: View {
     struct ErrorRequestView: View {
         
         var viewModel: ViewModel.OperationsErrorViewModel
-
+        
         var body: some View {
             
             VStack(spacing: 24) {
@@ -344,17 +384,16 @@ struct HistoryViewComponent: View {
                     .background(Color.mainColorsGrayLightest)
                     .cornerRadius(90)
                 VStack(spacing: 13) {
-                Text(viewModel.errorTitle)
-                    .font(Font.system(size: 20, weight: .semibold))
-                    .foregroundColor(.mainColorsBlackMedium)
-                
-                Text(viewModel.subTitle)
-                    .font(Font.system(size: 16, weight: .light))
-                    .foregroundColor(.gray)
+                    Text(viewModel.errorTitle)
+                        .font(Font.system(size: 20, weight: .semibold))
+                        .foregroundColor(.mainColorsBlackMedium)
+                    
+                    Text(viewModel.subTitle)
+                        .font(Font.system(size: 16, weight: .light))
+                        .foregroundColor(.gray)
                 }
                 Button {
                     viewModel.button.action(ModelAction.Statement.List.Request.init(productId: 10000122929, productType: .card))
-                    print("viewModel.button.action(ModelAction.Statement.List.Request.init(productId: 123, productType: .card))")
                 } label: {
                     Text(viewModel.button.title)
                         .foregroundColor(.mainColorsBlackMedium)

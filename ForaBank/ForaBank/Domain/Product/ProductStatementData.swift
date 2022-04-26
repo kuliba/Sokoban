@@ -10,7 +10,6 @@ import Foundation
 struct ProductStatementDataCacheble: Cachable {
     
     var productStatement: [Int: [ProductStatementData]]
-    
 }
 
 struct ProductStatementData: Codable, Equatable, Cachable {
@@ -156,5 +155,15 @@ extension ProductStatementData {
         try container.encodeIfPresent(terminalCode, forKey: .terminalCode)
         try container.encode(Int(tranDate.timeIntervalSince1970) * 1000, forKey: .tranDate)
         try container.encode(type, forKey: .type)
+    }
+}
+
+extension ProductStatementData {
+    
+    var amountFormattedtWithCurrency: String {
+        
+        let currency = Model.shared.currencyDict.value.first(where: {$0.codeNumeric == currencyCodeNumeric})
+        let currencyCode = currency?.code ?? "RUB"
+        return self.amount.currencyFormatter(symbol: currencyCode)
     }
 }
