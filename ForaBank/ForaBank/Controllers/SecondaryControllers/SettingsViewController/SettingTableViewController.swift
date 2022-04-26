@@ -74,29 +74,19 @@ class SettingTableViewController: UITableViewController {
         tableView.tableHeaderView = tableHeaderView
         emailLabel.text = ""
         loadConfig()
-       
+        
         tableView.isUserInteractionEnabled = true
         
-        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-            let reason = "Identify yourself!"
-            
-            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) {
-                [weak self] success, authenticationError in
-                
-                DispatchQueue.main.async {
-                    if success {
-                        self?.faceId.isOn = true
-                    } else {
-                        self?.faceId.isOn = false
-                    }
-                }
-            }
-        } else {
-            DispatchQueue.main.async {
-             self.faceId.isOn = false
-            }
-        }
+        let context = context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error)
         
+        DispatchQueue.main.async {
+            if context {
+                self.faceId.isOn = true
+            } else {
+                self.faceId.isOn = false
+            }
+            
+        }
     }
 
     private func loadConfig() {
