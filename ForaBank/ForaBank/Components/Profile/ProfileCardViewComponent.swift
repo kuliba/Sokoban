@@ -43,7 +43,7 @@ extension ProfileCardViewComponent {
     
             if let balance = productData?.viewBalance, let fontColor = productData?.fontDesignColor.color, let name = productData?.viewName, let backgroundColor = productData?.background.first?.color {
                 
-                self.product = .init(header: .init(logo: nil, number: productData?.viewNumber, period: nil), name: name, footer: .init(balance: balance, paymentSystem: nil), statusAction: .init(status: .activation, style: .profile, action: {}), appearance: .init(textColor: fontColor, background: .init(color: backgroundColor, image: nil), size: .normal), isUpdating: false, productType: .init(rawValue: productData?.productType.rawValue ?? "card") ?? .card, action: {})
+                self.product = .init(header: .init(logo: nil, number: productData?.viewNumber, period: nil), name: name, footer:    .init(balance: balance, paymentSystem: nil), statusAction: .init(status: .activation, style: .profile, action: {}), appearance: .init(textColor: fontColor, background: .init(color: backgroundColor, image: nil), size: .normal), isUpdating: false, productType: .init(rawValue: productData?.productType.rawValue ?? "card") ?? .card, action: {})
                 
             } else {
                 
@@ -137,27 +137,21 @@ struct ProfileCardViewComponent: View {
         
         VStack {
             
-            ZStack(alignment: .center) {
+            ZStack(alignment: .top) {
                 
-                if let background = viewModel.product.appearance.background.image {
-                    
-                    background
-                } else {
-                    
-                    viewModel.product.appearance.background.color.contrast(0.8)
-                        .frame(height: 155)
-                }
-                
-                GeometryReader { geometry in
-                    
-                    ZStack {
-
-                        viewModel.product.appearance.background.color.contrast(0.8)
-                            .clipped()
-                    }
-                }.frame(height: 150)
-                
-                VStack {
+//                GeometryReader { geometry in
+//
+//                    ZStack {
+//
+//                        viewModel.product.appearance.background.color.contrast(0.8)
+//                            .clipped()
+//                    }
+//                    .frame(height: 1200, alignment: .top)
+////                    .offset(y: -(UIScreen.main.bounds.height-90))
+//                }
+                viewModel.product.appearance.background.color.contrast(0.8)
+                    .frame(height: 155, alignment: .top)
+                VStack(spacing: 0) {
                     
                     if #available(iOS 14.0, *) {
                         
@@ -189,7 +183,6 @@ struct ProfileCardViewComponent: View {
                         }
                         .tabViewStyle(.page(indexDisplayMode: .never))
                         .frame(height: 200, alignment: .top)
-                        .padding(.vertical, 20)
                         
                     } else {
                         // Fallback on earlier versions
@@ -223,18 +216,18 @@ extension ProfileCardViewComponent {
                             
                             backgroundImage
                                 .resizable()
-                                .frame(width: 32, height: 24, alignment: .center)
+                                .frame(width: 32, height: 22, alignment: .center)
                                 .cornerRadius(3)
                             
                         } else {
                             
                             viewModel.product.appearance.background.color
-                                .frame(width: 32, height: 24, alignment: .center)
+                                .frame(width: 32, height: 22, alignment: .center)
                                 .cornerRadius(3)
                         }
                     }
                     .frame(width: 32, height: 32, alignment: .center)
-                    .padding(.all, 14)
+                    .padding(.all, 12)
                     .background(Color.black.opacity(0.2))
                     .cornerRadius(90)
                     
@@ -246,20 +239,20 @@ extension ProfileCardViewComponent {
                             
                             backgroundImage
                                 .resizable()
-                                .frame(width: 32, height: 24, alignment: .center)
+                                .frame(width: 32, height: 22, alignment: .center)
                                 .cornerRadius(3).opacity(0.3)
                             
                             
                         } else {
                             
                             viewModel.product.appearance.background.color
-                                .frame(width: 32, height: 24, alignment: .center)
+                                .frame(width: 32, height: 22, alignment: .center)
                                 .cornerRadius(3)
                                 .opacity(0.3)
                             
                         }
                     }
-                    .padding(.all, 14)
+                    .padding(.all, 12)
                 }
             }
         }

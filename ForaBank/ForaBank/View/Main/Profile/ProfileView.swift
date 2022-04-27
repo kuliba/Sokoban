@@ -24,26 +24,30 @@ struct ProfileView: View {
                         ZStack {
                             
                             viewModel.productViewModel.product.appearance.background.color.contrast(0.8)
-                                .frame(width: geometry.size.width, height: 200)
+                                .frame(width: geometry.size.width, height: 150)
                                 .clipped()
                         }
                     }
                     
-                    VStack(spacing: 32) {
+                    VStack(spacing: 0) {
                         
                         ProfileCardViewComponent(viewModel: viewModel.productViewModel)
+                            .padding(.top, 20)
                         
-                        ProfileButtonsSectionView(viewModel: .init(kind: viewModel.productViewModel.product.productType))
-                        
-                        if let detailAccount = viewModel.detailAccountViewModel {
+                        VStack(spacing: 32) {
                             
-                            DetailAccountViewComponent(viewModel: detailAccount)
-                                .padding(.horizontal, 20)
-                        }
-                        
-                        if let historyViewModel = viewModel.historyViewModel {
+                            ProfileButtonsSectionView(viewModel: .init(kind: viewModel.productViewModel.product.productType))
                             
-                            HistoryViewComponent(viewModel: historyViewModel)
+                            if let detailAccount = viewModel.detailAccountViewModel {
+                                
+                                DetailAccountViewComponent(viewModel: detailAccount)
+                                    .padding(.horizontal, 20)
+                            }
+                            
+                            if let historyViewModel = viewModel.historyViewModel {
+                                
+                                HistoryViewComponent(viewModel: historyViewModel)
+                            }
                         }
                     }
                 }
@@ -58,10 +62,12 @@ struct ProfileView: View {
                     .edgesIgnoringSafeArea(.all)
                     .frame(height: 50)
                 HeaderView(viewModel: viewModel)
-                    .background( viewModel.productViewModel.product.appearance.background.color.contrast(0.8))
             }
         }
         .navigationBarHidden(true)
+        .alert(item: $viewModel.alert, content: { alertViewModel in
+            Alert(with: alertViewModel)
+        })
     }
     
     struct HeaderView: View {
@@ -73,7 +79,7 @@ struct ProfileView: View {
                 
                 Button {
                     
-                        viewModel.dismissAction()
+                    viewModel.dismissAction()
                     
                 } label: {
                     
@@ -102,7 +108,7 @@ struct ProfileView: View {
                     
                     Button {
                         
-                        viewModel.customNameAction()
+                        viewModel.action.send(ProductProfileViewModelAction.CustomName())
                         
                     } label: {
                         
@@ -122,6 +128,8 @@ struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
         
         ProfileView(viewModel: .sample)
+        
+        ProfileView(viewModel: .sampleCard)
     }
 }
 
@@ -129,5 +137,7 @@ struct ProfileView_Previews: PreviewProvider {
 extension ProfileViewModel {
     
     static let sample = ProfileViewModel(productViewModel: .init(products: [.notActivateProfile, .accountProfile, .classicProfile, .depositProfile], product: .depositProfile, model: .emptyMock), model: .emptyMock)
+    
+    static let sampleCard = ProfileViewModel(productViewModel: .init(products: [.notActivateProfile, .accountProfile, .classicProfile, .blockedProfile, .depositProfile], product: .blockedProfile, model: .emptyMock), model: .emptyMock)
 }
 

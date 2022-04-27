@@ -29,13 +29,15 @@ extension ProfileButtonView {
         
         enum TitleType: String {
             
-            case topUp = "Пополнить"
+            case pay = "Пополнить"
             case requisites = "Реквизиты и выписка"
             case transfer = "Перевести"
             case control = "Управление"
-            case block = "Заблокировать"
+            case block = "Блокировать"
             case unblock = "Разблокировать"
             case repay = "Погасить досрочно"
+            case details = "Детали"
+            case close = "Закрыть"
         }
     }
 }
@@ -72,12 +74,13 @@ struct ProfileButtonView: View {
                     
                     viewModel.image
                         .foregroundColor(.iconBlack)
+                        .frame(width: 24, height: 24)
                     
                     Text(viewModel.title.rawValue)
                         .font(.system(size: 14))
                         .foregroundColor(.buttonBlack)
                 }
-                .frame(width: 150 ,height: 48, alignment: .leading)
+                .frame(width: 164, height: 48, alignment: .leading)
                 .padding(.leading, 12)
             }
             .background(Color.mainColorsGrayLightest)
@@ -86,8 +89,7 @@ struct ProfileButtonView: View {
         } else {
             
             Button {
-                
-                viewModel.action.send(ProductProfileViewModelAction.CustomName())
+                viewModel.action.send(ProductProfileViewModelAction.BlockProduct(productId: 1))
 
             } label: {
                 
@@ -95,12 +97,13 @@ struct ProfileButtonView: View {
                     
                     viewModel.image
                         .foregroundColor(.iconBlack)
+                        .frame(width: 24, height: 24)
                     
                     Text(viewModel.title.rawValue)
                         .font(.system(size: 14))
                         .foregroundColor(.buttonBlack)
                 }
-                .frame(width: 150 ,height: 48, alignment: .leading)
+                .frame(width: 164, height: 48, alignment: .leading)
                 .padding(.leading, 12)
             }
             .background(Color.mainColorsGrayLightest)
@@ -133,7 +136,7 @@ struct ProfileButtonView_Previews: PreviewProvider {
 
 extension ProfileButtonView.ViewModel {
     
-    static let ussualyButton = ProfileButtonView.ViewModel(title: .topUp, image: Image.ic24Plus, state: true)
+    static let ussualyButton = ProfileButtonView.ViewModel(title: .pay, image: Image.ic24Plus, state: true)
     
     static let disableButton = ProfileButtonView.ViewModel(title: .block, image: Image.ic24Lock, state: false)
     

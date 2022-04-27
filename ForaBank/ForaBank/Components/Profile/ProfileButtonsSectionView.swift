@@ -25,19 +25,19 @@ extension ProfileButtonsSectionView {
             switch kind {
             case .card:
                 
-                self.buttons = [[.init(title: .topUp, image: Image.ic24Plus), .init(title: .transfer, image: Image.ic24ArrowUpRight)],[.init(title: .requisites, image: Image.ic24File), .init(title: .block, image: Image.ic24Lock, state: true)]]
+                self.buttons = [[.init(title: .pay, image: Image.ic24Plus), .init(title: .transfer, image: Image.ic24ArrowUpRight)],[.init(title: .requisites, image: Image.ic24File), .init(title: .block, image: Image.ic24Lock, state: true)]]
 
             case .account:
                 
-                self.buttons = [[.init(title: .topUp, image: Image.ic24Plus), .init(title: .transfer, image: Image.ic24ArrowUpRight)],[.init(title: .requisites, image: Image.ic24File), .init(title: .block, image: Image.ic24Lock, state: false)]]
+                self.buttons = [[.init(title: .pay, image: Image.ic24Plus), .init(title: .transfer, image: Image.ic24ArrowUpRight)],[.init(title: .requisites, image: Image.ic24File), .init(title: .close, image: Image.ic24Lock, state: false)]]
 
             case .deposit:
                 
-                self.buttons = [[.init(title: .topUp, image: Image.ic24Plus), .init(title: .transfer, image: Image.ic24ArrowUpRight)],[.init(title: .requisites, image: Image.ic24File), .init(title: .block, image: Image.ic24Lock, state: false)]]
+                self.buttons = [[.init(title: .pay, image: Image.ic24Plus), .init(title: .transfer, image: Image.ic24ArrowUpRight)],[.init(title: .details, image: Image.ic24File), .init(title: .control, image: Image.ic24Server, state: false)]]
 
             case .loan:
                 
-                self.buttons = [[.init(title: .topUp, image: Image.ic24Plus), .init(title: .transfer, image: Image.ic24ArrowUpRight)],[.init(title: .requisites, image: Image.ic24File), .init(title: .block, image: Image.ic24Lock, state: false)]]
+                self.buttons = [[.init(title: .pay, image: Image.ic24Plus), .init(title: .transfer, image: Image.ic24ArrowUpRight)],[.init(title: .requisites, image: Image.ic24File), .init(title: .block, image: Image.ic24Lock, state: false)]]
 
             }
         }
