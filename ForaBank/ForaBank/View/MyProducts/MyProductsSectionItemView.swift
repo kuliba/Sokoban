@@ -53,11 +53,18 @@ struct MyProductsSectionItemView: View {
                     VStack {
                         
                         HStack {
+
+                            if let paymentSystemIcon = viewModel.paymentSystemIcon {
+
+                                paymentSystemIcon
+                                    .renderingMode(.original)
+
+                            } else {
+
+                                Divider()
+                            }
                             
-                            viewModel.paymentSystemIcon
-                                .renderingMode(.original)
-                            
-                            Text(viewModel.cardType.name)
+                            Text(viewModel.title)
                                 .font(.textBodyMM14200())
                                 .foregroundColor(.textSecondary)
                             
@@ -71,8 +78,16 @@ struct MyProductsSectionItemView: View {
                         .padding(.top, 4)
                         
                         HStack {
-                            
+
+                            Text(viewModel.numberCard)
+                                .font(.textBodySR12160())
+                                .foregroundColor(.textPlaceholder)
+
                             Text(viewModel.subtitle)
+                                .font(.textBodySR12160())
+                                .foregroundColor(.textPlaceholder)
+
+                            Text(viewModel.dateLong)
                                 .font(.textBodySR12160())
                                 .foregroundColor(.textPlaceholder)
                             
@@ -86,20 +101,20 @@ struct MyProductsSectionItemView: View {
             }
             .background(Color.white)
             .offset(x: contentOffset)
-            .modifier(SwipeSidesModifier(leftAction: {
-                
-                viewModel.action.send(MyProductsSectionItemAction.SwipeDirection.Left())
-                
-            }, rightAction: {
-                
-                viewModel.action.send(MyProductsSectionItemAction.SwipeDirection.Right())
-            }))
             .onTapGesture {
                 
                 viewModel.action.send(MyProductsSectionItemAction.Tap())
             }
         }
         .frame(height: 56)
+        .modifier(SwipeSidesModifier(leftAction: {
+
+            viewModel.action.send(MyProductsSectionItemAction.SwipeDirection.Left())
+
+        }, rightAction: {
+
+            viewModel.action.send(MyProductsSectionItemAction.SwipeDirection.Right())
+        }))
     }
 }
 
@@ -127,7 +142,6 @@ extension MyProductsSectionItemView {
                             .foregroundColor(.white)
                             .font(.textBodySM12160())
                     }
-                    
                 }
                 .frame(width: 120, height: 56)
             }
@@ -140,7 +154,7 @@ struct MyProductsSectionItemView_Previews: PreviewProvider {
         
         Group {
             
-            MyProductsSectionItemView(viewModel: .sample1)
+            MyProductsSectionItemView(viewModel: .sample4)
                 .previewLayout(.sizeThatFits)
             
             MyProductsSectionItemView(viewModel: .sample2)

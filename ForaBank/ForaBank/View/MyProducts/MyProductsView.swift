@@ -2,7 +2,7 @@
 //  MyProductsView.swift
 //  ForaBank
 //
-//  Created by Андрей Лятовец on 08.03.2022.
+//  Created by Pavel Samsonov on 10.04.2022.
 //
 
 import Foundation
@@ -36,8 +36,8 @@ struct MyProductsView: View {
                                 displayMode: .inline)
             .navigationBarBackButtonHidden(true)
             .navigationBarItems(
-                leading: NavigationItemView(viewModel: viewModel.navigationBar.backButton),
-                trailing: NavigationItemView(viewModel: viewModel.navigationBar.addButton)
+                leading: BackButtonView(viewModel: viewModel),
+                trailing: AddButtonView(viewModel: viewModel)
             )
             
             if let viewModel = viewModel.currencyMenu {
@@ -57,16 +57,39 @@ struct MyProductsView: View {
 }
 
 extension MyProductsView {
-    
-    struct NavigationItemView: View {
-        
-        let viewModel: MyProductsViewModel.NavigationButtonViewModel
-        
+
+    struct BackButtonView: View {
+
+        let viewModel: MyProductsViewModel
+
         var body: some View {
-            
-            Button(action: viewModel.action) {
-                
-                viewModel.icon
+
+            Button {
+
+                viewModel.action.send(MyProductsNavigationItemAction.Back())
+
+            } label: {
+
+                viewModel.navigationBar.backButton.icon
+                    .foregroundColor(.mainColorsBlack)
+            }
+        }
+    }
+
+    struct AddButtonView: View {
+
+        let viewModel: MyProductsViewModel
+
+        var body: some View {
+
+            Button {
+
+                viewModel.action.send(MyProductsNavigationItemAction.Add())
+
+            } label: {
+
+                viewModel.navigationBar.addButton.icon
+                    .foregroundColor(.mainColorsGray)
             }
         }
     }

@@ -10,10 +10,14 @@ import UIKit
 import SwiftUI
 
 class MyProductsViewModel: ObservableObject {
-    
+
+    let action: PassthroughSubject<Action, Never> = .init()
+
     @Published var currencyMenu: MyProductsСurrencyMenuViewModel?
+
+    private let model: Model
     
-    let sections: [MyProductsSectionViewModel]
+    var sections: [MyProductsSectionViewModel]
     let navigationBar: NavigationViewModel
     let totalMoney: MyProductsMoneyViewModel
     
@@ -22,15 +26,105 @@ class MyProductsViewModel: ObservableObject {
     init(navigationBar: NavigationViewModel,
          totalMoney: MyProductsMoneyViewModel,
          sections: [MyProductsSectionViewModel]) {
-        
+
+        self.model = .emptyMock
         self.navigationBar = navigationBar
         self.totalMoney = totalMoney
         self.sections = sections
         
-        bind(sections: sections)
+        bind()
     }
 
-    private func bind(sections: [MyProductsSectionViewModel]) {
+    init(_ model: Model) {
+
+        self.model = model
+        sections = []
+        navigationBar = .init()
+        totalMoney = .init()
+
+        bind()
+    }
+
+    private func bind() {
+
+        model.products
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] data in
+
+                var sections: [MyProductsSectionViewModel] = []
+
+                data.forEach { key, value in
+
+                    switch key {
+                    case .card:
+
+                        let items = sectionItems(value: value)
+
+                        sections.append(MyProductsSectionViewModel(
+                            title: key.pluralName,
+                            items: items,
+                            isCollapsed: false,
+                            isEnabled: true))
+
+                    case .account:
+
+                        let items = sectionItems(value: value)
+
+                        sections.append(MyProductsSectionViewModel(
+                            title: key.pluralName,
+                            items: items,
+                            isCollapsed: false,
+                            isEnabled: true))
+
+                    case .deposit:
+
+                        let items = sectionItems(value: value)
+
+                        sections.append(MyProductsSectionViewModel(
+                            title: key.pluralName,
+                            items: items,
+                            isCollapsed: false,
+                            isEnabled: true))
+
+                    case .loan:
+
+                        let items = sectionItems(value: value)
+
+                        sections.append(MyProductsSectionViewModel(
+                            title: key.pluralName,
+                            items: items,
+                            isCollapsed: false,
+                            isEnabled: true))
+                    }
+                }
+
+                guard sections.count > 0 else {
+                    return
+                }
+                
+                let balance = sections
+                    .flatMap { $0.items }
+                    .reduce(into: 0.0) { result, item in
+
+                        result += item.balanceRub
+                    }
+
+                totalMoney.balance = "\(balance)"
+                self.sections = sections
+
+            }.store(in: &bindings)
+
+        action
+            .receive(on: DispatchQueue.main)
+            .sink { action in
+
+                switch action {
+                case _ as MyProductsNavigationItemAction.Back: break
+                case _ as MyProductsNavigationItemAction.Add: break
+                default:
+                    break
+                }
+            }.store(in: &bindings)
 
         totalMoney.currencyButton.$isSelected
             .receive(on: DispatchQueue.main)
@@ -175,28 +269,98 @@ extension MyProductsViewModel {
 
         totalMoney.currencyButton.isSelected.toggle()
     }
+
+    private func sectionItems(value: [ProductData]) -> [MyProductsSectionItemViewModel] {
+
+        return value.compactMap { viewModel(data: $0) }
+    }
+
+    private func viewModel(data: ProductData) -> MyProductsSectionItemViewModel? {
+
+        guard
+            let icon = data.smallDesign.image,
+            let balance = data.balance,
+            let balanceRub = data.balanceRub,
+            let subtitle = data.additionalField else {
+                return nil
+            }
+
+        let numberCard = data.numberMasked ?? ""
+
+        var dateLong: String = ""
+        var paymentSystemIcon: Image? = nil
+
+        if let cardData = data as? ProductCardData {
+            paymentSystemIcon = cardData.paymentSystemImage?.image
+        }
+
+        if let loanData = data as? ProductLoanData {
+            dateLong = dateFormatter(date: loanData.dateLong)
+        }
+
+        return MyProductsSectionItemViewModel(
+            icon: icon,
+            title: data.mainField,
+            subtitle: subtitle,
+            numberCard: numberCard.count > 0 ? "•  \(numberCard.suffix(4))  •" : numberCard,
+            balance: "\(balance)",
+            balanceRub: balanceRub,
+            dateLong: "•  \(dateLong)",
+            paymentSystemIcon: paymentSystemIcon)
+    }
+
+    private func dateFormatter(date: Date) -> String {
+
+        let dateFormatter = DateFormatter()
+
+        dateFormatter.timeStyle = DateFormatter.Style.none
+        dateFormatter.dateStyle = DateFormatter.Style.long
+
+        dateFormatter.dateFormat =  "dd.MM.yy"
+        dateFormatter.timeZone = .current
+        dateFormatter.locale = Locale(identifier: "ru_RU")
+
+        let stringDate = dateFormatter.string(from: date)
+
+        return stringDate
+    }
 }
 
 extension MyProductsViewModel {
     
     struct NavigationViewModel {
-        
+
         let title: String
         let backButton: NavigationButtonViewModel
         let addButton: NavigationButtonViewModel
+
+        init() {
+            
+            title = "Мои продукты"
+            backButton = .init(icon: .ic24ChevronLeft)
+            addButton = .init(icon: .ic24Plus)
+        }
+
+        init(title: String,
+             backButton: NavigationButtonViewModel,
+             addButton: NavigationButtonViewModel) {
+
+            self.title = title
+            self.backButton = backButton
+            self.addButton = addButton
+        }
     }
     
     struct NavigationButtonViewModel {
         
         let icon: Image
-        let action: () -> Void
-        
-        init(icon: Image, action: @escaping () -> Void) {
-            
-            self.icon = icon
-            self.action = action
-        }
     }
+}
+
+enum MyProductsNavigationItemAction {
+
+    struct Back: Action {}
+    struct Add: Action {}
 }
 
 extension MyProductsViewModel {
@@ -204,8 +368,8 @@ extension MyProductsViewModel {
     static let sample = MyProductsViewModel(
         navigationBar: NavigationViewModel(
             title: "Мои продукты",
-            backButton: NavigationButtonViewModel(icon: .ic24ChevronLeft, action: {}),
-            addButton: NavigationButtonViewModel(icon: .ic24Plus, action: {})),
+            backButton: NavigationButtonViewModel(icon: .ic24ChevronLeft),
+            addButton: NavigationButtonViewModel(icon: .ic24Plus)),
         totalMoney: .sample,
         sections: [.sample1, .sample2, .sample3, .sample4, .sample5, .sample6]
     )
