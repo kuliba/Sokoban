@@ -318,7 +318,6 @@ struct HistoryViewComponent: View {
                             .padding(.vertical, 8)
                             .onTapGesture {
                                 
-                                print("123")
                             }
                         }
                     }
