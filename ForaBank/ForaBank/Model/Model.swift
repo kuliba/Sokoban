@@ -31,6 +31,9 @@ class Model {
     //TODO: store in cache 
     let paymentTemplatesViewSettings: CurrentValueSubject<TemplatesListViewModel.Settings, Never>
     
+    //MARK: Notifications
+    let notifications: CurrentValueSubject<[NotificationData], Never>
+    
     //TODO: remove when all templates will be implemented
     let paymentTemplatesAllowed: [ProductStatementData.Kind] = [.sfp, .insideBank, .betweenTheir, .direct, .contactAddressless, .externalIndivudual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
     let paymentTemplatesDisplayed: [PaymentTemplateData.Kind] = [.sfp, .byPhone, .insideBank, .betweenTheir, .direct, .contactAdressless, .externalIndividual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
@@ -78,6 +81,7 @@ class Model {
         self.catalogBanners = .init([])
         self.paymentTemplates = .init([])
         self.paymentTemplatesViewSettings = .init(.initial)
+        self.notifications = .init([])
         self.currentUserLoaction = .init(nil)
         self.sessionAgent = sessionAgent
         self.serverAgent = serverAgent
@@ -294,6 +298,13 @@ class Model {
                 case _ as ModelAction.Settings.GetClientInfo.Requested:
                     handleGetClientInfoRequest()
                     
+               //MARK: - Notifications
+                case _ as ModelAction.Notification.Fetch.New.Request:
+                    handleNotificationsFetchNewRequest()
+                    
+                case _ as ModelAction.Notification.Fetch.Next.Request:
+                    handleNotificationsFetchNextRequest()
+                    
                 //MARK: - Templates Actions
                     
                 case _ as ModelAction.PaymentTemplate.List.Requested:
@@ -307,7 +318,6 @@ class Model {
                     
                 case let payload as ModelAction.PaymentTemplate.Delete.Requested:
                    handleTemplatesDeleteRequest(payload)
-                    
                     
                 //MARK: - Dictionaries Actions
                     
@@ -385,7 +395,6 @@ class Model {
                 case _ as ModelAction.Deposits.List.Request:
                     handleDepositsListRequest()
                     
-                
                 //MARK: - Notification Action
                 
                 case let payload as ModelAction.Notification.ChangeNotificationStatus.Requested:

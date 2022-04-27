@@ -163,8 +163,7 @@ class MainViewController: UIViewController {
         }
         model.action.send(ModelAction.Deposits.List.Request())
         model.action.send(ModelAction.Settings.GetClientInfo.Requested())
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(startUpdate), name: .startProductsUpdate, object: nil)
+        model.action.send(ModelAction.Notification.Fetch.New.Request())
     }
     
     func updateProductsViewModels(with products: Results<UserAllCardsModel>) {
@@ -323,8 +322,10 @@ class MainViewController: UIViewController {
         }
         
         searchBar.trailingRightAction = {
-            let pushHistory = PushHistoryViewController.storyboardInstance()!
-            let nc = UINavigationController(rootViewController: pushHistory)
+            let pushModel = MessagesHistoryViewModel(model: self.model)
+            
+            let pushHistory = MessagesHistoryView(viewModel: pushModel)
+            let nc = UIHostingController(rootView: pushHistory)
             nc.modalPresentationStyle = .fullScreen
             self.present(nc, animated: true)
         }

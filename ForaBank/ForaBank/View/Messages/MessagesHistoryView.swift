@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MessagesHistoryView: View {
     
-    var viewModel: MessagesHistoryViewModel
+   @ObservedObject var viewModel: MessagesHistoryViewModel
     
     var body: some View {
         NavigationView {
