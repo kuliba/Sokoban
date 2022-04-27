@@ -42,6 +42,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()
         
+        
+        
         //LEGACY
         /*
         // MARK: Window

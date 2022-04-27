@@ -6,19 +6,46 @@
 //
 
 import SwiftUI
+import Combine
 
 extension ProfileButtonsSectionView {
     
     class ViewModel: Identifiable, Hashable, ObservableObject {
         
-        let id = UUID()
-        let buttons: [[ProfileButtonView.ViewModel]]
+        let action: PassthroughSubject<Action, Never> = .init()
 
-        internal init(buttons: [[ProfileButtonView.ViewModel]]) {
+        let id = UUID()
+        var buttons: [[ProfileButtonView.ViewModel]]
+        let kind: ProductType
+        
+        internal init(kind: ProductType) {
             
-            self.buttons = buttons
+            self.kind = kind
+
+            switch kind {
+            case .card:
+                
+                self.buttons = [[.init(title: .pay, image: Image.ic24Plus), .init(title: .transfer, image: Image.ic24ArrowUpRight)],[.init(title: .requisites, image: Image.ic24File), .init(title: .block, image: Image.ic24Lock)]]
+
+            case .account:
+                
+                self.buttons = [[.init(title: .pay, image: Image.ic24Plus), .init(title: .transfer, image: Image.ic24ArrowUpRight)],[.init(title: .requisites, image: Image.ic24File), .init(title: .close, image: Image.ic24Lock, state: false)]]
+
+            case .deposit:
+                
+                self.buttons = [[.init(title: .pay, image: Image.ic24Plus), .init(title: .transfer, image: Image.ic24ArrowUpRight, state: false)],[.init(title: .details, image: Image.ic24File), .init(title: .control, image: Image.ic24Server, state: false)]]
+
+            case .loan:
+                
+                self.buttons = [[.init(title: .pay, image: Image.ic24Plus), .init(title: .control, image: Image.ic24Server)],[.init(title: .requisites, image: Image.ic24File), .init(title: .repay, image: Image.ic24Clock)]]
+
+            }
         }
     }
+}
+
+extension ProfileButtonsSectionView.ViewModel {
+    
 }
 
 extension ProfileButtonsSectionView.ViewModel {
@@ -66,5 +93,5 @@ struct ProfileButtonsSectionView_Previews: PreviewProvider {
 
 extension ProfileButtonsSectionView.ViewModel {
     
-    static let sample = ProfileButtonsSectionView.ViewModel(buttons: [[.ussualyButton, .transferButton],[ .requisitsButton, .disableButton]])
+    static let sample = ProfileButtonsSectionView.ViewModel(kind: .card)
 }

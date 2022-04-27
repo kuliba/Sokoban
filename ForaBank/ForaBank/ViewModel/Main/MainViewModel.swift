@@ -89,7 +89,7 @@ class MainViewModel: ObservableObject {
                         
                         switch action {
                         case let payload as MainSectionProductsViewModelAction.ProductDidTapped:
-                            let productProfileViewModel: ProfileViewModel = .sample
+                            let productProfileViewModel: ProfileViewModel = .init(productViewModel: .init(model, productId: payload.productId, productType: .card), model: model)
                             sheet = .productProfile(productProfileViewModel)
                             
                         case _ as MainSectionProductsViewModelAction.MoreButtonTapped:

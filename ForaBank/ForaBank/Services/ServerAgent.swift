@@ -18,18 +18,23 @@ class ServerAgent: NSObject, ServerAgentProtocol {
     private lazy var session: URLSession = {
         
         let configuration = URLSessionConfiguration.default
+        //TODO: Uncomment when updateted auth will be used
+        /*
         configuration.httpShouldSetCookies = false
         configuration.httpCookieAcceptPolicy = .never
+         */
         
         return URLSession(configuration: configuration)
-        
     }()
     
     private lazy var sessionCached: URLSession = {
         
         let configuration = URLSessionConfiguration.default
+        //TODO: Uncomment when updateted auth will be used
+        /*
         configuration.httpShouldSetCookies = false
         configuration.httpCookieAcceptPolicy = .never
+         */
         configuration.urlCache = URLCache.downloadCache
         
         return URLSession(configuration: configuration)
@@ -38,7 +43,11 @@ class ServerAgent: NSObject, ServerAgentProtocol {
     
     private let encoder: JSONEncoder
     private let decoder: JSONDecoder
+    
+    //TODO: Uncomment when updateted auth will be used
+    /*
     private var cookies: [HTTPCookie]?
+     */
     
     internal init(enviroment: Environment) {
         
@@ -68,6 +77,8 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                     return
                 }
                 
+                //TODO: Uncomment when updateted auth will be used
+                /*
                 if command.cookiesProvider == true,
                     let headers = response.allHeaderFields as? [String: String],
                     let url = request.url {
@@ -78,6 +89,7 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                         self.cookies = responseCookies
                     }
                 }
+                 */
                 
                 guard let data = data else {
                     completion(.failure(.emptyResponseData))
@@ -167,12 +179,15 @@ internal extension ServerAgent {
         // http method
         request.httpMethod = command.method.rawValue
         
+        //TODO: Uncomment when updateted auth will be used
+        /*
         // cookies headers
         request.httpShouldHandleCookies = false
         if let cookies = self.cookies {
            
             request.allHTTPHeaderFields = HTTPCookie.requestHeaderFields(with: cookies)
         }
+         */
         
         // headers
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")

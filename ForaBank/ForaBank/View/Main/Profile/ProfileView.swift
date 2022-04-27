@@ -13,50 +13,113 @@ struct ProfileView: View {
     
     var body: some View {
         
-        NavigationView {
+        ZStack(alignment: .top) {
             
-            ZStack {
-                VStack {
+            ScrollView(showsIndicators: false) {
+                
+                ZStack {
                     
-                    Image("Substrate Deposit")
-                        .resizable()
-                        .frame(height: 248)
-                        .edgesIgnoringSafeArea(.all)
-                }
-                ScrollView {
+                    GeometryReader { geometry in
+                        
+                        ZStack {
+                            
+                            viewModel.productViewModel.product.appearance.background.color.contrast(0.8)
+                                .frame(width: geometry.size.width, height: 150)
+                                .clipped()
+                        }
+                    }
                     
-                    //                             HeaderView(viewModel: viewModel)
-                    
-                    ScrollView(showsIndicators: false) {
+                    VStack(spacing: 0) {
+                        
+                        ProfileCardViewComponent(viewModel: viewModel.productViewModel)
+                            .padding(.top, 20)
                         
                         VStack(spacing: 32) {
                             
-                            ProfileCardViewComponent(viewModel: viewModel.productViewModel, currentItem: viewModel.productViewModel.products[0])
+                            ProfileButtonsSectionView(viewModel: .init(kind: viewModel.productViewModel.product.productType))
                             
-                            ProfileButtonsSectionView(viewModel: viewModel.buttonsViewModel)
+                            if let detailAccount = viewModel.detailAccountViewModel {
+                                
+                                DetailAccountViewComponent(viewModel: detailAccount)
+                                    .padding(.horizontal, 20)
+                            }
                             
-                            HistoryViewComponent(viewModel: viewModel.historyViewModel)
+                            if let historyViewModel = viewModel.historyViewModel {
+                                
+                                HistoryViewComponent(viewModel: historyViewModel)
+                            }
                         }
                     }
                 }
+                .padding(.top, 35)
+                .edgesIgnoringSafeArea(.top)
             }
-            .navigationBarTitle("title", displayMode: .inline)
-            .navigationBarBackButtonHidden(true)
-            .navigationBarTitle(Text(                viewModel.productViewModel.products[0].name), displayMode: .inline)
-            .navigationBarItems(leading: Button(action: {
+            
+            ZStack {
                 
-            }, label: {
+                viewModel.productViewModel.product.appearance.background.color.contrast(0.8)
+                    .clipped()
+                    .edgesIgnoringSafeArea(.all)
+                    .frame(height: 50)
+                HeaderView(viewModel: viewModel)
+            }
+        }
+        .navigationBarHidden(true)
+        .alert(item: $viewModel.alert, content: { alertViewModel in
+            Alert(with: alertViewModel)
+        })
+    }
+    
+    struct HeaderView: View {
+        
+        @ObservedObject var viewModel: ProfileViewModel
+        
+        var body: some View {
+            HStack {
                 
-                Image.ic24ChevronLeft
+                Button {
+                    
+                    viewModel.dismissAction()
+                    
+                } label: {
+                    
+                    Image.ic24ChevronLeft
+                        .foregroundColor(viewModel.productViewModel.product.appearance.textColor)
+                }
                 
-            }), trailing: Button(action: {
+                Spacer()
                 
-            }, label: {
+                VStack {
+                    
+                    Text(viewModel.productViewModel.product.name)
+                        .foregroundColor(viewModel.productViewModel.product.appearance.textColor)
+                    
+                    if let number = viewModel.productViewModel.product.header.number {
+                        
+                        Text(number)
+                            .font(.system(size: 12))
+                            .foregroundColor(viewModel.productViewModel.product.appearance.textColor)
+                    }
+                }
                 
-                Image.ic24Edit2
-            }) )
-            .navigationBarBackButtonHidden(true)
-            //                                .foregroundColor(viewModel.productViewModel.products[0].appearance.textColor)
+                Spacer()
+                
+                if viewModel.productViewModel.product.productType != .loan || viewModel.productViewModel.product.productType != .deposit {
+                    
+                    Button {
+                        
+                        viewModel.action.send(ProductProfileViewModelAction.CustomName())
+                        
+                    } label: {
+                        
+                        Image.ic24Edit2
+                            .foregroundColor(viewModel.productViewModel.product.appearance.textColor)
+                    }
+                }
+            }
+            .padding(.horizontal, 20)
+            .padding(.bottom, 10)
+            .background(Color.clear)
         }
     }
 }
@@ -65,11 +128,16 @@ struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
         
         ProfileView(viewModel: .sample)
+        
+        ProfileView(viewModel: .sampleCard)
     }
 }
 
 
 extension ProfileViewModel {
     
-    static let sample = ProfileViewModel(productViewModel: .init(products: [.notActivateProfile, .accountProfile, .classicProfile, .blockedProfile]), buttonsViewModel: .sample, historyViewModel: .init( dateOperations: [.init(date: "12 декабря", operations: [.init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit)])], spending: .init(value: [100, 300])))
+    static let sample = ProfileViewModel(productViewModel: .init(products: [.notActivateProfile, .accountProfile, .classicProfile, .depositProfile], product: .depositProfile, model: .emptyMock), model: .emptyMock)
+    
+    static let sampleCard = ProfileViewModel(productViewModel: .init(products: [.notActivateProfile, .accountProfile, .classicProfile, .blockedProfile, .depositProfile], product: .blockedProfile, model: .emptyMock), model: .emptyMock)
 }
+

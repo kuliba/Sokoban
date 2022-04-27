@@ -447,6 +447,8 @@ extension Model {
                         return
                     }
                     
+                    self.bankList.value = data.banksList
+                    
                     do {
                         
                         try self.localAgent.store(data.banksList, serial: data.serial)
@@ -526,6 +528,8 @@ extension Model {
                     guard data.currencyList.count > 0 else {
                         return
                     }
+                    
+                    self.currencyDict.value = data.currencyList
                     
                     do {
                         

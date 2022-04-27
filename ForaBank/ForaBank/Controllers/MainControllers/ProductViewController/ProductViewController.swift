@@ -38,8 +38,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
     
     weak var delegatePaymentVc: ProductViewControllerDelegate?
     
-    var swiftUIView = DetailAccountViewComponent(viewModel: .init(with: .init(), status: .notActivated, isCredit: false, productName: nil, longInt: nil))
-    var detailView = SelfSizingHostingController(rootView: DetailAccountViewComponent(viewModel: .init(with: .init(), status: .notActivated, isCredit: false, productName: nil, longInt: nil)))
+//    var swiftUIView = DetailAccountViewComponent(viewModel: .init(with: .init(), status: .notActivated, isCredit: false, productName: nil, longInt: nil))
+//    var detailView = SelfSizingHostingController(rootView: DetailAccountViewComponent(viewModel: .init(with: .init(), status: .notActivated, isCredit: false, productName: nil, longInt: nil)))
     
     var emptySpending = UIView()
     
@@ -412,8 +412,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         }
         
         secondStackView.isHidden = true
-        secondStackView.removeArrangedSubview(detailView.view)
-        detailView.view.isHidden = true
         
         statusBarView.isHidden = false
         statusBarView.layer.cornerRadius = 8
@@ -461,34 +459,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             
             tableView.isHidden = false
             headerView.isHidden = false
-            
-            if product?.productType == ProductType.loan.rawValue || product?.loanBaseParam?.number != "", let loanBase = product?.loanBaseParam {
-                
-                swiftUIView = DetailAccountViewComponent(viewModel: .init(with: loanBase , status: StatusPC(rawValue: product?.statusPC ?? "0") ?? .notActivated, isCredit: false, productName: nil, longInt: nil))
-                detailView = SelfSizingHostingController(rootView: swiftUIView)
-                
-                heightConstraint = detailView.view.heightAnchor.constraint(equalToConstant: 0)
-                
-                secondStackView.addArrangedSubview(detailView.view)
-                scrollView.contentSize.height += 500
-                detailView.view.anchor(top: secondStackView.topAnchor, paddingTop: 20)
-                detailView.view.isHidden = false
-                secondStackView.isHidden = false
-                
-            }
-
-            
-            if product?.statusPC == "17", product?.status == "Действует" || product?.status == "Выдано клиенту" {
-                
-                activateSlider.isHidden = false
-                activateSlider.isEnabled = true
-                activateSlider.delegate = self
-
-            } else {
-
-                activateSlider.isHidden = true
-            }
-            
             
         case ProductType.account.rawValue:
             
@@ -548,7 +518,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
                 personsCredit(id: productId)
             }
             
-            secondStackView.removeArrangedSubview(detailView.view)
+//            secondStackView.removeArrangedSubview(detailView.view)
             
             guard let number = self.product?.settlementAccount else { return }
             
@@ -603,27 +573,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             }
             guard let model = model else { return }
             if model.statusCode == 0 {
-                DispatchQueue.main.async {
-                    
-                    guard let data = model.data?.original else {
-                        return
-                    }
-                    
-                    self.detailView.view = nil
-                    
-                    let swiftUIView = DetailAccountViewComponent(viewModel: .init(with: .init(with: .init(loanID: data.loanId ?? 0, clientID: data.clientId, number: data.number ?? "", currencyID: data.currencyId, currencyNumber: data.currencyNumber, currencyCode: data.currencyCode, minimumPayment: data.amountPayment, gracePeriodPayment: nil, overduePayment: data.overduePayment, availableExceedLimit: nil, ownFunds: nil, debtAmount: nil, totalAvailableAmount: data.amountRepaid, totalDebtAmount: data.amountCredit)), status: .active, isCredit: true, productName: self.product?.productName, longInt: data.datePayment))
-                    
-                    self.detailView = SelfSizingHostingController(rootView: swiftUIView)
-                    
-                    self.heightConstraint = self.detailView.view.heightAnchor.constraint(equalToConstant: 0)
-                    
-                    self.secondStackView.addArrangedSubview(self.detailView.view)
-                    self.scrollView.contentSize.height += 300
-                    self.detailView.view.anchor(top: self.secondStackView.topAnchor, paddingTop: 20)
-                    self.detailView.view.isHidden = false
-                    self.secondStackView.isHidden = false
-                    
-                }
+              
             } else {
                 
                 self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")

@@ -20,15 +20,20 @@ class Model {
     //MARK: Products
     let products: CurrentValueSubject<[ProductType: [ProductData]], Never>
     let productsUpdateState: CurrentValueSubject<ProductsUpdateState, Never>
-    var productsAllowed: Set<ProductType> { [.card, .account, .deposit] }
+    var productsAllowed: Set<ProductType> { [.card, .account, .deposit, .loan] }
+    
+    //MARK: Statement
+    var statement: CurrentValueSubject<ProductStatementDataCacheble, Never>
     
     //MARK: Dictionaries
     let catalogProducts: CurrentValueSubject<[CatalogProductData], Never>
     let catalogBanners: CurrentValueSubject<[BannerCatalogListData], Never>
-    
+    let currencyDict: CurrentValueSubject<[CurrencyData], Never>
+    let bankList: CurrentValueSubject<[BankData], Never>
+
     //MARK: Templates
     let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
-    //TODO: store in cache 
+    //TODO: store in cache
     let paymentTemplatesViewSettings: CurrentValueSubject<TemplatesListViewModel.Settings, Never>
     
     //MARK: Notifications
@@ -76,9 +81,12 @@ class Model {
         self.action = .init()
         self.auth = .init(.registerRequired)
         self.products = .init([:])
+        self.statement = .init(.init(productStatement: [:]))
         self.productsUpdateState = .init(.idle)
         self.catalogProducts = .init([])
         self.catalogBanners = .init([])
+        self.currencyDict = .init([])
+        self.bankList = .init([])
         self.paymentTemplates = .init([])
         self.paymentTemplatesViewSettings = .init(.initial)
         self.notifications = .init([])
@@ -103,11 +111,11 @@ class Model {
         let sessionAgent = SessionAgent()
        
         // server agent
-        #if DEBUG
+#if DEBUG
         let enviroment = ServerAgent.Environment.test
-        #else
+#else
         let enviroment = ServerAgent.Environment.prod
-        #endif
+#endif
         
         let serverAgent = ServerAgent(enviroment: enviroment)
         
@@ -212,8 +220,6 @@ class Model {
             .sink {[unowned self] action in
                 
                 switch action {
-                
-                //MARK: - Auth Actions
                     
                 case _ as ModelAction.Auth.Session.Start.Request:
                     handleAuthSessionStartRequest()
@@ -266,7 +272,7 @@ class Model {
                 case _ as ModelAction.Auth.Logout:
                     handleAuthLogoutRequest()
                     
-                //MARK: - Products Actions
+                    //MARK: - Products Actions
                     
                 case _ as ModelAction.Products.Update.Fast.All:
                     handleProductsUpdateFastAll()
@@ -282,6 +288,23 @@ class Model {
 
                 //MARK: - Payments
                     
+                    //MARK: - Products Actions
+                    
+                case _ as ModelAction.Products.Update.Fast.All:
+                    handleProductsUpdateFastAll()
+                    
+                case let payload as ModelAction.Products.Update.Fast.Single.Request:
+                    handleProductsUpdateFastSingleRequest(payload)
+                    
+                case _ as ModelAction.Products.Update.Total.All:
+                    handleProductsUpdateTotalAll()
+                    
+                    //MARK: - Statement
+                case let payload as ModelAction.Statement.List.Request:
+                    handleStatementRequest(payload)
+                    
+                    //MARK: - Payments
+                    
                 case let payload as ModelAction.Payment.Services.Request:
                     handlePaymentsServicesRequest(payload)
                     
@@ -294,7 +317,7 @@ class Model {
                 case let payload as ModelAction.Payment.Complete.Request:
                     handlePaymentsCompleteRequest(payload)
                     
-                //MARK: - Settings Actions
+                    //MARK: - Settings Actions
                 case _ as ModelAction.Settings.GetClientInfo.Requested:
                     handleGetClientInfoRequest()
                     
@@ -317,7 +340,7 @@ class Model {
                     handleTemplatesUpdateRequest(payload)
                     
                 case let payload as ModelAction.PaymentTemplate.Delete.Requested:
-                   handleTemplatesDeleteRequest(payload)
+                    handleTemplatesDeleteRequest(payload)
                     
                 //MARK: - Dictionaries Actions
                     
@@ -466,6 +489,16 @@ private extension Model {
         if let catalogBanner = localAgent.load(type: [BannerCatalogListData].self) {
             
             self.catalogBanners.value = catalogBanner
+        }
+        
+        if let currency = localAgent.load(type: [CurrencyData].self) {
+            
+            self.currencyDict.value = currency
+        }
+        
+        if let bankList = localAgent.load(type: [BankData].self) {
+            
+            self.bankList.value = bankList
         }
         
         if let products = localAgent.load(type: [ProductData].self) {

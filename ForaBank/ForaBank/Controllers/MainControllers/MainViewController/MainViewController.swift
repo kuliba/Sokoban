@@ -163,6 +163,7 @@ class MainViewController: UIViewController {
         }
         model.action.send(ModelAction.Deposits.List.Request())
         model.action.send(ModelAction.Settings.GetClientInfo.Requested())
+        model.action.send(ModelAction.Products.Update.Total.All())
         model.action.send(ModelAction.Notification.Fetch.New.Request())
     }
     

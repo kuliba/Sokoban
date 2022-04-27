@@ -172,7 +172,7 @@ extension Model {
                         continuation.resume(returning: products)
                         
                         do {
-                            try self.localAgent.store( products, serial: response.data.serial)
+                            try self.localAgent.store(products, serial: response.data.serial)
                             
                         } catch {
                             

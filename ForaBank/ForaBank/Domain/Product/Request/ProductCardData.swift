@@ -178,10 +178,10 @@ extension ProductCardData {
     
     struct LoanBaseParamInfoData: Codable {
         
-        let loanID: Int
-        let clientID: Int
+        let loanId: Int
+        let clientId: Int
         let number: String
-        let currencyID: Int?
+        let currencyId: Int?
         let currencyNumber: Int?
         let currencyCode: String?
         let minimumPayment: Double?
@@ -192,6 +192,50 @@ extension ProductCardData {
         let debtAmount: Double?
         let totalAvailableAmount: Double?
         let totalDebtAmount: Double?
+        
+        private enum CodingKeys : String, CodingKey {
+            
+            case loanId = "loanID"
+            case clientId = "clientID"
+            case currencyId = "currencyID"
+            case number, currencyNumber, currencyCode, minimumPayment, gracePeriodPayment, overduePayment, availableExceedLimit, ownFunds, debtAmount, totalAvailableAmount, totalDebtAmount
+            
+        }
+        
+        internal init(loanId: Int, clientId: Int, number: String, currencyId: Int?, currencyNumber: Int?, currencyCode: String?, minimumPayment: Double?, gracePeriodPayment: Double?, overduePayment: Double?, availableExceedLimit: Double?, ownFunds: Double?, debtAmount: Double?, totalAvailableAmount: Double?, totalDebtAmount: Double?) {
+            self.loanId = loanId
+            self.clientId = clientId
+            self.number = number
+            self.currencyId = currencyId
+            self.currencyNumber = currencyNumber
+            self.currencyCode = currencyCode
+            self.minimumPayment = minimumPayment
+            self.gracePeriodPayment = gracePeriodPayment
+            self.overduePayment = overduePayment
+            self.availableExceedLimit = availableExceedLimit
+            self.ownFunds = ownFunds
+            self.debtAmount = debtAmount
+            self.totalAvailableAmount = totalAvailableAmount
+            self.totalDebtAmount = totalDebtAmount
+        }
+        
+//        convenience init?(paramInfo: ProductCardData.LoanBaseParamInfoData) {
+//
+//            self.loanId = paramInfo.loanId
+//            self.clientId = paramInfo.clientId
+//            self.number = paramInfo.number
+//            self.currencyID = paramInfo.currencyID
+//            self.currencyNumber = paramInfo.currencyNumber
+//            self.currencyCode = paramInfo.currencyCode
+//            self.minimumPayment = paramInfo.minimumPayment
+//            self.gracePeriodPayment = paramInfo.gracePeriodPayment
+//            self.overduePayment = paramInfo.overduePayment
+//            self.availableExceedLimit = paramInfo.availableExceedLimit
+//            self.ownFunds = paramInfo.ownFunds
+//            self.debtAmount = paramInfo.debtAmount
+//            self.totalAvailableAmount = paramInfo.totalAvailableAmount
+//            self.totalDebtAmount = paramInfo.totalAvailableAmount
+//        }
     }
 }
 
