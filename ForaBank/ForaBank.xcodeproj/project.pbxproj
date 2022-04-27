@@ -795,6 +795,7 @@
 		77F158292817FDE400CA5E4E /* Bundle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F158282817FDE400CA5E4E /* Bundle+Extensions.swift */; };
 		77F1582B28183BD900CA5E4E /* CryptoKit+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F1582A28183BD900CA5E4E /* CryptoKit+Extensions.swift */; };
 		77F1582D28191DFE00CA5E4E /* SessionCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F1582C28191DFE00CA5E4E /* SessionCredentials.swift */; };
+		77F1582F28194DCD00CA5E4E /* MainSectionAtmViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F1582E28194DCD00CA5E4E /* MainSectionAtmViewComponent.swift */; };
 		77F4C8BD27E077D70095820E /* Model+PaymentsTaxesFSSP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F4C8BC27E077D70095820E /* Model+PaymentsTaxesFSSP.swift */; };
 		77F5CE0928049E3500611B66 /* LocationAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5CE0828049E3500611B66 /* LocationAgentProtocol.swift */; };
 		77F5CE0B2804A10500611B66 /* LocationAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5CE0A2804A10500611B66 /* LocationAgent.swift */; };
@@ -1933,6 +1934,7 @@
 		77F158282817FDE400CA5E4E /* Bundle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Extensions.swift"; sourceTree = "<group>"; };
 		77F1582A28183BD900CA5E4E /* CryptoKit+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CryptoKit+Extensions.swift"; sourceTree = "<group>"; };
 		77F1582C28191DFE00CA5E4E /* SessionCredentials.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionCredentials.swift; sourceTree = "<group>"; };
+		77F1582E28194DCD00CA5E4E /* MainSectionAtmViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSectionAtmViewComponent.swift; sourceTree = "<group>"; };
 		77F4C8BC27E077D70095820E /* Model+PaymentsTaxesFSSP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTaxesFSSP.swift"; sourceTree = "<group>"; };
 		77F5CE0828049E3500611B66 /* LocationAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAgentProtocol.swift; sourceTree = "<group>"; };
 		77F5CE0A2804A10500611B66 /* LocationAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAgent.swift; sourceTree = "<group>"; };
@@ -3777,6 +3779,7 @@
 				F81EF91927D2180E0096DC70 /* MainSectionPromoViewComponent.swift */,
 				F81EF91C27D21A240096DC70 /* MainSectionCurrencyViewComponent.swift */,
 				F81EF91427D212990096DC70 /* MainSectionOpenProductViewComponent.swift */,
+				77F1582E28194DCD00CA5E4E /* MainSectionAtmViewComponent.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -6956,6 +6959,7 @@
 				ED9C1A0027567F6B00AF9DFF /* OpenNewDepositViewControllerCell.swift in Sources */,
 				682092A427AC0653003DCAFD /* ServerCommands+Person.swift in Sources */,
 				ED9D4D922750F937001AF471 /* OpenNewDepositViewController.swift in Sources */,
+				77F1582F28194DCD00CA5E4E /* MainSectionAtmViewComponent.swift in Sources */,
 				0B22AEB026CEB80100B11E7F /* Keyboard.swift in Sources */,
 				77F1581F2810909B00CA5E4E /* SessionAgent.swift in Sources */,
 				770DCE8F27BBE6AB004099C1 /* Model+Auth.swift in Sources */,
