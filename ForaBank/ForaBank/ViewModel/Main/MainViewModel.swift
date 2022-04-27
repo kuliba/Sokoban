@@ -34,7 +34,7 @@ class MainViewModel: ObservableObject {
     init(_ model: Model) {
         
         self.navButtonsRight = []
-        self.sections = [MainSectionProductsView.ViewModel(model), MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample]
+        self.sections = [MainSectionProductsView.ViewModel(model), MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample, MainSectionAtmView.ViewModel(content: "Выберите ближайшую точку на карте", isCollapsed: false)]
         
         self.isRefreshing = false
         self.model = model
@@ -102,7 +102,25 @@ class MainViewModel: ObservableObject {
                         }
                         
                     }.store(in: &bindings)
-                    
+                
+            case let atmSection as MainSectionAtmView.ViewModel:
+                atmSection.action
+                    .receive(on: DispatchQueue.main)
+                    .sink { [unowned self] action in
+                        
+                        switch action {
+                        case _ as MainSectionAtmViewModelAction.ButtonTapped:
+                            guard let placesViewModel = PlacesViewModel(model) else {
+                                return
+                            }
+                            sheet = .places(placesViewModel)
+                            
+                        default:
+                            break
+                            
+                        }
+                        
+                    }.store(in: &bindings)
                 
             default:
                 break
@@ -145,6 +163,7 @@ extension MainViewModel {
         case userAccount(UserAccountViewModel)
         case messages(MessagesHistoryViewModel)
         case myProducts(MyProductsViewModel)
+        case places(PlacesViewModel)
     }
 }
 
