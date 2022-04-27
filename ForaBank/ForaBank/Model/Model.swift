@@ -39,6 +39,9 @@ class Model {
     //MARK: Notifications
     let notifications: CurrentValueSubject<[NotificationData], Never>
     
+    //MARK: - UserData
+    let userSettingData: CurrentValueSubject<ClientInfoState, Never> = .init(.empty)
+    
     //TODO: remove when all templates will be implemented
     let paymentTemplatesAllowed: [ProductStatementData.Kind] = [.sfp, .insideBank, .betweenTheir, .direct, .contactAddressless, .externalIndivudual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
     let paymentTemplatesDisplayed: [PaymentTemplateData.Kind] = [.sfp, .byPhone, .insideBank, .betweenTheir, .direct, .contactAdressless, .externalIndividual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
@@ -147,6 +150,7 @@ class Model {
                 switch auth {
                 case .active:
                     action.send(ModelAction.Products.Update.Total.All())
+                    action.send(ModelAction.Settings.GetClientInfo.Requested())
                     
                 case .inactive:
                     if let pincode = try? authStoredPincode() {
