@@ -6,9 +6,12 @@
 //
 
 import Foundation
+import Combine
 
 class ServerAgent: NSObject, ServerAgentProtocol {
 
+    let action: PassthroughSubject<Action, Never> = .init()
+    
     private var baseURL: String { enviroment.baseURL }
     private let enviroment: Environment
   
@@ -50,6 +53,8 @@ class ServerAgent: NSObject, ServerAgentProtocol {
             
             let request = try request(with: command)
             session.dataTask(with: request) {[unowned self] data, response, error in
+                
+                self.action.send(ServerAgentAction.NetworkActivityEvent())
                 
                 if let error = error {
                     

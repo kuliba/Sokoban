@@ -28,17 +28,15 @@ class AuthPinCodeViewModel: ObservableObject {
     @Published var mistakes: Int
     
     private let model: Model
-    private let backAction: () -> Void
     private let dismissAction: () -> Void
     private var bindings = Set<AnyCancellable>()
     private let feedbackGenerator = UINotificationFeedbackGenerator()
 
-    init(pinCode: PinCodeViewModel, numpad: NumPadViewModel, footer: FooterViewModel, backAction: @escaping () -> Void, dismissAction: @escaping () -> Void, model: Model = .emptyMock, mode: Mode = .unlock(attempt: 3), stage: Stage = .editing, isPermissionsViewPresented: Bool = false, mistakes: Int = 0) {
+    init(pinCode: PinCodeViewModel, numpad: NumPadViewModel, footer: FooterViewModel, dismissAction: @escaping () -> Void, model: Model = .emptyMock, mode: Mode = .unlock(attempt: 3), stage: Stage = .editing, isPermissionsViewPresented: Bool = false, mistakes: Int = 0) {
         
         self.pinCode = pinCode
         self.numpad = numpad
         self.footer = footer
-        self.backAction = backAction
         self.dismissAction = dismissAction
         self.model = model
         self.mode = mode
@@ -47,7 +45,7 @@ class AuthPinCodeViewModel: ObservableObject {
         self.mistakes = mistakes
     }
     
-    init(_ model: Model, mode: Mode, backAction: @escaping () -> Void, dismissAction: @escaping () -> Void) {
+    init(_ model: Model, mode: Mode, dismissAction: @escaping () -> Void) {
  
         switch mode {
         case .unlock:
@@ -72,7 +70,6 @@ class AuthPinCodeViewModel: ObservableObject {
             self.mode = .create(step: .one)
         }
         
-        self.backAction = backAction
         self.dismissAction = dismissAction
         self.stage = .editing
         self.isPermissionsViewPresented = false
@@ -97,12 +94,10 @@ class AuthPinCodeViewModel: ObservableObject {
                             pinCode.style = .correct
                             numpad.isEnabled = false
                         }
+                        
                         // taptic feedback
                         feedbackGenerator.notificationOccurred(.success)
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(400)) {
-                            
-                            self.dismissAction()
-                        }
+                        self.model.action.send(ModelAction.Auth.Login.Request(type: .pin))
                         
                     case .incorrect(remain: let remainAttempts):
                         guard case .unlock(attempt: let lastAttempt) = mode else {
@@ -120,16 +115,20 @@ class AuthPinCodeViewModel: ObservableObject {
                         AudioServicesPlaySystemSound(1109)
                         // taptic feedback
                         feedbackGenerator.notificationOccurred(.error)
-                        alert = .init(title: "Введен некорректный пин-код.", message: "Осталось попыток: \(remainAttempts)", primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.action.send(AuthPinCodeViewModelAction.Unlock.Attempt()) }))
+                        alert = .init(title: "Введен некорректный пин-код.", message: "Осталось попыток: \(remainAttempts)", primary: .init(type: .default, title: "Ok", action: {[weak self] in
+                            
+                            self?.alert = nil
+                            self?.action.send(AuthPinCodeViewModelAction.Unlock.Attempt()) }))
                         
-     
                     case .restricted:
                         withAnimation {
                             // show incorrect pincode state
                             pinCode.style = .incorrect
                             numpad.isEnabled = false
                         }
-                        alert = .init(title: "Введен некорректный пин-код.", message: "Все попытки исчерпаны.", primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.action.send(AuthPinCodeViewModelAction.Unlock.Failed()) }))
+                        alert = .init(title: "Введен некорректный пин-код.", message: "Все попытки исчерпаны.", primary: .init(type: .default, title: "Ok", action: { [weak self] in
+                            self?.alert = nil
+                            self?.action.send(AuthPinCodeViewModelAction.Unlock.Failed()) }))
                         
                     case .failure(message: let message):
                         alert = .init(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
@@ -137,11 +136,59 @@ class AuthPinCodeViewModel: ObservableObject {
                     
                 case let payload as ModelAction.Auth.Sensor.Evaluate.Response:
                     switch payload {
-                    case .success:
-                        dismissAction()
-                        
+                    case .success(let sensorType):
+                        switch sensorType {
+                        case .face:
+                            self.model.action.send(ModelAction.Auth.Login.Request(type: .faceId))
+                            
+                        case .touch:
+                            self.model.action.send(ModelAction.Auth.Login.Request(type: .touchId))
+                        }
+
                     case .failure(message: let message):
                         alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.alert = nil}))
+                    }
+                    
+                case let payload as ModelAction.Auth.Pincode.Set.Response:
+                    switch payload {
+                    case .success:
+                        feedbackGenerator.notificationOccurred(.success)
+                        model.action.send(ModelAction.Auth.SetDeviceSettings.Request())
+                        
+                    case .failure(message: let message):
+                        alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: {[weak self] in
+                            
+                            //TODO: set pincode failed with error. Back to login or try again?
+                            
+                            self?.alert = nil
+                            
+                        }))
+                    }
+                    
+                case let payload as ModelAction.Auth.SetDeviceSettings.Response:
+                    switch payload {
+                    case .success:
+                        model.action.send(ModelAction.Auth.Login.Request(type: .pin))
+                        
+                    case .failure:
+                        alert = Alert.ViewModel(title: "Ошибка", message: model.authDefaultErrorMessage, primary: .init(type: .default, title: "Ok", action: {[weak self] in
+                            self?.alert = nil
+                            self?.action.send(AuthPinCodeViewModelAction.Unlock.Attempt())
+                        }))
+                    }
+                    
+                case let payload as ModelAction.Auth.Login.Response:
+                    switch payload {
+                    case .failure(message: let message):
+                        print("SessionAgent: LOGIN FAILED")
+                        alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: {[weak self] in
+                            self?.alert = nil
+                            self?.action.send(AuthPinCodeViewModelAction.Unlock.Attempt()) 
+                        }))
+                        
+                    default:
+                        break
+                        
                     }
      
                 default:
@@ -187,7 +234,9 @@ class AuthPinCodeViewModel: ObservableObject {
                         AudioServicesPlaySystemSound(1156)
 
                     case .exit:
-                        alert = .init(title: "Внимание!", message: "Вы действительно хотите выйти из аккаунта?", primary: .init(type: .cancel, title: "Отмена", action: {}), secondary: .init(type: .distructive, title: "Выйти", action: { [weak self] in self?.action.send(AuthPinCodeViewModelAction.Exit())}))
+                        alert = .init(title: "Внимание!", message: "Вы действительно хотите выйти из аккаунта?", primary: .init(type: .cancel, title: "Отмена", action: {}), secondary: .init(type: .distructive, title: "Выйти", action: { [weak self] in
+                            self?.alert = nil
+                            self?.action.send(AuthPinCodeViewModelAction.Exit())}))
                         AudioServicesPlaySystemSound(1156)
                         
                     default:
@@ -262,6 +311,7 @@ class AuthPinCodeViewModel: ObservableObject {
             }.store(in: &bindings)
         
         $stage
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] stage in
   
@@ -277,14 +327,14 @@ class AuthPinCodeViewModel: ObservableObject {
                     AudioServicesPlaySystemSound(1109)
                     // taptic feedback
                     feedbackGenerator.notificationOccurred(.error)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(400)) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(400)) { [self] in
                         
                         withAnimation {
                             // back to editing
                             self.stage = .editing
-                            pinCode.style = .normal
-                            pinCode.value = ""
-                            numpad.isEnabled = true
+                            self.pinCode.style = .normal
+                            self.pinCode.value = ""
+                            self.numpad.isEnabled = true
                         }
                     }
                     
@@ -301,22 +351,7 @@ class AuthPinCodeViewModel: ObservableObject {
                         withAnimation {
                             pinCode.style = .correct
                         }
-                        // taptic feedback
-                        feedbackGenerator.notificationOccurred(.success)
-                        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(200)) {
-                            
-                            model.action.send(ModelAction.Auth.Pincode.Set.Request(pincode: pinCode.value))
-                            
-                            if let sensor = model.authAvailableBiometricSensorType {
-                                
-                                permissionsViewModel = .init(model, sensorType: sensor, dismissAction: dismissAction)
-                                isPermissionsViewPresented = true
-                                
-                            } else {
-                                
-                                dismissAction()
-                            }
-                        }
+                        model.action.send(ModelAction.Auth.Pincode.Set.Request(pincode: pinCode.value))
                     }
                     
                 default:
@@ -349,13 +384,10 @@ class AuthPinCodeViewModel: ObservableObject {
                     }
                     
                 case _ as AuthPinCodeViewModelAction.Unlock.Failed:
-                    alert = nil
                     model.action.send(ModelAction.Auth.Logout())
-                    backAction()
                     
                 case _ as AuthPinCodeViewModelAction.Exit:
                     model.action.send(ModelAction.Auth.Logout())
-                    backAction()
                 
                 default:
                     break

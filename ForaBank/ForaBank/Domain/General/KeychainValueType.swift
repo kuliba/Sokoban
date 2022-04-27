@@ -10,4 +10,5 @@ import Foundation
 enum KeychainValueType: String {
     
     case pincode
+    case serverDeviceGUID
 }

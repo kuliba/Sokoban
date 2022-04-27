@@ -52,7 +52,7 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: Int
+                let data: Int?
             }
             
             internal init(token: String) {

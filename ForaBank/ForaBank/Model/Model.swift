@@ -36,6 +36,7 @@ class Model {
     let paymentTemplatesDisplayed: [PaymentTemplateData.Kind] = [.sfp, .byPhone, .insideBank, .betweenTheir, .direct, .contactAdressless, .externalIndividual, .externalEntity, .mobile]
     
     // services
+    internal let sessionAgent: SessionAgentProtocol
     internal let serverAgent: ServerAgentProtocol
     internal let localAgent: LocalAgentProtocol
     internal let keychainAgent: KeychainAgentProtocol
@@ -47,33 +48,40 @@ class Model {
     private let queue = DispatchQueue(label: "ru.forabank.sense.model", qos: .userInitiated, attributes: .concurrent)
     internal var token: String? {
         
-        return CSRFToken.token
-        /*
-        guard case .authorized(let credentials) = auth.value else {
+        guard case .active(_, let credentials) = sessionAgent.sessionState.value else {
             return nil
         }
         
         return credentials.token
-         */
     }
     
-    init(serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol, settingsAgent: SettingsAgentProtocol, biometricAgent: BiometricAgentProtocol) {
+    internal var credentials: SessionCredentials? {
+        
+        guard case .active(_, let credentials) = sessionAgent.sessionState.value else {
+            return nil
+        }
+        
+        return credentials
+    }
+    
+    init(sessionAgent: SessionAgentProtocol, serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol, settingsAgent: SettingsAgentProtocol, biometricAgent: BiometricAgentProtocol) {
         
         self.action = .init()
-        self.auth = .init(.notAuthorized)
+        self.auth = .init(.registerRequired)
         self.products = .init([:])
         self.productsUpdateState = .init(.idle)
         self.catalogProducts = .init([])
         self.catalogBanners = .init([])
         self.paymentTemplates = .init([])
         self.paymentTemplatesViewSettings = .init(.initial)
+        self.sessionAgent = sessionAgent
         self.serverAgent = serverAgent
         self.localAgent = localAgent
         self.keychainAgent = keychainAgent
         self.settingsAgent = settingsAgent
         self.biometricAgent = biometricAgent
         self.bindings = []
-        
+         
         loadCachedData()
         bind()
         cacheDictionaries()
@@ -81,6 +89,9 @@ class Model {
     
     //FIXME: remove after refactoring
     static var shared: Model = {
+        
+        // session agent
+        let sessionAgent = SessionAgent()
        
         // server agent
         #if DEBUG
@@ -104,10 +115,84 @@ class Model {
         // biometric agent
         let biometricAgent = BiometricAgent()
         
-        return Model(serverAgent: serverAgent, localAgent: localAgent, keychainAgent: keychainAgent, settingsAgent: settingsAgent, biometricAgent: biometricAgent)
+        return Model(sessionAgent: sessionAgent, serverAgent: serverAgent, localAgent: localAgent, keychainAgent: keychainAgent, settingsAgent: settingsAgent, biometricAgent: biometricAgent)
     }()
     
     private func bind() {
+        
+        sessionAgent.sessionState
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] auth in
+                
+                switch auth {
+                case .inactive:
+                    if let pincode = try? authStoredPincode() {
+                        
+                        self.auth.value = .signInRequired(pincode: pincode)
+                        
+                    } else {
+                        
+                        self.auth.value = .registerRequired
+                    }
+                    
+                case .expired:
+                    if let pincode = try? authStoredPincode() {
+                        
+                        self.auth.value = .unlockRequired(pincode: pincode)
+                        
+                    } else {
+                        
+                        self.auth.value = .registerRequired
+                    }
+                    
+                case .failed(let error):
+                    if let pincode = try? authStoredPincode() {
+                        
+                        self.auth.value = .unlockRequired(pincode: pincode)
+                        
+                    } else {
+                        
+                        self.auth.value = .registerRequired
+                    }
+                    
+                    //TODO: show error message
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+        
+        sessionAgent.action
+            .receive(on: queue)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as SessionAgentAction.Session.Start.Request:
+                    self.action.send(ModelAction.Auth.Session.Start.Request())
+                    
+                case _ as SessionAgentAction.Session.Extend.Request:
+                    self.action.send(ModelAction.Auth.Session.Extend.Request())
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+        
+        serverAgent.action
+            .receive(on: queue)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as ServerAgentAction.NetworkActivityEvent:
+                    sessionAgent.action.send(SessionAgentAction.Event.Network())
+ 
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
         
         action
             .receive(on: queue)
@@ -117,17 +202,32 @@ class Model {
                 
                 //MARK: - Auth Actions
                     
+                case _ as ModelAction.Auth.Session.Start.Request:
+                    handleAuthSessionStartRequest()
+                    
+                case let payload as ModelAction.Auth.Session.Start.Response:
+                    sessionAgent.action.send(SessionAgentAction.Session.Start.Response(result: payload.result))
+                    
+                case _ as ModelAction.Auth.Session.Extend.Request:
+                    handleAuthSessionExtendRequest()
+                    
+                case let payload as ModelAction.Auth.Session.Extend.Response:
+                    sessionAgent.action.send(SessionAgentAction.Session.Extend.Response(result: payload.result))
+                    
                 case let payload as ModelAction.Auth.ProductImage.Request:
                     handleAuthProductImageRequest(payload)
                     
-                case let payload as ModelAction.Auth.Register.Request:
-                    handleAuthRegisterRequest(payload: payload)
+                case let payload as ModelAction.Auth.CheckClient.Request:
+                    handleAuthCheckClientRequest(payload: payload)
                 
                 case let payload as ModelAction.Auth.VerificationCode.Confirm.Request:
                     handleAuthVerificationCodeConfirmRequest(payload: payload)
                     
                 case let payload as ModelAction.Auth.VerificationCode.Resend.Request:
                     handleAuthVerificationCodeResendRequest(payload: payload)
+                    
+                case _ as ModelAction.Auth.Register.Request:
+                    handleAuthRegisterRequest()
                     
                 case let payload as ModelAction.Auth.Pincode.Set.Request:
                     handleAuthPincodeSetRequest(payload: payload)
@@ -144,8 +244,11 @@ class Model {
                 case _ as ModelAction.Auth.Push.Register.Request:
                     handleAuthPushRegisterRequest()
                     
-                case _ as ModelAction.Auth.Login.Request:
-                    handleAuthLoginRequest()
+                case let payload as ModelAction.Auth.SetDeviceSettings.Request:
+                    handleAuthSetDeviceSettings(payload: payload)
+                    
+                case let payload as ModelAction.Auth.Login.Request:
+                    handleAuthLoginRequest(payload: payload)
                     
                 case _ as ModelAction.Auth.Logout:
                     handleAuthLogoutRequest()
