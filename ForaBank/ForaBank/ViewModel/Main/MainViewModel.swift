@@ -14,18 +14,60 @@ class MainViewModel: ObservableObject {
     let action: PassthroughSubject<Action, Never> = .init()
 
     lazy var userAccountButton: UserAccountButtonViewModel = UserAccountButtonViewModel(logo: .ic12LogoForaColor, avatar: nil, name: "Александр", action: { [weak self] in self?.action.send(MainViewModelAction.ButtonTapped.UserAccount())})
-    @Published var navButtonsRight: [NavBarButtonViewModel]
+    @Published var navButtonsRight: [NavigationBarButtonViewModel]
     @Published var sections: [MainSectionViewModel]
     @Published var isRefreshing: Bool
+    @Published var sheet: Sheet?
     
+    private var model: Model
     private var bindings = Set<AnyCancellable>()
     
-    init(navButtonsRight: [NavBarButtonViewModel], sections: [MainSectionViewModel], isRefreshing: Bool) {
+    init(navButtonsRight: [NavigationBarButtonViewModel], sections: [MainSectionViewModel], isRefreshing: Bool, model: Model = .emptyMock) {
         
         self.navButtonsRight = navButtonsRight
         self.sections = sections
         self.isRefreshing = isRefreshing
+        self.model = model
     }
+    
+    init(_ model: Model) {
+        
+        self.navButtonsRight = []
+        self.sections = []
+        self.isRefreshing = false
+        self.model = model
+        
+        navButtonsRight = createNavButtonsRight()
+        bind()
+    }
+    
+    func bind() {
+        
+        action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as MainViewModelAction.ButtonTapped.UserAccount:
+                    let userAccountViewModel: UserAccountViewModel = .sample
+                    sheet = .userAccount(userAccountViewModel)
+                    
+                case _ as MainViewModelAction.ButtonTapped.Messages:
+                    let messagesHistoryViewModel: MessagesHistoryViewModel = .sample
+                    sheet = .messages(messagesHistoryViewModel)
+                
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+    }
+    
+    func createNavButtonsRight() -> [NavigationBarButtonViewModel] {
+        
+        [.init(icon: .ic24Search, action: {[weak self] in self?.action.send(MainViewModelAction.ButtonTapped.Search())}), .init(icon: .ic24Bell, action: {[weak self] in self?.action.send(MainViewModelAction.ButtonTapped.Messages())})]
+    }
+
 }
 
 extension MainViewModel {
@@ -46,11 +88,13 @@ extension MainViewModel {
         }
     }
     
-    struct NavBarButtonViewModel: Identifiable {
+    enum Sheet: Identifiable {
         
-        let id: UUID = UUID()
-        let icon: Image
-        let action: () -> Void
+        var id: UUID { UUID() }
+        
+        case userAccount(UserAccountViewModel)
+        case messages(MessagesHistoryViewModel)
+        case myProducts(MyProductsViewModel)
     }
 }
 
@@ -59,6 +103,10 @@ enum MainViewModelAction {
     enum ButtonTapped {
         
         struct UserAccount: Action {}
+        
+        struct Search: Action {}
+        
+        struct Messages: Action {}
     }
 }
 

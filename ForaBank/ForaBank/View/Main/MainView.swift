@@ -55,6 +55,18 @@ struct MainView: View {
             }
             .padding(20)
         }
+        .sheet(item: $viewModel.sheet, content: { sheet in
+            switch sheet {
+            case .userAccount(let userAccountViewModel):
+                UserAccountView(viewModel: userAccountViewModel)
+                
+            case .messages(let messagesHistoryViewModel):
+                MessagesHistoryView(viewModel: messagesHistoryViewModel)
+                
+            default:
+                EmptyView()
+            }
+        })
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarItems(leading:
                                 UserAccountButton(viewModel: viewModel.userAccountButton),
@@ -117,7 +129,7 @@ extension MainView {
     
     struct NavBarButton: View {
         
-        let viewModel: MainViewModel.NavBarButtonViewModel
+        let viewModel: NavigationBarButtonViewModel
         
         var body: some View {
             

@@ -13,14 +13,16 @@ class RootViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
     
-    private var bindings = Set<AnyCancellable>()
+    let mainViewModel: MainViewModel
     
     private let model: Model
-    
+    private var bindings = Set<AnyCancellable>()
+
     init(_ model: Model) {
         
+        self.mainViewModel = MainViewModel(model)
         self.model = model
-        
+    
         bind()
     }
     

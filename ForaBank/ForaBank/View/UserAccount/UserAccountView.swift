@@ -121,21 +121,25 @@ struct UserAccountView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        UserAccountView(viewModel: .init(
-            model: Model.emptyMock,
-            navigationBar: .sample,
-            avatar: .init(
-                image: Image("imgMainBanner2"),
-                //image: nil,
-                action: {
-                    print("Open peacker")
-                }),
-            sections:
-                [UserAccountContactsView.ViewModel.contact,
-                 UserAccountDocumentsView.ViewModel.documents,
-                 UserAccountPaymentsView.ViewModel.payments,
-                 UserAccountSecurityView.ViewModel.security
-                ])
-        )
+        UserAccountView(viewModel: .sample)
     }
+}
+
+extension UserAccountViewModel {
+    
+    static let sample = UserAccountViewModel(
+        model: Model.emptyMock,
+        navigationBar: .sample,
+        avatar: .init(
+            image: Image("imgMainBanner2"),
+            //image: nil,
+            action: {
+                print("Open peacker")
+            }),
+        sections:
+            [UserAccountContactsView.ViewModel.contact,
+             UserAccountDocumentsView.ViewModel.documents,
+             UserAccountPaymentsView.ViewModel.payments,
+             UserAccountSecurityView.ViewModel.security
+            ])
 }
