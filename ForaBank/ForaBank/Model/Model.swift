@@ -272,9 +272,6 @@ class Model {
                 case _ as ModelAction.Products.Update.Total.All:
                     handleProductsUpdateTotalAll()
                     
-                case let payload as ModelAction.Products.Update.Total.Single.Request:
-                    handleProductsUpdateTotalSingleRequest(payload)
-                    
                 case let payload as ModelAction.Products.UpdateCustomName.Request:
                     handleProductsUpdateCustomName(payload)
 
