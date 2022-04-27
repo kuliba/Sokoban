@@ -52,7 +52,7 @@ class MainViewModel: ObservableObject {
                 
                 switch action {
                 case _ as MainViewModelAction.ButtonTapped.UserAccount:
-                    let userAccountViewModel: UserAccountViewModel = .sample
+                    let userAccountViewModel: UserAccountViewModel = .init(model: model)
                     sheet = .userAccount(userAccountViewModel)
                     
                 case _ as MainViewModelAction.ButtonTapped.Messages:

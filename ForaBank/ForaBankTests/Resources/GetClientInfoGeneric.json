@@ -1,13 +1,42 @@
-{
-  "data": {
-    "address": "string",
-    "firstName": "Иван",
+"statusCode": 0,
+"errorMessage": "string",
+"data": {
+    "clientId": 10002053887,
     "lastName": "Иванов",
+    "firstName": "Иван",
     "patronymic": "Иванович",
-    "regNumber": "string",
-    "regSeries": "string"
-  },
-  "errorMessage": "string",
-  "statusCode": 0
+    "birthDay": "1992-04-19",
+    "regSeries": "1234",
+    "regNumber": "123456",
+    "birthPlace": "Г. САМАРА",
+    "dateOfIssue": "2021-07-19",
+    "codeDepartment": "630-006",
+    "regDepartment": "ГУ МВД РОССИИ ПО САМАРСКОЙ ОБЛАСТИ",
+    "address": "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 123456, Московская обл, Мытищи г, Олимпийский пр-кт ,  д. 99,  корп. 1,  кв. 18",
+    "addressInfo": {
+        "postIndex": "150522",
+        "country": "РОССИЯ",
+        "area": "Ярославский",
+        "region": "Ярославская",
+        "street": "Ленина",
+        "house": "3",
+        "frame": "1",
+        "flat": "31"
+    },
+    "addressResidential": "РОССИЙСКАЯ ФЕДЕРАЦИЯ, 123456, Московская обл, Мытищи г, Олимпийский пр-кт ,  д. 99,  корп. 1,  кв. 18",
+    "addressResidentialInfo": {
+        "postIndex": "150522",
+        "country": "РОССИЯ",
+        "area": "Ярославский",
+        "region": "Ярославская",
+        "street": "Ленина",
+        "house": "3",
+        "frame": "1",
+        "flat": "31"
+    },
+    "phone": "79998887766",
+    "phoneSMS": "79998887766",
+    "email": "test@test.com",
+    "INN": "7723384619"
 }
-
+}

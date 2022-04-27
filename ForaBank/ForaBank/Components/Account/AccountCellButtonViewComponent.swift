@@ -14,7 +14,7 @@ extension AccountCellButtonView {
     class ViewModel: AccountCellDefaultViewModel, ObservableObject {
         
         let button: ButtonView.ViewModel
-             
+        
         internal init(icon: Image, content: String, title: String? = nil, button: ButtonView.ViewModel) {
             
             self.button = button
@@ -122,17 +122,17 @@ struct AccountCellButtonView_Previews: PreviewProvider {
 
 extension AccountCellButtonView.ViewModel {
     
-    static let name =  AccountCellButtonView.ViewModel
-        .init(icon: .ic24User,
-              content: "Николай",
-              title: "Имя",
-              button: .init(icon: .ic24Edit2, action: {} )
-        )
+    static let name = AccountCellButtonView.ViewModel(
+        icon: .ic24User,
+        content: "Николай",
+        title: "Имя",
+        button: .init(icon: .ic24Edit2, action: {} )
+    )
     
-    static let paymentSPF =  AccountCellButtonView.ViewModel
-        .init(icon: Image("sbp-logo"),
-              content: "Система быстрых платежей",
-              button: .init(icon: .ic24ChevronRight, action: {} )
-        )
+    static let paymentSPF =  AccountCellButtonView.ViewModel(
+        icon: Image("sbp-logo"),
+        content: "Система быстрых платежей",
+        button: .init(icon: .ic24ChevronRight, action: {} )
+    )
     
 }

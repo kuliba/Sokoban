@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 class UserAccountViewModel: ObservableObject {
     
@@ -17,6 +18,7 @@ class UserAccountViewModel: ObservableObject {
     @Published var exitButton: AccountCellFullButtonView.ViewModel
     
     private let model: Model
+    private var bindings = Set<AnyCancellable>()
     
     internal init(model: Model, navigationBar: UserAccountViewModel.NavigationViewModel, avatar: AvatarViewModel, sections: [AccountSectionViewModel]) {
         
@@ -32,6 +34,148 @@ class UserAccountViewModel: ObservableObject {
                 print("Exit action")
             })
         
+    }
+    
+    internal init(model: Model) {
+        
+        self.model = model
+        self.navigationBar = .init(
+            title: "Профиль",
+            backButton: .init(icon: .ic24ChevronLeft, action: {
+                print("back")
+            }),
+            rightButton: .init(icon: .ic24Settings, action: {
+                print("right")
+            }))
+        self.avatar = .init(
+            image: nil,
+            action: {
+                print("Open peacker")
+            })
+        
+        self.exitButton = .init(
+            icon: .ic24LogOut,
+            content: "Выход из приложения",
+            action: {
+                print("Exit action")
+            })
+        
+        self.sections = []
+        bind()
+        model.action.send(ModelAction.Settings.GetClientInfo.Requested())
+    }
+        
+    func bind() {
+        
+        model.userSettingData
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] user in
+                switch user {
+                    
+                case .authorized(user: let userData):
+                    createSections(userData: userData)
+                    
+                default:
+                    break
+                }
+            }.store(in: &bindings)
+        
+    }
+    
+    func createSections(userData: ClientInfoData) {
+        var accountContactsItems = [
+            AccountCellButtonView.ViewModel(
+                icon: .ic24User,
+                content: userData.firstName,
+                title: "Имя",
+                button: .init(icon: .ic24Edit2, action: {
+                    print("Open Изменить Имя")
+                } )
+            ),
+            
+            AccountCellInfoView.ViewModel(
+                icon: .ic24Smartphone,
+                content: userData.phone,
+                title: "Телефон"
+            )]
+        
+        if let email = userData.email {
+            accountContactsItems.append(AccountCellInfoView.ViewModel(
+                icon: .ic24Mail,
+                content: email,
+                title: "Электронная почта"
+            ))
+        }
+        
+        var accountDocuments: [AccountCellDefaultViewModel] = [
+            DocumentCellView.ViewModel(
+            icon: .ic24Passport,
+            content: "Паспорт РФ",
+            title: userData.pasportNumber,
+            action: {
+                print("Open Паспорт")
+            })
+        ]
+        
+        if let userInn = userData.INN {
+            accountDocuments.append(DocumentCellView.ViewModel(
+                icon: .ic24FileHash,
+                content: "ИНН",
+                title: userInn,
+                action: {
+                    print("Open ИНН")
+                })
+            )
+        }
+        
+        accountDocuments.append(DocumentCellView.ViewModel(
+            icon: .ic24Passport,
+            content: "Адрес регистрации",
+            title: userData.address,
+            action: {
+                print("Open Адрес регистрации")
+            }))
+        
+        if let addressResidential = userData.addressResidential {
+            accountDocuments.append(DocumentCellView.ViewModel(
+                icon: .ic24Passport,
+                content: "Адрес проживания",
+                title: addressResidential,
+                action: {}))
+        }
+        
+        
+        self.sections = [
+            UserAccountContactsView.ViewModel(
+                items: accountContactsItems,
+                isCollapsed: false),
+            
+            UserAccountDocumentsView.ViewModel(
+                items: accountDocuments,
+                isCollapsed: false),
+            
+            UserAccountPaymentsView.ViewModel(
+                items: [
+                    AccountCellButtonView.ViewModel(
+                        icon: Image("sbp-logo"),
+                        content: "Система быстрых платежей",
+                        button: .init(icon: .ic24ChevronRight, action: {
+                            print("Open Система быстрых платежей")
+                        }))
+                ],
+                isCollapsed: false),
+            
+            UserAccountSecurityView.ViewModel(
+                items: [
+                    AccountCellSwitchView.ViewModel(
+                        content: "Вход по Face ID",
+                        icon: .ic24FaceId),
+                    
+                    AccountCellSwitchView.ViewModel(
+                        content: "Push-уведомления",
+                        icon: .ic24Bell)],
+                isCollapsed: false)
+        ]
     }
     
 }

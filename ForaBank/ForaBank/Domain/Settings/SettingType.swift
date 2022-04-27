@@ -16,6 +16,7 @@ enum SettingType {
     
     enum Personal: String {
         
+        case allData
         case photo
         case name
         case phone

@@ -84,14 +84,14 @@ struct AccountCellInfoView_Previews: PreviewProvider {
 
 extension AccountCellInfoView.ViewModel {
     
-    static let phone = AccountCellInfoView.ViewModel
-        .init(icon: .ic24Smartphone,
-              content: "+7 898 764-87-12",
-              title: "Телефон")
+    static let phone = AccountCellInfoView.ViewModel(
+        icon: .ic24Smartphone,
+        content: "+7 898 764-87-12",
+        title: "Телефон")
     
-    static let email = AccountCellInfoView.ViewModel
-        .init(icon: .ic24Mail,
-              content: "konstan@gmail.com",
-              title: "Электронная почта")
+    static let email = AccountCellInfoView.ViewModel(
+        icon: .ic24Mail,
+        content: "konstan@gmail.com",
+        title: "Электронная почта")
     
 }
