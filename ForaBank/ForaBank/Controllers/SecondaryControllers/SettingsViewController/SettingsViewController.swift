@@ -36,6 +36,7 @@ class SettingsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        
     }
     
     func setupUI() {
@@ -53,6 +54,9 @@ class SettingsViewController: UIViewController {
         subTitleLabel.textAlignment = .left
         
         imageView.setDimensions(height: 250, width: 250)
+        imageView.layer.cornerRadius = 125
+        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFit
         imageView.centerX(inView: view,
                           topAnchor: view.safeAreaLayoutGuide.topAnchor,
                           paddingTop: 22)
@@ -61,9 +65,6 @@ class SettingsViewController: UIViewController {
                           paddingLeft: 20, paddingRight: 20)
         titleLabel.centerX(inView: view,
                            topAnchor: imageView.bottomAnchor, paddingTop: 44)
-        
-//        subTitleLabel.centerX(inView: view,
-//                           topAnchor: titleLabel.bottomAnchor, paddingTop: 16)
         subTitleLabel.anchor(top: titleLabel.bottomAnchor, left: view.leftAnchor, paddingTop: 16, paddingLeft: 20)
         
         currencySwitch.centerY(inView: subTitleLabel)
@@ -74,7 +75,7 @@ class SettingsViewController: UIViewController {
         
         logoutButton.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingLeft: 20, paddingBottom: 30, paddingRight: 20, height: 44)
         
-        addCloseButton()
+        addCloseButton_setting()
         
     }
 
@@ -87,13 +88,6 @@ class SettingsViewController: UIViewController {
     }
     
     @objc func sbpButtonAction() {
-        print(#function)
-        
-//        let vc = MeToMeSearchBanksViewController()
-//        let navVC = UINavigationController(rootViewController: vc)
-////        navVC.modalPresentationStyle = .fullScreen
-//        navVC.addCloseButton()
-//        self.present(navVC, animated: true, completion: nil)
         #if DEBUG
         self.showActivity()
         getFastPaymentContractList { [weak self] contractList, error in
@@ -111,7 +105,6 @@ class SettingsViewController: UIViewController {
                     vc.addCloseButton()
                     let navVC = UINavigationController(rootViewController: vc)
                     navVC.modalPresentationStyle = .fullScreen
-//                    navVC.addCloseButton()
                     self?.present(navVC, animated: true, completion: nil)
                 }
             }
@@ -120,10 +113,8 @@ class SettingsViewController: UIViewController {
     }
     
     @objc func logout() {
-        print(#function)
         
         NetworkManager<LogoutDecodableModel>.addRequest(.logout, [:], [:]) { _,_  in
-//            print("Logout :", "Вышли из приложения")
             DispatchQueue.main.async {
                 self.cleanAllData()
                 Model.shared.action.send(ModelAction.LoggedOut())
@@ -133,15 +124,6 @@ class SettingsViewController: UIViewController {
             }
             
         }
-        
-        
-        
-//        DispatchQueue.main.async { [weak self] in
-//            let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
-//            self?.window?.rootViewController = navVC
-//        }
-        
-        
     }
     
     private func cleanAllData() {
@@ -164,3 +146,4 @@ class SettingsViewController: UIViewController {
     }
     
 }
+

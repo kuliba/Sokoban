@@ -57,6 +57,8 @@ struct OperationDetailInfoView: View {
                             BankCellView(viewModel: bankViewModel)
                         case let productViewModel as OperationDetailInfoViewModel.ProductCellViewModel:
                             ProductCellView(viewModel: productViewModel)
+                        case let iconCellViewModel as OperationDetailInfoViewModel.IconCellViewModel:
+                            IconCellView(viewModel: iconCellViewModel)
                         default:
                             EmptyView()
                         }
@@ -94,7 +96,21 @@ extension OperationDetailInfoView {
             
         }
     }
-    
+
+    struct IconCellView: View {
+
+        var viewModel: OperationDetailInfoViewModel.IconCellViewModel
+
+        var body: some View {
+            Group {
+                viewModel.icon
+                        .resizable()
+                        .frame(width: 100, height: 50, alignment: .center)
+            }.position(x: UIScreen.main.bounds.width/2)
+                    .padding(.init(top: 30, leading: 0, bottom: 50, trailing: 50))
+        }
+    }
+
     struct BankCellView: View {
         
         var viewModel: OperationDetailInfoViewModel.BankCellViewModel
@@ -118,7 +134,7 @@ extension OperationDetailInfoView {
             
         }
     }
-    
+
     struct ProductCellView: View {
         
         var viewModel: OperationDetailInfoViewModel.ProductCellViewModel

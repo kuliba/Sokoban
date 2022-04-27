@@ -14,8 +14,7 @@ struct GetNotificationsModelSaved {
         
         NetworkManager<GetNotificationsDecodableModel>.addRequest(.getNotifications, param, body) { model, error in
             
-            if let error = error {
-                print("DEBUG: error", error)
+            if error != nil {
                 completion()
                 return
             }

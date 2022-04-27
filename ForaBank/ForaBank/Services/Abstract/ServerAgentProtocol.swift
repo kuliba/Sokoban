@@ -34,6 +34,10 @@ protocol ServerCommand: CustomDebugStringConvertible {
 
 extension ServerCommand {
     
+    var token: String? { nil }
+    var parameters: [ServerCommandParameter]? { nil }
+    var payload: Payload? { nil }
+    var timeout: TimeInterval? { nil }
     var cookiesProvider: Bool { false }
     var debugDescription: String {
         

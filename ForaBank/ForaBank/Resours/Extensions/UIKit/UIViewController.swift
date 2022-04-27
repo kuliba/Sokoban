@@ -118,6 +118,27 @@ extension UIViewController {
         navigationItem.leftBarButtonItem = button
     }
     
+    func addCloseButton_setting() {
+        let button = UIBarButtonItem(image: UIImage(systemName: "xmark"),
+                                     landscapeImagePhone: nil,
+                                     style: .done,
+                                     target: self,
+                                     action: #selector(onClose))
+        button.tintColor = .black
+        navigationItem.leftBarButtonItem = button
+
+//        let button2 = UIBarButtonItem(image: UIImage(named: "sbp-logo"),
+//                style: .plain,
+//                target: self,
+//                action: #selector(onClose))
+        //button2.tintColor = .black
+
+        let imageViewRight = UIImageView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+        imageViewRight.contentMode = .scaleAspectFit
+        imageViewRight.image = UIImage(named: "Right Actionable")
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: imageViewRight)
+    }
+    
     func addCloseButton_1() {
         let button = UIBarButtonItem(image: UIImage(systemName: "barcode"),
                                      landscapeImagePhone: nil,
@@ -154,6 +175,19 @@ extension UIViewController {
         navigationItem.rightBarButtonItem = button
     }
     
+    func addBackButton() {
+        let button = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"),
+                                     landscapeImagePhone: nil,
+                                     style: .done,
+                                     target: self,
+                                     action: #selector(onBack))
+        navigationItem.leftBarButtonItem = button
+    }
+    
+    @objc func onBack(){
+        self.navigationController?.popViewController(animated: true)
+    }
+    
     @objc func onClose(){
         self.dismiss(animated: true, completion: nil)
     }
@@ -174,8 +208,6 @@ extension UIViewController {
             fatalError("Error: No initial view controller in \(name) storyboard!")
         }
     }
-
-    
 }
 
 extension UIWindow {
@@ -222,7 +254,6 @@ extension UIWindow {
                        width: UIScreen.main.bounds.size.width,
                        height: UIScreen.main.bounds.size.height)
             self.addSubview(UIWindow.visualEffectView)
-            
         }
     }
     
@@ -231,8 +262,6 @@ extension UIWindow {
             UIWindow.visualEffectView.removeFromSuperview()
         }
     }
-    
-    
 }
 
 public final class ObjectAssociation<T: AnyObject> {

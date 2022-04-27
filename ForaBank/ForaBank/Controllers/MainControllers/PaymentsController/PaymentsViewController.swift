@@ -31,6 +31,8 @@ class PaymentsViewController: UIViewController {
     
     lazy var searchContact: NavigationBarUIView = UIView.fromNib()
     
+    let phoneFormatter = PhoneNumberFormater()
+
     enum Section: Int, CaseIterable {
         case payments, transfers, pay
         func description() -> String {
@@ -69,9 +71,6 @@ class PaymentsViewController: UIViewController {
         setupCollectionView()
         createDataSource()
         reloadData(with: nil)
-//        loadLastPhonePayments()
-//        loadLastPayments()
-//        loadLastMobilePayments()
         loadAllLastLatestPayments()
     }
     
@@ -85,11 +84,6 @@ class PaymentsViewController: UIViewController {
         }
         navigationController?.navigationBar.isHidden = true
     }
-    
-//    override func viewWillDisappear(_ animated: Bool) {
-//        super.viewWillDisappear(animated)
-//        loadAllLastMobilePayments()
-//    }
     
     func setupData() {
         payments = MockItems.returnPayments()

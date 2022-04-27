@@ -11,4 +11,5 @@ extension Notification.Name {
     // выбор города в ЖКХ
     static let city = Notification.Name("city")
     
+    static let startProductsUpdate = Notification.Name("Start Products Update")
 }

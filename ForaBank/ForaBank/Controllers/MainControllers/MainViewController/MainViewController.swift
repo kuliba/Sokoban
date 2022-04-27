@@ -67,23 +67,49 @@ class MainViewController: UIViewController {
         }
     }
     
+    @objc func addUserName() {
+        DispatchQueue.main.async {
+            let uName = UserDefaults.standard.object(forKey: "userName") as? String
+            if uName != nil {
+                self.searchBar.textField.text = uName
+            }
+        }
+    }
+    
+    @objc func addUserPhoto() {
+        let userPhoto = self.loadImageFromDocumentDirectory(fileName: "userPhoto")
+
+        if userPhoto != nil {
+            self.searchBar.searchIcon.image = userPhoto//?.fixOrientation()
+        } else {
+            self.searchBar.searchIcon.image = UIImage(named: "ProfileImage")
+        }
+    }
+    
     lazy var searchBar: NavigationBarUIView = UIView.fromNib()
     
     enum Section: Int, CaseIterable {
-        case products, pay, offer, currentsExchange, openProduct
+        case products, pay, offer, currentsExchange, openProduct, atm
         
         func description() -> String {
             switch self {
             case .products:
                 return "Мои продукты"
+                
             case .pay:
                 return "Быстрые операции"
+                
             case .offer:
                 return "123"
+                
             case .currentsExchange:
                 return "Обмен валют"
+                
             case .openProduct:
                 return "Открыть продукт"
+                
+            case .atm:
+                return "Отделения и банкоматы"
             }
         }
     }
@@ -113,6 +139,11 @@ class MainViewController: UIViewController {
         createDataSource()
         getCurrency()
         setupData()
+        addUserName()
+        addUserPhoto()
+        NotificationCenter.default.addObserver(self, selector: #selector(addUserPhoto), name: Notification.Name("userPhotoNotification"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(addUserName), name: Notification.Name("userNameNotification"), object: nil)
         
         if let products = self.realm?.objects(UserAllCardsModel.self) {
             
@@ -125,9 +156,15 @@ class MainViewController: UIViewController {
         }
 
         bind()
-        startUpdate()
+        startObserveRealm()
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+            
+            self.startUpdate()
+        }
         model.action.send(ModelAction.Deposits.List.Request())
         model.action.send(ModelAction.Settings.GetClientInfo.Requested())
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(startUpdate), name: .startProductsUpdate, object: nil)
     }
     
     func updateProductsViewModels(with products: Results<UserAllCardsModel>) {
@@ -175,6 +212,7 @@ class MainViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
         if GlobalModule.qrOperator != nil && GlobalModule.qrData != nil {
             let controller = InternetTVMainController.storyboardInstance()!
             let nc = UINavigationController(rootViewController: controller)
@@ -192,7 +230,12 @@ class MainViewController: UIViewController {
         }
     }
     
+    @objc
     func startUpdate() {
+        
+        guard isUpdating.value == false else {
+            return
+        }
         
         isUpdating.value = true
         
@@ -219,9 +262,9 @@ class MainViewController: UIViewController {
         
         for section in Section.allCases {
             
-            if let mainSectionType = section.mainSectionType {
+            if let isExpanded = settings.sectionsExpanded[section.mainSectionType] {
                 
-                expanded[section] = settings.sectionsExpanded[mainSectionType]
+                expanded[section] = isExpanded
                 
             } else {
                 
@@ -241,11 +284,8 @@ class MainViewController: UIViewController {
         sectionsExpanded.value[section] = expandedSectionValue
         
         // updating settings
-        guard let mainSectionType = section.mainSectionType else {
-            return
-        }
         var settings = model.settingsMainSections
-        settings.update(isExpanded: expandedSectionValue, sectionType: mainSectionType)
+        settings.update(isExpanded: expandedSectionValue, sectionType: section.mainSectionType)
         model.settingsUpdate(settings)
     }
     
@@ -254,14 +294,16 @@ class MainViewController: UIViewController {
 
         let gesture = UITapGestureRecognizer(target: self, action: #selector(openSetting))
         searchBar.searchIcon.addGestureRecognizer(gesture)
-        searchBar.searchIcon.image = UIImage(named: "ProfileImage")
-
+ //       searchBar.searchIcon.image = UIImage(named: "ProfileImage")
+        
         searchBar.textField.text = ""
         searchBar.textField.placeholder = ""
         searchBar.textField.isEnabled = false
         searchBar.foraAvatarImageView.isHidden = false
         searchBar.searchIconWidth.constant = 40
         searchBar.searchIconHeight.constant = 40
+        self.searchBar.searchIcon.layer.cornerRadius = 20
+        self.searchBar.searchIcon.clipsToBounds = true
         
         searchBar.trailingLeftButton.setImage(UIImage(named: "searchBarIcon"), for: .normal)
         searchBar.trailingLeftButton.isEnabled = false
@@ -322,7 +364,12 @@ class MainViewController: UIViewController {
                     }
                     
                 case let payload as ModelAction.Settings.GetClientInfo.Complete:
-                    searchBar.textField.text = payload.user.firstName
+                    let userName = UserDefaults.standard.object(forKey: "userName") as? String
+                    if userName != nil {
+                        searchBar.textField.text = userName
+                    } else {
+                        searchBar.textField.text = payload.user.firstName
+                    }
                     
                 default:
                     break
@@ -363,7 +410,7 @@ class MainViewController: UIViewController {
                 
             }.store(in: &bindings)
         
-        productTypeSelector.selected
+        productTypeSelector.$selected
             .receive(on: DispatchQueue.main)
             .sink {[unowned self] selectedProduct in
                 
@@ -378,13 +425,31 @@ class MainViewController: UIViewController {
             }.store(in: &bindings)
     }
     
+    func startObserveRealm() {
+        
+        guard let realm = try? Realm() else {
+            return
+        }
+        
+        self.token = realm.objects(UserAllCardsModel.self).observe { [weak self] _ in
+            
+            guard let self = self else { return }
+            
+            let products = realm.objects(UserAllCardsModel.self)
+            
+            self.productTypeSelector.update(with: products)
+            self.updateProductsViewModels(with: products)
+        }
+    }
+    
     deinit {
+        
         self.token?.invalidate()
+        NotificationCenter.default.removeObserver(self, name: .startProductsUpdate, object: nil)
     }
     
     func setupData() {
         
-        print(model.catalogBanners.value)
         let baners = model.catalogBanners.value
         var items: [PaymentsModel] = []
         baners.forEach { baner in
@@ -417,6 +482,7 @@ class MainViewController: UIViewController {
         collectionView.register(OfferCollectionViewCell.self, forCellWithReuseIdentifier: OfferCollectionViewCell.reuseId)
         collectionView.register(ProductCell.self, forCellWithReuseIdentifier: ProductCell.reuseId)
         collectionView.register(NewProductCell.self, forCellWithReuseIdentifier: NewProductCell.reuseId)
+        collectionView.register(AtmCollectionViewCell.self, forCellWithReuseIdentifier: AtmCollectionViewCell.identifier)
         
         collectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 80, right: 0)
         collectionView.isScrollEnabled = true
@@ -473,12 +539,13 @@ class MainViewController: UIViewController {
     
     func reloadData(with searchText: String?) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, PaymentsModel>()
-        snapshot.appendSections([.products, .pay, .offer, .currentsExchange, .openProduct])
+        snapshot.appendSections([.products, .pay, .offer, .currentsExchange, .openProduct, .atm])
         snapshot.appendItems(productsViewModels, toSection: .products)
         snapshot.appendItems(paymentsViewModels, toSection: .pay)
         snapshot.appendItems(promoViewModels, toSection: .offer)
         snapshot.appendItems(exchangeRatesViewModels, toSection: .currentsExchange)
         snapshot.appendItems(openProductViewModels, toSection: .openProduct)
+        snapshot.appendItems([PaymentsModel(id: 0, name: "Выберите ближайшую точку на карте", iconName: "imgMainMap", controllerName: "PlacesView")], toSection: .atm)
         dataSource?.apply(snapshot, animatingDifferences: true)
         collectionView.reloadData()
     }
@@ -536,7 +603,7 @@ extension MainViewController {
         
         var productTypes = [ProductType]()
         var firstIndexes = [ProductType: Int]()
-        var selected: CurrentValueSubject<ProductType?, Never> = .init(nil)
+        @Published var selected: ProductType? = nil
         var optionSelector: OptionSelectorView.ViewModel? = nil
         
         private var bindings = Set<AnyCancellable>()
@@ -559,8 +626,8 @@ extension MainViewController {
                 productTypes = productTypes(from: products)
                 firstIndexes = firstIndexes(for: products, and: productTypes)
                 
-                bindings = Set<AnyCancellable>()
-                if let optionSelector = optionSelector(with: productTypes, selected: selected.value) {
+//                bindings = Set<AnyCancellable>()
+                if let optionSelector = optionSelector(with: productTypes, selected: selected) {
                     
                     self.optionSelector = optionSelector
                     bind(optionSelector: optionSelector)
@@ -574,7 +641,7 @@ extension MainViewController {
                 
                 productTypes = [ProductType]()
                 firstIndexes = [ProductType: Int]()
-                selected = .init(nil)
+                selected = nil
                 optionSelector = nil
             }
         }
@@ -585,7 +652,7 @@ extension MainViewController {
                 .receive(on: DispatchQueue.main)
                 .sink {[unowned self] selectedId in
                     
-                    selected.value = ProductType(rawValue: selectedId)
+                    selected = ProductType(rawValue: selectedId)
                     
                 }.store(in: &bindings)
         }
@@ -638,6 +705,17 @@ extension MainViewController: ChildViewControllerDelegate {
     func childViewControllerResponse(productList: [GetProductListDatum]) {
         showAlert(with: "ОБновляет", and: "")
     }
+    
+    func loadImageFromDocumentDirectory(fileName: String) -> UIImage? {
+        
+        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!;
+        let fileURL = documentsUrl.appendingPathComponent(fileName)
+        do {
+            let imageData = try Data(contentsOf: fileURL)
+            return UIImage(data: imageData)
+        } catch {}
+        return nil
+    }
 }
 
 extension UICollectionViewDiffableDataSource {
@@ -661,10 +739,11 @@ extension MainViewController.Section {
         case .promo: self = .offer
         case .currencyExchange: self = .currentsExchange
         case .openProduct: self = .openProduct
+        case .atm: self = .atm
         }
     }
     
-    var mainSectionType: MainSectionType? {
+    var mainSectionType: MainSectionType {
         
         switch self {
         case .products: return .products
@@ -672,7 +751,8 @@ extension MainViewController.Section {
         case .offer: return .promo
         case .currentsExchange: return .currencyExchange
         case .openProduct: return .openProduct
-        default: return nil
+        case .atm: return .atm
         }
     }
 }
+

@@ -14,12 +14,14 @@ extension CustomPopUpWithRateView {
         super.viewDidLoad()
         setupUI()
         setupConstraint()
-        AddAllUserCardtList.add() {
-            print("REALM Add")
-        }
+        AddAllUserCardtList.add() { }
         if let template = paymentTemplate {
-            let cardId = template.parameterList.first?.payer.cardId
-            updateObjectWithNotification(cardId: cardId)
+            
+            if let cardId = template.parameterList.first?.payer.cardId {
+                updateObjectWithNotification(cardId: cardId)
+            } else if let accountId = template.parameterList.first?.payer.accountId {
+                updateObjectWithNotification(cardId: accountId)
+            }
             updateObjectWithTamplate(paymentTemplate: template)
         } else {
             updateObjectWithNotification()
@@ -134,7 +136,7 @@ extension CustomPopUpWithRateView {
                     
                 } else if let accountId = transfer.payeeInternal?.accountId {
                     
-                    let card = object?.first(where: { $0.accountID == accountId })
+                    let card = object?.first(where: { $0.id == accountId })
                     self.cardToField.model = card
                     self.viewModel.cardToRealm = card
                 }

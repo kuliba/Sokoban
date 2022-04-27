@@ -16,7 +16,7 @@ protocol PaymentsViewControllerDelegate: AnyObject {
 }
 
 extension PaymentsViewController: UICollectionViewDelegate {
-
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let section = Section(rawValue: indexPath.section) else {
             fatalError("Unknown section kind")
@@ -32,12 +32,14 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 let phoneNumber = lastMobilePayment.additionalList?.filter {
                     $0.fieldName == "a3_NUMBER_1_2"
                 }
-                let number = phoneNumber?.first?.fieldValue ?? ""
-                // delegate?.toMobilePay(viewController, number )
-                let mask = StringMask(mask: "+7 (000) 000-00-00")
-                let maskPhone = mask.mask(string: number)
-                viewController.phoneField.text = maskPhone ?? ""
-                viewController.selectNumber = maskPhone
+    
+                if let number = phoneNumber?.first?.fieldValue {
+
+                    let formattedPhone = phoneFormatter.format(number)
+                    viewController.phoneField.text = formattedPhone
+                    viewController.selectNumber = formattedPhone
+                }
+
                 let vc = UINavigationController(rootViewController: viewController)
                 vc.modalPresentationStyle = .fullScreen
                 present(vc, animated: true)
@@ -65,9 +67,6 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 }
             }
         case .transfers:
-//            if indexPath.row == 0 {
-//                delegate?.goToPaymentByPhone()
-//             } else
             if indexPath.row == 1 {
                 let model = ConfirmViewControllerModel(type: .card2card)
                 let popView = CustomPopUpWithRateView()
@@ -76,8 +75,6 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 popView.modalPresentationStyle = .custom
                 popView.transitioningDelegate = self
                 self.present(popView, animated: true, completion: nil)
-//            } else if indexPath.row == 2 {
-//                delegate?.goToCountryPayments()
             } else if indexPath.row == 3 {
                 let popView = MemeDetailVC()
                 popView.titleLabel.text = "На другую карту"
@@ -165,7 +162,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
     }
 
     private func openLatestUtilities(lastGKHPayment: GetAllLatestPaymentsDatum) {
-        var amount = ""
+        let amount = lastGKHPayment.amount?.string() ?? ""
         var name = ""
         var image: UIImage!
         let realm = try? Realm()
@@ -198,22 +195,6 @@ extension PaymentsViewController: UICollectionViewDelegate {
 
     private func openPhonePaymentVC(model: GetAllLatestPaymentsDatum) {
         let vc = PaymentByPhoneViewController(viewModel: PaymentByPhoneViewModel(phoneNumber: model.phoneNumber, bankId: model.bankID ?? ""))
-//        let banksList = Dict.shared.banks
-//        banksList?.forEach { bank in
-//            if bank.memberID == model.bankID {
-////                vc.selectedBank = bank
-//                vc.viewModel.bankId = bank.memberID ?? ""
-//            }
-//        }
-//        let mask = StringMask(mask: "+7 (000) 000-00-00")
-//        let maskPhone = mask.mask(string: model.phoneNumber)
-//        vc.phoneField.text = maskPhone ?? ""
-//        vc.viewModel.selectNumber = maskPhone
-//        if model.bankName == "ФОРА-БАНК" {
-//            vc.viewModel.isSbp = false
-//        } else {
-//            vc.viewModel.isSbp = true
-//        }
         vc.phoneField.chooseButton.isHidden = true
         vc.phoneField.rightButton.isHidden = true
         vc.addCloseButton()

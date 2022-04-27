@@ -175,4 +175,23 @@ class ServerCommandsAccountControllerTests: XCTestCase {
 		// then
 		XCTAssertEqual(resultString, expected)
 	}
+    
+    //MARK: - SaveAccountName
+
+    func testSaveAccountName_Response_Decoding() throws {
+
+        // given
+        guard let url = bundle.url(forResource: "SaveAccountNameResponseGeneric", withExtension: "json") else {
+            XCTFail("testSaveAccountName_Response_Decoding : Missing file: SaveAccountNameResponseGeneric.json")
+            return
+        }
+        let json = try Data(contentsOf: url)
+        let expected = ServerCommands.AccountController.SaveAccountName.Response(statusCode: .ok, errorMessage: "string", data: EmptyData())
+        
+        // when
+        let result = try decoder.decode(ServerCommands.AccountController.SaveAccountName.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
 }
