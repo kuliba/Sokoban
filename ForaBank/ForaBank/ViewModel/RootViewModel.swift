@@ -7,55 +7,68 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 class RootViewModel: ObservableObject {
     
-    @Published var login: AuthLoginViewModel?
-    @Published var lock: AuthLockViewModel?
-    @Published var spinner: SpinnerView.ViewModel?
+    let action: PassthroughSubject<Action, Never> = .init()
+    
+    private var bindings = Set<AnyCancellable>()
     
     private let model: Model
     
     init(_ model: Model) {
         
         self.model = model
+        
+        bind()
     }
     
-    func showLogin() {
+    private func bind() {
         
-        login = AuthLoginViewModel(model, rootActions: .init(dismiss: {[weak self] in
-            withAnimation {
-                self?.login = nil
-            }
+        model.auth
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] auth in
+                
+                switch auth {
+                case .registerRequired:
+                    action.send(RootViewModelAction.Cover.ShowLogin(viewModel: loginViewModel(with: model)))
+                    
+                case .signInRequired(pincode: let pincode):
+                    action.send(RootViewModelAction.Cover.ShowLock(viewModel: lockViewModel(with: model, pincode: pincode), animated: false))
+                    
+                case .unlockRequired(pincode: let pincode):
+                    action.send(RootViewModelAction.Cover.ShowLock(viewModel: lockViewModel(with: model, pincode: pincode), animated: true))
+                    
+                case .authorized:
+                    action.send(RootViewModelAction.Cover.Hide())
+                }
+                
+            }.store(in: &bindings)
+    }
+    
+    private func loginViewModel(with model: Model) -> AuthLoginViewModel {
+        
+        AuthLoginViewModel(model, rootActions: .init(dismiss: {[weak self] in
+            self?.action.send(RootViewModelAction.Cover.Hide())
         }, spinner: .init(show: {[weak self] in
-            withAnimation {
-                self?.spinner = SpinnerView.ViewModel()
-            }
+            self?.action.send(RootViewModelAction.Spinner.Show(viewModel: .init()))
         }, hide: {[weak self] in
-            withAnimation {
-                self?.spinner = nil
-            }
+            self?.action.send(RootViewModelAction.Spinner.Hide())
         })))
     }
     
-    func showLock() {
+    private func lockViewModel(with model: Model, pincode: String) -> AuthPinCodeViewModel {
         
-        withAnimation {
-            
-            lock = AuthLockViewModel(model, rootActions: .init(dismiss: {[weak self] in
-                withAnimation {
-                    self?.lock = nil
-                }
-            }, spinner: .init(show: {[weak self] in
-                withAnimation {
-                    self?.spinner = SpinnerView.ViewModel()
-                }
-            }, hide: {[weak self] in
-                withAnimation {
-                    self?.spinner = nil
-                }
-            })))
-        }
+        //TODO: pass pincode to AuthPinCodeViewModel
+        AuthPinCodeViewModel(model, mode: .unlock(attempt: 0), dismissAction: {[weak self] in
+            self?.action.send(RootViewModelAction.Cover.Hide()) })
+    }
+    
+    private func permissionsViewModel(with model: Model, sensorType: BiometricSensorType) -> AuthPermissionsViewModel {
+        
+        AuthPermissionsViewModel(model, sensorType: sensorType, dismissAction: {[weak self] in
+            self?.action.send(RootViewModelAction.Cover.Hide()) })
     }
 }
 
@@ -71,5 +84,41 @@ extension RootViewModel {
             let show: () -> Void
             let hide: () -> Void
         }
+    }
+}
+
+//MARK: - Action
+
+enum RootViewModelAction {
+    
+    enum Cover {
+    
+        struct ShowLogin: Action {
+            
+            let viewModel: AuthLoginViewModel
+        }
+        
+        struct ShowLock: Action {
+            
+            let viewModel: AuthPinCodeViewModel
+            let animated: Bool
+        }
+
+        struct Hide: Action {}
+    }
+    
+    enum Spinner {
+    
+        struct Show: Action {
+            
+            let viewModel: SpinnerView.ViewModel
+        }
+        
+        struct Hide: Action {}
+    }
+    
+    struct ShowPermissions: Action {
+        
+        let sensorType: BiometricSensorType
     }
 }

@@ -8,19 +8,14 @@
 import UIKit
 
 class C2BDetailsInputView: UIView {
-    
-    //MARK: - Property
+
     let kContentXibName = "C2BDetailsInput"
-    
-    var viewModel: ForaInputModel! {
+
+    var viewModel: C2BDetailsInputViewModel! {
         didSet {
             guard let viewModel = viewModel else { return }
             if !viewModel.isEditable {
-                self.textField.text = viewModel.text
-                self.placeHolder.alpha = viewModel.text.isEmpty ? 0 : 1
-                self.placeHolder.isHidden = viewModel.text.isEmpty
-                self.lineView.backgroundColor = viewModel.text.isEmpty ? #colorLiteral(red: 0.9176470588, green: 0.9215686275, blue: 0.9215686275, alpha: 1) : #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1)
-
+                textField.text = viewModel.text
             }
             configure()
         }
@@ -40,7 +35,7 @@ class C2BDetailsInputView: UIView {
         }
     }
     
-    //MARK: - IBOutlets
+
     @IBOutlet var contentView: UIView!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var textField: MaskedTextField!
@@ -52,7 +47,6 @@ class C2BDetailsInputView: UIView {
     @IBOutlet weak var chooseButton: UIButton!
     @IBOutlet weak var rubButton: UIButton! {
         didSet {
-            
             rubButton.layer.borderWidth = 1
             rubButton.layer.borderColor = rubButton.titleLabel?.textColor.cgColor
             rubButton.layer.cornerRadius = 32 / 2
@@ -70,35 +64,26 @@ class C2BDetailsInputView: UIView {
     
     var didChooseButtonTapped: (() -> Void)?
     var didChangeValueField: ((_ field: UITextField) -> Void)?
-    
-    //MARK: - Viewlifecicle
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        //commonInit(viewModel: ForaInputModel(title: ""))
-    }
-    
+
+
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        //commonInit(viewModel: ForaInputModel(title: ""))
+        commonInit(viewModel: C2BDetailsInputViewModel(title: ""))
     }
     
-    required init(frame: CGRect = .zero, viewModel: ForaInputModel) {
+    required init(frame: CGRect = .zero, viewModel: C2BDetailsInputViewModel) {
         super.init(frame: frame)
-        //commonInit(viewModel: viewModel)
+        commonInit(viewModel: viewModel)
     }
 
     
-//    func commonInit(viewModel: ForaInputModel) {
-//        Bundle.main.loadNibNamed(kContentXibName, owner: self, options: nil)
-//        contentView.fixInView(self)
-//        self.viewModel = viewModel
-//
-//        textField.addTarget(self, action: #selector(setupValue), for: .editingChanged)
-//        textField.delegate = self
-//        self.anchor(height: 58)
-//    }
-    
-    //MARK: - Helpers
+    func commonInit(viewModel: C2BDetailsInputViewModel) {
+        Bundle.main.loadNibNamed(kContentXibName, owner: self, options: nil)
+        contentView.fixInView(self)
+        self.viewModel = viewModel
+        self.anchor(height: 58)
+    }
+
     private func configure() {
         imageView.image = viewModel.image
         balanceLabel.isHidden = true
@@ -114,43 +99,16 @@ class C2BDetailsInputView: UIView {
         errorLabel.alpha = 0
         bottomLabel.isHidden = !viewModel.showBottomLabel
         viewModel.isError ? showError() : nil
-        
-        let viewType = viewModel.fieldType.self
-        switch viewType {
-        case .credidCard:
-            placeHolder.text = viewModel.title
-            errorLabel.isHidden = true
-            placeHolder.isHidden = false
-            balanceLabel.isHidden = false
-            placeHolder.alpha = text.isEmpty ? 0 : 1
-
-        case .amountOfTransfer:
-            placeHolder.text = viewModel.title
-            placeHolder.isHidden = false
-            errorLabel.isHidden = true
-            placeHolder.alpha = text.isEmpty ? 0 : 1
-        case .smsCode:
-            placeHolder.text = viewModel.title
-            placeHolder.isHidden = false
-            placeHolder.alpha = 1
-            placeHolder.textColor = #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)
-            errorLabel.isHidden = true
-
-        default:
-            placeHolder.text = viewModel.title
-            placeHolder.isHidden = text.isEmpty
-            placeHolder.alpha = text.isEmpty ? 0 : 1
-        }
-
+        placeHolder.isHidden = false
+        placeHolder.text = viewModel.title
     }
     
     func configCardView(_ with: GetProductListDatum) {
         viewModel.cardModel = with
-        self.text = with.product ?? ""
+        text = with.product ?? ""
         let balance = Double(with.balance ?? 0)
-        self.balanceLabel.text = balance.currencyFormatter(symbol: with.currency ?? "")
-        self.bottomLabelText = with.numberMasked
-        
+        balanceLabel.text = balance.currencyFormatter(symbol: with.currency ?? "")
+        bottomLabelText = with.numberMasked
     }
     
     private func configureBottomLabel(with text: String) {
@@ -190,16 +148,10 @@ class C2BDetailsInputView: UIView {
             self.lineView.backgroundColor = !self.viewModel.text.isEmpty ? #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1) : #colorLiteral(red: 0.8901960784, green: 0.003921568627, blue: 0.1058823529, alpha: 1)
         }
     }
-    
-    //MARK: - IBAction
+
     @objc private func setupValue() {
         guard let text = textField.text else { return }
         viewModel.text = text
-        UIView.animate(withDuration: TimeInterval(0.2)) {
-//            self.errorLabel.alpha = 0
-            self.placeHolder.alpha = text.isEmpty ? 0 : 1
-            self.placeHolder.isHidden = text.isEmpty// ? true : false
-        }
     }
     
     @IBAction func rubButtonTapped(_ sender: Any) {
@@ -218,41 +170,9 @@ class C2BDetailsInputView: UIView {
         viewModel.activeCurrency = ButtonСurrency.USD
     }
     
-    
-    
     @IBAction func chooseButtonTapped(_ sender: Any) {
-//        print(#function)
         didChooseButtonTapped?()
     }
     
-    private func createBorder(for button: UIButton) {
-        
-    }
-    
+    private func createBorder(for button: UIButton) {}
 }
-
-////MARK: - UITextFieldDelegate
-//extension ForaInput: UITextFieldDelegate {
-//    func textFieldDidEndEditing(_ textField: UITextField) {
-//        if viewModel.needValidate {
-//            UIView.animate(withDuration: TimeInterval(0.2)) {
-//                self.errorLabel.alpha = !self.viewModel.text.isEmpty ? 0 : 1
-//                self.lineView.backgroundColor = !self.viewModel.text.isEmpty ? #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1) : #colorLiteral(red: 0.8901960784, green: 0.003921568627, blue: 0.1058823529, alpha: 1)
-//            }
-//        }
-//    }
-    
-//    func textFieldDidBeginEditing(_ textField: UITextField) {
-//        self.lineView.backgroundColor = #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1)
-//    }
-//
-//    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-//        self.lineView.backgroundColor = #colorLiteral(red: 0.9176470588, green: 0.9215686275, blue: 0.9215686275, alpha: 1)
-//        return true
-//    }
-//    func textFieldDidChangeSelection(_ textField: UITextField) {
-//        didChangeValueField?(textField)
-//    }
-
-
-

@@ -11,6 +11,7 @@
 import SwiftUI
 
 public extension Image {
+    static var ic12LogoForaColor: Image { Image(#function) }
     static var ic16Ball: Image { Image(#function) }
     static var ic1612Circle: Image { Image(#function) }
     static var ic16Apple: Image { Image(#function) }
@@ -131,7 +132,6 @@ public extension Image {
     static var ic16Edit2: Image { Image(#function) }
     static var ic16Edit3: Image { Image(#function) }
     static var ic16Education: Image { Image(#function) }
-    static var ic16Emblem: Image { Image(#function) }
     static var ic16ExternalLink: Image { Image(#function) }
     static var ic16Eye: Image { Image(#function) }
     static var ic16EyeOff: Image { Image(#function) }
@@ -395,11 +395,13 @@ public extension Image {
     static var ic24Bookmark: Image { Image(#function) }
     static var ic24Box: Image { Image(#function) }
     static var ic24Briefcase: Image { Image(#function) }
+    static var ic24Bulb: Image { Image(#function) }
     static var ic24Cafe: Image { Image(#function) }
     static var ic24Calendar: Image { Image(#function) }
     static var ic24CalendarPayment: Image { Image(#function) }
     static var ic24Camera: Image { Image(#function) }
     static var ic24CameraOff: Image { Image(#function) }
+    static var ic24Car: Image { Image(#function) }
     static var ic24Cash: Image { Image(#function) }
     static var ic24Cashback: Image { Image(#function) }
     static var ic24Cast: Image { Image(#function) }
@@ -478,7 +480,7 @@ public extension Image {
     static var ic24Eye: Image { Image(#function) }
     static var ic24EyeOff: Image { Image(#function) }
     static var ic24FaceId: Image { Image(#function) }
-    static var ic24Facebook: Image { Image(#function) }
+    static var ic24FacebK: Image { Image(#function) }
     static var ic24FastForward: Image { Image(#function) }
     static var ic24Favorites: Image { Image(#function) }
     static var ic24Feather: Image { Image(#function) }
@@ -544,6 +546,7 @@ public extension Image {
     static var ic24LogOut: Image { Image(#function) }
     static var ic24LogoForaColor: Image { Image(#function) }
     static var ic24LogoForaLine: Image { Image(#function) }
+    static var ic24LogoForaOneColor: Image { Image(#function) }
     static var ic24Mail: Image { Image(#function) }
     static var ic24Map: Image { Image(#function) }
     static var ic24MapPin: Image { Image(#function) }
@@ -556,6 +559,7 @@ public extension Image {
     static var ic24Menu: Image { Image(#function) }
     static var ic24MessageCircle: Image { Image(#function) }
     static var ic24MessageSquare: Image { Image(#function) }
+    static var ic24Metro: Image { Image(#function) }
     static var ic24Mic: Image { Image(#function) }
     static var ic24MicOff: Image { Image(#function) }
     static var ic24Minimize: Image { Image(#function) }
@@ -566,6 +570,7 @@ public extension Image {
     static var ic24Monitor: Image { Image(#function) }
     static var ic24Moon: Image { Image(#function) }
     static var ic24MoreHorizontal: Image { Image(#function) }
+    static var ic24MoreHorizontalColor: Image { Image(#function) }
     static var ic24MoreVertical: Image { Image(#function) }
     static var ic24MousePointer: Image { Image(#function) }
     static var ic24Move: Image { Image(#function) }
@@ -712,17 +717,28 @@ public extension Image {
     static var ic40Card: Image { Image(#function) }
     static var ic40Delete: Image { Image(#function) }
     static var ic40FaceId: Image { Image(#function) }
+    static var ic48Abroad: Image { Image(#function) }
+    static var ic48AlertCircle: Image { Image(#function) }
+    static var ic48AnotherCard: Image { Image(#function) }
+    static var ic48BankDetails: Image { Image(#function) }
     static var ic48BarcodeScanner: Image { Image(#function) }
+    static var ic48BetweenTheir: Image { Image(#function) }
     static var ic48Check: Image { Image(#function) }
     static var ic48Clock: Image { Image(#function) }
     static var ic48Close: Image { Image(#function) }
+    static var ic48PinATM: Image { Image(#function) }
+    static var ic48PinManyBranches: Image { Image(#function) }
+    static var ic48PinManyBranchesBlack: Image { Image(#function) }
+    static var ic48PinManyBranchesRed: Image { Image(#function) }
+    static var ic48PinOffice: Image { Image(#function) }
+    static var ic48PinOthers: Image { Image(#function) }
+    static var ic48PinTerminal: Image { Image(#function) }
+    static var ic48Search: Image { Image(#function) }
     static var ic48Settings: Image { Image(#function) }
+    static var ic48Telephone: Image { Image(#function) }
+    static var ic48Tool: Image { Image(#function) }
     static var ic48UploadToAccount: Image { Image(#function) }
     static var ic64TouchID: Image { Image(#function) }
     static var ic64FaceId: Image { Image(#function) }
     static var ic64ForaColor: Image { Image(#function) }
-    static var ic88Denied: Image { Image(#function) }
-    static var ic88Done: Image { Image(#function) }
-    static var ic88TransferToAccount: Image { Image(#function) }
-    static var ic88Waiting: Image { Image(#function) }
 }

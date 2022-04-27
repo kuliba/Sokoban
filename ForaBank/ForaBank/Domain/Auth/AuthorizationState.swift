@@ -9,6 +9,8 @@ import Foundation
 
 enum AuthorizationState {
     
-    case notAuthorized
-    case authorized(credentials: CSRFCredentials)
+    case registerRequired
+    case signInRequired(pincode: String)
+    case unlockRequired(pincode: String)
+    case authorized
 }

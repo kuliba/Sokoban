@@ -117,7 +117,7 @@ class ContactInputViewController: UIViewController {
     init(paymentTemplate: PaymentTemplateData) {
         super.init(nibName: nil, bundle: nil)
         self.paymentTemplate = paymentTemplate
-        
+        addBackButton()
         switch paymentTemplate.type {
         case .direct:
             if let model = paymentTemplate.parameterList.first as? TransferAnywayData {

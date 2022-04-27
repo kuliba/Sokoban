@@ -26,4 +26,5 @@ class URLHost {
         /// Для релизных запросов используется этот хост
         case qa = "test.inn4b.ru/dbo/api/v3"
     }
+    //git.briginvest
 }

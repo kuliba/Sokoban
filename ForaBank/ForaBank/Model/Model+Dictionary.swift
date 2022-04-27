@@ -13,14 +13,24 @@ extension ModelAction {
     
     enum Dictionary {
         
-        static let cached: [Kind] = [.anywayOperators, .fmsList, .fsspDebtList, .fsspDocumentList, .ftsList, .productCatalogList, .bannerCatalogList]
+        static let cached: [Kind] = [.anywayOperators, .fmsList, .fsspDebtList, .fsspDocumentList, .ftsList, .productCatalogList, .bannerCatalogList, .atmList, .atmServiceList, .atmTypeList, .atmMetroStationList, .atmCityList, .atmRegionList]
 
-        struct Request: Action {
-            
-            let type: Kind
-            let serial: String?
-        }
+        enum UpdateCache {
         
+            struct All: Action {}
+            
+            struct List: Action {
+                
+                let types: [Kind]
+            }
+            
+            struct Request: Action {
+                
+                let type: Kind
+                let serial: String?
+            }
+        }
+
         enum Kind: CaseIterable {
             
             case anywayOperators
@@ -37,9 +47,217 @@ extension ModelAction {
             case paymentSystemList
             case productCatalogList
             case bannerCatalogList
+            case atmList
+            case atmServiceList
+            case atmTypeList
+            case atmMetroStationList
+            case atmCityList
+            case atmRegionList
         }
     }
 }
+
+//MARK: - Cache
+
+extension Model {
+        
+    func dictionaryCheckCache(for dictionaryType: ModelAction.Dictionary.Kind) -> Bool {
+        
+        switch dictionaryType {
+        case .anywayOperators:
+            return localAgent.load(type: [OperatorGroupData].self) != nil
+            
+        case .banks:
+            return localAgent.load(type: [BankData].self) != nil
+            
+        case .countries:
+            return localAgent.load(type: [CountryData].self) != nil
+            
+        case .currencyList:
+            return localAgent.load(type: [CurrencyData].self) != nil
+            
+        case .fmsList:
+            return localAgent.load(type: [FMSData].self) != nil
+            
+        case .fsspDebtList:
+            return localAgent.load(type: [FSSPDebtData].self) != nil
+            
+        case .fsspDocumentList:
+            return localAgent.load(type: [FSSPDocumentData].self) != nil
+            
+        case .ftsList:
+            return localAgent.load(type: [FTSData].self) != nil
+            
+        case .fullBankInfoList:
+            return localAgent.load(type: [BankFullInfoData].self) != nil
+            
+        case .mobileList:
+            return localAgent.load(type: [MobileData].self) != nil
+            
+        case .mosParkingList:
+            return localAgent.load(type: [MosParkingData].self) != nil
+            
+        case .paymentSystemList:
+            return localAgent.load(type: [PaymentSystemData].self) != nil
+            
+        case .productCatalogList:
+            return localAgent.load(type: [CatalogProductData].self) != nil
+            
+        case .bannerCatalogList:
+            return localAgent.load(type: [BannerCatalogListData].self) != nil
+            
+        case .atmList:
+            return localAgent.load(type: [AtmData].self) != nil
+        
+        case .atmTypeList:
+            return localAgent.load(type: [AtmTypeData].self) != nil
+            
+        case .atmServiceList:
+            return localAgent.load(type: [AtmServiceData].self) != nil
+            
+        case .atmMetroStationList:
+            return localAgent.load(type: [AtmMetroStationData].self) != nil
+            
+        case .atmCityList:
+            return localAgent.load(type: [AtmCityData].self) != nil
+            
+        case .atmRegionList:
+            return localAgent.load(type: [AtmRegionData].self) != nil
+        }
+    }
+    
+    func dictionaryCacheSerial(for dictionaryType: ModelAction.Dictionary.Kind) -> String? {
+        
+        switch dictionaryType {
+        case .anywayOperators:
+            return localAgent.serial(for: [OperatorGroupData].self)
+            
+        case .banks:
+            return localAgent.serial(for: [BankData].self)
+            
+        case .countries:
+            return localAgent.serial(for: [CountryData].self)
+            
+        case .currencyList:
+            return localAgent.serial(for: [CurrencyData].self)
+            
+        case .fmsList:
+            return localAgent.serial(for: [FMSData].self)
+            
+        case .fsspDebtList:
+            return localAgent.serial(for: [FSSPDebtData].self)
+            
+        case .fsspDocumentList:
+            return localAgent.serial(for: [FSSPDocumentData].self)
+            
+        case .ftsList:
+            return localAgent.serial(for: [FTSData].self)
+            
+        case .fullBankInfoList:
+            return localAgent.serial(for: [BankFullInfoData].self)
+            
+        case .mobileList:
+            return localAgent.serial(for: [MobileData].self)
+            
+        case .mosParkingList:
+            return localAgent.serial(for: [MosParkingData].self)
+            
+        case .paymentSystemList:
+            return localAgent.serial(for: [PaymentSystemData].self)
+            
+        case .productCatalogList:
+            return localAgent.serial(for: [CatalogProductData].self)
+            
+        case .bannerCatalogList:
+            return localAgent.serial(for: [BannerCatalogListData].self)
+            
+        case .atmList:
+            return localAgent.serial(for: [AtmData].self)
+        
+        case .atmTypeList:
+            return localAgent.serial(for: [AtmTypeData].self)
+            
+        case .atmServiceList:
+            return localAgent.serial(for: [AtmServiceData].self)
+            
+        case .atmMetroStationList:
+            return localAgent.serial(for: [AtmMetroStationData].self)
+            
+        case .atmCityList:
+            return localAgent.serial(for: [AtmCityData].self)
+            
+        case .atmRegionList:
+            return localAgent.serial(for: [AtmRegionData].self)
+        }
+    }
+    
+    func dictionaryClearCache(for dictionaryType: ModelAction.Dictionary.Kind) {
+        
+        switch dictionaryType {
+        case .anywayOperators:
+            try? localAgent.clear(type: [OperatorGroupData].self)
+            
+        case .banks:
+            try? localAgent.clear(type: [BankData].self)
+            
+        case .countries:
+            try? localAgent.clear(type: [CountryData].self)
+            
+        case .currencyList:
+            try? localAgent.clear(type: [CurrencyData].self)
+            
+        case .fmsList:
+            try? localAgent.clear(type: [FMSData].self)
+            
+        case .fsspDebtList:
+            try? localAgent.clear(type: [FSSPDebtData].self)
+            
+        case .fsspDocumentList:
+            try? localAgent.clear(type: [FSSPDocumentData].self)
+            
+        case .ftsList:
+            try? localAgent.clear(type: [FTSData].self)
+            
+        case .fullBankInfoList:
+            try? localAgent.clear(type: [BankFullInfoData].self)
+            
+        case .mobileList:
+            try? localAgent.clear(type: [MobileData].self)
+            
+        case .mosParkingList:
+            try? localAgent.clear(type: [MosParkingData].self)
+            
+        case .paymentSystemList:
+            try? localAgent.clear(type: [PaymentSystemData].self)
+            
+        case .productCatalogList:
+            try? localAgent.clear(type: [CatalogProductData].self)
+            
+        case .bannerCatalogList:
+            try? localAgent.clear(type: [BannerCatalogListData].self)
+            
+        case .atmList:
+            try? localAgent.clear(type: [AtmData].self)
+        
+        case .atmTypeList:
+            try? localAgent.clear(type: [AtmTypeData].self)
+            
+        case .atmServiceList:
+            try? localAgent.clear(type: [AtmServiceData].self)
+            
+        case .atmMetroStationList:
+            try? localAgent.clear(type: [AtmMetroStationData].self)
+            
+        case .atmCityList:
+            try? localAgent.clear(type: [AtmCityData].self)
+            
+        case .atmRegionList:
+            try? localAgent.clear(type: [AtmRegionData].self)
+        }
+    }
+}
+
+//MARK: - Data Helpers
 
 extension Model {
     
@@ -89,16 +307,89 @@ extension Model {
         
         return localAgent.load(type: [FSSPDocumentData].self)
     }
+    
+    func dictionaryAtmList() -> [AtmData]? {
+        
+        return localAgent.load(type: [AtmData].self)
+    }
+    
+    func dictionaryAtmMetroStations() -> [AtmMetroStationData]? {
+        
+        return localAgent.load(type: [AtmMetroStationData].self)
+    }
+    
+    func dictionaryAtmServices() -> [AtmServiceData]? {
+
+        return localAgent.load(type: [AtmServiceData].self)
+    }
+}
+
+
+//MARK: - Reducers
+
+extension Model {
+    
+    static func dictionaryAtmReduce(current: [AtmData], update: [AtmData]) -> [AtmData] {
+        
+        var updated = current
+        
+        // insert items
+        let insertedItems = update.filter{ $0.action == .insert }
+        updated.append(contentsOf: insertedItems)
+        
+        // delete items
+        let deletedItems = update.filter({ $0.action == .delete }).map{ $0.id }
+        updated = updated.filter({ deletedItems.contains($0.id) == false})
+        
+        // update items
+        let updatedItems = update.filter({ $0.action == .update })
+        return updated.map({ item in
+            
+            if let updatedItem = updatedItems.first(where: { $0.id == item.id }) {
+                
+                return updatedItem
+                
+            } else {
+                
+                return item
+            }
+        })
+    }
 }
 
 //MARK: - Handlers
 
 extension Model {
     
-    // Anyway Operators
-    func handleDictionaryAnywayOperatorsRequest(_ payload: ModelAction.Dictionary.Request) {
+    // Update all cached
+    func handleDictionaryUpdateAll()  {
         
-        let command = ServerCommands.DictionaryController.GetAnywayOperatorsList(serial: payload.serial)
+        action.send(ModelAction.Dictionary.UpdateCache.List(types: ModelAction.Dictionary.cached))
+    }
+    
+    // Update list
+    
+    func handleDictionaryUpdateList(_ payload: ModelAction.Dictionary.UpdateCache.List) {
+        
+        for type in payload.types {
+            
+            if dictionaryCheckCache(for: type) == true {
+                
+                action.send(ModelAction.Dictionary.UpdateCache.Request(type: type, serial: dictionaryCacheSerial(for: type)))
+                
+            } else {
+                
+                dictionaryClearCache(for: type)
+                action.send(ModelAction.Dictionary.UpdateCache.Request(type: type, serial: nil))
+            }
+        }
+    }
+    
+    
+    // Anyway Operators
+    func handleDictionaryAnywayOperatorsRequest(_ serial: String?) {
+        
+        let command = ServerCommands.DictionaryController.GetAnywayOperatorsList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -136,9 +427,9 @@ extension Model {
     }
     
     // Banks
-    func handleDictionaryBanks(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryBanks(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetBanks(serial: payload.serial)
+        let command = ServerCommands.DictionaryController.GetBanks(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -176,9 +467,9 @@ extension Model {
     }
     
     // Countries
-    func handleDictionaryCountries(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryCountries(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetCountries(serial: payload.serial)
+        let command = ServerCommands.DictionaryController.GetCountries(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -216,9 +507,9 @@ extension Model {
     }
     
     // CurrencyList
-    func handleDictionaryCurrencyList(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryCurrencyList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetCurrencyList(serial: payload.serial)
+        let command = ServerCommands.DictionaryController.GetCurrencyList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -256,9 +547,9 @@ extension Model {
     }
     
     // FMSList
-    func handleDictionaryFMSList(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryFMSList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetFMSList(serial: payload.serial)
+        let command = ServerCommands.DictionaryController.GetFMSList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -296,9 +587,9 @@ extension Model {
     }
     
     // FSSPDebtList
-    func handleDictionaryFSSPDebtList(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryFSSPDebtList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetFSSPDebtList(serial: payload.serial)
+        let command = ServerCommands.DictionaryController.GetFSSPDebtList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -336,9 +627,9 @@ extension Model {
     }
     
     // FSSPDocumentList
-    func handleDictionaryFSSPDocumentList(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryFSSPDocumentList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetFSSPDocumentList(serial: payload.serial)
+        let command = ServerCommands.DictionaryController.GetFSSPDocumentList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -376,9 +667,9 @@ extension Model {
     }
     
     // FTSList
-    func handleDictionaryFTSList(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryFTSList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetFTSList(serial: payload.serial)
+        let command = ServerCommands.DictionaryController.GetFTSList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -417,9 +708,9 @@ extension Model {
     }
     
     // FullBankInfoList
-    func handleDictionaryFullBankInfoList(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryFullBankInfoList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetFullBankInfoList(serial: payload.serial)
+        let command = ServerCommands.DictionaryController.GetFullBankInfoList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -457,9 +748,9 @@ extension Model {
     }
     
     // MobileList
-    func handleDictionaryMobileList(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryMobileList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetMobileList(serial: payload.serial)
+        let command = ServerCommands.DictionaryController.GetMobileList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -497,9 +788,9 @@ extension Model {
     }
     
     // MosParkingList
-    func handleDictionaryMosParkingList(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryMosParkingList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetMosParkingList(serial: payload.serial)
+        let command = ServerCommands.DictionaryController.GetMosParkingList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -536,9 +827,9 @@ extension Model {
     }
     
     // PaymentSystemList
-    func handleDictionaryPaymentSystemList(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryPaymentSystemList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetPaymentSystemList(serial: payload.serial)
+        let command = ServerCommands.DictionaryController.GetPaymentSystemList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -575,9 +866,9 @@ extension Model {
     }
     
     // ProductCatalogList
-    func handleDictionaryProductCatalogList(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryProductCatalogList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetProductCatalogList(serial: payload.serial)
+        let command = ServerCommands.DictionaryController.GetProductCatalogList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -616,9 +907,9 @@ extension Model {
     }
     
     //BannerCatalogListData
-    func handleDictionaryBannerCatalogList(_ payload: ModelAction.Dictionary.Request) {
+    func handleDictionaryBannerCatalogList(_ serial: String?) {
         
-        let command = ServerCommands.DictionaryController.GetBannerCatalogList(serial: payload.serial)
+        let command = ServerCommands.DictionaryController.GetBannerCatalogList(serial: serial)
         serverAgent.executeCommand(command: command) {[unowned self] result in
             
             switch result {
@@ -655,4 +946,237 @@ extension Model {
             }
         }
     }
+    
+    //AtmDataList
+    func handleDictionaryAtmDataList(_ serial: String?) {
+        
+        let command = ServerCommands.AtmController.GetAtmList(serial: serial)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    guard let data = response.data else {
+                        return
+                    }
+                    
+                    var atmDataSource = [AtmData]()
+                    
+                    // load items from cache if exists
+                    if let cached = self.localAgent.load(type: [AtmData].self)  {
+                        atmDataSource.append(contentsOf: cached)
+                    }
+                    
+                    let result = Self.dictionaryAtmReduce(current: atmDataSource, update: data.list)
+                    
+                    do {
+ 
+                        try self.localAgent.store(result, serial: "\(data.version)")
+                        
+                    } catch {
+                        
+                        handleServerCommandCachingError(error: error, command: command)
+                    }
+                    
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                
+            case .failure(let error):
+                handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
+    //AtmServiceDataList
+    func handleDictionaryAtmServiceDataList(_ serial: String?) {
+        
+        let command = ServerCommands.AtmController.GetAtmServiceList(serial: serial)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    guard let data = response.data else {
+                        return
+                    }
+                    
+                    // check if we have updated data
+                    guard data.list.count > 0 else {
+                        return
+                    }
+                    
+                    do {
+ 
+                        try self.localAgent.store(data.list, serial: data.serial)
+                        
+                    } catch {
+                        
+                        handleServerCommandCachingError(error: error, command: command)
+                    }
+                    
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                
+            case .failure(let error):
+                handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
+    //AtmTypeDataList
+    func handleDictionaryAtmTypeDataList(_ serial: String?) {
+        
+        let command = ServerCommands.AtmController.GetAtmTypeList(serial: serial)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    guard let data = response.data else {
+                        return
+                    }
+                    
+                    // check if we have updated data
+                    guard data.list.count > 0 else {
+                        return
+                    }
+                    
+                    do {
+ 
+                        try self.localAgent.store(data.list, serial: data.serial)
+                        
+                    } catch {
+                        
+                        handleServerCommandCachingError(error: error, command: command)
+                    }
+                    
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                
+            case .failure(let error):
+                handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
+    //AtmMetroStationDataList
+    func handleDictionaryAtmMetroStationDataList(_ serial: String?) {
+        
+        let command = ServerCommands.AtmController.GetMetroStationList(serial: serial)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    guard let data = response.data else {
+                        return
+                    }
+                    
+                    // check if we have updated data
+                    guard data.list.count > 0 else {
+                        return
+                    }
+                    
+                    do {
+ 
+                        try self.localAgent.store(data.list, serial: data.serial)
+                        
+                    } catch {
+                        
+                        handleServerCommandCachingError(error: error, command: command)
+                    }
+                    
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                
+            case .failure(let error):
+                handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
+    //AtmCityDataList
+    func handleDictionaryAtmCityDataList(_ serial: String?) {
+        
+        let command = ServerCommands.AtmController.GetCityList(serial: serial)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    guard let data = response.data else {
+                        return
+                    }
+                    
+                    // check if we have updated data
+                    guard data.list.count > 0 else {
+                        return
+                    }
+                    
+                    do {
+ 
+                        try self.localAgent.store(data.list, serial: data.serial)
+                        
+                    } catch {
+                        
+                        handleServerCommandCachingError(error: error, command: command)
+                    }
+                    
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                
+            case .failure(let error):
+                handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
+    
+    //AtmRegionDataList
+    func handleDictionaryAtmRegionDataList(_ serial: String?) {
+        
+        let command = ServerCommands.AtmController.GetRegionList(serial: serial)
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    guard let data = response.data else {
+                        return
+                    }
+                    
+                    // check if we have updated data
+                    guard data.list.count > 0 else {
+                        return
+                    }
+                    
+                    do {
+ 
+                        try self.localAgent.store(data.list, serial: data.serial)
+                        
+                    } catch {
+                        
+                        handleServerCommandCachingError(error: error, command: command)
+                    }
+                    
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                
+            case .failure(let error):
+                handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
 }
+

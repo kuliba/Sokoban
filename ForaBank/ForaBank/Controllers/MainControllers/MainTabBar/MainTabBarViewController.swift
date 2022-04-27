@@ -15,17 +15,14 @@ class MainTabBarViewController: UITabBarController {
     let historyVC = DevelopViewController()
     let chatVC = ChatViewController()
     
-
     override func viewDidLoad() {
         super.viewDidLoad()
         getFastPaymentContractList()
         tabBar.layer.backgroundColor = UIColor(red: 0.973, green: 0.973, blue: 0.973, alpha: 0.82).cgColor
-//        tabBar.tintColor = #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)
-//        tabBar.tintColor = .clear
         tabBar.layer.borderWidth = 0.50
-        tabBar.layer.borderColor = UIColor.clear.cgColor
+        tabBar.layer.borderColor = UIColor(red: 211/255, green: 211/255, blue: 211/255, alpha: 0.7).cgColor
         tabBar.clipsToBounds = true
-
+        
         viewControllers = [
             generateNavController(rootViewController: mainVC,
                                   title: "Главный",
@@ -49,7 +46,7 @@ class MainTabBarViewController: UITabBarController {
         ]
         loadCatalog()
     }
-
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if GlobalModule.qrOperator != nil && GlobalModule.qrData != nil {
@@ -59,9 +56,12 @@ class MainTabBarViewController: UITabBarController {
             present(nc, animated: false)
             return
         }
+
+    //GlobalModule.c2bURL = "success"
+//        GlobalModule.c2bURL = "https://medium.com/wolox/ios-deep-linking-url-scheme-vs-universal-links-50abd3802f97"
+        //GlobalModule.c2bURL = "https://qr.nspk.ru/AS1000592TVC2NHL8U7OG5A3VG0P6FEV?type=01&bank=100000000217&sum=1000701&cur=RUB&crc=65AC"
         
-        //GlobalModule.c2bURL = "bank100000000217://qr.nspk.ru/AS1A002B0O3J2AKC97URG6GI1HAPP6VA?type=01&bank=1crt88888881&crc=9C74"
-        //GlobalModule.c2bURL = "https://qr.nspk.ru/AS1000285IN8NDBK8PE8PP8JECT7PP50?type=01&bank=1crt88888881&sum=1000501&cur=RUB&crc=E415"
+        //GlobalModule.c2bURL = "https://qr.nspk.ru/AD10004BV3QC8968984A781K6B7NK62U?type=02&bank=100000000007&sum=24300&cur=RUB&crc=F2F9"
         
         if GlobalModule.c2bURL != nil {
             let controller = C2BDetailsViewController.storyboardInstance()!
@@ -71,7 +71,7 @@ class MainTabBarViewController: UITabBarController {
             return
         }
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         UITabBar.appearance().tintColor = .black
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
@@ -85,6 +85,18 @@ class MainTabBarViewController: UITabBarController {
                     UserDefaults.standard.set(nil, forKey: "ConsentMe2MePull")
                 })
             }
+            
+            if UserDefaults.standard.object(forKey: "AnyPull") is [AnyHashable : Any] {
+                let topvc = UIApplication.topViewController()
+                
+                let pushHistory = PushHistoryViewController.storyboardInstance()!
+                let nc = UINavigationController(rootViewController: pushHistory)
+                nc.modalPresentationStyle = .fullScreen
+                topvc?.present(nc, animated: true, completion: {
+                    UserDefaults.standard.set(nil, forKey: "AnyPull")
+                })
+            }
+            
             
             if let bankId = UserDefaults.standard.object(forKey: "GetMe2MeDebitConsent") as? String {
                 let body = ["bankId": bankId] as [String: AnyObject]
@@ -105,10 +117,10 @@ class MainTabBarViewController: UITabBarController {
                                 })
                             }
                         } else {
-//                            let meToMeReq = RequestMeToMeModel(model: model)
+                            //                            let meToMeReq = RequestMeToMeModel(model: model)
                             let topvc = UIApplication.topViewController()
                             let vc = MeToMeRequestController()
-//                            vc.viewModel = meToMeReq
+                            //                            vc.viewModel = meToMeReq
                             vc.modalPresentationStyle = .fullScreen
                             topvc?.present(vc, animated: true, completion: {
                                 UserDefaults.standard.set(nil, forKey: "GetMe2MeDebitConsent")
@@ -127,12 +139,15 @@ class MainTabBarViewController: UITabBarController {
         navigationVC.tabBarItem.selectedImage = fillImage
         return navigationVC
     }
-
+    
     private func loadCatalog() {
+        
+    #if RELEASE
         if (GlobalModule.c2bURL == nil) {
             AppUpdater.shared.showUpdate(withConfirmation: true)
         }
-
+    #endif
+        
         NetworkHelper.request(.getCountries) { model, error in
             if error != nil {
                 self.showAlert(with: "Ошибка", and: error!)
@@ -187,17 +202,6 @@ class MainTabBarViewController: UITabBarController {
             Dict.shared.currencyList = currencySystem
             print("DEBUG: Load Currency")
         }
-
-        /// Add REALM
- //       AddAllUserCardtList.add() {}
-
-//        NetworkHelper.request(.getProductList) { cardList , error in
-//            if error != nil {
-//                self.showAlert(with: "Ошибка", and: error!)
-//            }
-//            guard let cardList = cardList as? [GetProductListDatum] else { return }
-//            print("DEBUG: Load card list... Count is: ", cardList.count)
-//        }
     }
     
     func getFastPaymentContractList() {

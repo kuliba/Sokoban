@@ -98,8 +98,6 @@ extension ProductViewController {
                         self.emptySpending.isHidden = true
                         self.tableView.isHidden = false
                         self.tableView.reloadData()
-                        self.scrollView.contentSize.height += CGFloat((dict.count * 80))
-
                         
                     } else {
                         self.tableView.isHidden = true
@@ -190,7 +188,8 @@ extension ProductViewController {
                         self.emptySpending.isHidden = true
                         self.tableView.isHidden = false
                         self.tableView.reloadData()
-                        self.scrollView.contentSize.height += CGFloat((dict.count * 80))
+                        
+
                     } else {
                         
                         self.tableView.isHidden = true
@@ -269,7 +268,6 @@ extension ProductViewController {
                         
                         self.emptySpending.isHidden = true
                         self.tableView.isHidden = false
-                        self.scrollView.contentSize.height += CGFloat((dict.count * 80))
                         self.tableView.reloadData()
                         self.tableView.hideSkeleton()
 

@@ -13,7 +13,7 @@ class SettingViewCoordinator: Coordinator {
 
     override init(router: RouterType) {
         super.init(router: router)
-        settingsViewController.addCloseButton()
+        settingsViewController.addCloseButton_setting()
         settingsViewController.delegate = self
     }
     

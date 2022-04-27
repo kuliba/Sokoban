@@ -14,7 +14,7 @@ class AuthLoginViewModel: ObservableObject {
     let action: PassthroughSubject<Action, Never> = .init()
     
     let header: HeaderViewModel
-    lazy var card: CardViewModel = CardViewModel(scanButton: .init(action: { self.action.send(AuthLoginViewModelAction.Show.Scaner()) }), textField: .init(masks: [.card, .account], regExp: "[0-9]"), nextButton: nil, state: .editing)
+    lazy var card: CardViewModel = CardViewModel(scanButton: .init(action: {[weak self] in self?.action.send(AuthLoginViewModelAction.Show.Scaner()) }), textField: .init(masks: [.card, .account], regExp: "[0-9]"), nextButton: nil, state: .editing)
     
     @Published var productsButton: ProductsButtonViewModel?
     
@@ -54,17 +54,20 @@ class AuthLoginViewModel: ObservableObject {
     
     private func bind() {
         
+        print("SessionAgent: AuthLoginViewModel BIND addr:\(Unmanaged.passUnretained(self).toOpaque())")
+
         model.action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 
                 switch action {
-                case let payload as ModelAction.Auth.Register.Response:
+                case let payload as ModelAction.Auth.CheckClient.Response:
                     self.action.send(AuthLoginViewModelAction.Spinner.Hide())
                     switch payload {
                     case .success(codeLength: let codeLength, phone: let phone, resendCodeDelay: let resendCodeDelay):
                         confirmViewModel = AuthConfirmViewModel(model, confirmCodeLength: codeLength, phoneNumber: phone, resendCodeDelay: resendCodeDelay, backAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Dismiss.Confirm())}, rootActions: rootActions)
                         isConfirmViewPresented = true
+                        print("SessionAgent: CHECK DONE")
                         
                     case .failure(message: let message):
                         alert = .init(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: {[weak self] in self?.alert = nil }))
@@ -82,9 +85,10 @@ class AuthLoginViewModel: ObservableObject {
                 
                 switch action {
                 case let payload as AuthLoginViewModelAction.Register:
-                    model.action.send(ModelAction.Auth.Register.Request(number: payload.cardNumber))
+                    model.action.send(ModelAction.Auth.CheckClient.Request(number: payload.cardNumber))
                     card.textField.dismissKeyboard()
                     self.action.send(AuthLoginViewModelAction.Spinner.Show())
+                    print("SessionAgent: CHECK CLIENT")
                     
                 case _ as AuthLoginViewModelAction.Show.Products:
                     productsViewModel = AuthProductsViewModel(model, products: model.catalogProducts.value, dismissAction: { [weak self] in self?.action.send(AuthLoginViewModelAction.Dismiss.Products())})
@@ -125,6 +129,7 @@ class AuthLoginViewModel: ObservableObject {
             }.store(in: &bindings)
                 
         card.$state
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] cardState in
                 
@@ -134,7 +139,7 @@ class AuthLoginViewModel: ObservableObject {
                     return
                 }
                 
-                card.nextButton = CardViewModel.NextButtonViewModel(action: {[weak self] in self?.action.send(AuthLoginViewModelAction.Register.init(cardNumber: cardNumber))})
+                card.nextButton = CardViewModel.NextButtonViewModel(action: {[weak self] in self?.action.send(AuthLoginViewModelAction.Register(cardNumber: cardNumber))})
                 
             }.store(in: &bindings)
         
@@ -152,6 +157,11 @@ class AuthLoginViewModel: ObservableObject {
                 }
                 
             }.store(in: &bindings)
+    }
+    
+    deinit {
+        
+        print("SessionAgent: AuthLoginViewModel DEINIT")
     }
 }
 
@@ -226,7 +236,7 @@ extension AuthLoginViewModel {
             let action: () -> Void
         }
         
-        enum State {
+        enum State: Hashable {
             
             case editing
             case ready(String)

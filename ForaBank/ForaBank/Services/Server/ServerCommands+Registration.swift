@@ -61,18 +61,20 @@ extension ServerCommands {
             
             struct Payload: Encodable {
                 
-                let cryptoVersion: String
-                let model: String
-                let operationSystem = "iOS"
+                let cryptoVersion: String?
                 let pushDeviceId: String
-                let pushFcmToken: String    
+                let pushFcmToken: String
+                let model: String
+                let operationSystem: String
+                let operationSystemVersion: String?
+                let appVersion: String?
             }
             
             struct Response: ServerResponse {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: EmptyData
+                let data: String?
             }
             
             internal init(token: String, payload: Payload) {
@@ -121,9 +123,9 @@ extension ServerCommands {
             let payload: Payload?
             let timeout: TimeInterval? = nil
 
-            
             struct Payload: Encodable {
-                let cryptoVersion: String
+                
+                let cryptoVersion: String?
                 let pushDeviceId: String
                 let pushFcmToken: String
                 let serverDeviceGUID: String
@@ -131,9 +133,10 @@ extension ServerCommands {
             }
             
             struct Settings: Encodable {
+    
+                let type: String
+                let value: String?
                 let isActive: Bool
-                let type: SettingsType
-                let value: String
             }
             
             enum SettingsType: String, Encodable { case pin, touchid, faceid }
@@ -149,6 +152,47 @@ extension ServerCommands {
                 
                 self.token = token
                 self.payload = payload
+            }
+            
+            init(credentials: SessionCredentials, pushDeviceId: String, pushFcmToken: String, serverDeviceGUID: String, loginValue: String, availableSensorType: BiometricSensorType?, isSensorEnabled: Bool) throws {
+                
+                let cryptoVersion = "1.0"
+                let pushDeviceIdEncrypted = try credentials.csrfAgent.encrypt(pushDeviceId)
+                let pushFcmTokenEncrypted = try credentials.csrfAgent.encrypt(pushFcmToken)
+                let serverDeviceGUIDEncrypted = try credentials.csrfAgent.encrypt(serverDeviceGUID)
+                
+                let settings = try Self.settings(credentials: credentials, loginValue: loginValue, availableSensorType: availableSensorType, isSensorEnabled: isSensorEnabled)
+                
+                self.init(token: credentials.token, payload: .init(cryptoVersion: cryptoVersion, pushDeviceId: pushDeviceIdEncrypted, pushFcmToken: pushFcmTokenEncrypted, serverDeviceGUID: serverDeviceGUIDEncrypted, settings: settings))
+            }
+            
+            static func settings(credentials: SessionCredentials, loginValue: String, availableSensorType: BiometricSensorType?, isSensorEnabled: Bool) throws -> [Settings] {
+                
+                let loginValueEncrypted = try credentials.csrfAgent.encrypt(loginValue)
+                let typePinEncrypted = try credentials.csrfAgent.encrypt(SettingsType.pin.rawValue)
+                let typeFaceEncrypted = try credentials.csrfAgent.encrypt(SettingsType.faceid.rawValue)
+                let typeTouchEncrypted = try credentials.csrfAgent.encrypt(SettingsType.touchid.rawValue)
+                
+                if let availableSensorType = availableSensorType {
+                    
+                    switch availableSensorType {
+                    case .face:
+                        return [.init(type: typePinEncrypted, value: loginValueEncrypted, isActive: true),
+                                .init(type: typeFaceEncrypted, value: loginValueEncrypted, isActive: isSensorEnabled),
+                                .init( type: typeTouchEncrypted, value: nil, isActive: false)]
+                        
+                    case .touch:
+                        return [.init(type: typePinEncrypted, value: loginValueEncrypted, isActive: true),
+                                .init(type: typeFaceEncrypted, value: nil, isActive: false),
+                                .init(type: typeTouchEncrypted, value: loginValueEncrypted, isActive: isSensorEnabled)]
+                    }
+                    
+                } else {
+                    
+                    return [.init(type: typePinEncrypted, value: loginValue, isActive: true),
+                            .init(type: typeFaceEncrypted, value: nil, isActive: false),
+                            .init(type: typeTouchEncrypted, value: nil, isActive: false)]
+                }
             }
         }
         /*

@@ -35,17 +35,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
-        /*
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
         let rootViewController = RootViewHostingViewController(with: .init(Model.shared))
         window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()
-//        rootViewController.showLogin()
-         */
         
         //LEGACY
+        /*
         // MARK: Window
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
@@ -57,12 +55,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let tapGesture = UITapGestureRecognizer(target: self, action: nil)
         tapGesture.delegate = self
         window?.addGestureRecognizer(tapGesture)
+         */
         
         // NetMonitoring observer
         self.observeNetworkStatus()
 
         if let urlContext = connectionOptions.urlContexts.first {
             let sendingAppID = urlContext.options.sourceApplication
+            
             GlobalModule.c2bURL = urlContext.url.description
         }
     }
@@ -102,10 +102,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             UIApplication.shared.keyWindow?.addBlure()
         }
     }
+    
+    func sceneWillEnterForeground(_ scene: UIScene) {
+        
+//        AppDelegate.shared.model.sessionAgent.action.send(SessionAgentAction.App.Activated())
+          AppDelegate.shared.model.action.send(ModelAction.Dictionary.UpdateCache.All())
+    }
+    
+    func sceneDidEnterBackground(_ scene: UIScene) {
+        
+        AppDelegate.shared.model.sessionAgent.action.send(SessionAgentAction.App.Inactivated())
+    }
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-        print("qr5555 scene(_ scene 1")
-        GlobalModule.c2bURL = "244"
         guard let url = URLContexts.first?.url else { return }
         guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true),
               let params = components.queryItems else {
@@ -123,7 +132,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             topvc?.present(nc, animated: false)
             return
         }
-        print("qr5555 scene(_ scene 2")
 
         if let bankId = params.first?.value {
             let bankId = String(bankId.dropFirst(4))

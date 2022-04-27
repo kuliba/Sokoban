@@ -57,6 +57,5 @@ extension ProductViewController: UICollectionViewDataSource {
         }
     }
     
-    
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {}
 }

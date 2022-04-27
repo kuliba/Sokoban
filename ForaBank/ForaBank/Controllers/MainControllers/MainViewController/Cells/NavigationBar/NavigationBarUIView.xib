@@ -20,7 +20,7 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7HM-54-WfL">
                             <rect key="frame" x="0.0" y="12" width="24" height="24"/>
                             <subviews>
-                                <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="searchBarIcon" translatesAutoresizingMaskIntoConstraints="NO" id="eVb-WI-DkT">
+                                <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="eVb-WI-DkT">
                                     <rect key="frame" x="0.0" y="0.0" width="24" height="24"/>
                                     <color key="tintColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
@@ -108,6 +108,5 @@
         <image name="belliconsvg" width="24" height="24"/>
         <image name="foraAvatar" width="20" height="20"/>
         <image name="qr_Icon" width="32" height="32"/>
-        <image name="searchBarIcon" width="24" height="24"/>
     </resources>
 </document>

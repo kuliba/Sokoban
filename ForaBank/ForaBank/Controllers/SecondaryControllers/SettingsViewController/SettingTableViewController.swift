@@ -7,14 +7,14 @@
 
 import UIKit
 import RealmSwift
+import LocalAuthentication
 
 protocol SettingTableViewControllerDelegate: AnyObject {
     func goLoginCardEntry()
 }
 
-
 class SettingTableViewController: UITableViewController {
-
+    
     var delegate: SettingTableViewControllerDelegate?
     
     let kHeaderViewHeight: CGFloat = 140
@@ -23,6 +23,7 @@ class SettingTableViewController: UITableViewController {
     @IBOutlet weak var phoneLabel: UILabel!
     @IBOutlet weak var emailLabel: UILabel!
     @IBOutlet weak var pushSwitch: UISwitch!
+    @IBOutlet weak var faceId: UISwitch!
     
     
     var imageView = UIImageView()
@@ -37,16 +38,23 @@ class SettingTableViewController: UITableViewController {
         button.addTarget(self, action: #selector(changeImage), for: .touchUpInside)
         
         //imageView
-        imageView.image = UIImage(named: "ProfileImage")
-        imageView.backgroundColor = UIColor.clear
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 96 / 2
-        imageView.setDimensions(height: 96, width: 96)
         
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: kHeaderViewHeight))
         headerView.backgroundColor = UIColor.white
         headerView.addSubview(imageView)
         headerView.addSubview(button)
+        
+        let userPhoto = loadImageFromDocumentDirectory(fileName: "userPhoto")
+        if userPhoto != nil {
+            imageView.image = userPhoto
+        } else {
+            imageView.image = UIImage(named: "ProfileImage")
+        }
+        imageView.backgroundColor = UIColor.clear
+        imageView.setDimensions(height: 96, width: 96)
+        imageView.layer.cornerRadius = 96 / 2
+        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFill
         
         imageView.centerX(inView: headerView,
                           topAnchor: headerView.topAnchor, paddingTop: 16)
@@ -56,14 +64,29 @@ class SettingTableViewController: UITableViewController {
         return headerView
     }
     
+    
+    let context = LAContext()
+    var error: NSError?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Профиль"
         tableView.tableHeaderView = tableHeaderView
-//        nameLabel.text = ""
-//        phoneLabel.text = ""
         emailLabel.text = ""
         loadConfig()
+        
+        tableView.isUserInteractionEnabled = true
+        
+        let context = context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error)
+        
+        DispatchQueue.main.async {
+            if context {
+                self.faceId.isOn = true
+            } else {
+                self.faceId.isOn = false
+            }
+            
+        }
     }
 
     private func loadConfig() {
@@ -84,7 +107,7 @@ class SettingTableViewController: UITableViewController {
                         }
                     }
                 }
-                self.getFastPaymentContractList { [weak self] contractList, error in
+                self.getUserAccount { [weak self] contractList, error in
                     self?.dismissActivity()
                     if error != nil {
                         self?.showAlert(with: "Ошибка", and: error!)
@@ -92,10 +115,18 @@ class SettingTableViewController: UITableViewController {
                         if let contractList = contractList {
                             DispatchQueue.main.async {
                                 let mask = StringMask(mask: "+0 (000) 000-00-00")
-                                let number = mask.mask(string: contractList.first?.fastPaymentContractAttributeList?.first?.phoneNumber)
+                                let number = mask.mask(string: contractList.phone)
                                 self?.phoneLabel.text = number
-                                self?.nameLabel.text = contractList.first?.fastPaymentContractClAttributeList?.first?.clientInfo?.name
-                                
+                                if let userName = UserDefaults.standard.object(forKey: "userName") as? String {
+                                    self?.nameLabel.text = userName
+                                } else {
+                                    self?.nameLabel.text = contractList.firstName
+                                }
+                                if let userName = contractList.email {
+                                self?.emailLabel.text = userName
+                                } else {
+                                    self?.emailLabel.text = ""
+                                }
                             }
                         }
                     }
@@ -107,12 +138,33 @@ class SettingTableViewController: UITableViewController {
     //MARK: - Actions
     
     @objc func changeImage() {
-        let imagePickerController = UIImagePickerController()
-        imagePickerController.delegate = self
-        imagePickerController.sourceType = .photoLibrary
-        imagePickerController.navigationController?.navigationBar.tintColor = .black
-        present(imagePickerController, animated: true, completion: nil)
-
+        let controller = SettingsPhotoViewController()
+        controller.itemIsSelect = { [weak self] item in
+            
+            switch item {
+            case "Сделать фото":
+                let vc = UIImagePickerController()
+                vc.sourceType = .camera
+                vc.allowsEditing = true
+                vc.delegate = self
+                self?.present(vc, animated: true)
+            case "Выбрать из галереи":
+                let imagePickerController = UIImagePickerController()
+                imagePickerController.delegate = self
+                imagePickerController.sourceType = .photoLibrary
+                imagePickerController.navigationController?.navigationBar.tintColor = .black
+                self?.present(imagePickerController, animated: true, completion: nil)
+            default:
+                print()
+            }
+            
+        }
+        
+        let navController = UINavigationController(rootViewController: controller)
+        navController.modalPresentationStyle = .custom
+        navController.transitioningDelegate = self
+        self.present(navController, animated: true)
+        
     }
     
     
@@ -163,6 +215,35 @@ class SettingTableViewController: UITableViewController {
         }
     }
     
+    @IBAction func showChangeNameAlertButton(_ sender: Any) {
+        self.showInputDialog(title: "Имя", subtitle: "Как к вам обращаться?", actionTitle: "Да", cancelTitle: "Отмена", inputText: self.nameLabel.text, inputPlaceholder: "Введите Имя", inputKeyboardType: .default) { _ in } actionHandler: { text in
+            if text != nil {
+            UserDefaults.standard.set(text, forKey: "userName")
+            NotificationCenter.default.post(name: Notification.Name("userNameNotification"), object: nil)
+            self.nameLabel.text = text
+            }
+        }
+
+    }
+    @IBAction func faceIdAction(_ sender: UISwitch) {
+        
+        self.showAlertWithCancel(with: "Для активации Face ID необходимо выполнить переход в настройки устройства.", and: "") {
+            if let appSettings = URL(string: UIApplication.openSettingsURLString + Bundle.main.bundleIdentifier!) {
+                if UIApplication.shared.canOpenURL(appSettings) {
+                  UIApplication.shared.open(appSettings)
+                }
+              }
+        }
+
+    }
+    @IBAction func faceIdSwitch(_ sender: Any) {
+        
+    }
+    
+    @IBAction func showPhoneAlert(_ sender: Any) {
+        self.showAlert(with: "Телефон", and: "для смены номера обратитесь в колл-центр или отделение банка")
+    }
+    
     private func cleanAllData() {
         UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
         
@@ -175,16 +256,52 @@ class SettingTableViewController: UITableViewController {
     func getFastPaymentContractList(_ completion: @escaping (_ model: [FastPaymentContractFindListDatum]? ,_ error: String?) -> Void) {
         NetworkManager<FastPaymentContractFindListDecodableModel>.addRequest(.fastPaymentContractFindList, [:], [:]) { model, error in
             if error != nil {
-                print("DEBUG: Error: ", error ?? "")
                 completion(nil, error)
             }
             guard let model = model else { return }
-            print("DEBUG: fastPaymentContractFindList", model)
+            
             if model.statusCode == 0 {
                 completion(model.data, nil)
             } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
-
+                completion(nil, model.errorMessage)
+            }
+        }
+        
+    }
+    
+    func getUserAccount(_ completion: @escaping (_ model: ClintInfoModelData? ,_ error: String?) -> Void) {
+        NetworkManager<ClintInfoModel>.addRequest(.getClientInfo, [:], [:]) { model, error in
+            if error != nil {
+                completion(nil, error)
+            }
+            guard let model = model else { return }
+            
+            if model.statusCode == 0 {
+                
+                var loginResponse = [DocumentSettingModel]()
+                
+                let a = model.data
+                let passport = DocumentSettingModel(icon: "rus passporrt",
+                                                    title: "Паспорт РФ",
+                                                    subtitle: (a?.regSeries ?? "") + (a?.regNumber ?? ""))
+                let inn = DocumentSettingModel(icon: "INN",
+                                               title: "ИНН",
+                                               subtitle: a?.INN ?? "")
+                let address = DocumentSettingModel(icon: "property tax",
+                                                   title: "Адрес регистрации",
+                                                   subtitle: a?.address ?? "")
+                
+                loginResponse.append(passport)
+                loginResponse.append(inn)
+                loginResponse.append(address)
+                let infoData = ["value": loginResponse]
+                NotificationCenter.default
+                    .post(name: NSNotification.Name("settingDocument"),
+                          object: nil,
+                          userInfo: infoData)
+                
+                completion(model.data, nil)
+            } else {
                 completion(nil, model.errorMessage)
             }
         }
@@ -208,8 +325,10 @@ class SettingTableViewController: UITableViewController {
         case 0:
             label.text = "Мои данные"
         case 1:
-            label.text = "Платежи и переводы"
+            label.text = "Документы"
         case 2:
+            label.text = "Платежи и переводы"
+        case 3:
             label.text = "Безопасность"
         default:
             label.text = ""
@@ -221,10 +340,65 @@ class SettingTableViewController: UITableViewController {
 
 // MARK: - UIImagePickerControllerDelegate
 extension SettingTableViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         picker.dismiss(animated: true, completion: nil)
         guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
-        imageView.image = image
+        self.imageView.image = image
+        saveImageInDocumentDirectory(image: image, fileName: "userPhoto")
+        NotificationCenter.default.post(name: Notification.Name("userPhotoNotification"), object: nil)
+        
+    }
+    
+    func saveImageInDocumentDirectory(image: UIImage, fileName: String) {
+        
+        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!;
+        let fileURL = documentsUrl.appendingPathComponent(fileName)
+        if let imageData = image.jpegData(compressionQuality: 1.0) {
+            try? imageData.write(to: fileURL, options: .atomic)
+            
+        }
+    }
+    
+    func loadImageFromDocumentDirectory(fileName: String) -> UIImage? {
+        
+        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!;
+        let fileURL = documentsUrl.appendingPathComponent(fileName)
+        do {
+            let imageData = try Data(contentsOf: fileURL)
+            return UIImage(data: imageData)
+        } catch {}
+        return nil
+    }
+    
+}
+
+
+extension SettingTableViewController: UIViewControllerTransitioningDelegate {
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        let presenter = PresentationController(presentedViewController: presented, presenting: presenting)
+        presenter.height = 200
+        return presenter
     }
 }
 
+extension UIImage {
+    func fixOrientation() -> UIImage {
+        if self.imageOrientation == UIImage.Orientation.up {
+            return self
+
+        }
+
+        UIGraphicsBeginImageContextWithOptions(self.size, false, self.scale)
+
+        self.draw(in: CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height))
+
+        let normalizedImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+
+        UIGraphicsEndImageContext()
+
+        return normalizedImage
+
+    }
+
+}

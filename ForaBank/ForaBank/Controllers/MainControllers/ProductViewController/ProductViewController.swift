@@ -9,6 +9,7 @@ import UIKit
 import SkeletonView
 import RealmSwift
 import SwiftUI
+import Combine
 
 protocol ProductViewControllerDelegate: AnyObject {
     func goPaymentsViewController()
@@ -19,10 +20,13 @@ protocol ChildViewControllerDelegate{
 }
 
 protocol CtoBDelegate : AnyObject{
-    func sendMyDataBack(product: UserAllCardsModel?)
+    func sendMyDataBack(product: UserAllCardsModel?, products: [UserAllCardsModel])
 }
 
 class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrollViewDelegate, UITextFieldDelegate {
+    
+    private let model = Model.shared
+    private var bindings = Set<AnyCancellable>()
     
     lazy var realm = try? Realm()
     var token: NotificationToken?
@@ -75,11 +79,11 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
     var firstTimeLoad = false
     var indexItem: Int?
     var scrollView = UIScrollView()
-    var collectionView: UICollectionView?
-    var products = [UserAllCardsModel](){
+    var collectionView = UICollectionView(frame: .init(), collectionViewLayout: .init())
+    var products = [UserAllCardsModel]() {
         didSet{
             DispatchQueue.main.async {
-                self.collectionView?.reloadData()
+                self.collectionView.reloadData()
             }
         }
     }
@@ -158,7 +162,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
     }()
     
     
-    lazy var activateSlider: MTSlideToOpenView = {
+    var activateSlider: MTSlideToOpenView = {
         let slide = MTSlideToOpenView(frame: CGRect(x: 26, y: 300, width: 317, height: 56))
         slide.sliderViewTopDistance = 0
         slide.thumbnailViewTopDistance = 4
@@ -166,7 +170,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         slide.sliderCornerRadius = 25
         slide.thumnailImageView.backgroundColor = .white
         slide.draggedView.backgroundColor = .clear
-        slide.delegate = self
         slide.thumnailImageView.image = #imageLiteral(resourceName: "sliderButton").imageFlippedForRightToLeftLayoutDirection()
         slide.showSliderText = true
         slide.textLabelLeadingDistance = 40
@@ -176,7 +179,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-     
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -236,9 +239,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         
         scrollView.isScrollEnabled = true
         scrollView.contentSize.width = UIScreen.main.bounds.width
-        scrollView.contentMode = .bottom
-        scrollView.contentSize.height = UIScreen.main.bounds.height + 1500
-        scrollView.anchor(left: view.leftAnchor, right: view.rightAnchor, paddingBottom: 20, height: 2000)
+        
+        scrollView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor)
         
         card.backgroundImageView.backgroundColor = UIColor(red: 0.667, green: 0.667, blue: 0.667, alpha: 1)
         card.backgroundImageView.layer.cornerRadius = 12
@@ -251,16 +253,16 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         flowLayout.minimumLineSpacing = 5
         flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: flowLayout)
-        collectionView?.register(UINib(nibName: "CardCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "CardCollectionViewCell")
-        collectionView?.register(UINib(nibName: "MoreButtonCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "MoreButtonCollectionViewCell")
+        collectionView.register(UINib(nibName: "CardCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "CardCollectionViewCell")
+        collectionView.register(UINib(nibName: "MoreButtonCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "MoreButtonCollectionViewCell")
         
-        collectionView?.delegate = self
-        collectionView?.dataSource = self
-        collectionView?.backgroundColor = .clear
-        collectionView?.isMultipleTouchEnabled = false
-        collectionView?.allowsMultipleSelection = false
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.backgroundColor = .clear
+        collectionView.isMultipleTouchEnabled = false
+        collectionView.allowsMultipleSelection = false
         
-        scrollView.addSubview(collectionView!)
+        scrollView.addSubview(collectionView)
         
         var filteredProducts = products.filter({$0.productType == product?.productType})
         
@@ -282,27 +284,21 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             width = CGFloat(products.count)
         }
         
-        collectionView?.anchor(top: scrollView.topAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 20, paddingRight: 20, width:  width * 60, height: 65)
+        collectionView.anchor(top: scrollView.topAnchor, paddingTop: 20, paddingLeft: 20, paddingBottom: 20, paddingRight: 20, width:  width * 60, height: 65)
         
-        collectionView?.centerX(inView: view)
-        collectionView?.contentMode = .center
+        collectionView.centerX(inView: view)
+        collectionView.contentMode = .center
         
         //CardView set
-        card.anchor(top: collectionView?.bottomAnchor, paddingTop: 0,  paddingBottom: 30,  width: 268, height: 160)
+        card.anchor(top: collectionView.bottomAnchor, paddingTop: 0,  paddingBottom: 30,  width: 268, height: 160)
         card.backgroundColor = .clear
         card.centerX(inView: view)
         card.card = product
         card.backgroundImageView.image = product?.XLDesign?.convertSVGStringToImage()
         card.backgroundImageView.sizeToFit()
-        card.addSubview(activateSlider)
         
-        if product?.statusPC == "17", product?.status == "Действует" || product?.status == "Выдано клиенту" {
-            
-            activateSlider.isHidden = false
-        } else {
-            activateSlider.isHidden = true
-        }
-        
+        view.addSubview(activateSlider)
+        activateSlider.isEnabled = true
         activateSlider.delegate = self
         activateSlider.center(inView: card)
         activateSlider.anchor(width: 167, height: 48)
@@ -346,18 +342,63 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         tableView.showsVerticalScrollIndicator = false
         
         scrollView.addSubview(tableView)
-        tableView.anchor(top: headerView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 20, paddingBottom: 20, paddingRight: 20, width: 300, height: 1500)
+        tableView.anchor(top: headerView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingLeft: 20, paddingRight: 20, height: UIScreen.main.bounds.height - 80)
         
         tableView.dataSource = self
         tableView.delegate = self
+        
+        scrollView.contentSize.height = UIScreen.main.bounds.height + tableView.frame.height + 300
         
         setupButtons()
         setupNavigationColor()
         setupProduct()
         loadHistoryForCard()
-        
+        bind()
     }
     
+    private func bind() {
+        
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as ModelAction.Products.UpdateCustomName.Response:
+                    switch payload {
+                    case .complete(let name):
+                        DispatchQueue.main.async {
+                            
+                            self.card.cardNameLabel.text = name
+                            
+                            // update product model
+                            guard let realm = try? Realm(), let product = self.product, product.isInvalidated == false else {
+                                return
+                            }
+
+                            try? realm.write({
+                                
+                                product.customName = name
+                            })
+                        }
+                    
+                    case .failed(let message):
+                        showAlert(with: "Ошибка", and: message)
+                    }
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+    }
+    
+    func centerItemsInCollectionView(cellWidth: Double, numberOfItems: Double, spaceBetweenCell: Double, collectionView: UICollectionView) -> UIEdgeInsets {
+        let totalWidth = cellWidth * numberOfItems
+        let totalSpacingWidth = spaceBetweenCell * (numberOfItems - 1)
+        let leftInset = (collectionView.frame.width - CGFloat(totalWidth + totalSpacingWidth)) / 2
+        let rightInset = leftInset
+        return UIEdgeInsets(top: 0, left: leftInset, bottom: 0, right: rightInset)
+    }
     
     fileprivate func setupProduct() {
         
@@ -379,6 +420,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         statusBarView.skeletonCornerRadius = 8
         statusBarLabel.text = ""
         
+        self.scrollView = UIScrollView()
+        
         statusBarView.isSkeletonable = true
         statusBarView.showAnimatedGradientSkeleton()
         
@@ -389,13 +432,13 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         
         if productsCount == 0 && products.count <= 1 {
             
-            collectionView?.anchor(height: 0)
-            collectionView?.isHidden = true
+            collectionView.anchor(height: 0)
+            collectionView.isHidden = true
             
         } else {
             
-            collectionView?.anchor(height: 65)
-            collectionView?.isHidden = false
+            collectionView.anchor(height: 65)
+            collectionView.isHidden = false
         }
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.showAlert(sender:)), name: Notification.Name("openPaymentsView"), object: nil)
@@ -433,6 +476,19 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
                 secondStackView.isHidden = false
                 
             }
+
+            
+            if product?.statusPC == "17", product?.status == "Действует" || product?.status == "Выдано клиенту" {
+                
+                activateSlider.isHidden = false
+                activateSlider.isEnabled = true
+                activateSlider.delegate = self
+
+            } else {
+
+                activateSlider.isHidden = true
+            }
+            
             
         case ProductType.account.rawValue:
             
@@ -450,13 +506,13 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             
             tableView.isHidden = false
             headerView.isHidden = false
+            activateSlider.isHidden = true
             
         case ProductType.deposit.rawValue:
             
             guard let number = self.product?.accountNumber else { return }
             
             self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4)))", color: "#ffffff")
-            
             
             button2.alpha = 0.4
             button2.isUserInteractionEnabled = false
@@ -465,6 +521,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             button4.setImage(UIImage(named: "server"), for: .normal)
             button4.alpha = 1
             button4.isUserInteractionEnabled = true
+            activateSlider.isHidden = true
             
             card.backgroundView?.backgroundColor = UIColor(hexString: "#999999")
             card.interestRate.isHidden = false
@@ -507,6 +564,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             
             card.backgroundView?.backgroundColor = UIColor(hexString: "#999999")
             card.interestRate.isHidden = false
+            activateSlider.isHidden = true
             
             button2.alpha = 0.4
             button2.isUserInteractionEnabled = false
@@ -726,26 +784,11 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         
         let saveAction = UIAlertAction(title: "Сохранить", style: UIAlertAction.Style.default, handler: { alert -> Void in
             
-            let nameTextField = alertController.textFields![0] as UITextField
-            guard let idCard = self.product?.cardID else { return }
-            guard let name = nameTextField.text else { return }
-            let body = [ "id" : idCard, "name" : name ] as [String : AnyObject]
-            
-            NetworkManager<SaveCardNameDecodableModel>.addRequest(.saveCardName, [:], body) { model, error in
-                
-                if error != nil {
-                    print("DEBUG: Error: ", error ?? "")
-                }
-                guard let model = model else { return }
-                if model.statusCode == 0 {
-                    DispatchQueue.main.async {
-                        self.card.cardNameLabel.text = name
-                        AddAllUserCardtList.add() {}
-                    }
-                } else {
-                    self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
-                }
+            guard let nameTextField = alertController.textFields?.first, let name = nameTextField.text, name.count > 0, let productId = self.product?.id, let productType = self.product?.productTypeEnum else {
+                return
             }
+            
+            self.model.action.send(ModelAction.Products.UpdateCustomName.Request(productId: productId, productType: productType, name: name))
         })
         
         let cancelAction = UIAlertAction(title: "Отмена", style: UIAlertAction.Style.default, handler: nil)
@@ -831,7 +874,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             alertController.addAction(saveAction)
             self.present(alertController, animated: true, completion: nil)
             
-        } else if button4.titleLabel?.text == "Управление"{
+        } else if button4.titleLabel?.text == "Управление" {
             
             presentRequisitsVc(product: product!, true)
             
@@ -889,12 +932,12 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             guard (self?.collectionView) != nil else {return}
             switch changes {
             case .initial:
-                self?.collectionView?.reloadData()
+                self?.collectionView.reloadData()
             case .update(_, let deletions, let insertions, let modifications):
-                self?.collectionView?.performBatchUpdates({
-                    self?.collectionView?.reloadItems(at: modifications.map { IndexPath(row: $0, section: 0) })
-                    self?.collectionView?.insertItems(at: insertions.map { IndexPath(row: $0, section: 0) })
-                    self?.collectionView?.deleteItems(at: deletions.map { IndexPath(row: $0, section: 0) })
+                self?.collectionView.performBatchUpdates({
+                    self?.collectionView.reloadItems(at: modifications.map { IndexPath(row: $0, section: 0) })
+                    self?.collectionView.insertItems(at: insertions.map { IndexPath(row: $0, section: 0) })
+                    self?.collectionView.deleteItems(at: deletions.map { IndexPath(row: $0, section: 0) })
                 })
             case .error(let error):
                 fatalError("\(error)")
@@ -935,7 +978,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         if let status = product?.status {
             
             if status == "Заблокирована банком" || status == "Блокирована по решению Клиента" || status == "BLOCKED_DEBET" || status == "BLOCKED_CREDIT" || status == "BLOCKED" || product?.statusPC == "3" || product?.statusPC == "5" || product?.statusPC == "6"  || product?.statusPC == "7"  || product?.statusPC == "20"  || product?.statusPC == "21" {
-
+                
                 
                 card.addSubview(blockView)
                 button.isEnabled = false
@@ -960,7 +1003,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
                 }
                 
             } else if product?.statusPC == "17", product?.status == "Действует" || product?.status == "Выдано клиенту"{
-
+                
                 button.isEnabled = false
                 button.alpha = 0.4
                 button2.isEnabled = false
@@ -973,7 +1016,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
                 guard let number = self.product?.number else { return }
                 
                 self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4))) · Карта не активирована", color: self.product?.fontDesignColor)
-                activateSlider.isHidden = false
             } else {
                 guard let number = self.product?.number else { return }
                 
@@ -1063,9 +1105,33 @@ extension ProductViewController: MTSlideToOpenDelegate {
 
 extension ProductViewController: CtoBDelegate {
     
-    func sendMyDataBack(product: UserAllCardsModel?) {
+    func sendMyDataBack(product: UserAllCardsModel?, products: [UserAllCardsModel]) {
         
         self.product = product
+        
+        var filteredProducts = products.filter({$0.productType == product?.productType})
+        
+        if product?.productType == ProductType.loan.rawValue {
+            
+            filteredProducts = products.filter({$0.productType == product?.productType})
+            filteredProducts += products.filter({$0.number == product?.settlementAccount})
+        }
+        
+        self.products = Array(filteredProducts[0 ..< filteredProducts.prefix(3).count])
+        productsCount = products.filter({$0.productType != product?.productType}).count
+        
+        let width: CGFloat
+        
+        if productsCount > 0 {
+            
+            width = CGFloat(products.count + 1)
+        } else {
+            
+            width = CGFloat(products.count)
+        }
+        
+        collectionView.reloadInputViews()
+        self.collectionView.anchor(width:  width * 60)
     }
 }
 

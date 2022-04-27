@@ -64,6 +64,7 @@ class MemeDetailVC : AddHeaderImageViewController {
             print("REALM Add")
         }
         if let template = paymentTemplate {
+            addBackButton()
             updateObjectWithTamplate(paymentTemplate: template)
             let cardId = template.parameterList.first?.payer.cardId
             updateObjectWithNotification(cardId: cardId)

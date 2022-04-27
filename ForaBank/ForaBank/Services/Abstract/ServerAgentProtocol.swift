@@ -7,8 +7,11 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 protocol ServerAgentProtocol {
+    
+    var action: PassthroughSubject<Action, Never> { get }
     
     func executeCommand<Command: ServerCommand>(command: Command, completion: @escaping (Result<Command.Response, ServerAgentError>) -> Void)
     func executeDownloadCommand<Command: ServerDownloadCommand>(command: Command, completion: @escaping (Result<Command.Response, ServerAgentError>) -> Void)
@@ -31,6 +34,10 @@ protocol ServerCommand: CustomDebugStringConvertible {
 
 extension ServerCommand {
     
+    var token: String? { nil }
+    var parameters: [ServerCommandParameter]? { nil }
+    var payload: Payload? { nil }
+    var timeout: TimeInterval? { nil }
     var cookiesProvider: Bool { false }
     var debugDescription: String {
         
@@ -119,4 +126,9 @@ struct ServerCommandParameter: CustomDebugStringConvertible {
     let value: String
     
     var debugDescription: String { "\(name), \(value)" }
+}
+
+enum ServerAgentAction {
+    
+    struct NetworkActivityEvent: Action {}
 }
