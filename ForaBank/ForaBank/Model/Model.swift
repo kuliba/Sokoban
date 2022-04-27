@@ -81,6 +81,7 @@ class Model {
         self.catalogBanners = .init([])
         self.paymentTemplates = .init([])
         self.paymentTemplatesViewSettings = .init(.initial)
+        self.notifications = .init([])
         self.currentUserLoaction = .init(nil)
         self.sessionAgent = sessionAgent
         self.serverAgent = serverAgent
