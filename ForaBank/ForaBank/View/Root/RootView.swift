@@ -13,7 +13,10 @@ struct RootView: View {
     
     var body: some View {
         
-        MainView(viewModel: .sampleProducts)
+        NavigationView {
+            
+            MainView(viewModel: viewModel.mainViewModel)
+        }
     }
 }
 

@@ -133,6 +133,9 @@ class Model {
             .sink { [unowned self] auth in
                 
                 switch auth {
+                case .active:
+                    action.send(ModelAction.Products.Update.Total.All())
+                    
                 case .inactive:
                     if let pincode = try? authStoredPincode() {
                         
@@ -164,9 +167,7 @@ class Model {
                     }
                     
                     //TODO: show error message
-                    
-                default:
-                    break
+            
                 }
                 
             }.store(in: &bindings)
