@@ -45,6 +45,9 @@ struct MainView: View {
                             case let openProductViewModel as MainSectionOpenProductView.ViewModel:
                                 MainSectionOpenProductView(viewModel: openProductViewModel)
                                 
+                            case let atmViewModel as MainSectionAtmView.ViewModel:
+                                MainSectionAtmView(viewModel: atmViewModel)
+                                
                             default:
                                 EmptyView()
                             }
@@ -68,6 +71,9 @@ struct MainView: View {
                 
             case .myProducts(let myProductsViewModel):
                 MyProductsView(viewModel: myProductsViewModel)
+                
+            case .places(let placesViewModel):
+                PlacesView(viewModel: placesViewModel)
             }
         })
         .navigationBarTitle("", displayMode: .inline)
