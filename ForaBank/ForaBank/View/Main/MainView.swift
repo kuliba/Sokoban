@@ -57,6 +57,9 @@ struct MainView: View {
         }
         .sheet(item: $viewModel.sheet, content: { sheet in
             switch sheet {
+            case .productProfile(let productProfileViewModel):
+                ProfileView(viewModel: productProfileViewModel)
+                
             case .userAccount(let userAccountViewModel):
                 UserAccountView(viewModel: userAccountViewModel)
                 

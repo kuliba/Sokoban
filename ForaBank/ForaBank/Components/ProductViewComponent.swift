@@ -14,7 +14,7 @@ extension ProductView {
 
     class ViewModel: MainSectionProductsListItemViewModel, ObservableObject, Hashable {
 
-        let productId: Int
+        let productId: ProductData.ID
         let header: HeaderViewModel
         @Published var name: String
         @Published var footer: FooterViewModel
@@ -24,7 +24,7 @@ extension ProductView {
         let productType: ProductType
         let action: () -> Void
         
-        internal init(id: String = UUID().uuidString, productId: Int = 0, header: HeaderViewModel, name: String, footer: FooterViewModel, statusAction: StatusActionViewModel?, appearance: Appearance, isUpdating: Bool, productType: ProductType, action: @escaping () -> Void) {
+        internal init(id: String = UUID().uuidString, productId: ProductData.ID = 0, header: HeaderViewModel, name: String, footer: FooterViewModel, statusAction: StatusActionViewModel?, appearance: Appearance, isUpdating: Bool, productType: ProductType, action: @escaping () -> Void) {
             
             self.productId = productId
             self.header = header

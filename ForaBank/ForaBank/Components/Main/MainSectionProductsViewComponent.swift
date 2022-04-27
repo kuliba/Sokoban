@@ -16,6 +16,8 @@ extension MainSectionProductsView {
     
     class ViewModel: MainSectionCollapsableViewModel {
         
+        let action: PassthroughSubject<Action, Never> = .init()
+        
         override var type: MainSectionType { .products }
         @Published var typeSelector: OptionSelectorView.ViewModel?
         @Published var selectedTypeId: Option.ID = ""
@@ -70,6 +72,14 @@ extension MainSectionProductsView {
                             continue
                         }
                         
+                        for product in productTypeItems {
+                            
+                            let itemViewModel = ProductView.ViewModel(with: product, statusAction: {}, action: { [weak self] in  self?.action.send(MainSectionProductsViewModelAction.ProductDidTapped(productId: product.id)) })
+                            items.append(itemViewModel)
+                        }
+                        
+                        /*
+                        
                         if let currentProductTypeItems = self.productsViewModels.value[productType] {
                             
                             //TODO: update view models if exists or add new
@@ -77,8 +87,9 @@ extension MainSectionProductsView {
                             
                         } else {
           
-                            items.append(contentsOf: productTypeItems.map({ ProductView.ViewModel(with: $0, statusAction: {}, action: {})}))
+                            items.append(contentsOf: productTypeItems.map({ ProductView.ViewModel(with: $0, statusAction: {}, action: { [weak self] productId in  self?.action.send(MainSectionProductsViewModelAction.ProductDidTapped(productId: productId)) })}))
                         }
+                         */
                     }
                     
                     self.items = items
@@ -118,6 +129,16 @@ extension MainSectionProductsView {
             let icon: Image
             let action: () -> Void
         }
+    }
+}
+
+//MARK: - Action
+
+enum MainSectionProductsViewModelAction {
+    
+    struct ProductDidTapped: Action {
+        
+        let productId: ProductData.ID
     }
 }
 

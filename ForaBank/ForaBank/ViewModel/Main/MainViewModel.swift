@@ -17,6 +17,7 @@ class MainViewModel: ObservableObject {
     @Published var navButtonsRight: [NavigationBarButtonViewModel]
     @Published var sections: [MainSectionViewModel]
     @Published var isRefreshing: Bool
+    @Published var productProfile: ProfileViewModel?
     @Published var sheet: Sheet?
     
     private var model: Model
@@ -33,12 +34,14 @@ class MainViewModel: ObservableObject {
     init(_ model: Model) {
         
         self.navButtonsRight = []
-        self.sections = []
+        self.sections = [MainSectionProductsView.ViewModel(model), MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample]
+        
         self.isRefreshing = false
         self.model = model
         
         navButtonsRight = createNavButtonsRight()
         bind()
+        
     }
     
     func bind() {
@@ -61,7 +64,49 @@ class MainViewModel: ObservableObject {
                 }
                 
             }.store(in: &bindings)
+        
+        model.productsUpdateState
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] updateState in
+                
+                switch updateState {
+                case .idle:
+                    isRefreshing = false
+                    
+                case .updating:
+                    isRefreshing = true
+                }
+                
+            }.store(in: &bindings)
+        
+        for section in sections {
+            
+            switch section {
+            case let productsSection as MainSectionProductsView.ViewModel:
+                productsSection.action
+                    .receive(on: DispatchQueue.main)
+                    .sink { [unowned self] action in
+                        
+                        switch action {
+                        case let payload as MainSectionProductsViewModelAction.ProductDidTapped:
+                            let productProfileViewModel: ProfileViewModel = .sample
+                            sheet = .productProfile(productProfileViewModel)
+                            
+                        default:
+                            break
+                            
+                        }
+                        
+                    }.store(in: &bindings)
+                    
+                
+            default:
+                break
+            }
+        }
     }
+    
+
     
     func createNavButtonsRight() -> [NavigationBarButtonViewModel] {
         
@@ -92,6 +137,7 @@ extension MainViewModel {
         
         var id: UUID { UUID() }
         
+        case productProfile(ProfileViewModel)
         case userAccount(UserAccountViewModel)
         case messages(MessagesHistoryViewModel)
         case myProducts(MyProductsViewModel)
