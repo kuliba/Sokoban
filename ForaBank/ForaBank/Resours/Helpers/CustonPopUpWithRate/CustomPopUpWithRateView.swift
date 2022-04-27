@@ -114,7 +114,7 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
             self.viewModel.cardToRealm = accountLoan.first
         }
         
-        self.cardFromField.model = cards.first
+//        self.cardFromField.model = cards.first
         self.viewModel.cardFromRealm = cards.first
     }
     

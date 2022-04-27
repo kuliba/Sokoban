@@ -77,6 +77,7 @@ extension CustomPopUpWithRateView {
                                 viewModel.summInCurrency = model.data?.creditAmount?.currencyFormatter(symbol: model.data?.currencyPayee ?? "RUB") ?? ""
                                 viewModel.taxTransction = model.data?.fee?.currencyFormatter(symbol: model.data?.currencyPayer ?? "RUB") ?? ""
                                 viewModel.template = self?.paymentTemplate
+                                
                                 vc.smsCodeField.isHidden = !(model.data?.needOTP ?? true)
                                 vc.confurmVCModel = viewModel
                                 vc.addCloseButton()

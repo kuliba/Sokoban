@@ -4,67 +4,63 @@ import RealmSwift
 
 class C2BDetailsFormViewController: UIViewController {
 
-//
-//        when (answer.operationStatus) {
-//"IN_PROGRESS" -> detailsArr.add(DetailsDO(R.drawable.ic_waiting2,"Статус операции", "в обработке"))
-//"REJECTED" -> detailsArr.add(DetailsDO(R.drawable.ic_transfer_reject2,"Статус операции", "отказ"))
-//"COMPLETE" -> detailsArr.add(DetailsDO(R.drawable.ic_success2,"Статус операции", "успешно"))
-//"FAILED" -> detailsArr.add(DetailsDO(-1,"Статус операции", answer.operationStatus))
-//}
-//detailsArr.add(DetailsDO(-1, "source", ""))
-
-    var amountField = ForaInput(
-            viewModel: ForaInputModel(
+    var amountField = C2BDetailsInputView(
+            viewModel: C2BDetailsInputViewModel(
                     title: "Сумма перевода",
-                    text: C2BDetailsViewModel.operationDetail?.amount?.description ?? "",
-                    image: #imageLiteral(resourceName: "Phone"),
+                    text: C2BDetailsViewModel.operationDetail?.amount?.currencyFormatter() ?? "",
+                    image: #imageLiteral(resourceName: "coins"),
                     isEditable: false))
 
-    var dateOperation = ForaInput(
-            viewModel: ForaInputModel(
-                    title: "Дата и время операции (МСК)",
-                    text: C2BDetailsViewModel.operationDetail?.dateForDetail ?? "",
-                    image: #imageLiteral(resourceName: "accountImage"),
-                    isEditable: false))
-
-    var nameOfRecipientField = ForaInput(
-            viewModel: ForaInputModel(
+    var nameOfRecipientField = C2BDetailsInputView(
+            viewModel: C2BDetailsInputViewModel(
                     title: "Наименование ТСП",
                     text: C2BDetailsViewModel.operationDetail?.merchantSubName ?? "",
-                    image: #imageLiteral(resourceName: "BankIcon"),
+                    image: C2BDetailsViewModel.recipientIcon,
                     isEditable: false))
 
-    var nameOfRecipient2Field = ForaInput(
-            viewModel: ForaInputModel(
+    var dateOperation = C2BDetailsInputView(
+            viewModel: C2BDetailsInputViewModel(
+                    title: "Дата и время операции (МСК)",
+                    text: C2BDetailsViewModel.operationDetail?.dateForDetail ?? "",
+                    image: #imageLiteral(resourceName: "date"),
+                    isEditable: false))
+
+    var stateOfOperation = C2BDetailsInputView(
+            viewModel: C2BDetailsInputViewModel(
+                    title: "Статус операции",
+                    text: C2BSuccessView.statusText,
+                    image: C2BSuccessView.statusImg!,
+                    isEditable: false))
+
+    var cardFromField = CardChooseView()
+
+    var nameOfRecipient2Field = C2BDetailsInputView(
+            viewModel: C2BDetailsInputViewModel(
                     title: "Получатель",
                     text: C2BDetailsViewModel.operationDetail?.payeeFullName ?? "",
-                    image: UIImage(named: "map-pin")!,
+                    image: UIImage(named: "fio")!,
                     isEditable: false))
 
-    var bankField = ForaInput(
-            viewModel: ForaInputModel(
+    var bankField = C2BDetailsInputView(
+            viewModel: C2BDetailsInputViewModel(
                     title: "Банк",
-                    image: UIImage(named: "hash")!,
+                    text: C2BSuccessView.bankName,
+                    image: C2BSuccessView.bankImg,
                     isEditable: false))
 
-    var commentField = ForaInput(
-            viewModel: ForaInputModel(
+    var commentField = C2BDetailsInputView(
+            viewModel: C2BDetailsInputViewModel(
                     title: "Сообщение получателю",
                     text: C2BDetailsViewModel.operationDetail?.comment ?? "",
-                    image: UIImage(named: "hash")!,
+                    image: UIImage(named: "message"),
                     isEditable: false))
 
-    var numberTransactionField = ForaInput(
-            viewModel: ForaInputModel(
+    var numberTransactionField = C2BDetailsInputView(
+            viewModel: C2BDetailsInputViewModel(
                     title: "Идентификатор операции",
                     text: C2BDetailsViewModel.operationDetail?.transferNumber ?? "",
                     image: UIImage(named: "hash")!,
                     isEditable: false))
-
-    var cardFromField = CardChooseView()
-    
-
-    let doneButton = UIButton(title: "Оплатить")
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,7 +68,6 @@ class C2BDetailsFormViewController: UIViewController {
         setupUI()
         hideKeyboardWhenTappedAround()
     }
-
 
     func setupData() {
         dismissActivity()
@@ -85,26 +80,53 @@ class C2BDetailsFormViewController: UIViewController {
     }
 
     fileprivate func setupUI() {
-        view.backgroundColor = .white
+        let imageViewRight = UIImageView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+        imageViewRight.contentMode = .scaleAspectFit
+        imageViewRight.image = UIImage(named: "sbp-logo")
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: imageViewRight)
 
+        view.backgroundColor = .white
+        cardFromField.model = C2BDetailsViewModel.sourceModel
+
+        let image = UIImage(named: "sbptext")
+        let imageViewSBP = UIImageView(image: image!)
+
+        let viewImg = UIView()
+        viewImg.addSubview(imageViewSBP)
+
+        let scrollView = UIScrollView()
+        scrollView.isScrollEnabled = true
         let stackView = UIStackView(
                 arrangedSubviews: [amountField,
-                                   dateOperation,
                                    nameOfRecipientField,
+                                   dateOperation,
+                                   stateOfOperation,
+                                   cardFromField,
                                    nameOfRecipient2Field,
+                                   bankField,
+                                   commentField,
                                    numberTransactionField,
-                                   cardFromField])
+                                   viewImg])
         stackView.axis = .vertical
         stackView.alignment = .fill
-        stackView.distribution = .equalSpacing
+        stackView.distribution = .fill
         stackView.spacing = 10
-        view.addSubview(stackView)
-
-        stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
-                left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20)
-
-        view.addSubview(doneButton)
-        doneButton.anchor(left: stackView.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: stackView.rightAnchor,
-                paddingLeft: 20, paddingBottom: 20, paddingRight: 20, height: 44)
+        view.addSubview(scrollView)
+        scrollView.addSubview(stackView)
+        scrollView.anchor(top: view.topAnchor,
+                left: view.leftAnchor,
+                bottom: view.bottomAnchor,
+                right: view.rightAnchor)
+        stackView.anchor(top: stackView.topAnchor,
+                left: stackView.leftAnchor,
+                right: stackView.rightAnchor,
+                height: 750)
+        scrollView.contentSize.width = UIScreen.main.bounds.width
+        scrollView.contentSize.height = 750
+        viewImg.anchor(left: view.leftAnchor,
+                right: view.rightAnchor,
+                paddingBottom: 100)
+        imageViewSBP.centerX(inView: viewImg)
+        imageViewSBP.anchor(top: viewImg.topAnchor, paddingTop: 10)
     }
 }

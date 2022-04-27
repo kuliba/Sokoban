@@ -35,7 +35,6 @@ class InternetTVMainViewModel {
         }
         operatorsList = realm?.objects(GKHOperatorsModel.self)
         operatorsList?.forEach({ op in
-            print("op5555  \(op.parentCode) + \(op.name)")
             if !op.parameterList.isEmpty && op.parentCode?.contains(InternetTVMainViewModel.filter) ?? false {
                 getCustomOrgs(op: op)
                 arrOrganizations.append(op)

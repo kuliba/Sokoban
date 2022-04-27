@@ -68,7 +68,7 @@ class ServerCommandsNotificationTests: XCTestCase {
     func testGetNotifications_Parameters() throws {
         // given
         
-        let command = ServerCommands.NotificationController.GetNotifications(token: "", offset: 100, limit: 200, type: .push, state: .inProgress)
+        let command = ServerCommands.NotificationController.GetNotifications(token: "", offset: 100, limit: 200, types: [.push, .email, .sms], states: [.inProgress, .delivered, .sent])
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -81,8 +81,8 @@ class ServerCommandsNotificationTests: XCTestCase {
         
         XCTAssertEqual(command.parameters?[0].value, "100")
         XCTAssertEqual(command.parameters?[1].value, "200")
-        XCTAssertEqual(command.parameters?[2].value, "PUSH")
-        XCTAssertEqual(command.parameters?[3].value, "IN_PROGRESS")
+        XCTAssertEqual(command.parameters?[2].value, "[PUSH,EMAIL,SMS]")
+        XCTAssertEqual(command.parameters?[3].value, "[IN_PROGRESS,DELIVERED,SENT]")
     }
     
 }

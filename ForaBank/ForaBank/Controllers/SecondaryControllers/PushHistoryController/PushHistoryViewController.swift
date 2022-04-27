@@ -26,9 +26,11 @@ class PushHistoryViewController: UIViewController {
         super.viewDidLoad()
         tempArray = realm?.objects(GetNotificationsModel.self)
         setupNavBar()
-        // Удалить
-        clearPushRealmData()
         
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
         downloadPushArray()
     }
     
@@ -39,11 +41,11 @@ class PushHistoryViewController: UIViewController {
         let body = ["offset": tempOffset,
                     "limit" : "100",
                     "notificationType" : "PUSH",
-                    "notificationState" : "SENT"
+                    "notificationState" : "[SENT,DELIVERED,READ]"
         ]
         GetNotificationsModelSaved.add(body, [:]) {
             DispatchQueue.main.async {
-                self.tableView.reloadData()
+                self.tableView?.reloadData()
             }
         }
     }

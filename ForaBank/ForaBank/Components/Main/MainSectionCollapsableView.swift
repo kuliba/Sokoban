@@ -10,12 +10,19 @@ import SwiftUI
 struct MainSectionCollapsableView<Content: View>: View {
     
     let title: String
+    let isEnabled: Bool
+    let edges: Edge.Set
+    let padding: CGFloat?
+
     @Binding var isCollapsed: Bool
     var content: () -> Content
     
-    init(title: String, isCollapsed: Binding<Bool>, @ViewBuilder content: @escaping () -> Content) {
+    init(title: String, edges: Edge.Set = [], padding: CGFloat? = nil, isEnabled: Bool = true, isCollapsed: Binding<Bool>, @ViewBuilder content: @escaping () -> Content) {
         
         self.title = title
+        self.isEnabled = isEnabled
+        self.edges = edges
+        self.padding = padding
         self._isCollapsed = isCollapsed
         self.content = content
     }
@@ -23,28 +30,46 @@ struct MainSectionCollapsableView<Content: View>: View {
     var body: some View {
         
         VStack(spacing: 16) {
-            
-            Button {
 
-                withAnimation {
-                    
-                    isCollapsed.toggle()
-                }
+            if isEnabled {
 
-            } label: {
+                Button {
+
+                    withAnimation {
+
+                        isCollapsed.toggle()
+                    }
+
+                } label: {
+
+                    HStack(alignment: .center, spacing: 4) {
+
+                        Text(title)
+                            .font(.textH2SB20282())
+                            .foregroundColor(.textSecondary)
+
+                        Image.ic24ChevronDown
+                            .rotationEffect(isCollapsed ? .degrees(-90) : .degrees(0))
+                            .foregroundColor(.iconGray)
+
+                        Spacer()
+                    }
+                }.padding(edges, padding)
+
+            } else {
 
                 HStack(alignment: .center, spacing: 4) {
 
                     Text(title)
                         .font(.textH2SB20282())
-                        .foregroundColor(.textSecondary)
-                    
+                        .foregroundColor(.textDisabled)
+
                     Image.ic24ChevronDown
-                        .rotationEffect(isCollapsed ? .degrees(-90) : .degrees(0))
                         .foregroundColor(.iconGray)
 
                     Spacer()
-                }
+
+                }.padding(edges, padding)
             }
 
             if isCollapsed == false {

@@ -6,8 +6,11 @@
 //
 
 import Foundation
+import Combine
 
 class ServerAgentEmptyMock: ServerAgentProtocol {
+    
+    let action: PassthroughSubject<Action, Never> = .init()
     
     func executeCommand<Command>(command: Command, completion: @escaping (Result<Command.Response, ServerAgentError>) -> Void) where Command : ServerCommand {
         

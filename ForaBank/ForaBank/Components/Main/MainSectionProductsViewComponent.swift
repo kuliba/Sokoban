@@ -16,11 +16,13 @@ extension MainSectionProductsView {
     
     class ViewModel: MainSectionCollapsableViewModel {
         
+        let action: PassthroughSubject<Action, Never> = .init()
+        
         override var type: MainSectionType { .products }
         @Published var typeSelector: OptionSelectorView.ViewModel?
         @Published var selectedTypeId: Option.ID = ""
         @Published var items: [MainSectionProductsListItemViewModel]
-        let moreButton: MoreButtonViewModel
+        lazy var moreButton: MoreButtonViewModel = MoreButtonViewModel(icon: .ic24MoreHorizontal, action: {[weak self] in self?.action.send(MainSectionProductsViewModelAction.MoreButtonTapped())})
         
         private var productsViewModels: CurrentValueSubject<[ProductType: [ProductView.ViewModel]], Never> = .init([:])
         private var productsGroupsState: CurrentValueSubject<[ProductType: Bool], Never> = .init([:])
@@ -31,7 +33,6 @@ extension MainSectionProductsView {
             
             self.typeSelector = productsTypeSelector
             self.items = products
-            self.moreButton = moreButton
             self.model = model
             super.init(isCollapsed: isCollapsed)
             
@@ -47,7 +48,6 @@ extension MainSectionProductsView {
             
             self.typeSelector = nil
             self.items = []
-            self.moreButton = .init(icon: .ic24MoreHorizontal, action: {})
             self.model = model
             super.init(isCollapsed: false)
             
@@ -70,6 +70,14 @@ extension MainSectionProductsView {
                             continue
                         }
                         
+                        for product in productTypeItems {
+                            
+                            let itemViewModel = ProductView.ViewModel(with: product, statusAction: {}, action: { [weak self] in  self?.action.send(MainSectionProductsViewModelAction.ProductDidTapped(productId: product.id)) })
+                            items.append(itemViewModel)
+                        }
+                        
+                        /*
+                        
                         if let currentProductTypeItems = self.productsViewModels.value[productType] {
                             
                             //TODO: update view models if exists or add new
@@ -77,8 +85,9 @@ extension MainSectionProductsView {
                             
                         } else {
           
-                            items.append(contentsOf: productTypeItems.map({ ProductView.ViewModel(with: $0, statusAction: {}, action: {})}))
+                            items.append(contentsOf: productTypeItems.map({ ProductView.ViewModel(with: $0, statusAction: {}, action: { [weak self] productId in  self?.action.send(MainSectionProductsViewModelAction.ProductDidTapped(productId: productId)) })}))
                         }
+                         */
                     }
                     
                     self.items = items
@@ -119,6 +128,18 @@ extension MainSectionProductsView {
             let action: () -> Void
         }
     }
+}
+
+//MARK: - Action
+
+enum MainSectionProductsViewModelAction {
+    
+    struct ProductDidTapped: Action {
+        
+        let productId: ProductData.ID
+    }
+    
+    struct MoreButtonTapped: Action {}
 }
 
 //MARK: - View

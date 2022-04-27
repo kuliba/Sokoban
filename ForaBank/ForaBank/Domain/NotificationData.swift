@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct NotificationData: Equatable {
+struct NotificationData: Equatable, Cachable {
     
     let date: Date
     let state: State
@@ -66,5 +66,25 @@ extension NotificationData: Codable {
     
     enum DecodingError: Error {
         case unableDecodeDate
+    }
+}
+
+//MARK: - Hashable
+
+extension NotificationData: Hashable {
+    
+    static func == (lhs: NotificationData, rhs: NotificationData) -> Bool {
+        return lhs.date == rhs.date
+               && lhs.text == rhs.text
+               && lhs.state == rhs.state
+               && lhs.type == rhs.type
+               
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(date)
+        hasher.combine(text)
+        hasher.combine(state)
+        hasher.combine(type)
     }
 }
