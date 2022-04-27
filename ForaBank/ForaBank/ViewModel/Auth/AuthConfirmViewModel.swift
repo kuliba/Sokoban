@@ -77,13 +77,12 @@ class AuthConfirmViewModel: ObservableObject {
                 
                 switch action {
                 case let payload as ModelAction.Auth.VerificationCode.Confirm.Response:
-                    rootActions.spinner.hide()
                     switch payload {
                     case .correct:
-                        pincodeViewModel = AuthPinCodeViewModel(model, mode: .create(step: .one), backAction: backAction, dismissAction: rootActions.dismiss)
-                        isPincodeViewPresented = true
-                        
+                        model.action.send(ModelAction.Auth.Register.Request())
+       
                     case .incorrect(let message):
+                        rootActions.spinner.hide()
                         alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in
                             self?.alert = nil
                             self?.code.state = .edit
@@ -92,15 +91,30 @@ class AuthConfirmViewModel: ObservableObject {
                         }))
                         
                     case .restricted(let message):
+                        rootActions.spinner.hide()
                         alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.action.send(AuthConfirmViewModelAction.Dismiss())}))
                         
                     case .failure(message: let message):
+                        rootActions.spinner.hide()
                         alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in
                             self?.alert = nil
                             self?.code.state = .edit
                             self?.code.textField.text = ""
                             self?.code.textField.showKeyboard()
                         }))
+                    }
+                    
+                case let payload as ModelAction.Auth.Register.Response:
+                    rootActions.spinner.hide()
+                    switch payload {
+                    case .success:
+                        pincodeViewModel = AuthPinCodeViewModel(model, mode: .create(step: .one), dismissAction: rootActions.dismiss)
+                        isPincodeViewPresented = true
+                        print("SessionAgent: REGISTER DONE, addr:\(Unmanaged.passUnretained(self).toOpaque())")
+                        
+                    case .failure(message: let message):
+                        alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: { [weak self] in self?.alert = nil}))
+                        print("SessionAgent: REGISTER ERROR")
                     }
                     
                 case let payload as ModelAction.Auth.VerificationCode.Resend.Response:
@@ -152,6 +166,7 @@ class AuthConfirmViewModel: ObservableObject {
             }.store(in: &bindings)
         
         code.$state
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] state in
                 
@@ -165,6 +180,7 @@ class AuthConfirmViewModel: ObservableObject {
                     code.textField.dismissKeyboard()
                     rootActions.spinner.show()
                     model.action.send(ModelAction.Auth.VerificationCode.Confirm.Request(code: code.textField.text))
+                    print("SessionAgent: CONFIRM CODE REQUEST")
                     
                 default:
                     break

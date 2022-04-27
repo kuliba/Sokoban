@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CryptoKit
 
 extension String {
     
@@ -135,4 +136,20 @@ extension String {
 
         return String(value.dropLast(value.digits.count - max))
     }
+    
+    func sha256String() throws -> String {
+        
+        guard let data = data(using: .utf8) else {
+            throw StringHelperError.unableCreateDataFromString
+        }
+        
+        let digest = SHA256.hash(data: data)
+        
+        return digest.hexStr
+    }
+}
+
+enum StringHelperError: Error {
+    
+    case unableCreateDataFromString
 }

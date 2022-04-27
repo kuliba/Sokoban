@@ -1,5 +1,5 @@
 //
-//  CSRFCredentials.swift
+//  SessionCredentials.swift
 //  ForaBank
 //
 //  Created by Max Gribov on 03.03.2022.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct CSRFCredentials {
+struct SessionCredentials {
     
     let token: String
     let csrfAgent: CSRFAgent<AESEncryptionAgent>

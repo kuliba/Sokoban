@@ -51,11 +51,13 @@ extension ServerCommands {
             
             struct Payload: Encodable {
                 
-                let cryptoVersion: String
+                let cryptoVersion: String?
                 let model: String
                 let operationSystem: String = "IOS"
                 let pushDeviceId: String
                 let pushFcmToken: String
+                let operationSystemVersion: String?
+                let appVersion: String?
             }
             
             struct Response: ServerResponse {
