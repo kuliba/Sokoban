@@ -48,11 +48,11 @@ extension ProductView {
             let name = productData.viewName
             let textColor = productData.fontDesignColor.color
             let productType = productData.productType
+            let backgroundImage = productData.extraLargeDesign.image ?? .init("")
             
-            self.init(header: .init(logo: nil, number: number, period: nil), name: name, footer: .init(balance: "nil", paymentSystem: nil), statusAction: nil, appearance: .init(textColor: textColor, background: .init(color: .bGIconBlack, image: nil), size: .normal), isUpdating: false, productType: productType, action: {})
+            self.init(header: .init(logo: nil, number: number, period: nil), name: name, footer: .init(balance: "nil", paymentSystem: nil), statusAction: nil, appearance: .init(textColor: textColor, background: .init(color: .bGIconBlack, image: backgroundImage), size: .normal), isUpdating: false, productType: productType, action: {})
             
             guard let balance = productData.balance?.currencyFormatter(symbol: productData.currency),
-                  let backgroundImage = productData.extraLargeDesign.image,
                   let backgroundColor = productData.background.first?.color  else { return }
             
             self.init(header: .init(logo: nil, number: number, period: nil), name: name, footer: .init(balance: balance, paymentSystem: nil), statusAction: nil, appearance: .init(textColor: textColor, background: .init(color: backgroundColor, image: backgroundImage), size: .normal), isUpdating: false, productType: productType, action: {})

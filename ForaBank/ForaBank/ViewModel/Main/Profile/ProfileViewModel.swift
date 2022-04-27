@@ -86,22 +86,6 @@ class ProfileViewModel: ObservableObject {
                     break
                 }
             }.store(in: &bindings)
-        
-        buttonsViewModel.action
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                switch action {
-                case _ as ProductProfileViewModelAction.BlockProduct:
-                    alert = .init(title: "Заблокировать карту?", message: "Карту можно будет разблокироать в приложении или в колл-центре", primary: .init(type: .default, title: "Отмена", action: { [weak self] in
-                        self?.alert = nil
-                    }), secondary: .init(type: .default, title: "Ok", action: { [weak self] in
-                        self?.model.action.send(ModelAction.Card.Unblock.Request(cardId: 1))
-                        self?.alert = nil
-                    }))
-                default:
-                    break
-                }
-            }.store(in: &bindings)
     }
 }
 
