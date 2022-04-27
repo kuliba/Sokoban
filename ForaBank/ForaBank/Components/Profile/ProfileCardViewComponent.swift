@@ -33,7 +33,7 @@ extension ProfileCardViewComponent {
             
         }
         
-        init(_ model: Model, productId: Int, productType: ProductType) {
+        init(_ model: Model, productId: ProductData.ID, productType: ProductType) {
             
             self.products = []
             self.model = model

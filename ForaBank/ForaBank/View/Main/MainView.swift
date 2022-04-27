@@ -13,107 +13,47 @@ struct MainView: View {
     @ObservedObject var viewModel: MainViewModel
     
     var body: some View {
-        NavigationView {
-            VStack {
+        
+        VStack {
+            
+            if viewModel.isRefreshing == true {
                 
-                if viewModel.isRefreshing == true {
+                RefreshView()
+            }
+            
+            ScrollView(showsIndicators: false) {
+                
+                ScrollViewReader { proxy in
                     
-                    RefreshView()
-                }
-                
-                HeaderView()
-                
-                ScrollView(showsIndicators: false) {
-                    
-                    ScrollViewReader { proxy in
+                    VStack(spacing: 20) {
                         
-                        VStack(spacing: 20) {
+                        ForEach(viewModel.sections) { section in
                             
-                            ForEach(viewModel.sections) { section in
+                            switch section {
+                            case let productsSectionViewModel as MainSectionProductsView.ViewModel:
+                                MainSectionProductsView(viewModel: productsSectionViewModel)
                                 
-                                switch section {
-                                case let productsSectionViewModel as MainSectionProductsView.ViewModel:
-                                    MainSectionProductsView(viewModel: productsSectionViewModel)
-                                    
-                                case let fastOperationViewModel as MainSectionFastOperationView.ViewModel:
-                                    MainSectionFastOperationView(viewModel: fastOperationViewModel)
-                                    
-                                case let promoViewModel  as MainSectionPromoView.ViewModel:
-                                    MainSectionPromoView(viewModel: promoViewModel)
-                                    
-                                case let currencyViewModel as MainSectionCurrencyView.ViewModel:
-                                    MainSectionCurrencyView(viewModel: currencyViewModel)
-                                    
-                                case let openProductViewModel as MainSectionOpenProductView.ViewModel:
-                                    MainSectionOpenProductView(viewModel: openProductViewModel)
-                                    
-                                default:
-                                    EmptyView()
-                                }
+                            case let fastOperationViewModel as MainSectionFastOperationView.ViewModel:
+                                MainSectionFastOperationView(viewModel: fastOperationViewModel)
+                                
+                            case let promoViewModel  as MainSectionPromoView.ViewModel:
+                                MainSectionPromoView(viewModel: promoViewModel)
+                                
+                            case let currencyViewModel as MainSectionCurrencyView.ViewModel:
+                                MainSectionCurrencyView(viewModel: currencyViewModel)
+                                
+                            case let openProductViewModel as MainSectionOpenProductView.ViewModel:
+                                MainSectionOpenProductView(viewModel: openProductViewModel)
+                                
+                            default:
+                                EmptyView()
                             }
                         }
                     }
                 }
-                .padding(.horizontal, 20)
+
             }
-            .navigationBarHidden(true)
-            
-        }
-    }
-    
-    struct HeaderView: View {
-        
-        var body: some View {
-            
-            HStack {
-                
-                ZStack(alignment: .topTrailing) {
-                    
-                    ZStack(alignment: .center) {
-                        
-                        Circle()
-                            .frame(width: 40, height: 40)
-                            .foregroundColor(Color.bGIconGrayLightest)
-                        
-                        Image.ic24User
-                            .foregroundColor(Color.gray)
-                    }
-                    
-                    ZStack(alignment: .center) {
-                        
-                        Circle()
-                            .frame(width: 20, height: 20)
-                            .foregroundColor(Color.white)
-                            .frame(alignment: .topTrailing)
-                        
-                        Image.ic64ForaColor
-                            .resizable()
-                            .frame(width: 12, height: 12)
-                    }
-                    .padding(.top, -4)
-                    .padding(.trailing, -8)
-                }
-                
-                Text("Name")
-                
-                Spacer()
-                
-                Button {
-                    
-                } label: {
-                    Image.ic24Search
-                        .foregroundColor(.iconBlack)
-                }
-                
-                Button {
-                    
-                } label: {
-                    Image.ic24Bell
-                        .foregroundColor(.iconBlack)
-                }
-                
-            }
-            .padding(.horizontal, 20)
+            .padding(20)
         }
         .sheet(item: $viewModel.sheet, content: { sheet in
             switch sheet {
@@ -223,4 +163,3 @@ extension MainViewModel {
     
     static let sampleProducts = MainViewModel(navButtonsRight: [.init(icon: .ic24Search, action: {}), .init(icon: .ic24Bell, action: {})], sections: [MainSectionProductsView.ViewModel(.productsMock), MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample], isRefreshing: false)
 }
-
