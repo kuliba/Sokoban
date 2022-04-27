@@ -22,7 +22,7 @@ extension MainSectionProductsView {
         @Published var typeSelector: OptionSelectorView.ViewModel?
         @Published var selectedTypeId: Option.ID = ""
         @Published var items: [MainSectionProductsListItemViewModel]
-        let moreButton: MoreButtonViewModel
+        lazy var moreButton: MoreButtonViewModel = MoreButtonViewModel(icon: .ic24MoreHorizontal, action: {[weak self] in self?.action.send(MainSectionProductsViewModelAction.MoreButtonTapped())})
         
         private var productsViewModels: CurrentValueSubject<[ProductType: [ProductView.ViewModel]], Never> = .init([:])
         private var productsGroupsState: CurrentValueSubject<[ProductType: Bool], Never> = .init([:])
@@ -33,7 +33,6 @@ extension MainSectionProductsView {
             
             self.typeSelector = productsTypeSelector
             self.items = products
-            self.moreButton = moreButton
             self.model = model
             super.init(isCollapsed: isCollapsed)
             
@@ -49,7 +48,6 @@ extension MainSectionProductsView {
             
             self.typeSelector = nil
             self.items = []
-            self.moreButton = .init(icon: .ic24MoreHorizontal, action: {})
             self.model = model
             super.init(isCollapsed: false)
             
@@ -140,6 +138,8 @@ enum MainSectionProductsViewModelAction {
         
         let productId: ProductData.ID
     }
+    
+    struct MoreButtonTapped: Action {}
 }
 
 //MARK: - View

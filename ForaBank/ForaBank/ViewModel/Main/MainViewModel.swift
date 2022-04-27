@@ -92,6 +92,10 @@ class MainViewModel: ObservableObject {
                             let productProfileViewModel: ProfileViewModel = .sample
                             sheet = .productProfile(productProfileViewModel)
                             
+                        case _ as MainSectionProductsViewModelAction.MoreButtonTapped:
+                            let myProductsViewModel: MyProductsViewModel = .sample
+                            sheet = .myProducts(myProductsViewModel)
+                            
                         default:
                             break
                             

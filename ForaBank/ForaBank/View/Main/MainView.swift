@@ -66,8 +66,8 @@ struct MainView: View {
             case .messages(let messagesHistoryViewModel):
                 MessagesHistoryView(viewModel: messagesHistoryViewModel)
                 
-            default:
-                EmptyView()
+            case .myProducts(let myProductsViewModel):
+                MyProductsView(viewModel: myProductsViewModel)
             }
         })
         .navigationBarTitle("", displayMode: .inline)
