@@ -22,7 +22,12 @@ extension ModelAction {
             
             struct Response: Action {
                 
-                let result: Result<[ProductStatementData], Error>
+                let result: Result
+                
+                enum Result {
+                    case success
+                    case failure(message: String)
+                }
             }
         }
     }
@@ -61,9 +66,11 @@ extension Model {
                         
                     default:
                         self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                        self.action.send(ModelAction.Statement.List.Response(result: .failure(message: response.errorMessage ?? "Возникла техническая ошибка. Свяжитесь с поддержкой банка для уточнения")))
                         return
                     }
                 case .failure(let error):
+                    self.action.send(ModelAction.Statement.List.Response(result: .failure(message: error.localizedDescription)))
                     self.handleServerCommandError(error: error, command: command)
                 }
             }
@@ -90,9 +97,11 @@ extension Model {
                         }
                     default:
                         self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                        self.action.send(ModelAction.Statement.List.Response(result: .failure(message: response.errorMessage ?? "Возникла техническая ошибка. Свяжитесь с поддержкой банка для уточнения")))
                         return
                     }
                 case .failure(let error):
+                    self.action.send(ModelAction.Statement.List.Response(result: .failure(message: error.localizedDescription)))
                     self.handleServerCommandError(error: error, command: command)
                 }
             }
@@ -118,9 +127,11 @@ extension Model {
                         }
                     default:
                         self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                        self.action.send(ModelAction.Statement.List.Response(result: .failure(message: response.errorMessage ?? "Возникла техническая ошибка. Свяжитесь с поддержкой банка для уточнения")))
                         return
                     }
                 case .failure(let error):
+                    self.action.send(ModelAction.Statement.List.Response(result: .failure(message: error.localizedDescription)))
                     self.handleServerCommandError(error: error, command: command)
                 }
             }
@@ -146,9 +157,11 @@ extension Model {
                         }
                     default:
                         self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                        self.action.send(ModelAction.Statement.List.Response(result: .failure(message: response.errorMessage ?? "Возникла техническая ошибка. Свяжитесь с поддержкой банка для уточнения")))
                         return
                     }
                 case .failure(let error):
+                    self.action.send(ModelAction.Statement.List.Response(result: .failure(message: error.localizedDescription)))
                     self.handleServerCommandError(error: error, command: command)
                 }
             }
