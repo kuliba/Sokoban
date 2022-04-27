@@ -17,28 +17,37 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
     
     let id: String
     let icon: Image
-    let paymentSystemIcon: Image
-    let balance: String
+    let title: String
     let subtitle: String
-    let cardType: CardType
+    let numberCard: String
+    let balance: String
+    let paymentSystemIcon: Image?
+    let balanceRub: Double
+    let dateLong: String
     
     private var bindings = Set<AnyCancellable>()
     
     init(id: String = UUID().uuidString,
          icon: Image,
-         paymentSystemIcon: Image,
-         balance: String,
+         title: String,
          subtitle: String,
-         state: State,
-         cardType: CardType) {
+         numberCard: String,
+         balance: String,
+         balanceRub: Double = 0,
+         dateLong: String = "",
+         paymentSystemIcon: Image? = nil,
+         state: State = .normal) {
         
         self.id = id
         self.icon = icon
-        self.paymentSystemIcon = paymentSystemIcon
-        self.balance = balance
+        self.title = title
         self.subtitle = subtitle
+        self.numberCard = numberCard
+        self.balance = balance
+        self.paymentSystemIcon = paymentSystemIcon
+        self.balanceRub = balanceRub
+        self.dateLong = dateLong
         self.state = state
-        self.cardType = cardType
         
         bind()
     }
@@ -157,28 +166,6 @@ extension MyProductsSectionItemViewModel {
         }
     }
     
-    enum CardType {
-        
-        case multibonus
-        case digital
-        case salary
-        case wantCard
-        case classic
-        case credit
-        
-        var name: String {
-            
-            switch self {
-            case .multibonus: return "Мультибонус"
-            case .digital: return "Цифровая"
-            case .salary: return "Зарплатная"
-            case .wantCard: return "Хочу карту"
-            case .classic: return " Classic"
-            case .credit: return "Кредит"
-            }
-        }
-    }
-    
     private func setNormalStateWithAnimation() {
         
         withAnimation {
@@ -206,58 +193,60 @@ enum MyProductsSectionItemAction {
 }
 
 extension MyProductsSectionItemViewModel {
-    
+
     static let sample1 = MyProductsSectionItemViewModel(
         icon: .init("Multibonus Card"),
-        paymentSystemIcon: .init("Logo Visa"),
+        title: "Кредит",
+        subtitle: "Дебетовая",
+        numberCard: "•  2953  •",
         balance: "19 547 ₽",
-        subtitle: "• 2953 • Дебетовая",
-        state: .normal,
-        cardType: .multibonus
+        dateLong: "•  29.08.22",
+        paymentSystemIcon: .init("Logo Visa")
     )
-    
-    static let sample2 =  MyProductsSectionItemViewModel(
+
+    static let sample2 = MyProductsSectionItemViewModel(
         icon: .init("Digital Card"),
-        paymentSystemIcon: .init("Logo Visa"),
+        title: "Цифровая",
+        subtitle: "Дебетовая",
+        numberCard: "•  2953  •",
         balance: "19 547 ₽",
-        subtitle: "• 2953 • Дебетовая",
-        state: .leftButton(.init(type: .activate, action: {})),
-        cardType: .digital
+        paymentSystemIcon: .init("Logo Visa"),
+        state: .leftButton(.init(type: .activate, action: {}))
     )
-    
-    static let sample3 =  MyProductsSectionItemViewModel(
+
+    static let sample3 = MyProductsSectionItemViewModel(
         icon: .init("Salary Card"),
-        paymentSystemIcon: .init("Logo Visa"),
+        title: "Зарплатная",
+        subtitle: "Дебетовая",
+        numberCard: "•  2953  •",
         balance: "19 547 ₽",
-        subtitle: "• 2953 • Дебетовая",
-        state: .rightButton(.init(type: .add, action: {})),
-        cardType: .salary
+        paymentSystemIcon: .init("Logo Visa"),
+        state: .rightButton(.init(type: .add, action: {}))
     )
-    
-    static let sample4 =  MyProductsSectionItemViewModel(
+
+    static let sample4 = MyProductsSectionItemViewModel(
         icon: .init("Want Card"),
-        paymentSystemIcon: .init(""),
-        balance: "19 547 ₽",
-        subtitle: "• 2953 • Бесплатно",
-        state: .normal,
-        cardType: .wantCard
+        title: "Хочу карту",
+        subtitle: "Бесплатно",
+        numberCard: "•  2953  •",
+        balance: "19 547 ₽"
     )
-    
-    static let sample5 =  MyProductsSectionItemViewModel(
+
+    static let sample5 = MyProductsSectionItemViewModel(
         icon: .init("Classic Card"),
-        paymentSystemIcon: .init("Logo Visa"),
+        title: "Classic",
+        subtitle: "Дебетовая",
+        numberCard: "•  2953  •",
         balance: "19 547 ₽",
-        subtitle: "• 2953 • Дебетовая",
-        state: .normal,
-        cardType: .classic
+        paymentSystemIcon: .init("Logo Visa")
     )
-    
-    static let sample6 =  MyProductsSectionItemViewModel(
+
+    static let sample6 = MyProductsSectionItemViewModel(
         icon: .init("Multibonus Card"),
-        paymentSystemIcon: .init("Logo Visa"),
+        title: "Мультибонус",
+        subtitle: "Дебетовая",
+        numberCard: "•  2953  •",
         balance: "19 547 ₽",
-        subtitle: "• 2953 • Дебетовая",
-        state: .normal,
-        cardType: .credit
+        paymentSystemIcon: .init("Logo Visa")
     )
 }

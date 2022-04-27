@@ -22,6 +22,15 @@ class MyProductsMoneyViewModel: ObservableObject {
         self.balance = balance
         self.currencyButton = currencyButton
     }
+
+    init() {
+
+        self.subtitle = "По курсу ЦБ"
+        self.balance = ""
+        self.currencyButton = .init(icon: .ic16ChevronDown,
+                                    title: "₽",
+                                    isSelected: false)
+    }
 }
 
 extension MyProductsMoneyViewModel {

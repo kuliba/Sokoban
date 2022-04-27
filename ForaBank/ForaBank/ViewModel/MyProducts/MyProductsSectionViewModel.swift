@@ -6,93 +6,69 @@
 //
 
 import Combine
+import Foundation
 
 class MyProductsSectionViewModel: ObservableObject, Identifiable {
-    
-    let type: SectionType
+
+    @Published var items: [MyProductsSectionItemViewModel]
+    @Published var isCollapsed: Bool
+
+    let id: String
+    let title: String
     let isEnabled: Bool
     
-    @Published var isCollapsed: Bool
-    @Published var items: [MyProductsSectionItemViewModel]
-    
-    var id: String { type.rawValue }
-    var title: String { type.name }
-    
-    @Published var selectedItemID: String = .init()
-    
-    init(type: SectionType,
+    init(title: String,
          items: [MyProductsSectionItemViewModel],
          isCollapsed: Bool,
          isEnabled: Bool) {
-        
-        self.type = type
+
+        id = UUID().uuidString
+        self.title = title
         self.isCollapsed = isCollapsed
         self.isEnabled = isEnabled
         self.items = items
-    }
-    
-    enum SectionType: String, CaseIterable {
-        
-        case inactiveProducts
-        case cards
-        case deposits
-        case credits
-        case investment
-        case insurance
-        
-        var name: String {
-            
-            switch self {
-            case .inactiveProducts: return "Неактивированные продукты"
-            case .cards: return "Карты"
-            case .deposits: return "Вклады"
-            case .credits: return "Кредиты"
-            case .investment: return "Инвестиции"
-            case .insurance: return "Страховка"
-            }
-        }
     }
 }
 
 extension MyProductsSectionViewModel {
     
     static let sample1 = MyProductsSectionViewModel(
-        type: .inactiveProducts,
+        title: "Неактивированные продукты",
         items: [.sample1, .sample2, .sample3],
         isCollapsed: false,
         isEnabled: true
     )
     
     static let sample2 = MyProductsSectionViewModel(
-        type: .cards,
+        title: "Карты",
         items: [.sample4, .sample5],
         isCollapsed: false,
         isEnabled: true
     )
     
     static let sample3 = MyProductsSectionViewModel(
-        type: .deposits,
+        title: "Вклады",
         items: [.sample6],
         isCollapsed: true,
         isEnabled: true
     )
     
     static let sample4 = MyProductsSectionViewModel(
-        type: .credits,
+        title: "Кредиты",
         items: [],
         isCollapsed: false,
         isEnabled: false
     )
     
     static let sample5 = MyProductsSectionViewModel(
-        type: .investment,
+        title: "Инвестиции",
         items: [],
         isCollapsed: false,
         isEnabled: false
     )
     
     static let sample6 = MyProductsSectionViewModel(
-        type: .insurance,
+        title: "Страховка",
         items: [],
         isCollapsed: false,
         isEnabled: false
