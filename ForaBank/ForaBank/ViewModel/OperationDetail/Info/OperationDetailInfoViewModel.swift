@@ -678,7 +678,7 @@ final class OperationDetailInfoViewModel: Identifiable {
             if let debitAccounCell = Self.debitAccountCell(with: product, currency: currency) {
                 cells.append(debitAccounCell)
             }
-            cells.append(BankCellViewModel(title: "Отправитель", icon: Image("hash"), name: statement.fastPayment?.foreignName ?? ""))
+            cells.append(BankCellViewModel(title: "Получатель", icon: Image("fio"), name: statement.fastPayment?.foreignName ?? ""))
             if let bankName = statement.fastPayment?.foreignBankName, statement.operationType == .debit {
                 cells.append(BankCellViewModel(title: "Банк получателя", icon:  imageBank ?? Image("bank_icon"), name: bankName))
             } else if let bankName = statement.fastPayment?.foreignBankName{
