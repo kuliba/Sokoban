@@ -124,7 +124,7 @@ class MainViewController: UIViewController {
     var refreshView: UIView?
     var sectionsExpanded: CurrentValueSubject<[Section: Bool], Never> = .init([:])
     let productTypeSelector = ProductTypeSelectorViewModel()
-    private let model: Model = .shared
+    let model: Model = .shared
     private var bindings = Set<AnyCancellable>()
     
     override func viewDidLoad() {
