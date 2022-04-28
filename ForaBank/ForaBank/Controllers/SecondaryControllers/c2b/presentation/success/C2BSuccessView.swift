@@ -68,11 +68,11 @@ class C2BSuccessView: UIView {
             break
         case "COMPLETED":
             C2BSuccessView.statusImg = #imageLiteral(resourceName: "OkOperators")
-            C2BSuccessView.statusText = "Успешно"
+            C2BSuccessView.statusText = "Успешный перевод"
             break
         case "COMPLETE":
             C2BSuccessView.statusImg = #imageLiteral(resourceName: "OkOperators")
-            C2BSuccessView.statusText = "Успешно"
+            C2BSuccessView.statusText = "Успешный перевод"
             break
         case .none:
             C2BSuccessView.statusImg = #imageLiteral(resourceName: "rejected")
