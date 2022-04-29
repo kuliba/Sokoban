@@ -49,6 +49,7 @@ extension ProductStatementData {
         let foreignName: String
         let foreignPhoneNumber: String
         let opkcid: String
+        let operTypeFP: String?
     }
     
     enum Kind: String, Codable {
