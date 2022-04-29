@@ -392,6 +392,8 @@ class MainViewController: UIViewController {
                     productCell.isUpdating = isUpdating
                 }
                 
+                self.model.action.send(ModelAction.Dictionary.UpdateCache.Request.init(type: .bannerCatalogList, serial: nil))
+                
             }.store(in: &bindings)
         
         sectionsExpanded

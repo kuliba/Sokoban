@@ -97,11 +97,11 @@ extension MainViewController: UICollectionViewDelegate {
             
         case .openProduct:
             if indexPath.row == 1{
-                let depositsProductsView = AuthProductsView(viewModel: .init(self.model, products: self.model.depositsProducts.value))
-                let vc = UIHostingController(rootView: depositsProductsView)
+                let vc = OpenProductHostingViewController(with: .init(self.model, products: self.model.depositsProducts.value, style: .deposit))
                 navigationController?.pushViewController(vc, animated: true)
                 
             } else {
+                
                 guard let url = URL(string: openProductViewModels[indexPath.row].controllerName ) else { return  }
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
