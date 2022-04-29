@@ -431,6 +431,9 @@
 		688B9BB626E03B3E00407A75 /* TotalMoneyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 688B9BB526E03B3E00407A75 /* TotalMoneyView.xib */; };
 		689A99AE2779E73600D1FDAE /* OperationDetailInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689A99AD2779E73600D1FDAE /* OperationDetailInfoViewModel.swift */; };
 		68A07C43281AAE0000797A54 /* DepositProductsHostingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A07C42281AAE0000797A54 /* DepositProductsHostingViewController.swift */; };
+		68A07C45281ADEBC00797A54 /* OfferProductViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A07C44281ADEBB00797A54 /* OfferProductViewComponent.swift */; };
+		68A07C48281B18C900797A54 /* OpenDepositView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A07C47281B18C800797A54 /* OpenDepositView.swift */; };
+		68A07C4B281B190800797A54 /* OpenDepositViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A07C4A281B190800797A54 /* OpenDepositViewModel.swift */; };
 		68A40A132771E154007333EA /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 68A40A122771E154007333EA /* FirebaseAnalytics */; };
 		68AD33F1279858E900647665 /* CsrfDtoDecodingGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 68AD33F0279858E900647665 /* CsrfDtoDecodingGeneric.json */; };
 		68AD33F327985AD500647665 /* GetSessionTimeoutResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 68AD33F227985AD500647665 /* GetSessionTimeoutResponseGeneric.json */; };
@@ -1537,6 +1540,9 @@
 		68935F71276970CF002F56C2 /* AntifraudViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AntifraudViewModel.swift; sourceTree = "<group>"; };
 		689A99AD2779E73600D1FDAE /* OperationDetailInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailInfoViewModel.swift; sourceTree = "<group>"; };
 		68A07C42281AAE0000797A54 /* DepositProductsHostingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositProductsHostingViewController.swift; sourceTree = "<group>"; };
+		68A07C44281ADEBB00797A54 /* OfferProductViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferProductViewComponent.swift; sourceTree = "<group>"; };
+		68A07C47281B18C800797A54 /* OpenDepositView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenDepositView.swift; sourceTree = "<group>"; };
+		68A07C4A281B190800797A54 /* OpenDepositViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenDepositViewModel.swift; sourceTree = "<group>"; };
 		68AD33F0279858E900647665 /* CsrfDtoDecodingGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = CsrfDtoDecodingGeneric.json; sourceTree = "<group>"; };
 		68AD33F227985AD500647665 /* GetSessionTimeoutResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetSessionTimeoutResponseGeneric.json; sourceTree = "<group>"; };
 		68AD33F427985B9B00647665 /* KeyExchangeResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = KeyExchangeResponseGeneric.json; sourceTree = "<group>"; };
@@ -3245,6 +3251,22 @@
 			path = Info;
 			sourceTree = "<group>";
 		};
+		68A07C46281B18A700797A54 /* OpenDeposit */ = {
+			isa = PBXGroup;
+			children = (
+				68A07C47281B18C800797A54 /* OpenDepositView.swift */,
+			);
+			path = OpenDeposit;
+			sourceTree = "<group>";
+		};
+		68A07C49281B18EB00797A54 /* OpenDepositViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				68A07C4A281B190800797A54 /* OpenDepositViewModel.swift */,
+			);
+			path = OpenDepositViewModel;
+			sourceTree = "<group>";
+		};
 		68A919EB27E37519004A1139 /* DetailAccountViewComponent */ = {
 			isa = PBXGroup;
 			children = (
@@ -3634,6 +3656,7 @@
 		7769F5BA27D3A2D900F80607 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				68A07C46281B18A700797A54 /* OpenDeposit */,
 				68E803E127D9200B00B75D41 /* Profile */,
 				7769F5BB27D3A2EA00F80607 /* MainView.swift */,
 			);
@@ -3665,6 +3688,7 @@
 		7772979127C77BFF0099EF91 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				68A07C49281B18EB00797A54 /* OpenDepositViewModel */,
 				68E803E427D927FB00B75D41 /* Profile */,
 				7772979227C77C190099EF91 /* MainViewModel.swift */,
 				7772979427C781420099EF91 /* MainViewSectionViewModel.swift */,
@@ -4012,6 +4036,7 @@
 				77C3829B27E31EBA00B5246E /* TextFieldFormatableViewComponent.swift */,
 				68A919EB27E37519004A1139 /* DetailAccountViewComponent */,
 				7744944627FEBC7F001E2B9E /* TagsGridView.swift */,
+				68A07C44281ADEBB00797A54 /* OfferProductViewComponent.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -6679,6 +6704,7 @@
 				EDDFE3CA275E1C4100F57C71 /* OpenDepositDecodableModel.swift in Sources */,
 				0BB24AB326F0C59900DDA4F6 /* SaveCardNameDecodableModel.swift in Sources */,
 				EDCE659527C4FFDE006C2C3E /* Model+PaymentsTaxesFNS.swift in Sources */,
+				68A07C4B281B190800797A54 /* OpenDepositViewModel.swift in Sources */,
 				A5C7A1AE275BEF58003BEF6D /* RequisiteDO.swift in Sources */,
 				ED664BB7274530320050D1E0 /* AccountStatementPDFController.swift in Sources */,
 				7769F5BC27D3A2EA00F80607 /* MainView.swift in Sources */,
@@ -6720,6 +6746,7 @@
 				0B66E8DC26CC5F4D00FD735D /* QRScannerCodeDelegate.swift in Sources */,
 				0BD1CAA026E6C3CD00CFE993 /* GetCurrencyList.swift in Sources */,
 				0BDE453126E2A8CB00B64A0A /* ExtensionGKHMainQR.swift in Sources */,
+				68A07C48281B18C900797A54 /* OpenDepositView.swift in Sources */,
 				ED92D3A226735A0A006D47B3 /* PaymentByPhoneViewController.swift in Sources */,
 				77F5CE1728060BCC00611B66 /* AtmRegionData.swift in Sources */,
 				6833E0D1273920CE004C070F /* MainTabBarCoordinator.swift in Sources */,
@@ -7008,6 +7035,7 @@
 				5A5ABF8C27AAF55800D548AA /* PaymentCountryData.swift in Sources */,
 				0B8C1C51273B2E1C00BA5CAC /* QRErrorCoordinator.swift in Sources */,
 				EDB1452E26665AD50028EF5A /* OrderProductsViewController.swift in Sources */,
+				68A07C45281ADEBC00797A54 /* OfferProductViewComponent.swift in Sources */,
 				EDCF89E226CACC7300DC9F54 /* MeToMeSetupSwitchView.swift in Sources */,
 				EDF4F24B277249950030F087 /* ChangePaymentContactDecodableModel.swift in Sources */,
 				0B8BE08F266FBE0500E96CAA /* CSRFDecodableModel.swift in Sources */,
