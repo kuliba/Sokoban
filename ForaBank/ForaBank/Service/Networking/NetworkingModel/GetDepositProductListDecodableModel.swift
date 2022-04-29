@@ -62,6 +62,7 @@ struct OpenDepositDatum: Codable {
     let detailedСonditions: [DetailedСondition]?
     let txtСondition: [String]?
     let termRateList: [DatumTermRateList]?
+    let termRateCapList: [DatumTermRateList]?
     let documentsList: [DocumentsList]?
 }
 
@@ -90,6 +91,7 @@ extension OpenDepositDatum {
         detailedСonditions: [DetailedСondition]?? = nil,
         txtСondition: [String]?? = nil,
         termRateList: [DatumTermRateList]?? = nil,
+        termRateCapList: [DatumTermRateList]?? = nil,
         documentsList: [DocumentsList]?? = nil
     ) -> OpenDepositDatum {
         return OpenDepositDatum(
@@ -99,6 +101,7 @@ extension OpenDepositDatum {
             detailedСonditions: detailedСonditions ?? self.detailedСonditions,
             txtСondition: txtСondition ?? self.txtСondition,
             termRateList: termRateList ?? self.termRateList,
+            termRateCapList: termRateCapList ?? self.termRateCapList,
             documentsList: documentsList ?? self.documentsList
         )
     }
