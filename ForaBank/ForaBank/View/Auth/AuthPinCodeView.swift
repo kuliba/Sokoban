@@ -22,6 +22,7 @@ struct AuthPinCodeView: View {
                 .padding(.top, 52)
             
             Spacer()
+            
             FooterView(viewModel: viewModel.footer)
             
             NavigationLink("", isActive: $viewModel.isPermissionsViewPresented) {
