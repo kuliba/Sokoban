@@ -20,7 +20,7 @@ class ProductStatementDataTests: XCTestCase {
         // given
         let url = bundle.url(forResource: "ProductStatementDataDecodingGeneric", withExtension: "json")!
         let json = try Data(contentsOf: url)
-        let fastPayment = ProductStatementData.FastPayment(documentComment: "string", foreignBankBIC: "044525491", foreignBankID: "10000001153", foreignBankName: "КУ ООО ПИР Банк - ГК \\\"АСВ\\\"", foreignName: "Петров Петр Петрович", foreignPhoneNumber: "70115110217", opkcid: "A1355084612564010000057CAFC75755")
+        let fastPayment = ProductStatementData.FastPayment(documentComment: "string", foreignBankBIC: "044525491", foreignBankID: "10000001153", foreignBankName: "КУ ООО ПИР Банк - ГК \\\"АСВ\\\"", foreignName: "Петров Петр Петрович", foreignPhoneNumber: "70115110217", opkcid: "A1355084612564010000057CAFC75755",operTypeFP: nil)
         
         // when
         let result = try decoder.decode(ProductStatementData.self, from: json)
