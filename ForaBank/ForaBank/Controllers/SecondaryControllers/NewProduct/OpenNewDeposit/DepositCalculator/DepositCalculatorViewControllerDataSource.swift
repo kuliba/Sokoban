@@ -12,7 +12,11 @@ import UIKit
 extension DepositCalculatorViewController {
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        if product?.termRateCapList != nil {
+            return 6
+        } else {
+            return 5
+        }
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -26,15 +30,46 @@ extension DepositCalculatorViewController {
             cell.viewModel = product
             cell.delegate = self
             return cell
+            
         case 2:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: detailDepositCell, for: indexPath) as! DetailInformationCollectionViewCell
-            cell.viewModel = product
-            return cell
+            if product?.termRateCapList != nil {
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: termsCapitCell, for: indexPath) as! DetailCapitCollectionViewCell
+                cell.viewModel = product
+                return cell
+                
+            } else {
+                
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: detailDepositCell, for: indexPath) as! DetailInformationCollectionViewCell
+                cell.viewModel = product
+                return cell
+            }
         case 3:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: termsDepositCell, for: indexPath) as! TermsDepositCollectionViewCell
-            cell.documentsList = product?.txtСondition ?? []
-            return cell
+            if product?.termRateCapList != nil {
+                
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: detailDepositCell, for: indexPath) as! DetailInformationCollectionViewCell
+                cell.viewModel = product
+                return cell
+                
+            } else {
+                
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: termsDepositCell, for: indexPath) as! TermsDepositCollectionViewCell
+                cell.documentsList = product?.txtСondition ?? []
+                return cell
+            }
         case 4:
+            if product?.termRateCapList != nil {
+                
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: termsDepositCell, for: indexPath) as! TermsDepositCollectionViewCell
+                cell.documentsList = product?.txtСondition ?? []
+                return cell
+                
+            } else {
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: docDepositCell, for: indexPath) as! DocDepositCollectionViewCell
+                cell.documentsList = product?.documentsList
+                return cell
+            }
+            
+        case 5:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: docDepositCell, for: indexPath) as! DocDepositCollectionViewCell
             cell.documentsList = product?.documentsList
             return cell

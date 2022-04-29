@@ -31,26 +31,60 @@ extension DepositCalculatorViewController: UICollectionViewDelegateFlowLayout {
                 height: 388)
             
         case 2:
-            let height = ((product?.detailedСonditions?.count ?? 1) * 44) + 40
-            return CGSize(
-                width: Int(collectionView.bounds.width) - 40,
-                height: height)
-        case 3:
-            var height: CGFloat = 88
-            if (product?.txtСondition?.count ?? 0) > 0 {
-                product?.txtСondition?.forEach({ term in
-                    height += requiredHeight(text: term, cellWidth: collectionView.bounds.width - 94) + 8
-                })
+            if product?.termRateCapList != nil {
+                return CGSize(
+                    width: collectionView.bounds.width - 40,
+                    height: 278)
+                
+            } else {
+            
+                let height = ((product?.detailedСonditions?.count ?? 1) * 44) + 40
+                return CGSize(
+                    width: Int(collectionView.bounds.width) - 40,
+                    height: height)
             }
-            return CGSize(
-                width: collectionView.bounds.width - 40,
-                height: height)
+        case 3:
+            if product?.termRateCapList != nil {
+                
+                let height = ((product?.detailedСonditions?.count ?? 1) * 44) + 40
+                return CGSize(
+                    width: Int(collectionView.bounds.width) - 40,
+                    height: height)
+                
+            } else {
+                
+                var height: CGFloat = 88
+                if (product?.txtСondition?.count ?? 0) > 0 {
+                    product?.txtСondition?.forEach({ term in
+                        height += requiredHeight(text: term, cellWidth: collectionView.bounds.width - 94) + 8
+                    })
+                }
+                return CGSize(
+                    width: collectionView.bounds.width - 40,
+                    height: height)
+            }
             
         case 4:
+            if product?.termRateCapList != nil {
+                var height: CGFloat = 88
+                if (product?.txtСondition?.count ?? 0) > 0 {
+                    product?.txtСondition?.forEach({ term in
+                        height += requiredHeight(text: term, cellWidth: collectionView.bounds.width - 94) + 8
+                    })
+                }
+                return CGSize(
+                    width: collectionView.bounds.width - 40,
+                    height: height)
+                
+            } else {
+                return CGSize(
+                    width: collectionView.bounds.width - 40,
+                    height: 180)
+            }
+        case 5:
             return CGSize(
                 width: collectionView.bounds.width - 40,
                 height: 180)
-            
         default:
             return CGSize(
                 width: collectionView.bounds.width,
