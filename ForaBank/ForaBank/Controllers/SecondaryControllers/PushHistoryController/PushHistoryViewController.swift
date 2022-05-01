@@ -41,9 +41,14 @@ class PushHistoryViewController: UIViewController {
         let body = ["offset": tempOffset,
                     "limit" : "100",
                     "notificationType" : "PUSH",
-                    "notificationState" : "[SENT,DELIVERED,READ]"
+                   // "notificationState" : "SENT,DELIVERED,READ" //,DELIVERED,READ
         ]
-        GetNotificationsModelSaved.add(body, [:]) {
+        
+        let query = [URLQueryItem(name: "notificationState", value: "SENT"),
+                     URLQueryItem(name: "notificationState", value: "DELIVERED"),
+                     URLQueryItem(name: "notificationState", value: "READ")]
+        
+        GetNotificationsModelSaved.add(body, [:], query) {
             DispatchQueue.main.async {
                 self.tableView?.reloadData()
             }

@@ -13,6 +13,7 @@ final class NetworkManager<T: NetworkModelProtocol> {
     static func addRequest(_ requestType: RouterManager,
                            _ urlParametrs: [String: String],
                            _ requestBody: [String: AnyObject],
+                           _ query: [URLQueryItem]? = nil,
                            completion: @escaping (_ model: T?, _ error: String?)->()) {
         
         var debuggedApi = [String]()
@@ -41,7 +42,6 @@ final class NetworkManager<T: NetworkModelProtocol> {
                     }
                 }
 
-        print("DEBUG: urlParametrs count",urlParametrs.count)
         if request.httpMethod != "GET" {
             /// URL Parameters
             if var urlComponents = URLComponents(url: request.url!,
@@ -54,8 +54,13 @@ final class NetworkManager<T: NetworkModelProtocol> {
                             value: "\(value)".addingPercentEncoding(withAllowedCharacters: .urlHostAllowed))
                     urlComponents.queryItems?.append(queryItem)
                 })
+                
+                if query != nil {
+                    query?.forEach { item in
+                        urlComponents.queryItems?.append(item)
+                    }
+                }
 
-                print("DEBUG: URLrequest:", urlComponents.query ?? "")
                 request.url = urlComponents.url
             }
             request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
@@ -102,8 +107,11 @@ final class NetworkManager<T: NetworkModelProtocol> {
                             value: "\(value)".addingPercentEncoding(withAllowedCharacters: .urlHostAllowed))
                     urlComponents.queryItems?.append(queryItem)
                 })
-
-                print("DEBUG: URLrequest:", urlComponents.url ?? "")
+                if query != nil {
+                    query?.forEach { item in
+                        urlComponents.queryItems?.append(item)
+                    }
+                }
                 request.url = urlComponents.url
             }
         }

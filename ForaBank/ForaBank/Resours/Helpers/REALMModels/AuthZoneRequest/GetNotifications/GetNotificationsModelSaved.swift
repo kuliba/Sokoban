@@ -10,9 +10,9 @@ import RealmSwift
 
 struct GetNotificationsModelSaved {
     
-    static func add(_ param: [String : String], _ body: [String: AnyObject], completion: @escaping () -> Void) {
+    static func add(_ param: [String : String], _ body: [String: AnyObject], _ query: [URLQueryItem], completion: @escaping () -> Void) {
         
-        NetworkManager<GetNotificationsDecodableModel>.addRequest(.getNotifications, param, body) { model, error in
+        NetworkManager<GetNotificationsDecodableModel>.addRequest(.getNotifications, param, body, query) { model, error in
             
             if error != nil {
                 completion()
