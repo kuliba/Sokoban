@@ -60,27 +60,33 @@ class C2BSuccessView: UIView {
             layoutLink.isHidden = true
         }
 
-        let docStatus = C2BDetailsViewModel.makeTransfer?.data?.documentStatus
+        var statusOp = ""
+        var docStatus = C2BDetailsViewModel.makeTransfer?.data?.documentStatus
         switch (docStatus) {
         case "IN_PROGRESS":
             C2BSuccessView.statusImg = #imageLiteral(resourceName: "waiting")
-            C2BSuccessView.statusText = "Запрос принят в обработку"
+            docStatus = "Запрос принят в обработку"
+            C2BSuccessView.statusText = "В обработке"
             break
         case "COMPLETED":
             C2BSuccessView.statusImg = #imageLiteral(resourceName: "OkOperators")
-            C2BSuccessView.statusText = "Успешный перевод"
+            statusOp = "Успешный перевод"
+            C2BSuccessView.statusText = "Успешно"
             break
         case "COMPLETE":
             C2BSuccessView.statusImg = #imageLiteral(resourceName: "OkOperators")
-            C2BSuccessView.statusText = "Успешный перевод"
+            statusOp = "Успешный перевод"
+            C2BSuccessView.statusText = "Успешно"
             break
         case .none:
             C2BSuccessView.statusImg = #imageLiteral(resourceName: "rejected")
-            C2BSuccessView.statusText = "Операция неуспешна!"
+            statusOp = "Операция неуспешна!"
+            C2BSuccessView.statusText = "Отказ"
             break
         case .some(_):
             C2BSuccessView.statusImg = #imageLiteral(resourceName: "rejected")
-            C2BSuccessView.statusText = "Операция неуспешна!"
+            statusOp = "Операция неуспешна!"
+            C2BSuccessView.statusText = "Отказ"
             break
         }
 
