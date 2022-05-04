@@ -8,10 +8,13 @@
 import SwiftUI
 
 struct UnderConstructionView: View {
+    @ObservedObject
+    var viewModel: UnderConstructionViewModel
+    
     var body: some View {
         VStack(spacing: 80) {
-            UnderConstructionTextBlockView()
-            UnderConstructionButtonBlockView()
+            UnderConstructionTextBlockView(viewModel: viewModel)
+            UnderConstructionButtonBlockView(viewModel: viewModel.buttonBlock)
         }
     }
 }
@@ -19,13 +22,18 @@ struct UnderConstructionView: View {
 //MARK: - TextBlock
 
 struct UnderConstructionTextBlockView: View {
+    var viewModel: UnderConstructionViewModel
+    
     var body: some View {
         VStack(spacing: 24) {
-            Image.ic48Tool
+            viewModel.icon
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 88, height: 88)
             VStack(spacing: 12) {
-                Text("Раздел еще в разработке")
+                Text(viewModel.title)
                     .font(.textH3SB18240())
-                Text("Вы всегда можете обратиться в нашу службу поддержки с вопросами и предложениями")
+                Text(viewModel.subTitle)
                     .font(.textBodyMR14200())
                     .multilineTextAlignment(.center)
             }
@@ -38,43 +46,91 @@ struct UnderConstructionTextBlockView: View {
 //MARK: - ButtonBlock
 
 struct UnderConstructionButtonBlockView: View {
+    @ObservedObject
+    var viewModel: UnderConstructionViewModel.ButtonBlockViewModel
+    
     var body: some View {
         
         VStack(spacing: 16) {
-            HStack(spacing: 16) {
-                ForEach(0..<2) { _ in ButtonView() }
-            }
-            HStack(spacing: 16) {
-                ForEach(0..<3) { _ in ButtonView() }
+            ForEach(viewModel.buttons, id: \.self) { rowButtons in
+                HStack(spacing: 16) {
+                    ForEach(rowButtons) { button in
+                        ButtonView(viewModel: viewModel, buttonVM: button)
+                    }
+                }
             }
         }
         .padding(20)
     }
 }
 
+//MARK: - OneButton
+
 struct ButtonView: View {
+    @ObservedObject
+    var viewModel: UnderConstructionViewModel.ButtonBlockViewModel
+    var buttonVM: UnderConstructionViewModel.ButtonBlockViewModel.ButtonViewModel
+    
+    private var isMailButton: Bool {
+        if case .email( _) = buttonVM {
+            return true
+        } else {
+            return false
+        }
+    }
+    
     var body: some View {
         Button {
-            print("Tapped")
+            if isMailButton {
+                guard SendMailView.isCanSendMail else { return }
+                viewModel.isShowSendMail = true
+            } else {
+                guard let url = URL(string: buttonVM.appearance.url) else { return }
+                UIApplication.shared.open(url)
+            }
         } label: {
             ZStack {
                 RoundedRectangle(cornerRadius: 12)
                     .foregroundColor(.mainColorsGrayLightest)
                 VStack {
-                    Image.ic24Mail //Image.ic16PhoneOutgoing
+                    buttonVM.appearance.icon
                         .resizable()
                         .scaledToFill()
                         .frame(width: 24, height: 24)
                         .foregroundColor(.mainColorsBlack)
                         .padding(.top, 15)
                     Spacer()
-                    Text("Отправить e-mail")
+                    Text(buttonVM.appearance.title)
                         .font(.textBodySM12160())
                         .foregroundColor(.mainColorsBlack)
                         .padding(.bottom, 10)
                 }
             }
             .frame(height: 76)
+            .if(isMailButton) { view in
+                view.sheet(isPresented: $viewModel.isShowSendMail) {
+                    SendMailView(mailAddress: buttonVM.appearance.url)
+                }
+            }
+        }
+    }
+}
+
+//MARK: - Conditional View Modifier
+
+extension View {
+    /// Applies the given transform if the given condition evaluates to `true`.
+    /// - Parameters:
+    ///   - condition: The condition to evaluate.
+    ///   - transform: The transform to apply to the source `View`.
+    /// - Returns: Either the original `View` or the modified `View` if the condition is `true`.
+    
+    @ViewBuilder
+    func `if`<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {
+        if condition {
+            transform(self)
+        } else {
+            self
         }
     }
 }
@@ -83,6 +139,8 @@ struct ButtonView: View {
 
 struct UnderConstructionView_Previews: PreviewProvider {
     static var previews: some View {
-        UnderConstructionView()
+        Group {
+            UnderConstructionView(viewModel: UnderConstructionViewModel())
+        }
     }
 }
