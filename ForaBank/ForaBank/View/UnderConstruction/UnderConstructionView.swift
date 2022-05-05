@@ -22,7 +22,7 @@ struct UnderConstructionView: View {
 //MARK: - TextBlock
 
 struct UnderConstructionTextBlockView: View {
-    var viewModel: UnderConstructionViewModel
+    let viewModel: UnderConstructionViewModel
     
     var body: some View {
         VStack(spacing: 24) {
@@ -38,8 +38,7 @@ struct UnderConstructionTextBlockView: View {
                     .multilineTextAlignment(.center)
             }
         }
-        .padding(.leading, 20)
-        .padding(.trailing, 20)
+        .padding(.horizontal, 20)
     }
 }
 
