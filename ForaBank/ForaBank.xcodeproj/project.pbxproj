@@ -245,6 +245,11 @@
 		503F074C28252D3B00E84A77 /* DepositBottomSheetItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503F074628252D3B00E84A77 /* DepositBottomSheetItemView.swift */; };
 		503F074D28252D3B00E84A77 /* DepositCalculatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503F074728252D3B00E84A77 /* DepositCalculatorView.swift */; };
 		503F074E28252D3B00E84A77 /* DepositBottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503F074828252D3B00E84A77 /* DepositBottomSheetView.swift */; };
+		503F075628252E1B00E84A77 /* Inter-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 503F075128252E1B00E84A77 /* Inter-Medium.ttf */; };
+		503F075728252E1B00E84A77 /* Inter-VariableFont_slnt,wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 503F075228252E1B00E84A77 /* Inter-VariableFont_slnt,wght.ttf */; };
+		503F075828252E1B00E84A77 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 503F075328252E1B00E84A77 /* Inter-Bold.ttf */; };
+		503F075928252E1B00E84A77 /* Inter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 503F075428252E1B00E84A77 /* Inter-Regular.ttf */; };
+		503F075A28252E1B00E84A77 /* Inter-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 503F075528252E1B00E84A77 /* Inter-SemiBold.ttf */; };
 		5A5ABF8227AAF4BF00D548AA /* PaymentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5ABF8127AAF4BF00D548AA /* PaymentData.swift */; };
 		5A5ABF8427AAF4DE00D548AA /* PaymentGeneralData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5ABF8327AAF4DE00D548AA /* PaymentGeneralData.swift */; };
 		5A5ABF8627AAF4FB00D548AA /* PaymentPhoneData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5ABF8527AAF4FB00D548AA /* PaymentPhoneData.swift */; };
@@ -962,7 +967,6 @@
 		EDB143CD265FDEC90028EF5A /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EDB143C1265FDEC90028EF5A /* Roboto-Bold.ttf */; };
 		EDB143CE265FDEC90028EF5A /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EDB143C2265FDEC90028EF5A /* Roboto-Thin.ttf */; };
 		EDB143CF265FDEC90028EF5A /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EDB143C3265FDEC90028EF5A /* Roboto-Black.ttf */; };
-		EDB145112664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EDB145102664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf */; };
 		EDB14516266526B10028EF5A /* CreditCardEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB14515266526B10028EF5A /* CreditCardEntryView.swift */; };
 		EDB14518266526BD0028EF5A /* CreditCardEntryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDB14517266526BD0028EF5A /* CreditCardEntryView.xib */; };
 		EDB1451C26652D370028EF5A /* UILabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB1451B26652D370028EF5A /* UILabel.swift */; };
@@ -1369,6 +1373,11 @@
 		503F074628252D3B00E84A77 /* DepositBottomSheetItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositBottomSheetItemView.swift; sourceTree = "<group>"; };
 		503F074728252D3B00E84A77 /* DepositCalculatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositCalculatorView.swift; sourceTree = "<group>"; };
 		503F074828252D3B00E84A77 /* DepositBottomSheetView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositBottomSheetView.swift; sourceTree = "<group>"; };
+		503F075128252E1B00E84A77 /* Inter-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Medium.ttf"; sourceTree = "<group>"; };
+		503F075228252E1B00E84A77 /* Inter-VariableFont_slnt,wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-VariableFont_slnt,wght.ttf"; sourceTree = "<group>"; };
+		503F075328252E1B00E84A77 /* Inter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
+		503F075428252E1B00E84A77 /* Inter-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Regular.ttf"; sourceTree = "<group>"; };
+		503F075528252E1B00E84A77 /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-SemiBold.ttf"; sourceTree = "<group>"; };
 		5A5ABF8127AAF4BF00D548AA /* PaymentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentData.swift; sourceTree = "<group>"; };
 		5A5ABF8327AAF4DE00D548AA /* PaymentGeneralData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentGeneralData.swift; sourceTree = "<group>"; };
 		5A5ABF8527AAF4FB00D548AA /* PaymentPhoneData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentPhoneData.swift; sourceTree = "<group>"; };
@@ -2083,7 +2092,6 @@
 		EDB143C1265FDEC90028EF5A /* Roboto-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		EDB143C2265FDEC90028EF5A /* Roboto-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Thin.ttf"; sourceTree = "<group>"; };
 		EDB143C3265FDEC90028EF5A /* Roboto-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Black.ttf"; sourceTree = "<group>"; };
-		EDB145102664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-VariableFont_slnt,wght.ttf"; sourceTree = "<group>"; };
 		EDB14515266526B10028EF5A /* CreditCardEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditCardEntryView.swift; sourceTree = "<group>"; };
 		EDB14517266526BD0028EF5A /* CreditCardEntryView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CreditCardEntryView.xib; sourceTree = "<group>"; };
 		EDB1451B26652D370028EF5A /* UILabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabel.swift; sourceTree = "<group>"; };
@@ -2925,6 +2933,37 @@
 				503F074628252D3B00E84A77 /* DepositBottomSheetItemView.swift */,
 			);
 			path = DepositCalculator;
+			sourceTree = "<group>";
+		};
+		503F074F28252E0C00E84A77 /* Roboto */ = {
+			isa = PBXGroup;
+			children = (
+				EDB143B8265FDEC90028EF5A /* Roboto-Medium.ttf */,
+				EDB143B9265FDEC90028EF5A /* Roboto-Light.ttf */,
+				EDB143BA265FDEC90028EF5A /* Roboto-Regular.ttf */,
+				EDB143BB265FDEC90028EF5A /* Roboto-MediumItalic.ttf */,
+				EDB143BC265FDEC90028EF5A /* Roboto-ThinItalic.ttf */,
+				EDB143BD265FDEC90028EF5A /* Roboto-BoldItalic.ttf */,
+				EDB143BE265FDEC90028EF5A /* Roboto-LightItalic.ttf */,
+				EDB143BF265FDEC90028EF5A /* Roboto-Italic.ttf */,
+				EDB143C0265FDEC90028EF5A /* Roboto-BlackItalic.ttf */,
+				EDB143C1265FDEC90028EF5A /* Roboto-Bold.ttf */,
+				EDB143C2265FDEC90028EF5A /* Roboto-Thin.ttf */,
+				EDB143C3265FDEC90028EF5A /* Roboto-Black.ttf */,
+			);
+			path = Roboto;
+			sourceTree = "<group>";
+		};
+		503F075028252E1B00E84A77 /* Inter */ = {
+			isa = PBXGroup;
+			children = (
+				503F075128252E1B00E84A77 /* Inter-Medium.ttf */,
+				503F075228252E1B00E84A77 /* Inter-VariableFont_slnt,wght.ttf */,
+				503F075328252E1B00E84A77 /* Inter-Bold.ttf */,
+				503F075428252E1B00E84A77 /* Inter-Regular.ttf */,
+				503F075528252E1B00E84A77 /* Inter-SemiBold.ttf */,
+			);
+			path = Inter;
 			sourceTree = "<group>";
 		};
 		5A5ABF9527AAF7DD00D548AA /* PaymentOperationDetailContoller */ = {
@@ -5303,19 +5342,8 @@
 		EDB143B7265FDEC90028EF5A /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
-				EDB145102664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf */,
-				EDB143B8265FDEC90028EF5A /* Roboto-Medium.ttf */,
-				EDB143B9265FDEC90028EF5A /* Roboto-Light.ttf */,
-				EDB143BA265FDEC90028EF5A /* Roboto-Regular.ttf */,
-				EDB143BB265FDEC90028EF5A /* Roboto-MediumItalic.ttf */,
-				EDB143BC265FDEC90028EF5A /* Roboto-ThinItalic.ttf */,
-				EDB143BD265FDEC90028EF5A /* Roboto-BoldItalic.ttf */,
-				EDB143BE265FDEC90028EF5A /* Roboto-LightItalic.ttf */,
-				EDB143BF265FDEC90028EF5A /* Roboto-Italic.ttf */,
-				EDB143C0265FDEC90028EF5A /* Roboto-BlackItalic.ttf */,
-				EDB143C1265FDEC90028EF5A /* Roboto-Bold.ttf */,
-				EDB143C2265FDEC90028EF5A /* Roboto-Thin.ttf */,
-				EDB143C3265FDEC90028EF5A /* Roboto-Black.ttf */,
+				503F075028252E1B00E84A77 /* Inter */,
+				503F074F28252E0C00E84A77 /* Roboto */,
 			);
 			path = Fonts;
 			sourceTree = "<group>";
@@ -6180,6 +6208,7 @@
 				0BAC674726D4F471005AAD91 /* QRCodeStoryboard.storyboard in Resources */,
 				68FFA5472682F49A002DADFA /* SearchContact.xib in Resources */,
 				ED2BE18526A04F0600647CB1 /* CardChooseView.xib in Resources */,
+				503F075728252E1B00E84A77 /* Inter-VariableFont_slnt,wght.ttf in Resources */,
 				6833E0B72732B763004C070F /* DetailOperationTableViewCell.xib in Resources */,
 				68673B6126F4B87900F67A8C /* PayTableViewCell.xib in Resources */,
 				68C8D57126F0DF120076246B /* HistoryTableViewCell.xib in Resources */,
@@ -6195,6 +6224,7 @@
 				EDDFE3C22757D8F800F57C71 /* SelectDepositPeriodViewCell.xib in Resources */,
 				EDB143CF265FDEC90028EF5A /* Roboto-Black.ttf in Resources */,
 				EDA5637726F375980093F0C8 /* SettingTableViewController.storyboard in Resources */,
+				503F075628252E1B00E84A77 /* Inter-Medium.ttf in Resources */,
 				68673B5426F2F3B900F67A8C /* RequisitsTableViewCell.xib in Resources */,
 				EDB143CD265FDEC90028EF5A /* Roboto-Bold.ttf in Resources */,
 				EDB143C6265FDEC90028EF5A /* Roboto-Regular.ttf in Resources */,
@@ -6207,6 +6237,7 @@
 				ED75CDF926E245EE0074F5D5 /* GoogleService-Info-test.plist in Resources */,
 				ED75CE0926E2BA6F0074F5D5 /* TarifView.xib in Resources */,
 				68B6755D26BC8A9B004DECA4 /* GoogleService-Info.plist in Resources */,
+				503F075928252E1B00E84A77 /* Inter-Regular.ttf in Resources */,
 				6822EFD726B935FF00125EEC /* BaseTableViewCell.xib in Resources */,
 				0BE6960B27F5C10A007F30D1 /* PlacesSampleData.json in Resources */,
 				68673B5926F3772400F67A8C /* CardCollectionViewCell.xib in Resources */,
@@ -6239,10 +6270,10 @@
 				68D06F3A26CCDE0100F9BE4C /* NavigationBarUIView.xib in Resources */,
 				0BF3484E268A455C005138A8 /* AllCardView.xib in Resources */,
 				A5662698275FDD2400FFE31A /* checkBtn.xib in Resources */,
+				503F075828252E1B00E84A77 /* Inter-Bold.ttf in Resources */,
 				F8E529AD27B67F7B00222394 /* Assets.xcassets in Resources */,
 				EDA0DCBD2735E8030013F47E /* AppLocker.storyboard in Resources */,
 				ED84995826A8831E005205C6 /* EPContactCell.xib in Resources */,
-				EDB145112664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf in Resources */,
 				0B8C1C5D273DCB1D00BA5CAC /* PushHistoryStoryboard.storyboard in Resources */,
 				ED8AB45D26C2B55E006F0D03 /* SuccessMeToMeController.xib in Resources */,
 				688B9BB626E03B3E00407A75 /* TotalMoneyView.xib in Resources */,
@@ -6259,6 +6290,7 @@
 				ED75CE0326E2AB8A0074F5D5 /* MeToMeReqestSwitchView.xib in Resources */,
 				0B66E8E626CC658A00FD735D /* GKHStoryboard.storyboard in Resources */,
 				EDB14532266667140028EF5A /* OrderProductsCollectionViewCell.xib in Resources */,
+				503F075A28252E1B00E84A77 /* Inter-SemiBold.ttf in Resources */,
 				F63D45F2B6942EA98C94F9FE /* CheckBoxView.xib in Resources */,
 				F63D409A487FD3AD287E63D1 /* InternetInputCell.xib in Resources */,
 				F63D45E6DA7A3F76FDD0B282 /* C2BSuccess.xib in Resources */,
