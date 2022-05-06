@@ -35,8 +35,9 @@ struct DepositCalculateAmountView: View {
 
                         } label: {
 
-                            Image(viewModel.depositTermNamed)
-                                .renderingMode(.original)
+                            Image.ic24ChevronDown
+                                .renderingMode(.template)
+                                .foregroundColor(.mainColorsGray)
                         }
                     }
                 }
@@ -75,8 +76,9 @@ struct DepositCalculateAmountView: View {
                         // action
                     } label: {
 
-                        Image(viewModel.depositAmountNamed)
-                            .renderingMode(.original)
+                        Image.ic16Edit2
+                            .renderingMode(.template)
+                            .foregroundColor(.mainColorsGray)
                     }
                 }
             }

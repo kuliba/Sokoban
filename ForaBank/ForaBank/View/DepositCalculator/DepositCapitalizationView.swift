@@ -8,16 +8,16 @@
 import SwiftUI
 
 struct DepositCapitalizationView: View {
-
+    
     @ObservedObject var viewModel: DepositCapitalizationViewModel
-
+    
     var body: some View {
-
+        
         VStack {
-
+            
             HStack {
-
-                Image(viewModel.named)
+                
+                Image.ic24TrendingUp
                     .renderingMode(.template)
                     .foregroundColor(viewModel.isOn ? .mainColorsWhite : .mainColorsGray)
                 
@@ -25,9 +25,9 @@ struct DepositCapitalizationView: View {
                     .foregroundColor(viewModel.isOn ? .mainColorsWhite : .mainColorsGray)
                     .font(.textBodyMR14200())
                     .padding(.leading)
-
+                
                 Spacer()
-
+                
                 DepositToggleViewComponent(isOn: $viewModel.isOn)
             }
             
@@ -35,7 +35,7 @@ struct DepositCapitalizationView: View {
                 .background(Color.mainColorsGray)
                 .padding(.top, 8)
                 .padding(.bottom, 12)
-
+            
         }.padding([.leading, .trailing], 20)
     }
 }

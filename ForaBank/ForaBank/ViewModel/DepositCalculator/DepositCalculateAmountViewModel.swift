@@ -16,29 +16,23 @@ class DepositCalculateAmountViewModel: ObservableObject {
     @Published var isShowBottomSheet: Bool
 
     let depositTerm: String
-    let depositTermNamed: String
     let interestRate: String
     let depositAmount: String
-    let depositAmountNamed: String
     let bounds: ClosedRange<Double>
 
     init(depositTerm: String = "Срок вклада",
-         depositTermNamed: String = "Deposit Term",
          interestRate: String = "Процентная ставка",
          interestRateValue: Double,
          depositAmount: String = "Сумма депозита",
-         depositAmountNamed: String = "Pencil",
          value: Double = 1500000,
          depositValue: Int,
          isShowBottomSheet: Bool = false,
          bounds: ClosedRange<Double> = 10000...5000000) {
 
         self.depositTerm = depositTerm
-        self.depositTermNamed = depositTermNamed
         self.interestRate = interestRate
         self.interestRateValue = interestRateValue
         self.depositAmount = depositAmount
-        self.depositAmountNamed = depositAmountNamed
         self.value = value
         self.depositValue = depositValue
         self.isShowBottomSheet = isShowBottomSheet

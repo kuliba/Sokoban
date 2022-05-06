@@ -215,9 +215,7 @@ extension DepositCalculatorViewModel {
 
     static let sample1 = DepositCalculatorViewModel(
         depositModels: .points1,
-        capitalization: .init(
-            title: "С учетом капитализации",
-            named: "Calculate Capitalization"),
+        capitalization: .init(title: "С учетом капитализации"),
         calculateAmount: .sample1,
         totalAmount: .init(
             yourIncome: 102099.28,
