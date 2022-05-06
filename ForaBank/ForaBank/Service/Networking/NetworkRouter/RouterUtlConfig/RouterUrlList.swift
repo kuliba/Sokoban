@@ -112,6 +112,7 @@ enum RouterUrlList: String {
     case getDepositInfo
     case changeOutgoing
     case returnOutgoing
+    case getPrintFormForCardStatment
     
     func returnUrl () -> URLValue {
         switch self {
@@ -1137,6 +1138,16 @@ enum RouterUrlList: String {
             
         case .returnOutgoing:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.returnOutgoing.rawValue)
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+            
+        case .getPrintFormForCardStatment:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.getPrintFormForCardStatment.rawValue)
             switch result {
             case .success(let url):
                 return .success(url.absoluteURL)

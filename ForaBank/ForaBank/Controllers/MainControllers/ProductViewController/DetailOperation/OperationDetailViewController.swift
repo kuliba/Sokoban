@@ -272,6 +272,7 @@ class OperationDetailViewController: UIViewController{
         let vc = PDFViewerViewController()
         vc.id = operation?.paymentOperationDetailID
         vc.printFormType = operation?.printFormType
+        
         present(vc, animated: true, completion: nil)
     }
     
