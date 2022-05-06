@@ -96,8 +96,9 @@ extension MainViewController: UICollectionViewDelegate {
             }
             
         case .openProduct:
-            if indexPath.row == 1{
+            if indexPath.row == 1 {
                 let vc = OpenProductHostingViewController(with: .init(self.model, products: self.model.depositsProducts.value, style: .deposit))
+                vc.hidesBottomBarWhenPushed = true
                 navigationController?.pushViewController(vc, animated: true)
                 
             } else {

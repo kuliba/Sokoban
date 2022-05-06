@@ -40,7 +40,7 @@ class OpenProductHostingViewController: UIHostingController<OpenDepositView> {
                 case _ as OperationDetailViewModelAction.Dismiss:
                     self.dismiss(animated: true)
                 default:
-                    break
+                    BottomSheetDepositHostringViewController(with: .init(desc: [.init(desc: "", enable: true)]))
                 }
                 
             }.store(in: &bindings)

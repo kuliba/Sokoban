@@ -174,8 +174,8 @@ extension AuthProductsViewModel {
             self.conditionViewModel = .init(percent: "\(deposit.generalСondition.maxSum)", amount: "\(deposit.generalСondition.minSum)", date: "\(deposit.generalСondition.minTerm)")
             self.subtitle = deposit.generalСondition.generalTxtСondition
             self.image = .endpoint(deposit.generalСondition.imageLink)
-            self.infoButton = .init(url: .init(string: "https://www.vk.com")!)
-            self.orderButton = OrderButton(url: .init(string: "https://www.vk.com")!)
+            self.infoButton = .init(url: .init(string: "https://www.forabank.ru")!)
+            self.orderButton = OrderButton(url: .init(string: "https://www.forabank.ru")!)
             
         }
         

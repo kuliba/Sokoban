@@ -444,6 +444,8 @@
 		68AD340527997DC000647665 /* ServerCommandsCardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68AD340427997DC000647665 /* ServerCommandsCardTests.swift */; };
 		68AD340727997E6F00647665 /* BlockCardResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 68AD340627997E6F00647665 /* BlockCardResponseGeneric.json */; };
 		68AD340B27998A5D00647665 /* GetCardStatementResponseGeneric.json in Resources */ = {isa = PBXBuildFile; fileRef = 68AD340A27998A5D00647665 /* GetCardStatementResponseGeneric.json */; };
+		68B55C5728229BF900ACAF46 /* BottomSheetDepositHostringViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68B55C5628229BF800ACAF46 /* BottomSheetDepositHostringViewController.swift */; };
+		68B55C5B28249D8F00ACAF46 /* ProductDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68B55C5A28249D8F00ACAF46 /* ProductDetailView.swift */; };
 		68B6755D26BC8A9B004DECA4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 68B6755C26BC8A9B004DECA4 /* GoogleService-Info.plist */; };
 		68BAECAF2744132E00E1BF65 /* GetDepositStatementDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BAECAE2744132D00E1BF65 /* GetDepositStatementDecodableModel.swift */; };
 		68BAECB12744157200E1BF65 /* GetDepositInfoDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BAECB02744157200E1BF65 /* GetDepositInfoDecodableModel.swift */; };
@@ -1552,6 +1554,8 @@
 		68AD340427997DC000647665 /* ServerCommandsCardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerCommandsCardTests.swift; sourceTree = "<group>"; };
 		68AD340627997E6F00647665 /* BlockCardResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = BlockCardResponseGeneric.json; sourceTree = "<group>"; };
 		68AD340A27998A5D00647665 /* GetCardStatementResponseGeneric.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetCardStatementResponseGeneric.json; sourceTree = "<group>"; };
+		68B55C5628229BF800ACAF46 /* BottomSheetDepositHostringViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetDepositHostringViewController.swift; sourceTree = "<group>"; };
+		68B55C5A28249D8F00ACAF46 /* ProductDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailView.swift; sourceTree = "<group>"; };
 		68B6755C26BC8A9B004DECA4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		68BAECAE2744132D00E1BF65 /* GetDepositStatementDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDepositStatementDecodableModel.swift; sourceTree = "<group>"; };
 		68BAECB02744157200E1BF65 /* GetDepositInfoDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDepositInfoDecodableModel.swift; sourceTree = "<group>"; };
@@ -3255,6 +3259,7 @@
 			isa = PBXGroup;
 			children = (
 				68A07C47281B18C800797A54 /* OpenDepositView.swift */,
+				68B55C5A28249D8F00ACAF46 /* ProductDetailView.swift */,
 			);
 			path = OpenDeposit;
 			sourceTree = "<group>";
@@ -5079,6 +5084,7 @@
 				EDDFE3C4275972F200F57C71 /* ConfurmOpenDeposit */,
 				EDDFE3A82756D34200F57C71 /* DetailDeposit */,
 				EDDFE3A92756D36600F57C71 /* DepositCalculator */,
+				68B55C5628229BF800ACAF46 /* BottomSheetDepositHostringViewController.swift */,
 			);
 			path = OpenNewDeposit;
 			sourceTree = "<group>";
@@ -6458,6 +6464,7 @@
 				68E803E327D9202600B75D41 /* ProfileView.swift in Sources */,
 				0B2A8D2E26E8DA3400651BCB /* GetLatestPhonePaymentsSaved.swift in Sources */,
 				0B22AEAA26CE77F100B11E7F /* GKHDataCase.swift in Sources */,
+				68B55C5728229BF900ACAF46 /* BottomSheetDepositHostringViewController.swift in Sources */,
 				EDF68216266F9EC800FD5C07 /* RouterError.swift in Sources */,
 				0B216FC626D1E9EB0023C878 /* ExtensionNotificationName.swift in Sources */,
 				68EB187827CEDFC600745558 /* HistoryViewComponent.swift in Sources */,
@@ -7088,6 +7095,7 @@
 				68FFA5452682F48C002DADFA /* SearchContact.swift in Sources */,
 				A5ECD4C127ECB392008FBEEC /* C2BSuccessViewController.swift in Sources */,
 				0B7A18C72685BD130007CC75 /* GetBanksDecodableModel.swift in Sources */,
+				68B55C5B28249D8F00ACAF46 /* ProductDetailView.swift in Sources */,
 				68AD33F9279961F700647665 /* ServerCommands+CardController.swift in Sources */,
 				77FF670527B4B07B009FEA09 /* PaymentsDataModel+Parameter.swift in Sources */,
 				684533722798515100104A8B /* CsrfData.swift in Sources */,

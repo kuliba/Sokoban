@@ -11,7 +11,7 @@ import ScrollViewProxy
 struct OpenDepositView: View {
     
     @ObservedObject var viewModel: OpenDepositViewModel
-    
+
     var body: some View {
         
         VStack {
