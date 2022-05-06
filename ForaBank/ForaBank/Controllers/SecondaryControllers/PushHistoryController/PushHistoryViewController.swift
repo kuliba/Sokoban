@@ -41,7 +41,7 @@ class PushHistoryViewController: UIViewController {
         let body = ["offset": tempOffset,
                     "limit" : "100",
                     "notificationType" : "PUSH",
-                   // "notificationState" : "SENT,DELIVERED,READ" //,DELIVERED,READ
+                   // "notificationState" : "[SENT,DELIVERED,READ]" //,DELIVERED,READ
         ]
         
         let query = [URLQueryItem(name: "notificationState", value: "SENT"),

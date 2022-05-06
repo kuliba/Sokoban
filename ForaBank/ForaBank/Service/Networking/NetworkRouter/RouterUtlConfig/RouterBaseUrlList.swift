@@ -207,6 +207,8 @@ enum RouterBaseUrlList: String {
     /// Вопрос для обсуждения. Нужно ли кэшировать
     case getExchangeCurrencyRates  = "/rest/getExchangeCurrencyRates"
     
+    case getPrintFormForCardStatment  = "/rest/getPrintFormForCardStatement"
+    
     
     // MARK: - Не используется
     

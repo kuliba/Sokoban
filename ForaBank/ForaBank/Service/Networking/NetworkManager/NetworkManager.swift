@@ -79,9 +79,6 @@ final class NetworkManager<T: NetworkModelProtocol> {
                                     if (request.url?.absoluteString ?? "").contains(filter) {
                                         if let data = request.httpBody, let str = String(data: data, encoding: .utf8) {
                                             print("NET5555 Request \(str)")
-                                            //                        if let prettyPrintedData = try? JSONSerialization.data(withJSONObject: requestBody, options: .prettyPrinted) {
-                                            //                            print("NET5555 Request \(String(bytes: prettyPrintedData, encoding: String.Encoding.utf8) ?? "NIL")")
-                                            //                        }
                                         }
                                     }
                                 }
@@ -138,10 +135,7 @@ final class NetworkManager<T: NetworkModelProtocol> {
                                                         do {
                                                             if let dataUnw = data, let str = String(data: dataUnw, encoding: .utf8) {
                                                                 print("NET5555 Answer \(response.url?.absoluteString ?? "") ", str)
-                                                                //                        let dataForJson = try JSONDecoder().decode([Form].self, from: str)
-                                                                //                        if let prettyPrintedData = try? JSONSerialization.data(withJSONObject: dataForJson, options: .prettyPrinted) {
-                                                                //                            print("NET5555 Answer \(response.url?.absoluteString ?? "") ", String(bytes: prettyPrintedData, encoding: String.Encoding.utf8) ?? "NIL")
-                                                                //                        }
+                                                            
                                                             }
                                                         } catch {
                                                             //debugPrint(NetworkError.encodingFailed)
