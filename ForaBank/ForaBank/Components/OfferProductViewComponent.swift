@@ -7,12 +7,16 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 //MARK: - ViewModel
 
 extension OfferProductView {
     
     class ViewModel: Identifiable, ObservableObject {
+        
+        let action: PassthroughSubject<Action, Never> = .init()
+        private var bindings = Set<AnyCancellable>()
         
         let id = UUID()
         let title: String
@@ -54,11 +58,15 @@ extension OfferProductView {
             self.conditionViewModel = .init(percent: "\(deposit.generalСondition.maxRate)", amount: "\(deposit.generalСondition.minSum)", date: "\(deposit.generalСondition.minTerm)")
             self.subtitle = deposit.generalСondition.generalTxtСondition
             self.image = .endpoint(deposit.generalСondition.imageLink)
-            self.infoButton = .init(url: .init(string: "https://www.vk.com")!, action: {})
-            self.orderButton = OrderButton(url: .init(string: "https://www.vk.com")!)
+            self.infoButton = .init(url: .init(string: "https://www.forabank.ru")!, action: {})
+            self.orderButton = OrderButton(url: .init(string: "https://www.forabank.ru")!)
             self.design = .init(background: deposit.generalСondition.design.background[0].color, textColor: deposit.generalСondition.design.textColor[0].color)
             self.additionalCondition = .init(desc: descriptionReduce(with: deposit.detailedСonditions))
             
+            self.infoButton = .init(url: .init(string: "https://www.forabank.ru")!, action: { [self] in
+                action.send(OperationDetailViewModelAction.Dismiss())
+            })
+            bind()
         }
         
         struct AdditionalCondition {
@@ -114,8 +122,27 @@ extension OfferProductView {
         
         struct OrderButton {
             
-            let title: String = "Заказать"
+            let title: String = "Продолжить"
             let url: URL
+        }
+        
+        enum ModelAction {
+            
+            struct OpenDetail: Action {}
+        }
+        
+        func bind() {
+            action
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
+                    
+                    switch action {
+                    case _ as ModelAction.OpenDetail:
+                        self.action.send(OperationDetailViewModelAction.Dismiss())
+                        
+                    default: break
+                    }
+                }.store(in: &bindings)
         }
     }
 }
@@ -210,13 +237,6 @@ struct OfferProductView: View {
                 .padding(.bottom, 32)
             }
             .padding(.horizontal, 20)
-            
-            if let additional = viewModel.additionalCondition {
-                
-                BottomSheetView(isOpen: .constant(false), maxHeight: 600) {
-                    DetailConditionView(viewModel: additional)
-                }
-            }
         }
     }
     
@@ -291,8 +311,17 @@ struct OfferProductView: View {
             
             if #available(iOS 14.0, *) {
                 
-                Link(destination: viewModel.url) {
-                    
+                //                Link(destination: viewModel.url) {
+                //
+                //                    Text(viewModel.title)
+                //                        .foregroundColor(.textWhite)
+                //                        .padding(.vertical, 12)
+                //                        .frame(width: 166)
+                //                        .background(Color.buttonPrimary)
+                //                        .cornerRadius(8)
+                //                }
+                
+                NavigationLink(destination: ProductDetailView(viewModel: .sample)) {
                     Text(viewModel.title)
                         .foregroundColor(.textWhite)
                         .padding(.vertical, 12)

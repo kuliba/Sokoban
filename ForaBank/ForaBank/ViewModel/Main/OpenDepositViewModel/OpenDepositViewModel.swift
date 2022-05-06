@@ -12,7 +12,7 @@ import Combine
 class OpenDepositViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
-
+    
     @Published var products: [OfferProductView.ViewModel]
     let style: Style
     
@@ -27,7 +27,7 @@ class OpenDepositViewModel: ObservableObject {
     }
     
     init(_ model: Model, products: [CatalogProductData], dismissAction: @escaping () -> Void = {}, style: Style) {
-    
+        
         self.style = .catalog
         self.products = products.enumerated().map({ product in
             
@@ -41,7 +41,7 @@ class OpenDepositViewModel: ObservableObject {
     }
     
     init(_ model: Model, products: [DepositProductData], dismissAction: @escaping () -> Void = {}, style: Style) {
-
+        
         self.style = .deposit
         self.products = products.enumerated().map({ product in
             
@@ -56,6 +56,19 @@ class OpenDepositViewModel: ObservableObject {
     
     private func bind() {
         
+        action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as OperationDetailViewModelAction.Dismiss:
+                    self.action.send(OperationDetailViewModelAction.Dismiss())
+                    
+                default: break
+                }
+                
+            }.store(in: &bindings)
+        
         model.action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
@@ -63,7 +76,7 @@ class OpenDepositViewModel: ObservableObject {
                 case let payload as ModelAction.Auth.ProductImage.Response:
                     switch payload.result {
                     case .success(let data):
-      
+                        
                         guard let image = Image(data: data) else {
                             //TODO: log
                             print("AuthProductsViewModel: unable create product image from data for endpoint: \(payload.endpoint)")
@@ -102,7 +115,7 @@ class OpenDepositViewModel: ObservableObject {
     func requestImages(for products: [CatalogProductData]) {
         
         for product in products {
-        
+            
             model.action.send(ModelAction.Auth.ProductImage.Request(endpoint: product.imageEndpoint))
         }
     }
@@ -110,7 +123,7 @@ class OpenDepositViewModel: ObservableObject {
     func requestDepositImages(for products: [DepositProductData]) {
         
         for product in products {
-        
+            
             model.action.send(ModelAction.Auth.ProductImage.Request(endpoint: product.generalСondition.imageLink))
         }
     }
@@ -123,3 +136,4 @@ extension OpenDepositViewModel {
         case catalog
     }
 }
+
