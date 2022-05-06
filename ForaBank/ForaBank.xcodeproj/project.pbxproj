@@ -233,6 +233,12 @@
 		1CB9C8278920B424652C4AE2 /* Image+Illustrations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F88A9A4DBEADB3F8E16A822 /* Image+Illustrations.swift */; };
 		503F073328252B7900E84A77 /* DepositToggleViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503F073128252B7900E84A77 /* DepositToggleViewComponent.swift */; };
 		503F073428252B7900E84A77 /* DepositSliderViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503F073228252B7900E84A77 /* DepositSliderViewComponent.swift */; };
+		503F073C28252CBA00E84A77 /* DepositCapitalizationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503F073628252CBA00E84A77 /* DepositCapitalizationViewModel.swift */; };
+		503F073D28252CBA00E84A77 /* DepositCalculateAmountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503F073728252CBA00E84A77 /* DepositCalculateAmountViewModel.swift */; };
+		503F073E28252CBA00E84A77 /* DepositBottomSheetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503F073828252CBA00E84A77 /* DepositBottomSheetViewModel.swift */; };
+		503F073F28252CBA00E84A77 /* DepositTotalAmountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503F073928252CBA00E84A77 /* DepositTotalAmountViewModel.swift */; };
+		503F074028252CBA00E84A77 /* DepositBottomSheetItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503F073A28252CBA00E84A77 /* DepositBottomSheetItemViewModel.swift */; };
+		503F074128252CBA00E84A77 /* DepositCalculatorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503F073B28252CBA00E84A77 /* DepositCalculatorViewModel.swift */; };
 		5A5ABF8227AAF4BF00D548AA /* PaymentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5ABF8127AAF4BF00D548AA /* PaymentData.swift */; };
 		5A5ABF8427AAF4DE00D548AA /* PaymentGeneralData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5ABF8327AAF4DE00D548AA /* PaymentGeneralData.swift */; };
 		5A5ABF8627AAF4FB00D548AA /* PaymentPhoneData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5ABF8527AAF4FB00D548AA /* PaymentPhoneData.swift */; };
@@ -1345,6 +1351,12 @@
 		0BF816FB27E122AF00AC890D /* EPContactSelfDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPContactSelfDataView.swift; sourceTree = "<group>"; };
 		503F073128252B7900E84A77 /* DepositToggleViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositToggleViewComponent.swift; sourceTree = "<group>"; };
 		503F073228252B7900E84A77 /* DepositSliderViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositSliderViewComponent.swift; sourceTree = "<group>"; };
+		503F073628252CBA00E84A77 /* DepositCapitalizationViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositCapitalizationViewModel.swift; sourceTree = "<group>"; };
+		503F073728252CBA00E84A77 /* DepositCalculateAmountViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositCalculateAmountViewModel.swift; sourceTree = "<group>"; };
+		503F073828252CBA00E84A77 /* DepositBottomSheetViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositBottomSheetViewModel.swift; sourceTree = "<group>"; };
+		503F073928252CBA00E84A77 /* DepositTotalAmountViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositTotalAmountViewModel.swift; sourceTree = "<group>"; };
+		503F073A28252CBA00E84A77 /* DepositBottomSheetItemViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositBottomSheetItemViewModel.swift; sourceTree = "<group>"; };
+		503F073B28252CBA00E84A77 /* DepositCalculatorViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositCalculatorViewModel.swift; sourceTree = "<group>"; };
 		5A5ABF8127AAF4BF00D548AA /* PaymentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentData.swift; sourceTree = "<group>"; };
 		5A5ABF8327AAF4DE00D548AA /* PaymentGeneralData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentGeneralData.swift; sourceTree = "<group>"; };
 		5A5ABF8527AAF4FB00D548AA /* PaymentPhoneData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentPhoneData.swift; sourceTree = "<group>"; };
@@ -2877,6 +2889,19 @@
 			path = DepositCalculator;
 			sourceTree = "<group>";
 		};
+		503F073528252CBA00E84A77 /* DepositCalculator */ = {
+			isa = PBXGroup;
+			children = (
+				503F073628252CBA00E84A77 /* DepositCapitalizationViewModel.swift */,
+				503F073728252CBA00E84A77 /* DepositCalculateAmountViewModel.swift */,
+				503F073828252CBA00E84A77 /* DepositBottomSheetViewModel.swift */,
+				503F073928252CBA00E84A77 /* DepositTotalAmountViewModel.swift */,
+				503F073A28252CBA00E84A77 /* DepositBottomSheetItemViewModel.swift */,
+				503F073B28252CBA00E84A77 /* DepositCalculatorViewModel.swift */,
+			);
+			path = DepositCalculator;
+			sourceTree = "<group>";
+		};
 		5A5ABF9527AAF7DD00D548AA /* PaymentOperationDetailContoller */ = {
 			isa = PBXGroup;
 			children = (
@@ -3843,6 +3868,7 @@
 			isa = PBXGroup;
 			children = (
 				770DCE9027BBF7F4004099C1 /* RootViewModel.swift */,
+				503F073528252CBA00E84A77 /* DepositCalculator */,
 				F82ED55427D7B9AA008485AB /* MyProducts */,
 				7772979127C77BFF0099EF91 /* Main */,
 				6862B54B27B688CC006E833F /* Auth */,
@@ -6586,12 +6612,14 @@
 				0B8C1C44273ADF7E00BA5CAC /* QRCoordinator.swift in Sources */,
 				77A6A9CC27F46B3800CE7E28 /* PlacesMapView.swift in Sources */,
 				F8E529B427BBABF600222394 /* AuthProductsViewModel+Preview.swift in Sources */,
+				503F073C28252CBA00E84A77 /* DepositCapitalizationViewModel.swift in Sources */,
 				77E1803327AC04320006ACC9 /* NotificationData.swift in Sources */,
 				6862B55427B688CC006E833F /* AuthPinCodeViewModel.swift in Sources */,
 				77DC12652770F08300C917B0 /* SVGImageData.swift in Sources */,
 				774E318F27A05197005A067B /* TemplatesListViewModel+Preview.swift in Sources */,
 				77EC58E9277237190054D75C /* ModelAction.swift in Sources */,
 				ED684CD52760C75600AA7A33 /* MakeDepositDecodableModel.swift in Sources */,
+				503F073F28252CBA00E84A77 /* DepositTotalAmountViewModel.swift in Sources */,
 				6862B55627B688CC006E833F /* AuthPermissionsViewModel.swift in Sources */,
 				0BF3486426943DFB005138A8 /* SuggestCompanyDecodableModel.swift in Sources */,
 				6862B55527B688CC006E833F /* AuthConfirmViewModel.swift in Sources */,
@@ -6712,6 +6740,7 @@
 				687FB23626F0189C004A479F /* ProductViewControllerDataSource.swift in Sources */,
 				EDA5637A26F386AD0093F0C8 /* SettingTableViewController.swift in Sources */,
 				77F5CE1528060A9600611B66 /* AtmCityData.swift in Sources */,
+				503F073E28252CBA00E84A77 /* DepositBottomSheetViewModel.swift in Sources */,
 				775E068527E8A0D1006A9886 /* Model+PaymentsTaxesFNSMock.swift in Sources */,
 				68673B4F26F2F29300F67A8C /* RequisitesViewController.swift in Sources */,
 				A5F15C0B27495F7C00DC91DA /* GlobalModule.swift in Sources */,
@@ -6908,6 +6937,7 @@
 				77C3829327E0E19900B5246E /* PaymentsProductSelectorViewComponet.swift in Sources */,
 				77EC58AA277114D20054D75C /* TransferGeneralData.swift in Sources */,
 				6880D32D26A70585008FBCB4 /* FaceTouchIdViewController.swift in Sources */,
+				503F074128252CBA00E84A77 /* DepositCalculatorViewModel.swift in Sources */,
 				ED687C2D2768906800A38E87 /* DepositInfoViewController.swift in Sources */,
 				77EC58E3277217D20054D75C /* ServerAgent.swift in Sources */,
 				0B95C40C26B72CB100AA57E6 /* ExtensionBottomViewWithSetup.swift in Sources */,
@@ -7012,6 +7042,7 @@
 				0BDE453D26E5442500B64A0A /* GetPaymentSystemSaved.swift in Sources */,
 				77FF66CD27B42DD5009FEA09 /* Model+PaymentsTaxesFMS.swift in Sources */,
 				688B9BA526DD0DC600407A75 /* ProductTableViewCell.swift in Sources */,
+				503F073D28252CBA00E84A77 /* DepositCalculateAmountViewModel.swift in Sources */,
 				0B2B29212808BD79001C6380 /* DocumentCollectionViewController.swift in Sources */,
 				EDB1452226661C3F0028EF5A /* MaskedTextField.swift in Sources */,
 				ED4FC5EF266B70A00092B4AB /* PartialTransparentView.swift in Sources */,
@@ -7158,6 +7189,7 @@
 				0B04EBCC27B07F6700893687 /* PaymentsInfoViewComponent.swift in Sources */,
 				F63D41C3BB407DA15542F98F /* GIBDDFineDetailsFormController.swift in Sources */,
 				5A5ABF8627AAF4FB00D548AA /* PaymentPhoneData.swift in Sources */,
+				503F074028252CBA00E84A77 /* DepositBottomSheetItemViewModel.swift in Sources */,
 				F63D4B91E94C13AFD50FF312 /* GIBDDFineDetailsFormViewModel.swift in Sources */,
 				68AD340027996E4F00647665 /* ProductStatementData.swift in Sources */,
 				7538D9ADE22F0BF6C08AC91F /* Color+Assets.swift in Sources */,
