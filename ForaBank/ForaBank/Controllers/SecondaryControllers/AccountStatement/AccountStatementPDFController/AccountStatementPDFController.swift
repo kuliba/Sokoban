@@ -48,14 +48,61 @@ class AccountStatementPDFController: UIViewController, URLSessionDownloadDelegat
         if model.product.productType == ProductType.loan.rawValue {
             id = model.product.settlementAccountId
         }
-        let body = [
-            "id" : id,
-            "accountNumber" : nil,
-            "startDate": "\(model.startDate)",
-            "endDate": "\(model.endDate)"
-        ] as [String: AnyObject]
         
-        createPdfDocument(body)
+        if model.product.productType == "CARD" {
+            
+            let idCard = model.product.id
+            let body = [
+                "id" : idCard,
+                "startDate": "\(model.startDate)",
+                "endDate": "\(model.endDate)",
+                "cardNumber": ""
+            ] as [String: AnyObject]
+            
+            getPrintFormForCardStatmentRequest(body)
+        } else {
+            
+            let printType = printFormType ?? ""
+            let body = [
+                "paymentOperationDetailId": id,
+                "printFormType" : printType
+            ] as [String: AnyObject]
+            createPdfDocument(body)
+        }
+        
+        
+    }
+    
+    ///rest/getPrintFormForCardStatment
+    private func getPrintFormForCardStatmentRequest(_ body: [String: AnyObject]?) {
+        var router = RouterManager.getPrintFormForCardStatment.request()
+        do {
+            let jsonAsData = try JSONSerialization.data(withJSONObject: body!, options: [])
+            router?.httpBody = jsonAsData
+            
+            if router?.value(forHTTPHeaderField: "Content-Type") == nil {
+                router?.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            }
+        } catch {
+            debugPrint(NetworkError.encodingFailed)
+        }
+        
+        let session = URLSession(configuration: .default, delegate: self, delegateQueue: .main)
+        router?.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        if let token = CSRFToken.token {
+            router?.allHTTPHeaderFields = ["X-XSRF-TOKEN": token]
+        }
+        
+        session.downloadTask(with: router!) { (url, response, err) in
+            
+            if let response = response as? HTTPURLResponse {
+                if let document = PDFDocument(url: url!) {
+                    self.pdfView.pageBreakMargins = UIEdgeInsets(top: 20, left: 20, bottom: 0, right: 20)
+                    self.pdfView.autoScales = true
+                    self.pdfView.document = document
+                }
+            }
+        }.resume()
     }
     
     @objc func sharePDF(){

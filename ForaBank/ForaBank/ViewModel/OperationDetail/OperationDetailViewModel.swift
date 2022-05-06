@@ -121,7 +121,7 @@ class OperationDetailViewModel: ObservableObject {
             let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
             self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: productStatement.tranDate)
         case .c2b:
-            let isReturn = productStatement.groupName.contains("Возврат")
+            let isReturn = productStatement.fastPayment?.operTypeFP ?? "" == "CBRC" && productStatement.amount > 0
             let allBanks = Dict.shared.bankFullInfoList
             let foundBank = allBanks?.filter({ $0.bic == productStatement.fastPayment?.foreignBankBIC })
 
@@ -236,7 +236,7 @@ class OperationDetailViewModel: ObservableObject {
                 var featureButtonsUpdated = [FeatureButtonViewModel]()
 
                 switch productStatement.paymentDetailType {
-                case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp, .transport, .c2b:
+                case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp, .transport, .c2b, .notFinance:
                     if let templateButtonViewModel = self.templateButtonViewModel(with: productStatement, operationDetail: operationDetail) {
                         featureButtonsUpdated.append(templateButtonViewModel)
                     }
@@ -706,7 +706,8 @@ extension OperationDetailViewModel {
         guard let paymentDetailType = statement.paymentDetailType,
               let svgImageData = statement.svgImage,
               let groupName = statement.groupName,
-              var amount = statement.documentAmount else{
+              var amount = statement.amount
+        else {
                   return nil
               }
         
