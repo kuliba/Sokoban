@@ -56,6 +56,7 @@ enum RouterManager {
     case createMe2MePullCreditTransfer
     case createFastPaymentContract
     case updateFastPaymentContract
+    case changeNotificationStatus
     case fastPaymentContractFindList
     case createContactAddresslessTransfer
     case createDirectTransfer
@@ -804,7 +805,7 @@ extension RouterManager {
             var request = URLRequest(url: resultUrl!)
             request.httpMethod = RequestMethod.post.rawValue
             return request
-            
+
         case .updateFastPaymentContract:
             let baseUrl = RouterUrlList.updateFastPaymentContract.returnUrl()
             switch baseUrl {
@@ -819,7 +820,22 @@ extension RouterManager {
             var request = URLRequest(url: resultUrl!)
             request.httpMethod = RequestMethod.post.rawValue
             return request
-            
+
+        case .changeNotificationStatus:
+            let baseUrl = RouterUrlList.changeNotificationStatus.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
+
         case .fastPaymentContractFindList:
             let baseUrl = RouterUrlList.fastPaymentContractFindList.returnUrl()
             switch baseUrl {
