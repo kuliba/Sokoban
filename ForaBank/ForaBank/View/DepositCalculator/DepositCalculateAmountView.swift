@@ -98,30 +98,43 @@ extension DepositCalculateAmountView {
         @ObservedObject var viewModel: DepositCalculateAmountViewModel
         private var bindings = Set<AnyCancellable>()
 
-        let view = UITextField()
+        private let textField = UITextField()
 
         init(viewModel: DepositCalculateAmountViewModel) {
 
             self.viewModel = viewModel
 
+            bind()
+        }
+
+        private func bind() {
+
             viewModel.$value
                 .receive(on: DispatchQueue.main)
                 .sink { value in
-                    self.view.text = "\(value)"
+
+                    DispatchQueue.main.async { [unowned self] in
+                        textField.text = "\(value)"
+                    }
+
                 }.store(in: &bindings)
         }
 
         func makeUIView(context: Context) -> UITextField {
 
-            view.text = "\(viewModel.value)"
-            view.textColor = .white
-            view.font = UIFont(name: "Inter-SemiBold", size: 24)
-            view.delegate = context.coordinator
+            textField.delegate = context.coordinator
+            textField.textColor = Color.mainColorsWhite.uiColor()
+            textField.tintColor = Color.mainColorsGray.uiColor()
+            textField.backgroundColor = .clear
+            textField.font = UIFont(name: "Inter-SemiBold", size: 24)
+            textField.keyboardType = .numberPad
 
-            return view
+            return textField
         }
 
         func updateUIView(_ uiView: UITextField, context: Context) {
+
+            uiView.isUserInteractionEnabled = viewModel.isFirstResponder
 
             switch viewModel.isFirstResponder {
             case true: uiView.becomeFirstResponder()
@@ -152,12 +165,6 @@ extension DepositCalculateAmountView {
 
                     self.viewModel.value = value
                 }
-            }
-
-            func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-
-                viewModel.isFirstResponder.toggle()
-                return true
             }
         }
     }
