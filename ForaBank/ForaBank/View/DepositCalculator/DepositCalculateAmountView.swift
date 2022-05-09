@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 struct DepositCalculateAmountView: View {
 
@@ -66,14 +67,13 @@ struct DepositCalculateAmountView: View {
 
                 HStack {
 
-                    TextField("", value: $viewModel.value, formatter: viewModel.numberFormatter)
-                        .foregroundColor(.mainColorsWhite)
-                        .font(.textH1SB24322())
-                        .keyboardType(.decimalPad)
+                    DepositCalculateTextField(viewModel: viewModel)
                         .fixedSize()
 
                     Button {
-                        // action
+
+                        viewModel.isFirstResponder.toggle()
+
                     } label: {
 
                         Image.ic16Edit2
@@ -88,6 +88,78 @@ struct DepositCalculateAmountView: View {
                 .padding(.bottom, 12)
 
         }.padding([.leading, .trailing], 20)
+    }
+}
+
+extension DepositCalculateAmountView {
+
+    final class DepositCalculateTextField: UIViewRepresentable {
+
+        @ObservedObject var viewModel: DepositCalculateAmountViewModel
+        private var bindings = Set<AnyCancellable>()
+
+        let view = UITextField()
+
+        init(viewModel: DepositCalculateAmountViewModel) {
+
+            self.viewModel = viewModel
+
+            viewModel.$value
+                .receive(on: DispatchQueue.main)
+                .sink { value in
+                    self.view.text = "\(value)"
+                }.store(in: &bindings)
+        }
+
+        func makeUIView(context: Context) -> UITextField {
+
+            view.text = "\(viewModel.value)"
+            view.textColor = .white
+            view.font = UIFont(name: "Inter-SemiBold", size: 24)
+            view.delegate = context.coordinator
+
+            return view
+        }
+
+        func updateUIView(_ uiView: UITextField, context: Context) {
+
+            switch viewModel.isFirstResponder {
+            case true: uiView.becomeFirstResponder()
+            case false: uiView.resignFirstResponder()
+            }
+        }
+
+        func makeCoordinator() -> Coordinator {
+
+            Coordinator(viewModel: viewModel)
+        }
+
+        class Coordinator: NSObject, UITextFieldDelegate {
+
+            @ObservedObject var viewModel: DepositCalculateAmountViewModel
+
+            init(viewModel: DepositCalculateAmountViewModel) {
+                self.viewModel = viewModel
+            }
+
+            func textFieldDidEndEditing(_ textField: UITextField) {
+
+                DispatchQueue.main.async {
+
+                    guard let text = textField.text, let value = Double(text) else {
+                        return
+                    }
+
+                    self.viewModel.value = value
+                }
+            }
+
+            func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+
+                viewModel.isFirstResponder.toggle()
+                return true
+            }
+        }
     }
 }
 
