@@ -61,6 +61,7 @@ enum RouterUrlList: String {
     case createMe2MePullCreditTransfer
     case createFastPaymentContract
     case updateFastPaymentContract
+    case changeNotificationStatus
     case fastPaymentContractFindList
     case createContactAddresslessTransfer
     case createDirectTransfer
@@ -626,6 +627,17 @@ enum RouterUrlList: String {
         case .updateFastPaymentContract:
             let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.updateFastPaymentContract.rawValue)
             
+            switch result {
+            case .success(let url):
+                return .success(url.absoluteURL)
+            case .failure(let error):
+                debugPrint(error)
+                return .failure(.urlError)
+            }
+
+        case .changeNotificationStatus:
+            let result = URLConstruct.setUrl(.https, .qa, RouterBaseUrlList.changeNotificationStatus.rawValue)
+
             switch result {
             case .success(let url):
                 return .success(url.absoluteURL)
