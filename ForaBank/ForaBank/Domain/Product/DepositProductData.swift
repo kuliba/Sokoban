@@ -15,6 +15,7 @@ struct DepositProductData: Codable, Equatable, Cachable {
     let generalСondition: GeneralConditionData
     let name: String
     let termRateList: [TermCurrencyRate]
+    let termRateCapList: [TermCurrencyRate]?
     let txtСondition: [String]
 }
 
