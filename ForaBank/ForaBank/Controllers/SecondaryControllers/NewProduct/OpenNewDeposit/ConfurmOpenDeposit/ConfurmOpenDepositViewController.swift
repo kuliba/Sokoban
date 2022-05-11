@@ -11,7 +11,7 @@ import RealmSwift
 
 class ConfurmOpenDepositViewController: PaymentViewController {
     
-    var startAmount: Float = 5000.0
+    var startAmount: Double = 5000.0
     var showSmsCode = false {
         didSet {
             if showSmsCode {
@@ -41,7 +41,7 @@ class ConfurmOpenDepositViewController: PaymentViewController {
             rateField.text = "\(choosenRate.rate ?? 0.0)%"
             guard let text = self.bottomView.amountTextField.text else { return }
             guard let unformatText = self.moneyFormatter?.unformat(text) else { return }
-            guard let value = Float(unformatText) else { return }
+            guard let value = Double(unformatText) else { return }
             calculateSumm(with: value)
         }
     }
@@ -91,7 +91,7 @@ class ConfurmOpenDepositViewController: PaymentViewController {
         NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: bottomView.amountTextField, queue: .main) { _ in
             guard let text = self.bottomView.amountTextField.text else { return }
             guard let unformatText = self.bottomView.moneyFormatter?.unformat(text) else { return }
-            guard let value = Float(unformatText) else { return }
+            guard let value = Double(unformatText) else { return }
             self.calculateSumm(with: value)
             
             //TODO: - Validate summ
@@ -113,7 +113,7 @@ class ConfurmOpenDepositViewController: PaymentViewController {
             if value < self.product?.generalСondition?.minSum ?? 5000 {
                 let newText = self.bottomView.moneyFormatter?.format("\(self.product?.generalСondition?.minSum ?? 5000)")
                 self.bottomView.amountTextField.text = newText
-                self.calculateSumm(with: Float(self.product?.generalСondition?.minSum ?? 5000))
+                self.calculateSumm(with: Double(self.product?.generalСondition?.minSum ?? 5000))
             }
         }
         
@@ -243,22 +243,22 @@ class ConfurmOpenDepositViewController: PaymentViewController {
     }
     
     //MARK: - Calculator
-    private func calculateSumm(with value: Float) {
+    private func calculateSumm(with value: Double) {
         chooseRate(from: value)
-        let interestRate = Float(choosenRate?.rate ?? 0)
-        let termDay = Float(choosenRate?.term ?? 0)
+        let interestRate = Double(choosenRate?.rate ?? 0)
+        let termDay = Double(choosenRate?.term ?? 0)
         
         let income = ( (value * interestRate * termDay) / 365 ) / 100
         incomeField.text = moneyFormatter?.format("\(income)") ?? ""
     }
     
-    private func chooseRate(from value: Float) {
+    private func chooseRate(from value: Double) {
         guard let mainRateList = self.product?.termRateList else { return }
         mainRateList.forEach { termRateList in
             if termRateList.сurrencyCode == "810" {
                 let termRateSumm = termRateList.termRateSum
                 termRateSumm?.forEach({ rateSum in
-                    if value >= Float(rateSum.sum ?? 0) {
+                    if value >= Double(rateSum.sum ?? 0) {
                         choosenRateList = rateSum.termRateList
                     }
                 })

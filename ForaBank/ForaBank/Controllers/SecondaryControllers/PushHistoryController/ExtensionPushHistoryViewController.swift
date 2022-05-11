@@ -51,7 +51,7 @@ extension PushHistoryViewController: UITableViewDelegate, UITableViewDataSource 
         if indexPath.section == tableView.numberOfSections - 1 {
             print("Последняя секция в истории пушей 🏁")
             if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
-                self.offsetNumber += 1
+                self.offsetNumber += 15
                 self.downloadPushArray()
                 print("Последняя ячейка в истории пушей 🚩")
             }

@@ -75,7 +75,7 @@ extension AuthLoginView {
     
     struct HeaderView: View {
         
-        var viewModel: AuthLoginViewModel.HeaderViewModel
+        let viewModel: AuthLoginViewModel.HeaderViewModel
         
         var body: some View {
             

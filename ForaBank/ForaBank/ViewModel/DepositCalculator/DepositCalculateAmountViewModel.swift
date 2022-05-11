@@ -29,7 +29,7 @@ class DepositCalculateAmountViewModel: ObservableObject {
          isFirstResponder: Bool = false,
          depositValue: Int,
          isShowBottomSheet: Bool = false,
-         bounds: ClosedRange<Double> = 10000...5000000) {
+         bounds: ClosedRange<Double>) {
 
         self.depositTerm = depositTerm
         self.interestRate = interestRate
@@ -47,7 +47,7 @@ extension DepositCalculateAmountViewModel {
 
     static let sample1 = DepositCalculateAmountViewModel(
         interestRateValue: 7.95,
-        depositValue: 365
+        depositValue: 365, bounds: 10000...500000
     )
 
     static let sample2 = DepositCalculateAmountViewModel(
