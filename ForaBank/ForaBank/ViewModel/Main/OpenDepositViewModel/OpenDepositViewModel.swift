@@ -22,14 +22,14 @@ class OpenDepositViewModel: ObservableObject {
     private var bindings = Set<AnyCancellable>()
 
     
-    init(_ model: Model = .emptyMock, products: [OfferProductView.ViewModel], dismissAction: @escaping () -> Void = {}, style: Style) {
+    init(_ model: Model = .emptyMock, products: [OfferProductView.ViewModel], style: Style) {
         
         self.style = style
         self.products = products
         self.model = model
     }
     
-    init(_ model: Model, products: [CatalogProductData], dismissAction: @escaping () -> Void = {}, style: Style) {
+    init(_ model: Model, products: [CatalogProductData], style: Style) {
         
         self.style = .catalog
         self.products = products.enumerated().map({ product in
@@ -43,12 +43,12 @@ class OpenDepositViewModel: ObservableObject {
         requestImages(for: products)
     }
     
-    init(_ model: Model, products: [DepositProductData], dismissAction: @escaping () -> Void = {}, style: Style) {
+    init(_ model: Model, products: [DepositProductData], style: Style) {
         
         self.style = .deposit
         self.products = products.enumerated().map({ product in
             
-            OfferProductView.ViewModel(with: product.element, action: dismissAction)
+            OfferProductView.ViewModel(with: product.element)
         })
         self.model = model
         
