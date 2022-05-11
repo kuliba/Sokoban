@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DepositProductData: Codable, Equatable {
+struct DepositProductData: Codable, Equatable, Cachable {
     
     let depositProductID: Int
     let detailedСonditions: [DetailedСondition]
@@ -15,6 +15,7 @@ struct DepositProductData: Codable, Equatable {
     let generalСondition: GeneralConditionData
     let name: String
     let termRateList: [TermCurrencyRate]
+    let termRateCapList: [TermCurrencyRate]?
     let txtСondition: [String]
 }
 
@@ -57,7 +58,7 @@ extension DepositProductData {
         let design: DesignData
         let formula: String
         let generalTxtСondition: [String]
-        let imageLink: URL
+        let imageLink: String
         let maxRate: Double
         let maxSum: Double
         let maxTerm: Int

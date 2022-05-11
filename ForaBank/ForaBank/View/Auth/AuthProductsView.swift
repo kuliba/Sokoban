@@ -45,7 +45,7 @@ extension AuthProductsView {
     
     struct ProductView: View {
         
-        @ObservedObject var viewModel: AuthProductsViewModel.ProductCard
+        @ObservedObject var viewModel: AuthProductsViewModel.ProductCardViewModel
         
         var body: some View {
             
@@ -59,6 +59,31 @@ extension AuthProductsView {
                         .font(.textH0B32402())
                         .foregroundColor(viewModel.style.textColor)
                         .padding(.top, 32)
+                    
+                    if let conditionViewModel = viewModel.conditionViewModel {
+                     
+                        HStack(spacing: 16) {
+                            Text(conditionViewModel.percent)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                                .foregroundColor(.white)
+                                .background(Color.mainColorsRed)
+                                .cornerRadius(4)
+                                .font(.system(size: 14))
+                            
+                            Text(conditionViewModel.amount)
+                                .font(.system(size: 14))
+
+                            Color(.black)
+                                .frame(width: 1, alignment: .center)
+                                .padding(.vertical, 3)
+                            
+                            Text(conditionViewModel.date)
+                                .font(.system(size: 14))
+                        }
+                        .frame(height: 24, alignment: .leading)
+                        .padding(.top, 24)
+                    }
                     
                     VStack(alignment: .leading, spacing: 4) {
                         
@@ -109,7 +134,7 @@ extension AuthProductsView {
     
     struct InfoButtonView: View {
         
-        let viewModel: AuthProductsViewModel.ProductCard.InfoButton
+        let viewModel: AuthProductsViewModel.ProductCardViewModel.InfoButton
         
         let color: Color
         
@@ -154,7 +179,7 @@ extension AuthProductsView {
     
     struct OrderButtonView: View {
         
-        let viewModel: AuthProductsViewModel.ProductCard.OrderButton
+        let viewModel: AuthProductsViewModel.ProductCardViewModel.OrderButton
         
         var body: some View {
             

@@ -26,6 +26,9 @@ class Model {
     let catalogProducts: CurrentValueSubject<[CatalogProductData], Never>
     let catalogBanners: CurrentValueSubject<[BannerCatalogListData], Never>
     
+    //MARK: Deposits Offer Products
+    let depositsProducts: CurrentValueSubject<[DepositProductData], Never>
+
     //MARK: Templates
     let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
     //TODO: store in cache 
@@ -69,6 +72,7 @@ class Model {
         self.productsUpdateState = .init(.idle)
         self.catalogProducts = .init([])
         self.catalogBanners = .init([])
+        self.depositsProducts = .init([])
         self.paymentTemplates = .init([])
         self.paymentTemplatesViewSettings = .init(.initial)
         self.currentUserLoaction = .init(nil)
@@ -358,6 +362,11 @@ private extension Model {
         if let catalogBanner = localAgent.load(type: [BannerCatalogListData].self) {
             
             self.catalogBanners.value = catalogBanner
+        }
+        
+        if let depositsProducts = localAgent.load(type: [DepositProductData].self) {
+            
+            self.depositsProducts.value = depositsProducts
         }
     }
     

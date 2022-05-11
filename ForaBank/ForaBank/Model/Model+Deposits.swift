@@ -36,23 +36,32 @@ extension Model {
             return
         }
         let command = ServerCommands.DepositController.GetDepositProductList(token: token)
-        serverAgent.executeCommand(command: command) { result in
+        serverAgent.executeCommand(command: command) { [weak self] result in
             
             switch result {
             case .success(let response):
                 switch response.statusCode {
                 case .ok:
                     guard let deposits = response.data else {
-                        self.handleServerCommandEmptyData(command: command)
+                        self?.handleServerCommandEmptyData(command: command)
                         return
                     }
-                    self.action.send(ModelAction.Deposits.List.Response(result: .success(deposits)))
-
+                    self?.action.send(ModelAction.Deposits.List.Response(result: .success(deposits)))
+                    self?.depositsProducts.value = deposits
+                    
+                    do {
+                        
+                        try self?.localAgent.store(deposits, serial: nil)
+                        
+                    } catch {
+                        
+                        self?.handleServerCommandCachingError(error: error, command: command)
+                    }
                 default:
-                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self?.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
             case .failure(let error):
-            self.action.send(ModelAction.Deposits.List.Response(result: .failure(error)))
+                self?.action.send(ModelAction.Deposits.List.Response(result: .failure(error)))
             }
         }
     }

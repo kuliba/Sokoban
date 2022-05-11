@@ -45,8 +45,8 @@ extension MainViewController: UICollectionViewDelegate {
             }
             
         case .offer:
-            guard let url = URL(string: promoViewModels[indexPath.row].controllerName ) else { return  }
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                guard let url = URL(string: promoViewModels[indexPath.row].controllerName ) else { return  }
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
         
         case .currentsExchange:
             break
@@ -96,14 +96,15 @@ extension MainViewController: UICollectionViewDelegate {
             }
             
         case .openProduct:
-            if indexPath.row == 1{
-                let viewController = OpenNewDepositViewController()
-                viewController.addCloseButton()
-                let navVC = UINavigationController(rootViewController: viewController)
-                navVC.modalPresentationStyle = .fullScreen
-                present(navVC, animated: true)
+            if indexPath.row == 1 {
                 
+                let vc = OpenProductHostingViewController(with: .init(self.model, products: self.model.depositsProducts.value, style: .deposit))
+                vc.hidesBottomBarWhenPushed = true
+                let navigationViewController = UINavigationController(rootViewController: vc)
+                present(navigationViewController, animated: true)
+
             } else {
+                
                 guard let url = URL(string: openProductViewModels[indexPath.row].controllerName ) else { return  }
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }

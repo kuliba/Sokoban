@@ -45,7 +45,7 @@ class DepositCalculatorViewController: UICollectionViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc func doneButtonTapped() {
+    @objc func doneButtonTapped() { 
         let calculator = self.collectionView.cellForItem(at: [0,1]) as! CalculatorDepositCollectionViewCell
         
         let controller = ConfurmOpenDepositViewController()
@@ -53,7 +53,7 @@ class DepositCalculatorViewController: UICollectionViewController {
         controller.choosenRateList = calculator.choosenRateList
         controller.choosenRate = calculator.choosenRate
         let amount = calculator.moneyFormatter?.unformat(calculator.summTextField.text) ?? ""
-        controller.startAmount = Float(amount) ?? 0
+        controller.startAmount = Double(amount) ?? 0
 //        controller.bottomView.amountTextField.text = calculator.summTextField.text
         navigationController?.pushViewController(controller, animated: true)
     }
