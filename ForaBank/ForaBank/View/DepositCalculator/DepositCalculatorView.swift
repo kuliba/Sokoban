@@ -28,7 +28,6 @@ struct DepositCalculatorView: View {
             }
             .background(Color.mainColorsBlack)
             .cornerRadius(12)
-
         }
     }
 }
