@@ -209,7 +209,7 @@ extension AuthConfirmViewModel {
             self.state = state
             bind()
         }
-        
+            
         init(title: String, lenght: Int, state: State) {
 
             self.title = title
