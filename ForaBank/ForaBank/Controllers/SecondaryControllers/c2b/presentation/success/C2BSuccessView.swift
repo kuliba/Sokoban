@@ -91,7 +91,7 @@ class C2BSuccessView: UIView {
         }
 
         statusImageView.image = C2BSuccessView.statusImg
-        statusLabel.text = C2BSuccessView.statusText
+        statusLabel.text = statusOp
         let sumDouble = Double(C2BDetailsViewModel.sum)
         summLabel.text = sumDouble?.currencyFormatter() ?? "0.0"
     }

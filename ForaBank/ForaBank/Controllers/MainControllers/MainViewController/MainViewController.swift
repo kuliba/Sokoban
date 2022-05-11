@@ -249,6 +249,7 @@ class MainViewController: UIViewController {
             self.updateProductsViewModels(with: products)
             self.isUpdating.value = false
         }
+        getCurrency()
     }
     
     @objc func openSetting() {
