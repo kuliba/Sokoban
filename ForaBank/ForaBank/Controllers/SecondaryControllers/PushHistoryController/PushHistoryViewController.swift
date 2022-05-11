@@ -39,7 +39,7 @@ class PushHistoryViewController: UIViewController {
     func downloadPushArray() {
         let tempOffset = String(offsetNumber)
         let body = ["offset": tempOffset,
-                    "limit" : "100",
+                    "limit" : "15",
                     "notificationType" : "PUSH",
                    // "notificationState" : "[SENT,DELIVERED,READ]" //,DELIVERED,READ
         ]
