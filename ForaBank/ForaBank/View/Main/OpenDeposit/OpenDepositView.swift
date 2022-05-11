@@ -14,19 +14,47 @@ struct OpenDepositView: View {
 
     var body: some View {
         
-        VStack {
+        ZStack {
             
             ScrollView(showsIndicators: false) {
                 ForEach(viewModel.products) { productCard in
                     switch viewModel.style {
                     case .deposit:
                         OfferProductView(viewModel: productCard)
-                        
+
                     case .catalog:
                         OfferProductView(viewModel: productCard)
                     }
                 }
             }
+            .navigationBarTitle(Text("Вклады"), displayMode: .inline)
+            .foregroundColor(.black)
+
+            ForEach(viewModel.products) { productCard in
+                switch viewModel.style {
+                case .deposit:
+                    DepositShowBottomSheetView(viewModel: productCard)
+
+                case .catalog:
+                    DepositShowBottomSheetView(viewModel: productCard)
+                }
+            }
+        }
+    }
+    
+    struct DepositShowBottomSheetView: View {
+        
+        @ObservedObject var viewModel: OfferProductView.ViewModel
+
+        var body: some View {
+
+            BottomSheetView(isOpen: $viewModel.isShowSheet, maxHeight: CGFloat((viewModel.additionalCondition?.desc.count ?? 0) * 100)) {
+                if let additionalCondition = viewModel.additionalCondition {
+                    
+                    OfferProductView.DetailConditionView(viewModel: additionalCondition)
+                }
+            }
+            .offset(y: 170)
         }
     }
 }

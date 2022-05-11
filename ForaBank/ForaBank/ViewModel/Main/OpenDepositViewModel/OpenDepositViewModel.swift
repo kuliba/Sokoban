@@ -14,10 +14,13 @@ class OpenDepositViewModel: ObservableObject {
     let action: PassthroughSubject<Action, Never> = .init()
     
     @Published var products: [OfferProductView.ViewModel]
+    @Published var isShowSheet: Bool = false
+    
     let style: Style
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
+
     
     init(_ model: Model = .emptyMock, products: [OfferProductView.ViewModel], dismissAction: @escaping () -> Void = {}, style: Style) {
         
@@ -45,7 +48,7 @@ class OpenDepositViewModel: ObservableObject {
         self.style = .deposit
         self.products = products.enumerated().map({ product in
             
-            OfferProductView.ViewModel(with: product.element)
+            OfferProductView.ViewModel(with: product.element, action: dismissAction)
         })
         self.model = model
         

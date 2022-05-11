@@ -29,7 +29,6 @@ struct DepositCalculatorView: View {
             .background(Color.mainColorsBlack)
             .cornerRadius(12)
 
-            DepositShowBottomSheetView(viewModel: viewModel.bottomSheet)
         }
     }
 }
@@ -117,20 +116,6 @@ extension DepositCalculatorView {
                 )
             }
             .edgesIgnoringSafeArea(.all)
-        }
-    }
-
-    struct DepositShowBottomSheetView: View {
-        
-        @ObservedObject var viewModel: DepositBottomSheetViewModel
-
-        var body: some View {
-
-            DepositCalculatorView.DepositContainerBottomSheetView(
-                isOpen: $viewModel.isShowBottomSheet,
-                maxHeight: CGFloat(viewModel.items.count * viewModel.itemHeight)) {
-                    DepositBottomSheetView(viewModel: viewModel)
-                }
         }
     }
 }
