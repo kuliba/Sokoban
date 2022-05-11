@@ -51,7 +51,7 @@ struct DepositCalculateAmountView: View {
                         .font(.textBodySR12160())
                         .foregroundColor(.mainColorsGray)
 
-                    Text(viewModel.percentFormat(viewModel.interestRateValue))
+                    Text(viewModel.interestRateValue.currencyDepositFormatter(symbol: "₽"))
                         .foregroundColor(.mainColorsWhite)
                         .font(.textH4M16240())
                 }
@@ -114,7 +114,8 @@ extension DepositCalculateAmountView {
                 .sink { value in
 
                     DispatchQueue.main.async { [unowned self] in
-                        textField.text = "\(value)"
+                        textField.text = "\(value.currencyDepositFormatter(symbol: "₽"))"
+                        textField.updateCursorPosition()
                     }
 
                 }.store(in: &bindings)
@@ -155,16 +156,42 @@ extension DepositCalculateAmountView {
                 self.viewModel = viewModel
             }
 
+            func textFieldDidBeginEditing(_ textField: UITextField) {
+                textField.updateCursorPosition()
+            }
+
             func textFieldDidEndEditing(_ textField: UITextField) {
 
                 DispatchQueue.main.async {
 
-                    guard let text = textField.text, let value = Double(text) else {
+                    let filterred = textField.text?.filterred()
+
+                    guard let text = filterred, let value = Double(text) else {
+                        textField.text = self.viewModel.value.currencyDepositFormatter()
                         return
                     }
 
                     self.viewModel.value = value
                 }
+            }
+
+            func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+
+                guard let text = textField.text else {
+                    return false
+                }
+
+                let filterred = "\(text)\(string)".filterred()
+
+                if filterred.count > 1 && filterred.first == "0" {
+                    return false
+                }
+
+                guard let value = Double(filterred), value <= viewModel.bounds.upperBound else {
+                    return false
+                }
+
+                return true
             }
         }
     }

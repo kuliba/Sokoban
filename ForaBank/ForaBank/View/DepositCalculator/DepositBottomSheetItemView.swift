@@ -32,7 +32,7 @@ struct DepositBottomSheetItemView: View {
 struct DepositBottomSheetItemView_Previews: PreviewProvider {
     static var previews: some View {
         DepositBottomSheetItemView(
-            viewModel: .init(term: 365, rate: 8.25, termName: "1 год"))
+            viewModel: .init())
             .previewLayout(.sizeThatFits)
             .padding()
     }

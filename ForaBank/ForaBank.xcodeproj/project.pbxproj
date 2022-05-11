@@ -231,6 +231,7 @@
 		0BF816FA27E11E9600AC890D /* EPContactSelfDataView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0BF816F927E11E9600AC890D /* EPContactSelfDataView.xib */; };
 		0BF816FC27E122AF00AC890D /* EPContactSelfDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF816FB27E122AF00AC890D /* EPContactSelfDataView.swift */; };
 		1CB9C8278920B424652C4AE2 /* Image+Illustrations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F88A9A4DBEADB3F8E16A822 /* Image+Illustrations.swift */; };
+		503CF6AD282BE12B0069253E /* TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503CF6AC282BE12B0069253E /* TextField.swift */; };
 		503F073328252B7900E84A77 /* DepositToggleViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503F073128252B7900E84A77 /* DepositToggleViewComponent.swift */; };
 		503F073428252B7900E84A77 /* DepositSliderViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503F073228252B7900E84A77 /* DepositSliderViewComponent.swift */; };
 		503F073C28252CBA00E84A77 /* DepositCapitalizationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503F073628252CBA00E84A77 /* DepositCapitalizationViewModel.swift */; };
@@ -1399,6 +1400,7 @@
 		0BF43D4727B466C2004DF248 /* PaymentsNameViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsNameViewComponent.swift; sourceTree = "<group>"; };
 		0BF816F927E11E9600AC890D /* EPContactSelfDataView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EPContactSelfDataView.xib; sourceTree = "<group>"; };
 		0BF816FB27E122AF00AC890D /* EPContactSelfDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPContactSelfDataView.swift; sourceTree = "<group>"; };
+		503CF6AC282BE12B0069253E /* TextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextField.swift; sourceTree = "<group>"; };
 		503F073128252B7900E84A77 /* DepositToggleViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositToggleViewComponent.swift; sourceTree = "<group>"; };
 		503F073228252B7900E84A77 /* DepositSliderViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositSliderViewComponent.swift; sourceTree = "<group>"; };
 		503F073628252CBA00E84A77 /* DepositCapitalizationViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositCapitalizationViewModel.swift; sourceTree = "<group>"; };
@@ -5453,6 +5455,7 @@
 				ED75CDFA26E27F150074F5D5 /* UIApplication.swift */,
 				6863EF6A2716D095008FD522 /* MTSlideToOpenControl.swift */,
 				EDA0DCD62739BAB00013F47E /* UIControl.swift */,
+				503CF6AC282BE12B0069253E /* TextField.swift */,
 			);
 			path = UIKit;
 			sourceTree = "<group>";
@@ -7316,6 +7319,7 @@
 				EDB14528266624EE0028EF5A /* OrderCardView.swift in Sources */,
 				ED4B54422703450800C87A1A /* CardsScrollView.swift in Sources */,
 				EDF68219266F9EC800FD5C07 /* RouterBaseUrlList.swift in Sources */,
+				503CF6AD282BE12B0069253E /* TextField.swift in Sources */,
 				774E318B27A050DB005A067B /* Model+Preview.swift in Sources */,
 				68D06F3426C40DF500F9BE4C /* CurrencyExchangeCollectionViewCell.swift in Sources */,
 				0B22AEA126CDA9BC00B11E7F /* GKHInputViewController.swift in Sources */,
@@ -7659,7 +7663,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
 				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
@@ -7690,7 +7693,6 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;

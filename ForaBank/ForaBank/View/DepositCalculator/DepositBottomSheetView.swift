@@ -24,7 +24,7 @@ struct DepositBottomSheetView: View {
                 DepositBottomSheetItemView(viewModel: item)
                     .onTapGesture {
 
-                        viewModel.viewModel = .init(
+                        viewModel.selectedItem = .init(
                             term: item.term,
                             rate: item.rate,
                             termName: item.termName
@@ -47,8 +47,7 @@ struct DepositBottomSheetView_Previews: PreviewProvider {
                 items: [
                     .init(term: 365, rate: 8.25, termName: "1 год"),
                     .init(term: 540, rate: 13.06, termName: "1 год 6 месяцев")
-                ],
-                viewModel: .init(term: 365, rate: 8.25, termName: "1 год")))
+                ]))
             .previewLayout(.sizeThatFits)
     }
 }

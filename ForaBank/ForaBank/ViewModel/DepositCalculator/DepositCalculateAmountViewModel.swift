@@ -45,31 +45,6 @@ class DepositCalculateAmountViewModel: ObservableObject {
 
 extension DepositCalculateAmountViewModel {
 
-    var numberFormatter: NumberFormatter {
-
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.locale = Locale(identifier: "ru_RU")
-
-        return formatter
-    }
-
-    func percentFormat(_ value: Double) -> String {
-
-        let formatter = NumberFormatter()
-        let number = NSNumber(value: value / 100)
-
-        formatter.numberStyle = .percent
-
-        formatter.minimumFractionDigits = 2
-        formatter.maximumFractionDigits = 2
-
-        return formatter.string(from: number) ?? ""
-    }
-}
-
-extension DepositCalculateAmountViewModel {
-
     static let sample1 = DepositCalculateAmountViewModel(
         interestRateValue: 7.95,
         depositValue: 365

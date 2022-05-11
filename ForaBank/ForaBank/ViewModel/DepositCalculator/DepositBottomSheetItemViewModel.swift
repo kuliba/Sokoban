@@ -16,9 +16,9 @@ class DepositBottomSheetItemViewModel: Identifiable {
     let termName: String
 
     init(id: String = UUID().uuidString,
-         term: Int,
-         rate: Double,
-         termName: String) {
+         term: Int = 0,
+         rate: Double = 0,
+         termName: String = "") {
 
         self.id = id
         self.term = term

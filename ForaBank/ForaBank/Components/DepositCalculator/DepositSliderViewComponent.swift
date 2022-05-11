@@ -137,7 +137,7 @@ extension DepositSliderViewComponent {
     private func offset(_ value: Double, index: Int) -> Double {
 
         if index == 0 {
-            return offset() - 2.75
+            return offset()
         }
 
         return offset(value) + thumbSize.width / 3
