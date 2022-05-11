@@ -34,7 +34,7 @@ class OpenProductViewModel: ObservableObject {
         
         let deposit = model.depositsProducts.value.first(where: { $0.depositProductID == depositId })!
         
-        self.productDetail = .init(name: deposit.name, detail: [.init(title: "Срок вклада", description: deposit.generalСondition.maxTermTxt), .init(title: "Процентная ставка", description: "\(deposit.generalСondition.maxRate.currencyFormatterForMain()) %")], minAmount: .init(title: "Минимальная  сумма вклада", description: deposit.generalСondition.minSum.currencyFormatter()))
+        self.productDetail = .init(name: deposit.name, detail: [.init(title: "Срок вклада", description: deposit.generalСondition.maxTermTxt), .init(title: "Процентная ставка", description: "до \(deposit.generalСondition.maxRate.currencyFormatterForMain()) %")], minAmount: .init(title: "Минимальная  сумма вклада", description: deposit.generalСondition.minSum.currencyFormatter()))
         
         self.calculator = DepositCalculatorViewModel(
             depositModels: .init(points: reduceModels(with: deposit)),
@@ -536,7 +536,7 @@ extension ProductDetailView {
                         
                         if item.enable {
                             
-                            Image.ic16Check
+                            Image.ic24Check
                                 .resizable()
                                 .frame(width: 24, height: 24, alignment: .top)
                                 .foregroundColor(Color.green)

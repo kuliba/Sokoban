@@ -57,7 +57,7 @@ extension OfferProductView {
             
             self.id = deposit.depositProductID
             self.title = deposit.name
-            self.conditionViewModel = .init(percent: "\(deposit.generalСondition.maxRate)", amount: "\(deposit.generalСondition.minSum.currencyFormatter())", date: "\(deposit.generalСondition.minTerm)")
+            self.conditionViewModel = .init(percent: "\(deposit.generalСondition.maxRate)", amount: "\(deposit.generalСondition.minSum.currencyFormatter(symbol: "RUB"))", date: "\(deposit.generalСondition.maxTermTxt)")
             self.subtitle = deposit.generalСondition.generalTxtСondition
             self.image = .endpoint(deposit.generalСondition.imageLink)
             self.infoButton = .init(url: .init(string: "https://www.forabank.ru")!, action: {})
@@ -87,7 +87,7 @@ extension OfferProductView {
         
         struct InfoButton {
             
-            let title: String = "Подробные условия"
+            let title: String = "Допол. условия"
             let icon: Image = .ic24Info
             let url: URL
             var action: () -> Void
@@ -112,10 +112,6 @@ extension OfferProductView {
             
             var amountViewModel: String {
                 "От \(amount)"
-            }
-            
-            var dateViewModel: String {
-                "От \(date) дня"
             }
         }
         
@@ -200,6 +196,7 @@ struct OfferProductView: View {
                             Text(line)
                                 .font(.textBodyMR14200())
                                 .foregroundColor(viewModel.design.textColor)
+                                .fixedSize(horizontal: false, vertical: true)
                         }
                     }
                 }
@@ -209,10 +206,9 @@ struct OfferProductView: View {
                 case .image(let image):
                     image
                         .resizable()
-                        .aspectRatio(contentMode: .fit)
                         .frame(height: 236)
-                        .padding(.top, 24)
                         .cornerRadius(12)
+                        .padding(.top, 24)
                     
                 case .endpoint:
                     Color
@@ -265,7 +261,7 @@ struct OfferProductView: View {
                     .frame(width: 1, alignment: .center)
                     .padding(.vertical, 3)
                 
-                Text(viewModel.dateViewModel)
+                Text(viewModel.date)
                     .font(.system(size: 14))
                     .foregroundColor(color)
                 
@@ -358,6 +354,7 @@ struct OfferProductView: View {
             VStack(alignment: .leading, spacing: 20) {
                 
                 Text(viewModel.title)
+                    .fontWeight(.semibold)
                 
                 VStack(alignment: .leading, spacing: 15) {
                     
@@ -367,7 +364,9 @@ struct OfferProductView: View {
                             
                             if viewModel.desc[index].enable {
                                 
-                                Image.ic16Check
+                                Image.ic24Close
+                                    .resizable()
+                                    .frame(width: 24, height: 24, alignment: .top)
                                     .foregroundColor(.mainColorsGray)
                                     .padding(.top, 5)
                                 
@@ -375,8 +374,10 @@ struct OfferProductView: View {
                                     .foregroundColor(.mainColorsGray)
                             } else {
                                 
-                                Image.ic16Check
-                                    .foregroundColor(.bGIconGreenLight)
+                                Image.ic24Check
+                                    .resizable()
+                                    .frame(width: 24, height: 24, alignment: .top)
+                                    .foregroundColor(Color.green)
                                     .padding(.top, 5)
                                 
                                 Text(viewModel.desc[index].desc)
