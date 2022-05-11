@@ -9,7 +9,7 @@ import Foundation
 
 class DepositBottomSheetViewModel: ObservableObject {
 
-    @Published var viewModel: DepositBottomSheetItemViewModel
+    @Published var selectedItem: DepositBottomSheetItemViewModel
     @Published var isShowBottomSheet: Bool
 
 
@@ -20,13 +20,13 @@ class DepositBottomSheetViewModel: ObservableObject {
     init(title: String = "Срок вклада",
          items: [DepositBottomSheetItemViewModel],
          itemHeight: Int = 100,
-         viewModel: DepositBottomSheetItemViewModel,
+         selectedItem: DepositBottomSheetItemViewModel = .init(),
          isShowBottomSheet: Bool = false) {
 
         self.title = title
         self.items = items
         self.itemHeight = itemHeight
-        self.viewModel = viewModel
+        self.selectedItem = selectedItem
         self.isShowBottomSheet = isShowBottomSheet
     }
 }

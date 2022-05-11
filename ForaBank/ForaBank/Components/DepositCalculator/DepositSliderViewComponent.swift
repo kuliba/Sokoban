@@ -100,6 +100,20 @@ extension DepositSliderViewComponent {
         value - Points.offsetToStick...value + Points.offsetToStick
     }
 
+    private var thumbOffset: Double {
+
+        if value >= 0 {
+
+            DispatchQueue.main.async {
+                withAnimation {
+                    offset = offset(value)
+                }
+            }
+        }
+
+        return offset
+    }
+
     enum Points {
 
         static let minValue: Double = 1500000
@@ -123,7 +137,7 @@ extension DepositSliderViewComponent {
     private func offset(_ value: Double, index: Int) -> Double {
 
         if index == 0 {
-            return offset() - 2.75
+            return offset()
         }
 
         return offset(value) + thumbSize.width / 3
@@ -154,7 +168,7 @@ extension DepositSliderViewComponent {
 
         Capsule()
             .foregroundColor(.mainColorsRed)
-            .frame(width: offset, height: trackSize.height)
+            .frame(width: thumbOffset, height: trackSize.height)
     }
 
     private func makeThumb() -> some View {
@@ -166,7 +180,7 @@ extension DepositSliderViewComponent {
                     .stroke(Color.mainColorsRed, lineWidth: 2)
             )
             .frame(width: thumbSize.width, height: thumbSize.height)
-            .offset(x: offset)
+            .offset(x: thumbOffset)
             .gesture(DragGesture(minimumDistance: 0)
                         .onChanged { value in
 

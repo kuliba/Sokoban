@@ -24,7 +24,7 @@ class DepositCalculatorViewModel: ObservableObject {
     init(depositModels: DepositInterestRateModel,
          capitalization: DepositCapitalizationViewModel?,
          calculateAmount: DepositCalculateAmountViewModel,
-         totalAmount: DepositTotalAmountViewModel,
+         totalAmount: DepositTotalAmountViewModel = .init(),
          bottomSheet: DepositBottomSheetViewModel) {
 
         self.depositModels = depositModels
@@ -52,23 +52,9 @@ class DepositCalculatorViewModel: ObservableObject {
                     return
                 }
 
-                let list = isOn ? point.termRateCapLists : point.termRateLists
+                let termList = isOn ? point.termRateCapLists : point.termRateLists
 
-                let model = list.first { model in
-                    model.term == Int(calculateAmount.depositValue)
-                }
-
-                guard let model = model else {
-                    return
-                }
-
-                calculateAmount.interestRateValue = model.rate
-
-                let yourIncome = (calculateAmount.value * model.rate * Double(model.term) / 365) / 100
-                totalAmount.yourIncome = yourIncome
-
-                let totalAmount = calculateAmount.value + yourIncome
-                self.totalAmount.totalAmount = totalAmount
+                calculateAmount(value: calculateAmount.value, termList: termList)
 
             }.store(in: &bindings)
 
@@ -114,40 +100,56 @@ class DepositCalculatorViewModel: ObservableObject {
                 }
 
                 let isOnCapitalization = capitalization?.isOn ?? false
-                let list = isOnCapitalization ? point.termRateCapLists : point.termRateLists
+                let termList = isOnCapitalization ? point.termRateCapLists : point.termRateLists
 
-                let model = list.first { model in
-                    model.term == calculateAmount.depositValue
-                }
-
-                guard let model = model else {
-                    return
-                }
-
-                calculateAmount.interestRateValue = model.rate
-
-                let yourIncome = (value * model.rate * Double(model.term) / 365) / 100
-                totalAmount.yourIncome = yourIncome
-
-                let totalAmount = value + yourIncome
-                self.totalAmount.totalAmount = totalAmount
+                calculateAmount(value: value, termList: termList)
 
             }.store(in: &bindings)
 
-        bottomSheet.$viewModel
+        bottomSheet.$selectedItem
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] model in
+            .sink { [unowned self] selectedItem in
 
-                calculateAmount.depositValue = model.term
-                calculateAmount.interestRateValue = model.rate
+                calculateAmount.depositValue = selectedItem.term
+                calculateAmount.interestRateValue = selectedItem.rate
 
-                let yourIncome = (calculateAmount.value * model.rate * Double(model.term) / 365) / 100
+                let yourIncome = calculateYourIncome(initialAmount: calculateAmount.value,
+                                                     interestRate: selectedItem.rate,
+                                                     termDay: selectedItem.term)
                 totalAmount.yourIncome = yourIncome
 
                 let totalAmount = calculateAmount.value + yourIncome
                 self.totalAmount.totalAmount = totalAmount
 
             }.store(in: &bindings)
+    }
+}
+
+extension DepositCalculatorViewModel {
+
+    private func calculateYourIncome(initialAmount: Double, interestRate: Double, termDay: Int) -> Double {
+        (initialAmount * interestRate * Double(termDay) / 365) / 100
+    }
+
+    func calculateAmount(value: Double, termList: [DepositBottomSheetItemViewModel]) {
+
+        let itemViewModel = termList.first { model in
+            model.term == calculateAmount.depositValue
+        }
+
+        guard let itemViewModel = itemViewModel else {
+            return
+        }
+
+        let yourIncome = calculateYourIncome(initialAmount: value,
+                                             interestRate: itemViewModel.rate,
+                                             termDay: itemViewModel.term)
+
+        calculateAmount.interestRateValue = itemViewModel.rate
+        totalAmount.yourIncome = yourIncome
+
+        let totalAmount = value + yourIncome
+        self.totalAmount.totalAmount = totalAmount
     }
 }
 
@@ -217,16 +219,13 @@ extension DepositCalculatorViewModel {
         depositModels: .points1,
         capitalization: .init(title: "С учетом капитализации"),
         calculateAmount: .sample1,
-        totalAmount: .init(
-            yourIncome: 102099.28,
-            totalAmount: 1565321.08),
         bottomSheet: .init(
             title: "Срок вклада",
             items: [
                 .init(term: 365, rate: 8.25, termName: "1 год"),
                 .init(term: 540, rate: 13.06, termName: "1 год 6 месяцев")
             ],
-            viewModel: .init(term: 365, rate: 8.25, termName: "1 год")
+            selectedItem: .init(term: 365, rate: 8.25, termName: "1 год")
         )
     )
 
@@ -234,16 +233,13 @@ extension DepositCalculatorViewModel {
         depositModels: .points2,
         capitalization: nil,
         calculateAmount: .sample2,
-        totalAmount: .init(
-            yourIncome: 102099.28,
-            totalAmount: 1565321.08),
         bottomSheet: .init(
             title: "Срок вклада",
             items: [
                 .init(term: 31, rate: 9.15, termName: "1 месяц"),
                 .init(term: 92, rate: 10, termName: "3 месяца")
             ],
-            viewModel: .init(term: 31, rate: 9.15, termName: "1 месяц")
+            selectedItem: .init(term: 31, rate: 9.15, termName: "1 месяц")
         )
     )
 }

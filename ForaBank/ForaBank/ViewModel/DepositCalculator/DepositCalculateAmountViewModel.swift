@@ -11,6 +11,7 @@ import SwiftUI
 class DepositCalculateAmountViewModel: ObservableObject {
 
     @Published var value: Double
+    @Published var isFirstResponder: Bool
     @Published var depositValue: Int
     @Published var interestRateValue: Double
     @Published var isShowBottomSheet: Bool
@@ -25,6 +26,7 @@ class DepositCalculateAmountViewModel: ObservableObject {
          interestRateValue: Double,
          depositAmount: String = "Сумма депозита",
          value: Double = 1500000,
+         isFirstResponder: Bool = false,
          depositValue: Int,
          isShowBottomSheet: Bool = false,
          bounds: ClosedRange<Double>) {
@@ -34,34 +36,10 @@ class DepositCalculateAmountViewModel: ObservableObject {
         self.interestRateValue = interestRateValue
         self.depositAmount = depositAmount
         self.value = value
+        self.isFirstResponder = isFirstResponder
         self.depositValue = depositValue
         self.isShowBottomSheet = isShowBottomSheet
         self.bounds = bounds
-    }
-}
-
-extension DepositCalculateAmountViewModel {
-
-    var numberFormatter: NumberFormatter {
-
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.locale = Locale(identifier: "ru_RU")
-
-        return formatter
-    }
-
-    func percentFormat(_ value: Double) -> String {
-
-        let formatter = NumberFormatter()
-        let number = NSNumber(value: value / 100)
-
-        formatter.numberStyle = .percent
-
-        formatter.minimumFractionDigits = 2
-        formatter.maximumFractionDigits = 2
-
-        return formatter.string(from: number) ?? ""
     }
 }
 

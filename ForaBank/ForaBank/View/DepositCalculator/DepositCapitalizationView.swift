@@ -32,7 +32,7 @@ struct DepositCapitalizationView: View {
             }
             
             Divider()
-                .background(Color.mainColorsGray)
+                .background(Color.init(hex: "#292929"))
                 .padding(.top, 8)
                 .padding(.bottom, 12)
             

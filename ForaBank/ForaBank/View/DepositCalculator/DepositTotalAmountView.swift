@@ -15,8 +15,7 @@ struct DepositTotalAmountView: View {
         
         ZStack {
             
-            Color
-                .mainColorsBlackMedium
+            Color(hex: "#292929")
                 .opacity(0.4)
                 .cornerRadius(12)
                 .frame(height: 128)
@@ -30,8 +29,8 @@ struct DepositTotalAmountView: View {
                         Text(viewModel.yourIncomeTitle)
                             .font(.textBodySR12160())
                             .foregroundColor(.mainColorsGray)
-                        
-                        Text(viewModel.currencyFormat(viewModel.yourIncome))
+
+                        Text(viewModel.yourIncome.currencyDepositFormatter())
                             .foregroundColor(.mainColorsWhite)
                             .font(.textH4M16240())
                     }
@@ -44,7 +43,7 @@ struct DepositTotalAmountView: View {
                             .font(.textBodySR12160())
                             .foregroundColor(.mainColorsGray)
                         
-                        Text(viewModel.currencyFormat(viewModel.totalAmount))
+                        Text(viewModel.totalAmount.currencyDepositFormatter())
                             .foregroundColor(.mainColorsWhite)
                             .font(.textH4M16240())
                     }
@@ -64,10 +63,7 @@ struct DepositTotalAmountView: View {
 
 struct DepositTotalAmountView_Previews: PreviewProvider {
     static var previews: some View {
-        DepositTotalAmountView(
-            viewModel: .init(
-                yourIncome: 102099.28,
-                totalAmount: 1565321.08))
+        DepositTotalAmountView(viewModel: .sample)
             .background(Color.mainColorsBlack)
             .previewLayout(.sizeThatFits)
     }
