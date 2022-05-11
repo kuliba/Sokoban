@@ -11,7 +11,8 @@ import Combine
 
 class OpenProductHostingViewController: UIHostingController<OpenDepositView> {
     
-    private let viewModel: OpenDepositViewModel
+    let action: PassthroughSubject<Action, Never> = .init()
+    @ObservedObject var viewModel: OpenDepositViewModel
     private var bindings = Set<AnyCancellable>()
     
     init(with viewModel: OpenDepositViewModel) {
@@ -39,10 +40,20 @@ class OpenProductHostingViewController: UIHostingController<OpenDepositView> {
                 switch action {
                 case _ as OperationDetailViewModelAction.Dismiss:
                     self.dismiss(animated: true)
-                default:
-                    BottomSheetDepositHostringViewController(with: .init(desc: [.init(desc: "", enable: true)]))
+                default: break
                 }
                 
+            }.store(in: &bindings)
+        
+        action
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] action in
+            
+                switch action {
+                case _ as OperationDetailViewModelAction.Dismiss:
+                    self?.dismiss(animated: true)
+                default: break
+                }
             }.store(in: &bindings)
     }
 }

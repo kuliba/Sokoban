@@ -6,22 +6,180 @@
 //
 
 import SwiftUI
+import Combine
 
 class OpenProductViewModel: ObservableObject {
     
+    let action: PassthroughSubject<Action, Never> = .init()
+    
+    let model: Model = .shared
     let productDetail: ProductDetailViewModel
+    let calculator:  DepositCalculatorViewModel
     let details: [DetailsViewModel]
     let documents: DocumentViewModel
     let condition: ConditionViewModel
     let percents: PercentsViewModel?
     
-    init(productDetail: ProductDetailViewModel, details: [DetailsViewModel], documents: DocumentViewModel, condition: ConditionViewModel, percents: PercentsViewModel?) {
+    init(productDetail: ProductDetailViewModel, calculator: DepositCalculatorViewModel, details: [DetailsViewModel], documents: DocumentViewModel, condition: ConditionViewModel, percents: PercentsViewModel?) {
         
         self.productDetail = productDetail
+        self.calculator = calculator
         self.details = details
         self.documents = documents
         self.condition = condition
         self.percents = percents
+    }
+    
+    init(depositId: Int) {
+        
+        let deposit = model.depositsProducts.value.first(where: { $0.depositProductID == depositId })!
+        
+        self.productDetail = .init(name: deposit.name, detail: [.init(title: "Срок вклада", description: deposit.generalСondition.maxTermTxt), .init(title: "Процентная ставка", description: "\(deposit.generalСondition.maxRate.currencyFormatterForMain()) %")], minAmount: .init(title: "Минимальная  сумма вклада", description: deposit.generalСondition.minSum.currencyFormatter()))
+        
+        self.calculator = DepositCalculatorViewModel(
+            depositModels: .init(points: reduceModels(with: deposit)),
+            capitalization: .init(title: "С учетом капитализации"),
+            calculateAmount: .init(interestRateValue: deposit.termRateList[0].termRateSum[0].termRateList[0].rate, depositValue: Int(deposit.generalСondition.minSum), bounds: deposit.generalСondition.minSum...deposit.generalСondition.maxSum),
+            totalAmount: .init(
+                yourIncome: deposit.generalСondition.minSum,
+                totalAmount: deposit.generalСondition.maxSum),
+            bottomSheet: .init(
+                title: "Срок вклада",
+                items: reduceBottomSheetItem(with: deposit.termRateList[0].termRateSum),
+                viewModel: .init(term: deposit.termRateList[0].termRateSum[0].termRateList[0].term, rate: deposit.termRateList[0].termRateSum[0].termRateList[0].rate, termName: deposit.termRateList[0].termRateSum[0].termRateList[0].termName)
+            )
+        )
+        
+        func reduceBottomSheetItem(with deposit: [DepositProductData.TermCurrencyRate.TermRateSum]) -> [DepositBottomSheetItemViewModel] {
+            
+            var items: [DepositBottomSheetItemViewModel] = []
+            
+            for item in deposit {
+                for i in item.termRateList {
+                    
+                    items.append(.init(term: i.term, rate: i.rate, termName: i.termName))
+                }
+            }
+            
+            return items
+        }
+        
+        func reduceModels(with deposit: DepositProductData) -> [DepositCalculatorViewModel.DepositInterestRatePoint] {
+            
+            var points: [DepositCalculatorViewModel.DepositInterestRatePoint] = []
+            
+            var point: [DepositBottomSheetItemViewModel] = []
+            var capPoint: [DepositBottomSheetItemViewModel] = []
+            var sum: Double = 0.0
+            
+                for termRateList in deposit.termRateList {
+                    
+                    for termRateSum in termRateList.termRateSum {
+                        
+                        sum = termRateSum.sum
+                        
+                        for i in termRateSum.termRateList {
+                            
+                            point = [.init(term: i.term, rate: i.rate, termName: i.termName)]
+                            
+                            if let capList = deposit.termRateCapList {
+                                
+                                for capList in capList {
+                                    
+                                    for termRateSum in capList.termRateSum {
+                                        
+                                        sum = termRateSum.sum
+                                        
+                                        for i in termRateSum.termRateList {
+                                            
+                                            capPoint = [.init(term: i.term, rate: i.rate, termName: i.termName)]
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            points.append(.init(minSumm: sum, termRateLists: point, termRateCapLists: capPoint))
+                        }
+                    }
+                }
+                
+            
+            return points
+        }
+        
+        self.details = reduceDetail(deposit: deposit)
+        self.documents = .init(documents: reduceDocument(documents: deposit.documentsList))
+        self.condition = .init(conditions: deposit.txtСondition)
+        
+        let date = deposit.termRateList[0].termRateSum[0].termRateList.map({$0.termName})
+        
+        if let termRateCapList = deposit.termRateCapList {
+
+            self.percents = .init(termRateSum: reduceTermRateList(with: deposit), date: date)
+
+        } else {
+            
+            self.percents = nil
+        }
+                
+        func reduceTermRateList(with deposit: DepositProductData) -> [PercentsViewModel.TermRateSum] {
+           
+            var term: [PercentsViewModel.TermRateSum] = []
+            var termName: [String] = []
+            
+            for item in deposit.termRateList {
+                
+                for termRateSum in item.termRateSum {
+                    
+                    let rate = termRateSum.termRateList.map({String($0.rate)})
+                    term.append(.init(sum: termRateSum.sum.currencyFormatter(), rate: rate))
+                    
+                    if let capList = deposit.termRateCapList {
+                        
+                        for item in capList {
+                            
+                            for i in item.termRateSum {
+                                
+                                let rate = i.termRateList.map({String($0.rate)})
+                                
+                                for term in term {
+                                    
+                                    for index in term.rate.indices {
+                                        
+                                        termName.append(term.rate[index] + rate[index])
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return term
+        }
+        
+        func reduceDetail(deposit: DepositProductData) -> [DetailsViewModel] {
+            
+            var details: [DetailsViewModel] = []
+            
+            for item in deposit.detailedСonditions {
+                let detailItem: DetailsViewModel = .init(enable: item.enable, title: item.desc)
+                details.append(detailItem)
+            }
+            
+            return details
+        }
+        
+        func reduceDocument(documents: [DepositProductData.DocumentsData]) -> [DocumentViewModel.Documents] {
+            
+            var document: [DocumentViewModel.Documents] = []
+            
+            for item in documents {
+                document.append(.init(title: item.name, url: item.url))
+            }
+            
+            return document
+        }
     }
     
     struct ProductDetailViewModel {
@@ -54,7 +212,7 @@ class OpenProductViewModel: ObservableObject {
             
             let id = UUID()
             let sum: String
-            let rate: [String]
+            var rate: [String]
             
         }
         
@@ -87,6 +245,7 @@ class OpenProductViewModel: ObservableObject {
             
             self.documents = documents
         }
+        
         struct Documents: Hashable {
             
             let title: String
@@ -115,6 +274,8 @@ struct ProductDetailView: View {
                     
                     HeaderView(viewModel: viewModel.productDetail)
                     
+                    DepositCalculatorView(viewModel: viewModel.calculator)
+                    
                     if let percent = viewModel.percents {
                         
                         PercentView(viewModel: percent)
@@ -123,14 +284,12 @@ struct ProductDetailView: View {
                     DetailView(viewModel: viewModel.details)
                     ConditionView(viewModel: viewModel.condition)
                     DocumentView(viewModel: viewModel.documents)
+                        .padding(.bottom, 50)
                 }
                 .padding(20)
             }
-            .padding(.bottom, 100)
             
-            Button {
-                
-            } label: {
+            NavigationLink(destination: ConfirmView(viewModel: viewModel)) {
                 
                 Text("Продолжить")
                     .fontWeight(.semibold)
@@ -140,8 +299,8 @@ struct ProductDetailView: View {
                     .foregroundColor(.white)
                     .cornerRadius(8)
             }
-            .offset(y: -50)
-            .background(Color.clear)
+            
+            DepositShowBottomSheetView(viewModel: viewModel.calculator.bottomSheet)
         }
         .navigationBarTitle(Text("Подробнее"), displayMode: .inline)
         .foregroundColor(.black)
@@ -442,8 +601,7 @@ extension ProductDetailView {
                     }
                 }
             }
-            .padding(.leading, 20)
-            .padding(.trailing, 20)
+            .padding(.horizontal, 20)
             .padding(.vertical, 16)
             .background(Color.mainColorsGrayLightest)
             .cornerRadius(12)
@@ -451,7 +609,7 @@ extension ProductDetailView {
         
         struct HeaderSectionView: View {
             
-            let viewModel: OpenProductViewModel.ConditionViewModel
+            @ObservedObject var viewModel: OpenProductViewModel.ConditionViewModel
             
             var body: some View {
                 
@@ -556,8 +714,7 @@ extension ProductDetailView {
                     }
                 }
             }
-            .padding(.leading, 20)
-            .padding(.trailing, 20)
+            .padding(.horizontal, 20)
             .padding(.vertical, 16)
             .background(Color.mainColorsGrayLightest)
             .cornerRadius(12)
@@ -565,7 +722,7 @@ extension ProductDetailView {
         
         struct HeaderSectionView: View {
             
-            let viewModel: OpenProductViewModel.DocumentViewModel
+            @ObservedObject var viewModel: OpenProductViewModel.DocumentViewModel
             
             var body: some View {
                 
@@ -604,11 +761,74 @@ extension ProductDetailView {
             }
         }
     }
+    
+    struct DepositShowBottomSheetView: View {
+        
+        @ObservedObject var viewModel: DepositBottomSheetViewModel
+
+        var body: some View {
+
+            DepositCalculatorView.DepositContainerBottomSheetView(
+                isOpen: $viewModel.isShowBottomSheet,
+                maxHeight: CGFloat(viewModel.items.count * viewModel.itemHeight)) {
+                    DepositBottomSheetView(viewModel: viewModel)
+                }
+        }
+    }
+    
+    struct ConfirmView: UIViewControllerRepresentable {
+        
+        @ObservedObject var viewModel: OpenProductViewModel
+
+        typealias UIViewControllerType = ConfurmOpenDepositViewController
+        
+        func makeUIViewController(context: Context) -> ConfurmOpenDepositViewController {
+            
+            let vc = ConfurmOpenDepositViewController()
+            
+            vc.product = proxyDepositProductData(data: viewModel.model.depositsProducts.value[0])
+            
+            var termRateSumTermRateList: [TermRateSumTermRateList] = []
+            
+            for i in viewModel.model.depositsProducts.value[0].termRateList {
+                
+                for sum in i.termRateSum {
+                    
+                    for s in sum.termRateList {
+                        
+                        termRateSumTermRateList.append(.init(term: s.term, rate: s.rate, termName: s.termName))
+                    }
+                }
+            }
+            
+            vc.choosenRateList = termRateSumTermRateList
+            
+            vc.choosenRate = .init(term: viewModel.calculator.bottomSheet.viewModel.term, rate: viewModel.calculator.bottomSheet.viewModel.rate, termName: viewModel.calculator.bottomSheet.viewModel.termName)
+            
+            vc.startAmount = viewModel.calculator.calculateAmount.value
+            vc.modalPresentationStyle = .fullScreen
+            
+            func proxyDepositProductData(data: DepositProductData) -> OpenDepositDatum {
+            
+                var openDepositDatum: OpenDepositDatum
+                
+                openDepositDatum = .init(depositProductID: data.depositProductID, name: data.name, generalСondition: .init(maxRate: data.generalСondition.maxRate, minSum: Int(data.generalСondition.minSum), maxSum: Int(data.generalСondition.maxSum), minTerm: data.generalСondition.minTerm, maxTerm: data.generalСondition.minTerm, maxTermTxt: data.generalСondition.maxTermTxt, imageLink: data.generalСondition.imageLink, design: nil, formula: data.generalСondition.formula, сurrencyCode: nil, generalTxtСondition: nil), detailedСonditions: nil, txtСondition: nil, termRateList: nil, termRateCapList: nil, documentsList: nil)
+                
+                return openDepositDatum
+            }
+            
+            return vc
+        }
+        
+        func updateUIViewController(_ uiViewController: ConfurmOpenDepositViewController, context: Context) {
+            
+        }
+    }
 }
 
 extension ProductDetailView {
     
-    struct OpenProduct: Action {}
+    struct OpenProductAction: Action {}
 }
 
 struct ProductDetailView_Previews: PreviewProvider {
@@ -633,5 +853,5 @@ extension OpenProductViewModel {
     
     static let percentSample = OpenProductViewModel.PercentsViewModel(termRateSum: [.init(sum: "10 000", rate: ["7,95 (8,25)", "12,00 (13,06)"]), .init(sum: "1 500 000", rate: ["7,95 (8,25)", "12,50 (13,65)"]), .init(sum: "3 000 000", rate: ["8,35 (8,68)", "13,00 (14,25)"])], date: ["365 дней", "540 дней"])
     
-    static let sample = OpenProductViewModel(productDetail: productDetailSample, details: detailsSample, documents: documentsSample, condition: conditionsSample, percents: percentSample)
+    static let sample = OpenProductViewModel(productDetail: productDetailSample, calculator: .sample1, details: detailsSample, documents: documentsSample, condition: conditionsSample, percents: percentSample)
 }
