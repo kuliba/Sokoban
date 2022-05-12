@@ -14,11 +14,12 @@ class OpenProductViewModel: ObservableObject {
     
     let model: Model = .shared
     let productDetail: ProductDetailViewModel
-    let calculator:  DepositCalculatorViewModel
+    var calculator:  DepositCalculatorViewModel
     let details: [DetailsViewModel]
     let documents: DocumentViewModel
     let condition: ConditionViewModel
     let percents: PercentsViewModel?
+    var depositId = 0
     
     init(productDetail: ProductDetailViewModel, calculator: DepositCalculatorViewModel, details: [DetailsViewModel], documents: DocumentViewModel, condition: ConditionViewModel, percents: PercentsViewModel?) {
         
@@ -28,21 +29,23 @@ class OpenProductViewModel: ObservableObject {
         self.documents = documents
         self.condition = condition
         self.percents = percents
+        
     }
     
     init(depositId: Int) {
         
+        self.depositId = depositId
         let deposit = model.depositsProducts.value.first(where: { $0.depositProductID == depositId })!
         
         self.productDetail = .init(name: deposit.name, detail: [.init(title: "Срок вклада", description: deposit.generalСondition.maxTermTxt), .init(title: "Процентная ставка", description: "до \(deposit.generalСondition.maxRate.currencyFormatterForMain()) %")], minAmount: .init(title: "Минимальная  сумма вклада", description: deposit.generalСondition.minSum.currencyFormatter()))
         
         if let termRateCapList = deposit.termRateCapList {
             
-            self.calculator = DepositCalculatorViewModel(depositModels: .init(points: reduceModels(with: deposit)), capitalization: .init(title: "С учетом капитализации", isOn: true), calculateAmount: .sample1, bottomSheet: .init(items: reduceBottomSheetItem(with: deposit.termRateList[0].termRateSum)))
+            self.calculator = DepositCalculatorViewModel.init(depositModels: .init(points: reduceModels(with: deposit)), capitalization: .sample, calculateAmount: .init(interestRateValue: deposit.termRateList[0].termRateSum[0].termRateList[0].rate, depositValue: Int(deposit.generalСondition.minSum),minSum: deposit.generalСondition.minSum, bounds: deposit.generalСondition.minSum...deposit.generalСondition.maxSum), bottomSheet: .init(items: .init(reduceBottomSheetItem(with: deposit.termRateList[0].termRateSum))))
             
         } else {
-         
-            self.calculator = DepositCalculatorViewModel(depositModels: .init(points: reduceModels(with: deposit)), capitalization: nil, calculateAmount: .init(interestRateValue: 20.0, depositValue: 20, bounds: 20...100), bottomSheet: .init(items: reduceBottomSheetItem(with: deposit.termRateList[0].termRateSum)))
+            
+            self.calculator = DepositCalculatorViewModel(depositModels: .init(points: reduceModels(with: deposit)), capitalization: nil, calculateAmount: .init(interestRateValue: deposit.termRateList[0].termRateSum[0].termRateList[0].rate, depositValue: Int(deposit.generalСondition.minSum),minSum: deposit.generalСondition.minSum, bounds: deposit.generalСondition.minSum...deposit.generalСondition.maxSum), bottomSheet: .init(items: .init(reduceBottomSheetItem(with: deposit.termRateList[0].termRateSum))))
         }
         
         func reduceBottomSheetItem(with deposit: [DepositProductData.TermCurrencyRate.TermRateSum]) -> [DepositBottomSheetItemViewModel] {
@@ -67,37 +70,35 @@ class OpenProductViewModel: ObservableObject {
             var capPoint: [DepositBottomSheetItemViewModel] = []
             var sum: Double = 0.0
             
-                for termRateList in deposit.termRateList {
+            for termRateList in deposit.termRateList[0].termRateSum {
+                
+                sum = termRateList.sum
+                point = []
+                capPoint = []
+                
+                for i in termRateList.termRateList {
                     
-                    for termRateSum in termRateList.termRateSum {
+                    point.append(.init(term: i.term, rate: i.rate, termName: i.termName))
+                    
+                    if let capList = deposit.termRateCapList {
                         
-                        sum = termRateSum.sum
-                        
-                        for i in termRateSum.termRateList {
+                        for capList in capList[0].termRateSum {
                             
-                            point = [.init(term: i.term, rate: i.rate, termName: i.termName)]
-                            
-                            if let capList = deposit.termRateCapList {
+                            for i in capList.termRateList {
                                 
-                                for capList in capList {
-                                    
-                                    for termRateSum in capList.termRateSum {
-                                        
-                                        sum = termRateSum.sum
-                                        
-                                        for i in termRateSum.termRateList {
-                                            
-                                            capPoint = [.init(term: i.term, rate: i.rate, termName: i.termName)]
-                                        }
-                                    }
-                                }
+                                capPoint.append(.init(term: i.term, rate: i.rate, termName: i.termName))
                             }
                             
                             points.append(.init(minSumm: sum, termRateLists: point, termRateCapLists: capPoint))
+                            
                         }
+                        
+                    } else {
+                        
+                        points.append(.init(minSumm: sum, termRateLists: point, termRateCapLists: capPoint))
                     }
                 }
-                
+            }
             
             return points
         }
@@ -109,47 +110,64 @@ class OpenProductViewModel: ObservableObject {
         let date = deposit.termRateList[0].termRateSum[0].termRateList.map({$0.termName})
         
         if let termRateCapList = deposit.termRateCapList {
-
+            
             self.percents = .init(termRateSum: reduceTermRateList(with: deposit), date: date)
-
         } else {
             
             self.percents = nil
         }
-                
+        
         func reduceTermRateList(with deposit: DepositProductData) -> [PercentsViewModel.TermRateSum] {
-           
+            
             var term: [PercentsViewModel.TermRateSum] = []
-            var termName: [String] = []
+            var capRate: [String] = []
+            var rate: [String] = []
+            var sum: [String] = []
+            var mergedString: [String] = []
+            var mergedString2: [[String]] = []
             
             for item in deposit.termRateList {
                 
                 for termRateSum in item.termRateSum {
+                    sum.append(termRateSum.sum.fullCurrencyFormatter())
+                    rate = rate + termRateSum.termRateList.map({String($0.rate)})
                     
-                    let rate = termRateSum.termRateList.map({String($0.rate)})
-                    term.append(.init(sum: termRateSum.sum.currencyFormatter(), rate: rate))
+                }
+            }
+            
+            if let termRateCapList = deposit.termRateCapList {
+                
+                for item in termRateCapList {
                     
-                    if let capList = deposit.termRateCapList {
+                    for termRateSum in item.termRateSum {
                         
-                        for item in capList {
-                            
-                            for i in item.termRateSum {
-                                
-                                let rate = i.termRateList.map({String($0.rate)})
-                                
-                                for term in term {
-                                    
-                                    for index in term.rate.indices {
-                                        
-                                        termName.append(term.rate[index] + rate[index])
-                                    }
-                                }
-                            }
-                        }
+                        capRate = capRate + termRateSum.termRateList.map({String($0.rate)})
+                        
                     }
                 }
             }
-
+            
+            func mergeString(string: [String], string2: [String]) -> [String] {
+                
+                var strings: [String] = []
+                
+                for i in string.indices {
+                    
+                    strings.append("\(string[i])" + " " + "(\(string2[i]))")
+                    
+                }
+                
+                return strings
+            }
+            
+            mergedString = mergeString(string: rate, string2: capRate)
+            
+            for i in sum.indices {
+                
+                let array = mergedString.splitInSubArrays(sum.count)
+                term.append(.init(sum: sum[i], rate: array[i]))
+            }
+            
             return term
         }
         
@@ -158,6 +176,7 @@ class OpenProductViewModel: ObservableObject {
             var details: [DetailsViewModel] = []
             
             for item in deposit.detailedСonditions {
+                
                 let detailItem: DetailsViewModel = .init(enable: item.enable, title: item.desc)
                 details.append(detailItem)
             }
@@ -261,6 +280,7 @@ struct ProductDetailView: View {
     @ObservedObject var viewModel: OpenProductViewModel
     
     var body: some View {
+        
         ZStack(alignment: .bottom) {
             
             ScrollView {
@@ -437,7 +457,7 @@ extension ProductDetailView {
                                     
                                     ForEach(viewModel.termRateSum[index].rate, id: \.self) { item in
                                         Text(item)
-                                            .padding(.trailing, 20)
+                                            .padding(.trailing, 30)
                                     }
                                 }
                                 .padding(.top, 9)
@@ -456,7 +476,7 @@ extension ProductDetailView {
                                     
                                     ForEach(viewModel.termRateSum[index].rate, id: \.self) { item in
                                         Text(item)
-                                            .padding(.trailing, 20)
+                                            .padding(.trailing, 30)
                                     }
                                 }
                                 .padding(.top, 9)
@@ -760,9 +780,9 @@ extension ProductDetailView {
     struct DepositShowBottomSheetView: View {
         
         @ObservedObject var viewModel: DepositBottomSheetViewModel
-
+        
         var body: some View {
-
+            
             DepositCalculatorView.DepositContainerBottomSheetView(
                 isOpen: $viewModel.isShowBottomSheet,
                 maxHeight: CGFloat(viewModel.items.count * viewModel.itemHeight)) {
@@ -774,18 +794,18 @@ extension ProductDetailView {
     struct ConfirmView: UIViewControllerRepresentable {
         
         @ObservedObject var viewModel: OpenProductViewModel
-
+        
         typealias UIViewControllerType = ConfurmOpenDepositViewController
         
         func makeUIViewController(context: Context) -> ConfurmOpenDepositViewController {
             
             let vc = ConfurmOpenDepositViewController()
             
-            vc.product = proxyDepositProductData(data: viewModel.model.depositsProducts.value[0])
+            vc.product = proxyDepositProductData(data: viewModel.model.depositsProducts.value.first(where: { $0.depositProductID == viewModel.depositId })!)
             
             var termRateSumTermRateList: [TermRateSumTermRateList] = []
             
-            for i in viewModel.model.depositsProducts.value[0].termRateList {
+            for i in viewModel.model.depositsProducts.value.first(where: { $0.depositProductID == viewModel.depositId })!.termRateList {
                 
                 for sum in i.termRateSum {
                     
@@ -797,14 +817,13 @@ extension ProductDetailView {
             }
             
             vc.choosenRateList = termRateSumTermRateList
-            
-            vc.choosenRate = .init(term: viewModel.calculator.bottomSheet.items[0].term, rate: viewModel.calculator.bottomSheet.items[0].rate, termName: viewModel.calculator.bottomSheet.items[0].termName)
+            vc.choosenRate = .init(term: viewModel.calculator.bottomSheet.selectedItem.term, rate: viewModel.calculator.bottomSheet.selectedItem.rate, termName: viewModel.calculator.bottomSheet.selectedItem.termName)
             
             vc.startAmount = viewModel.calculator.calculateAmount.value
             vc.modalPresentationStyle = .fullScreen
             
             func proxyDepositProductData(data: DepositProductData) -> OpenDepositDatum {
-            
+                
                 var openDepositDatum: OpenDepositDatum
                 
                 openDepositDatum = .init(depositProductID: data.depositProductID, name: data.name, generalСondition: .init(maxRate: data.generalСondition.maxRate, minSum: Int(data.generalСondition.minSum), maxSum: Int(data.generalСondition.maxSum), minTerm: data.generalСondition.minTerm, maxTerm: data.generalСondition.minTerm, maxTermTxt: data.generalСondition.maxTermTxt, imageLink: data.generalСondition.imageLink, design: nil, formula: data.generalСondition.formula, сurrencyCode: nil, generalTxtСondition: nil), detailedСonditions: nil, txtСondition: nil, termRateList: nil, termRateCapList: nil, documentsList: nil)
