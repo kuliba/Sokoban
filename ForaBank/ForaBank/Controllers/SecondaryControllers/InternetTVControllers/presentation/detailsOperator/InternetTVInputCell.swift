@@ -223,7 +223,7 @@ class InternetTVInputCell: UITableViewCell, UITextViewDelegate, IMsg {
     func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
         let a = textView.text ?? ""
         if ( !isValidPassword(a) == true && a != "") {
-            showAlert!()
+            showAlert?()
             textView.text = ""
         }
         return true
