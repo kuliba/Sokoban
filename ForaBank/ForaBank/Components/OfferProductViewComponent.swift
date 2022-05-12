@@ -87,7 +87,7 @@ extension OfferProductView {
         
         struct InfoButton {
             
-            let title: String = "Допол. условия"
+            let title: String = "Допол.\nусловия"
             let icon: Image = .ic24Info
             let url: URL
             var action: () -> Void
