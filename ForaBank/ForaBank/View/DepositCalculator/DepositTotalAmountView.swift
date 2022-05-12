@@ -8,24 +8,24 @@
 import SwiftUI
 
 struct DepositTotalAmountView: View {
-    
+
     @ObservedObject var viewModel: DepositTotalAmountViewModel
-    
+
     var body: some View {
-        
+
         ZStack {
-            
+
             Color(hex: "#292929")
                 .opacity(0.4)
                 .cornerRadius(12)
                 .frame(height: 128)
-            
+
             VStack(alignment: .leading, spacing: 8) {
-                
+
                 HStack {
-                    
+
                     VStack(alignment: .leading, spacing: 8) {
-                        
+
                         Text(viewModel.yourIncomeTitle)
                             .font(.textBodySR12160())
                             .foregroundColor(.mainColorsGray)
@@ -34,28 +34,30 @@ struct DepositTotalAmountView: View {
                             .foregroundColor(.mainColorsWhite)
                             .font(.textH4M16240())
                     }
-                    
+
                     Spacer()
-                    
+
                     VStack(alignment: .leading, spacing: 8) {
-                        
+
                         Text(viewModel.totalAmountTitle)
                             .font(.textBodySR12160())
                             .foregroundColor(.mainColorsGray)
-                        
+
                         Text(viewModel.totalAmount.currencyDepositFormatter())
                             .foregroundColor(.mainColorsWhite)
                             .font(.textH4M16240())
-                    }
-                    
+
+                    }.frame(width: 150, alignment: .leading)
+
                     Spacer()
+                        .fixedSize()
                 }
-                
+
                 Text(viewModel.description)
                     .font(.textBodySR12160())
                     .foregroundColor(.mainColorsGray)
                     .padding(.top, 8)
-                
+
             }.padding(20)
         }
     }
