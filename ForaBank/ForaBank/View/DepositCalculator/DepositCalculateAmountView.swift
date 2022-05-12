@@ -5,6 +5,7 @@
 //  Created by Pavel Samsonov on 04.05.2022.
 //
 
+
 import SwiftUI
 import Combine
 
@@ -59,30 +60,40 @@ struct DepositCalculateAmountView: View {
                 Spacer()
             }
 
-            VStack(alignment: .leading, spacing: 8) {
+            HStack {
 
-                Text(viewModel.depositAmount)
-                    .font(.textBodySR12160())
-                    .foregroundColor(.mainColorsGray)
+                VStack(alignment: .leading, spacing: 8) {
 
-                HStack {
+                    Text(viewModel.depositAmount)
+                        .font(.textBodySR12160())
+                        .foregroundColor(.mainColorsGray)
 
-                    DepositCalculateTextField(viewModel: viewModel)
-                        .fixedSize()
+                    HStack {
 
-                    Button {
+                        DepositCalculateTextField(viewModel: viewModel)
+                            .fixedSize()
 
-                        viewModel.isFirstResponder.toggle()
+                        Button {
 
-                    } label: {
+                            viewModel.isFirstResponder.toggle()
 
-                        Image.ic16Edit2
-                            .renderingMode(.template)
-                            .foregroundColor(.mainColorsGray)
+                        } label: {
+
+                            Image.ic16Edit2
+                                .renderingMode(.template)
+                                .foregroundColor(.mainColorsGray)
+                        }
                     }
                 }
+                .padding([.top, .bottom], 8)
+
+                Spacer()
+
+                Text("От \(viewModel.bounds.lowerBound.currencyDepositShortFormatter())")
+                    .font(.textBodySR12160())
+                    .foregroundColor(.mainColorsGray)
+                    .padding(.top, 26)
             }
-            .padding([.top, .bottom], 8)
 
             DepositSliderViewComponent(
                 viewModel: .init(
