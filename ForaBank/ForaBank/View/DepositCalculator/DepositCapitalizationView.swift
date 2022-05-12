@@ -28,7 +28,7 @@ struct DepositCapitalizationView: View {
                 
                 Spacer()
                 
-                DepositToggleViewComponent(isOn: $viewModel.isOn)
+                DepositToggleViewComponent(viewModel: .init(isOn: $viewModel.isOn))
             }
             
             Divider()

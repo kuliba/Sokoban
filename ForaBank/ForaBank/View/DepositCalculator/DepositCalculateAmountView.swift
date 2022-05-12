@@ -84,8 +84,11 @@ struct DepositCalculateAmountView: View {
             }
             .padding([.top, .bottom], 8)
 
-            DepositSliderViewComponent(value: $viewModel.value, bounds: viewModel.bounds)
-                .padding(.bottom, 12)
+            DepositSliderViewComponent(
+                viewModel: .init(
+                    value: $viewModel.value,
+                    bounds: viewModel.bounds)
+            ).padding(.bottom, 12)
 
         }.padding([.leading, .trailing], 20)
     }

@@ -25,24 +25,24 @@ extension DepositToggleViewComponent {
 
 struct DepositToggleViewComponent: View {
 
-    @Binding var isOn: Bool
+    @ObservedObject var viewModel: ViewModel
 
     var body: some View {
 
         ZStack {
 
             Capsule()
-                .stroke(isOn ? Color.mainColorsWhite : Color.mainColorsGray, lineWidth: 1)
+                .stroke(viewModel.isOn ? Color.mainColorsWhite : Color.mainColorsGray, lineWidth: 1)
                 .frame(width: Const.trackSize.width, height: Const.trackSize.height)
 
             Circle()
-                .foregroundColor(isOn ? Color.mainColorsWhite : Color.mainColorsGray)
+                .foregroundColor(viewModel.isOn ? Color.mainColorsWhite : Color.mainColorsGray)
                 .frame(width: Const.thumbSize.width, height: Const.thumbSize.height)
-                .offset(x:isOn ? Const.thumbOffset : -Const.thumbOffset)
+                .offset(x:viewModel.isOn ? Const.thumbOffset : -Const.thumbOffset)
                 .animation(.spring())
 
         }.onTapGesture {
-            isOn.toggle()
+            viewModel.isOn.toggle()
         }
     }
 }
@@ -63,7 +63,7 @@ struct DepositToggleView: View {
 
         ZStack {
 
-            DepositToggleViewComponent(isOn: .constant(true))
+            DepositToggleViewComponent(viewModel: .init(isOn: .constant(true)))
         }
         .frame(width: 375, height: 64)
         .background(Color.mainColorsBlackMedium)

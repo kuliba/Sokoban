@@ -14,30 +14,12 @@ extension DepositSliderViewComponent {
     class ViewModel: ObservableObject {
 
         @Binding var value: Double
-        
-        @State private var offset: Double
-        @State private var lastOffset: Double
-        @State private var trackSize: CGSize
+        let bounds: ClosedRange<Double>
 
-        private let thumbSize: CGSize
-        private let bounds: ClosedRange<Double>
-        private let step: Double
-
-        init(value: Binding<Double>,
-             offset: Double = 0,
-             lastOffset: Double = 0,
-             trackSize: CGSize = .zero,
-             thumbSize: CGSize = .init(width: 20, height: 20),
-             bounds: ClosedRange<Double>,
-             step: Double = 1000) {
+        init(value: Binding<Double>, bounds: ClosedRange<Double>) {
 
             _value = value
-            self.offset = offset
-            self.lastOffset = lastOffset
-            self.trackSize = trackSize
-            self.thumbSize = thumbSize
             self.bounds = bounds
-            self.step = step
         }
     }
 }
@@ -46,30 +28,27 @@ extension DepositSliderViewComponent {
 
 struct DepositSliderViewComponent: View {
 
-    @Binding var value: Double
+    @ObservedObject var viewModel: ViewModel
 
     @State private var offset: Double
     @State private var lastOffset: Double
     @State private var trackSize: CGSize
 
     private let thumbSize: CGSize
-    private let bounds: ClosedRange<Double>
     private let step: Double
 
-    init(value: Binding<Double>,
+    init(viewModel: ViewModel,
          offset: Double = 0,
          lastOffset: Double = 0,
          trackSize: CGSize = .zero,
          thumbSize: CGSize = .init(width: 20, height: 20),
-         bounds: ClosedRange<Double>,
          step: Double = 1000) {
 
-        _value = value
+        self.viewModel = viewModel
         self.offset = offset
         self.lastOffset = lastOffset
         self.trackSize = trackSize
         self.thumbSize = thumbSize
-        self.bounds = bounds
         self.step = step
     }
 
@@ -89,24 +68,24 @@ extension DepositSliderViewComponent {
 
     private var points: [Double] {
 
-        if bounds.upperBound == Points.loanFiveMillion {
-            return [bounds.lowerBound, Points.minValue, Points.maxValue]
+        if viewModel.bounds.upperBound == Points.loanFiveMillion {
+            return [viewModel.bounds.lowerBound, Points.minValue, Points.maxValue]
         }
 
-        return [bounds.lowerBound]
+        return [viewModel.bounds.lowerBound]
     }
 
     private var stickingRange: ClosedRange<Double> {
-        value - Points.offsetToStick...value + Points.offsetToStick
+        viewModel.value - Points.offsetToStick...viewModel.value + Points.offsetToStick
     }
 
     private var thumbOffset: Double {
 
-        if value >= 0 {
+        if viewModel.value >= 0 {
 
             DispatchQueue.main.async {
                 withAnimation {
-                    offset = offset(value)
+                    offset = offset(viewModel.value)
                 }
             }
         }
@@ -127,7 +106,7 @@ extension DepositSliderViewComponent {
 extension DepositSliderViewComponent {
 
     private func percentage(_ value: Double) -> Double {
-        1 - (bounds.upperBound - value) / (bounds.upperBound - bounds.lowerBound)
+        1 - (viewModel.bounds.upperBound - value) / (viewModel.bounds.upperBound - viewModel.bounds.lowerBound)
     }
 
     private func offset(_ value: Double = 0) -> Double {
@@ -159,7 +138,7 @@ extension DepositSliderViewComponent {
                 }
 
                 trackSize = value
-                offset = offset(self.value)
+                offset = offset(viewModel.value)
                 lastOffset = offset
             }
     }
@@ -197,7 +176,7 @@ extension DepositSliderViewComponent {
         return ForEach(0...points.count - 1, id:\.self) { index in
 
             let point = points[index]
-            let color: Color = value >= point ? .mainColorsRed : .mainColorsBlackMedium
+            let color: Color = viewModel.value >= point ? .mainColorsRed : .mainColorsBlackMedium
 
             color
                 .cornerRadius(3)
@@ -206,8 +185,8 @@ extension DepositSliderViewComponent {
                 .onTapGesture {
 
                     withAnimation {
-                        value = point
-                        offset = offset(value)
+                        viewModel.value = point
+                        offset = offset(viewModel.value)
                     }
                 }
         }
@@ -221,9 +200,9 @@ extension DepositSliderViewComponent {
 
         let availableWidth = trackSize.width - thumbSize.width
         offset = max(0, min(lastOffset + width, availableWidth))
-        let newValue = (bounds.upperBound - bounds.lowerBound) * Double(offset / availableWidth) + bounds.lowerBound
+        let newValue = (viewModel.bounds.upperBound - viewModel.bounds.lowerBound) * Double(offset / availableWidth) + viewModel.bounds.lowerBound
         let steppedValue = (round(newValue / step) * step)
-        value = min(bounds.upperBound, max(bounds.lowerBound, steppedValue))
+        viewModel.value = min(viewModel.bounds.upperBound, max(viewModel.bounds.lowerBound, steppedValue))
     }
 
     private func stickToPoint() {
@@ -243,7 +222,7 @@ extension DepositSliderViewComponent {
 
         withAnimation {
 
-            self.value = value
+            viewModel.value = value
             offset = offset(value)
         }
     }
@@ -277,12 +256,15 @@ struct DepositSliderView: View {
     var body: some View {
 
         VStack {
-            
+
             Text("\(Int(value))")
                 .foregroundColor(.mainColorsWhite)
 
-            DepositSliderViewComponent(value: $value, bounds: 10000...5000000)
-                .padding([.leading, .trailing])
+            DepositSliderViewComponent(
+                viewModel: .init(
+                    value: $value,
+                    bounds: 10000...5000000)
+            ).padding([.leading, .trailing])
         }
         .frame(height: 84)
         .background(Color.mainColorsBlack)
