@@ -63,6 +63,22 @@ extension Double {
         }
         return String(self)
     }
+
+    func percentDepositFormatter() -> String {
+
+        let currencyFormatter = NumberFormatter()
+
+        currencyFormatter.numberStyle = .percent
+        currencyFormatter.locale = Locale(identifier: "ru_RU")
+        currencyFormatter.maximumFractionDigits = 2
+        currencyFormatter.minimumFractionDigits = 2
+
+        if let priceString = currencyFormatter.string(from: NSNumber(value: self / 100)) {
+            return priceString
+        }
+
+        return String(self)
+    }
     
     func currencyFormatterForMain() -> String {
         
