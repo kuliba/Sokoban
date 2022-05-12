@@ -15,6 +15,10 @@ extension DepositToggleViewComponent {
 
         @Binding var isOn: Bool
 
+        let trackSize: CGSize = .init(width: 51, height: 31)
+        let thumbSize: CGSize = .init(width: 21, height: 21)
+        let thumbOffset: CGFloat = 11
+
         init(isOn: Binding<Bool>) {
             _isOn = isOn
         }
@@ -33,27 +37,17 @@ struct DepositToggleViewComponent: View {
 
             Capsule()
                 .stroke(viewModel.isOn ? Color.mainColorsWhite : Color.mainColorsGray, lineWidth: 1)
-                .frame(width: Const.trackSize.width, height: Const.trackSize.height)
+                .frame(width: viewModel.trackSize.width, height: viewModel.trackSize.height)
 
             Circle()
                 .foregroundColor(viewModel.isOn ? Color.mainColorsWhite : Color.mainColorsGray)
-                .frame(width: Const.thumbSize.width, height: Const.thumbSize.height)
-                .offset(x:viewModel.isOn ? Const.thumbOffset : -Const.thumbOffset)
+                .frame(width: viewModel.thumbSize.width, height: viewModel.thumbSize.height)
+                .offset(x:viewModel.isOn ? viewModel.thumbOffset : -viewModel.thumbOffset)
                 .animation(.spring())
 
         }.onTapGesture {
             viewModel.isOn.toggle()
         }
-    }
-}
-
-extension DepositToggleViewComponent {
-
-    enum Const {
-
-        static let trackSize: CGSize = .init(width: 51, height: 31)
-        static let thumbSize: CGSize = .init(width: 21, height: 21)
-        static let thumbOffset: CGFloat = 11
     }
 }
 

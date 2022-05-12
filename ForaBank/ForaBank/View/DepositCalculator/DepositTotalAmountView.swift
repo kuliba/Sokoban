@@ -30,7 +30,7 @@ struct DepositTotalAmountView: View {
                             .font(.textBodySR12160())
                             .foregroundColor(.mainColorsGray)
 
-                        Text(viewModel.yourIncome.currencyDepositFormatter())
+                        Text(viewModel.yourIncomeCurrency)
                             .foregroundColor(.mainColorsWhite)
                             .font(.textH4M16240())
                     }
@@ -43,7 +43,7 @@ struct DepositTotalAmountView: View {
                             .font(.textBodySR12160())
                             .foregroundColor(.mainColorsGray)
 
-                        Text(viewModel.totalAmount.currencyDepositFormatter())
+                        Text(viewModel.totalAmountCurrency)
                             .foregroundColor(.mainColorsWhite)
                             .font(.textH4M16240())
 

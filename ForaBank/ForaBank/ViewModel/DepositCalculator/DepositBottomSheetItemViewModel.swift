@@ -34,3 +34,10 @@ class DepositBottomSheetItemViewModel: Identifiable {
         self.isOnCapitalization = isOnCapitalization
     }
 }
+
+extension DepositBottomSheetItemViewModel {
+
+    var ratePercent: String {
+        rate.percentDepositFormatter()
+    }
+}

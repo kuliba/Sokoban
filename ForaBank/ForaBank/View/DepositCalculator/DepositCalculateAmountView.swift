@@ -52,7 +52,7 @@ struct DepositCalculateAmountView: View {
                         .font(.textBodySR12160())
                         .foregroundColor(.mainColorsGray)
 
-                    Text(viewModel.interestRateValue.currencyDepositFormatter(symbol: "₽"))
+                    Text(viewModel.interestRateValueCurrency)
                         .foregroundColor(.mainColorsWhite)
                         .font(.textH4M16240())
                 }
@@ -89,7 +89,7 @@ struct DepositCalculateAmountView: View {
 
                 Spacer()
 
-                Text("От \(viewModel.bounds.lowerBound.currencyDepositShortFormatter())")
+                Text(viewModel.lowerBoundCurrency)
                     .font(.textBodySR12160())
                     .foregroundColor(.mainColorsGray)
                     .padding(.top, 26)
@@ -128,7 +128,7 @@ extension DepositCalculateAmountView {
                 .sink { value in
 
                     DispatchQueue.main.async { [unowned self] in
-                        textField.text = "\(value.currencyDepositFormatter(symbol: "₽"))"
+                        textField.text = viewModel.valueCurrencySymbol
                         textField.updateCursorPosition()
                     }
 
@@ -181,7 +181,7 @@ extension DepositCalculateAmountView {
                     let filterred = textField.text?.filterred()
 
                     guard let text = filterred, let value = Double(text) else {
-                        textField.text = self.viewModel.value.currencyDepositFormatter()
+                        textField.text = self.viewModel.valueCurrency
                         return
                     }
 

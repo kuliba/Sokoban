@@ -28,7 +28,7 @@ struct DepositBottomSheetItemView: View {
 
             VStack(alignment: .trailing, spacing: 8) {
 
-                Text(viewModel.rate.percentDepositFormatter())
+                Text(viewModel.ratePercent)
                     .font(.textH4M16240())
                 Text(viewModel.capitalizationTitle)
                     .font(.textBodySR12160())

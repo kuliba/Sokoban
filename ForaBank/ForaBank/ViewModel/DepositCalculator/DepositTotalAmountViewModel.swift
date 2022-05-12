@@ -32,6 +32,17 @@ class DepositTotalAmountViewModel: ObservableObject {
 
 extension DepositTotalAmountViewModel {
 
+    var yourIncomeCurrency: String {
+        yourIncome.currencyDepositFormatter()
+    }
+
+    var totalAmountCurrency: String {
+        totalAmount.currencyDepositFormatter()
+    }
+}
+
+extension DepositTotalAmountViewModel {
+
     static let sample = DepositTotalAmountViewModel(
         yourIncome: 102099.28,
         totalAmount: 1565321.08
