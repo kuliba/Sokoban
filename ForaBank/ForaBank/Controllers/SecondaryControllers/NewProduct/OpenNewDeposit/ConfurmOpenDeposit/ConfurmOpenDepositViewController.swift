@@ -63,7 +63,7 @@ class ConfurmOpenDepositViewController: PaymentViewController {
     var rateField = ForaInput(
         viewModel: ForaInputModel(
             title: "Процентная ставка",
-            image: #imageLiteral(resourceName: "Frame 580"),
+            image: #imageLiteral(resourceName: "PercentDeposit"),
             isEditable: false))
     
     var incomeField = ForaInput(
