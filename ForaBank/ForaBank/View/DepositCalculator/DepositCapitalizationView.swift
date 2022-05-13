@@ -28,11 +28,11 @@ struct DepositCapitalizationView: View {
                 
                 Spacer()
                 
-                DepositToggleViewComponent(isOn: $viewModel.isOn)
+                DepositToggleViewComponent(viewModel: .init(isOn: $viewModel.isOn))
             }
             
             Divider()
-                .background(Color.mainColorsGray)
+                .background(Color.init(hex: "#292929"))
                 .padding(.top, 8)
                 .padding(.bottom, 12)
             

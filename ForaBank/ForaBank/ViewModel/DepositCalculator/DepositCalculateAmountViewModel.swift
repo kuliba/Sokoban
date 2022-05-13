@@ -11,6 +11,7 @@ import SwiftUI
 class DepositCalculateAmountViewModel: ObservableObject {
 
     @Published var value: Double
+    @Published var isFirstResponder: Bool
     @Published var depositValue: Int
     @Published var interestRateValue: Double
     @Published var isShowBottomSheet: Bool
@@ -25,15 +26,17 @@ class DepositCalculateAmountViewModel: ObservableObject {
          interestRateValue: Double,
          depositAmount: String = "Сумма депозита",
          value: Double = 1500000,
+         isFirstResponder: Bool = false,
          depositValue: Int,
          isShowBottomSheet: Bool = false,
-         bounds: ClosedRange<Double>) {
+         bounds: ClosedRange<Double> = 10000...5000000) {
 
         self.depositTerm = depositTerm
         self.interestRate = interestRate
         self.interestRateValue = interestRateValue
         self.depositAmount = depositAmount
         self.value = value
+        self.isFirstResponder = isFirstResponder
         self.depositValue = depositValue
         self.isShowBottomSheet = isShowBottomSheet
         self.bounds = bounds
@@ -42,26 +45,36 @@ class DepositCalculateAmountViewModel: ObservableObject {
 
 extension DepositCalculateAmountViewModel {
 
-    var numberFormatter: NumberFormatter {
-
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.locale = Locale(identifier: "ru_RU")
-
-        return formatter
+    var valueCurrency: String {
+        value.currencyDepositFormatter()
     }
 
-    func percentFormat(_ value: Double) -> String {
+    var valueCurrencySymbol: String {
+        "\(value.currencyDepositFormatter(symbol: "₽"))"
+    }
 
-        let formatter = NumberFormatter()
-        let number = NSNumber(value: value / 100)
+    var interestRateValueCurrency: String {
+        interestRateValue.currencyDepositFormatter(symbol: "₽")
+    }
 
-        formatter.numberStyle = .percent
+    var lowerBoundCurrency: String {
+        "От \(bounds.lowerBound.currencyDepositShortFormatter())"
+    }
 
-        formatter.minimumFractionDigits = 2
-        formatter.maximumFractionDigits = 2
+    func textFieldDidEndEditing(_ textField: UITextField) {
 
-        return formatter.string(from: number) ?? ""
+        DispatchQueue.main.async {
+
+            let filterred = textField.text?.filterred()
+
+            guard let text = filterred, let value = Double(text) else {
+                textField.text = self.valueCurrency
+                return
+            }
+
+            self.value = value
+            self.isFirstResponder = false
+        }
     }
 }
 
@@ -69,7 +82,7 @@ extension DepositCalculateAmountViewModel {
 
     static let sample1 = DepositCalculateAmountViewModel(
         interestRateValue: 7.95,
-        depositValue: 365, bounds: 10000...500000
+        depositValue: 365
     )
 
     static let sample2 = DepositCalculateAmountViewModel(

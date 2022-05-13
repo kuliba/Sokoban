@@ -14,15 +14,30 @@ class DepositBottomSheetItemViewModel: Identifiable {
     let term: Int
     let rate: Double
     let termName: String
+    var isOnCapitalization: Bool
+
+    var capitalizationTitle: String {
+
+        isOnCapitalization ? "С учетом капитализации" : "Без учета капитализации"
+    }
 
     init(id: String = UUID().uuidString,
-         term: Int,
-         rate: Double,
-         termName: String) {
+         term: Int = 0,
+         rate: Double = 0,
+         termName: String = "",
+         isOnCapitalization: Bool = true) {
 
         self.id = id
         self.term = term
         self.rate = rate
         self.termName = termName
+        self.isOnCapitalization = isOnCapitalization
+    }
+}
+
+extension DepositBottomSheetItemViewModel {
+
+    var ratePercent: String {
+        rate.percentDepositFormatter()
     }
 }
