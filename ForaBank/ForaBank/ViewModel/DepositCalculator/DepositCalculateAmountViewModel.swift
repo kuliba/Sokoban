@@ -57,7 +57,7 @@ extension DepositCalculateAmountViewModel {
     }
 
     var interestRateValueCurrency: String {
-        interestRateValue.currencyDepositFormatter(symbol: "₽")
+        interestRateValue.currencyDepositFormatter(symbol: "%")
     }
 
     var lowerBoundCurrency: String {

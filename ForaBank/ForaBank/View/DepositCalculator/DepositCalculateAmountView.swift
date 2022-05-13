@@ -59,9 +59,6 @@ struct DepositCalculateAmountView: View {
 
                 Spacer()
             }
-            HStack {
-                
-                VStack(alignment: .leading, spacing: 8) {
 
             HStack {
 

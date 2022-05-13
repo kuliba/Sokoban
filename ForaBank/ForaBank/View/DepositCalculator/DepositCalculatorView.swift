@@ -110,7 +110,7 @@ extension DepositCalculatorView {
                             return
                         }
 
-                    action: do { self.presentationMode.wrappedValue.dismiss() }
+                    action: do { self.isOpen.toggle() }
                     }
                 )
             }
