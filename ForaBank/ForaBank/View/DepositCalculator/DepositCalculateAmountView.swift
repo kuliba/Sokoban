@@ -51,41 +51,51 @@ struct DepositCalculateAmountView: View {
                         .font(.textBodySR12160())
                         .foregroundColor(.mainColorsGray)
 
-                    Text(viewModel.interestRateValue.currencyDepositFormatter(symbol: "₽"))
+                    Text(viewModel.interestRateValue.currencyDepositFormatter(symbol: "%"))
                         .foregroundColor(.mainColorsWhite)
                         .font(.textH4M16240())
                 }
 
                 Spacer()
             }
+            HStack {
+                
+                VStack(alignment: .leading, spacing: 8) {
 
-            VStack(alignment: .leading, spacing: 8) {
+                    Text(viewModel.depositAmount)
+                        .font(.textBodySR12160())
+                        .foregroundColor(.mainColorsGray)
 
-                Text(viewModel.depositAmount)
-                    .font(.textBodySR12160())
-                    .foregroundColor(.mainColorsGray)
+                    HStack {
 
-                HStack {
+                        DepositCalculateTextField(viewModel: viewModel)
+                            .fixedSize()
 
-                    DepositCalculateTextField(viewModel: viewModel)
-                        .fixedSize()
+                        Button {
 
-                    Button {
+                            viewModel.isFirstResponder.toggle()
 
-                        viewModel.isFirstResponder.toggle()
+                        } label: {
 
-                    } label: {
-
-                        Image.ic16Edit2
-                            .renderingMode(.template)
-                            .foregroundColor(.mainColorsGray)
+                            Image.ic16Edit2
+                                .renderingMode(.template)
+                                .foregroundColor(.mainColorsGray)
+                        }
                     }
                 }
+                .padding([.top, .bottom], 8)
+                
+                Spacer()
+                
+                Text(viewModel.minSum)
+                    .foregroundColor(.gray)
+                    .font(.system(size: 12))
+                    .frame(alignment: .trailing)
             }
-            .padding([.top, .bottom], 8)
 
             DepositSliderViewComponent(value: $viewModel.value, bounds: viewModel.bounds)
                 .padding(.bottom, 12)
+                .frame(width: 300)
 
         }.padding([.leading, .trailing], 20)
     }

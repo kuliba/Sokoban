@@ -20,6 +20,7 @@ class DepositCalculateAmountViewModel: ObservableObject {
     let interestRate: String
     let depositAmount: String
     let bounds: ClosedRange<Double>
+    let minSum: String
 
     init(depositTerm: String = "Срок вклада",
          interestRate: String = "Процентная ставка",
@@ -28,6 +29,7 @@ class DepositCalculateAmountViewModel: ObservableObject {
          value: Double = 1500000,
          isFirstResponder: Bool = false,
          depositValue: Int,
+         minSum: Double,
          isShowBottomSheet: Bool = false,
          bounds: ClosedRange<Double> = 10000...5000000) {
 
@@ -40,6 +42,7 @@ class DepositCalculateAmountViewModel: ObservableObject {
         self.depositValue = depositValue
         self.isShowBottomSheet = isShowBottomSheet
         self.bounds = bounds
+        self.minSum = "От \(minSum.currencyFormatter())"
     }
 }
 
@@ -47,12 +50,12 @@ extension DepositCalculateAmountViewModel {
 
     static let sample1 = DepositCalculateAmountViewModel(
         interestRateValue: 7.95,
-        depositValue: 365
+        depositValue: 365, minSum: 5000.0
     )
 
     static let sample2 = DepositCalculateAmountViewModel(
         interestRateValue: 9.15,
         depositValue: 31,
-        bounds: 5000...10000000
+        minSum: 5000.0, bounds: 5000...10000000
     )
 }
