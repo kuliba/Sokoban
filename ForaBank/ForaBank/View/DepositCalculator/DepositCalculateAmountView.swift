@@ -8,6 +8,7 @@
 
 import SwiftUI
 import Combine
+import IQKeyboardManagerSwift
 
 struct DepositCalculateAmountView: View {
 
@@ -144,7 +145,19 @@ extension DepositCalculateAmountView {
             textField.font = UIFont(name: "Inter-SemiBold", size: 24)
             textField.keyboardType = .numberPad
 
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(keyboardWillHide),
+                name: UIResponder.keyboardWillHideNotification,
+                object: nil)
+
             return textField
+        }
+
+        @objc func keyboardWillHide(notification: NSNotification) {
+
+            guard viewModel.isFirstResponder == true else { return }
+            viewModel.textFieldDidEndEditing(textField)
         }
 
         func updateUIView(_ uiView: UITextField, context: Context) {
@@ -175,18 +188,7 @@ extension DepositCalculateAmountView {
             }
 
             func textFieldDidEndEditing(_ textField: UITextField) {
-
-                DispatchQueue.main.async {
-
-                    let filterred = textField.text?.filterred()
-
-                    guard let text = filterred, let value = Double(text) else {
-                        textField.text = self.viewModel.valueCurrency
-                        return
-                    }
-
-                    self.viewModel.value = value
-                }
+                viewModel.textFieldDidEndEditing(textField)
             }
 
             func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
