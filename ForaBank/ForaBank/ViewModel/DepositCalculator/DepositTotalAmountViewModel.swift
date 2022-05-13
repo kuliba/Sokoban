@@ -16,8 +16,8 @@ class DepositTotalAmountViewModel: ObservableObject {
     let totalAmountTitle: String
     let description: String
 
-    init(yourIncome: Double,
-         totalAmount: Double,
+    init(yourIncome: Double = 0,
+         totalAmount: Double = 0,
          yourIncomeTitle: String = "Ваш доход",
          totalAmountTitle: String = "Итоговая сумма",
          description: String = "Представленные параметры являются расчетными и носят справочный характер") {
@@ -32,15 +32,12 @@ class DepositTotalAmountViewModel: ObservableObject {
 
 extension DepositTotalAmountViewModel {
 
-    func currencyFormat(_ value: Double) -> String {
+    var yourIncomeCurrency: String {
+        yourIncome.currencyDepositFormatter()
+    }
 
-        let formatter = NumberFormatter()
-        let number = NSNumber(value: value)
-
-        formatter.numberStyle = .currency
-        formatter.locale = Locale(identifier: "ru_RU")
-
-        return formatter.string(from: number) ?? ""
+    var totalAmountCurrency: String {
+        totalAmount.currencyDepositFormatter()
     }
 }
 

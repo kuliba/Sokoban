@@ -15,6 +15,10 @@ extension DepositToggleViewComponent {
 
         @Binding var isOn: Bool
 
+        let trackSize: CGSize = .init(width: 51, height: 31)
+        let thumbSize: CGSize = .init(width: 21, height: 21)
+        let thumbOffset: CGFloat = 11
+
         init(isOn: Binding<Bool>) {
             _isOn = isOn
         }
@@ -25,35 +29,25 @@ extension DepositToggleViewComponent {
 
 struct DepositToggleViewComponent: View {
 
-    @Binding var isOn: Bool
+    @ObservedObject var viewModel: ViewModel
 
     var body: some View {
 
         ZStack {
 
             Capsule()
-                .stroke(isOn ? Color.mainColorsWhite : Color.mainColorsGray, lineWidth: 1)
-                .frame(width: Const.trackSize.width, height: Const.trackSize.height)
+                .stroke(viewModel.isOn ? Color.mainColorsWhite : Color.mainColorsGray, lineWidth: 1)
+                .frame(width: viewModel.trackSize.width, height: viewModel.trackSize.height)
 
             Circle()
-                .foregroundColor(isOn ? Color.mainColorsWhite : Color.mainColorsGray)
-                .frame(width: Const.thumbSize.width, height: Const.thumbSize.height)
-                .offset(x:isOn ? Const.thumbOffset : -Const.thumbOffset)
+                .foregroundColor(viewModel.isOn ? Color.mainColorsWhite : Color.mainColorsGray)
+                .frame(width: viewModel.thumbSize.width, height: viewModel.thumbSize.height)
+                .offset(x:viewModel.isOn ? viewModel.thumbOffset : -viewModel.thumbOffset)
                 .animation(.spring())
 
         }.onTapGesture {
-            isOn.toggle()
+            viewModel.isOn.toggle()
         }
-    }
-}
-
-extension DepositToggleViewComponent {
-
-    enum Const {
-
-        static let trackSize: CGSize = .init(width: 51, height: 31)
-        static let thumbSize: CGSize = .init(width: 21, height: 21)
-        static let thumbOffset: CGFloat = 11
     }
 }
 
@@ -63,7 +57,7 @@ struct DepositToggleView: View {
 
         ZStack {
 
-            DepositToggleViewComponent(isOn: .constant(true))
+            DepositToggleViewComponent(viewModel: .init(isOn: .constant(true)))
         }
         .frame(width: 375, height: 64)
         .background(Color.mainColorsBlackMedium)

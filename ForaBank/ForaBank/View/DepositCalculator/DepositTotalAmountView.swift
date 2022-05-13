@@ -8,55 +8,56 @@
 import SwiftUI
 
 struct DepositTotalAmountView: View {
-    
+
     @ObservedObject var viewModel: DepositTotalAmountViewModel
-    
+
     var body: some View {
-        
+
         ZStack {
-            
-            Color
-                .mainColorsBlackMedium
+
+            Color(hex: "#292929")
                 .opacity(0.4)
                 .cornerRadius(12)
                 .frame(height: 128)
-            
+
             VStack(alignment: .leading, spacing: 8) {
-                
+
                 HStack {
-                    
+
                     VStack(alignment: .leading, spacing: 8) {
-                        
+
                         Text(viewModel.yourIncomeTitle)
                             .font(.textBodySR12160())
                             .foregroundColor(.mainColorsGray)
-                        
-                        Text(viewModel.currencyFormat(viewModel.yourIncome))
+
+                        Text(viewModel.yourIncomeCurrency)
                             .foregroundColor(.mainColorsWhite)
                             .font(.textH4M16240())
                     }
-                    
+
                     Spacer()
-                    
+
                     VStack(alignment: .leading, spacing: 8) {
-                        
+
                         Text(viewModel.totalAmountTitle)
                             .font(.textBodySR12160())
                             .foregroundColor(.mainColorsGray)
-                        
-                        Text(viewModel.currencyFormat(viewModel.totalAmount))
+
+                        Text(viewModel.totalAmountCurrency)
                             .foregroundColor(.mainColorsWhite)
                             .font(.textH4M16240())
-                    }
-                    
+
+                    }.frame(width: 150, alignment: .leading)
+
                     Spacer()
+                        .fixedSize()
                 }
-                
+
                 Text(viewModel.description)
                     .font(.textBodySR12160())
                     .foregroundColor(.mainColorsGray)
                     .padding(.top, 8)
-                
+
             }.padding(20)
         }
     }
@@ -64,10 +65,7 @@ struct DepositTotalAmountView: View {
 
 struct DepositTotalAmountView_Previews: PreviewProvider {
     static var previews: some View {
-        DepositTotalAmountView(
-            viewModel: .init(
-                yourIncome: 102099.28,
-                totalAmount: 1565321.08))
+        DepositTotalAmountView(viewModel: .sample)
             .background(Color.mainColorsBlack)
             .previewLayout(.sizeThatFits)
     }
