@@ -48,6 +48,25 @@ class DepositCalculateAmountViewModel: ObservableObject {
 
 extension DepositCalculateAmountViewModel {
 
+    var valueCurrency: String {
+        value.currencyDepositFormatter()
+    }
+
+    var valueCurrencySymbol: String {
+        "\(value.currencyDepositFormatter(symbol: "₽"))"
+    }
+
+    var interestRateValueCurrency: String {
+        interestRateValue.currencyDepositFormatter(symbol: "₽")
+    }
+
+    var lowerBoundCurrency: String {
+        "От \(bounds.lowerBound.currencyDepositShortFormatter())"
+    }
+}
+
+extension DepositCalculateAmountViewModel {
+
     static let sample1 = DepositCalculateAmountViewModel(
         interestRateValue: 7.95,
         depositValue: 365, minSum: 5000.0

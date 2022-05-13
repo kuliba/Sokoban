@@ -12,7 +12,6 @@ class DepositBottomSheetViewModel: ObservableObject {
     @Published var selectedItem: DepositBottomSheetItemViewModel
     @Published var isShowBottomSheet: Bool
 
-
     let title: String
     var items: [DepositBottomSheetItemViewModel]
     let itemHeight: Int

@@ -81,6 +81,12 @@ class DepositCalculatorViewModel: ObservableObject {
                     }
                 }
 
+                bottomSheet.items.forEach { item in
+                    if let capitalization = capitalization {
+                        item.isOnCapitalization = capitalization.isOn
+                    }
+                }
+
                 bottomSheet.isShowBottomSheet = isShow
 
             }.store(in: &bindings)

@@ -5,6 +5,7 @@
 //  Created by Pavel Samsonov on 04.05.2022.
 //
 
+
 import SwiftUI
 import Combine
 
@@ -51,7 +52,7 @@ struct DepositCalculateAmountView: View {
                         .font(.textBodySR12160())
                         .foregroundColor(.mainColorsGray)
 
-                    Text(viewModel.interestRateValue.currencyDepositFormatter(symbol: "%"))
+                    Text(viewModel.interestRateValueCurrency)
                         .foregroundColor(.mainColorsWhite)
                         .font(.textH4M16240())
                 }
@@ -60,6 +61,10 @@ struct DepositCalculateAmountView: View {
             }
             HStack {
                 
+                VStack(alignment: .leading, spacing: 8) {
+
+            HStack {
+
                 VStack(alignment: .leading, spacing: 8) {
 
                     Text(viewModel.depositAmount)
@@ -84,18 +89,20 @@ struct DepositCalculateAmountView: View {
                     }
                 }
                 .padding([.top, .bottom], 8)
-                
+
                 Spacer()
-                
-                Text(viewModel.minSum)
-                    .foregroundColor(.gray)
-                    .font(.system(size: 12))
-                    .frame(alignment: .trailing)
+
+                Text(viewModel.lowerBoundCurrency)
+                    .font(.textBodySR12160())
+                    .foregroundColor(.mainColorsGray)
+                    .padding(.top, 26)
             }
 
-            DepositSliderViewComponent(value: $viewModel.value, bounds: viewModel.bounds)
-                .padding(.bottom, 12)
-                .frame(width: 300)
+            DepositSliderViewComponent(
+                viewModel: .init(
+                    value: $viewModel.value,
+                    bounds: viewModel.bounds)
+            ).padding(.bottom, 12)
 
         }.padding([.leading, .trailing], 20)
     }
@@ -124,7 +131,7 @@ extension DepositCalculateAmountView {
                 .sink { value in
 
                     DispatchQueue.main.async { [unowned self] in
-                        textField.text = "\(value.currencyDepositFormatter(symbol: "₽"))"
+                        textField.text = viewModel.valueCurrencySymbol
                         textField.updateCursorPosition()
                     }
 
@@ -177,7 +184,7 @@ extension DepositCalculateAmountView {
                     let filterred = textField.text?.filterred()
 
                     guard let text = filterred, let value = Double(text) else {
-                        textField.text = self.viewModel.value.currencyDepositFormatter()
+                        textField.text = self.viewModel.valueCurrency
                         return
                     }
 
