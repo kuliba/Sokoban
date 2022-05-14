@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "PercentDeposit.svg",
+      "filename" : "UnknownInside.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "PercentDeposit-1.svg",
+      "filename" : "UnknownInside-1.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "PercentDeposit-2.svg",
+      "filename" : "UnknownInside-2.svg",
       "idiom" : "universal",
       "scale" : "3x"
     }

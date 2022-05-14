@@ -25,14 +25,17 @@ struct DepositBottomSheetItemView: View {
             }
 
             Spacer()
+            
+            if viewModel.isOnCapitalization {
+                
+                VStack(alignment: .trailing, spacing: 8) {
 
-            VStack(alignment: .trailing, spacing: 8) {
-
-                Text(viewModel.ratePercent)
-                    .font(.textH4M16240())
-                Text(viewModel.capitalizationTitle)
-                    .font(.textBodySR12160())
-                    .foregroundColor(.mainColorsGray)
+                    Text(viewModel.ratePercent)
+                        .font(.textH4M16240())
+                    Text(viewModel.capitalizationTitle)
+                        .font(.textBodySR12160())
+                        .foregroundColor(.mainColorsGray)
+                }
             }
         }
     }
