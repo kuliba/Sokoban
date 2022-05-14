@@ -37,6 +37,9 @@ extension DepositProductData {
                 let rate: Double
                 let term: Int
                 let termName: String
+                let termABS: Int
+                let termKind: Int?
+                let termType: Int?
             }
         }
     }
