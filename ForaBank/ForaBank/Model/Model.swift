@@ -33,8 +33,12 @@ class Model {
 
     //MARK: Templates
     let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
+    
     //TODO: store in cache
     let paymentTemplatesViewSettings: CurrentValueSubject<TemplatesListViewModel.Settings, Never>
+    
+    //MARK: LatestAllPayments
+    let latestPayments: CurrentValueSubject<[PaymentData], Never>
     
     //MARK: Notifications
     let notifications: CurrentValueSubject<[NotificationData], Never>
@@ -92,6 +96,7 @@ class Model {
         self.bankList = .init([])
         self.paymentTemplates = .init([])
         self.paymentTemplatesViewSettings = .init(.initial)
+        self.latestPayments = .init([])
         self.notifications = .init([])
         self.currentUserLoaction = .init(nil)
         self.sessionAgent = sessionAgent
@@ -331,7 +336,12 @@ class Model {
                     
                 case _ as ModelAction.Notification.Fetch.Next.Request:
                     handleNotificationsFetchNextRequest()
-                    
+                
+                //MARK: - LatestAllPayments Actions
+                        
+                case _ as ModelAction.LatestPayments.List.Requested:
+                    handleLatestPaymentsListRequest()
+                        
                 //MARK: - Templates Actions
                     
                 case _ as ModelAction.PaymentTemplate.List.Requested:
