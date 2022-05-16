@@ -250,6 +250,8 @@ class MainViewController: UIViewController {
             self.isUpdating.value = false
         }
         getCurrency()
+        
+        model.action.send(ModelAction.Deposits.List.Request())
     }
     
     @objc func openSetting() {
