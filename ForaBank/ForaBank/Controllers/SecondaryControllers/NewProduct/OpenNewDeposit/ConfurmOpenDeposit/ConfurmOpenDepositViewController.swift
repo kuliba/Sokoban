@@ -33,16 +33,51 @@ class ConfurmOpenDepositViewController: PaymentViewController {
         }
     }
     var choosenRateList: [TermRateSumTermRateList]?
+    var depositModels: DepositCalculatorViewModel.DepositInterestRateModel?
+    
     var choosenRate: TermRateSumTermRateList? {
         didSet {
             guard let choosenRate = choosenRate else { return }
-            let dateDepositButtontext = "\(choosenRate.termName ?? "") (\(choosenRate.term ?? 0) \(WordDeclensionUtil.getWordInDeclension(type: WordDeclensionEnum().day, n: choosenRate.term )))"
-            termField.text = dateDepositButtontext
-            rateField.text = "\(choosenRate.rate ?? 0.0)%"
-            guard let text = self.bottomView.amountTextField.text else { return }
-            guard let unformatText = self.moneyFormatter?.unformat(text) else { return }
-            guard let value = Double(unformatText) else { return }
-            calculateSumm(with: value)
+                
+            if let i = depositModels {
+                    
+                    guard let text = self.bottomView.amountTextField.text else { return }
+                    guard let unformatText = self.moneyFormatter?.unformat(text) else { return }
+                    guard let value = Double(unformatText) else { return }
+                    
+                    let point = i.points
+                        .compactMap {$0}
+                        .last { point in
+                            point.minSumm <= value
+                        }
+
+                    guard let point = point else {
+                        return
+                    }
+                    
+                    let itemViewModel = point.termRateLists.first { model in
+                        model.term == choosenRate.term
+                    }
+
+                    guard let itemViewModel = itemViewModel else {
+                        return
+                    }
+                    
+                let dateDepositButtontext = "\(itemViewModel.termName ) (\(itemViewModel.term) \(WordDeclensionUtil.getWordInDeclension(type: WordDeclensionEnum().day, n: itemViewModel.term )))"
+                    termField.text = dateDepositButtontext
+                    rateField.text = "\(itemViewModel.rate )%"
+                    calculateSumm(with: value)
+                
+            } else {
+                
+                let dateDepositButtontext = "\(choosenRate.termName ?? "") (\(choosenRate.term ?? 0) \(WordDeclensionUtil.getWordInDeclension(type: WordDeclensionEnum().day, n: choosenRate.term )))"
+                termField.text = dateDepositButtontext
+                rateField.text = "\(choosenRate.rate ?? 0.0)%"
+                guard let text = self.bottomView.amountTextField.text else { return }
+                guard let unformatText = self.moneyFormatter?.unformat(text) else { return }
+                guard let value = Double(unformatText) else { return }
+                calculateSumm(with: value)
+            }
         }
     }
     var moneyFormatter: SumTextInputFormatter?
@@ -63,7 +98,7 @@ class ConfurmOpenDepositViewController: PaymentViewController {
     var rateField = ForaInput(
         viewModel: ForaInputModel(
             title: "Процентная ставка",
-            image: #imageLiteral(resourceName: "Frame 580"),
+            image: #imageLiteral(resourceName: "PercentDeposit"),
             isEditable: false))
     
     var incomeField = ForaInput(
@@ -89,20 +124,52 @@ class ConfurmOpenDepositViewController: PaymentViewController {
         setupUI()
         readAndSetupCard()
         NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: bottomView.amountTextField, queue: .main) { _ in
-            guard let text = self.bottomView.amountTextField.text else { return }
-            guard let unformatText = self.bottomView.moneyFormatter?.unformat(text) else { return }
-            guard let value = Double(unformatText) else { return }
-            self.calculateSumm(with: value)
             
-            //TODO: - Validate summ
-            let intValue = Int(unformatText) ?? 0
-            let minSumm = self.product?.generalСondition?.minSum ?? 5000
-            let maxSumm = Int(self.cardFromField.model?.balance ?? 0)
-            if intValue < minSumm ||
-                intValue > maxSumm {
+            if let depositModels = self.depositModels {
                 
-                print("TODO: - Validate summ")
+                guard let text = self.bottomView.amountTextField.text else { return }
+                guard let unformatText = self.moneyFormatter?.unformat(text) else { return }
+                guard let value = Double(unformatText) else { return }
                 
+                let point = depositModels.points
+                    .compactMap {$0}
+                    .last { point in
+                        point.minSumm <= value
+                    }
+
+                guard let point = point else {
+                    return
+                }
+                
+                let itemViewModel = point.termRateLists.first { model in
+                    model.term == self.choosenRate?.term
+                }
+
+                guard let itemViewModel = itemViewModel else {
+                    return
+                }
+                
+            let dateDepositButtontext = "\(itemViewModel.termName ) (\(itemViewModel.term) \(WordDeclensionUtil.getWordInDeclension(type: WordDeclensionEnum().day, n: itemViewModel.term )))"
+                self.termField.text = dateDepositButtontext
+                self.rateField.text = "\(itemViewModel.rate)%"
+                self.calculateSumm(with: value)
+                
+            } else {
+                guard let text = self.bottomView.amountTextField.text else { return }
+                guard let unformatText = self.bottomView.moneyFormatter?.unformat(text) else { return }
+                guard let value = Double(unformatText) else { return }
+                self.calculateSumm(with: value)
+                
+                //TODO: - Validate summ
+                let intValue = Int(unformatText) ?? 0
+                let minSumm = self.product?.generalСondition?.minSum ?? 5000
+                let maxSumm = Int(self.cardFromField.model?.balance ?? 0)
+                if intValue < minSumm ||
+                    intValue > maxSumm {
+                    
+                    print("TODO: - Validate summ")
+                    
+                }
             }
         }
         
@@ -123,9 +190,15 @@ class ConfurmOpenDepositViewController: PaymentViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         moneyFormatter = SumTextInputFormatter(textPattern: "# ###,## ₽")
+        rateField.imageView.setDimensions(height: 24, width: 24)
         
         let newText = moneyFormatter?.format("\(startAmount)") ?? ""
         bottomView.amountTextField.text = newText
+        
+        let dateDepositButtontext = "\(choosenRate?.termName ?? "") (\(choosenRate?.term ?? 0) \(WordDeclensionUtil.getWordInDeclension(type: WordDeclensionEnum().day, n: choosenRate?.term ?? 0)))"
+            termField.text = dateDepositButtontext
+        rateField.text = "\(choosenRate?.rate ?? 0)%"
+
         calculateSumm(with: startAmount)
         
         bottomView.doneButtonIsEnabled(newText.isEmpty)
@@ -319,8 +392,9 @@ class ConfurmOpenDepositViewController: PaymentViewController {
         guard let initialAmount = Double(amount) else { return }
         guard let card = self.cardFromField.model else { return }
         guard let finOperID = self.product?.depositProductID else { return }
-        guard let term = self.choosenRate?.term else { return }
+        guard let term = self.choosenRate?.termABS else { return }
         guard var code = smsCodeField.textField.text else { return }
+        
         if code.isEmpty {
             code = "0"
         }
@@ -328,6 +402,8 @@ class ConfurmOpenDepositViewController: PaymentViewController {
         var body = [
             "finOperID": finOperID,
             "term": term,
+            "termKind": self.choosenRate?.termKind ?? nil,
+            "termType": self.choosenRate?.termType ?? nil ,
             "currencyCode": "810",
             "initialAmount": initialAmount,
             "verificationCode": code

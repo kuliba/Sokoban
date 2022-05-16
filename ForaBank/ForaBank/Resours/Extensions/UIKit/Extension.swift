@@ -243,4 +243,10 @@ extension Date {
     }
 }
 
-
+extension Collection {
+    func splitInSubArrays(_ size: Int) -> [[Element]] {
+        enumerated().reduce(into: [[Element]](repeating: [], count: size)) {
+            $0[$1.offset % size].append($1.element)
+        }
+    }
+}

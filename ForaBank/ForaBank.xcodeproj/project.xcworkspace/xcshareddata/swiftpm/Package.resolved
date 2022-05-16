@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/google/GoogleDataTransport.git",
         "state": {
           "branch": null,
-          "revision": "b905c49326b72211531ed9d7baa02d724828a8dc",
-          "version": "9.1.4"
+          "revision": "4073d04bf28943353b706f461d4ca2a89abb69c1",
+          "version": "9.1.3"
         }
       },
       {
@@ -132,8 +132,8 @@
         "repositoryURL": "https://github.com/marmelroy/PhoneNumberKit.git",
         "state": {
           "branch": null,
-          "revision": "5a1ff64be62f7ddea35618e6084997419a3f03d2",
-          "version": "3.4.0"
+          "revision": "6297dc937f209f9d28f2c71f1c2623b20312648d",
+          "version": "3.3.7"
         }
       },
       {

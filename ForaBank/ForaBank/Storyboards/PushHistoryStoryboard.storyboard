@@ -47,7 +47,7 @@
                                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="rPv-DZ-WFE">
                                                                     <rect key="frame" x="0.0" y="0.0" width="40" height="90"/>
                                                                     <subviews>
-                                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="GKH" translatesAutoresizingMaskIntoConstraints="NO" id="hbz-wu-kM7">
+                                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="UnknownInside" translatesAutoresizingMaskIntoConstraints="NO" id="hbz-wu-kM7">
                                                                             <rect key="frame" x="0.0" y="0.0" width="40" height="45"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="1wl-ME-wCk"/>
@@ -161,7 +161,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="GKH" width="40" height="40"/>
+        <image name="UnknownInside" width="40" height="40"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

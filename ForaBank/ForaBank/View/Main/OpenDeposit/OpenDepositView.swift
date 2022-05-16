@@ -17,7 +17,9 @@ struct OpenDepositView: View {
         ZStack {
             
             ScrollView(showsIndicators: false) {
+                
                 ForEach(viewModel.products) { productCard in
+                    
                     switch viewModel.style {
                     case .deposit:
                         OfferProductView(viewModel: productCard)
@@ -54,7 +56,7 @@ struct OpenDepositView: View {
                     OfferProductView.DetailConditionView(viewModel: additionalCondition)
                 }
             }
-            .offset(y: 170)
+            .offset(y: 180)
         }
     }
 }
@@ -62,13 +64,6 @@ struct OpenDepositView: View {
 struct OpenDepositView_Previews: PreviewProvider {
     
     static var previews: some View {
-        MainView(viewModel: .sample)
+        OpenDepositView(viewModel: .init(products: [.depositSample, .depositSample], style: .deposit))
     }
-}
-
-extension OpenDepositViewModel {
-    
-    static let sample = MainViewModel(sections: [MainSectionProductsView.ViewModel.sample, MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample], isRefreshing: true)
-    
-    static let sampleProducts = MainViewModel(sections: [MainSectionProductsView.ViewModel(.productsMock), MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample], isRefreshing: false)
 }

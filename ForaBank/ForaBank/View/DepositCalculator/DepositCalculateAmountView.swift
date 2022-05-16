@@ -25,10 +25,10 @@ struct DepositCalculateAmountView: View {
                     Text(viewModel.depositTerm)
                         .font(.textBodySR12160())
                         .foregroundColor(.mainColorsGray)
-
+                    
                     HStack {
 
-                        Text("\(viewModel.depositValue) дней")
+                        Text(viewModel.depositValue)
                             .foregroundColor(.mainColorsWhite)
                             .font(.textH4M16240())
 
@@ -57,8 +57,7 @@ struct DepositCalculateAmountView: View {
                         .foregroundColor(.mainColorsWhite)
                         .font(.textH4M16240())
                 }
-
-                Spacer()
+                .padding(.trailing, 15)
             }
 
             HStack {

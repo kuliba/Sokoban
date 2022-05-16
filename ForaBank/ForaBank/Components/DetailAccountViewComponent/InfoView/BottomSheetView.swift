@@ -72,7 +72,9 @@ struct BottomSheetView<Content: View>: View {
                         return
                     }
                                         
-                    action: do { self.presentationMode.wrappedValue.dismiss() }
+                    action: do { self.presentationMode.wrappedValue.dismiss()
+                        self.isOpen.toggle()
+                    }
 
                 }
             )

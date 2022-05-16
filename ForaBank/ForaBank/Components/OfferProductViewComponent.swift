@@ -57,7 +57,7 @@ extension OfferProductView {
             
             self.id = deposit.depositProductID
             self.title = deposit.name
-            self.conditionViewModel = .init(percent: "\(deposit.generalСondition.maxRate)", amount: "\(deposit.generalСondition.minSum.currencyFormatter())", date: "\(deposit.generalСondition.minTerm)")
+            self.conditionViewModel = .init(percent: "\(deposit.generalСondition.maxRate)", amount: "\(deposit.generalСondition.minSum.currencyFormatter(symbol: "RUB"))", date: "\(deposit.generalСondition.maxTermTxt)")
             self.subtitle = deposit.generalСondition.generalTxtСondition
             self.image = .endpoint(deposit.generalСondition.imageLink)
             self.infoButton = .init(url: .init(string: "https://www.forabank.ru")!, action: {})
@@ -87,7 +87,7 @@ extension OfferProductView {
         
         struct InfoButton {
             
-            let title: String = "Подробные условия"
+            let title: String = "Допол.\nусловия"
             let icon: Image = .ic24Info
             let url: URL
             var action: () -> Void
@@ -112,10 +112,6 @@ extension OfferProductView {
             
             var amountViewModel: String {
                 "От \(amount)"
-            }
-            
-            var dateViewModel: String {
-                "От \(date) дня"
             }
         }
         
@@ -190,12 +186,13 @@ struct OfferProductView: View {
                     
                     ForEach(viewModel.subtitle, id: \.self) { line in
                         
-                        HStack(spacing: 10) {
+                        HStack(alignment: .top, spacing: 10) {
                             
                             Circle()
                                 .foregroundColor(viewModel.design.textColor)
-                                .frame(width: 5, height: 5, alignment: .center)
+                                .frame(width: 5, height: 5)
                                 .padding(.leading, 10)
+                                .padding(.top, 7)
                             
                             Text(line)
                                 .font(.textBodyMR14200())
@@ -209,10 +206,9 @@ struct OfferProductView: View {
                 case .image(let image):
                     image
                         .resizable()
-                        .aspectRatio(contentMode: .fit)
                         .frame(height: 236)
-                        .padding(.top, 24)
                         .cornerRadius(12)
+                        .padding(.top, 24)
                     
                 case .endpoint:
                     Color
@@ -265,7 +261,7 @@ struct OfferProductView: View {
                     .frame(width: 1, alignment: .center)
                     .padding(.vertical, 3)
                 
-                Text(viewModel.dateViewModel)
+                Text(viewModel.date)
                     .font(.system(size: 14))
                     .foregroundColor(color)
                 
@@ -358,6 +354,7 @@ struct OfferProductView: View {
             VStack(alignment: .leading, spacing: 20) {
                 
                 Text(viewModel.title)
+                    .fontWeight(.semibold)
                 
                 VStack(alignment: .leading, spacing: 15) {
                     
@@ -367,20 +364,25 @@ struct OfferProductView: View {
                             
                             if viewModel.desc[index].enable {
                                 
-                                Image.ic16Check
-                                    .foregroundColor(.mainColorsGray)
-                                    .padding(.top, 5)
-                                
-                                Text(viewModel.desc[index].desc)
-                                    .foregroundColor(.mainColorsGray)
-                            } else {
-                                
-                                Image.ic16Check
-                                    .foregroundColor(.bGIconGreenLight)
+                                Image.ic24Check
+                                    .resizable()
+                                    .frame(width: 24, height: 24, alignment: .top)
+                                    .foregroundColor(Color.green)
                                     .padding(.top, 5)
                                 
                                 Text(viewModel.desc[index].desc)
                                     .foregroundColor(.mainColorsBlack)
+
+                            } else {
+                                
+                                Image.ic24Close
+                                    .resizable()
+                                    .frame(width: 24, height: 24, alignment: .top)
+                                    .foregroundColor(.mainColorsGray)
+                                    .padding(.top, 5)
+                                
+                                Text(viewModel.desc[index].desc)
+                                    .foregroundColor(.mainColorsGray)
                             }
                         }
                     }
@@ -414,6 +416,7 @@ extension OfferProductView.ViewModel {
     
     static let catalogSample: OfferProductView.ViewModel = .init(with: .init(name: "Карта «Миг»", description: ["Получите карту с кешбэком в любом офисе без предварительного заказа!"], imageEndpoint: "", infoURL: URL(string: "https://www.forabank.ru/private/cards/")!, orderURL: URL(string: "https://www.forabank.ru/private/cards/")!))
     
-    static let depositSample: OfferProductView.ViewModel = .init(with: .init(depositProductID: 10000003006, detailedСonditions: [.init(desc: "Капитализация процентов ко вкладу", enable: true)], documentsList: [.init(name: "string", url: URL(string: "https://www.forabank.ru/private/cards/")!)], generalСondition: .init(design: .init(background: [ColorData.init(description: "1C1C1C"), ColorData.init(description: "FFFFFF"), ColorData.init(description: "999999")], textColor: [ColorData.init(description: "1C1C1C"), ColorData.init(description: "FFFFFF"), ColorData.init(description: "999999")]), formula: "(initialAmount * interestRate * termDay/AllDay) / 100", generalTxtСondition: ["string"], imageLink: "urlImage", maxRate: 8.7, maxSum: 10000000, maxTerm: 731, maxTermTxt: "До 2-х лет", minSum: 5000, minSumCur: "RUB", minTerm: 31), name: "Сберегательный онлайн", termRateList: [.init(termRateSum: [.init(sum: 5000, termRateList: [.init(rate: 0.7, term: 31, termName: "1 месяц")])], сurrencyCode: "810", сurrencyCodeTxt: "RUB")], termRateCapList: [.init(termRateSum: [.init(sum: 5000, termRateList: [.init(rate: 0.7, term: 31, termName: "1 месяц")])], сurrencyCode: "810", сurrencyCodeTxt: "RUB")], txtСondition: ["string"]))
+    static let depositSample: OfferProductView.ViewModel = .init(with: .init(depositProductID: 10000003006, detailedСonditions: [.init(desc: "Капитализация процентов ко вкладу", enable: true)], documentsList: [.init(name: "string", url: URL(string: "https://www.forabank.ru/private/cards/")!)], generalСondition: .init(design: .init(background: [ColorData.init(description: "1C1C1C"), ColorData.init(description: "FFFFFF"), ColorData.init(description: "999999")], textColor: [ColorData.init(description: "1C1C1C"), ColorData.init(description: "FFFFFF"), ColorData.init(description: "999999")]), formula: "(initialAmount * interestRate * termDay/AllDay) / 100", generalTxtСondition: ["string"], imageLink: "urlImage", maxRate: 8.7, maxSum: 10000000, maxTerm: 731, maxTermTxt: "До 2-х лет", minSum: 5000, minSumCur: "RUB", minTerm: 31), name: "Сберегательный онлайн", termRateList: [.init(termRateSum: [.init(sum: 5000, termRateList: [.init(rate: 0.7, term: 31, termName: "1 месяц", termABS: 0, termKind: 0, termType: 0)])], сurrencyCode: "810", сurrencyCodeTxt: "RUB")], termRateCapList: [.init(termRateSum: [.init(sum: 5000, termRateList: [.init(rate: 0.7, term: 31, termName: "1 месяц", termABS: 0, termKind: 0, termType: 0)])], сurrencyCode: "810", сurrencyCodeTxt: "RUB")], txtСondition: ["string"]))
     
 }
+

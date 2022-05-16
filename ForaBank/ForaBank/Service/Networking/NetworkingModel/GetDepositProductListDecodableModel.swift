@@ -404,6 +404,9 @@ struct TermRateSumTermRateList: Codable {
     let term: Int?
     let rate: Double?
     let termName: String?
+    let termABS: Int?
+    let termKind: Int?
+    let termType: Int?
 }
 
 // MARK: TermRateSumTermRateList convenience initializers and mutators
@@ -427,12 +430,20 @@ extension TermRateSumTermRateList {
     func with(
         term: Int?? = nil,
         rate: Double?? = nil,
-        termName: String?? = nil
+        termName: String?? = nil,
+        termABS: Int?? = nil,
+        termKind: Int?? = nil,
+        termType: Int?? = nil
+        
     ) -> TermRateSumTermRateList {
         return TermRateSumTermRateList(
             term: term ?? self.term,
             rate: rate ?? self.rate,
-            termName: termName ?? self.termName
+            termName: termName ?? self.termName,
+            termABS: termABS ?? self.termABS,
+            termKind: termKind ?? self.termKind,
+            termType: termType ?? self.termType
+
         )
     }
 
