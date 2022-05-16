@@ -116,7 +116,6 @@ class DepositCalculatorViewModel: ObservableObject {
 
                 let isOnCapitalization = capitalization?.isOn ?? false
                 let termList = isOnCapitalization ? point.termRateCapLists : point.termRateLists
-<<<<<<< HEAD
                 
                 calculateAmount(value: value, termList: termList)
 
@@ -187,58 +186,6 @@ extension DepositCalculatorViewModel {
 
         let totalAmount = value + yourIncome
         self.totalAmount.totalAmount = totalAmount
-        
-=======
-
-                calculateAmount(value: value, termList: termList)
-
-            }.store(in: &bindings)
-
-        bottomSheet.$selectedItem
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] selectedItem in
-
-                calculateAmount.depositValue = selectedItem.term
-                calculateAmount.interestRateValue = selectedItem.rate
-
-                let yourIncome = calculateYourIncome(initialAmount: calculateAmount.value,
-                                                     interestRate: selectedItem.rate,
-                                                     termDay: selectedItem.term)
-                totalAmount.yourIncome = yourIncome
-
-                let totalAmount = calculateAmount.value + yourIncome
-                self.totalAmount.totalAmount = totalAmount
-
-            }.store(in: &bindings)
-    }
-}
-
-extension DepositCalculatorViewModel {
-
-    private func calculateYourIncome(initialAmount: Double, interestRate: Double, termDay: Int) -> Double {
-        (initialAmount * interestRate * Double(termDay) / 365) / 100
-    }
-
-    func calculateAmount(value: Double, termList: [DepositBottomSheetItemViewModel]) {
-
-        let itemViewModel = termList.first { model in
-            model.term == calculateAmount.depositValue
-        }
-
-        guard let itemViewModel = itemViewModel else {
-            return
-        }
-
-        let yourIncome = calculateYourIncome(initialAmount: value,
-                                             interestRate: itemViewModel.rate,
-                                             termDay: itemViewModel.term)
-
-        calculateAmount.interestRateValue = itemViewModel.rate
-        totalAmount.yourIncome = yourIncome
-
-        let totalAmount = value + yourIncome
-        self.totalAmount.totalAmount = totalAmount
->>>>>>> develop
     }
 }
 

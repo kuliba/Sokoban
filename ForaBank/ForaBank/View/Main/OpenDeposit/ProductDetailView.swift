@@ -38,7 +38,6 @@ class OpenProductViewModel: ObservableObject {
         
         let deposit = model.depositsProducts.value.first(where: { $0.depositProductID == depositId })!
         
-<<<<<<< HEAD
         self.productDetail = .init(name: deposit.name, detail: [.init(title: "Срок вклада", description: deposit.generalСondition.maxTermTxt), .init(title: "Процентная ставка", description: "до \(deposit.generalСondition.maxRate.currencyFormatterForMain()) %")], minAmount: .init(title: "Минимальная  сумма вклада", description: deposit.generalСondition.minSum.currencyFormatter()))
         
         if let _ = deposit.termRateCapList {
@@ -48,17 +47,7 @@ class OpenProductViewModel: ObservableObject {
         } else {
             
             self.calculator = DepositCalculatorViewModel(depositModels: .init(points: reduceModels(with: deposit)), capitalization: nil, calculateAmount: .init(interestRateValue: deposit.termRateList[0].termRateSum[0].termRateList[0].rate, depositValue: "", minSum: deposit.generalСondition.minSum, bounds: deposit.generalСondition.minSum...deposit.generalСondition.maxSum), bottomSheet: .init(items: .init(reduceBottomSheetItem(with: deposit))))
-=======
-        self.productDetail = .init(name: deposit.name, detail: [.init(title: "Срок вклада", description: deposit.generalСondition.maxTermTxt), .init(title: "Процентная ставка", description: "\(deposit.generalСondition.maxRate.currencyFormatterForMain()) %")], minAmount: .init(title: "Минимальная  сумма вклада", description: deposit.generalСondition.minSum.currencyFormatter()))
 
-        if let termRateCapList = deposit.termRateCapList {
-
-            self.calculator = DepositCalculatorViewModel(depositModels: .init(points: reduceModels(with: deposit)), capitalization: .init(title: "С учетом капитализации", isOn: true), calculateAmount: .sample1, bottomSheet: .init(items: reduceBottomSheetItem(with: deposit.termRateList[0].termRateSum)))
-
-        } else {
-
-            self.calculator = DepositCalculatorViewModel(depositModels: .init(points: reduceModels(with: deposit)), capitalization: nil, calculateAmount: .init(interestRateValue: 20.0, depositValue: 20, bounds: 20...100), bottomSheet: .init(items: reduceBottomSheetItem(with: deposit.termRateList[0].termRateSum)))
->>>>>>> develop
         }
         
         func reduceBottomSheetItem(with deposit: DepositProductData) -> [DepositBottomSheetItemViewModel] {
@@ -893,12 +882,8 @@ extension ProductDetailView {
             
             vc.choosenRateList = termRateSumTermRateList
             
-<<<<<<< HEAD
             vc.depositModels = viewModel.calculator.depositModels
-=======
-            vc.choosenRate = .init(term: viewModel.calculator.bottomSheet.items[0].term, rate: viewModel.calculator.bottomSheet.items[0].rate, termName: viewModel.calculator.bottomSheet.items[0].termName)
-            
->>>>>>> develop
+
             vc.startAmount = viewModel.calculator.calculateAmount.value
             vc.bottomView.amountTextField.text = "\(viewModel.calculator.calculateAmount.value)"
             vc.choosenRate = .init(term: viewModel.calculator.bottomSheet.selectedItem.term, rate: termRateSumTermRateList.filter({$0.termName == viewModel.calculator.bottomSheet.selectedItem.termName})[0].rate, termName: viewModel.calculator.bottomSheet.selectedItem.termName, termABS: termRateSumTermRateList[0].termABS, termKind: termRateSumTermRateList[0].termKind, termType: termRateSumTermRateList[0].termType)
