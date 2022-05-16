@@ -37,7 +37,8 @@ extension DepositProductData {
                 let rate: Double
                 let term: Int
                 let termName: String
-                let termABS: Int
+                //TODO: decoder for termABS to termAbs
+                let termABS: Int?
                 let termKind: Int?
                 let termType: Int?
             }

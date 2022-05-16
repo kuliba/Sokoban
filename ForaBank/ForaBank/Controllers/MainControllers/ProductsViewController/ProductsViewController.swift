@@ -342,8 +342,11 @@ class ProductsViewController: UIViewController, UITableViewDelegate, UITableView
             guard let url = URL(string: "https://promo.forabank.ru/?metka=leads1&affiliate_id=44935&source=leads1&transaction_id=6dae603673619b0681e492d4bd1d8f3a" ) else { return  }
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         } else if indexPath.section == 2 && indexPath.row == deposits.count {
-            let viewController = OpenNewDepositViewController()
-            navigationController?.pushViewController(viewController, animated: true)
+            let model = Model.shared
+            let vc = OpenProductHostingViewController(with: .init(model, products: model.depositsProducts.value, style: .deposit))
+            vc.hidesBottomBarWhenPushed = true
+            let navigationViewController = UINavigationController(rootViewController: vc)
+            present(navigationViewController, animated: true)
         } else {
             if delegateProducts == nil {
                 let viewController = ProductViewController()

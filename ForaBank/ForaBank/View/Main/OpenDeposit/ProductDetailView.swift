@@ -35,27 +35,47 @@ class OpenProductViewModel: ObservableObject {
     init(depositId: Int) {
         
         self.depositId = depositId
+        
         let deposit = model.depositsProducts.value.first(where: { $0.depositProductID == depositId })!
         
         self.productDetail = .init(name: deposit.name, detail: [.init(title: "Срок вклада", description: deposit.generalСondition.maxTermTxt), .init(title: "Процентная ставка", description: "до \(deposit.generalСondition.maxRate.currencyFormatterForMain()) %")], minAmount: .init(title: "Минимальная  сумма вклада", description: deposit.generalСondition.minSum.currencyFormatter()))
         
-        if let termRateCapList = deposit.termRateCapList {
+        if let _ = deposit.termRateCapList {
             
-            self.calculator = DepositCalculatorViewModel.init(depositModels: .init(points: reduceModels(with: deposit)), capitalization: .sample, calculateAmount: .init(interestRateValue: deposit.termRateList[0].termRateSum[0].termRateList[0].rate, depositValue: Int(deposit.generalСondition.minSum),minSum: deposit.generalСondition.minSum, bounds: deposit.generalСondition.minSum...deposit.generalСondition.maxSum), bottomSheet: .init(items: .init(reduceBottomSheetItem(with: deposit.termRateList[0].termRateSum))))
+            self.calculator = DepositCalculatorViewModel.init(depositModels: .init(points: reduceModels(with: deposit)), capitalization: .sample, calculateAmount: .init(interestRateValue: deposit.termRateList[0].termRateSum[0].termRateList[0].rate, depositValue: "", minSum: deposit.generalСondition.minSum, bounds: deposit.generalСondition.minSum...deposit.generalСondition.maxSum), bottomSheet: .init(items: .init(reduceBottomSheetItem(with: deposit))))
             
         } else {
             
-            self.calculator = DepositCalculatorViewModel(depositModels: .init(points: reduceModels(with: deposit)), capitalization: nil, calculateAmount: .init(interestRateValue: deposit.termRateList[0].termRateSum[0].termRateList[0].rate, depositValue: Int(deposit.generalСondition.minSum),minSum: deposit.generalСondition.minSum, bounds: deposit.generalСondition.minSum...deposit.generalСondition.maxSum), bottomSheet: .init(items: .init(reduceBottomSheetItem(with: deposit.termRateList[0].termRateSum))))
+            self.calculator = DepositCalculatorViewModel(depositModels: .init(points: reduceModels(with: deposit)), capitalization: nil, calculateAmount: .init(interestRateValue: deposit.termRateList[0].termRateSum[0].termRateList[0].rate, depositValue: "", minSum: deposit.generalСondition.minSum, bounds: deposit.generalСondition.minSum...deposit.generalСondition.maxSum), bottomSheet: .init(items: .init(reduceBottomSheetItem(with: deposit))))
         }
         
-        func reduceBottomSheetItem(with deposit: [DepositProductData.TermCurrencyRate.TermRateSum]) -> [DepositBottomSheetItemViewModel] {
+        func reduceBottomSheetItem(with deposit: DepositProductData) -> [DepositBottomSheetItemViewModel] {
             
             var items: [DepositBottomSheetItemViewModel] = []
             
-            for item in deposit {
-                for i in item.termRateList {
+            if let termCapList = deposit.termRateCapList {
+                
+                for item in termCapList {
                     
-                    items.append(.init(term: i.term, rate: i.rate, termName: i.termName))
+                    if let term = item.termRateSum.last?.termRateList {
+                        
+                        for i in term {
+                            
+                            items.append(.init(term: i.term, rate: i.rate, termName: i.termName))
+                        }
+                    }
+                }
+            } else {
+                
+                for item in deposit.termRateList {
+                    
+                    if let term = item.termRateSum.last?.termRateList {
+                        
+                        for i in term {
+                            
+                            items.append(.init(term: i.term, rate: i.rate, termName: i.termName, isOnCapitalization: false))
+                        }
+                    }
                 }
             }
             
@@ -82,11 +102,11 @@ class OpenProductViewModel: ObservableObject {
                     
                     if let capList = deposit.termRateCapList {
                         
-                        for capList in capList[0].termRateSum {
+                        for capList in capList[0].termRateSum.filter({$0.sum == sum}) {
                             
-                            for i in capList.termRateList {
+                            for cap in capList.termRateList {
                                 
-                                capPoint.append(.init(term: i.term, rate: i.rate, termName: i.termName))
+                                capPoint.append(.init(term: cap.term, rate: cap.rate, termName: cap.termName))
                             }
                             
                             points.append(.init(minSumm: sum, termRateLists: point, termRateCapLists: capPoint))
@@ -107,9 +127,9 @@ class OpenProductViewModel: ObservableObject {
         self.documents = .init(documents: reduceDocument(documents: deposit.documentsList))
         self.condition = .init(conditions: deposit.txtСondition)
         
-        let date = deposit.termRateList[0].termRateSum[0].termRateList.map({$0.termName})
+        let date = deposit.termRateList[0].termRateSum[0].termRateList.map({"\(String($0.term)) дней"})
         
-        if let termRateCapList = deposit.termRateCapList {
+        if let _ = deposit.termRateCapList {
             
             self.percents = .init(termRateSum: reduceTermRateList(with: deposit), date: date)
         } else {
@@ -124,7 +144,6 @@ class OpenProductViewModel: ObservableObject {
             var rate: [String] = []
             var sum: [String] = []
             var mergedString: [String] = []
-            var mergedString2: [[String]] = []
             
             for item in deposit.termRateList {
                 
@@ -163,9 +182,17 @@ class OpenProductViewModel: ObservableObject {
             mergedString = mergeString(string: rate, string2: capRate)
             
             for i in sum.indices {
-                
-                let array = mergedString.splitInSubArrays(sum.count)
-                term.append(.init(sum: sum[i], rate: array[i]))
+                switch i {
+                case 0:
+                    term.append(.init(sum: sum[i], rate: Array(mergedString[0...1])))
+                case 1:
+                    term.append(.init(sum: sum[i], rate: Array(mergedString[2...3])))
+                case 2:
+                    term.append(.init(sum: sum[i], rate: Array(mergedString[4...5])))
+                    
+                default:
+                    break
+                }
             }
             
             return term
@@ -304,7 +331,9 @@ struct ProductDetailView: View {
                 .padding(20)
             }
             
-            NavigationLink(destination: ConfirmView(viewModel: viewModel)) {
+            NavigationLink(destination:
+                            ConfirmView(viewModel: viewModel)
+                            .navigationBarTitle("Потвердите параметры вклада", displayMode: .inline)) {
                 
                 Text("Продолжить")
                     .fontWeight(.semibold)
@@ -427,16 +456,41 @@ extension ProductDetailView {
                         Spacer()
                     }
                     
-                    VStack(spacing: 0) {
+                    VStack(alignment: .center, spacing: 0) {
+                        
+                        //                        HStack {
+                        //
+                        //                            Color.white
+                        //                                .background(Color.white)
+                        //                                .frame(width: 91)
+                        //
+                        //                            HStack {
+                        //                                ForEach(viewModel.date, id: \.self) { date in
+                        //
+                        //                                    Text(date)
+                        //                                        .frame(alignment: .center)
+                        //                                        .background(Color.blue)
+                        //                                        .multilineTextAlignment(.center)
+                        //                                }
+                        //                            }
+                        //                        }
+                        //                        .padding(.top, 9)
+                        //                        .padding(.bottom, 5)
+                        //                        .background(Color.white)
+                        //                        .padding(.horizontal, -20)
                         
                         HStack {
+                            
+                            Color.white
+                                .padding(.leading, 20)
+                                .frame(width: 91, alignment: .leading)
                             
                             Spacer()
                             
                             ForEach(viewModel.date, id: \.self) { date in
-                                
                                 Text(date)
-                                    .padding(.trailing, 30)
+                                    .frame(width: 91)
+                                    .padding(.trailing, 20)
                             }
                         }
                         .padding(.top, 9)
@@ -452,12 +506,14 @@ extension ProductDetailView {
                                     
                                     Text(viewModel.termRateSum[index].sum)
                                         .padding(.leading, 20)
+                                        .frame(width: 91, alignment: .leading)
                                     
                                     Spacer()
                                     
                                     ForEach(viewModel.termRateSum[index].rate, id: \.self) { item in
                                         Text(item)
-                                            .padding(.trailing, 30)
+                                            .frame(width: 91)
+                                            .padding(.trailing, 20)
                                     }
                                 }
                                 .padding(.top, 9)
@@ -476,7 +532,8 @@ extension ProductDetailView {
                                     
                                     ForEach(viewModel.termRateSum[index].rate, id: \.self) { item in
                                         Text(item)
-                                            .padding(.trailing, 30)
+                                            .frame(width: 91)
+                                            .padding(.trailing, 20)
                                     }
                                 }
                                 .padding(.top, 9)
@@ -801,25 +858,34 @@ extension ProductDetailView {
             
             let vc = ConfurmOpenDepositViewController()
             
-            vc.product = proxyDepositProductData(data: viewModel.model.depositsProducts.value.first(where: { $0.depositProductID == viewModel.depositId })!)
+            let deposit = viewModel.model.depositsProducts.value.first(where: { $0.depositProductID == viewModel.depositId })!
+            
+            vc.product = proxyDepositProductData(data: deposit)
             
             var termRateSumTermRateList: [TermRateSumTermRateList] = []
             
             for i in viewModel.model.depositsProducts.value.first(where: { $0.depositProductID == viewModel.depositId })!.termRateList {
                 
-                for sum in i.termRateSum {
+                if let termList = i.termRateSum
+                    .compactMap({$0})
+                    .last(where: { point in
+                        point.sum <= viewModel.calculator.calculateAmount.value
+                    }) {
                     
-                    for s in sum.termRateList {
+                    for point in termList.termRateList {
                         
-                        termRateSumTermRateList.append(.init(term: s.term, rate: s.rate, termName: s.termName))
+                        termRateSumTermRateList.append(.init(term: point.term, rate: point.rate, termName: point.termName, termABS: point.termABS, termKind: point.termKind, termType: point.termType))
                     }
                 }
             }
             
             vc.choosenRateList = termRateSumTermRateList
-            vc.choosenRate = .init(term: viewModel.calculator.bottomSheet.selectedItem.term, rate: viewModel.calculator.bottomSheet.selectedItem.rate, termName: viewModel.calculator.bottomSheet.selectedItem.termName)
             
+            vc.depositModels = viewModel.calculator.depositModels
             vc.startAmount = viewModel.calculator.calculateAmount.value
+            vc.bottomView.amountTextField.text = "\(viewModel.calculator.calculateAmount.value)"
+            vc.choosenRate = .init(term: viewModel.calculator.bottomSheet.selectedItem.term, rate: termRateSumTermRateList.filter({$0.termName == viewModel.calculator.bottomSheet.selectedItem.termName})[0].rate, termName: viewModel.calculator.bottomSheet.selectedItem.termName, termABS: termRateSumTermRateList[0].termABS, termKind: termRateSumTermRateList[0].termKind, termType: termRateSumTermRateList[0].termType)
+            
             vc.modalPresentationStyle = .fullScreen
             
             func proxyDepositProductData(data: DepositProductData) -> OpenDepositDatum {
