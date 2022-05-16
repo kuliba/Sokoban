@@ -12,7 +12,11 @@ class DepositCalculateAmountViewModel: ObservableObject {
 
     @Published var value: Double
     @Published var isFirstResponder: Bool
+<<<<<<< HEAD
     @Published var depositValue: String
+=======
+    @Published var depositValue: Int
+>>>>>>> develop
     @Published var interestRateValue: Double
     @Published var isShowBottomSheet: Bool
 
@@ -28,8 +32,12 @@ class DepositCalculateAmountViewModel: ObservableObject {
          depositAmount: String = "Сумма депозита",
          value: Double = 1500000,
          isFirstResponder: Bool = false,
+<<<<<<< HEAD
          depositValue: String,
          minSum: Double,
+=======
+         depositValue: Int,
+>>>>>>> develop
          isShowBottomSheet: Bool = false,
          bounds: ClosedRange<Double> = 10000...5000000) {
 
@@ -57,7 +65,11 @@ extension DepositCalculateAmountViewModel {
     }
 
     var interestRateValueCurrency: String {
+<<<<<<< HEAD
         interestRateValue.currencyDepositFormatter(symbol: "%")
+=======
+        interestRateValue.currencyDepositFormatter(symbol: "₽")
+>>>>>>> develop
     }
 
     var lowerBoundCurrency: String {
@@ -85,7 +97,11 @@ extension DepositCalculateAmountViewModel {
 
     static let sample1 = DepositCalculateAmountViewModel(
         interestRateValue: 7.95,
+<<<<<<< HEAD
         depositValue: "365", minSum: 5000.0
+=======
+        depositValue: 365
+>>>>>>> develop
     )
 
     static let sample2 = DepositCalculateAmountViewModel(

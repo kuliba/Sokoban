@@ -33,11 +33,19 @@ class DepositTotalAmountViewModel: ObservableObject {
 extension DepositTotalAmountViewModel {
 
     var yourIncomeCurrency: String {
+<<<<<<< HEAD
         yourIncome.currencyDepositFormatter(symbol: "₽")
     }
 
     var totalAmountCurrency: String {
         totalAmount.currencyDepositFormatter(symbol: "₽")
+=======
+        yourIncome.currencyDepositFormatter()
+    }
+
+    var totalAmountCurrency: String {
+        totalAmount.currencyDepositFormatter()
+>>>>>>> develop
     }
 }
 

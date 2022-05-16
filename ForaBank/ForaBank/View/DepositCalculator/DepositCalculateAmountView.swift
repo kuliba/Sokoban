@@ -63,6 +63,7 @@ struct DepositCalculateAmountView: View {
             HStack {
 
                 VStack(alignment: .leading, spacing: 8) {
+<<<<<<< HEAD
 
                     Text(viewModel.depositAmount)
                         .font(.textBodySR12160())
@@ -75,6 +76,20 @@ struct DepositCalculateAmountView: View {
 
                         Button {
 
+=======
+
+                    Text(viewModel.depositAmount)
+                        .font(.textBodySR12160())
+                        .foregroundColor(.mainColorsGray)
+
+                    HStack {
+
+                        DepositCalculateTextField(viewModel: viewModel)
+                            .fixedSize()
+
+                        Button {
+
+>>>>>>> develop
                             viewModel.isFirstResponder.toggle()
 
                         } label: {
