@@ -12,7 +12,7 @@ class DepositCalculateAmountViewModel: ObservableObject {
 
     @Published var value: Double
     @Published var isFirstResponder: Bool
-    @Published var depositValue: Int
+    @Published var depositValue: String
     @Published var interestRateValue: Double
     @Published var isShowBottomSheet: Bool
 
@@ -20,6 +20,7 @@ class DepositCalculateAmountViewModel: ObservableObject {
     let interestRate: String
     let depositAmount: String
     let bounds: ClosedRange<Double>
+    let minSum: String
 
     init(depositTerm: String = "Срок вклада",
          interestRate: String = "Процентная ставка",
@@ -27,7 +28,8 @@ class DepositCalculateAmountViewModel: ObservableObject {
          depositAmount: String = "Сумма депозита",
          value: Double = 1500000,
          isFirstResponder: Bool = false,
-         depositValue: Int,
+         depositValue: String,
+         minSum: Double,
          isShowBottomSheet: Bool = false,
          bounds: ClosedRange<Double> = 10000...5000000) {
 
@@ -40,6 +42,7 @@ class DepositCalculateAmountViewModel: ObservableObject {
         self.depositValue = depositValue
         self.isShowBottomSheet = isShowBottomSheet
         self.bounds = bounds
+        self.minSum = "От \(minSum.currencyFormatter())"
     }
 }
 
@@ -54,7 +57,7 @@ extension DepositCalculateAmountViewModel {
     }
 
     var interestRateValueCurrency: String {
-        interestRateValue.currencyDepositFormatter(symbol: "₽")
+        interestRateValue.currencyDepositFormatter(symbol: "%")
     }
 
     var lowerBoundCurrency: String {
@@ -82,12 +85,12 @@ extension DepositCalculateAmountViewModel {
 
     static let sample1 = DepositCalculateAmountViewModel(
         interestRateValue: 7.95,
-        depositValue: 365
+        depositValue: "365", minSum: 5000.0
     )
 
     static let sample2 = DepositCalculateAmountViewModel(
         interestRateValue: 9.15,
-        depositValue: 31,
-        bounds: 5000...10000000
+        depositValue: "31",
+        minSum: 5000.0, bounds: 5000...10000000
     )
 }

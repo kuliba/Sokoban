@@ -142,11 +142,9 @@ class MainTabBarViewController: UITabBarController {
     
     private func loadCatalog() {
         
-    #if RELEASE
         if (GlobalModule.c2bURL == nil) {
             AppUpdater.shared.showUpdate(withConfirmation: true)
         }
-    #endif
         
         NetworkHelper.request(.getCountries) { model, error in
             if error != nil {

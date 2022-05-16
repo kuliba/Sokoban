@@ -104,7 +104,7 @@ class MockItems {
             PaymentsModel(id: 98, name: "Вклад",
                           iconName: "openDeposit",
                           controllerName: "https://www.forabank.ru/private/deposits/",
-                          description: "24,5% годовых"),
+                          description: ""),
             //
             //            PaymentsModel(id: 97, name: "Кредит",
             //                          iconName: "loanIcon",

@@ -17,7 +17,7 @@ class DepositCalculatorViewModel: ObservableObject {
     let capitalization: DepositCapitalizationViewModel?
     let calculateAmount: DepositCalculateAmountViewModel
     let totalAmount: DepositTotalAmountViewModel
-    let bottomSheet: DepositBottomSheetViewModel
+    var bottomSheet: DepositBottomSheetViewModel
 
     private var bindings = Set<AnyCancellable>()
 
@@ -32,7 +32,11 @@ class DepositCalculatorViewModel: ObservableObject {
         self.calculateAmount = calculateAmount
         self.totalAmount = totalAmount
         self.bottomSheet = bottomSheet
-
+        
+        if let firstPoint = depositModels.points[0].termRateLists.first {
+            self.bottomSheet.selectedItem = firstPoint
+        }
+        
         bind()
     }
 
@@ -75,9 +79,15 @@ class DepositCalculatorViewModel: ObservableObject {
                 if isShow {
 
                     if let capitalization = capitalization {
-                        bottomSheet.items = capitalization.isOn ? point.termRateCapLists : point.termRateLists
+//                        bottomSheet.items =
                     } else {
-                        bottomSheet.items = point.termRateLists
+//                        bottomSheet.items = point.termRateLists
+                    }
+                }
+
+                bottomSheet.items.forEach { item in
+                    if let capitalization = capitalization {
+                        item.isOnCapitalization = capitalization.isOn
                     }
                 }
 
@@ -96,7 +106,6 @@ class DepositCalculatorViewModel: ObservableObject {
             .sink { [unowned self] value in
 
                 let point = depositModels.points
-                    .compactMap {$0}
                     .last { point in
                         point.minSumm <= value
                     }
@@ -107,27 +116,48 @@ class DepositCalculatorViewModel: ObservableObject {
 
                 let isOnCapitalization = capitalization?.isOn ?? false
                 let termList = isOnCapitalization ? point.termRateCapLists : point.termRateLists
-
+                
                 calculateAmount(value: value, termList: termList)
 
             }.store(in: &bindings)
 
         bottomSheet.$selectedItem
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] selectedItem in
+             .receive(on: DispatchQueue.main)
+             .sink { [unowned self] selectedItem in
 
-                calculateAmount.depositValue = selectedItem.term
-                calculateAmount.interestRateValue = selectedItem.rate
+                 let point = depositModels.points
+                     .last { point in
+                         point.minSumm <= calculateAmount.value
+                     }
 
-                let yourIncome = calculateYourIncome(initialAmount: calculateAmount.value,
-                                                     interestRate: selectedItem.rate,
-                                                     termDay: selectedItem.term)
-                totalAmount.yourIncome = yourIncome
+                 guard let point = point else {
+                     return
+                 }
+                 
+                 calculateAmount.depositValue = selectedItem.termName
 
-                let totalAmount = calculateAmount.value + yourIncome
-                self.totalAmount.totalAmount = totalAmount
+                 let isOnCapitalization = capitalization?.isOn ?? false
+                 let termList = isOnCapitalization ? point.termRateCapLists : point.termRateLists
+                 
+                 let itemViewModel = termList.first { model in
+                     model.termName == calculateAmount.depositValue
+                 }
 
-            }.store(in: &bindings)
+                 guard let itemViewModel = itemViewModel else {
+                     return
+                 }
+                 
+                 calculateAmount.interestRateValue = itemViewModel.rate
+
+                 let yourIncome = calculateYourIncome(initialAmount: calculateAmount.value,
+                                                      interestRate: selectedItem.rate,
+                                                      termDay: selectedItem.term)
+                 totalAmount.yourIncome = yourIncome
+
+                 let totalAmount = calculateAmount.value + yourIncome
+                 self.totalAmount.totalAmount = totalAmount
+
+             }.store(in: &bindings)
     }
 }
 
@@ -140,7 +170,7 @@ extension DepositCalculatorViewModel {
     func calculateAmount(value: Double, termList: [DepositBottomSheetItemViewModel]) {
 
         let itemViewModel = termList.first { model in
-            model.term == calculateAmount.depositValue
+            model.termName == calculateAmount.depositValue
         }
 
         guard let itemViewModel = itemViewModel else {
@@ -151,8 +181,8 @@ extension DepositCalculatorViewModel {
                                              interestRate: itemViewModel.rate,
                                              termDay: itemViewModel.term)
 
-        calculateAmount.interestRateValue = itemViewModel.rate
-        totalAmount.yourIncome = yourIncome
+        self.calculateAmount.interestRateValue = itemViewModel.rate
+        self.totalAmount.yourIncome = yourIncome
 
         let totalAmount = value + yourIncome
         self.totalAmount.totalAmount = totalAmount
@@ -170,8 +200,8 @@ extension DepositCalculatorViewModel {
 
         let minSumm: Double
 
-        let termRateLists: [DepositBottomSheetItemViewModel]
-        let termRateCapLists: [DepositBottomSheetItemViewModel]
+        var termRateLists: [DepositBottomSheetItemViewModel]
+        var termRateCapLists: [DepositBottomSheetItemViewModel]
     }
 }
 
