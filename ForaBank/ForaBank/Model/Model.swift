@@ -90,7 +90,7 @@ class Model {
     
     //FIXME: remove after refactoring
     static var shared: Model = {
-       
+        
         // server agent
         #if DEBUG
         let enviroment = ServerAgent.Environment.test

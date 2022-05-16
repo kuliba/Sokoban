@@ -38,6 +38,9 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
     @IBAction func transponderAction(_ sender: Any) {
         btnContract.backgroundColor = UIColor.clear
         btnTransponder.backgroundColor = UIColor.white
+        if customGroup?.childsOperators.count ?? 0 < 2 {
+            return
+        }
         operatorData = customGroup?.childsOperators[1]
         viewModel.puref = operatorData?.puref ?? ""
         InternetTVApiRequests.isSingleService(puref: operatorData?.puref ?? "") {
