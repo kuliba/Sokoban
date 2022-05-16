@@ -886,7 +886,13 @@ extension ProductDetailView {
 
             vc.startAmount = viewModel.calculator.calculateAmount.value
             vc.bottomView.amountTextField.text = "\(viewModel.calculator.calculateAmount.value)"
-            vc.choosenRate = .init(term: viewModel.calculator.bottomSheet.selectedItem.term, rate: termRateSumTermRateList.filter({$0.termName == viewModel.calculator.bottomSheet.selectedItem.termName})[0].rate, termName: viewModel.calculator.bottomSheet.selectedItem.termName, termABS: termRateSumTermRateList[0].termABS, termKind: termRateSumTermRateList[0].termKind, termType: termRateSumTermRateList[0].termType)
+            
+            let termAbs = termRateSumTermRateList.first(where: {$0.termName == viewModel.calculator.bottomSheet.selectedItem.termName})?.termABS
+            let rate = termRateSumTermRateList.first(where: {$0.termName == viewModel.calculator.bottomSheet.selectedItem.termName})?.rate
+            let termKind = termRateSumTermRateList.first(where: {$0.termName == viewModel.calculator.bottomSheet.selectedItem.termName})?.termKind
+            let termType = termRateSumTermRateList.first(where: {$0.termName == viewModel.calculator.bottomSheet.selectedItem.termName})?.termType
+            
+            vc.choosenRate = .init(term: viewModel.calculator.bottomSheet.selectedItem.term, rate: rate, termName: viewModel.calculator.bottomSheet.selectedItem.termName, termABS: termAbs, termKind: termKind, termType: termType)
             
             vc.modalPresentationStyle = .fullScreen
             
