@@ -13,14 +13,21 @@ class RootViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
     
+    @Published var selected: TabType
+
     let mainViewModel: MainViewModel
+    let paymentsViewModel: PaymentsTransfersViewModel
+    let chatViewModel: ChatViewModel
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
 
     init(_ model: Model) {
         
+        self.selected = .main
         self.mainViewModel = MainViewModel(model)
+        self.paymentsViewModel = .sample
+        self.chatViewModel = .init()
         self.model = model
     
         bind()
@@ -75,6 +82,47 @@ class RootViewModel: ObservableObject {
 }
 
 extension RootViewModel {
+    
+    enum TabType: String, Hashable {
+        
+        case main
+        case payments
+        case history
+        case chat
+        
+        var name: String {
+            
+            switch self {
+            case .main: return "Главный"
+            case .payments: return "Платежи"
+            case .history: return "История"
+            case .chat: return "Чат"
+            }
+        }
+        
+        //TODO: load images from figma style guide
+        func image(for selected: TabType) -> Image {
+            
+            if self == selected {
+                
+                switch self {
+                case .main: return Image("tabBar-main-fill")
+                case .payments: return Image("tabBar-card-fill")
+                case .history: return Image("tabBar-history-fill")
+                case .chat: return Image("tabBar-chat-fill")
+                }
+                
+            } else {
+                
+                switch self {
+                case .main: return Image("tabBar-main")
+                case .payments: return Image("tabBar-card")
+                case .history: return Image("tabBar-history")
+                case .chat: return Image("tabBar-chat")
+                }
+            }
+        }
+    }
     
     struct AuthActions {
         
