@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct FMSData: Codable, Equatable, Cachable {
+struct FMSData: Codable, Equatable {
     
     let md5hash: String
     let svgImage: SVGImageData

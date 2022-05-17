@@ -324,7 +324,6 @@ extension Model {
     }
 }
 
-
 //MARK: - Reducers
 
 extension Model {
@@ -529,7 +528,7 @@ extension Model {
                         return
                     }
                     
-                    self.currencyDict.value = data.currencyList
+                    self.currencyList.value = data.currencyList
                     
                     do {
                         

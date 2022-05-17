@@ -7,12 +7,12 @@
 
 import Foundation
 
-struct ProductStatementDataCacheble: Cachable {
+struct ProductStatementDataCacheble: Codable {
     
     var productStatement: [Int: [ProductStatementData]]
 }
 
-struct ProductStatementData: Codable, Equatable, Cachable {
+struct ProductStatementData: Codable, Equatable {
     
     let mcc: Int?
     let accountId: Int?
@@ -162,7 +162,7 @@ extension ProductStatementData {
     
     var amountFormattedtWithCurrency: String {
         
-        let currency = Model.shared.currencyDict.value.first(where: {$0.codeNumeric == currencyCodeNumeric})
+        let currency = Model.shared.currencyList.value.first(where: {$0.codeNumeric == currencyCodeNumeric})
         let currencyCode = currency?.code ?? "RUB"
         return self.amount.currencyFormatter(symbol: currencyCode)
     }

@@ -97,6 +97,22 @@ class LocalAgentTests: XCTestCase {
         XCTAssertEqual(result, [sample])
     }
     
+    func testStore_Dictionary() throws {
+        
+        // given
+        let sample = ["sample": SampleType()]
+        // when
+        try localAgent.store(sample)
+        
+        // then
+        let rootFolderURL = try localAgent.rootFolderURL()
+        let fileUrl = rootFolderURL.appendingPathComponent("dictionary_string_sampletype.json")
+        let data = try Data(contentsOf: fileUrl)
+        let result = try JSONDecoder().decode(Dictionary<String, SampleType>.self, from: data)
+        
+        XCTAssertEqual(result, sample)
+    }
+    
     //MARK: - Load
     
     func testLoad_Item() throws {
@@ -123,6 +139,19 @@ class LocalAgentTests: XCTestCase {
         
         // then
         XCTAssertEqual(result, [sample])
+    }
+    
+    func testLoad_Dictionary() throws {
+        
+        // given
+        let sample = SampleType()
+
+        // when
+        try localAgent.store(["sample": sample])
+        let result = localAgent.load(type: Dictionary<String, SampleType>.self)
+        
+        // then
+        XCTAssertEqual(result, ["sample": sample])
     }
     
     //MARK: - Clear
@@ -159,6 +188,22 @@ class LocalAgentTests: XCTestCase {
         XCTAssertFalse(Self.context.fileManager.fileExists(atPath: fileUrl.path))
     }
     
+    func testClear_Dictionary() throws {
+        
+        // given
+        let sample = SampleType()
+        try localAgent.store(["sample" : sample])
+        let rootFolderURL = try localAgent.rootFolderURL()
+        let fileUrl = rootFolderURL.appendingPathComponent("dictionary_string_sampletype.json")
+        XCTAssertTrue(Self.context.fileManager.fileExists(atPath: fileUrl.path))
+
+        // when
+        try localAgent.clear(type: Dictionary<String, SampleType>.self)
+
+        // then
+        XCTAssertFalse(Self.context.fileManager.fileExists(atPath: fileUrl.path))
+    }
+    
     //MARK: - Serial
     
     func testSerial_Item() throws {
@@ -184,6 +229,20 @@ class LocalAgentTests: XCTestCase {
 
         // when
         let result = localAgent.serial(for: [SampleType].self)
+        
+        // then
+        XCTAssertEqual(result, serial)
+    }
+    
+    func testSerial_Dictionary() throws {
+        
+        // given
+        let sample = SampleType()
+        let serial = UUID().uuidString
+        try localAgent.store(["sample": sample], serial: serial)
+
+        // when
+        let result = localAgent.serial(for: Dictionary<String, SampleType>.self)
         
         // then
         XCTAssertEqual(result, serial)
@@ -216,11 +275,25 @@ class LocalAgentTests: XCTestCase {
         // then
         XCTAssertNil(localAgent.serial(for: [SampleType].self))
     }
+    
+    func testSerial_Dictionary_Clear() throws {
+        
+        // given
+        let sample = SampleType()
+        let serial = UUID().uuidString
+        try localAgent.store(["sample": sample], serial: serial)
+
+        // when
+        try localAgent.clear(type: Dictionary<String, SampleType>.self)
+        
+        // then
+        XCTAssertNil(localAgent.serial(for: Dictionary<String, SampleType>.self))
+    }
 }
 
 extension LocalAgentTests {
     
-    struct SampleType: Cachable, Hashable, Equatable {
+    struct SampleType: Codable, Hashable, Equatable {
         
         var id = UUID()
     }

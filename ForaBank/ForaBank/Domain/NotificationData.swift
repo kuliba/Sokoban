@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct NotificationData: Equatable, Cachable {
+struct NotificationData: Equatable {
     
     let date: Date
     let state: State

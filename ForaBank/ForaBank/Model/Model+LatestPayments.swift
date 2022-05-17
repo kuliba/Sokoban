@@ -25,7 +25,6 @@ extension ModelAction {
                 let error: Error
             }
         }
-    
     }
 }
 
@@ -77,5 +76,4 @@ extension Model {
             }
         }
     }
-    
 }

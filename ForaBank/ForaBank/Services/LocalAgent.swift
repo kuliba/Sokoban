@@ -22,7 +22,7 @@ class LocalAgent: LocalAgentProtocol {
     
     //MARK: - Store
     
-    func store<T>(_ data: T, serial: String? = nil) throws where T : Cachable {
+    func store<T>(_ data: T, serial: String? = nil) throws where T : Encodable {
         
         let dataFileName = fileName(for: T.self)
         let data = try context.encoder.encode(data)
@@ -32,21 +32,10 @@ class LocalAgent: LocalAgentProtocol {
         let serialsData = try JSONEncoder().encode(serials)
         try serialsData.write(to: fileURL(with: context.serialsFileName))
     }
-    
-    func store<T>(_ data: T, serial: String? = nil) throws where T : Collection, T: Encodable, T.Element : Cachable {
-        
-        let dataFileName = fileName(for: T.self)
-        let data = try context.encoder.encode(data)
-        try data.write(to: fileURL(with: dataFileName))
-        
-        serials[dataFileName] = serial
-        let serialsData = try JSONEncoder().encode(serials)
-        try serialsData.write(to: fileURL(with: context.serialsFileName))
-    }
-    
+
     //MARK: - Load
     
-    func load<T>(type: T.Type) -> T? where T : Cachable {
+    func load<T>(type: T.Type) -> T? where T : Decodable {
 
         let fileName = fileName(for: type)
         
@@ -62,37 +51,10 @@ class LocalAgent: LocalAgentProtocol {
             return nil
         }
     }
-    
-    func load<T>(type: T.Type) -> T? where T : Collection, T : Decodable, T.Element : Cachable {
         
-        let fileName = fileName(for: type)
-        
-        do {
-            
-            let data = try Data(contentsOf: fileURL(with: fileName))
-            let decodedData = try context.decoder.decode(T.self, from: data)
-            
-            return decodedData
-            
-        } catch  {
-            
-            return nil
-        }
-    }
-    
     //MARK: - Clear
     
-    func clear<T>(type: T.Type) throws where T : Cachable {
-        
-        let fileName = fileName(for: type)
-        try context.fileManager.removeItem(at: fileURL(with: fileName))
-        
-        serials[fileName] = nil
-        let serialsData = try JSONEncoder().encode(serials)
-        try serialsData.write(to: fileURL(with: context.serialsFileName))
-    }
-    
-    func clear<T>(type: T.Type) throws where T : Collection, T.Element : Cachable {
+    func clear<T>(type: T.Type) throws  {
         
         let fileName = fileName(for: type)
         try context.fileManager.removeItem(at: fileURL(with: fileName))
@@ -104,14 +66,7 @@ class LocalAgent: LocalAgentProtocol {
     
     //MARK: - Serial
     
-    func serial<T>(for type: T.Type) -> String? where T : Cachable {
-        
-        let fileName = fileName(for: type)
-        
-        return serials[fileName]
-    }
-    
-    func serial<T>(for type: T.Type) -> String? where T : Collection, T.Element : Cachable {
+    func serial<T>(for type: T.Type) -> String? {
         
         let fileName = fileName(for: type)
         

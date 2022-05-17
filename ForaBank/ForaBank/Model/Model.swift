@@ -11,10 +11,9 @@ import os
 
 class Model {
     
-    //MARK: Products
-    
-    //MARK: Templates
     let action: PassthroughSubject<Action, Never>
+    
+    //MARK: Auth
     let auth: CurrentValueSubject<AuthorizationState, Never>
     
     //MARK: Products
@@ -28,12 +27,11 @@ class Model {
     //MARK: Dictionaries
     let catalogProducts: CurrentValueSubject<[CatalogProductData], Never>
     let catalogBanners: CurrentValueSubject<[BannerCatalogListData], Never>
-    let currencyDict: CurrentValueSubject<[CurrencyData], Never>
+    let currencyList: CurrentValueSubject<[CurrencyData], Never>
     let bankList: CurrentValueSubject<[BankData], Never>
-
+    
     //MARK: Templates
     let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
-    
     //TODO: store in cache
     let paymentTemplatesViewSettings: CurrentValueSubject<TemplatesListViewModel.Settings, Never>
     
@@ -46,12 +44,12 @@ class Model {
     //MARK: - UserData
     let userSettingData: CurrentValueSubject<ClientInfoState, Never> = .init(.empty)
     
+    //MARK: Loacation
+    let currentUserLoaction: CurrentValueSubject<LocationData?, Never>
+    
     //TODO: remove when all templates will be implemented
     let paymentTemplatesAllowed: [ProductStatementData.Kind] = [.sfp, .insideBank, .betweenTheir, .direct, .contactAddressless, .externalIndivudual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
     let paymentTemplatesDisplayed: [PaymentTemplateData.Kind] = [.sfp, .byPhone, .insideBank, .betweenTheir, .direct, .contactAdressless, .externalIndividual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
-    
-    //MARK: Loacation
-    let currentUserLoaction: CurrentValueSubject<LocationData?, Never>
     
     // services
     internal let sessionAgent: SessionAgentProtocol
@@ -92,7 +90,7 @@ class Model {
         self.productsUpdateState = .init(.idle)
         self.catalogProducts = .init([])
         self.catalogBanners = .init([])
-        self.currencyDict = .init([])
+        self.currencyList = .init([])
         self.bankList = .init([])
         self.paymentTemplates = .init([])
         self.paymentTemplatesViewSettings = .init(.initial)
@@ -107,7 +105,7 @@ class Model {
         self.biometricAgent = biometricAgent
         self.locationAgent = locationAgent
         self.bindings = []
-         
+        
         loadCachedData()
         bind()
     }
@@ -117,7 +115,7 @@ class Model {
         
         // session agent
         let sessionAgent = SessionAgent()
-       
+        
         // server agent
 #if DEBUG
         let enviroment = ServerAgent.Environment.test
@@ -188,7 +186,6 @@ class Model {
                     }
                     
                     //TODO: show error message
-            
                 }
                 
             }.store(in: &bindings)
@@ -217,7 +214,7 @@ class Model {
                 switch action {
                 case _ as ServerAgentAction.NetworkActivityEvent:
                     sessionAgent.action.send(SessionAgentAction.Event.Network())
- 
+                    
                 default:
                     break
                 }
@@ -229,6 +226,8 @@ class Model {
             .sink {[unowned self] action in
                 
                 switch action {
+                    
+                    //MARK: - Auth Actions
                     
                 case _ as ModelAction.Auth.Session.Start.Request:
                     handleAuthSessionStartRequest()
@@ -247,7 +246,7 @@ class Model {
                     
                 case let payload as ModelAction.Auth.CheckClient.Request:
                     handleAuthCheckClientRequest(payload: payload)
-                
+                    
                 case let payload as ModelAction.Auth.VerificationCode.Confirm.Request:
                     handleAuthVerificationCodeConfirmRequest(payload: payload)
                     
@@ -294,21 +293,9 @@ class Model {
                     
                 case let payload as ModelAction.Products.UpdateCustomName.Request:
                     handleProductsUpdateCustomName(payload)
-
-                //MARK: - Payments
-                    
-                    //MARK: - Products Actions
-                    
-                case _ as ModelAction.Products.Update.Fast.All:
-                    handleProductsUpdateFastAll()
-                    
-                case let payload as ModelAction.Products.Update.Fast.Single.Request:
-                    handleProductsUpdateFastSingleRequest(payload)
-                    
-                case _ as ModelAction.Products.Update.Total.All:
-                    handleProductsUpdateTotalAll()
                     
                     //MARK: - Statement
+                    
                 case let payload as ModelAction.Statement.List.Request:
                     handleStatementRequest(payload)
                     
@@ -327,22 +314,27 @@ class Model {
                     handlePaymentsCompleteRequest(payload)
                     
                     //MARK: - Settings Actions
+                    
                 case _ as ModelAction.Settings.GetClientInfo.Requested:
                     handleGetClientInfoRequest()
                     
-               //MARK: - Notifications
+                    //MARK: - Notifications
+                    
                 case _ as ModelAction.Notification.Fetch.New.Request:
                     handleNotificationsFetchNewRequest()
                     
                 case _ as ModelAction.Notification.Fetch.Next.Request:
                     handleNotificationsFetchNextRequest()
-                
-                //MARK: - LatestAllPayments Actions
-                        
+                    
+                case let payload as ModelAction.Notification.ChangeNotificationStatus.Requested:
+                   handleNotificationsChangeNotificationStatusRequest(payload: payload)
+                    
+                    //MARK: - LatestPayments Actions
+                    
                 case _ as ModelAction.LatestPayments.List.Requested:
                     handleLatestPaymentsListRequest()
-                        
-                //MARK: - Templates Actions
+                    
+                    //MARK: - Templates Actions
                     
                 case _ as ModelAction.PaymentTemplate.List.Requested:
                     handleTemplatesListRequest()
@@ -356,7 +348,7 @@ class Model {
                 case let payload as ModelAction.PaymentTemplate.Delete.Requested:
                     handleTemplatesDeleteRequest(payload)
                     
-                //MARK: - Dictionaries Actions
+                    //MARK: - Dictionaries Actions
                     
                 case _ as ModelAction.Dictionary.UpdateCache.All:
                     handleDictionaryUpdateAll()
@@ -407,7 +399,7 @@ class Model {
                         
                     case .bannerCatalogList:
                         handleDictionaryBannerCatalogList(payload.serial)
-                    
+                        
                     case .atmList:
                         handleDictionaryAtmDataList(payload.serial)
                         
@@ -419,7 +411,7 @@ class Model {
                         
                     case .atmMetroStationList:
                         handleDictionaryAtmMetroStationDataList(payload.serial)
-                    
+                        
                     case .atmCityList:
                         handleDictionaryAtmCityDataList(payload.serial)
                         
@@ -432,38 +424,14 @@ class Model {
                 case _ as ModelAction.Deposits.List.Request:
                     handleDepositsListRequest()
                     
-                //MARK: - Notification Action
-                
-                case let payload as ModelAction.Notification.ChangeNotificationStatus.Requested:
-                    guard let token = token else {
-                        //TODO: handle not authoried server request attempt
-                        return
-                    }
-                    let command = ServerCommands.NotificationController.ChangeNotificationStatus (token: token, payload: .init(eventId: payload.eventId, cloudId: payload.cloudId, status: payload.status))
-                    serverAgent.executeCommand(command: command) { result in
-                        
-                        switch result {
-                        case .success(let response):
-                            switch response.statusCode {
-                            case .ok:
-                                self.action.send(ModelAction.Notification.ChangeNotificationStatus.Complete())
-                            default:
-                                //TODO: handle not ok server status
-                                return
-                            }
-                        case .failure(let error):
-                            self.action.send(ModelAction.Notification.ChangeNotificationStatus.Failed(error: error))
-                        }
-                    }
-                    
-                   //MARK: - Location Actions
+                    //MARK: - Location Actions
                     
                 case _ as ModelAction.Location.Updates.Start:
                     handleLocationUpdatesStart()
                     
                 case _ as ModelAction.Location.Updates.Stop:
                     handleLocationUpdateStop()
-
+                    
                 default:
                     break
                 }
@@ -488,6 +456,7 @@ class Model {
 //MARK: - Private Helpers
 
 private extension Model {
+    
     func loadCachedData() {
         
         if let catalogProducts = localAgent.load(type: [CatalogProductData].self) {
@@ -507,7 +476,7 @@ private extension Model {
         
         if let currency = localAgent.load(type: [CurrencyData].self) {
             
-            self.currencyDict.value = currency
+            self.currencyList.value = currency
         }
         
         if let bankList = localAgent.load(type: [BankData].self) {
@@ -516,6 +485,7 @@ private extension Model {
         }
         
         if let products = localAgent.load(type: [ProductData].self) {
+            
             self.products.value = reduce(products: self.products.value, with: products)
         }
     }
@@ -524,7 +494,7 @@ private extension Model {
         
         do {
             
-            try localAgent.clear(type: PaymentTemplateData.self)
+            try localAgent.clear(type: [PaymentTemplateData].self)
             
         } catch {
             

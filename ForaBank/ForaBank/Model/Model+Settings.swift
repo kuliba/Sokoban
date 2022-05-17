@@ -7,6 +7,8 @@
 
 import Foundation
 
+//MARK: - Actions
+
 extension ModelAction {
     
     enum Settings {
@@ -27,6 +29,8 @@ extension ModelAction {
         }
     }
 }
+
+//MARK: - Data Helpers
 
 extension Model {
     
@@ -55,6 +59,11 @@ extension Model {
             print(error.localizedDescription)
         }
     }
+}
+
+//MARK: - Handlers
+
+extension Model {
     
     func handleGetClientInfoRequest() {
         guard let token = token else {
@@ -70,14 +79,17 @@ extension Model {
                 case .ok:
                     guard let clientInfo = response.data else { return }
                     
-                    //                    do {
-                    //                        try self.settingsAgent.store(clientInfo, type: .personal(.allData))
-                    //
-                    //                    } catch {
-                    //
-                    //                        //TODO: log
-                    //                        print(error.localizedDescription)
-                    //                    }
+                    //TODO: store settings
+                    /*
+                    do {
+                        try self.settingsAgent.store(clientInfo, type: .personal(.allData))
+                        
+                    } catch {
+                        
+                        //TODO: log
+                        print(error.localizedDescription)
+                    }
+                     */
                     
                     self.userSettingData.value = .authorized(user: clientInfo)
                     self.action.send(ModelAction.Settings.GetClientInfo.Complete(user: clientInfo))

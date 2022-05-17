@@ -33,7 +33,7 @@ struct MainSectionCurrencyView: View {
 
     var body: some View {
         
-        MainSectionCollapsableView(title: viewModel.title, isCollapsed: $viewModel.isCollapsed) {
+        CollapsableSectionView(title: viewModel.title, isCollapsed: $viewModel.isCollapsed) {
             
             CurrencyExchangeView(viewModel: viewModel.currencyExchange)
         }
