@@ -30,5 +30,6 @@ struct MyProductsSectionView_Previews: PreviewProvider {
     
     static var previews: some View {
         MyProductsSectionView(viewModel: .sample1)
+            .previewLayout(.sizeThatFits)
     }
 }

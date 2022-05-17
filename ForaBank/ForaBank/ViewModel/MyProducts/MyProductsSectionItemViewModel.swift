@@ -30,7 +30,7 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
     init(id: String = UUID().uuidString,
          icon: Image,
          title: String,
-         subtitle: String,
+         subtitle: String = "",
          numberCard: String,
          balance: String,
          balanceRub: Double = 0,
@@ -210,9 +210,7 @@ extension MyProductsSectionItemViewModel {
         subtitle: "Дебетовая",
         numberCard: "•  2953  •",
         balance: "19 547 ₽",
-        paymentSystemIcon: .init("Logo Visa"),
-        state: .leftButton(.init(type: .activate, action: {}))
-    )
+        paymentSystemIcon: .init("Logo Visa"))
 
     static let sample3 = MyProductsSectionItemViewModel(
         icon: .init("Salary Card"),
@@ -220,17 +218,14 @@ extension MyProductsSectionItemViewModel {
         subtitle: "Дебетовая",
         numberCard: "•  2953  •",
         balance: "19 547 ₽",
-        paymentSystemIcon: .init("Logo Visa"),
-        state: .rightButton(.init(type: .add, action: {}))
-    )
+        paymentSystemIcon: .init("Logo Visa"))
 
     static let sample4 = MyProductsSectionItemViewModel(
         icon: .init("Want Card"),
         title: "Хочу карту",
         subtitle: "Бесплатно",
         numberCard: "•  2953  •",
-        balance: "19 547 ₽"
-    )
+        balance: "19 547 ₽")
 
     static let sample5 = MyProductsSectionItemViewModel(
         icon: .init("Classic Card"),
@@ -238,8 +233,7 @@ extension MyProductsSectionItemViewModel {
         subtitle: "Дебетовая",
         numberCard: "•  2953  •",
         balance: "19 547 ₽",
-        paymentSystemIcon: .init("Logo Visa")
-    )
+        paymentSystemIcon: .init("Logo Visa"))
 
     static let sample6 = MyProductsSectionItemViewModel(
         icon: .init("Multibonus Card"),
@@ -247,6 +241,32 @@ extension MyProductsSectionItemViewModel {
         subtitle: "Дебетовая",
         numberCard: "•  2953  •",
         balance: "19 547 ₽",
-        paymentSystemIcon: .init("Logo Visa")
-    )
+        paymentSystemIcon: .init("Logo Visa"))
+
+    static let sample7 = MyProductsSectionItemViewModel(
+        icon: .init("Multibonus Card"),
+        title: "Кредит",
+        subtitle: "Дебетовая",
+        numberCard: "•  2953  •",
+        balance: "19 547 ₽",
+        dateLong: "•  29.08.22",
+        paymentSystemIcon: .init("Logo Visa"))
+
+    static let sample8 = MyProductsSectionItemViewModel(
+        icon: .init("Digital Card"),
+        title: "Цифровая",
+        subtitle: "Дебетовая",
+        numberCard: "•  2953  •",
+        balance: "19 547 ₽",
+        paymentSystemIcon: .init("Logo Visa"),
+        state: .leftButton(.init(type: .activate, action: {})))
+
+    static let sample9 = MyProductsSectionItemViewModel(
+        icon: .init("Salary Card"),
+        title: "Зарплатная",
+        subtitle: "Дебетовая",
+        numberCard: "•  2953  •",
+        balance: "19 547 ₽",
+        paymentSystemIcon: .init("Logo Visa"),
+        state: .rightButton(.init(type: .add, action: {})))
 }

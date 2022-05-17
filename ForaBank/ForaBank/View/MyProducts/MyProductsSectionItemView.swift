@@ -50,7 +50,7 @@ struct MyProductsSectionItemView: View {
                         
                     }.padding()
                     
-                    VStack {
+                    VStack(spacing: 2) {
                         
                         HStack {
 
@@ -66,13 +66,13 @@ struct MyProductsSectionItemView: View {
                             
                             Text(viewModel.title)
                                 .font(.textBodyMM14200())
-                                .foregroundColor(.textSecondary)
+                                .foregroundColor(.mainColorsBlack)
                             
                             Spacer()
                             
                             Text(viewModel.balance)
                                 .font(.textBodyMM14200())
-                                .foregroundColor(.textSecondary)
+                                .foregroundColor(.mainColorsBlack)
                                 .frame(alignment: .trailing)
                         }
                         .padding(.top, 4)
@@ -81,15 +81,15 @@ struct MyProductsSectionItemView: View {
 
                             Text(viewModel.numberCard)
                                 .font(.textBodySR12160())
-                                .foregroundColor(.textPlaceholder)
+                                .foregroundColor(.mainColorsGray)
 
                             Text(viewModel.subtitle)
                                 .font(.textBodySR12160())
-                                .foregroundColor(.textPlaceholder)
+                                .foregroundColor(.mainColorsGray)
 
                             Text(viewModel.dateLong)
                                 .font(.textBodySR12160())
-                                .foregroundColor(.textPlaceholder)
+                                .foregroundColor(.mainColorsGray)
                             
                             Spacer()
                         }
@@ -99,7 +99,7 @@ struct MyProductsSectionItemView: View {
                     .padding(.trailing)
                 }
             }
-            .background(Color.white)
+            .background(Color.mainColorsWhite)
             .offset(x: contentOffset)
             .onTapGesture {
                 
@@ -139,7 +139,7 @@ extension MyProductsSectionItemView {
                         }
                         
                         Text(viewModel.type.title)
-                            .foregroundColor(.white)
+                            .foregroundColor(.mainColorsWhite)
                             .font(.textBodySM12160())
                     }
                 }
@@ -154,13 +154,13 @@ struct MyProductsSectionItemView_Previews: PreviewProvider {
         
         Group {
             
-            MyProductsSectionItemView(viewModel: .sample4)
+            MyProductsSectionItemView(viewModel: .sample7)
                 .previewLayout(.sizeThatFits)
             
-            MyProductsSectionItemView(viewModel: .sample2)
+            MyProductsSectionItemView(viewModel: .sample8)
                 .previewLayout(.sizeThatFits)
             
-            MyProductsSectionItemView(viewModel: .sample3)
+            MyProductsSectionItemView(viewModel: .sample9)
                 .previewLayout(.sizeThatFits)
         }
     }

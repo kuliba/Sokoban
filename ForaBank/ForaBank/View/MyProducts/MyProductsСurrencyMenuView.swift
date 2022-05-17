@@ -30,11 +30,11 @@ struct MyProductsCurrencyMenuView: View {
                         item.icon
                             .renderingMode(.original)
                             .frame(width: 24, height: 24)
-                            .foregroundColor(.buttonBlackMedium)
+                            .foregroundColor(.mainColorsBlackMedium)
 
                         VStack(alignment: .leading, spacing: 2) {
                             Text(item.title)
-                                .foregroundColor(.black)
+                                .foregroundColor(.mainColorsBlack)
                                 .font(.textBodyMM14200())
 
                             HStack(spacing: 2) {

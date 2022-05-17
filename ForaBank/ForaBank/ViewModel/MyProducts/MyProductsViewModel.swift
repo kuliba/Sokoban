@@ -14,10 +14,10 @@ class MyProductsViewModel: ObservableObject {
     let action: PassthroughSubject<Action, Never> = .init()
 
     @Published var currencyMenu: MyProductsСurrencyMenuViewModel?
+    @Published var sections: [MyProductsSectionViewModel]
 
     private let model: Model
-    
-    var sections: [MyProductsSectionViewModel]
+
     let navigationBar: NavigationViewModel
     let totalMoney: MyProductsMoneyViewModel
     
@@ -52,6 +52,7 @@ class MyProductsViewModel: ObservableObject {
             .sink { [unowned self] data in
 
                 var sections: [MyProductsSectionViewModel] = []
+                let data = data.sorted(by: { $0.key.order < $1.key.order })
 
                 data.forEach { key, value in
 
@@ -277,26 +278,81 @@ extension MyProductsViewModel {
 
     private func viewModel(data: ProductData) -> MyProductsSectionItemViewModel? {
 
+        switch data.productType {
+        case .card: return productCardModel(data: data)
+        case .account: return productAccountModel(data: data)
+        case .deposit: return productDepositModel(data: data)
+        case .loan: return productLoanModel(data: data)
+        }
+    }
+
+    private func productCardModel(data: ProductData) -> MyProductsSectionItemViewModel? {
+
         guard
             let icon = data.smallDesign.image,
             let balance = data.balance,
             let balanceRub = data.balanceRub,
-            let subtitle = data.additionalField else {
+            let subtitle = data.additionalField,
+            let numberCard = data.numberMasked else {
                 return nil
             }
 
-        let numberCard = data.numberMasked ?? ""
+        return MyProductsSectionItemViewModel(
+            icon: icon,
+            title: data.mainField,
+            subtitle: subtitle,
+            numberCard: numberCard.count > 0 ? "•  \(numberCard.suffix(4))  •" : numberCard,
+            balance: "\(balance)",
+            balanceRub: balanceRub)
+    }
 
-        var dateLong: String = ""
-        var paymentSystemIcon: Image? = nil
+    private func productAccountModel(data: ProductData) -> MyProductsSectionItemViewModel? {
 
-        if let cardData = data as? ProductCardData {
-            paymentSystemIcon = cardData.paymentSystemImage?.image
-        }
+        guard
+            let icon = data.smallDesign.image,
+            let balance = data.balance,
+            let balanceRub = data.balanceRub,
+            let numberCard = data.numberMasked else {
+                return nil
+            }
 
-        if let loanData = data as? ProductLoanData {
-            dateLong = dateFormatter(date: loanData.dateLong)
-        }
+        return MyProductsSectionItemViewModel(
+            icon: icon,
+            title: data.mainField,
+            numberCard: numberCard.count > 0 ? "•  \(numberCard.suffix(4))  •" : numberCard,
+            balance: "\(balance)",
+            balanceRub: balanceRub)
+    }
+
+    private func productDepositModel(data: ProductData) -> MyProductsSectionItemViewModel? {
+
+        guard
+            let icon = data.smallDesign.image,
+            let balance = data.balance,
+            let balanceRub = data.balanceRub,
+            let numberCard = data.numberMasked else {
+                return nil
+            }
+
+        return MyProductsSectionItemViewModel(
+            icon: icon,
+            title: data.mainField,
+            numberCard: numberCard.count > 0 ? "•  \(numberCard.suffix(4))  •" : numberCard,
+            balance: "\(balance)",
+            balanceRub: balanceRub)
+    }
+
+    private func productLoanModel(data: ProductData) -> MyProductsSectionItemViewModel? {
+
+        guard
+            let icon = data.smallDesign.image,
+            let balance = data.balance,
+            let balanceRub = data.balanceRub,
+            let subtitle = data.additionalField,
+            let numberCard = data.numberMasked,
+            let loanData = data as? ProductLoanData else {
+                return nil
+            }
 
         return MyProductsSectionItemViewModel(
             icon: icon,
@@ -305,24 +361,7 @@ extension MyProductsViewModel {
             numberCard: numberCard.count > 0 ? "•  \(numberCard.suffix(4))  •" : numberCard,
             balance: "\(balance)",
             balanceRub: balanceRub,
-            dateLong: "•  \(dateLong)",
-            paymentSystemIcon: paymentSystemIcon)
-    }
-
-    private func dateFormatter(date: Date) -> String {
-
-        let dateFormatter = DateFormatter()
-
-        dateFormatter.timeStyle = DateFormatter.Style.none
-        dateFormatter.dateStyle = DateFormatter.Style.long
-
-        dateFormatter.dateFormat =  "dd.MM.yy"
-        dateFormatter.timeZone = .current
-        dateFormatter.locale = Locale(identifier: "ru_RU")
-
-        let stringDate = dateFormatter.string(from: date)
-
-        return stringDate
+            dateLong: "•  \(DateFormatter.shortDate.string(from: loanData.dateLong))")
     }
 }
 
@@ -370,7 +409,7 @@ extension MyProductsViewModel {
             title: "Мои продукты",
             backButton: NavigationButtonViewModel(icon: .ic24ChevronLeft),
             addButton: NavigationButtonViewModel(icon: .ic24Plus)),
-        totalMoney: .sample,
+        totalMoney: .sample1,
         sections: [.sample1, .sample2, .sample3, .sample4, .sample5, .sample6]
     )
 }

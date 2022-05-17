@@ -93,7 +93,7 @@ class MainViewModel: ObservableObject {
                             sheet = .productProfile(productProfileViewModel)
                             
                         case _ as MainSectionProductsViewModelAction.MoreButtonTapped:
-                            let myProductsViewModel: MyProductsViewModel = .sample
+                            let myProductsViewModel: MyProductsViewModel = .init(model)
                             sheet = .myProducts(myProductsViewModel)
                             
                         default:

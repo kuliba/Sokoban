@@ -75,6 +75,10 @@
 	<string>Ваше местоположение позволит показать ближайшие банкоматы</string>
 	<key>UIAppFonts</key>
 	<array>
+		<string>Inter-Regular.ttf</string>
+		<string>Inter-Medium.ttf</string>
+		<string>Inter-Bold.ttf</string>
+		<string>Inter-SemiBold.ttf</string>
 		<string>Inter-VariableFont_slnt,wght.ttf</string>
 		<string>Roboto-Black.ttf</string>
 		<string>Roboto-BlackItalic.ttf</string>

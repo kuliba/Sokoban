@@ -245,6 +245,10 @@
 		1CB9C8278920B424652C4AE2 /* Image+Illustrations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F88A9A4DBEADB3F8E16A822 /* Image+Illustrations.swift */; };
 		50880009280C27A300ADD338 /* MyProductsSectionItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50880008280C27A300ADD338 /* MyProductsSectionItemView.swift */; };
 		5088000B280C38E300ADD338 /* MyProductsSectionItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5088000A280C38E300ADD338 /* MyProductsSectionItemViewModel.swift */; };
+		509ADC2C2832C547002DC829 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 509ADC282832C547002DC829 /* Inter-Bold.ttf */; };
+		509ADC2D2832C547002DC829 /* Inter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 509ADC292832C547002DC829 /* Inter-Regular.ttf */; };
+		509ADC2E2832C548002DC829 /* Inter-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 509ADC2A2832C547002DC829 /* Inter-SemiBold.ttf */; };
+		509ADC2F2832C548002DC829 /* Inter-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 509ADC2B2832C547002DC829 /* Inter-Medium.ttf */; };
 		509B8E4A280345A90045F60B /* MyProductsMoneyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 509B8E49280345A90045F60B /* MyProductsMoneyView.swift */; };
 		509B8E4C280347140045F60B /* MyProductsMoneyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 509B8E4B280347140045F60B /* MyProductsMoneyViewModel.swift */; };
 		50A19943280F1AF80094CFA5 /* SwipeSidesModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A19942280F1AF80094CFA5 /* SwipeSidesModifier.swift */; };
@@ -1400,6 +1404,10 @@
 		0CCF9124281C288700C6322F /* UnderConstructionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnderConstructionViewModel.swift; sourceTree = "<group>"; };
 		50880008280C27A300ADD338 /* MyProductsSectionItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProductsSectionItemView.swift; sourceTree = "<group>"; };
 		5088000A280C38E300ADD338 /* MyProductsSectionItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProductsSectionItemViewModel.swift; sourceTree = "<group>"; };
+		509ADC282832C547002DC829 /* Inter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
+		509ADC292832C547002DC829 /* Inter-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Regular.ttf"; sourceTree = "<group>"; };
+		509ADC2A2832C547002DC829 /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-SemiBold.ttf"; sourceTree = "<group>"; };
+		509ADC2B2832C547002DC829 /* Inter-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Medium.ttf"; sourceTree = "<group>"; };
 		509B8E49280345A90045F60B /* MyProductsMoneyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProductsMoneyView.swift; sourceTree = "<group>"; };
 		509B8E4B280347140045F60B /* MyProductsMoneyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProductsMoneyViewModel.swift; sourceTree = "<group>"; };
 		50A19942280F1AF80094CFA5 /* SwipeSidesModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeSidesModifier.swift; sourceTree = "<group>"; };
@@ -3018,6 +3026,37 @@
 				0CCF9124281C288700C6322F /* UnderConstructionViewModel.swift */,
 			);
 			path = UnderConstruction;
+			sourceTree = "<group>";
+		};
+		509ADC272832C527002DC829 /* Inter */ = {
+			isa = PBXGroup;
+			children = (
+				509ADC282832C547002DC829 /* Inter-Bold.ttf */,
+				509ADC2B2832C547002DC829 /* Inter-Medium.ttf */,
+				509ADC292832C547002DC829 /* Inter-Regular.ttf */,
+				509ADC2A2832C547002DC829 /* Inter-SemiBold.ttf */,
+				EDB145102664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf */,
+			);
+			path = Inter;
+			sourceTree = "<group>";
+		};
+		509ADC302832C566002DC829 /* Roboto */ = {
+			isa = PBXGroup;
+			children = (
+				EDB143B8265FDEC90028EF5A /* Roboto-Medium.ttf */,
+				EDB143B9265FDEC90028EF5A /* Roboto-Light.ttf */,
+				EDB143BA265FDEC90028EF5A /* Roboto-Regular.ttf */,
+				EDB143BB265FDEC90028EF5A /* Roboto-MediumItalic.ttf */,
+				EDB143BC265FDEC90028EF5A /* Roboto-ThinItalic.ttf */,
+				EDB143BD265FDEC90028EF5A /* Roboto-BoldItalic.ttf */,
+				EDB143BE265FDEC90028EF5A /* Roboto-LightItalic.ttf */,
+				EDB143BF265FDEC90028EF5A /* Roboto-Italic.ttf */,
+				EDB143C0265FDEC90028EF5A /* Roboto-BlackItalic.ttf */,
+				EDB143C1265FDEC90028EF5A /* Roboto-Bold.ttf */,
+				EDB143C2265FDEC90028EF5A /* Roboto-Thin.ttf */,
+				EDB143C3265FDEC90028EF5A /* Roboto-Black.ttf */,
+			);
+			path = Roboto;
 			sourceTree = "<group>";
 		};
 		50A1993F280F1A240094CFA5 /* Modifiers */ = {
@@ -5471,19 +5510,8 @@
 		EDB143B7265FDEC90028EF5A /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
-				EDB145102664D9E80028EF5A /* Inter-VariableFont_slnt,wght.ttf */,
-				EDB143B8265FDEC90028EF5A /* Roboto-Medium.ttf */,
-				EDB143B9265FDEC90028EF5A /* Roboto-Light.ttf */,
-				EDB143BA265FDEC90028EF5A /* Roboto-Regular.ttf */,
-				EDB143BB265FDEC90028EF5A /* Roboto-MediumItalic.ttf */,
-				EDB143BC265FDEC90028EF5A /* Roboto-ThinItalic.ttf */,
-				EDB143BD265FDEC90028EF5A /* Roboto-BoldItalic.ttf */,
-				EDB143BE265FDEC90028EF5A /* Roboto-LightItalic.ttf */,
-				EDB143BF265FDEC90028EF5A /* Roboto-Italic.ttf */,
-				EDB143C0265FDEC90028EF5A /* Roboto-BlackItalic.ttf */,
-				EDB143C1265FDEC90028EF5A /* Roboto-Bold.ttf */,
-				EDB143C2265FDEC90028EF5A /* Roboto-Thin.ttf */,
-				EDB143C3265FDEC90028EF5A /* Roboto-Black.ttf */,
+				509ADC272832C527002DC829 /* Inter */,
+				509ADC302832C566002DC829 /* Roboto */,
 			);
 			path = Fonts;
 			sourceTree = "<group>";
@@ -6348,6 +6376,7 @@
 				6833E0B72732B763004C070F /* DetailOperationTableViewCell.xib in Resources */,
 				68673B6126F4B87900F67A8C /* PayTableViewCell.xib in Resources */,
 				68C8D57126F0DF120076246B /* HistoryTableViewCell.xib in Resources */,
+				509ADC2F2832C548002DC829 /* Inter-Medium.ttf in Resources */,
 				EDCF89E426CACC7D00DC9F54 /* MeToMeSetupSwitchView.xib in Resources */,
 				68E346242705C6FA00D6FE37 /* ProductStoryboard.storyboard in Resources */,
 				0BF816FA27E11E9600AC890D /* EPContactSelfDataView.xib in Resources */,
@@ -6370,12 +6399,14 @@
 				A55A52D92746FC3B00641DD0 /* InternetTV.storyboard in Resources */,
 				ED75CDF926E245EE0074F5D5 /* GoogleService-Info-test.plist in Resources */,
 				ED75CE0926E2BA6F0074F5D5 /* TarifView.xib in Resources */,
+				509ADC2D2832C547002DC829 /* Inter-Regular.ttf in Resources */,
 				68B6755D26BC8A9B004DECA4 /* GoogleService-Info.plist in Resources */,
 				6822EFD726B935FF00125EEC /* BaseTableViewCell.xib in Resources */,
 				0BE6960B27F5C10A007F30D1 /* PlacesSampleData.json in Resources */,
 				68673B5926F3772400F67A8C /* CardCollectionViewCell.xib in Resources */,
 				EDB143C4265FDEC90028EF5A /* Roboto-Medium.ttf in Resources */,
 				EDB143C5265FDEC90028EF5A /* Roboto-Light.ttf in Resources */,
+				509ADC2C2832C547002DC829 /* Inter-Bold.ttf in Resources */,
 				EDFA7526277D181500EEB4AE /* TermsDepositTableViewCell.xib in Resources */,
 				EDB143C8265FDEC90028EF5A /* Roboto-ThinItalic.ttf in Resources */,
 				ED664BB4274513040050D1E0 /* ResultAccountStatementController.storyboard in Resources */,
@@ -6426,6 +6457,7 @@
 				F63D45F2B6942EA98C94F9FE /* CheckBoxView.xib in Resources */,
 				F63D409A487FD3AD287E63D1 /* InternetInputCell.xib in Resources */,
 				F63D45E6DA7A3F76FDD0B282 /* C2BSuccess.xib in Resources */,
+				509ADC2E2832C548002DC829 /* Inter-SemiBold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
