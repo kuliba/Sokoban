@@ -32,8 +32,7 @@ struct MyProductsView: View {
                 .background(Color.mainColorsWhite)
                 .padding(.top, -5)
             }
-            .navigationBarTitle(Text(viewModel.navigationBar.title).font(.textH3M18240()),
-                                displayMode: .inline)
+            .navigationBarTitle(Text(viewModel.navigationBar.title), displayMode: .inline)
             .navigationBarBackButtonHidden(true)
             .navigationBarItems(
                 leading: BackButtonView(viewModel: viewModel),
@@ -102,6 +101,6 @@ struct AllMoneyView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             MyProductsView(viewModel: .sample)
-        }.padding(.top)
+        }
     }
 }

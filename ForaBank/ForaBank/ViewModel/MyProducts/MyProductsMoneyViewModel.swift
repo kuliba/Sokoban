@@ -53,9 +53,16 @@ extension MyProductsMoneyViewModel {
 
 extension MyProductsMoneyViewModel {
     
-    static let sample = MyProductsMoneyViewModel(
+    static let sample1 = MyProductsMoneyViewModel(
         subtitle: "По курсу ЦБ",
-        balance: "170 897",
+        balance: "170897",
+        currencyButton: CurrencyButtonViewModel(icon: .ic16ChevronDown,
+                                                title: "₽",
+                                                isSelected: false))
+
+    static let sample2 = MyProductsMoneyViewModel(
+        subtitle: "По курсу ЦБ",
+        balance: "100032281773",
         currencyButton: CurrencyButtonViewModel(icon: .ic16ChevronDown,
                                                 title: "₽",
                                                 isSelected: false))

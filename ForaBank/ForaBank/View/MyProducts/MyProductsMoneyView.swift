@@ -12,47 +12,62 @@ struct MyProductsMoneyView: View {
     @ObservedObject var viewModel: MyProductsMoneyViewModel
     
     var body: some View {
-        
-        VStack(spacing: 0) {
-            
+
+        VStack {
+
             ZStack() {
-                
-                Color.barsTabbar
-                
-                VStack(spacing: 0) {
-                    
-                    HStack {
-                        
-                        Text(viewModel.title)
-                            .padding(.leading, 20)
-                            .font(.textH2SB20282())
-                        
-                        Spacer()
-                        
-                        Text(viewModel.balance)
-                            .padding(.trailing, 7)
-                            .font(.textH2SB20282())
+
+                VStack {
+
+                    HStack(alignment: .bottom) {
+
+                        if viewModel.balance.count > 8 {
+
+                            VStack(alignment: .leading, spacing: 8) {
+
+                                Text(viewModel.title)
+                                    .font(.textH2SB20282())
+                                    .foregroundColor(.mainColorsBlack)
+
+                                Text(viewModel.balance)
+                                    .font(.textH2SB20282())
+                                    .foregroundColor(.mainColorsBlack)
+                            }
+
+                            Spacer()
+
+                        } else {
+
+                            Text(viewModel.title)
+                                .font(.textH2SB20282())
+                                .foregroundColor(.mainColorsBlack)
+
+                            Spacer()
+
+                            Text(viewModel.balance)
+                                .font(.textH2SB20282())
+                                .foregroundColor(.mainColorsBlack)
+                        }
 
                         MyProductsMoneyViewButton(viewModel: viewModel.currencyButton)
                     }
-                    .padding(.top, 20)
+                    .padding([.leading, .top], 20)
                     .padding(.bottom, 4)
-                    
+
                     HStack {
-                        
+
                         Spacer()
-                        
+
                         Text(viewModel.subtitle)
                             .font(.textBodySR12160())
-                            .foregroundColor(.textPlaceholder)
-                            .padding(.trailing, 19)
+                            .foregroundColor(.mainColorsGray)
+                            .padding(.trailing)
                     }
-                    .padding(.bottom, 12)
                 }
             }
-            .frame(height: 76)
+            .fixedSize(horizontal: false, vertical: true)
             .padding(.bottom, 16)
-        }
+        }.background(Color.barsTabbar)
     }
 }
 
@@ -68,7 +83,7 @@ extension MyProductsMoneyView {
                 return .mainColorsBlack
             }
 
-            return .buttonPrimaryDisabled
+            return .mainColorsGrayMedium
         }
 
         var body: some View {
@@ -91,6 +106,7 @@ extension MyProductsMoneyView {
                     HStack(spacing: 3) {
 
                         Text(viewModel.title)
+                            .font(.textBodyMM14200())
                             .foregroundColor(.textWhite)
 
                         viewModel.icon
@@ -105,7 +121,14 @@ extension MyProductsMoneyView {
 
 struct MyProductsTotalMoneyView_Previews: PreviewProvider {
     static var previews: some View {
-        MyProductsMoneyView(viewModel: .sample)
-            .previewLayout(.sizeThatFits)
+
+        Group {
+
+            MyProductsMoneyView(viewModel: .sample1)
+                .previewLayout(.sizeThatFits)
+
+            MyProductsMoneyView(viewModel: .sample2)
+                .previewLayout(.sizeThatFits)
+        }
     }
 }
