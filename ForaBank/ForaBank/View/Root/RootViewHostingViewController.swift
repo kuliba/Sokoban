@@ -78,16 +78,18 @@ class RootViewHostingViewController: UIHostingController<RootView> {
     }
     
     private func presentCover(_ viewController: UIViewController, of type: Cover.Kind, animated: Bool) {
-                
-        addChild(viewController)
-        view.addSubview(viewController.view)
-        viewController.view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            viewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            viewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            viewController.view.topAnchor.constraint(equalTo: view.topAnchor),
-            viewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
+        
+        guard let scene = view.window?.windowScene else {
+            return
+        }
+        
+        let window = UIWindow(windowScene: scene)
+        window.backgroundColor = .clear
+        window.windowLevel = .alert + 1
+        window.rootViewController = viewController
+        window.makeKeyAndVisible()
+
+        viewController.view.frame = UIScreen.main.bounds
         
         if animated == true {
             
@@ -99,14 +101,12 @@ class RootViewHostingViewController: UIHostingController<RootView> {
                 
             } completion: { _ in
                 
-                viewController.didMove(toParent: self)
-                self.cover = Cover(type: type, controller: viewController)
+                self.cover = Cover(type: type, controller: viewController, window: window)
             }
             
         } else {
             
-            viewController.didMove(toParent: self)
-            self.cover = Cover(type: type, controller: viewController)
+            self.cover = Cover(type: type, controller: viewController, window: window)
         }
     }
     
@@ -115,8 +115,6 @@ class RootViewHostingViewController: UIHostingController<RootView> {
         guard let cover = cover else {
             return
         }
-        
-        cover.controller.willMove(toParent: nil)
         
         if animated == true {
             
@@ -130,8 +128,7 @@ class RootViewHostingViewController: UIHostingController<RootView> {
                     
                 } completion: { _ in
                     
-                    cover.controller.view.removeFromSuperview()
-                    cover.controller.removeFromParent()
+                    cover.window.isHidden = true
                     self.cover = nil
                     self.isCoverDismissing = false
                 }
@@ -144,8 +141,7 @@ class RootViewHostingViewController: UIHostingController<RootView> {
                     
                 } completion: { _ in
                     
-                    cover.controller.view.removeFromSuperview()
-                    cover.controller.removeFromParent()
+                    cover.window.isHidden = true
                     self.cover = nil
                     self.isCoverDismissing = false
                 }
@@ -155,8 +151,7 @@ class RootViewHostingViewController: UIHostingController<RootView> {
             
         } else {
             
-            cover.controller.view.removeFromSuperview()
-            cover.controller.removeFromParent()
+            cover.window.isHidden = true
             self.cover = nil
             
             print("SessionAgent: COVER DISMISSED addr:\(Unmanaged.passUnretained(cover.controller).toOpaque())")
@@ -214,6 +209,7 @@ extension RootViewHostingViewController {
         
         let type: Kind
         let controller: UIViewController
+        let window: UIWindow
         
         enum Kind {
             
