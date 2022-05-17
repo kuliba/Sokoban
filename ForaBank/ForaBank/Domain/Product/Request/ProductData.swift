@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ProductData: Identifiable, Cachable {
+class ProductData: Identifiable, Codable {
     
     let id: Int
     
@@ -65,6 +65,14 @@ class ProductData: Identifiable, Cachable {
         self.fontDesignColor = fontDesignColor
         self.background = background
         
+    }
+    
+    private enum CodingKeys: String, CodingKey {
+        
+        case extraLargeDesign = "XLDesign"
+        case balanceRub = "balanceRUB"
+        case ownerId = "ownerID"
+        case accountNumber, additionalField, allowCredit, allowDebit, background, balance, branchId, currency, customName, fontDesignColor, id, largeDesign, mainField, mediumDesign, number, numberMasked, openDate, productName, productType, smallDesign
     }
     
     required init(from decoder: Decoder) throws {
@@ -129,17 +137,6 @@ class ProductData: Identifiable, Cachable {
         try container.encode(smallDesign, forKey: .smallDesign)
         try container.encode(fontDesignColor, forKey: .fontDesignColor)
         try container.encode(background, forKey: .background)
-    }
-}
-
-extension ProductData: Codable {
-    
-    private enum CodingKeys: String, CodingKey {
-        
-        case extraLargeDesign = "XLDesign"
-        case balanceRub = "balanceRUB"
-        case ownerId = "ownerID"
-        case accountNumber, additionalField, allowCredit, allowDebit, background, balance, branchId, currency, customName, fontDesignColor, id, largeDesign, mainField, mediumDesign, number, numberMasked, openDate, productName, productType, smallDesign
     }
 }
 

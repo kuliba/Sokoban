@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MobileData: Codable, Equatable, Cachable {
+struct MobileData: Codable, Equatable {
     
     let code: String
     let md5hash: String

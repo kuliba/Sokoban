@@ -9,55 +9,6 @@ import Foundation
 import UIKit
 import FirebaseMessaging
 
-extension Model {
-    
-    var authPincodeLength: Int { 4 }
-    var authVerificationCodeLength: Int { 6 }
-    var authVerificationCodeResendDelay: TimeInterval { 30 }
-    var authUnlockAttemptsAvailable: Int { 3 }
-    var authAvailableBiometricSensorType: BiometricSensorType? { biometricAgent.availableSensor }
-    var authIsBiometricSensorEnabled: Bool {
-        
-        guard let isSensorEnabled: Bool = try? settingsAgent.load(type: .security(.sensor)) else {
-            return false
-        }
-        
-        return isSensorEnabled
-    }
-    
-    var authIsBiometricSensorSettingsSet: Bool {
-        
-        let isSensorEnabled: Bool? = try? settingsAgent.load(type: .security(.sensor))
-        
-        return isSensorEnabled != nil
-    }
-    
-    var authDefaultErrorMessage: String { "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения." }
-        
-    func authStoredPincode() throws -> String {
-        
-        try keychainAgent.load(type: .pincode)
-    }
-    
-    func authServerDeviceGUID() throws -> String {
-        
-       try keychainAgent.load(type: .serverDeviceGUID)
-    }
-}
-
-enum ModelAuthError: Error {
-    
-    case unauthorizedCommandAttempt
-    case emptyCSRFData(status: ServerStatusCode, message: String?)
-    case identifierForVendorObtainFailed
-    case fcmTokenObtainFailed
-    case installPushDeviceFailed(status: ServerStatusCode, message: String?)
-    case keyExchangeFailed(status: ServerStatusCode, message: String?)
-    case checkClientFailed(status: ServerStatusCode, message: String?)
-    case setDeviceSettingsFailed(status: ServerStatusCode, message: String?)
-    
-}
-
 //MARK: - Actions
 
 extension ModelAction {
@@ -270,6 +221,44 @@ extension ModelAction {
         }
         
         struct Logout: Action {}
+    }
+}
+
+//MARK: - Data Helpers
+
+extension Model {
+    
+    var authPincodeLength: Int { 4 }
+    var authVerificationCodeLength: Int { 6 }
+    var authVerificationCodeResendDelay: TimeInterval { 30 }
+    var authUnlockAttemptsAvailable: Int { 3 }
+    var authAvailableBiometricSensorType: BiometricSensorType? { biometricAgent.availableSensor }
+    var authIsBiometricSensorEnabled: Bool {
+        
+        guard let isSensorEnabled: Bool = try? settingsAgent.load(type: .security(.sensor)) else {
+            return false
+        }
+        
+        return isSensorEnabled
+    }
+    
+    var authIsBiometricSensorSettingsSet: Bool {
+        
+        let isSensorEnabled: Bool? = try? settingsAgent.load(type: .security(.sensor))
+        
+        return isSensorEnabled != nil
+    }
+    
+    var authDefaultErrorMessage: String { "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения." }
+        
+    func authStoredPincode() throws -> String {
+        
+        try keychainAgent.load(type: .pincode)
+    }
+    
+    func authServerDeviceGUID() throws -> String {
+        
+       try keychainAgent.load(type: .serverDeviceGUID)
     }
 }
 
@@ -1026,4 +1015,18 @@ extension Model {
     var authOperationSystem: String { "IOS" }
 }
 
+//MARK: - Errors
+
+enum ModelAuthError: Error {
+    
+    case unauthorizedCommandAttempt
+    case emptyCSRFData(status: ServerStatusCode, message: String?)
+    case identifierForVendorObtainFailed
+    case fcmTokenObtainFailed
+    case installPushDeviceFailed(status: ServerStatusCode, message: String?)
+    case keyExchangeFailed(status: ServerStatusCode, message: String?)
+    case checkClientFailed(status: ServerStatusCode, message: String?)
+    case setDeviceSettingsFailed(status: ServerStatusCode, message: String?)
+    
+}
 

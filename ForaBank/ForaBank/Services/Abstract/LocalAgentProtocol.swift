@@ -9,17 +9,10 @@ import Foundation
 
 protocol LocalAgentProtocol {
     
-    func store<T>(_ data: T, serial: String?) throws where T : Cachable
-    func store<T>(_ data: T, serial: String?) throws where T : Collection, T : Encodable, T.Element : Cachable
-    
-    func load<T>(type: T.Type) -> T? where T : Cachable
-    func load<T>(type: T.Type) -> T? where T : Collection, T : Decodable, T.Element : Cachable
-    
-    func clear<T>(type: T.Type) throws where T : Cachable
-    func clear<T>(type: T.Type) throws where T : Collection, T.Element : Cachable
-    
-    func serial<T>(for type: T.Type) -> String? where T : Cachable
-    func serial<T>(for type: T.Type) -> String? where T : Collection, T.Element : Cachable
+    func store<T>(_ data: T, serial: String?) throws where T : Encodable
+    func load<T>(type: T.Type) -> T? where T : Decodable
+    func clear<T>(type: T.Type) throws
+    func serial<T>(for type: T.Type) -> String?
     
     func fileName<T>(for type: T.Type) -> String
 }

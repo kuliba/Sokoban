@@ -17,7 +17,7 @@ class MainViewModel: ObservableObject {
     @Published var navButtonsRight: [NavigationBarButtonViewModel]
     @Published var sections: [MainSectionViewModel]
     @Published var isRefreshing: Bool
-    @Published var productProfile: ProfileViewModel?
+    @Published var productProfile: ProductProfileViewModel?
     @Published var sheet: Sheet?
     
     private var model: Model
@@ -89,7 +89,7 @@ class MainViewModel: ObservableObject {
                         
                         switch action {
                         case let payload as MainSectionProductsViewModelAction.ProductDidTapped:
-                            let productProfileViewModel: ProfileViewModel = .init(productViewModel: .init(model, productId: payload.productId, productType: .card), model: model)
+                            let productProfileViewModel: ProductProfileViewModel = .init(productViewModel: .init(model, productId: payload.productId, productType: .card), model: model)
                             sheet = .productProfile(productProfileViewModel)
                             
                         case _ as MainSectionProductsViewModelAction.MoreButtonTapped:
@@ -159,7 +159,7 @@ extension MainViewModel {
         
         var id: UUID { UUID() }
         
-        case productProfile(ProfileViewModel)
+        case productProfile(ProductProfileViewModel)
         case userAccount(UserAccountViewModel)
         case messages(MessagesHistoryViewModel)
         case myProducts(MyProductsViewModel)

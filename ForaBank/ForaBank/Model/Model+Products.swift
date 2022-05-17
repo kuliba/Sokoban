@@ -7,6 +7,59 @@
 
 import Foundation
 
+//MARK: - Actions
+
+extension ModelAction {
+    
+    enum Products {
+        
+        enum Update {
+            
+            enum Fast {
+                
+                struct All: Action {}
+                
+                enum Single {
+                    
+                    struct Request: Action {
+                        
+                        let productId: ProductData.ID
+                        let productType: ProductType
+                    }
+                    
+                    struct Response: Action {
+                        
+                        let productId: ProductData.ID
+                        let productType: ProductType
+                        let result: Result<ProductDynamicParamsData, Error>
+                    }
+                }
+            }
+            
+            enum Total {
+                
+                struct All: Action {}
+            }
+        }
+        
+        enum UpdateCustomName {
+        
+            struct Request: Action {
+                
+                let productId: ProductData.ID
+                let productType: ProductType
+                let name: String
+            }
+            
+            enum Response: Action {
+                
+                case complete(name: String)
+                case failed(message: String)
+            }
+        }
+    }
+}
+
 //MARK: - Handlers
 
 extension Model {
@@ -360,59 +413,6 @@ extension Model {
         }
         
         return productsData
-    }
-}
-
-//MARK: - Actions
-
-extension ModelAction {
-    
-    enum Products {
-        
-        enum Update {
-            
-            enum Fast {
-                
-                struct All: Action {}
-                
-                enum Single {
-                    
-                    struct Request: Action {
-                        
-                        let productId: ProductData.ID
-                        let productType: ProductType
-                    }
-                    
-                    struct Response: Action {
-                        
-                        let productId: ProductData.ID
-                        let productType: ProductType
-                        let result: Result<ProductDynamicParamsData, Error>
-                    }
-                }
-            }
-            
-            enum Total {
-                
-                struct All: Action {}
-            }
-        }
-        
-        enum UpdateCustomName {
-        
-            struct Request: Action {
-                
-                let productId: ProductData.ID
-                let productType: ProductType
-                let name: String
-            }
-            
-            enum Response: Action {
-                
-                case complete(name: String)
-                case failed(message: String)
-            }
-        }
     }
 }
 

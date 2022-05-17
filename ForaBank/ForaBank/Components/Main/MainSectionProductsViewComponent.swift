@@ -150,7 +150,7 @@ struct MainSectionProductsView: View {
 
     var body: some View {
         
-        MainSectionCollapsableView(title: viewModel.title, isCollapsed: $viewModel.isCollapsed) {
+        CollapsableSectionView(title: viewModel.title, isCollapsed: $viewModel.isCollapsed) {
             
             VStack(spacing: 16) {
                 

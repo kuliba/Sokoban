@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct AtmTypeData: Codable, Equatable, Cachable, Identifiable {
+struct AtmTypeData: Identifiable, Codable, Equatable {
     
     let id: Int
     let name: String

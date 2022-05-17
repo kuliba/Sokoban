@@ -38,8 +38,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
     
     weak var delegatePaymentVc: ProductViewControllerDelegate?
     
-//    var swiftUIView = DetailAccountViewComponent(viewModel: .init(with: .init(), status: .notActivated, isCredit: false, productName: nil, longInt: nil))
-//    var detailView = SelfSizingHostingController(rootView: DetailAccountViewComponent(viewModel: .init(with: .init(), status: .notActivated, isCredit: false, productName: nil, longInt: nil)))
+//    var swiftUIView = ProductProfileAccountDetailView(viewModel: .init(with: .init(), status: .notActivated, isCredit: false, productName: nil, longInt: nil))
+//    var detailView = SelfSizingHostingController(rootView: ProductProfileAccountDetailView(viewModel: .init(with: .init(), status: .notActivated, isCredit: false, productName: nil, longInt: nil)))
     
     var emptySpending = UIView()
     
@@ -756,7 +756,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
     
     @objc func presentBottomSheet(sender: AnyObject) {
         
-        let bottomSheet = BottomSheetHostingViewController(with: InfoView.ViewModel())
+        let bottomSheet = BottomSheetHostingViewController(with: ProductProfileLoanDelayInfoView.ViewModel())
         present(bottomSheet, animated: true)
     }
     
