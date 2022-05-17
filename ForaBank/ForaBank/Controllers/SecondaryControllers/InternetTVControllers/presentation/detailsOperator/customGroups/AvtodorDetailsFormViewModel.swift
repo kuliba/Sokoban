@@ -135,7 +135,9 @@ class AvtodorDetailsFormViewModel {
                     controller.showAlert(with: "Ошибка", and: error!)
                 } else {
                     if InternetTVApiRequests.isSingleService {
-                        controller.doConfirmation(response: response)
+                        if let respUnw = response {
+                            controller.doConfirmation(response: respUnw)
+                        }
                     } else {
                         if let respUnw = response {
                             if respUnw.data?.needSum ?? false {
