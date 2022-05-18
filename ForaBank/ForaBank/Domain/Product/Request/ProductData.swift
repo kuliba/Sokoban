@@ -142,7 +142,7 @@ class ProductData: Identifiable, Codable {
 
 extension ProductData {
     
-    func updated(with params: ProductDynamicParamsData) {
+    func update(with params: ProductDynamicParamsData) {
         
         self.balance = params.balance
         self.customName = params.customName

@@ -37,7 +37,7 @@ extension ProductProfileCardView {
             self.products = []
             self.model = model
 
-            let products = model.productForCache(products: self.model.products.value)
+            let products = model.products.value.values.flatMap{ $0 }
             let productData = products.first(where: ({$0.id == productId}))
     
             if let balance = productData?.viewBalance, let fontColor = productData?.fontDesignColor.color, let name = productData?.viewName, let backgroundColor = productData?.background.first?.color {
