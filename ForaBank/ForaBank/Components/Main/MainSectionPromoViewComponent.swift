@@ -131,6 +131,7 @@ struct MainSectionPromoView: View {
         }
     }
 }
+
 //MARK: - Preview
 
 struct MainSectionPromotionsView_Previews: PreviewProvider {
