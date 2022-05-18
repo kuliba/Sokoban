@@ -60,37 +60,32 @@ extension MainSectionProductsView {
                 .receive(on: DispatchQueue.main)
                 .sink {[unowned self] products in
                     
-                    //TODO: update products view models
-                    
-                    var items = [MainSectionProductsListItemViewModel]()
-                    
                     for productType in ProductType.allCases {
                         
-                        guard let productTypeItems = products[productType] else {
-                            continue
-                        }
-                        
-                        for product in productTypeItems {
+                        if let productTypeItems = products[productType] {
                             
-                            let itemViewModel = ProductView.ViewModel(with: product, statusAction: {}, action: { [weak self] in  self?.action.send(MainSectionProductsViewModelAction.ProductDidTapped(productId: product.id)) })
-                            items.append(itemViewModel)
-                        }
-                        
-                        /*
-                        
-                        if let currentProductTypeItems = self.productsViewModels.value[productType] {
+                            var productsViewModelsForType = [ProductView.ViewModel]()
+                            for product in productTypeItems {
+                                
+                                let productViewModel = ProductView.ViewModel(with: product, statusAction: {}, action: { [weak self] in  self?.action.send(MainSectionProductsViewModelAction.ProductDidTapped(productId: product.id)) })
+                                productsViewModelsForType.append(productViewModel)
+                            }
                             
-                            //TODO: update view models if exists or add new
-                            
+                            productsViewModels.value[productType] = productsViewModelsForType
                             
                         } else {
-          
-                            items.append(contentsOf: productTypeItems.map({ ProductView.ViewModel(with: $0, statusAction: {}, action: { [weak self] productId in  self?.action.send(MainSectionProductsViewModelAction.ProductDidTapped(productId: productId)) })}))
+                            
+                            productsViewModels.value[productType] = nil
                         }
-                         */
                     }
                     
-                    self.items = items
+                }.store(in: &bindings)
+            
+            productsViewModels
+                .receive(on: DispatchQueue.main)
+                .sink {[unowned self] productsViewModels in
+                    
+                    //TODO
                     
                 }.store(in: &bindings)
             
