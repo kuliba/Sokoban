@@ -110,6 +110,7 @@ enum RouterManager {
     case changeOutgoing
     case returnOutgoing
     case getPrintFormForCardStatment
+    case getPrintFormForDepositConditions
 }
 
 extension RouterManager {
@@ -1565,6 +1566,19 @@ extension RouterManager {
             request.httpMethod = RequestMethod.post.rawValue
             return request
             
+        case .getPrintFormForDepositConditions:
+            let baseUrl = RouterUrlList.getPrintFormForDepositConditions.returnUrl()
+            switch baseUrl {
+            case .success(let url):
+                resultUrl = url.absoluteURL
+            case .failure(let error):
+                resultUrl = nil
+                debugPrint(error)
+            }
+            guard resultUrl != nil else { return nil}
+            var request = URLRequest(url: resultUrl!)
+            request.httpMethod = RequestMethod.post.rawValue
+            return request
         }
     }
 }

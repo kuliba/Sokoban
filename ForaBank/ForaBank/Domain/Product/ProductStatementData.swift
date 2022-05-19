@@ -72,5 +72,6 @@ extension ProductStatementData {
         case transport = "TRANSPORT"
         case taxes = "TAX_AND_STATE_SERVICE"
         case c2b = "C2B_PAYMENT"
+        case iNSIDE_DEPOSIT = "INSIDE_DEPOSIT"
     }
 }

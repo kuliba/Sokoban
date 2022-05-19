@@ -699,6 +699,13 @@ final class OperationDetailInfoViewModel: Identifiable {
             }
             cells.append(BankCellViewModel(title: "Идентификатор операции", icon: Image("hash"), name: statement.fastPayment?.opkcid ?? ""))
             cells.append(IconCellViewModel(icon: Image("sbptext")))
+            
+        case .iNSIDE_DEPOSIT:
+            cells.append(BankCellViewModel(title: "Наименование операции", icon: statement.svgImage, name: statement.merchantName))
+            cells.append(PropertyCellViewModel(title: "Категория операции", iconType: .nil, value: statement.groupName))
+            cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: statement.amount.currencyFormatter(symbol: currency)))
+            cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)", iconType: .date, value: tranDateString))
+            
         default:
             //FIXME: implement taxes & c2b
             break
