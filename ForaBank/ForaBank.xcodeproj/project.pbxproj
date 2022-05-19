@@ -560,6 +560,7 @@
 		77178A6F27C1F07F0095CF8C /* PaymentsDataModel+Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77178A6E27C1F07F0095CF8C /* PaymentsDataModel+Service.swift */; };
 		77178A7127C1F32E0095CF8C /* PaymentsDataModel+Operator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77178A7027C1F32E0095CF8C /* PaymentsDataModel+Operator.swift */; };
 		7728A1792835004600EE4CA6 /* MainSectionProductsGroupViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7728A1782835004600EE4CA6 /* MainSectionProductsGroupViewComponent.swift */; };
+		7728A17D283632D600EE4CA6 /* MainProductsGroupSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7728A17C283632D600EE4CA6 /* MainProductsGroupSettings.swift */; };
 		773E49AA27D0C72900D8264E /* URLCache+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 773E49A927D0C72900D8264E /* URLCache+Extensions.swift */; };
 		7744940027FDE3B9001E2B9E /* PlacesFilterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774493FF27FDE3B9001E2B9E /* PlacesFilterViewModel.swift */; };
 		7744940227FDF9D7001E2B9E /* PlacesFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7744940127FDF9D7001E2B9E /* PlacesFilterView.swift */; };
@@ -1713,6 +1714,7 @@
 		77178A6E27C1F07F0095CF8C /* PaymentsDataModel+Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsDataModel+Service.swift"; sourceTree = "<group>"; };
 		77178A7027C1F32E0095CF8C /* PaymentsDataModel+Operator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsDataModel+Operator.swift"; sourceTree = "<group>"; };
 		7728A1782835004600EE4CA6 /* MainSectionProductsGroupViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSectionProductsGroupViewComponent.swift; sourceTree = "<group>"; };
+		7728A17C283632D600EE4CA6 /* MainProductsGroupSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainProductsGroupSettings.swift; sourceTree = "<group>"; };
 		773E49A927D0C72900D8264E /* URLCache+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLCache+Extensions.swift"; sourceTree = "<group>"; };
 		774493FF27FDE3B9001E2B9E /* PlacesFilterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesFilterViewModel.swift; sourceTree = "<group>"; };
 		7744940127FDF9D7001E2B9E /* PlacesFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesFilterView.swift; sourceTree = "<group>"; };
@@ -3982,6 +3984,7 @@
 			children = (
 				774A82C627BAE4BF00E5A5E9 /* SettingType.swift */,
 				77A411E627EB962100D36E46 /* MainSectionsSettings.swift */,
+				7728A17C283632D600EE4CA6 /* MainProductsGroupSettings.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -7045,6 +7048,7 @@
 				6820922E27A978D0003DCAFD /* ServerCommands+Dictionary.swift in Sources */,
 				7758401727B1BD6000251969 /* PaymentsDataModel+Operation.swift in Sources */,
 				EDA0DCD72739BAB00013F47E /* UIControl.swift in Sources */,
+				7728A17D283632D600EE4CA6 /* MainProductsGroupSettings.swift in Sources */,
 				F81EF91A27D2180E0096DC70 /* MainSectionPromoViewComponent.swift in Sources */,
 				77DC12612770F03D00C917B0 /* TransferData.swift in Sources */,
 				EDDFE3C12757D8F800F57C71 /* SelectDepositPeriodViewCell.swift in Sources */,

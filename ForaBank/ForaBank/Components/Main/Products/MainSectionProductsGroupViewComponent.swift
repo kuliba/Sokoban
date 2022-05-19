@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 extension MainSectionProductsGroupView {
     
@@ -20,17 +21,95 @@ extension MainSectionProductsGroupView {
         @Published var isCollapsed: Bool
         @Published var isSeparator: Bool
         
-        private var products: [ProductView.ViewModel]
+        private var products: CurrentValueSubject<[ProductView.ViewModel], Never> = .init([])
+        private let settings: MainProductsGroupSettings
+        private var bindings = Set<AnyCancellable>()
         
-        init(productType: ProductType, presented: [ProductView.ViewModel], newProductViewModel: ButtonNewProduct.ViewModel?, collapsaleProductsTitle: String?, isCollapsed: Bool, isSeparator: Bool, products: [ProductView.ViewModel]) {
+        init(productType: ProductType, presented: [ProductView.ViewModel], newProductViewModel: ButtonNewProduct.ViewModel?, collapsaleProductsTitle: String?, isCollapsed: Bool, isSeparator: Bool, settings: MainProductsGroupSettings = .base) {
             
             self.productType = productType
-            self.presented = products
+            self.presented = presented
             self.newProductViewModel = newProductViewModel
             self.collapsaleProductsTitle = collapsaleProductsTitle
             self.isCollapsed = isCollapsed
             self.isSeparator = isSeparator
-            self.products = products
+            self.products.value = presented
+            self.settings = settings
+        }
+        
+        init(productType: ProductType, products: [ProductView.ViewModel], settings: MainProductsGroupSettings = .base) {
+            
+            self.productType = productType
+            self.products.value = products
+            self.settings = settings
+            self.presented = []
+            self.newProductViewModel = nil
+            self.isCollapsed = true
+            self.isSeparator = true
+            
+            bind()
+        }
+        
+        func update(with products: [ProductView.ViewModel]) {
+            
+            self.products.value = products
+        }
+        
+        private func bind() {
+            
+           products
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] products in
+                    
+                    withAnimation {
+                        
+                        let result = reduce(products: products, isCollapsed: isCollapsed, settings: settings)
+                        presented = result.products
+                        collapsaleProductsTitle = result.collapsaleProductsTitle
+                        
+                        if productType == .card, presented.count <= settings.maxCardsAmountRequeredNewProduct {
+                            
+                            //TODO: real action required
+                            newProductViewModel = ButtonNewProduct.ViewModel(icon: .ic24NewCardColor, title: "Хочу карту", subTitle: "Бесплатно", action: {})
+                        }
+                    }
+
+                }.store(in: &bindings)
+            
+            $isCollapsed
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] isCollapsed in
+                    
+                    withAnimation {
+                        
+                        let result = reduce(products: products.value, isCollapsed: isCollapsed, settings: settings)
+                        presented = result.products
+                        collapsaleProductsTitle = result.collapsaleProductsTitle
+                    }
+
+                }.store(in: &bindings)
+        }
+        
+        func reduce(products: [ProductView.ViewModel], isCollapsed: Bool, settings: MainProductsGroupSettings) -> (products: [ProductView.ViewModel], collapsaleProductsTitle: String?) {
+            
+            if products.count <= settings.minVisibleProductsAmount {
+                
+                return (products, nil)
+                
+            } else {
+                
+                if isCollapsed == true {
+                    
+                    let visibleProducts = Array(products.prefix(settings.minVisibleProductsAmount))
+                    let remainProductsAmount = products.count - settings.minVisibleProductsAmount
+
+                    return (visibleProducts, "+\(remainProductsAmount)")
+                    
+                } else {
+     
+                    return (products, "")
+                }
+            }
         }
     }
 }
@@ -86,7 +165,7 @@ extension MainSectionProductsGroupView {
                 RoundedRectangle(cornerRadius: 12)
                     .foregroundColor(.mainColorsGrayLightest)
                 
-                if isCollapsed == false {
+                if isCollapsed == true {
                     
                     Text(title)
                         .font(.textBodyMM14200())
@@ -112,6 +191,15 @@ struct MainSectionProductsGroupView_Previews: PreviewProvider {
         
         Group {
             
+            MainSectionProductsGroupView(viewModel: .sampleProductsOne)
+                .previewLayout(.fixed(width: 375, height: 200))
+            
+            ScrollView(.horizontal) {
+                
+                MainSectionProductsGroupView(viewModel: .sampleProducts)
+            }
+                .previewLayout(.fixed(width: 400, height: 200))
+            
             MainSectionProductsGroupView(viewModel: .sampleWant)
                 .previewLayout(.fixed(width: 375, height: 200))
             
@@ -134,11 +222,15 @@ struct MainSectionProductsGroupView_Previews: PreviewProvider {
 
 extension MainSectionProductsGroupView.ViewModel {
     
-    static let sampleWant = MainSectionProductsGroupView.ViewModel(productType: .card, presented: [.classic], newProductViewModel: .sampleWantCard, collapsaleProductsTitle: nil, isCollapsed: false, isSeparator: false, products: [.classic])
+    static let sampleWant = MainSectionProductsGroupView.ViewModel(productType: .card, presented: [.classic], newProductViewModel: .sampleWantCard, collapsaleProductsTitle: nil, isCollapsed: false, isSeparator: false)
     
-    static let sampleGroup = MainSectionProductsGroupView.ViewModel(productType: .card, presented: [.classic], newProductViewModel: nil, collapsaleProductsTitle: "+5", isCollapsed: false, isSeparator: true, products: [.classic])
+    static let sampleGroup = MainSectionProductsGroupView.ViewModel(productType: .card, presented: [.classic], newProductViewModel: nil, collapsaleProductsTitle: "+5", isCollapsed: false, isSeparator: true)
     
-    static let sampleGroupCollapsed = MainSectionProductsGroupView.ViewModel(productType: .card, presented: [.classic], newProductViewModel: nil, collapsaleProductsTitle: "+5", isCollapsed: true, isSeparator: true, products: [.classic])
+    static let sampleGroupCollapsed = MainSectionProductsGroupView.ViewModel(productType: .card, presented: [.classic], newProductViewModel: nil, collapsaleProductsTitle: "+5", isCollapsed: true, isSeparator: true)
+    
+    static let sampleProducts = MainSectionProductsGroupView.ViewModel(productType: .card, products: [.classic, .account, .blocked])
+    
+    static let sampleProductsOne = MainSectionProductsGroupView.ViewModel(productType: .card, products: [.classic])
 }
 
 extension ButtonNewProduct.ViewModel {
