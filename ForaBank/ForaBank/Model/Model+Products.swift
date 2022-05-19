@@ -194,7 +194,7 @@ extension Model {
             
             for productType in ProductType.allCases {
                 
-                let command = ServerCommands.ProductController.GetProductListByType(token: token, serial: localAgent.serial(for: [ProductData].self), productType: productType)
+                let command = ServerCommands.ProductController.GetProductListByType(token: token, serial: nil, productType: productType)
                 
                 do {
                     

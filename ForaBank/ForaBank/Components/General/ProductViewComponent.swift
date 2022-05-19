@@ -40,14 +40,15 @@ extension ProductView {
             self.style = .main
         }
         
+        //FIXME: refactor this
         convenience init(with productData: ProductData, statusAction: @escaping () -> Void, action: @escaping () -> Void) {
             
-            let number = productData.viewNumber
+            let number = productData.displayNumber
             
-            let name = productData.viewName
+            let name = productData.displayName
             let textColor = productData.fontDesignColor.color
             let productType = productData.productType
-            let backgroundImage = productData.extraLargeDesign.image ?? .init("")
+            let backgroundImage = productData.extraLargeDesign.image 
             
             self.init(header: .init(logo: nil, number: number, period: nil), name: name, footer: .init(balance: "nil", paymentSystem: nil), statusAction: nil, appearance: .init(textColor: textColor, background: .init(color: .bGIconBlack, image: backgroundImage), size: .normal), isUpdating: false, productType: productType, action: action)
             
@@ -57,11 +58,22 @@ extension ProductView {
             self.init(header: .init(logo: nil, number: number, period: nil), name: name, footer: .init(balance: balance, paymentSystem: nil), statusAction: nil, appearance: .init(textColor: textColor, background: .init(color: backgroundColor, image: backgroundImage), size: .normal), isUpdating: false, productType: productType, action: action)
         }
         
-        //        convenience init(with productData: ProductData) {
-        //
-        //            //TODO: make switch with productData subclass
-        //        }
-        
+        convenience init?(with productData: ProductData, action: @escaping () -> Void) {
+            
+            guard let balance = productData.displayBalance else {
+                return nil
+            }
+            
+            let number = productData.displayNumber
+            let name = productData.displayName
+            let textColor = productData.fontDesignColor.color
+            let productType = productData.productType
+            let backgroundColor = productData.background.first?.color ?? .bGIconBlack
+            let backgroundImage = productData.largeDesign.image
+            
+            self.init(header: .init(logo: nil, number: number, period: nil), name: name, footer: .init(balance: balance, paymentSystem: nil), statusAction: nil, appearance: .init(textColor: textColor, background: .init(color: backgroundColor, image: backgroundImage), size: .normal), isUpdating: false, productType: productType, action: action)
+        }
+
         func update(with productData: ProductData) {
             
             if let customName = productData.customName {

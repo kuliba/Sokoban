@@ -62,7 +62,9 @@ extension MainSectionProductsView {
                             for product in productTypeItems {
                                 
                                 //TODO: update product view model if exists
-                                let productViewModel = ProductView.ViewModel(with: product, statusAction: {}, action: { [weak self] in  self?.action.send(MainSectionProductsViewModelAction.ProductDidTapped(productId: product.id)) })
+                                guard let productViewModel = ProductView.ViewModel(with: product, action: { [weak self] in  self?.action.send(MainSectionProductsViewModelAction.ProductDidTapped(productId: product.id)) }) else {
+                                    continue
+                                }
                                 productsViewModelsForType.append(productViewModel)
                             }
                             

@@ -40,13 +40,13 @@ extension ProductProfileCardView {
             let products = model.products.value.values.flatMap{ $0 }
             let productData = products.first(where: ({$0.id == productId}))
     
-            if let balance = productData?.viewBalance, let fontColor = productData?.fontDesignColor.color, let name = productData?.viewName, let backgroundColor = productData?.background.first?.color {
+            if let balance = productData?.displayBalance, let fontColor = productData?.fontDesignColor.color, let name = productData?.displayName, let backgroundColor = productData?.background.first?.color {
                 
-                self.product = .init(header: .init(logo: nil, number: productData?.viewNumber, period: nil), name: name, footer: .init(balance: balance, paymentSystem: nil), statusAction: .init(status: .activation, style: .profile, action: {}), appearance: .init(textColor: fontColor, background: .init(color: backgroundColor, image: nil), size: .normal), isUpdating: false, productType: .init(rawValue: productData?.productType.rawValue ?? "card") ?? .card, action: {})
+                self.product = .init(header: .init(logo: nil, number: productData?.displayNumber, period: nil), name: name, footer: .init(balance: balance, paymentSystem: nil), statusAction: .init(status: .activation, style: .profile, action: {}), appearance: .init(textColor: fontColor, background: .init(color: backgroundColor, image: nil), size: .normal), isUpdating: false, productType: .init(rawValue: productData?.productType.rawValue ?? "card") ?? .card, action: {})
                 
             } else {
                 
-                self.product = .init(header: .init(logo: nil, number: productData?.number, period: nil), name: productData?.mainField ?? "", footer: .init(balance: productData?.viewBalance ?? "", paymentSystem: nil), statusAction: nil, appearance: .init(textColor: productData?.fontDesignColor.color ?? .init(""), background: .init(color: productData?.background.first?.color ?? .init(""), image: productData?.extraLargeDesign.image!), size: .normal), isUpdating: true, productType: ProductType(rawValue: productData?.productType.rawValue ?? "CARD") ?? .card, action: {})
+                self.product = .init(header: .init(logo: nil, number: productData?.number, period: nil), name: productData?.mainField ?? "", footer: .init(balance: productData?.displayBalance ?? "", paymentSystem: nil), statusAction: nil, appearance: .init(textColor: productData?.fontDesignColor.color ?? .init(""), background: .init(color: productData?.background.first?.color ?? .init(""), image: productData?.extraLargeDesign.image!), size: .normal), isUpdating: true, productType: ProductType(rawValue: productData?.productType.rawValue ?? "CARD") ?? .card, action: {})
             }
             
             self.moreButton = false
