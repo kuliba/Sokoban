@@ -151,6 +151,7 @@
 		0BA4093228063F45001326CE /* SettingsPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA4093128063F45001326CE /* SettingsPhotoViewController.swift */; };
 		0BA409342806440E001326CE /* SettingPhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA409332806440E001326CE /* SettingPhotoCell.swift */; };
 		0BA4093628064484001326CE /* SettingPhotoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0BA4093528064484001326CE /* SettingPhotoCell.xib */; };
+		0BA9FE032833D6050027FAD1 /* GetPrintFormForDepositConditionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA9FE022833D6050027FAD1 /* GetPrintFormForDepositConditionsModel.swift */; };
 		0BAC319626CB264B006E03FD /* ExtensionGKHMainTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAC319526CB264B006E03FD /* ExtensionGKHMainTableView.swift */; };
 		0BAC674126D408DC005AAD91 /* CreateDirectTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAC674026D408DC005AAD91 /* CreateDirectTransferDecodableModel.swift */; };
 		0BAC674426D41C18005AAD91 /* ExtensionGKHSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAC674326D41C18005AAD91 /* ExtensionGKHSearch.swift */; };
@@ -1327,6 +1328,7 @@
 		0BA4093128063F45001326CE /* SettingsPhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPhotoViewController.swift; sourceTree = "<group>"; };
 		0BA409332806440E001326CE /* SettingPhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingPhotoCell.swift; sourceTree = "<group>"; };
 		0BA4093528064484001326CE /* SettingPhotoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingPhotoCell.xib; sourceTree = "<group>"; };
+		0BA9FE022833D6050027FAD1 /* GetPrintFormForDepositConditionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPrintFormForDepositConditionsModel.swift; sourceTree = "<group>"; };
 		0BAC319526CB264B006E03FD /* ExtensionGKHMainTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionGKHMainTableView.swift; sourceTree = "<group>"; };
 		0BAC674026D408DC005AAD91 /* CreateDirectTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateDirectTransferDecodableModel.swift; sourceTree = "<group>"; };
 		0BAC674326D41C18005AAD91 /* ExtensionGKHSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionGKHSearch.swift; sourceTree = "<group>"; };
@@ -5928,6 +5930,7 @@
 				0BB24AB626F0C6AC00DDA4F6 /* UnBlockCardDecodableModel.swift */,
 				0BA251F426C270A100AD087A /* UpdateFastPaymentContractDecodableModel.swift */,
 				0BBACF75281F13B5008E983D /* GetPrintFormForCardStatmentModel.swift */,
+				0BA9FE022833D6050027FAD1 /* GetPrintFormForDepositConditionsModel.swift */,
 			);
 			path = NetworkingModel;
 			sourceTree = "<group>";
@@ -7277,6 +7280,7 @@
 				0B51D87626D959BB00FC7B6B /* ExtensionGKHInputNav.swift in Sources */,
 				774A82C727BAE4BF00E5A5E9 /* SettingType.swift in Sources */,
 				ED0B48AC26812F450037EA06 /* LoginViewModel.swift in Sources */,
+				0BA9FE032833D6050027FAD1 /* GetPrintFormForDepositConditionsModel.swift in Sources */,
 				F81EF91727D212BE0096DC70 /* ButtonNewProductComponent.swift in Sources */,
 				0B22AEA326CDB38500B11E7F /* ExtensionGKHInput.swift in Sources */,
 				EDE212FD2743265C005D9821 /* DateChooseView.swift in Sources */,

@@ -34,8 +34,14 @@ class OperationDetailViewModel: ObservableObject {
     init?(productStatement: ProductStatementProxy, product: UserAllCardsModel) {
 
         let tranDateString = DateFormatter.operation.string(from: productStatement.tranDate)
-
+        self.featureButtons = []
         switch productStatement.paymentDetailType {
+            
+        case .iNSIDE_DEPOSIT:
+            self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: productStatement.merchantName, category: "\(productStatement.groupName)")
+            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
+            self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: productStatement.tranDate)
+            
         case .insideBank:
             self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: "Перевод на карту", category: productStatement.groupName)
             let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchantName)
@@ -164,11 +170,10 @@ class OperationDetailViewModel: ObservableObject {
             //FIXME: taxes
             self.header = HeaderViewModel(logo: productStatement.svgImage, status: nil, title: productStatement.merchantName, category: "\(productStatement.groupName)")
             let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: productStatement.currencyCode, operationType: productStatement.operationType, payService: nil)
-            self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: productStatement.tranDate)
+            self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: "У Вас не поддерживаемая версия приложения, поэтому произошла ошибка", date: productStatement.tranDate)
         }
 
         self.actionButtons = nil
-        self.featureButtons = []
         self.isLoading = true
 
         if let infoFeatureButtonViewModel = infoFeatureButtonViewModel(with: productStatement, product: product) {
@@ -236,7 +241,7 @@ class OperationDetailViewModel: ObservableObject {
                 var featureButtonsUpdated = [FeatureButtonViewModel]()
 
                 switch productStatement.paymentDetailType {
-                case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp, .transport, .c2b, .notFinance:
+                case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp, .transport, .c2b, .notFinance, .iNSIDE_DEPOSIT:
                     if let templateButtonViewModel = self.templateButtonViewModel(with: productStatement, operationDetail: operationDetail) {
                         featureButtonsUpdated.append(templateButtonViewModel)
                     }
@@ -260,7 +265,15 @@ class OperationDetailViewModel: ObservableObject {
                         actionButtonsUpdated = self.actionButtons(with: operationDetail, product: product)
                     }
                 default:
-                    break
+                    if let templateButtonViewModel = self.templateButtonViewModel(with: productStatement, operationDetail: operationDetail) {
+                        featureButtonsUpdated.append(templateButtonViewModel)
+                    }
+                    if let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
+                        featureButtonsUpdated.append(documentButtonViewModel)
+                    }
+                    if let infoButtonViewModel = self.infoFeatureButtonViewModel(with: productStatement, product: product, operationDetail: operationDetail) {
+                        featureButtonsUpdated.append(infoButtonViewModel)
+                    }
                 }
 
                 withAnimation(.easeInOut(duration: self.animationDuration)) {
@@ -323,7 +336,7 @@ private extension OperationDetailViewModel {
     func templateName(with productStatement: ProductStatementProxy, operationDetail: OperationDetailDatum) -> String? {
 
         switch productStatement.paymentDetailType {
-        case .betweenTheir, .insideBank, .housingAndCommunalService, .internet, .direct, .sfp, .contactAddressless, .transport:
+        case .betweenTheir, .insideBank, .housingAndCommunalService, .internet, .direct, .sfp, .contactAddressless, .transport, .iNSIDE_DEPOSIT:
             
             //TODO:  проверка на productStatement.merchantNameRus
             
@@ -538,7 +551,7 @@ extension OperationDetailViewModel {
                 if let feeViewModel = FeeViewModel(with: operation, currencyCode: productStatement.currencyCode)  {
                     operationViewModel = operationViewModel.updated(with: feeViewModel)
                 }
-            case .outsideOther, .insideOther, .betweenTheir, .insideBank, .notFinance, .outsideCash:
+            case .outsideOther, .insideOther, .betweenTheir, .insideBank, .notFinance, .outsideCash, .iNSIDE_DEPOSIT:
                 return operationViewModel
             default:
                 //FIXME: taxes & c2b

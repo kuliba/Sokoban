@@ -56,7 +56,7 @@ class HistoryTableViewCell: UITableViewCell {
     
     func configure(currency: String){
         
-        if operation != nil{
+        if operation != nil {
             switch operation?.type {
             case "OUTSIDE":
                 logoImageView.alpha = 0.3
@@ -359,8 +359,6 @@ class HistoryTableViewCell: UITableViewCell {
                     }
                     
                 case "INSIDE":
-                    //                    logoImageView.alpha = 0.3
-                    //                    subTitleLabel.text = depositOperation?.merchantNameRus
                     
                     if depositOperation?.groupName != nil{
                         subTitleLabel.text = depositOperation?.groupName
@@ -417,6 +415,7 @@ class HistoryTableViewCell: UITableViewCell {
                     } else {
                         amountLabel.isHidden = true
                     }
+                    
                 case .none:
                     titleLable.text = depositOperation?.comment
                     //                    guard let sum = depositOperation?.amount else {

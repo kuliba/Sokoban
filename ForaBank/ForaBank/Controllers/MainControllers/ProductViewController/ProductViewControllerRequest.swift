@@ -51,7 +51,6 @@ extension ProductViewController {
         NetworkManager<GetAccountStatementDecodableModel>.addRequest(.getAccountStatement, [:], body) { model, error in
             if error != nil {
                 self.emptySpending.isHidden = false
-                print("DEBUG: Error: ", error ?? "")
             }
             guard let model = model else { return }
             if model.statusCode == 0 {
@@ -128,10 +127,10 @@ extension ProductViewController {
         NetworkManager<GetCardStatementDecodableModel>.addRequest(.getCardStatement, [:], body) { model, error in
             if error != nil {
                 self.emptySpending.isHidden = false
-                print("DEBUG: Error: ", error ?? "")
+                
             }
             guard let model = model else { return }
-            print("DEBUG: LatestPayment: ", model)
+
             if model.statusCode == 0 {
                 DispatchQueue.main.async {
                     
@@ -198,7 +197,7 @@ extension ProductViewController {
                     }
                 }
             } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
+                
                 DispatchQueue.main.async {
                     self.emptySpending.isHidden = false
                 }
@@ -215,10 +214,8 @@ extension ProductViewController {
         NetworkManager<GetDepositStatementDecodableModel>.addRequest(.getDepositStatement, [:], body) { model, error in
             if error != nil {
                 self.emptySpending.isHidden = false
-                print("DEBUG: Error: ", error ?? "")
             }
             guard let model = model else { return }
-            print("DEBUG: LatestPayment: ", model)
             if model.statusCode == 0 {
                 DispatchQueue.main.async {
                     self.stopSkeleton()
@@ -247,9 +244,9 @@ extension ProductViewController {
                             _ = dateFormatter.string(from: date)
                         }
                     }
-                    
-                    
+                
                     self.groupByCategoryDeposit = Dictionary(grouping: self.historyArrayDeposit) { $0.tranDate ?? 0 }
+                    
                     var unsortedCodeKeys = Array(self.groupByCategoryAccount.keys)
                     let _: () = unsortedCodeKeys.sort(by: >)
                     
@@ -288,8 +285,6 @@ extension ProductViewController {
                 DispatchQueue.main.async {
                     self.emptySpending.isHidden = false
                 }
-                print("DEBUG: Error: ", model.errorMessage ?? "")
-                
             }
         }
     }

@@ -103,7 +103,6 @@ class AccountDetailsViewController: UIViewController {
                 }
                 
             } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
                 self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
 
             }
@@ -171,11 +170,13 @@ class AccountDetailsViewController: UIViewController {
                 }
                 
             } else {
-                print("DEBUG: Error: ", model.errorMessage ?? "")
                 self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
-
             }
         }
+    }
+    
+    func getPrintFormForDepositConditions() {
+        
     }
     
 }
@@ -302,8 +303,17 @@ extension AccountDetailsViewController: UITableViewDelegate {
                 let topvc = UIApplication.topViewController()
                 topvc?.present(navController, animated: true)
             }
-        case 2:
-            presentToDepositInfo(product: product)
+        case 5:
+            let pdfViewerVC = PDFViewerViewController()
+            pdfViewerVC.modalPresentationStyle = .fullScreen
+            pdfViewerVC.id = product?.id
+            pdfViewerVC.printFormType = "depositConditions"
+            let navController = UINavigationController(rootViewController: pdfViewerVC)
+            navController.modalPresentationStyle = .fullScreen
+            self.dismiss(animated: true) {
+                let topvc = UIApplication.topViewController()
+                topvc?.present(navController, animated: true)
+            }
         default:
             self.dismiss(animated: true, completion: nil)
         }
@@ -315,7 +325,7 @@ extension AccountDetailsViewController: UIViewControllerTransitioningDelegate {
     
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         let presenter = PresentationController(presentedViewController: presented, presenting: presenting)
-        presenter.height = 490
+        presenter.height = 460
         return presenter
     }
 }

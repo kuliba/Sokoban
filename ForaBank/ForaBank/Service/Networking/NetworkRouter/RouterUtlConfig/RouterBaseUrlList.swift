@@ -204,13 +204,14 @@ enum RouterBaseUrlList: String {
     
     case getPersonsCredit          = "/rest/getPersonsCredit"
     
+    case getPrintFormForDepositConditions = "/rest/getPrintFormForDepositConditions"
+    
     /// Добавить поле в модель с номером карты и результатом проверки ( название банка )
     case checkCard                 = "/rest/transfer/checkCard"
     /// Вопрос для обсуждения. Нужно ли кэшировать
     case getExchangeCurrencyRates  = "/rest/getExchangeCurrencyRates"
     
     case getPrintFormForCardStatment  = "/rest/getPrintFormForCardStatement"
-    
     
     // MARK: - Не используется
     

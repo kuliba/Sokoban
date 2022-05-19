@@ -99,7 +99,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             card.card = product
             setupNavigationColor()
             emptySpending.isHidden = true
-            card.reloadInputViews()
             loadHistoryForCard()
         }
     }
@@ -352,7 +351,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         setupButtons()
         setupNavigationColor()
         setupProduct()
-        loadHistoryForCard()
+//        loadHistoryForCard()
         bind()
     }
     
@@ -742,13 +741,13 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         stackView2.anchor(top: stackView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingRight: 20, height: 48)
     }
     
-    func loadProducts() {
-        
-        allProductList = realm?.objects(UserAllCardsModel.self)
-        AddAllUserCardtList.add() {}
-        
-        observerRealm()
-    }
+//    func loadProducts() {
+//
+//        allProductList = realm?.objects(UserAllCardsModel.self)
+//        AddAllUserCardtList.add() {}
+//
+//        observerRealm()
+//    }
     
     func addCloseColorButton(with color: UIColor) {
         let button = UIBarButtonItem(image: UIImage(systemName: "xmark"),
@@ -927,23 +926,23 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         }
     }
     
-    func observerRealm() {
-        self.token = self.allProductList?.observe { [weak self] ( changes: RealmCollectionChange) in
-            guard (self?.collectionView) != nil else {return}
-            switch changes {
-            case .initial:
-                self?.collectionView.reloadData()
-            case .update(_, let deletions, let insertions, let modifications):
-                self?.collectionView.performBatchUpdates({
-                    self?.collectionView.reloadItems(at: modifications.map { IndexPath(row: $0, section: 0) })
-                    self?.collectionView.insertItems(at: insertions.map { IndexPath(row: $0, section: 0) })
-                    self?.collectionView.deleteItems(at: deletions.map { IndexPath(row: $0, section: 0) })
-                })
-            case .error(let error):
-                fatalError("\(error)")
-            }
-        }
-    }
+//    func observerRealm() {
+//        self.token = self.allProductList?.observe { [weak self] ( changes: RealmCollectionChange) in
+//            guard (self?.collectionView) != nil else {return}
+//            switch changes {
+//            case .initial:
+//                self?.collectionView.reloadData()
+//            case .update(_, let deletions, let insertions, let modifications):
+//                self?.collectionView.performBatchUpdates({
+//                    self?.collectionView.reloadItems(at: modifications.map { IndexPath(row: $0, section: 0) })
+//                    self?.collectionView.insertItems(at: insertions.map { IndexPath(row: $0, section: 0) })
+//                    self?.collectionView.deleteItems(at: deletions.map { IndexPath(row: $0, section: 0) })
+//                })
+//            case .error(let error):
+//                fatalError("\(error)")
+//            }
+//        }
+//    }
     
     deinit {
         self.token?.invalidate()

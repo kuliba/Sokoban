@@ -66,6 +66,7 @@ extension ProductViewController: UITableViewDelegate, UITableViewDataSource, Ske
             cell.logoImageView.hideSkeleton()
             
             let bank = Dict.shared.currencyList?.first(where: {$0.codeNumeric == sortedDeposit[indexPath.section].value[indexPath.row].currencyCodeNumeric})
+            
             cell.depositOperation = sortedDeposit[indexPath.section].value[indexPath.row]
             
             if let currency = bank?.code {
@@ -107,10 +108,8 @@ extension ProductViewController: UITableViewDelegate, UITableViewDataSource, Ske
             cell.selectionStyle = .none
             return cell
         case .none:
-            print("none case")
             return UITableViewCell()
         case .some(_):
-            print("some case")
             return UITableViewCell()
             
         }
@@ -127,6 +126,7 @@ extension ProductViewController: UITableViewDelegate, UITableViewDataSource, Ske
         }
         
         let operationDetailVC = OperationDetailHostingViewController(with: operationDetailViewModel)
+        
         present(operationDetailVC, animated: true)
     }
     
@@ -192,7 +192,7 @@ extension ProductViewController: UITableViewDelegate, UITableViewDataSource, Ske
                 
             }
         case "DEPOSIT":
-            if self.sortedDeposit.count != 0{
+            if self.sortedDeposit.count != 0 {
                 guard let tranDate = self.sortedDeposit[section].value[0].tranDate  else {
                     return
                 }
