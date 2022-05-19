@@ -560,7 +560,6 @@
 		77178A6F27C1F07F0095CF8C /* PaymentsDataModel+Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77178A6E27C1F07F0095CF8C /* PaymentsDataModel+Service.swift */; };
 		77178A7127C1F32E0095CF8C /* PaymentsDataModel+Operator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77178A7027C1F32E0095CF8C /* PaymentsDataModel+Operator.swift */; };
 		7728A1792835004600EE4CA6 /* MainSectionProductsGroupViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7728A1782835004600EE4CA6 /* MainSectionProductsGroupViewComponent.swift */; };
-		7728A17B283512EE00EE4CA6 /* MainSectionProductsSeparatorViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7728A17A283512EE00EE4CA6 /* MainSectionProductsSeparatorViewComponent.swift */; };
 		773E49AA27D0C72900D8264E /* URLCache+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 773E49A927D0C72900D8264E /* URLCache+Extensions.swift */; };
 		7744940027FDE3B9001E2B9E /* PlacesFilterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774493FF27FDE3B9001E2B9E /* PlacesFilterViewModel.swift */; };
 		7744940227FDF9D7001E2B9E /* PlacesFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7744940127FDF9D7001E2B9E /* PlacesFilterView.swift */; };
@@ -661,7 +660,6 @@
 		7767049E27FDAF3D00996A07 /* CLLocationCoordinate2D+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7767049D27FDAF3D00996A07 /* CLLocationCoordinate2D+Extensions.swift */; };
 		77674A4027A02D86008101B5 /* CircleProgressViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77674A3F27A02D86008101B5 /* CircleProgressViewComponent.swift */; };
 		7769F5B727D26DD500F80607 /* CollapsableSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7769F5B627D26DD500F80607 /* CollapsableSectionView.swift */; };
-		7769F5B927D27CA200F80607 /* MainSectionProductsListItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7769F5B827D27CA200F80607 /* MainSectionProductsListItemViewModel.swift */; };
 		7769F5BC27D3A2EA00F80607 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7769F5BB27D3A2EA00F80607 /* MainView.swift */; };
 		7769F5BE27D7C9ED00F80607 /* ProductsListSample.json in Resources */ = {isa = PBXBuildFile; fileRef = 7769F5BD27D7C9ED00F80607 /* ProductsListSample.json */; };
 		7769F5C027D8A40700F80607 /* ProductsUpdateState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7769F5BF27D8A40700F80607 /* ProductsUpdateState.swift */; };
@@ -1715,7 +1713,6 @@
 		77178A6E27C1F07F0095CF8C /* PaymentsDataModel+Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsDataModel+Service.swift"; sourceTree = "<group>"; };
 		77178A7027C1F32E0095CF8C /* PaymentsDataModel+Operator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsDataModel+Operator.swift"; sourceTree = "<group>"; };
 		7728A1782835004600EE4CA6 /* MainSectionProductsGroupViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSectionProductsGroupViewComponent.swift; sourceTree = "<group>"; };
-		7728A17A283512EE00EE4CA6 /* MainSectionProductsSeparatorViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSectionProductsSeparatorViewComponent.swift; sourceTree = "<group>"; };
 		773E49A927D0C72900D8264E /* URLCache+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLCache+Extensions.swift"; sourceTree = "<group>"; };
 		774493FF27FDE3B9001E2B9E /* PlacesFilterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesFilterViewModel.swift; sourceTree = "<group>"; };
 		7744940127FDF9D7001E2B9E /* PlacesFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesFilterView.swift; sourceTree = "<group>"; };
@@ -1816,7 +1813,6 @@
 		7767049D27FDAF3D00996A07 /* CLLocationCoordinate2D+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationCoordinate2D+Extensions.swift"; sourceTree = "<group>"; };
 		77674A3F27A02D86008101B5 /* CircleProgressViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressViewComponent.swift; sourceTree = "<group>"; };
 		7769F5B627D26DD500F80607 /* CollapsableSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsableSectionView.swift; sourceTree = "<group>"; };
-		7769F5B827D27CA200F80607 /* MainSectionProductsListItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSectionProductsListItemViewModel.swift; sourceTree = "<group>"; };
 		7769F5BB27D3A2EA00F80607 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		7769F5BD27D7C9ED00F80607 /* ProductsListSample.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ProductsListSample.json; sourceTree = "<group>"; };
 		7769F5BF27D8A40700F80607 /* ProductsUpdateState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsUpdateState.swift; sourceTree = "<group>"; };
@@ -3799,7 +3795,6 @@
 			children = (
 				681142DC27C7D729008D3D67 /* MainSectionProductsViewComponent.swift */,
 				7728A1782835004600EE4CA6 /* MainSectionProductsGroupViewComponent.swift */,
-				7728A17A283512EE00EE4CA6 /* MainSectionProductsSeparatorViewComponent.swift */,
 			);
 			path = Products;
 			sourceTree = "<group>";
@@ -3955,7 +3950,6 @@
 			children = (
 				7772979227C77C190099EF91 /* MainViewModel.swift */,
 				7772979427C781420099EF91 /* MainViewSectionViewModel.swift */,
-				7769F5B827D27CA200F80607 /* MainSectionProductsListItemViewModel.swift */,
 				68E803E427D927FB00B75D41 /* ProductProfile */,
 				F82ED55427D7B9AA008485AB /* MyProducts */,
 				ED79D913280DC2A600CE15C6 /* UserAccount */,
@@ -7014,7 +7008,6 @@
 				68673B4F26F2F29300F67A8C /* RequisitesViewController.swift in Sources */,
 				A5F15C0B27495F7C00DC91DA /* GlobalModule.swift in Sources */,
 				0B7A18AF268346560007CC75 /* GetLatestPhonePaymentsDecodableModel.swift in Sources */,
-				7728A17B283512EE00EE4CA6 /* MainSectionProductsSeparatorViewComponent.swift in Sources */,
 				0B37F980267A11FB007728FC /* GetOwnerPhoneNumberPhoneDecodableModel.swift in Sources */,
 				0BF43D4627B2D3F3004DF248 /* PaymentsSelectServiceViewComponent.swift in Sources */,
 				ED07FA5E27DA063400734E37 /* PaymentsConfirmViewModel.swift in Sources */,
@@ -7232,7 +7225,6 @@
 				EDF68218266F9EC800FD5C07 /* RouterManager.swift in Sources */,
 				77F158292817FDE400CA5E4E /* Bundle+Extensions.swift in Sources */,
 				EDA0DCCE2739773A0013F47E /* MainCoordinator.swift in Sources */,
-				7769F5B927D27CA200F80607 /* MainSectionProductsListItemViewModel.swift in Sources */,
 				0BA14E14270DD0BF0098E422 /* BackgroundTimerController.swift in Sources */,
 				0B283FC32701016100B5E925 /* CreateMobileTransferDecodableModel.swift in Sources */,
 				77499C462773C0D100F6C079 /* ButtonStyles.swift in Sources */,

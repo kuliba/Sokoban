@@ -54,7 +54,7 @@ extension ProductProfileCardView {
             bind()
             
             action.send(ModelAction.Products.Update.Total.All())
-            action.send(ModelAction.Products.Update.Fast.Single.Request(productId: product.productId, productType: productType))
+            action.send(ModelAction.Products.Update.Fast.Single.Request(productId: product.id, productType: productType))
         }
         
         private func bind() {

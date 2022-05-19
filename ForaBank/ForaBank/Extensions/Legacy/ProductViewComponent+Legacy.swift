@@ -41,8 +41,7 @@ extension ProductView.ViewModel {
             }
         }
         
-        self.init(id: UUID().uuidString,
-                  productId: productId,
+        self.init(id: productId,
                   header: header,
                   name: name,
                   footer: footer,
