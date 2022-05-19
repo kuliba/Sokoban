@@ -56,11 +56,12 @@ extension MainSectionProductsView {
                     
                     for productType in ProductType.allCases {
                         
-                        if let productTypeItems = products[productType] {
+                        if let productTypeItems = products[productType], productTypeItems.count > 0 {
                             
                             var productsViewModelsForType = [ProductView.ViewModel]()
                             for product in productTypeItems {
                                 
+                                //TODO: update product view model if exists
                                 let productViewModel = ProductView.ViewModel(with: product, statusAction: {}, action: { [weak self] in  self?.action.send(MainSectionProductsViewModelAction.ProductDidTapped(productId: product.id)) })
                                 productsViewModelsForType.append(productViewModel)
                             }
@@ -77,9 +78,32 @@ extension MainSectionProductsView {
             
             products
                 .receive(on: DispatchQueue.main)
-                .sink {[unowned self] productsViewModels in
+                .sink {[unowned self] products in
                     
-                    //TODO: implementation required
+                    var groupsUpdated = [MainSectionProductsGroupView.ViewModel]()
+                    
+                    for productType in ProductType.allCases {
+                        
+                        guard let productsForType = products[productType] else {
+                            continue
+                        }
+                        
+                        if let groupForType = groups.first(where: { $0.productType == productType}) {
+                            
+                            groupForType.update(with: productsForType)
+                            groupForType.isSeparator = true
+                            groupsUpdated.append(groupForType)
+                            
+                        } else {
+                            
+                            let group = MainSectionProductsGroupView.ViewModel(productType: productType, products: productsForType)
+                            group.isSeparator = true
+                            groupsUpdated.append(group)
+                        }
+                    }
+                    
+                    groupsUpdated.last?.isSeparator = false
+                    groups = groupsUpdated
                     
                 }.store(in: &bindings)
         }
