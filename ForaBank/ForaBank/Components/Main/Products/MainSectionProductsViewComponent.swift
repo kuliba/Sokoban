@@ -107,16 +107,30 @@ extension MainSectionProductsView {
                     groupsUpdated.last?.isSeparator = false
                     groups = groupsUpdated
                     
+                    if groups.count > 1 {
+                        
+                        let options = groups.map{ Option(id: $0.id, name: $0.productType.pluralName)}
+                        let selector = OptionSelectorView.ViewModel(options: options, selected: options[0].id, style: .products)
+                        bind(typeSelector: selector)
+                        self.selector = selector
+                    }
+                    
                 }.store(in: &bindings)
         }
         
         private func bind(typeSelector: OptionSelectorView.ViewModel) {
             
-            typeSelector.$selected
+            typeSelector.action
                 .receive(on: DispatchQueue.main)
-                .sink {[unowned self] selectedId in
+                .sink {[unowned self] action in
                     
-                    //TODO: implementation required
+                    switch action {
+                    case let payload as OptionSelectorAction.OptionDidSelected:
+                        self.action.send(MainSectionProductsViewModelAction.ScrollToGroup(groupId: payload.optionId))
+                        
+                    default:
+                        break
+                    }
                     
                 }.store(in: &bindings)
         }
@@ -141,6 +155,11 @@ enum MainSectionProductsViewModelAction {
     struct ProductDidTapped: Action {
         
         let productId: ProductData.ID
+    }
+    
+    struct ScrollToGroup: Action {
+        
+        let groupId: MainSectionProductsGroupView.ViewModel.ID
     }
     
     struct MoreButtonTapped: Action {}
@@ -173,8 +192,21 @@ struct MainSectionProductsView: View {
                             ForEach(viewModel.groups) { groupViewModel in
                                 
                                 MainSectionProductsGroupView(viewModel: groupViewModel)
+                                    .scrollId(groupViewModel.id)
+                                    
                             }
                         }
+                        .onReceive(viewModel.action) { action in
+                            
+                            switch action {
+                            case let payload as MainSectionProductsViewModelAction.ScrollToGroup:
+                                proxy.scrollTo(payload.groupId, alignment: .leading, animated: true)
+                                
+                            default:
+                                break
+                            }
+                        }
+                       
                         
                         /*
                         

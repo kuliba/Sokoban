@@ -6,12 +6,15 @@
 //
 
 import SwiftUI
+import Combine
 
 //MARK: - View Model
 
 extension OptionSelectorView {
     
     class ViewModel: ObservableObject {
+        
+        let action: PassthroughSubject<Action, Never> = .init()
         
         @Published var options: [OptionViewModel]
         @Published var selected: Option.ID
@@ -23,7 +26,10 @@ extension OptionSelectorView {
             self.selected = selected
             self.style = style
             
-            self.options = options.map{ OptionViewModel(id: $0.id, title: $0.name, style: style, action: { [weak self] optionId in self?.selected = optionId })}
+            self.options = options.map{ OptionViewModel(id: $0.id, title: $0.name, style: style, action: { [weak self] optionId in
+                self?.selected = optionId
+                self?.action.send(OptionSelectorAction.OptionDidSelected(optionId: optionId))
+            })}
         }
         
         enum Style {
@@ -43,6 +49,15 @@ extension OptionSelectorView {
     }
 }
 
+//MARK: - Action
+
+enum OptionSelectorAction {
+    
+    struct OptionDidSelected: Action {
+        
+        let optionId: Option.ID
+    }
+}
 
 //MARK: - View
 
