@@ -334,7 +334,7 @@ struct ProductDetailView: View {
             
             NavigationLink(destination:
                             ConfirmView(viewModel: viewModel)
-                            .navigationBarTitle("Потвердите параметры вклада", displayMode: .inline)) {
+                            .navigationBarTitle("Подтвердите параметры вклада", displayMode: .inline)) {
                 
                 Text("Продолжить")
                     .fontWeight(.semibold)
@@ -864,7 +864,8 @@ extension ProductDetailView {
             vc.product = proxyDepositProductData(data: deposit)
             
             var termRateSumTermRateList: [TermRateSumTermRateList] = []
-            
+            var termRateSumTermRateListCap: [TermRateSumTermRateList] = []
+
             for i in viewModel.model.depositsProducts.value.first(where: { $0.depositProductID == viewModel.depositId })!.termRateList {
                 
                 if let termList = i.termRateSum
@@ -881,6 +882,26 @@ extension ProductDetailView {
             }
             
             vc.choosenRateList = termRateSumTermRateList
+
+            if let capitalization = viewModel.calculator.capitalization, capitalization.isOn, let capList = viewModel.model.depositsProducts.value.first(where: { $0.depositProductID == viewModel.depositId })!.termRateCapList {
+                
+                for i in capList {
+                    
+                    if let termList = i.termRateSum
+                        .compactMap({$0})
+                        .last(where: { point in
+                            point.sum <= viewModel.calculator.calculateAmount.value
+                        }) {
+                        
+                        for point in termList.termRateList {
+                            
+                            termRateSumTermRateListCap.append(.init(term: point.term, rate: point.rate, termName: point.termName, termABS: point.termABS, termKind: point.termKind, termType: point.termType))
+                        }
+                    }
+                }
+                vc.choosenRateListWithCap = termRateSumTermRateListCap
+                vc.withCapRate = true
+            }
             
             vc.depositModels = viewModel.calculator.depositModels
 

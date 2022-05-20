@@ -197,6 +197,8 @@ struct OfferProductView: View {
                             Text(line)
                                 .font(.textBodyMR14200())
                                 .foregroundColor(viewModel.design.textColor)
+                                .lineLimit(nil)
+                                .fixedSize(horizontal: false, vertical: true)
                         }
                     }
                 }

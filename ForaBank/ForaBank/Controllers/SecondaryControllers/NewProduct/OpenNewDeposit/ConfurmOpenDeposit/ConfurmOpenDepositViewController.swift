@@ -33,8 +33,10 @@
             }
         }
         var choosenRateList: [TermRateSumTermRateList]?
-        var depositModels: DepositCalculatorViewModel.DepositInterestRateModel?
+        var choosenRateListWithCap: [TermRateSumTermRateList]?
         
+        var depositModels: DepositCalculatorViewModel.DepositInterestRateModel?
+        var withCapRate: Bool = false
         var choosenRate: TermRateSumTermRateList? {
             didSet {
                 guard let choosenRate = choosenRate else { return }
@@ -319,12 +321,33 @@
         
         //MARK: - Calculator
         private func calculateSumm(with value: Double) {
-            chooseRate(from: value)
-            let interestRate = Double(choosenRate?.rate ?? 0)
-            let termDay = Double(choosenRate?.term ?? 0)
-            
-            let income = ( (value * interestRate * termDay) / 365 ) / 100
-            incomeField.text = moneyFormatter?.format("\(income)") ?? ""
+            if withCapRate {
+                
+                chooseRate(from: value)
+                var interestRate = Double(choosenRate?.rate ?? 0)
+                if let capList = choosenRateListWithCap {
+
+                    for i in capList {
+                        if i.term == choosenRate?.term, i.termName == choosenRate?.termName {
+                            interestRate = Double(i.rate ?? 0)
+                        }
+                    }
+                }
+
+                let termDay = Double(choosenRate?.term ?? 0)
+                
+                
+                let income = ( (value * interestRate * termDay) / 365 ) / 100
+                incomeField.text = moneyFormatter?.format("\(income)") ?? ""
+
+            } else {
+                chooseRate(from: value)
+                let interestRate = Double(choosenRate?.rate ?? 0)
+                let termDay = Double(choosenRate?.term ?? 0)
+                
+                let income = ( (value * interestRate * termDay) / 365 ) / 100
+                incomeField.text = moneyFormatter?.format("\(income)") ?? ""
+            }
         }
         
         private func chooseRate(from value: Double) {
