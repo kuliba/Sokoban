@@ -10,6 +10,8 @@ import SwiftUI
 import Combine
 import ScrollViewProxy
 
+//MARK: - ViewModel
+
 extension MainSectionProductsGroupView {
     
     class ViewModel: Identifiable, ObservableObject {
@@ -21,6 +23,7 @@ extension MainSectionProductsGroupView {
         @Published var collapsaleProductsTitle: String?
         @Published var isCollapsed: Bool
         @Published var isSeparator: Bool
+        let dimensions: Dimensions = .initial
         
         private var products: CurrentValueSubject<[ProductView.ViewModel], Never> = .init([])
         private let settings: MainProductsGroupSettings
@@ -54,6 +57,38 @@ extension MainSectionProductsGroupView {
         func update(with products: [ProductView.ViewModel]) {
             
             self.products.value = products
+        }
+        
+        var width: CGFloat {
+            
+            var result: CGFloat = 0
+            
+            // products width
+            result += CGFloat(presented.count) * dimensions.widths.product
+            result += CGFloat(max(presented.count - 1, 0)) * dimensions.spacing
+            
+            // new product width
+            if newProductViewModel != nil {
+                
+                result += dimensions.spacing
+                result += dimensions.widths.new
+            }
+            
+            // group button width
+            if collapsaleProductsTitle != nil {
+                
+                result += dimensions.spacing
+                result += dimensions.widths.button
+            }
+            
+            // separator width
+            if isSeparator == true {
+                
+                result += dimensions.spacing
+                result += dimensions.widths.separator
+            }
+            
+            return result
         }
         
         private func bind() {
@@ -115,36 +150,60 @@ extension MainSectionProductsGroupView {
     }
 }
 
+//MARK: - ViewModel Types
+
+extension MainSectionProductsGroupView.ViewModel {
+    
+    struct Dimensions {
+        
+        let spacing: CGFloat
+        let widths: Widths
+        
+        struct Widths {
+            
+            let product: CGFloat
+            let new: CGFloat
+            let button: CGFloat
+            let separator: CGFloat
+        }
+        
+        static let initial = Dimensions(spacing: 8, widths: .init(product: 164, new: 112, button: 48, separator: 1))
+    }
+}
+
+//MARK: - View
+
 struct MainSectionProductsGroupView: View {
     
     @ObservedObject var viewModel: ViewModel
     
     var body: some View {
         
-        HStack(spacing: 8) {
+        HStack(spacing: viewModel.dimensions.spacing) {
             
             ForEach(viewModel.presented) { productViewModel in
                 
                 ProductView(viewModel: productViewModel)
-                    .frame(width: 164)
+                    .frame(width: viewModel.dimensions.widths.product)
                     .scrollId(productViewModel.id)
             }
             
             if let newProductViewModel = viewModel.newProductViewModel {
                 
                 ButtonNewProduct(viewModel: newProductViewModel)
-                    .frame(width: 112)
+                    .frame(width: viewModel.dimensions.widths.new)
             }
             
             if let collapsaleProductsTitle = viewModel.collapsaleProductsTitle {
                 
                 GroupButtonView(title: collapsaleProductsTitle, isCollapsed: $viewModel.isCollapsed)
+                    .frame(width: viewModel.dimensions.widths.button)
             }
             
             if viewModel.isSeparator == true {
                 
                 Capsule(style: .continuous)
-                    .frame(width: 1)
+                    .frame(width: viewModel.dimensions.widths.separator)
                     .foregroundColor(.mainColorsGrayLightest)
                     .padding(.vertical, 20)
             }
@@ -179,7 +238,6 @@ extension MainSectionProductsGroupView {
                         .foregroundColor(.iconBlack)
                 }
             }
-            .frame(width: 48)
             .onTapGesture { isCollapsed.toggle() }
         }
     }

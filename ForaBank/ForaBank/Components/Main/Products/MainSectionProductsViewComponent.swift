@@ -142,7 +142,37 @@ extension MainSectionProductsView {
 
         func updateSelector(with offset: CGFloat) {
             
-            //TODO: implementation required
+            guard let selector = selector, let productType = productType(with: offset) else {
+                return
+            }
+            
+            if selector.selected != productType.rawValue {
+                
+                withAnimation {
+                    
+                    self.selector?.selected = productType.rawValue
+                }
+            }
+        }
+        
+        private func productType(with offset: CGFloat) -> ProductType? {
+            
+            guard groups.count > 0 else {
+                return nil
+            }
+            
+            var currentLength: CGFloat = 0
+            for group in groups {
+                
+                currentLength += group.width
+                guard currentLength >= offset else {
+                    continue
+                }
+                
+                return group.productType
+            }
+            
+            return groups.last?.productType
         }
         
         struct MoreButtonViewModel {
@@ -211,22 +241,10 @@ struct MainSectionProductsView: View {
                                 break
                             }
                         }
-                       
-                        
-                        /*
-                        
-                        ContentView(items: viewModel.items)
-                            .frame(height: 104)
-                            .onReceive(viewModel.$selectedTypeId) { selectedId in
-
-                                proxy.scrollTo(selectedId, alignment: .leading, animated: true)
-                                
-                            }
-                            .onReceive(proxy.offset) { offset in
-                                
-                                viewModel.updateSelector(with: offset.x)
-                            }
-                         */
+                        .onReceive(proxy.offset) { offset in
+                            
+                            viewModel.updateSelector(with: offset.x)
+                        }
                     }
                 }
             }
