@@ -27,7 +27,7 @@ class DepositInfoViewController: UIViewController {
     }()
     
     let titleLabel: UILabel = {
-        let label = UILabel(text: "Представленные параметры являются расчетными и носят справочный характер",
+        let label = UILabel(text: "Ваш потенциальный доход рассчитан с учетом капитализации процентов за весь срок действия вклада",
                             font: UIFont(name: "Inter-SemiBold", size: 16))
         label.numberOfLines = 0
         label.textAlignment = .center
