@@ -273,6 +273,9 @@
             
             incomeField.didChooseButtonTapped = {
                 let controller = DepositInfoViewController()
+                if !self.withCapRate {
+                    controller.titleLabel.text = "Представленные параметры являются расчетными и носят справочный характер"
+                }
                 let navController = UINavigationController(rootViewController: controller)
                 navController.modalPresentationStyle = .custom
                 navController.transitioningDelegate = self
