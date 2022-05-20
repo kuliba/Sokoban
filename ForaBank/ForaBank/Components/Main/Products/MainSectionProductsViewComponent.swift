@@ -126,7 +126,12 @@ extension MainSectionProductsView {
                     
                     switch action {
                     case let payload as OptionSelectorAction.OptionDidSelected:
-                        self.action.send(MainSectionProductsViewModelAction.ScrollToGroup(groupId: payload.optionId))
+                        guard let productType = ProductType(rawValue: payload.optionId),
+                              let group = groups.first(where: { $0.productType == productType}),
+                              let product = group.presented.first else {
+                            return
+                        }
+                        self.action.send(MainSectionProductsViewModelAction.ScrollToProduct(productId: product.id))
                         
                     default:
                         break
@@ -157,9 +162,9 @@ enum MainSectionProductsViewModelAction {
         let productId: ProductData.ID
     }
     
-    struct ScrollToGroup: Action {
+    struct ScrollToProduct: Action {
         
-        let groupId: MainSectionProductsGroupView.ViewModel.ID
+        let productId: ProductView.ViewModel.ID
     }
     
     struct MoreButtonTapped: Action {}
@@ -199,8 +204,8 @@ struct MainSectionProductsView: View {
                         .onReceive(viewModel.action) { action in
                             
                             switch action {
-                            case let payload as MainSectionProductsViewModelAction.ScrollToGroup:
-                                proxy.scrollTo(payload.groupId, alignment: .leading, animated: true)
+                            case let payload as MainSectionProductsViewModelAction.ScrollToProduct:
+                                proxy.scrollTo(payload.productId, alignment: .leading, animated: true)
                                 
                             default:
                                 break

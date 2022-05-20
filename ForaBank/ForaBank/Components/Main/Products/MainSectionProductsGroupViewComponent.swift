@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Combine
+import ScrollViewProxy
 
 extension MainSectionProductsGroupView {
     
@@ -126,6 +127,7 @@ struct MainSectionProductsGroupView: View {
                 
                 ProductView(viewModel: productViewModel)
                     .frame(width: 164)
+                    .scrollId(productViewModel.id)
             }
             
             if let newProductViewModel = viewModel.newProductViewModel {
