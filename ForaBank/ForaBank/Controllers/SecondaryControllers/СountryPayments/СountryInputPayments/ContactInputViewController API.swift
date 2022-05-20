@@ -59,6 +59,19 @@ extension ContactInputViewController {
                         ]
                     ] ] as [String: AnyObject]
         
+        if country?.code == "TR" {
+            
+            let phone = self.phoneField.textField.unmaskedText ?? ""
+            
+            let field = ["fieldid": 6,
+                         "fieldname": "bPhone",
+                         "fieldvalue": phone] as [String: AnyObject]
+            
+            var anyBody = body["additional"] as? [[String: AnyObject]]
+            anyBody?.append(field)
+            body["additional"] = anyBody as AnyObject
+        }
+        
         if card.productType == "CARD" {
             body["payer"] = ["cardId": card.cardID,
                              "cardNumber" : nil,
@@ -76,14 +89,14 @@ extension ContactInputViewController {
         
         NetworkManager<CreateContactAddresslessTransferDecodableModel>.addRequest(.createContactAddresslessTransfer, [:], body, completion: { respModel, error in
             if error != nil {
-                print("DEBUG: Error: ContaktPaymentBegin ", error ?? "")
                 completion(nil, error!)
             }
+            let phone = self.phoneField.textField.unmaskedText ?? ""
             guard let respModel = respModel else { return }
             if respModel.statusCode == 0 {
                 guard let country = self.country else { return }
                 guard let data = respModel.data else { return }
-                print(data)
+        
                 let model = ConfirmViewControllerModel(type: .contact)
                 model.country = country
                 model.cardFrom = self.cardFromField.cardModel
@@ -97,6 +110,7 @@ extension ContactInputViewController {
                 model.secondName = secondName
                 model.currancyTransction = "Наличные"
                 model.status = .succses
+                model.phone = phone
                 // TODO: add paymentSystem in model
                 model.paymentSystem = self.paymentSystem
                 model.template = self.paymentTemplate
