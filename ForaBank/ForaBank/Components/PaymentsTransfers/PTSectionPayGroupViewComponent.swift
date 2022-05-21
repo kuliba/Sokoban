@@ -6,7 +6,8 @@
 //
 
 import SwiftUI
-import Introspect
+import ScrollViewProxy
+import Combine
 
 //MARK: Section ViewModel
 
@@ -60,8 +61,11 @@ struct PTSectionPayGroupView: View {
     
     @ObservedObject
     var viewModel: SectionViewModel
-    @State private var rowsCount: Int = 3
     var heightBlock: CGFloat
+    
+    @State private var rowsCount: Int = UIScreen.main.bounds.height > 890 ? 4 : 3
+    @State private var scrollProxy: AmzdScrollViewProxy?
+    @State private var scrollOffsetX: CGFloat = 0
     
     var body: some View {
         Text(viewModel.title)
@@ -73,43 +77,72 @@ struct PTSectionPayGroupView: View {
             .padding(.leading, 20)
       
         HStack {
-            ScrollView(.horizontal, showsIndicators: false) {
+            ScrollView(.horizontal, showsIndicators: false) { proxy in
+                
                 HStack(spacing: 64) {
                 
-                    let PayButtonsCount = viewModel.payGroupButtons.count
-                    let columnsCount = (PayButtonsCount / rowsCount)
-                                     + (PayButtonsCount % rowsCount == 0 ? 0 : 1)
+                if #available(iOS 14.0, *) {
+
+                    let gridItems = Array(repeating: GridItem(.fixed(48), spacing: 8),
+                                          count: rowsCount)
+
+                    LazyHGrid(rows: gridItems, spacing: 64) {
+                        ForEach(viewModel.payGroupButtons.indices, id: \.self) { index in
+
+                            ButtonPayGroupView(viewModel: viewModel.payGroupButtons[index])
+                                .scrollId(index)
+                        }
+                    }
+
+                } else {
+                
+                    let payButtonsCount = viewModel.payGroupButtons.count
+                    let columnsCount = (payButtonsCount / rowsCount)
+                                     + (payButtonsCount % rowsCount == 0 ? 0 : 1)
                     
                     ForEach(0..<columnsCount, id: \.self) { column in
                         VStack {
                             ForEach(0..<rowsCount, id: \.self) { row in
-                              
-                                if PayButtonsCount > (rowsCount * column + row) {
-                                    ButtonPayGroupView(viewModel:
-                                        viewModel.payGroupButtons[rowsCount * column + row])
+                                
+                                let index = rowsCount * column + row
+                                if payButtonsCount > index {
+                                    ButtonPayGroupView(viewModel: viewModel.payGroupButtons[index])
+                                            .scrollId(index)
+                                    
                                 } else { Spacer() }
                             }
                         }
+                        .onAppear {
+                            let scrollHeight = heightBlock - viewModel.const.fixHeightBlok
+                            let calcRowsCount = Int(round(10 * scrollHeight) / (10 * viewModel.const.payRowHeight))
+                            
+                            if calcRowsCount > 3 {
+                                rowsCount = calcRowsCount
+                            } else {
+                                rowsCount = viewModel.const.payRowCountIfZeroHeight
+                            }
+                        }
                     }
+                } //iOS14
                     Spacer(minLength: 1)
                 }
+                .onReceive(proxy.offset) { scrollOffsetX = $0.x }
+                .onAppear { scrollProxy = proxy }
+
             }
             .frame(width: viewModel.const.pageScrollViewWidth)
             .introspectScrollView {
                 $0.isPagingEnabled = true
                 $0.clipsToBounds = false
             }
-            .onAppear {
-                let scrollHeight = heightBlock - viewModel.const.fixHeightBlok
-                let calcRowsCount = Int(round(10 * scrollHeight) / (10 * viewModel.const.payRowHeight))
-                
-                if calcRowsCount > 3 {
-                    rowsCount = calcRowsCount
-                } else {
-                    rowsCount = viewModel.const.payRowCountIfZeroHeight
+        
+            Color.clear
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    let itemIndex = (Int(scrollOffsetX / viewModel.const.pageScrollViewWidth) + 1) * rowsCount
+                    scrollProxy?.scrollTo(itemIndex, alignment: .leading, animated: true)
                 }
-            }
-            Spacer()
+            
         }.padding(.leading, 20)
     }
     
@@ -162,7 +195,7 @@ extension PTSectionPayGroupView.SectionViewModel {
                     paymentsBlockHeight
                   + transfersBlockHeight
                   + payBlockTitleHeight
-                  + 45 // 34)
+                  + 45 
         }
         
         let payRowHeight: CGFloat = (48 + 12)
@@ -179,7 +212,7 @@ struct PTSectionPayGroupView_Previews: PreviewProvider {
     static var previews: some View {
         
         PTSectionPayGroupView(viewModel: .init(), heightBlock: 100)
-            .previewLayout(.fixed(width: 370, height: 180))
+            .previewLayout(.fixed(width: 410, height: 280))
             .previewDisplayName("Section PayGroup")
     }
 }
