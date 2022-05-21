@@ -52,23 +52,36 @@ extension MainSectionProductsView {
             
             model.products
                 .receive(on: DispatchQueue.main)
-                .sink {[unowned self] products in
+                .sink {[unowned self] productsUpdate in
+                    
+                    // all existing products view models list
+                    let currentProductsViewModels = products.value.values.flatMap{ $0 }
                     
                     for productType in ProductType.allCases {
                         
-                        if let productTypeItems = products[productType], productTypeItems.count > 0 {
+                        if let productForType = productsUpdate[productType], productForType.count > 0 {
                             
-                            var productsViewModelsForType = [ProductView.ViewModel]()
-                            for product in productTypeItems {
+                            var productsViewModelsUpdated = [ProductView.ViewModel]()
+                            for product in productForType {
                                 
-                                //TODO: update product view model if exists
-                                guard let productViewModel = ProductView.ViewModel(with: product, action: { [weak self] in  self?.action.send(MainSectionProductsViewModelAction.ProductDidTapped(productId: product.id)) }) else {
-                                    continue
+                                // check if we alredy have view model for product data
+                                if let currentProductViewModel = currentProductsViewModels.first(where: { $0.id == product.id }) {
+                                    
+                                    // just update existing view model with product data
+                                    currentProductViewModel.update(with: product)
+                                    productsViewModelsUpdated.append(currentProductViewModel)
+                                    
+                                } else {
+                                    
+                                    // try to create new product view model
+                                    guard let productViewModel = ProductView.ViewModel(with: product, action: { [weak self] in  self?.action.send(MainSectionProductsViewModelAction.ProductDidTapped(productId: product.id)) }) else {
+                                        continue
+                                    }
+                                    productsViewModelsUpdated.append(productViewModel)
                                 }
-                                productsViewModelsForType.append(productViewModel)
                             }
                             
-                            self.products.value[productType] = productsViewModelsForType
+                            self.products.value[productType] = productsViewModelsUpdated
                             
                         } else {
                             
@@ -105,39 +118,96 @@ extension MainSectionProductsView {
                     }
                     
                     groupsUpdated.last?.isSeparator = false
-                    groups = groupsUpdated
                     
+                    withAnimation {
+                        
+                        groups = groupsUpdated
+                    }
+                    
+                    // create product type selector
                     if groups.count > 1 {
                         
                         let options = groups.map{ Option(id: $0.id, name: $0.productType.pluralName)}
-                        let selector = OptionSelectorView.ViewModel(options: options, selected: options[0].id, style: .products)
-                        bind(typeSelector: selector)
-                        self.selector = selector
+                        
+                        if let currentSelector = selector {
+                            
+                            let optionsIds = options.map{ $0.id }
+                            let selected = optionsIds.contains(currentSelector.selected) ? currentSelector.selected : options[0].id
+                            
+                            withAnimation {
+                                
+                                currentSelector.update(options: options, selected: selected)
+                            }
+                            
+                        } else {
+                            
+                            withAnimation {
+                                
+                                selector = OptionSelectorView.ViewModel(options: options, selected: options[0].id, style: .products)
+                            }
+  
+                            bind(selector)
+                        }
+                        
+                    } else {
+                        
+                        withAnimation {
+                            
+                            selector = nil
+                        }
                     }
                     
+                }.store(in: &bindings)
+            
+            //FIXME: breaks product type selector
+            model.productsUpdating
+                .receive(on: DispatchQueue.main)
+                .sink {[unowned self] productsUpdating in
+                    
+                    print("Updating: \(productsUpdating)")
+                    
+                    withAnimation {
+                        
+                        for productType in ProductType.allCases {
+                            
+                            guard let productsForType = self.products.value[productType] else {
+                                continue
+                            }
+                            
+                            for product in productsForType {
+                                
+                                product.isUpdating = productsUpdating.contains(productType) ? true : false
+                            }
+                        }
+                    }
+       
                 }.store(in: &bindings)
         }
         
-        private func bind(typeSelector: OptionSelectorView.ViewModel) {
+        private func bind(_ selector: OptionSelectorView.ViewModel?) {
             
-            typeSelector.action
-                .receive(on: DispatchQueue.main)
-                .sink {[unowned self] action in
-                    
-                    switch action {
-                    case let payload as OptionSelectorAction.OptionDidSelected:
-                        guard let productType = ProductType(rawValue: payload.optionId),
-                              let group = groups.first(where: { $0.productType == productType}),
-                              let product = group.presented.first else {
-                            return
-                        }
-                        self.action.send(MainSectionProductsViewModelAction.ScrollToProduct(productId: product.id))
+            if let selector = selector {
+                
+                selector.action
+                    .receive(on: DispatchQueue.main)
+                    .sink {[unowned self] action in
                         
-                    default:
-                        break
-                    }
-                    
-                }.store(in: &bindings)
+                        switch action {
+                        case let payload as OptionSelectorAction.OptionDidSelected:
+                            guard let productType = ProductType(rawValue: payload.optionId),
+                                  let group = groups.first(where: { $0.productType == productType}),
+                                  let product = group.presented.first else {
+                                return
+                            }
+                            
+                            self.action.send(MainSectionProductsViewModelAction.ScrollToProduct(productId: product.id))
+                            
+                        default:
+                            break
+                        }
+                        
+                    }.store(in: &bindings)
+            }
         }
 
         func updateSelector(with offset: CGFloat) {

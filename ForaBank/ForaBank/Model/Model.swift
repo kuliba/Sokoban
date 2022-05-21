@@ -18,7 +18,7 @@ class Model {
     
     //MARK: Products
     let products: CurrentValueSubject<ProductsData, Never>
-    let productsUpdateState: CurrentValueSubject<ProductsUpdateState, Never>
+    let productsUpdating: CurrentValueSubject<[ProductType], Never>
     var productsAllowed: Set<ProductType> { [.card, .account, .deposit, .loan] }
     
     //MARK: Statement
@@ -87,7 +87,7 @@ class Model {
         self.auth = .init(.registerRequired)
         self.products = .init([:])
         self.statement = .init(.init(productStatement: [:]))
-        self.productsUpdateState = .init(.idle)
+        self.productsUpdating = .init([])
         self.catalogProducts = .init([])
         self.catalogBanners = .init([])
         self.currencyList = .init([])

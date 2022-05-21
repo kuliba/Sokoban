@@ -65,16 +65,13 @@ class MainViewModel: ObservableObject {
                 
             }.store(in: &bindings)
         
-        model.productsUpdateState
+        model.productsUpdating
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] updateState in
+            .sink { [unowned self] productsUpdating in
                 
-                switch updateState {
-                case .idle:
-                    isRefreshing = false
+                withAnimation {
                     
-                case .updating:
-                    isRefreshing = true
+                    self.isRefreshing = productsUpdating.isEmpty ? false : true
                 }
                 
             }.store(in: &bindings)

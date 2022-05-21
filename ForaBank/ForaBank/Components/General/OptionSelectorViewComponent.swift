@@ -32,6 +32,15 @@ extension OptionSelectorView {
             })}
         }
         
+        func update(options: [Option], selected: Option.ID) {
+            
+            self.options = options.map{ OptionViewModel(id: $0.id, title: $0.name, style: style, action: { [weak self] optionId in
+                self?.selected = optionId
+                self?.action.send(OptionSelectorAction.OptionDidSelected(optionId: optionId))
+            })}
+            self.selected = selected
+        }
+        
         enum Style {
             
             case template

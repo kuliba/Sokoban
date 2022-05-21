@@ -179,7 +179,7 @@ extension Model {
     
     func handleProductsUpdateTotalAll() {
         
-        guard self.productsUpdateState.value == .idle else {
+        guard self.productsUpdating.value.isEmpty == true else {
             return
         }
         
@@ -190,9 +190,9 @@ extension Model {
         
         Task {
             
-            self.productsUpdateState.value = .updating
+            self.productsUpdating.value = Array(productsAllowed)
             
-            for productType in ProductType.allCases {
+            for productType in productsAllowed {
                 
                 let command = ServerCommands.ProductController.GetProductListByType(token: token, serial: nil, productType: productType)
                 
@@ -200,6 +200,14 @@ extension Model {
                     
                     let productsForType = try await productsFetchWithCommand(command: command)
                     self.products.value = reduce(products: self.products.value, with: productsForType, allowed: self.productsAllowed)
+                    
+                    // updating status
+                    if let index = self.productsUpdating.value.firstIndex(of: productType) {
+                        
+                        self.productsUpdating.value.remove(at: index)
+                    }
+                    
+                    // cache products
                     try self.localAgent.store(self.products.value, serial: nil)
                     
                 } catch {
@@ -207,8 +215,6 @@ extension Model {
                     self.handleServerCommandError(error: error, command: command)
                 }
             }
-            
-            self.productsUpdateState.value = .idle
         }
     }
     
