@@ -67,6 +67,11 @@ struct PTSectionPayGroupView: View {
     @State private var scrollProxy: AmzdScrollViewProxy?
     @State private var scrollOffsetX: CGFloat = 0
     
+    private func scrollToRight() {
+        let itemIndex = (Int(scrollOffsetX / viewModel.const.pageScrollViewWidth) + 1) * rowsCount
+        scrollProxy?.scrollTo(itemIndex, alignment: .leading, animated: true)
+    }
+    
     var body: some View {
         Text(viewModel.title)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -138,10 +143,8 @@ struct PTSectionPayGroupView: View {
         
             Color.clear
                 .contentShape(Rectangle())
-                .onTapGesture {
-                    let itemIndex = (Int(scrollOffsetX / viewModel.const.pageScrollViewWidth) + 1) * rowsCount
-                    scrollProxy?.scrollTo(itemIndex, alignment: .leading, animated: true)
-                }
+                .gesture(DragGesture().onEnded { _ in scrollToRight() })
+                .onTapGesture { scrollToRight() }
             
         }.padding(.leading, 20)
     }
