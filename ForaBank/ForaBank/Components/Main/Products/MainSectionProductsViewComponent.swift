@@ -159,26 +159,23 @@ extension MainSectionProductsView {
                     
                 }.store(in: &bindings)
             
-            //FIXME: breaks product type selector
             model.productsUpdating
                 .receive(on: DispatchQueue.main)
                 .sink {[unowned self] productsUpdating in
-                    
-                    print("Updating: \(productsUpdating)")
-                    
-                    withAnimation {
+                     
+                    for productType in ProductType.allCases {
                         
-                        for productType in ProductType.allCases {
-                            
-                            guard let productsForType = self.products.value[productType] else {
-                                continue
-                            }
-                            
-                            for product in productsForType {
-                                
-                                product.isUpdating = productsUpdating.contains(productType) ? true : false
-                            }
+                        guard let group = groups.first(where: { $0.productType == productType}) else {
+                            continue
                         }
+                        
+                        let isUpdating = productsUpdating.contains(productType) ? true : false
+                        
+                        guard group.isUpdating != isUpdating else {
+                            continue
+                        }
+                        
+                        group.isUpdating = isUpdating
                     }
        
                 }.store(in: &bindings)
@@ -195,12 +192,11 @@ extension MainSectionProductsView {
                         switch action {
                         case let payload as OptionSelectorAction.OptionDidSelected:
                             guard let productType = ProductType(rawValue: payload.optionId),
-                                  let group = groups.first(where: { $0.productType == productType}),
-                                  let product = group.presented.first else {
+                                  let group = groups.first(where: { $0.productType == productType}) else {
                                 return
                             }
                             
-                            self.action.send(MainSectionProductsViewModelAction.ScrollToProduct(productId: product.id))
+                            self.action.send(MainSectionProductsViewModelAction.ScrollToGroup(groupId: group.id))
                             
                         default:
                             break
@@ -262,6 +258,11 @@ enum MainSectionProductsViewModelAction {
         let productId: ProductData.ID
     }
     
+    struct ScrollToGroup: Action {
+        
+        let groupId: MainSectionProductsGroupView.ViewModel.ID
+    }
+    
     struct ScrollToProduct: Action {
         
         let productId: ProductView.ViewModel.ID
@@ -304,9 +305,12 @@ struct MainSectionProductsView: View {
                         .onReceive(viewModel.action) { action in
                             
                             switch action {
+                            case let payload as MainSectionProductsViewModelAction.ScrollToGroup:
+                                proxy.scrollTo(payload.groupId, alignment: .leading, animated: true)
+                                
                             case let payload as MainSectionProductsViewModelAction.ScrollToProduct:
                                 proxy.scrollTo(payload.productId, alignment: .leading, animated: true)
-                                
+
                             default:
                                 break
                             }

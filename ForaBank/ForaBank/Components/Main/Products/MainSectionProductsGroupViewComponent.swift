@@ -18,26 +18,28 @@ extension MainSectionProductsGroupView {
         
         var id: String { productType.rawValue }
         let productType: ProductType
-        @Published var presented: [ProductView.ViewModel]
+        @Published var visible: [ProductView.ViewModel]
         @Published var newProductViewModel: ButtonNewProduct.ViewModel?
         @Published var collapsaleProductsTitle: String?
         @Published var isCollapsed: Bool
         @Published var isSeparator: Bool
+        @Published var isUpdating: Bool
         let dimensions: Dimensions = .initial
         
         private var products: CurrentValueSubject<[ProductView.ViewModel], Never> = .init([])
         private let settings: MainProductsGroupSettings
         private var bindings = Set<AnyCancellable>()
         
-        init(productType: ProductType, presented: [ProductView.ViewModel], newProductViewModel: ButtonNewProduct.ViewModel?, collapsaleProductsTitle: String?, isCollapsed: Bool, isSeparator: Bool, settings: MainProductsGroupSettings = .base) {
+        init(productType: ProductType, visible: [ProductView.ViewModel], newProductViewModel: ButtonNewProduct.ViewModel?, collapsaleProductsTitle: String?, isCollapsed: Bool, isSeparator: Bool, isUpdating: Bool, settings: MainProductsGroupSettings = .base) {
             
             self.productType = productType
-            self.presented = presented
+            self.visible = visible
             self.newProductViewModel = newProductViewModel
             self.collapsaleProductsTitle = collapsaleProductsTitle
             self.isCollapsed = isCollapsed
             self.isSeparator = isSeparator
-            self.products.value = presented
+            self.isUpdating = isUpdating
+            self.products.value = visible
             self.settings = settings
         }
         
@@ -46,10 +48,11 @@ extension MainSectionProductsGroupView {
             self.productType = productType
             self.products.value = products
             self.settings = settings
-            self.presented = []
+            self.visible = []
             self.newProductViewModel = nil
             self.isCollapsed = true
             self.isSeparator = true
+            self.isUpdating = false
             
             bind()
         }
@@ -64,8 +67,8 @@ extension MainSectionProductsGroupView {
             var result: CGFloat = 0
             
             // products width
-            result += CGFloat(presented.count) * dimensions.widths.product
-            result += CGFloat(max(presented.count - 1, 0)) * dimensions.spacing
+            result += CGFloat(visible.count) * dimensions.widths.product
+            result += CGFloat(max(visible.count - 1, 0)) * dimensions.spacing
             
             // new product width
             if newProductViewModel != nil {
@@ -100,10 +103,10 @@ extension MainSectionProductsGroupView {
                     withAnimation {
                         
                         let result = reduce(products: products, isCollapsed: isCollapsed, settings: settings)
-                        presented = result.products
+                        visible = reduce(products: result.products, isUpdating: isUpdating)
                         collapsaleProductsTitle = result.collapsaleProductsTitle
                         
-                        if productType == .card, presented.count <= settings.maxCardsAmountRequeredNewProduct {
+                        if productType == .card, visible.count <= settings.maxCardsAmountRequeredNewProduct {
                             
                             //TODO: real action required
                             newProductViewModel = ButtonNewProduct.ViewModel(icon: .ic24NewCardColor, title: "Хочу карту", subTitle: "Бесплатно", action: {})
@@ -119,8 +122,19 @@ extension MainSectionProductsGroupView {
                     withAnimation {
                         
                         let result = reduce(products: products.value, isCollapsed: isCollapsed, settings: settings)
-                        presented = result.products
+                        visible = reduce(products: result.products, isUpdating: isUpdating)
                         collapsaleProductsTitle = result.collapsaleProductsTitle
+                    }
+
+                }.store(in: &bindings)
+            
+            $isUpdating
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] isUpdating in
+                                        
+                    withAnimation {
+
+                        visible = reduce(products: visible, isUpdating: isUpdating)
                     }
 
                 }.store(in: &bindings)
@@ -146,6 +160,16 @@ extension MainSectionProductsGroupView {
                     return (products, "")
                 }
             }
+        }
+        
+        func reduce(products: [ProductView.ViewModel], isUpdating: Bool) -> [ProductView.ViewModel] {
+            
+            for product in products {
+                
+                product.isUpdating = isUpdating
+            }
+            
+            return products
         }
     }
 }
@@ -181,7 +205,9 @@ struct MainSectionProductsGroupView: View {
         
         HStack(spacing: viewModel.dimensions.spacing) {
             
-            ForEach(viewModel.presented) { productViewModel in
+            ForEach(viewModel.visible) { productViewModel in
+                
+                let _ = print("Product type: \(viewModel.productType), isIpdating: \(viewModel.isUpdating ? "true" : "false"), id: \(productViewModel.id)")
                 
                 ProductView(viewModel: productViewModel)
                     .frame(width: viewModel.dimensions.widths.product)
@@ -282,11 +308,11 @@ struct MainSectionProductsGroupView_Previews: PreviewProvider {
 
 extension MainSectionProductsGroupView.ViewModel {
     
-    static let sampleWant = MainSectionProductsGroupView.ViewModel(productType: .card, presented: [.classic], newProductViewModel: .sampleWantCard, collapsaleProductsTitle: nil, isCollapsed: false, isSeparator: false)
+    static let sampleWant = MainSectionProductsGroupView.ViewModel(productType: .card, visible: [.classic], newProductViewModel: .sampleWantCard, collapsaleProductsTitle: nil, isCollapsed: false, isSeparator: false, isUpdating: false)
     
-    static let sampleGroup = MainSectionProductsGroupView.ViewModel(productType: .card, presented: [.classic], newProductViewModel: nil, collapsaleProductsTitle: "+5", isCollapsed: false, isSeparator: true)
+    static let sampleGroup = MainSectionProductsGroupView.ViewModel(productType: .card, visible: [.classic], newProductViewModel: nil, collapsaleProductsTitle: "+5", isCollapsed: false, isSeparator: true, isUpdating: false)
     
-    static let sampleGroupCollapsed = MainSectionProductsGroupView.ViewModel(productType: .card, presented: [.classic], newProductViewModel: nil, collapsaleProductsTitle: "+5", isCollapsed: true, isSeparator: true)
+    static let sampleGroupCollapsed = MainSectionProductsGroupView.ViewModel(productType: .card, visible: [.classic], newProductViewModel: nil, collapsaleProductsTitle: "+5", isCollapsed: true, isSeparator: true, isUpdating: false)
     
     static let sampleProducts = MainSectionProductsGroupView.ViewModel(productType: .card, products: [.classic, .account, .blocked])
     

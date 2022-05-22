@@ -3755,15 +3755,15 @@
 		7709C77B2833E56800C1A8B6 /* General */ = {
 			isa = PBXGroup;
 			children = (
+				68CB3B1727C39D03000B3EBF /* ProductViewComponent.swift */,
+				EDE70927279AC4BA0048CA94 /* OptionSelectorViewComponent.swift */,
 				0B01073727CD4D4B006462E6 /* ButtonSimpleViewComponent.swift */,
 				F87F9B1F27C3B1B2007E3D94 /* ButtonIconTextViewComponent.swift */,
 				F81EF91627D212BE0096DC70 /* ButtonNewProductComponent.swift */,
-				EDE70927279AC4BA0048CA94 /* OptionSelectorViewComponent.swift */,
 				ED7866B1279EF2FB006B4F5A /* ContextMenuViewComponent.swift */,
 				77674A3F27A02D86008101B5 /* CircleProgressViewComponent.swift */,
 				7772978D27C4ABCE0099EF91 /* AlertViewComponent.swift */,
 				777297A427CD389E0099EF91 /* SpinnerViewComponent.swift */,
-				68CB3B1727C39D03000B3EBF /* ProductViewComponent.swift */,
 				6806FAAB27E9424D00EA005A /* CircleSegmentedBarView.swift */,
 				681142E127C90B35008D3D67 /* SliderButtonViewComponent.swift */,
 				68EB187927CEE85700745558 /* SegmentedBarViewComponent.swift */,
