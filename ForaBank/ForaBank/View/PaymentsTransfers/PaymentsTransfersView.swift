@@ -26,13 +26,13 @@ struct PaymentsTransfersView: View {
                         ForEach(viewModel.sections) { section in
                             
                             switch section {
-                            case let latestPaymentsSectionVM as PTSectionLatestPaymentsView.SectionViewModel:
+                            case let latestPaymentsSectionVM as PTSectionLatestPaymentsView.ViewModel:
                                 PTSectionLatestPaymentsView(viewModel: latestPaymentsSectionVM)
                                 
-                            case let transfersSectionVM as PTSectionTransfersView.SectionViewModel:
+                            case let transfersSectionVM as PTSectionTransfersView.ViewModel:
                                 PTSectionTransfersView(viewModel: transfersSectionVM)
                                 
-                            case let payGroupSectionVM as PTSectionPayGroupView.SectionViewModel:
+                            case let payGroupSectionVM as PTSectionPayGroupView.ViewModel:
                                 PTSectionPayGroupView(viewModel: payGroupSectionVM,
                                                       heightBlock: grProxy.size.height)
                             default:

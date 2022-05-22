@@ -15,9 +15,9 @@ class PaymentsTransfersViewModel: ObservableObject {
     
     init(model: Model) {
         self.sections = [
-            PTSectionLatestPaymentsView.SectionViewModel(model: model),
-            PTSectionTransfersView.SectionViewModel(),
-            PTSectionPayGroupView.SectionViewModel()
+            PTSectionLatestPaymentsView.ViewModel(model: model),
+            PTSectionTransfersView.ViewModel(),
+            PTSectionPayGroupView.ViewModel()
         ]
         self.model = model
    }

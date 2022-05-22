@@ -12,7 +12,7 @@ import Combine
 
 extension PTSectionLatestPaymentsView {
     
-    class SectionViewModel: PaymentsTransfersSectionViewModel {
+    class ViewModel: PaymentsTransfersSectionViewModel {
      
         @Published
         var latestPaymentsButtons: [LatestPaymentButtonVM]
@@ -91,7 +91,7 @@ extension PTSectionLatestPaymentsView {
 struct PTSectionLatestPaymentsView: View {
     
     @ObservedObject
-    var viewModel: SectionViewModel
+    var viewModel: ViewModel
     
     var body: some View {
         Text(viewModel.title)
@@ -120,7 +120,7 @@ struct PTSectionLatestPaymentsView: View {
 extension PTSectionLatestPaymentsView {
     
     struct LatestPaymentButtonView: View {
-        let viewModel: SectionViewModel.LatestPaymentButtonVM
+        let viewModel: ViewModel.LatestPaymentButtonVM
         
         var body: some View {
             Button(action: {}, label: {

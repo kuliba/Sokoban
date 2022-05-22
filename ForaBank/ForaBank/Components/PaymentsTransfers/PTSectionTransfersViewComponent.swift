@@ -11,7 +11,7 @@ import SwiftUI
 
 extension PTSectionTransfersView {
     
-    class SectionViewModel: PaymentsTransfersSectionViewModel {
+    class ViewModel: PaymentsTransfersSectionViewModel {
      
         @Published
         var transfersButtons: [TransfersButtonVM]
@@ -19,11 +19,30 @@ extension PTSectionTransfersView {
         override var type: PaymentsTransfersSectionType { .transfers }
         
         struct TransfersButtonVM: Identifiable {
-            var id: String { title }
+            var id: String { type.rawValue }
             
-            let title: String
-            let image: String
+            let type: TransfersButtonType
+            var title: String { type.apearance.title }
+            var image: String { type.apearance.image }
             let action: () -> Void
+        }
+        
+        enum TransfersButtonType: String {
+            case byPhoneNumber
+            case betweenSelf
+            case abroad
+            case anotherCard
+            case byBankDetails
+            
+            var apearance: (title: String, image: String)  {
+                switch self {
+                case .byPhoneNumber: return ("По номеру\nтелефона", "ic48Telephone")
+                case .betweenSelf: return ("Между\nсвоими", "ic48BetweenTheir")
+                case .abroad: return ("За рубеж\nи по РФ", "ic48Abroad")
+                case .anotherCard: return ("На другую\nкарту", "ic48AnotherCard")
+                case .byBankDetails: return ("По\nреквизитaм", "ic48BankDetails")
+                }
+            }
         }
         
         override init() {
@@ -38,11 +57,11 @@ extension PTSectionTransfersView {
         
         static let transfersButtonsData: [TransfersButtonVM] = {
             [
-            .init(title: "По номеру\nтелефона", image: "ic48Telephone", action: {}),
-            .init(title: "Между\nсвоими", image: "ic48BetweenTheir", action: {}),
-            .init(title: "За рубеж\nи по РФ", image: "ic48Abroad", action: {}),
-            .init(title: "На другую\nкарту ", image: "ic48AnotherCard", action: {}),
-            .init(title: "По\nреквизитaм", image: "ic48BankDetails", action: {})
+            .init(type: .byPhoneNumber, action: {}),
+            .init(type: .betweenSelf, action: {}),
+            .init(type: .abroad, action: {}),
+            .init(type: .anotherCard, action: {}),
+            .init(type: .byBankDetails, action: {})
             ]
         }()
     }
@@ -53,7 +72,7 @@ extension PTSectionTransfersView {
 struct PTSectionTransfersView: View {
     
     @ObservedObject
-    var viewModel: SectionViewModel
+    var viewModel: ViewModel
     
     var body: some View {
         Text(viewModel.title) 
@@ -82,7 +101,7 @@ struct PTSectionTransfersView: View {
 extension PTSectionTransfersView {
     
     struct TransfersButtonView: View {
-        let viewModel: SectionViewModel.TransfersButtonVM
+        let viewModel: ViewModel.TransfersButtonVM
         
         var body: some View {
             ZStack(alignment: .bottom){

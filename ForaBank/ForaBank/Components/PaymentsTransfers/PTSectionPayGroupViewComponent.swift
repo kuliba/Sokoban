@@ -13,7 +13,7 @@ import Combine
 
 extension PTSectionPayGroupView {
     
-    class SectionViewModel: PaymentsTransfersSectionViewModel {
+    class ViewModel: PaymentsTransfersSectionViewModel {
      
         @Published
         var payGroupButtons: [PayGroupButtonVM]
@@ -60,7 +60,7 @@ extension PTSectionPayGroupView {
 struct PTSectionPayGroupView: View {
     
     @ObservedObject
-    var viewModel: SectionViewModel
+    var viewModel: ViewModel
     var heightBlock: CGFloat
     
     @State private var rowsCount: Int = UIScreen.main.bounds.height > 890 ? 4 : 3
@@ -156,7 +156,7 @@ struct PTSectionPayGroupView: View {
 extension PTSectionPayGroupView {
     
     struct ButtonPayGroupView: View {
-        let viewModel: SectionViewModel.PayGroupButtonVM
+        let viewModel: ViewModel.PayGroupButtonVM
         
         var body: some View {
             Button(action: viewModel.action,  label: {
@@ -184,7 +184,7 @@ extension PTSectionPayGroupView {
 
 //MARK: - Constant
 
-extension PTSectionPayGroupView.SectionViewModel {
+extension PTSectionPayGroupView.ViewModel {
     
     struct ViewSettingsConst { //allSizeWithoutSafeAreaInsets with paddings
         
