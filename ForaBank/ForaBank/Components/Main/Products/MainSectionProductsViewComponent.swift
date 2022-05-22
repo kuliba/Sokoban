@@ -279,7 +279,7 @@ struct MainSectionProductsView: View {
 
     var body: some View {
         
-        CollapsableSectionView(title: viewModel.title, isCollapsed: $viewModel.isCollapsed) {
+        CollapsableSectionView(title: viewModel.title, edges: .horizontal, padding: 20, isCollapsed: $viewModel.isCollapsed) {
             
             VStack(spacing: 16) {
                 
@@ -287,6 +287,7 @@ struct MainSectionProductsView: View {
                     
                     OptionSelectorView(viewModel: selectorViewModel)
                         .frame(height: 24)
+                        .padding(.leading, 20)
                 }
                 
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -295,12 +296,17 @@ struct MainSectionProductsView: View {
                         
                         HStack(spacing: 8) {
                             
+                            Color.clear
+                                .frame(width: 12)
+                            
                             ForEach(viewModel.groups) { groupViewModel in
                                 
                                 MainSectionProductsGroupView(viewModel: groupViewModel)
                                     .scrollId(groupViewModel.id)
-                                    
                             }
+                            
+                            Color.clear
+                                .frame(width: 12)
                         }
                         .onReceive(viewModel.action) { action in
                             
@@ -323,7 +329,7 @@ struct MainSectionProductsView: View {
                 }
             }
         }
-        .overlay(MoreButtonView(viewModel: viewModel.moreButton))
+        .overlay(MoreButtonView(viewModel: viewModel.moreButton).padding(.trailing, 20))
     }
 }
 

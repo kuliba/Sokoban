@@ -54,9 +54,8 @@ struct MainView: View {
                         }
                     }
                 }
-
             }
-            .padding(20)
+            .padding(.vertical, 20)
         }
         .sheet(item: $viewModel.sheet, content: { sheet in
             switch sheet {

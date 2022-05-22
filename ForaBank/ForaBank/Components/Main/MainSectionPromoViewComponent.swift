@@ -89,6 +89,9 @@ struct MainSectionPromoView: View {
             
             HStack(spacing: 8) {
                 
+                Color.clear
+                    .frame(width: 20)
+                
                 ForEach(viewModel.items) { promotionViewModel in
                     
                     Button {
@@ -102,6 +105,9 @@ struct MainSectionPromoView: View {
                             .cornerRadius(12)
                     }
                 }
+                
+                Color.clear
+                    .frame(width: 20)
             }
         }
     }
