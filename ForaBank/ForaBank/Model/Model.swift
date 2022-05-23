@@ -484,10 +484,7 @@ private extension Model {
             self.bankList.value = bankList
         }
         
-        if let products = localAgent.load(type: ProductsData.self) {
-            
-            self.products.value = products
-        }
+        self.products.value = productsCacheLoadData()
     }
     
     func clearCachedData() {
@@ -503,7 +500,7 @@ private extension Model {
         
         do {
             
-            try localAgent.clear(type: ProductsData.self)
+            try productsCacheClearData()
             
         } catch {
             
