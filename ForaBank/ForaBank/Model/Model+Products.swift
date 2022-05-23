@@ -217,7 +217,7 @@ extension Model {
                     switch response.statusCode {
                     case .ok:
                         
-                        guard let products = response.data.productList else {
+                        guard let products = response.data?.productList else {
                             continuation.resume(with: .failure(ModelProductsError.emptyData(message: response.errorMessage)))
                             return
                         }
@@ -225,7 +225,7 @@ extension Model {
                         continuation.resume(returning: products)
                         
                         do {
-                            try self.localAgent.store(products, serial: response.data.serial)
+                            try self.localAgent.store(products, serial: response.data?.serial)
                             
                         } catch {
                             

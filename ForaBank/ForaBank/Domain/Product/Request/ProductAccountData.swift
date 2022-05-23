@@ -41,7 +41,7 @@ class ProductAccountData: ProductData {
         let dateOpenValue = try container.decode(Int.self, forKey: .dateOpen)
         dateOpen = Date(timeIntervalSince1970: TimeInterval(dateOpenValue / 1000))
         status = try container.decode(Status.self, forKey: .status)
-        branchName = try container.decode(String.self, forKey: .branchName)
+        branchName = try container.decodeIfPresent(String.self, forKey: .branchName)
         miniStatement = try container.decode([PaymentData].self, forKey: .miniStatement)
         
         try super.init(from: decoder)
@@ -54,7 +54,7 @@ class ProductAccountData: ProductData {
         try container.encode(name, forKey: .name)
         try container.encode(Int(dateOpen.timeIntervalSince1970) * 1000, forKey: .dateOpen)
         try container.encode(status, forKey: .status)
-        try container.encode(branchName, forKey: .branchName)
+        try container.encodeIfPresent(branchName, forKey: .branchName)
         try container.encode(miniStatement, forKey: .miniStatement)
         
         try super.encode(to: encoder)

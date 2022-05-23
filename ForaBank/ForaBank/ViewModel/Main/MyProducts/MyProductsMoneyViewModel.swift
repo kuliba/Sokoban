@@ -34,6 +34,13 @@ class MyProductsMoneyViewModel: ObservableObject {
 }
 
 extension MyProductsMoneyViewModel {
+
+    var decimalBalance: String {
+        NumberFormatter.decimal(totalBalance: balance)
+    }
+}
+
+extension MyProductsMoneyViewModel {
     
     class CurrencyButtonViewModel: ObservableObject {
         

@@ -239,3 +239,28 @@ extension ProductCardData {
     }
 }
 
+extension ProductCardData {
+
+    var isNotActivated: Bool {
+
+        guard status == .active || status == .issuedToClient,
+              statusPc == .notActivated else {
+                  return false
+              }
+
+        return true
+    }
+    
+    var isActivated: Bool {
+        isNotActivated == false
+    }
+
+    var isBlocked: Bool {
+
+        guard status == .blockedByBank || status == .blockedByClient, statusPc == .operationsBlocked || statusPc == .blockedByBank || statusPc == .lost || statusPc == .stolen || statusPc == .temporarilyBlocked || statusPc == .blockedByClient else {
+            return false
+        }
+
+        return true
+    }
+}
