@@ -17,8 +17,8 @@ class Model {
     let auth: CurrentValueSubject<AuthorizationState, Never>
     
     //MARK: Products
-    let products: CurrentValueSubject<[ProductType: [ProductData]], Never>
-    let productsUpdateState: CurrentValueSubject<ProductsUpdateState, Never>
+    let products: CurrentValueSubject<ProductsData, Never>
+    let productsUpdating: CurrentValueSubject<[ProductType], Never>
     var productsAllowed: Set<ProductType> { [.card, .account, .deposit, .loan] }
     
     //MARK: Statement
@@ -87,7 +87,7 @@ class Model {
         self.auth = .init(.registerRequired)
         self.products = .init([:])
         self.statement = .init(.init(productStatement: [:]))
-        self.productsUpdateState = .init(.idle)
+        self.productsUpdating = .init([])
         self.catalogProducts = .init([])
         self.catalogBanners = .init([])
         self.currencyList = .init([])
@@ -484,9 +484,9 @@ private extension Model {
             self.bankList.value = bankList
         }
         
-        if let products = localAgent.load(type: [ProductData].self) {
+        if let products = localAgent.load(type: ProductsData.self) {
             
-            self.products.value = reduce(products: self.products.value, with: products)
+            self.products.value = products
         }
     }
     
@@ -498,7 +498,16 @@ private extension Model {
             
         } catch {
             
-            print("Model: clearCachedData: error: \(error.localizedDescription)")
+            print("Model: clearCachedData: templates error: \(error.localizedDescription)")
+        }
+        
+        do {
+            
+            try localAgent.clear(type: ProductsData.self)
+            
+        } catch {
+            
+            print("Model: clearCachedData: products error: \(error.localizedDescription)")
         }
     }
 }

@@ -22,7 +22,7 @@ extension Model {
         let decoder = JSONDecoder.serverDate
         let productsData = try! decoder.decode([ProductData].self, from: json)
         
-        model.products.value = model.reduce(products: model.products.value, with: productsData)
+        model.products.value = model.reduce(products: model.products.value, with: productsData, allowed: model.productsAllowed)
         
         return model
     }()

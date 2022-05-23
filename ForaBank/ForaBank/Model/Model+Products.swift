@@ -9,6 +9,9 @@ import Foundation
 
 //MARK: - Actions
 
+typealias ProductsData = [ProductType : [ProductData]]
+typealias ProductsDynamicParams = [ServerCommands.ProductController.GetProductDynamicParamsList.Response.List.DynamicListParams]
+
 extension ModelAction {
     
     enum Products {
@@ -71,7 +74,8 @@ extension Model {
             return
         }
         
-        let command = ServerCommands.ProductController.GetProductDynamicParamsList(token: token, products: productForCache(products: self.products.value))
+        let productsList = products.value.values.flatMap{ $0 }
+        let command = ServerCommands.ProductController.GetProductDynamicParamsList(token: token, products: productsList)
         
         serverAgent.executeCommand(command: command) { result in
             
@@ -85,22 +89,22 @@ extension Model {
                         return
                     }
                     
-                    let updatedProducts = self.updatedListValue(products: self.products.value, with: params)
-                    
+                    let updatedProducts = self.reduce(products: self.products.value, with: params)
                     self.products.value = updatedProducts
                     
                     do {
                         
-                        let productList = self.productForCache(products: updatedProducts)
-                        try self.localAgent.store(productList, serial: nil)
+                        try self.localAgent.store(self.products.value, serial: nil)
                         
                     } catch {
                         
                         self.handleServerCommandCachingError(error: error, command: command)
                     }
+                    
                 default:
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                 }
+                
             case .failure(let error):
                 self.handleServerCommandError(error: error, command: command)
             }
@@ -156,8 +160,8 @@ extension Model {
                     self.products.value = self.reduce(products: self.products.value, with: params, productId: payload.productId)
                     
                     do {
-                        let productList = self.productForCache(products: self.products.value)
-                        try self.localAgent.store( productList, serial: nil)
+                        
+                        try self.localAgent.store(self.products.value, serial: nil)
                         
                     } catch {
                         
@@ -175,7 +179,7 @@ extension Model {
     
     func handleProductsUpdateTotalAll() {
         
-        guard self.productsUpdateState.value == .idle else {
+        guard self.productsUpdating.value.isEmpty == true else {
             return
         }
         
@@ -186,28 +190,35 @@ extension Model {
         
         Task {
             
-            self.productsUpdateState.value = .updating
+            self.productsUpdating.value = Array(productsAllowed)
             
-            for productType in ProductType.allCases {
+            for productType in productsAllowed {
                 
-                let command = ServerCommands.ProductController.GetProductListByType(token: token, serial: localAgent.serial(for: [ProductData].self), productType: productType)
+                let command = ServerCommands.ProductController.GetProductListByType(token: token, serial: nil, productType: productType)
                 
                 do {
                     
-                    let productsType = try await fetchProductsWithCommand(command: command)
-                    self.products.value = reduce(products: self.products.value, with: productsType)
+                    let productsForType = try await productsFetchWithCommand(command: command)
+                    self.products.value = reduce(products: self.products.value, with: productsForType, allowed: self.productsAllowed)
+                    
+                    // updating status
+                    if let index = self.productsUpdating.value.firstIndex(of: productType) {
+                        
+                        self.productsUpdating.value.remove(at: index)
+                    }
+                    
+                    // cache products
+                    try self.localAgent.store(self.products.value, serial: nil)
                     
                 } catch {
                     
                     self.handleServerCommandError(error: error, command: command)
                 }
             }
-            
-            self.productsUpdateState.value = .idle
         }
     }
     
-    func fetchProductsWithCommand(command: ServerCommands.ProductController.GetProductListByType) async throws -> [ProductData] {
+    func productsFetchWithCommand(command: ServerCommands.ProductController.GetProductListByType) async throws -> [ProductData] {
         
         try await withCheckedThrowingContinuation { continuation in
             
@@ -223,14 +234,7 @@ extension Model {
                         }
                         
                         continuation.resume(returning: products)
-                        
-                        do {
-                            try self.localAgent.store(products, serial: response.data?.serial)
-                            
-                        } catch {
-                            
-                            self.handleServerCommandCachingError(error: error, command: command)
-                        }
+
                     default:
                         continuation.resume(with: .failure(ModelProductsError.statusError(status: response.statusCode, message: response.errorMessage)))
                     }
@@ -334,87 +338,97 @@ extension Model {
             }
         }
     }
+}
+
+//MARK: - Reducers
+
+//TODO: tests
+extension Model {
     
-    func reduce(products: [ProductType: [ProductData]], with productsData: [ProductData]) -> [ProductType: [ProductData]] {
+    func reduce(products: ProductsData, with productsList: [ProductData], allowed: Set<ProductType>) -> ProductsData {
         
         var productsUpdated = products
         
-        for productType in self.productsAllowed.uniqued() {
+        for productType in ProductType.allCases {
             
-            let productsTypeData = productsData.filter{ $0.productType == productType }
-            
-            guard productsTypeData.isEmpty == false else {
-                continue
+            if allowed.contains(productType) {
+                
+                let productsForType = productsList.filter{ $0.productType == productType }
+                
+                guard productsForType.isEmpty == false else {
+                    continue
+                }
+                
+                productsUpdated[productType] = productsForType
+                
+            } else {
+                
+                productsUpdated[productType] = nil
             }
-            
-            productsUpdated[productType] = productsTypeData
         }
         
         return productsUpdated
     }
     
-    func reduce(products: [ProductType: [ProductData]], with params: ProductDynamicParamsData, productId: Int) -> [ProductType: [ProductData]] {
+    func reduce(products: ProductsData, with params: ProductDynamicParamsData, productId: Int) -> ProductsData {
         
-        let productsUpdated = self.productForCache(products: products)
-        var productsDataUpdated = [ProductData]()
+        var productsUpdated = ProductsData()
         
-        for product in productsUpdated {
+        for productType in products.keys {
             
-            if product.id == productId  {
-                
-                product.updated(with: params)
-                productsDataUpdated.append(product)
-                
-            } else {
-                
-                productsDataUpdated.append(product)
+            guard let productsForType = products[productType] else {
+                continue
             }
-        }
-        
-        let productUpdateResult = reduce(products: self.products.value, with: productsDataUpdated)
-        
-        return productUpdateResult
-    }
-    
-    func updatedListValue(products: [ProductType: [ProductData]], with params: [ServerCommands.ProductController.GetProductDynamicParamsList.Response.List.DynamicListParams]) -> [ProductType: [ProductData]] {
-        
-        let productsList = productForCache(products: products)
-
-        for product in productsList {
-
-            if params.contains(where: {$0.id == product.id}) {
-                let param = params.filter({$0.id == product.id})
-                if let updateParam = param.first?.dynamicParams {
+            
+            var productsForTypeUpdated = [ProductData]()
+            
+            for product in productsForType {
+                
+                if product.id == productId  {
                     
-                    product.updated(with: updateParam)
+                    product.update(with: params)
                 }
+                
+                productsForTypeUpdated.append(product)
             }
+            
+            productsUpdated[productType] = productsForTypeUpdated
         }
         
-        let productUpdateResult = reduce(products: self.products.value, with: productsList)
-
-        return productUpdateResult
+       return productsUpdated
     }
     
-    func productForCache(products: [ProductType: [ProductData]]) -> [ProductData] {
+    func reduce(products: ProductsData, with params: ProductsDynamicParams) -> ProductsData {
         
-        var productsData = [ProductData]()
+        var productsUpdated = ProductsData()
         
-        for value in products.values {
+        for productType in products.keys {
             
-            for item in value {
+            guard let productsForType = products[productType] else {
+                continue
+            }
+            
+            var productsForTypeUpdated = [ProductData]()
+            
+            for product in productsForType {
                 
-                guard self.productsAllowed.contains(item.productType) else {
-                    break
+                if let dynamicParam = params.first(where: { $0.id == product.id })?.dynamicParams {
+                    
+                    product.update(with: dynamicParam)
+                    
                 }
                 
-                productsData.append(item)
+                productsForTypeUpdated.append(product)
             }
+            
+            productsUpdated[productType] = productsForTypeUpdated
         }
         
-        return productsData
+       return productsUpdated
     }
 }
+
+//MARK: - Error
 
 enum ModelProductsError: Swift.Error {
     

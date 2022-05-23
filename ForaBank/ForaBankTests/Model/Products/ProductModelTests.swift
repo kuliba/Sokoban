@@ -14,6 +14,7 @@ class ProductModelTests: XCTestCase {
     
     //MARK: - Handle
     
+    /*
     func testUpdatedListValue() throws {
         
         // given
@@ -33,4 +34,5 @@ class ProductModelTests: XCTestCase {
         // then
         XCTAssertEqual(result, "Handle")
     }
+     */
 }

@@ -43,7 +43,7 @@ struct MainSectionAtmView: View {
 
     var body: some View {
         
-        CollapsableSectionView(title: viewModel.title, isCollapsed: $viewModel.isCollapsed) {
+        CollapsableSectionView(title: viewModel.title, edges: .horizontal, padding: 20, isCollapsed: $viewModel.isCollapsed) {
             
             Button {
                 
@@ -54,6 +54,9 @@ struct MainSectionAtmView: View {
                 ZStack(alignment: .leading) {
                     
                     Image.imgMainMap
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        
                     
                     Text(viewModel.content)
                         .font(.textBodyMM14200())
@@ -62,6 +65,7 @@ struct MainSectionAtmView: View {
                         .lineSpacing(6)
                         .padding(.leading, 12)
                 }
+                .padding(.horizontal, 20)
             }
         }
     }
