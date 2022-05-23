@@ -13,8 +13,8 @@ class ProductDepositData: ProductData {
     let depositId: Int
     let interestRate: Double
     let accountId: Int
-    let creditMinimumAmount: Double
-    let minimumBalance: Double
+    let creditMinimumAmount: Double?
+    let minimumBalance: Double?
     
     internal init(id: Int, productType: ProductType, number: String, numberMasked: String, accountNumber: String, balance: Double, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date, ownerId: Int, branchId: Int, allowCredit: Bool, allowDebit: Bool,extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], depositProductId: Int, depositId: Int, interestRate: Double, accountId: Int, creditMinimumAmount: Double, minimumBalance: Double) {
         
@@ -42,8 +42,8 @@ class ProductDepositData: ProductData {
         depositId = try container.decode(Int.self, forKey: .depositId)
         interestRate = try container.decode(Double.self, forKey: .interestRate)
         accountId = try container.decode(Int.self, forKey: .accountId)
-        creditMinimumAmount = try container.decode(Double.self, forKey: .creditMinimumAmount)
-        minimumBalance = try container.decode(Double.self, forKey: .minimumBalance)
+        creditMinimumAmount = try container.decodeIfPresent(Double.self, forKey: .creditMinimumAmount)
+        minimumBalance = try container.decodeIfPresent(Double.self, forKey: .minimumBalance)
 
         try super.init(from: decoder)
     }
@@ -54,8 +54,8 @@ class ProductDepositData: ProductData {
         try container.encode(depositId, forKey: .depositId)
         try container.encode(interestRate, forKey: .interestRate)
         try container.encode(accountId, forKey: .accountId)
-        try container.encode(creditMinimumAmount, forKey: .creditMinimumAmount)
-        try container.encode(minimumBalance, forKey: .minimumBalance)
+        try container.encodeIfPresent(creditMinimumAmount, forKey: .creditMinimumAmount)
+        try container.encodeIfPresent(minimumBalance, forKey: .minimumBalance)
 
         try super.encode(to: encoder)
     }

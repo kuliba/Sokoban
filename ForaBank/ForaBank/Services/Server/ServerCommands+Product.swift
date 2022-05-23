@@ -174,12 +174,75 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: List
+                let data: List?
                 
                 struct List: Codable, Equatable {
                     
-                    let serial: String?
-                    let productList: [ProductData]?
+                    let serial: String
+                    let productList: [ProductData]
+                }
+
+                private enum CodingKeys : String, CodingKey {
+
+                    case statusCode
+                    case errorMessage
+                    case data
+                }
+
+                private enum ListCodingKeys : String, CodingKey {
+
+                    case serial
+                    case productList
+                }
+
+                init(statusCode: ServerStatusCode, errorMessage: String?, data: List?) {
+
+                    self.statusCode = statusCode
+                    self.errorMessage = errorMessage
+                    self.data = data
+                }
+
+                init(from decoder: Decoder) throws {
+
+                    let container = try decoder.container(keyedBy: CodingKeys.self)
+                    statusCode = try container.decode(ServerStatusCode.self, forKey: .statusCode)
+                    errorMessage = try container.decodeIfPresent(String.self, forKey: .errorMessage)
+
+                    let nestedContainer = try container.nestedContainer(keyedBy: ListCodingKeys.self, forKey: .data)
+                    let serial = try nestedContainer.decode(String.self, forKey: .serial)
+                    var listContainer = try nestedContainer.nestedUnkeyedContainer(forKey: .productList)
+
+                    var data: [ProductData] = []
+                    var items = listContainer
+
+                    while listContainer.isAtEnd == false {
+
+                        let productData = try listContainer.decode(ProductData.self)
+
+                        switch productData.productType {
+                        case .card:
+
+                            let productData = try items.decode(ProductCardData.self)
+                            data.append(productData)
+
+                        case .account:
+
+                            let productData = try items.decode(ProductAccountData.self)
+                            data.append(productData)
+
+                        case .deposit:
+
+                            let productData = try items.decode(ProductDepositData.self)
+                            data.append(productData)
+
+                        case .loan:
+
+                            let productData = try items.decode(ProductLoanData.self)
+                            data.append(productData)
+                        }
+                    }
+
+                    self.data = .init(serial: serial, productList: data)
                 }
             }
             
@@ -259,7 +322,7 @@ extension ServerCommands {
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: List?
-  
+
                 struct List: Codable, Equatable {
                     
                     let dynamicProductParamsList: [DynamicListParams]

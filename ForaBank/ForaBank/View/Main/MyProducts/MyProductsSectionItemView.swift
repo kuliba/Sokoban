@@ -40,7 +40,7 @@ struct MyProductsSectionItemView: View {
             
             ZStack {
                 
-                HStack {
+                HStack(spacing: 16) {
                     
                     VStack {
                         
@@ -48,20 +48,17 @@ struct MyProductsSectionItemView: View {
                             .renderingMode(.original)
                         Spacer()
                         
-                    }.padding()
-                    
-                    VStack(spacing: 2) {
+                    }
+                    .padding(.top, 4)
+                    .padding(.leading, 20)
+
+                    VStack(spacing: 8) {
                         
                         HStack {
 
                             if let paymentSystemIcon = viewModel.paymentSystemIcon {
-
                                 paymentSystemIcon
                                     .renderingMode(.original)
-
-                            } else {
-
-                                Divider()
                             }
                             
                             Text(viewModel.title)
@@ -70,7 +67,7 @@ struct MyProductsSectionItemView: View {
                             
                             Spacer()
                             
-                            Text(viewModel.balance)
+                            Text(viewModel.currencyBalance)
                                 .font(.textBodyMM14200())
                                 .foregroundColor(.mainColorsBlack)
                                 .frame(alignment: .trailing)
@@ -95,8 +92,10 @@ struct MyProductsSectionItemView: View {
                         }
                         
                         Divider()
+                            .background(Color.mainColorsGrayLightest)
+                            .opacity(0.5)
                     }
-                    .padding(.trailing)
+                    .padding(.trailing, 20)
                 }
             }
             .background(Color.mainColorsWhite)
@@ -106,12 +105,21 @@ struct MyProductsSectionItemView: View {
                 viewModel.action.send(MyProductsSectionItemAction.Tap())
             }
         }
-        .frame(height: 56)
+        .frame(height: 60)
         .modifier(SwipeSidesModifier(leftAction: {
 
             viewModel.action.send(MyProductsSectionItemAction.SwipeDirection.Left())
 
         }, rightAction: {
+
+            switch viewModel.state {
+            case .normal:
+                guard viewModel.isNeedsActivated else {
+                    return
+                }
+            default:
+                break
+            }
 
             viewModel.action.send(MyProductsSectionItemAction.SwipeDirection.Right())
         }))
@@ -143,7 +151,7 @@ extension MyProductsSectionItemView {
                             .font(.textBodySM12160())
                     }
                 }
-                .frame(width: 120, height: 56)
+                .frame(width: 120, height: 60)
             }
         }
     }

@@ -24,6 +24,7 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
     let paymentSystemIcon: Image?
     let balanceRub: Double
     let dateLong: String
+    let isNeedsActivated: Bool
     
     private var bindings = Set<AnyCancellable>()
     
@@ -35,6 +36,7 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
          balance: String,
          balanceRub: Double = 0,
          dateLong: String = "",
+         isNeedsActivated: Bool = false,
          paymentSystemIcon: Image? = nil,
          state: State = .normal) {
         
@@ -47,6 +49,7 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
         self.paymentSystemIcon = paymentSystemIcon
         self.balanceRub = balanceRub
         self.dateLong = dateLong
+        self.isNeedsActivated = isNeedsActivated
         self.state = state
         
         bind()
@@ -119,7 +122,11 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
 }
 
 extension MyProductsSectionItemViewModel {
-    
+
+    var currencyBalance: String {
+        NumberFormatter.currency(balance: balance)
+    }
+
     enum State {
         
         case normal
