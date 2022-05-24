@@ -124,6 +124,8 @@ extension MainSectionProductsView {
                         groups = groupsUpdated
                     }
                     
+                    bind(groups)
+                    
                     // create product type selector
                     if groups.count > 1 {
                         
@@ -219,6 +221,28 @@ extension MainSectionProductsView {
                     }.store(in: &bindings)
             }
         }
+        
+        private func bind(_ groups: [MainSectionProductsGroupView.ViewModel]) {
+            
+            for group in groups {
+                
+                group.action
+                    .receive(on: DispatchQueue.main)
+                    .sink {[unowned self] action in
+                        
+                        switch action {
+                        case _ as MainSectionProductsGroupAction.Group.Collapsed:
+                            self.action.send(MainSectionProductsViewModelAction.ScrollToGroup(groupId: group.id))
+                            
+                        default:
+                            break
+                        }
+                        
+                    }.store(in: &bindings)
+                    
+            }
+            
+        }
 
         private func updateSelector(with offset: CGFloat) {
             
@@ -277,11 +301,6 @@ enum MainSectionProductsViewModelAction {
         let groupId: MainSectionProductsGroupView.ViewModel.ID
     }
     
-    struct ScrollToProduct: Action {
-        
-        let productId: ProductView.ViewModel.ID
-    }
-    
     struct MoreButtonTapped: Action {}
     
     struct HorizontalOffsetDidChanged: Action {
@@ -320,6 +339,7 @@ struct MainSectionProductsView: View {
                             
                             ForEach(viewModel.groups) { groupViewModel in
                                 
+                                // padding hack to get offset from screen side when scrolling to group with type selector
                                 MainSectionProductsGroupView(viewModel: groupViewModel)
                                     .padding(.horizontal, 20)
                                     .scrollId(groupViewModel.id)
@@ -334,9 +354,6 @@ struct MainSectionProductsView: View {
                             switch action {
                             case let payload as MainSectionProductsViewModelAction.ScrollToGroup:
                                 proxy.scrollTo(payload.groupId, alignment: .leading, animated: true)
-                                
-                            case let payload as MainSectionProductsViewModelAction.ScrollToProduct:
-                                proxy.scrollTo(payload.productId, alignment: .leading, animated: true)
 
                             default:
                                 break
