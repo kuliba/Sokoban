@@ -179,6 +179,20 @@ extension MainSectionProductsView {
                     }
        
                 }.store(in: &bindings)
+            
+            action
+                .receive(on: DispatchQueue.main)
+                .sink {[unowned self] action in
+                    
+                    switch action {
+                    case let payload as MainSectionProductsViewModelAction.HorizontalOffsetDidChanged:
+                        updateSelector(with: payload.offset)
+                        
+                    default:
+                        break
+                    }
+                    
+                }.store(in: &bindings)
         }
         
         private func bind(_ selector: OptionSelectorView.ViewModel?) {
@@ -206,7 +220,7 @@ extension MainSectionProductsView {
             }
         }
 
-        func updateSelector(with offset: CGFloat) {
+        private func updateSelector(with offset: CGFloat) {
             
             guard let selector = selector, let productType = productType(with: offset) else {
                 return
@@ -269,6 +283,11 @@ enum MainSectionProductsViewModelAction {
     }
     
     struct MoreButtonTapped: Action {}
+    
+    struct HorizontalOffsetDidChanged: Action {
+        
+        let offset: CGFloat
+    }
 }
 
 //MARK: - View
@@ -302,7 +321,9 @@ struct MainSectionProductsView: View {
                             ForEach(viewModel.groups) { groupViewModel in
                                 
                                 MainSectionProductsGroupView(viewModel: groupViewModel)
+                                    .padding(.horizontal, 20)
                                     .scrollId(groupViewModel.id)
+                                    .padding(.horizontal, -20)
                             }
                             
                             Color.clear
@@ -323,7 +344,7 @@ struct MainSectionProductsView: View {
                         }
                         .onReceive(proxy.offset) { offset in
                             
-                            viewModel.updateSelector(with: offset.x)
+                            viewModel.action.send( MainSectionProductsViewModelAction.HorizontalOffsetDidChanged(offset: offset.x))
                         }
                     }
                 }
