@@ -20,8 +20,8 @@ extension MainSectionProductsView {
         
         override var type: MainSectionType { .products }
         
-        @Published var groups: [MainSectionProductsGroupView.ViewModel]
         @Published var selector: OptionSelectorView.ViewModel?
+        @Published var groups: [MainSectionProductsGroupView.ViewModel]
         
         lazy var moreButton: MoreButtonViewModel = MoreButtonViewModel(icon: .ic24MoreHorizontal, action: {[weak self] in self?.action.send(MainSectionProductsViewModelAction.MoreButtonTapped())})
         
@@ -145,7 +145,7 @@ extension MainSectionProductsView {
                             
                             withAnimation {
                                 
-                                selector = OptionSelectorView.ViewModel(options: options, selected: options[0].id, style: .products)
+                                selector = OptionSelectorView.ViewModel(options: options, selected: options[0].id, style: .products, mode: .action)
                             }
   
                             bind(selector)
@@ -314,6 +314,7 @@ enum MainSectionProductsViewModelAction {
 struct MainSectionProductsView: View {
     
     @ObservedObject var viewModel: ViewModel
+    @State private var scrollView: UIScrollView? = nil
 
     var body: some View {
         
@@ -333,27 +334,22 @@ struct MainSectionProductsView: View {
                     ScrollViewReader { proxy in
                         
                         HStack(spacing: 8) {
-                            
-                            Color.clear
-                                .frame(width: 12)
-                            
+    
                             ForEach(viewModel.groups) { groupViewModel in
                                 
-                                // padding hack to get offset from screen side when scrolling to group with type selector
                                 MainSectionProductsGroupView(viewModel: groupViewModel)
-                                    .padding(.horizontal, 20)
-                                    .scrollId(groupViewModel.id)
-                                    .padding(.horizontal, -20)
                             }
-                            
-                            Color.clear
-                                .frame(width: 12)
                         }
+                        .padding(.horizontal, 20)
+                        .introspectScrollView(customize: { scrollView in
+                            
+                            self.scrollView = scrollView
+                        })
                         .onReceive(viewModel.action) { action in
                             
                             switch action {
                             case let payload as MainSectionProductsViewModelAction.ScrollToGroup:
-                                proxy.scrollTo(payload.groupId, alignment: .leading, animated: true)
+                                scrollToGroup(groupId: payload.groupId)
 
                             default:
                                 break
@@ -368,6 +364,27 @@ struct MainSectionProductsView: View {
             }
         }
         .overlay(MoreButtonView(viewModel: viewModel.moreButton).padding(.trailing, 20))
+    }
+    
+    func scrollToGroup(groupId: MainSectionProductsGroupView.ViewModel.ID) {
+        
+        guard let scrollView = scrollView else {
+            return
+        }
+        
+        var offset: CGFloat = 0
+        for group in viewModel.groups {
+            
+            guard group.id != groupId else {
+                break
+            }
+            
+            offset += group.width
+            offset += 8
+        }
+        
+        let targetRect = CGRect(x: offset, y: 0, width: scrollView.bounds.width , height: scrollView.bounds.height)
+        scrollView.scrollRectToVisible(targetRect, animated: true)
     }
 }
 

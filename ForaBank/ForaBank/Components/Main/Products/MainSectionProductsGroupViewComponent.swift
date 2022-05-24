@@ -259,8 +259,6 @@ struct MainSectionProductsGroupView: View {
             
             ForEach(viewModel.visible) { productViewModel in
                 
-                let _ = print("Product type: \(viewModel.productType), isIpdating: \(viewModel.isUpdating ? "true" : "false"), id: \(productViewModel.id)")
-                
                 ProductView(viewModel: productViewModel)
                     .frame(width: viewModel.dimensions.widths.product)
             }
