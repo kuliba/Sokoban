@@ -39,17 +39,12 @@ struct MainSectionOpenProductView: View {
                 
                 HStack(spacing: 8) {
                     
-                    Color.clear
-                        .frame(width: 12)
-                    
                     ForEach(viewModel.items) { itemViewModel in
                         
                         ButtonNewProduct(viewModel: itemViewModel)
                     }
-                    
-                    Color.clear
-                        .frame(width: 12)
                 }
+                .padding(.horizontal, 20)
             }
         }
     }

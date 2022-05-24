@@ -40,17 +40,12 @@ struct MainSectionFastOperationView: View {
                 
                 HStack(spacing: 4) {
                     
-                    Color.clear
-                        .frame(width: 16)
-                    
                     ForEach(viewModel.items) { itemViewModel in
                        
                         ButtonIconTextView(viewModel: itemViewModel)
                     }
-                    
-                    Color.clear
-                        .frame(width: 16)
                 }
+                .padding(.horizontal, 20)
             }
         }
     }
