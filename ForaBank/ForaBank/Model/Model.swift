@@ -24,6 +24,11 @@ class Model {
     //MARK: Statement
     var statement: CurrentValueSubject<ProductStatementDataCacheble, Never>
     
+    //MARK: Currency rates
+    let rates: CurrentValueSubject<[ExchangeRateData], Never>
+    let ratesUpdating: CurrentValueSubject<[Currency], Never>
+    var ratesAllowed: Set<Currency> { [.usd, .eur] }
+    
     //MARK: Dictionaries
     let catalogProducts: CurrentValueSubject<[CatalogProductData], Never>
     let catalogBanners: CurrentValueSubject<[BannerCatalogListData], Never>
@@ -86,8 +91,10 @@ class Model {
         self.action = .init()
         self.auth = .init(.registerRequired)
         self.products = .init([:])
-        self.statement = .init(.init(productStatement: [:]))
         self.productsUpdating = .init([])
+        self.statement = .init(.init(productStatement: [:]))
+        self.rates = .init([])
+        self.ratesUpdating = .init([])
         self.catalogProducts = .init([])
         self.catalogBanners = .init([])
         self.currencyList = .init([])
@@ -97,6 +104,7 @@ class Model {
         self.latestPayments = .init([])
         self.notifications = .init([])
         self.currentUserLoaction = .init(nil)
+        
         self.sessionAgent = sessionAgent
         self.serverAgent = serverAgent
         self.localAgent = localAgent
@@ -154,6 +162,7 @@ class Model {
                 case .active:
                     action.send(ModelAction.Products.Update.Total.All())
                     action.send(ModelAction.Settings.GetClientInfo.Requested())
+                    action.send(ModelAction.Rates.Update.All())
                     
                 case .inactive:
                     if let pincode = try? authStoredPincode() {
@@ -299,6 +308,11 @@ class Model {
                     
                 case let payload as ModelAction.Statement.List.Request:
                     handleStatementRequest(payload)
+                    
+                    //MARK: - Rates
+                    
+                case _ as ModelAction.Rates.Update.All:
+                    handleRatesUpdateAll()
                     
                     //MARK: - Payments
                     
@@ -486,6 +500,11 @@ private extension Model {
         }
         
         self.products.value = productsCacheLoadData()
+        
+        if let rates = localAgent.load(type: [ExchangeRateData].self) {
+            
+            self.rates.value = rates
+        }
     }
     
     func clearCachedData() {

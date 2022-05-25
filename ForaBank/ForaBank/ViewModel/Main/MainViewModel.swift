@@ -37,7 +37,7 @@ class MainViewModel: ObservableObject {
         self.sections = [MainSectionProductsView.ViewModel(model),
                          MainSectionFastOperationView.ViewModel.sample,
                          MainSectionPromoView.ViewModel(model),
-                         MainSectionCurrencyView.ViewModel.sample,
+                         MainSectionCurrencyView.ViewModel(model),
                          MainSectionOpenProductView.ViewModel.sample,
                          MainSectionAtmView.ViewModel.initial]
         

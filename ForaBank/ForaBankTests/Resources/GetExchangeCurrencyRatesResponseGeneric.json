@@ -5,9 +5,9 @@
     "currencyID": 90001299,
     "currencyName": "Евро",
     "rateBuy": 85.9,
-    "rateBuyDate": "2022-02-01T16:16:46.021Z",
+    "rateBuyDate": 1648512000000,
     "rateSell": 87.3,
-    "rateSellDate": "2022-02-01T16:16:46.021Z",
+    "rateSellDate": 1648512000000,
     "rateType": "КурсДБОФЛ",
     "rateTypeID": 10000000002
   },
