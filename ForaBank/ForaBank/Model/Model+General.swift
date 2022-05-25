@@ -7,6 +7,48 @@
 
 import Foundation
 
+extension ModelAction {
+    
+    enum General {
+    
+        enum DownloadImage {
+            
+            struct Request: Action {
+                
+                let endpoint: String
+            }
+            
+            struct Response: Action {
+                
+                let endpoint: String
+                let result: Result<Data, Error>
+            }
+        }
+    }
+}
+
+//MARK: - Handlers
+
+extension Model {
+    
+    func handleGeneralDownloadImageRequest(_ payload: ModelAction.General.DownloadImage.Request) {
+        
+        let command = ServerCommands.DictionaryController.GetProductCatalogImage(endpoint: payload.endpoint)
+        serverAgent.executeDownloadCommand(command: command) {[unowned self] result in
+            
+            switch result {
+            case .success(let data):
+                action.send(ModelAction.General.DownloadImage.Response(endpoint: payload.endpoint, result: .success(data)))
+                
+            case .failure(let error):
+                action.send(ModelAction.General.DownloadImage.Response(endpoint: payload.endpoint, result: .failure(error)))
+            }
+        }
+    }
+}
+
+//MARK: - Handlers
+
 extension Model {
     
     func handledUnauthorizedCommandAttempt(_ method: String = #function) {

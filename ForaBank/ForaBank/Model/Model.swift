@@ -227,6 +227,10 @@ class Model {
                 
                 switch action {
                     
+                    //MARK: - General
+                case let payload as ModelAction.General.DownloadImage.Request:
+                    handleGeneralDownloadImageRequest(payload)
+                    
                     //MARK: - Auth Actions
                     
                 case _ as ModelAction.Auth.Session.Start.Request:
@@ -240,9 +244,6 @@ class Model {
                     
                 case let payload as ModelAction.Auth.Session.Extend.Response:
                     sessionAgent.action.send(SessionAgentAction.Session.Extend.Response(result: payload.result))
-                    
-                case let payload as ModelAction.Auth.ProductImage.Request:
-                    handleAuthProductImageRequest(payload)
                     
                 case let payload as ModelAction.Auth.CheckClient.Request:
                     handleAuthCheckClientRequest(payload: payload)

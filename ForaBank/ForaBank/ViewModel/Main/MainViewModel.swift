@@ -34,7 +34,12 @@ class MainViewModel: ObservableObject {
     init(_ model: Model) {
         
         self.navButtonsRight = []
-        self.sections = [MainSectionProductsView.ViewModel(model), MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample, MainSectionAtmView.ViewModel(content: "Выберите ближайшую точку на карте", isCollapsed: false)]
+        self.sections = [MainSectionProductsView.ViewModel(model),
+                         MainSectionFastOperationView.ViewModel.sample,
+                         MainSectionPromoView.ViewModel(model),
+                         MainSectionCurrencyView.ViewModel.sample,
+                         MainSectionOpenProductView.ViewModel.sample,
+                         MainSectionAtmView.ViewModel.initial]
         
         self.isRefreshing = false
         self.model = model
@@ -150,7 +155,8 @@ class MainViewModel: ObservableObject {
 
     private func createNavButtonsRight() -> [NavigationBarButtonViewModel] {
         
-        [.init(icon: .ic24Search, action: {[weak self] in self?.action.send(MainViewModelAction.ButtonTapped.Search())}), .init(icon: .ic24Bell, action: {[weak self] in self?.action.send(MainViewModelAction.ButtonTapped.Messages())})]
+        [.init(icon: .ic24Search, action: {[weak self] in self?.action.send(MainViewModelAction.ButtonTapped.Search())}),
+         .init(icon: .ic24Bell, action: {[weak self] in self?.action.send(MainViewModelAction.ButtonTapped.Messages())})]
     }
 }
 

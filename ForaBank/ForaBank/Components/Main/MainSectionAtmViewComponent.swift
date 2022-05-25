@@ -23,6 +23,8 @@ extension MainSectionAtmView {
             self.content = content
             super.init(isCollapsed: isCollapsed)
         }
+        
+        static let initial = ViewModel(content: "Выберите ближайшую точку на карте", isCollapsed: false)
     }
 }
 

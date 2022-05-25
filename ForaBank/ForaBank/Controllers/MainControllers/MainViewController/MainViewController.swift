@@ -456,9 +456,9 @@ class MainViewController: UIViewController {
         var items: [PaymentsModel] = []
         baners.forEach { baner in
             let host = ServerAgent.Environment.test
-            let urlString = host.baseURL + "/" + baner.imageLink
-            print(host.baseURL + "/" + baner.imageLink)
-            let cell = PaymentsModel(id: Int.random(in: 1..<9999), name: baner.productName, iconName: urlString, controllerName: baner.orderLink.absoluteString)
+            let urlString = host.baseURL + "/" + baner.imageEndpoint
+            print(host.baseURL + "/" + baner.imageEndpoint)
+            let cell = PaymentsModel(id: Int.random(in: 1..<9999), name: baner.productName, iconName: urlString, controllerName: baner.orderURL.absoluteString)
             items.append(cell)
         }
         promoViewModels = items
