@@ -8,8 +8,7 @@
 import Foundation
 
 class ProductCardData: ProductData {
-    
-    let cardId: Int?
+
     let accountId: Int?
     let name: String
     let validThru: Date
@@ -22,13 +21,12 @@ class ProductCardData: ProductData {
     let paymentSystemName: String?
     let paymentSystemImage: SVGImageData?
     let loanBaseParam: LoanBaseParamInfoData?
-    let statusPc: ProductData.StatusPC?
+    var statusPc: ProductData.StatusPC?
     let isMain: Bool?
     let externalId: Int?
     
-    internal init(id: Int, productType: ProductType, number: String, numberMasked: String, accountNumber: String, balance: Double, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date, ownerId: Int, branchId: Int, allowCredit: Bool, allowDebit: Bool,extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], cardId: Int?, accountId: Int?, name: String, validThru: Date, status: Status, expireDate: String?, holderName: String?, product: String?, branch: String, miniStatement: [PaymentDataItem]?, paymentSystemName: String?, paymentSystemImage: SVGImageData?, loanBaseParam: LoanBaseParamInfoData?, statusPc: ProductData.StatusPC?, isMain: Bool?, externalId: Int?) {
-        
-        self.cardId = cardId
+    internal init(id: Int, productType: ProductType, number: String, numberMasked: String, accountNumber: String, balance: Double, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date, ownerId: Int, branchId: Int, allowCredit: Bool, allowDebit: Bool,extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], accountId: Int?, name: String, validThru: Date, status: Status, expireDate: String?, holderName: String?, product: String?, branch: String, miniStatement: [PaymentDataItem]?, paymentSystemName: String?, paymentSystemImage: SVGImageData?, loanBaseParam: LoanBaseParamInfoData?, statusPc: ProductData.StatusPC?, isMain: Bool?, externalId: Int?) {
+
         self.accountId = accountId
         self.name = name
         self.validThru = validThru
@@ -60,7 +58,6 @@ class ProductCardData: ProductData {
     required init(from decoder: Decoder) throws {
 
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        cardId = try container.decodeIfPresent(Int.self, forKey: .cardId)
         accountId = try container.decodeIfPresent(Int.self, forKey: .accountId)
         name = try container.decode(String.self, forKey: .name)
         let validThruValue = try container.decode(Int.self, forKey: .validThru)
@@ -84,7 +81,6 @@ class ProductCardData: ProductData {
     override func encode(to encoder: Encoder) throws {
         
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(cardId, forKey: .cardId)
         try container.encode(accountId, forKey: .accountId)
         try container.encode(name, forKey: .name)
         try container.encodeIfPresent(validThru, forKey: .validThru)
@@ -108,7 +104,6 @@ class ProductCardData: ProductData {
     static func == (lhs: ProductCardData, rhs: ProductCardData) -> Bool {
         
         return  lhs.product == rhs.product &&
-        lhs.cardId == rhs.cardId &&
         lhs.accountId == rhs.accountId &&
         lhs.name == rhs.name &&
         lhs.validThru == rhs.validThru &&

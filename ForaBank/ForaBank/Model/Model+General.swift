@@ -35,4 +35,9 @@ extension Model {
         
         print("DownloadEmptyData command: \(command)")
     }
+
+    func handleSettingsCachingError(error: Error) {
+
+        print("CachingError: \(error.localizedDescription)")
+    }
 }

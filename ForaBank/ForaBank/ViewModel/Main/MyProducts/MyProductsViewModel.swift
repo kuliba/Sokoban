@@ -210,6 +210,22 @@ class MyProductsViewModel: ObservableObject {
 
             }.store(in: &bindings)
 
+        model.productsHidden
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] productsHidden in
+
+                let items = sections.flatMap { $0.items }
+
+                for item in items {
+
+                    if model.productsHidden.value.contains(item.id) {
+                        item.isMainScreenHidden = true
+                    } else {
+                        item.isMainScreenHidden = false
+                    }
+                }
+            }.store(in: &bindings)
+
         $sections
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] sections in
@@ -223,6 +239,16 @@ class MyProductsViewModel: ObservableObject {
                         .sink { [unowned self] action in
 
                             switch action {
+                            case let payload as MyProductsSectionItemAction.ButtonType.Activate:
+
+                                let modelAction = ModelAction.Products.ActivateCard.Request(cardID: payload.cardID, cardNumber: payload.cardNumber)
+
+                                model.action.send(modelAction)
+
+                            case let payload as MyProductsSectionItemAction.ButtonType.Hidden:
+
+                                model.action.send(ModelAction.Settings.UpdateProductsHidden(productID: payload.productID))
+
                             case _ as MyProductsSectionItemAction.Tap:
                                 items
                                     .forEach { model in
@@ -320,14 +346,17 @@ extension MyProductsViewModel {
             let balance = data.balance,
             let balanceRub = data.balanceRub,
             let subtitle = data.additionalField,
+            let number = data.number,
             let numberCard = data.numberMasked else {
                 return nil
             }
 
         return MyProductsSectionItemViewModel(
+            id: data.id,
             icon: icon,
             title: data.mainField,
             subtitle: subtitle,
+            number: number,
             numberCard: numberCard.count > 0 ? "•  \(numberCard.suffix(4))  •" : numberCard,
             balance: "\(balance)",
             balanceRub: balanceRub,
@@ -340,13 +369,16 @@ extension MyProductsViewModel {
             let icon = data.smallDesign.image,
             let balance = data.balance,
             let balanceRub = data.balanceRub,
+            let number = data.number,
             let numberCard = data.numberMasked else {
                 return nil
             }
 
         return MyProductsSectionItemViewModel(
+            id: data.id,
             icon: icon,
             title: data.mainField,
+            number: number,
             numberCard: numberCard.count > 0 ? "•  \(numberCard.suffix(4))  •" : numberCard,
             balance: "\(balance)",
             balanceRub: balanceRub)
@@ -358,13 +390,16 @@ extension MyProductsViewModel {
             let icon = data.smallDesign.image,
             let balance = data.balance,
             let balanceRub = data.balanceRub,
+            let number = data.number,
             let numberCard = data.numberMasked else {
                 return nil
             }
 
         return MyProductsSectionItemViewModel(
+            id: data.id,
             icon: icon,
             title: data.mainField,
+            number: number,
             numberCard: numberCard.count > 0 ? "•  \(numberCard.suffix(4))  •" : numberCard,
             balance: "\(balance)",
             balanceRub: balanceRub)
@@ -377,15 +412,18 @@ extension MyProductsViewModel {
             let balance = data.balance,
             let balanceRub = data.balanceRub,
             let subtitle = data.additionalField,
+            let number = data.number,
             let numberCard = data.numberMasked,
             let loanData = data as? ProductLoanData else {
                 return nil
             }
 
         return MyProductsSectionItemViewModel(
+            id: data.id,
             icon: icon,
             title: data.mainField,
             subtitle: subtitle,
+            number: number,
             numberCard: numberCard.count > 0 ? "•  \(numberCard.suffix(4))  •" : numberCard,
             balance: "\(balance)",
             balanceRub: balanceRub,
