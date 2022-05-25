@@ -41,6 +41,7 @@ class MainViewModel: ObservableObject {
         
         navButtonsRight = createNavButtonsRight()
         bind()
+        update(sections, with: model.settingsMainSections)
         bind(sections)
     }
     
@@ -111,6 +112,40 @@ class MainViewModel: ObservableObject {
                     }
                     
                 }.store(in: &bindings)
+            
+            if let collapsableSection = section as? MainSectionCollapsableViewModel {
+                
+                collapsableSection.$isCollapsed
+                    .dropFirst()
+                    .receive(on: DispatchQueue.main)
+                    .sink { [unowned self] isCollapsed in
+                        
+                        var settings = model.settingsMainSections
+                        settings.update(sectionType: collapsableSection.type, isCollapsed: isCollapsed)
+                        model.settingsMainSectionsUpdate(settings)
+                        
+                    }.store(in: &bindings)
+                
+            }
+        }
+    }
+    
+    private func update(_ sections: [MainSectionViewModel], with settings: MainSectionsSettings) {
+        
+        for section in sections {
+            
+            guard let collapsableSection = section as? MainSectionCollapsableViewModel else {
+                continue
+            }
+            
+            if let isCollapsed = settings.collapsed[section.type] {
+                
+                collapsableSection.isCollapsed = isCollapsed
+                
+            } else {
+                
+                collapsableSection.isCollapsed = false
+            }
         }
     }
 

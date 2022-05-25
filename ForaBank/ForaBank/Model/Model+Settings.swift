@@ -34,20 +34,20 @@ extension ModelAction {
 
 extension Model {
     
-    var settingsMainSections: MainSectionSettings {
+    var settingsMainSections: MainSectionsSettings {
         
         do {
     
-            let settings: MainSectionSettings = try settingsAgent.load(type: .interface(.mainSections))
+            let settings: MainSectionsSettings = try settingsAgent.load(type: .interface(.mainSections))
             return settings
         
         } catch {
             
-            return .initial
+            return MainSectionsSettings(collapsed: [:])
         }
     }
     
-    func settingsUpdate(_ settings: MainSectionSettings) {
+    func settingsMainSectionsUpdate(_ settings: MainSectionsSettings) {
         
         do {
             
