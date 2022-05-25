@@ -41,7 +41,7 @@ class MainViewModel: ObservableObject {
         
         navButtonsRight = createNavButtonsRight()
         bind()
-        
+        bind(sections)
     }
     
     private func bind() {
@@ -78,53 +78,39 @@ class MainViewModel: ObservableObject {
                 }
                 
             }.store(in: &bindings)
+    }
+    
+    private func bind(_ sections: [MainSectionViewModel]) {
         
         for section in sections {
             
-            switch section {
-            case let productsSection as MainSectionProductsView.ViewModel:
-                productsSection.action
-                    .receive(on: DispatchQueue.main)
-                    .sink { [unowned self] action in
+            section.action
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
+                    
+                    switch action {
+                        // products section
+                    case let payload as MainSectionViewModelAction.Products.ProductDidTapped:
+                        let productProfileViewModel: ProductProfileViewModel = .init(productViewModel: .init(model, productId: payload.productId, productType: .card), model: model)
+                        sheet = .productProfile(productProfileViewModel)
                         
-                        switch action {
-                        case let payload as MainSectionProductsViewModelAction.ProductDidTapped:
-                            let productProfileViewModel: ProductProfileViewModel = .init(productViewModel: .init(model, productId: payload.productId, productType: .card), model: model)
-                            sheet = .productProfile(productProfileViewModel)
-                            
-                        case _ as MainSectionProductsViewModelAction.MoreButtonTapped:
-                            let myProductsViewModel: MyProductsViewModel = .init(model)
-                            sheet = .myProducts(myProductsViewModel)
-                            
-                        default:
-                            break
-                            
+                    case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
+                        let myProductsViewModel: MyProductsViewModel = .init(model)
+                        sheet = .myProducts(myProductsViewModel)
+                       
+                        // atm section
+                    case _ as MainSectionViewModelAction.Atm.ButtonTapped:
+                        guard let placesViewModel = PlacesViewModel(model) else {
+                            return
                         }
+                        sheet = .places(placesViewModel)
                         
-                    }.store(in: &bindings)
-                
-            case let atmSection as MainSectionAtmView.ViewModel:
-                atmSection.action
-                    .receive(on: DispatchQueue.main)
-                    .sink { [unowned self] action in
+                    default:
+                        break
                         
-                        switch action {
-                        case _ as MainSectionAtmViewModelAction.ButtonTapped:
-                            guard let placesViewModel = PlacesViewModel(model) else {
-                                return
-                            }
-                            sheet = .places(placesViewModel)
-                            
-                        default:
-                            break
-                            
-                        }
-                        
-                    }.store(in: &bindings)
-                
-            default:
-                break
-            }
+                    }
+                    
+                }.store(in: &bindings)
         }
     }
 

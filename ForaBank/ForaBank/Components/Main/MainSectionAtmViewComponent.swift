@@ -15,8 +15,6 @@ extension MainSectionAtmView {
 
     class ViewModel: MainSectionCollapsableViewModel {
         
-        let action: PassthroughSubject<Action, Never> = .init()
-        
         override var type: MainSectionType { .atm }
         let content: String
         
@@ -26,13 +24,6 @@ extension MainSectionAtmView {
             super.init(isCollapsed: isCollapsed)
         }
     }
-}
-
-//MARK: - Action
-
-enum MainSectionAtmViewModelAction {
-
-    struct ButtonTapped: Action {}
 }
 
 //MARK: - View
@@ -47,7 +38,7 @@ struct MainSectionAtmView: View {
             
             Button {
                 
-                viewModel.action.send(MainSectionAtmViewModelAction.ButtonTapped())
+                viewModel.action.send(MainSectionViewModelAction.Atm.ButtonTapped())
                 
             } label: {
                 

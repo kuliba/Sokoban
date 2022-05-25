@@ -15,9 +15,7 @@ import ScrollViewProxy
 extension MainSectionProductsView {
     
     class ViewModel: MainSectionCollapsableViewModel {
-        
-        let action: PassthroughSubject<Action, Never> = .init()
-        
+
         override var type: MainSectionType { .products }
         
         @Published var groups: [MainSectionProductsGroupView.ViewModel]
@@ -75,7 +73,7 @@ extension MainSectionProductsView {
                                 } else {
                                     
                                     // try to create new product view model
-                                    guard let productViewModel = ProductView.ViewModel(with: product, action: { [weak self] in  self?.action.send(MainSectionProductsViewModelAction.ProductDidTapped(productId: product.id)) }) else {
+                                    guard let productViewModel = ProductView.ViewModel(with: product, action: { [weak self] in  self?.action.send(MainSectionViewModelAction.Products.ProductDidTapped(productId: product.id)) }) else {
                                         continue
                                     }
                                     productsViewModelsUpdated.append(productViewModel)
@@ -188,7 +186,7 @@ extension MainSectionProductsView {
                 .sink {[unowned self] action in
                     
                     switch action {
-                    case let payload as MainSectionProductsViewModelAction.HorizontalOffsetDidChanged:
+                    case let payload as MainSectionViewModelAction.Products.HorizontalOffsetDidChanged:
                         updateSelector(with: payload.offset)
                         
                     default:
@@ -209,7 +207,7 @@ extension MainSectionProductsView {
                             
                         } else {
                             
-                            moreButton = MoreButtonViewModel(icon: .ic24MoreHorizontal, action: {[weak self] in self?.action.send(MainSectionProductsViewModelAction.MoreButtonTapped())})
+                            moreButton = MoreButtonViewModel(icon: .ic24MoreHorizontal, action: {[weak self] in self?.action.send(MainSectionViewModelAction.Products.MoreButtonTapped())})
                         }
                     }
                  
@@ -232,7 +230,7 @@ extension MainSectionProductsView {
                                 return
                             }
                             
-                            self.action.send(MainSectionProductsViewModelAction.ScrollToGroup(groupId: group.id))
+                            self.action.send(MainSectionViewModelAction.Products.ScrollToGroup(groupId: group.id))
                             
                         default:
                             break
@@ -252,7 +250,7 @@ extension MainSectionProductsView {
                         
                         switch action {
                         case _ as MainSectionProductsGroupAction.Group.Collapsed:
-                            self.action.send(MainSectionProductsViewModelAction.ScrollToGroup(groupId: group.id))
+                            self.action.send(MainSectionViewModelAction.Products.ScrollToGroup(groupId: group.id))
                             
                         default:
                             break
@@ -307,28 +305,6 @@ extension MainSectionProductsView {
     }
 }
 
-//MARK: - Action
-
-enum MainSectionProductsViewModelAction {
-    
-    struct ProductDidTapped: Action {
-        
-        let productId: ProductData.ID
-    }
-    
-    struct ScrollToGroup: Action {
-        
-        let groupId: MainSectionProductsGroupView.ViewModel.ID
-    }
-    
-    struct MoreButtonTapped: Action {}
-    
-    struct HorizontalOffsetDidChanged: Action {
-        
-        let offset: CGFloat
-    }
-}
-
 //MARK: - View
 
 struct MainSectionProductsView: View {
@@ -368,7 +344,7 @@ struct MainSectionProductsView: View {
                         .onReceive(viewModel.action) { action in
                             
                             switch action {
-                            case let payload as MainSectionProductsViewModelAction.ScrollToGroup:
+                            case let payload as MainSectionViewModelAction.Products.ScrollToGroup:
                                 scrollToGroup(groupId: payload.groupId)
 
                             default:
@@ -377,7 +353,7 @@ struct MainSectionProductsView: View {
                         }
                         .onReceive(proxy.offset) { offset in
                             
-                            viewModel.action.send( MainSectionProductsViewModelAction.HorizontalOffsetDidChanged(offset: offset.x))
+                            viewModel.action.send( MainSectionViewModelAction.Products.HorizontalOffsetDidChanged(offset: offset.x))
                         }
                     }
                 }
