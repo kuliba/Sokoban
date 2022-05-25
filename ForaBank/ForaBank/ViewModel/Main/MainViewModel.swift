@@ -58,6 +58,9 @@ class MainViewModel: ObservableObject {
                 case _ as MainViewModelAction.ButtonTapped.Messages:
                     let messagesHistoryViewModel: MessagesHistoryViewModel = .sample
                     sheet = .messages(messagesHistoryViewModel)
+                    
+                case _ as MainViewModelAction.PullToRefresh:
+                    model.action.send(ModelAction.Products.Update.Total.All())
                 
                 default:
                     break
@@ -174,5 +177,7 @@ enum MainViewModelAction {
         
         struct Messages: Action {}
     }
+    
+    struct PullToRefresh: Action {}
 }
 

@@ -14,48 +14,61 @@ struct MainView: View {
     
     var body: some View {
         
-        VStack {
+        ZStack(alignment: .top) {
+            
+            ScrollView(showsIndicators: false) {
+                
+                VStack(spacing: 20) {
+                    
+                    ForEach(viewModel.sections) { section in
+                        
+                        switch section {
+                        case let productsSectionViewModel as MainSectionProductsView.ViewModel:
+                            MainSectionProductsView(viewModel: productsSectionViewModel)
+                            
+                        case let fastOperationViewModel as MainSectionFastOperationView.ViewModel:
+                            MainSectionFastOperationView(viewModel: fastOperationViewModel)
+                            
+                        case let promoViewModel  as MainSectionPromoView.ViewModel:
+                            MainSectionPromoView(viewModel: promoViewModel)
+                            
+                        case let currencyViewModel as MainSectionCurrencyView.ViewModel:
+                            MainSectionCurrencyView(viewModel: currencyViewModel)
+                            
+                        case let openProductViewModel as MainSectionOpenProductView.ViewModel:
+                            MainSectionOpenProductView(viewModel: openProductViewModel)
+                            
+                        case let atmViewModel as MainSectionAtmView.ViewModel:
+                            MainSectionAtmView(viewModel: atmViewModel)
+                            
+                        default:
+                            EmptyView()
+                        }
+                    }
+                }
+                .padding(.vertical, 20)
+                .background(GeometryReader { geo in
+                    
+                    Color.clear
+                        .preference(key: ScrollOffsetKey.self, value: -geo.frame(in: .named("scroll")).origin.y)
+           
+                })
+                .onPreferenceChange(ScrollOffsetKey.self) { offset in
+                    
+                    if offset < -80 {
+                        
+                        viewModel.action.send(MainViewModelAction.PullToRefresh())
+                    }
+                }
+            }
+            .coordinateSpace(name: "scroll")
+            .zIndex(0)
             
             if viewModel.isRefreshing == true {
                 
                 RefreshView()
+                    .zIndex(1)
             }
-            
-            ScrollView(showsIndicators: false) {
-                
-                ScrollViewReader { proxy in
-                    
-                    VStack(spacing: 20) {
-                        
-                        ForEach(viewModel.sections) { section in
-                            
-                            switch section {
-                            case let productsSectionViewModel as MainSectionProductsView.ViewModel:
-                                MainSectionProductsView(viewModel: productsSectionViewModel)
-                                
-                            case let fastOperationViewModel as MainSectionFastOperationView.ViewModel:
-                                MainSectionFastOperationView(viewModel: fastOperationViewModel)
-                                
-                            case let promoViewModel  as MainSectionPromoView.ViewModel:
-                                MainSectionPromoView(viewModel: promoViewModel)
-                                
-                            case let currencyViewModel as MainSectionCurrencyView.ViewModel:
-                                MainSectionCurrencyView(viewModel: currencyViewModel)
-                                
-                            case let openProductViewModel as MainSectionOpenProductView.ViewModel:
-                                MainSectionOpenProductView(viewModel: openProductViewModel)
-                                
-                            case let atmViewModel as MainSectionAtmView.ViewModel:
-                                MainSectionAtmView(viewModel: atmViewModel)
-                                
-                            default:
-                                EmptyView()
-                            }
-                        }
-                    }
-                }
-            }
-            .padding(.vertical, 20)
         }
         .sheet(item: $viewModel.sheet, content: { sheet in
             switch sheet {
@@ -86,6 +99,18 @@ struct MainView: View {
                                     }
                                 }
         )
+    }
+}
+
+extension MainView {
+    
+    struct ScrollOffsetKey: PreferenceKey {
+        
+        typealias Value = CGFloat
+        static var defaultValue = CGFloat.zero
+        static func reduce(value: inout Value, nextValue: () -> Value) {
+            value += nextValue()
+        }
     }
 }
 
