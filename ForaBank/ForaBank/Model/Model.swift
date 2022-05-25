@@ -19,6 +19,7 @@ class Model {
     //MARK: Products
     let products: CurrentValueSubject<ProductsData, Never>
     let productsUpdating: CurrentValueSubject<[ProductType], Never>
+    let productsHidden: CurrentValueSubject<[ProductData.ID], Never>
     var productsAllowed: Set<ProductType> { [.card, .account, .deposit, .loan] }
     
     //MARK: Statement
@@ -88,6 +89,7 @@ class Model {
         self.products = .init([:])
         self.statement = .init(.init(productStatement: [:]))
         self.productsUpdating = .init([])
+        self.productsHidden = .init([])
         self.catalogProducts = .init([])
         self.catalogBanners = .init([])
         self.currencyList = .init([])
@@ -107,6 +109,7 @@ class Model {
         self.bindings = []
         
         loadCachedData()
+        loadSettings()
         bind()
     }
     
@@ -293,6 +296,9 @@ class Model {
                     
                 case let payload as ModelAction.Products.UpdateCustomName.Request:
                     handleProductsUpdateCustomName(payload)
+
+                case let payload as ModelAction.Products.ActivateCard.Request:
+                    handleProductsActivateCard(payload)
                     
                     //MARK: - Statement
                     
@@ -317,6 +323,9 @@ class Model {
                     
                 case _ as ModelAction.Settings.GetClientInfo.Requested:
                     handleGetClientInfoRequest()
+
+                case let payload as ModelAction.Settings.UpdateProductsHidden:
+                    handleUpdateProductsHidden(payload.productID)
                     
                     //MARK: - Notifications
                     
@@ -487,6 +496,19 @@ private extension Model {
         if let products = localAgent.load(type: ProductsData.self) {
             
             self.products.value = products
+        }
+    }
+
+    func loadSettings() {
+
+        do {
+
+            let productsHidden: [ProductData.ID] = try settingsAgent.load(type: .interface(.productsHidden))
+            self.productsHidden.value = productsHidden
+
+        } catch {
+
+            handleSettingsCachingError(error: error)
         }
     }
     

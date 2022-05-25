@@ -60,6 +60,21 @@ extension ModelAction {
                 case failed(message: String)
             }
         }
+
+        enum ActivateCard {
+
+            struct Request: Action {
+
+                let cardID: ProductData.ID
+                let cardNumber: String
+            }
+
+            enum Response: Action {
+
+                case complete
+                case failed(message: String)
+            }
+        }
     }
 }
 
@@ -214,6 +229,56 @@ extension Model {
                     
                     self.handleServerCommandError(error: error, command: command)
                 }
+            }
+        }
+    }
+
+    func handleProductsActivateCard(_ payload: ModelAction.Products.ActivateCard.Request) {
+
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+
+        let id = payload.cardID
+        let number = payload.cardNumber
+        let defaultErrorMessage = "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения."
+
+        let command = ServerCommands.CardController.UnblockCard(token: token, payload: .init(cardID: id, cardNumber: number))
+
+        serverAgent.executeCommand(command: command) { result in
+
+            switch result {
+            case let .success(response):
+                switch response.statusCode {
+                case .ok:
+
+                    guard response.data != nil else {
+
+                        self.handleServerCommandEmptyData(command: command)
+                        self.action.send(ModelAction.Products.ActivateCard.Response.failed(message: defaultErrorMessage))
+
+                        return
+                    }
+
+                    self.products.value = Model.reduce(products: self.products.value, cardID: id)
+
+                    do {
+
+                        try self.localAgent.store(self.products.value, serial: nil)
+
+                    } catch {
+
+                        self.handleServerCommandCachingError(error: error, command: command)
+                    }
+
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.action.send(ModelAction.Products.ActivateCard.Response.failed(message: response.errorMessage ?? defaultErrorMessage))
+                }
+
+            case let .failure(error):
+                self.action.send(ModelAction.Products.ActivateCard.Response.failed(message: error.localizedDescription))
             }
         }
     }
@@ -425,6 +490,20 @@ extension Model {
         }
         
        return productsUpdated
+    }
+
+    /// Activate card for products
+    static func reduce(products: ProductsData, cardID: ProductData.ID) -> ProductsData {
+
+        guard let productCards = products[.card],
+              let productCard = productCards.first(where: { $0.id == cardID }) as? ProductCardData else {
+            return products
+        }
+
+        productCard.status = .active
+        productCard.statusPc = .active
+
+        return products
     }
 }
 

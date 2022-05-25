@@ -27,6 +27,11 @@ extension ModelAction {
                 let error: Error
             }
         }
+
+        struct UpdateProductsHidden: Action {
+
+            let productID: ProductData.ID
+        }
     }
 }
 
@@ -100,6 +105,35 @@ extension Model {
             case .failure(let error):
                 self.action.send(ModelAction.Settings.GetClientInfo.Failed(error: error))
             }
+        }
+    }
+
+    func handleUpdateProductsHidden(_ productID: ProductData.ID) {
+
+        var productsHidden = self.productsHidden.value
+
+        if productsHidden.contains(productID) {
+
+            guard let firstIndex = productsHidden.firstIndex(where: { $0 == productID }) else {
+                return
+            }
+
+            productsHidden.remove(at: firstIndex)
+
+        } else {
+
+            productsHidden.append(productID)
+        }
+
+        self.productsHidden.value = productsHidden
+
+        do {
+
+            try settingsAgent.store(self.productsHidden.value, type: .interface(.productsHidden))
+
+        } catch {
+
+            handleSettingsCachingError(error: error)
         }
     }
 }

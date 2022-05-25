@@ -14,11 +14,13 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
     let action: PassthroughSubject<Action, Never> = .init()
     
     @Published var state: State
+    @Published var isMainScreenHidden: Bool
     
-    let id: String
+    let id: Int
     let icon: Image
     let title: String
     let subtitle: String
+    let number: String
     let numberCard: String
     let balance: String
     let paymentSystemIcon: Image?
@@ -28,15 +30,17 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
     
     private var bindings = Set<AnyCancellable>()
     
-    init(id: String = UUID().uuidString,
+    init(id: Int,
          icon: Image,
          title: String,
          subtitle: String = "",
+         number: String,
          numberCard: String,
          balance: String,
          balanceRub: Double = 0,
          dateLong: String = "",
          isNeedsActivated: Bool = false,
+         isMainScreenHidden: Bool = false,
          paymentSystemIcon: Image? = nil,
          state: State = .normal) {
         
@@ -44,12 +48,14 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
         self.icon = icon
         self.title = title
         self.subtitle = subtitle
+        self.number = number
         self.numberCard = numberCard
         self.balance = balance
         self.paymentSystemIcon = paymentSystemIcon
         self.balanceRub = balanceRub
         self.dateLong = dateLong
         self.isNeedsActivated = isNeedsActivated
+        self.isMainScreenHidden = isMainScreenHidden
         self.state = state
         
         bind()
@@ -67,12 +73,11 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
                     case .normal:
                         withAnimation(.easeInOut(duration: 0.3)) {
                             
-                            let viewModel = ActionButtonViewModel(type: .delete) { [weak self] in
-                                self?.action.send(MyProductsSectionItemAction.ButtonType.Delete())
+                            let viewModel = ActionButtonViewModel(type: isMainScreenHidden ? .add : .delete) { [weak self] in
+                                self?.action.send(MyProductsSectionItemAction.ButtonType.Hidden(productID: id))
                             }
                             
                             self.state = .rightButton(viewModel)
-                            
                         }
                     case .leftButton:
                         withAnimation(.easeInOut(duration: 0.3)) {
@@ -88,7 +93,8 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
                         withAnimation(.easeInOut(duration: 0.3)) {
                             
                             let viewModel = ActionButtonViewModel(type: .activate) { [weak self] in
-                                self?.action.send(MyProductsSectionItemAction.ButtonType.Activate())
+
+                                self?.action.send(MyProductsSectionItemAction.ButtonType.Activate(cardID: id, cardNumber: number))
                             }
                             
                             self.state = .leftButton(viewModel)
@@ -101,9 +107,8 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
                         break
                     }
                     
-                case _ as MyProductsSectionItemAction.ButtonType.Delete:
+                case _ as MyProductsSectionItemAction.ButtonType.Hidden:
                     setNormalStateWithAnimation()
-                    //TODO: Implementation required
                     
                 case _ as MyProductsSectionItemAction.ButtonType.Add:
                     setNormalStateWithAnimation()
@@ -111,7 +116,6 @@ class MyProductsSectionItemViewModel: ObservableObject, Identifiable {
                     
                 case _ as MyProductsSectionItemAction.ButtonType.Activate:
                     setNormalStateWithAnimation()
-                    //TODO: Implementation required
                     
                 default:
                     break
@@ -186,8 +190,17 @@ enum MyProductsSectionItemAction {
     enum ButtonType {
         
         struct Add: Action {}
-        struct Delete: Action {}
-        struct Activate: Action {}
+
+        struct Hidden: Action {
+
+            let productID: ProductData.ID
+        }
+
+        struct Activate: Action {
+
+            let cardID: Int
+            let cardNumber: String
+        }
     }
     
     enum SwipeDirection {
@@ -202,9 +215,11 @@ enum MyProductsSectionItemAction {
 extension MyProductsSectionItemViewModel {
 
     static let sample1 = MyProductsSectionItemViewModel(
+        id: 10002585800,
         icon: .init("Multibonus Card"),
         title: "Кредит",
         subtitle: "Дебетовая",
+        number: "4444555566661120",
         numberCard: "•  2953  •",
         balance: "19 547 ₽",
         dateLong: "•  29.08.22",
@@ -212,66 +227,82 @@ extension MyProductsSectionItemViewModel {
     )
 
     static let sample2 = MyProductsSectionItemViewModel(
+        id: 10002585801,
         icon: .init("Digital Card"),
         title: "Цифровая",
         subtitle: "Дебетовая",
+        number: "4444555566661121",
         numberCard: "•  2953  •",
         balance: "19 547 ₽",
         paymentSystemIcon: .init("Logo Visa"))
 
     static let sample3 = MyProductsSectionItemViewModel(
+        id: 10002585802,
         icon: .init("Salary Card"),
         title: "Зарплатная",
         subtitle: "Дебетовая",
+        number: "4444555566661122",
         numberCard: "•  2953  •",
         balance: "19 547 ₽",
         paymentSystemIcon: .init("Logo Visa"))
 
     static let sample4 = MyProductsSectionItemViewModel(
+        id: 10002585803,
         icon: .init("Want Card"),
         title: "Хочу карту",
         subtitle: "Бесплатно",
+        number: "4444555566661123",
         numberCard: "•  2953  •",
         balance: "19 547 ₽")
 
     static let sample5 = MyProductsSectionItemViewModel(
+        id: 10002585804,
         icon: .init("Classic Card"),
         title: "Classic",
         subtitle: "Дебетовая",
+        number: "4444555566661124",
         numberCard: "•  2953  •",
         balance: "19 547 ₽",
         paymentSystemIcon: .init("Logo Visa"))
 
     static let sample6 = MyProductsSectionItemViewModel(
+        id: 10002585805,
         icon: .init("Multibonus Card"),
         title: "Мультибонус",
         subtitle: "Дебетовая",
+        number: "4444555566661125",
         numberCard: "•  2953  •",
         balance: "19 547 ₽",
         paymentSystemIcon: .init("Logo Visa"))
 
     static let sample7 = MyProductsSectionItemViewModel(
+        id: 10002585806,
         icon: .init("Multibonus Card"),
         title: "Кредит",
         subtitle: "Дебетовая",
+        number: "4444555566661126",
         numberCard: "•  2953  •",
         balance: "19 547 ₽",
         dateLong: "•  29.08.22",
         paymentSystemIcon: .init("Logo Visa"))
 
     static let sample8 = MyProductsSectionItemViewModel(
+        id: 10002585807,
         icon: .init("Digital Card"),
         title: "Цифровая",
         subtitle: "Дебетовая",
+        number: "4444555566661127",
         numberCard: "•  2953  •",
         balance: "19 547 ₽",
         paymentSystemIcon: .init("Logo Visa"),
         state: .leftButton(.init(type: .activate, action: {})))
 
     static let sample9 = MyProductsSectionItemViewModel(
+        id: 10002585808,
         icon: .init("Salary Card"),
         title: "Зарплатная",
         subtitle: "Дебетовая",
+        number: "4444555566661128",
         numberCard: "•  2953  •",
         balance: "19 547 ₽",
         paymentSystemIcon: .init("Logo Visa"),
