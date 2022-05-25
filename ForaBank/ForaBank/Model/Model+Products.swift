@@ -46,7 +46,7 @@ extension ModelAction {
         }
         
         enum UpdateCustomName {
-        
+            
             struct Request: Action {
                 
                 let productId: ProductData.ID
@@ -73,6 +73,21 @@ extension ModelAction {
 
                 case complete
                 case failed(message: String)
+            }
+        }
+        
+        enum ProductDetails {
+            
+            struct Request: Action {
+                            
+               let type: ProductType
+               let id: ProductData.ID
+            }
+            
+            enum Response: Action {
+                
+                case success(productDetails: ProductDetailsData)
+                case failure(message: String)
             }
         }
     }
@@ -299,7 +314,7 @@ extension Model {
                         }
                         
                         continuation.resume(returning: products)
-
+                        
                     default:
                         continuation.resume(with: .failure(ModelProductsError.statusError(status: response.statusCode, message: response.errorMessage)))
                     }
@@ -320,7 +335,7 @@ extension Model {
         let id = payload.productId
         let name = payload.name
         let defaultErrorMessage = "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения."
-    
+        
         switch payload.productType {
         case .card:
             let command = ServerCommands.CardController.SaveCardName(token: token, payload: .init(cardNumber: nil, endDate: nil, id: id, name: name, startDate: nil, statementFormat: nil))
@@ -403,6 +418,50 @@ extension Model {
             }
         }
     }
+    
+    func handleProductDetails(_ payload: ModelAction.Products.ProductDetails.Request) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        var command = ServerCommands.ProductController.GetProductDetails(token: token, payload: .init(accountId: nil, cardId: nil, depositId: nil))
+        
+        switch payload.type {
+        case .card:
+            command = ServerCommands.ProductController.GetProductDetails(token: token, payload: .init(accountId: nil, cardId: payload.id, depositId: nil))
+        case .deposit:
+            command = ServerCommands.ProductController.GetProductDetails(token: token, payload: .init(accountId: nil, cardId: nil, depositId: payload.id))
+        case .account:
+            command = ServerCommands.ProductController.GetProductDetails(token: token, payload: .init(accountId: payload.id, cardId: nil, depositId: nil))
+        case .loan:
+            return
+        }
+        
+        serverAgent.executeCommand(command: command) { result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    
+                    guard let details = response.data else {
+                        self.handleServerCommandEmptyData(command: command)
+                        return
+                    }
+                    
+                    self.action.send(ModelAction.Products.ProductDetails.Response.success(productDetails: details))
+                    
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                
+            case .failure(let error):
+                self.handleServerCommandError(error: error, command: command)
+            }
+        }
+    }
 }
 
 //MARK: - Reducers
@@ -460,7 +519,7 @@ extension Model {
             productsUpdated[productType] = productsForTypeUpdated
         }
         
-       return productsUpdated
+        return productsUpdated
     }
     
     func reduce(products: ProductsData, with params: ProductsDynamicParams) -> ProductsData {
@@ -489,7 +548,7 @@ extension Model {
             productsUpdated[productType] = productsForTypeUpdated
         }
         
-       return productsUpdated
+        return productsUpdated
     }
 
     /// Activate card for products

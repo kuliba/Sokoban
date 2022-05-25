@@ -22,6 +22,20 @@ extension ModelAction {
                 let result: Result<[DepositProductData], Error>
             }
         }
+        
+        enum Info {
+            
+            struct Request: Action {
+                
+                let id: Int
+            }
+            
+            enum Response: Action {
+                
+                case success(data: DepositInfoDataItem)
+                case failure(message: String)
+            }
+        }
     }
 }
 
@@ -53,6 +67,35 @@ extension Model {
                 }
             case .failure(let error):
             self.action.send(ModelAction.Deposits.List.Response(result: .failure(error)))
+            }
+        }
+    }
+    
+    func handleDepositsInfoRequest(id: Int) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.DepositController.GetDepositInfo(token: token, payload: .init(id: id))
+        serverAgent.executeCommand(command: command) { result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    guard let info = response.data else {
+                        self.handleServerCommandEmptyData(command: command)
+                        return
+                    }
+                    self.action.send(ModelAction.Deposits.Info.Response.success(data: info))
+
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+            case .failure(let error):
+                self.handleServerCommandError(error: error, command: command)
             }
         }
     }

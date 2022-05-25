@@ -459,6 +459,8 @@
 		6880D32726A5CC69008FBCB4 /* AES.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6880D32626A5CC68008FBCB4 /* AES.swift */; };
 		6880D32926A5CC7D008FBCB4 /* Encription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6880D32826A5CC7D008FBCB4 /* Encription.swift */; };
 		6880D32D26A70585008FBCB4 /* FaceTouchIdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6880D32C26A70585008FBCB4 /* FaceTouchIdViewController.swift */; };
+		68821585283C026500B27D54 /* InfoProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68821584283C026500B27D54 /* InfoProductView.swift */; };
+		68821588283C029000B27D54 /* InfoProductViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68821587283C029000B27D54 /* InfoProductViewModel.swift */; };
 		688B9BA126DD0C2500407A75 /* ProductsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688B9BA026DD0C2500407A75 /* ProductsViewController.swift */; };
 		688B9BA526DD0DC600407A75 /* ProductTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688B9BA326DD0DC600407A75 /* ProductTableViewCell.swift */; };
 		688B9BA626DD0DC600407A75 /* ProductTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 688B9BA426DD0DC600407A75 /* ProductTableViewCell.xib */; };
@@ -1621,6 +1623,8 @@
 		6880D32626A5CC68008FBCB4 /* AES.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AES.swift; sourceTree = "<group>"; };
 		6880D32826A5CC7D008FBCB4 /* Encription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Encription.swift; sourceTree = "<group>"; };
 		6880D32C26A70585008FBCB4 /* FaceTouchIdViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceTouchIdViewController.swift; sourceTree = "<group>"; };
+		68821584283C026500B27D54 /* InfoProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoProductView.swift; sourceTree = "<group>"; };
+		68821587283C029000B27D54 /* InfoProductViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoProductViewModel.swift; sourceTree = "<group>"; };
 		688B9BA026DD0C2500407A75 /* ProductsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsViewController.swift; sourceTree = "<group>"; };
 		688B9BA326DD0DC600407A75 /* ProductTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductTableViewCell.swift; sourceTree = "<group>"; };
 		688B9BA426DD0DC600407A75 /* ProductTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProductTableViewCell.xib; sourceTree = "<group>"; };
@@ -3421,6 +3425,22 @@
 			path = FaceToucheId;
 			sourceTree = "<group>";
 		};
+		68821583283C024E00B27D54 /* InfoProductView */ = {
+			isa = PBXGroup;
+			children = (
+				68821584283C026500B27D54 /* InfoProductView.swift */,
+			);
+			path = InfoProductView;
+			sourceTree = "<group>";
+		};
+		68821586283C027100B27D54 /* InfoProduct */ = {
+			isa = PBXGroup;
+			children = (
+				68821587283C029000B27D54 /* InfoProductViewModel.swift */,
+			);
+			path = InfoProduct;
+			sourceTree = "<group>";
+		};
 		688B9B9F26DD0BFB00407A75 /* ProductsViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -3624,6 +3644,7 @@
 			children = (
 				68E803E227D9202600B75D41 /* ProductProfileView.swift */,
 				68A07C3E2811F15300797A54 /* ProductProfileViewHostingViewController.swift */,
+				68821583283C024E00B27D54 /* InfoProductView */,
 				77499C3D2773A37F00F6C079 /* OperationDetail */,
 			);
 			path = ProductProfile;
@@ -3633,6 +3654,7 @@
 			isa = PBXGroup;
 			children = (
 				68E803E527D9280B00B75D41 /* ProductProfileViewModel.swift */,
+				68821586283C027100B27D54 /* InfoProduct */,
 				77EA0DBC2779B40100C6ED12 /* OperationDetail */,
 			);
 			path = ProductProfile;
@@ -6917,6 +6939,7 @@
 				6820929027AB1004003DCAFD /* FastPaymentContractClAttributeTypeData.swift in Sources */,
 				68FFA5282682AF2C002DADFA /* ContactsViewController.swift in Sources */,
 				0B66E8DA26CC5F1E00FD735D /* SquareView.swift in Sources */,
+				68821585283C026500B27D54 /* InfoProductView.swift in Sources */,
 				68BAECB12744157200E1BF65 /* GetDepositInfoDecodableModel.swift in Sources */,
 				0B931B5126E005D700CA8017 /* GKHInputFooterView.swift in Sources */,
 				68FFA55326857530002DADFA /* Extension.swift in Sources */,
@@ -7429,6 +7452,7 @@
 				774E318B27A050DB005A067B /* Model+Preview.swift in Sources */,
 				68D06F3426C40DF500F9BE4C /* CurrencyExchangeCollectionViewCell.swift in Sources */,
 				0B22AEA126CDA9BC00B11E7F /* GKHInputViewController.swift in Sources */,
+				68821588283C029000B27D54 /* InfoProductViewModel.swift in Sources */,
 				EDDFE3C827597A7600F57C71 /* PaymentViewController.swift in Sources */,
 				7772978727C39E2D0099EF91 /* StringValueMask.swift in Sources */,
 				68FFA5452682F48C002DADFA /* SearchContact.swift in Sources */,

@@ -73,4 +73,12 @@ extension DateFormatter {
         
         return formatter
     }()
+    
+    static let detailFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat =  "d MMMM yyyy"
+        formatter.locale = Locale(identifier: "ru_RU")
+        
+        return formatter
+    }()
 }

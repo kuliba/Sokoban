@@ -300,6 +300,9 @@ class Model {
                 case let payload as ModelAction.Products.ActivateCard.Request:
                     handleProductsActivateCard(payload)
                     
+                case let payload as ModelAction.Products.ProductDetails.Request:
+                    handleProductDetails(payload)
+                    
                     //MARK: - Statement
                     
                 case let payload as ModelAction.Statement.List.Request:
@@ -432,6 +435,9 @@ class Model {
                     
                 case _ as ModelAction.Deposits.List.Request:
                     handleDepositsListRequest()
+                    
+                case let payload as ModelAction.Deposits.Info.Request:
+                    handleDepositsInfoRequest(id: payload.id)
                     
                     //MARK: - Location Actions
                     
