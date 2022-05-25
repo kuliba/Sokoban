@@ -44,7 +44,7 @@ class MainViewModel: ObservableObject {
         
     }
     
-    func bind() {
+    private func bind() {
         
         action
             .receive(on: DispatchQueue.main)
@@ -127,14 +127,11 @@ class MainViewModel: ObservableObject {
             }
         }
     }
-    
 
-    
-    func createNavButtonsRight() -> [NavigationBarButtonViewModel] {
+    private func createNavButtonsRight() -> [NavigationBarButtonViewModel] {
         
         [.init(icon: .ic24Search, action: {[weak self] in self?.action.send(MainViewModelAction.ButtonTapped.Search())}), .init(icon: .ic24Bell, action: {[weak self] in self?.action.send(MainViewModelAction.ButtonTapped.Messages())})]
     }
-
 }
 
 extension MainViewModel {

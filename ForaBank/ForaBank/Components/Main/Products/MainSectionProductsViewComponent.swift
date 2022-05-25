@@ -20,20 +20,20 @@ extension MainSectionProductsView {
         
         override var type: MainSectionType { .products }
         
-        @Published var selector: OptionSelectorView.ViewModel?
         @Published var groups: [MainSectionProductsGroupView.ViewModel]
-        
-        lazy var moreButton: MoreButtonViewModel = MoreButtonViewModel(icon: .ic24MoreHorizontal, action: {[weak self] in self?.action.send(MainSectionProductsViewModelAction.MoreButtonTapped())})
+        @Published var selector: OptionSelectorView.ViewModel?
+        @Published var moreButton: MoreButtonViewModel?
         
         private var products: CurrentValueSubject<[ProductType: [ProductView.ViewModel]], Never> = .init([:])
 
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        internal init(groups: [MainSectionProductsGroupView.ViewModel], selector: OptionSelectorView.ViewModel?, model: Model = .emptyMock, isCollapsed: Bool) {
+        internal init(groups: [MainSectionProductsGroupView.ViewModel], selector: OptionSelectorView.ViewModel?, moreButton: MoreButtonViewModel?, model: Model = .emptyMock, isCollapsed: Bool) {
             
             self.groups = groups
             self.selector = selector
+            self.moreButton = moreButton
             self.model = model
             super.init(isCollapsed: isCollapsed)
         }
@@ -42,6 +42,7 @@ extension MainSectionProductsView {
             
             self.groups = []
             self.selector = nil
+            self.moreButton = nil
             self.model = model
             super.init(isCollapsed: false)
             
@@ -195,6 +196,25 @@ extension MainSectionProductsView {
                     }
                     
                 }.store(in: &bindings)
+            
+            $isCollapsed
+                .receive(on: DispatchQueue.main)
+                .sink {[unowned self] isCollapsed in
+                    
+                    withAnimation {
+                        
+                        if isCollapsed == true {
+                            
+                            moreButton = nil
+                            
+                        } else {
+                            
+                            moreButton = MoreButtonViewModel(icon: .ic24MoreHorizontal, action: {[weak self] in self?.action.send(MainSectionProductsViewModelAction.MoreButtonTapped())})
+                        }
+                    }
+                 
+                }.store(in: &bindings)
+            
         }
         
         private func bind(_ selector: OptionSelectorView.ViewModel?) {
@@ -394,31 +414,38 @@ extension MainSectionProductsView {
     
     struct MoreButtonView: View {
         
-        let viewModel: ViewModel.MoreButtonViewModel
+        let viewModel: ViewModel.MoreButtonViewModel?
         
         var body: some View {
             
-            VStack {
+            if let viewModel = viewModel {
                 
-                HStack {
+                VStack {
                     
-                    Spacer()
-                    
-                    Button(action: viewModel.action){
+                    HStack {
                         
-                        ZStack{
+                        Spacer()
+                        
+                        Button(action: viewModel.action){
                             
-                            Circle()
-                                .frame(width: 32, height: 32, alignment: .center)
-                                .foregroundColor(.mainColorsGrayLightest)
-                            
-                            viewModel.icon
-                                .renderingMode(.original)
+                            ZStack{
+                                
+                                Circle()
+                                    .frame(width: 32, height: 32, alignment: .center)
+                                    .foregroundColor(.mainColorsGrayLightest)
+                                
+                                viewModel.icon
+                                    .renderingMode(.original)
+                            }
                         }
                     }
+                    
+                    Spacer()
                 }
                 
-                Spacer()
+            } else {
+                
+                Color.clear
             }
         }
     }
@@ -439,7 +466,7 @@ struct MainSectionProductsView_Previews: PreviewProvider {
 
 extension MainSectionProductsView.ViewModel {
     
-    static let sample = MainSectionProductsView.ViewModel(groups: [.sampleWant], selector: nil, isCollapsed: false)
+    static let sample = MainSectionProductsView.ViewModel(groups: [.sampleWant], selector: nil, moreButton: nil, isCollapsed: false)
 }
 
 
