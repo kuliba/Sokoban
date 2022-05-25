@@ -91,16 +91,13 @@ struct MainSectionPromoView: View {
                                 
                 ForEach(viewModel.items) { promotionViewModel in
                     
-                    Button {
-                        
-                        promotionViewModel.action()
-                        
-                    } label: {
+                    Button(action: promotionViewModel.action) {
                         
                         promotionViewModel.image
                             .frame(width: 288, height: 124)
                             .cornerRadius(12)
-                    }
+                        
+                    }.buttonStyle(PushButtonStyle())
                 }
             }
             .padding(.horizontal, 20)

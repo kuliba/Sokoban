@@ -57,7 +57,8 @@ struct MainSectionAtmView: View {
                         .padding(.leading, 12)
                 }
                 .padding(.horizontal, 20)
-            }
+                
+            }.buttonStyle(PushButtonStyle())
         }
     }
 }

@@ -125,7 +125,6 @@ class MainViewModel: ObservableObject {
                         model.settingsMainSectionsUpdate(settings)
                         
                     }.store(in: &bindings)
-                
             }
         }
     }
