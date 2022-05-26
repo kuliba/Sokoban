@@ -20,7 +20,7 @@ class UserAccountViewModel: ObservableObject {
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
-    internal init(model: Model, navigationBar: UserAccountViewModel.NavigationViewModel, avatar: AvatarViewModel, sections: [AccountSectionViewModel]) {
+    init(model: Model, navigationBar: UserAccountViewModel.NavigationViewModel, avatar: AvatarViewModel, sections: [AccountSectionViewModel]) {
         
         self.model = model
         self.navigationBar = navigationBar
@@ -36,7 +36,9 @@ class UserAccountViewModel: ObservableObject {
         
     }
     
-    internal init(model: Model) {
+    init(model: Model, clientInfo: ClientInfoData) {
+        
+        //TODO: fill viewModel with ClientInfoData
         
         self.model = model
         self.navigationBar = .init(
@@ -61,28 +63,27 @@ class UserAccountViewModel: ObservableObject {
             })
         
         self.sections = []
+        
         bind()
-        model.action.send(ModelAction.Settings.GetClientInfo.Requested())
+        model.action.send(ModelAction.ClientInfo.Fetch.Request())
     }
         
     func bind() {
         
-        model.userSettingData
+        model.clientInfo
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] user in
-                switch user {
-                    
-                case .authorized(user: let userData):
-                    createSections(userData: userData)
-                    
-                default:
-                    break
-                }
+            .sink { [unowned self] clientInfo in
+                
+                guard let clientInfo = clientInfo else { return }
+                
+                createSections(userData: clientInfo)
+
             }.store(in: &bindings)
         
     }
     
     func createSections(userData: ClientInfoData) {
+        
         var accountContactsItems = [
             AccountCellButtonView.ViewModel(
                 icon: .ic24User,

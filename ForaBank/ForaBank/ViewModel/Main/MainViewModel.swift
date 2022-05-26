@@ -58,7 +58,10 @@ class MainViewModel: ObservableObject {
                 
                 switch action {
                 case _ as MainViewModelAction.ButtonTapped.UserAccount:
-                    let userAccountViewModel: UserAccountViewModel = .init(model: model)
+                    guard let clientInfo = model.clientInfo.value else {
+                        return
+                    }
+                    let userAccountViewModel: UserAccountViewModel = .init(model: model, clientInfo: clientInfo)
                     sheet = .userAccount(userAccountViewModel)
                     
                 case _ as MainViewModelAction.ButtonTapped.Messages:

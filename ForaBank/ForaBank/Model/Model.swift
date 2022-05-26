@@ -46,8 +46,10 @@ class Model {
     //MARK: Notifications
     let notifications: CurrentValueSubject<[NotificationData], Never>
     
-    //MARK: - UserData
-    let userSettingData: CurrentValueSubject<ClientInfoState, Never> = .init(.empty)
+    //MARK: - Client Info
+    let clientInfo: CurrentValueSubject<ClientInfoData?, Never>
+    let clientPhoto: CurrentValueSubject<ClientPhotoData?, Never>
+    let clientName: CurrentValueSubject<ClientNameData?, Never>
     
     //MARK: Loacation
     let currentUserLoaction: CurrentValueSubject<LocationData?, Never>
@@ -103,6 +105,9 @@ class Model {
         self.paymentTemplatesViewSettings = .init(.initial)
         self.latestPayments = .init([])
         self.notifications = .init([])
+        self.clientInfo = .init(nil)
+        self.clientPhoto = .init(nil)
+        self.clientName = .init(nil)
         self.currentUserLoaction = .init(nil)
         
         self.sessionAgent = sessionAgent
@@ -161,7 +166,7 @@ class Model {
                 switch auth {
                 case .active:
                     action.send(ModelAction.Products.Update.Total.All())
-                    action.send(ModelAction.Settings.GetClientInfo.Requested())
+                    action.send(ModelAction.ClientInfo.Fetch.Request())
                     action.send(ModelAction.Rates.Update.All())
                     
                 case .inactive:
@@ -328,10 +333,10 @@ class Model {
                 case let payload as ModelAction.Payment.Complete.Request:
                     handlePaymentsCompleteRequest(payload)
                     
-                    //MARK: - Settings Actions
+                    //MARK: - Client Info
                     
-                case _ as ModelAction.Settings.GetClientInfo.Requested:
-                    handleGetClientInfoRequest()
+                case _ as ModelAction.ClientInfo.Fetch.Request:
+                    handleClientInfoFetchRequest()
                     
                     //MARK: - Notifications
                     
@@ -505,6 +510,10 @@ private extension Model {
             
             self.rates.value = rates
         }
+        
+        self.clientInfo.value = localAgent.load(type: ClientInfoData.self)
+        self.clientPhoto.value = localAgent.load(type: ClientPhotoData.self)
+        self.clientName.value = localAgent.load(type: ClientNameData.self)
     }
     
     func clearCachedData() {
@@ -525,6 +534,33 @@ private extension Model {
         } catch {
             
             print("Model: clearCachedData: products error: \(error.localizedDescription)")
+        }
+        
+        do {
+            
+            try localAgent.clear(type: ClientInfoData.self)
+            
+        } catch {
+            
+            print("Model: clearCachedData: ClientInfoData error: \(error.localizedDescription)")
+        }
+        
+        do {
+            
+            try localAgent.clear(type: ClientPhotoData.self)
+            
+        } catch {
+            
+            print("Model: clearCachedData: ClientPhotoData error: \(error.localizedDescription)")
+        }
+        
+        do {
+            
+            try localAgent.clear(type: ClientNameData.self)
+            
+        } catch {
+            
+            print("Model: clearCachedData: ClientNameData error: \(error.localizedDescription)")
         }
     }
 }

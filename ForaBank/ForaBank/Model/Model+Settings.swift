@@ -7,29 +7,6 @@
 
 import Foundation
 
-//MARK: - Actions
-
-extension ModelAction {
-    
-    enum Settings {
-        
-        enum GetClientInfo {
-        
-            struct Requested: Action { }
-            
-            struct Complete: Action {
-                
-                let user: ClientInfoData
-            }
-            
-            struct Failed: Action {
-                
-                let error: Error
-            }
-        }
-    }
-}
-
 //MARK: - Data Helpers
 
 extension Model {
@@ -57,49 +34,6 @@ extension Model {
             
             //TODO: log
             print(error.localizedDescription)
-        }
-    }
-}
-
-//MARK: - Handlers
-
-extension Model {
-    
-    func handleGetClientInfoRequest() {
-        guard let token = token else {
-            return
-        }
-        
-        let command = ServerCommands.PersonController.GetClientInfo(token: token)
-        serverAgent.executeCommand(command: command) { result in
-            
-            switch result {
-            case .success(let response):
-                switch response.statusCode {
-                case .ok:
-                    guard let clientInfo = response.data else { return }
-                    
-                    //TODO: store settings
-                    /*
-                    do {
-                        try self.settingsAgent.store(clientInfo, type: .personal(.allData))
-                        
-                    } catch {
-                        
-                        //TODO: log
-                        print(error.localizedDescription)
-                    }
-                     */
-                    
-                    self.userSettingData.value = .authorized(user: clientInfo)
-                    self.action.send(ModelAction.Settings.GetClientInfo.Complete(user: clientInfo))
-                default:
-                    //TODO: handle not ok server status
-                    return
-                }
-            case .failure(let error):
-                self.action.send(ModelAction.Settings.GetClientInfo.Failed(error: error))
-            }
         }
     }
 }
