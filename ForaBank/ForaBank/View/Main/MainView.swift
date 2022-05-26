@@ -71,7 +71,7 @@ struct MainView: View {
             }
         }
         .sheet(item: $viewModel.sheet, content: { sheet in
-            switch sheet {
+            switch sheet.type {
             case .productProfile(let productProfileViewModel):
                 ProductProfileView(viewModel: productProfileViewModel)
                 

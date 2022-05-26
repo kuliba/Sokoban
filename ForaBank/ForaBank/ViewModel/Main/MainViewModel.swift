@@ -62,11 +62,11 @@ class MainViewModel: ObservableObject {
                         return
                     }
                     let userAccountViewModel: UserAccountViewModel = .init(model: model, clientInfo: clientInfo)
-                    sheet = .userAccount(userAccountViewModel)
+                    sheet = .init(type: .userAccount(userAccountViewModel))
                     
                 case _ as MainViewModelAction.ButtonTapped.Messages:
                     let messagesHistoryViewModel: MessagesHistoryViewModel = .sample
-                    sheet = .messages(messagesHistoryViewModel)
+                    sheet = .init(type: .messages(messagesHistoryViewModel))
                     
                 case _ as MainViewModelAction.PullToRefresh:
                     model.action.send(ModelAction.Products.Update.Total.All())
@@ -110,18 +110,18 @@ class MainViewModel: ObservableObject {
                         // products section
                     case let payload as MainSectionViewModelAction.Products.ProductDidTapped:
                         let productProfileViewModel: ProductProfileViewModel = .init(productViewModel: .init(model, productId: payload.productId, productType: .card), model: model)
-                        sheet = .productProfile(productProfileViewModel)
+                        sheet = .init(type: .productProfile(productProfileViewModel))
                         
                     case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
                         let myProductsViewModel: MyProductsViewModel = .init(model)
-                        sheet = .myProducts(myProductsViewModel)
+                        sheet = .init(type: .myProducts(myProductsViewModel))
                        
                         // atm section
                     case _ as MainSectionViewModelAction.Atm.ButtonTapped:
                         guard let placesViewModel = PlacesViewModel(model) else {
                             return
                         }
-                        sheet = .places(placesViewModel)
+                        sheet = .init(type: .places(placesViewModel))
                         
                     default:
                         break
@@ -194,15 +194,19 @@ extension MainViewModel {
         let action: () -> Void
     }
     
-    enum Sheet: Identifiable {
+    struct Sheet: Identifiable {
         
-        var id: UUID { UUID() }
+        let id = UUID()
+        let type: Kind
         
-        case productProfile(ProductProfileViewModel)
-        case userAccount(UserAccountViewModel)
-        case messages(MessagesHistoryViewModel)
-        case myProducts(MyProductsViewModel)
-        case places(PlacesViewModel)
+        enum Kind {
+            
+            case productProfile(ProductProfileViewModel)
+            case userAccount(UserAccountViewModel)
+            case messages(MessagesHistoryViewModel)
+            case myProducts(MyProductsViewModel)
+            case places(PlacesViewModel)
+        }
     }
 }
 
