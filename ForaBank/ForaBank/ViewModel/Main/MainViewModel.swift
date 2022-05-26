@@ -38,7 +38,7 @@ class MainViewModel: ObservableObject {
                          MainSectionFastOperationView.ViewModel.sample,
                          MainSectionPromoView.ViewModel(model),
                          MainSectionCurrencyView.ViewModel(model),
-                         MainSectionOpenProductView.ViewModel.sample,
+                         MainSectionOpenProductView.ViewModel(model),
                          MainSectionAtmView.ViewModel.initial]
         
         self.isRefreshing = false

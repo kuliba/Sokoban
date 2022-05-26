@@ -77,6 +77,14 @@ enum MainSectionViewModelAction {
         }
     }
     
+    enum OpenProduct {
+    
+        struct ButtonTapped: Action {
+            
+            let productType: ProductType
+        }
+    }
+    
     enum Atm {
     
         struct ButtonTapped: Action {}
