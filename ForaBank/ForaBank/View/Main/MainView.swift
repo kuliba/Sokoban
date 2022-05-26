@@ -118,45 +118,53 @@ extension MainView {
     
     struct UserAccountButton: View {
     
-        @ObservedObject var viewModel: MainViewModel.UserAccountButtonViewModel
+        let viewModel: MainViewModel.UserAccountButtonViewModel?
         
         var body: some View {
             
-            Button(action: viewModel.action) {
-               
-                HStack {
-                    
-                    ZStack {
+            if let viewModel = viewModel {
+                
+                Button(action: viewModel.action) {
+                   
+                    HStack {
                         
                         ZStack {
                             
-                            Circle()
-                                .foregroundColor(.bGIconGrayLightest)
-                                .frame(width: 40, height: 40)
+                            ZStack {
+                                
+                                Circle()
+                                    .foregroundColor(.bGIconGrayLightest)
+                                    .frame(width: 40, height: 40)
+                                
+                                Image.ic24User
+                                    .renderingMode(.template)
+                                    .foregroundColor(.iconGray)
+                            }
+                           
+                            ZStack{
+                              
+                                Circle()
+                                    .foregroundColor(.iconWhite)
+                                    .frame(width: 20, height: 20)
+                                
+                                viewModel.logo
+                                    .renderingMode(.original)
+                            }
+                            .offset(x: 14, y: -14)
                             
-                            Image.ic24User
-                                .renderingMode(.template)
-                                .foregroundColor(.iconGray)
                         }
-                       
-                        ZStack{
-                          
-                            Circle()
-                                .foregroundColor(.iconWhite)
-                                .frame(width: 20, height: 20)
-                            
-                            viewModel.logo
-                                .renderingMode(.original)
-                        }
-                        .offset(x: 14, y: -14)
                         
+                        Text(viewModel.name)
+                            .foregroundColor(.textSecondary)
+                            .font(.textH4R16240())
                     }
-                    
-                    Text(viewModel.name)
-                        .foregroundColor(.textSecondary)
-                        .font(.textH4R16240())
                 }
+                
+            } else {
+                
+                Color.clear
             }
+            
         }
     }
     

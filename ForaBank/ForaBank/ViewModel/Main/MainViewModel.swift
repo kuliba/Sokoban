@@ -13,7 +13,7 @@ class MainViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
 
-    lazy var userAccountButton: UserAccountButtonViewModel = UserAccountButtonViewModel(logo: .ic12LogoForaColor, avatar: nil, name: "Александр", action: { [weak self] in self?.action.send(MainViewModelAction.ButtonTapped.UserAccount())})
+    @Published var userAccountButton: UserAccountButtonViewModel?
     @Published var navButtonsRight: [NavigationBarButtonViewModel]
     @Published var sections: [MainSectionViewModel]
     @Published var isRefreshing: Bool
@@ -85,6 +85,15 @@ class MainViewModel: ObservableObject {
                     
                     self.isRefreshing = productsUpdating.isEmpty ? false : true
                 }
+                
+            }.store(in: &bindings)
+        
+        model.clientInfo
+            .combineLatest(model.clientPhoto, model.clientName)
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] clientData in
+                
+                userAccountButton = userAccountButton(clientInfo: clientData.0, clientPhoto: clientData.1, clientName: clientData.2)
                 
             }.store(in: &bindings)
     }
@@ -161,24 +170,28 @@ class MainViewModel: ObservableObject {
         [.init(icon: .ic24Search, action: {[weak self] in self?.action.send(MainViewModelAction.ButtonTapped.Search())}),
          .init(icon: .ic24Bell, action: {[weak self] in self?.action.send(MainViewModelAction.ButtonTapped.Messages())})]
     }
+    
+    private func userAccountButton(clientInfo: ClientInfoData?, clientPhoto: ClientPhotoData?, clientName: ClientNameData?) -> UserAccountButtonViewModel? {
+        
+        guard let clientInfo = clientInfo else {
+            return nil
+        }
+        
+        let name = clientName ?? clientInfo.firstName
+        let avatar = clientPhoto?.image
+        
+        return  UserAccountButtonViewModel(logo: .ic12LogoForaColor, avatar: avatar, name: name, action: { [weak self] in self?.action.send(MainViewModelAction.ButtonTapped.UserAccount())})
+    }
 }
 
 extension MainViewModel {
     
-    class UserAccountButtonViewModel: ObservableObject {
+    struct UserAccountButtonViewModel {
         
-        @Published var logo: Image
-        @Published var avatar: Image?
-        @Published var name: String
+        let logo: Image
+        let avatar: Image?
+        let name: String
         let action: () -> Void
-        
-        init(logo: Image, avatar: Image?, name: String, action: @escaping () -> Void) {
-            
-            self.logo = logo
-            self.avatar = avatar
-            self.name = name
-            self.action = action
-        }
     }
     
     enum Sheet: Identifiable {
