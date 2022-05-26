@@ -98,4 +98,15 @@ extension NumberFormatter {
         
         return formatter
     }
+    
+    static var currencyRate: NumberFormatter {
+        
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 2
+        formatter.locale = Locale(identifier: "ru_RU")
+        
+        return formatter
+    }
 }

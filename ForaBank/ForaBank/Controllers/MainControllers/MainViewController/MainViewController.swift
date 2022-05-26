@@ -162,7 +162,7 @@ class MainViewController: UIViewController {
             self.startUpdate()
         }
         model.action.send(ModelAction.Deposits.List.Request())
-        model.action.send(ModelAction.Settings.GetClientInfo.Requested())
+//        model.action.send(ModelAction.Settings.GetClientInfo.Requested())
         model.action.send(ModelAction.Products.Update.Total.All())
         model.action.send(ModelAction.Notification.Fetch.New.Request())
     }
@@ -262,9 +262,9 @@ class MainViewController: UIViewController {
         
         for section in Section.allCases {
             
-            if let isExpanded = settings.sectionsExpanded[section.mainSectionType] {
+            if let isCollapsed = settings.collapsed[section.mainSectionType] {
                 
-                expanded[section] = isExpanded
+                expanded[section] = !isCollapsed
                 
             } else {
                 
@@ -285,8 +285,8 @@ class MainViewController: UIViewController {
         
         // updating settings
         var settings = model.settingsMainSections
-        settings.update(isExpanded: expandedSectionValue, sectionType: section.mainSectionType)
-        model.settingsUpdate(settings)
+        settings.update(sectionType: section.mainSectionType, isCollapsed: !expandedSectionValue)
+        model.settingsMainSectionsUpdate(settings)
     }
     
     private func setupSearchBar() {
@@ -364,14 +364,15 @@ class MainViewController: UIViewController {
                     case .failure(let error):
                         print("loading deposits list error: \(error)")
                     }
-                    
+                  
+                    /*
                 case let payload as ModelAction.Settings.GetClientInfo.Complete:
                     let userName = UserDefaults.standard.object(forKey: "userName") as? String
                     if userName != nil {
                         searchBar.textField.text = userName
                     } else {
                         searchBar.textField.text = payload.user.firstName
-                    }
+                    }*/
                     
                 default:
                     break
@@ -456,9 +457,9 @@ class MainViewController: UIViewController {
         var items: [PaymentsModel] = []
         baners.forEach { baner in
             let host = ServerAgent.Environment.test
-            let urlString = host.baseURL + "/" + baner.imageLink
-            print(host.baseURL + "/" + baner.imageLink)
-            let cell = PaymentsModel(id: Int.random(in: 1..<9999), name: baner.productName, iconName: urlString, controllerName: baner.orderLink.absoluteString)
+            let urlString = host.baseURL + "/" + baner.imageEndpoint
+            print(host.baseURL + "/" + baner.imageEndpoint)
+            let cell = PaymentsModel(id: Int.random(in: 1..<9999), name: baner.productName, iconName: urlString, controllerName: baner.orderURL.absoluteString)
             items.append(cell)
         }
         promoViewModels = items

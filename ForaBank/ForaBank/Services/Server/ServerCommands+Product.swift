@@ -256,8 +256,8 @@ extension ServerCommands {
                     parameters.append(.init(name: "serial", value: serial))
                 }
                 parameters.append(.init(name: "productType", value: productType.rawValue))
-                self.parameters = parameters
                 
+                self.parameters = parameters
             }
         }
         

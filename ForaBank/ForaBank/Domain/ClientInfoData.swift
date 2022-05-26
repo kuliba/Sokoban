@@ -7,6 +7,9 @@
 
 import Foundation
 
+typealias ClientPhotoData = ImageData
+typealias ClientNameData = String
+
 struct ClientInfoData: Codable, Equatable, Identifiable {
     
     let id: Int
@@ -69,10 +72,4 @@ struct ClientInfoData: Codable, Equatable, Identifiable {
 extension ClientInfoData {
     
     var pasportNumber: String { (regSeries ?? "") + regNumber }
-}
-
-enum ClientInfoState {
-    
-    case empty
-    case authorized(user: ClientInfoData)
 }

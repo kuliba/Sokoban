@@ -25,6 +25,11 @@ class Model {
     //MARK: Statement
     var statement: CurrentValueSubject<ProductStatementDataCacheble, Never>
     
+    //MARK: Currency rates
+    let rates: CurrentValueSubject<[ExchangeRateData], Never>
+    let ratesUpdating: CurrentValueSubject<[Currency], Never>
+    var ratesAllowed: Set<Currency> { [.usd, .eur] }
+    
     //MARK: Dictionaries
     let catalogProducts: CurrentValueSubject<[CatalogProductData], Never>
     let catalogBanners: CurrentValueSubject<[BannerCatalogListData], Never>
@@ -42,8 +47,10 @@ class Model {
     //MARK: Notifications
     let notifications: CurrentValueSubject<[NotificationData], Never>
     
-    //MARK: - UserData
-    let userSettingData: CurrentValueSubject<ClientInfoState, Never> = .init(.empty)
+    //MARK: - Client Info
+    let clientInfo: CurrentValueSubject<ClientInfoData?, Never>
+    let clientPhoto: CurrentValueSubject<ClientPhotoData?, Never>
+    let clientName: CurrentValueSubject<ClientNameData?, Never>
     
     //MARK: Loacation
     let currentUserLoaction: CurrentValueSubject<LocationData?, Never>
@@ -87,9 +94,12 @@ class Model {
         self.action = .init()
         self.auth = .init(.registerRequired)
         self.products = .init([:])
+        self.productsUpdating = .init([])
         self.statement = .init(.init(productStatement: [:]))
         self.productsUpdating = .init([])
         self.productsHidden = .init([])
+        self.rates = .init([])
+        self.ratesUpdating = .init([])
         self.catalogProducts = .init([])
         self.catalogBanners = .init([])
         self.currencyList = .init([])
@@ -98,7 +108,11 @@ class Model {
         self.paymentTemplatesViewSettings = .init(.initial)
         self.latestPayments = .init([])
         self.notifications = .init([])
+        self.clientInfo = .init(nil)
+        self.clientPhoto = .init(nil)
+        self.clientName = .init(nil)
         self.currentUserLoaction = .init(nil)
+        
         self.sessionAgent = sessionAgent
         self.serverAgent = serverAgent
         self.localAgent = localAgent
@@ -156,7 +170,8 @@ class Model {
                 switch auth {
                 case .active:
                     action.send(ModelAction.Products.Update.Total.All())
-                    action.send(ModelAction.Settings.GetClientInfo.Requested())
+                    action.send(ModelAction.ClientInfo.Fetch.Request())
+                    action.send(ModelAction.Rates.Update.All())
                     
                 case .inactive:
                     if let pincode = try? authStoredPincode() {
@@ -230,6 +245,10 @@ class Model {
                 
                 switch action {
                     
+                    //MARK: - General
+                case let payload as ModelAction.General.DownloadImage.Request:
+                    handleGeneralDownloadImageRequest(payload)
+                    
                     //MARK: - Auth Actions
                     
                 case _ as ModelAction.Auth.Session.Start.Request:
@@ -243,9 +262,6 @@ class Model {
                     
                 case let payload as ModelAction.Auth.Session.Extend.Response:
                     sessionAgent.action.send(SessionAgentAction.Session.Extend.Response(result: payload.result))
-                    
-                case let payload as ModelAction.Auth.ProductImage.Request:
-                    handleAuthProductImageRequest(payload)
                     
                 case let payload as ModelAction.Auth.CheckClient.Request:
                     handleAuthCheckClientRequest(payload: payload)
@@ -308,6 +324,11 @@ class Model {
                 case let payload as ModelAction.Statement.List.Request:
                     handleStatementRequest(payload)
                     
+                    //MARK: - Rates
+                    
+                case _ as ModelAction.Rates.Update.All:
+                    handleRatesUpdateAll()
+                    
                     //MARK: - Payments
                     
                 case let payload as ModelAction.Payment.Services.Request:
@@ -322,10 +343,12 @@ class Model {
                 case let payload as ModelAction.Payment.Complete.Request:
                     handlePaymentsCompleteRequest(payload)
                     
-                    //MARK: - Settings Actions
+                    //MARK: - Client Info
                     
-                case _ as ModelAction.Settings.GetClientInfo.Requested:
-                    handleGetClientInfoRequest()
+                case _ as ModelAction.ClientInfo.Fetch.Request:
+                    handleClientInfoFetchRequest()
+                    
+                    //MARK: - Settings Actions
 
                 case let payload as ModelAction.Settings.UpdateProductsHidden:
                     handleUpdateProductsHidden(payload.productID)
@@ -499,10 +522,16 @@ private extension Model {
             self.bankList.value = bankList
         }
         
-        if let products = localAgent.load(type: ProductsData.self) {
+        self.products.value = productsCacheLoadData()
+        
+        if let rates = localAgent.load(type: [ExchangeRateData].self) {
             
-            self.products.value = products
+            self.rates.value = rates
         }
+        
+        self.clientInfo.value = localAgent.load(type: ClientInfoData.self)
+        self.clientPhoto.value = localAgent.load(type: ClientPhotoData.self)
+        self.clientName.value = localAgent.load(type: ClientNameData.self)
     }
 
     func loadSettings() {
@@ -531,11 +560,38 @@ private extension Model {
         
         do {
             
-            try localAgent.clear(type: ProductsData.self)
+            try productsCacheClearData()
             
         } catch {
             
             print("Model: clearCachedData: products error: \(error.localizedDescription)")
+        }
+        
+        do {
+            
+            try localAgent.clear(type: ClientInfoData.self)
+            
+        } catch {
+            
+            print("Model: clearCachedData: ClientInfoData error: \(error.localizedDescription)")
+        }
+        
+        do {
+            
+            try localAgent.clear(type: ClientPhotoData.self)
+            
+        } catch {
+            
+            print("Model: clearCachedData: ClientPhotoData error: \(error.localizedDescription)")
+        }
+        
+        do {
+            
+            try localAgent.clear(type: ClientNameData.self)
+            
+        } catch {
+            
+            print("Model: clearCachedData: ClientNameData error: \(error.localizedDescription)")
         }
     }
 }

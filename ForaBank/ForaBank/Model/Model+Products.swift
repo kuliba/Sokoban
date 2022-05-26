@@ -222,14 +222,36 @@ extension Model {
             
             self.productsUpdating.value = Array(productsAllowed)
             
-            for productType in productsAllowed {
+            for productType in ProductType.allCases {
                 
-                let command = ServerCommands.ProductController.GetProductListByType(token: token, serial: nil, productType: productType)
-                
+                guard productsAllowed.contains(productType) else {
+                    continue
+                }
+
+                let serial = productsCacheSerial(for: productType)
+                let command = ServerCommands.ProductController.GetProductListByType(token: token, serial: serial, productType: productType)
+                             
                 do {
                     
-                    let productsForType = try await productsFetchWithCommand(command: command)
-                    self.products.value = reduce(products: self.products.value, with: productsForType, allowed: self.productsAllowed)
+                    let result = try await productsFetchWithCommand(command: command)
+  
+                    // updating status
+                    if let index = self.productsUpdating.value.firstIndex(of: productType) {
+                        
+                        self.productsUpdating.value.remove(at: index)
+                    }
+                    
+                    guard result.products.isEmpty == false else {
+                        continue
+                    }
+                    
+                    // update products
+                    self.products.value = reduce(products: self.products.value, with: result.products, allowed: self.productsAllowed)
+
+                    // cache products
+                    try productsCaheData(products: result.products, serial: result.serial)
+
+                } catch {
                     
                     // updating status
                     if let index = self.productsUpdating.value.firstIndex(of: productType) {
@@ -237,12 +259,8 @@ extension Model {
                         self.productsUpdating.value.remove(at: index)
                     }
                     
-                    // cache products
-                    try self.localAgent.store(self.products.value, serial: nil)
-                    
-                } catch {
-                    
                     self.handleServerCommandError(error: error, command: command)
+                    //TODO: show error message in UI
                 }
             }
         }
@@ -298,7 +316,7 @@ extension Model {
         }
     }
     
-    func productsFetchWithCommand(command: ServerCommands.ProductController.GetProductListByType) async throws -> [ProductData] {
+    func productsFetchWithCommand(command: ServerCommands.ProductController.GetProductListByType) async throws -> (products: [ProductData], serial: String) {
         
         try await withCheckedThrowingContinuation { continuation in
             
@@ -308,13 +326,13 @@ extension Model {
                     switch response.statusCode {
                     case .ok:
                         
-                        guard let products = response.data?.productList else {
+                        guard let data = response.data else {
                             continuation.resume(with: .failure(ModelProductsError.emptyData(message: response.errorMessage)))
                             return
                         }
                         
-                        continuation.resume(returning: products)
-                        
+                        continuation.resume(returning: (data.productList, data.serial))
+
                     default:
                         continuation.resume(with: .failure(ModelProductsError.statusError(status: response.statusCode, message: response.errorMessage)))
                     }
@@ -566,6 +584,110 @@ extension Model {
     }
 }
 
+//MARK: - Cache
+
+extension Model {
+    
+    func productsCaheData(products: [ProductData], serial: String?) throws {
+        
+        if let cards = products as? [ProductCardData] {
+            
+            try localAgent.store(cards, serial: serial)
+            
+        } else if let accounts = products as? [ProductAccountData] {
+            
+            try localAgent.store(accounts, serial: serial)
+            
+        } else if let deposits = products as? [ProductDepositData] {
+            
+            try localAgent.store(deposits, serial: serial)
+            
+        } else if let loans = products as? [ProductLoanData] {
+            
+            try localAgent.store(loans, serial: serial)
+            
+        } else {
+            
+            throw ModelProductsError.unableCacheUnknownProductType
+        }
+    }
+    
+    func productsCacheLoadData() -> ProductsData {
+        
+        var result = ProductsData()
+        
+        for productType in ProductType.allCases {
+            
+            switch productType {
+            case .card:
+                result[.card] = localAgent.load(type: [ProductCardData].self)
+                
+            case .account:
+                result[.account] = localAgent.load(type: [ProductAccountData].self)
+                
+            case .deposit:
+                result[.deposit] = localAgent.load(type: [ProductDepositData].self)
+                
+            case .loan:
+                result[.loan] = localAgent.load(type: [ProductLoanData].self)
+            }
+        }
+        
+        return result
+    }
+    
+    func productsCacheClearData() throws  {
+        
+        var errors = [Error]()
+        
+        for productType in ProductType.allCases {
+            
+            do {
+                
+                switch productType {
+                case .card:
+                    try localAgent.clear(type: [ProductCardData].self)
+                    
+                case .account:
+                    try localAgent.clear(type: [ProductAccountData].self)
+                    
+                case .deposit:
+                    try localAgent.clear(type: [ProductDepositData].self)
+                    
+                case .loan:
+                    try localAgent.clear(type: [ProductLoanData].self)
+                }
+                
+            } catch {
+                
+                errors.append(error)
+            }
+        }
+        
+        if errors.isEmpty == false {
+            
+            throw ModelProductsError.clearCacheErrors(errors)
+        }
+    }
+    
+    func productsCacheSerial(for type: ProductType) -> String? {
+        
+        switch type {
+        case .card:
+            return localAgent.serial(for: [ProductCardData].self)
+            
+        case .account:
+            return localAgent.serial(for: [ProductAccountData].self)
+            
+        case .deposit:
+            return localAgent.serial(for: [ProductDepositData].self)
+            
+        case .loan:
+            return localAgent.serial(for: [ProductLoanData].self)
+        }
+    }
+}
+
 //MARK: - Error
 
 enum ModelProductsError: Swift.Error {
@@ -573,4 +695,6 @@ enum ModelProductsError: Swift.Error {
     case emptyData(message: String?)
     case statusError(status: ServerStatusCode, message: String?)
     case serverCommandError(error: String)
+    case unableCacheUnknownProductType
+    case clearCacheErrors([Error])
 }

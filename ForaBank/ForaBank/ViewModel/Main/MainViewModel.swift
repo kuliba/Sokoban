@@ -13,7 +13,7 @@ class MainViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
 
-    lazy var userAccountButton: UserAccountButtonViewModel = UserAccountButtonViewModel(logo: .ic12LogoForaColor, avatar: nil, name: "Александр", action: { [weak self] in self?.action.send(MainViewModelAction.ButtonTapped.UserAccount())})
+    @Published var userAccountButton: UserAccountButtonViewModel?
     @Published var navButtonsRight: [NavigationBarButtonViewModel]
     @Published var sections: [MainSectionViewModel]
     @Published var isRefreshing: Bool
@@ -34,17 +34,23 @@ class MainViewModel: ObservableObject {
     init(_ model: Model) {
         
         self.navButtonsRight = []
-        self.sections = [MainSectionProductsView.ViewModel(model), MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample, MainSectionAtmView.ViewModel(content: "Выберите ближайшую точку на карте", isCollapsed: false)]
+        self.sections = [MainSectionProductsView.ViewModel(model),
+                         MainSectionFastOperationView.ViewModel.sample,
+                         MainSectionPromoView.ViewModel(model),
+                         MainSectionCurrencyView.ViewModel(model),
+                         MainSectionOpenProductView.ViewModel.sample,
+                         MainSectionAtmView.ViewModel.initial]
         
         self.isRefreshing = false
         self.model = model
         
         navButtonsRight = createNavButtonsRight()
         bind()
-        
+        update(sections, with: model.settingsMainSections)
+        bind(sections)
     }
     
-    func bind() {
+    private func bind() {
         
         action
             .receive(on: DispatchQueue.main)
@@ -52,12 +58,18 @@ class MainViewModel: ObservableObject {
                 
                 switch action {
                 case _ as MainViewModelAction.ButtonTapped.UserAccount:
-                    let userAccountViewModel: UserAccountViewModel = .init(model: model)
+                    guard let clientInfo = model.clientInfo.value else {
+                        return
+                    }
+                    let userAccountViewModel: UserAccountViewModel = .init(model: model, clientInfo: clientInfo)
                     sheet = .userAccount(userAccountViewModel)
                     
                 case _ as MainViewModelAction.ButtonTapped.Messages:
                     let messagesHistoryViewModel: MessagesHistoryViewModel = .sample
                     sheet = .messages(messagesHistoryViewModel)
+                    
+                case _ as MainViewModelAction.PullToRefresh:
+                    model.action.send(ModelAction.Products.Update.Total.All())
                 
                 default:
                     break
@@ -76,80 +88,110 @@ class MainViewModel: ObservableObject {
                 
             }.store(in: &bindings)
         
+        model.clientInfo
+            .combineLatest(model.clientPhoto, model.clientName)
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] clientData in
+                
+                userAccountButton = userAccountButton(clientInfo: clientData.0, clientPhoto: clientData.1, clientName: clientData.2)
+                
+            }.store(in: &bindings)
+    }
+    
+    private func bind(_ sections: [MainSectionViewModel]) {
+        
         for section in sections {
             
-            switch section {
-            case let productsSection as MainSectionProductsView.ViewModel:
-                productsSection.action
-                    .receive(on: DispatchQueue.main)
-                    .sink { [unowned self] action in
+            section.action
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
+                    
+                    switch action {
+                        // products section
+                    case let payload as MainSectionViewModelAction.Products.ProductDidTapped:
+                        let productProfileViewModel: ProductProfileViewModel = .init(productViewModel: .init(model, productId: payload.productId, productType: .card), model: model)
+                        sheet = .productProfile(productProfileViewModel)
                         
-                        switch action {
-                        case let payload as MainSectionProductsViewModelAction.ProductDidTapped:
-                            let productProfileViewModel: ProductProfileViewModel = .init(productViewModel: .init(model, productId: payload.productId, productType: .card), model: model)
-                            sheet = .productProfile(productProfileViewModel)
-                            
-                        case _ as MainSectionProductsViewModelAction.MoreButtonTapped:
-                            let myProductsViewModel: MyProductsViewModel = .init(model)
-                            sheet = .myProducts(myProductsViewModel)
-                            
-                        default:
-                            break
-                            
+                    case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
+                        let myProductsViewModel: MyProductsViewModel = .init(model)
+                        sheet = .myProducts(myProductsViewModel)
+                       
+                        // atm section
+                    case _ as MainSectionViewModelAction.Atm.ButtonTapped:
+                        guard let placesViewModel = PlacesViewModel(model) else {
+                            return
                         }
+                        sheet = .places(placesViewModel)
+                        
+                    default:
+                        break
+                        
+                    }
+                    
+                }.store(in: &bindings)
+            
+            if let collapsableSection = section as? MainSectionCollapsableViewModel {
+                
+                collapsableSection.$isCollapsed
+                    .dropFirst()
+                    .receive(on: DispatchQueue.main)
+                    .sink { [unowned self] isCollapsed in
+                        
+                        var settings = model.settingsMainSections
+                        settings.update(sectionType: collapsableSection.type, isCollapsed: isCollapsed)
+                        model.settingsMainSectionsUpdate(settings)
                         
                     }.store(in: &bindings)
-                
-            case let atmSection as MainSectionAtmView.ViewModel:
-                atmSection.action
-                    .receive(on: DispatchQueue.main)
-                    .sink { [unowned self] action in
-                        
-                        switch action {
-                        case _ as MainSectionAtmViewModelAction.ButtonTapped:
-                            guard let placesViewModel = PlacesViewModel(model) else {
-                                return
-                            }
-                            sheet = .places(placesViewModel)
-                            
-                        default:
-                            break
-                            
-                        }
-                        
-                    }.store(in: &bindings)
-                
-            default:
-                break
             }
         }
     }
     
-
-    
-    func createNavButtonsRight() -> [NavigationBarButtonViewModel] {
+    private func update(_ sections: [MainSectionViewModel], with settings: MainSectionsSettings) {
         
-        [.init(icon: .ic24Search, action: {[weak self] in self?.action.send(MainViewModelAction.ButtonTapped.Search())}), .init(icon: .ic24Bell, action: {[weak self] in self?.action.send(MainViewModelAction.ButtonTapped.Messages())})]
+        for section in sections {
+            
+            guard let collapsableSection = section as? MainSectionCollapsableViewModel else {
+                continue
+            }
+            
+            if let isCollapsed = settings.collapsed[section.type] {
+                
+                collapsableSection.isCollapsed = isCollapsed
+                
+            } else {
+                
+                collapsableSection.isCollapsed = false
+            }
+        }
     }
 
+    private func createNavButtonsRight() -> [NavigationBarButtonViewModel] {
+        
+        [.init(icon: .ic24Search, action: {[weak self] in self?.action.send(MainViewModelAction.ButtonTapped.Search())}),
+         .init(icon: .ic24Bell, action: {[weak self] in self?.action.send(MainViewModelAction.ButtonTapped.Messages())})]
+    }
+    
+    private func userAccountButton(clientInfo: ClientInfoData?, clientPhoto: ClientPhotoData?, clientName: ClientNameData?) -> UserAccountButtonViewModel? {
+        
+        guard let clientInfo = clientInfo else {
+            return nil
+        }
+        
+        let name = clientName ?? clientInfo.firstName
+        let avatar = clientPhoto?.image
+        
+        return  UserAccountButtonViewModel(logo: .ic12LogoForaColor, avatar: avatar, name: name, action: { [weak self] in self?.action.send(MainViewModelAction.ButtonTapped.UserAccount())})
+    }
 }
 
 extension MainViewModel {
     
-    class UserAccountButtonViewModel: ObservableObject {
+    struct UserAccountButtonViewModel {
         
-        @Published var logo: Image
-        @Published var avatar: Image?
-        @Published var name: String
+        let logo: Image
+        let avatar: Image?
+        let name: String
         let action: () -> Void
-        
-        init(logo: Image, avatar: Image?, name: String, action: @escaping () -> Void) {
-            
-            self.logo = logo
-            self.avatar = avatar
-            self.name = name
-            self.action = action
-        }
     }
     
     enum Sheet: Identifiable {
@@ -174,5 +216,7 @@ enum MainViewModelAction {
         
         struct Messages: Action {}
     }
+    
+    struct PullToRefresh: Action {}
 }
 

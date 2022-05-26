@@ -38,11 +38,7 @@ struct ButtonNewProduct: View {
     
     var body: some View {
         
-        Button {
-            
-            viewModel.action()
-            
-        } label: {
+        Button(action: viewModel.action) {
             
             ZStack {
                 
@@ -69,7 +65,8 @@ struct ButtonNewProduct: View {
                 }
                 .padding(11)
             }
-        }
+            
+        }.buttonStyle(PushButtonStyle())
     }
 }
 

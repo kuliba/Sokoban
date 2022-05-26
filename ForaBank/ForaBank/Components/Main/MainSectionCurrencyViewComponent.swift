@@ -17,10 +17,16 @@ extension MainSectionCurrencyView {
         override var type: MainSectionType { .currencyExchange }
         let currencyExchange: CurrencyExchangeView.ViewModel
         
-        internal init(currencyExchange: CurrencyExchangeView.ViewModel, isCollapsed: Bool) {
+        init(currencyExchange: CurrencyExchangeView.ViewModel, isCollapsed: Bool) {
             
             self.currencyExchange = currencyExchange
             super.init(isCollapsed: isCollapsed)
+        }
+        
+        init(_ model: Model) {
+            
+            self.currencyExchange = .init(model)
+            super.init(isCollapsed: false)
         }
     }
 }

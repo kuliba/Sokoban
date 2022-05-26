@@ -38,19 +38,15 @@ struct MainSectionFastOperationView: View {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 
-                HStack(spacing: 4) {
-                    
-                    Color.clear
-                        .frame(width: 16)
+                HStack(alignment: .top, spacing: 4) {
                     
                     ForEach(viewModel.items) { itemViewModel in
                        
                         ButtonIconTextView(viewModel: itemViewModel)
+                            .frame(width: 80)
                     }
-                    
-                    Color.clear
-                        .frame(width: 16)
                 }
+                .padding(.horizontal, 20)
             }
         }
     }
