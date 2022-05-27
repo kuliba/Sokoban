@@ -18,54 +18,56 @@ struct ProductProfileView: View {
         
         ZStack(alignment: .top) {
             
-            ScrollView(showsIndicators: false) {
+            ScrollView {
                 
-                ZStack {
+                GeometryReader { geometry in
                     
-                    GeometryReader { geometry in
+                    ZStack {
                         
-                        ZStack {
+                        if geometry.frame(in: .global).minY <= 0 {
                             
-                            viewModel.product.product.appearance.background.color.contrast(0.8)
-                                .frame(width: geometry.size.width, height: 150)
+                            viewModel.accentColor.contrast(0.5)
+                                .frame(width: geometry.size.width, height: geometry.size.height)
+                                .offset(y: geometry.frame(in: .global).minY / 9)
                                 .clipped()
-                        }
-                    }
-                    
-                    VStack(spacing: 0) {
-                        
-                        ProductProfileCardView(viewModel: viewModel.product)
-                            .padding(.top, 20)
-                        
-                        VStack(spacing: 32) {
                             
-                            ProductProfileButtonsSectionView(viewModel: .init(kind: viewModel.product.product.productType))
+                        } else {
                             
-                            if let detailAccount = viewModel.detail {
-                                
-                                ProductProfileAccountDetailView(viewModel: detailAccount)
-                                    .padding(.horizontal, 20)
-                            }
-                            
-                            if let historyViewModel = viewModel.history {
-                                
-                                ProductProfileHistoryView(viewModel: historyViewModel)
-                            }
+                            viewModel.accentColor.contrast(0.5)
+                                .frame(width: geometry.size.width, height: geometry.size.height + geometry.frame(in: .global).minY)
+                                .clipped()
+                                .offset(y: -geometry.frame(in: .global).minY)
                         }
                     }
                 }
-                .padding(.top, 35)
-                .edgesIgnoringSafeArea(.top)
+                .frame(height: 204)
+       
+                VStack(spacing: 0) {
+                    
+                    ProductProfileCardView(viewModel: viewModel.product)
+                    
+                    VStack(spacing: 32) {
+                        
+                        ProductProfileButtonsSectionView(viewModel: viewModel.selector)
+                        
+                        if let detailAccount = viewModel.detail {
+                            
+                            ProductProfileAccountDetailView(viewModel: detailAccount)
+                                .padding(.horizontal, 20)
+                        }
+                        
+                        if let historyViewModel = viewModel.history {
+                            
+                            ProductProfileHistoryView(viewModel: historyViewModel)
+                        }
+                    }
+                }
+                .offset(x: 0, y: -156)
             }
             
-            ZStack {
-                
-                viewModel.product.product.appearance.background.color.contrast(0.8)
-                    .clipped()
-                    .edgesIgnoringSafeArea(.all)
-                    .frame(height: 50)
-                StatusView(viewModel: viewModel.statusBar)
-            }
+            StatusView(viewModel: viewModel.statusBar)
+                .frame(height: 48)
+                .background(viewModel.accentColor.contrast(0.5).edgesIgnoringSafeArea(.top))
         }
         .navigationBarHidden(true)
         .introspectTabBarController(customize: { tabBarController in
@@ -150,8 +152,7 @@ struct ProfileView_Previews: PreviewProvider {
         Group {
             
             ProductProfileView(viewModel: .sample)
-            ProductProfileView(viewModel: .sampleCard)
-            
+ 
             ProductProfileView.StatusView(viewModel: .sample)
                 .previewLayout(.fixed(width: 375, height: 48))
             ProductProfileView.StatusView(viewModel: .sampleNoActionButton)
@@ -164,9 +165,7 @@ struct ProfileView_Previews: PreviewProvider {
 
 extension ProductProfileViewModel {
     
-    static let sample = ProductProfileViewModel(productViewModel: .init(products: [.notActivateProfile, .accountProfile, .classicProfile, .depositProfile], product: .depositProfile, model: .emptyMock), model: .emptyMock, dismissAction: {})
-    
-    static let sampleCard = ProductProfileViewModel(productViewModel: .init(products: [.notActivateProfile, .accountProfile, .classicProfile, .blockedProfile, .depositProfile], product: .blockedProfile, model: .emptyMock), model: .emptyMock, dismissAction: {})
+    static let sample = ProductProfileViewModel(statusBar: .sample, product: .sample, selector: .sample, detail: .sample, history: .sampleHistory)
 }
 
 extension ProductProfileViewModel.StatusBarViewModel {

@@ -265,7 +265,8 @@ extension ProductView {
                     
                     backgroundImage
                         .resizable()
-                        .aspectRatio(contentMode: .fit)
+                        .aspectRatio(contentMode: .fill)
+                    
                 } else {
                     
                     RoundedRectangle(cornerRadius: cornerRadius)

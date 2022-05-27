@@ -111,8 +111,11 @@ class MainViewModel: ObservableObject {
                     switch action {
                         // products section
                     case let payload as MainSectionViewModelAction.Products.ProductDidTapped:
-                        let productProfileViewModel: ProductProfileViewModel = .init(productViewModel: .init(model, productId: payload.productId, productType: .card), model: model, dismissAction: { [weak self] in self?.link = nil })
-//                        sheet = .init(type: .productProfile(productProfileViewModel))
+                    
+                        guard let prooduct = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.productId }),
+                            let productProfileViewModel = ProductProfileViewModel(model, productData: prooduct, dismissAction: { [weak self] in self?.link = nil }) else {
+                            return
+                        }
                         link = .productProfile(productProfileViewModel)
                         
                     case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
