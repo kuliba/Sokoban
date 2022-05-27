@@ -81,14 +81,14 @@ extension PTSectionLatestPaymentsView {
                                 var text = ""
                                 
                                 switch item.type {
+                                
                                 case .phone:
                                     guard let paymentData = item as? PaymentGeneralData else { return }
                                     
                                     text = paymentData.phoneNumber
                                     image = .icon(Image("ic24Smartphone"), .iconGray)
             
-                                    let bankList = self.model.localAgent.load(type: [BankData].self)
-                                    if let bank = bankList?.first(where: { $0.memberId == paymentData.bankId }) {
+                                    if let bank = model.dictionaryBank(for: paymentData.bankId) {
                                         topIcon = bank.svgImage.image
                                     }
                                     
@@ -121,11 +121,24 @@ extension PTSectionLatestPaymentsView {
                                             text = phone
                                     }
                                     
-                                    let countryList = self.model.localAgent.load(type: [CountryData].self)
-                                    if let country = countryList?.first(where: { $0.code == paymentData.countryCode }) {
+                                    if let country = model.dictionaryCountry(for: paymentData.puref) {
                                         topIcon = country.svgImage?.image
                                     }
-                                        
+                                    
+                                case .service:
+                                    guard let paymentData = item as? PaymentServiceData else { return }
+                                    
+                                    text = String(paymentData.puref)
+                                    image = .image(Image("ic24Smartphone"))
+                                    
+                                    if let oper = model.dictionaryAnywayOperator(for: paymentData.puref) {
+                                    
+                                        text = oper.name
+                                        if let logo = oper.logotypeList.first?.svgImage?.image {
+                                            image = .image(logo)
+                                        }
+                                    }
+                                    
                                 default:
                                     image = .text(item.type.rawValue)
                                     text = item.type.rawValue
