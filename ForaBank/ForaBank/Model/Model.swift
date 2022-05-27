@@ -296,7 +296,7 @@ class Model {
                     
                 case let payload as ModelAction.Products.UpdateCustomName.Request:
                     handleProductsUpdateCustomName(payload)
-
+                    
                 case let payload as ModelAction.Products.ActivateCard.Request:
                     handleProductsActivateCard(payload)
                     
@@ -322,11 +322,14 @@ class Model {
                 case let payload as ModelAction.Payment.Complete.Request:
                     handlePaymentsCompleteRequest(payload)
                     
+                case let payload as ModelAction.Payment.OperationDetail.Request:
+                    handleOperationDetailRequest(payload)
+                    
                     //MARK: - Settings Actions
                     
                 case _ as ModelAction.Settings.GetClientInfo.Requested:
                     handleGetClientInfoRequest()
-
+                    
                 case let payload as ModelAction.Settings.UpdateProductsHidden:
                     handleUpdateProductsHidden(payload.productID)
                     
@@ -339,7 +342,7 @@ class Model {
                     handleNotificationsFetchNextRequest()
                     
                 case let payload as ModelAction.Notification.ChangeNotificationStatus.Requested:
-                   handleNotificationsChangeNotificationStatusRequest(payload: payload)
+                    handleNotificationsChangeNotificationStatusRequest(payload: payload)
                     
                     //MARK: - LatestPayments Actions
                     
@@ -504,16 +507,16 @@ private extension Model {
             self.products.value = products
         }
     }
-
+    
     func loadSettings() {
-
+        
         do {
-
+            
             let productsHidden: [ProductData.ID] = try settingsAgent.load(type: .interface(.productsHidden))
             self.productsHidden.value = productsHidden
-
+            
         } catch {
-
+            
             handleSettingsCachingError(error: error)
         }
     }
