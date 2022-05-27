@@ -18,28 +18,25 @@ final class OperationDetailInfoViewModel: Identifiable {
     var logo: Image?
     var cells: [DefaultCellViewModel]
     let dismissAction: () -> Void
+    let model: Model
     
-    var token: NotificationToken?
-    var allProductList: Results<UserAllCardsModel>? = nil
-    var products = [UserAllCardsModel]()
-    
-    init(logo: Image?, cells: [DefaultCellViewModel], dismissAction: @escaping () -> Void) {
+    init(logo: Image?, cells: [DefaultCellViewModel], dismissAction: @escaping () -> Void, model: Model) {
         
         self.logo = nil
         self.cells = cells
         self.dismissAction = dismissAction
-        
+        self.model = model
         
     }
     
-    init?(with statement: ProductStatementData, operation: OperationDetailData?, product: ProductData, dismissAction: @escaping () -> Void) {
+    init?(with statement: ProductStatementData, operation: OperationDetailData?, product: ProductData, dismissAction: @escaping () -> Void, model: Model) {
         
+        self.model = model
         let tranDateString = DateFormatter.operation.string(from: statement.tranDate)
         let foraBankName = "Фора Банк"
         let foraBankIcon = Image("foraContactImage", bundle: nil)
         
-        //FIXME: get currency from currencyList
-        let currency = "RUB"
+        let currency = self.model.currencyList.value.first(where: {$0.codeNumeric == statement.currencyCodeNumeric})?.code ?? "RUB"
         self.dismissAction = dismissAction
         var logo: Image? = nil
         self.cells = [DefaultCellViewModel]()
@@ -66,69 +63,47 @@ final class OperationDetailInfoViewModel: Identifiable {
             
             
         case .betweenTheir:
-            /*
-             /rest/getProductListByFilter || payeeCardNumber
-             amount + currencyCode
-             fee
-             product
-             tranDate
-             */
             
-            //TODO: make load data from cache
-            //            if let payeeCardNumber = operation?.payeeCardNumber, let productObjects = realm?.objects(UserAllCardsModel.self){
-            //                    for product in productObjects{
-            //                        if product.number?.suffix(4) == payeeCardNumber.suffix(4){
-            //                            print(product)
-            //                            if let smallDesign = product.smallDesign?.convertSVGStringToImage(),
-            //                                  let productName = product.mainField,
-            //                                  let additionalField = product.additionalField,
-            //                               let productCurrency = product.currency,
-            //                               let description = product.number?.suffix(4){
-            //                                let balanceString = product.balance.currencyFormatter(symbol: productCurrency)
-            //
-            //                                cells.append(ProductCellViewModel(title: "Счет пополнения", icon: Image(uiImage: smallDesign), name: productName, iconPaymentService: nil, balance: balanceString, description: "· \(description) · \(additionalField)"))
-            //                            }
-            //                        }
-            //                    }
-            //                }
+            if let payeeCardId = operation?.payeeCardId {
+                
+                for i in model.products.value {
+                    
+                    if let card = i.value.first(where: { $0.id == payeeCardId }) {
+                        
+                        if let description = card.number?.suffix(4), let balance = card.balance?.currencyFormatter(symbol: card.currency), let icon = card.smallDesign.image, let additional = card.additionalField {
+                            
+                            cells.append(ProductCellViewModel(title: "Счет пополнения", icon: icon, name: card.productName, iconPaymentService: nil, balance: balance, description: "· \(description) · \(additional)"))
+                            
+                        }
+                    }
+                }
+            }
             
             cells.append(PropertyCellViewModel(title: "Сумма перевода", iconType: .balance, value: statement.amount.currencyFormatter(symbol: currency)))
             
             if let payerFee = operation?.payerFee {
                 cells.append(PropertyCellViewModel(title: "Комиссия", iconType: .commission, value: payerFee.currencyFormatter(symbol: currency)))
             }
-            //TODO: make load data from cache
-            //            if let payerCardNumber = operation?.payerCardNumber, let productObjects = realm?.objects(UserAllCardsModel.self){
-            //                for product in productObjects{
-            //                    if product.number?.suffix(4) == payerCardNumber.suffix(4){
-            //                        print(product)
-            //                        if let smallDesign = product.smallDesign?.convertSVGStringToImage(),
-            //                              let productName = product.mainField,
-            //                              let additionalField = product.additionalField,
-            //                           let productCurrency = product.currency,
-            //                           let description = product.number?.suffix(4){
-            //                            let balanceString = product.balance.currencyFormatter(symbol: productCurrency)
-            //
-            //                            cells.append(ProductCellViewModel(title: "Счет списания", icon: Image(uiImage: smallDesign), name: productName, iconPaymentService: nil, balance: balanceString, description: "· \(description) · \(additionalField)"))
-            //                        }
-            //                    }
-            //                }
-            //            }
-            //            if let debitAccounCell = Self.debitAccountCell(with: product, currency: currency) {
-            //                cells.append(debitAccounCell)
-            //            }
+            
+            if let payerCardId = operation?.payerCardId {
+                
+                for i in model.products.value {
+                    
+                    if let card = i.value.first(where: { $0.id == payerCardId }) {
+                        
+                        if let description = card.number?.suffix(4), let balance = card.balance?.currencyFormatter(symbol: card.currency), let icon = card.smallDesign.image, let additional = card.additionalField {
+                            
+                            cells.append(ProductCellViewModel(title: "Счет списания", icon: icon, name: card.productName, iconPaymentService: nil, balance: balance, description: "· \(description) · \(additional)"))
+                            
+                        }
+                    }
+                }
+            }
             
             cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)", iconType: .date, value: tranDateString))
+            
         case  .insideBank:
-            /*
-             payeeAccountNumber || payeeCardNumber || || payeePhone
-             payeeFullName
-             svgImage
-             amount + currencyCode
-             fee
-             product
-             tranDate
-             */
+            
             if let payeeAccountNumber = operation?.payeeAccountNumber {
                 cells.append(PropertyCellViewModel(title: "Номер счета получателя", iconType: .bank, value: payeeAccountNumber))
                 
@@ -214,16 +189,6 @@ final class OperationDetailInfoViewModel: Identifiable {
             cells.append(PropertyCellViewModel(title: "Дата и время операции (МСК)", iconType: .date, value: tranDateString))
             
         case .direct:
-            /*
-             svgImage
-             payeePhone
-             merchantName || merchantNameRus
-             amount + currencyCode
-             fee
-             product
-             tranDate
-             */
-            
             
             let directLogoImage = Image("MigAvatar")
             logo = directLogoImage
@@ -859,7 +824,7 @@ extension OperationDetailInfoViewModel {
                                                                PropertyCellViewModel(title: "Назначение платежа", iconType: .purpose, value: "Оплата по договору №285"),
                                                                PropertyCellViewModel(title: "Номер операции СБП", iconType: .operationNumber, value: "B11271248585590B00001750251A3F95"),
                                                                PropertyCellViewModel(title: "Дата и время операции (МСК)", iconType: .date, value: "10.05.2021 15:38:12")
-                                                              ], dismissAction: {})
+                                                              ], dismissAction: {}, model: .emptyMock)
         
     }()
 }
