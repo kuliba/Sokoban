@@ -27,7 +27,6 @@ class PaymentData: Codable {
 	required init(from decoder: Decoder) throws {
 
 		let container = try decoder.container(keyedBy: CodingKeys.self)
-		//date = try container.decode(Date.self, forKey: .date)
         let dateValue = try container.decode(Int.self, forKey: .date)
         date = Date(timeIntervalSince1970: TimeInterval(dateValue / 1000))
 		paymentDate = try container.decode(String.self, forKey: .paymentDate)
