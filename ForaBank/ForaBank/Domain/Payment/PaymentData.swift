@@ -20,14 +20,16 @@ class PaymentData: Codable {
 		self.type = type
 	}
 
-	private enum CodingKeys : String, CodingKey {
+	private enum CodingKeys: String, CodingKey {
 		case date, paymentDate, type
 	}
 
 	required init(from decoder: Decoder) throws {
 
 		let container = try decoder.container(keyedBy: CodingKeys.self)
-		date = try container.decode(Date.self, forKey: .date)
+		//date = try container.decode(Date.self, forKey: .date)
+        let dateValue = try container.decode(Int.self, forKey: .date)
+        date = Date(timeIntervalSince1970: TimeInterval(dateValue / 1000))
 		paymentDate = try container.decode(String.self, forKey: .paymentDate)
 		type = try container.decode(Kind.self, forKey: .type)
 	}
@@ -36,13 +38,13 @@ class PaymentData: Codable {
 extension PaymentData {
     
     enum Kind: String, Codable {
-
         case phone
         case country
         case service
         case mobile
         case internet
         case transport
+        case taxAndStateService
     }
 }
 

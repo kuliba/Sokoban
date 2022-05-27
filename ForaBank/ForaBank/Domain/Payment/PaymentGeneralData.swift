@@ -10,15 +10,15 @@ import Foundation
 class PaymentGeneralData: PaymentData {
 
 	let amount: String?
-	let bankId: String?
+	let bankId: String
 	let bankName: String?
-	let phoneNumber: String?
+	let phoneNumber: String
 
 	private enum CodingKeys : String, CodingKey {
 		case amount, bankId, bankName, phoneNumber
 	}
 
-	internal init(amount: String?, bankId: String?, bankName: String?, date: Date, paymentDate: String, phoneNumber: String?, type: Kind) {
+	init(amount: String?, bankId: String, bankName: String?, date: Date, paymentDate: String, phoneNumber: String, type: Kind) {
 
 		self.amount = amount
 		self.bankId = bankId
@@ -31,9 +31,9 @@ class PaymentGeneralData: PaymentData {
 
 		let container = try decoder.container(keyedBy: CodingKeys.self)
 		amount = try container.decodeIfPresent(String.self, forKey: .amount)
-		bankId = try container.decodeIfPresent(String.self, forKey: .bankId)
+		bankId = try container.decode(String.self, forKey: .bankId)
 		bankName = try container.decodeIfPresent(String.self, forKey: .bankName)
-		phoneNumber = try container.decodeIfPresent(String.self, forKey: .phoneNumber)
+		phoneNumber = try container.decode(String.self, forKey: .phoneNumber)
 		try super.init(from: decoder)
 	}
 }

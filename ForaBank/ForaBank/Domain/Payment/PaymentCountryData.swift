@@ -31,7 +31,7 @@ class PaymentCountryData: PaymentData {
 		super.init(date: date, paymentDate: paymentDate, type: type)
 	}
 
-	private enum CodingKeys : String, CodingKey {
+	private enum CodingKeys: String, CodingKey {
 		case countryCode, countryName, firstName, middleName, phoneNumber, puref, shortName, surName
 	}
 	

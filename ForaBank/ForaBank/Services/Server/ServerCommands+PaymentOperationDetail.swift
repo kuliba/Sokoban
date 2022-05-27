@@ -13,7 +13,7 @@ extension ServerCommands {
 		
 		/*
 		 https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/PaymentOperationDetailController/getAllLatestPaymentsUsingGET
-		 */
+        */
 		struct GetAllLatestPayments: ServerCommand {
 			
 			let token: String?
@@ -23,6 +23,21 @@ extension ServerCommands {
 			let payload: Payload? = nil
             let timeout: TimeInterval? = nil
 
+            init(token: String, isPhonePayments: Bool, isCountriesPayments: Bool, isServicePayments: Bool, isMobilePayments: Bool, isInternetPayments: Bool, isTransportPayments: Bool, isTaxAndStateServicePayments: Bool) {
+                
+                self.token = token
+                var parameters = [ServerCommandParameter]()
+
+                parameters.append(.init(name: "isPhonePayments", value: isPhonePayments ? "true" : "false"))
+                parameters.append(.init(name: "isCountriesPayments", value: isCountriesPayments ? "true" : "false"))
+                parameters.append(.init(name: "isServicePayments", value: isServicePayments ? "true" : "false"))
+                parameters.append(.init(name: "isMobilePayments", value: isMobilePayments ? "true" : "false"))
+                parameters.append(.init(name: "isInternetPayments", value: isInternetPayments ? "true" : "false"))
+                parameters.append(.init(name: "isTransportPayments", value: isTransportPayments ? "true" : "false"))
+                parameters.append(.init(name: "isTaxAndStateServicePayments", value: isTaxAndStateServicePayments ? "true" : "false"))
+                self.parameters = parameters
+            }
+            
 			struct Payload: Encodable { }
 			
 			struct Response: ServerResponse {
@@ -30,23 +45,47 @@ extension ServerCommands {
 				let statusCode: ServerStatusCode
 				let errorMessage: String?
 				let data: [PaymentData]?
-			}
 			
-			internal init(token: String, isPhonePayments: Bool, isCountriesPayments: Bool, isServicePayments: Bool, isMobilePayments: Bool, isInternetPayments: Bool, isTransportPayments: Bool, isTaxAndStateServicePayments: Bool) {
-				
-				self.token = token
-				var parameters = [ServerCommandParameter]()
-
-				parameters.append(.init(name: "isPhonePayments", value: isPhonePayments ? "true" : "false"))
-				parameters.append(.init(name: "isCountriesPayments", value: isCountriesPayments ? "true" : "false"))
-				parameters.append(.init(name: "isServicePayments", value: isServicePayments ? "true" : "false"))
-				parameters.append(.init(name: "isMobilePayments", value: isMobilePayments ? "true" : "false"))
-				parameters.append(.init(name: "isInternetPayments", value: isInternetPayments ? "true" : "false"))
-				parameters.append(.init(name: "isTransportPayments", value: isTransportPayments ? "true" : "false"))
-				parameters.append(.init(name: "isTaxAndStateServicePayments", value: isTaxAndStateServicePayments ? "true" : "false"))
-				self.parameters = parameters
-			}
-		}
+                private enum CodingKeys: CodingKey {
+                    case statusCode, errorMessage, data
+                }
+            
+                init(from decoder: Decoder) throws {
+                    
+                    let container = try decoder.container(keyedBy: CodingKeys.self)
+                    self.statusCode = try container.decode(ServerStatusCode.self, forKey: .statusCode)
+                    self.errorMessage = try container.decodeIfPresent(String.self, forKey: .errorMessage)
+                    
+                    var containerData = try container.nestedUnkeyedContainer(forKey: .data)
+                    
+                    var data = [PaymentData]()
+                    var items = containerData
+                    
+                    while !containerData.isAtEnd {
+                        
+                        let paymentData = try containerData.decode(PaymentData.self)
+                        let paymentType = paymentData.type
+                        
+                        switch paymentType {
+                        
+                        case .phone:
+                            let paymentData = try items.decode(PaymentGeneralData.self)
+                            data.append(paymentData)
+                            
+                        case .country:
+                            let paymentData = try items.decode(PaymentCountryData.self)
+                            data.append(paymentData)
+                            
+                        case .internet, .mobile, .service, .transport, .taxAndStateService:
+                            let paymentData = try items.decode(PaymentServiceData.self)
+                            data.append(paymentData)
+                        }
+                    }
+                    self.data = data
+                }
+            } //struct Response
+            
+		} //struct GetAllLatestPayments
 		
 		/*
 		 https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/PaymentOperationDetailController/getLatestInternetPaymentsUsingGET
@@ -153,7 +192,7 @@ extension ServerCommands {
 
 				let statusCode: ServerStatusCode
 				let errorMessage: String?
-				let data: [PaymentPhoneData]?
+				let data: [PaymentGeneralData]?
 			}
 			
 			internal init(token: String, payload: Payload) {
@@ -277,5 +316,7 @@ extension ServerCommands {
 				self.payload = payload
 			}
 		}
-	}
+            
+	} //PaymentOperationDetailContoller
 }
+

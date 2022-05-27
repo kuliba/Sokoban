@@ -19,6 +19,9 @@ extension PTSectionLatestPaymentsView {
         
         override var type: PaymentsTransfersSectionType { .latestPayments }
         private let model: Model
+        private let contactsAgent: ContactsAgent
+        private var contactsAgentStatus: Bool
+        
         private var bindings = Set<AnyCancellable>()
         
         struct LatestPaymentButtonVM: Identifiable {
@@ -34,13 +37,13 @@ extension PTSectionLatestPaymentsView {
                 case text(String)
                 case icon(Image, Color)
             }
-            
         }
         
         init(model: Model) {
             self.latestPaymentsButtons = Self.templateButtonData
             self.model = model
-            self.model.action.send(ModelAction.LatestPayments.List.Requested())
+            self.contactsAgent = ContactsAgent()
+            self.contactsAgentStatus = false
             super.init()
             bind()
         }
@@ -48,10 +51,22 @@ extension PTSectionLatestPaymentsView {
         init(latestPaymentsButtons: [LatestPaymentButtonVM], model: Model) {
             self.latestPaymentsButtons = latestPaymentsButtons
             self.model = model
+            self.contactsAgent = ContactsAgent()
+            self.contactsAgentStatus = false //TODO: Mock
             super.init()
         }
         
         func bind() {
+            
+            contactsAgent.status.sink { [unowned self] status in
+                
+                switch status {
+                case .available: self.contactsAgentStatus = true
+                default: self.contactsAgentStatus = false
+                }
+                
+            }.store(in: &bindings)
+            
             // data updates from model
             model.latestPayments
                 .receive(on: DispatchQueue.main)
@@ -61,11 +76,76 @@ extension PTSectionLatestPaymentsView {
                         
                         if !latestPayments.isEmpty {
                             
+                            self.contactsAgent.requestPermission()
                             self.latestPaymentsButtons = Self.templateButtonData
-                            //TODO: handle model -> viewModel
+                            
+                            for item in latestPayments {
+                                
+                                var image: LatestPaymentButtonVM.ImageType = .text(item.type.rawValue)
+                                var topIcon: Image?
+                                var text = ""
+                                
+                                switch item.type {
+                                case .phone:
+                                    guard let paymentData = item as? PaymentGeneralData else { return }
+                                    
+                                    text = paymentData.phoneNumber
+                                    image = .icon(Image("ic24Smartphone"), .iconGray)
+            
+                                    let bankList = self.model.localAgent.load(type: [BankData].self)
+                                    if let bank = bankList?.first(where: { $0.memberId == paymentData.bankId }) {
+                                        topIcon = bank.svgImage.image
+                                    }
+                                    
+                                    var contact: AdressBookContact?
+                                    if self.contactsAgentStatus {
+                                        contact = self.contactsAgent.fetchContact(by: paymentData.phoneNumber)
+                                        
+                                        if let contact = contact {
+                                            if let fullName = contact.fullName {
+                                                text = fullName
+                                            }
+                                            
+                                            if let avatar = contact.avatar {
+                                                image = .image(Image(data: avatar.data)!)
+                                            } else {
+                                                if let initials = contact.initials {
+                                                    image = .text(initials)
+                                                }
+                                            }
+                                        }
+                                    }
+                        
+                                case .country:
+                                    guard let paymentData = item as? PaymentCountryData else { return }
+                                    
+                                    text = paymentData.shortName
+                                    image = .icon(Image("ic24Smartphone"), .iconGray)
+            
+                                    if let phone = paymentData.phoneNumber {
+                                            text = phone
+                                    }
+                                    
+                                    let countryList = self.model.localAgent.load(type: [CountryData].self)
+                                    if let country = countryList?.first(where: { $0.code == paymentData.countryCode }) {
+                                        topIcon = country.svgImage?.image
+                                    }
+                                        
+                                default:
+                                    image = .text(item.type.rawValue)
+                                    text = item.type.rawValue
+                                }
+                                
+                                let button = LatestPaymentButtonVM(image: image,
+                                                                   topIcon: topIcon,
+                                                                   description: text,
+                                                                   action: {})
+                                self.latestPaymentsButtons.append(button)
+                                
+                            } //for
                             
                         } else {
-                            
+                            print("mdy LPVM Empty")
                             self.latestPaymentsButtons = Self.templateButtonData
                         }
                      
@@ -120,6 +200,7 @@ struct PTSectionLatestPaymentsView: View {
 extension PTSectionLatestPaymentsView {
     
     struct LatestPaymentButtonView: View {
+        
         let viewModel: ViewModel.LatestPaymentButtonVM
         
         var body: some View {
@@ -160,6 +241,7 @@ extension PTSectionLatestPaymentsView {
                         if let topIcon = viewModel.topIcon {
                             topIcon
                                 .resizable()
+                                .clipShape(Circle())
                                 .frame(width: 24, height: 24)
                         }
                     }

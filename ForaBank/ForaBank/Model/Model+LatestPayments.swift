@@ -56,6 +56,7 @@ extension Model {
             case .success(let response):
                 switch response.statusCode {
                 case .ok:
+                    
                     if let payments = response.data {
                      
                         self.latestPayments.value = payments
@@ -72,6 +73,7 @@ extension Model {
                                                    errorMessage: response.errorMessage)
                 }
             case .failure(let error):
+                
                 self.action.send(ModelAction.LatestPayments.List.Failed(error: error))
             }
         }

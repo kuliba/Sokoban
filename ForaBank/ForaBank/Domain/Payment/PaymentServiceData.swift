@@ -13,7 +13,7 @@ class PaymentServiceData: PaymentData {
 	var amount: Double
 	var puref: String
 	
-	private enum CodingKeys : String, CodingKey {
+	private enum CodingKeys: String, CodingKey {
 		case additionalList, amount, puref
 	}
 	
@@ -40,7 +40,7 @@ extension PaymentServiceData {
 
 	struct AdditionalListData: Codable, Equatable {
 		
-		let fieldTitle: String
+		let fieldTitle: String?
 		let fieldName: String
 		let fieldValue: String
 		let svgImage: String?

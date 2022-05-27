@@ -262,7 +262,6 @@
 		50F020172806087B00379DC3 /* MyProductsSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50F020162806087B00379DC3 /* MyProductsSectionView.swift */; };
 		5A5ABF8227AAF4BF00D548AA /* PaymentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5ABF8127AAF4BF00D548AA /* PaymentData.swift */; };
 		5A5ABF8427AAF4DE00D548AA /* PaymentGeneralData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5ABF8327AAF4DE00D548AA /* PaymentGeneralData.swift */; };
-		5A5ABF8627AAF4FB00D548AA /* PaymentPhoneData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5ABF8527AAF4FB00D548AA /* PaymentPhoneData.swift */; };
 		5A5ABF8827AAF51000D548AA /* PaymentServiceData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5ABF8727AAF51000D548AA /* PaymentServiceData.swift */; };
 		5A5ABF8A27AAF53000D548AA /* OperationDetailData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5ABF8927AAF53000D548AA /* OperationDetailData.swift */; };
 		5A5ABF8C27AAF55800D548AA /* PaymentCountryData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5ABF8B27AAF55800D548AA /* PaymentCountryData.swift */; };
@@ -1422,7 +1421,6 @@
 		50F020162806087B00379DC3 /* MyProductsSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProductsSectionView.swift; sourceTree = "<group>"; };
 		5A5ABF8127AAF4BF00D548AA /* PaymentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentData.swift; sourceTree = "<group>"; };
 		5A5ABF8327AAF4DE00D548AA /* PaymentGeneralData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentGeneralData.swift; sourceTree = "<group>"; };
-		5A5ABF8527AAF4FB00D548AA /* PaymentPhoneData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentPhoneData.swift; sourceTree = "<group>"; };
 		5A5ABF8727AAF51000D548AA /* PaymentServiceData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentServiceData.swift; sourceTree = "<group>"; };
 		5A5ABF8927AAF53000D548AA /* OperationDetailData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationDetailData.swift; sourceTree = "<group>"; };
 		5A5ABF8B27AAF55800D548AA /* PaymentCountryData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCountryData.swift; sourceTree = "<group>"; };
@@ -4278,7 +4276,6 @@
 				6820928A27AB0F53003DCAFD /* Fast */,
 				5A5ABF8127AAF4BF00D548AA /* PaymentData.swift */,
 				5A5ABF8327AAF4DE00D548AA /* PaymentGeneralData.swift */,
-				5A5ABF8527AAF4FB00D548AA /* PaymentPhoneData.swift */,
 				5A5ABF8727AAF51000D548AA /* PaymentServiceData.swift */,
 				5A5ABF8B27AAF55800D548AA /* PaymentCountryData.swift */,
 			);
@@ -7483,7 +7480,6 @@
 				F63D4543C2BD628A0BFB42EA /* AvtodorDetailsFormViewModel.swift in Sources */,
 				0B04EBCC27B07F6700893687 /* PaymentsInfoViewComponent.swift in Sources */,
 				F63D41C3BB407DA15542F98F /* GIBDDFineDetailsFormController.swift in Sources */,
-				5A5ABF8627AAF4FB00D548AA /* PaymentPhoneData.swift in Sources */,
 				F63D4B91E94C13AFD50FF312 /* GIBDDFineDetailsFormViewModel.swift in Sources */,
 				68AD340027996E4F00647665 /* ProductStatementData.swift in Sources */,
 				7538D9ADE22F0BF6C08AC91F /* Color+Assets.swift in Sources */,

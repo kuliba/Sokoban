@@ -26,7 +26,7 @@ class RootViewModel: ObservableObject {
         
         self.selected = .main
         self.mainViewModel = MainViewModel(model)
-        self.paymentsViewModel = .sample
+        self.paymentsViewModel = .init(model: model)   //.sample
         self.chatViewModel = .init()
         self.model = model
     

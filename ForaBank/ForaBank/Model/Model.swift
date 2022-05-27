@@ -155,6 +155,9 @@ class Model {
                     action.send(ModelAction.Products.Update.Total.All())
                     action.send(ModelAction.Settings.GetClientInfo.Requested())
                     
+                    action.send(ModelAction.LatestPayments.List.Requested())
+                    action.send(ModelAction.Dictionary.UpdateCache.List(types: [.banks, .countries]))
+                    
                 case .inactive:
                     if let pincode = try? authStoredPincode() {
                         
