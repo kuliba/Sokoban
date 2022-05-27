@@ -65,7 +65,7 @@ class MainViewModel: ObservableObject {
                     sheet = .userAccount(userAccountViewModel)
                     
                 case _ as MainViewModelAction.ButtonTapped.Messages:
-                    let messagesHistoryViewModel: MessagesHistoryViewModel = .sample
+                    let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model)
                     sheet = .messages(messagesHistoryViewModel)
                     
                 case _ as MainViewModelAction.PullToRefresh:

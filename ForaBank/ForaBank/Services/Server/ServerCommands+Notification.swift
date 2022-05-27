@@ -86,20 +86,12 @@ extension ServerCommands {
                     parameters.append(.init(name: "limit", value: "\(limit)"))
                 }
                 // [SEND, PUSH, MAIL]
-                let typesList = types.reduce("", { partialResult, type in
-                    var updated = partialResult
-                    updated += "\(type.rawValue),"
-                    return updated
-                }).dropLast()
+                let typesParameters = types.map {ServerCommandParameter(name: "notificationType", value: $0.rawValue) }
+                parameters.append(contentsOf: typesParameters)
                 
-                let statesList = states.reduce("", { partialResult, state in
-                    var updated = partialResult
-                    updated += "\(state.rawValue),"
-                    return updated
-                }).dropLast()
+                let stateParameters = states.map {ServerCommandParameter(name: "notificationState", value: $0.rawValue) }
                 
-                parameters.append(.init(name: "notificationType", value: "[\(typesList)]"))
-                parameters.append(.init(name: "notificationState", value: "[\(statesList)]"))
+                parameters.append(contentsOf: stateParameters)
                 
                 self.parameters = parameters
             }

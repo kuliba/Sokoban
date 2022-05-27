@@ -20,6 +20,12 @@ extension MessagesHistorySectionView: Identifiable {
             self.section = section
             self.items = items
         }
+        
+        init(section: String, items: [NotificationData]) {
+            self.section = section
+            self.items = items.map {MessagesHistoryItemView.ViewModel(icon: Image("GKH"), title: $0.title, content: $0.text, time: DateFormatter.minutsAndSecond.string(from: $0.date), action: {})}
+        }
+                                                                      
     }
 }
 

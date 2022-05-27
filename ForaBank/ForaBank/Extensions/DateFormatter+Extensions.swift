@@ -45,6 +45,15 @@ extension DateFormatter {
         return formatter
     }()
     
+    static let minutsAndSecond: DateFormatter = {
+        
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone(identifier: "UTC")
+        formatter.dateFormat = "HH:mm"
+        
+        return formatter
+    }()
+    
     
     static let dateAndTime: DateFormatter = {
         

@@ -56,7 +56,7 @@ class ServerCommandsNotificationTests: XCTestCase {
         let url = bundle.url(forResource: "GetNotificationsResponseGeneric", withExtension: "json")!
         let json = try Data(contentsOf: url)
         let date = formatter.date(from: "27.12.2021 18:22:58")!
-        let expected = ServerCommands.NotificationController.GetNotifications.Response(statusCode: .ok, errorMessage: "string", data: [.init(date: date, state: .sent, text: "27.12.2022 18:22:58: Успешный вход в приложение", type: .push)])
+        let expected = ServerCommands.NotificationController.GetNotifications.Response(statusCode: .ok, errorMessage: "string", data: [.init(date: date, title: "Cмс", state: .sent, text: "27.12.2022 18:22:58: Успешный вход в приложение", type: .push)])
         
         // when
         let result = try decoder.decode(ServerCommands.NotificationController.GetNotifications.Response.self, from: json)
@@ -72,17 +72,25 @@ class ServerCommandsNotificationTests: XCTestCase {
         
         // then
         XCTAssertNotNil(command.parameters)
-        XCTAssertEqual(command.parameters?.count, 4)
+        XCTAssertEqual(command.parameters?.count, 8)
         
         XCTAssertEqual(command.parameters?[0].name, "offset")
         XCTAssertEqual(command.parameters?[1].name, "limit")
         XCTAssertEqual(command.parameters?[2].name, "notificationType")
-        XCTAssertEqual(command.parameters?[3].name, "notificationState")
+        XCTAssertEqual(command.parameters?[3].name, "notificationType")
+        XCTAssertEqual(command.parameters?[4].name, "notificationType")
+        XCTAssertEqual(command.parameters?[5].name, "notificationState")
+        XCTAssertEqual(command.parameters?[6].name, "notificationState")
+        XCTAssertEqual(command.parameters?[7].name, "notificationState")
         
         XCTAssertEqual(command.parameters?[0].value, "100")
         XCTAssertEqual(command.parameters?[1].value, "200")
-        XCTAssertEqual(command.parameters?[2].value, "[PUSH,EMAIL,SMS]")
-        XCTAssertEqual(command.parameters?[3].value, "[IN_PROGRESS,DELIVERED,SENT]")
+        XCTAssertEqual(command.parameters?[2].value, "PUSH")
+        XCTAssertEqual(command.parameters?[3].value, "EMAIL")
+        XCTAssertEqual(command.parameters?[4].value, "SMS")
+        XCTAssertEqual(command.parameters?[5].value, "IN_PROGRESS")
+        XCTAssertEqual(command.parameters?[6].value, "DELIVERED")
+        XCTAssertEqual(command.parameters?[7].value, "SENT")
     }
     
 }

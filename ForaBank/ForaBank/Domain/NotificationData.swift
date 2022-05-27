@@ -9,10 +9,39 @@ import Foundation
 
 struct NotificationData: Equatable {
     
-    let date: Date
+    var date: Date
+    let title: String
     let state: State
     let text: String
     let type: Kind
+    
+    var sortIndex: Int? {
+        
+        let componets = calendarComponents(date)
+        
+        guard let hour = componets?.hour,
+              let minute = componets?.minute,
+              let second = componets?.second
+        else { return nil }
+        
+        let result = join(with: hour, minute, second)
+        
+        return result
+    }
+    
+    var groupIndex: Int? {
+        
+        let componets = calendarComponents(date)
+        
+        guard let year = componets?.year,
+              let month = componets?.month,
+              let day = componets?.day
+        else { return nil }
+        
+        let result = join(with: year, month, day)
+        
+        return result
+    }
     
     enum State: String, Codable, Equatable {
         
@@ -30,6 +59,23 @@ struct NotificationData: Equatable {
         case push = "PUSH"
         case sms = "SMS"
     }
+    
+    private func calendarComponents (_ date: Date) -> DateComponents? {
+        
+        let calendar = Calendar.current
+        let componets = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
+        return componets
+    }
+    
+    private func join (with values: Int ... ) -> Int {
+        
+        var total: Int = 0
+        for value in values {
+            total += value
+            total = total * 100
+        }
+        return total / 100
+    }
 }
 
 //MARK: - Codable
@@ -37,7 +83,7 @@ struct NotificationData: Equatable {
 extension NotificationData: Codable {
     
     private enum CodingKeys : String, CodingKey {
-        case date, state, text, type
+        case date, title, state, text, type
     }
     
     init(from decoder: Decoder) throws {
@@ -52,6 +98,7 @@ extension NotificationData: Codable {
         self.state = try container.decode(State.self, forKey: .state)
         self.text = try container.decode(String.self, forKey: .text)
         self.type = try container.decode(Kind.self, forKey: .type)
+        self.title = try container.decode(String.self, forKey: .title)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -61,6 +108,7 @@ extension NotificationData: Codable {
         try container.encode(formatter.string(from: date), forKey: .date)
         try container.encode(state, forKey: .state)
         try container.encode(text, forKey: .text)
+        try container.encode(text, forKey: .title)
         try container.encode(type, forKey: .type)
     }
     
