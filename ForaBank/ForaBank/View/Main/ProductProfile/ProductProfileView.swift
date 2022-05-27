@@ -63,6 +63,21 @@ struct ProductProfileView: View {
                     .frame(height: 50)
                 HeaderView(viewModel: viewModel)
             }
+            
+            if let detailViewModel = viewModel.detailOperation {
+                
+                ZStack(alignment: .bottom) {
+                    
+                     VStack(spacing: 0) {
+                         
+                         OperationDetailView(viewModel: detailViewModel)
+                     }
+                     .layoutPriority(1)
+                     .frame(alignment: .top)
+                     .animation(.linear(duration: 0.3))
+                     .shadow(color: .black, radius: 0.2, x: 10, y: 10)
+                 }.edgesIgnoringSafeArea(.all)
+            }
         }
         .navigationBarHidden(true)
         .alert(item: $viewModel.alert, content: { alertViewModel in
@@ -79,7 +94,7 @@ struct ProductProfileView: View {
                 
                 Button {
                     
-                    viewModel.dismissAction()
+                    
                     
                 } label: {
                     
@@ -108,7 +123,7 @@ struct ProductProfileView: View {
                     
                     Button {
                         
-                        viewModel.action.send(ProductProfileViewModelAction.CustomName())
+//                        viewModel.action.send(ProductProfileViewModelAction.CustomName())
                         
                     } label: {
                         
@@ -132,7 +147,6 @@ struct ProfileView_Previews: PreviewProvider {
         ProductProfileView(viewModel: .sampleCard)
     }
 }
-
 
 extension ProductProfileViewModel {
     

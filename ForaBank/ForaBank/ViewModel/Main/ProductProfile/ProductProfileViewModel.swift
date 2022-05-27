@@ -11,18 +11,13 @@ import SwiftUI
 
 class ProductProfileViewModel: ObservableObject {
     
-    let action: PassthroughSubject<Action, Never> = .init()
-    
     @Published var productViewModel: ProductProfileCardView.ViewModel
     @Published var buttonsViewModel: ProductProfileButtonsSectionView.ViewModel
     @Published var accountDetailViewModel: ProductProfileAccountDetailView.ViewModel?
     @Published var historyViewModel: ProductProfileHistoryView.ViewModel?
     @Published var alert: Alert.ViewModel?
     @Published var detailOperation: OperationDetailViewModel?
-    
-    lazy var dismissAction: () -> Void = {[weak self] in
-        self?.action.send(ProductProfileViewModelAction.Dismiss())
-    }
+    @Published var isPresentedSheet: Bool
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
@@ -31,28 +26,19 @@ class ProductProfileViewModel: ObservableObject {
         
         self.model = model
         self.productViewModel = productViewModel
-        
+        self.isPresentedSheet = false
         self.accountDetailViewModel = nil
         
         self.buttonsViewModel = .init(kind: productViewModel.product.productType)
         self.historyViewModel = .init(model, productId: productViewModel.product.id, productType: productViewModel.product.productType)
         
-        switch productViewModel.product.productType {
-        case .card:
-            break
-        case .account:
-            break
-        case .deposit:
-            break
-        case .loan:
-            self.historyViewModel = nil
-        }
-        
+        setupHistoryView()
         bind()
     }
     
     func bind() {
-        action
+        
+        buttonsViewModel.action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 switch action {
@@ -80,12 +66,47 @@ class ProductProfileViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 switch action {
-                case _ as ProductProfileViewModelAction.DetailOperation:
-                    break
+                    
+                case let statement as HistoryViewModelAction.DetailTapped.Detail:
+                    
+                    if let product = model.products.value[productViewModel.product.productType]?.first(where: {$0.id == productViewModel.product.id}), let details =
+                        model.statement.value.productStatement[product.id]?.first(where: {$0.operationId == statement.statement}) {
+                        
+                        withAnimation(.linear(duration: 0.3)) {
+                            
+                            detailOperation = .init(productStatement: details, product: product, model: self.model)
+                            isPresentedSheet = true
+                        }
+                    }
                 default:
                     break
                 }
             }.store(in: &bindings)
+    }
+    
+    func setupHistoryView() {
+        
+        switch productViewModel.product.productType {
+        case .card:
+            break
+        case .account:
+            break
+        case .deposit:
+            break
+        case .loan:
+            self.historyViewModel = nil
+        }
+        
+        if let statement = model.statement.value.productStatement[productViewModel.product.id], let historyViewModel = historyViewModel {
+            
+            historyViewModel.listState = .list(historyViewModel.separationDate(operations: statement))
+            historyViewModel.dateOperations = historyViewModel.separationDate(operations: statement)
+            
+            if historyViewModel.sumDeifferentGroup(operations: statement).count > 0 {
+                
+                self.historyViewModel?.spendingViewModel = .init(value: historyViewModel.sumDeifferentGroup(operations: statement))
+            }
+        }
     }
 }
 
@@ -106,4 +127,9 @@ enum ProductProfileViewModelAction {
     struct DetailOperation: Action {}
     
     struct Dismiss: Action {}
+    
+    struct ProductDetail: Action {
+        
+        let productId: Int
+    }
 }
