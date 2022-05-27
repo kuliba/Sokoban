@@ -17,12 +17,18 @@ class Model {
     let auth: CurrentValueSubject<AuthorizationState, Never>
     
     //MARK: Products
-    let products: CurrentValueSubject<[ProductType: [ProductData]], Never>
-    let productsUpdateState: CurrentValueSubject<ProductsUpdateState, Never>
+    let products: CurrentValueSubject<ProductsData, Never>
+    let productsUpdating: CurrentValueSubject<[ProductType], Never>
+    let productsHidden: CurrentValueSubject<[ProductData.ID], Never>
     var productsAllowed: Set<ProductType> { [.card, .account, .deposit, .loan] }
     
     //MARK: Statement
     var statement: CurrentValueSubject<ProductStatementDataCacheble, Never>
+    
+    //MARK: Currency rates
+    let rates: CurrentValueSubject<[ExchangeRateData], Never>
+    let ratesUpdating: CurrentValueSubject<[Currency], Never>
+    var ratesAllowed: Set<Currency> { [.usd, .eur] }
     
     //MARK: Dictionaries
     let catalogProducts: CurrentValueSubject<[CatalogProductData], Never>
@@ -41,8 +47,10 @@ class Model {
     //MARK: Notifications
     let notifications: CurrentValueSubject<[NotificationData], Never>
     
-    //MARK: - UserData
-    let userSettingData: CurrentValueSubject<ClientInfoState, Never> = .init(.empty)
+    //MARK: - Client Info
+    let clientInfo: CurrentValueSubject<ClientInfoData?, Never>
+    let clientPhoto: CurrentValueSubject<ClientPhotoData?, Never>
+    let clientName: CurrentValueSubject<ClientNameData?, Never>
     
     //MARK: Loacation
     let currentUserLoaction: CurrentValueSubject<LocationData?, Never>
@@ -86,8 +94,11 @@ class Model {
         self.action = .init()
         self.auth = .init(.registerRequired)
         self.products = .init([:])
+        self.productsUpdating = .init([])
+        self.productsHidden = .init([])
         self.statement = .init(.init(productStatement: [:]))
-        self.productsUpdateState = .init(.idle)
+        self.rates = .init([])
+        self.ratesUpdating = .init([])
         self.catalogProducts = .init([])
         self.catalogBanners = .init([])
         self.currencyList = .init([])
@@ -96,7 +107,11 @@ class Model {
         self.paymentTemplatesViewSettings = .init(.initial)
         self.latestPayments = .init([])
         self.notifications = .init([])
+        self.clientInfo = .init(nil)
+        self.clientPhoto = .init(nil)
+        self.clientName = .init(nil)
         self.currentUserLoaction = .init(nil)
+        
         self.sessionAgent = sessionAgent
         self.serverAgent = serverAgent
         self.localAgent = localAgent
@@ -107,6 +122,7 @@ class Model {
         self.bindings = []
         
         loadCachedData()
+        loadSettings()
         bind()
     }
     
@@ -153,7 +169,8 @@ class Model {
                 switch auth {
                 case .active:
                     action.send(ModelAction.Products.Update.Total.All())
-                    action.send(ModelAction.Settings.GetClientInfo.Requested())
+                    action.send(ModelAction.ClientInfo.Fetch.Request())
+                    action.send(ModelAction.Rates.Update.All())
                     
                     action.send(ModelAction.LatestPayments.List.Requested())
                     action.send(ModelAction.Dictionary.UpdateCache.List(types: [.banks, .countries]))
@@ -230,6 +247,10 @@ class Model {
                 
                 switch action {
                     
+                    //MARK: - General
+                case let payload as ModelAction.General.DownloadImage.Request:
+                    handleGeneralDownloadImageRequest(payload)
+                    
                     //MARK: - Auth Actions
                     
                 case _ as ModelAction.Auth.Session.Start.Request:
@@ -243,9 +264,6 @@ class Model {
                     
                 case let payload as ModelAction.Auth.Session.Extend.Response:
                     sessionAgent.action.send(SessionAgentAction.Session.Extend.Response(result: payload.result))
-                    
-                case let payload as ModelAction.Auth.ProductImage.Request:
-                    handleAuthProductImageRequest(payload)
                     
                 case let payload as ModelAction.Auth.CheckClient.Request:
                     handleAuthCheckClientRequest(payload: payload)
@@ -296,11 +314,22 @@ class Model {
                     
                 case let payload as ModelAction.Products.UpdateCustomName.Request:
                     handleProductsUpdateCustomName(payload)
+
+                case let payload as ModelAction.Products.ActivateCard.Request:
+                    handleProductsActivateCard(payload)
+                    
+                case let payload as ModelAction.Products.ProductDetails.Request:
+                    handleProductDetails(payload)
                     
                     //MARK: - Statement
                     
                 case let payload as ModelAction.Statement.List.Request:
                     handleStatementRequest(payload)
+                    
+                    //MARK: - Rates
+                    
+                case _ as ModelAction.Rates.Update.All:
+                    handleRatesUpdateAll()
                     
                     //MARK: - Payments
                     
@@ -316,10 +345,15 @@ class Model {
                 case let payload as ModelAction.Payment.Complete.Request:
                     handlePaymentsCompleteRequest(payload)
                     
-                    //MARK: - Settings Actions
+                    //MARK: - Client Info
                     
-                case _ as ModelAction.Settings.GetClientInfo.Requested:
-                    handleGetClientInfoRequest()
+                case _ as ModelAction.ClientInfo.Fetch.Request:
+                    handleClientInfoFetchRequest()
+                    
+                    //MARK: - Settings Actions
+
+                case let payload as ModelAction.Settings.UpdateProductsHidden:
+                    handleUpdateProductsHidden(payload.productID)
                     
                     //MARK: - Notifications
                     
@@ -427,6 +461,9 @@ class Model {
                 case _ as ModelAction.Deposits.List.Request:
                     handleDepositsListRequest()
                     
+                case let payload as ModelAction.Deposits.Info.Request:
+                    handleDepositsInfoRequest(id: payload.id)
+                    
                     //MARK: - Location Actions
                     
                 case _ as ModelAction.Location.Updates.Start:
@@ -487,9 +524,28 @@ private extension Model {
             self.bankList.value = bankList
         }
         
-        if let products = localAgent.load(type: [ProductData].self) {
+        self.products.value = productsCacheLoadData()
+        
+        if let rates = localAgent.load(type: [ExchangeRateData].self) {
             
-            self.products.value = reduce(products: self.products.value, with: products)
+            self.rates.value = rates
+        }
+        
+        self.clientInfo.value = localAgent.load(type: ClientInfoData.self)
+        self.clientPhoto.value = localAgent.load(type: ClientPhotoData.self)
+        self.clientName.value = localAgent.load(type: ClientNameData.self)
+    }
+
+    func loadSettings() {
+
+        do {
+
+            let productsHidden: [ProductData.ID] = try settingsAgent.load(type: .interface(.productsHidden))
+            self.productsHidden.value = productsHidden
+
+        } catch {
+
+            handleSettingsCachingError(error: error)
         }
     }
     
@@ -501,7 +557,43 @@ private extension Model {
             
         } catch {
             
-            print("Model: clearCachedData: error: \(error.localizedDescription)")
+            print("Model: clearCachedData: templates error: \(error.localizedDescription)")
+        }
+        
+        do {
+            
+            try productsCacheClearData()
+            
+        } catch {
+            
+            print("Model: clearCachedData: products error: \(error.localizedDescription)")
+        }
+        
+        do {
+            
+            try localAgent.clear(type: ClientInfoData.self)
+            
+        } catch {
+            
+            print("Model: clearCachedData: ClientInfoData error: \(error.localizedDescription)")
+        }
+        
+        do {
+            
+            try localAgent.clear(type: ClientPhotoData.self)
+            
+        } catch {
+            
+            print("Model: clearCachedData: ClientPhotoData error: \(error.localizedDescription)")
+        }
+        
+        do {
+            
+            try localAgent.clear(type: ClientNameData.self)
+            
+        } catch {
+            
+            print("Model: clearCachedData: ClientNameData error: \(error.localizedDescription)")
         }
     }
 }

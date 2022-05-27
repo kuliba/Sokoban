@@ -35,7 +35,7 @@ class ProductProfileViewModel: ObservableObject {
         self.accountDetailViewModel = nil
         
         self.buttonsViewModel = .init(kind: productViewModel.product.productType)
-        self.historyViewModel = .init(model, productId: productViewModel.product.productId, productType: productViewModel.product.productType)
+        self.historyViewModel = .init(model, productId: productViewModel.product.id, productType: productViewModel.product.productType)
         
         switch productViewModel.product.productType {
         case .card:

@@ -7,27 +7,13 @@
 
 import Foundation
 
-struct MainSectionSettings: Codable {
+struct MainSectionsSettings: Codable {
     
-    var sectionsExpanded: [MainSectionType: Bool]
+    var collapsed: [MainSectionType: Bool]
     
-    mutating func update(isExpanded: Bool, sectionType: MainSectionType) {
+    mutating func update(sectionType: MainSectionType, isCollapsed: Bool) {
         
-        sectionsExpanded[sectionType] = isExpanded
+        collapsed[sectionType] = isCollapsed
     }
 }
 
-extension MainSectionSettings {
-    
-    static let initial: MainSectionSettings = {
-       
-        var sectionsExpanded = [MainSectionType: Bool]()
-        for section in MainSectionType.allCases {
-            
-            sectionsExpanded[section] = true
-        }
-        
-        return MainSectionSettings(sectionsExpanded: sectionsExpanded)
-        
-    }()
-}

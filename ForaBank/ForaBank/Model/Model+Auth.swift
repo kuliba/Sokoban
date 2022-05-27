@@ -38,20 +38,6 @@ extension ModelAction {
             }
         }
         
-        enum ProductImage {
-            
-            struct Request: Action {
-                
-                let endpoint: String
-            }
-            
-            struct Response: Action {
-                
-                let endpoint: String
-                let result: Result<Data, Error>
-            }
-        }
-        
         enum CheckClient {
             
             struct Request: Action {
@@ -310,21 +296,6 @@ internal extension Model {
 
             case .failure(let error):
                 self.action.send(ModelAction.Auth.Session.Extend.Response(result: .failure(error)))
-            }
-        }
-    }
-
-    func handleAuthProductImageRequest(_ payload: ModelAction.Auth.ProductImage.Request) {
-        
-        let command = ServerCommands.DictionaryController.GetProductCatalogImage(endpoint: payload.endpoint)
-        serverAgent.executeDownloadCommand(command: command) {[unowned self] result in
-            
-            switch result {
-            case .success(let data):
-                action.send(ModelAction.Auth.ProductImage.Response(endpoint: payload.endpoint, result: .success(data)))
-                
-            case .failure(let error):
-                action.send(ModelAction.Auth.ProductImage.Response(endpoint: payload.endpoint, result: .failure(error)))
             }
         }
     }

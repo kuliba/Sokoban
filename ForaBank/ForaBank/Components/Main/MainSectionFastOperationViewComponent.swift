@@ -34,17 +34,19 @@ struct MainSectionFastOperationView: View {
     
     var body: some View {
         
-        CollapsableSectionView(title: viewModel.title, isCollapsed: $viewModel.isCollapsed) {
+        CollapsableSectionView(title: viewModel.title, edges: .horizontal, padding: 20, isCollapsed: $viewModel.isCollapsed) {
             
-            ScrollView(.horizontal) {
+            ScrollView(.horizontal, showsIndicators: false) {
                 
-                HStack(spacing: 4) {
+                HStack(alignment: .top, spacing: 4) {
                     
                     ForEach(viewModel.items) { itemViewModel in
                        
                         ButtonIconTextView(viewModel: itemViewModel)
+                            .frame(width: 80)
                     }
                 }
+                .padding(.horizontal, 20)
             }
         }
     }

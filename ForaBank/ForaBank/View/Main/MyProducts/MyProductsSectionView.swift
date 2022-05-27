@@ -14,13 +14,15 @@ struct MyProductsSectionView: View {
     var body: some View {
         
         CollapsableSectionView(title: viewModel.title,
-                                   edges: .all,
-                                   isEnabled: viewModel.isEnabled,
-                                   isCollapsed: $viewModel.isCollapsed) {
+                               edges: [.leading, .top],
+                               padding: 20,
+                               isEnabled: viewModel.isEnabled,
+                               isCollapsed: $viewModel.isCollapsed) {
 
             ForEach(viewModel.items) { model in
 
                 MyProductsSectionItemView(viewModel: model)
+                    .padding(.top, (viewModel.padding(model)))
             }
         }
     }

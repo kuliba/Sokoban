@@ -6,8 +6,12 @@
 //
 
 import Foundation
+import Combine
+import SwiftUI
 
 class MainSectionViewModel: ObservableObject, Identifiable {
+    
+    let action: PassthroughSubject<Action, Never> = .init()
     
     var id: String { type.rawValue }
     var type: MainSectionType { fatalError("Implement in subclass")}
@@ -24,6 +28,8 @@ class MainSectionCollapsableViewModel: MainSectionViewModel {
         super.init()
     }
 }
+
+//MARK: - Types
 
 enum MainSectionType: String, CaseIterable, Codable {
     
@@ -44,5 +50,35 @@ enum MainSectionType: String, CaseIterable, Codable {
         case .openProduct: return "Открыть продукт"
         case .atm: return "Отделения и банкоматы"
         }
+    }
+}
+
+//MARK: - Action
+
+enum MainSectionViewModelAction {
+    
+    enum Products {
+ 
+        struct ProductDidTapped: Action {
+            
+            let productId: ProductData.ID
+        }
+        
+        struct ScrollToGroup: Action {
+            
+            let groupId: MainSectionProductsGroupView.ViewModel.ID
+        }
+        
+        struct MoreButtonTapped: Action {}
+        
+        struct HorizontalOffsetDidChanged: Action {
+            
+            let offset: CGFloat
+        }
+    }
+    
+    enum Atm {
+    
+        struct ButtonTapped: Action {}
     }
 }

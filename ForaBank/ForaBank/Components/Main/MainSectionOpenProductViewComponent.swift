@@ -33,9 +33,9 @@ struct MainSectionOpenProductView: View {
     
     var body: some View {
         
-        CollapsableSectionView(title: viewModel.title, isCollapsed: $viewModel.isCollapsed) {
+        CollapsableSectionView(title: viewModel.title, edges: .horizontal, padding: 20, isCollapsed: $viewModel.isCollapsed) {
             
-            ScrollView(.horizontal) {
+            ScrollView(.horizontal, showsIndicators: false) {
                 
                 HStack(spacing: 8) {
                     
@@ -44,6 +44,7 @@ struct MainSectionOpenProductView: View {
                         ButtonNewProduct(viewModel: itemViewModel)
                     }
                 }
+                .padding(.horizontal, 20)
             }
         }
     }

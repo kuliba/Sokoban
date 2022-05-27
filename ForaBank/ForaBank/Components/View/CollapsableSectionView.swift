@@ -32,30 +32,28 @@ struct CollapsableSectionView<Content: View>: View {
         VStack(spacing: 16) {
 
             if isEnabled {
+                
+                HStack(alignment: .center, spacing: 4) {
 
-                Button {
+                    Text(title)
+                        .font(.textH2SB20282())
+                        .foregroundColor(.textSecondary)
 
+                    Image.ic24ChevronDown
+                        .rotationEffect(isCollapsed ? .degrees(-90) : .degrees(0))
+                        .foregroundColor(.iconGray)
+
+                    Spacer()
+                    
+                }
+                .padding(edges, padding)
+                .onTapGesture {
+                    
                     withAnimation {
 
                         isCollapsed.toggle()
                     }
-
-                } label: {
-
-                    HStack(alignment: .center, spacing: 4) {
-
-                        Text(title)
-                            .font(.textH2SB20282())
-                            .foregroundColor(.textSecondary)
-
-                        Image.ic24ChevronDown
-                            .rotationEffect(isCollapsed ? .degrees(-90) : .degrees(0))
-                            .foregroundColor(.iconGray)
-
-                        Spacer()
-                    }
-                    
-                }.padding(edges, padding)
+                }
 
             } else {
 

@@ -20,9 +20,14 @@ extension ServerCommands {
 			let endpoint = "/rest/getDepositInfo"
 			let method: ServerCommandMethod = .post
 			let parameters: [ServerCommandParameter]? = nil
-			let payload: BasePayload?
+            let payload: Payload?
             let timeout: TimeInterval? = nil
 
+            struct Payload: Encodable {
+                
+                let id: Int
+            }
+            
 			struct Response: ServerResponse {
 
 				let statusCode: ServerStatusCode
@@ -30,25 +35,10 @@ extension ServerCommands {
 				let data: DepositInfoDataItem?
 			}
 
-			internal init(token: String, endDate: Date?, id: Int, name: String?, startDate: Date?, statementFormat: StatementFormat?) {
+            internal init(token: String, payload: Payload) {
 
-				let formatter = DateFormatter.iso8601
 				self.token = token
-				var endDateString: String? = nil
-				if let endDate = endDate {
-					endDateString = formatter.string(from: endDate)
-				}
-
-				var startDateString: String? = nil
-				if let startDate = startDate {
-					startDateString = formatter.string(from: startDate)
-				}
-
-				self.payload = BasePayload(endDate: endDateString,
-														id: id,
-														name: name,
-														startDate: startDateString,
-														statementFormat: statementFormat)
+				self.payload = payload
 			}
 		}
 

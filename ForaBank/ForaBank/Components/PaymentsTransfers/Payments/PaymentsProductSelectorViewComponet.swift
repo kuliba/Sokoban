@@ -36,13 +36,13 @@ extension PaymentsProductSelectorView {
             self.productsFilterred = []
             self.products = []
             
-            let classicSmall = ProductView.ViewModel(id: "2", header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardClassic, image: nil), size: .small), isUpdating: false,  productType: .card, action: {[weak self] in self?.action.send(PaymentsProductSelectorView.ViewModelAction.SelectedProduct(productId: 2))})
+            let classicSmall = ProductView.ViewModel(id: 2, header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardClassic, image: nil), size: .small), isUpdating: false,  productType: .card, action: {[weak self] in self?.action.send(PaymentsProductSelectorView.ViewModelAction.SelectedProduct(productId: 2))})
             
-            let classicSmall1 = ProductView.ViewModel(id: "3", header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardRIO, image: nil), size: .small), isUpdating: false,  productType: .card, action: {[weak self] in self?.action.send(PaymentsProductSelectorView.ViewModelAction.SelectedProduct(productId: 2))})
+            let classicSmall1 = ProductView.ViewModel(id: 3, header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardRIO, image: nil), size: .small), isUpdating: false,  productType: .card, action: {[weak self] in self?.action.send(PaymentsProductSelectorView.ViewModelAction.SelectedProduct(productId: 2))})
             
-            let classicSmall2 = ProductView.ViewModel(id: "4", header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardAccount, image: nil), size: .small), isUpdating: false,  productType: .card, action: {[weak self] in self?.action.send(PaymentsProductSelectorView.ViewModelAction.SelectedProduct(productId: 2))})
+            let classicSmall2 = ProductView.ViewModel(id: 4, header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardAccount, image: nil), size: .small), isUpdating: false,  productType: .card, action: {[weak self] in self?.action.send(PaymentsProductSelectorView.ViewModelAction.SelectedProduct(productId: 2))})
             
-            let classicSmall3 = ProductView.ViewModel(id: "5", header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardGold, image: nil), size: .small), isUpdating: false,  productType: .card, action: {[weak self] in self?.action.send(PaymentsProductSelectorView.ViewModelAction.SelectedProduct(productId: 2))})
+            let classicSmall3 = ProductView.ViewModel(id: 5, header: .init(logo: .ic24LogoForaColor, number: "7854", period: nil), name: "Classic", footer: .init(balance: "170 897 ₽", paymentSystem: Image("Payment System Mastercard")), statusAction: nil, appearance: .init(textColor: .white, background: .init(color: .cardGold, image: nil), size: .small), isUpdating: false,  productType: .card, action: {[weak self] in self?.action.send(PaymentsProductSelectorView.ViewModelAction.SelectedProduct(productId: 2))})
             
             self.productsFilterred = [classicSmall, classicSmall1, classicSmall2, classicSmall3]
             
@@ -127,7 +127,7 @@ struct PaymentsProductSelectorView: View {
                             .frame(width: 112, height: 72)
                             .onTapGesture {
                                 
-                                viewModel.action.send(PaymentsProductSelectorView.ViewModelAction.SelectedProduct(productId: productViewModel.productId))
+                                viewModel.action.send(PaymentsProductSelectorView.ViewModelAction.SelectedProduct(productId: productViewModel.id))
                             }
                     }
                 }

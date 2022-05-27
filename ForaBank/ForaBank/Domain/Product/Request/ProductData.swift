@@ -142,7 +142,7 @@ class ProductData: Identifiable, Codable {
 
 extension ProductData {
     
-    func updated(with params: ProductDynamicParamsData) {
+    func update(with params: ProductDynamicParamsData) {
         
         self.balance = params.balance
         self.customName = params.customName
@@ -153,34 +153,35 @@ extension ProductData {
 
 extension ProductData {
     
-    var viewNumber: String? {
+    var displayNumber: String? {
         
         switch productType {
         case .deposit:
-            if let accountNumber = accountNumber {
-                return String(accountNumber.suffix(4))
-            } else {
-                return nil
+            guard let accountNumber = accountNumber else {
+               return nil
             }
+            
+            return String(accountNumber.suffix(4))
+            
         default:
-            if let number = number {
-                return String(number.suffix(4))
-            } else {
+            guard let number = number else {
                 return nil
             }
+            
+            return String(number.suffix(4))
         }
     }
     
-    var viewName: String { customName ?? mainField }
+    var displayName: String { customName ?? mainField }
     
-    var viewBalance: String? {
+    var displayBalance: String? {
         
-        if let balance = balance {
-            
-            return balance.currencyFormatter(symbol: currency)
-        } else {
+        guard let balance = balance else {
             return nil
         }
+        
+        //FIXME: refactor formatter
+        return balance.currencyFormatter(symbol: currency)
     }
 }
 

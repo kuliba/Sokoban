@@ -29,7 +29,7 @@ struct MyProductsMoneyView: View {
                                     .font(.textH2SB20282())
                                     .foregroundColor(.mainColorsBlack)
 
-                                Text(viewModel.balance)
+                                Text(viewModel.decimalBalance)
                                     .font(.textH2SB20282())
                                     .foregroundColor(.mainColorsBlack)
                             }
@@ -44,7 +44,7 @@ struct MyProductsMoneyView: View {
 
                             Spacer()
 
-                            Text(viewModel.balance)
+                            Text(viewModel.decimalBalance)
                                 .font(.textH2SB20282())
                                 .foregroundColor(.mainColorsBlack)
                         }

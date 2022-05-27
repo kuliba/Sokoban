@@ -6,71 +6,112 @@
 //
 
 import SwiftUI
+import Combine
 
 //MARK: - ViewModel
 
 extension CurrencyExchangeView {
     
-    struct ViewModel {
+    class ViewModel: ObservableObject {
 
         let header: HeaderViewModel
-        let rates: [CurrencyRateViewModel]
+        @Published var rates: [CurrencyRateViewModel]
+        
+        private let model: Model
+        private var bindings = Set<AnyCancellable>()
+        
+        private let displayCurrencies: [Currency] = [.eur, .usd]
 
-        internal init(header: HeaderViewModel, rates: [CurrencyRateViewModel]) {
+        init(header: HeaderViewModel, rates: [CurrencyRateViewModel], model: Model = .emptyMock) {
 
             self.header = header
             self.rates = rates
+            self.model = model
         }
         
-        struct HeaderViewModel {
+        init(_ model: Model) {
             
-            var currency: String = "Валюта"
-            var buy: String = "Купить"
-            var sell: String = "Продать"
+            self.header = .init()
+            self.rates = []
+            self.model = model
+            
+            bind()
         }
-
-        struct CurrencyRateViewModel: Identifiable {
- 
-            let id: UUID
-            let currency: String
-            let buy: RateViewModel
-            let sell: RateViewModel
+        
+        private func bind() {
             
-            internal init(id: UUID = UUID(), currency: String, buy: RateViewModel, sell: RateViewModel) {
-                
-                self.id = id
-                self.currency = currency
-                self.buy = buy
-                self.sell = sell
+            model.rates
+                .receive(on: DispatchQueue.main)
+                .sink {[unowned self] ratesData in
+                    
+                    var updated = [CurrencyRateViewModel]()
+                    
+                    for currency in displayCurrencies {
+                        
+                        guard let rate = ratesData.first(where: { $0.currency == currency }),
+                              let rateViewModel = CurrencyRateViewModel(with: rate) else {
+                            
+                            continue
+                        }
+                        
+                        updated.append(rateViewModel)
+                    }
+                    
+                    withAnimation {
+                        
+                        rates = updated
+                    }
+          
+                }.store(in: &bindings)
+        }
+    }
+}
+
+//MARK: - Types
+
+extension CurrencyExchangeView.ViewModel {
+    
+    struct HeaderViewModel {
+        
+        var currency: String = "Валюта"
+        var buy: String = "Купить"
+        var sell: String = "Продать"
+    }
+
+    struct CurrencyRateViewModel: Identifiable {
+
+        let id: Currency
+        let title: String
+        let buy: RateViewModel
+        let sell: RateViewModel
+        
+        init(id: Currency, title: String, buy: RateViewModel, sell: RateViewModel) {
+            
+            self.id = id
+            self.title = title
+            self.buy = buy
+            self.sell = sell
+        }
+        
+        init?(with rate: ExchangeRateData) {
+            
+            let formatter = NumberFormatter.currencyRate
+            guard let buyValue = formatter.string(from: NSNumber(value: rate.rateBuy)),
+                let sellValue = formatter.string(from: NSNumber(value: rate.rateSell)) else {
+                return nil
             }
             
-            /*
- 
-            internal init(id: UUID = UUID(), currencyName: String, exchangeRateBuy: String, buyingExchangeRateHasRisen: Bool, exchangeRateSell: String, sellingExchangeRateHasRisen: Bool) {
-                
-                self.id = id
-                self.currency = currencyName
-                self.exchangeRateBuy = exchangeRateBuy
-                self.exchangeRateSell = exchangeRateSell
-                self.exchangeRateBuyIcon = Image.ic16PoligonDown
-                self.exchangeRateSellIcon = Image.ic16PoligonDown
-
-                if buyingExchangeRateHasRisen {
-                    self.exchangeRateBuyIcon = Image.ic16PoligonUp
-                }
-
-                if sellingExchangeRateHasRisen {
-                    self.exchangeRateSellIcon = Image.ic16PoligonUp
-                }
-            }
-             */
+            self.id = rate.currency
+            self.title = rate.currencyName
+            self.buy = RateViewModel(value: buyValue, icon: .ic16PoligonUp, iconColor: .clear)
+            self.sell = RateViewModel(value: sellValue, icon: .ic16PoligonUp, iconColor: .clear)
+        }
+        
+        struct RateViewModel {
             
-            struct RateViewModel {
-                
-                let value: String
-                let icon: Image
-                let iconColor: Color
-            }
+            let value: String
+            let icon: Image
+            let iconColor: Color
         }
     }
 }
@@ -79,7 +120,7 @@ extension CurrencyExchangeView {
 
 struct CurrencyExchangeView: View {
     
-    var viewModel: ViewModel
+    @ObservedObject var viewModel: ViewModel
     
     var body: some View {
 
@@ -137,7 +178,7 @@ struct CurrencyExchangeView: View {
 
             HStack {
 
-                Text(viewModel.currency)
+                Text(viewModel.title)
                     .font(.textH4M16240())
                     .foregroundColor(.textSecondary)
                 
@@ -194,6 +235,6 @@ struct CurrencyExchangeView_Previews: PreviewProvider {
 
 extension CurrencyExchangeView.ViewModel {
     
-    static let sample = CurrencyExchangeView.ViewModel(header: .init(), rates: [.init(currency: "Евро", buy: .init(value: "87,15", icon: .ic16PoligonUp, iconColor: .systemColorActive), sell: .init(value: "94,85", icon: .ic16PoligonDown, iconColor: .systemColorError)), .init(currency: "Доллар США", buy: .init(value: "87,15", icon: .ic16PoligonUp, iconColor: .systemColorActive), sell: .init(value: "94,85", icon: .ic16PoligonDown, iconColor: .systemColorError))])
+    static let sample = CurrencyExchangeView.ViewModel(header: .init(), rates: [.init(id: .eur, title: "Евро", buy: .init(value: "87,15", icon: .ic16PoligonUp, iconColor: .systemColorActive), sell: .init(value: "94,85", icon: .ic16PoligonDown, iconColor: .systemColorError)), .init(id: .usd, title: "Доллар США", buy: .init(value: "87,15", icon: .ic16PoligonUp, iconColor: .systemColorActive), sell: .init(value: "94,85", icon: .ic16PoligonDown, iconColor: .systemColorError))])
     
 }

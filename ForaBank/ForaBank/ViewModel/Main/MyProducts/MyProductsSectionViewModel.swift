@@ -5,8 +5,9 @@
 //  Created by Pavel Samsonov on 12.04.2022.
 //
 
-import Combine
 import Foundation
+import SwiftUI
+import Combine
 
 class MyProductsSectionViewModel: ObservableObject, Identifiable {
 
@@ -27,6 +28,18 @@ class MyProductsSectionViewModel: ObservableObject, Identifiable {
         self.isCollapsed = isCollapsed
         self.isEnabled = isEnabled
         self.items = items
+    }
+}
+
+extension MyProductsSectionViewModel {
+
+    func padding(_ model: MyProductsSectionItemViewModel) -> CGFloat {
+
+        if items.first?.id == model.id {
+            return 8
+        }
+
+        return 0
     }
 }
 

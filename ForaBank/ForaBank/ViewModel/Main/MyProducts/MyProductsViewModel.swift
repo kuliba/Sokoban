@@ -59,13 +59,25 @@ class MyProductsViewModel: ObservableObject {
                     switch key {
                     case .card:
 
-                        let items = sectionItems(value: value)
+                        let activatedCards = value.filter { isActivatedCard($0) }
 
                         sections.append(MyProductsSectionViewModel(
                             title: key.pluralName,
-                            items: items,
+                            items: sectionItems(value: activatedCards),
                             isCollapsed: false,
                             isEnabled: true))
+
+                        let notActivatedCards = value.filter { isNotActivatedCard($0) }
+
+                        if notActivatedCards.isEmpty { return }
+
+                        let notActivatedSection = MyProductsSectionViewModel(
+                            title: "Неактивированные продукты",
+                            items: sectionItems(value: notActivatedCards),
+                            isCollapsed: false,
+                            isEnabled: true)
+
+                        sections.insert(notActivatedSection, at: 0)
 
                     case .account:
 
@@ -97,6 +109,17 @@ class MyProductsViewModel: ObservableObject {
                             isCollapsed: false,
                             isEnabled: true))
                     }
+                }
+
+                if let blockedCards = blockedCards(data) {
+
+                    let blockedSection = MyProductsSectionViewModel(
+                        title: "Заблокированные продукты",
+                        items: sectionItems(value: blockedCards),
+                        isCollapsed: false,
+                        isEnabled: true)
+
+                    sections.append(blockedSection)
                 }
 
                 guard sections.count > 0 else {
@@ -180,7 +203,6 @@ class MyProductsViewModel: ObservableObject {
                                     break
                                 }
                             }.store(in: &bindings)
-
                     }
                 } else {
                     currencyMenu = nil
@@ -188,56 +210,86 @@ class MyProductsViewModel: ObservableObject {
 
             }.store(in: &bindings)
 
-        let items = sections.flatMap { $0.items }
+        model.productsHidden
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] productsHidden in
 
-        for item in items {
+                let items = sections.flatMap { $0.items }
 
-            item.action
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] action in
+                for item in items {
 
-                    switch action {
-                    case _ as MyProductsSectionItemAction.Tap:
-                        items
-                            .forEach { model in
-                                setStateNormal(model)
-                            }
-                    default:
-                        break
+                    if model.productsHidden.value.contains(item.id) {
+                        item.isMainScreenHidden = true
+                    } else {
+                        item.isMainScreenHidden = false
                     }
-                }.store(in: &bindings)
+                }
+            }.store(in: &bindings)
 
-            item.$state
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] state in
+        $sections
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] sections in
 
-                    switch state {
-                    case .leftButton, .rightButton:
-                        items
-                            .filter { $0.id != item.id }
-                            .forEach { model in
-                                setStateNormal(model)
+                let items = sections.flatMap { $0.items }
+
+                for item in items {
+
+                    item.action
+                        .receive(on: DispatchQueue.main)
+                        .sink { [unowned self] action in
+
+                            switch action {
+                            case let payload as MyProductsSectionItemAction.ButtonType.Activate:
+
+                                let modelAction = ModelAction.Products.ActivateCard.Request(cardID: payload.cardID, cardNumber: payload.cardNumber)
+
+                                model.action.send(modelAction)
+
+                            case let payload as MyProductsSectionItemAction.ButtonType.Hidden:
+
+                                model.action.send(ModelAction.Settings.UpdateProductsHidden(productID: payload.productID))
+
+                            case _ as MyProductsSectionItemAction.Tap:
+                                items
+                                    .forEach { model in
+                                        setStateNormal(model)
+                                    }
+                            default:
+                                break
                             }
-                    default:
-                        break
-                    }
-                }.store(in: &bindings)
-        }
+                        }.store(in: &bindings)
 
-        for section in sections {
+                    item.$state
+                        .receive(on: DispatchQueue.main)
+                        .sink { [unowned self] state in
 
-            section.$isCollapsed
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] _ in
+                            switch state {
+                            case .leftButton, .rightButton:
+                                items
+                                    .filter { $0.id != item.id }
+                                    .forEach { model in
+                                        setStateNormal(model)
+                                    }
+                            default:
+                                break
+                            }
+                        }.store(in: &bindings)
+                }
 
-                    sections
-                        .flatMap { $0.items }
-                        .forEach { model in
-                            setStateNormal(model)
-                        }
+                for section in sections {
 
-                }.store(in: &bindings)
-        }
+                    section.$isCollapsed
+                        .receive(on: DispatchQueue.main)
+                        .sink { [unowned self] _ in
+
+                            sections
+                                .flatMap { $0.items }
+                                .forEach { model in
+                                    setStateNormal(model)
+                                }
+                        }.store(in: &bindings)
+                }
+            }.store(in: &bindings)
     }
 }
 
@@ -289,21 +341,26 @@ extension MyProductsViewModel {
     private func productCardModel(data: ProductData) -> MyProductsSectionItemViewModel? {
 
         guard
+            let data = data as? ProductCardData,
             let icon = data.smallDesign.image,
             let balance = data.balance,
             let balanceRub = data.balanceRub,
             let subtitle = data.additionalField,
+            let number = data.number,
             let numberCard = data.numberMasked else {
                 return nil
             }
 
         return MyProductsSectionItemViewModel(
+            id: data.id,
             icon: icon,
             title: data.mainField,
             subtitle: subtitle,
+            number: number,
             numberCard: numberCard.count > 0 ? "•  \(numberCard.suffix(4))  •" : numberCard,
             balance: "\(balance)",
-            balanceRub: balanceRub)
+            balanceRub: balanceRub,
+            isNeedsActivated: data.isNotActivated)
     }
 
     private func productAccountModel(data: ProductData) -> MyProductsSectionItemViewModel? {
@@ -312,13 +369,16 @@ extension MyProductsViewModel {
             let icon = data.smallDesign.image,
             let balance = data.balance,
             let balanceRub = data.balanceRub,
+            let number = data.number,
             let numberCard = data.numberMasked else {
                 return nil
             }
 
         return MyProductsSectionItemViewModel(
+            id: data.id,
             icon: icon,
             title: data.mainField,
+            number: number,
             numberCard: numberCard.count > 0 ? "•  \(numberCard.suffix(4))  •" : numberCard,
             balance: "\(balance)",
             balanceRub: balanceRub)
@@ -330,13 +390,16 @@ extension MyProductsViewModel {
             let icon = data.smallDesign.image,
             let balance = data.balance,
             let balanceRub = data.balanceRub,
+            let number = data.number,
             let numberCard = data.numberMasked else {
                 return nil
             }
 
         return MyProductsSectionItemViewModel(
+            id: data.id,
             icon: icon,
             title: data.mainField,
+            number: number,
             numberCard: numberCard.count > 0 ? "•  \(numberCard.suffix(4))  •" : numberCard,
             balance: "\(balance)",
             balanceRub: balanceRub)
@@ -349,19 +412,57 @@ extension MyProductsViewModel {
             let balance = data.balance,
             let balanceRub = data.balanceRub,
             let subtitle = data.additionalField,
+            let number = data.number,
             let numberCard = data.numberMasked,
             let loanData = data as? ProductLoanData else {
                 return nil
             }
 
         return MyProductsSectionItemViewModel(
+            id: data.id,
             icon: icon,
             title: data.mainField,
             subtitle: subtitle,
+            number: number,
             numberCard: numberCard.count > 0 ? "•  \(numberCard.suffix(4))  •" : numberCard,
             balance: "\(balance)",
             balanceRub: balanceRub,
             dateLong: "•  \(DateFormatter.shortDate.string(from: loanData.dateLong))")
+    }
+
+    private func isActivatedCard(_ item: ProductData) -> Bool {
+
+        guard let item = item as? ProductCardData, item.isActivated else {
+            return false
+        }
+        return true
+    }
+
+    private func isNotActivatedCard(_ item: ProductData) -> Bool {
+
+        guard let item = item as? ProductCardData, item.isNotActivated else {
+            return false
+        }
+        return true
+    }
+
+    private func blockedCards(_ data: [Dictionary<ProductType, [ProductData]>.Element]) -> [ProductData]? {
+
+        let data = data.first(where: { $0.key == .card })
+
+        let filterred = data?.value.filter { item in
+
+            guard let item = item as? ProductCardData, item.isBlocked else {
+                return false
+            }
+            return true
+        }
+
+        guard let blockedCards = filterred, !blockedCards.isEmpty else {
+            return nil
+        }
+
+        return blockedCards
     }
 }
 

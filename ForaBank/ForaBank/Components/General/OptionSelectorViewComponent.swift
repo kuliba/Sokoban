@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 //MARK: - View Model
 
@@ -13,17 +14,41 @@ extension OptionSelectorView {
     
     class ViewModel: ObservableObject {
         
+        let action: PassthroughSubject<Action, Never> = .init()
+        
         @Published var options: [OptionViewModel]
         @Published var selected: Option.ID
         let style: Style
+        let mode: Mode
      
-        internal init(options: [Option], selected: Option.ID, style: Style) {
+        internal init(options: [Option], selected: Option.ID, style: Style, mode: Mode = .auto) {
            
             self.options = []
             self.selected = selected
             self.style = style
+            self.mode = mode
             
-            self.options = options.map{ OptionViewModel(id: $0.id, title: $0.name, style: style, action: { [weak self] optionId in self?.selected = optionId })}
+            self.options = options.map{ OptionViewModel(id: $0.id, title: $0.name, style: style, action: { [weak self] optionId in
+                
+                guard let self = self else { return }
+                
+                switch self.mode {
+                case .auto:
+                    self.selected = optionId
+                    
+                case .action:
+                    self.action.send(OptionSelectorAction.OptionDidSelected(optionId: optionId))
+                }
+            })}
+        }
+        
+        func update(options: [Option], selected: Option.ID) {
+            
+            self.options = options.map{ OptionViewModel(id: $0.id, title: $0.name, style: style, action: { [weak self] optionId in
+                self?.selected = optionId
+                self?.action.send(OptionSelectorAction.OptionDidSelected(optionId: optionId))
+            })}
+            self.selected = selected
         }
         
         enum Style {
@@ -31,6 +56,12 @@ extension OptionSelectorView {
             case template
             case products
             case productsSmall
+        }
+        
+        enum Mode {
+            
+            case auto
+            case action
         }
         
         struct OptionViewModel: Identifiable {
@@ -43,6 +74,15 @@ extension OptionSelectorView {
     }
 }
 
+//MARK: - Action
+
+enum OptionSelectorAction {
+    
+    struct OptionDidSelected: Action {
+        
+        let optionId: Option.ID
+    }
+}
 
 //MARK: - View
 
