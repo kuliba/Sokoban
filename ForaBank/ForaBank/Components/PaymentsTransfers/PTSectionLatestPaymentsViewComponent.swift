@@ -121,7 +121,7 @@ extension PTSectionLatestPaymentsView {
                                             text = phone
                                     }
                                     
-                                    if let country = model.dictionaryCountry(for: paymentData.puref) {
+                                    if let country = model.dictionaryCountry(for: paymentData.countryCode) {
                                         topIcon = country.svgImage?.image
                                     }
                                     

@@ -17,6 +17,13 @@ extension ModelAction {
             
             struct Requested: Action {}
             
+            //TODO: refacor action ala Products
+//            struct Response: Action {
+//
+//                let productId: ProductData.ID
+//                let productType: ProductType
+//                let result: Result<ProductDynamicParamsData, Error>
+//            }
             struct Complete: Action {
                 let latestAllPayments: [PaymentData]
             }

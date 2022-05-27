@@ -173,7 +173,6 @@ class Model {
                     action.send(ModelAction.Rates.Update.All())
                     
                     action.send(ModelAction.LatestPayments.List.Requested())
-                    action.send(ModelAction.Dictionary.UpdateCache.List(types: [.banks, .countries, .anywayOperators]))
                     
                 case .inactive:
                     if let pincode = try? authStoredPincode() {

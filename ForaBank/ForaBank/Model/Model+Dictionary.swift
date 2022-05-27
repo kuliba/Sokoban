@@ -13,7 +13,7 @@ extension ModelAction {
     
     enum Dictionary {
         
-        static let cached: [Kind] = [.anywayOperators, .fmsList, .fsspDebtList, .fsspDocumentList, .ftsList, .productCatalogList, .bannerCatalogList, .atmList, .atmServiceList, .atmTypeList, .atmMetroStationList, .atmCityList, .atmRegionList]
+        static let cached: [Kind] = [.anywayOperators, .fmsList, .fsspDebtList, .fsspDocumentList, .ftsList, .productCatalogList, .bannerCatalogList, .atmList, .atmServiceList, .atmTypeList, .atmMetroStationList, .atmCityList, .atmRegionList, .countries, .banks]
 
         enum UpdateCache {
         
