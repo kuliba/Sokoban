@@ -20,7 +20,7 @@ extension PTSectionLatestPaymentsView {
         override var type: PaymentsTransfersSectionType { .latestPayments }
         private let model: Model
         private let contactsAgent: ContactsAgent
-        private var contactsAgentStatus: Bool
+        private var contactsAgentStatus: ContactsAgentStatus
         
         private var bindings = Set<AnyCancellable>()
         
@@ -43,7 +43,7 @@ extension PTSectionLatestPaymentsView {
             self.latestPaymentsButtons = Self.templateButtonData
             self.model = model
             self.contactsAgent = ContactsAgent()
-            self.contactsAgentStatus = false
+            self.contactsAgentStatus = .disabled
             super.init()
             bind()
         }
@@ -52,20 +52,15 @@ extension PTSectionLatestPaymentsView {
             self.latestPaymentsButtons = latestPaymentsButtons
             self.model = model
             self.contactsAgent = ContactsAgent()
-            self.contactsAgentStatus = false //TODO: Mock
+            self.contactsAgentStatus = .disabled //TODO: Mock
             super.init()
         }
         
         func bind() {
             
-            contactsAgent.status.sink { [unowned self] status in
-                
-                switch status {
-                case .available: self.contactsAgentStatus = true
-                default: self.contactsAgentStatus = false
-                }
-                
-            }.store(in: &bindings)
+            contactsAgent.status
+                .assign(to: \.contactsAgentStatus, on: self)
+                .store(in: &bindings)
             
             // data updates from model
             model.latestPayments
@@ -98,7 +93,7 @@ extension PTSectionLatestPaymentsView {
                                     }
                                     
                                     var contact: AdressBookContact?
-                                    if self.contactsAgentStatus {
+                                    if case .available = self.contactsAgentStatus {
                                         contact = self.contactsAgent.fetchContact(by: paymentData.phoneNumber)
                                         
                                         if let contact = contact {
