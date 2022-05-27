@@ -25,7 +25,7 @@ extension ModelAction {
                 let result: Result
                 
                 enum Result {
-                    case success
+                    case success(statement: [ProductStatementData])
                     case failure(message: String)
                 }
             }
@@ -63,6 +63,8 @@ extension Model {
                             
                             self.handleServerCommandCachingError(error: error, command: command)
                         }
+                        
+                        self.action.send(ModelAction.Statement.List.Response(result: .success(statement: statement)))
                         
                     default:
                         self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
@@ -175,6 +177,8 @@ extension Model {
         
         if filteredByKeys.count == 0 {
             
+            statementUpdated.productStatement.updateValue(statementData, forKey: productId)
+
         } else {
             
             statementUpdated.productStatement.updateValue(statementData, forKey: productId)
