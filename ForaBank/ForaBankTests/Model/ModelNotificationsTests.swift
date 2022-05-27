@@ -16,49 +16,60 @@ class ModelNotificationsTests: XCTestCase {
         
         // given
         let current: [NotificationData] = [ .init(date: date + TimeInterval(1),
+                                                  title: "Cmc",
                                                   state: .delivered ,
                                                   text: "SMS",
                                                   type: .email),
                                             .init(date: date + TimeInterval(2),
+                                                  title: "Cmc",
                                                   state: .delivered ,
                                                   text: "SMS_s",
                                                   type: .push),
                                             .init(date: date + TimeInterval(3),
+                                                  title: "Cmc",
                                                   state: .delivered ,
                                                   text: "PUSH",
                                                   type: .email)]
         
         let update: [NotificationData] = [ .init(date: date + TimeInterval(1),
+                                                 title: "Cmc",
                                                  state: .delivered ,
                                                  text: "SMS",
                                                  type: .email),
                                            .init(date: date + TimeInterval(4),
+                                                 title: "Cmc",
                                                  state: .delivered ,
                                                  text: "PUSH",
                                                  type: .push),
                                            .init(date: date + TimeInterval(5),
+                                                 title: "Cmc",
                                                  state: .delivered ,
                                                  text: "SMS_e",
                                                  type: .email)]
         
         
         let testResult: [NotificationData] = [.init(date: date + TimeInterval(1),
+                                                    title: "Cmc",
                                                     state: .delivered ,
                                                     text: "SMS",
                                                     type: .email),
                                               .init(date: date + TimeInterval(2),
+                                                    title: "Cmc",
                                                     state: .delivered ,
                                                     text: "SMS_s",
                                                     type: .push),
                                               .init(date: date + TimeInterval(3),
+                                                    title: "Cmc",
                                                     state: .delivered ,
                                                     text: "PUSH",
                                                     type: .email),
                                               .init(date: date + TimeInterval(4),
+                                                    title: "Cmc",
                                                     state: .delivered ,
                                                     text: "PUSH",
                                                     type: .push),
                                               .init(date: date + TimeInterval(5),
+                                                    title: "Cmc",
                                                     state: .delivered ,
                                                     text: "SMS_e",
                                                     type: .email)
@@ -78,41 +89,50 @@ class ModelNotificationsTests: XCTestCase {
         
         // given
         let current: [NotificationData] = [ .init(date: date,
+                                                  title: "Cmc",
                                                   state: .delivered ,
                                                   text: "SMS",
                                                   type: .email),
                                             .init(date: date,
+                                                  title: "Cmc",
                                                   state: .delivered ,
                                                   text: "SMS_s",
                                                   type: .push),
                                             .init(date: date,
+                                                  title: "Cmc",
                                                   state: .delivered ,
                                                   text: "PUSH",
                                                   type: .email)]
         
         let update: [NotificationData] = [ .init(date: date,
+                                                 title: "Cmc",
                                                  state: .delivered ,
                                                  text: "SMS",
                                                  type: .email),
                                            .init(date: date,
+                                                 title: "Cmc",
                                                  state: .delivered ,
                                                  text: "SMS_s",
                                                  type: .push),
                                            .init(date: date,
+                                                 title: "Cmc",
                                                  state: .delivered ,
                                                  text: "PUSH",
                                                  type: .email)]
         
         
         let testResult: [NotificationData] = [.init(date: date,
+                                                    title: "Cmc",
                                                     state: .delivered ,
                                                     text: "SMS",
                                                     type: .email),
                                               .init(date: date,
+                                                    title: "Cmc",
                                                     state: .delivered ,
                                                     text: "SMS_s",
                                                     type: .push),
                                               .init(date: date,
+                                                    title: "Cmc",
                                                     state: .delivered ,
                                                     text: "PUSH",
                                                     type: .email)
@@ -131,27 +151,33 @@ class ModelNotificationsTests: XCTestCase {
         
         // given
         let current: [NotificationData] = [ .init(date: date + TimeInterval(1),
+                                                  title: "Cmc",
                                                   state: .delivered ,
                                                   text: "SMS",
                                                   type: .email),
                                             .init(date: date + TimeInterval(2),
+                                                  title: "Cmc",
                                                   state: .delivered ,
                                                   text: "SMS_s",
                                                   type: .push),
                                             .init(date: date + TimeInterval(3),
+                                                  title: "Cmc",
                                                   state: .delivered ,
                                                   text: "PUSH",
                                                   type: .email)]
         
         let update: [NotificationData] = [ .init(date: date + TimeInterval(1),
+                                                 title: "Cmc",
                                                  state: .delivered ,
                                                  text: "SMS",
                                                  type: .email),
                                            .init(date: date + TimeInterval(4),
+                                                 title: "Cmc",
                                                  state: .delivered ,
                                                  text: "PUSH",
                                                  type: .push),
                                            .init(date: date + TimeInterval(5),
+                                                 title: "Cmc",
                                                  state: .delivered ,
                                                  text: "SMS_e",
                                                  type: .email)]
@@ -159,18 +185,22 @@ class ModelNotificationsTests: XCTestCase {
         
         let testResult: [NotificationData] = [
                                               .init(date: date + TimeInterval(2),
+                                                    title: "Cmc",
                                                     state: .delivered ,
                                                     text: "SMS_s",
                                                     type: .push),
                                               .init(date: date + TimeInterval(3),
+                                                    title: "Cmc",
                                                     state: .delivered ,
                                                     text: "PUSH",
                                                     type: .email),
                                               .init(date: date + TimeInterval(4),
+                                                    title: "Cmc",
                                                     state: .delivered ,
                                                     text: "PUSH",
                                                     type: .push),
                                               .init(date: date + TimeInterval(5),
+                                                    title: "Cmc",
                                                     state: .delivered ,
                                                     text: "SMS_e",
                                                     type: .email)
@@ -185,5 +215,37 @@ class ModelNotificationsTests: XCTestCase {
         XCTAssertNotEqual(result, testResult)
     }
 
-
+    func testNotificationsExpected() throws {
+        
+        let current: [NotificationData] = [ .init(date: date + TimeInterval(1),
+                                                         title: "Cmc",
+                                                         state: .delivered ,
+                                                         text: "SMS",
+                                                         type: .email),
+                                                   .init(date: date + TimeInterval(2),
+                                                         title: "Cmc",
+                                                         state: .delivered ,
+                                                         text: "SMS_s",
+                                                         type: .push)
+                                                   ]
+        
+        let update: [NotificationData] = [ .init(date: date + TimeInterval(1),
+                                                        title: "Cmc",
+                                                         state: .delivered ,
+                                                         text: "SMS",
+                                                         type: .email),
+                                                   .init(date: date + TimeInterval(3),
+                                                         title: "Cmc",
+                                                         state: .delivered ,
+                                                         text: "PUSH",
+                                                         type: .push)
+                                                   ]
+        
+        // when
+        let expected = Model.dictinaryNotificationReduce(current: current,
+                                                       update: update)
+        
+        // then
+        XCTAssertEqual(expected.count, 3)
+    }
 }

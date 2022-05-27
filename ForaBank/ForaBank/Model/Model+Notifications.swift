@@ -74,7 +74,7 @@ extension Model {
             return
         }
         
-        let command = ServerCommands.NotificationController.GetNotifications(token: token, offset: 0, limit: 100, types: [.push, .sms, .email], states: [.new, .inProgress, .sent, .error, .delivered, .read])
+        let command = ServerCommands.NotificationController.GetNotifications(token: token, offset: 0, limit: 15, types: [.push, .sms, .email], states: [.new, .inProgress, .sent, .error, .delivered, .read])
         
         serverAgent.executeCommand(command: command) { result in
             
@@ -130,7 +130,7 @@ extension Model {
         
         let offset = notifications.value.count
         
-        let command = ServerCommands.NotificationController.GetNotifications(token: token, offset: offset, limit: 100, types: [.push, .sms, .email], states: [.new, .inProgress, .sent, .error, .delivered, .read])
+        let command = ServerCommands.NotificationController.GetNotifications(token: token, offset: offset, limit: 15, types: [.push, .sms, .email], states: [.new, .inProgress, .sent, .error, .delivered, .read])
         
         serverAgent.executeCommand(command: command) { result in
             
