@@ -125,7 +125,7 @@ extension PTSectionLatestPaymentsView {
                                         topIcon = country.svgImage?.image
                                     }
                                     
-                                case .service:
+                                case .service, .taxAndStateService, .transport, .internet, .mobile:
                                     guard let paymentData = item as? PaymentServiceData else { return }
                                     
                                     text = String(paymentData.puref)
@@ -139,9 +139,6 @@ extension PTSectionLatestPaymentsView {
                                         }
                                     }
                                     
-                                default:
-                                    image = .text(item.type.rawValue)
-                                    text = item.type.rawValue
                                 }
                                 
                                 let button = LatestPaymentButtonVM(image: image,
