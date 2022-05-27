@@ -13,26 +13,28 @@ class ProductProfileViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
     
-    @Published var productViewModel: ProductProfileCardView.ViewModel
-    @Published var buttonsViewModel: ProductProfileButtonsSectionView.ViewModel
-    @Published var accountDetailViewModel: ProductProfileAccountDetailView.ViewModel?
-    @Published var historyViewModel: ProductProfileHistoryView.ViewModel?
+    let statusBar: StatusBarViewModel
+    @Published var selector: ProductProfileButtonsSectionView.ViewModel
+    @Published var product: ProductProfileCardView.ViewModel
+    @Published var detail: ProductProfileAccountDetailView.ViewModel?
+    @Published var history: ProductProfileHistoryView.ViewModel?
     @Published var alert: Alert.ViewModel?
-    @Published var detailOperation: OperationDetailViewModel?
-    let dismissAction: () -> Void
-    
+    @Published var operationDetail: OperationDetailViewModel?
+
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
-    internal init(productViewModel: ProductProfileCardView.ViewModel, model: Model, dismissAction: @escaping () -> Void) {
+    
+    init(productViewModel: ProductProfileCardView.ViewModel, model: Model, dismissAction: @escaping () -> Void) {
         
+        self.statusBar = ProductProfileViewModel.StatusBarViewModel(backButton: .init(icon: .ic24ChevronLeft, action: dismissAction), title: "Platinum", subtitle: "· 4329", actionButton: .init(icon: .ic24Edit2, action: {}), color: .iconBlack)
         self.model = model
-        self.productViewModel = productViewModel
+        self.product = productViewModel
 
-        self.accountDetailViewModel = nil
+        self.detail = nil
         
-        self.buttonsViewModel = .init(kind: productViewModel.product.productType)
-        self.historyViewModel = .init(model, productId: productViewModel.product.id, productType: productViewModel.product.productType)
+        self.selector = .init(kind: productViewModel.product.productType)
+        self.history = .init(model, productId: productViewModel.product.id, productType: productViewModel.product.productType)
         
         switch productViewModel.product.productType {
         case .card:
@@ -42,9 +44,8 @@ class ProductProfileViewModel: ObservableObject {
         case .deposit:
             break
         case .loan:
-            self.historyViewModel = nil
+            self.history = nil
         }
-        self.dismissAction = dismissAction
         
         bind()
     }
@@ -74,7 +75,7 @@ class ProductProfileViewModel: ObservableObject {
                 }
             }.store(in: &bindings)
         
-        historyViewModel?.action
+        history?.action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 switch action {
@@ -86,6 +87,37 @@ class ProductProfileViewModel: ObservableObject {
             }.store(in: &bindings)
     }
 }
+
+//MARK: - Types
+
+extension ProductProfileViewModel {
+    
+    class StatusBarViewModel: ObservableObject {
+
+        let backButton: ButtonViewModel
+        @Published var title: String
+        @Published var subtitle: String
+        @Published var actionButton: ButtonViewModel?
+        @Published var color: Color
+        
+        init(backButton: ButtonViewModel, title: String, subtitle: String, actionButton: ButtonViewModel?, color: Color = .iconWhite) {
+            
+            self.backButton = backButton
+            self.title = title
+            self.subtitle = subtitle
+            self.actionButton = actionButton
+            self.color = color
+        }
+        
+        struct ButtonViewModel {
+            
+            let icon: Image
+            let action: () -> Void
+        }
+    }
+}
+
+//MARK: - Action
 
 enum ProductProfileViewModelAction {
     

@@ -26,7 +26,7 @@ struct ProductProfileView: View {
                         
                         ZStack {
                             
-                            viewModel.productViewModel.product.appearance.background.color.contrast(0.8)
+                            viewModel.product.product.appearance.background.color.contrast(0.8)
                                 .frame(width: geometry.size.width, height: 150)
                                 .clipped()
                         }
@@ -34,20 +34,20 @@ struct ProductProfileView: View {
                     
                     VStack(spacing: 0) {
                         
-                        ProductProfileCardView(viewModel: viewModel.productViewModel)
+                        ProductProfileCardView(viewModel: viewModel.product)
                             .padding(.top, 20)
                         
                         VStack(spacing: 32) {
                             
-                            ProductProfileButtonsSectionView(viewModel: .init(kind: viewModel.productViewModel.product.productType))
+                            ProductProfileButtonsSectionView(viewModel: .init(kind: viewModel.product.product.productType))
                             
-                            if let detailAccount = viewModel.accountDetailViewModel {
+                            if let detailAccount = viewModel.detail {
                                 
                                 ProductProfileAccountDetailView(viewModel: detailAccount)
                                     .padding(.horizontal, 20)
                             }
                             
-                            if let historyViewModel = viewModel.historyViewModel {
+                            if let historyViewModel = viewModel.history {
                                 
                                 ProductProfileHistoryView(viewModel: historyViewModel)
                             }
@@ -60,11 +60,11 @@ struct ProductProfileView: View {
             
             ZStack {
                 
-                viewModel.productViewModel.product.appearance.background.color.contrast(0.8)
+                viewModel.product.product.appearance.background.color.contrast(0.8)
                     .clipped()
                     .edgesIgnoringSafeArea(.all)
                     .frame(height: 50)
-                HeaderView(viewModel: viewModel)
+                StatusView(viewModel: viewModel.statusBar)
             }
         }
         .navigationBarHidden(true)
@@ -86,70 +86,81 @@ struct ProductProfileView: View {
             Alert(with: alertViewModel)
         })
     }
+}
+
+//MARK: - Internal Views
+
+extension ProductProfileView {
     
-    struct HeaderView: View {
+    struct StatusView: View {
         
-        @ObservedObject var viewModel: ProductProfileViewModel
+        @ObservedObject var viewModel: ProductProfileViewModel.StatusBarViewModel
         
         var body: some View {
+            
             HStack {
                 
-                Button {
+                Button(action: viewModel.backButton.action) {
                     
-                    viewModel.dismissAction()
-                    
-                } label: {
-                    
-                    Image.ic24ChevronLeft
-                        .foregroundColor(viewModel.productViewModel.product.appearance.textColor)
+                    viewModel.backButton.icon
+                        .foregroundColor(viewModel.color)
                 }
-                
+
                 Spacer()
                 
                 VStack {
                     
-                    Text(viewModel.productViewModel.product.name)
-                        .foregroundColor(viewModel.productViewModel.product.appearance.textColor)
+                    Text(viewModel.title)
+                        .font(.textH3M18240())
+                        .foregroundColor(viewModel.color)
                     
-                    if let number = viewModel.productViewModel.product.header.number {
-                        
-                        Text(number)
-                            .font(.system(size: 12))
-                            .foregroundColor(viewModel.productViewModel.product.appearance.textColor)
-                    }
+                    Text(viewModel.subtitle)
+                        .font(.textBodySR12160())
+                        .foregroundColor(viewModel.color)
                 }
                 
                 Spacer()
                 
-                if viewModel.productViewModel.product.productType != .loan || viewModel.productViewModel.product.productType != .deposit {
+                if let actionButtonViewModel = viewModel.actionButton {
                     
-                    Button {
+                    Button(action: actionButtonViewModel.action) {
                         
-                        viewModel.action.send(ProductProfileViewModelAction.CustomName())
-                        
-                    } label: {
-                        
-                        Image.ic24Edit2
-                            .foregroundColor(viewModel.productViewModel.product.appearance.textColor)
+                        actionButtonViewModel.icon
+                            .foregroundColor(viewModel.color)
                     }
+                    
+                } else {
+                    
+                    Color.clear
+                        .frame(width: 24, height: 24)
                 }
             }
             .padding(.horizontal, 20)
-            .padding(.bottom, 10)
             .background(Color.clear)
         }
     }
 }
 
+//MARK: - Preview
+
 struct ProfileView_Previews: PreviewProvider {
+    
     static var previews: some View {
         
-        ProductProfileView(viewModel: .sample)
-        
-        ProductProfileView(viewModel: .sampleCard)
+        Group {
+            
+            ProductProfileView(viewModel: .sample)
+            ProductProfileView(viewModel: .sampleCard)
+            
+            ProductProfileView.StatusView(viewModel: .sample)
+                .previewLayout(.fixed(width: 375, height: 48))
+            ProductProfileView.StatusView(viewModel: .sampleNoActionButton)
+                .previewLayout(.fixed(width: 375, height: 48))
+        }
     }
 }
 
+//MARK: - Preview Content
 
 extension ProductProfileViewModel {
     
@@ -157,4 +168,12 @@ extension ProductProfileViewModel {
     
     static let sampleCard = ProductProfileViewModel(productViewModel: .init(products: [.notActivateProfile, .accountProfile, .classicProfile, .blockedProfile, .depositProfile], product: .blockedProfile, model: .emptyMock), model: .emptyMock, dismissAction: {})
 }
+
+extension ProductProfileViewModel.StatusBarViewModel {
+    
+    static let sample = ProductProfileViewModel.StatusBarViewModel(backButton: .init(icon: .ic24ChevronLeft, action: {}), title: "Platinum", subtitle: "· 4329", actionButton: .init(icon: .ic24Edit2, action: {}), color: .iconBlack)
+    
+    static let sampleNoActionButton = ProductProfileViewModel.StatusBarViewModel(backButton: .init(icon: .ic24ChevronLeft, action: {}), title: "Platinum", subtitle: "· 4329", actionButton: nil, color: .iconBlack)
+}
+
 
