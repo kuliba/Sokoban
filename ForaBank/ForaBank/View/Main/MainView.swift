@@ -55,7 +55,7 @@ struct MainView: View {
                 })
                 .onPreferenceChange(ScrollOffsetKey.self) { offset in
                     
-                    if offset < -80 {
+                    if offset < -100 {
                         
                         viewModel.action.send(MainViewModelAction.PullToRefresh())
                     }
@@ -68,6 +68,17 @@ struct MainView: View {
                 
                 RefreshView()
                     .zIndex(1)
+            }
+            
+            NavigationLink("", isActive: $viewModel.isLinkActive) {
+                
+                if let link = viewModel.link  {
+                    
+                    switch link {
+                    case .productProfile(let productProfileViewModel):
+                        ProductProfileView(viewModel: productProfileViewModel)
+                    }
+                }
             }
         }
         .sheet(item: $viewModel.sheet, content: { sheet in

@@ -19,6 +19,8 @@ class MainViewModel: ObservableObject {
     @Published var isRefreshing: Bool
     @Published var productProfile: ProductProfileViewModel?
     @Published var sheet: Sheet?
+    @Published var link: Link? { didSet { isLinkActive = link != nil } }
+    @Published var isLinkActive: Bool = false
     
     private var model: Model
     private var bindings = Set<AnyCancellable>()
@@ -109,8 +111,9 @@ class MainViewModel: ObservableObject {
                     switch action {
                         // products section
                     case let payload as MainSectionViewModelAction.Products.ProductDidTapped:
-                        let productProfileViewModel: ProductProfileViewModel = .init(productViewModel: .init(model, productId: payload.productId, productType: .card), model: model)
-                        sheet = .init(type: .productProfile(productProfileViewModel))
+                        let productProfileViewModel: ProductProfileViewModel = .init(productViewModel: .init(model, productId: payload.productId, productType: .card), model: model, dismissAction: { [weak self] in self?.link = nil })
+//                        sheet = .init(type: .productProfile(productProfileViewModel))
+                        link = .productProfile(productProfileViewModel)
                         
                     case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
                         let myProductsViewModel: MyProductsViewModel = .init(model)
@@ -207,6 +210,11 @@ extension MainViewModel {
             case myProducts(MyProductsViewModel)
             case places(PlacesViewModel)
         }
+    }
+    
+    enum Link {
+        
+        case productProfile(ProductProfileViewModel)
     }
 }
 

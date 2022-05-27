@@ -19,19 +19,16 @@ class ProductProfileViewModel: ObservableObject {
     @Published var historyViewModel: ProductProfileHistoryView.ViewModel?
     @Published var alert: Alert.ViewModel?
     @Published var detailOperation: OperationDetailViewModel?
-    
-    lazy var dismissAction: () -> Void = {[weak self] in
-        self?.action.send(ProductProfileViewModelAction.Dismiss())
-    }
+    let dismissAction: () -> Void
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
-    internal init(productViewModel: ProductProfileCardView.ViewModel, model: Model) {
+    internal init(productViewModel: ProductProfileCardView.ViewModel, model: Model, dismissAction: @escaping () -> Void) {
         
         self.model = model
         self.productViewModel = productViewModel
-        
+
         self.accountDetailViewModel = nil
         
         self.buttonsViewModel = .init(kind: productViewModel.product.productType)
@@ -47,6 +44,7 @@ class ProductProfileViewModel: ObservableObject {
         case .loan:
             self.historyViewModel = nil
         }
+        self.dismissAction = dismissAction
         
         bind()
     }
