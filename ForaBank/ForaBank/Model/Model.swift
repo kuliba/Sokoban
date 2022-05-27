@@ -28,7 +28,8 @@ class Model {
     //MARK: Dictionaries
     let catalogProducts: CurrentValueSubject<[CatalogProductData], Never>
     let catalogBanners: CurrentValueSubject<[BannerCatalogListData], Never>
-    let currencyList: CurrentValueSubject<[CurrencyData], Never>
+    var currencyList: [CurrencyData]
+    //TODO: remove wrapper for dicts
     let bankList: CurrentValueSubject<[BankData], Never>
     
     //MARK: Templates
@@ -494,7 +495,7 @@ private extension Model {
         
         if let currency = localAgent.load(type: [CurrencyData].self) {
             
-            self.currencyList.value = currency
+            self.currencyList = currency
         }
         
         if let bankList = localAgent.load(type: [BankData].self) {

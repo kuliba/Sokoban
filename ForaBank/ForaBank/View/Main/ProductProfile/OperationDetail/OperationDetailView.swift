@@ -109,7 +109,7 @@ extension OperationDetailView {
         var body: some View {
             VStack(spacing: 0) {
                 
-                viewModel.logo
+                viewModel.logo?
                     .resizable()
                     .frame(width: 64, height: 64)
                 

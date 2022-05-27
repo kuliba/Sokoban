@@ -150,7 +150,7 @@ extension ProductProfileHistoryView {
                 let title: String
                 let image: Image?
                 let subtitle: String
-                let amount: String
+                let amount: String?
                 let type: OperationType
                 
                 internal init(id: String, title: String, image: Image?, subtitle: String, amount: String, type: OperationType) {
@@ -342,8 +342,10 @@ struct ProductProfileHistoryView: View {
                                 
                                 Spacer()
                                 
-                                Text(item.amount)
-                                
+                                if let amount = item.amount {
+                                    
+                                    Text(amount)
+                                }
                             }
                             .padding(.vertical, 8)
                             .onTapGesture {

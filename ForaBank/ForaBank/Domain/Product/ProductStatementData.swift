@@ -160,10 +160,10 @@ extension ProductStatementData {
 
 extension ProductStatementData {
     
-    var amountFormattedtWithCurrency: String {
+    var amountFormattedtWithCurrency: String? {
         
-        let currency = Model.shared.currencyList.value.first(where: {$0.codeNumeric == currencyCodeNumeric})
-        let currencyCode = currency?.code ?? "RUB"
+        let currency = Model.shared.currency(for: currencyCodeNumeric)
+        guard let currencyCode = currency?.code else { return nil }
         return self.amount.currencyFormatter(symbol: currencyCode)
     }
 }

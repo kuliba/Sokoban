@@ -39,9 +39,11 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         self.product = product
         let tranDateString = DateFormatter.operation.string(from: productStatement.tranDate)
         
-        let currencyCode = self.model.currencyList.value.first(where: {$0.codeNumeric == productStatement.currencyCodeNumeric})?.code ?? "RUB"
+        guard let currency = model.currency(for: productStatement.currencyCodeNumeric)?.code else {
+            return nil
+        }
         
-        let image = productStatement.svgImage.image ?? .init(systemName: "")
+        let image = productStatement.svgImage.image
         
         switch productStatement.paymentDetailType {
         case .insideBank:
@@ -50,7 +52,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
             
             let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchantName)
             
-            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currencyCode, operationType: productStatement.operationType, payService: nil)
+            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currency, operationType: productStatement.operationType, payService: nil)
             
             self.operation = OperationViewModel(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
             
@@ -59,7 +61,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
             self.header = HeaderViewModel(logo: image, status: nil, title: productStatement.groupName, category: "Переводы")
             
             let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchantName)
-            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currencyCode, operationType: productStatement.operationType, payService: nil)
+            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currency, operationType: productStatement.operationType, payService: nil)
             self.operation = OperationViewModel(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
             
         case .otherBank:
@@ -67,7 +69,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
             self.header = HeaderViewModel(logo: image, status: nil, title: "Перевод на карту", category: productStatement.groupName)
             
             let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchantName)
-            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currencyCode, operationType: productStatement.operationType, payService: nil)
+            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currency, operationType: productStatement.operationType, payService: nil)
             self.operation = OperationViewModel(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
             
         case .contactAddressless, .direct:
@@ -75,14 +77,14 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
             self.header = HeaderViewModel(logo: image, status: nil, title: productStatement.groupName, category: nil)
             
             let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchantName)
-            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currencyCode, operationType: productStatement.operationType, payService: nil)
+            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currency, operationType: productStatement.operationType, payService: nil)
             self.operation = OperationViewModel(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
             
         case .externalIndivudual, .externalEntity:
             
             self.header = HeaderViewModel(logo: image, status: nil, title: productStatement.groupName, category: nil)
             
-            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currencyCode, operationType: productStatement.operationType, payService: nil)
+            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currency, operationType: productStatement.operationType, payService: nil)
             
             if let documentComment = productStatement.fastPayment?.documentComment, documentComment != "" {
                 
@@ -95,7 +97,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
             
         case .housingAndCommunalService, .insideOther, .internet, .mobile:
             self.header = HeaderViewModel(logo: image, status: nil, title: productStatement.merchantName, category: "\(productStatement.groupName)")
-            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currencyCode, operationType: productStatement.operationType, payService: nil)
+            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currency, operationType: productStatement.operationType, payService: nil)
             self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
             
         case .notFinance:
@@ -104,7 +106,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         case .outsideCash:
             self.header = HeaderViewModel(logo: image, status: nil, title: productStatement.groupName, category: "Прочие")
             let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchantName)
-            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currencyCode, operationType: productStatement.operationType, payService: nil)
+            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currency, operationType: productStatement.operationType, payService: nil)
             self.operation = OperationViewModel(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
             
         case .outsideOther:
@@ -117,7 +119,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                 self.header = HeaderViewModel(logo: image, status: nil, title: productStatement.merchantName, category: "\(productStatement.groupName)")
             }
             
-            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currencyCode, operationType: productStatement.operationType, payService: nil)
+            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currency, operationType: productStatement.operationType, payService: nil)
             self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: tranDateString)
             
         case .sfp:
@@ -135,7 +137,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                 
                 payeeViewModel = .singleRow(productStatement.merchantName)
             }
-            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currencyCode, operationType: productStatement.operationType, payService: nil)
+            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currency, operationType: productStatement.operationType, payService: nil)
             if let documentComment = productStatement.fastPayment?.documentComment, documentComment != "" {
                 
                 self.operation = OperationViewModel(bankLogo: image, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: documentComment, date: tranDateString)
@@ -146,7 +148,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
             }
         case .transport:
             self.header = HeaderViewModel(logo: image, status: nil, title: productStatement.merchantName, category: "\(productStatement.groupName)")
-            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currencyCode, operationType: productStatement.operationType, payService: nil)
+            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currency, operationType: productStatement.operationType, payService: nil)
             self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: productStatement.tranDate)
         case .c2b:
             let isReturn = productStatement.groupName.contains("Возврат")
@@ -177,7 +179,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
             
             let amountViewModel = AmountViewModel(
                 amount: productStatement.amount,
-                currency: currencyCode,
+                currency: currency,
                 operationType: productStatement.operationType,
                 payService: nil)
             
@@ -191,7 +193,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
         default:
             //FIXME: taxes
             self.header = HeaderViewModel(logo: image, status: nil, title: productStatement.merchantName, category: "\(productStatement.groupName)")
-            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currencyCode, operationType: productStatement.operationType, payService: nil)
+            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currency, operationType: productStatement.operationType, payService: nil)
             self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: productStatement.tranDate)
         }
         
@@ -418,7 +420,7 @@ extension OperationDetailViewModel {
     
     struct HeaderViewModel {
         
-        let logo: Image
+        let logo: Image?
         let status: StatusViewModel?
         let title: String
         let category: String?

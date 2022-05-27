@@ -7,16 +7,37 @@
 
 import Foundation
 
+//MARK: Data Helpers
+
+extension Model {
+    
+    var dictionaryCurrencyList: [CurrencyData]? {
+        
+        return localAgent.load(type: [CurrencyData].self)
+        
+    }
+    
+    func currency(for currencyCode: Int) -> CurrencyData? {
+        
+        guard let dictionaryCurrencyList = dictionaryCurrencyList else {
+            return nil
+        }
+        
+        return dictionaryCurrencyList.first(where: {$0.codeNumeric == currencyCode})
+        
+    }
+}
+
 //MARK: - Actions
 
 extension ModelAction {
     
     enum Dictionary {
         
-        static let cached: [Kind] = [.anywayOperators, .fmsList, .fsspDebtList, .fsspDocumentList, .ftsList, .productCatalogList, .bannerCatalogList, .atmList, .atmServiceList, .atmTypeList, .atmMetroStationList, .atmCityList, .atmRegionList]
-
-        enum UpdateCache {
+        static let cached: [Kind] = [.anywayOperators, .fmsList, .fsspDebtList, .fsspDocumentList, .ftsList, .productCatalogList, .bannerCatalogList, .atmList, .atmServiceList, .atmTypeList, .atmMetroStationList, .atmCityList, .atmRegionList, .currencyList, .banks]
         
+        enum UpdateCache {
+            
             struct All: Action {}
             
             struct List: Action {
@@ -30,7 +51,7 @@ extension ModelAction {
                 let serial: String?
             }
         }
-
+        
         enum Kind: CaseIterable {
             
             case anywayOperators
@@ -60,7 +81,7 @@ extension ModelAction {
 //MARK: - Cache
 
 extension Model {
-        
+    
     func dictionaryCheckCache(for dictionaryType: ModelAction.Dictionary.Kind) -> Bool {
         
         switch dictionaryType {
@@ -108,7 +129,7 @@ extension Model {
             
         case .atmList:
             return localAgent.load(type: [AtmData].self) != nil
-        
+            
         case .atmTypeList:
             return localAgent.load(type: [AtmTypeData].self) != nil
             
@@ -173,7 +194,7 @@ extension Model {
             
         case .atmList:
             return localAgent.serial(for: [AtmData].self)
-        
+            
         case .atmTypeList:
             return localAgent.serial(for: [AtmTypeData].self)
             
@@ -238,7 +259,7 @@ extension Model {
             
         case .atmList:
             try? localAgent.clear(type: [AtmData].self)
-        
+            
         case .atmTypeList:
             try? localAgent.clear(type: [AtmTypeData].self)
             
@@ -319,7 +340,7 @@ extension Model {
     }
     
     func dictionaryAtmServices() -> [AtmServiceData]? {
-
+        
         return localAgent.load(type: [AtmServiceData].self)
     }
 }
@@ -528,7 +549,7 @@ extension Model {
                         return
                     }
                     
-                    self.currencyList.value = data.currencyList
+                    self.currencyList = data.currencyList
                     
                     do {
                         
@@ -974,7 +995,7 @@ extension Model {
                     let result = Self.dictionaryAtmReduce(current: atmDataSource, update: data.list)
                     
                     do {
- 
+                        
                         try self.localAgent.store(result, serial: "\(data.version)")
                         
                     } catch {
@@ -1012,7 +1033,7 @@ extension Model {
                     }
                     
                     do {
- 
+                        
                         try self.localAgent.store(data.list, serial: data.serial)
                         
                     } catch {
@@ -1050,7 +1071,7 @@ extension Model {
                     }
                     
                     do {
- 
+                        
                         try self.localAgent.store(data.list, serial: data.serial)
                         
                     } catch {
@@ -1088,7 +1109,7 @@ extension Model {
                     }
                     
                     do {
- 
+                        
                         try self.localAgent.store(data.list, serial: data.serial)
                         
                     } catch {
@@ -1126,7 +1147,7 @@ extension Model {
                     }
                     
                     do {
- 
+                        
                         try self.localAgent.store(data.list, serial: data.serial)
                         
                     } catch {
@@ -1164,7 +1185,7 @@ extension Model {
                     }
                     
                     do {
- 
+                        
                         try self.localAgent.store(data.list, serial: data.serial)
                         
                     } catch {
