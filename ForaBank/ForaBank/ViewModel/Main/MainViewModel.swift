@@ -68,7 +68,7 @@ class MainViewModel: ObservableObject {
                     
                 case _ as MainViewModelAction.ButtonTapped.Messages:
                     let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model)
-                    sheet = .messages(messagesHistoryViewModel)
+                    sheet = .init(type: .messages(messagesHistoryViewModel))
                     
                 case _ as MainViewModelAction.PullToRefresh:
                     model.action.send(ModelAction.Products.Update.Total.All())
