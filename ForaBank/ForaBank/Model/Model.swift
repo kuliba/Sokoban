@@ -36,6 +36,9 @@ class Model {
     let currencyList: CurrentValueSubject<[CurrencyData], Never>
     let bankList: CurrentValueSubject<[BankData], Never>
     
+    //MARK: Deposits
+    let deposits: CurrentValueSubject<[DepositProductData], Never>
+    
     //MARK: Templates
     let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
     //TODO: store in cache
@@ -103,6 +106,7 @@ class Model {
         self.catalogBanners = .init([])
         self.currencyList = .init([])
         self.bankList = .init([])
+        self.deposits = .init([])
         self.paymentTemplates = .init([])
         self.paymentTemplatesViewSettings = .init(.initial)
         self.latestPayments = .init([])
@@ -171,6 +175,7 @@ class Model {
                     action.send(ModelAction.Products.Update.Total.All())
                     action.send(ModelAction.ClientInfo.Fetch.Request())
                     action.send(ModelAction.Rates.Update.All())
+                    action.send(ModelAction.Deposits.List.Request())
                     
                 case .inactive:
                     if let pincode = try? authStoredPincode() {
@@ -245,6 +250,7 @@ class Model {
                 switch action {
                     
                     //MARK: - General
+                    
                 case let payload as ModelAction.General.DownloadImage.Request:
                     handleGeneralDownloadImageRequest(payload)
                     
@@ -531,6 +537,11 @@ private extension Model {
         self.clientInfo.value = localAgent.load(type: ClientInfoData.self)
         self.clientPhoto.value = localAgent.load(type: ClientPhotoData.self)
         self.clientName.value = localAgent.load(type: ClientNameData.self)
+        
+        if let deposits = localAgent.load(type: [DepositProductData].self) {
+            
+            self.deposits.value = deposits
+        }
     }
 
     func loadSettings() {
@@ -573,6 +584,15 @@ private extension Model {
         } catch {
             
             print("Model: clearCachedData: ClientInfoData error: \(error.localizedDescription)")
+        }
+        
+        do {
+            
+            try localAgent.clear(type: [DepositProductData].self)
+            
+        } catch {
+            
+            print("Model: clearCachedData: DepositProductData error: \(error.localizedDescription)")
         }
         
         do {

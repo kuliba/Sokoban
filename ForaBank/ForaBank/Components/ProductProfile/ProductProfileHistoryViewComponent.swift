@@ -42,11 +42,20 @@ extension ProductProfileHistoryView {
             self.dateOperations = []
             self.spendingViewModel = nil
             self.model = model
+            self.listState = .error(.init(button: .init(action: {_ in })))
+            self.productId = productId
+  
+            //FIXME: temp disabled
+            /*
+            self.dateOperations = []
+            self.spendingViewModel = nil
+            self.model = model
             self.listState = .loading
             self.productId = productId
             bind()
             
             model.action.send(ModelAction.Statement.List.Request(productId: productId, productType: productType))
+             */
         }
         
         private func bind() {

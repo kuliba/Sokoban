@@ -13,50 +13,53 @@ class ProductProfileViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
     
-    @Published var productViewModel: ProductProfileCardView.ViewModel
-    @Published var buttonsViewModel: ProductProfileButtonsSectionView.ViewModel
-    @Published var accountDetailViewModel: ProductProfileAccountDetailView.ViewModel?
-    @Published var historyViewModel: ProductProfileHistoryView.ViewModel?
+    let statusBar: StatusBarViewModel
+    @Published var product: ProductProfileCardView.ViewModel
+    @Published var selector: ProductProfileButtonsSectionView.ViewModel
+    @Published var detail: ProductProfileAccountDetailView.ViewModel?
+    @Published var history: ProductProfileHistoryView.ViewModel?
     @Published var alert: Alert.ViewModel?
-    @Published var detailOperation: OperationDetailViewModel?
-    
-    lazy var dismissAction: () -> Void = {[weak self] in
-        self?.action.send(ProductProfileViewModelAction.Dismiss())
-    }
-    
+    @Published var operationDetail: OperationDetailViewModel?
+    @Published var accentColor: Color
+
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
-    internal init(productViewModel: ProductProfileCardView.ViewModel, model: Model) {
+    init(statusBar: StatusBarViewModel, product: ProductProfileCardView.ViewModel, selector: ProductProfileButtonsSectionView.ViewModel, detail: ProductProfileAccountDetailView.ViewModel?, history: ProductProfileHistoryView.ViewModel?, alert: Alert.ViewModel? = nil, operationDetail: OperationDetailViewModel? = nil, accentColor: Color = .purple, model: Model = .emptyMock) {
         
+        self.statusBar = statusBar
+        self.product = product
+        self.selector = selector
+        self.detail = detail
+        self.history = history
+        self.alert = alert
+        self.operationDetail = operationDetail
+        self.accentColor = accentColor
         self.model = model
-        self.productViewModel = productViewModel
+    }
+    
+    init?(_ model: Model, productData: ProductData, dismissAction: @escaping () -> Void) {
         
-        self.accountDetailViewModel = nil
-        
-        self.buttonsViewModel = .init(kind: productViewModel.product.productType)
-        self.historyViewModel = .init(model, productId: productViewModel.product.id, productType: productViewModel.product.productType)
-        
-        switch productViewModel.product.productType {
-        case .card:
-            break
-        case .account:
-            break
-        case .deposit:
-            break
-        case .loan:
-            self.historyViewModel = nil
+        guard let productViewModel = ProductProfileCardView.ViewModel(model, productData: productData) else {
+            return nil
         }
+        self.statusBar = ProductProfileViewModel.StatusBarViewModel(backButton: .init(icon: .ic24ChevronLeft, action: dismissAction), title: "Platinum", subtitle: "· 4329", actionButton: .init(icon: .ic24Edit2, action: {}), color: .iconBlack)
+        self.product = productViewModel
+        self.selector = .init(kind: productData.productType)
+        self.history = .init(model, productId: productData.id, productType: productData.productType)
+        self.accentColor = .purple
+        self.model = model
         
         bind()
     }
     
     func bind() {
+        
         action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 switch action {
-                case _ as ProductProfileViewModelAction.CustomName:
+                case _ as ProductProfileViewModelAction.ActivateCard:
                     alert = .init(title: "Активировать карту?", message: "После активации карта будет готова к использованию", primary: .init(type: .default, title: "Отмена", action: { [weak self] in
                         self?.alert = nil
                     }), secondary: .init(type: .default, title: "Ok", action: { [weak self] in
@@ -76,18 +79,54 @@ class ProductProfileViewModel: ObservableObject {
                 }
             }.store(in: &bindings)
         
-        historyViewModel?.action
+        product.$active
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] action in
-                switch action {
-                case _ as ProductProfileViewModelAction.DetailOperation:
-                    break
-                default:
-                    break
+            .sink { [unowned self] active in
+                
+                guard let productViewModel = product.products.first(where: { $0.id == active }) else {
+                    return
                 }
+                
+                statusBar.title = productViewModel.name
+                statusBar.subtitle = productViewModel.header.number ?? ""
+                statusBar.color = productViewModel.appearance.textColor
+                accentColor = productViewModel.appearance.background.color
+                
             }.store(in: &bindings)
+        
     }
 }
+
+//MARK: - Types
+
+extension ProductProfileViewModel {
+    
+    class StatusBarViewModel: ObservableObject {
+
+        let backButton: ButtonViewModel
+        @Published var title: String
+        @Published var subtitle: String
+        @Published var actionButton: ButtonViewModel?
+        @Published var color: Color
+        
+        init(backButton: ButtonViewModel, title: String, subtitle: String, actionButton: ButtonViewModel?, color: Color = .iconWhite) {
+            
+            self.backButton = backButton
+            self.title = title
+            self.subtitle = subtitle
+            self.actionButton = actionButton
+            self.color = color
+        }
+        
+        struct ButtonViewModel {
+            
+            let icon: Image
+            let action: () -> Void
+        }
+    }
+}
+
+//MARK: - Action
 
 enum ProductProfileViewModelAction {
     

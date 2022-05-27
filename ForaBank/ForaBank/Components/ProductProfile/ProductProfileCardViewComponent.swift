@@ -16,251 +16,399 @@ extension ProductProfileCardView {
         
         let action: PassthroughSubject<Action, Never> = .init()
         
+        @Published var selector: SelectorViewModel?
         @Published var products: [ProductView.ViewModel]
-        @Published var product: ProductView.ViewModel
-        @Published var moreButton: Bool = false
+        @Published var active: ProductData.ID
+        
+        private let productType: ProductType
         
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        internal init( products: [ProductView.ViewModel] = [], product: ProductView.ViewModel, model: Model) {
-            
-            
-            self.products = products.filter({$0.productType == product.productType})
-            self.product = product
+        init(selector: SelectorViewModel?, products: [ProductView.ViewModel], active: ProductData.ID, productType: ProductType, model: Model = .emptyMock) {
+ 
+            self.selector = selector
+            self.products = products
+            self.active = active
+            self.productType = productType
             self.model = model
-            
         }
         
-        init(_ model: Model, productId: ProductData.ID, productType: ProductType) {
+        init?(_ model: Model, productData: ProductData) {
             
-            self.products = []
-            self.model = model
-
-            let products = model.products.value.values.flatMap{ $0 }
-            let productData = products.first(where: ({$0.id == productId}))
-    
-            if let balance = productData?.displayBalance, let fontColor = productData?.fontDesignColor.color, let name = productData?.displayName, let backgroundColor = productData?.background.first?.color {
-                
-                self.product = .init(id: 12, header: .init(logo: nil, number: productData?.displayNumber, period: nil), name: name, footer: .init(balance: balance, paymentSystem: nil), statusAction: .init(status: .activation, style: .profile, action: {}), appearance: .init(textColor: fontColor, background: .init(color: backgroundColor, image: nil), size: .normal), isUpdating: false, productType: .init(rawValue: productData?.productType.rawValue ?? "card") ?? .card, action: {})
-                
-            } else {
-                
-                self.product = .init(id: 13, header: .init(logo: nil, number: productData?.number, period: nil), name: productData?.mainField ?? "", footer: .init(balance: productData?.displayBalance ?? "", paymentSystem: nil), statusAction: nil, appearance: .init(textColor: productData?.fontDesignColor.color ?? .init(""), background: .init(color: productData?.background.first?.color ?? .init(""), image: productData?.extraLargeDesign.image!), size: .normal), isUpdating: true, productType: ProductType(rawValue: productData?.productType.rawValue ?? "CARD") ?? .card, action: {})
+            guard let productViewModel = ProductView.ViewModel(with: productData, action: {}) else {
+                return nil
             }
-            
-            self.moreButton = false
+
+            self.products = [productViewModel]
+            self.active = productData.id
+            self.productType = productData.productType
+            self.model = model
             
             bind()
-            
-            action.send(ModelAction.Products.Update.Total.All())
-            action.send(ModelAction.Products.Update.Fast.Single.Request(productId: product.id, productType: productType))
+
+            action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productData.id, productType: productData.productType))
         }
         
         private func bind() {
             
             model.products
                 .receive(on: DispatchQueue.main)
-                .sink {[unowned self] products in
+                .sink {[unowned self] productsData in
                     
-                    var items = [ProductView.ViewModel]()
-                    
-                    if let prodictTypeList = products[self.product.productType] {
+                    guard let productsForType = productsData[productType], productsForType.isEmpty == false else {
                         
-                        for productType in prodictTypeList {
-                            
-                            items.append(.init(with: productType, statusAction: {}, action: {}))
-                            
-                        }
+                        return
                     }
                     
-                    self.products = items
+                    var updatedProducts = [ProductView.ViewModel]()
+            
+                    for product in productsForType {
+                        
+                        //TODO: - action
+                        guard let productViewModel = ProductView.ViewModel(with: product, action: {}) else {
+                            continue
+                        }
+                        
+                        updatedProducts.append(productViewModel)
+                    }
+                                        
+                    products = updatedProducts
+                    selector = SelectorViewModel(with: productsForType, selected: active)
+                    bind(selector)
+                    
+                    if products.contains(where: { $0.id == active }) == false {
+                        
+                        active = products[0].id
+                    }
+                }.store(in: &bindings)
+            
+            $active
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] active in
+                    
+                    withAnimation {
+                        
+                        selector?.selected = active
+                        
+                    }
+                    
+                }.store(in: &bindings)
+        }
+        
+        func bind(_ selector: SelectorViewModel?) {
+            
+            guard let selector = selector else {
+                return
+            }
+            
+            selector.action
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
+                    
+                    switch action {
+                    case let payload as ProductProfileCardView.ViewModel.SelectorViewModelAction.ThumbnailSelected:
+                        withAnimation {
+                            
+                            active = payload.thunmbnailId
+                        }
+    
+                    default:
+                        break
+                    }
                     
                 }.store(in: &bindings)
         }
     }
 }
 
-extension ProductProfileCardView {
+extension ProductProfileCardView.ViewModel {
     
-    struct MiniCardViewModel {
+    class SelectorViewModel: ObservableObject {
         
-        let background: Image?
-        let product: ProductView.ViewModel
-        let action: (ProductView.ViewModel) -> Void
+        let action: PassthroughSubject<Action, Never> = .init()
+        
+        @Published var thumbnails: [ThumbnailViewModel]
+        @Published var selected: ThumbnailViewModel.ID
+        @Published var moreButton: MoreButtonViewModel?
+        
+        init(thumbnails: [ThumbnailViewModel], selected: ThumbnailViewModel.ID, moreButton: MoreButtonViewModel?) {
+            
+            self.thumbnails = thumbnails
+            self.selected = selected
+            self.moreButton = moreButton
+        }
+        
+        init?(with products: [ProductData], selected: ProductData.ID, moreButton: MoreButtonViewModel? = nil) {
+            
+            let displayProducts = products.prefix(5)
+            
+            guard displayProducts.isEmpty == false else {
+                return nil
+            }
+            
+            self.thumbnails = []
+            self.selected = selected
+            self.moreButton = moreButton
+            
+            self.thumbnails = displayProducts.map { product in
+                
+                ThumbnailViewModel(with: product) { [weak self] productId in
+                    self?.selected = productId
+                    self?.action.send(ProductProfileCardView.ViewModel.SelectorViewModelAction.ThumbnailSelected(thunmbnailId: productId))
+                }
+            }
+        }
+        
+        struct ThumbnailViewModel: Identifiable {
+ 
+            let id: ProductData.ID
+            let background: Background
+            let action: (ProductData.ID) -> Void
+            
+            init(id: ProductData.ID, background: Background, action: @escaping (ProductData.ID) -> Void) {
+                
+                self.id = id
+                self.background = background
+                self.action = action
+            }
+            
+            init(with productData: ProductData, action: @escaping (ProductData.ID) -> Void) {
+                
+                self.id = productData.id
+   
+                if let backgroundImage = productData.smallDesign.image {
+                    
+                    self.background = .image(backgroundImage)
+                    
+                } else {
+                    
+                    let backgroundColor = productData.background.first?.color ?? .bGIconBlack
+                    self.background = .color(backgroundColor)
+                }
+                
+                self.action = action
+            }
+            
+            enum Background {
+                
+                case image(Image)
+                case color(Color)
+            }
+        }
+        
+        struct MoreButtonViewModel {
+            
+            let action: () -> Void
+        }
+    }
+    
+    enum SelectorViewModelAction {
+        
+        struct ThumbnailSelected: Action {
+            
+            let thunmbnailId: SelectorViewModel.ThumbnailViewModel.ID
+        }
     }
 }
 
 struct ProductProfileCardView: View {
     
     @ObservedObject var viewModel: ProductProfileCardView.ViewModel
-    
-    private var TabBar: some View {
         
-        HStack(alignment: .center, spacing: 8) {
+    var body: some View {
+        
+        VStack(spacing: 0) {
             
-            ForEach(viewModel.products) { product in
+            if let selectorViewModel = viewModel.selector {
                 
-                if let backgroundImage = product.appearance.background.image {
-                    
-                    MiniCardView(viewModel: MiniCardViewModel( background: backgroundImage, product: product, action: { productItem in
-                        viewModel.product = productItem
-                    }), isSelected: viewModel.product.id == product.id)
-                    
-                    
-                } else {
-                    
-                    MiniCardView(viewModel: MiniCardViewModel( background: nil, product: product, action: { productItem in
-                        viewModel.product = productItem
-                    }), isSelected: viewModel.product.id == product.id)
-                }
+                SelectorView(viewModel: selectorViewModel)
             }
             
-            if viewModel.moreButton {
+            if #available(iOS 14.0, *) {
                 
-                Button {
+                TabView(selection: $viewModel.active) {
                     
-                } label: {
-                    
-                    Image.ic16MoreHorizontal
-                        .foregroundColor(.black)
+                    ForEach(viewModel.products) { product in
+                        
+                        ZStack {
+                            // shadow
+                            RoundedRectangle(cornerRadius: 12)
+                                .offset(.init(x: 0, y: 6))
+                                .foregroundColor(.mainColorsBlackMedium)
+                                .opacity(0.3)
+                                .blur(radius: 12)
+                                .frame(width: shadowWidth(for: product), height: 160)
+                            
+                            ProductView(viewModel: product)
+                                .frame(width: productWidth(for: product), height: 160)
+                            
+                        }.tag(product.id)
+                    }
                 }
-                .frame(width: 32, height: 22, alignment: .center)
-                .background(Color.white)
-                .cornerRadius(3.0)
+                .tabViewStyle(.page(indexDisplayMode: .never))
+                .frame(height: 210)
+                
+            } else {
+                
+                // Fallback on earlier versions
             }
         }
     }
     
-    var body: some View {
+    func productWidth(for product: ProductView.ViewModel) -> CGFloat {
         
-        VStack {
-            
-            ZStack(alignment: .top) {
-                
-//                GeometryReader { geometry in
-//
-//                    ZStack {
-//
-//                        viewModel.product.appearance.background.color.contrast(0.8)
-//                            .clipped()
-//                    }
-//                    .frame(height: 1200, alignment: .top)
-////                    .offset(y: -(UIScreen.main.bounds.height-90))
-//                }
-                viewModel.product.appearance.background.color.contrast(0.8)
-                    .frame(height: 155, alignment: .top)
-                VStack(spacing: 0) {
-                    
-                    if #available(iOS 14.0, *) {
-                        
-                        TabBar
-                            .frame(alignment: .bottom)
-                        
-                        TabView(selection: $viewModel.product) {
-                            
-                            ForEach(viewModel.products) { product in
-                                
-                                if product.productType == .deposit {
-                                    
-                                    ProductView(viewModel: product)
-                                        .frame(width: 228, height: 160)
-                                        .padding(.bottom, 20)
-                                        .shadow(color: Color.mainColorsBlack.opacity(0.2), radius: 12, x: 0, y: 12)
-                                        .tag(product)
-                                    
-                                } else {
-                                    
-                                    ProductView(viewModel: product)
-                                        .frame(width: 268, height: 160)
-                                        .padding(.bottom, 20)
-                                        .shadow(color: Color.mainColorsBlack.opacity(0.2), radius: 12, x: 0, y: 12)
-                                        .tag(product)
-                                    
-                                }
-                            }
-                        }
-                        .tabViewStyle(.page(indexDisplayMode: .never))
-                        .frame(height: 200, alignment: .top)
-                        
-                    } else {
-                        // Fallback on earlier versions
-                    }
-                }
-            }
+        switch product.productType {
+        case .deposit: return 228
+        default: return 268
+        }
+    }
+    
+    func shadowWidth(for product: ProductView.ViewModel) -> CGFloat {
+        
+        switch product.productType {
+        case .deposit: return 228 - 20
+        default: return 268 - 20
         }
     }
 }
 
+//MARK: - Internal Views
+
 extension ProductProfileCardView {
     
-    struct MiniCardView: View {
+    struct SelectorView: View {
         
-        let viewModel: ProductProfileCardView.MiniCardViewModel
+        @ObservedObject var viewModel: ProductProfileCardView.ViewModel.SelectorViewModel
+        
+        var body: some View {
+            
+            HStack(alignment: .center, spacing: 8) {
+                
+                ForEach(viewModel.thumbnails) { thumbnail in
+                    
+                    ProductProfileCardView.ThumbnailView(viewModel: thumbnail, isSelected: viewModel.selected == thumbnail.id)
+                }
+                
+                if let moreButtonViewModel = viewModel.moreButton {
+                    
+                    ProductProfileCardView.MoreButtonView(viewModel: moreButtonViewModel)
+                }
+            }
+        }
+    }
+    
+    struct ThumbnailView: View {
+        
+        let viewModel: ProductProfileCardView.ViewModel.SelectorViewModel.ThumbnailViewModel
         let isSelected: Bool
         
         var body: some View {
             
             Button {
                 
-                viewModel.action(viewModel.product)
+                viewModel.action(viewModel.id)
                 
             } label: {
                 
-                if isSelected {
+                ZStack {
                     
-                    HStack(spacing: 6) {
+                    if isSelected {
                         
-                        if let backgroundImage = viewModel.product.appearance.background.image {
-                            
-                            backgroundImage
-                                .resizable()
-                                .frame(width: 32, height: 22, alignment: .center)
-                                .cornerRadius(3)
-                            
-                        } else {
-                            
-                            viewModel.product.appearance.background.color
-                                .frame(width: 32, height: 22, alignment: .center)
-                                .cornerRadius(3)
-                        }
+                        Circle()
+                            .foregroundColor(.black.opacity(0.2))
+     
                     }
-                    .frame(width: 32, height: 32, alignment: .center)
-                    .padding(.all, 12)
-                    .background(Color.black.opacity(0.2))
-                    .cornerRadius(90)
                     
-                } else {
-                    
-                    HStack(spacing: 6) {
+                    switch viewModel.background {
+                    case .image(let image):
                         
-                        if let backgroundImage = viewModel.product.appearance.background.image {
-                            
-                            backgroundImage
-                                .resizable()
-                                .frame(width: 32, height: 22, alignment: .center)
-                                .cornerRadius(3).opacity(0.3)
-                            
-                            
-                        } else {
-                            
-                            viewModel.product.appearance.background.color
-                                .frame(width: 32, height: 22, alignment: .center)
-                                .cornerRadius(3)
-                                .opacity(0.3)
-                            
-                        }
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 32, height: 22)
+                            .cornerRadius(3)
+                            .opacity(isSelected ? 1 : 0.3)
+                        
+                    case .color(let color):
+                        
+                        color
+                            .frame(width: 32, height: 22)
+                            .cornerRadius(3)
+                            .opacity(isSelected ? 1 : 0.3)
                     }
-                    .padding(.all, 12)
                 }
+                .frame(width: 48, height: 48)
+            }
+        }
+    }
+    
+    struct MoreButtonView: View {
+        
+        let viewModel: ProductProfileCardView.ViewModel.SelectorViewModel.MoreButtonViewModel
+        
+        var body: some View {
+            
+            Button(action: viewModel.action) {
+                
+                ZStack {
+                    
+                    Color.white
+                        .frame(width: 32, height: 22)
+                        .cornerRadius(3)
+                    
+                    HStack(spacing: 3) {
+                        
+                        ForEach(0..<3) { _ in
+                            
+                            Circle()
+                                .foregroundColor(.iconBlack)
+                                .frame(width: 2, height: 2)
+                        }
+                    }
+                }
+                .frame(width: 48, height: 48)
+                .opacity(0.4)
             }
         }
     }
 }
 
-struct ProfileCardViewComponent_Previews: PreviewProvider {
+//MARK: - Preview
+
+struct ProductProfileCardView_Previews: PreviewProvider {
+    
     static var previews: some View {
-        ProductProfileCardView(viewModel: .init(products: [.notActivateProfile, .classicProfile, .accountProfile, .blockedProfile, .depositProfile], product: .notActivateProfile, model: .emptyMock))
-            .previewLayout(.fixed(width: 400, height: 500))
+        
+        Group {
+            
+            ProductProfileCardView(viewModel: .sample)
+                .previewLayout(.fixed(width: 375, height: 500))
+            
+            ProductProfileCardView.SelectorView(viewModel: .sample)
+                .previewLayout(.fixed(width: 375, height: 60))
+        }
     }
 }
+
+//MARK: - Preview Content
+
+extension ProductProfileCardView.ViewModel {
+    
+    static let sample = ProductProfileCardView.ViewModel(selector: .sample, products: [.notActivateProfile, .classicProfile, .accountProfile, .blockedProfile, .depositProfile], active: 4, productType: .account, model: .emptyMock)
+}
+
+extension ProductProfileCardView.ViewModel.SelectorViewModel.ThumbnailViewModel {
+    
+    static let sampleColorPurpule = ProductProfileCardView.ViewModel.SelectorViewModel.ThumbnailViewModel(id: 0, background: .color(.purple), action: { _ in  })
+    
+    static let sampleColorBlue = ProductProfileCardView.ViewModel.SelectorViewModel.ThumbnailViewModel(id: 1, background: .color(.blue), action: { _ in  })
+    
+    static let sampleColorOrange = ProductProfileCardView.ViewModel.SelectorViewModel.ThumbnailViewModel(id: 2, background: .color(.orange), action: { _ in  })
+}
+
+extension ProductProfileCardView.ViewModel.SelectorViewModel {
+    
+    static let sample = ProductProfileCardView.ViewModel.SelectorViewModel(thumbnails: [.sampleColorPurpule, .sampleColorBlue, .sampleColorOrange], selected: 0, moreButton: .init(action: {}))
+}
+

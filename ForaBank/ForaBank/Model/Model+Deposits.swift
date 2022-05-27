@@ -60,7 +60,19 @@ extension Model {
                         self.handleServerCommandEmptyData(command: command)
                         return
                     }
+                    
+                    self.deposits.value = deposits
                     self.action.send(ModelAction.Deposits.List.Response(result: .success(deposits)))
+                    
+                    do {
+                        
+                        try self.localAgent.store(deposits, serial: nil)
+                        
+                    } catch {
+                        
+                        //TODO: log error
+                        print("handleDepositsListRequest: caching error: \(error.localizedDescription)")
+                    }
 
                 default:
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
