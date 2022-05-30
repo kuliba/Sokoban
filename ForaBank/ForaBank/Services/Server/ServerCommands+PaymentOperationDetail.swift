@@ -50,6 +50,12 @@ extension ServerCommands {
                     case statusCode, errorMessage, data
                 }
             
+                init(statusCode: ServerStatusCode, errorMessage: String?, data: [PaymentData]) {
+                    self.statusCode = statusCode
+                    self.errorMessage = errorMessage
+                    self.data = data
+                }
+                
                 init(from decoder: Decoder) throws {
                     
                     let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -192,7 +198,7 @@ extension ServerCommands {
 
 				let statusCode: ServerStatusCode
 				let errorMessage: String?
-				let data: [PaymentGeneralData]?
+				let data: [PaymentPhoneData]?
 			}
 			
 			internal init(token: String, payload: Payload) {

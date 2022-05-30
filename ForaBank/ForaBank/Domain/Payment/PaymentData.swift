@@ -13,7 +13,7 @@ class PaymentData: Codable {
 	let paymentDate: String
 	let type: Kind
 
-	internal init (date: Date, paymentDate: String, type: Kind) {
+	init (date: Date, paymentDate: String, type: Kind) {
 
 		self.date = date
 		self.paymentDate = paymentDate
