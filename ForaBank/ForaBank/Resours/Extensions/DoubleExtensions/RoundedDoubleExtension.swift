@@ -46,8 +46,8 @@ extension Double {
     func currencyFormatter(symbol: String = "") -> String {
         
         var resultString = ""
-        let currArr = Dict.shared.currencyList
-        currArr?.forEach({ currency in
+        let currArr = Model.shared.currencyList
+        currArr.forEach({ currency in
             if currency.code == symbol {
                 var symbolArr = currency.cssCode?.components(separatedBy: "\\")
                 symbolArr?.removeFirst()

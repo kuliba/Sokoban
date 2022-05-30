@@ -33,7 +33,8 @@ class Model {
     //MARK: Dictionaries
     let catalogProducts: CurrentValueSubject<[CatalogProductData], Never>
     let catalogBanners: CurrentValueSubject<[BannerCatalogListData], Never>
-    let currencyList: CurrentValueSubject<[CurrencyData], Never>
+    var currencyList: [CurrencyData]
+    //TODO: remove wrapper for dicts
     let bankList: CurrentValueSubject<[BankData], Never>
     
     //MARK: Deposits
@@ -317,7 +318,7 @@ class Model {
                     
                 case let payload as ModelAction.Products.UpdateCustomName.Request:
                     handleProductsUpdateCustomName(payload)
-
+                    
                 case let payload as ModelAction.Products.ActivateCard.Request:
                     handleProductsActivateCard(payload)
                     
@@ -348,13 +349,19 @@ class Model {
                 case let payload as ModelAction.Payment.Complete.Request:
                     handlePaymentsCompleteRequest(payload)
                     
+                case let payload as ModelAction.Payment.OperationDetail.Request:
+                    handleOperationDetailRequest(payload)
+                    
                     //MARK: - Client Info
                     
                 case _ as ModelAction.ClientInfo.Fetch.Request:
                     handleClientInfoFetchRequest()
                     
                     //MARK: - Settings Actions
-
+                    
+                case _ as ModelAction.Settings.GetClientInfo.Requested:
+                    handleGetClientInfoRequest()
+                    
                 case let payload as ModelAction.Settings.UpdateProductsHidden:
                     handleUpdateProductsHidden(payload.productID)
                     
@@ -367,7 +374,7 @@ class Model {
                     handleNotificationsFetchNextRequest()
                     
                 case let payload as ModelAction.Notification.ChangeNotificationStatus.Requested:
-                   handleNotificationsChangeNotificationStatusRequest(payload: payload)
+                    handleNotificationsChangeNotificationStatusRequest(payload: payload)
                     
                     //MARK: - LatestPayments Actions
                     
@@ -519,7 +526,7 @@ private extension Model {
         
         if let currency = localAgent.load(type: [CurrencyData].self) {
             
-            self.currencyList.value = currency
+            self.currencyList = currency
         }
         
         if let bankList = localAgent.load(type: [BankData].self) {
@@ -543,16 +550,16 @@ private extension Model {
             self.deposits.value = deposits
         }
     }
-
+    
     func loadSettings() {
-
+        
         do {
-
+            
             let productsHidden: [ProductData.ID] = try settingsAgent.load(type: .interface(.productsHidden))
             self.productsHidden.value = productsHidden
-
+            
         } catch {
-
+            
             handleSettingsCachingError(error: error)
         }
     }

@@ -83,6 +83,21 @@ struct ProductProfileView: View {
                 tabBarController.tabBar.isHidden = false
                 UIView.transition(with: tabBarController.view, duration: 0.35, options: .transitionCrossDissolve, animations: nil)
             }
+            
+            if let detailViewModel = viewModel.detailOperation {
+                
+                ZStack(alignment: .bottom) {
+                    
+                     VStack(spacing: 0) {
+                         
+                         OperationDetailView(viewModel: detailViewModel)
+                     }
+                     .layoutPriority(1)
+                     .frame(alignment: .top)
+                     .animation(.linear(duration: 0.3))
+                     .shadow(color: .black, radius: 0.2, x: 10, y: 10)
+                 }.edgesIgnoringSafeArea(.all)
+            }
         }
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)

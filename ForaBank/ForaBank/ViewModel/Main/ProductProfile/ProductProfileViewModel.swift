@@ -95,6 +95,31 @@ class ProductProfileViewModel: ObservableObject {
             }.store(in: &bindings)
         
     }
+    
+    func setupHistoryView() {
+        
+        switch productViewModel.product.productType {
+        case .card:
+            break
+        case .account:
+            break
+        case .deposit:
+            break
+        case .loan:
+            self.historyViewModel = nil
+        }
+        
+        if let statement = model.statement.value.productStatement[productViewModel.product.id], let historyViewModel = historyViewModel {
+            
+            historyViewModel.listState = .list(historyViewModel.separationDate(operations: statement))
+            historyViewModel.dateOperations = historyViewModel.separationDate(operations: statement)
+            
+            if historyViewModel.sumDeifferentGroup(operations: statement).count > 0 {
+                
+                self.historyViewModel?.spendingViewModel = .init(value: historyViewModel.sumDeifferentGroup(operations: statement))
+            }
+        }
+    }
 }
 
 //MARK: - Types
@@ -145,4 +170,9 @@ enum ProductProfileViewModelAction {
     struct DetailOperation: Action {}
     
     struct Dismiss: Action {}
+    
+    struct ProductDetail: Action {
+        
+        let productId: Int
+    }
 }
