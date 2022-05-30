@@ -47,6 +47,17 @@ struct UserAccountView: View {
                     
                 }
                 .padding(20)
+                
+                NavigationLink("", isActive: $viewModel.isLinkActive) {
+                    
+                    if let link = viewModel.link  {
+                        
+                        switch link {
+                        case .userDocument(let userDocumentViewModel):
+                            UserDocumentView(viewModel: userDocumentViewModel)
+                        }
+                    }
+                }
             }
             .navigationBarTitle(
                 Text(viewModel.navigationBar.title).font(.textH3M18240()),
