@@ -48,4 +48,20 @@ class PaymentCountryData: LatestPaymentData {
 		surName = try container.decodeIfPresent(String.self, forKey: .surName)
 		try super.init(from: decoder)
 	}
+    
+    override func encode(to encoder: Encoder) throws {
+        
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(countryCode, forKey: .countryCode)
+        try container.encode(countryName, forKey: .countryName)
+        try container.encodeIfPresent(firstName, forKey: .firstName)
+        try container.encodeIfPresent(middleName, forKey: .middleName)
+        try container.encodeIfPresent(surName, forKey: .surName)
+        try container.encodeIfPresent(phoneNumber, forKey: .phoneNumber)
+        try container.encode(puref, forKey: .puref)
+        try container.encode(shortName, forKey: .shortName)
+        
+        
+        try super.encode(to: encoder)
+    }
 }

@@ -16,7 +16,7 @@ struct AdressBookContact: Identifiable {
         
     var initials: String? {
         let str = firstChar(firstName) + firstChar(lastName)
-        return str.isEmpty ? nil : str.capitalized
+        return str.isEmpty ? nil : str.uppercased()
     }
     
     var fullName: String? {

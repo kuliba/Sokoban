@@ -36,4 +36,15 @@ class PaymentGeneralData: LatestPaymentData {
 		phoneNumber = try container.decode(String.self, forKey: .phoneNumber)
 		try super.init(from: decoder)
 	}
+    
+    override func encode(to encoder: Encoder) throws {
+        
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encodeIfPresent(amount, forKey: .amount)
+        try container.encode(bankId, forKey: .bankId)
+        try container.encodeIfPresent(bankName, forKey: .bankName)
+        try container.encode(phoneNumber, forKey: .phoneNumber)
+
+        try super.encode(to: encoder)
+    }
 }

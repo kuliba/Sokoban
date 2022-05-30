@@ -22,34 +22,19 @@ extension ServerCommands {
 			let parameters: [ServerCommandParameter]?
 			let payload: Payload? = nil
             let timeout: TimeInterval? = nil
-
-            init(token: String, isPhonePayments: Bool, isCountriesPayments: Bool, isServicePayments: Bool, isMobilePayments: Bool, isInternetPayments: Bool, isTransportPayments: Bool, isTaxAndStateServicePayments: Bool) {
-                
-                self.token = token
-                var parameters = [ServerCommandParameter]()
-
-                parameters.append(.init(name: "isPhonePayments", value: isPhonePayments ? "true" : "false"))
-                parameters.append(.init(name: "isCountriesPayments", value: isCountriesPayments ? "true" : "false"))
-                parameters.append(.init(name: "isServicePayments", value: isServicePayments ? "true" : "false"))
-                parameters.append(.init(name: "isMobilePayments", value: isMobilePayments ? "true" : "false"))
-                parameters.append(.init(name: "isInternetPayments", value: isInternetPayments ? "true" : "false"))
-                parameters.append(.init(name: "isTransportPayments", value: isTransportPayments ? "true" : "false"))
-                parameters.append(.init(name: "isTaxAndStateServicePayments", value: isTaxAndStateServicePayments ? "true" : "false"))
-                self.parameters = parameters
-            }
             
 			struct Payload: Encodable { }
 			
-			struct Response: ServerResponse {
-
-				let statusCode: ServerStatusCode
-				let errorMessage: String?
-				let data: [LatestPaymentData]?
-			
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: [LatestPaymentData]?
+                
                 private enum CodingKeys: CodingKey {
                     case statusCode, errorMessage, data
                 }
-            
+                
                 init(statusCode: ServerStatusCode, errorMessage: String?, data: [LatestPaymentData]) {
                     self.statusCode = statusCode
                     self.errorMessage = errorMessage
@@ -73,7 +58,7 @@ extension ServerCommands {
                         let paymentType = paymentData.type
                         
                         switch paymentType {
-                        
+                            
                         case .phone:
                             let paymentData = try items.decode(PaymentGeneralData.self)
                             data.append(paymentData)
@@ -90,6 +75,21 @@ extension ServerCommands {
                     self.data = data
                 }
             } //struct Response
+            
+            init(token: String, isPhonePayments: Bool, isCountriesPayments: Bool, isServicePayments: Bool, isMobilePayments: Bool, isInternetPayments: Bool, isTransportPayments: Bool, isTaxAndStateServicePayments: Bool) {
+                
+                self.token = token
+                var parameters = [ServerCommandParameter]()
+
+                parameters.append(.init(name: "isPhonePayments", value: isPhonePayments ? "true" : "false"))
+                parameters.append(.init(name: "isCountriesPayments", value: isCountriesPayments ? "true" : "false"))
+                parameters.append(.init(name: "isServicePayments", value: isServicePayments ? "true" : "false"))
+                parameters.append(.init(name: "isMobilePayments", value: isMobilePayments ? "true" : "false"))
+                parameters.append(.init(name: "isInternetPayments", value: isInternetPayments ? "true" : "false"))
+                parameters.append(.init(name: "isTransportPayments", value: isTransportPayments ? "true" : "false"))
+                parameters.append(.init(name: "isTaxAndStateServicePayments", value: isTaxAndStateServicePayments ? "true" : "false"))
+                self.parameters = parameters
+            }
             
 		} //struct GetAllLatestPayments
 		

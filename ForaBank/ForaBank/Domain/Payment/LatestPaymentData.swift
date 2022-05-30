@@ -33,6 +33,14 @@ class LatestPaymentData: Codable {
 		paymentDate = try container.decode(String.self, forKey: .paymentDate)
 		type = try container.decode(Kind.self, forKey: .type)
 	}
+    
+    func encode(to encoder: Encoder) throws {
+        
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(type, forKey: .type)
+        try container.encode(Int(date.timeIntervalSince1970) * 1000, forKey: .date)
+        try container.encode(paymentDate, forKey: .paymentDate)
+    }
 }
 
 extension LatestPaymentData {

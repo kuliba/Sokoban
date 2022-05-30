@@ -65,8 +65,4 @@ class ContactsAgent: ContactsAgentProtocol {
         
     }
     
-    func fetchContacts(by phoneNumbers: [String]) -> [AdressBookContact] {
-        return [] //TODO:
-    }
-    
 }

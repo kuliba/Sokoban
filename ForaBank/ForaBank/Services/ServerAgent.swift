@@ -103,7 +103,6 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                     
                 } catch {
                     
-                    print("mdy decoder fail \(error.localizedDescription)")
                     completion(.failure(.curruptedData(error)))
                      
                 }
