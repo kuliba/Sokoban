@@ -84,6 +84,7 @@ struct ProductProfileView: View {
                 UIView.transition(with: tabBarController.view, duration: 0.35, options: .transitionCrossDissolve, animations: nil)
             }
             
+            /*
             if let detailViewModel = viewModel.detailOperation {
                 
                 ZStack(alignment: .bottom) {
@@ -98,6 +99,7 @@ struct ProductProfileView: View {
                      .shadow(color: .black, radius: 0.2, x: 10, y: 10)
                  }.edgesIgnoringSafeArea(.all)
             }
+             */
         }
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)

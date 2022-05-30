@@ -98,6 +98,7 @@ class ProductProfileViewModel: ObservableObject {
     
     func setupHistoryView() {
         
+        /*
         switch productViewModel.product.productType {
         case .card:
             break
@@ -119,6 +120,7 @@ class ProductProfileViewModel: ObservableObject {
                 self.historyViewModel?.spendingViewModel = .init(value: historyViewModel.sumDeifferentGroup(operations: statement))
             }
         }
+         */
     }
 }
 

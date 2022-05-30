@@ -359,9 +359,6 @@ class Model {
                     
                     //MARK: - Settings Actions
                     
-                case _ as ModelAction.Settings.GetClientInfo.Requested:
-                    handleGetClientInfoRequest()
-                    
                 case let payload as ModelAction.Settings.UpdateProductsHidden:
                     handleUpdateProductsHidden(payload.productID)
                     
