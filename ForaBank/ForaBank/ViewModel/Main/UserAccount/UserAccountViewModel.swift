@@ -16,6 +16,8 @@ class UserAccountViewModel: ObservableObject {
     @Published var avatar: AvatarViewModel
     @Published var sections: [AccountSectionViewModel]
     @Published var exitButton: AccountCellFullButtonView.ViewModel
+    @Published var link: Link? { didSet { isLinkActive = link != nil } }
+    @Published var isLinkActive: Bool = false
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
@@ -114,7 +116,17 @@ class UserAccountViewModel: ObservableObject {
                 content: userData.pasportNumber,
                 action: {
                     print("Open Паспорт")
-                    let pass = UserDocumentViewModel(model: self.model, itemType: .passport)
+                    self.link = .userDocument(UserDocumentViewModel(
+                        model: self.model, itemType: .passport,
+                        navigationBar: .init(
+                            title: DocumentCellType.passport.title,
+                            backButton: .init(icon: .ic24ChevronLeft, action: {
+                                self.link = nil
+                            }),
+                            rightButton: .init(icon: .ic24Share, action: {
+                                print("right")
+                            }))))
+                    
                 })
         ]
         
@@ -133,8 +145,21 @@ class UserAccountViewModel: ObservableObject {
             content: userData.address,
             action: {
                 print("Open Адрес регистрации")
-                let pass = UserDocumentViewModel(model: self.model, itemType: .adressPass)
-            }))
+//                let pass = UserDocumentViewModel(model: self.model, itemType: .adressPass)
+                self.link = .userDocument(UserDocumentViewModel(
+                    model: self.model, itemType: .adressPass,
+                    navigationBar: .init(
+                        title: DocumentCellType.adressPass.title,
+                        backButton: .init(icon: .ic24ChevronLeft, action: {
+                            self.link = nil
+                        }),
+                        rightButton: .init(icon: .ic24Share, action: {
+                            print("right")
+                        })
+                    ))
+                )
+            })
+        )
         
         if let addressResidential = userData.addressResidential {
             accountDocuments.append(DocumentCellView.ViewModel(
@@ -142,8 +167,20 @@ class UserAccountViewModel: ObservableObject {
                 content: addressResidential,
                 action: {
                     print("Open Адрес проживания")
-                    let pass = UserDocumentViewModel(model: self.model, itemType: .adress)
-                }))
+                    self.link = .userDocument(UserDocumentViewModel(
+                        model: self.model, itemType: .adress,
+                        navigationBar: .init(
+                            title: DocumentCellType.adress.title,
+                            backButton: .init(icon: .ic24ChevronLeft, action: {
+                                self.link = nil
+                            }),
+                            rightButton: .init(icon: .ic24Share, action: {
+                                print("right")
+                            })
+                        ))
+                    )
+                })
+            )
         }
         
         
@@ -251,6 +288,10 @@ extension UserAccountViewModel {
         }
     }
     
+    enum Link {
+        
+        case userDocument(UserDocumentViewModel)
+    }
 }
 
 extension UserAccountViewModel.NavigationViewModel {

@@ -35,17 +35,10 @@ class UserDocumentViewModel: ObservableObject {
         
     }
 
-    init(model: Model, itemType: DocumentCellType) {
+    init(model: Model, itemType: DocumentCellType, navigationBar: UserDocumentViewModel.NavigationViewModel) {
                 
         self.model = model
-        self.navigationBar = .init(
-            title: itemType.title,
-            backButton: .init(icon: .ic24ChevronLeft, action: {
-                print("back")
-            }),
-            rightButton: .init(icon: .ic24Settings, action: {
-                print("right")
-            }))
+        self.navigationBar = navigationBar
         self.itemType = itemType
         self.items = []
         self.copyButton = .init(
