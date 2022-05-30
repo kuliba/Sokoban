@@ -38,6 +38,7 @@ struct UserAccountDocumentsView: View {
                     
                     ForEach(viewModel.items) { itemViewModel in
                         if let viewModel = itemViewModel as? DocumentCellView.ViewModel {
+                            
                             DocumentCellView(viewModel: viewModel)
                         }
                     }

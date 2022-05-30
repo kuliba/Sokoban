@@ -110,17 +110,18 @@ class UserAccountViewModel: ObservableObject {
         
         var accountDocuments: [AccountCellDefaultViewModel] = [
             DocumentCellView.ViewModel(
-            icon: .ic24Passport,
-            content: "Паспорт РФ",
-            title: userData.pasportNumber,
-            action: {
-                print("Open Паспорт")
-            })
+                itemType: .passport,
+                content: "Паспорт РФ",
+                title: userData.pasportNumber,
+                action: {
+                    print("Open Паспорт")
+                    let pass = UserDocumentViewModel(model: self.model, itemType: .passport)
+                })
         ]
         
         if let userInn = userData.INN {
             accountDocuments.append(DocumentCellView.ViewModel(
-                icon: .ic24FileHash,
+                itemType: .inn,
                 content: "ИНН",
                 title: userInn,
                 action: {
@@ -130,7 +131,7 @@ class UserAccountViewModel: ObservableObject {
         }
         
         accountDocuments.append(DocumentCellView.ViewModel(
-            icon: .ic24Passport,
+            itemType: .adressPass,
             content: "Адрес регистрации",
             title: userData.address,
             action: {
@@ -139,7 +140,7 @@ class UserAccountViewModel: ObservableObject {
         
         if let addressResidential = userData.addressResidential {
             accountDocuments.append(DocumentCellView.ViewModel(
-                icon: .ic24Passport,
+                itemType: .adress,
                 content: "Адрес проживания",
                 title: addressResidential,
                 action: {}))

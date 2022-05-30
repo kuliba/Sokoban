@@ -9,15 +9,56 @@ import SwiftUI
 
 //MARK: - ViewModel
 
+enum DocumentCellType {
+    
+    case passport
+    case inn
+    case adressPass
+    case adress
+    
+    var viewModel: DocumentCellTypeModel {
+        
+        switch self {
+            
+        case .passport:
+            return .init(icon: .ic24Passport,
+                         iconBackground: .bGIconDeepPurpleMedium,
+                         background: Color(hex: "8676A2"))
+        case .inn:
+            return .init(icon: .ic24FileHash,
+                         iconBackground: .bGIconTealLight,
+                         background: Color(hex: "8676A2"))
+        case .adressPass:
+            return .init(icon: .ic24Home,
+                         iconBackground: .bGIconDeepPurpleMedium,
+                         background: Color(hex: "8676A2"))
+        case .adress:
+            return .init(icon: .ic24MapPin,
+                         iconBackground: .bGIconBlueLightest,
+                         background: Color(hex: "629FBB"))
+        }
+    }
+    
+    struct DocumentCellTypeModel {
+        
+        let icon: Image
+        let iconBackground: Color
+        let background: Color
+    }
+}
+
 extension DocumentCellView {
     
     class ViewModel: AccountCellDefaultViewModel, ObservableObject {
-                
+              
+        let itemType: DocumentCellType
         let action: () -> Void
         
-        internal init(id: UUID = UUID(), icon: Image, content: String, title: String? = nil, action: @escaping () -> Void) {
+        internal init(id: UUID = UUID(), itemType: DocumentCellType, content: String, title: String? = nil, action: @escaping () -> Void) {
+            
             self.action = action
-            super.init(id: id, icon: icon, content: content, title: title)
+            self.itemType = itemType
+            super.init(id: id, icon: itemType.viewModel.icon, content: content, title: title)
         }
         
     }
@@ -31,10 +72,10 @@ struct DocumentCellView: View {
     
     var body: some View {
         
-        
         Button {
             
             viewModel.action()
+            
         } label: {
             
             VStack(alignment: .leading, spacing: 0) {
@@ -44,12 +85,11 @@ struct DocumentCellView: View {
                     ZStack {
                         
                         RoundedRectangle(cornerRadius: 20)
-                            .foregroundColor(.bGIconDeepPurpleMedium)
+                            .foregroundColor(viewModel.itemType.viewModel.iconBackground)
                             .frame(width: 40, height: 40)
                         
                         viewModel.icon
                             .foregroundColor(.iconWhite)
-                        
                     }
                     
                     Spacer()
@@ -71,7 +111,6 @@ struct DocumentCellView: View {
                             .foregroundColor(.textPlaceholder)
                     }
                 }
-                
             }
             .padding(12)
             .frame(width: 132, height: 134)
@@ -90,10 +129,13 @@ struct DocumentCellView_Previews: PreviewProvider {
         Group {
             DocumentCellView(viewModel: .passport)
                 .previewLayout(.fixed(width: 175, height: 180))
+            
             DocumentCellView(viewModel: .inn)
                 .previewLayout(.fixed(width: 175, height: 180))
+            
             DocumentCellView(viewModel: .address)
                 .previewLayout(.fixed(width: 175, height: 180))
+            
             DocumentCellView(viewModel: .address2)
                 .previewLayout(.fixed(width: 175, height: 180))
         }
@@ -104,28 +146,28 @@ struct DocumentCellView_Previews: PreviewProvider {
 
 extension DocumentCellView.ViewModel {
     
-    static let passport = DocumentCellView.ViewModel
-        .init(icon: .ic24Passport,
-              content: "Паспорт РФ",
-              title: "38 06 ****75",
-              action: {})
+    static let passport = DocumentCellView.ViewModel(
+        itemType: .passport,
+        content: "Паспорт РФ",
+        title: "38 06 ****75",
+        action: {})
     
-    static let inn = DocumentCellView.ViewModel
-        .init(icon: .ic24FileHash,
-              content: "ИНН",
-              title: "6525****3942",
-              action: {})
+    static let inn = DocumentCellView.ViewModel(
+        itemType: .inn,
+        content: "ИНН",
+        title: "6525****3942",
+        action: {})
     
-    static let address = DocumentCellView.ViewModel
-        .init(icon: .ic24Passport,
-              content: "Адрес регистрации",
-              title: "г. Москва, Кут.",
-              action: {})
+    static let address = DocumentCellView.ViewModel(
+        itemType: .adressPass,
+        content: "Адрес регистрации",
+        title: "г. Москва, Кут.",
+        action: {})
     
-    static let address2 = DocumentCellView.ViewModel
-        .init(icon: .ic24Passport,
-              content: "Адрес проживания",
-              title: "г. Москва, Кут.",
-              action: {})
+    static let address2 = DocumentCellView.ViewModel(
+        itemType: .adress,
+        content: "Адрес проживания",
+        title: "г. Москва, Кут.",
+        action: {})
     
 }
