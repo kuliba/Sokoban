@@ -111,8 +111,7 @@ class UserAccountViewModel: ObservableObject {
         var accountDocuments: [AccountCellDefaultViewModel] = [
             DocumentCellView.ViewModel(
                 itemType: .passport,
-                content: "Паспорт РФ",
-                title: userData.pasportNumber,
+                content: userData.pasportNumber,
                 action: {
                     print("Open Паспорт")
                     let pass = UserDocumentViewModel(model: self.model, itemType: .passport)
@@ -122,8 +121,7 @@ class UserAccountViewModel: ObservableObject {
         if let userInn = userData.INN {
             accountDocuments.append(DocumentCellView.ViewModel(
                 itemType: .inn,
-                content: "ИНН",
-                title: userInn,
+                content: userInn,
                 action: {
                     print("Open ИНН")
                 })
@@ -132,18 +130,20 @@ class UserAccountViewModel: ObservableObject {
         
         accountDocuments.append(DocumentCellView.ViewModel(
             itemType: .adressPass,
-            content: "Адрес регистрации",
-            title: userData.address,
+            content: userData.address,
             action: {
                 print("Open Адрес регистрации")
+                let pass = UserDocumentViewModel(model: self.model, itemType: .adressPass)
             }))
         
         if let addressResidential = userData.addressResidential {
             accountDocuments.append(DocumentCellView.ViewModel(
                 itemType: .adress,
-                content: "Адрес проживания",
-                title: addressResidential,
-                action: {}))
+                content: addressResidential,
+                action: {
+                    print("Open Адрес проживания")
+                    let pass = UserDocumentViewModel(model: self.model, itemType: .adress)
+                }))
         }
         
         

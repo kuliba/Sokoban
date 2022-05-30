@@ -9,43 +9,6 @@ import SwiftUI
 
 //MARK: - ViewModel
 
-enum DocumentCellType {
-    
-    case passport
-    case inn
-    case adressPass
-    case adress
-    
-    var viewModel: DocumentCellTypeModel {
-        
-        switch self {
-            
-        case .passport:
-            return .init(icon: .ic24Passport,
-                         iconBackground: .bGIconDeepPurpleMedium,
-                         background: Color(hex: "8676A2"))
-        case .inn:
-            return .init(icon: .ic24FileHash,
-                         iconBackground: .bGIconTealLight,
-                         background: Color(hex: "8676A2"))
-        case .adressPass:
-            return .init(icon: .ic24Home,
-                         iconBackground: .bGIconDeepPurpleMedium,
-                         background: Color(hex: "8676A2"))
-        case .adress:
-            return .init(icon: .ic24MapPin,
-                         iconBackground: .bGIconBlueLightest,
-                         background: Color(hex: "629FBB"))
-        }
-    }
-    
-    struct DocumentCellTypeModel {
-        
-        let icon: Image
-        let iconBackground: Color
-        let background: Color
-    }
-}
 
 extension DocumentCellView {
     
@@ -54,11 +17,11 @@ extension DocumentCellView {
         let itemType: DocumentCellType
         let action: () -> Void
         
-        internal init(id: UUID = UUID(), itemType: DocumentCellType, content: String, title: String? = nil, action: @escaping () -> Void) {
+        internal init(id: UUID = UUID(), itemType: DocumentCellType, content: String, action: @escaping () -> Void) {
             
             self.action = action
             self.itemType = itemType
-            super.init(id: id, icon: itemType.viewModel.icon, content: content, title: title)
+            super.init(id: id, icon: itemType.icon, content: itemType.title, title: content)
         }
         
     }
@@ -85,7 +48,7 @@ struct DocumentCellView: View {
                     ZStack {
                         
                         RoundedRectangle(cornerRadius: 20)
-                            .foregroundColor(viewModel.itemType.viewModel.iconBackground)
+                            .foregroundColor(viewModel.itemType.iconBackground)
                             .frame(width: 40, height: 40)
                         
                         viewModel.icon
@@ -148,26 +111,22 @@ extension DocumentCellView.ViewModel {
     
     static let passport = DocumentCellView.ViewModel(
         itemType: .passport,
-        content: "Паспорт РФ",
-        title: "38 06 ****75",
+        content: "38 06 ****75",
         action: {})
     
     static let inn = DocumentCellView.ViewModel(
         itemType: .inn,
-        content: "ИНН",
-        title: "6525****3942",
+        content: "6525****3942",
         action: {})
     
     static let address = DocumentCellView.ViewModel(
         itemType: .adressPass,
-        content: "Адрес регистрации",
-        title: "г. Москва, Кут.",
+        content: "г. Москва, Кут.",
         action: {})
     
     static let address2 = DocumentCellView.ViewModel(
         itemType: .adress,
-        content: "Адрес проживания",
-        title: "г. Москва, Кут.",
+        content: "г. Москва, Кут.",
         action: {})
     
 }

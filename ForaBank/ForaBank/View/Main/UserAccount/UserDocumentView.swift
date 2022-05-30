@@ -13,30 +13,36 @@ struct UserDocumentView: View {
     
     var body: some View {
         
-        ZStack {
+        ZStack(alignment: .top) {
             
             ScrollView(showsIndicators: false) {
                 
                 ZStack {
                     
-                    viewModel.itemType.viewModel.background
-                        .frame(height: 56)
+                    GeometryReader { geometry in
+                        
+                        ZStack {
+                            
+                            BackgroundHeaderView(geometry: geometry, color: viewModel.itemType.backgroundColor)
+                            
+                        }
+                    }
+                    .frame(height: 100)
+                }
+                
+                VStack(spacing: 24) {
                     
                     ZStack {
+                        
                         RoundedRectangle(cornerRadius: 32)
-                            .foregroundColor(viewModel.itemType.viewModel.iconBackground)
+                            .foregroundColor(viewModel.itemType.iconBackground)
                             .frame(width: 64, height: 64)
                         
-                        viewModel.itemType.viewModel.icon
+                        viewModel.itemType.icon
                             .resizable()
                             .frame(width: 39, height: 39)
                             .foregroundColor(.iconWhite)
                     }
-                    .offset(x: 0, y: 28)
-                }
-                .padding(.bottom, 28)
-                
-                VStack(spacing: 24) {
                     
                     ForEach(viewModel.items) { item in
                         
@@ -44,8 +50,21 @@ struct UserDocumentView: View {
                         
                     }
                 }
+                .offset(x: 0, y: -40)
                 .padding(.horizontal, 20)
-                .padding(.vertical, 24)
+                .padding(.bottom, 24)
+                .edgesIgnoringSafeArea(.top)
+            }
+            
+            ZStack {
+                
+                viewModel.itemType.backgroundColor
+                    .contrast(0.8)
+                    .clipped()
+                    .edgesIgnoringSafeArea(.all)
+                    .frame(height: 50)
+                
+                NavigationBarView
             }
             
             VStack {
@@ -57,32 +76,73 @@ struct UserDocumentView: View {
                     .padding(20)
             }
         }
-        .navigationBarTitle(
-            Text(viewModel.navigationBar.title).font(.textH3M18240()),
-            displayMode: .inline)
+        .navigationBarHidden(true)
         .navigationBarBackButtonHidden(true)
-        .navigationBarItems(
-            leading: backButton,
-            trailing: settingButton)
     }
-    
-    var backButton: some View {
         
-        Button {
-            viewModel.navigationBar.backButton.action()
-        } label: {
-            viewModel.navigationBar.backButton.icon
-                .foregroundColor(.iconBlack)
+    var NavigationBarView: some View {
+        
+        HStack {
+            
+            Button {
+                
+                viewModel.navigationBar.backButton.action()
+                
+            } label: {
+                
+                viewModel.navigationBar.backButton.icon
+                    .foregroundColor(.iconWhite)
+            }
+            
+            Spacer()
+            
+            VStack {
+                
+                Text(viewModel.navigationBar.title)
+                    .font(.textH3M18240())
+                    .foregroundColor(.iconWhite)
+            }
+            
+            Spacer()
+            
+            Button {
+                
+                viewModel.navigationBar.rightButton.action()
+                
+            } label: {
+                
+                viewModel.navigationBar.rightButton.icon
+                    .foregroundColor(.iconWhite)
+            }
         }
+        .padding(.horizontal, 20)
+        .padding(.bottom, 10)
+        .background(Color.clear)
     }
     
-    var settingButton: some View {
+    struct BackgroundHeaderView: View {
         
-        Button {
-            viewModel.navigationBar.rightButton.action()
-        } label: {
-            viewModel.navigationBar.rightButton.icon
-                .foregroundColor(.iconGray)
+        let geometry: GeometryProxy
+        let color: Color
+        
+        var body: some View {
+            
+            if geometry.frame(in: .global).minY <= 0 {
+                
+                Rectangle()
+                    .foregroundColor(color)
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                    .offset(y: geometry.frame(in: .global).minY)
+                    .clipped()
+                
+            } else {
+                
+                Rectangle()
+                    .foregroundColor(color)
+                    .frame(width: geometry.size.width, height: geometry.size.height + geometry.frame(in: .global).minY)
+                    .clipped()
+                    .offset(y: -geometry.frame(in: .global).minY)
+            }
         }
     }
     

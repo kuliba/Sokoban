@@ -39,7 +39,7 @@ class UserDocumentViewModel: ObservableObject {
                 
         self.model = model
         self.navigationBar = .init(
-            title: "Паспорт РФ",
+            title: itemType.title,
             backButton: .init(icon: .ic24ChevronLeft, action: {
                 print("back")
             }),
@@ -90,6 +90,7 @@ class UserDocumentViewModel: ObservableObject {
     func createItems(from: ClientInfoData) {
         
         switch itemType {
+            
         case .passport:
             items = [
                 .init(title: "ФИО", content: "\(from.lastName) \(from.firstName) \(from.patronymic ?? "")"),
@@ -99,8 +100,7 @@ class UserDocumentViewModel: ObservableObject {
                 .init(title: "Место рождения", content: from.birthPlace),
                 .init(title: "Дата рождения", content: from.birthDay)
             ]
-        case .inn:
-            break
+            
         case .adressPass:
             items = [
                 .init(title: "Страна", content: from.addressInfo?.country),
@@ -112,6 +112,7 @@ class UserDocumentViewModel: ObservableObject {
                 .init(title: "Индекс", content: from.addressInfo?.postIndex)
                 
             ]
+            
         case .adress:
             items = [
                 .init(title: "Страна", content: from.addressResidentialInfo?.country),
@@ -123,11 +124,10 @@ class UserDocumentViewModel: ObservableObject {
                 .init(title: "Индекс", content: from.addressResidentialInfo?.postIndex)
                 
             ]
+            
+        default: break
         }
-        
-        
     }
-    
 }
 
 
