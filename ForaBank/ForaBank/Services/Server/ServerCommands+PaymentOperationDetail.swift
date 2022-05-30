@@ -44,13 +44,13 @@ extension ServerCommands {
 
 				let statusCode: ServerStatusCode
 				let errorMessage: String?
-				let data: [PaymentData]?
+				let data: [LatestPaymentData]?
 			
                 private enum CodingKeys: CodingKey {
                     case statusCode, errorMessage, data
                 }
             
-                init(statusCode: ServerStatusCode, errorMessage: String?, data: [PaymentData]) {
+                init(statusCode: ServerStatusCode, errorMessage: String?, data: [LatestPaymentData]) {
                     self.statusCode = statusCode
                     self.errorMessage = errorMessage
                     self.data = data
@@ -64,12 +64,12 @@ extension ServerCommands {
                     
                     var containerData = try container.nestedUnkeyedContainer(forKey: .data)
                     
-                    var data = [PaymentData]()
+                    var data = [LatestPaymentData]()
                     var items = containerData
                     
                     while !containerData.isAtEnd {
                         
-                        let paymentData = try containerData.decode(PaymentData.self)
+                        let paymentData = try containerData.decode(LatestPaymentData.self)
                         let paymentType = paymentData.type
                         
                         switch paymentType {

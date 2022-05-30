@@ -25,7 +25,7 @@ extension ModelAction {
 //                let result: Result<ProductDynamicParamsData, Error>
 //            }
             struct Complete: Action {
-                let latestAllPayments: [PaymentData]
+                let latestAllPayments: [LatestPaymentData]
             }
             
             struct Failed: Action {

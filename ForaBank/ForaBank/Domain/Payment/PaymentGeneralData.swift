@@ -7,7 +7,7 @@
 
 import Foundation
 
-class PaymentGeneralData: PaymentData {
+class PaymentGeneralData: LatestPaymentData {
 
 	let amount: String?
 	let bankId: String

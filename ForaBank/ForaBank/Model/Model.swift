@@ -42,7 +42,7 @@ class Model {
     let paymentTemplatesViewSettings: CurrentValueSubject<TemplatesListViewModel.Settings, Never>
     
     //MARK: LatestAllPayments
-    let latestPayments: CurrentValueSubject<[PaymentData], Never>
+    let latestPayments: CurrentValueSubject<[LatestPaymentData], Never>
     
     //MARK: Notifications
     let notifications: CurrentValueSubject<[NotificationData], Never>

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class PaymentServiceData: PaymentData {
+class PaymentServiceData: LatestPaymentData {
 
 	var additionalList: [AdditionalListData]
 	var amount: Double

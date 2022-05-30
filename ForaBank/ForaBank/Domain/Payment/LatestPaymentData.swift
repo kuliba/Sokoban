@@ -1,13 +1,14 @@
 //
-//  PaymentData.swift
+//  LatestPaymentData.swift
 //  ForaBank
 //
 //  Created by Андрей Лятовец on 1/24/22.
+//  Refactor by Dmitry Martynov 25.05.2022
 //
 
 import Foundation
 
-class PaymentData: Codable {
+class LatestPaymentData: Codable {
 
 	let date: Date
 	let paymentDate: String
@@ -34,7 +35,7 @@ class PaymentData: Codable {
 	}
 }
 
-extension PaymentData {
+extension LatestPaymentData {
     
     enum Kind: String, Codable {
         case phone
@@ -47,9 +48,9 @@ extension PaymentData {
     }
 }
 
-extension PaymentData: Equatable {
+extension LatestPaymentData: Equatable {
 
-	static func == (lhs: PaymentData, rhs: PaymentData) -> Bool {
+	static func == (lhs: LatestPaymentData, rhs: LatestPaymentData) -> Bool {
 		(lhs.date == rhs.date) && (lhs.paymentDate == rhs.paymentDate) && (lhs.type == rhs.type)
 	}
 }
