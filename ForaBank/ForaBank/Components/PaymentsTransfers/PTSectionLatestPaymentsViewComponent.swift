@@ -19,8 +19,6 @@ extension PTSectionLatestPaymentsView {
         
         override var type: PaymentsTransfersSectionType { .latestPayments }
         private let model: Model
-        private let contactsAgent: ContactsAgent
-        private var contactsAgentStatus: ContactsAgentStatus
         
         private var bindings = Set<AnyCancellable>()
         
@@ -42,8 +40,6 @@ extension PTSectionLatestPaymentsView {
         init(model: Model) {
             self.latestPaymentsButtons = Self.templateButtonData
             self.model = model
-            self.contactsAgent = ContactsAgent()
-            self.contactsAgentStatus = .disabled
             super.init()
             bind()
         }
@@ -51,113 +47,27 @@ extension PTSectionLatestPaymentsView {
         init(latestPaymentsButtons: [LatestPaymentButtonVM], model: Model) {
             self.latestPaymentsButtons = latestPaymentsButtons
             self.model = model
-            self.contactsAgent = ContactsAgent()
-            self.contactsAgentStatus = .disabled //TODO: Mock
             super.init()
         }
         
         func bind() {
             
-            contactsAgent.status
-                .assign(to: \.contactsAgentStatus, on: self)
-                .store(in: &bindings)
-            
-            // data updates from model
             model.latestPayments
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] latestPayments in
                     
                     withAnimation {
                         
-                        if !latestPayments.isEmpty {
-                            
-                            self.contactsAgent.requestPermission()
-                            self.latestPaymentsButtons = Self.templateButtonData
-                            
-                            for item in latestPayments {
-                                
-                                var image: LatestPaymentButtonVM.ImageType = .text(item.type.rawValue)
-                                var topIcon: Image?
-                                var text = ""
-                                
-                                switch item.type {
-                                
-                                case .phone:
-                                    guard let paymentData = item as? PaymentGeneralData else { return }
-                                    
-                                    text = paymentData.phoneNumber
-                                    image = .icon(Image("ic24Smartphone"), .iconGray)
-            
-                                    if let bank = model.dictionaryBank(for: paymentData.bankId) {
-                                        topIcon = bank.svgImage.image
-                                    }
-                                    
-                                    var contact: AdressBookContact?
-                                    if case .available = self.contactsAgentStatus {
-                                        contact = self.contactsAgent.fetchContact(by: paymentData.phoneNumber)
-                                        
-                                        if let contact = contact {
-                                            if let fullName = contact.fullName {
-                                                text = fullName
-                                            }
-                                            
-                                            if let avatar = contact.avatar {
-                                                image = .image(Image(data: avatar.data)!)
-                                            } else {
-                                                if let initials = contact.initials {
-                                                    image = .text(initials)
-                                                }
-                                            }
-                                        }
-                                    }
+                        self.latestPaymentsButtons = Self.templateButtonData
                         
-                                case .country:
-                                    guard let paymentData = item as? PaymentCountryData else { return }
-                                    
-                                    text = paymentData.shortName
-                                    image = .icon(Image("ic24Smartphone"), .iconGray)
-            
-                                    if let phone = paymentData.phoneNumber {
-                                            text = phone
-                                    }
-                                    
-                                    if let country = model.dictionaryCountry(for: paymentData.countryCode) {
-                                        topIcon = country.svgImage?.image
-                                    }
-                                    
-                                case .service, .taxAndStateService, .transport, .internet, .mobile:
-                                    guard let paymentData = item as? PaymentServiceData else { return }
-                                    
-                                    text = String(paymentData.puref)
-                                    image = .image(Image("ic24Smartphone"))
-                                    
-                                    if let oper = model.dictionaryAnywayOperator(for: paymentData.puref) {
-                                    
-                                        text = oper.name
-                                        if let logo = oper.logotypeList.first?.svgImage?.image {
-                                            image = .image(logo)
-                                        }
-                                    }
-                                    
-                                }
-                                
-                                let button = LatestPaymentButtonVM(image: image,
-                                                                   topIcon: topIcon,
-                                                                   description: text,
-                                                                   action: {})
-                                self.latestPaymentsButtons.append(button)
-                                
-                            } //for
-                            
-                        } else {
-                            print("mdy LPVM Empty")
-                            self.latestPaymentsButtons = Self.templateButtonData
+                        guard !latestPayments.isEmpty else { return }
+                        self.model.contactsAgent.requestPermission()
+                        latestPayments.forEach {
+                            self.latestPaymentsButtons.append(.init(data: $0, model: self.model))
                         }
-                     
                     }
         
                 }.store(in: &bindings)
-            
         }
         
         static let templateButtonData: [LatestPaymentButtonVM] = {
@@ -262,6 +172,101 @@ extension PTSectionLatestPaymentsView {
         }
     }
 
+}
+
+//MARK: default LatestPaymentButton by type
+
+extension LatestPaymentData.Kind {
+    typealias ButtonVM = PTSectionLatestPaymentsView.ViewModel.LatestPaymentButtonVM
+    
+    var defaultButton: ButtonVM {
+        switch self {
+        case .country: return .init(image: .icon(Image("ic24Smartphone"), .iconGray),
+                                    topIcon: nil, description: "За рубеж", action: {})
+        
+        case .phone: return .init(image: .icon(Image("ic24Smartphone"), .iconGray),
+                                  topIcon: nil, description: "По телефону", action: {})
+        
+        case .service, .mobile, .transport, .internet, .taxAndStateService:
+                     return .init(image: .icon(Image("ic24Smartphone"), .iconGray),
+                                  topIcon: nil, description: "Услуги", action: {})
+        }
+    }
+}
+
+//MARK: LatestPaymentButtonVM init
+
+extension PTSectionLatestPaymentsView.ViewModel.LatestPaymentButtonVM {
+
+    init(data: LatestPaymentData, model: Model) {
+        
+        var image = data.type.defaultButton.image
+        var topIcon = data.type.defaultButton.topIcon
+        var text = data.type.defaultButton.description
+        var action = data.type.defaultButton.action
+        
+        switch data.type {
+        case .phone:
+            guard let paymentData = data as? PaymentGeneralData else { break }
+            
+            text = paymentData.phoneNumber
+            image = .icon(Image("ic24Smartphone"), .iconGray)
+            
+            if let bank = model.dictionaryBank(for: paymentData.bankId) {
+                topIcon = bank.svgImage.image
+            }
+            
+            var contact: AdressBookContact?
+            if case .available = model.contactsAgent.status.value {
+                contact = model.contactsAgent.fetchContact(by: paymentData.phoneNumber)
+                
+                if let contact = contact {
+                    if let fullName = contact.fullName {
+                        text = fullName
+                    }
+                    
+                    if let avatar = contact.avatar {
+                        image = .image(Image(data: avatar.data)!)
+                    } else {
+                        if let initials = contact.initials {
+                            image = .text(initials)
+                        }
+                    }
+                }
+            }
+            
+        case .country:
+            guard let paymentData = data as? PaymentCountryData else { break }
+            
+            text = paymentData.shortName
+            image = .icon(Image("ic24Smartphone"), .iconGray)
+            
+            if let phone = paymentData.phoneNumber {
+                text = phone
+            }
+            
+            if let country = model.dictionaryCountry(for: paymentData.countryCode) {
+                topIcon = country.svgImage?.image
+            }
+            
+        case .service, .taxAndStateService, .transport, .internet, .mobile:
+            guard let paymentData = data as? PaymentServiceData else { break }
+            
+            text = String(paymentData.puref)
+            image = .image(Image("ic24Smartphone"))
+            
+            if let oper = model.dictionaryAnywayOperator(for: paymentData.puref) {
+                
+                text = oper.name
+                if let logo = oper.logotypeList.first?.svgImage?.image {
+                    image = .image(logo)
+                }
+            }
+            
+        }
+        self.init(image: image, topIcon: topIcon, description: text, action: action)
+    }
+            
 }
 
 //MARK: - Preview

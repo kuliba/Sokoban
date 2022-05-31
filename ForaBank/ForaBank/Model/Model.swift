@@ -67,6 +67,7 @@ class Model {
     internal let settingsAgent: SettingsAgentProtocol
     internal let biometricAgent: BiometricAgentProtocol
     internal let locationAgent: LocationAgentProtocol
+    let contactsAgent: ContactsAgentProtocol
     
     // private
     private var bindings: Set<AnyCancellable>
@@ -89,7 +90,7 @@ class Model {
         return credentials
     }
     
-    init(sessionAgent: SessionAgentProtocol, serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol, settingsAgent: SettingsAgentProtocol, biometricAgent: BiometricAgentProtocol, locationAgent: LocationAgentProtocol) {
+    init(sessionAgent: SessionAgentProtocol, serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol, settingsAgent: SettingsAgentProtocol, biometricAgent: BiometricAgentProtocol, locationAgent: LocationAgentProtocol, contactsAgent: ContactsAgentProtocol) {
         
         self.action = .init()
         self.auth = .init(.registerRequired)
@@ -119,6 +120,7 @@ class Model {
         self.settingsAgent = settingsAgent
         self.biometricAgent = biometricAgent
         self.locationAgent = locationAgent
+        self.contactsAgent = contactsAgent
         self.bindings = []
         
         loadCachedData()
@@ -157,7 +159,10 @@ class Model {
         // location agent
         let locationAgent = LocationAgent()
         
-        return Model(sessionAgent: sessionAgent, serverAgent: serverAgent, localAgent: localAgent, keychainAgent: keychainAgent, settingsAgent: settingsAgent, biometricAgent: biometricAgent, locationAgent: locationAgent)
+        // contacts agent
+        let contactsAgent = ContactsAgent()
+        
+        return Model(sessionAgent: sessionAgent, serverAgent: serverAgent, localAgent: localAgent, keychainAgent: keychainAgent, settingsAgent: settingsAgent, biometricAgent: biometricAgent, locationAgent: locationAgent, contactsAgent: contactsAgent)
     }()
     
     private func bind() {
