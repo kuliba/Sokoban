@@ -21,14 +21,16 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
     func testGetAllLatestPayments_Response_Encoding() throws {
         // given
         
-        let command = ServerCommands.PaymentOperationDetailContoller.GetAllLatestPayments(token: "",
-                                                                                          isPhonePayments: false,
-                                                                                          isCountriesPayments: true,
-                                                                                          isServicePayments: true,
-                                                                                          isMobilePayments: false,
-                                                                                          isInternetPayments: true,
-                                                                                          isTransportPayments: false,
-                                                                                          isTaxAndStateServicePayments: true)
+        let command = ServerCommands
+                        .PaymentOperationDetailContoller
+                        .GetAllLatestPayments(token: "",
+                                              isPhonePayments: false,
+                                              isCountriesPayments: true,
+                                              isServicePayments: true,
+                                              isMobilePayments: false,
+                                              isInternetPayments: true,
+                                              isTransportPayments: false,
+                                              isTaxAndStateServicePayments: true)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -52,24 +54,32 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
     }
     
     func testGetAllLatestPayments_Response_Decoding() throws {
-        
+
         // given
         let url = bundle.url(forResource: "GetAllLatestPayments", withExtension: "json")!
         let json = try Data(contentsOf: url)
-        
-        let date = formatter.date(from: "2022-01-24T15:00:32.250Z")!
-        
-        let data = PaymentData(date: date,
-                               paymentDate: "21.12.2021 11:04:26",
-                               type: .phone)
-        
-        let expected = ServerCommands.PaymentOperationDetailContoller.GetAllLatestPayments.Response(statusCode: .ok,
-                                                                                                    errorMessage: "string",
-                                                                                                    data: [data])
-        
+
+        let date = Date(timeIntervalSince1970: TimeInterval(1653570551608 / 1000))
+
+        let data = PaymentGeneralData(amount: "10000.00",
+                                      bankId: "100000000217",
+                                      bankName: "ФОРА-БАНК",
+                                      date: date,
+                                      paymentDate: "26.05.2022 16:09:11",
+                                      phoneNumber: "9636124249",
+                                      type: .phone)
+
+        let expected = ServerCommands
+                        .PaymentOperationDetailContoller
+                        .GetAllLatestPayments.Response(statusCode: .ok,
+                                                       errorMessage: "string",
+                                                       data: [data])
+
         // when
-        let result = try decoder.decode(ServerCommands.PaymentOperationDetailContoller.GetAllLatestPayments.Response.self, from: json)
-        
+        let result = try decoder.decode(ServerCommands
+                                        .PaymentOperationDetailContoller
+                                        .GetAllLatestPayments.Response.self, from: json)
+
         // then
         XCTAssertEqual(result, expected)
     }
@@ -82,7 +92,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
         let url = bundle.url(forResource: "GetLatestInternetPayments", withExtension: "json")!
         let json = try Data(contentsOf: url)
         
-        let date = formatter.date(from: "2022-01-24T15:00:50.853Z")!
+        let date = Date(timeIntervalSince1970: TimeInterval(1653570551608 / 1000))
         
         let data = PaymentServiceData(additionalList: [.init(fieldTitle: "Лицевой счет у Получателя",
                                                              fieldName: "a3_PERSONAL_ACCOUNT_5_5",
@@ -92,14 +102,17 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                                       date: date,
                                       paymentDate: "21.12.2021 11:04:26",
                                       puref: "iFora||4285",
-                                      type: .phone)
+                                      type: .internet)
         
-        let expected = ServerCommands.PaymentOperationDetailContoller.GetLatestInternetPayments.Response(statusCode: .ok,
-                                                                                                         errorMessage: "string",
-                                                                                                         data: [data])
+        let expected = ServerCommands.PaymentOperationDetailContoller
+                        .GetLatestInternetPayments.Response(statusCode: .ok,
+                                                            errorMessage: "string",
+                                                            data: [data])
         
         // when
-        let result = try decoder.decode(ServerCommands.PaymentOperationDetailContoller.GetLatestInternetPayments.Response.self, from: json)
+        let result = try decoder.decode(ServerCommands
+                                        .PaymentOperationDetailContoller
+                                        .GetLatestInternetPayments.Response.self, from: json)
         
         // then
         XCTAssertEqual(result, expected)
@@ -113,7 +126,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
         let url = bundle.url(forResource: "GetLatestMobilePayments", withExtension: "json")!
         let json = try Data(contentsOf: url)
         
-        let date = formatter.date(from: "2022-01-24T15:01:48.197Z")!
+        let date = Date(timeIntervalSince1970: TimeInterval(1653570551608 / 1000))
         
         let data = PaymentServiceData(additionalList: [.init(fieldTitle: "Лицевой счет у Получателя",
                                                              fieldName: "a3_PERSONAL_ACCOUNT_5_5",
@@ -123,14 +136,18 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                                       date: date,
                                       paymentDate: "21.12.2021 11:04:26",
                                       puref: "iFora||4285",
-                                      type: .phone)
+                                      type: .mobile)
         
-        let expected = ServerCommands.PaymentOperationDetailContoller.GetLatestMobilePayments.Response(statusCode: .ok,
-                                                                                                       errorMessage: "string",
-                                                                                                       data: [data])
+        let expected = ServerCommands
+                        .PaymentOperationDetailContoller
+                        .GetLatestMobilePayments.Response(statusCode: .ok,
+                                                          errorMessage: "string",
+                                                          data: [data])
         
         // when
-        let result = try decoder.decode(ServerCommands.PaymentOperationDetailContoller.GetLatestMobilePayments.Response.self, from: json)
+        let result = try decoder.decode(ServerCommands
+                                        .PaymentOperationDetailContoller
+                                        .GetLatestMobilePayments.Response.self, from: json)
         
         // then
         XCTAssertEqual(result, expected)
@@ -144,7 +161,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
         let url = bundle.url(forResource: "GetLatestPayments", withExtension: "json")!
         let json = try Data(contentsOf: url)
         
-        let date = formatter.date(from: "2022-01-24T15:02:31.941Z")!
+        let date = Date(timeIntervalSince1970: TimeInterval(1653570551608 / 1000))
         
         let data = PaymentGeneralData(amount: "100",
                                       bankId: "100000000004",
@@ -154,12 +171,16 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                                       phoneNumber: "9998887766",
                                       type: .phone)
         
-        let expected = ServerCommands.PaymentOperationDetailContoller.GetLatestPayments.Response(statusCode: .ok,
-                                                                                                 errorMessage: "string",
-                                                                                                 data: [data])
+        let expected = ServerCommands
+                        .PaymentOperationDetailContoller
+                        .GetLatestPayments.Response(statusCode: .ok,
+                                                    errorMessage: "string",
+                                                    data: [data])
         
         // when
-        let result = try decoder.decode(ServerCommands.PaymentOperationDetailContoller.GetLatestPayments.Response.self, from: json)
+        let result = try decoder.decode(ServerCommands
+                                        .PaymentOperationDetailContoller
+                                        .GetLatestPayments.Response.self, from: json)
         
         // then
         XCTAssertEqual(result, expected)
@@ -169,8 +190,10 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
     
     func testGetLatestPhonePayments_Response_Encoding() throws {
         // given
-        let command = ServerCommands.PaymentOperationDetailContoller.GetLatestPhonePayments(token: "",
-                                                                                            payload: .init(phoneNumber: "9998887766"))
+        let command = ServerCommands
+                        .PaymentOperationDetailContoller
+                        .GetLatestPhonePayments(token: "",
+                                                payload: .init(phoneNumber: "9998887766"))
         
         let expected = "{\"phoneNumber\":\"9998887766\"}"
         
@@ -183,43 +206,51 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
     }
     
     func testGetLatestPhonePayments_MinResponse_Decoding() throws {
-        
+
         // given
         let url = bundle.url(forResource: "GetLatestPhonePaymentsMin", withExtension: "json")!
         let json = try Data(contentsOf: url)
-        
+
         let data = PaymentPhoneData(bankId: nil,
                                     bankName: nil,
                                     payment: nil)
-        
-        let expected = ServerCommands.PaymentOperationDetailContoller.GetLatestPhonePayments.Response(statusCode: .ok,
-                                                                                                      errorMessage: "string",
-                                                                                                      data: [data])
-        
+
+        let expected = ServerCommands
+                        .PaymentOperationDetailContoller
+                        .GetLatestPhonePayments.Response(statusCode: .ok,
+                                                        errorMessage: "string",
+                                                        data: [data])
+
         // when
-        let result = try decoder.decode(ServerCommands.PaymentOperationDetailContoller.GetLatestPhonePayments.Response.self, from: json)
-        
+        let result = try decoder.decode(ServerCommands
+                                        .PaymentOperationDetailContoller
+                                        .GetLatestPhonePayments.Response.self, from: json)
+
         // then
         XCTAssertEqual(result, expected)
     }
     
     func testGetLatestPhonePayments_Response_Decoding() throws {
-        
+
         // given
         let url = bundle.url(forResource: "GetLatestPhonePayments", withExtension: "json")!
         let json = try Data(contentsOf: url)
-        
+
         let data = PaymentPhoneData(bankId: "string",
                                     bankName: "string",
                                     payment: true)
-        
-        let expected = ServerCommands.PaymentOperationDetailContoller.GetLatestPhonePayments.Response(statusCode: .ok,
-                                                                                                      errorMessage: "string",
-                                                                                                      data: [data])
-        
+
+        let expected = ServerCommands
+                        .PaymentOperationDetailContoller
+                        .GetLatestPhonePayments.Response(statusCode: .ok,
+                                                        errorMessage: "string",
+                                                        data: [data])
+
         // when
-        let result = try decoder.decode(ServerCommands.PaymentOperationDetailContoller.GetLatestPhonePayments.Response.self, from: json)
-        
+        let result = try decoder.decode(ServerCommands
+                                        .PaymentOperationDetailContoller
+                                        .GetLatestPhonePayments.Response.self, from: json)
+
         // then
         XCTAssertEqual(result, expected)
     }
@@ -232,7 +263,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
         let url = bundle.url(forResource: "GetLatestServicePayments", withExtension: "json")!
         let json = try Data(contentsOf: url)
         
-        let date = formatter.date(from: "2022-01-24T15:03:21.966Z")!
+        let date = Date(timeIntervalSince1970: TimeInterval(1653570551608 / 1000))
         
         let data = PaymentServiceData(additionalList: [.init(fieldTitle: "Лицевой счет у Получателя",
                                                              fieldName: "a3_PERSONAL_ACCOUNT_5_5",
@@ -242,14 +273,18 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                                       date: date,
                                       paymentDate: "21.12.2021 11:04:26",
                                       puref: "iFora||4285",
-                                      type: .phone)
+                                      type: .service)
         
-        let expected = ServerCommands.PaymentOperationDetailContoller.GetLatestServicePayments.Response(statusCode: .ok,
-                                                                                                        errorMessage: "string",
-                                                                                                        data: [data])
+        let expected = ServerCommands
+                        .PaymentOperationDetailContoller
+                        .GetLatestServicePayments.Response(statusCode: .ok,
+                                                           errorMessage: "string",
+                                                           data: [data])
         
         // when
-        let result = try decoder.decode(ServerCommands.PaymentOperationDetailContoller.GetLatestServicePayments.Response.self, from: json)
+        let result = try decoder.decode(ServerCommands
+                                        .PaymentOperationDetailContoller
+                                        .GetLatestServicePayments.Response.self, from: json)
         
         // then
         XCTAssertEqual(result, expected)
@@ -263,7 +298,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
         let url = bundle.url(forResource: "GetLatestTransportPayments", withExtension: "json")!
         let json = try Data(contentsOf: url)
         
-        let date = formatter.date(from: "2022-01-24T15:04:09.120Z")!
+        let date = Date(timeIntervalSince1970: TimeInterval(1653570551608 / 1000))
         
         let data = PaymentServiceData(additionalList: [.init(fieldTitle: "Лицевой счет у Получателя",
                                                              fieldName: "a3_PERSONAL_ACCOUNT_5_5",
@@ -273,14 +308,18 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                                       date: date,
                                       paymentDate: "21.12.2021 11:04:26",
                                       puref: "iFora||4285",
-                                      type: .phone)
+                                      type: .transport)
         
-        let expected = ServerCommands.PaymentOperationDetailContoller.GetLatestTransportPayments.Response(statusCode: .ok,
-                                                                                                          errorMessage: "string",
-                                                                                                          data: [data])
+        let expected = ServerCommands
+                        .PaymentOperationDetailContoller
+                        .GetLatestTransportPayments.Response(statusCode: .ok,
+                                                            errorMessage: "string",
+                                                            data: [data])
         
         // when
-        let result = try decoder.decode(ServerCommands.PaymentOperationDetailContoller.GetLatestTransportPayments.Response.self, from: json)
+        let result = try decoder.decode(ServerCommands
+                                        .PaymentOperationDetailContoller
+                                        .GetLatestTransportPayments.Response.self, from: json)
         
         // then
         XCTAssertEqual(result, expected)
@@ -290,8 +329,10 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
     
     func testGetOperationDetail_Response_Encoding() throws {
         // given
-        let command = ServerCommands.PaymentOperationDetailContoller.GetOperationDetail(token: "",
-                                                                                        payload: .init(documentId: "string"))
+        let command = ServerCommands
+                        .PaymentOperationDetailContoller
+                        .GetOperationDetail(token: "",
+                                            payload: .init(documentId: "string"))
         
         let expected = "{\"documentId\":\"string\"}"
         
@@ -372,12 +413,16 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                                        transferNumber: "A1355080358996010000057CAFC75755",
                                        transferReference: "848197415")
         
-        let expected = ServerCommands.PaymentOperationDetailContoller.GetOperationDetail.Response(statusCode: .ok,
-                                                                                                  errorMessage: "string",
-                                                                                                  data: data)
+        let expected = ServerCommands
+                        .PaymentOperationDetailContoller
+                        .GetOperationDetail.Response(statusCode: .ok,
+                                                    errorMessage: "string",
+                                                    data: data)
         
         // when
-        let result = try decoder.decode(ServerCommands.PaymentOperationDetailContoller.GetOperationDetail.Response.self, from: json)
+        let result = try decoder.decode(ServerCommands
+                                        .PaymentOperationDetailContoller
+                                        .GetOperationDetail.Response.self, from: json)
         
         // then
         XCTAssertEqual(result, expected)
@@ -464,12 +509,16 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                                        transferNumber: nil,
                                        transferReference: nil)
         
-        let expected = ServerCommands.PaymentOperationDetailContoller.GetOperationDetail.Response(statusCode: .ok,
-                                                                                                  errorMessage: "string",
-                                                                                                  data: data)
+        let expected = ServerCommands
+                        .PaymentOperationDetailContoller
+                        .GetOperationDetail.Response(statusCode: .ok,
+                                                    errorMessage: "string",
+                                                    data: data)
         
         // when
-        let result = try decoder.decode(ServerCommands.PaymentOperationDetailContoller.GetOperationDetail.Response.self, from: json)
+        let result = try decoder.decode(ServerCommands
+                                        .PaymentOperationDetailContoller
+                                        .GetOperationDetail.Response.self, from: json)
         
         // then
         XCTAssertEqual(result, expected)
@@ -483,7 +532,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
         let url = bundle.url(forResource: "GetPaymentCountries", withExtension: "json")!
         let json = try Data(contentsOf: url)
         
-        let date = formatter.date(from: "2022-01-24T15:04:59.652Z")!
+        let date = Date(timeIntervalSince1970: TimeInterval(1653570551608 / 1000))
         
         let data = PaymentCountryData(countryCode: "AM",
                                       countryName: "Армения",
@@ -495,14 +544,18 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                                       puref: "iFora||TransferArmBBClientP",
                                       shortName: "Иванов И.",
                                       surName: "Иванов",
-                                      type: .phone)
+                                      type: .country)
         
-        let expected = ServerCommands.PaymentOperationDetailContoller.GetPaymentCountries.Response(statusCode: .ok,
-                                                                                                   errorMessage: "string",
-                                                                                                   data: [data])
+        let expected = ServerCommands
+                        .PaymentOperationDetailContoller
+                        .GetPaymentCountries.Response(statusCode: .ok,
+                                                    errorMessage: "string",
+                                                    data: [data])
         
         // when
-        let result = try decoder.decode(ServerCommands.PaymentOperationDetailContoller.GetPaymentCountries.Response.self, from: json)
+        let result = try decoder.decode(ServerCommands
+                                        .PaymentOperationDetailContoller
+                                        .GetPaymentCountries.Response.self, from: json)
         
         // then
         XCTAssertEqual(result, expected)
@@ -514,7 +567,7 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
         let url = bundle.url(forResource: "GetPaymentCountriesMin", withExtension: "json")!
         let json = try Data(contentsOf: url)
         
-        let date = formatter.date(from: "2022-01-24T15:04:59.652Z")!
+        let date = Date(timeIntervalSince1970: TimeInterval(1653570551608 / 1000))
         
         let data = PaymentCountryData(countryCode: "AM",
                                       countryName: "Армения",
@@ -526,14 +579,18 @@ class ServerCommandsPaymentOperationDetailTests: XCTestCase {
                                       puref: "iFora||TransferArmBBClientP",
                                       shortName: "Иванов И.",
                                       surName: nil,
-                                      type: .phone)
+                                      type: .country)
         
-        let expected = ServerCommands.PaymentOperationDetailContoller.GetPaymentCountries.Response(statusCode: .ok,
-                                                                                                   errorMessage: "string",
-                                                                                                   data: [data])
+        let expected = ServerCommands
+                        .PaymentOperationDetailContoller
+                        .GetPaymentCountries.Response(statusCode: .ok,
+                                                    errorMessage: "string",
+                                                    data: [data])
         
         // when
-        let result = try decoder.decode(ServerCommands.PaymentOperationDetailContoller.GetPaymentCountries.Response.self, from: json)
+        let result = try decoder.decode(ServerCommands
+                                        .PaymentOperationDetailContoller
+                                        .GetPaymentCountries.Response.self, from: json)
         
         // then
         XCTAssertEqual(result, expected)

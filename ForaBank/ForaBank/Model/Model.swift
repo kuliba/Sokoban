@@ -46,7 +46,7 @@ class Model {
     let paymentTemplatesViewSettings: CurrentValueSubject<TemplatesListViewModel.Settings, Never>
     
     //MARK: LatestAllPayments
-    let latestPayments: CurrentValueSubject<[PaymentData], Never>
+    let latestPayments: CurrentValueSubject<[LatestPaymentData], Never>
     
     //MARK: Notifications
     let notifications: CurrentValueSubject<[NotificationData], Never>
@@ -177,6 +177,8 @@ class Model {
                     action.send(ModelAction.ClientInfo.Fetch.Request())
                     action.send(ModelAction.Rates.Update.All())
                     action.send(ModelAction.Deposits.List.Request())
+                    
+                    action.send(ModelAction.LatestPayments.List.Requested())
                     
                 case .inactive:
                     if let pincode = try? authStoredPincode() {

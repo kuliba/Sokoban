@@ -72,11 +72,13 @@
                 "status": "NOT_BLOCKED",
                 "branchName": "АКБ \"ФОРА-БАНК\" (АО)",
                 "miniStatement": [
-                    {
-                        "date": "2022-01-24T15:00:32.250Z",
-                        "paymentDate": "21.12.2022 11:04:26",
-                        "type": "mobile"
-                    }
+                        {
+                            "account": "string",
+                            "date": 1648512000000,
+                            "amount": 0,
+                            "currency": "string",
+                            "purpose": "string"
+                        }
                 ],
                 "id": 10002585800,
                 "balanceRUB": 1000123,
