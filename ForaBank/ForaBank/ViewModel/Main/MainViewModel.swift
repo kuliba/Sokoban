@@ -19,6 +19,8 @@ class MainViewModel: ObservableObject {
     @Published var isRefreshing: Bool
     @Published var productProfile: ProductProfileViewModel?
     @Published var sheet: Sheet?
+    @Published var link: Link? { didSet { isLinkActive = link != nil } }
+    @Published var isLinkActive: Bool = false
     
     private var model: Model
     private var bindings = Set<AnyCancellable>()
@@ -38,7 +40,7 @@ class MainViewModel: ObservableObject {
                          MainSectionFastOperationView.ViewModel.sample,
                          MainSectionPromoView.ViewModel(model),
                          MainSectionCurrencyView.ViewModel(model),
-                         MainSectionOpenProductView.ViewModel.sample,
+                         MainSectionOpenProductView.ViewModel(model),
                          MainSectionAtmView.ViewModel.initial]
         
         self.isRefreshing = false
@@ -62,11 +64,11 @@ class MainViewModel: ObservableObject {
                         return
                     }
                     let userAccountViewModel: UserAccountViewModel = .init(model: model, clientInfo: clientInfo)
-                    sheet = .userAccount(userAccountViewModel)
+                    sheet = .init(type: .userAccount(userAccountViewModel))
                     
                 case _ as MainViewModelAction.ButtonTapped.Messages:
-                    let messagesHistoryViewModel: MessagesHistoryViewModel = .sample
-                    sheet = .messages(messagesHistoryViewModel)
+                    let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model)
+                    sheet = .init(type: .messages(messagesHistoryViewModel))
                     
                 case _ as MainViewModelAction.PullToRefresh:
                     model.action.send(ModelAction.Products.Update.Total.All())
@@ -109,19 +111,23 @@ class MainViewModel: ObservableObject {
                     switch action {
                         // products section
                     case let payload as MainSectionViewModelAction.Products.ProductDidTapped:
-                        let productProfileViewModel: ProductProfileViewModel = .init(productViewModel: .init(model, productId: payload.productId, productType: .card), model: model)
-                        sheet = .productProfile(productProfileViewModel)
+                    
+                        guard let prooduct = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.productId }),
+                            let productProfileViewModel = ProductProfileViewModel(model, productData: prooduct, dismissAction: { [weak self] in self?.link = nil }) else {
+                            return
+                        }
+                        link = .productProfile(productProfileViewModel)
                         
                     case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
                         let myProductsViewModel: MyProductsViewModel = .init(model)
-                        sheet = .myProducts(myProductsViewModel)
+                        sheet = .init(type: .myProducts(myProductsViewModel))
                        
                         // atm section
                     case _ as MainSectionViewModelAction.Atm.ButtonTapped:
                         guard let placesViewModel = PlacesViewModel(model) else {
                             return
                         }
-                        sheet = .places(placesViewModel)
+                        sheet = .init(type: .places(placesViewModel))
                         
                     default:
                         break
@@ -194,15 +200,24 @@ extension MainViewModel {
         let action: () -> Void
     }
     
-    enum Sheet: Identifiable {
+    struct Sheet: Identifiable {
         
-        var id: UUID { UUID() }
+        let id = UUID()
+        let type: Kind
+        
+        enum Kind {
+            
+            case productProfile(ProductProfileViewModel)
+            case userAccount(UserAccountViewModel)
+            case messages(MessagesHistoryViewModel)
+            case myProducts(MyProductsViewModel)
+            case places(PlacesViewModel)
+        }
+    }
+    
+    enum Link {
         
         case productProfile(ProductProfileViewModel)
-        case userAccount(UserAccountViewModel)
-        case messages(MessagesHistoryViewModel)
-        case myProducts(MyProductsViewModel)
-        case places(PlacesViewModel)
     }
 }
 

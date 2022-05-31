@@ -28,6 +28,7 @@ extension MessagesHistoryItemView {
             self.time = time
             self.action = action
         }
+        
     }
 }
 

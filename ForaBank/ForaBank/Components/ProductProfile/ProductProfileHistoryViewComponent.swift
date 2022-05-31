@@ -42,11 +42,20 @@ extension ProductProfileHistoryView {
             self.dateOperations = []
             self.spendingViewModel = nil
             self.model = model
+            self.listState = .error(.init(button: .init(action: {_ in })))
+            self.productId = productId
+  
+            //FIXME: temp disabled
+            /*
+            self.dateOperations = []
+            self.spendingViewModel = nil
+            self.model = model
             self.listState = .loading
             self.productId = productId
             bind()
             
             model.action.send(ModelAction.Statement.List.Request(productId: productId, productType: productType))
+             */
         }
         
         private func bind() {
@@ -61,11 +70,18 @@ extension ProductProfileHistoryView {
                         case .failure(message: _):
                             self.listState = .error(.init(button: .init(action: {_ in
                                 self.model.action.send(ModelAction.Statement.List.Request(productId: self.productId, productType: .card))
+                                self.listState = .loading
                             })))
                             
-                        case .success:
-                            self.listState = .list([])
-                    }
+                        case .success(statement: let statement):
+                            
+                            self.listState = .list(separationDate(operations: statement))
+                            self.dateOperations = separationDate(operations: statement)
+                            if sumDeifferentGroup(operations: statement).count > 0 {
+                                
+                                self.spendingViewModel = .init(value: sumDeifferentGroup(operations: statement))
+                            }
+                        }
                     default:
                         break
                     }
@@ -139,15 +155,16 @@ extension ProductProfileHistoryView {
             
             struct Operation: Identifiable {
                 
-                let id = UUID()
+                let id: String
                 let title: String
                 let image: Image?
                 let subtitle: String
-                let amount: String
+                let amount: String?
                 let type: OperationType
                 
-                internal init(title: String, image: Image?, subtitle: String, amount: String, type: OperationType) {
+                internal init(id: String, title: String, image: Image?, subtitle: String, amount: String, type: OperationType) {
                     
+                    self.id = id
                     self.title = title
                     self.image = image
                     self.subtitle = subtitle
@@ -156,6 +173,13 @@ extension ProductProfileHistoryView {
                 }
                 
                 init(productStatementData: ProductStatementData) {
+                    
+                    if let operationId = productStatementData.operationId {
+                        
+                        self.id = operationId
+                    } else {
+                        self.id = ""
+                    }
                     
                     if let name = productStatementData.merchantNameRus {
                         
@@ -177,6 +201,17 @@ extension ProductProfileHistoryView {
                     self.amount = productStatementData.amountFormattedtWithCurrency
                 }
             }
+        }
+    }
+}
+
+enum HistoryViewModelAction {
+    
+    enum DetailTapped {
+        
+        struct Detail: Action {
+            
+            let statement: String
         }
     }
 }
@@ -273,7 +308,7 @@ struct ProductProfileHistoryView: View {
             case .empty(let emptyViewModel):
                 EmptyOperationsView(viewModel: emptyViewModel)
                     .padding(.top, 20)
-
+                
             case .list(_):
                 
                 ForEach(viewModel.dateOperations) { operation in
@@ -316,12 +351,15 @@ struct ProductProfileHistoryView: View {
                                 
                                 Spacer()
                                 
-                                Text(item.amount)
-                                
+                                if let amount = item.amount {
+                                    
+                                    Text(amount)
+                                }
                             }
                             .padding(.vertical, 8)
                             .onTapGesture {
-                                
+                            
+                                self.viewModel.action.send(HistoryViewModelAction.DetailTapped.Detail(statement: item.id))
                             }
                         }
                     }
@@ -439,7 +477,7 @@ struct ProductProfileHistoryView: View {
                 }
                 .background(Color.buttonSecondary)
                 .cornerRadius(8)
-
+                
             }
         }
     }
@@ -453,10 +491,10 @@ struct HistoryViewComponent_Previews: PreviewProvider {
         
         Group {
             
-            ProductProfileHistoryView(viewModel: .init(dateOperations: [.init(date: "25 августа, ср", operations: [.init(title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .debit), .init(title: "Selhozmarket", image: Image.init("GKH", bundle: nil), subtitle: "Магазин", amount: "-230 Р", type: .credit)], action: {}), .init(date: "26 августа, ср", operations: [.init(title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .debit)], action: {})], spendingViewModel: .spending, productId: 1, model: .emptyMock))
+            ProductProfileHistoryView(viewModel: .init(dateOperations: [.init(date: "25 августа, ср", operations: [.init(id: "", title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .debit), .init(id: "", title: "Selhozmarket", image: Image.init("GKH", bundle: nil), subtitle: "Магазин", amount: "-230 Р", type: .credit)], action: {}), .init(date: "26 августа, ср", operations: [.init(id: "", title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .debit)], action: {})], spendingViewModel: .spending, productId: 1, model: .emptyMock))
                 .previewLayout(.fixed(width: 360, height: 500))
             
-            ProductProfileHistoryView(viewModel: .init(dateOperations: [.init(date: "25 августа, ср", operations: [.init(title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .debit)], action: {}), .init(date: "26 августа, ср", operations: [.init(title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .debit)], action: {})], spendingViewModel: nil, productId: 1, model: .emptyMock))
+            ProductProfileHistoryView(viewModel: .init(dateOperations: [.init(date: "25 августа, ср", operations: [.init(id: "", title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .debit)], action: {}), .init(date: "26 августа, ср", operations: [.init(id: "", title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .debit)], action: {})], spendingViewModel: nil, productId: 1, model: .emptyMock))
                 .previewLayout(.fixed(width: 400, height: 400))
             
             ProductProfileHistoryView(viewModel: .init(dateOperations: [], spendingViewModel: nil, productId: 1, model: .emptyMock))
@@ -470,13 +508,13 @@ struct HistoryViewComponent_Previews: PreviewProvider {
 
 extension ProductProfileHistoryView.ViewModel.OperationsDateViewModel {
     
-    static let debitOperation = Operation(title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .credit)
+    static let debitOperation = Operation(id: "", title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .credit)
     
-    static let creditOperation = Operation(title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit)
+    static let creditOperation = Operation(id: "", title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit)
     
 }
 
 extension ProductProfileHistoryView.ViewModel {
     
-    static let sampleHistory = ProductProfileHistoryView.ViewModel( dateOperations: [.init(date: "12 декабря", operations: [.init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit)], action: {})], spendingViewModel: .init(value: [100, 300]), productId: 1, model: .emptyMock)
+    static let sampleHistory = ProductProfileHistoryView.ViewModel( dateOperations: [.init(date: "12 декабря", operations: [.init(id: "", title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(id: "", title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(id: "", title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(id: "", title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(id: "", title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit)], action: {})], spendingViewModel: .init(value: [100, 300]), productId: 1, model: .emptyMock)
 }

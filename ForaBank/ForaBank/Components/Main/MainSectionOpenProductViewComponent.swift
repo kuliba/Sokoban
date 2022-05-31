@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 //MARK: - ViewModel
 
@@ -15,12 +16,120 @@ extension MainSectionOpenProductView {
     class ViewModel: MainSectionCollapsableViewModel {
 
         override var type: MainSectionType { .openProduct }
-        let items: [ButtonNewProduct.ViewModel]
+        @Published var items: [ButtonNewProduct.ViewModel]
+        
+        private let displayButtonsTypes: [ProductType] = [.card, .deposit, .loan, .account]
+        
+        private let model: Model
+        private var bindings = Set<AnyCancellable>()
 
-        internal init(items: [ButtonNewProduct.ViewModel], isCollapsed: Bool) {
+        init(items: [ButtonNewProduct.ViewModel], model: Model = .emptyMock, isCollapsed: Bool) {
             
             self.items = items
+            self.model = model
             super.init(isCollapsed: isCollapsed)
+        }
+        
+        init(_ model: Model) {
+            
+            self.items = []
+            self.model = model
+            super.init(isCollapsed: false)
+            
+            self.items = createItems()
+            bind()
+        }
+        
+        func bind() {
+            
+            model.deposits
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] _ in
+                    
+                    //TODO: more elegant update required
+                    items = createItems()
+                    
+                }.store(in: &bindings)
+        }
+        
+        private func createItems() -> [ButtonNewProduct.ViewModel] {
+            
+            displayButtonsTypes.map { type in
+                
+                let icon = type.openButtonIcon
+                let title = type.openButtonTitle
+                let subTitle = description(for: type)
+                let action: () -> Void = { [weak self] in self?.action.send(MainSectionViewModelAction.OpenProduct.ButtonTapped(productType: type))}
+                
+                return ButtonNewProduct.ViewModel(icon: icon, title: title, subTitle: subTitle, action: action)
+            }
+        }
+        
+        private func description(for type: ProductType) -> String {
+            
+            switch type {
+            case .card: return "62 дня без %"
+            case .account: return "8% годовых"
+            case .deposit:
+                return depositDescription(with: model.deposits.value)
+                
+            case .loan: return "от 7% годов."
+            }
+        }
+        
+        private func depositDescription(with deposits: [DepositProductData]) -> String {
+            
+            guard let maxRate = deposits.map({ $0.generalСondition.maxRate }).max(),
+                  let maxRateString = NumberFormatter.persent.string(from: NSNumber(value: maxRate / 100)) else {
+                
+                return "..."
+            }
+            
+            return "\(maxRateString) годовых"
+        }
+    }
+}
+
+/*
+ guard let maxRate = deposits.map({ $0.generalСondition.maxRate }).max(),
+ let openDepositIndex = openProductViewModels.firstIndex(where: { $0.id == 98 }) else {
+     return
+ }
+
+ let formatter = NumberFormatter()
+ formatter.numberStyle = .percent
+ formatter.maximumFractionDigits = 1
+ 
+ guard let maxRateString = formatter.string(from: NSNumber(value: maxRate / 100)) else {
+     return
+ }
+ 
+ var openProductMutable = openProductViewModels
+ var depositProduct = openProductMutable[openDepositIndex]
+ depositProduct.description = "\(maxRateString) годовых"
+ openProductMutable[openDepositIndex] = depositProduct
+ openProductViewModels = openProductMutable
+ */
+
+extension ProductType {
+    
+    var openButtonIcon: Image {
+        
+        switch self {
+        case .card: return .ic24NewCardColor
+        case .account: return .ic24FilePluseColor
+        case .deposit: return .ic24DepositPlusColor
+        case .loan: return .ic24CreditColor
+        }
+    }
+    
+    var openButtonTitle: String {
+        
+        switch self {
+        case .card: return "Карту"
+        case .account: return "Счет"
+        case .deposit: return "Вклад"
+        case .loan: return "Кредит"
         }
     }
 }
@@ -42,6 +151,7 @@ struct MainSectionOpenProductView: View {
                     ForEach(viewModel.items) { itemViewModel in
                         
                         ButtonNewProduct(viewModel: itemViewModel)
+                            .frame(width: 112, height: 124)
                     }
                 }
                 .padding(.horizontal, 20)

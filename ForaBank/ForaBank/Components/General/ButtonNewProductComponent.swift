@@ -40,7 +40,7 @@ struct ButtonNewProduct: View {
         
         Button(action: viewModel.action) {
             
-            ZStack {
+            ZStack(alignment: .leading) {
                 
                 RoundedRectangle(cornerRadius: 12)
                     .foregroundColor(.mainColorsGrayLightest)
@@ -61,6 +61,7 @@ struct ButtonNewProduct: View {
                         Text(viewModel.subTitle)
                             .font(.textBodyMR14200())
                             .foregroundColor(.textPlaceholder)
+                            .lineLimit(1)
                     }
                 }
                 .padding(11)
@@ -77,7 +78,14 @@ struct ButtonNewProduct_Previews: PreviewProvider {
     static var previews: some View {
         
         Group {
+            
             ButtonNewProduct(viewModel: .sample)
+                .previewLayout(.fixed(width: 112, height: 124))
+            
+            ButtonNewProduct(viewModel: .sampleEmptySubtitle)
+                .previewLayout(.fixed(width: 112, height: 124))
+            
+            ButtonNewProduct(viewModel: .sampleLongSubtitle)
                 .previewLayout(.fixed(width: 112, height: 124))
         }
     }
@@ -88,4 +96,8 @@ struct ButtonNewProduct_Previews: PreviewProvider {
 extension ButtonNewProduct.ViewModel {
     
     static let sample =  ButtonNewProduct.ViewModel.init(icon: .ic24NewCardColor, title: "Карту", subTitle: "62 дня без %", action: {})
+    
+    static let sampleEmptySubtitle =  ButtonNewProduct.ViewModel.init(icon: .ic24NewCardColor, title: "Карту", subTitle: "", action: {})
+    
+    static let sampleLongSubtitle =  ButtonNewProduct.ViewModel.init(icon: .ic24NewCardColor, title: "Карту", subTitle: "13,08 % годовых", action: {})
 }

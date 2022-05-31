@@ -41,14 +41,14 @@ extension ModelAction {
             struct Request: Action {
                 
                 let source: Source
-
+                
                 enum Source {
                     
                     case service(Service)
                     case templateId(PaymentTemplateData.ID)
                 }
             }
-
+            
             enum Response: Action {
                 
                 case success(Operation)
@@ -58,14 +58,14 @@ extension ModelAction {
         
         // continue payment process
         enum Continue {
-     
+            
             struct Request: Action {
                 
                 let operation: Operation
             }
             
             struct Response: Action {
-
+                
                 let result: Result
                 
                 enum Result {
@@ -76,7 +76,7 @@ extension ModelAction {
                 }
             }
         }
-
+        
         // complete payment
         enum Complete {
             
@@ -96,7 +96,12 @@ extension ModelAction {
             
             struct Request: Action {
                 
-                let documentId: Int
+                let documentId: String
+            }
+            
+            enum Response: Action {
+                case success(details: OperationDetailData)
+                case failture
             }
         }
     }
@@ -182,9 +187,9 @@ extension Model {
         print("Payments: continue request")
         
         let operation = payload.operation
-     
+        
         parameters(for: operation.service, parameters: operation.parameters, history: operation.history) { result in
-
+            
             switch result {
             case .success(let parameters):
                 
@@ -193,7 +198,7 @@ extension Model {
                 historyUpdated.append(historyValues)
                 
                 let continueOperation = Operation(service: operation.service, parameters: parameters, history: historyUpdated)
-
+                
                 if parameters.filter({ $0 is Payments.ParameterFinal }).count > 0 {
                     
                     self.action.send(ModelAction.Payment.Continue.Response(result: .confirm(continueOperation)))
@@ -202,7 +207,7 @@ extension Model {
                     
                     self.action.send(ModelAction.Payment.Continue.Response(result: .step(continueOperation)))
                 }
-
+                
             case .failure(let error):
                 self.action.send(ModelAction.Payment.Continue.Response(result: .failure(self.paymentsAlertMessage(with: error))))
             }
@@ -222,7 +227,7 @@ extension Model {
         Task {
             
             do {
-                    
+                
                 let result = try await paymentsTransferComplete(code: codeValue)
                 let success = try Payments.Success(with: result, operation: payload.operation)
                 self.action.send(ModelAction.Payment.Complete.Response.success(success))
@@ -235,17 +240,50 @@ extension Model {
         
         //paymentsTransferComplete mock
         /*
-        DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(200)) {
-            
-            guard let amountParameter = payload.operation.parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.amount.rawValue}) as? Payments.ParameterAmount else {
-                
-                self.action.send(ModelAction.Payment.Complete.Response.failure(self.paymentsAlertMessage(with: Payments.Error.missingAmountParameter)))
-                return
-            }
-            
-            self.action.send(ModelAction.Payment.Complete.Response.success(.init(status: .complete, amount: amountParameter.amount, currency: amountParameter.currency, icon: nil, operationDetailId: 0)))
-        }
+         DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(200)) {
+         
+         guard let amountParameter = payload.operation.parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.amount.rawValue}) as? Payments.ParameterAmount else {
+         
+         self.action.send(ModelAction.Payment.Complete.Response.failure(self.paymentsAlertMessage(with: Payments.Error.missingAmountParameter)))
+         return
+         }
+         
+         self.action.send(ModelAction.Payment.Complete.Response.success(.init(status: .complete, amount: amountParameter.amount, currency: amountParameter.currency, icon: nil, operationDetailId: 0)))
+         }
          */
+    }
+    
+    func handleOperationDetailRequest(_ payload: ModelAction.Payment.OperationDetail.Request) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.PaymentOperationDetailContoller.GetOperationDetail(token: token, payload: .init(documentId: payload.documentId))
+        
+        serverAgent.executeCommand(command: command) { result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    
+                    guard let details = response.data else {
+                        self.handleServerCommandEmptyData(command: command)
+                        return
+                    }
+                    
+                    self.action.send(ModelAction.Payment.OperationDetail.Response.success(details: details))
+                    
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+                
+            case .failure(let error):
+                self.handleServerCommandError(error: error, command: command)
+            }
+        }
     }
     
     func paymentsAlertMessage(with error: Error) -> String {
@@ -264,7 +302,7 @@ extension Model {
                 
             case .unableCreateOperationForService(let service):
                 return "unableCreateOperationForService \(service.name) "
-            
+                
             case .unexpectedOperatorValue:
                 return "unexpectedOperatorValue"
                 
@@ -276,7 +314,7 @@ extension Model {
                 
             case .missingPayer:
                 return "missingPayer"
-            
+                
             case .missingCurrency:
                 return "missingCurrency"
                 
@@ -331,7 +369,7 @@ extension Model {
             
             switch result {
             case .success(let parameters):
-
+                
                 // selected operator required
                 guard parameters.contains(where: { $0.parameter.id == Parameter.Identifier.operator.rawValue}) else {
                     completion(.failure(Payments.Operation.Error.operatorNotSelectedForService(service)))
@@ -385,7 +423,7 @@ extension Model {
         case .fns:
             
             guard let anywayOperator = operators.first(where: { $0.code == service.operators.first?.rawValue })  else {
-               return nil
+                return nil
             }
             
             let title = anywayOperator.title
@@ -393,11 +431,11 @@ extension Model {
             let icon = anywayOperator.iconImageData ?? .serviceFNS
             
             return .init(service: service, title: title, description: description, icon: icon)
-
+            
         case .fms:
             
             guard let anywayOperator = operators.first(where: { $0.code == service.operators.first?.rawValue })  else {
-               return nil
+                return nil
             }
             
             let title = anywayOperator.title
@@ -405,11 +443,11 @@ extension Model {
             let icon = anywayOperator.iconImageData ?? .serviceFMS
             
             return .init(service: service, title: title, description: description, icon: icon)
-
+            
         case .fssp:
             
             guard let anywayOperator = operators.first(where: { $0.code == service.operators.first?.rawValue })  else {
-               return nil
+                return nil
             }
             
             let title = anywayOperator.title
@@ -548,8 +586,8 @@ extension Model {
     func paymentsTransferPayer(with parameters: [ParameterRepresentable], currency: Currency) -> TransferData.Payer? {
         
         if let parameterCard = parameters.first(where: { $0.parameter.id == Payments.Parameter.Identifier.card.rawValue }), let productIdValue = parameterCard.parameter.value,
-            let productId = Int(productIdValue),
-            let productType = paymentsProductType(for: productId) {
+           let productId = Int(productIdValue),
+           let productType = paymentsProductType(for: productId) {
             
             switch productType {
             case .card:
@@ -587,7 +625,7 @@ extension Model {
         
         return products.first(where: { $0.id == productId })?.productTypeEnum
     }
-        
+    
     func paymentsFirstProductId(of type: ProductType, currency: Currency) -> Int? {
         
         guard let realm = try? Realm() else {
@@ -647,8 +685,8 @@ extension Model {
             
             guard let parameter = parameters.first(where: { $0.parameter.id == paraneterId})?.parameter,
                   let parameterValue = parameter.value else {
-                      continue
-                  }
+                continue
+            }
             
             additional.append(.init(fieldid: index + 1, fieldname: parameter.id, fieldvalue: parameterValue))
         }
@@ -693,7 +731,7 @@ extension Model {
                     return parameter
                 }
             }
-     
+            
         } else {
             
             return parameters.map{ $0.updated(editable: editable) }

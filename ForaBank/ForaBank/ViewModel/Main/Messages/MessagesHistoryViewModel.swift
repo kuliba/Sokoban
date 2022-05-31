@@ -12,50 +12,53 @@ class MessagesHistoryViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
     @Published var sections: [MessagesHistorySectionView]
+    private var state: State
     private var bindings = Set<AnyCancellable>()
     private let model: Model
     
     init( model: Model) {
         self.model = model
         self.sections = []
+        self.state = .stating
         bind()
+        model.action.send(ModelAction.Notification.Fetch.New.Request())
     }
     
-    init( sections: [MessagesHistorySectionView]) {
+    init( sections: [MessagesHistorySectionView], model: Model, state: State) {
         
-        self.model = Model.emptyMock
+        self.model = model
         self.sections = sections
+        self.state = state
     }
     
     func createSections (with notifications: [NotificationData]) {
         
+        var keyArray = [Int]()
         
-        var dic: [String: [NotificationData]] = [:]
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd-MM-YYYY"
-        
-        notifications.forEach { notificationData in
-            
-            if var val = dic[formatter.string(from: notificationData.date)] {
-                val.append(notificationData)
-                dic[formatter.string(from: notificationData.date)] = val
-            } else {
-                dic[formatter.string(from: notificationData.date)] = [notificationData]
-            }
+        notifications.forEach { item in
+            guard let section = item.groupIndex else { return }
+            keyArray.append(section)
         }
         
-        print(dic)
+        let uniqueKeyArray = Array(Set(keyArray))
+        let sortedKeyArray = uniqueKeyArray.sorted(by: >)
+            
+        self.sections.removeAll()
         
-        let sections = [
-            MessagesHistorySectionView.init(viewModel: .init(section: "25 агуста, ср",
-                                                             items: [MessagesHistoryItemView.ViewModel(icon: Image("Payments List Sample"), title: "Срок вашей карты истекает 29.08.2021 г.", content: "Оставте он-лайн заявку или обратитесь в ближайшее отделение банка", time: "17:56", action: {}),
-                                                                     MessagesHistoryItemView.ViewModel(icon: Image("Payments List Sample"), title: "Отказ. Недостаточно средств.", content: "LIQPAY*IP Artur Danilo, Moscow Интернет-оплата. Карта / счет .4387 16:59", time: "17:56", action: {})
-                                                                                    ]))
-        ]
-        
-        self.sections = sections
-    }
+        sortedKeyArray.forEach { key in
+            
+            var items = notifications.filter { $0.groupIndex == key }
+            
+            items.sort{ $0.sortIndex ?? 0 > $1.sortIndex ?? 0 }
+
+            guard let section = items.map({$0.date}).first else { return }
+    
+            let messages = MessagesHistorySectionView(viewModel:
+                    .init(section: DateFormatter.historyDateFormatter.string(from:section),
+                          items: items))
+            self.sections.append(messages)
+        }
+}
     
     func bind() {
         model.notifications
@@ -65,5 +68,50 @@ class MessagesHistoryViewModel: ObservableObject {
                 createSections(with: notifications)
                 
             }.store(in: &bindings)
+        
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as ModelAction.Notification.Fetch.New.Response:
+                    state = .normal
+                case _ as ModelAction.Notification.Fetch.Next.Response:
+                    state = .normal
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+        
+        action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as MessagesHistoryViewModelAction.ScrolledToEnd:
+                    
+                    guard state == .normal else { return }
+                    state = .updating
+                    model.action.send(ModelAction.Notification.Fetch.Next.Request())
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
     }
+}
+
+extension MessagesHistoryViewModel {
+    
+    enum State {
+        case stating
+        case normal
+        case updating
+    }
+}
+
+enum MessagesHistoryViewModelAction {
+    struct ScrolledToEnd: Action {}
 }

@@ -33,8 +33,12 @@ class Model {
     //MARK: Dictionaries
     let catalogProducts: CurrentValueSubject<[CatalogProductData], Never>
     let catalogBanners: CurrentValueSubject<[BannerCatalogListData], Never>
-    let currencyList: CurrentValueSubject<[CurrencyData], Never>
+    var currencyList: [CurrencyData]
+    //TODO: remove wrapper for dicts
     let bankList: CurrentValueSubject<[BankData], Never>
+    
+    //MARK: Deposits
+    let deposits: CurrentValueSubject<[DepositProductData], Never>
     
     //MARK: Templates
     let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
@@ -103,6 +107,7 @@ class Model {
         self.catalogBanners = .init([])
         self.currencyList = .init([])
         self.bankList = .init([])
+        self.deposits = .init([])
         self.paymentTemplates = .init([])
         self.paymentTemplatesViewSettings = .init(.initial)
         self.latestPayments = .init([])
@@ -171,6 +176,7 @@ class Model {
                     action.send(ModelAction.Products.Update.Total.All())
                     action.send(ModelAction.ClientInfo.Fetch.Request())
                     action.send(ModelAction.Rates.Update.All())
+                    action.send(ModelAction.Deposits.List.Request())
                     
                 case .inactive:
                     if let pincode = try? authStoredPincode() {
@@ -245,6 +251,7 @@ class Model {
                 switch action {
                     
                     //MARK: - General
+                    
                 case let payload as ModelAction.General.DownloadImage.Request:
                     handleGeneralDownloadImageRequest(payload)
                     
@@ -311,7 +318,7 @@ class Model {
                     
                 case let payload as ModelAction.Products.UpdateCustomName.Request:
                     handleProductsUpdateCustomName(payload)
-
+                    
                 case let payload as ModelAction.Products.ActivateCard.Request:
                     handleProductsActivateCard(payload)
                     
@@ -342,13 +349,16 @@ class Model {
                 case let payload as ModelAction.Payment.Complete.Request:
                     handlePaymentsCompleteRequest(payload)
                     
+                case let payload as ModelAction.Payment.OperationDetail.Request:
+                    handleOperationDetailRequest(payload)
+                    
                     //MARK: - Client Info
                     
                 case _ as ModelAction.ClientInfo.Fetch.Request:
                     handleClientInfoFetchRequest()
                     
                     //MARK: - Settings Actions
-
+                    
                 case let payload as ModelAction.Settings.UpdateProductsHidden:
                     handleUpdateProductsHidden(payload.productID)
                     
@@ -361,7 +371,7 @@ class Model {
                     handleNotificationsFetchNextRequest()
                     
                 case let payload as ModelAction.Notification.ChangeNotificationStatus.Requested:
-                   handleNotificationsChangeNotificationStatusRequest(payload: payload)
+                    handleNotificationsChangeNotificationStatusRequest(payload: payload)
                     
                     //MARK: - LatestPayments Actions
                     
@@ -513,7 +523,7 @@ private extension Model {
         
         if let currency = localAgent.load(type: [CurrencyData].self) {
             
-            self.currencyList.value = currency
+            self.currencyList = currency
         }
         
         if let bankList = localAgent.load(type: [BankData].self) {
@@ -531,17 +541,22 @@ private extension Model {
         self.clientInfo.value = localAgent.load(type: ClientInfoData.self)
         self.clientPhoto.value = localAgent.load(type: ClientPhotoData.self)
         self.clientName.value = localAgent.load(type: ClientNameData.self)
+        
+        if let deposits = localAgent.load(type: [DepositProductData].self) {
+            
+            self.deposits.value = deposits
+        }
     }
-
+    
     func loadSettings() {
-
+        
         do {
-
+            
             let productsHidden: [ProductData.ID] = try settingsAgent.load(type: .interface(.productsHidden))
             self.productsHidden.value = productsHidden
-
+            
         } catch {
-
+            
             handleSettingsCachingError(error: error)
         }
     }
@@ -573,6 +588,15 @@ private extension Model {
         } catch {
             
             print("Model: clearCachedData: ClientInfoData error: \(error.localizedDescription)")
+        }
+        
+        do {
+            
+            try localAgent.clear(type: [DepositProductData].self)
+            
+        } catch {
+            
+            print("Model: clearCachedData: DepositProductData error: \(error.localizedDescription)")
         }
         
         do {
