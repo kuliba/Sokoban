@@ -237,6 +237,7 @@
 		0BF816FC27E122AF00AC890D /* EPContactSelfDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF816FB27E122AF00AC890D /* EPContactSelfDataView.swift */; };
 		0C4245782846200600899EB2 /* PaymentPhoneData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4245772846200600899EB2 /* PaymentPhoneData.swift */; };
 		0C42457A2846C79E00899EB2 /* ContactsAgentMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4245792846C79E00899EB2 /* ContactsAgentMock.swift */; };
+		0C42457C2846D51700899EB2 /* Model+Contacts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C42457B2846D51700899EB2 /* Model+Contacts.swift */; };
 		0C6508CF28299C6D0058916A /* PaymentsTransfersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6508CE28299C6D0058916A /* PaymentsTransfersView.swift */; };
 		0C6508D228299DAF0058916A /* PaymentsTransfersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6508D128299DAF0058916A /* PaymentsTransfersViewModel.swift */; };
 		0C8CF960282179E80047DDAE /* SendMailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C8CF95F282179E80047DDAE /* SendMailView.swift */; };
@@ -1410,6 +1411,7 @@
 		0BF816FB27E122AF00AC890D /* EPContactSelfDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPContactSelfDataView.swift; sourceTree = "<group>"; };
 		0C4245772846200600899EB2 /* PaymentPhoneData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentPhoneData.swift; sourceTree = "<group>"; };
 		0C4245792846C79E00899EB2 /* ContactsAgentMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsAgentMock.swift; sourceTree = "<group>"; };
+		0C42457B2846D51700899EB2 /* Model+Contacts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Contacts.swift"; sourceTree = "<group>"; };
 		0C6508CE28299C6D0058916A /* PaymentsTransfersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersView.swift; sourceTree = "<group>"; };
 		0C6508D128299DAF0058916A /* PaymentsTransfersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersViewModel.swift; sourceTree = "<group>"; };
 		0C8CF95F282179E80047DDAE /* SendMailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendMailView.swift; sourceTree = "<group>"; };
@@ -4151,6 +4153,7 @@
 				77A411E827EC456800D36E46 /* Model+Settings.swift */,
 				77333DA2283F75EF00C3036F /* Model+ClientInfo.swift */,
 				0BCFBE002812DD17003F2F36 /* Model+Notifications.swift */,
+				0C42457B2846D51700899EB2 /* Model+Contacts.swift */,
 				77A411EA27EC624000D36E46 /* Model+Deposits.swift */,
 				68A07C4028122FDC00797A54 /* Model+Card.swift */,
 				77F5CE1028056EF600611B66 /* Model+Location.swift */,
@@ -7229,6 +7232,7 @@
 				6833E0CC273920CE004C070F /* CodeVerificationCoordinator.swift in Sources */,
 				77A76A9427FB69D200A271B3 /* AtmCollectionViewCell.swift in Sources */,
 				0BB015DA26C9378200E7A85B /* GKHOperatorsModel.swift in Sources */,
+				0C42457C2846D51700899EB2 /* Model+Contacts.swift in Sources */,
 				EDFFCAFD2683C18B004EE095 /* ContactInputViewController API.swift in Sources */,
 				776C846D27DF1D4300F8F7E1 /* PaymentsViewModel.swift in Sources */,
 				EDB1451E26652F170028EF5A /* UIView.swift in Sources */,

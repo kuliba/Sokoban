@@ -476,6 +476,11 @@ class Model {
                 case _ as ModelAction.Location.Updates.Stop:
                     handleLocationUpdateStop()
                     
+                    //MARK: - ContactsAgent Actions
+                    
+                case _ as ModelAction.Contacts.PermissionStatus.Request:
+                    handleContactsPermissionStatusRequest()
+                    
                 default:
                     break
                 }

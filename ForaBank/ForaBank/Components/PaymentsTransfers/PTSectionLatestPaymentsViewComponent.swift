@@ -61,7 +61,8 @@ extension PTSectionLatestPaymentsView {
                         self.latestPaymentsButtons = Self.templateButtonData
                         
                         guard !latestPayments.isEmpty else { return }
-                        self.model.contactsAgent.requestPermission()
+                        
+                        self.model.action.send(ModelAction.Contacts.PermissionStatus.Request())
                         latestPayments.forEach {
                             self.latestPaymentsButtons.append(.init(data: $0, model: self.model))
                         }
