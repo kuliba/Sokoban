@@ -15,8 +15,7 @@ extension PTSectionLatestPaymentsView.ViewModel {
         
         let latestPaymentsButtons: [LatestPaymentButtonVM] =
             
-            ViewModel.templateButtonData + [
-            
+        [
             .init(image: .image(Image("contactPlaceholder")),
                   topIcon: Image("beline"),
                   description: "Любимая Diamond",
@@ -39,7 +38,10 @@ extension PTSectionLatestPaymentsView.ViewModel {
                   action: {})
         ]
         
-        return .init(latestPaymentsButtons: latestPaymentsButtons, model: .emptyMock)
+        let latestPaymentsVM = ViewModel(latestPaymentsButtons: latestPaymentsButtons, model: .emptyMock)
+        latestPaymentsVM.latestPaymentsButtons = latestPaymentsVM.templateButton
+                                               + latestPaymentsVM.latestPaymentsButtons
+        return latestPaymentsVM
         
     }()
 }

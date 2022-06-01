@@ -30,7 +30,7 @@ class ContactsAgent: ContactsAgentProtocol {
         }
     }
     
-    func fetchContact(by phoneNumber: String) -> AdressBookContact? {
+    func fetchContact(by phoneNumber: String) -> AddressBookContact? {
         
         let clearNumber = CNPhoneNumber(stringValue: "+" + phoneNumber
             .components(separatedBy: CharacterSet.decimalDigits.inverted)
@@ -54,7 +54,7 @@ class ContactsAgent: ContactsAgentProtocol {
                   imageData = ImageData(data: data)
               }
               
-              return AdressBookContact(phone: phoneNumber,
+              return AddressBookContact(phone: phoneNumber,
                                        firstName: contact.givenName,
                                        middleName: contact.middleName,
                                        lastName: contact.familyName,

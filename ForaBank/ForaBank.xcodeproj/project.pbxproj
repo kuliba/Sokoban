@@ -241,7 +241,7 @@
 		0C6508CF28299C6D0058916A /* PaymentsTransfersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6508CE28299C6D0058916A /* PaymentsTransfersView.swift */; };
 		0C6508D228299DAF0058916A /* PaymentsTransfersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6508D128299DAF0058916A /* PaymentsTransfersViewModel.swift */; };
 		0C8CF960282179E80047DDAE /* SendMailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C8CF95F282179E80047DDAE /* SendMailView.swift */; };
-		0CA1CDE12840720200021671 /* AdressBookContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA1CDE02840720200021671 /* AdressBookContact.swift */; };
+		0CA1CDE12840720200021671 /* AddressBookContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA1CDE02840720200021671 /* AddressBookContact.swift */; };
 		0CA1CDE32840725600021671 /* ContactsAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA1CDE22840725600021671 /* ContactsAgent.swift */; };
 		0CA1CDE52840726F00021671 /* ContactsAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA1CDE42840726F00021671 /* ContactsAgentProtocol.swift */; };
 		0CA1CDE9284551A000021671 /* PaymentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA1CDE8284551A000021671 /* PaymentData.swift */; };
@@ -1415,7 +1415,7 @@
 		0C6508CE28299C6D0058916A /* PaymentsTransfersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersView.swift; sourceTree = "<group>"; };
 		0C6508D128299DAF0058916A /* PaymentsTransfersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersViewModel.swift; sourceTree = "<group>"; };
 		0C8CF95F282179E80047DDAE /* SendMailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendMailView.swift; sourceTree = "<group>"; };
-		0CA1CDE02840720200021671 /* AdressBookContact.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdressBookContact.swift; sourceTree = "<group>"; };
+		0CA1CDE02840720200021671 /* AddressBookContact.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressBookContact.swift; sourceTree = "<group>"; };
 		0CA1CDE22840725600021671 /* ContactsAgent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsAgent.swift; sourceTree = "<group>"; };
 		0CA1CDE42840726F00021671 /* ContactsAgentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsAgentProtocol.swift; sourceTree = "<group>"; };
 		0CA1CDE8284551A000021671 /* PaymentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentData.swift; sourceTree = "<group>"; };
@@ -4256,7 +4256,7 @@
 		77E1805027AC6B790006ACC9 /* General */ = {
 			isa = PBXGroup;
 			children = (
-				0CA1CDE02840720200021671 /* AdressBookContact.swift */,
+				0CA1CDE02840720200021671 /* AddressBookContact.swift */,
 				77DC12702771080400C917B0 /* EmptyData.swift */,
 				77517FCD27A97913005CFB77 /* ColorData.swift */,
 				77DC12642770F08300C917B0 /* SVGImageData.swift */,
@@ -6885,7 +6885,7 @@
 				6820928727AB0EC3003DCAFD /* MosParkingData.swift in Sources */,
 				687FB23026E8D41A004A479F /* OfferCard.swift in Sources */,
 				EDFFCAF0268245EC004EE095 /* CardViewModel.swift in Sources */,
-				0CA1CDE12840720200021671 /* AdressBookContact.swift in Sources */,
+				0CA1CDE12840720200021671 /* AddressBookContact.swift in Sources */,
 				77C3829827E1FEAD00B5246E /* PaymentsProductSelectorViewComponent+Legacy.swift in Sources */,
 				7758400D27B1442F00251969 /* Model+Payments.swift in Sources */,
 				0BB24A9726EFE66900DDA4F6 /* GetPaymentCountriesList.swift in Sources */,

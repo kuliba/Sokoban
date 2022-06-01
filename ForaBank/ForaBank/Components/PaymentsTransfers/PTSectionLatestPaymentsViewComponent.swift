@@ -14,6 +14,8 @@ extension PTSectionLatestPaymentsView {
     
     class ViewModel: PaymentsTransfersSectionViewModel {
      
+        let action: PassthroughSubject<Action, Never> = .init()
+        
         @Published
         var latestPaymentsButtons: [LatestPaymentButtonVM]
         
@@ -38,7 +40,7 @@ extension PTSectionLatestPaymentsView {
         }
         
         init(model: Model) {
-            self.latestPaymentsButtons = Self.templateButtonData
+            self.latestPaymentsButtons = []
             self.model = model
             super.init()
             bind()
@@ -58,27 +60,50 @@ extension PTSectionLatestPaymentsView {
                     
                     withAnimation {
                         
-                        self.latestPaymentsButtons = Self.templateButtonData
+                        self.latestPaymentsButtons = self.templateButton
                         
                         guard !latestPayments.isEmpty else { return }
                         
                         self.model.action.send(ModelAction.Contacts.PermissionStatus.Request())
-                        latestPayments.forEach {
-                            self.latestPaymentsButtons.append(.init(data: $0, model: self.model))
+                        for item in latestPayments {
+                            
+                            latestPaymentsButtons
+                                .append(.init(data: item,
+                                              model: self.model,
+                                              action: { [weak self] in
+                                                        self?.action.send(PTSectionLatestPaymentsViewAction
+                                                                         .ButtonTapped
+                                                                         .LatestPayment(latestPayment: item)) } ))
                         }
                     }
-        
                 }.store(in: &bindings)
         }
         
-        static let templateButtonData: [LatestPaymentButtonVM] = {
+        lazy var templateButton: [LatestPaymentButtonVM] = {
             [
                 .init(image: .icon(Image("ic24Star"), .iconBlack),
-                    topIcon: nil,
-                    description: "Шаблоны и автоплатежи",
-                    action: {})
+                      topIcon: nil,
+                      description: "Шаблоны и автоплатежи",
+                      action: { [weak self] in
+                          self?.action.send(PTSectionLatestPaymentsViewAction.ButtonTapped.Templates())
+                      })
             ]
         }()
+    }
+}
+
+//MARK: - Action PTSectionLatestPaymentsViewAction
+
+enum PTSectionLatestPaymentsViewAction {
+
+    enum ButtonTapped {
+
+        struct Templates: Action {}
+
+        struct LatestPayment: Action {
+
+            let latestPayment: LatestPaymentData
+        }
     }
 }
 
@@ -199,12 +224,11 @@ extension LatestPaymentData.Kind {
 
 extension PTSectionLatestPaymentsView.ViewModel.LatestPaymentButtonVM {
 
-    init(data: LatestPaymentData, model: Model) {
+    init(data: LatestPaymentData, model: Model, action: @escaping () -> Void) {
         
         var image = data.type.defaultButton.image
         var topIcon = data.type.defaultButton.topIcon
         var text = data.type.defaultButton.description
-        var action = data.type.defaultButton.action
         
         switch data.type {
         case .phone:
@@ -217,9 +241,9 @@ extension PTSectionLatestPaymentsView.ViewModel.LatestPaymentButtonVM {
                 topIcon = bank.svgImage.image
             }
             
-            var contact: AdressBookContact?
+            var contact: AddressBookContact?
             if case .available = model.contactsAgent.status.value {
-                contact = model.contactsAgent.fetchContact(by: paymentData.phoneNumber)
+                contact = model.contact(for: paymentData.phoneNumber)
                 
                 if let contact = contact {
                     if let fullName = contact.fullName {
@@ -254,7 +278,6 @@ extension PTSectionLatestPaymentsView.ViewModel.LatestPaymentButtonVM {
             guard let paymentData = data as? PaymentServiceData else { break }
             
             text = String(paymentData.puref)
-            image = .image(Image("ic24Smartphone"))
             
             if let oper = model.dictionaryAnywayOperator(for: paymentData.puref) {
                 

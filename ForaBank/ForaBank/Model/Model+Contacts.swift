@@ -27,7 +27,12 @@ extension Model {
     
     func handleContactsPermissionStatusRequest() {
             
-            contactsAgent.requestPermission()
+        contactsAgent.requestPermission()
     }
    
+    func contact(for phoneNumber: String) -> AddressBookContact? {
+        
+        contactsAgent.fetchContact(by: phoneNumber)
+        
+    }
 }

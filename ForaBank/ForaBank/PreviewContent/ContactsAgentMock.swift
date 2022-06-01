@@ -12,7 +12,7 @@ class ContactsAgentMock: ContactsAgentProtocol {
     
     var status: CurrentValueSubject<ContactsAgentStatus, Never> = .init(.disabled)
     
-    func fetchContact(by phoneNumber: String) -> AdressBookContact? {
+    func fetchContact(by phoneNumber: String) -> AddressBookContact? {
         return nil
     }
     
