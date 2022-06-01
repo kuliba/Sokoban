@@ -17,46 +17,92 @@ class PushHistoryViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
-    lazy var realm = try? Realm()
-    var token: NotificationToken?
-    var tempArray: Results <GetNotificationsModel>?
+    var currentPage = 0
+    var isLoadingList = false
     
+    var tempArray = [PushHistoryModel]()
+    var offset = UserDefaults.standard.object(forKey: "offset") as? String ?? ""
     var offsetNumber = 0
     override func viewDidLoad() {
         super.viewDidLoad()
-        tempArray = realm?.objects(GetNotificationsModel.self)
+        self.currentPage = Int(self.offset) ?? 0
+        self.offsetNumber = Int(self.offset) ?? 0
+        readCash()
+        downloadPushArray()
         setupNavBar()
-        
     }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        downloadPushArray()
+        
     }
+   
+    func loadMoreItemsForList() {
+           currentPage += 1
+           downloadPushArray()
+       }
     
     // MARK: Загрузка истории пушей
     /// Отправляем запрос на сервер, для получения истории пушей
     func downloadPushArray() {
+        self.isLoadingList = true
+        showActivity()
         let tempOffset = String(offsetNumber)
+        print("tempOffset :", offsetNumber)
         let body = ["offset": tempOffset,
-                    "limit" : "15",
-                    "notificationType" : "PUSH",
-                   // "notificationState" : "[SENT,DELIVERED,READ]" //,DELIVERED,READ
-        ]
+                    "limit": "10",
+                    "notificationType": "PUSH"
+                     ]
         
         let query = [URLQueryItem(name: "notificationState", value: "SENT"),
                      URLQueryItem(name: "notificationState", value: "DELIVERED"),
-                     URLQueryItem(name: "notificationState", value: "READ")]
+                     URLQueryItem(name: "notificationState", value: "READ"),
+                     ]
         
-        GetNotificationsModelSaved.add(body, [:], query) {
-            DispatchQueue.main.async {
-                self.tableView?.reloadData()
+        GetNotificationsModelSaved.add(body, [:], query) { [weak self] error in
+            self?.dismissActivity()
+            if (error != nil && error != "not update") {
+                self?.showAlert(with: "Ошибка", and: error ?? "")
+                return
             }
+            
+            if error == "not update" {
+                return
+            }
+            
+            DispatchQueue.main.async {
+                var model = PushHistoryViewModel()
+                model.addSections { sections in
+                    self?.tempArray = sections
+                }
+                self?.tableView?.reloadData()
+                self?.isLoadingList = false
+                self?.offsetNumber += 10
+                UserDefaults.standard.setValue(String(self?.offsetNumber ?? 0), forKey: "offset")
+            }
+           print("tempOffset2 :", self?.tempArray.count ?? 0 )
         }
     }
     
+    
+    func readCash() {
+        DispatchQueue.main.async {
+            var model = PushHistoryViewModel()
+            model.addSections { sections in
+                self.tempArray = sections
+            }
+            self.tableView?.reloadData()
+        }
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+            if (((scrollView.contentOffset.y + scrollView.frame.size.height) > scrollView.contentSize.height ) && !isLoadingList){
+                self.loadMoreItemsForList()
+            }
+        }
+    
     deinit {
-        clearPushRealmData()
+//        clearPushRealmData()
     }
     
 }

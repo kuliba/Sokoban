@@ -10,24 +10,23 @@ import RealmSwift
 
 struct GetNotificationsModelSaved {
     
-    static func add(_ param: [String : String], _ body: [String: AnyObject], _ query: [URLQueryItem], completion: @escaping () -> Void) {
+    static func add(_ param: [String : String], _ body: [String: AnyObject], _ query: [URLQueryItem], completion: @escaping (String?) -> Void) {
         
         NetworkManager<GetNotificationsDecodableModel>.addRequest(.getNotifications, param, body, query) { model, error in
             
             if error != nil {
-                completion()
+                completion(error)
                 return
             }
             
             guard let model = model, let notificationsData = model.data else {
-                completion()
+                completion(nil)
                 return
             }
-            
-            
+            guard !(model.data?.isEmpty ?? true) else { return completion("not update") }
             
             let a = notificationsData.map{ $0.date?.components(separatedBy: " ").first ?? "" }.uniqued()
-            guard a.count != 0 else { return completion() }
+            guard a.count != 0 else { return completion(nil) }
             let updatedNotifications = notificationsData.map{ GetNotificationsCellModel(with: $0) }
             
             var resultArray = [GetNotificationsModel]()
@@ -63,12 +62,12 @@ struct GetNotificationsModelSaved {
                     print("REALM", realm.configuration.fileURL?.absoluteString ?? "" )
                 }
                 
-                completion()
+                completion(nil)
                 
             } catch {
                 
                 print(error.localizedDescription)
-                completion()
+                completion(nil)
             }
         }
     }

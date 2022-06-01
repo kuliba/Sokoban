@@ -198,6 +198,8 @@
 		0BD2177926A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */; };
 		0BD7879F27B9A6F30073DA1A /* PaymentsCardViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD7879E27B9A6F30073DA1A /* PaymentsCardViewComponent.swift */; };
 		0BD787A127B9AF290073DA1A /* PaymentsAmountViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD787A027B9AF290073DA1A /* PaymentsAmountViewComponent.swift */; };
+		0BD8ED212846C9F10052214F /* PushHistoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD8ED202846C9F10052214F /* PushHistoryModel.swift */; };
+		0BD8ED232846CB3D0052214F /* PushHistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD8ED222846CB3D0052214F /* PushHistoryViewModel.swift */; };
 		0BDCF0082749A56300AAA1C3 /* ExtensionGKHInputRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDCF0072749A56300AAA1C3 /* ExtensionGKHInputRequest.swift */; };
 		0BDCF00A2749A5A900AAA1C3 /* GKHInputModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDCF0092749A5A900AAA1C3 /* GKHInputModel.swift */; };
 		0BDCF00D274A8B0F00AAA1C3 /* IsSingleServiceDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDCF00C274A8B0F00AAA1C3 /* IsSingleServiceDecodableModel.swift */; };
@@ -1375,6 +1377,8 @@
 		0BD2177826A9ABCA0016D51C /* GetAnywayOperatorsListDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAnywayOperatorsListDecodableModel.swift; sourceTree = "<group>"; };
 		0BD7879E27B9A6F30073DA1A /* PaymentsCardViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsCardViewComponent.swift; sourceTree = "<group>"; };
 		0BD787A027B9AF290073DA1A /* PaymentsAmountViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsAmountViewComponent.swift; sourceTree = "<group>"; };
+		0BD8ED202846C9F10052214F /* PushHistoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushHistoryModel.swift; sourceTree = "<group>"; };
+		0BD8ED222846CB3D0052214F /* PushHistoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushHistoryViewModel.swift; sourceTree = "<group>"; };
 		0BDCF0072749A56300AAA1C3 /* ExtensionGKHInputRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionGKHInputRequest.swift; sourceTree = "<group>"; };
 		0BDCF0092749A5A900AAA1C3 /* GKHInputModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GKHInputModel.swift; sourceTree = "<group>"; };
 		0BDCF00C274A8B0F00AAA1C3 /* IsSingleServiceDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsSingleServiceDecodableModel.swift; sourceTree = "<group>"; };
@@ -2646,6 +2650,8 @@
 				0BAD4D3A274417E700FDF9B6 /*  ExtensionPushHistoryNav.swift */,
 				0B8C1C63273DD21300BA5CAC /* ExtensionPushHistoryViewController.swift */,
 				0B8C1C61273DD0DF00BA5CAC /* PushHistoryCell.swift */,
+				0BD8ED202846C9F10052214F /* PushHistoryModel.swift */,
+				0BD8ED222846CB3D0052214F /* PushHistoryViewModel.swift */,
 			);
 			path = PushHistoryController;
 			sourceTree = "<group>";
@@ -7144,6 +7150,7 @@
 				77517FE227A98CC3005CFB77 /* UserSettingData.swift in Sources */,
 				68E6A29726A033F200A1D9A1 /* GetProductTemplateListDecodableModel.swift in Sources */,
 				EDA0DCC22739523F0013F47E /* AccountDetailsViewController.swift in Sources */,
+				0BD8ED232846CB3D0052214F /* PushHistoryViewModel.swift in Sources */,
 				0BAD466E27E7C04700569FE6 /* QRSearchDataViewController.swift in Sources */,
 				EDDFE3B52756D54800F57C71 /* CalculatorDepositCollectionViewCell.swift in Sources */,
 				0B283FB826FB7DD300B5E925 /* ExtensionMobilePayNav.swift in Sources */,
@@ -7271,6 +7278,7 @@
 				77FF66CD27B42DD5009FEA09 /* Model+PaymentsTaxesFMS.swift in Sources */,
 				688B9BA526DD0DC600407A75 /* ProductTableViewCell.swift in Sources */,
 				503F073D28252CBA00E84A77 /* DepositCalculateAmountViewModel.swift in Sources */,
+				0BD8ED212846C9F10052214F /* PushHistoryModel.swift in Sources */,
 				0B2B29212808BD79001C6380 /* DocumentCollectionViewController.swift in Sources */,
 				EDB1452226661C3F0028EF5A /* MaskedTextField.swift in Sources */,
 				ED4FC5EF266B70A00092B4AB /* PartialTransparentView.swift in Sources */,
