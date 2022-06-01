@@ -25,6 +25,10 @@ extension ModelAction {
 
 extension Model {
     
+    var contactsPermissionStatus: ContactsAgentStatus {
+        contactsAgent.status.value
+    }
+    
     func handleContactsPermissionStatusRequest() {
             
         contactsAgent.requestPermission()

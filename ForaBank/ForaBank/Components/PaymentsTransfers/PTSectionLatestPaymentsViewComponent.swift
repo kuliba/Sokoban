@@ -230,6 +230,91 @@ extension PTSectionLatestPaymentsView.ViewModel.LatestPaymentButtonVM {
         var topIcon = data.type.defaultButton.topIcon
         var text = data.type.defaultButton.description
         
+        // for Maxim *****************************************
+        switch data {
+        
+        case let paymentData as PaymentGeneralData:
+            
+            switch paymentData.type {
+            case .phone:
+                print("ok matching type. handler .phone type")
+                //code handler
+            default:
+                print("error matching typeOperation and PaymentGeneralData")
+                break
+            }
+
+        case let paymentData as PaymentCountryData:
+            
+            switch paymentData.type {
+            case .country:
+                print("ok matching type. handler .country type ")
+                //code handler
+            default:
+                print("error matching typeOperation and PaymentCountryData")
+                break
+            }
+            
+        case let paymentData as PaymentServiceData:
+            
+            switch paymentData.type {
+            case .service:
+                print("ok matching type. handler .service type ")
+                //code handler
+            case .internet:
+                print("ok matching type. handler .internet type ")
+                //code handler
+            case .transport:
+                print("ok matching type. handler .transport type ")
+                //code handler
+            case .mobile:
+                print("ok matching type. handler .mobile type ")
+                //code handler
+           
+                // + others type of operations
+            default:
+                print("error matching typeOperation and PaymentServiceData")
+                break
+            }
+                
+        default: break
+        // картинки по умолчанию
+        //init on top main switch
+        }
+
+        ///*************************************************************
+        
+        
+        // this is my solution
+        
+        switch data.type {
+        case .phone:
+            guard let paymentData = data as? PaymentGeneralData else { break }
+            print("ok matching type. handler .phone type")
+            //code handler
+            
+        case .country:
+            guard let paymentData = data as? PaymentCountryData else { break }
+            print("ok matching type. handler .country type ")
+            //code handler
+            
+        case .service:
+            guard let paymentData = data as? PaymentServiceData else { break }
+            print("ok matching type. handler .service type ")
+            //code handler
+          
+        case .transport, .internet, .mobile, .taxAndStateService:
+            guard let paymentData = data as? PaymentServiceData else { break }
+            print("ok matching type. handler others .service type ")
+            //code handler
+        }
+        //**********************************************************
+        
+        
+        
+        
+        
+        
         switch data.type {
         case .phone:
             guard let paymentData = data as? PaymentGeneralData else { break }
@@ -242,7 +327,7 @@ extension PTSectionLatestPaymentsView.ViewModel.LatestPaymentButtonVM {
             }
             
             var contact: AddressBookContact?
-            if case .available = model.contactsAgent.status.value {
+            if case .available = model.contactsPermissionStatus {
                 contact = model.contact(for: paymentData.phoneNumber)
                 
                 if let contact = contact {
