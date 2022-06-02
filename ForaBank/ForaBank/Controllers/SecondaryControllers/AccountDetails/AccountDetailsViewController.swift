@@ -6,9 +6,10 @@
 //
 
 import UIKit
+import SwiftUI
 
 class AccountDetailsViewController: UIViewController {
-
+    
     let cellReuse = "PayTableViewCell"
     var productType: String?
     var tableView = UITableView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
@@ -22,7 +23,7 @@ class AccountDetailsViewController: UIViewController {
         
         view.backgroundColor = .white
         setupTableView()
-
+        
     }
     
     private func setupTableView() {
@@ -52,16 +53,16 @@ class AccountDetailsViewController: UIViewController {
             
         case ProductType.account.rawValue:
             body = ["accountId": product?.id] as [String : AnyObject]
-
+            
         case ProductType.deposit.rawValue:
             body = ["depositId": product?.id] as [String : AnyObject]
-
+            
         case ProductType.loan.rawValue:
             body = ["accountId": product?.settlementAccountId] as [String : AnyObject]
-
+            
         default:
             body = ["cardId": product?.cardID] as [String : AnyObject]
-
+            
         }
         
         NetworkManager<GetProductDetailsDecodableModel>.addRequest(.getProductDetails, [:], body) { model, error in
@@ -99,31 +100,31 @@ class AccountDetailsViewController: UIViewController {
                         let topvc = UIApplication.topViewController()
                         topvc?.present(navController, animated: true)
                     }
-//                    self.present(navController, animated: true, completion: nil)
+                    //                    self.present(navController, animated: true, completion: nil)
                 }
                 
             } else {
                 self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
-
+                
             }
         }
         
-
+        
     }
     func longIntToDateString(longInt: Int) -> String?{
         let date = Date(timeIntervalSince1970: TimeInterval(longInt/1000))
-            let dateFormatter = DateFormatter()
-            dateFormatter.timeStyle = DateFormatter.Style.none//Set time style
-            dateFormatter.dateStyle = DateFormatter.Style.long //Set date style
-            
-            dateFormatter.dateFormat =  "d MMMM yyyy"
-            dateFormatter.timeZone = .current
-            dateFormatter.locale = Locale(identifier: "ru_RU")
-            var localDate = dateFormatter.string(from: date)
-            print(localDate)
-            if localDate == "1 января 1970"{
-                localDate = "-"
-            }
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeStyle = DateFormatter.Style.none//Set time style
+        dateFormatter.dateStyle = DateFormatter.Style.long //Set date style
+        
+        dateFormatter.dateFormat =  "d MMMM yyyy"
+        dateFormatter.timeZone = .current
+        dateFormatter.locale = Locale(identifier: "ru_RU")
+        var localDate = dateFormatter.string(from: date)
+        print(localDate)
+        if localDate == "1 января 1970"{
+            localDate = "-"
+        }
         
         return localDate
     }
@@ -131,8 +132,8 @@ class AccountDetailsViewController: UIViewController {
     func presentToDepositInfo(product: UserAllCardsModel?){
         showActivity()
         let bodyForInfo = ["id": product?.id] as [String : AnyObject]
-
-    
+        
+        
         NetworkManager<DepositInfoGetDepositInfoDecodebleModel>.addRequest(.getDepositInfo, [:], bodyForInfo) { model, error in
             self.dismissActivity()
             if error != nil {
@@ -154,7 +155,7 @@ class AccountDetailsViewController: UIViewController {
                     self.mockItemsDeposit[7].description = model.data?.sumCredit?.currencyFormatter(symbol:  product?.currency ?? "RUB")
                     self.mockItemsDeposit[8].description = model.data?.sumDebit?.currencyFormatter(symbol:  product?.currency ?? "RUB")
                     self.mockItemsDeposit[9].description = model.data?.sumAccInt?.currencyFormatter(symbol:  product?.currency ?? "RUB")
-
+                    
                     let newArray = self.mockItemsDeposit.filter { $0.description != "" || $0.description != "0.0"}
                     viewController.addCloseButton()
                     viewController.addCloseButton_3()
@@ -171,6 +172,7 @@ class AccountDetailsViewController: UIViewController {
                 
             } else {
                 self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+                
             }
         }
     }
@@ -224,7 +226,7 @@ extension AccountDetailsViewController: UITableViewDataSource {
                     cell.imageButton.image = UIImage(named: "scheduleButton")
                     cell.alpha = 0.3
                     cell.isUserInteractionEnabled = false
-
+                    
                 case 5:
                     cell.titleLabel.text = "Условия по вкладу"
                     cell.imageButton.image = UIImage(named: "conditionButton")
@@ -237,10 +239,30 @@ extension AccountDetailsViewController: UITableViewDataSource {
                 cell.imageButton.tintColor = #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1)
                 cell.selectionStyle = .none
             } else  if product?.productType == "DEPOSIT", openControlButtons == true {
+                
                 switch indexPath.row {
                 case 0:
                     cell.titleLabel.text = "Закрыть вклад"
                     cell.imageButton.image = UIImage(named: "closeDeposit")
+                    
+                    if let closeDate = product?.endDate {
+                        
+                        let endDate = Date(timeIntervalSince1970: TimeInterval((closeDate) / 1000))
+                        if endDate <= Date(), closeDate != 0  {
+                            
+                            cell.alpha = 0.4
+                            cell.imageButton.alpha = 0.4
+                            cell.titleLabel.alpha = 0.4
+                            cell.isUserInteractionEnabled = false
+                            
+                        } else {
+                            
+                            cell.alpha = 1
+                            cell.imageButton.alpha = 1
+                            cell.titleLabel.alpha = 1
+                            cell.isUserInteractionEnabled = true
+                        }
+                    }
                 case 1:
                     cell.titleLabel.text = "Скрыть с главной"
                     cell.imageButton.image = UIImage(named: "hideDeposit")
@@ -279,9 +301,9 @@ extension AccountDetailsViewController: UITableViewDataSource {
                 cell.imageButton.image = UIImage(named: "otherAccountButton")
             }
         }
-          
-            cell.imageButton.tintColor = #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1)
-            cell.selectionStyle = .none
+        
+        cell.imageButton.tintColor = #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1)
+        cell.selectionStyle = .none
         return cell
     }
     
@@ -290,37 +312,75 @@ extension AccountDetailsViewController: UITableViewDataSource {
 extension AccountDetailsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch indexPath.row {
-        case 0:
-            presentRequisitsVc(product: product)
-        case 1:
-            let controller = AccountStatementController()
-            controller.modalPresentationStyle = .fullScreen
-            controller.startProduct = product
-            let navController = UINavigationController(rootViewController: controller)
-            navController.modalPresentationStyle = .fullScreen
-            self.dismiss(animated: true) {
-                let topvc = UIApplication.topViewController()
-                topvc?.present(navController, animated: true)
+        
+        if product?.productType == "DEPOSIT", openControlButtons == true {
+            switch indexPath.row {
+            case 0:
+                if let closeDate = product?.endDate {
+                    
+                    let endDate = Date(timeIntervalSince1970: TimeInterval((closeDate) / 1000))
+                    if endDate <= Date(), closeDate != 0  {
+                        
+                    } else {
+                        
+                        let alertController = UIAlertController(title: "Закрыть вклад", message: "Срок вашего вклада еще не истек. Для досрочного закрытия обратитесь в ближайший офис", preferredStyle: .alert)
+                        
+                        let office = UIAlertAction(title: "Наши офисы", style: .default) { (action) in
+                            guard let placesViewModel = PlacesViewModel(Model.shared) else {
+                                return
+                            }
+                            let placesHoustingController = UIHostingController(rootView: PlacesView(viewModel: placesViewModel))
+                            self.present(placesHoustingController, animated: true)
+                        }
+                        
+                        let cancelAction = UIAlertAction(title: "Ок", style: .default) { (action) in
+                            
+                        }
+                        
+                        alertController.addAction(office)
+                        alertController.addAction(cancelAction)
+                        present(alertController, animated: true, completion: nil)
+                    }
+                }
+            default:
+                self.dismiss(animated: true, completion: nil)
             }
-        case 5:
-            let pdfViewerVC = PDFViewerViewController()
-            pdfViewerVC.modalPresentationStyle = .fullScreen
-            pdfViewerVC.id = product?.id
-            pdfViewerVC.printFormType = "depositConditions"
-            let navController = UINavigationController(rootViewController: pdfViewerVC)
-            navController.modalPresentationStyle = .fullScreen
-            self.dismiss(animated: true) {
-                let topvc = UIApplication.topViewController()
-                topvc?.present(navController, animated: true)
+            
+        } else {
+            switch indexPath.row {
+            case 0:
+                presentRequisitsVc(product: product)
+            case 1:
+                let controller = AccountStatementController()
+                controller.modalPresentationStyle = .fullScreen
+                controller.startProduct = product
+                let navController = UINavigationController(rootViewController: controller)
+                navController.modalPresentationStyle = .fullScreen
+                self.dismiss(animated: true) {
+                    let topvc = UIApplication.topViewController()
+                    topvc?.present(navController, animated: true)
+                }
+            case 2:
+                presentToDepositInfo(product: product)
+            case 5:
+                let pdfViewerVC = PDFViewerViewController()
+                pdfViewerVC.modalPresentationStyle = .fullScreen
+                pdfViewerVC.id = product?.id
+                pdfViewerVC.printFormType = "depositConditions"
+                let navController = UINavigationController(rootViewController: pdfViewerVC)
+                navController.modalPresentationStyle = .fullScreen
+                self.dismiss(animated: true) {
+                    let topvc = UIApplication.topViewController()
+                    topvc?.present(navController, animated: true)
+                }
+            default:
+                self.dismiss(animated: true, completion: nil)
             }
-        default:
-            self.dismiss(animated: true, completion: nil)
         }
     }
 }
 
-    
+
 extension AccountDetailsViewController: UIViewControllerTransitioningDelegate {
     
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {

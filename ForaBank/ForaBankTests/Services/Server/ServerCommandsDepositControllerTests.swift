@@ -301,6 +301,46 @@ class ServerCommandsDepositControllerTests: XCTestCase {
         // then
         XCTAssertEqual(result, expected)
     }
+    
+    //MARK: GetCloseDeposit
+    
+    func testCloseDeposit_Response_Decoding() throws {
+
+        // given
+        guard let url = bundle.url(forResource: "CloseDepositResponseGeneric", withExtension: "json") else {
+            XCTFail("testCloseDeposit_Response_Decoding : Missing file: CloseDepositResponseGeneric.json")
+            return
+        }
+        
+        let json = try Data(contentsOf: url)
+
+        let expected = ServerCommands.DepositController.CloseDeposit.Response(statusCode: .ok, data: .init(paymentOperationDetailId: 1, documentStatus: "COMPLETE", accountNumber: "42317810000000000001", closeDate: 1, comment: "Закрытие срочного банковского вклада по договору № 04913_224RUB0000/22  от 22/04/2022. НДС не облагается.", category: "Закрытие вклада"), errorMessage: "string")
+
+        // when
+        let result = try decoder.decode(ServerCommands.DepositController.CloseDeposit.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
+    
+    func testCloseDepositMin_Response_Decoding() throws {
+
+        // given
+        guard let url = bundle.url(forResource: "CloseDepositResponseGenericMin", withExtension: "json") else {
+            XCTFail("testCloseDeposit_Response_Decoding : Missing file: CloseDepositResponseGeneric.json")
+            return
+        }
+        
+        let json = try Data(contentsOf: url)
+
+        let expected = ServerCommands.DepositController.CloseDeposit.Response(statusCode: .ok, data: .init(paymentOperationDetailId: 18445, documentStatus: "COMPLETE", accountNumber: nil, closeDate: nil, comment: "Закрытие срочного банковского вклада по договору № 00080_224RUB4700/21  от 04/02/2021. НДС не облагается.", category: "Закрытие вклада"), errorMessage: nil)
+        
+        // when
+        let result = try decoder.decode(ServerCommands.DepositController.CloseDeposit.Response.self, from: json)
+        
+        // then
+        XCTAssertEqual(result, expected)
+    }
 }
 
 

@@ -39,6 +39,8 @@ class UserAllCardsModel: Object {
     @objc dynamic var paymentSystemImage: String?
     @objc dynamic var fontDesignColor: String?
     @objc dynamic var id: Int = 0
+    @objc dynamic var endDate: Int = 0
+    @objc dynamic var endDate_nf: Bool = false
     
     var background = List<UserAllCardsbackgroundModel>()
     @objc dynamic var openDate = 0
@@ -157,6 +159,9 @@ extension UserAllCardsModel: Identifiable {
         settlementAccountId = data.settlementAccountId ?? 0
         dateLong           = data.dateLong ?? 0
         isMain             = data.isMain ?? true
+        endDate            = data.endDate ?? 0
+        endDate_nf            = data.endDate_nf ?? false
+        
         data.background.forEach { color in
             
             background.append(UserAllCardsbackgroundModel(with: color))

@@ -14,56 +14,35 @@ extension MainViewController {
     func createDataSource() {
         dataSource = UICollectionViewDiffableDataSource<Section, PaymentsModel>(collectionView: collectionView, cellProvider: { (collectionView, indexPath, item) -> UICollectionViewCell? in
             
-            guard let section = Section(rawValue: indexPath.section) else {
-                fatalError("Unknown section kind")
-            }
+            let section = Section(rawValue: indexPath.section)
             
             switch section {
             case .products:
-                switch item.id {
-                case 32:
-                    if item.name == "Cм.все"{
-                        guard let cell = collectionView.dequeueReusableCell(
-                            withReuseIdentifier: "AllCardCell",
-                            for: indexPath) as? AllCardCell
-                        else {
-                            fatalError("Unable to dequeue \(AllCardCell.self)")
-                        }
-                        
-                        return cell
-                    } else {
-                        guard let cell = collectionView.dequeueReusableCell(
-                            withReuseIdentifier: "OfferCard",
-                            for: indexPath) as? OfferCard
-                        else {
-                            fatalError("Unable to dequeue \(OfferCard.self)")
-                        }
-                        
-                        return cell
-                    }
+                switch item.name {
+                case "Хочу карту":
+                    let cell = collectionView.dequeueReusableCell(
+                        withReuseIdentifier: "OfferCard",
+                        for: indexPath) as? OfferCard
+                    
+                    return cell
+                    
                 default:
-                    guard let cell = collectionView.dequeueReusableCell(
+                    let cell = collectionView.dequeueReusableCell(
                         withReuseIdentifier: ProductCell.reuseId,
                         for: indexPath) as? ProductCell
-                    else {
-                        fatalError("Unable to dequeue \(ProductCell.self)")
-                    }
                     
-                    cell.card = item.productListFromRealm
+                    cell?.card = item.productListFromRealm
                     
                     return cell
                 }
                 
             case .offer:
-                guard let cell = collectionView.dequeueReusableCell(
+                let cell = collectionView.dequeueReusableCell(
                     withReuseIdentifier: OfferCollectionViewCell.reuseId,
                     for: indexPath) as? OfferCollectionViewCell
-                else {
-                    fatalError("Unable to dequeue \(OfferCollectionViewCell.self)")
-                }
                 
                 let url = URL(string: self.promoViewModels[indexPath.row].iconName ?? "")
-                cell.backgroundImageView.sd_setImage(with: url)
+                cell?.backgroundImageView.sd_setImage(with: url)
                 
                 return cell
                 
@@ -71,9 +50,8 @@ extension MainViewController {
                 guard let cell = collectionView.dequeueReusableCell(
                     withReuseIdentifier: CurrencyExchangeCollectionViewCell.reuseId,
                     for: indexPath) as? CurrencyExchangeCollectionViewCell
-                else {
-                    fatalError("Unable to dequeue \(CurrencyExchangeCollectionViewCell.self)")
-                }
+                else { break }
+                
                 if let euroBuy = self.dataEuro?.rateBuy{
                     
                     cell.rateBuyEuro.text = euroBuy.currencyFormatterForMain()
@@ -90,30 +68,26 @@ extension MainViewController {
                     
                     cell.rateSellUSD.text =  usdSell.currencyFormatterForMain()
                 }
+                
                 cell.backgroundColor = .red
                 
                 return cell
                 
             case .pay:
-                guard let cell = collectionView.dequeueReusableCell(
+                let cell = collectionView.dequeueReusableCell(
                     withReuseIdentifier: PaymentsMainCell.reuseId,
                     for: indexPath) as? PaymentsMainCell
-                else {
-                    fatalError("Unable to dequeue \(PaymentsMainCell.self)")
-                }
-                cell.configure(with: item)
+                
+                cell?.configure(with: item)
                 
                 return cell
                 
             case .openProduct:
-                guard let cell = collectionView.dequeueReusableCell(
+                let cell = collectionView.dequeueReusableCell(
                     withReuseIdentifier: NewProductCell.reuseId,
                     for: indexPath) as? NewProductCell
-                else {
-                    fatalError("Unable to dequeue \(NewProductCell.self)")
-                }
                 
-                cell.configure(with: item)
+                cell?.configure(with: item)
                 
                 return cell
                 
@@ -126,8 +100,12 @@ extension MainViewController {
                 }
                 
                 return cell
+            case .none:
+                return UICollectionViewCell()
             }
-        })
+            return UICollectionViewCell()
+        }
+        )
         
         dataSource?.supplementaryViewProvider = { [self]
             collectionView, kind, indexPath in
@@ -171,7 +149,6 @@ extension MainViewController {
         
         let viewController = ProductsViewController()
         viewController.addCloseButton()
-        //            viewController.products = self.productList
         let navVC = UINavigationController(rootViewController: viewController)
         navVC.modalPresentationStyle = .fullScreen
         

@@ -20,9 +20,12 @@ class BottomInputViewWithRateView: UIView {
     var currencySymbol = "" {
         didSet {
             guard moneyFormatter != nil else { return }
-            setupMoneyController()
+            if isEnable {
+                setupMoneyController()
+            }
         }
     }
+    var isEnable = true
     /// Инициализируем модели карт
     var models = (to: "", from: "") {
         didSet {
@@ -32,17 +35,25 @@ class BottomInputViewWithRateView: UIView {
                     self.exchangeRate(self.models.to, self.models.from)
                 }
             } else {
-                self.buttomLabel.text = "Возможна комиссия"
+                
+                if isEnable {
+                    self.buttomLabel.text = "Возможна комиссия"
+                    
+                } else {
+                    self.buttomLabel.text = "Условия снятия"
+                }
             }
         }
     }
     
     // MARK: - Formatters
-    var moneyFormatter: SumTextInputFormatter?
+    var moneyFormatter = SumTextInputFormatter(textPattern: "# ###,##")
+
     
     //MARK: - Property
     let kContentXibName = "BottomInputViewWithRate"
     var switchIsChanged: ((UISwitch) -> Void)?
+    @IBOutlet weak var infoButton: UIButton!
     
     @IBOutlet var contentView: UIView!
     @IBOutlet weak var topLabel: UILabel! {
@@ -84,20 +95,20 @@ class BottomInputViewWithRateView: UIView {
     }
     
     func commonInit() {
-        
         Bundle.main.loadNibNamed(kContentXibName, owner: self, options: nil)
         contentView.fixInView(self)
         self.heightAnchor.constraint(equalToConstant: 88).isActive = true
         setupTextFIeld()
         
         self.currencySwitchButton.setBackgroundColor(color: .white, forState: [.selected])
-
+        
         self.currencySwitchButton.layer.cornerRadius = 12
         self.currencySwitchButton.layer.masksToBounds = true
         setupMoneyController()
+        
         NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: amountTextField, queue: .main) { _ in
             guard let text = self.amountTextField.text else { return }
-            guard let unformatText = self.moneyFormatter?.unformat(text) else { return }
+            guard let unformatText = self.moneyFormatter.unformat(text) else { return }
             self.tempTextFieldValue = unformatText
             self.doneButtonIsEnabled(unformatText.isEmpty)
             
@@ -106,7 +117,7 @@ class BottomInputViewWithRateView: UIView {
                 self.topLabel.alpha = text.isEmpty ? 0 : 1
                 self.buttomLabel.alpha = text.isEmpty ? 0 : 1
             }
-        
+            
             if self.currencySymbol != "" {
                 self.exchangeRate(self.models.to, self.models.from)
             }
@@ -115,37 +126,32 @@ class BottomInputViewWithRateView: UIView {
     
     @IBAction func doneButtonTapped(_ sender: Any) {
         guard let amaunt = amountTextField.text else { return }
-        let unformatText = moneyFormatter?.unformat(amaunt)
+        let unformatText = moneyFormatter.unformat(amaunt)
         let text = unformatText?.replacingOccurrences(of: ",", with: ".")
+        
         if !(text?.isEmpty ?? true) {
+            
             didDoneButtonTapped?(text ?? "")
+            
         }
     }
     
     /// Добавляем в textField символ валюты
-   private func setupMoneyController() {
-        DispatchQueue.main.async {
-            var amount = ""
-            if let text = self.amountTextField.text {
-                if self.currencySymbol != "" {
-                    let unformatText = self.moneyFormatter?.unformat(text)
-                    if unformatText == "" || unformatText == nil {
-                        amount = "0"
-                    } else {
-                        amount = unformatText ?? ""
-                    }
-                } else {
-                    let unformatText = self.moneyFormatter?.unformat(text)
-                    amount = unformatText ?? ""
-                }
-            }
-            self.moneyFormatter = SumTextInputFormatter(textPattern: "# ###,## \(self.currencySymbol)")
-            self.moneyInputController.formatter = self.moneyFormatter
-            self.amountTextField.delegate = self.moneyInputController
+    private func setupMoneyController() {
+        var amount = ""
+        
+        if let text = self.amountTextField.text {
             
-            let newText = self.moneyFormatter?.format(amount)
-            self.amountTextField.text = newText
+            guard let unformatText = self.moneyFormatter.unformat(text) else { return }
+                amount = unformatText
         }
+        
+        self.moneyFormatter = SumTextInputFormatter(textPattern: "# ###,## \(self.currencySymbol)")
+        self.moneyInputController.formatter = self.moneyFormatter
+        self.amountTextField.delegate = self.moneyInputController
+        
+        let newText = self.moneyFormatter.format(amount)
+        self.amountTextField.text = newText
     }
     
     @IBAction func currencyButtonTapped(_ sender: UIButton) {
@@ -157,10 +163,11 @@ class BottomInputViewWithRateView: UIView {
             reversedRate(models.from, models.to)
         }
     }
-
+    
 }
 
 extension UIButton {
+    
     func setBackgroundColor(color: UIColor, forState: UIControl.State) {
         self.clipsToBounds = true  // add this to maintain corner radius
         UIGraphicsBeginImageContext(CGSize(width: 1, height: 1))
@@ -172,6 +179,4 @@ extension UIButton {
             self.setBackgroundImage(colorImage, for: forState)
         }
     }
-    
-    
 }

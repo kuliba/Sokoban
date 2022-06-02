@@ -51,7 +51,7 @@ class DepositSuccessViewController: UIViewController {
         cardFromField.titleLabel.text = "Счет списания"
         cardFromField.titleLabel.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
         cardFromField.imageView.isHidden = false
-        cardFromField.choseButton.isHidden = true
+        cardFromField.choseButton?.isHidden = true
         cardFromField.leftTitleAncor.constant = 64
         cardFromField.layoutIfNeeded()
         

@@ -17,18 +17,10 @@ extension MainViewController: UICollectionViewDelegate {
         }
         switch section {
         case .products:
-            switch productsViewModels[indexPath.item].id {
-            case 32:
-                if productsViewModels[indexPath.item].name == "Cм.все"{
-                    let viewController = ProductsViewController()
-                    viewController.addCloseButton()
-                    let navVC = UINavigationController(rootViewController: viewController)
-                    navVC.modalPresentationStyle = .fullScreen
-                    present(navVC, animated: true)
-                } else {
+            switch productsViewModels[indexPath.item].name {
+            case "Хочу карту":
                     guard let url = URL(string: "https://promo.forabank.ru/?metka=leads1&affiliate_id=44935&source=leads1&transaction_id=6dae603673619b0681e492d4bd1d8f3a" ) else { return  }
                     UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                }
             default:
                 let productIndex = indexPath.item
                 guard let products = self.realm?.objects(UserAllCardsModel.self), productIndex < products.count else {
@@ -41,7 +33,7 @@ extension MainViewController: UICollectionViewDelegate {
                     productsList.append(product)
                 }
                 
-                delegate?.goProductViewController(productIndex: productIndex, product: productsList[productIndex], products: productsList)
+                delegate?.goProductViewController(product: productsList[productIndex], products: productsList)
             }
             
         case .offer:
@@ -179,9 +171,8 @@ extension MainViewController: TemplatesListViewHostingViewControllerDelegate {
         }
                 
         let viewController = ProductViewController()
-        viewController.indexItem = 0
 
-        delegate?.goProductViewController(productIndex: 0, product: firstProduct, products: productsList)
+        delegate?.goProductViewController(product: firstProduct, products: productsList)
     }
 }
 

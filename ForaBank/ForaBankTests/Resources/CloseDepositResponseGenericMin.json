@@ -1,0 +1,9 @@
+{
+    "statusCode":0,
+    "data":{
+        "paymentOperationDetailId":18445,
+        "documentStatus":"COMPLETE",
+        "comment":"Закрытие срочного банковского вклада по договору № 00080_224RUB4700/21  от 04/02/2021. НДС не облагается.",
+        "category":"Закрытие вклада"
+    }
+}

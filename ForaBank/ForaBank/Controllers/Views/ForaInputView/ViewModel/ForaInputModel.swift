@@ -13,7 +13,6 @@ class ForaInputModel {
     var image: UIImage?
     var text: String {
         didSet {
-//            guard let text = self.text else { return }
             validate(text: text)
         }
     }
@@ -40,7 +39,7 @@ class ForaInputModel {
     ///   - errorText: Не обязательный параметр, Текст выводимой ошибки
     ///   - isEditable: Не обязательный параметр, указывает будет ли поле редактируемым. По умолчанию `true`
     ///   - showChooseButton: Не обязательный параметр, указывает будет ли отображаться иконка выбора, и по нажатию на view вызывается тот же метод. По умолчанию `false`
-    init(title: String, text: String = "", image: UIImage = UIImage(), type: FieldType = FieldType.text, needValidate: Bool = false, errorText: String = "", isEditable: Bool = true, showChooseButton: Bool = false) {
+    init(title: String = "", text: String = "", image: UIImage = UIImage(), type: FieldType = FieldType.text, needValidate: Bool = false, errorText: String = "", isEditable: Bool = true, showChooseButton: Bool = false) {
         
         self.isEditable = isEditable
         self.needValidate = isEditable
@@ -69,7 +68,6 @@ class ForaInputModel {
             
         default:
             
-//            showChooseButton = false
             showCurrencyButton = false
         }
     }
@@ -91,6 +89,7 @@ class ForaInputModel {
         case amountOfTransfer
         case credidCard
         case smsCode
+        case description
         
         var keyboardType: UIKeyboardType {
             switch self {

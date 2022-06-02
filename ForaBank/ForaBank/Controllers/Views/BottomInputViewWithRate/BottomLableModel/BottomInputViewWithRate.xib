@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -15,12 +15,13 @@
                 <outlet property="contentView" destination="iN0-l3-epB" id="UAS-Z0-g4Y"/>
                 <outlet property="currencySwitchButton" destination="ENw-6q-luf" id="dWb-tc-j3V"/>
                 <outlet property="doneButton" destination="MeI-1d-qwn" id="NlA-JC-U2O"/>
+                <outlet property="infoButton" destination="1Sl-fO-03W" id="QkJ-Ry-i1I"/>
                 <outlet property="topLabel" destination="kdn-zp-JVN" id="uBb-fp-90P"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB">
-            <rect key="frame" x="0.0" y="0.0" width="432" height="145"/>
+            <rect key="frame" x="0.0" y="0.0" width="432" height="143"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="1bS-iQ-Fkx">
@@ -90,30 +91,48 @@
                         <constraint firstAttribute="height" constant="1" id="b3B-MX-gWd"/>
                     </constraints>
                 </view>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Возможна комиссия ℹ︎" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7JW-zV-QWE">
-                    <rect key="frame" x="20" y="110.5" width="392" height="14.5"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                    <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                    <nil key="highlightedColor"/>
-                </label>
+                <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gp4-aL-8hM">
+                    <rect key="frame" x="20" y="107.5" width="121.5" height="15"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Возможна комиссия" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7JW-zV-QWE">
+                            <rect key="frame" x="0.0" y="0.0" width="121.5" height="15"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                            <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="1Sl-fO-03W">
+                            <rect key="frame" x="121.5" y="0.0" width="0.0" height="15"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <state key="normal" title="Button"/>
+                            <buttonConfiguration key="configuration" style="plain" image="ic16Info">
+                                <color key="baseForegroundColor" name="iconGray"/>
+                            </buttonConfiguration>
+                        </button>
+                    </subviews>
+                </stackView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" red="0.23921568627450979" green="0.23921568627450979" blue="0.27058823529411763" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="ls8-6I-Qxq" firstAttribute="top" secondItem="MeI-1d-qwn" secondAttribute="bottom" id="98U-pQ-8xn"/>
+                <constraint firstItem="gp4-aL-8hM" firstAttribute="leading" secondItem="ls8-6I-Qxq" secondAttribute="leading" id="Hjz-ZI-G5s"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="1bS-iQ-Fkx" secondAttribute="trailing" constant="20" id="OgR-pZ-sXA"/>
                 <constraint firstItem="kdn-zp-JVN" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="4" id="VMq-rd-1cL"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="7JW-zV-QWE" secondAttribute="trailing" constant="20" id="fUf-2p-93Y"/>
-                <constraint firstItem="7JW-zV-QWE" firstAttribute="top" secondItem="1bS-iQ-Fkx" secondAttribute="bottom" constant="4" id="gIf-6d-2Th"/>
                 <constraint firstItem="ls8-6I-Qxq" firstAttribute="leading" secondItem="Att-bb-GzQ" secondAttribute="leading" id="gcm-Nf-qSw"/>
+                <constraint firstItem="gp4-aL-8hM" firstAttribute="top" secondItem="ls8-6I-Qxq" secondAttribute="bottom" id="jqm-e3-fZC"/>
                 <constraint firstItem="ls8-6I-Qxq" firstAttribute="trailing" secondItem="Att-bb-GzQ" secondAttribute="trailing" id="n1U-aK-LLL"/>
                 <constraint firstItem="1bS-iQ-Fkx" firstAttribute="top" secondItem="kdn-zp-JVN" secondAttribute="bottom" constant="4" id="uaQ-t5-DaW"/>
-                <constraint firstItem="7JW-zV-QWE" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="vp4-8H-Z6h"/>
                 <constraint firstItem="kdn-zp-JVN" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="vvE-jG-j7I"/>
                 <constraint firstItem="1bS-iQ-Fkx" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="x1w-Ow-bIT"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="231.8840579710145" y="-201.22767857142856"/>
+            <point key="canvasLocation" x="231.8840579710145" y="-219.97767857142856"/>
         </view>
     </objects>
+    <resources>
+        <image name="ic16Info" width="16" height="16"/>
+        <namedColor name="iconGray">
+            <color red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
 </document>

@@ -7,7 +7,6 @@
 
 import UIKit
 
-@IBDesignable
 final class CardChooseView: UIView {
     
     //MARK: - Property
@@ -21,9 +20,8 @@ final class CardChooseView: UIView {
     @IBOutlet weak var maskNumberLabel: UILabel!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var numberCardLabel: UILabel!
-    @IBInspectable
     @IBOutlet weak var leftTitleAncor: NSLayoutConstraint!
-    @IBOutlet weak var choseButton: UIButton!
+    @IBOutlet weak var choseButton: UIButton?
     
     
     var didChooseButtonTapped: (() -> Void)?
@@ -79,37 +77,55 @@ final class CardChooseView: UIView {
         
         var balance = Double(model.balance)
 
-        if model.productType == "ACCOUNT" || model.productType == "DEPOSIT" || model.productType == ProductType.loan.rawValue {
-            imageView.image = model.smallDesign?.convertSVGStringToImage() ?? #imageLiteral(resourceName: "AccImage")
-            cardTypeImage.isHidden = true
-        }
-        else if model.productType == "CARD" {
-            self.imageView.image = model.smallDesign?.convertSVGStringToImage() ?? #imageLiteral(resourceName: "credit-card")
-        }
+        imageView.image = model.smallDesign?.convertSVGStringToImage() ?? #imageLiteral(resourceName: "AccImage")
                 
-        if model.productType == ProductType.loan.rawValue {
-            balance = model.totalAmountDebt
-        }
         self.balanceLabel.text = balance.currencyFormatter(symbol: model.currency ?? "")
+            
         let text = NSAttributedString(
             string: model.mainField ?? "",
             attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14),
                          NSAttributedString.Key.foregroundColor : UIColor.black])
         self.numberCardLabel.attributedText = text
-        if model.productType == "DEPOSIT" {
-            self.maskNumberLabel.text = "• \(model.accountNumber?.suffix(4) ?? "")"
-        } else if model.productType == ProductType.loan.rawValue {
+        
+        switch model.productType {
+        case ProductType.card.rawValue:
             
+            self.maskNumberLabel.text = "• \(model.number?.suffix(4) ?? "")"
+            self.nameLabel.text = model.customName ?? model.additionalField ?? ""
+
+        case ProductType.account.rawValue:
+            
+            self.maskNumberLabel.text = "• \(model.number?.suffix(4) ?? "")"
+            cardTypeImage.isHidden = true
+            self.nameLabel.text = model.customName ?? model.additionalField ?? ""
+
+        case ProductType.deposit.rawValue:
+            
+            self.numberCardLabel.text = model.mainField
+            self.maskNumberLabel.text = "• \(model.accountNumber?.suffix(4) ?? "")"
+            self.nameLabel.text = "• \("Cтавка \(model.interestRate ?? "")%")"
+            let text = NSAttributedString(
+                string: model.mainField ?? "",
+                attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14),
+                             NSAttributedString.Key.foregroundColor : UIColor.black])
+            self.numberCardLabel.attributedText = text
+            cardTypeImage.isHidden = true
+
+        case ProductType.loan.rawValue:
+            
+            balance = model.totalAmountDebt
+
             if let date = longIntToDateString(longInt: model.dateLong/1000) {
                 
                 self.maskNumberLabel.text = "· \(model.settlementAccount?.suffix(4) ?? "") · Ставка \(model.currentInterestRate)%  · \(date)"
             }
             
-        } else {
-            self.maskNumberLabel.text = "• \(model.number?.suffix(4) ?? "")"
+            self.nameLabel.text = model.customName ?? model.additionalField ?? ""
+            cardTypeImage.isHidden = true
+
+        default:
+            break
         }
-        self.nameLabel.text = model.customName ?? model.additionalField ?? ""
-        self.cardTypeImage.image = model.paymentSystemImage?.convertSVGStringToImage()
     }
     
     private func setupData(with model: GetProductListDatum) {
@@ -176,8 +192,6 @@ final class CardChooseView: UIView {
         } else {
             self.setupCardImage(with: model.numberMask ?? "")
         }
-        
-        self.choseButton.setImage(UIImage(systemName: "xmark"), for: .normal)
         
         self.balanceLabel.isHidden = true
         self.nameLabel.isHidden = true

@@ -49,8 +49,9 @@ class AccountStatementPDFController: UIViewController, URLSessionDownloadDelegat
             id = model.product.settlementAccountId
         }
         
-        if model.product.productType == "CARD" {
-            
+        
+        switch model.product.productType {
+        case ProductType.card.rawValue:
             let idCard = model.product.id
             let body = [
                 "id" : idCard,
@@ -60,8 +61,18 @@ class AccountStatementPDFController: UIViewController, URLSessionDownloadDelegat
             ] as [String: AnyObject]
             
             getPrintFormForCardStatmentRequest(body)
-        } else {
+        case ProductType.deposit.rawValue:
             
+            let accountId = model.product.accountID
+            let body = [
+                "id" : accountId,
+                "startDate": "\(model.startDate)",
+                "endDate": "\(model.endDate)",
+                "cardNumber": ""
+            ] as [String: AnyObject]
+            
+            createPdfDocument(body)
+        default:
             let printType = printFormType ?? ""
             let body = [
                 "paymentOperationDetailId": id,
@@ -69,8 +80,6 @@ class AccountStatementPDFController: UIViewController, URLSessionDownloadDelegat
             ] as [String: AnyObject]
             createPdfDocument(body)
         }
-        
-        
     }
     
     ///rest/getPrintFormForCardStatment
@@ -138,18 +147,10 @@ class AccountStatementPDFController: UIViewController, URLSessionDownloadDelegat
             
             if let response = response as? HTTPURLResponse {
                 if let document = PDFDocument(url: url!) {
-                    //                    self.pdfView.autoresizesSubviews = true
-                    //                    self.pdfView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleTopMargin, .flexibleLeftMargin]
-                    //                    self.pdfView.displayDirection = .vertical
                     
                     self.pdfView.pageBreakMargins = UIEdgeInsets(top: 20, left: 20, bottom: 0, right: 20)
                     self.pdfView.autoScales = true
-                    //                    self.pdfView.displayMode = .singlePageContinuous
-                    //                    self.pdfView.displaysPageBreaks = true
                     self.pdfView.document = document
-                    
-                    //                    self.pdfView.maxScaleFactor = 4.0
-                    //                    self.pdfView.minScaleFactor = self.pdfView.scaleFactorForSizeToFit
                 }
             }
         }.resume()

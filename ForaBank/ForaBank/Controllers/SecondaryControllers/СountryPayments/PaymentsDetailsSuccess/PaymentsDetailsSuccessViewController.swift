@@ -10,7 +10,6 @@ import Combine
 
 class PaymentsDetailsSuccessViewController: UIViewController {
     
-//    var id: Int?
     var printFormType: String?
     let confurmView = PaymentsDetailsView()
     let button = UIButton(title: "На главную")

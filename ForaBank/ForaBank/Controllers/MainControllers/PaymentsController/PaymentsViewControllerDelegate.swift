@@ -71,7 +71,6 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 let model = ConfirmViewControllerModel(type: .card2card)
                 let popView = CustomPopUpWithRateView()
                 popView.viewModel = model
-//                popView.onlyMy = false
                 popView.modalPresentationStyle = .custom
                 popView.transitioningDelegate = self
                 self.present(popView, animated: true, completion: nil)

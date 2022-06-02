@@ -8,7 +8,8 @@
 import Foundation
 
 struct PaymentsModel: Hashable {
-    var id: Int
+    
+    var id = UUID()
     var name: String
     var iconName: String?
     var avatarImageName: String?
@@ -23,9 +24,6 @@ struct PaymentsModel: Hashable {
     var lastInternetPayment: GetAllLatestPaymentsDatum? = nil
     var productListFromRealm: UserAllCardsModel? = nil
 
-    
-    
-    
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
@@ -34,14 +32,8 @@ struct PaymentsModel: Hashable {
         return lhs.id == rhs.id
     }
     
-    init() {
-        self.id = Int.random(in: 100 ... 10000)
-        self.name = ""
-        self.controllerName = ""
-    }
-    
-    init(id: Int, name: String, iconName: String, controllerName: String, description: String? = "", type: String? = nil) {
-        self.id = id
+    init(name: String, iconName: String, controllerName: String, description: String? = "", type: String? = nil) {
+        
         self.name = name
         self.iconName = iconName
         self.controllerName = controllerName
@@ -52,7 +44,6 @@ struct PaymentsModel: Hashable {
     init(lastCountryPayment: GetAllLatestPaymentsDatum) {
         self.lastCountryPayment = lastCountryPayment
         self.type = lastCountryPayment.type
-        self.id = Int.random(in: 100 ... 10000)
         if lastCountryPayment.phoneNumber != nil {
             let mask = StringMask(mask: "+000-0000-00-00")
             let maskPhone = mask.mask(string: lastCountryPayment.phoneNumber)
@@ -67,14 +58,13 @@ struct PaymentsModel: Hashable {
     init(lastPhonePayment: GetAllLatestPaymentsDatum) {
         self.lastPhonePayment = lastPhonePayment
         self.type = lastPhonePayment.type
-        self.id = Int.random(in: 100 ... 10000)
         self.name = lastPhonePayment.phoneNumber?.numberFormatter() ?? ""
         self.controllerName = "PaymentByPhoneViewController"
         self.iconName = "smartphonegray"
     }
+    
     init(productList: GetProductListDatum) {
         self.productList = productList
-        self.id = Int.random(in: 100 ... 10000)
         self.name = productList.name ?? ""
         self.controllerName = "PaymentByPhoneViewController"
         self.iconName = "smartphonegray"
@@ -83,7 +73,6 @@ struct PaymentsModel: Hashable {
     init(lastMobilePayment: GetAllLatestPaymentsDatum) {
         self.lastMobilePayment = lastMobilePayment
         self.type = lastMobilePayment.type
-        self.id = Int.random(in: 100 ... 10000)
         let mask = StringMask(mask: "+7 (000) 000-00-00")
         self.name = "\(mask.mask(string: lastMobilePayment.additionalList?[0].fieldValue) ?? "")"
         self.controllerName = "MobilePayViewController"
@@ -93,22 +82,21 @@ struct PaymentsModel: Hashable {
     init(lastGKHPayment: GetAllLatestPaymentsDatum) {
         self.lastGKHPayment = lastGKHPayment
         self.type = lastGKHPayment.type
-        self.id = Int.random(in: 100 ... 10000)
         self.name = "\(lastGKHPayment.amount ?? Amount.string(""))"
         self.controllerName = "GKHInputViewController"
         self.iconName = "GKH"
     }
+    
     init(lastInternetPayment: GetAllLatestPaymentsDatum) {
         self.lastInternetPayment = lastInternetPayment
         self.type = lastInternetPayment.type
-        self.id = Int.random(in: 100 ... 10000)
         self.name = "\(lastInternetPayment.amount ?? Amount.string(""))"
         self.controllerName = "InternetTVDetailsFormController"
         self.iconName = "GKH"
     }
+
     init(productListFromRealm: UserAllCardsModel) {
         self.productListFromRealm = productListFromRealm
-        self.id = Int.random(in: 100 ... 10000)
         self.name = productListFromRealm.name ?? "1234"
         self.controllerName = "PaymentByPhoneViewController"
         self.iconName = "smartphonegray"

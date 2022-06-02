@@ -30,7 +30,6 @@ class PaymentsDetailsView: UIView {
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var summLabel: UILabel!
     @IBOutlet weak var infoLabel: UILabel!
-//    @IBOutlet weak var buttonView: UIStackView!
     @IBOutlet weak var changeButtonsStackView: UIStackView!
     @IBOutlet weak var detailButtonsStackView: UIStackView!
     
@@ -93,7 +92,7 @@ class PaymentsDetailsView: UIView {
     }
     
     func setupData(with model: ConfirmViewControllerModel) {
-//        buttonView.isHidden = !model.statusIsSuccses
+
         operatorImageView.image = UIImage()
         if model.type == .contact {
             changeButtonsStackView.isHidden = false

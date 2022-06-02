@@ -79,17 +79,17 @@ class PaymentsMainCell: UICollectionViewCell, SelfConfiguringCell {
         if let iconName = payment.iconName {
             iconImageView.image = UIImage(named: iconName)
         }
-        if payment.id == 83 || payment.id == 84 {
-            
-            titleLabel.alpha = 0.3
-            avatarImageView.alpha = 0.3
-            iconImageView.alpha = 0.3
-            
-        } else {
-            titleLabel.alpha = 1
-            avatarImageView.alpha = 1
-            iconImageView.alpha = 1
-        }
+//        if payment.id == 83 || payment.id == 84 {
+//            
+//            titleLabel.alpha = 0.3
+//            avatarImageView.alpha = 0.3
+//            iconImageView.alpha = 0.3
+//            
+//        } else {
+//            titleLabel.alpha = 1
+//            avatarImageView.alpha = 1
+//            iconImageView.alpha = 1
+//        }
     }
     
     

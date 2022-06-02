@@ -37,8 +37,6 @@ class MemeDetailVC : AddHeaderImageViewController {
     lazy var realm = try? Realm()
     var token: NotificationToken?
     
-    
-    
     init() {
         super.init(nibName: nil, bundle: nil)
     }
@@ -59,10 +57,9 @@ class MemeDetailVC : AddHeaderImageViewController {
         setupConstraint()
         setupActions()
         setupCardViewActions()
-        /// Add REALM
-        AddAllUserCardtList.add() {
-            print("REALM Add")
-        }
+    
+        AddAllUserCardtList.add() {}
+        
         if let template = paymentTemplate {
             addBackButton()
             updateObjectWithTamplate(paymentTemplate: template)
@@ -168,8 +165,6 @@ class MemeDetailVC : AddHeaderImageViewController {
                 viewModel.customCardTo = CastomCardViewModel(cardNumber: card.numberMask ?? "", cardName: card.customName, cardId: card.id)
             }
             
-//            cardToField.choseButton.isHidden = true
-            
         default:
             break
         }
@@ -222,16 +217,10 @@ class MemeDetailVC : AddHeaderImageViewController {
             token = object?.observe { ( changes: RealmCollectionChange) in
                 switch changes {
                 case .initial:
-                    //                print("REALM Initial")
-                    //                self.cardFromListView.cardList = self.updateCardsList(with: object)
                     self.cardFromField.model = self.updateCardsList(with: object).first
                     self.viewModel.cardFromRealm = self.updateCardsList(with: object).first
-                    //                self.cardToListView.cardList = self.updateCardsList(with: object)
                 case .update:
-                    //                print("REALM Update")
-                    //                self.cardFromListView.cardList = self.updateCardsList(with: object)
                     self.cardFromField.model = self.updateCardsList(with: object).first
-                    //                self.cardToListView.cardList = self.updateCardsList(with: object)
                 case .error(let error):
                     fatalError("\(error)")
                 }
@@ -315,8 +304,6 @@ class MemeDetailVC : AddHeaderImageViewController {
         cardToField.numberCardLabel.text = "Номер карты получателя"
         cardToField.didChooseButtonTapped = { [weak self]  () in
             
-//            guard self?.paymentTemplate == nil else { return }
-            
             DispatchQueue.main.async {
                 UIView.animate(withDuration: 0.2) {
                     if self?.cardToListView.isHidden == true {
@@ -375,7 +362,6 @@ class MemeDetailVC : AddHeaderImageViewController {
                 vc.onlyCard = false
             }
             vc.didCardTapped = { [weak self] card in
-//                self?.viewModel.cardFromRealm = card
                 self?.viewModel.cardFrom = card
                 self?.cardFromField.cardModel = card
                 self?.bottomView.currencySymbol = card.currency?.getSymbol() ?? ""
@@ -524,8 +510,6 @@ class MemeDetailVC : AddHeaderImageViewController {
     //MARK: - API
     
     func doneButtonTapped(with viewModel: ConfirmViewControllerModel, amaunt: String) {
-//        self?.viewModel.summTransction = amaunt
-//        var viewModel = viewModel
         self.dismissKeyboard()
         self.showActivity()
         bottomView.doneButtonIsEnabled(true)
@@ -545,7 +529,7 @@ class MemeDetailVC : AddHeaderImageViewController {
                         "accountNumber" : viewModel.cardToAccountNumber,
                         "productCustomName" : viewModel.cardToCastomName
                      ] ] as [String : AnyObject]
-//        print("DEBUG: ", #function, body)
+
         NetworkManager<CreatTransferDecodableModel>.addRequest(.createTransfer, [:], body) { [weak self] model, error in
             DispatchQueue.main.async {
                 self?.dismissActivity()

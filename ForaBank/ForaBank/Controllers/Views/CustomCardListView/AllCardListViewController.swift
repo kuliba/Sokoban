@@ -26,7 +26,7 @@ class CardTableCell: UITableViewCell {
         cardView.centerY(inView: self)
         cardView.anchor(left: self.leftAnchor, right: self.rightAnchor)
         cardView.titleLabel.text = ""
-        cardView.choseButton.isHidden = true
+        cardView.choseButton?.isHidden = true
         cardView.backgroundColor = .clear
     }
 }

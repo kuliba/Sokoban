@@ -69,10 +69,14 @@ extension ProductViewController: UITableViewDelegate, UITableViewDataSource, Ske
             
             cell.depositOperation = sortedDeposit[indexPath.section].value[indexPath.row]
             
+            cell.configure(currency: "RUB")
+            
             if let currency = bank?.code {
                 cell.configure(currency: currency)
             }
+            
             cell.selectionStyle = .none
+            
             return cell
         case "ACCOUNT":
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "HistoryTableViewCell", for: indexPath) as? HistoryTableViewCell else { return  UITableViewCell() }
@@ -87,6 +91,7 @@ extension ProductViewController: UITableViewDelegate, UITableViewDataSource, Ske
             
             let bank =  Dict.shared.currencyList?.first(where: {$0.codeNumeric == sortedAccount[indexPath.section].value[indexPath.row].currencyCodeNumeric})
             cell.accountOperation = sortedAccount[indexPath.section].value[indexPath.row]
+            
             cell.configure(currency: bank?.code ?? "RUB")
             
             cell.selectionStyle = .none

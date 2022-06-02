@@ -1,0 +1,12 @@
+{
+  "statusCode": 0,
+  "errorMessage": "string",
+  "data": {
+    "paymentOperationDetailId": 1,
+    "documentStatus": "COMPLETE",
+    "accountNumber": "42317810000000000001",
+    "closeDate": 1,
+    "comment": "Закрытие срочного банковского вклада по договору № 04913_224RUB0000/22  от 22/04/2022. НДС не облагается.",
+    "category": "Закрытие вклада"
+  }
+}

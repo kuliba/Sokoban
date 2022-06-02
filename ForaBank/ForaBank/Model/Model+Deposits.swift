@@ -22,6 +22,20 @@ extension ModelAction {
                 let result: Result<[DepositProductData], Error>
             }
         }
+        
+        enum Close {
+            
+            struct Request: Action {
+                
+                let payload: ServerCommands.DepositController.CloseDeposit.Payload
+            }
+            
+            enum Response: Action {
+                
+                case success(data: ServerCommands.DepositController.CloseDeposit.Response.TransferData)
+                case failure(message: String)
+            }
+        }
     }
 }
 
@@ -35,6 +49,7 @@ extension Model {
             handledUnauthorizedCommandAttempt()
             return
         }
+        
         let command = ServerCommands.DepositController.GetDepositProductList(token: token)
         serverAgent.executeCommand(command: command) { [weak self] result in
             
@@ -62,6 +77,42 @@ extension Model {
                 }
             case .failure(let error):
                 self?.action.send(ModelAction.Deposits.List.Response(result: .failure(error)))
+            }
+        }
+    }
+    
+    func handleCloseDepositRequest(_ payload: ModelAction.Deposits.Close.Request) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.DepositController.CloseDeposit(token: token, payload: .init(id: payload.payload.id, name: payload.payload.name, startDate: payload.payload.startDate, endDate: payload.payload.endDate, statementFormat: payload.payload.statementFormat, accountId: payload.payload.accountId, cardId: payload.payload.cardId))
+        serverAgent.executeCommand(command: command) { [weak self] result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    
+                    guard let data = response.data else {
+                        return
+                    }
+                    
+                    self?.action.send(ModelAction.Deposits.Close.Response.success(data: data))
+                    
+                default:
+                    
+                    if let error = response.errorMessage {
+                        
+                        self?.action.send(ModelAction.Deposits.Close.Response.failure(message: error))
+                    }
+                    
+                    self?.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                }
+            case .failure(let error):
+                self?.action.send(ModelAction.Deposits.Close.Response.failure(message: error.localizedDescription))
             }
         }
     }

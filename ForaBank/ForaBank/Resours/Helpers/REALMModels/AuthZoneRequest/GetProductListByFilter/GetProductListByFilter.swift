@@ -30,6 +30,7 @@ class GetProductListByFilter: Object {
     @objc dynamic var productName: String?
     @objc dynamic var productType: String?
     @objc dynamic var smallDesign: String?
+    @objc dynamic var endDate: Int = 0
     
     var background = List<GetProductListByFilterList>()
 }

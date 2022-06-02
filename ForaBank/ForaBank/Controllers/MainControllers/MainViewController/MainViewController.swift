@@ -12,7 +12,7 @@ import SwiftUI
 
 protocol MainViewControllerDelegate: AnyObject {
     func goSettingViewController()
-    func goProductViewController(productIndex: Int, product: UserAllCardsModel, products: [UserAllCardsModel])
+    func goProductViewController(product: UserAllCardsModel, products: [UserAllCardsModel])
     func goPaymentsViewController()
 }
 
@@ -22,7 +22,7 @@ class MainViewController: UIViewController {
     var alertController: UIAlertController?
     
     var token: NotificationToken?
-
+    
     var productsViewModels = [PaymentsModel]()
     var paymentsViewModels = [PaymentsModel]() {
         didSet {
@@ -78,7 +78,7 @@ class MainViewController: UIViewController {
     
     @objc func addUserPhoto() {
         let userPhoto = self.loadImageFromDocumentDirectory(fileName: "userPhoto")
-
+        
         if userPhoto != nil {
             self.searchBar.searchIcon.image = userPhoto//?.fixOrientation()
         } else {
@@ -100,7 +100,7 @@ class MainViewController: UIViewController {
                 return "Быстрые операции"
                 
             case .offer:
-                return "123"
+                return ""
                 
             case .currentsExchange:
                 return "Обмен валют"
@@ -154,7 +154,7 @@ class MainViewController: UIViewController {
             
             reloadData(with: nil)
         }
-
+        
         bind()
         startObserveRealm()
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
@@ -170,30 +170,30 @@ class MainViewController: UIViewController {
     func updateProductsViewModels(with products: Results<UserAllCardsModel>) {
         
         if products.count > 0 {
-
+            
             var productsViewModels = [PaymentsModel]()
-
+            
             for product in products {
-
+                
                 productsViewModels.append(PaymentsModel(productListFromRealm: product))
             }
             
             if products.count <= 1  {
                 
-                productsViewModels.append(PaymentsModel(id: 32, name: "Хочу карту", iconName: "openCard", controllerName: ""))
+                productsViewModels.append(PaymentsModel(name: "Хочу карту", iconName: "openCard", controllerName: ""))
             }
-
+            
             self.productsViewModels = productsViewModels
-
-
+            
+            
         } else {
-
+            
             self.productsViewModels = []
-
+            
         }
         
         reloadData(with: nil)
-
+        
         if GlobalModule.c2bURL != nil {
             let controller = C2BDetailsViewController.storyboardInstance()!
             let nc = UINavigationController(rootViewController: controller)
@@ -220,7 +220,7 @@ class MainViewController: UIViewController {
             present(nc, animated: false)
             return
         }
-
+        
         if GlobalModule.c2bURL != nil {
             let controller = C2BDetailsViewController.storyboardInstance()!
             let nc = UINavigationController(rootViewController: controller)
@@ -242,7 +242,36 @@ class MainViewController: UIViewController {
         AddAllUserCardtList.add() { [weak self] in
             
             guard let self = self, let products = self.realm?.objects(UserAllCardsModel.self) else {
+                self?.isUpdating.value = false
                 return
+            }
+            
+            for i in products {
+                
+                if i.endDate_nf == true, UserDefaults.standard.bool(forKey: "\(i.depositID)") == false {
+                    
+                    
+                    UserDefaults.standard.set(true, forKey: "\(i.depositID)")
+                    showAlertWithCancel(with: "Срок действия вклада истек", and: "Переведите деньги со вклада на свою карту/счет в любое время") {
+                        
+                        self.delegate?.goProductViewController(product: i, products: products.uniqued())
+                    }
+                }
+                
+                func showAlertWithCancel(with title: String, and message: String, completion: @escaping () -> Void = { }) {
+                    DispatchQueue.main.async {
+                        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+                        let okAction = UIAlertAction(title: "OK", style: .default) { (_) in
+                            completion()
+                        }
+                        let cancel = UIAlertAction(title: "Отмена", style: .cancel)
+                        alertController.addAction(cancel)
+                        alertController.addAction(okAction)
+                        alertController.view.tintColor = .black
+                        alertController.view.center = self.view.center
+                        self.present(alertController, animated: true, completion: nil)
+                    }
+                }
             }
             
             self.productTypeSelector.update(with: products)
@@ -294,10 +323,9 @@ class MainViewController: UIViewController {
     
     private func setupSearchBar() {
         view.addSubview(searchBar)
-
+        
         let gesture = UITapGestureRecognizer(target: self, action: #selector(openSetting))
         searchBar.searchIcon.addGestureRecognizer(gesture)
- //       searchBar.searchIcon.image = UIImage(named: "ProfileImage")
         
         searchBar.textField.text = ""
         searchBar.textField.placeholder = ""
@@ -320,7 +348,7 @@ class MainViewController: UIViewController {
             right: view.rightAnchor,
             paddingTop: 0, paddingLeft: 0,
             paddingRight: 0, height: 48)
-
+        
         searchBar.trailingLeftAction = {
             // TODO: - Func Search Button Tapped
         }
@@ -338,16 +366,17 @@ class MainViewController: UIViewController {
         model.action
             .receive(on: DispatchQueue.main)
             .sink {[unowned self] action in
-
+                
                 switch action {
                 case let payload as ModelAction.Deposits.List.Response:
                     switch payload.result {
                     case .success(let deposits):
                         guard let maxRate = deposits.map({ $0.generalСondition.maxRate }).max(),
-                        let openDepositIndex = openProductViewModels.firstIndex(where: { $0.id == 98 }) else {
+                              
+                              let openDepositIndex = openProductViewModels.firstIndex(where: { $0.name == "Вклад" }) else {
                             return
                         }
- 
+                        
                         let formatter = NumberFormatter()
                         formatter.numberStyle = .percent
                         formatter.maximumFractionDigits = 1
@@ -379,7 +408,7 @@ class MainViewController: UIViewController {
                 }
                 
             }.store(in: &bindings)
-    
+        
         isUpdating
             .receive(on: DispatchQueue.main)
             .sink {[unowned self] isUpdating in
@@ -387,7 +416,7 @@ class MainViewController: UIViewController {
                 setupRefreshView(isEnabled: isUpdating)
                 
                 for cell in collectionView.visibleCells {
-                
+                    
                     guard let productCell = cell as? ProductCell else {
                         continue
                     }
@@ -408,7 +437,7 @@ class MainViewController: UIViewController {
                 collectionView.setCollectionViewLayout(layout, animated: true) {[weak self] complete in
                     
                     if complete == true {
-
+                        
                         self?.collectionView.reloadData()
                     }
                 }
@@ -420,7 +449,7 @@ class MainViewController: UIViewController {
             .sink {[unowned self] selectedProduct in
                 
                 guard let selectedProduct = selectedProduct,
-                    let firstItemIndex = productTypeSelector.firstIndexes[selectedProduct] else {
+                      let firstItemIndex = productTypeSelector.firstIndexes[selectedProduct] else {
                     return
                 }
                 
@@ -461,7 +490,7 @@ class MainViewController: UIViewController {
             let host = ServerAgent.Environment.test
             let urlString = host.baseURL + "/" + baner.imageLink
             print(host.baseURL + "/" + baner.imageLink)
-            let cell = PaymentsModel(id: Int.random(in: 1..<9999), name: baner.productName, iconName: urlString, controllerName: baner.orderLink.absoluteString)
+            let cell = PaymentsModel(name: baner.productName, iconName: urlString, controllerName: baner.orderLink.absoluteString)
             items.append(cell)
         }
         promoViewModels = items
@@ -514,7 +543,7 @@ class MainViewController: UIViewController {
                 refreshView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: -4),
                 refreshView.heightAnchor.constraint(equalToConstant: 4)
             ])
-
+            
             self.refreshView = refreshView
             
             refreshView.alpha = 0
@@ -528,7 +557,7 @@ class MainViewController: UIViewController {
             UIView.animate(withDuration: 0.3) {
                 
                 self.refreshView?.alpha = 0
-            
+                
             } completion: { _ in
                 
                 self.refreshView?.removeFromSuperview()
@@ -550,7 +579,7 @@ class MainViewController: UIViewController {
         snapshot.appendItems(promoViewModels, toSection: .offer)
         snapshot.appendItems(exchangeRatesViewModels, toSection: .currentsExchange)
         snapshot.appendItems(openProductViewModels, toSection: .openProduct)
-        snapshot.appendItems([PaymentsModel(id: 0, name: "Выберите ближайшую точку на карте", iconName: "imgMainMap", controllerName: "PlacesView")], toSection: .atm)
+        snapshot.appendItems([PaymentsModel(name: "Выберите ближайшую точку на карте", iconName: "imgMainMap", controllerName: "PlacesView")], toSection: .atm)
         dataSource?.apply(snapshot, animatingDifferences: true)
         collectionView.reloadData()
     }
@@ -631,7 +660,6 @@ extension MainViewController {
                 productTypes = productTypes(from: products)
                 firstIndexes = firstIndexes(for: products, and: productTypes)
                 
-//                bindings = Set<AnyCancellable>()
                 if let optionSelector = optionSelector(with: productTypes, selected: selected) {
                     
                     self.optionSelector = optionSelector
@@ -663,7 +691,7 @@ extension MainViewController {
         }
         
         private func productTypes(from products: [UserAllCardsModel]) -> [ProductType] {
-        
+            
             let productTypeStrings = products.compactMap{ $0.productType }
             let productTypes = productTypeStrings.compactMap{ ProductType(rawValue: $0) }
             var productTypesUnique = Set<ProductType>()

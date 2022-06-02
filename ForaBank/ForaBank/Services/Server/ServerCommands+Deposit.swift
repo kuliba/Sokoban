@@ -171,6 +171,53 @@ extension ServerCommands {
             }
         }
         
+        /*
+         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/dict//rest/closeDeposit
+         */
+        struct CloseDeposit: ServerCommand {
+
+            let token: String?
+            let endpoint = "/rest/closeDeposit"
+            let method: ServerCommandMethod = .post
+            let parameters: [ServerCommandParameter]? = nil
+            let payload: Payload?
+            let timeout: TimeInterval? = nil
+
+            struct Payload: Encodable {
+                    
+                    let id: Int
+                    let name: String?
+                    let startDate: String?
+                    let endDate: String?
+                    let statementFormat: StatementFormat?
+                    let accountId: Int?
+                    let cardId: Int?
+            }
+
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let data: TransferData?
+                let errorMessage: String?
+                
+                struct TransferData: Codable, Equatable {
+                    
+                    let paymentOperationDetailId: Int?
+                    let documentStatus: String
+                    let accountNumber: String?
+                    let closeDate: Int?
+                    let comment: String?
+                    let category: String?
+                }
+            }
+            
+            internal init(token: String, payload: Payload) {
+
+                self.token = token
+                self.payload = payload
+            }
+        }
+        
         struct BasePayload: Encodable {
 
             let endDate: String?
