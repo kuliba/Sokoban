@@ -118,7 +118,6 @@ final class NetworkManager<T: NetworkModelProtocol> {
                 if error != nil {
                     completion(nil, "Пожалуйста, проверьте ваше сетевое соединение.")
                 }
-                //print("test5555 \(response.request.content.body)")
 
                 if let response = response as? HTTPURLResponse {
                     let result = handleNetworkResponse(response)

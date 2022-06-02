@@ -115,7 +115,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     fileprivate func RealmConfiguration() {
          // Версия БД (изменить на большую если меняем БД)
-         let schemaVersion: UInt64 = 26
+         let schemaVersion: UInt64 = 30
 
          let config = Realm.Configuration(
                  // Set the new schema version. This must be greater than the previously used
@@ -145,7 +145,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                              migration.deleteData(forType: "GKHOperatorsModel")
                              migration.deleteData(forType: "Parameters")
                          }
-                         if oldSchemaVersion < 27 {
+                         if oldSchemaVersion < 30 {
                              migration.deleteData(forType: "UserAllCardsModel")
                          }
                          if oldSchemaVersion < 10 {
@@ -426,7 +426,6 @@ class AppUpdater: NSObject {
                         print("Needs update: AppStore Version: \(appStoreAppVersion) > Current version: ",currentVersion)
                         DispatchQueue.main.async {
                             guard let vc = UIApplication.getTopViewController() else {return}
-//                            let topController: UIViewController = UIApplication.shared.keyWindow!.rootViewController!
                             vc.showAppUpdateAlert(Version: (info?.version)!, Force: force, AppURL: (info?.trackViewUrl)!)
                         }
                     }

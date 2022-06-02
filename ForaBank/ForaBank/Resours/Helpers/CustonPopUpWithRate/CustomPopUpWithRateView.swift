@@ -7,15 +7,20 @@
 
 import UIKit
 import RealmSwift
+import Combine
 
 class CustomPopUpWithRateView : AddHeaderImageViewController {
     
+    private var bindings = Set<AnyCancellable>()
+    let model: Model = .shared
+
     var titleLabel = UILabel(text: "Между счетами", font: .boldSystemFont(ofSize: 18), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
     lazy var realm = try? Realm()
     var token: NotificationToken?
     var onlyMy = true
     var cardTo: UserAllCardsModel?
-    
+    var cardFrom: UserAllCardsModel?
+    var withProducts: Bool = true
     var paymentTemplate: PaymentTemplateData? = nil
     
     var trasfer = ("", "") {
@@ -44,7 +49,6 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
         }
     }
     
-    
     var cardFromField = CardChooseView()
     var seporatorView = SeparatorView()
     var cardFromListView: CardsScrollView!
@@ -55,7 +59,6 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
     lazy var cardView = CastomCardView()
     
     var stackView = UIStackView(arrangedSubviews: [])
-    
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -70,6 +73,110 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
         super.init(nibName: nil, bundle: nil)
         self.cardTo = cardTo
     }
+    
+    init(cardFrom: UserAllCardsModel) {
+        super.init(nibName: nil, bundle: nil)
+        self.cardFrom = cardFrom
+        self.cardFromField.model = cardFrom
+        self.cardFromField.choseButton?.isHidden = true
+        self.cardFromField.choseButton?.isHidden = true
+        self.cardFromField.didChooseButtonTapped = nil
+        self.bottomView.isEnable = false
+        self.withProducts = false
+        
+        self.bottomView.buttomLabel.text = "Условия снятия"
+        self.bottomView.buttomLabel.isHidden = false
+        self.bottomView.buttomLabel.alpha = 1
+        
+        self.bottomView.infoButton.isHidden = false
+        self.bottomView.infoButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
+        self.bottomView.infoButton.setTitle("", for: .normal)
+        self.bottomView.infoButton.isHidden = false
+        
+        self.bottomView.topLabel.alpha = 1
+        
+        self.bottomView.amountTextField.text = "\(cardFrom.balance.currencyFormatter())"
+        self.bottomView.amountTextField.isEnabled = false
+    
+        self.bottomView.doneButton.isEnabled = true
+        self.bottomView.doneButtonIsEnabled(false)
+        bind()
+        guard let currency = cardFrom.currencyCode else {
+            return
+        }
+        
+        self.bottomView.currencySymbol = currency
+    }
+    
+    func bind() {
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink {[unowned self] action in
+
+                switch action {
+                case _ as ModelAction.Deposits.Close.Request:
+                    self.showActivity()
+                    
+                case let payload as ModelAction.Deposits.Close.Response:
+                    self.dismissActivity()
+                    switch payload {
+                    case .success(let data):
+                        let vc = PaymentsDetailsSuccessViewController()
+                        
+                        if data.documentStatus == "COMPLETE" {
+                            
+                            viewModel.status = .succses
+                            viewModel.summTransction = self.bottomView.amountTextField.text ?? ""
+                            
+                            if let paymentOperationDetailId = data.paymentOperationDetailId {
+                                
+                                viewModel.paymentOperationDetailId = paymentOperationDetailId
+
+                            }
+                            
+                            viewModel.cardFromRealm = self.cardFrom
+                            
+                            if let category = data.category {
+                                
+                                viewModel.dateOfTransction = category
+                            }
+                            
+                            if let comment = data.comment {
+                                
+                                viewModel.comment = comment
+                            }
+                        }
+                        
+                        vc.confurmVCModel = viewModel
+                        vc.confurmVCModel?.type = .closeDeposit
+                        vc.printFormType = "closeDeposit"
+                        
+                        let nav = UINavigationController(rootViewController: vc)
+                        nav.modalPresentationStyle = .fullScreen
+                        self.present(nav, animated: true, completion: nil)
+                        
+                    case .failure(let error):
+                        self.showAlert(with: "Ошибка", and: error)
+                    }
+                    
+                default:
+                    self.dismissActivity()
+                    break
+                }
+                
+            }.store(in: &bindings)
+    }
+    
+    @objc func buttonAction(sender: UIButton!) {
+        
+        let vc = InfoViewController()
+        
+        let nav = UINavigationController(rootViewController: vc)
+        nav.modalPresentationStyle = .custom
+        nav.transitioningDelegate = self
+        self.present(nav, animated: true, completion: nil)
+        
+       }
     
     init(paymentTemplate: PaymentTemplateData) {
         super.init(nibName: nil, bundle: nil)
@@ -87,7 +194,7 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
     final func checkModel(with model: ConfirmViewControllerModel) {
         guard let cardFrom = model.cardFromRealm else { return }
         guard let cardTo = model.cardToRealm else { return }
-        //        guard model.cardFrom != nil, model.cardTo != nil else { return }
+
         print("Отображаем кнопку для переворачивания списка карт")
         /// Отображаем кнопку для переворачивания списка карт
         
@@ -95,8 +202,9 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
         self.bottomView.currencySwitchButton.isHidden = (model.cardFromRealm?.currency! == model.cardToRealm?.currency!) ? true : false // Правильно true : false сейчас для теста
         self.bottomView.currencySwitchButton.setTitle((model.cardFromRealm?.currency?.getSymbol() ?? "") + " ⇆ " + (model.cardToRealm?.currency?.getSymbol() ?? ""), for: .normal)
         /// Когда скрывается кнопка смены валют, то есть валюта одинаковая, то меняем содержание лейбла на то, что по умолчанию
-        
-        if self.bottomView.currencySwitchButton.isHidden == true {
+
+        if self.bottomView.currencySwitchButton.isHidden == true, cardFrom.productType != ProductType.deposit.rawValue, withProducts {
+            
             self.bottomView.buttomLabel.text = "Возможна комиссия ℹ︎"
         }
     }
@@ -104,19 +212,33 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
     func updateCards(cards: [UserAllCardsModel]) {
   
         if let cardTo = cardTo, cardTo.productType != ProductType.loan.rawValue {
-            
+
             self.cardToField.model = cardTo
             self.viewModel.cardToRealm = cardTo
+
         } else if cardTo?.productType == ProductType.loan.rawValue {
-            
+
             let accountLoan = cards.filter({$0.accountNumber == cardTo?.settlementAccount})
             self.cardToField.model = accountLoan.first
             self.viewModel.cardToRealm = accountLoan.first
         }
-        
-//        self.cardFromField.model = cards.first
-        self.viewModel.cardFromRealm = cards.first
+        if cardFrom != nil {
+
+            self.viewModel.cardFromRealm = cardFrom
+        } else {
+
+            self.viewModel.cardFromRealm = cards.first
+        }
     }
     
 }
 
+extension CustomPopUpWithRateView: UIViewControllerTransitioningDelegate {
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        
+        let presenter = PresentationController(presentedViewController: presented, presenting: presenting)
+            
+        presenter.height = 276
+        return presenter
+    }
+}

@@ -15,26 +15,24 @@ class NewProductCell: UICollectionViewCell, SelfConfiguringCell {
         transferImage.image = UIImage(named: payment.iconName ?? "")
         transferLabel.text = payment.name
         descriptionLabel.text = payment.description
-        if
-//#if DEBUG
-//            payment.id == 98 ||
-//#endif
-                payment.id == 97 || payment.id == 96 || payment.id == 95{
-            self.backgroundView?.alpha = 0.4
-            transferImage.alpha = 0.4
-            transferLabel.alpha = 0.4
-            descriptionLabel.alpha = 0.4
-            self.isUserInteractionEnabled = false
-        } else {
-            self.backgroundView?.alpha = 1
-            transferImage.alpha = 1
-            transferLabel.alpha = 1
-            descriptionLabel.alpha = 1
-            self.isUserInteractionEnabled = true
-        }
-        
+//        if
+//            
+//            payment.id == 97 || payment.id == 96 || payment.id == 95{
+//            self.backgroundView?.alpha = 0.4
+//            transferImage.alpha = 0.4
+//            transferLabel.alpha = 0.4
+//            descriptionLabel.alpha = 0.4
+//            self.isUserInteractionEnabled = false
+//        } else {
+//            
+//            self.backgroundView?.alpha = 1
+//            transferImage.alpha = 1
+//            transferLabel.alpha = 1
+//            descriptionLabel.alpha = 1
+//            self.isUserInteractionEnabled = true
+//        }
     }
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -45,7 +43,7 @@ class NewProductCell: UICollectionViewCell, SelfConfiguringCell {
         container.translatesAutoresizingMaskIntoConstraints = false
         addSubview(container)
         NSLayoutConstraint.activate([
-        
+            
             container.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
             container.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
             container.topAnchor.constraint(equalTo: topAnchor, constant: 12),

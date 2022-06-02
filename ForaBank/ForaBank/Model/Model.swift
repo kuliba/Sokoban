@@ -288,6 +288,9 @@ class Model {
                 case _ as ModelAction.Deposits.List.Request:
                     handleDepositsListRequest()
                     
+                case let payload as ModelAction.Deposits.Close.Request:
+                    handleCloseDepositRequest(payload)
+                    
                 
                 //MARK: - Notification Action
                 

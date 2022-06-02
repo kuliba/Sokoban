@@ -73,7 +73,7 @@ class C2BDetailsFormViewController: UIViewController {
         dismissActivity()
         cardFromField.model = C2BDetailsViewModel.sourceModel
         cardFromField.isHidden = false
-        cardFromField.choseButton.isHidden = true
+        cardFromField.choseButton?.isHidden = true
         cardFromField.balanceLabel.isHidden = true
         cardFromField.titleLabel.text = "Счет списания"
         cardFromField.leftTitleAncor.constant = 64

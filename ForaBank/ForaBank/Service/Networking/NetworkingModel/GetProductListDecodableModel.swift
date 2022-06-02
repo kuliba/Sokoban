@@ -95,6 +95,8 @@ struct GetProductListDatum: Codable{
     let statusPC: String?
     let interestRate: Float?
     let openDate: Int?
+    let endDate: Int?
+    let endDate_nf: Bool?
     let branchId: Int?
     let expireDate: String?
     let depositProductID: Int?
@@ -192,6 +194,8 @@ extension GetProductListDatum {
         statusPC: String?? = nil,
         interestRate: Float? = nil,
         openDate: Int?? = nil,
+        endDate: Int?? = nil,
+        endDate_nf: Bool?? = nil,
         branchId: Int?? = nil,
         expireDate: String?? = nil,
         depositProductID: Int?? = nil,
@@ -253,6 +257,8 @@ extension GetProductListDatum {
             statusPC: statusPC ?? self.statusPC,
             interestRate: interestRate ?? self.interestRate,
             openDate: openDate ?? self.openDate,
+            endDate: endDate ?? self.endDate,
+            endDate_nf: endDate_nf ?? self.endDate_nf,
             branchId: branchId ?? self.branchId,
             expireDate: expireDate ?? self.expireDate,
             depositProductID: depositProductID ?? self.depositProductID,

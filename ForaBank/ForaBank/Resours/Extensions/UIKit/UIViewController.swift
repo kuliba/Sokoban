@@ -93,18 +93,12 @@ extension UIViewController {
         DispatchQueue.main.async {
             
             UIApplication.shared.keyWindow?.startIndicatingActivity()
-            
-//            ProgressHUD.colorAnimation = #colorLiteral(red: 1, green: 0.2117647059, blue: 0.2117647059, alpha: 1)
-//            ProgressHUD.colorHUD = .clear
-//            ProgressHUD.animationType = .circleRotateChase
-//            ProgressHUD.show()
         }
     }
 
     func dismissActivity() {
         DispatchQueue.main.async {
             UIApplication.shared.keyWindow?.stopIndicatingActivity()
-//            ProgressHUD.dismiss()
         }
     }
     
@@ -126,12 +120,6 @@ extension UIViewController {
                                      action: #selector(onClose))
         button.tintColor = .black
         navigationItem.leftBarButtonItem = button
-
-//        let button2 = UIBarButtonItem(image: UIImage(named: "sbp-logo"),
-//                style: .plain,
-//                target: self,
-//                action: #selector(onClose))
-        //button2.tintColor = .black
 
         let imageViewRight = UIImageView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
         imageViewRight.contentMode = .scaleAspectFit

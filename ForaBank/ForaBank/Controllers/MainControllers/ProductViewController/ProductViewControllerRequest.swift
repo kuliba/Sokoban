@@ -265,7 +265,6 @@ extension ProductViewController {
                         
                         self.emptySpending.isHidden = true
                         self.tableView.isHidden = false
-                        self.tableView.reloadData()
                         self.tableView.hideSkeleton()
 
                     } else {

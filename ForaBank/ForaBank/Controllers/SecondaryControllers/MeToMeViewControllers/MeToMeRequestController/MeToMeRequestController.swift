@@ -67,13 +67,11 @@ class MeToMeRequestController: UIViewController {
         cardField.titleLabel.text = "Счет зачисления"
         cardField.titleLabel.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
         cardField.imageView.isHidden = false
-        cardField.choseButton.isHidden = true
+        cardField.choseButton?.isHidden = true
         cardField.leftTitleAncor.constant = 64
         cardField.layoutIfNeeded()
         return cardField
     }()
-    
-//    lazy var cardListView = CardListView(onlyMy: false)
     
     lazy var summTransctionField = ForaInput(
         viewModel: ForaInputModel(

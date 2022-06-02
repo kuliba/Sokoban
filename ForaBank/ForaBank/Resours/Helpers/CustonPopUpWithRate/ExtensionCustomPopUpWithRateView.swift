@@ -55,12 +55,21 @@ extension CustomPopUpWithRateView {
         view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         view.clipsToBounds = true
         view.backgroundColor = .white
-        
-        stackView = UIStackView(arrangedSubviews: [cardFromField,
-                                                   seporatorView,
-                                                   cardFromListView,
-                                                   cardToField,
-                                                   cardToListView])
+        if withProducts {
+            
+            stackView = UIStackView(arrangedSubviews: [cardFromField,
+                                                       seporatorView,
+                                                       cardFromListView,
+                                                       cardToField,
+                                                       cardToListView])
+        } else {
+            
+            stackView = UIStackView(arrangedSubviews: [cardFromField,
+                                                       seporatorView,
+                                                       cardToField,
+                                                       cardToListView])
+        }
+
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fillProportionally
@@ -180,7 +189,8 @@ extension CustomPopUpWithRateView {
     }
     
     func setupAmount(amount: Double?) {
-        guard let moneyFormatter = bottomView.moneyFormatter else { return }
+        
+        let moneyFormatter = bottomView.moneyFormatter
         let newText = moneyFormatter.format("\(amount ?? 0)") ?? ""
         bottomView.amountTextField.text = newText
         bottomView.doneButtonIsEnabled(newText.isEmpty)
@@ -238,9 +248,17 @@ extension CustomPopUpWithRateView {
             self.reversCard = ""
         }
         
-        bottomView.didDoneButtonTapped = { [weak self] (amaunt) in
-            self?.viewModel.summTransction = amaunt
-            self?.doneButtonTapped(with: self!.viewModel)
+        if  self.cardFromField.model?.productType == ProductType.deposit.rawValue {
+            
+            self.bottomView.didDoneButtonTapped = { [weak self] (amaunt) in
+                self?.closeDeposit()
+            }
+            
+        } else {
+            bottomView.didDoneButtonTapped = { [weak self] (amaunt) in
+                self?.viewModel.summTransction = amaunt
+                self?.doneButtonTapped(with: self!.viewModel)
+            }
         }
     }
     
@@ -249,13 +267,17 @@ extension CustomPopUpWithRateView {
         cardFromField.numberCardLabel.text = onlyMy
             ? "Номер карты или счета"
             : "Номер карты отправителя"
-        cardFromField.didChooseButtonTapped = { () in
+        
+        if withProducts {
+            
+            cardFromField.didChooseButtonTapped = { () in
 
-            self.openOrHideView(self.cardFromListView) {
-                self.seporatorView.curvedLineView.isHidden.toggle()
-                self.seporatorView.straightLineView.isHidden.toggle()
-                if !self.cardToListView.isHidden {
-                    self.hideView(self.cardToListView, needHide: true) { }
+                self.openOrHideView(self.cardFromListView) {
+                    self.seporatorView.curvedLineView.isHidden.toggle()
+                    self.seporatorView.straightLineView.isHidden.toggle()
+                    if !self.cardToListView.isHidden {
+                        self.hideView(self.cardToListView, needHide: true) { }
+                    }
                 }
             }
         }
@@ -266,12 +288,12 @@ extension CustomPopUpWithRateView {
         cardToField.numberCardLabel.text = onlyMy
             ? "Номер карты или счета"
             : "Номер карты получателя"
+        
         cardToField.didChooseButtonTapped = { () in
-//            guard self.paymentTemplate == nil else { return }
             self.openOrHideView(self.cardToListView) {
                 self.seporatorView.curvedLineView.isHidden = false
                 self.seporatorView.straightLineView.isHidden = true
-                if !self.cardFromListView.isHidden {
+                if self.withProducts, !self.cardFromListView.isHidden {
                     self.hideView(self.cardFromListView, needHide: true) {
                         self.stackView.layoutIfNeeded()
                     }
@@ -282,56 +304,68 @@ extension CustomPopUpWithRateView {
     
     /// Инициализация верхних карт
     private func setupListFrom() {
-        cardFromListView = CardsScrollView(onlyMy: onlyMy, deleteDeposit: true)
-        cardFromListView.didCardTapped = { (cardId) in
-            DispatchQueue.main.async {
-                guard let cardList = self.allCardsFromRealm else { return }
-                cardList.forEach({ card in
-                    if card.id == cardId {
-                        self.viewModel.cardFromRealm = card
-                        self.reversCard = ""
-                        self.cardFromField.model = card
-                        self.hideView(self.cardFromListView, needHide: true) {
-                            if !self.cardToListView.isHidden {
-                                self.hideView(self.cardToListView, needHide: true) { }
+        if withProducts {
+            cardFromListView = CardsScrollView(onlyMy: onlyMy, deleteDeposit: true)
+            cardFromListView.didCardTapped = { (cardId) in
+                DispatchQueue.main.async {
+                    guard let cardList = self.allCardsFromRealm else { return }
+                    cardList.forEach({ card in
+                        if card.id == cardId {
+                            self.viewModel.cardFromRealm = card
+                            self.reversCard = ""
+                            self.cardFromField.model = card
+                            self.hideView(self.cardFromListView, needHide: true) {
+                                if !self.cardToListView.isHidden {
+                                    self.hideView(self.cardToListView, needHide: true) { }
+                                }
+                                self.seporatorView.curvedLineView.isHidden = false
+                                self.seporatorView.straightLineView.isHidden = true
+                                self.stackView.layoutIfNeeded()
                             }
-                            self.seporatorView.curvedLineView.isHidden = false
-                            self.seporatorView.straightLineView.isHidden = true
-                            self.stackView.layoutIfNeeded()
                         }
-                    }
-                })
-            }
-        }
-        cardFromListView.lastItemTap = {
-            print("Открывать все карты ")
-            let vc = AllCardListViewController()
-            vc.withTemplate = false
-            if self.onlyMy {
-                vc.onlyCard = false
-            }
-            vc.didCardTapped = { card in
-                self.viewModel.cardFrom = card
-                self.reversCard = ""
-                self.cardFromField.cardModel = card
-                if !self.cardFromListView.isHidden {
-                    self.hideView(self.cardFromListView, needHide: true) {
-                        self.hideView(self.cardToListView, needHide: true) {
-                            self.stackView.layoutIfNeeded()
-                        }
-                    }
+                    })
                 }
-                vc.dismiss(animated: true, completion: nil)
             }
-            let navVc = UINavigationController(rootViewController: vc)
-            navVc.modalPresentationStyle = .fullScreen
-            self.present(navVc, animated: true, completion: nil)
+            
+            cardFromListView.lastItemTap = {
+                print("Открывать все карты ")
+                let vc = AllCardListViewController()
+                vc.withTemplate = false
+                if self.onlyMy {
+                    vc.onlyCard = false
+                }
+                vc.didCardTapped = { card in
+                    self.viewModel.cardFrom = card
+                    self.reversCard = ""
+                    self.cardFromField.cardModel = card
+                    if !self.cardFromListView.isHidden {
+                        self.hideView(self.cardFromListView, needHide: true) {
+                            self.hideView(self.cardToListView, needHide: true) {
+                                self.stackView.layoutIfNeeded()
+                            }
+                        }
+                    }
+                    vc.dismiss(animated: true, completion: nil)
+                }
+                let navVc = UINavigationController(rootViewController: vc)
+                navVc.modalPresentationStyle = .fullScreen
+                self.present(navVc, animated: true, completion: nil)
+            }
         }
     }
     
     /// Инициализация нижних карт
     private func setupListTo() {
-        cardToListView = CardsScrollView(onlyMy: onlyMy)
+        
+        if withProducts {
+            
+            cardToListView = CardsScrollView(onlyMy: onlyMy)
+        } else {
+            
+            cardToListView = CardsScrollView(onlyMy: onlyMy, deleteDeposit: true)
+
+        }
+        
         cardToListView.didCardTapped = { (cardId) in
             DispatchQueue.main.async {
                 guard let cardList = self.allCardsFromRealm else { return }
@@ -341,7 +375,7 @@ extension CustomPopUpWithRateView {
                         self.reversCard = ""
                         self.cardToField.model = card
                         self.hideView(self.cardToListView, needHide: true) {
-                            if !self.cardFromListView.isHidden {
+                            if self.withProducts, !self.cardFromListView.isHidden {
                                 self.hideView(self.cardFromListView, needHide: true) { }
                             }
                             self.stackView.layoutIfNeeded()
@@ -350,6 +384,7 @@ extension CustomPopUpWithRateView {
                 })
             }
         }
+        
         cardToListView.lastItemTap = {
             print("Открывать все карты ")
             let vc = AllCardListViewController()

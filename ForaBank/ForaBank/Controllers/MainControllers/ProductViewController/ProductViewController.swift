@@ -77,7 +77,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
     }
     
     var firstTimeLoad = false
-    var indexItem: Int?
     var scrollView = UIScrollView()
     var collectionView = UICollectionView(frame: .init(), collectionViewLayout: .init())
     var products = [UserAllCardsModel]() {
@@ -513,8 +512,31 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             
             self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4)))", color: "#ffffff")
             
-            button2.alpha = 0.4
-            button2.isUserInteractionEnabled = false
+            let currentDate = Date()
+            let endDate = product?.endDate ?? 0
+            
+            let dateEnd = Date(timeIntervalSince1970: TimeInterval((endDate) / 1000))
+
+            if  dateEnd <= currentDate {
+                
+                button.alpha = 0.4
+                button.isUserInteractionEnabled = false
+            } else {
+                
+                button.alpha = 1
+                button.isUserInteractionEnabled = true
+            }
+             
+           if dateEnd <= currentDate {
+                
+                button2.alpha = 1
+                button2.isUserInteractionEnabled = true
+                button2.target(forAction: #selector(presentPaymentVC), withSender: .none)
+            } else {
+                
+                button2.alpha = 0.4
+                button2.isUserInteractionEnabled = false
+            }
             
             button4.setTitle("Управление", for: .normal)
             button4.setImage(UIImage(named: "server"), for: .normal)
@@ -759,7 +781,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         navigationItem.leftBarButtonItem = button
     }
     
-    @objc func onCloseScreen(){
+    @objc func onCloseScreen() {
         self.dismiss(animated: true, completion: nil)
     }
     
@@ -797,10 +819,30 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
     }
     
     @objc func presentPaymentVC() {
-        let vc = PaymentsViewController()
-        vc.searchContact.isHidden = true
-        vc.addCloseButton()
-        present(vc, animated: true, completion: nil)
+        
+        if product?.productType == ProductType.deposit.rawValue {
+            
+            let model = ConfirmViewControllerModel(type: .card2card)
+            var popView = CustomPopUpWithRateView()
+            
+            if let card = product {
+                
+                popView = CustomPopUpWithRateView(cardFrom: card)
+            }
+            
+            popView.viewModel = model
+
+            popView.modalPresentationStyle = .custom
+            popView.transitioningDelegate = self
+            self.present(popView, animated: true, completion: nil)
+            
+        } else {
+            
+            let vc = PaymentsViewController()
+            vc.searchContact.isHidden = true
+            vc.addCloseButton()
+            present(vc, animated: true, completion: nil)
+        }
     }
     
     @objc func presentBottomSheet(sender: AnyObject) {
@@ -949,6 +991,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
     }
     
     func loadHistoryForCard(){
+        
         historyArray.removeAll()
         historyArrayAccount.removeAll()
         historyArrayDeposit.removeAll()
@@ -958,7 +1001,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         groupByCategory.removeAll()
         groupByCategoryAccount.removeAll()
         groupByCategoryDeposit.removeAll()
-        tableView.reloadInputViews()
         
         if product?.productType == "ACCOUNT"{
             
@@ -1150,6 +1192,11 @@ extension ProductViewController: UIViewControllerTransitioningDelegate {
             } else {
                 presenter.height = 220
             }
+        }
+        
+        if presented is CustomPopUpWithRateView {
+            
+            presenter.height = 490
         }
         return presenter
     }

@@ -30,13 +30,9 @@ class ConfirmViewControllerModel {
                 cardFromAccountId = "\(cardFrom.id)"
                 cardFromCardId = ""
             }
-//            else if cardFrom.productType == "DEPOSIT" {
-//                cardFromAccountId = "\(cardFrom.accountID)"
-//                cardFromCardId = ""
-//            }
-            
         }
     }
+    
     var cardFrom: GetProductListDatum? {
         didSet {
             guard let cardFrom = cardFrom else { return }
@@ -53,6 +49,7 @@ class ConfirmViewControllerModel {
             }
         }
     }
+    
     var cardFromCardId = ""
     var cardFromCardNumber = ""
     var cardFromExpireDate = ""
@@ -162,7 +159,8 @@ class ConfirmViewControllerModel {
         case gkh
         case mobilePayment
         case openDeposit
-        
+        case closeDeposit
+
         //BANK_DEF, BEST2PAY, CHANGE_OUTGOING, CONTACT_ADDRESSING, CONTACT_ADDRESSLESS, DIRECT, ELECSNET, EXTERNAL, HOUSING_AND_COMMUNAL_SERVICE, INTERNAL, INTERNET, ME2ME_CREDIT, ME2ME_DEBIT, MOBILE, OTH, RETURN_OUTGOING, SFP
         
         init?(with transferType: StringLiteralType) {
@@ -194,7 +192,7 @@ class ConfirmViewControllerModel {
                 
             case "SFP":
                 self = .phoneNumberSBP
-   
+            
             default:
                 return nil
             }
@@ -286,6 +284,7 @@ class ContactConfurmViewController: UIViewController {
 
     var fromTitle = "От куда"
     var toTitle = "Куда"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -293,19 +292,21 @@ class ContactConfurmViewController: UIViewController {
         hideKeyboardWhenTappedAround()
         NotificationCenter.default.addObserver(self, selector: #selector(self.setOtpCode(_:)), name: NSNotification.Name(rawValue: "otpCode"), object: nil)
         let statusValue = createTransferSBP?.data?.additionalList?.filter({$0.fieldName == "AFResponse"})
-        if statusValue?[0].fieldValue == "G"{
+        if statusValue?[0].fieldValue == "G" {
         
         } else {
+            
             guard let data = self.createTransferSBP else {
                 return
             }
+            
             self.presentSwiftUIView(data: AntifraudViewModel(model: data, phoneNumber: self.phoneField.text))
 
         }
         NotificationCenter.default.addObserver(forName: NSNotification.Name("dismissSwiftUI"), object: nil, queue: nil) { data in
+            
             let vc = PaymentsDetailsSuccessViewController()
             vc.modalPresentationStyle = .fullScreen
-    //            vc.confurmView.operatorImageView = ""
             vc.confurmView.statusImageView.image = UIImage(named: "waiting")
             vc.confurmView.summLabel.text = self.summTransctionField.text
             vc.confurmView.statusLabel.text = "Перевод отменен!"
@@ -413,13 +414,18 @@ class ContactConfurmViewController: UIViewController {
             summTransctionField.text = model.numberTransction
             
             cardFromField.isHidden = false
-            cardFromField.choseButton.isHidden = true
+            cardFromField.choseButton?.isHidden = true
             cardFromField.balanceLabel.isHidden = true
             cardFromField.leftTitleAncor.constant = 64
             cardFromField.titleLabel.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
             cardFromField.model = model.cardFromRealm
             
         case .card2card:
+            
+            currTransctionField.text = model.summInCurrency
+            cardToField.model = model.cardToRealm
+            cardFromField.model = model.cardFromRealm
+            
             nameField.isHidden = true
             numberTransctionField.isHidden = true
             phoneField.isHidden = true
@@ -428,7 +434,7 @@ class ContactConfurmViewController: UIViewController {
             currancyTransctionField.isHidden = true
             
             cardFromField.isHidden = false
-            cardFromField.choseButton.isHidden = true
+            cardFromField.choseButton?.isHidden = true
             cardFromField.titleLabel.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
             cardFromField.balanceLabel.isHidden = true
             cardFromField.leftTitleAncor.constant = 64
@@ -438,7 +444,7 @@ class ContactConfurmViewController: UIViewController {
             
             
             cardToField.isHidden = false
-            cardToField.choseButton.isHidden = true
+            cardToField.choseButton?.isHidden = true
             cardToField.balanceLabel.isHidden = true
             cardToField.leftTitleAncor.constant = 64
             
@@ -448,8 +454,6 @@ class ContactConfurmViewController: UIViewController {
             if !model.summInCurrency.isEmpty {
                 currTransctionField.isHidden = false
             }
-            currTransctionField.text = model.summInCurrency
-            cardToField.model = model.cardToRealm
             
         case .phoneNumber, .phoneNumberSBP:
             cardToField.isHidden = true
@@ -489,7 +493,7 @@ class ContactConfurmViewController: UIViewController {
 
             cardFromField.model = model.cardFromRealm
             cardFromField.isHidden = false
-            cardFromField.choseButton.isHidden = true
+            cardFromField.choseButton?.isHidden = true
             cardFromField.balanceLabel.isHidden = true
             cardFromField.titleLabel.text = "Счет списания"
             cardFromField.leftTitleAncor.constant = 64
@@ -509,7 +513,7 @@ class ContactConfurmViewController: UIViewController {
 
             cardFromField.cardModel = model.cardFrom
             cardFromField.isHidden = false
-            cardFromField.choseButton.isHidden = true
+            cardFromField.choseButton?.isHidden = true
             cardFromField.balanceLabel.isHidden = true
             cardFromField.titleLabel.text = "Счет списания"
             cardFromField.leftTitleAncor.constant = 64
@@ -575,7 +579,7 @@ class ContactConfurmViewController: UIViewController {
             self.dismissActivity()
             cardFromField.cardModel = model.cardFrom
             cardFromField.isHidden = false
-            cardFromField.choseButton.isHidden = true
+            cardFromField.choseButton?.isHidden = true
             cardFromField.balanceLabel.isHidden = true
             cardFromField.titleLabel.text = "Счет списания"
             cardFromField.leftTitleAncor.constant = 64
@@ -601,6 +605,59 @@ class ContactConfurmViewController: UIViewController {
                 
                 let customViewItem = UIBarButtonItem(customView: UIImageView(image: navImage))
                 self.navigationItem.rightBarButtonItem = customViewItem
+            }
+        case .closeDeposit:
+            
+            currTransctionField.text = model.summInCurrency
+            cardToField.model = model.cardToRealm
+            cardFromField.model = model.cardFromRealm
+            
+            nameField.isHidden = true
+            numberTransctionField.isHidden = true
+            phoneField.isHidden = true
+            bankField.isHidden = true
+            countryField.isHidden = true
+            currancyTransctionField.isHidden = true
+            
+            cardFromField.isHidden = false
+            cardFromField.choseButton?.isHidden = true
+            cardFromField.titleLabel.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
+            cardFromField.balanceLabel.isHidden = true
+            cardFromField.leftTitleAncor.constant = 64
+            
+            cardFromField.titleLabel.text = fromTitle
+            
+            cardToField.isHidden = false
+            cardToField.choseButton?.isHidden = true
+            cardToField.balanceLabel.isHidden = true
+            cardToField.leftTitleAncor.constant = 64
+            
+            
+            cardToField.titleLabel.text = toTitle
+            
+            if !model.summInCurrency.isEmpty {
+                
+                currTransctionField.isHidden = false
+            }
+            
+            if !model.comment.isEmpty {
+                
+                taxTransctionField.isHidden = false
+                taxTransctionField.viewModel.title = "Назначение платежа"
+                taxTransctionField.text = "Назначение платежа"
+                taxTransctionField.textField.isHidden = true
+                taxTransctionField.imageView.image = #imageLiteral(resourceName: "comment")
+                taxTransctionField.descriptionLabel.text = model.comment
+                taxTransctionField.descriptionLabel.isHidden = false
+                taxTransctionField.anchor(height: 100)
+            }
+            
+            if !model.dateOfTransction.isEmpty {
+                currancyTransctionField.isHidden = false
+                currancyTransctionField.viewModel.title = "Тип платежа"
+                currancyTransctionField.viewModel.image = #imageLiteral(resourceName: "date")
+                currancyTransctionField.text = model.dateOfTransction
+
             }
         }
         
@@ -676,6 +733,7 @@ class ContactConfurmViewController: UIViewController {
                                currTransctionField,
                                currancyTransctionField,
                                smsCodeField])
+        
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .equalSpacing
@@ -720,7 +778,6 @@ class ContactConfurmViewController: UIViewController {
         case .card2card, .requisites, .phoneNumber, .gkh, .mobilePayment:
             NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { response, error in
                 if error != nil {
-//                    self.showNetErrorAlert ()
                     self.dismissActivity()
                     self.doneButtonIsEnabled(false)
                     self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
@@ -797,15 +854,13 @@ class ContactConfurmViewController: UIViewController {
                         }
                         
                         vc.confurmVCModel = self.confurmVCModel
-//                        self.doneButton.isEnabled = true
-//                        self.doneButton.backgroundColor = .red
                         let nav = UINavigationController(rootViewController: vc)
                         nav.modalPresentationStyle = .fullScreen
                         self.present(nav, animated: true, completion: nil)
                         
                     }
                 } else {
-//                    self.showNetErrorAlert ()
+
                     self.dismissActivity()
                     self.doneButtonIsEnabled(false)
                     self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
@@ -817,7 +872,6 @@ class ContactConfurmViewController: UIViewController {
             NetworkManager<MakeTransferDecodableModel>.addRequest(.makeTransfer, [:], body) { respons, error in
                 self.dismissActivity()
                 if error != nil {
-//                    self.showNetErrorAlert ()
                     self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
                     self.doneButtonIsEnabled(false)
                 }
@@ -881,8 +935,6 @@ class ContactConfurmViewController: UIViewController {
                         let nav = UINavigationController(rootViewController: vc)
                         nav.modalPresentationStyle = .fullScreen
                         self.present(nav, animated: true, completion: nil)
-//                        self.doneButton.isEnabled = true
-//                        self.doneButton.backgroundColor = .red
                     }
                 } else if model.statusCode == 102 {
                     self.doneButtonIsEnabled(false)
@@ -917,7 +969,6 @@ class ContactConfurmViewController: UIViewController {
         NetworkManager<CreateDirectTransferDecodableModel>.addRequest(.createServiceTransfer, [:], body) { respModel, error in
             if error != nil {
                 completion(error!)
-//                self.showNetErrorAlert ()
                 self.showAlert(with: "Ошибка", and: "Техническая ошибка. Попробуйте еще раз")
             } else {
                 completion(nil)

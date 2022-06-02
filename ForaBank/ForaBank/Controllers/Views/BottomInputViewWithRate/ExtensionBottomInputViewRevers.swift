@@ -13,7 +13,7 @@ extension BottomInputViewWithRateView  {
     final func reversedRate( _ from: String, _ whereTo: String) {
         
         guard let text = self.amountTextField.text else { return }
-        guard let unformatText = self.moneyFormatter?.unformat(text) else { return }
+        guard let unformatText = self.moneyFormatter.unformat(text) else { return }
         let (fromValue, whereValue) = (from, whereTo)
         
         let ru = (from == "RUB" || whereTo == "RUB")

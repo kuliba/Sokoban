@@ -117,10 +117,10 @@ class MainTabBarViewController: UITabBarController {
                                 })
                             }
                         } else {
-                            //                            let meToMeReq = RequestMeToMeModel(model: model)
+                    
                             let topvc = UIApplication.topViewController()
                             let vc = MeToMeRequestController()
-                            //                            vc.viewModel = meToMeReq
+                    
                             vc.modalPresentationStyle = .fullScreen
                             topvc?.present(vc, animated: true, completion: {
                                 UserDefaults.standard.set(nil, forKey: "GetMe2MeDebitConsent")
