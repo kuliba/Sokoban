@@ -180,11 +180,9 @@ extension ContactInputViewController {
                              "cardNumber" : nil,
                              "accountId" : card.accountID] as AnyObject
         }
-        print("DEBUG: ContaktPaymentBegin with body:",body)
         
         NetworkManager<CreateDirectTransferDecodableModel>.addRequest(.createDirectTransfer, [:], body, completion: { respModel, error in
             if error != nil {
-                print("DEBUG: Error: ContaktPaymentBegin ", error ?? "")
                 completion(nil, error!)
             }
             guard let respModel = respModel else { return }
@@ -211,7 +209,6 @@ extension ContactInputViewController {
                 completion(model, nil)
         
             } else {
-                print("DEBUG: Error: ContaktPaymentBegin ", respModel.errorMessage ?? "")
                 completion(nil, respModel.errorMessage)
             }
         })

@@ -32,8 +32,6 @@ struct PushHistoryModel {
            self.text = data.text
            self.type = data.type
            self.state = data.state
-            
         }
     }
-    
 }
