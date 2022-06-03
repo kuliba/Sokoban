@@ -115,7 +115,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     fileprivate func RealmConfiguration() {
          // Версия БД (изменить на большую если меняем БД)
-         let schemaVersion: UInt64 = 30
+         let schemaVersion: UInt64 = 27
 
          let config = Realm.Configuration(
                  // Set the new schema version. This must be greater than the previously used
@@ -160,6 +160,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                              let defaults = UserDefaults.standard
                              defaults.set("", forKey: DownloadQueue.Kind.operatorList.key)
                              //"DownloadQueueStorage_operatorList_Key"
+                         }
+                         
+                         if oldSchemaVersion < 28 {
+                             migration.deleteData(forType: "GetNotificationsCellModel")
+                             migration.deleteData(forType: "GetNotificationsCellModel")
                          }
 
                          // Nothing to do!

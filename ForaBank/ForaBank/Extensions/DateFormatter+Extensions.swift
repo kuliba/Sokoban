@@ -49,4 +49,13 @@ extension DateFormatter {
         
         return formatter
     }()
+    
+    static let timeAndSecond: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone(identifier: "UTC")
+        formatter.locale = Locale(identifier: "ru_RU")
+        formatter.dateFormat = "HH:mm"
+        
+        return formatter
+    }()
 }

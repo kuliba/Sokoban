@@ -17,47 +17,31 @@ class PushHistoryViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
-    var currentPage = 0
     var isLoadingList = false
-    
     var tempArray = [PushHistoryModel]()
-    var offset = UserDefaults.standard.object(forKey: "offset") as? String ?? ""
-    var offsetNumber = 0
+    var offsetNumber = "0"
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.currentPage = Int(self.offset) ?? 0
-        self.offsetNumber = Int(self.offset) ?? 0
         readCash()
         downloadPushArray()
         setupNavBar()
     }
-    
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        
-    }
-   
-    func loadMoreItemsForList() {
-           currentPage += 1
-           downloadPushArray()
-       }
-    
+
     // MARK: Загрузка истории пушей
     /// Отправляем запрос на сервер, для получения истории пушей
     func downloadPushArray() {
         self.isLoadingList = true
         showActivity()
-        let tempOffset = String(offsetNumber)
         print("tempOffset :", offsetNumber)
-        let body = ["offset": tempOffset,
-                    "limit": "10",
-                    "notificationType": "PUSH"
-                     ]
+        let body = ["offset": offsetNumber,
+                    "limit": "10" ]
         
         let query = [URLQueryItem(name: "notificationState", value: "SENT"),
                      URLQueryItem(name: "notificationState", value: "DELIVERED"),
                      URLQueryItem(name: "notificationState", value: "READ"),
-                     ]
+                     URLQueryItem(name: "notificationType", value: "PUSH"),
+                     URLQueryItem(name: "notificationType", value: "SMS"),
+        ]
         
         GetNotificationsModelSaved.add(body, [:], query) { [weak self] error in
             self?.dismissActivity()
@@ -69,7 +53,7 @@ class PushHistoryViewController: UIViewController {
             if error == "not update" {
                 return
             }
-            
+            self?.offsetNumber = "1"
             DispatchQueue.main.async {
                 var model = PushHistoryViewModel()
                 model.addSections { sections in
@@ -77,10 +61,8 @@ class PushHistoryViewController: UIViewController {
                 }
                 self?.tableView?.reloadData()
                 self?.isLoadingList = false
-                self?.offsetNumber += 10
-                UserDefaults.standard.setValue(String(self?.offsetNumber ?? 0), forKey: "offset")
             }
-           print("tempOffset2 :", self?.tempArray.count ?? 0 )
+            self?.tableView?.reloadData()
         }
     }
     
@@ -96,10 +78,10 @@ class PushHistoryViewController: UIViewController {
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-            if (((scrollView.contentOffset.y + scrollView.frame.size.height) > scrollView.contentSize.height ) && !isLoadingList){
-                self.loadMoreItemsForList()
-            }
+        if (((scrollView.contentOffset.y + scrollView.frame.size.height) > scrollView.contentSize.height ) && !isLoadingList){
+            self.downloadPushArray()
         }
+    }
     
     deinit {
 //        clearPushRealmData()

@@ -42,47 +42,28 @@ extension PushHistoryViewController: UITableViewDelegate, UITableViewDataSource 
         return 40
     }
     
-//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//        
-//        if indexPath.section == tableView.numberOfSections - 1 {
-//            print("Последняя секция в истории пушей 🏁")
-//            if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
-//                self.downloadPushArray()
-//                self.showActivity()
-//                
-//                print("Последняя ячейка в истории пушей 🚩")
-//            }
-//        }
-//        
-//    }
-    
-    
     func dateFormater(_ string: String, _ formatter: String) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "ru_RU")
+        dateFormatter.locale = Locale(identifier: "ru")
         dateFormatter.dateFormat = "dd.MM.yyyy"
         let date = dateFormatter.date(from: string)!
         
         let d = DateFormatter()
-        d.locale = Locale(identifier: "ru_RU")
+        d.locale = Locale(identifier: "ru")
         d.dateFormat = formatter
         
         let stringDate = d.string(from: date)
         return stringDate
     }
     
-//    }
-    
     /// Очищаем в REALM
     final func clearPushRealmData() {
         
         let realm = try? Realm()
         do {
-//            let b = realm?.objects(GetNotificationsEntitytModel.self)
             let a = realm?.objects(GetNotificationsCellModel.self)
             let c = realm?.objects(GetNotificationsModel.self)
             realm?.beginWrite()
-//            realm?.delete(b!)
             realm?.delete(a!)
             realm?.delete(c!)
             try realm?.commitWrite()
