@@ -267,8 +267,8 @@ class MemeDetailVC : AddHeaderImageViewController {
             self.checkModel(with: self.viewModel)
         }
         
-        bottomView.didDoneButtonTapped = { (amaunt) in
-            self.doneButtonTapped(with: self.viewModel, amaunt: amaunt)
+        bottomView.didDoneButtonTapped = { (amount) in
+            self.doneButtonTapped(with: self.viewModel, amount: amount)
         }
     }
     
@@ -509,12 +509,12 @@ class MemeDetailVC : AddHeaderImageViewController {
     
     //MARK: - API
     
-    func doneButtonTapped(with viewModel: ConfirmViewControllerModel, amaunt: String) {
+    func doneButtonTapped(with viewModel: ConfirmViewControllerModel, amount: String) {
         self.dismissKeyboard()
         self.showActivity()
         bottomView.doneButtonIsEnabled(true)
         let body = [ "check" : false,
-                     "amount" : amaunt,
+                     "amount" : amount,
                      "currencyAmount" : self.bottomView.currencyCode,
                      "payer" : [
                         "cardId" : viewModel.cardFromCardId,

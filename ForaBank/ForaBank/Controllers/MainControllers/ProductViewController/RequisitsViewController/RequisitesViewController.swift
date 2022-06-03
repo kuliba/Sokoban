@@ -37,6 +37,7 @@ class RequisitesViewController: UIViewController, UITableViewDataSource, UITable
         tableView.register(UINib(nibName: "RequisitsTableViewCell", bundle: nil), forCellReuseIdentifier: "RequisitsTableViewCell")
         mockItem = mockItem.filter({$0.description != nil})
         self.tableView.rowHeight = 56
+        self.tableView.showsVerticalScrollIndicator = false
 
         // Do any additional setup after loading the view.
     }

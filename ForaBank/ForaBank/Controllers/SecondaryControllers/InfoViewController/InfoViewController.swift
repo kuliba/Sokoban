@@ -10,6 +10,7 @@ import UIKit
 class InfoViewController: UIViewController {
     
     let titleLabel = UILabel(text: "Вы можете снять полную сумму вклада и выплаченных процентов", font: .systemFont(ofSize: 16))
+    var infoTitle: String? = nil
     let image = UIImageView(image: .init(named: "alert-circle"))
     
     override func viewDidLoad() {
@@ -20,13 +21,18 @@ class InfoViewController: UIViewController {
         setupConstraints()
     }
     
-
     func setupUI() {
         view.addSubview(image)
         view.addSubview(titleLabel)
         
         titleLabel.numberOfLines = 0
         titleLabel.textAlignment = .center
+        titleLabel.font = .systemFont(ofSize: 16)
+        
+        if let infoTitle = infoTitle {
+            
+            titleLabel.text = infoTitle
+        }
     }
 
     fileprivate func setupConstraints() {

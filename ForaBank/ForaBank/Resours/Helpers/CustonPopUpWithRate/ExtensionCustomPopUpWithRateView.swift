@@ -69,7 +69,7 @@ extension CustomPopUpWithRateView {
                                                        cardToField,
                                                        cardToListView])
         }
-
+        
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fillProportionally
@@ -154,8 +154,6 @@ extension CustomPopUpWithRateView {
         default:
             break
         }
-        
-        
     }
     
     @objc private func updateNameTemplate() {
@@ -171,14 +169,14 @@ extension CustomPopUpWithRateView {
             
             if text.isEmpty != true {
                 if text.count < 20 {
-                Model.shared.action.send(ModelAction.PaymentTemplate.Update.Requested(
-                    name: text,
-                    parameterList: nil,
-                    paymentTemplateId: templateId))
+                    Model.shared.action.send(ModelAction.PaymentTemplate.Update.Requested(
+                        name: text,
+                        parameterList: nil,
+                        paymentTemplateId: templateId))
                     
-                // FIXME: В рефактре нужно слушатель на обновление title
-                self.title = text
-                
+                    // FIXME: В рефактре нужно слушатель на обновление title
+                    self.title = text
+                    
                 } else {
                     self.showAlert(with: "Ошибка", and: "В названии шаблона не должно быть более 20 символов")
                 }
@@ -248,15 +246,23 @@ extension CustomPopUpWithRateView {
             self.reversCard = ""
         }
         
-        if  self.cardFromField.model?.productType == ProductType.deposit.rawValue {
+        if self.cardFromField.model?.productType == ProductType.deposit.rawValue {
             
-            self.bottomView.didDoneButtonTapped = { [weak self] (amaunt) in
-                self?.closeDeposit()
+            self.bottomView.didDoneButtonTapped = { [weak self] (amount) in
+                if self?.depositClose ?? false {
+                   
+                    self?.closeDeposit()
+                } else {
+                    if let amount = Double(amount) {
+                        
+                        self?.interestPayment(amount: amount)
+                    }
+                }
             }
             
         } else {
-            bottomView.didDoneButtonTapped = { [weak self] (amaunt) in
-                self?.viewModel.summTransction = amaunt
+            bottomView.didDoneButtonTapped = { [weak self] (amount) in
+                self?.viewModel.summTransction = amount
                 self?.doneButtonTapped(with: self!.viewModel)
             }
         }
@@ -265,13 +271,13 @@ extension CustomPopUpWithRateView {
     private func setupFieldFrom() {
         cardFromField.titleLabel.text = onlyMy ? "Откуда" : "С карты"
         cardFromField.numberCardLabel.text = onlyMy
-            ? "Номер карты или счета"
-            : "Номер карты отправителя"
+        ? "Номер карты или счета"
+        : "Номер карты отправителя"
         
         if withProducts {
             
             cardFromField.didChooseButtonTapped = { () in
-
+                
                 self.openOrHideView(self.cardFromListView) {
                     self.seporatorView.curvedLineView.isHidden.toggle()
                     self.seporatorView.straightLineView.isHidden.toggle()
@@ -286,8 +292,8 @@ extension CustomPopUpWithRateView {
     private func setupFieldTo() {
         cardToField.titleLabel.text = onlyMy ? "Куда" : "На карту"
         cardToField.numberCardLabel.text = onlyMy
-            ? "Номер карты или счета"
-            : "Номер карты получателя"
+        ? "Номер карты или счета"
+        : "Номер карты получателя"
         
         cardToField.didChooseButtonTapped = { () in
             self.openOrHideView(self.cardToListView) {
@@ -363,7 +369,7 @@ extension CustomPopUpWithRateView {
         } else {
             
             cardToListView = CardsScrollView(onlyMy: onlyMy, deleteDeposit: true)
-
+            
         }
         
         cardToListView.didCardTapped = { (cardId) in

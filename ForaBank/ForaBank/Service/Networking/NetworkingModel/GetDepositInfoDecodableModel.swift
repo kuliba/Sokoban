@@ -63,6 +63,7 @@ struct DepositInfoData: Codable {
     let dateOpen: Int?
     let initialAmount, interestRate, sumAccInt, sumCredit, sumDebit, sumPayInt: Double?
     let termDay: String?
+    let sumPayPrc: Double?
 }
 
 // MARK: DepositInfoData convenience initializers and mutators
@@ -94,7 +95,8 @@ extension DepositInfoData {
         sumCredit: Double?? = nil,
         sumDebit: Double?? = nil,
         sumPayInt: Double?? = nil,
-        termDay: String?? = nil
+        termDay: String?? = nil,
+        sumPayPrc: Double?? = nil
     ) -> DepositInfoData {
         return DepositInfoData(
             dateNext: dateNext ?? self.dateNext,
@@ -107,7 +109,8 @@ extension DepositInfoData {
             sumCredit: sumCredit ?? self.sumCredit,
             sumDebit: sumDebit ?? self.sumDebit,
             sumPayInt: sumPayInt ?? self.sumPayInt,
-            termDay: termDay ?? self.termDay
+            termDay: termDay ?? self.termDay,
+            sumPayPrc: sumPayPrc ?? self.sumPayPrc
         )
     }
 

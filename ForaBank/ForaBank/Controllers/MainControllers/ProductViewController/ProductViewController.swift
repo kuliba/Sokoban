@@ -54,6 +54,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             }
         }
     }
+    var sumPayPrc: Double?
     var sorted: [Dictionary<String?, [GetCardStatementDatum]>.Element] = []
     var sortedAccount: [Dictionary<String?, [GetAccountStatementDatum]>.Element] = []
     var sortedDeposit: [Dictionary<String?, [GetDepositStatementDatum]>.Element] = []
@@ -512,31 +513,11 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             
             self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4)))", color: "#ffffff")
             
-            let currentDate = Date()
-            let endDate = product?.endDate ?? 0
+            button.alpha = 0.4
+            button.isUserInteractionEnabled = false
             
-            let dateEnd = Date(timeIntervalSince1970: TimeInterval((endDate) / 1000))
-
-            if  dateEnd <= currentDate {
-                
-                button.alpha = 0.4
-                button.isUserInteractionEnabled = false
-            } else {
-                
-                button.alpha = 1
-                button.isUserInteractionEnabled = true
-            }
-             
-           if dateEnd <= currentDate {
-                
-                button2.alpha = 1
-                button2.isUserInteractionEnabled = true
-                button2.target(forAction: #selector(presentPaymentVC), withSender: .none)
-            } else {
-                
-                button2.alpha = 0.4
-                button2.isUserInteractionEnabled = false
-            }
+            button2.alpha = 0.4
+            button2.isUserInteractionEnabled = false
             
             button4.setTitle("Управление", for: .normal)
             button4.setImage(UIImage(named: "server"), for: .normal)
@@ -561,7 +542,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             
             tableView.isHidden = false
             headerView.isHidden = false
-            
+            depositInfo()
         case ProductType.loan.rawValue:
             
             if let productId = product?.id {
@@ -575,7 +556,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             
             if let additionalField = product?.additionalField, let currentInterestRate = product?.currentInterestRate {
                 
-                self.navigationItem.setTitle(title: additionalField, subtitle: "· \(String(number.suffix(4))) · \(currentInterestRate)%    ", color: "#ffffff")
+                self.navigationItem.setTitle(title: additionalField, subtitle: "· \(String(number.suffix(4))) · \(currentInterestRate)%", color: "#ffffff")
             } else {
                 
                 self.navigationItem.setTitle(title: product?.mainField ?? "", subtitle: "· \(String(number.suffix(4))) · \(product?.currentInterestRate ?? 0.0)%    ", color: "#ffffff")
@@ -763,14 +744,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         stackView2.anchor(top: stackView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingRight: 20, height: 48)
     }
     
-//    func loadProducts() {
-//
-//        allProductList = realm?.objects(UserAllCardsModel.self)
-//        AddAllUserCardtList.add() {}
-//
-//        observerRealm()
-//    }
-    
     func addCloseColorButton(with color: UIColor) {
         let button = UIBarButtonItem(image: UIImage(systemName: "xmark"),
                                      landscapeImagePhone: nil,
@@ -824,10 +797,29 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             
             let model = ConfirmViewControllerModel(type: .card2card)
             var popView = CustomPopUpWithRateView()
+            let currentDate = Date()
+            let endDate = product?.endDate ?? 0
+            let dateEnd = Date(timeIntervalSince1970: TimeInterval((endDate) / 1000))
             
-            if let card = product {
+            if let card = product, card.depositProductID == 10000003792, dateEnd > currentDate, sumPayPrc != 0 {
                 
-                popView = CustomPopUpWithRateView(cardFrom: card)
+                guard let currency = product?.currency, let sumPayPrc = sumPayPrc else {
+                    return
+                }
+                popView = CustomPopUpWithRateView(cardFrom: card, maxSum: sumPayPrc)
+                
+                popView.bottomView.amountTextField.isEnabled = true
+                popView.depositClose = false
+                    
+                popView.sumMax = sumPayPrc
+                popView.bottomView.maxSum = sumPayPrc
+
+            } else if let card = product {
+                
+                popView = CustomPopUpWithRateView(cardFrom: card, maxSum: nil)
+                popView.depositClose = true
+                popView.bottomView.amountTextField.isEnabled = false
+                popView.bottomView.amountTextField.text = product?.balance.currencyFormatter()
             }
             
             popView.viewModel = model
@@ -842,6 +834,55 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             vc.searchContact.isHidden = true
             vc.addCloseButton()
             present(vc, animated: true, completion: nil)
+        }
+    }
+    
+    func depositInfo() {
+        
+        sumPayPrc = nil
+        let bodyForInfo = ["id": product?.id] as [String : AnyObject]
+        
+        
+        NetworkManager<DepositInfoGetDepositInfoDecodebleModel>.addRequest(.getDepositInfo, [:], bodyForInfo) { model, error in
+            self.dismissActivity()
+            if error != nil {
+                print("DEBUG: Error: ", error ?? "")
+            }
+            guard let model = model else { return }
+            if model.statusCode == 0 {
+                DispatchQueue.main.async { [self] in
+                    self.sumPayPrc = model.data?.sumPayPrc
+                    
+                    let currentDate = Date()
+                    let endDate = product?.endDate ?? 0
+                    
+                    let dateEnd = Date(timeIntervalSince1970: TimeInterval((endDate) / 1000))
+
+                    if  dateEnd <= currentDate {
+                        
+                        button.alpha = 0.4
+                        button.isUserInteractionEnabled = false
+                    } else {
+                        
+                        button.alpha = 1
+                        button.isUserInteractionEnabled = true
+                    }
+                        
+                    if dateEnd <= currentDate || (product?.depositProductID == 10000003792 && sumPayPrc != 0) {
+                       
+                        button2.alpha = 1
+                        button2.isUserInteractionEnabled = true
+                        button2.target(forAction: #selector(presentPaymentVC), withSender: .none)
+                    } else {
+
+                        button2.alpha = 0.4
+                        button2.isUserInteractionEnabled = false
+                    }
+                }
+            } else {
+                self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
+                
+            }
         }
     }
     

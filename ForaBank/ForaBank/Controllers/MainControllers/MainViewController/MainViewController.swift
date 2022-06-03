@@ -379,7 +379,7 @@ class MainViewController: UIViewController {
                         
                         let formatter = NumberFormatter()
                         formatter.numberStyle = .percent
-                        formatter.maximumFractionDigits = 1
+                        formatter.maximumFractionDigits = 2
                         
                         guard let maxRateString = formatter.string(from: NSNumber(value: maxRate / 100)) else {
                             return
@@ -487,7 +487,11 @@ class MainViewController: UIViewController {
         let baners = model.catalogBanners.value
         var items: [PaymentsModel] = []
         baners.forEach { baner in
+            #if DEBUG
             let host = ServerAgent.Environment.test
+            #else
+            let host = ServerAgent.Environment.prod
+            #endif
             let urlString = host.baseURL + "/" + baner.imageLink
             print(host.baseURL + "/" + baner.imageLink)
             let cell = PaymentsModel(name: baner.productName, iconName: urlString, controllerName: baner.orderLink.absoluteString)

@@ -20,11 +20,14 @@ class BottomInputViewWithRateView: UIView {
     var currencySymbol = "" {
         didSet {
             guard moneyFormatter != nil else { return }
-            if isEnable {
-                setupMoneyController()
+            if isEnable, let amount = amountTextField.text {
+                
+                setupMoneyController(amount: amount, currency: self.currencySymbol)
             }
         }
     }
+    var maxSum: Double?
+    
     var isEnable = true
     /// Инициализируем модели карт
     var models = (to: "", from: "") {
@@ -48,7 +51,7 @@ class BottomInputViewWithRateView: UIView {
     
     // MARK: - Formatters
     var moneyFormatter = SumTextInputFormatter(textPattern: "# ###,##")
-
+    
     
     //MARK: - Property
     let kContentXibName = "BottomInputViewWithRate"
@@ -69,6 +72,7 @@ class BottomInputViewWithRateView: UIView {
     }
     
     @IBOutlet weak var amountTextField: UITextField!
+    
     @IBOutlet weak var currencySwitchButton: UIButton! {
         didSet {
             currencySwitchButton.isHidden = true
@@ -104,7 +108,10 @@ class BottomInputViewWithRateView: UIView {
         
         self.currencySwitchButton.layer.cornerRadius = 12
         self.currencySwitchButton.layer.masksToBounds = true
-        setupMoneyController()
+        if let amount = amountTextField.text {
+            
+            setupMoneyController(amount: amount, currency: self.currencySymbol)
+        }
         
         NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: amountTextField, queue: .main) { _ in
             guard let text = self.amountTextField.text else { return }
@@ -125,8 +132,8 @@ class BottomInputViewWithRateView: UIView {
     }
     
     @IBAction func doneButtonTapped(_ sender: Any) {
-        guard let amaunt = amountTextField.text else { return }
-        let unformatText = moneyFormatter.unformat(amaunt)
+        guard let amount = amountTextField.text else { return }
+        let unformatText = moneyFormatter.unformat(amount)
         let text = unformatText?.replacingOccurrences(of: ",", with: ".")
         
         if !(text?.isEmpty ?? true) {
@@ -137,20 +144,15 @@ class BottomInputViewWithRateView: UIView {
     }
     
     /// Добавляем в textField символ валюты
-    private func setupMoneyController() {
-        var amount = ""
+    func setupMoneyController(amount: String, currency: String) {
         
-        if let text = self.amountTextField.text {
-            
-            guard let unformatText = self.moneyFormatter.unformat(text) else { return }
-                amount = unformatText
-        }
+        guard let unformatText = self.moneyFormatter.unformat(amount) else { return }
         
-        self.moneyFormatter = SumTextInputFormatter(textPattern: "# ###,## \(self.currencySymbol)")
+        self.moneyFormatter = SumTextInputFormatter(textPattern: "# ###,## \(currency)")
         self.moneyInputController.formatter = self.moneyFormatter
         self.amountTextField.delegate = self.moneyInputController
         
-        let newText = self.moneyFormatter.format(amount)
+        let newText = self.moneyFormatter.format(unformatText)
         self.amountTextField.text = newText
     }
     

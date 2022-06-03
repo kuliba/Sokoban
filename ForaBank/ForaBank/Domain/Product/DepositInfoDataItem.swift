@@ -22,4 +22,5 @@ struct DepositInfoDataItem: Codable, Equatable {
 	let sumDebit: Double?
 	let sumPayInt: Double
 	let termDay: String
+    let sumPayPrc: Double?
 }

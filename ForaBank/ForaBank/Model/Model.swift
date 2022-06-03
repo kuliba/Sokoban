@@ -192,6 +192,11 @@ class Model {
                     
                 case let payload as ModelAction.Payment.Complete.Request:
                     handlePaymentsCompleteRequest(payload)
+                   
+                //MARK: - Transfers
+                    
+                case let payload as ModelAction.Transfers.CreateInterestDepositTransfer.Request:
+                    handleCreateInterestDepositTransferRequest(payload)
                     
                 //MARK: - Settings Actions
                 case _ as ModelAction.Settings.GetClientInfo.Requested:

@@ -61,7 +61,8 @@ class ServerCommandsDepositControllerTests: XCTestCase {
 									   sumCredit: 1000,
 									   sumDebit: 1000,
 									   sumPayInt: 1000,
-									   termDay: "540")
+                                       termDay: "540",
+                                       sumPayPrc: nil)
 
 		let expected = ServerCommands.DepositController.GetDepositInfo.Response(statusCode: .ok,
 																				errorMessage: "string",
@@ -94,7 +95,8 @@ class ServerCommandsDepositControllerTests: XCTestCase {
 									   sumCredit: nil,
 									   sumDebit: nil,
 									   sumPayInt: 1000,
-									   termDay: "540")
+									   termDay: "540",
+                                       sumPayPrc: nil)
 
 		let expected = ServerCommands.DepositController.GetDepositInfo.Response(statusCode: .ok,
 																				errorMessage: "string",
