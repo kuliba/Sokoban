@@ -101,10 +101,10 @@ extension ContactInputViewController {
             self.needShowSwitchView = country.code == "AM" ? true : false
             if country.code == "TR" {
                 self.phoneField.isHidden = false
-                self.phoneField.textField.maskString = "+00 (000) 000-00-00"
+//                self.phoneField.textField.maskString = "+90 (000) 000 00 00"
             } else {
                 self.phoneField.isHidden = byPhone ? false : true
-                self.phoneField.textField.maskString = "+000-0000-00-00"
+                self.phoneField.textField.maskString = "+374-00-000000"
             }
             self.bankField.isHidden = byPhone ? false : true
             self.surnameField.isHidden = byPhone ? true : false

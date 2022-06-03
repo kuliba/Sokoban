@@ -18,9 +18,15 @@ extension ContactInputViewController {
             }
             guard let banksList = banksList as? [BanksList] else { return }
             completion(banksList, nil)
-            print("DEBUG: Load Banks List... Count is: ", banksList.count)
         }
     }
+    
+    //90-535-8663013
+    func phoneNumberFormate( str : NSMutableString)->String{
+            str.insert("-", at: 2)
+            str.insert("-", at: 6)
+            return str as String
+        }
     
     func contaktPayment(with card: UserAllCardsModel, surname: String, name: String, secondName: String, amount: Double, completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {
         
@@ -60,8 +66,24 @@ extension ContactInputViewController {
                     ] ] as [String: AnyObject]
         
         if country?.code == "TR" {
+            //90-535-8663013 приходит "+96 (565) 656 56 56"
+            var phone = self.phoneField.textField.unmaskedText ?? ""
+        
+            switch phone.prefix(4) {
+            case "+90-":
+                phone = phone.applyPatternOnNumbers(pattern: "##-###-#######", replacmentCharacter: "#")
+            case "+374":
+                phone = phone.applyPatternOnNumbers(pattern: "###-##-######", replacmentCharacter: "#")
+            default:
+                print("Phone Error")
+            }
             
-            let phone = self.phoneField.textField.unmaskedText ?? ""
+            switch phone.prefix(3) {
+            case "+79":
+                phone = phone.applyPatternOnNumbers(pattern: "#-###-#######", replacmentCharacter: "#")
+            default:
+                print("Phone Error")
+            }
             
             let field = ["fieldid": 6,
                          "fieldname": "bPhone",
@@ -85,7 +107,6 @@ extension ContactInputViewController {
                              "cardNumber" : nil,
                              "accountId" : card.accountID] as AnyObject
         }
-        print("DEBUG: ContaktPaymentBegin with body:",body)
         
         NetworkManager<CreateContactAddresslessTransferDecodableModel>.addRequest(.createContactAddresslessTransfer, [:], body, completion: { respModel, error in
             if error != nil {
@@ -122,7 +143,6 @@ extension ContactInputViewController {
                 completion(model, nil)
         
             } else {
-                print("DEBUG: Error: ContaktPaymentBegin ", respModel.errorMessage ?? "")
                 completion(nil, respModel.errorMessage)
             }
         })
@@ -198,4 +218,20 @@ extension ContactInputViewController {
     }
     
     
+}
+
+
+extension String {
+
+    func applyPatternOnNumbers(pattern: String, replacmentCharacter: Character) -> String {
+        var pureNumber = self.replacingOccurrences( of: "[^0-9]", with: "", options: .regularExpression)
+        for index in 0 ..< pattern.count {
+            guard index < pureNumber.count else { return pureNumber }
+            let stringIndex = String.Index(utf16Offset: index, in: self)
+            let patternCharacter = pattern[stringIndex]
+            guard patternCharacter != replacmentCharacter else { continue }
+            pureNumber.insert(patternCharacter, at: stringIndex)
+        }
+        return pureNumber
+    }
 }
