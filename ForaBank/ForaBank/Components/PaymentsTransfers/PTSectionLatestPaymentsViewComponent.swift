@@ -24,6 +24,19 @@ extension PTSectionLatestPaymentsView {
         
         private var bindings = Set<AnyCancellable>()
         
+        init(latestPaymentsButtons: [LatestPaymentButtonVM], model: Model) {
+            self.latestPaymentsButtons = latestPaymentsButtons
+            self.model = model
+            super.init()
+        }
+        
+        init(model: Model) {
+            self.latestPaymentsButtons = []
+            self.model = model
+            super.init()
+            bind()
+        }
+        
         struct LatestPaymentButtonVM: Identifiable {
                
             let id = UUID()
@@ -37,19 +50,6 @@ extension PTSectionLatestPaymentsView {
                 case text(String)
                 case icon(Image, Color)
             }
-        }
-        
-        init(model: Model) {
-            self.latestPaymentsButtons = []
-            self.model = model
-            super.init()
-            bind()
-        }
-        
-        init(latestPaymentsButtons: [LatestPaymentButtonVM], model: Model) {
-            self.latestPaymentsButtons = latestPaymentsButtons
-            self.model = model
-            super.init()
         }
         
         func bind() {
@@ -81,7 +81,7 @@ extension PTSectionLatestPaymentsView {
         
         lazy var templateButton: [LatestPaymentButtonVM] = {
             [
-                .init(image: .icon(Image("ic24Star"), .iconBlack),
+                .init(image: .icon(.ic24Star, .iconBlack),
                       topIcon: nil,
                       description: "Шаблоны и автоплатежи",
                       action: { [weak self] in
