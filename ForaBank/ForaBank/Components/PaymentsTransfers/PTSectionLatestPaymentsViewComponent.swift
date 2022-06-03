@@ -207,15 +207,27 @@ extension LatestPaymentData.Kind {
     
     var defaultButton: ButtonVM {
         switch self {
-        case .country: return .init(image: .icon(Image("ic24Smartphone"), .iconGray),
-                                    topIcon: nil, description: "За рубеж", action: {})
-        
-        case .phone: return .init(image: .icon(Image("ic24Smartphone"), .iconGray),
-                                  topIcon: nil, description: "По телефону", action: {})
-        
-        case .service, .mobile, .transport, .internet, .taxAndStateService:
-                     return .init(image: .icon(Image("ic24Smartphone"), .iconGray),
-                                  topIcon: nil, description: "Услуги", action: {})
+        case .country:
+            return .init(image: .icon(.ic24Globe, .iconGray),
+                         topIcon: nil, description: "За рубеж", action: {})
+        case .phone:
+            return .init(image: .icon(.ic24Smartphone, .iconGray),
+                         topIcon: nil, description: "По телефону", action: {})
+        case .service:
+            return .init(image: .icon(.ic24ZKX, .iconGray),
+                         topIcon: nil, description: "Услуги ЖКХ", action: {})
+        case .mobile:
+            return .init(image: .icon(.ic24Smartphone, .iconGray),
+                         topIcon: nil, description: "Услуги связи", action: {})
+        case .internet:
+            return .init(image: .icon(.ic24Tv, .iconGray),
+                         topIcon: nil, description: "Услуги интернет", action: {})
+        case .transport:
+            return .init(image: .icon(.ic24Car, .iconGray),
+                         topIcon: nil, description: "Услуги Транспорта", action: {})
+        case .taxAndStateService:
+            return .init(image: .icon(.ic24Emblem, .iconGray),
+                         topIcon: nil, description: "Госуслуги", action: {})
         }
     }
 }
@@ -223,156 +235,112 @@ extension LatestPaymentData.Kind {
 //MARK: LatestPaymentButtonVM init
 
 extension PTSectionLatestPaymentsView.ViewModel.LatestPaymentButtonVM {
-
+    
     init(data: LatestPaymentData, model: Model, action: @escaping () -> Void) {
         
         var image = data.type.defaultButton.image
         var topIcon = data.type.defaultButton.topIcon
         var text = data.type.defaultButton.description
         
-        // for Maxim *****************************************
-        switch data {
-        
-        case let paymentData as PaymentGeneralData:
+        func mutateViewsFromContacts(by phoneNumber: String) {
             
-            switch paymentData.type {
-            case .phone:
-                print("ok matching type. handler .phone type")
-                //code handler
-            default:
-                print("error matching typeOperation and PaymentGeneralData")
-                break
+            guard case .available = model.contactsPermissionStatus,
+                  let contact = model.contact(for: phoneNumber)
+            else { return }
+            
+            if let fullName = contact.fullName { text = fullName }
+                    
+            if let avatar = contact.avatar,
+               let avatarImg = Image(data: avatar.data) {
+                image = .image(avatarImg)
+            } else {
+                if let initials = contact.initials {
+                    image = .text(initials)
+                }
             }
-
-        case let paymentData as PaymentCountryData:
-            
-            switch paymentData.type {
-            case .country:
-                print("ok matching type. handler .country type ")
-                //code handler
-            default:
-                print("error matching typeOperation and PaymentCountryData")
-                break
-            }
-            
-        case let paymentData as PaymentServiceData:
-            
-            switch paymentData.type {
-            case .service:
-                print("ok matching type. handler .service type ")
-                //code handler
-            case .internet:
-                print("ok matching type. handler .internet type ")
-                //code handler
-            case .transport:
-                print("ok matching type. handler .transport type ")
-                //code handler
-            case .mobile:
-                print("ok matching type. handler .mobile type ")
-                //code handler
-           
-                // + others type of operations
-            default:
-                print("error matching typeOperation and PaymentServiceData")
-                break
-            }
-                
-        default: break
-        // картинки по умолчанию
-        //init on top main switch
         }
-
-        ///*************************************************************
         
-        
-        // this is my solution
-        
-        switch data.type {
-        case .phone:
-            guard let paymentData = data as? PaymentGeneralData else { break }
-            print("ok matching type. handler .phone type")
-            //code handler
-            
-        case .country:
-            guard let paymentData = data as? PaymentCountryData else { break }
-            print("ok matching type. handler .country type ")
-            //code handler
-            
-        case .service:
-            guard let paymentData = data as? PaymentServiceData else { break }
-            print("ok matching type. handler .service type ")
-            //code handler
-          
-        case .transport, .internet, .mobile, .taxAndStateService:
-            guard let paymentData = data as? PaymentServiceData else { break }
-            print("ok matching type. handler others .service type ")
-            //code handler
-        }
-        //**********************************************************
-        
-        
-        
-        
-        
-        
-        switch data.type {
-        case .phone:
-            guard let paymentData = data as? PaymentGeneralData else { break }
+        switch (data.type, data) {
+        case (.phone, let paymentData as PaymentGeneralData):
             
             text = paymentData.phoneNumber
-            image = .icon(Image("ic24Smartphone"), .iconGray)
-            
             if let bank = model.dictionaryBank(for: paymentData.bankId) {
                 topIcon = bank.svgImage.image
             }
+            mutateViewsFromContacts(by: paymentData.phoneNumber)
             
-            var contact: AddressBookContact?
-            if case .available = model.contactsPermissionStatus {
-                contact = model.contact(for: paymentData.phoneNumber)
-                
-                if let contact = contact {
-                    if let fullName = contact.fullName {
-                        text = fullName
-                    }
-                    
-                    if let avatar = contact.avatar {
-                        image = .image(Image(data: avatar.data)!)
-                    } else {
-                        if let initials = contact.initials {
-                            image = .text(initials)
-                        }
-                    }
-                }
+        case (.country, let paymentData as PaymentCountryData):
+                   
+            if let firstChar = paymentData.shortName.first {
+                text = paymentData.shortName
+                image = .text(String(firstChar).uppercased())
             }
-            
-        case .country:
-            guard let paymentData = data as? PaymentCountryData else { break }
-            
-            text = paymentData.shortName
-            image = .icon(Image("ic24Smartphone"), .iconGray)
-            
             if let phone = paymentData.phoneNumber {
                 text = phone
+                mutateViewsFromContacts(by: phone)
             }
-            
-            if let country = model.dictionaryCountry(for: paymentData.countryCode) {
-                topIcon = country.svgImage?.image
+            if let country = model.dictionaryCountry(for: paymentData.countryCode),
+               let countryImg = country.svgImage?.image {
+                topIcon = countryImg
             }
-            
-        case .service, .taxAndStateService, .transport, .internet, .mobile:
-            guard let paymentData = data as? PaymentServiceData else { break }
+                    
+        case (.service, let paymentData as PaymentServiceData):
+                   
+            text = String(paymentData.puref)
+            if let oper = model.dictionaryAnywayOperator(for: paymentData.puref) {
+                text = oper.name
+                if let logo = oper.logotypeList.first?.svgImage?.image {
+                    image = .image(logo)
+                }
+            }
+                    
+        case (.transport, let paymentData as PaymentServiceData):
             
             text = String(paymentData.puref)
-            
             if let oper = model.dictionaryAnywayOperator(for: paymentData.puref) {
-                
+                text = oper.name
+                if let logo = oper.logotypeList.first?.svgImage?.image {
+                    image = .image(logo)
+                }
+            }
+                    
+        case (.internet, let paymentData as PaymentServiceData):
+                  
+            text = String(paymentData.puref)
+            if let oper = model.dictionaryAnywayOperator(for: paymentData.puref) {
                 text = oper.name
                 if let logo = oper.logotypeList.first?.svgImage?.image {
                     image = .image(logo)
                 }
             }
             
+        case (.mobile, let paymentData as PaymentServiceData):
+                
+            text = String(paymentData.puref)
+            if let phone = paymentData.additionalList.first?.fieldValue,
+               !phone.isEmpty {
+                    text = phone
+                    mutateViewsFromContacts(by: phone)
+            }
+            if let oper = model.dictionaryAnywayOperator(for: paymentData.puref),
+               let logo = oper.logotypeList.first?.svgImage?.image {
+                    topIcon = logo
+            }
+                
+        case (.taxAndStateService, let paymentData as PaymentServiceData):
+            
+            text = String(paymentData.puref)
+            if let oper = model.dictionaryAnywayOperator(for: paymentData.puref) {
+                text = oper.name
+                if let logo = oper.logotypeList.first?.svgImage?.image {
+                    image = .image(logo)
+                }
+            }
+            
+        default: //error matching, init default
+            break
         }
+        
         self.init(image: image, topIcon: topIcon, description: text, action: action)
     }
             
