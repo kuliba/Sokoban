@@ -71,7 +71,7 @@ struct UserDocumentView: View {
                 
                 Spacer()
                 
-                GrayButtonView(viewModel: viewModel.copyButton)
+                ButtonSimpleView(viewModel: viewModel.copyButton)
                     .frame(height: 48)
                     .padding(20)
             }

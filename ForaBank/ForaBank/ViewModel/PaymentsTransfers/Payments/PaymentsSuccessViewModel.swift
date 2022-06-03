@@ -29,7 +29,7 @@ class PaymentsSuccessViewModel: ObservableObject {
     
     convenience init(_ model: Model, paymentSuccess: Payments.Success, dismissAction: @escaping () -> Void) {
         
-        self.init(header: .init(with: paymentSuccess), optionButtons: [], actionButton: .init(title: "На главную", isEnabled: true, action: dismissAction), model: model)
+        self.init(header: .init(with: paymentSuccess), optionButtons: [], actionButton: .init(title: "На главную", style: .red, action: dismissAction), model: model)
     }
 }
 

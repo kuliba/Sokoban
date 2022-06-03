@@ -13,12 +13,13 @@ class UserDocumentViewModel: ObservableObject {
     
     let navigationBar: NavigationViewModel
     let itemType: DocumentCellType
-    @Published var copyButton: GrayButtonView.ViewModel
+    @Published var copyButton: ButtonSimpleView.ViewModel
     
     var items: [DocumentDelailCellView.ViewModel]
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
+    
     
     init(model: Model, navigationBar: UserDocumentViewModel.NavigationViewModel, items: [DocumentDelailCellView.ViewModel], itemType: DocumentCellType) {
         
@@ -29,11 +30,15 @@ class UserDocumentViewModel: ObservableObject {
         
         self.copyButton = .init(
             title: "Скопировать все",
+            style: .gray,
             action: {
+                
                 print("Copy action")
             })
         
     }
+    
+//    init(clientInfo: ClientInfoData, itemType: DocumentCellType, dismissAction: @escaping () -> Void) {
 
     init(model: Model, itemType: DocumentCellType, navigationBar: UserDocumentViewModel.NavigationViewModel) {
                 
@@ -43,10 +48,11 @@ class UserDocumentViewModel: ObservableObject {
         self.items = []
         self.copyButton = .init(
             title: "Скопировать все",
+            style: .gray,
             action: {
                 print("Copy action")
             })
-                
+        
         bind()
     }
         
@@ -57,7 +63,7 @@ class UserDocumentViewModel: ObservableObject {
             .sink { [unowned self] clientInfo in
                 
                 guard let clientInfo = clientInfo else { return }
-                createItems(from: clientInfo)
+                items = createItems(from: clientInfo)
 
             }.store(in: &bindings)
         
@@ -80,12 +86,12 @@ class UserDocumentViewModel: ObservableObject {
     // birthPlace
     // birthDay
     
-    func createItems(from: ClientInfoData) {
+    func createItems(from: ClientInfoData) -> [DocumentDelailCellView.ViewModel] {
         
         switch itemType {
             
         case .passport:
-            items = [
+            return [
                 .init(title: "ФИО", content: "\(from.lastName) \(from.firstName) \(from.patronymic ?? "")"),
                 .init(title: "Серия и номер", content: "\(from.regSeries ?? "") \(from.regNumber)"),
                 .init(title: "Дата выдачи", content: from.dateOfIssue),
@@ -95,7 +101,7 @@ class UserDocumentViewModel: ObservableObject {
             ]
             
         case .adressPass:
-            items = [
+            return [
                 .init(title: "Страна", content: from.addressInfo?.country),
                 .init(title: "Регион", content: from.addressInfo?.region),
                 .init(title: "Район", content: from.addressInfo?.area),
@@ -107,7 +113,7 @@ class UserDocumentViewModel: ObservableObject {
             ]
             
         case .adress:
-            items = [
+            return [
                 .init(title: "Страна", content: from.addressResidentialInfo?.country),
                 .init(title: "Регион", content: from.addressResidentialInfo?.region),
                 .init(title: "Район", content: from.addressResidentialInfo?.area),
@@ -118,7 +124,8 @@ class UserDocumentViewModel: ObservableObject {
                 
             ]
             
-        default: break
+        default:
+            return []
         }
     }
 }

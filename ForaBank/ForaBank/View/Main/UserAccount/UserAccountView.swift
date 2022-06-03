@@ -59,6 +59,21 @@ struct UserAccountView: View {
                     }
                 }
             }
+            .bottomSheet(item: $viewModel.sheet) {
+                
+                // onDismiss action
+                
+            } content: { sheet in
+                
+                switch sheet.sheetType {
+                    
+                case let .inn(model):
+                    UserAccountDocumentInfoView(viewModel: model)
+                    
+                default:
+                    EmptyView()
+                }
+            }
             .navigationBarTitle(
                 Text(viewModel.navigationBar.title).font(.textH3M18240()),
                 displayMode: .inline)
@@ -77,8 +92,8 @@ struct UserAccountView: View {
     
     var settingButton: some View {
         
-        Button(action: viewModel.navigationBar.rightButton.action) {
-            viewModel.navigationBar.rightButton.icon
+        Button(action: viewModel.navigationBar.settingsButton.action) {
+            viewModel.navigationBar.settingsButton.icon
                 .foregroundColor(.iconGray)
         }
     }
@@ -139,7 +154,6 @@ struct UserAccountView_Previews: PreviewProvider {
 extension UserAccountViewModel {
     
     static let sample = UserAccountViewModel(
-        model: Model.emptyMock,
         navigationBar: .sample,
         avatar: .init(
             image: Image("imgMainBanner2"),
@@ -152,5 +166,12 @@ extension UserAccountViewModel {
              UserAccountDocumentsView.ViewModel.documents,
              UserAccountPaymentsView.ViewModel.payments,
              UserAccountSecurityView.ViewModel.security
-            ])
+            ],
+        exitButton: .init(
+            icon: .ic24LogOut,
+            content: "Выход из приложения",
+            action: {
+                print("Exit action")
+            })
+    )
 }

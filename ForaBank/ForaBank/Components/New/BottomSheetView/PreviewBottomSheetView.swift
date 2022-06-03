@@ -52,7 +52,7 @@ class BottomSheetViewModel: ObservableObject {
 
                             switch action {
                             case let payload as BottomSheetViewModelAction.Tapped.Item:
-                                sheet = .init(sheetType: .item(payload.model))
+                                self.sheet = .init(sheetType: .item(payload.model))
 
                             default:
                                 break

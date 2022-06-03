@@ -18,23 +18,18 @@ class UserAccountViewModel: ObservableObject {
     @Published var exitButton: AccountCellFullButtonView.ViewModel
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
     @Published var isLinkActive: Bool = false
+    @Published var sheet: Sheet?
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
-    init(model: Model, navigationBar: UserAccountViewModel.NavigationViewModel, avatar: AvatarViewModel, sections: [AccountSectionViewModel]) {
+    init(navigationBar: NavigationViewModel, avatar: AvatarViewModel, sections: [AccountSectionViewModel], exitButton: AccountCellFullButtonView.ViewModel, model: Model = .emptyMock) {
         
         self.model = model
         self.navigationBar = navigationBar
         self.avatar = avatar
         self.sections = sections
-        
-        self.exitButton = .init(
-            icon: .ic24LogOut,
-            content: "Выход из приложения",
-            action: {
-                print("Exit action")
-            })
+        self.exitButton = exitButton
         
     }
     
@@ -48,7 +43,7 @@ class UserAccountViewModel: ObservableObject {
             backButton: .init(icon: .ic24ChevronLeft, action: {
                 print("back")
             }),
-            rightButton: .init(icon: .ic24Settings, action: {
+            settingsButton: .init(icon: .ic24Settings, action: {
                 print("right")
             }))
         self.avatar = .init(
@@ -136,6 +131,24 @@ class UserAccountViewModel: ObservableObject {
                 content: userInn,
                 action: {
                     print("Open ИНН")
+                    
+                    let button = ButtonSimpleView.ViewModel(
+                        title: "Скопировать",
+                        style: .gray,
+                        action: {
+//                            button.title = "Скопировано"
+//                            button.style = .inactive
+                            print("Скопировано")
+                        }
+                    )
+                    
+                    let innViewModel = UserAccountDocumentInfoView.ViewModel(
+                        itemType: .inn,
+                        content: userInn
+                    )
+                    
+                    self.sheet = .init(sheetType: .inn(innViewModel))
+                    
                 })
             )
         }
@@ -145,19 +158,11 @@ class UserAccountViewModel: ObservableObject {
             content: userData.address,
             action: {
                 print("Open Адрес регистрации")
-//                let pass = UserDocumentViewModel(model: self.model, itemType: .adressPass)
-                self.link = .userDocument(UserDocumentViewModel(
-                    model: self.model, itemType: .adressPass,
-                    navigationBar: .init(
-                        title: DocumentCellType.adressPass.title,
-                        backButton: .init(icon: .ic24ChevronLeft, action: {
-                            self.link = nil
-                        }),
-                        rightButton: .init(icon: .ic24Share, action: {
-                            print("right")
-                        })
-                    ))
-                )
+                                
+                self.sheet = .init(sheetType: .inn(.init(
+                    itemType: .adressPass,
+                    content: userData.address
+                )))
             })
         )
         
@@ -176,6 +181,7 @@ class UserAccountViewModel: ObservableObject {
                             }),
                             rightButton: .init(icon: .ic24Share, action: {
                                 print("right")
+//                                
                             })
                         ))
                     )
@@ -225,10 +231,10 @@ extension UserAccountViewModel {
     struct NavigationViewModel {
         
         let title: String
-        let backButton: NavigationButtonViewModel
-        let rightButton: NavigationButtonViewModel
+        let backButton: ButtonViewModel
+        let settingsButton: ButtonViewModel
         
-        struct NavigationButtonViewModel {
+        struct ButtonViewModel {
             
             let icon: Image
             let action: () -> Void
@@ -292,6 +298,18 @@ extension UserAccountViewModel {
         
         case userDocument(UserDocumentViewModel)
     }
+    
+
+    struct Sheet: Identifiable {
+        
+        let id = UUID()
+        let sheetType: SheetType
+        
+        enum SheetType {
+            case inn(UserAccountDocumentInfoView.ViewModel)
+            case button
+        }
+    }
 }
 
 extension UserAccountViewModel.NavigationViewModel {
@@ -301,7 +319,7 @@ extension UserAccountViewModel.NavigationViewModel {
         backButton: .init(icon: .ic24ChevronLeft, action: {
             print("back")
         }),
-        rightButton: .init(icon: .ic24Settings, action: {
+        settingsButton: .init(icon: .ic24Settings, action: {
             print("right")
         }))
 }

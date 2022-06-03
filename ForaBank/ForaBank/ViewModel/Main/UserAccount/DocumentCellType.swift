@@ -15,7 +15,7 @@ enum DocumentCellType {
     case adressPass
     case adress
 }
- 
+
 extension DocumentCellType {
     
     var title: String {

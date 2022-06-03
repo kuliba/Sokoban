@@ -13,22 +13,47 @@ extension ButtonSimpleView {
     
     class ViewModel: ObservableObject {
         
-        let title: String
-        @Published var isEnabled: Bool
+        @Published var title: String
+        @Published var style: ButtonStyle
         let action: () -> Void
 
-        internal init(title: String, isEnabled: Bool, action: @escaping () -> Void) {
+        internal init(title: String, style: ButtonStyle, action: @escaping () -> Void) {
 
             self.title = title
             self.action = action
-            self.isEnabled = isEnabled
+            self.style = style
         }
         
         internal init(buttonModel: PaymentsOperationViewModel.ContinueButtonViewModel) {
 
             self.title = buttonModel.title
             self.action = buttonModel.action
-            self.isEnabled = buttonModel.isEnabled
+            self.style = buttonModel.isEnabled ? .red : .inactive
+        }
+        
+        enum ButtonStyle {
+            
+            case red
+            case gray
+            case inactive
+            
+            var backgroundColor: Color {
+                switch self {
+                    
+                case .red:      return Color(hex: "#FF3636")
+                case .gray:     return .buttonSecondary
+                case .inactive: return .buttonSecondary
+                }
+            }
+            
+            var foregroundColor: Color {
+                switch self {
+                    
+                case .red:      return Color(hex: "#FFFFFF")
+                case .gray:     return .textSecondary
+                case .inactive: return Color(hex: "#898989")
+                }
+            }
         }
     }
 }
@@ -41,8 +66,20 @@ struct ButtonSimpleView: View {
     
     var body: some View {
         
-        if viewModel.isEnabled {
+        switch viewModel.style {
             
+        case .inactive:
+            ZStack {
+                
+                RoundedRectangle(cornerRadius: 8)
+                    .foregroundColor(ViewModel.ButtonStyle.inactive.backgroundColor)
+                
+                Text(viewModel.title)
+                    .font(.buttonLargeSB16180())
+                    .foregroundColor(ViewModel.ButtonStyle.inactive.foregroundColor)
+            }
+            
+        default :
             Button {
                 
                 viewModel.action()
@@ -52,24 +89,12 @@ struct ButtonSimpleView: View {
                 ZStack {
                     
                     RoundedRectangle(cornerRadius: 8)
-                        .foregroundColor(Color(hex: "#FF3636"))
+                        .foregroundColor(viewModel.style.backgroundColor)
                     
                     Text(viewModel.title)
-                        .font(Font.custom("Inter-SemiBold", size: 16))
-                        .foregroundColor(Color(hex: "#FFFFFF"))
+                        .font(.buttonLargeSB16180())
+                        .foregroundColor(viewModel.style.foregroundColor)
                 }
-            }
-
-        } else {
-
-            ZStack {
-                
-                RoundedRectangle(cornerRadius: 8)
-                    .foregroundColor(Color(hex: "#D3D3D3"))
-                
-                Text(viewModel.title)
-                    .font(Font.custom("Inter-SemiBold", size: 16))
-                    .foregroundColor(Color(hex: "#898989"))
             }
         }
     }
@@ -83,10 +108,13 @@ struct ButtonSimpleView_Previews: PreviewProvider {
         
         Group {
             
-            ButtonSimpleView(viewModel: .init(title: "Оплатить", isEnabled: false, action: {} ))
+            ButtonSimpleView(viewModel: .init(title: "Оплатить", style: .inactive, action: {} ))
                 .previewLayout(.fixed(width: 375, height: 70))
             
-            ButtonSimpleView(viewModel: .init(title: "Оплатить", isEnabled: true, action: {}))
+            ButtonSimpleView(viewModel: .init(title: "Оплатить", style: .red, action: {}))
+                .previewLayout(.fixed(width: 375, height: 70))
+            
+            ButtonSimpleView(viewModel: .init(title: "Скопировать все", style: .gray, action: {}))
                 .previewLayout(.fixed(width: 375, height: 70))
         }
     }
