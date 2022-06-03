@@ -13,7 +13,7 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
     
     private var bindings = Set<AnyCancellable>()
     let model: Model = .shared
-
+    
     var titleLabel = UILabel(text: "Между счетами", font: .boldSystemFont(ofSize: 18), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
     lazy var realm = try? Realm()
     var token: NotificationToken?
@@ -22,6 +22,8 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
     var cardFrom: UserAllCardsModel?
     var withProducts: Bool = true
     var paymentTemplate: PaymentTemplateData? = nil
+    var depositClose: Bool = false
+    var sumMax: Double?
     
     var trasfer = ("", "") {
         didSet {
@@ -74,7 +76,7 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
         self.cardTo = cardTo
     }
     
-    init(cardFrom: UserAllCardsModel) {
+    init(cardFrom: UserAllCardsModel, maxSum: Double?) {
         super.init(nibName: nil, bundle: nil)
         self.cardFrom = cardFrom
         self.cardFromField.model = cardFrom
@@ -95,14 +97,17 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
         
         self.bottomView.topLabel.alpha = 1
         
-        self.bottomView.amountTextField.text = "\(cardFrom.balance.currencyFormatter())"
-        self.bottomView.amountTextField.isEnabled = false
-    
         self.bottomView.doneButton.isEnabled = true
         self.bottomView.doneButtonIsEnabled(false)
         bind()
-        guard let currency = cardFrom.currencyCode else {
+        guard let currency = cardFrom.currency?.getSymbol() else {
             return
+        }
+        
+        if let maxSum = maxSum {
+            
+            self.bottomView.amountTextField.text = String(maxSum)
+            self.bottomView.setupMoneyController(amount: String(maxSum), currency: currency)
         }
         
         self.bottomView.currencySymbol = currency
@@ -112,7 +117,7 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
         model.action
             .receive(on: DispatchQueue.main)
             .sink {[unowned self] action in
-
+                
                 switch action {
                 case _ as ModelAction.Deposits.Close.Request:
                     self.showActivity()
@@ -131,7 +136,7 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
                             if let paymentOperationDetailId = data.paymentOperationDetailId {
                                 
                                 viewModel.paymentOperationDetailId = paymentOperationDetailId
-
+                                
                             }
                             
                             viewModel.cardFromRealm = self.cardFrom
@@ -159,6 +164,36 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
                         self.showAlert(with: "Ошибка", and: error)
                     }
                     
+                case _ as ModelAction.Transfers.CreateInterestDepositTransfer.Request:
+                    self.showActivity()
+                    
+                case let payload as ModelAction.Transfers.CreateInterestDepositTransfer.Response:
+                    self.dismissActivity()
+                    switch payload {
+                    case .success(let data):
+                        let vc = PaymentsDetailsSuccessViewController()
+                        
+                        if data.documentStatus == .complete {
+                            
+                            viewModel.status = .succses
+                            viewModel.summTransction = self.bottomView.amountTextField.text ?? ""
+                            
+                            viewModel.paymentOperationDetailId = data.paymentOperationDetailId
+                            
+                            viewModel.cardFromRealm = self.cardFrom
+                        }
+                        
+                        vc.confurmVCModel = viewModel
+                        vc.confurmVCModel?.type = .card2card
+                        vc.printFormType = "closeDeposit"
+                        
+                        let nav = UINavigationController(rootViewController: vc)
+                        nav.modalPresentationStyle = .fullScreen
+                        self.present(nav, animated: true, completion: nil)
+                        
+                    case .failure(let error):
+                        self.showAlert(with: "Ошибка", and: error)
+                    }
                 default:
                     self.dismissActivity()
                     break
@@ -169,14 +204,22 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
     
     @objc func buttonAction(sender: UIButton!) {
         
+        var title: String?
+        
+        if let sumMax = sumMax {
+            
+            title = "Вы можете снять полную или частичную сумму выплаченных процентов, но не более \(sumMax.currencyFormatter())"
+        }
+
         let vc = InfoViewController()
+        vc.infoTitle = title
         
         let nav = UINavigationController(rootViewController: vc)
         nav.modalPresentationStyle = .custom
         nav.transitioningDelegate = self
         self.present(nav, animated: true, completion: nil)
         
-       }
+    }
     
     init(paymentTemplate: PaymentTemplateData) {
         super.init(nibName: nil, bundle: nil)
@@ -194,7 +237,7 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
     final func checkModel(with model: ConfirmViewControllerModel) {
         guard let cardFrom = model.cardFromRealm else { return }
         guard let cardTo = model.cardToRealm else { return }
-
+        
         print("Отображаем кнопку для переворачивания списка карт")
         /// Отображаем кнопку для переворачивания списка карт
         
@@ -202,7 +245,7 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
         self.bottomView.currencySwitchButton.isHidden = (model.cardFromRealm?.currency! == model.cardToRealm?.currency!) ? true : false // Правильно true : false сейчас для теста
         self.bottomView.currencySwitchButton.setTitle((model.cardFromRealm?.currency?.getSymbol() ?? "") + " ⇆ " + (model.cardToRealm?.currency?.getSymbol() ?? ""), for: .normal)
         /// Когда скрывается кнопка смены валют, то есть валюта одинаковая, то меняем содержание лейбла на то, что по умолчанию
-
+        
         if self.bottomView.currencySwitchButton.isHidden == true, cardFrom.productType != ProductType.deposit.rawValue, withProducts {
             
             self.bottomView.buttomLabel.text = "Возможна комиссия ℹ︎"
@@ -210,23 +253,23 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
     }
     
     func updateCards(cards: [UserAllCardsModel]) {
-  
+        
         if let cardTo = cardTo, cardTo.productType != ProductType.loan.rawValue {
-
+            
             self.cardToField.model = cardTo
             self.viewModel.cardToRealm = cardTo
-
+            
         } else if cardTo?.productType == ProductType.loan.rawValue {
-
+            
             let accountLoan = cards.filter({$0.accountNumber == cardTo?.settlementAccount})
             self.cardToField.model = accountLoan.first
             self.viewModel.cardToRealm = accountLoan.first
         }
         if cardFrom != nil {
-
+            
             self.viewModel.cardFromRealm = cardFrom
         } else {
-
+            
             self.viewModel.cardFromRealm = cards.first
         }
     }
@@ -237,7 +280,7 @@ extension CustomPopUpWithRateView: UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         
         let presenter = PresentationController(presentedViewController: presented, presenting: presenting)
-            
+        
         presenter.height = 276
         return presenter
     }

@@ -42,6 +42,18 @@ extension CustomPopUpWithRateView {
         }
     }
     
+    func interestPayment(amount: Double) {
+        
+        let payer = cardFromField.model
+
+        let payeeInternal = cardToField.model
+        
+        if let depositId = payer?.depositID {
+            
+            Model.shared.action.send(ModelAction.Transfers.CreateInterestDepositTransfer.Request(payload: .init(check: false, amount: amount, currencyAmount: payer?.currency, payer: .init(cardId: nil, cardNumber: nil, accountId: payer?.accountID, accountNumber: nil, phoneNumber: nil, inn: nil), comment: nil, payeeInternal: .init(accountId: payeeInternal?.id, accountNumber: nil, cardId: nil, cardNumber: nil, phoneNumber: nil, productCustomName: nil), payeeExternal: nil, depositId: depositId)))
+        }
+    }
+    
     func transferModey(with viewModel: ConfirmViewControllerModel) {
         
         bottomView.doneButtonIsEnabled(true)
@@ -234,37 +246,37 @@ extension CustomPopUpWithRateView {
     
     
     final func setupCardViewActions() {
-       cardView.closeView = { [weak self] () in
-           DispatchQueue.main.async {
-               UIView.animate(withDuration: 0.1) {
-                   self?.cardView.alpha = 0
-                   self?.stackView.isHidden = false
-                   self?.titleLabel.isHidden = false
-                   self?.bottomView.isHidden = false
-               } completion: { finish in
-                   if finish {
-                       self?.cardView.removeFromSuperview()
-                       self?.cardView.alpha = 1
-                   }
-               }
-           }
-       }
-       cardView.finishAndCloseView = { [weak self]  (model) in
-           DispatchQueue.main.async {
-               UIView.animate(withDuration: 0.1) {
-                   self?.cardView.alpha = 0
-                   self?.stackView.isHidden = false
-                   self?.titleLabel.isHidden = false
-                   self?.bottomView.isHidden = false
-               } completion: { finish in
-                   if finish {
-                       self?.cardView.removeFromSuperview()
-                       self?.cardView.alpha = 1
-                   }
-                   self?.viewModel.customCardTo = model
-                   self?.cardToField.customCardModel = model
-               }
-           }
-       }
-   }
+        cardView.closeView = { [weak self] () in
+            DispatchQueue.main.async {
+                UIView.animate(withDuration: 0.1) {
+                    self?.cardView.alpha = 0
+                    self?.stackView.isHidden = false
+                    self?.titleLabel.isHidden = false
+                    self?.bottomView.isHidden = false
+                } completion: { finish in
+                    if finish {
+                        self?.cardView.removeFromSuperview()
+                        self?.cardView.alpha = 1
+                    }
+                }
+            }
+        }
+        cardView.finishAndCloseView = { [weak self]  (model) in
+            DispatchQueue.main.async {
+                UIView.animate(withDuration: 0.1) {
+                    self?.cardView.alpha = 0
+                    self?.stackView.isHidden = false
+                    self?.titleLabel.isHidden = false
+                    self?.bottomView.isHidden = false
+                } completion: { finish in
+                    if finish {
+                        self?.cardView.removeFromSuperview()
+                        self?.cardView.alpha = 1
+                    }
+                    self?.viewModel.customCardTo = model
+                    self?.cardToField.customCardModel = model
+                }
+            }
+        }
+    }
 }

@@ -289,8 +289,8 @@ class BottomInputView: UIView {
     
     @IBAction func doneButtonTapped(_ sender: Any) {
         print(#function)
-        guard let amaunt = amountTextField.text else { return }
-        let unformatText = moneyFormatter?.unformat(amaunt)
+        guard let amount = amountTextField.text else { return }
+        let unformatText = moneyFormatter?.unformat(amount)
         let text = unformatText?.replacingOccurrences(of: ",", with: ".")
         if !(text?.isEmpty ?? true) {
             didDoneButtonTapped?(text ?? "")

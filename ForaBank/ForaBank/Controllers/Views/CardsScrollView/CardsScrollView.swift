@@ -294,9 +294,6 @@ extension CardsScrollView: UICollectionViewDelegate {
                 }
             }
         }
-        
-        
-        
     }
 }
 

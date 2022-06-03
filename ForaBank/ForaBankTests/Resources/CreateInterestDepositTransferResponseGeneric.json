@@ -1,0 +1,19 @@
+{
+  "statusCode": 0,
+  "errorMessage": "string",
+  "data": {
+    "needMake": true,
+    "needOTP": true,
+    "amount": 100,
+    "creditAmount": 100,
+    "fee": 100,
+    "currencyAmount": "100.0",
+    "currencyPayer": "RUB",
+    "currencyPayee": "RUB",
+    "currencyRate": 86.7,
+    "debitAmount": 100,
+    "payeeName": "Иван Иванович И.",
+    "paymentOperationDetailId": 1,
+    "documentStatus": "COMPLETE"
+  }
+}

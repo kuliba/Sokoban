@@ -35,10 +35,11 @@ class AccountDetailsViewController: UIViewController {
             top: view.topAnchor, left: view.leftAnchor,
             bottom: view.bottomAnchor, right: view.rightAnchor,
             paddingTop: 20, paddingLeft: 20,
-            paddingBottom: 20, paddingRight: 20)
+            paddingBottom: 20, paddingRight: 0)
         tableView.register(UINib(nibName: cellReuse, bundle: nil), forCellReuseIdentifier: cellReuse)
         tableView.separatorStyle = .none
         tableView.rowHeight = 56
+        
     }
     
     
@@ -100,7 +101,6 @@ class AccountDetailsViewController: UIViewController {
                         let topvc = UIApplication.topViewController()
                         topvc?.present(navController, animated: true)
                     }
-                    //                    self.present(navController, animated: true, completion: nil)
                 }
                 
             } else {
@@ -156,6 +156,12 @@ class AccountDetailsViewController: UIViewController {
                     self.mockItemsDeposit[8].description = model.data?.sumDebit?.currencyFormatter(symbol:  product?.currency ?? "RUB")
                     self.mockItemsDeposit[9].description = model.data?.sumAccInt?.currencyFormatter(symbol:  product?.currency ?? "RUB")
                     
+                    if let sumPayPrc = model.data?.sumPayPrc {
+                        
+                        self.mockItemsDeposit.append(.init(name: "Сумма доступных к снятию процентов", iconName: "", controllerName: ""))
+                        self.mockItemsDeposit[10].description = sumPayPrc.currencyFormatter(symbol:  product?.currency ?? "RUB")
+                    }
+                    
                     let newArray = self.mockItemsDeposit.filter { $0.description != "" || $0.description != "0.0"}
                     viewController.addCloseButton()
                     viewController.addCloseButton_3()
@@ -176,11 +182,6 @@ class AccountDetailsViewController: UIViewController {
             }
         }
     }
-    
-    func getPrintFormForDepositConditions() {
-        
-    }
-    
 }
 
 extension AccountDetailsViewController: UITableViewDataSource {
@@ -248,7 +249,7 @@ extension AccountDetailsViewController: UITableViewDataSource {
                     if let closeDate = product?.endDate {
                         
                         let endDate = Date(timeIntervalSince1970: TimeInterval((closeDate) / 1000))
-                        if endDate <= Date(), closeDate != 0  {
+                        if endDate <= Date() || closeDate == 0 {
                             
                             cell.alpha = 0.4
                             cell.imageButton.alpha = 0.4
