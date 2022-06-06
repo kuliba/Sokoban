@@ -14,7 +14,9 @@ final class CardsScrollView: UIView {
     let reuseIdentifier = "CardCell"
     let newReuseIdentifier = "NewCardCell"
     let allReuseIdentifier = "AllCardCell"
-    
+
+    let model: Model = .shared
+
     var cardListRealm: Results<UserAllCardsModel>? = nil
     
     var cardList = [UserAllCardsModel]() {
@@ -43,11 +45,8 @@ final class CardsScrollView: UIView {
         }
     }
     
-    
     var didCardTapped: ((Int) -> Void)?
     
-    lazy var realm = try? Realm()
-    var token: NotificationToken?
     var firstItemTap: (() -> Void)?
     var lastItemTap: (() -> Void)?
     
@@ -77,21 +76,29 @@ final class CardsScrollView: UIView {
         commonInit(onlyMy: onlyMy, onlyCard: onlyCard, deleteDeposit: deleteDeposit, loadProducts: loadProducts, loans: loans)
     }
     
-    deinit {
-        token?.invalidate()
-    }
-
     func commonInit(onlyMy: Bool, onlyCard: Bool = false, deleteDeposit: Bool = false, loadProducts: Bool = true, loans: Bool = false) {
         self.onlyMy = onlyMy
         self.onlyCard = onlyCard
         
         let clientId = UserDefaults.standard.object(forKey: "clientId") as? Int
         if loadProducts {
-            updateObjectWithNotification()
-            cardListRealm?.forEach({ op in
+            
+            var products: [UserAllCardsModel] = []
+            
+            let data = model.products.value
+            
+            for i in data {
+                
+                for i in i.value {
+                    
+                    products.append(i.userAllProducts())
+                }
+            }
+            
+            products.forEach({ op in
                 if onlyCard {
                     if ( op.productType == "CARD" && op.isMain == true && op.ownerID == clientId ?? 0) {
-                    
+                        
                         cardList.append(op)
                     }
                 } else {
@@ -130,23 +137,6 @@ final class CardsScrollView: UIView {
                 self.isFiltered = false
             }
         }
-    }
-    
-    func updateObjectWithNotification() {
-        
-        cardListRealm = realm?.objects(UserAllCardsModel.self)
-        self.token = self.cardListRealm?.observe { [weak self] ( changes: RealmCollectionChange) in
-            guard (self?.collectionView) != nil else {return}
-            switch changes {
-            case .initial:
-                self?.collectionView.reloadData()
-            case .update(_, _, _, _):
-                print("REALM Update")
-            case .error(let error):
-                fatalError("\(error)")
-            }
-        }
-        
     }
     
     //MARK: - Helpers
@@ -222,8 +212,6 @@ extension CardsScrollView: UICollectionViewDataSource {
                 }
                 return cell
             }
-            
-            
         }
     }
     
@@ -256,7 +244,6 @@ extension CardsScrollView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 2, left: 20, bottom: 8, right: 8)
     }
-    
 }
 
 //MARK: - CollectionView Delegate
@@ -294,9 +281,6 @@ extension CardsScrollView: UICollectionViewDelegate {
                 }
             }
         }
-        
-        
-        
     }
 }
 

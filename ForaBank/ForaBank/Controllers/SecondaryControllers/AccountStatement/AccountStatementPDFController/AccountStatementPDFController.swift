@@ -70,6 +70,12 @@ class AccountStatementPDFController: UIViewController, URLSessionDownloadDelegat
     func createPdfDocument(_ requestBody: [String: AnyObject]?) {
         
         var router = RouterManager.getPrintFormForAccountStatement.request()
+        
+        if let cookies = Model.shared.cookies {
+            
+            router?.allHTTPHeaderFields = HTTPCookie.requestHeaderFields(with: cookies)
+        }
+        
         do {
             let jsonAsData = try JSONSerialization.data(withJSONObject: requestBody!, options: [])
             router?.httpBody = jsonAsData
@@ -82,8 +88,11 @@ class AccountStatementPDFController: UIViewController, URLSessionDownloadDelegat
         }
         
         let session = URLSession(configuration: .default, delegate: self, delegateQueue: .main)
+        session.configuration.httpCookieAcceptPolicy = .never
+        session.configuration.httpShouldSetCookies = false
+        
         router?.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        if let token = CSRFToken.token {
+        if let token = Model.shared.token {
             router?.allHTTPHeaderFields = ["X-XSRF-TOKEN": token]
         }
         
@@ -91,18 +100,10 @@ class AccountStatementPDFController: UIViewController, URLSessionDownloadDelegat
             
             if let response = response as? HTTPURLResponse {
                 if let document = PDFDocument(url: url!) {
-                    //                    self.pdfView.autoresizesSubviews = true
-                    //                    self.pdfView.autoresizingMask = [.flexibleWidth, .flexibleHeight, .flexibleTopMargin, .flexibleLeftMargin]
-                    //                    self.pdfView.displayDirection = .vertical
                     
                     self.pdfView.pageBreakMargins = UIEdgeInsets(top: 20, left: 20, bottom: 0, right: 20)
                     self.pdfView.autoScales = true
-                    //                    self.pdfView.displayMode = .singlePageContinuous
-                    //                    self.pdfView.displaysPageBreaks = true
                     self.pdfView.document = document
-                    
-                    //                    self.pdfView.maxScaleFactor = 4.0
-                    //                    self.pdfView.minScaleFactor = self.pdfView.scaleFactorForSizeToFit
                 }
             }
         }.resume()

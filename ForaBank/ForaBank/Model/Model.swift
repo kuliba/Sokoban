@@ -130,7 +130,6 @@ class Model {
         loadSettings()
         bind()
     }
-    
     //FIXME: remove after refactoring
     static var shared: Model = {
         
@@ -145,7 +144,7 @@ class Model {
 #endif
         
         let serverAgent = ServerAgent(enviroment: enviroment)
-        
+
         // local agent
         let localContext = LocalAgent.Context(cacheFolderName: "cache", encoder: .serverDate, decoder: .serverDate, fileManager: FileManager.default)
         let localAgent = LocalAgent(context: localContext)
