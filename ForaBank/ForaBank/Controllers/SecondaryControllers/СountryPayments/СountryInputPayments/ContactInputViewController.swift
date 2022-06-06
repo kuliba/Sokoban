@@ -550,9 +550,14 @@ extension ContactInputViewController: EPPickerDelegate {
         func epContactPicker(_: EPContactsPicker, didSelectContact contact : EPContact) {
             let phoneFromContact = contact.phoneNumbers.first?.phoneNumber
             let numbers = phoneFromContact?.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
-            let mask = StringMask(mask: "+000-0000-00-00")
-            let maskPhone = mask.mask(string: numbers)
-            phoneField.text = maskPhone ?? ""
+            
+            if country?.code == "TR" {
+                phoneField.text = numbers ?? ""
+            } else {
+                let mask = StringMask(mask: "+000-0000-00-00")
+                let maskPhone = mask.mask(string: numbers)
+                phoneField.text = maskPhone ?? ""
+            }
         }
         
         func epContactPicker(_: EPContactsPicker, didCancel error : NSError) {
