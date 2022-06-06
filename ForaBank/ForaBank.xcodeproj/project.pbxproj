@@ -1732,6 +1732,7 @@
 		770DCE9727BC0475004099C1 /* AuthPinCodeViewModel+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthPinCodeViewModel+Preview.swift"; sourceTree = "<group>"; };
 		77178A6E27C1F07F0095CF8C /* PaymentsDataModel+Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsDataModel+Service.swift"; sourceTree = "<group>"; };
 		77178A7027C1F32E0095CF8C /* PaymentsDataModel+Operator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsDataModel+Operator.swift"; sourceTree = "<group>"; };
+		77370907284E01490033B1CA /* ForaPushServiceExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ForaPushServiceExtension.entitlements; sourceTree = "<group>"; };
 		773E49A927D0C72900D8264E /* URLCache+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLCache+Extensions.swift"; sourceTree = "<group>"; };
 		774493FF27FDE3B9001E2B9E /* PlacesFilterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesFilterViewModel.swift; sourceTree = "<group>"; };
 		7744940127FDF9D7001E2B9E /* PlacesFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesFilterView.swift; sourceTree = "<group>"; };
@@ -4522,6 +4523,7 @@
 		A515682D2821B927000D4455 /* ForaPushServiceExtension */ = {
 			isa = PBXGroup;
 			children = (
+				77370907284E01490033B1CA /* ForaPushServiceExtension.entitlements */,
 				A515682E2821B927000D4455 /* NotificationService.swift */,
 				A51568302821B927000D4455 /* Info.plist */,
 				A55E878A2823F88900562060 /* ApiRequestsForPush.swift */,
@@ -7550,9 +7552,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 46;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -7564,7 +7567,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.ForaPushServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -7578,9 +7581,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_ENTITLEMENTS = ForaPushServiceExtension/ForaPushServiceExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 46;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ForaPushServiceExtension/Info.plist;
@@ -7592,7 +7596,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense.ForaPushServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
