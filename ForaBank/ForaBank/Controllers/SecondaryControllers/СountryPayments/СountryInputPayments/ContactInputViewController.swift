@@ -141,7 +141,10 @@ class ContactInputViewController: UIViewController {
                 typeOfPay = .contact
                 if let countryCode = model.additional.first(where: { $0.fieldname == "trnPickupPoint" })?.fieldvalue {
                     country = getCountry(code: countryCode)
+                    
                     configure(with: country, byPhone: false)
+                    
+                    
                 }
                 
                 self.foraSwitchView.bankByPhoneSwitch.isOn = false
@@ -151,12 +154,15 @@ class ContactInputViewController: UIViewController {
                 if let surName = model.additional.first(where: { $0.fieldname == "bName" })?.fieldvalue {
                     self.surnameField.text = surName
                 }
-                if let  firstName = model.additional.first(where: { $0.fieldname == "bLastName" })?.fieldvalue {
+                if let firstName = model.additional.first(where: { $0.fieldname == "bLastName" })?.fieldvalue {
                     self.nameField.text = firstName
                 }
                 if let middleName = model.additional.first(where: { $0.fieldname == "bSurName" })?.fieldvalue {
                     self.secondNameField.text = middleName
-                }                
+                }
+                if let phone = model.additional.first(where: { $0.fieldname == "bPhone" })?.fieldvalue {
+                    self.phoneField.text = phone
+                }
             }
                 
         default :
