@@ -362,6 +362,8 @@ class ContactConfurmViewController: UIViewController {
         
         summTransctionField.text = model.summTransction
         taxTransctionField.text = model.taxTransction
+        taxTransctionField.anchor(height: 64)
+
         if model.taxTransction.isEmpty {
             taxTransctionField.isHidden = true
         }
@@ -631,7 +633,6 @@ class ContactConfurmViewController: UIViewController {
             cardToField.choseButton?.isHidden = true
             cardToField.balanceLabel.isHidden = true
             cardToField.leftTitleAncor.constant = 64
-            
             
             cardToField.titleLabel.text = toTitle
             

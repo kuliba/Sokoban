@@ -53,7 +53,7 @@ class AllCardListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
-        navigationItem.title = "Выберете карту"
+        navigationItem.title = "Выберите карту"
         addCloseButton()
         
         tableView = UITableView(frame: .zero, style: .grouped)
