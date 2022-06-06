@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 struct MessagesHistoryView: View {
     
@@ -20,8 +21,8 @@ struct MessagesHistoryView: View {
                 
                 VStack(spacing: 0) {
                     
-                    ForEach(viewModel.sections) { sections in
-                        MessagesHistorySectionView(viewModel: sections.viewModel)
+                    ForEach(viewModel.sections) { section in
+                        MessagesHistorySectionView(viewModel: section)
                     }
                 }
                 .padding(.leading, 15)
@@ -50,6 +51,23 @@ struct MessagesHistoryView: View {
                 
             }, label: { Image.ic16ArrowLeft }))
             .navigationViewStyle(StackNavigationViewStyle())
+            .bottomSheet(item: $viewModel.sheet) {
+
+                // onDismiss action
+
+            } content: { sheet in
+
+                switch sheet.sheetType {
+                case .button:
+
+                    Color.mainColorsGrayLightest
+                        .frame(height: 250)
+
+                case let .item(model):
+                    MessagesHistoryDetailView(model: model)
+                    
+                }
+            }
         }
     }
 }
@@ -84,22 +102,24 @@ struct MessagesHistoryView_Previews: PreviewProvider {
 
 extension MessagesHistoryViewModel {
     
-    static let sample = MessagesHistoryViewModel(sections: [MessagesHistorySectionView.init(viewModel: .init(section: "25 агуста, ср",
-                                                                                                             items: [MessagesHistoryItemView.ViewModel(icon: Image("Payments List Sample"), title: "Срок вашей карты истекает 29.08.2021 г.", content: "Оставте он-лайн заявку или обратитесь в ближайшее отделение банка", time: "17:56", action: {}),
-                                                                                                                     MessagesHistoryItemView.ViewModel(icon: Image("Payments List Sample"), title: "Отказ. Недостаточно средств.", content: "LIQPAY*IP Artur Danilo, Moscow Интернет-оплата. Карта / счет .4387 16:59", time: "17:56", action: {})
-                                                                                                                    ])),
-                                                            MessagesHistorySectionView.init(viewModel: .init(section: "26 агуста, чт",
-                                                                                                             items: [MessagesHistoryItemView.ViewModel(icon: Image("Payments List Sample"), title: "Срок вашей карты истекает 29.08.2021 г.", content: "Оставте он-лайн заявку или обратитесь в ближайшее отделение банка", time: "17:56", action: {}),
-                                                                                                                     MessagesHistoryItemView.ViewModel(icon: Image("Payments List Sample"), title: "Отказ. Недостаточно средств.", content: "LIQPAY*IP Artur Danilo, Moscow Интернет-оплата. Карта / счет .4387 16:59", time: "17:56", action: {})
-                                                                                                                    ])),
-                                                            MessagesHistorySectionView.init(viewModel: .init(section: "27 агуста, пт",
-                                                                                                             items: [MessagesHistoryItemView.ViewModel(icon: Image("Payments List Sample"), title: "Срок вашей карты истекает 29.08.2021 г.", content: "Оставте он-лайн заявку или обратитесь в ближайшее отделение банка", time: "17:56", action: {}),
-                                                                                                                     MessagesHistoryItemView.ViewModel(icon: Image("Payments List Sample"), title: "Отказ. Недостаточно средств.", content: "LIQPAY*IP Artur Danilo, Moscow Интернет-оплата. Карта / счет .4387 16:59", time: "17:56", action: {})
-                                                                                                                    ])),
-                                                            MessagesHistorySectionView.init(viewModel: .init(section: "28 агуста, суб",
-                                                                                                             items: [MessagesHistoryItemView.ViewModel(icon: Image("Payments List Sample"), title: "Срок вашей карты истекает 29.08.2021 г.", content: "Оставте он-лайн заявку или обратитесь в ближайшее отделение банка", time: "17:56", action: {}),
-                                                                                                                     MessagesHistoryItemView.ViewModel(icon: Image("Payments List Sample"), title: "Отказ. Недостаточно средств.", content: "LIQPAY*IP Artur Danilo, Moscow Интернет-оплата. Карта / счет .4387 16:59", time: "17:56", action: {})
-                                                                                                                    ]))
-                                                            
-                                                           ], model: Model.emptyMock, state: .stating)
+    static let sample = MessagesHistoryViewModel(sections: [
+        .init(
+            section: "25 агуста, ср",
+            items: [MessagesHistoryItemView.ViewModel(icon: Image("Payments List Sample"), title: "Срок вашей карты истекает 29.08.2021 г.", content: "Оставте он-лайн заявку или обратитесь в ближайшее отделение банка", time: "17:56"),
+                    MessagesHistoryItemView.ViewModel(icon: Image("Payments List Sample"), title: "Отказ. Недостаточно средств.", content: "LIQPAY*IP Artur Danilo, Moscow Интернет-оплата. Карта / счет .4387 16:59", time: "17:56")
+                   ]),
+        .init(section: "26 агуста, чт",
+              items: [MessagesHistoryItemView.ViewModel(icon: Image("Payments List Sample"), title: "Срок вашей карты истекает 29.08.2021 г.", content: "Оставте он-лайн заявку или обратитесь в ближайшее отделение банка", time: "17:56"),
+                      MessagesHistoryItemView.ViewModel(icon: Image("Payments List Sample"), title: "Отказ. Недостаточно средств.", content: "LIQPAY*IP Artur Danilo, Moscow Интернет-оплата. Карта / счет .4387 16:59", time: "17:56")
+                     ]),
+        .init(section: "27 агуста, пт",
+              items: [MessagesHistoryItemView.ViewModel(icon: Image("Payments List Sample"), title: "Срок вашей карты истекает 29.08.2021 г.", content: "Оставте он-лайн заявку или обратитесь в ближайшее отделение банка", time: "17:56"),
+                      MessagesHistoryItemView.ViewModel(icon: Image("Payments List Sample"), title: "Отказ. Недостаточно средств.", content: "LIQPAY*IP Artur Danilo, Moscow Интернет-оплата. Карта / счет .4387 16:59", time: "17:56")
+                     ]),
+        .init(section: "28 агуста, суб",
+              items: [MessagesHistoryItemView.ViewModel(icon: Image("Payments List Sample"), title: "Срок вашей карты истекает 29.08.2021 г.", content: "Оставте он-лайн заявку или обратитесь в ближайшее отделение банка", time: "17:56"),
+                      MessagesHistoryItemView.ViewModel(icon: Image("Payments List Sample"), title: "Отказ. Недостаточно средств.", content: "LIQPAY*IP Artur Danilo, Moscow Интернет-оплата. Карта / счет .4387 16:59", time: "17:56")
+                     ])
+        
+    ], model: Model.emptyMock, state: .stating)
 }

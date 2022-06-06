@@ -11,12 +11,14 @@ import Combine
 class MessagesHistoryViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
-    @Published var sections: [MessagesHistorySectionView]
+    @Published var sections: [MessagesHistorySectionView.ViewModel]
+    @Published var sheet: Sheet?
     private var state: State
     private var bindings = Set<AnyCancellable>()
     private let model: Model
     
     init( model: Model) {
+        
         self.model = model
         self.sections = []
         self.state = .stating
@@ -24,7 +26,7 @@ class MessagesHistoryViewModel: ObservableObject {
         model.action.send(ModelAction.Notification.Fetch.New.Request())
     }
     
-    init( sections: [MessagesHistorySectionView], model: Model, state: State) {
+    init( sections: [MessagesHistorySectionView.ViewModel], model: Model, state: State) {
         
         self.model = model
         self.sections = sections
@@ -42,7 +44,7 @@ class MessagesHistoryViewModel: ObservableObject {
         
         let uniqueKeyArray = Array(Set(keyArray))
         let sortedKeyArray = uniqueKeyArray.sorted(by: >)
-            
+        
         self.sections.removeAll()
         
         sortedKeyArray.forEach { key in
@@ -50,23 +52,24 @@ class MessagesHistoryViewModel: ObservableObject {
             var items = notifications.filter { $0.groupIndex == key }
             
             items.sort{ $0.sortIndex ?? 0 > $1.sortIndex ?? 0 }
-
+            
             guard let section = items.map({$0.date}).first else { return }
-    
-            let messages = MessagesHistorySectionView(viewModel:
-                    .init(section: DateFormatter.historyDateFormatter.string(from:section),
-                          items: items))
+            
+            let messages = MessagesHistorySectionView.ViewModel(section: DateFormatter.historyDateFormatter.string(from:section),
+                                                                items: items)
             self.sections.append(messages)
         }
-}
+        
+    }
     
     func bind() {
+        
         model.notifications
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] notifications in
                 
                 createSections(with: notifications)
-                
+                bindSections(sections)
             }.store(in: &bindings)
         
         model.action
@@ -81,7 +84,6 @@ class MessagesHistoryViewModel: ObservableObject {
                 default:
                     break
                 }
-                
             }.store(in: &bindings)
         
         action
@@ -98,8 +100,28 @@ class MessagesHistoryViewModel: ObservableObject {
                 default:
                     break
                 }
-                
             }.store(in: &bindings)
+    }
+    
+    func bindSections(_ sections: [MessagesHistorySectionView.ViewModel]) {
+        
+        for section in sections {
+            
+            section.action
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
+                    
+                    switch action {
+                        
+                    case let payload as MessagesHistoryViewModelAction.ItemTapped:
+                        
+                        sheet = .init(sheetType: .item(payload.item))
+                        
+                    default:
+                        break
+                    }
+                }.store(in: &bindings)
+        }
     }
 }
 
@@ -113,5 +135,25 @@ extension MessagesHistoryViewModel {
 }
 
 enum MessagesHistoryViewModelAction {
+    
     struct ScrolledToEnd: Action {}
+    
+    struct ItemTapped: Action {
+        let item: MessagesHistoryDetailViewModel
+    }
+}
+
+extension MessagesHistoryViewModel {
+    
+    struct Sheet: Identifiable {
+        
+        let id = UUID()
+        let sheetType: SheetType
+        
+        enum SheetType {
+            
+            case item(MessagesHistoryDetailViewModel)
+            case button
+        }
+    }
 }
