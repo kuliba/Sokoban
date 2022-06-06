@@ -40,12 +40,12 @@ extension PTSectionLatestPaymentsView {
         struct LatestPaymentButtonVM: Identifiable {
                
             let id = UUID()
-            let image: ImageType
+            let avatar: Avatar
             let topIcon: Image?
             let description: String
             let action: () -> Void
 
-            enum ImageType {
+            enum Avatar {
                 case image(Image)
                 case text(String)
                 case icon(Image, Color)
@@ -60,7 +60,7 @@ extension PTSectionLatestPaymentsView {
                     
                     withAnimation {
                         
-                        self.latestPaymentsButtons = self.templateButton
+                        self.latestPaymentsButtons = self.baseButtons
                         
                         guard !latestPayments.isEmpty else { return }
                         
@@ -79,9 +79,9 @@ extension PTSectionLatestPaymentsView {
                 }.store(in: &bindings)
         }
         
-        lazy var templateButton: [LatestPaymentButtonVM] = {
+        lazy var baseButtons: [LatestPaymentButtonVM] = {
             [
-                .init(image: .icon(.ic24Star, .iconBlack),
+                .init(avatar: .icon(.ic24Star, .iconBlack),
                       topIcon: nil,
                       description: "Шаблоны и автоплатежи",
                       action: { [weak self] in
@@ -154,7 +154,7 @@ extension PTSectionLatestPaymentsView {
                             .frame(height: 56)
                             .overlay13 {
                                 
-                                switch viewModel.image {
+                                switch viewModel.avatar {
                                 case let .image(image):
                                    
                                     image
@@ -203,31 +203,30 @@ extension PTSectionLatestPaymentsView {
 //MARK: default LatestPaymentButton by type
 
 extension LatestPaymentData.Kind {
-    typealias ButtonVM = PTSectionLatestPaymentsView.ViewModel.LatestPaymentButtonVM
     
-    var defaultButton: ButtonVM {
+    var defaultName: String {
+        
         switch self {
-        case .country:
-            return .init(image: .icon(.ic24Globe, .iconGray),
-                         topIcon: nil, description: "За рубеж", action: {})
-        case .phone:
-            return .init(image: .icon(.ic24Smartphone, .iconGray),
-                         topIcon: nil, description: "По телефону", action: {})
-        case .service:
-            return .init(image: .icon(.ic24ZKX, .iconGray),
-                         topIcon: nil, description: "Услуги ЖКХ", action: {})
-        case .mobile:
-            return .init(image: .icon(.ic24Smartphone, .iconGray),
-                         topIcon: nil, description: "Услуги связи", action: {})
-        case .internet:
-            return .init(image: .icon(.ic24Tv, .iconGray),
-                         topIcon: nil, description: "Услуги интернет", action: {})
-        case .transport:
-            return .init(image: .icon(.ic24Car, .iconGray),
-                         topIcon: nil, description: "Услуги Транспорта", action: {})
-        case .taxAndStateService:
-            return .init(image: .icon(.ic24Emblem, .iconGray),
-                         topIcon: nil, description: "Госуслуги", action: {})
+        case .country: return "За рубеж"
+        case .phone: return "По телефону"
+        case .service: return "Услуги ЖКХ"
+        case .mobile: return "Услуги связи"
+        case .internet: return "Услуги интернет"
+        case .transport: return "Услуги Транспорта"
+        case .taxAndStateService: return  "Госуслуги"
+        }
+    }
+    
+    var defaultIcon: Image {
+        
+        switch self {
+        case .country: return .ic24Globe
+        case .phone: return .ic24Smartphone
+        case .service: return .ic24ZKX
+        case .mobile: return .ic24Smartphone
+        case .internet: return .ic24Tv
+        case .transport: return .ic24Car
+        case .taxAndStateService: return .ic24Emblem
         }
     }
 }
@@ -238,110 +237,127 @@ extension PTSectionLatestPaymentsView.ViewModel.LatestPaymentButtonVM {
     
     init(data: LatestPaymentData, model: Model, action: @escaping () -> Void) {
         
-        var image = data.type.defaultButton.image
-        var topIcon = data.type.defaultButton.topIcon
-        var text = data.type.defaultButton.description
-        
-        func mutateViewsFromContacts(by phoneNumber: String) {
+        func fullName(for phoneNumber: String?) -> String? {
             
             guard case .available = model.contactsPermissionStatus,
+                  let phoneNumber = phoneNumber,
                   let contact = model.contact(for: phoneNumber)
-            else { return }
+            else { return nil }
             
-            if let fullName = contact.fullName { text = fullName }
-                    
+            return contact.fullName
+        }
+                
+        func avatar(for phoneNumber: String?) -> Self.Avatar? {
+            
+            guard case .available = model.contactsPermissionStatus,
+                  let phoneNumber = phoneNumber,
+                  let contact = model.contact(for: phoneNumber)
+            else { return nil }
+            
             if let avatar = contact.avatar,
                let avatarImg = Image(data: avatar.data) {
-                image = .image(avatarImg)
+                
+                return .image(avatarImg)
+                
+            } else if let initials = contact.initials {
+                
+                return .text(initials)
+                
             } else {
-                if let initials = contact.initials {
-                    image = .text(initials)
-                }
+                
+                return nil
             }
         }
         
         switch (data.type, data) {
         case (.phone, let paymentData as PaymentGeneralData):
             
-            text = paymentData.phoneNumber
-            if let bank = model.dictionaryBank(for: paymentData.bankId) {
-                topIcon = bank.svgImage.image
-            }
-            mutateViewsFromContacts(by: paymentData.phoneNumber)
+            self.avatar = avatar(for: paymentData.phoneNumber) ?? .icon(data.type.defaultIcon, .iconGray)
+            self.topIcon = model.dictionaryBank(for: paymentData.bankId)?.svgImage.image
+            self.description = fullName(for: paymentData.phoneNumber)
+                                ?? (paymentData.phoneNumber.isEmpty
+                                    ? data.type.defaultName : paymentData.phoneNumber)
             
         case (.country, let paymentData as PaymentCountryData):
-                   
-            if let firstChar = paymentData.shortName.first {
-                text = paymentData.shortName
-                image = .text(String(firstChar).uppercased())
-            }
-            if let phone = paymentData.phoneNumber {
-                text = phone
-                mutateViewsFromContacts(by: phone)
-            }
-            if let country = model.dictionaryCountry(for: paymentData.countryCode),
-               let countryImg = country.svgImage?.image {
-                topIcon = countryImg
-            }
+
+            self.avatar = avatar(for: paymentData.phoneNumber)
+                            ?? (!paymentData.shortName.isEmpty
+                                ? .text(String(paymentData.shortName.first!).uppercased())
+                                : .icon(data.type.defaultIcon, .iconGray))
+            self.description = fullName(for: paymentData.phoneNumber)
+                                ?? (paymentData.shortName.isEmpty
+                                    ? data.type.defaultName : paymentData.shortName)
+            self.topIcon = model.dictionaryCountry(for: paymentData.countryCode)?.svgImage?.image
                     
         case (.service, let paymentData as PaymentServiceData):
-                   
-            text = String(paymentData.puref)
-            if let oper = model.dictionaryAnywayOperator(for: paymentData.puref) {
-                text = oper.name
-                if let logo = oper.logotypeList.first?.svgImage?.image {
-                    image = .image(logo)
-                }
+     
+            if let image = model.dictionaryAnywayOperator(for: paymentData.puref)?
+                .logotypeList.first?.svgImage?.image {
+                self.avatar = .image(image)
+            } else {
+                self.avatar = .icon(data.type.defaultIcon, .iconGray)
             }
+            self.description = model.dictionaryAnywayOperator(for: paymentData.puref)?.name
+                                ?? data.type.defaultName
+            self.topIcon = nil
                     
         case (.transport, let paymentData as PaymentServiceData):
             
-            text = String(paymentData.puref)
-            if let oper = model.dictionaryAnywayOperator(for: paymentData.puref) {
-                text = oper.name
-                if let logo = oper.logotypeList.first?.svgImage?.image {
-                    image = .image(logo)
-                }
+            if let image = model.dictionaryAnywayOperator(for: paymentData.puref)?
+                .logotypeList.first?.svgImage?.image {
+                self.avatar = .image(image)
+            } else {
+                self.avatar = .icon(data.type.defaultIcon, .iconGray)
             }
+            self.description = model.dictionaryAnywayOperator(for: paymentData.puref)?.name
+                                ?? data.type.defaultName
+            self.topIcon = nil
                     
         case (.internet, let paymentData as PaymentServiceData):
-                  
-            text = String(paymentData.puref)
-            if let oper = model.dictionaryAnywayOperator(for: paymentData.puref) {
-                text = oper.name
-                if let logo = oper.logotypeList.first?.svgImage?.image {
-                    image = .image(logo)
-                }
+            
+            if let image = model.dictionaryAnywayOperator(for: paymentData.puref)?
+                .logotypeList.first?.svgImage?.image {
+                self.avatar = .image(image)
+            } else {
+                self.avatar = .icon(data.type.defaultIcon, .iconGray)
             }
+            self.description = model.dictionaryAnywayOperator(for: paymentData.puref)?.name
+                                ?? data.type.defaultName
+            self.topIcon = nil
             
         case (.mobile, let paymentData as PaymentServiceData):
                 
-            text = String(paymentData.puref)
-            if let phone = paymentData.additionalList.first?.fieldValue,
-               !phone.isEmpty {
-                    text = phone
-                    mutateViewsFromContacts(by: phone)
+            self.avatar = avatar(for: paymentData.additionalList.first?.fieldValue)
+                          ?? .icon(data.type.defaultIcon, .iconGray)
+            if let phoneNumber = paymentData.additionalList.first?.fieldValue,
+               !phoneNumber.isEmpty {
+                self.description = fullName(for: phoneNumber) ?? phoneNumber
+            } else {
+                self.description = data.type.defaultName
             }
-            if let oper = model.dictionaryAnywayOperator(for: paymentData.puref),
-               let logo = oper.logotypeList.first?.svgImage?.image {
-                    topIcon = logo
-            }
+            self.topIcon = model.dictionaryAnywayOperator(for: paymentData.puref)?
+                            .logotypeList.first?.svgImage?.image
+
                 
         case (.taxAndStateService, let paymentData as PaymentServiceData):
-            
-            text = String(paymentData.puref)
-            if let oper = model.dictionaryAnywayOperator(for: paymentData.puref) {
-                text = oper.name
-                if let logo = oper.logotypeList.first?.svgImage?.image {
-                    image = .image(logo)
-                }
+           
+            if let image = model.dictionaryAnywayOperator(for: paymentData.puref)?
+                .logotypeList.first?.svgImage?.image {
+                self.avatar = .image(image)
+            } else {
+                self.avatar = .icon(data.type.defaultIcon, .iconGray)
             }
+            self.description = model.dictionaryAnywayOperator(for: paymentData.puref)?.name
+                                ?? data.type.defaultName
+            self.topIcon = nil
             
         default: //error matching, init default
-            break
+            self.avatar = .icon(data.type.defaultIcon, .iconGray)
+            self.topIcon = nil
+            self.description = data.type.defaultName
         }
         
-        self.init(image: image, topIcon: topIcon, description: text, action: action)
+        self.action = action
     }
             
 }

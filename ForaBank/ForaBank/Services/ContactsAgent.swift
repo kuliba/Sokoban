@@ -30,13 +30,16 @@ class ContactsAgent: ContactsAgentProtocol {
         }
     }
     
+    func clearNumber(for phoneNumber: String) -> String {
+         "+" + phoneNumber.components(separatedBy: CharacterSet.decimalDigits.inverted)
+            .joined(separator: "")
+    }
+    
     func fetchContact(by phoneNumber: String) -> AddressBookContact? {
         
-        let clearNumber = CNPhoneNumber(stringValue: "+" + phoneNumber
-            .components(separatedBy: CharacterSet.decimalDigits.inverted)
-            .joined(separator: "")
-        )
-        let predicate = CNContact.predicateForContacts(matching: clearNumber)
+        let predicate = CNContact.predicateForContacts(
+                            matching: CNPhoneNumber(
+                                stringValue: clearNumber(for: phoneNumber)))
           
         let keys = [CNContactGivenNameKey,
                     CNContactMiddleNameKey,

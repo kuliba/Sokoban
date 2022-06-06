@@ -67,7 +67,7 @@ class Model {
     internal let settingsAgent: SettingsAgentProtocol
     internal let biometricAgent: BiometricAgentProtocol
     internal let locationAgent: LocationAgentProtocol
-    let contactsAgent: ContactsAgentProtocol
+    internal let contactsAgent: ContactsAgentProtocol
     
     // private
     private var bindings: Set<AnyCancellable>
