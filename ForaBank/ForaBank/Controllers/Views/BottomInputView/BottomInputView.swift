@@ -95,11 +95,6 @@ class BottomInputView: UIView {
         
         NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: amountTextField, queue: .main) { _ in
             guard let text = self.amountTextField.text else { return }
-//            print(text)
-//            if text.count > 0 {
-////                self.currency = "₽"
-//                self.setupMoneyController()
-//            }
 
             guard let unformatText = self.moneyFormatter?.unformat(text) else { return }
             self.tempTextFieldValue = unformatText
@@ -180,7 +175,6 @@ class BottomInputView: UIView {
                 let tempValue = (unformatText as NSString).doubleValue
                 let resultSum = ( tempValue * ((self.currencyFrom?.rateBuy ?? 0) / (self.currencyTo?.rateSell ?? 0))).rounded(toPlaces: 2)
                 let a = String(((self.currencyFrom?.rateBuy ?? 0) / (self.currencyTo?.rateSell ?? 0)).rounded(toPlaces: 2))
-                
                 
                 let tempBottomLable = String(resultSum) + currencyToSimbol + "  |  " + "1" + currencyFromSimbol + " - " + a +  currencyToSimbol
                 let tempLable = tempBottomLable.replacingOccurrences(of: ".", with: ",")

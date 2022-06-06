@@ -191,20 +191,6 @@ extension CustomPopUpWithRateView {
         }
     }
     
-//   final func hideAllCardList() {
-//        DispatchQueue.main.async {
-//            UIView.animate(withDuration: 0.2) {
-//                self.cardFromListView.isHidden = true
-//                self.cardFromListView.alpha = 0
-//
-//                self.cardToListView.isHidden = true
-//                self.cardToListView.alpha = 0
-//
-//                self.stackView.layoutIfNeeded()
-//            }
-//        }
-//    }
-    
     //MARK: - Animation
     func openOrHideView(_ view: UIView, completion: @escaping () -> Void ) {
         DispatchQueue.main.async {
@@ -235,37 +221,37 @@ extension CustomPopUpWithRateView {
     
     
     final func setupCardViewActions() {
-       cardView.closeView = { [weak self] () in
-           DispatchQueue.main.async {
-               UIView.animate(withDuration: 0.1) {
-                   self?.cardView.alpha = 0
-                   self?.stackView.isHidden = false
-                   self?.titleLabel.isHidden = false
-                   self?.bottomView.isHidden = false
-               } completion: { finish in
-                   if finish {
-                       self?.cardView.removeFromSuperview()
-                       self?.cardView.alpha = 1
-                   }
-               }
-           }
-       }
-       cardView.finishAndCloseView = { [weak self]  (model) in
-           DispatchQueue.main.async {
-               UIView.animate(withDuration: 0.1) {
-                   self?.cardView.alpha = 0
-                   self?.stackView.isHidden = false
-                   self?.titleLabel.isHidden = false
-                   self?.bottomView.isHidden = false
-               } completion: { finish in
-                   if finish {
-                       self?.cardView.removeFromSuperview()
-                       self?.cardView.alpha = 1
-                   }
-                   self?.viewModel.customCardTo = model
-                   self?.cardToField.customCardModel = model
-               }
-           }
-       }
-   }
+        cardView.closeView = { [weak self] () in
+            DispatchQueue.main.async {
+                UIView.animate(withDuration: 0.1) {
+                    self?.cardView.alpha = 0
+                    self?.stackView.isHidden = false
+                    self?.titleLabel.isHidden = false
+                    self?.bottomView.isHidden = false
+                } completion: { finish in
+                    if finish {
+                        self?.cardView.removeFromSuperview()
+                        self?.cardView.alpha = 1
+                    }
+                }
+            }
+        }
+        cardView.finishAndCloseView = { [weak self]  (model) in
+            DispatchQueue.main.async {
+                UIView.animate(withDuration: 0.1) {
+                    self?.cardView.alpha = 0
+                    self?.stackView.isHidden = false
+                    self?.titleLabel.isHidden = false
+                    self?.bottomView.isHidden = false
+                } completion: { finish in
+                    if finish {
+                        self?.cardView.removeFromSuperview()
+                        self?.cardView.alpha = 1
+                    }
+                    self?.viewModel.customCardTo = model
+                    self?.cardToField.customCardModel = model
+                }
+            }
+        }
+    }
 }

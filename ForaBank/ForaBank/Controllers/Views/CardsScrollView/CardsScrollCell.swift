@@ -7,7 +7,6 @@
 
 import UIKit
 
-
 class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
    
     func configure<U>(with value: U) where U : Hashable {
@@ -19,8 +18,6 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
         logoImageView.image = viewModel.logoImage
         
     }
-    
-
   
     static var reuseId: String = "CardCell"
     //MARK: - Properties
@@ -45,7 +42,6 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
     public let balanceLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "Inter-Regular", size: 11)
-//        label.font = UIFont.boldSystemFont(ofSize: 11 )
         label.textAlignment = .left
         label.text = ""
         return label
@@ -107,13 +103,11 @@ class CardsScrollCell: UICollectionViewCell, SelfConfiguringCell {
         layer.shadowRadius = 6
         layer.shadowOpacity = 0.3
         layer.shadowOffset = CGSize()
-//        0.785
         let shadowPath = UIBezierPath(
             rect: CGRect(x: 15, y: 20,
                          width: self.frame.width * 0.785,
                          height: self.frame.height * 0.785))
         layer.shadowPath = shadowPath.cgPath
-        
         
         addSubview(backgroundImageView)
         addSubview(logoImageView)

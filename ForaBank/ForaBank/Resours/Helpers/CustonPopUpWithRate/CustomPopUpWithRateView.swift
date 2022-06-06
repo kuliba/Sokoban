@@ -8,13 +8,13 @@
 import UIKit
 import RealmSwift
 
-class CustomPopUpWithRateView : AddHeaderImageViewController {
+class CustomPopUpWithRateView: UIViewController {
     
     var titleLabel = UILabel(text: "Между счетами", font: .boldSystemFont(ofSize: 18), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
-    lazy var realm = try? Realm()
-    var token: NotificationToken?
+    
     var onlyMy = true
     var cardTo: UserAllCardsModel?
+    let model: Model = .shared
     
     var paymentTemplate: PaymentTemplateData? = nil
     
@@ -44,7 +44,6 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
         }
     }
     
-    
     var cardFromField = CardChooseView()
     var seporatorView = SeparatorView()
     var cardFromListView: CardsScrollView!
@@ -55,12 +54,6 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
     lazy var cardView = CastomCardView()
     
     var stackView = UIStackView(arrangedSubviews: [])
-    
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        token?.invalidate()
-    }
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -80,14 +73,10 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    deinit {
-        token?.invalidate()
-    }
-    
     final func checkModel(with model: ConfirmViewControllerModel) {
         guard let cardFrom = model.cardFromRealm else { return }
         guard let cardTo = model.cardToRealm else { return }
-        //        guard model.cardFrom != nil, model.cardTo != nil else { return }
+        
         print("Отображаем кнопку для переворачивания списка карт")
         /// Отображаем кнопку для переворачивания списка карт
         
@@ -102,7 +91,7 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
     }
     
     func updateCards(cards: [UserAllCardsModel]) {
-  
+        
         if let cardTo = cardTo, cardTo.productType != ProductType.loan.rawValue {
             
             self.cardToField.model = cardTo
@@ -114,7 +103,6 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
             self.viewModel.cardToRealm = accountLoan.first
         }
         
-//        self.cardFromField.model = cards.first
         self.viewModel.cardFromRealm = cards.first
     }
     

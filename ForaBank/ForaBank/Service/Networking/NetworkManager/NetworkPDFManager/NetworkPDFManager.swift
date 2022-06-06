@@ -28,7 +28,6 @@ class NetworkPDFManager: NSObject, URLSessionDownloadDelegate {
         } catch {
             debugPrint(NetworkError.encodingFailed)
         }
-        //   request.allHTTPHeaderFields = addHeader    +++++++++Singlton
         
         let session = URLSession(configuration: .default, delegate: self, delegateQueue: .main)
         router?.setValue("application/json", forHTTPHeaderField: "Content-Type")

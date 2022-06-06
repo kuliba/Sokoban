@@ -352,11 +352,9 @@ extension AppDelegate {
                 "model": UIDevice().model,
                 "operationSystem": "IOS"
             ] as [String : AnyObject]
-            print("DEBUG: Parameters = ", parameters)
             
             NetworkManager<InstallPushDeviceDecodebleModel>.addRequest(.installPushDevice, [:], parameters) { model, error in
                 if error != nil {
-                    print("DEBUG: installPushDevice error", error ?? "nil")
                     completion(error)
                 } else {
                     let parametersKey = [
@@ -367,11 +365,8 @@ extension AppDelegate {
                     
                     NetworkManager<KeyExchangeDecodebleModel>.addRequest(.keyExchange, [:], parametersKey) { model, error in
                         if error != nil {
-                            print("DEBUG: KeyExchange error", error ?? "nil")
                             completion(error)
                         } else {
-                            print("DEBUG: KeyExchange DONE!")
-                            print("DEBUG: CSRF DONE!")
                             completion(nil)
                         }
                     }
