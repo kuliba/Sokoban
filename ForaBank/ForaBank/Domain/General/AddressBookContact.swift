@@ -1,11 +1,11 @@
 //
-//  AdressBookContact.swift
+//  AddressBookContact.swift
 //  ForaBank
 //
 //  Created by Dmitry Martynov on 23.05.2022.
 //
 
-struct AdressBookContact: Identifiable {
+struct AddressBookContact: Identifiable {
     
     var id: String { phone }
     let phone: String

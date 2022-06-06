@@ -12,7 +12,7 @@ protocol ContactsAgentProtocol {
     
     var status: CurrentValueSubject<ContactsAgentStatus, Never> { get }
     
-    func fetchContact(by phoneNumber: String) -> AdressBookContact?
+    func fetchContact(by phoneNumber: String) -> AddressBookContact?
     func requestPermission()
 }
 

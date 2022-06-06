@@ -30,13 +30,16 @@ class ContactsAgent: ContactsAgentProtocol {
         }
     }
     
-    func fetchContact(by phoneNumber: String) -> AdressBookContact? {
-        
-        let clearNumber = CNPhoneNumber(stringValue: "+" + phoneNumber
-            .components(separatedBy: CharacterSet.decimalDigits.inverted)
+    func clearNumber(for phoneNumber: String) -> String {
+         "+" + phoneNumber.components(separatedBy: CharacterSet.decimalDigits.inverted)
             .joined(separator: "")
-        )
-        let predicate = CNContact.predicateForContacts(matching: clearNumber)
+    }
+    
+    func fetchContact(by phoneNumber: String) -> AddressBookContact? {
+        
+        let predicate = CNContact.predicateForContacts(
+                            matching: CNPhoneNumber(
+                                stringValue: clearNumber(for: phoneNumber)))
           
         let keys = [CNContactGivenNameKey,
                     CNContactMiddleNameKey,
@@ -45,24 +48,24 @@ class ContactsAgent: ContactsAgentProtocol {
                     CNContactThumbnailImageDataKey
         ] as [CNKeyDescriptor]
           
-          if let contacts = try? store.unifiedContacts(matching: predicate, keysToFetch: keys),
-             let contact = contacts.first {
-            
-              var imageData: ImageData?
-              if let data = contact.thumbnailImageData,
-                 contact.imageDataAvailable {
-                  imageData = ImageData(data: data)
-              }
-              
-              return AdressBookContact(phone: phoneNumber,
-                                       firstName: contact.givenName,
-                                       middleName: contact.middleName,
-                                       lastName: contact.familyName,
-                                       avatar: imageData)
-          }
-          
-        return nil
-        
+        guard let contacts = try? store.unifiedContacts(matching: predicate, keysToFetch: keys),
+              let contact = contacts.first
+        else { return nil }
+
+        return AddressBookContact(phone: phoneNumber,
+                                  firstName: contact.givenName,
+                                  middleName: contact.middleName,
+                                  lastName: contact.familyName,
+                                  avatar: avatar(for: contact))
     }
+    
+    private func avatar(for contact: CNContact) -> ImageData? {
+        
+        guard let thumbnailImageData = contact.thumbnailImageData
+        else { return nil }
+
+        return ImageData(data: thumbnailImageData)
+
+      }
     
 }
