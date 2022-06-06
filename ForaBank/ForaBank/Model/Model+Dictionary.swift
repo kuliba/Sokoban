@@ -34,7 +34,7 @@ extension ModelAction {
     
     enum Dictionary {
         
-        static let cached: [Kind] = [.anywayOperators, .fmsList, .fsspDebtList, .fsspDocumentList, .ftsList, .productCatalogList, .bannerCatalogList, .atmList, .atmServiceList, .atmTypeList, .atmMetroStationList, .atmCityList, .atmRegionList, .currencyList, .banks]
+        static let cached: [Kind] = [.anywayOperators, .fmsList, .fsspDebtList, .fsspDocumentList, .ftsList, .productCatalogList, .bannerCatalogList, .atmList, .atmServiceList, .atmTypeList, .atmMetroStationList, .atmCityList, .atmRegionList, .currencyList, .countries, .banks]
         
         enum UpdateCache {
             
@@ -282,6 +282,7 @@ extension Model {
 
 extension Model {
     
+    //Operators&OperatorGroups
     func dictionaryAnywayOperatorGroups() -> [OperatorGroupData]? {
         
         return localAgent.load(type: [OperatorGroupData].self)
@@ -313,6 +314,34 @@ extension Model {
         
         return anywayOperators.first(where: { $0.code == code })
     }
+    
+    //Banks
+    
+    func dictionaryBanks() -> [BankData]? {
+        
+        return localAgent.load(type: [BankData].self)
+    }
+    
+    func dictionaryBank(for memberId: String) -> BankData? {
+        
+        guard let banksList = dictionaryBanks() else { return nil }
+        return banksList.first(where: { $0.memberId == memberId })
+    }
+    
+    //Countries
+    
+    func dictionaryCountries() -> [CountryData]? {
+        
+        return localAgent.load(type: [CountryData].self)
+    }
+    
+    func dictionaryCountry(for code: String) -> CountryData? {
+        
+        guard let countries = dictionaryCountries() else { return nil }
+        return countries.first(where: { $0.code == code })
+    }
+    
+    //FMSList
     
     func dictionaryFMSList() -> [FMSData]? {
         

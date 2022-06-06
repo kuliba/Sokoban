@@ -91,6 +91,7 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                 } catch {
                     
                     completion(.failure(.curruptedData(error)))
+                     
                 }
      
             }.resume()
