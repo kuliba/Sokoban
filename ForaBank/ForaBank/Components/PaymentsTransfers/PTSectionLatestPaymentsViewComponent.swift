@@ -145,7 +145,7 @@ extension PTSectionLatestPaymentsView {
         let viewModel: ViewModel.LatestPaymentButtonVM
         
         var body: some View {
-            Button(action: {}, label: {
+            Button(action: viewModel.action, label: {
                 VStack(alignment: .center, spacing: 8) {
                     ZStack {
                         
