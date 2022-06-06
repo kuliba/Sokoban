@@ -403,7 +403,7 @@ extension CustomPopUpWithRateView {
                 self.reversCard = ""
                 self.cardToField.cardModel = card
                 self.hideView(self.cardToListView, needHide: true) {
-                    if !self.cardFromListView.isHidden {
+                    if let cardFromListView = self.cardFromListView, !cardFromListView.isHidden {
                         self.hideView(self.cardFromListView, needHide: true) { }
                     }
                     self.stackView.layoutIfNeeded()
