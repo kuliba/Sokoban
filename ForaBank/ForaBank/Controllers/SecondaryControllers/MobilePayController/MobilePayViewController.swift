@@ -269,6 +269,9 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                 let svgImage = data.data?.first?.svgImage
                 let cardId = self?.cardField.model?.id ?? 0
                 
+                var phoneFormate = phone.digits
+                phoneFormate.removeFirst()
+                
                 let body = [
                     "check" : false,
                     "amount" : amount,
@@ -282,7 +285,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                     "additional" : [[
                         "fieldid": 1,
                         "fieldname": "a3_NUMBER_1_2",
-                        "fieldvalue": phone.digits]]
+                        "fieldvalue": phoneFormate]]
                 ] as [String: AnyObject]
                 
                 NetworkManager<CreateMobileTransferDecodableModel>.addRequest(.createMobileTransfer, [:], body, completion: { [weak self] data, error in
