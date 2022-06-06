@@ -207,22 +207,36 @@ extension PaymentsViewController: UICollectionViewDelegate {
         let vc = ContactInputViewController()
         let country = getCountry(code: model.countryCode ?? "")
         vc.country = country
-        if model.phoneNumber != nil {
-            vc.typeOfPay = .mig
-            vc.configure(with: country, byPhone: true)
-            vc.selectedBank = findBankByPuref(purefString: model.puref ?? "")
-            let mask = StringMask(mask: "+000-0000-00-00")
-            let maskPhone = mask.mask(string: model.phoneNumber)
-            vc.phoneField.text = maskPhone ?? ""
-        } else if model.firstName != nil, model.middleName != nil, model.surName != nil {
-            vc.typeOfPay = .contact
-//            vc.configure(with: model.country, byPhone: false)
-            vc.foraSwitchView.bankByPhoneSwitch.isOn = false
-            vc.foraSwitchView.bankByPhoneSwitch.layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            vc.foraSwitchView.bankByPhoneSwitch.thumbTintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            vc.nameField.text = model.firstName!
-            vc.surnameField.text = model.surName!
-            vc.secondNameField.text = model.middleName!
+        if country.code == "TR" {
+            if model.firstName != nil, model.middleName != nil, model.surName != nil, model.phoneNumber != nil {
+                vc.typeOfPay = .contact
+                //            vc.configure(with: model.country, byPhone: false)
+                vc.foraSwitchView.bankByPhoneSwitch.isOn = false
+                vc.foraSwitchView.bankByPhoneSwitch.layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                vc.foraSwitchView.bankByPhoneSwitch.thumbTintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                vc.nameField.text = model.firstName!
+                vc.surnameField.text = model.surName!
+                vc.secondNameField.text = model.middleName!
+                vc.phoneField.text = model.phoneNumber!
+            }
+        } else {
+            if model.phoneNumber != nil {
+                vc.typeOfPay = .mig
+                vc.configure(with: country, byPhone: true)
+                vc.selectedBank = findBankByPuref(purefString: model.puref ?? "")
+                let mask = StringMask(mask: "+000-0000-00-00")
+                let maskPhone = mask.mask(string: model.phoneNumber)
+                vc.phoneField.text = maskPhone ?? ""
+            } else if model.firstName != nil, model.middleName != nil, model.surName != nil {
+                vc.typeOfPay = .contact
+                //            vc.configure(with: model.country, byPhone: false)
+                vc.foraSwitchView.bankByPhoneSwitch.isOn = false
+                vc.foraSwitchView.bankByPhoneSwitch.layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                vc.foraSwitchView.bankByPhoneSwitch.thumbTintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                vc.nameField.text = model.firstName!
+                vc.surnameField.text = model.surName!
+                vc.secondNameField.text = model.middleName!
+            }
         }
         vc.addCloseButton()
         let navVC = UINavigationController(rootViewController: vc)
@@ -263,7 +277,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 })
             }
         })
-        return bankValue!
+        return bankValue
     }
 }
 
