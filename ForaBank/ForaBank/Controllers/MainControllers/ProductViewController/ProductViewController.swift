@@ -364,16 +364,30 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
                 switch action {
                 case let payload as ModelAction.Products.UpdateCustomName.Response:
                     switch payload {
-                    case .complete(let name):
+                    case let .complete(productId, name):
                         DispatchQueue.main.async {
                             
                             self.card.cardNameLabel.text = name
-                            
-                            // update product model
-                            guard let realm = try? Realm(), let product = self.product, product.isInvalidated == false else {
+                        
+                            guard let realm = try? Realm() else {
                                 return
                             }
+                      
+                            // update product name on this view
+                            if let currentProduct = self.product,
+                                currentProduct.isInvalidated == false,
+                                let number = self.product?.accountNumber {
+                                
+                                self.navigationItem.setTitle(title: name, subtitle: "· \(String(number.suffix(4)))", color: "#ffffff")
+                            }
 
+                            // update product name in realm
+                            guard let products = self.realm?.objects(UserAllCardsModel.self),
+                                  let product = products.first(where: { $0.id == productId }) else {
+                                
+                                return
+                            }
+      
                             try? realm.write({
                                 
                                 product.customName = name

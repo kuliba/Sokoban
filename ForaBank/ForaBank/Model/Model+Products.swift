@@ -51,7 +51,7 @@ extension Model {
                 case .success(let response):
                     switch response.statusCode {
                     case .ok:
-                        self.action.send(ModelAction.Products.UpdateCustomName.Response.complete(name: name))
+                        self.action.send(ModelAction.Products.UpdateCustomName.Response.complete(productId: payload.productId, name: name))
                         
                     default:
                         self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
@@ -71,7 +71,7 @@ extension Model {
                 case .success(let response):
                     switch response.statusCode {
                     case .ok:
-                        self.action.send(ModelAction.Products.UpdateCustomName.Response.complete(name: name))
+                        self.action.send(ModelAction.Products.UpdateCustomName.Response.complete(productId: payload.productId, name: name))
                         
                     default:
                         self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
@@ -91,7 +91,7 @@ extension Model {
                 case .success(let response):
                     switch response.statusCode {
                     case .ok:
-                        self.action.send(ModelAction.Products.UpdateCustomName.Response.complete(name: name))
+                        self.action.send(ModelAction.Products.UpdateCustomName.Response.complete(productId: payload.productId, name: name))
                         
                     default:
                         self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
@@ -111,7 +111,7 @@ extension Model {
                 case .success(let response):
                     switch response.statusCode {
                     case .ok:
-                        self.action.send(ModelAction.Products.UpdateCustomName.Response.complete(name: name))
+                        self.action.send(ModelAction.Products.UpdateCustomName.Response.complete(productId: payload.productId, name: name))
                         
                     default:
                         self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
@@ -233,7 +233,7 @@ extension ModelAction {
             
             enum Response: Action {
                 
-                case complete(name: String)
+                case complete(productId: ProductData.ID, name: String)
                 case failed(message: String)
             }
         }
