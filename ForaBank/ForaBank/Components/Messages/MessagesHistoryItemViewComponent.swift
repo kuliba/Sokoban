@@ -18,17 +18,22 @@ extension MessagesHistoryItemView {
         let title: String
         let content: String
         let time: String
-        let action: () -> Void
-        
-        internal init(icon: Image, title: String, content: String, time: String, action: @escaping () -> Void) {
+
+        internal init(icon: Image, title: String, content: String, time: String) {
             
             self.icon = icon
             self.title = title
             self.content = content
             self.time = time
-            self.action = action
         }
         
+        internal init(notification: NotificationData) {
+            
+            self.icon = Image("Payments List Sample")
+            self.title = notification.title
+            self.content = notification.text
+            self.time = DateFormatter.minutsAndSecond.string(from: notification.date)
+        }
     }
 }
 
@@ -84,5 +89,5 @@ struct MessagesHistoryItemView_Previews: PreviewProvider {
 
 extension MessagesHistoryItemView.ViewModel {
     
-    static let sample = MessagesHistoryItemView.ViewModel(icon: Image("Payments List Sample"), title: "Срок вашей карты истекает 29.08.2021 г.", content: "Оставте он-лайн заявку или обратитесь в ближайшее отделение банка", time: "17:56", action: {})
+    static let sample = MessagesHistoryItemView.ViewModel(icon: Image("Payments List Sample"), title: "Срок вашей карты истекает 29.08.2021 г.", content: "Оставте он-лайн заявку или обратитесь в ближайшее отделение банка", time: "17:56")
 }

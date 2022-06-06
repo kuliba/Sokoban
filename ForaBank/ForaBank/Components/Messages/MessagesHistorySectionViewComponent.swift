@@ -6,15 +6,18 @@
 //
 
 import SwiftUI
+import Combine
 
 //MARK: - ViewModel
 
-extension MessagesHistorySectionView: Identifiable {
+extension MessagesHistorySectionView {
     
-    class ViewModel {
+    class ViewModel: Identifiable {
+        
+        let action: PassthroughSubject<Action, Never> = .init()
         
         let section: String
-        let items: [MessagesHistoryItemView.ViewModel]
+        var items: [MessagesHistoryItemView.ViewModel]
         
         internal init(section: String, items: [MessagesHistoryItemView.ViewModel]) {
             self.section = section
@@ -23,9 +26,13 @@ extension MessagesHistorySectionView: Identifiable {
         
         init(section: String, items: [NotificationData]) {
             self.section = section
-            self.items = items.map {MessagesHistoryItemView.ViewModel(icon: Image("GKH"), title: $0.title, content: $0.text, time: DateFormatter.minutsAndSecond.string(from: $0.date), action: {})}
+            self.items = items.map { MessagesHistoryItemView.ViewModel(notification: $0)}
         }
-                                                                      
+           
+        func itemTapped(item: MessagesHistoryItemView.ViewModel) {
+            let massege = MessagesHistoryDetailViewModel(item: item)
+            self.action.send(MessagesHistoryViewModelAction.ItemTapped(item: massege))
+        }
     }
 }
 
@@ -49,6 +56,10 @@ struct MessagesHistorySectionView: View {
             
             ForEach(viewModel.items) { item in
                 MessagesHistoryItemView.init(viewModel: item)
+                    .onTapGesture {
+                        viewModel.itemTapped(item: item)
+                }
+                
             }
         }
     }
@@ -71,7 +82,7 @@ extension MessagesHistorySectionView.ViewModel {
     
     static let sample = MessagesHistorySectionView.ViewModel(
         section: "25 агуста, ср",
-        items: [MessagesHistoryItemView.ViewModel(icon: Image("Payments List Sample"), title: "Срок вашей карты истекает 29.08.2021 г.", content: "Оставте он-лайн заявку или обратитесь в ближайшее отделение банка", time: "17:56", action: {}),
-                MessagesHistoryItemView.ViewModel(icon: Image("Payments List Sample"), title: "Отказ. Недостаточно средств.", content: "LIQPAY*IP Artur Danilo, Moscow Интернет-оплата. Карта / счет .4387 16:59", time: "17:56", action: {})
+        items: [MessagesHistoryItemView.ViewModel(icon: Image("Payments List Sample"), title: "Срок вашей карты истекает 29.08.2021 г.", content: "Оставте он-лайн заявку или обратитесь в ближайшее отделение банка", time: "17:56"),
+                MessagesHistoryItemView.ViewModel(icon: Image("Payments List Sample"), title: "Отказ. Недостаточно средств.", content: "LIQPAY*IP Artur Danilo, Moscow Интернет-оплата. Карта / счет .4387 16:59", time: "17:56")
                ])
 }

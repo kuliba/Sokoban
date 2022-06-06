@@ -52,9 +52,6 @@ struct MessagesHistoryView: View {
             }, label: { Image.ic16ArrowLeft }))
             .navigationViewStyle(StackNavigationViewStyle())
             .bottomSheet(item: $viewModel.sheet) {
-
-                // onDismiss action
-
             } content: { sheet in
 
                 switch sheet.sheetType {
