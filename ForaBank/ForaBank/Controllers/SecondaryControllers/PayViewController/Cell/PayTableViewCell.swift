@@ -29,7 +29,7 @@ class PayTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        if titleLabel.text == "Лимиты на операции" || titleLabel.text == "График выплаты % по вкладу" || titleLabel.text == "Скрыть с главной" || titleLabel.text == "Заказать справку"{
+        if titleLabel.text == "Лимиты на операции" || titleLabel.text == "График выплаты % по вкладу" || titleLabel.text == "Скрыть с главной" || titleLabel.text == "Заказать справку" {
             
             self.alpha = 0.4
             self.isUserInteractionEnabled = false
