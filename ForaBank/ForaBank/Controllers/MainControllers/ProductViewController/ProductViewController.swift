@@ -341,7 +341,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         tableView.showsVerticalScrollIndicator = false
         
         scrollView.addSubview(tableView)
-        tableView.anchor(top: headerView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingLeft: 20, paddingRight: 20, height: UIScreen.main.bounds.height - 80)
+        tableView.anchor(top: headerView.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingLeft: 20, paddingBottom: 29, paddingRight: 20, height: UIScreen.main.bounds.height - 80)
         
         tableView.dataSource = self
         tableView.delegate = self
