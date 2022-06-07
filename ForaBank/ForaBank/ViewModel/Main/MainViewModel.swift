@@ -64,7 +64,7 @@ class MainViewModel: ObservableObject {
                         return
                     }
                     let userAccountViewModel: UserAccountViewModel = .init(model: model, clientInfo: clientInfo)
-                    sheet = .init(type: .userAccount(userAccountViewModel))
+                    link = .userAccount(userAccountViewModel)
                     
                 case _ as MainViewModelAction.ButtonTapped.Messages:
                     let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model)
@@ -208,7 +208,6 @@ extension MainViewModel {
         enum Kind {
             
             case productProfile(ProductProfileViewModel)
-            case userAccount(UserAccountViewModel)
             case messages(MessagesHistoryViewModel)
             case myProducts(MyProductsViewModel)
             case places(PlacesViewModel)
@@ -217,6 +216,7 @@ extension MainViewModel {
     
     enum Link {
         
+        case userAccount(UserAccountViewModel)
         case productProfile(ProductProfileViewModel)
     }
 }

@@ -6,10 +6,13 @@
 //
 
 import SwiftUI
+import Introspect
 
 struct UserAccountView: View {
     
     @ObservedObject var viewModel: UserAccountViewModel
+    
+    @State private var tabBarController: UITabBarController?
     
     var body: some View {
         
@@ -79,6 +82,22 @@ struct UserAccountView: View {
                 displayMode: .inline)
             .navigationBarBackButtonHidden(true)
             .navigationBarItems(leading: backButton, trailing: settingButton)
+            
+            .introspectTabBarController(customize: { tabBarController in
+                
+                self.tabBarController = tabBarController
+                tabBarController.tabBar.isHidden = true
+                UIView.transition(with: tabBarController.view, duration: 0.35, options: .transitionCrossDissolve, animations: nil)
+            })
+            .onDisappear {
+                
+                if let tabBarController = tabBarController {
+                    
+                    tabBarController.tabBar.isHidden = false
+                    UIView.transition(with: tabBarController.view, duration: 0.35, options: .transitionCrossDissolve, animations: nil)
+                }
+                
+            }
         }
     }
     
