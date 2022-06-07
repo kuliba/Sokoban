@@ -320,9 +320,7 @@ extension AccountDetailsViewController: UITableViewDelegate {
                 if let closeDate = product?.endDate {
                     
                     let endDate = Date(timeIntervalSince1970: TimeInterval((closeDate) / 1000))
-                    if endDate <= Date(), closeDate != 0  {
-                        
-                    } else {
+                    if endDate <= Date() || closeDate == 0 {} else {
                         
                         let alertController = UIAlertController(title: "Закрыть вклад", message: "Срок вашего вклада еще не истек. Для досрочного закрытия обратитесь в ближайший офис", preferredStyle: .alert)
                         
