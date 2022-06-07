@@ -35,7 +35,7 @@ extension CustomPopUpWithRateView {
         
         if viewModel.cardToRealm?.productType == ProductType.account.rawValue {
             
-            Model.shared.action.send(ModelAction.Deposits.Close.Request(payload: .init(id: product?.depositID ?? 0, name: product?.productName, startDate: nil, endDate: nil, statementFormat: nil, accountId: viewModel.cardToRealm?.accountID, cardId: nil)))
+            Model.shared.action.send(ModelAction.Deposits.Close.Request(payload: .init(id: product?.depositID ?? 0, name: product?.productName, startDate: nil, endDate: nil, statementFormat: nil, accountId: viewModel.cardToRealm?.id, cardId: nil)))
         } else {
             
             Model.shared.action.send(ModelAction.Deposits.Close.Request(payload: .init(id: product?.depositID ?? 0, name: product?.productName, startDate: nil, endDate: nil, statementFormat: nil, accountId: nil, cardId: viewModel.cardToRealm?.cardID)))
