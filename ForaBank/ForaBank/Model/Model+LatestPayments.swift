@@ -47,6 +47,7 @@ extension Model {
                                               isTransportPayments: true,
                                               isTaxAndStateServicePayments: true)
         
+        Thread.sleep(forTimeInterval: 8)
         serverAgent.executeCommand(command: command) { result in
             
             switch result {

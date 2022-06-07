@@ -18,6 +18,8 @@ extension PTSectionLatestPaymentsView {
         
         @Published
         var latestPaymentsButtons: [LatestPaymentButtonVM]
+        @Published
+        var isAnimateState: Bool = false
         
         override var type: PaymentsTransfersSectionType { .latestPayments }
         private let model: Model
@@ -54,6 +56,24 @@ extension PTSectionLatestPaymentsView {
         
         func bind() {
             
+            model.action
+                .sink { [unowned self] action in
+                    switch action {
+                    case _ as ModelAction.LatestPayments.List.Requested:
+                        self.latestPaymentsButtons = self.baseButtons
+                                                + Array(repeating: .init(avatar: .text(""),
+                                                                         topIcon: nil,
+                                                                         description: "",
+                                                                         action: {}),
+                                                        count: 4)
+                
+                        self.isAnimateState = true
+                        
+                    default: break
+                        
+                    }
+                }.store(in: &bindings)
+            
             model.latestPayments
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] latestPayments in
@@ -62,7 +82,10 @@ extension PTSectionLatestPaymentsView {
                         
                         self.latestPaymentsButtons = self.baseButtons
                         
-                        guard !latestPayments.isEmpty else { return }
+                        guard !latestPayments.isEmpty else {
+                            self.isAnimateState = false
+                            return
+                        }
                         
                         self.model.action.send(ModelAction.Contacts.PermissionStatus.Request())
                         for item in latestPayments {
@@ -75,6 +98,7 @@ extension PTSectionLatestPaymentsView {
                                                                          .ButtonTapped
                                                                          .LatestPayment(latestPayment: item)) } ))
                         }
+                        self.isAnimateState = false
                     }
                 }.store(in: &bindings)
         }
@@ -113,7 +137,10 @@ struct PTSectionLatestPaymentsView: View {
     
     @ObservedObject
     var viewModel: ViewModel
-    
+    @State private var animateGradient = false
+    private let colorGr: [Color] = [.mainColorsGrayLightest.opacity(0.3),
+                                    .mainColorsGrayLightest,
+                                    .mainColorsGrayLightest]
     var body: some View {
         Text(viewModel.title)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -124,9 +151,45 @@ struct PTSectionLatestPaymentsView: View {
         
         ScrollView(.horizontal,showsIndicators: false) {
             HStack(spacing: 4) {
-                ForEach(viewModel.latestPaymentsButtons) { buttonVM in
+                ForEach(viewModel.latestPaymentsButtons.indices, id: \.self) { buttonVM in
                     
-                    LatestPaymentButtonView(viewModel: buttonVM)
+                    if viewModel.isAnimateState && buttonVM != 0 {
+                        VStack(alignment: .center, spacing: 8) {
+                            
+                            Circle()
+                                .fill(LinearGradient(colors: colorGr,
+                                                     startPoint:  animateGradient ? .trailing : .leading,
+                                                     endPoint:  .trailing ))
+                                .frame(width: 56, height: 56)
+                            
+                            Spacer()
+                                .frame(width: 80, height: 32)
+                                .overlay13 {
+                                    VStack(alignment: .center, spacing: 8) {
+                                        LinearGradient(colors: colorGr,
+                                                       startPoint:  animateGradient ? .trailing : .leading,
+                                                       endPoint:  .trailing )
+                                            .frame(width: 65, height: 8, alignment: .center)
+                                            .cornerRadius(6)
+                                            
+                                        LinearGradient(colors: colorGr,
+                                                       startPoint:  animateGradient ? .trailing : .leading,
+                                                       endPoint:  .trailing )
+                                            .frame(width: 45, height: 8, alignment: .center)
+                                            .cornerRadius(6)
+                                    }
+                                }
+                        }
+                        .onAppear {
+                            withAnimation(.linear(duration: 2).repeatForever(autoreverses: false)) {
+                                animateGradient = true
+                            }
+                        }
+                        .onDisappear { animateGradient = false }
+                        
+                    } else {
+                        LatestPaymentButtonView(viewModel: viewModel.latestPaymentsButtons[buttonVM])
+                    }
                 }
                 Spacer()
             }.padding(.leading, 8)
