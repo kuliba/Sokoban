@@ -102,7 +102,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
             errorText: "Необязательное поле"))
     
     var cardField = CardChooseView()
-    var cardListView = CardsScrollView(onlyMy: true)
+    var cardListView = CardsScrollView(onlyMy: true, deleteDeposit: true)
     var stackView = UIStackView(arrangedSubviews: [])
     var fioStackView = UIStackView(arrangedSubviews: [])
     var fio = Fio(name: "", patronymic: "", surname: "") {
