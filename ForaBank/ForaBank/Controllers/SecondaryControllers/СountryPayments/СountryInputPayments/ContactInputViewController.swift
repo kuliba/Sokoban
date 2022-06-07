@@ -451,7 +451,12 @@ class ContactInputViewController: UIViewController {
         guard let moneyFormatter = bottomView.moneyFormatter else { return }
         let newText = moneyFormatter.format("\(amount ?? 0)") ?? ""
         bottomView.amountTextField.text = newText
-        bottomView.doneButtonIsEnabled(newText.isEmpty)
+        
+        if country?.code == "АМ" {
+            bottomView.doneButtonIsEnabled(newText.isEmpty && selectedBank != nil)
+        } else {
+            bottomView.doneButtonIsEnabled(newText.isEmpty)
+        }
     }
     
     private func setupBankField(bank: BanksList) {
@@ -539,6 +544,7 @@ class ContactInputViewController: UIViewController {
                     }
                 }
                 self?.banks = filteredbanksList
+                self?.selectedBank = filteredbanksList.first
             }
         }
     }

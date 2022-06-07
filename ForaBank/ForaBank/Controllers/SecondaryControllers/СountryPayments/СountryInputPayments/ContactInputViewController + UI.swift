@@ -99,8 +99,11 @@ extension ContactInputViewController {
         
         UIView.animate(withDuration: 0.1) {
             self.needShowSwitchView = country.code == "AM" ? true : false
+            self.bottomView.doneButton.isEnabled = country.code == "AM" ? true : false
+            
             if country.code == "TR" {
                 self.phoneField.isHidden = false
+                
 //                self.phoneField.textField.maskString = "+90 (000) 000 00 00"
             } else {
                 self.phoneField.isHidden = byPhone ? false : true
