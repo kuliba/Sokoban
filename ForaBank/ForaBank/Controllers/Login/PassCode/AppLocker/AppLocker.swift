@@ -126,10 +126,13 @@ public class AppLocker: UIViewController {
         super.viewDidAppear(animated)
         
         //FIXME: this is hotfix for the DBSNEW-2851 issue. Should be fixed in the refactoring process
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) { [weak self] in
+        
+        guard let isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool else { return }
+        
+        if isSensorsEnabled == true {
             
-            let isSensorsEnabled = UserDefaults().object(forKey: "isSensorsEnabled") as? Bool
-            if isSensorsEnabled ?? false {
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(200)) { [weak self] in
+                
                 self?.checkSensors()
             }
         }
@@ -426,111 +429,166 @@ extension AppLocker {
         showActivity()
         DispatchQueue.main.async {
             AppDelegate.shared.getCSRF { error in
-                if error != nil {
-                    print("DEBUG: Error getCSRF: ", error!)
-                }
                 
-                let serverDeviceGUID = UserDefaults.standard.object(forKey: "serverDeviceGUID")
-                
-                func encript(string: String) -> String?{
-                    do {
-                        let aes = try AES(keyString: KeyFromServer.secretKey ?? Data())
-                        
-                        let stringToEncrypt: String = "\(string)"
-                        
-                        print("String to encrypt:\t\t\t\(stringToEncrypt)")
-                        
-                        let encryptedData: Data = try aes.encrypt(stringToEncrypt)
-                        print("String encrypted (base64):\t\(encryptedData.base64EncodedString())")
-                        
-                        let decryptedData: String = try aes.decrypt(encryptedData)
-                        print("String decrypted:\t\t\t\(decryptedData)")
-                        return encryptedData.base64EncodedString()
-                    } catch {
-                        print("Something went wrong: \(error)")
-                        return nil
-                    }
-                }
-                
-                let data = [
-                    "appId": encript(string:"IOS" ),
-                    "cryptoVersion": "1.0",
-                    "pushDeviceId": encript(string: UIDevice.current.identifierForVendor!.uuidString),
-                    "pushFcmToken": encript(string: Messaging.messaging().fcmToken as String? ?? ""),
-                    "serverDeviceGUID" : encript(string: serverDeviceGUID as! String),
-                    "loginValue": encript(string: code.sha256() ),
-                    "type": encript(string: type.rawValue)
-                ] as [String : AnyObject]
-                
-                NetworkManager<LoginDoCodableModel>.addRequest(.login, [:], data) { model, error in
-                    if error != nil {
-                        guard let error = error else { return }
-                        completion(error)
-                    } else {
-                        guard let statusCode = model?.statusCode else { return }
-                        if statusCode == 0 {
+                if let error = error {
+                    
+                    completion(error)
+                    self.showAlert(with: "Ошибка", and: error)
+                    
+                } else {
+                    
+                    let serverDeviceGUID = UserDefaults.standard.object(forKey: "serverDeviceGUID")
+                    
+                    func encript(string: String) -> String?{
+                        do {
+                            let aes = try AES(keyString: KeyFromServer.secretKey ?? Data())
                             
-                            //TODO: remove after refactoring
-                            Model.shared.action.send(ModelAction.LoggedIn())
+                            let stringToEncrypt: String = "\(string)"
                             
-                            let bodyRegisterPush = [
-                                "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
-                                "pushFcmToken": Messaging.messaging().fcmToken as String?
-                            ] as [String : AnyObject]
-                            NetworkManager<RegisterPushDeviceDecodebleModel>.addRequest(.registerPushDeviceForUser, [:], bodyRegisterPush) { modelPush, error in
-                                if error != nil {
-                                    guard let error = error else { return }
-                                    self.showAlert(with: "Ошибка", and: error)
-                                }
-                                guard let mPush = modelPush else { return }
-                                if mPush.statusCode == 0 {
-                                    DispatchQueue.main.async {
-                                        AppDelegate.shared.isAuth = true
-                                        
-                                        // Обновление времени старта
-                                        let realm = try? Realm()
-                                        let timeOutObjects = self.returnRealmModel()
-                                        
-                                        // Сохраняем в REALM
-                                        do {
-                                            let b = realm?.objects(GetSessionTimeout.self)
-                                            realm?.beginWrite()
-                                            realm?.delete(b!)
-                                            realm?.add(timeOutObjects)
-                                            try realm?.commitWrite()
-                                            print(realm?.configuration.fileURL?.absoluteString ?? "")
-                                        } catch {
-                                            print(error.localizedDescription)
-                                        }
-                                        
-                                        
-                                    }
-                                    self.dismissActivity()
-                                    completion(nil)
-                                }
-                            }
-                        } else if model?.statusCode == 102 {
-                            DispatchQueue.main.async {
-                                self.dismissActivity()
-                                self.onFailedAttempt?(self.mode)
-                                self.incorrectPinAnimation()
-                                if let m = model?.data?.entryCount {
-                                    self.entryCount = m
-                                    self.showAlert(with: "Ошибка", and: "\(model?.errorMessage ?? "")\n Количество попыток \(self.entryCount)")
-                                }
-                            }
-                        } else if model?.statusCode == 101 {
-                            DispatchQueue.main.async {
-                                self.dismissActivity()
-                                if (model?.data?.entryCountError) != nil {
-                                    self.exit()
-                                }
-                            }
-                        } else {
-                            guard let error = model?.errorMessage else { return }
-                            completion(error)
+                            print("String to encrypt:\t\t\t\(stringToEncrypt)")
+                            
+                            let encryptedData: Data = try aes.encrypt(stringToEncrypt)
+                            print("String encrypted (base64):\t\(encryptedData.base64EncodedString())")
+                            
+                            let decryptedData: String = try aes.decrypt(encryptedData)
+                            print("String decrypted:\t\t\t\(decryptedData)")
+                            return encryptedData.base64EncodedString()
+                        } catch {
+                            print("Something went wrong: \(error)")
+                            return nil
                         }
                     }
+                    
+                    let data = [
+                        "appId": encript(string:"IOS" ),
+                        "cryptoVersion": "1.0",
+                        "pushDeviceId": encript(string: UIDevice.current.identifierForVendor!.uuidString),
+                        "pushFcmToken": encript(string: Messaging.messaging().fcmToken as String? ?? ""),
+                        "serverDeviceGUID" : encript(string: serverDeviceGUID as! String),
+                        "loginValue": encript(string: code.sha256() ),
+                        "type": encript(string: type.rawValue)
+                    ] as [String : AnyObject]
+                    
+                    NetworkManager<LoginDoCodableModel>.addRequest(.login, [:], data) { model, error in
+                        
+                        if let error = error {
+                            
+                            completion(error)
+                            self.dismissActivity()
+                            self.showAlert(with: "Ошибка", and: error)
+                            
+                        } else {
+                            
+                            guard let statusCode = model?.statusCode else {
+                                
+                                let error = "Неккоректный статус в ответе сервера. Попытка логина не удаласть. Попробуйте позже."
+                                completion(error)
+                                self.dismissActivity()
+                                self.showAlert(with: "Ошибка", and: error)
+                                return
+                            }
+                            
+                            switch statusCode {
+                            case 0:
+                                //TODO: remove after refactoring
+                                Model.shared.action.send(ModelAction.LoggedIn())
+                                
+                                let bodyRegisterPush = [
+                                    "pushDeviceId": UIDevice.current.identifierForVendor!.uuidString,
+                                    "pushFcmToken": Messaging.messaging().fcmToken as String?
+                                ] as [String : AnyObject]
+                                
+                                NetworkManager<RegisterPushDeviceDecodebleModel>.addRequest(.registerPushDeviceForUser, [:], bodyRegisterPush) { modelPush, error in
+                                    
+                                    self.dismissActivity()
+                                    
+                                    if let error = error {
+                                        
+                                        completion(error)
+                                        self.showAlert(with: "Ошибка", and: error)
+                                        
+                                    } else {
+                                        
+                                        guard let mPush = modelPush else {
+                                            
+                                            let error = "Данные в ответе сервера отсутствуют. Попытка регистрации устройства на сервере не удаласть. Попробуйте позже."
+                                            completion(error)
+                                            self.showAlert(with: "Ошибка", and: error)
+                                            return
+                                        }
+                                        
+                                        switch mPush.statusCode {
+                                        case 0:
+                                            DispatchQueue.main.async {
+                                                AppDelegate.shared.isAuth = true
+                                                
+                                                // Обновление времени старта
+                                                let realm = try? Realm()
+                                                let timeOutObjects = self.returnRealmModel()
+                                                
+                                                // Сохраняем в REALM
+                                                do {
+                                                    let b = realm?.objects(GetSessionTimeout.self)
+                                                    realm?.beginWrite()
+                                                    realm?.delete(b!)
+                                                    realm?.add(timeOutObjects)
+                                                    try realm?.commitWrite()
+                                                    print(realm?.configuration.fileURL?.absoluteString ?? "")
+                                                } catch {
+                                                    print(error.localizedDescription)
+                                                }
+                                                
+                                            }
+                                            
+                                            completion(nil)
+                                            
+                                        default:
+                                            let error = "Неожиданный статус в ответе сервера. Попытка регистрации устройства на сервере не удаласть. Попробуйте позже."
+                                            completion(error)
+                                            self.showAlert(with: "Ошибка", and: error)
+                                        }
+                                    }
+                                }
+                                
+                            case 102:
+                                
+                                DispatchQueue.main.async {
+                                    
+                                    self.dismissActivity()
+                                    self.onFailedAttempt?(self.mode)
+                                    self.incorrectPinAnimation()
+                                    if let m = model?.data?.entryCount {
+                                        self.entryCount = m
+                                    }
+                                    
+                                    let error = "\(model?.errorMessage ?? "")\n Количество попыток \(self.entryCount)"
+                                    completion(error)
+                                    self.showAlert(with: "Ошибка", and: error)
+                                }
+
+                                
+                            case 101:
+                                DispatchQueue.main.async {
+                                    
+                                    self.dismissActivity()
+                                    if (model?.data?.entryCountError) != nil {
+                                        self.exit()
+                                    }
+                                    
+                                    let error = "Количества попыток входа исчерпано."
+                                    completion(error)
+                                    self.showAlert(with: "Ошибка", and: error)
+                                }
+                            default:
+                                
+                                let error = "\(String(describing: model?.errorMessage))"
+                                completion(error)
+                                self.dismissActivity()
+                                self.showAlert(with: "Ошибка", and: error)
+                            }
+                        }
+                    }
+                    
                 }
             }
         }
