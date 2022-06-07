@@ -139,7 +139,10 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
                                 
                             }
                             
-                            viewModel.cardFromRealm = self.cardFrom
+                            guard let cardFrom = self.cardFrom else {
+                                return
+                            }
+                            viewModel.cardFromRealm = cardFrom
                             
                             if let category = data.category {
                                 
@@ -237,8 +240,6 @@ class CustomPopUpWithRateView : AddHeaderImageViewController {
     final func checkModel(with model: ConfirmViewControllerModel) {
         guard let cardFrom = model.cardFromRealm else { return }
         guard let cardTo = model.cardToRealm else { return }
-        
-        print("Отображаем кнопку для переворачивания списка карт")
         /// Отображаем кнопку для переворачивания списка карт
         
         self.seporatorView.changeAccountButton.isHidden = false
