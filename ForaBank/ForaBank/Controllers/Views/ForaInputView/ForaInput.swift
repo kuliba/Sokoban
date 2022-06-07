@@ -95,11 +95,10 @@ class ForaInput: UIView {
         
         textField.addTarget(self, action: #selector(setupValue), for: .editingChanged)
         textField.delegate = self
-        if viewModel.title == "Комиссия" {
+        
+        if viewModel.title != "Назначение платежа" {
             
-        } else {
-            
-            self.anchor(height: 54)
+            self.anchor(height: 58)
         }
     }
     
@@ -146,7 +145,6 @@ class ForaInput: UIView {
             placeHolder.alpha = text.isEmpty ? 0 : 1
             
         }
-        
     }
     
     func configCardView(_ with: GetProductListDatum) {

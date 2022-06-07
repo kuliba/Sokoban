@@ -260,6 +260,12 @@ class ContactConfurmViewController: UIViewController {
             image: #imageLiteral(resourceName: "Frame 580"),
             isEditable: false))
     
+    var purposePaymentField = ForaInput(
+        viewModel: ForaInputModel(
+            title: "Назначение платежа",
+            image: #imageLiteral(resourceName: "Frame 580"),
+            isEditable: false))
+    
     var currTransctionField = ForaInput(
         viewModel: ForaInputModel(
             title: "Сумма зачисления в валюте",
@@ -362,12 +368,12 @@ class ContactConfurmViewController: UIViewController {
         
         summTransctionField.text = model.summTransction
         taxTransctionField.text = model.taxTransction
-        taxTransctionField.anchor(height: 64)
 
         if model.taxTransction.isEmpty {
             taxTransctionField.isHidden = true
         }
         
+        purposePaymentField.isHidden = true
         
         if model.paymentSystem != nil {
             let navImage: UIImage = model.paymentSystem?.svgImage?.convertSVGStringToImage() ?? UIImage()
@@ -643,14 +649,14 @@ class ContactConfurmViewController: UIViewController {
             
             if !model.comment.isEmpty {
                 
-                taxTransctionField.isHidden = false
-                taxTransctionField.viewModel.title = "Назначение платежа"
-                taxTransctionField.text = "Назначение платежа"
-                taxTransctionField.textField.isHidden = true
-                taxTransctionField.imageView.image = #imageLiteral(resourceName: "comment")
-                taxTransctionField.descriptionLabel.text = model.comment
-                taxTransctionField.descriptionLabel.isHidden = false
-                taxTransctionField.anchor(height: 100)
+                purposePaymentField.isHidden = false
+                purposePaymentField.viewModel.title = "Назначение платежа"
+                purposePaymentField.text = "Назначение платежа"
+                purposePaymentField.textField.isHidden = true
+                purposePaymentField.imageView.image = #imageLiteral(resourceName: "comment")
+                purposePaymentField.descriptionLabel.text = model.comment
+                purposePaymentField.descriptionLabel.isHidden = false
+                purposePaymentField.anchor(height: 100)
             }
             
             if !model.dateOfTransction.isEmpty {
@@ -731,6 +737,7 @@ class ContactConfurmViewController: UIViewController {
                                cardToField,
                                summTransctionField,
                                taxTransctionField,
+                               purposePaymentField,
                                currTransctionField,
                                currancyTransctionField,
                                smsCodeField])
