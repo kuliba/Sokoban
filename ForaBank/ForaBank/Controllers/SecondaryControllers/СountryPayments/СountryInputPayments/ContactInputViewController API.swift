@@ -66,7 +66,7 @@ extension ContactInputViewController {
                     ] ] as [String: AnyObject]
         
         if country?.code == "TR" {
-            //90-535-8663013 приходит "+96 (565) 656 56 56"
+            
             var phone = self.phoneField.textField.unmaskedText ?? ""
         
             switch phone.prefix(4) {
@@ -92,8 +92,18 @@ extension ContactInputViewController {
             switch phone.prefix(2) {
             case "79":
                 phone = phone.applyPatternOnNumbers(pattern: "#-###-#######", replacmentCharacter: "#")
+            case "+7":
+                phone = phone.applyPatternOnNumbers(pattern: "#-###-#######", replacmentCharacter: "#")
             case "90":
                 phone = phone.applyPatternOnNumbers(pattern: "##-###-#######", replacmentCharacter: "#")
+            
+            default:
+                print("Phone Error")
+            }
+            switch phone.prefix(1) {
+            case "8":
+                phone = phone.applyPatternOnNumbers(pattern: "#-###-#######", replacmentCharacter: "#")
+            
             default:
                 print("Phone Error")
             }
