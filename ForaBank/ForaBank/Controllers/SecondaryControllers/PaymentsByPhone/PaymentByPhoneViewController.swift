@@ -87,7 +87,7 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
     
     var stackView = UIStackView(arrangedSubviews: [])
     
-    var cardListView = CardsScrollView(onlyMy: true)
+    var cardListView = CardsScrollView(onlyMy: true, deleteDeposit: true)
     
     var bottomView = BottomInputView()
     

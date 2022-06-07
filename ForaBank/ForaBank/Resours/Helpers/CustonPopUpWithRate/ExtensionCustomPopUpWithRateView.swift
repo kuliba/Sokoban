@@ -286,6 +286,8 @@ extension CustomPopUpWithRateView {
                     }
                 }
             }
+        } else {
+            self.cardFromField.model = self.cardFrom
         }
     }
     
