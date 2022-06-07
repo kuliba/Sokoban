@@ -43,7 +43,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
         
         if let model = paymentTemplate.parameterList.first as? TransferAnywayData {
             
-            let mask = StringMask(mask: "+0 (000) 000-00-00")
+            let mask = StringMask(mask: "+7 (000) 000-00-00")
             let phone = model.additional.first(where: { $0.fieldname == "a3_NUMBER_1_2" })
             let maskPhone = mask.mask(string: phone?.fieldvalue)
             
