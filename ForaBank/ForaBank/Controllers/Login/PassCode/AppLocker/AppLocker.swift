@@ -433,6 +433,7 @@ extension AppLocker {
                 if let error = error {
                     
                     completion(error)
+                    self.dismissActivity()
                     self.showAlert(with: "Ошибка", and: error)
                     
                 } else {
