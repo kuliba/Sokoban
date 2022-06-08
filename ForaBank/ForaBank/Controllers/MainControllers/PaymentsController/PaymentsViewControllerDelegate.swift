@@ -208,7 +208,9 @@ extension PaymentsViewController: UICollectionViewDelegate {
         let country = getCountry(code: model.countryCode ?? "")
         vc.country = country
         if country.code == "TR" {
+            
             if model.firstName != nil, model.middleName != nil, model.surName != nil, model.phoneNumber != nil {
+                
                 vc.typeOfPay = .contact
                 //            vc.configure(with: model.country, byPhone: false)
                 vc.foraSwitchView.bankByPhoneSwitch.isOn = false
@@ -220,16 +222,20 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 vc.phoneField.text = model.phoneNumber!
             }
         } else {
+            
             if model.phoneNumber != nil {
+                
                 vc.typeOfPay = .mig
                 vc.configure(with: country, byPhone: true)
                 vc.selectedBank = findBankByPuref(purefString: model.puref ?? "")
                 let mask = StringMask(mask: "+000-0000-00-00")
                 let maskPhone = mask.mask(string: model.phoneNumber)
                 vc.phoneField.text = maskPhone ?? ""
+                
             } else if model.firstName != nil, model.middleName != nil, model.surName != nil {
+                
                 vc.typeOfPay = .contact
-                //            vc.configure(with: model.country, byPhone: false)
+                vc.configure(with: country, byPhone: false)
                 vc.foraSwitchView.bankByPhoneSwitch.isOn = false
                 vc.foraSwitchView.bankByPhoneSwitch.layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
                 vc.foraSwitchView.bankByPhoneSwitch.thumbTintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)

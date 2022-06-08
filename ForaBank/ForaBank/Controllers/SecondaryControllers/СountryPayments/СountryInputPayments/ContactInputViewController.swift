@@ -544,7 +544,9 @@ class ContactInputViewController: UIViewController {
                     }
                 }
                 self?.banks = filteredbanksList
-                self?.selectedBank = filteredbanksList.first
+                if self?.selectedBank == nil {
+                    self?.selectedBank = filteredbanksList.first
+                }
             }
         }
     }
