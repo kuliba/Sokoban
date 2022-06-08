@@ -31,10 +31,14 @@ extension Model {
     
     func handleLatestPaymentsListRequest() {
         
+        guard !latestPaymentsUpdating.value else { return }
+
         guard let token = token else {
             handledUnauthorizedCommandAttempt()
             return
         }
+        
+        latestPaymentsUpdating.value = true
         
         let command = ServerCommands
                         .PaymentOperationDetailContoller
@@ -47,7 +51,6 @@ extension Model {
                                               isTransportPayments: true,
                                               isTaxAndStateServicePayments: true)
         
-        Thread.sleep(forTimeInterval: 8)
         serverAgent.executeCommand(command: command) { result in
             
             switch result {
@@ -69,9 +72,7 @@ extension Model {
                                         .LatestPayments
                                         .List
                                         .Response(result: .success([])))
-                    
                     }
-                    
                     
                 default:
                     self.handleServerCommandStatus(command: command,
@@ -85,6 +86,8 @@ extension Model {
                                 .List
                                 .Response(result: .failure(error)))
             }
+            
+            self.latestPaymentsUpdating.value = false
         }
     }
 }

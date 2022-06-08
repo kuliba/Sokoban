@@ -38,9 +38,11 @@ extension PTSectionLatestPaymentsView.ViewModel {
                   action: {})
         ]
         
-        let latestPaymentsVM = ViewModel(latestPaymentsButtons: latestPaymentsButtons, model: .emptyMock)
-        latestPaymentsVM.latestPaymentsButtons = latestPaymentsVM.baseButtons
-                                               + latestPaymentsVM.latestPaymentsButtons
+        let items = latestPaymentsButtons.map { ItemViewModel.latestPayment($0) }
+        
+        let latestPaymentsVM = ViewModel(items: items, model: .emptyMock)
+        let baseButtons = latestPaymentsVM.baseButtons.map { ItemViewModel.templates($0) }
+        latestPaymentsVM.items = baseButtons + latestPaymentsVM.items
         return latestPaymentsVM
         
     }()
@@ -55,7 +57,7 @@ extension PaymentsTransfersViewModel {
         let sections: [PaymentsTransfersSectionViewModel] =
         [
             PTSectionLatestPaymentsView.ViewModel(
-                latestPaymentsButtons: PTSectionLatestPaymentsView.ViewModel.sample.latestPaymentsButtons,
+                items: PTSectionLatestPaymentsView.ViewModel.sample.items,
                 model: .emptyMock
             ),
           

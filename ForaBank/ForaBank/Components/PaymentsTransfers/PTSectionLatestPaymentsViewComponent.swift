@@ -7,130 +7,7 @@
 
 import SwiftUI
 import Combine
-
-/*
-
- class Model {
-
-     ...
-       //MARK: LatestAllPayments
-     let latestPayments: CurrentValueSubject<[PaymentData], Never>
-     let latestPaymentsUpdating: CurrentValueSubject<Bool, Never>
-     ...
- }
-
- //  Model+LatestPayments.swift
-
- extension Model {
-     
-     func handleLatestPaymentsListRequest() {
-         
-        guard latestPaymentsUpdating.value == false else { return }
-
-         guard let token = token else {
-             handledUnauthorizedCommandAttempt()
-             return
-         }
-
-         latestPaymentsUpdating.value = true
-
-         ...
-      }
- }
-
- class ViewModel: PaymentsTransfersSectionViewModel {
-      
-         let action: PassthroughSubject<Action, Never> = .init()
-         
-         @Published
-         var items: [ItemViewModel]
-         
-         enum ItemViewModel: Identifiable {
-
-             case templates(ButtonIconTextView.ViewModel)
-             case latestPayment(LatestPaymentButtonVM)
-             case placeholder(PlaceholderViewModel)
-
-             var id: UUID {
-              
-                switch self {
-                case let templates(templatesButtonViewModel): return templatesButtonViewModel.id
-                ...
-                }
-         }
-
-         struct PlaceholderViewModel {
-
-             let id = UUID()
-         }
-             
- ...
-
-         init(model: Model) {
-             self.latestPaymentsButtons = []
-             self.model = model
-             super.init()
-
-             bind()
-             
-             latestPaymentsButtons = baseButtons
-             model.action.send(ModelAction.LatestPayments.List.Requested())
-         }
-
- ...
-
-
- func bind() {
-             
-             model.latestPayments
-                 .combineLatest(model.latestPaymentsUpdating)
-                 .receive(on: DispatchQueue.main)
-                 .sink { [unowned self] data in
-
-                     let latestPayments = data.0
-                     let isLatestPaymentsUpdating = data.1
-               
-                     var updatedItems = [ItemViewModel]
-
-                     if isLatestPaymentsUpdating == true {
-              
-                          if latestPayments.isEmpty == false {
-
-                               updatedItems.append(contentsOf: baseButtons)
-                               updatedItems.append(.placehoder(.init()))
-                               
-                               let latestPaymentsItems = latestPayments.map{ ... }
-                               updatedItems.appent(contentsOf: latestPaymentsItems)
-
-                           else {
-                             
-                            updatedItems.append(contentsOf: baseButtons)
-                            updatedItems.append(contentsOf: Array(repeating: .placehoder(.init()), count: 4)
-
-                          }
-                      
-                      } else {
-
-                               updatedItems.append(contentsOf: baseButtons)
-
-                               let latestPaymentsItems = latestPayments.map{ ... }
-                               updatedItems.appent(contentsOf: latestPaymentsItems)
-                      }
-
-                     withAnimation {
-                         
-                        items = updatedItems
-                     }
-
-                 }.store(in: &bindings)
- }
-
-
-
-
-*/
-
-
+import Shimmer
 
 //MARK: Section ViewModel
 
@@ -140,27 +17,48 @@ extension PTSectionLatestPaymentsView {
      
         let action: PassthroughSubject<Action, Never> = .init()
         
-        @Published
-        var latestPaymentsButtons: [LatestPaymentButtonVM]
-        @Published
-        var isAnimateState: Bool = false
+        //@Published
+        //var latestPaymentsButtons: [LatestPaymentButtonVM]
+        
+        @Published var items: [ItemViewModel]
         
         override var type: PaymentsTransfersSectionType { .latestPayments }
         private let model: Model
         
         private var bindings = Set<AnyCancellable>()
         
-        init(latestPaymentsButtons: [LatestPaymentButtonVM], model: Model) {
-            self.latestPaymentsButtons = latestPaymentsButtons
+        init(items: [ItemViewModel], model: Model) {
+            self.items = items
             self.model = model
             super.init()
         }
         
         init(model: Model) {
-            self.latestPaymentsButtons = []
+            self.items = []
             self.model = model
             super.init()
             bind()
+        }
+        
+        enum ItemViewModel: Identifiable {
+
+            case templates(LatestPaymentButtonVM)
+            case latestPayment(LatestPaymentButtonVM)
+            case placeholder(PlaceholderViewModel)
+
+            var id: UUID {
+             
+               switch self {
+               case let .templates(templatesButtonViewModel): return templatesButtonViewModel.id
+               case let .latestPayment(latestPaymentButtonVM): return latestPaymentButtonVM.id
+               case let .placeholder(placeholderViewModel): return placeholderViewModel.id
+               }
+            }
+        }
+
+        struct PlaceholderViewModel: Identifiable {
+
+            let id = UUID()
         }
         
         struct LatestPaymentButtonVM: Identifiable {
@@ -180,49 +78,54 @@ extension PTSectionLatestPaymentsView {
         
         func bind() {
             
-            model.action
-                .sink { [unowned self] action in
-                    switch action {
-                    case _ as ModelAction.LatestPayments.List.Requested:
-                        self.latestPaymentsButtons = self.baseButtons
-                                                + Array(repeating: .init(avatar: .text(""),
-                                                                         topIcon: nil,
-                                                                         description: "",
-                                                                         action: {}),
-                                                        count: 4)
-                
-                        self.isAnimateState = true
-                        
-                    default: break
-                        
-                    }
-                }.store(in: &bindings)
-            
             model.latestPayments
+                .combineLatest(model.latestPaymentsUpdating)
                 .receive(on: DispatchQueue.main)
-                .sink { [unowned self] latestPayments in
+                .sink { [unowned self] data in
+                    
+                    let latestPayments = data.0
+                    let isLatestPaymentsUpdating = data.1
+                    var updatedItems = [ItemViewModel]()
+                    
+                    let baseButtons = self.baseButtons.map { ItemViewModel.templates($0) }
+                    
+                    self.model.action.send(ModelAction.Contacts.PermissionStatus.Request())
+                    let latestPaymentsItems = latestPayments.map { item in
+                       
+                        ItemViewModel
+                           .latestPayment(.init(data: item,
+                                                model: self.model,
+                                                action: { [weak self] in
+                                                           self?.action.send(PTSectionLatestPaymentsViewAction
+                                                                            .ButtonTapped
+                                                                            .LatestPayment(latestPayment: item)) } ))
+                   }
+                    
+                    if isLatestPaymentsUpdating {
+             
+                         if latestPayments.isEmpty {
+                             
+                             updatedItems.append(contentsOf: baseButtons)
+                             updatedItems.append(contentsOf: Array(repeating: .placeholder(.init()), count: 4))
+                             
+                         } else {
+                             
+                             updatedItems.append(contentsOf: baseButtons)
+                             updatedItems.append(.placeholder(.init()))
+                             updatedItems.append(contentsOf:  latestPaymentsItems)
+                             
+                         }
+                     
+                     } else {
+
+                              updatedItems.append(contentsOf: baseButtons)
+                              updatedItems.append(contentsOf: latestPaymentsItems)
+                     }
                     
                     withAnimation {
                         
-                        self.latestPaymentsButtons = self.baseButtons
+                        self.items = updatedItems
                         
-                        guard !latestPayments.isEmpty else {
-                            self.isAnimateState = false
-                            return
-                        }
-                        
-                        self.model.action.send(ModelAction.Contacts.PermissionStatus.Request())
-                        for item in latestPayments {
-                            
-                            latestPaymentsButtons
-                                .append(.init(data: item,
-                                              model: self.model,
-                                              action: { [weak self] in
-                                                        self?.action.send(PTSectionLatestPaymentsViewAction
-                                                                         .ButtonTapped
-                                                                         .LatestPayment(latestPayment: item)) } ))
-                        }
-                        self.isAnimateState = false
                     }
                 }.store(in: &bindings)
         }
@@ -261,10 +164,7 @@ struct PTSectionLatestPaymentsView: View {
     
     @ObservedObject
     var viewModel: ViewModel
-    @State private var animateGradient = false
-    private let colorGr: [Color] = [.mainColorsGrayLightest.opacity(0.3),
-                                    .mainColorsGrayLightest,
-                                    .mainColorsGrayLightest]
+    
     var body: some View {
         Text(viewModel.title)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -275,44 +175,19 @@ struct PTSectionLatestPaymentsView: View {
         
         ScrollView(.horizontal,showsIndicators: false) {
             HStack(spacing: 4) {
-                ForEach(viewModel.latestPaymentsButtons.indices, id: \.self) { buttonVM in
+                ForEach(viewModel.items) { item in
                     
-                    if viewModel.isAnimateState && buttonVM != 0 {
-                        VStack(alignment: .center, spacing: 8) {
-                            
-                            Circle()
-                                .fill(LinearGradient(colors: colorGr,
-                                                     startPoint:  animateGradient ? .trailing : .leading,
-                                                     endPoint:  .trailing ))
-                                .frame(width: 56, height: 56)
-                            
-                            Spacer()
-                                .frame(width: 80, height: 32)
-                                .overlay13 {
-                                    VStack(alignment: .center, spacing: 8) {
-                                        LinearGradient(colors: colorGr,
-                                                       startPoint:  animateGradient ? .trailing : .leading,
-                                                       endPoint:  .trailing )
-                                            .frame(width: 65, height: 8, alignment: .center)
-                                            .cornerRadius(6)
-                                            
-                                        LinearGradient(colors: colorGr,
-                                                       startPoint:  animateGradient ? .trailing : .leading,
-                                                       endPoint:  .trailing )
-                                            .frame(width: 45, height: 8, alignment: .center)
-                                            .cornerRadius(6)
-                                    }
-                                }
-                        }
-                        .onAppear {
-                            withAnimation(.linear(duration: 2).repeatForever(autoreverses: false)) {
-                                animateGradient = true
-                            }
-                        }
-                        .onDisappear { animateGradient = false }
+                    switch item {
+                    case let .templates(templateVM):
+                        LatestPaymentButtonView(viewModel: templateVM)
+                    
+                    case let .latestPayment(latestPaymentVM):
+                        LatestPaymentButtonView(viewModel: latestPaymentVM)
                         
-                    } else {
-                        LatestPaymentButtonView(viewModel: viewModel.latestPaymentsButtons[buttonVM])
+                    case let .placeholder(placeholderVM):
+                        PlaceholderView(viewModel: placeholderVM)
+                            .shimmering(active: true, bounce: true)
+                        
                     }
                 }
                 Spacer()
@@ -323,9 +198,38 @@ struct PTSectionLatestPaymentsView: View {
     
 }
 
-//MARK: - LatestPaymentButtonView
+//MARK: - LatestPaymentButtonView && PlaceholderView
 
 extension PTSectionLatestPaymentsView {
+    
+    struct PlaceholderView: View {
+        
+        let viewModel: ViewModel.PlaceholderViewModel
+        
+        var body: some View {
+            
+            VStack(alignment: .center, spacing: 8) {
+                
+                Circle()
+                    .fill(Color.mainColorsGrayLightest)
+                    .frame(width: 56, height: 56)
+                
+                Spacer()
+                    .frame(width: 80, height: 32)
+                    .overlay13 {
+                        VStack(alignment: .center, spacing: 8) {
+                            RoundedRectangle(cornerRadius: 6)
+                                .frame(width: 65, height: 8, alignment: .center)
+                                
+                            RoundedRectangle(cornerRadius: 6)
+                                .frame(width: 45, height: 8, alignment: .center)
+                            
+                        }.foregroundColor(.mainColorsGrayLightest)
+                    }
+            }
+            
+        }
+    }
     
     struct LatestPaymentButtonView: View {
         
