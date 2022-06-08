@@ -8,6 +8,130 @@
 import SwiftUI
 import Combine
 
+/*
+
+ class Model {
+
+     ...
+       //MARK: LatestAllPayments
+     let latestPayments: CurrentValueSubject<[PaymentData], Never>
+     let latestPaymentsUpdating: CurrentValueSubject<Bool, Never>
+     ...
+ }
+
+ //  Model+LatestPayments.swift
+
+ extension Model {
+     
+     func handleLatestPaymentsListRequest() {
+         
+        guard latestPaymentsUpdating.value == false else { return }
+
+         guard let token = token else {
+             handledUnauthorizedCommandAttempt()
+             return
+         }
+
+         latestPaymentsUpdating.value = true
+
+         ...
+      }
+ }
+
+ class ViewModel: PaymentsTransfersSectionViewModel {
+      
+         let action: PassthroughSubject<Action, Never> = .init()
+         
+         @Published
+         var items: [ItemViewModel]
+         
+         enum ItemViewModel: Identifiable {
+
+             case templates(ButtonIconTextView.ViewModel)
+             case latestPayment(LatestPaymentButtonVM)
+             case placeholder(PlaceholderViewModel)
+
+             var id: UUID {
+              
+                switch self {
+                case let templates(templatesButtonViewModel): return templatesButtonViewModel.id
+                ...
+                }
+         }
+
+         struct PlaceholderViewModel {
+
+             let id = UUID()
+         }
+             
+ ...
+
+         init(model: Model) {
+             self.latestPaymentsButtons = []
+             self.model = model
+             super.init()
+
+             bind()
+             
+             latestPaymentsButtons = baseButtons
+             model.action.send(ModelAction.LatestPayments.List.Requested())
+         }
+
+ ...
+
+
+ func bind() {
+             
+             model.latestPayments
+                 .combineLatest(model.latestPaymentsUpdating)
+                 .receive(on: DispatchQueue.main)
+                 .sink { [unowned self] data in
+
+                     let latestPayments = data.0
+                     let isLatestPaymentsUpdating = data.1
+               
+                     var updatedItems = [ItemViewModel]
+
+                     if isLatestPaymentsUpdating == true {
+              
+                          if latestPayments.isEmpty == false {
+
+                               updatedItems.append(contentsOf: baseButtons)
+                               updatedItems.append(.placehoder(.init()))
+                               
+                               let latestPaymentsItems = latestPayments.map{ ... }
+                               updatedItems.appent(contentsOf: latestPaymentsItems)
+
+                           else {
+                             
+                            updatedItems.append(contentsOf: baseButtons)
+                            updatedItems.append(contentsOf: Array(repeating: .placehoder(.init()), count: 4)
+
+                          }
+                      
+                      } else {
+
+                               updatedItems.append(contentsOf: baseButtons)
+
+                               let latestPaymentsItems = latestPayments.map{ ... }
+                               updatedItems.appent(contentsOf: latestPaymentsItems)
+                      }
+
+                     withAnimation {
+                         
+                        items = updatedItems
+                     }
+
+                 }.store(in: &bindings)
+ }
+
+
+
+
+*/
+
+
+
 //MARK: Section ViewModel
 
 extension PTSectionLatestPaymentsView {
