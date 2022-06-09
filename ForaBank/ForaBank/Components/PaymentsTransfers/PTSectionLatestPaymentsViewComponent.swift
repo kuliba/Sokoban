@@ -40,7 +40,7 @@ extension PTSectionLatestPaymentsView {
             bind()
         }
         
-        enum ItemViewModel: Identifiable {
+        enum ItemViewModel: Identifiable, Equatable {
 
             case templates(LatestPaymentButtonVM)
             case latestPayment(LatestPaymentButtonVM)
@@ -53,6 +53,10 @@ extension PTSectionLatestPaymentsView {
                case let .latestPayment(latestPaymentButtonVM): return latestPaymentButtonVM.id
                case let .placeholder(placeholderViewModel): return placeholderViewModel.id
                }
+            }
+            
+            static func == (lhs: PTSectionLatestPaymentsView.ViewModel.ItemViewModel, rhs: PTSectionLatestPaymentsView.ViewModel.ItemViewModel) -> Bool {
+                lhs.id == rhs.id
             }
         }
 

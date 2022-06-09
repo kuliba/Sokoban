@@ -52,6 +52,8 @@ extension Model {
                                               isTaxAndStateServicePayments: true)
         
         serverAgent.executeCommand(command: command) { result in
+           
+            self.latestPaymentsUpdating.value = false
             
             switch result {
             case .success(let response):
@@ -87,7 +89,6 @@ extension Model {
                                 .Response(result: .failure(error)))
             }
             
-            self.latestPaymentsUpdating.value = false
         }
     }
 }
