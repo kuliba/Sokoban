@@ -20,13 +20,13 @@ class PaymentsTransfersSectionViewModel: ObservableObject, Identifiable {
 enum PaymentsTransfersSectionType: String {
     case latestPayments
     case transfers
-    case payGroup
+    case payments
     
     var name: String {
         switch self {
         case .latestPayments: return "Платежи"
         case .transfers: return "Перевести"
-        case .payGroup: return "Оплатить"
+        case .payments: return "Оплатить"
         }
     }
 }

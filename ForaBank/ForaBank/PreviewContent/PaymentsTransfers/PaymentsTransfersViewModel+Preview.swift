@@ -53,10 +53,39 @@ extension PTSectionLatestPaymentsView.ViewModel {
     }()
 }
 
+extension PTSectionTransfersView.ViewModel {
+            
+    static let transfersButtonsExample: [TransfersButtonVM]  = {
+        [
+            .init(type: .byPhoneNumber, action: {}),
+            .init(type: .betweenSelf, action: {}),
+            .init(type: .abroad, action: {}),
+            .init(type: .anotherCard, action: {}),
+            .init(type: .byBankDetails, action: {})
+        ]
+    }()
+}
+
+extension PTSectionPaymentsView.ViewModel {
+            
+    static let paymentButtonsData: [PaymentButtonVM]  = {
+        [
+            .init(type: .qrPayment, action: {}),
+            .init(type: .mobile, action: {}),
+            .init(type: .service, action: {}),
+            .init(type: .internet, action: {}),
+            .init(type: .transport, action: {}),
+            .init(type: .taxAndStateService, action: {}),
+            .init(type: .socialAndGame, action: {}),
+            .init(type: .security, action: {}),
+            .init(type: .others, action: {})
+        ]
+    }()
+}
+
 extension PaymentsTransfersViewModel {
-    
+            
     static let sample: PaymentsTransfersViewModel = {
-        
         typealias ViewModel = PaymentsTransfersViewModel
         
         let sections: [PaymentsTransfersSectionViewModel] =
@@ -67,10 +96,10 @@ extension PaymentsTransfersViewModel {
             ),
           
             PTSectionTransfersView.ViewModel(transfersButtons:
-                PTSectionTransfersView.ViewModel.transfersButtonsExample()),
+                PTSectionTransfersView.ViewModel.transfersButtonsExample),
             
-            PTSectionPayGroupView.ViewModel(payGroupButtons:
-                PTSectionPayGroupView.ViewModel.payGroupButtonsData)
+            PTSectionPaymentsView.ViewModel(paymentButtons:
+                PTSectionPaymentsView.ViewModel.paymentButtonsData)
         ]
         
         return .init(sections: sections, model: .emptyMock)

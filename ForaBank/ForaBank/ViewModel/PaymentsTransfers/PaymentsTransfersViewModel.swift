@@ -10,7 +10,7 @@ import Combine
 
 class PaymentsTransfersViewModel: ObservableObject {
     typealias TransfersSectionVM = PTSectionTransfersView.ViewModel
-    typealias PaymentsSectionVM = PTSectionPayGroupView.ViewModel
+    typealias PaymentsSectionVM = PTSectionPaymentsView.ViewModel
     
     @Published var sections: [PaymentsTransfersSectionViewModel]
     
@@ -25,7 +25,7 @@ class PaymentsTransfersViewModel: ObservableObject {
         self.sections = [
             PTSectionLatestPaymentsView.ViewModel(model: model),
             PTSectionTransfersView.ViewModel(),
-            PTSectionPayGroupView.ViewModel()
+            PTSectionPaymentsView.ViewModel()
         ]
         self.model = model
         bindSections(sections)
@@ -50,28 +50,28 @@ class PaymentsTransfersViewModel: ObservableObject {
                         
                         switch (payload.latestPayment.type, payload.latestPayment) {
                         case (.phone, let paymentData as PaymentGeneralData):
-                            sheet = .init(type: .latestPaymentDetail(paymentData)) //TODO:
+                            sheet = .init(type: .exampleDetail(paymentData.type.rawValue)) //TODO:
                         
                         case (.country, let paymentData as PaymentCountryData):
-                            sheet = .init(type: .latestPaymentDetail(paymentData)) //TODO:
+                            sheet = .init(type: .exampleDetail(paymentData.type.rawValue)) //TODO:
                             
                         case (.service, let paymentData as PaymentServiceData):
-                            sheet = .init(type: .latestPaymentDetail(paymentData)) //TODO:
+                            sheet = .init(type: .exampleDetail(paymentData.type.rawValue)) //TODO:
                                     
                         case (.transport, let paymentData as PaymentServiceData):
-                            sheet = .init(type: .latestPaymentDetail(paymentData)) //TODO:
+                            sheet = .init(type: .exampleDetail(paymentData.type.rawValue)) //TODO:
                             
                         case (.internet, let paymentData as PaymentServiceData):
-                            sheet = .init(type: .latestPaymentDetail(paymentData)) //TODO:
+                            sheet = .init(type: .exampleDetail(paymentData.type.rawValue)) //TODO:
                             
                         case (.mobile, let paymentData as PaymentServiceData):
-                            sheet = .init(type: .latestPaymentDetail(paymentData)) //TODO:
+                            sheet = .init(type: .exampleDetail(paymentData.type.rawValue)) //TODO:
                             
                         case (.taxAndStateService, let paymentData as PaymentServiceData):
-                            sheet = .init(type: .latestPaymentDetail(paymentData)) //TODO:
+                            sheet = .init(type: .exampleDetail(paymentData.type.rawValue)) //TODO:
                             
                         default: //error matching
-                            sheet = .init(type: .latestPaymentDetail(payload.latestPayment)) //TODO:
+                            sheet = .init(type: .exampleDetail(payload.latestPayment.type.rawValue)) //TODO:
                         }
                     
                     //LatestPayment Section TemplateButton
@@ -81,14 +81,29 @@ class PaymentsTransfersViewModel: ObservableObject {
                     //Transfers Section
                     case let payload as PTSectionTransfersViewAction.ButtonTapped.Transfer:
                         switch TransfersSectionVM.TransfersButtonType(rawValue: payload.type) {
-                        case .abroad: link = .chooseCountry
-                        case .anotherCard: sheet = .init(type: .country)
-                        case .betweenSelf: break
-                        case .byBankDetails: break
-                        case .byPhoneNumber: break
+                        case .abroad: link = .chooseCountry //TODO:
+                        case .anotherCard: sheet = .init(type: .exampleDetail(payload.type))  //TODO:
+                        case .betweenSelf: sheet = .init(type: .exampleDetail(payload.type))   //TODO:
+                        case .byBankDetails: sheet = .init(type: .exampleDetail(payload.type)) //TODO:
+                        case .byPhoneNumber: sheet = .init(type: .exampleDetail(payload.type)) //TODO:
                         
                         default: break
-                            
+                        }
+                        
+                    //Payments Section
+                    case let payload as PTSectionPaymentsViewAction.ButtonTapped.Payment:
+                        switch PaymentsSectionVM.PaymentsType(rawValue: payload.type) {
+                        case .qrPayment: link = .chooseCountry //TODO: 
+                        case .mobile: sheet = .init(type: .exampleDetail(payload.type)) //TODO:
+                        case .service: sheet = .init(type: .exampleDetail(payload.type)) //TODO:
+                        case .internet: sheet = .init(type: .exampleDetail(payload.type)) //TODO:
+                        case .transport: sheet = .init(type: .exampleDetail(payload.type)) //TODO:
+                        case .taxAndStateService: sheet = .init(type: .exampleDetail(payload.type)) //TODO:
+                        case .socialAndGame: sheet = .init(type: .exampleDetail(payload.type)) //TODO:
+                        case .security: sheet = .init(type: .exampleDetail(payload.type)) //TODO:
+                        case .others: sheet = .init(type: .exampleDetail(payload.type)) //TODO:
+        
+                        default: break
                         }
                     
                     default:
@@ -107,13 +122,8 @@ class PaymentsTransfersViewModel: ObservableObject {
         
         enum Kind {
             
-            case latestPaymentDetail(LatestPaymentData)
-            case country
-            case productProfile(ProductProfileViewModel)
-            case userAccount(UserAccountViewModel)
-            case messages(MessagesHistoryViewModel)
-            case myProducts(MyProductsViewModel)
-            case places(PlacesViewModel)
+            case exampleDetail(String)
+
         }
     }
     

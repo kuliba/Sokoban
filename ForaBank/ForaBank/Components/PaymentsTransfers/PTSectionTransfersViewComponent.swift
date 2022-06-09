@@ -63,43 +63,6 @@ extension PTSectionTransfersView {
             self.transfersButtons = transfersButtons
             super.init()
         }
-        
-        func transfersButtonsData() -> [TransfersButtonVM] {
-           
-            TransfersButtonType.allCases.map { item in TransfersButtonVM(type: item, action: { self.action.send(PTSectionTransfersViewAction.ButtonTapped.Transfer(type: item.rawValue))} ) }
-            
-//            [
-//            .init(type: .byPhoneNumber, action: {
-//                self.action.send(PaymentsTransfersViewModelAction.OpenCountryPayment())
-//            }),
-//
-//            .init(type: .betweenSelf, action: {
-//
-//            }),
-//
-//            .init(type: .abroad, action: {
-//                self.action.send(PaymentsTransfersViewModelAction.OpenChooseCountry())
-//            }),
-//
-//            .init(type: .anotherCard, action: {
-//
-//            }),
-//
-//            .init(type: .byBankDetails, action: {
-//
-//            })
-//            ]
-        }
-        
-        static func transfersButtonsExample() -> [TransfersButtonVM] {
-            [
-            .init(type: .byPhoneNumber, action: { }),
-            .init(type: .betweenSelf, action: { }),
-            .init(type: .abroad, action: { }),
-            .init(type: .anotherCard, action: { }),
-            .init(type: .byBankDetails, action: { })
-            ]
-        }
     }
 }
 

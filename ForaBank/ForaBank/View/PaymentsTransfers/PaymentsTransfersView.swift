@@ -36,8 +36,8 @@ struct PaymentsTransfersView: View {
                                 case let transfersSectionVM as PTSectionTransfersView.ViewModel:
                                     PTSectionTransfersView(viewModel: transfersSectionVM)
                                     
-                                case let payGroupSectionVM as PTSectionPayGroupView.ViewModel:
-                                    PTSectionPayGroupView(viewModel: payGroupSectionVM,
+                                case let payGroupSectionVM as PTSectionPaymentsView.ViewModel:
+                                    PTSectionPaymentsView(viewModel: payGroupSectionVM,
                                                           heightBlock: grProxy.size.height)
                                 default:
                                     EmptyView()
@@ -86,28 +86,10 @@ struct PaymentsTransfersView: View {
             } //mainZStack
             .sheet(item: $viewModel.sheet, content: { sheet in
                 switch sheet.type {
-                    
                 
-                case let .latestPaymentDetail(paymentData):
-                    LatestPaymentDetailMock(paymentData: paymentData)
+                case let .exampleDetail(title):    //TODO: 
+                    ExampleDetailMock(title: title)
                     
-                case .country:
-                    ChooseCountryView()
-                    
-                case .productProfile(let productProfileViewModel):
-                    ProductProfileView(viewModel: productProfileViewModel)
-                    
-                case .userAccount(let userAccountViewModel):
-                    UserAccountView(viewModel: userAccountViewModel)
-                    
-                case .messages(let messagesHistoryViewModel):
-                    MessagesHistoryView(viewModel: messagesHistoryViewModel)
-                    
-                case .myProducts(let myProductsViewModel):
-                    MyProductsView(viewModel: myProductsViewModel)
-                    
-                case .places(let placesViewModel):
-                    PlacesView(viewModel: placesViewModel)
                 }
             })
             .navigationBarHidden(true)
@@ -119,12 +101,12 @@ struct PaymentsTransfersView: View {
 
 extension PaymentsTransfersView {
     
-    struct LatestPaymentDetailMock: View {
-        var paymentData: LatestPaymentData
+    struct ExampleDetailMock: View {
+        var title: String
         
         var body: some View {
             
-            Text("LatestPaymentsType: \(paymentData.type.rawValue)")
+            Text("TypeButton: \(title)")
                 .font(.title)
         }
     }
