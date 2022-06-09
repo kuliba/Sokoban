@@ -5,7 +5,6 @@
 //  Created by Pavel Samsonov on 04.05.2022.
 //
 
-
 import SwiftUI
 import Combine
 import IQKeyboardManagerSwift
@@ -192,22 +191,32 @@ extension DepositCalculateAmountView {
 
             func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
 
-                guard let text = textField.text else {
-                    return false
-                }
+                 guard let text = textField.text else {
+                     return false
+                 }
 
-                let filterred = "\(text)\(string)".filterred()
+                 var temporary = text.filterred()
 
-                if filterred.count > 1 && filterred.first == "0" {
-                    return false
-                }
+                 if string.isEmpty && temporary.count > 1 {
 
-                guard let value = Double(filterred), value <= viewModel.bounds.upperBound else {
-                    return false
-                }
+                     guard let stringRange = Range(range, in: text) else { return false }
+                     temporary = text.replacingCharacters(in: stringRange, with: string)
+                 }
 
-                return true
-            }
+                 let filterred = "\(temporary)\(string)".filterred()
+
+                 if filterred.count > 1 && filterred.first == "0" {
+                     return false
+                 }
+
+                 guard let value = Double(filterred), value <= viewModel.bounds.upperBound else {
+                     return false
+                 }
+
+                 viewModel.value = value
+
+                 return true
+             }
         }
     }
 }

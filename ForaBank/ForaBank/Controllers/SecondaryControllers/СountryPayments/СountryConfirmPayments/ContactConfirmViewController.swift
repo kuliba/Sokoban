@@ -262,7 +262,7 @@ class ContactConfurmViewController: UIViewController {
     
     var purposePaymentField = ForaInput(
         viewModel: ForaInputModel(
-            title: "Назначение платежа",
+            title: "purposePaymentField",
             image: #imageLiteral(resourceName: "Frame 580"),
             isEditable: false))
     

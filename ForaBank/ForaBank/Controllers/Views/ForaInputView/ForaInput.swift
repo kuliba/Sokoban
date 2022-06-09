@@ -96,7 +96,7 @@ class ForaInput: UIView {
         textField.addTarget(self, action: #selector(setupValue), for: .editingChanged)
         textField.delegate = self
         
-        if viewModel.title != "Назначение платежа" {
+        if viewModel.title != "purposePaymentField" {
             
             self.anchor(height: 58)
         }
