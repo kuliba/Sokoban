@@ -76,7 +76,7 @@ class PaymentsTransfersViewModel: ObservableObject {
                     
                     //LatestPayment Section TemplateButton
                     case _ as PTSectionLatestPaymentsViewAction.ButtonTapped.Templates:
-                        link = .chooseCountry
+                        sheet = .init(type: .exampleDetail("Шаблоны")) //TODO:
                         
                     //Transfers Section
                     case let payload as PTSectionTransfersViewAction.ButtonTapped.Transfer:
