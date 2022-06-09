@@ -6,8 +6,12 @@
 //
 
 import Foundation
+import Combine
 
 class PaymentsTransfersSectionViewModel: ObservableObject, Identifiable {
+    
+    let action: PassthroughSubject<Action, Never> = .init()
+    
     var id: String { type.rawValue }
     var title: String { type.name}
     var type: PaymentsTransfersSectionType { fatalError("init in subclass") }

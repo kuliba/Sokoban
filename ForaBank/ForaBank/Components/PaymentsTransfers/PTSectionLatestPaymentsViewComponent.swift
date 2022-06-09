@@ -14,8 +14,6 @@ import Shimmer
 extension PTSectionLatestPaymentsView {
     
     class ViewModel: PaymentsTransfersSectionViewModel {
-     
-        let action: PassthroughSubject<Action, Never> = .init()
         
         //@Published
         //var latestPaymentsButtons: [LatestPaymentButtonVM]

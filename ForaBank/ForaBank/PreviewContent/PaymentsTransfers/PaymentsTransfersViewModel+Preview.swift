@@ -62,7 +62,7 @@ extension PaymentsTransfersViewModel {
             ),
           
             PTSectionTransfersView.ViewModel(transfersButtons:
-                PTSectionTransfersView.ViewModel.transfersButtonsData),
+                PTSectionTransfersView.ViewModel.transfersButtonsExample()),
             
             PTSectionPayGroupView.ViewModel(payGroupButtons:
                 PTSectionPayGroupView.ViewModel.payGroupButtonsData)

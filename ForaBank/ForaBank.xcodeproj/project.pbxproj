@@ -945,6 +945,7 @@
 		ED60A1E126DC10A3000F3208 /* GetClientConsentMe2MePullDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED60A1E026DC10A3000F3208 /* GetClientConsentMe2MePullDecodableModel.swift */; };
 		ED60A1E326DC1600000F3208 /* ChangeClientConsentMe2MePullDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED60A1E226DC1600000F3208 /* ChangeClientConsentMe2MePullDecodableModel.swift */; };
 		ED60A1E626DCEA01000F3208 /* MeToMeRequestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED60A1E526DCEA01000F3208 /* MeToMeRequestController.swift */; };
+		ED65D6032851EB28002EB565 /* ChooseCountryView+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED65D6022851EB28002EB565 /* ChooseCountryView+Legacy.swift */; };
 		ED664BB2274512C80050D1E0 /* ResultAccountStatementController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED664BB1274512C80050D1E0 /* ResultAccountStatementController.swift */; };
 		ED664BB4274513040050D1E0 /* ResultAccountStatementController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ED664BB3274513040050D1E0 /* ResultAccountStatementController.storyboard */; };
 		ED664BB7274530320050D1E0 /* AccountStatementPDFController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED664BB6274530320050D1E0 /* AccountStatementPDFController.swift */; };
@@ -2112,6 +2113,7 @@
 		ED60A1E026DC10A3000F3208 /* GetClientConsentMe2MePullDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetClientConsentMe2MePullDecodableModel.swift; sourceTree = "<group>"; };
 		ED60A1E226DC1600000F3208 /* ChangeClientConsentMe2MePullDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeClientConsentMe2MePullDecodableModel.swift; sourceTree = "<group>"; };
 		ED60A1E526DCEA01000F3208 /* MeToMeRequestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeToMeRequestController.swift; sourceTree = "<group>"; };
+		ED65D6022851EB28002EB565 /* ChooseCountryView+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChooseCountryView+Legacy.swift"; sourceTree = "<group>"; };
 		ED664BB1274512C80050D1E0 /* ResultAccountStatementController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultAccountStatementController.swift; sourceTree = "<group>"; };
 		ED664BB3274513040050D1E0 /* ResultAccountStatementController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ResultAccountStatementController.storyboard; sourceTree = "<group>"; };
 		ED664BB6274530320050D1E0 /* AccountStatementPDFController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountStatementPDFController.swift; sourceTree = "<group>"; };
@@ -4150,6 +4152,7 @@
 		77DA206228453AA700D7E005 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				ED65D6012851EAFE002EB565 /* CountryPaymentViewController */,
 				77DA206328453ADB00D7E005 /* CustomPopUpWithRateView+Legacy.swift */,
 			);
 			path = Controllers;
@@ -5280,6 +5283,14 @@
 				ED60A1E526DCEA01000F3208 /* MeToMeRequestController.swift */,
 			);
 			path = MeToMeRequestController;
+			sourceTree = "<group>";
+		};
+		ED65D6012851EAFE002EB565 /* CountryPaymentViewController */ = {
+			isa = PBXGroup;
+			children = (
+				ED65D6022851EB28002EB565 /* ChooseCountryView+Legacy.swift */,
+			);
+			path = CountryPaymentViewController;
 			sourceTree = "<group>";
 		};
 		ED664BB0274512B80050D1E0 /* ResultAccountStatementController */ = {
@@ -7446,6 +7457,7 @@
 				688B9BA526DD0DC600407A75 /* ProductTableViewCell.swift in Sources */,
 				0B2B29212808BD79001C6380 /* DocumentCollectionViewController.swift in Sources */,
 				EDB1452226661C3F0028EF5A /* MaskedTextField.swift in Sources */,
+				ED65D6032851EB28002EB565 /* ChooseCountryView+Legacy.swift in Sources */,
 				ED4FC5EF266B70A00092B4AB /* PartialTransparentView.swift in Sources */,
 				ED302A3126D3E56600161243 /* UIImage.swift in Sources */,
 				77A411ED27F4325100D36E46 /* Model+PaymentsTaxesFSSPMock.swift in Sources */,

@@ -14,7 +14,7 @@ import Combine
 extension PTSectionPayGroupView {
     
     class ViewModel: PaymentsTransfersSectionViewModel {
-     
+        
         @Published
         var payGroupButtons: [PayGroupButtonVM]
 

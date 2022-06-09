@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 //MARK: Section ViewModel
 
@@ -46,24 +47,47 @@ extension PTSectionTransfersView {
         }
         
         override init() {
-            self.transfersButtons = Self.transfersButtonsData
+            
+            self.transfersButtons = []
             super.init()
+            self.transfersButtons = transfersButtonsData()
         }
         
         init(transfersButtons: [TransfersButtonVM]) {
+            
             self.transfersButtons = transfersButtons
             super.init()
         }
         
-        static let transfersButtonsData: [TransfersButtonVM] = {
+        func transfersButtonsData() -> [TransfersButtonVM] {
             [
-            .init(type: .byPhoneNumber, action: {}),
-            .init(type: .betweenSelf, action: {}),
-            .init(type: .abroad, action: {}),
-            .init(type: .anotherCard, action: {}),
-            .init(type: .byBankDetails, action: {})
+            .init(type: .byPhoneNumber, action: {
+                
+            }),
+            .init(type: .betweenSelf, action: {
+                
+            }),
+            .init(type: .abroad, action: {
+                self.action.send(PaymentsTransfersViewModelAction.OpenChooseCountry())
+            }),
+            .init(type: .anotherCard, action: {
+                
+            }),
+            .init(type: .byBankDetails, action: {
+                
+            })
             ]
-        }()
+        }
+        
+        static func transfersButtonsExample() -> [TransfersButtonVM] {
+            [
+            .init(type: .byPhoneNumber, action: { }),
+            .init(type: .betweenSelf, action: { }),
+            .init(type: .abroad, action: { }),
+            .init(type: .anotherCard, action: { }),
+            .init(type: .byBankDetails, action: { })
+            ]
+        }
     }
 }
 
