@@ -15,60 +15,77 @@ struct PaymentsTransfersView: View {
     
     var body: some View {
         
-        ZStack(alignment: .top) {
-            VStack() {
+        NavigationView {
+            
+            ZStack(alignment: .top) {
                 
-                Color.clear.frame(height: 48) // mock SearchView
-                
-                GeometryReader { grProxy in
-                    ScrollView(.vertical, showsIndicators: false) {
+                VStack() {
+                    
+                    Color.clear.frame(height: 48) // mock SearchView
+                    
+                    GeometryReader { grProxy in
                         
-                        ForEach(viewModel.sections) { section in
+                        ScrollView(.vertical, showsIndicators: false) {
                             
-                            switch section {
-                            case let latestPaymentsSectionVM as PTSectionLatestPaymentsView.ViewModel:
-                                PTSectionLatestPaymentsView(viewModel: latestPaymentsSectionVM)
+                            ForEach(viewModel.sections) { section in
                                 
-                            case let transfersSectionVM as PTSectionTransfersView.ViewModel:
-                                PTSectionTransfersView(viewModel: transfersSectionVM)
-                                
-                            case let payGroupSectionVM as PTSectionPayGroupView.ViewModel:
-                                PTSectionPayGroupView(viewModel: payGroupSectionVM,
-                                                      heightBlock: grProxy.size.height)
-                            default:
-                                EmptyView()
+                                switch section {
+                                case let latestPaymentsSectionVM as PTSectionLatestPaymentsView.ViewModel:
+                                    PTSectionLatestPaymentsView(viewModel: latestPaymentsSectionVM)
+                                    
+                                case let transfersSectionVM as PTSectionTransfersView.ViewModel:
+                                    PTSectionTransfersView(viewModel: transfersSectionVM)
+                                    
+                                case let payGroupSectionVM as PTSectionPayGroupView.ViewModel:
+                                    PTSectionPayGroupView(viewModel: payGroupSectionVM,
+                                                          heightBlock: grProxy.size.height)
+                                default:
+                                    EmptyView()
+                                }
                             }
+                            
+                        } //mainVerticalScrollView
+                    } //geometry
+                    
+                    if previewMode {
+                        if #available(iOS 14.0, *) {
+                            Rectangle()
+                                .ignoresSafeArea()
+                                .foregroundColor(.mainColorsGrayLightest)
+                                .frame(height: 56)
+                        } else {
+                            Color.mainColorsGrayLightest.frame(height: 56)
                         }
-                        
-                    } //mainVerticalScrollView
-                } //geometry
+                    }
+                    
+                } //mainVStack
                 
-                if previewMode {
-                    if #available(iOS 14.0, *) {
-                        Rectangle()
-                            .ignoresSafeArea()
-                            .foregroundColor(.mainColorsGrayLightest)
-                            .frame(height: 56)
-                    } else {
-                        Color.mainColorsGrayLightest.frame(height: 56)
+                if #available(iOS 14.0, *) {
+                    Color.mainColorsGrayLightest
+                        .frame(height: 48)
+                        .ignoresSafeArea()
+                        .overlay(TopSearchViewMock())
+                } else {
+                    Color.mainColorsGrayLightest
+                        .frame(height: 48)
+                        .overlay(TopSearchViewMock())
+                } //mock topSearchView
+                
+                NavigationLink("", isActive: $viewModel.isLinkActive) {
+                    
+                    if let link = viewModel.link  {
+                        
+                        switch link {
+                            
+                        case .chooseCountry:
+                            ChooseCountryView()
+                        }
                     }
                 }
                 
-            } //mainVStack
-            
-            if #available(iOS 14.0, *) {
-                Color.mainColorsGrayLightest
-                    .frame(height: 48)
-                    .ignoresSafeArea()
-                    .overlay(TopSearchViewMock())
-            } else {
-                Color.mainColorsGrayLightest
-                    .frame(height: 48)
-                    .overlay(TopSearchViewMock())
-            } //mock topSearchView
-            
-        } //mainZStack
-        
+            } //mainZStack
+            .navigationBarHidden(true)
+        }
     }
 }
 
