@@ -87,6 +87,10 @@ struct PaymentsTransfersView: View {
             .sheet(item: $viewModel.sheet, content: { sheet in
                 switch sheet.type {
                     
+                
+                case let .latestPaymentDetail(paymentData):
+                    LatestPaymentDetailMock(paymentData: paymentData)
+                    
                 case .country:
                     ChooseCountryView()
                     
@@ -110,6 +114,23 @@ struct PaymentsTransfersView: View {
         }
     }
 }
+
+//MARK: - LatestPaymentDetailMock
+
+extension PaymentsTransfersView {
+    
+    struct LatestPaymentDetailMock: View {
+        var paymentData: LatestPaymentData
+        
+        var body: some View {
+            
+            Text("LatestPaymentsType: \(paymentData.type.rawValue)")
+                .font(.title)
+        }
+    }
+    
+}
+
 
 extension PaymentsTransfersView {
  

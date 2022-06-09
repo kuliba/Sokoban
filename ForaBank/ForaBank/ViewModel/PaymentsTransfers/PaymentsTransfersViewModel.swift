@@ -10,6 +10,7 @@ import Combine
 
 class PaymentsTransfersViewModel: ObservableObject {
     typealias TransfersSectionVM = PTSectionTransfersView.ViewModel
+    typealias PaymentsSectionVM = PTSectionPayGroupView.ViewModel
     
     @Published var sections: [PaymentsTransfersSectionViewModel]
     
@@ -49,28 +50,28 @@ class PaymentsTransfersViewModel: ObservableObject {
                         
                         switch (payload.latestPayment.type, payload.latestPayment) {
                         case (.phone, let paymentData as PaymentGeneralData):
-                            break //TODO:
+                            sheet = .init(type: .latestPaymentDetail(paymentData)) //TODO:
                         
                         case (.country, let paymentData as PaymentCountryData):
-                            break //TODO:
+                            sheet = .init(type: .latestPaymentDetail(paymentData)) //TODO:
                             
                         case (.service, let paymentData as PaymentServiceData):
-                            break //TODO:
+                            sheet = .init(type: .latestPaymentDetail(paymentData)) //TODO:
                                     
                         case (.transport, let paymentData as PaymentServiceData):
-                            break //TODO:
+                            sheet = .init(type: .latestPaymentDetail(paymentData)) //TODO:
                             
                         case (.internet, let paymentData as PaymentServiceData):
-                            break //TODO:
+                            sheet = .init(type: .latestPaymentDetail(paymentData)) //TODO:
                             
                         case (.mobile, let paymentData as PaymentServiceData):
-                            break //TODO:
+                            sheet = .init(type: .latestPaymentDetail(paymentData)) //TODO:
                             
                         case (.taxAndStateService, let paymentData as PaymentServiceData):
-                            break //TODO:
+                            sheet = .init(type: .latestPaymentDetail(paymentData)) //TODO:
                             
                         default: //error matching
-                            break //TODO:
+                            sheet = .init(type: .latestPaymentDetail(payload.latestPayment)) //TODO:
                         }
                     
                     //LatestPayment Section TemplateButton
@@ -106,6 +107,7 @@ class PaymentsTransfersViewModel: ObservableObject {
         
         enum Kind {
             
+            case latestPaymentDetail(LatestPaymentData)
             case country
             case productProfile(ProductProfileViewModel)
             case userAccount(UserAccountViewModel)
@@ -119,13 +121,5 @@ class PaymentsTransfersViewModel: ObservableObject {
         
         case chooseCountry
     }
-    
-}
-
-enum PaymentsTransfersViewModelAction {
-
-    struct OpenChooseCountry: Action {}
-    
-    struct OpenCountryPayment: Action {}
     
 }
