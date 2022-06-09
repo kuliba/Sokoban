@@ -454,10 +454,13 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             collectionView.isHidden = false
         }
         
+        button.removeTarget(self, action: #selector(showAlert(sender:)), for: .touchUpInside)
+        button.removeTarget(self, action: #selector(depositAllowCreditAlert(sender:)), for: .touchUpInside)
+        
         NotificationCenter.default.addObserver(self, selector: #selector(self.showAlert(sender:)), name: Notification.Name("openPaymentsView"), object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.presentBottomSheet(sender: )), name: Notification.Name("openBottomSheet"), object: nil)
-        
+
         switch product?.productType {
         case ProductType.card.rawValue:
             
@@ -489,7 +492,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
                 secondStackView.isHidden = false
                 
             }
-
+            button.addTarget(self, action: #selector(showAlert(sender:)), for: .touchUpInside)
             
             if product?.statusPC == "17", product?.status == "Действует" || product?.status == "Выдано клиенту" {
                 
@@ -506,7 +509,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         case ProductType.account.rawValue:
             
             card.interestRate.isHidden = true
-            
+            button.addTarget(self, action: #selector(showAlert(sender:)), for: .touchUpInside)
             button3.setTitle("Реквизиты\nи выписки", for: .normal)
             button3.titleLabel?.lineBreakMode = .byWordWrapping
             button3.titleLabel?.font = UIFont.systemFont(ofSize: 14)
@@ -526,9 +529,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             guard let number = self.product?.accountNumber else { return }
             
             self.navigationItem.setTitle(title: (self.product?.customName ?? self.product?.mainField)!, subtitle: "· \(String(number.suffix(4)))", color: "#ffffff")
-            
-            button.alpha = 0.4
-            button.isUserInteractionEnabled = false
             
             button2.alpha = 0.4
             button2.isUserInteractionEnabled = false
@@ -554,11 +554,24 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             button3.setTitle("Детали", for: .normal)
             button3.setImage(UIImage(named: "infoBlack"), for: .normal)
             
+            button.alpha = 1
+            button.isUserInteractionEnabled = true
+            
+            if let allowCredit = product?.allowCredit, allowCredit {
+                
+                button.addTarget(self, action: #selector(showAlert(sender:)), for: .touchUpInside)
+            } else {
+                
+                button.addTarget(self, action: #selector(depositAllowCreditAlert(sender:)), for: .touchUpInside)
+            }
+            
             tableView.isHidden = false
             headerView.isHidden = false
             depositInfo()
         case ProductType.loan.rawValue:
             
+            button.addTarget(self, action: #selector(showAlert(sender:)), for: .touchUpInside)
+
             if let productId = product?.id {
                 
                 personsCredit(id: productId)
@@ -871,16 +884,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
                     let endDate = product?.endDate ?? 0
                     
                     let dateEnd = Date(timeIntervalSince1970: TimeInterval((endDate) / 1000))
-
-                    if  dateEnd <= currentDate {
-                        
-                        button.alpha = 0.4
-                        button.isUserInteractionEnabled = false
-                    } else {
-                        
-                        button.alpha = 1
-                        button.isUserInteractionEnabled = true
-                    }
                         
                     if dateEnd <= currentDate || (product?.depositProductID == 10000003792 && sumPayPrc != 0) {
                        
@@ -922,6 +925,13 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         navController.modalPresentationStyle = .custom
         navController.transitioningDelegate = self
         self.present(navController, animated: true, completion: nil)
+    }
+
+    @objc func depositAllowCreditAlert(sender: AnyObject) {
+        let alertController = UIAlertController(title: "Невозможно пополнить", message: "Вклад не предусматривает возможности пополнения.\n Подробнее в информации о вкладе в деталях", preferredStyle: UIAlertController.Style.alert)
+        let saveAction = UIAlertAction(title: "Ок", style: UIAlertAction.Style.default, handler: nil)
+        alertController.addAction(saveAction)
+        self.present(alertController, animated: true, completion: nil)
     }
     
     @objc func blockProduct(){

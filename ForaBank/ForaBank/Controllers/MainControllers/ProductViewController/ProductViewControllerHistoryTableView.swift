@@ -181,7 +181,7 @@ extension ProductViewController: UITableViewDelegate, UITableViewDataSource, Ske
                     statusBarLabel.text = "Траты за \(getMonthFromLognInt(longInt: tranDate/1000))"
 
                     
-                    let monthSort = historyArrayAccount.filter({longIntToDateString(longInt: $0.date!/1000)?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") ?? "" == month.replacingOccurrences(of: " ", with: "")})
+                    let monthSort = historyArrayAccount.filter({longIntToDateString(longInt: ($0.tranDate ?? $0.date!)/1000)?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") ?? "" == month.replacingOccurrences(of: " ", with: "")})
                     let monthDebit = monthSort.filter({$0.operationType == "DEBIT"})
                     let sumSalary = monthDebit.reduce(0.0, {
                         if let documentAmount = $1.documentAmount{
@@ -206,7 +206,7 @@ extension ProductViewController: UITableViewDelegate, UITableViewDataSource, Ske
                 if let month = label?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") {
                     statusBarLabel.text = "Траты за \(getMonthFromLognInt(longInt: tranDate/1000))"
                     
-                    let monthSort = historyArrayDeposit.filter({longIntToDateString(longInt: $0.date!/1000)?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") ?? "" == month.replacingOccurrences(of: " ", with: "")})
+                    let monthSort = historyArrayDeposit.filter({longIntToDateString(longInt: ($0.tranDate ?? $0.date!)/1000)?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") ?? "" == month.replacingOccurrences(of: " ", with: "")})
                     let monthDebit = monthSort.filter({$0.operationType == "DEBIT"})
                     let sumSalary = monthDebit.reduce(0.0, {
                         if let documentAmount = $1.documentAmount{
@@ -232,7 +232,7 @@ extension ProductViewController: UITableViewDelegate, UITableViewDataSource, Ske
                 if let month = label?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") {
                     statusBarLabel.text = "Траты за \(getMonthFromLognInt(longInt: tranDate/1000))"
                     
-                    let monthSort = historyArray.filter({longIntToDateString(longInt: $0.date!/1000)?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") ?? "" == month.replacingOccurrences(of: " ", with: "")})
+                    let monthSort = historyArray.filter({longIntToDateString(longInt: ($0.tranDate ?? $0.date!)/1000)?.dropFirst(2).dropLast(5).replacingOccurrences(of: " ", with: "") ?? "" == month.replacingOccurrences(of: " ", with: "")})
                     let monthDebit = monthSort.filter({$0.operationType == "DEBIT"})
                     
                     let sumSalary = monthDebit.reduce(0.0, {
