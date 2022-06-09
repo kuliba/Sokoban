@@ -50,7 +50,7 @@ extension Model {
                                               isInternetPayments: true,
                                               isTransportPayments: true,
                                               isTaxAndStateServicePayments: true)
-        
+    
         serverAgent.executeCommand(command: command) { result in
            
             self.latestPaymentsUpdating.value = false

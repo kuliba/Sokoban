@@ -28,7 +28,7 @@ extension PTSectionTransfersView {
             let action: () -> Void
         }
         
-        enum TransfersButtonType: String {
+        enum TransfersButtonType: String, CaseIterable {
             case byPhoneNumber
             case betweenSelf
             case abroad
@@ -50,7 +50,12 @@ extension PTSectionTransfersView {
             
             self.transfersButtons = []
             super.init()
-            self.transfersButtons = transfersButtonsData()
+            self.transfersButtons = TransfersButtonType.allCases.map { item in
+                TransfersButtonVM(type: item,
+                                  action: { self.action.send(PTSectionTransfersViewAction
+                                    .ButtonTapped
+                                    .Transfer(type: item.rawValue)) })
+            }
         }
         
         init(transfersButtons: [TransfersButtonVM]) {
@@ -60,23 +65,30 @@ extension PTSectionTransfersView {
         }
         
         func transfersButtonsData() -> [TransfersButtonVM] {
-            [
-            .init(type: .byPhoneNumber, action: {
-                self.action.send(PaymentsTransfersViewModelAction.OpenCountryPayment())
-            }),
-            .init(type: .betweenSelf, action: {
-                
-            }),
-            .init(type: .abroad, action: {
-                self.action.send(PaymentsTransfersViewModelAction.OpenChooseCountry())
-            }),
-            .init(type: .anotherCard, action: {
-                
-            }),
-            .init(type: .byBankDetails, action: {
-                
-            })
-            ]
+           
+            TransfersButtonType.allCases.map { item in TransfersButtonVM(type: item, action: { self.action.send(PTSectionTransfersViewAction.ButtonTapped.Transfer(type: item.rawValue))} ) }
+            
+//            [
+//            .init(type: .byPhoneNumber, action: {
+//                self.action.send(PaymentsTransfersViewModelAction.OpenCountryPayment())
+//            }),
+//
+//            .init(type: .betweenSelf, action: {
+//
+//            }),
+//
+//            .init(type: .abroad, action: {
+//                self.action.send(PaymentsTransfersViewModelAction.OpenChooseCountry())
+//            }),
+//
+//            .init(type: .anotherCard, action: {
+//
+//            }),
+//
+//            .init(type: .byBankDetails, action: {
+//
+//            })
+//            ]
         }
         
         static func transfersButtonsExample() -> [TransfersButtonVM] {
@@ -163,6 +175,19 @@ extension PTSectionTransfersView {
         }
     }
     
+}
+
+//MARK: - Action PTSectionTransfersViewAction
+
+enum PTSectionTransfersViewAction {
+
+    enum ButtonTapped {
+
+        struct Transfer: Action {
+
+            let type: PTSectionTransfersView.ViewModel.TransfersButtonVM.ID
+        }
+    }
 }
 
 //MARK: - Preview

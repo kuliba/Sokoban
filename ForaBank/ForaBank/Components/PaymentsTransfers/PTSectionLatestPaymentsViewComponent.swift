@@ -15,9 +15,6 @@ extension PTSectionLatestPaymentsView {
     
     class ViewModel: PaymentsTransfersSectionViewModel {
         
-        //@Published
-        //var latestPaymentsButtons: [LatestPaymentButtonVM]
-        
         @Published var items: [ItemViewModel]
         
         override var type: PaymentsTransfersSectionType { .latestPayments }
@@ -38,23 +35,19 @@ extension PTSectionLatestPaymentsView {
             bind()
         }
         
-        enum ItemViewModel: Identifiable, Equatable {
+        enum ItemViewModel: Identifiable {
 
             case templates(LatestPaymentButtonVM)
             case latestPayment(LatestPaymentButtonVM)
             case placeholder(PlaceholderViewModel)
 
-            var id: UUID {
-             
-               switch self {
-               case let .templates(templatesButtonViewModel): return templatesButtonViewModel.id
-               case let .latestPayment(latestPaymentButtonVM): return latestPaymentButtonVM.id
-               case let .placeholder(placeholderViewModel): return placeholderViewModel.id
-               }
-            }
+            var id: String {
             
-            static func == (lhs: PTSectionLatestPaymentsView.ViewModel.ItemViewModel, rhs: PTSectionLatestPaymentsView.ViewModel.ItemViewModel) -> Bool {
-                lhs.id == rhs.id
+               switch self {
+               case let .templates(templatesButtonViewModel): return String(templatesButtonViewModel.id)
+               case let .latestPayment(latestPaymentButtonVM): return String(latestPaymentButtonVM.id)
+               case let .placeholder(placeholderViewModel): return placeholderViewModel.id.uuidString
+               }
             }
         }
 
@@ -65,7 +58,7 @@ extension PTSectionLatestPaymentsView {
         
         struct LatestPaymentButtonVM: Identifiable {
                
-            let id = UUID()
+            let id: LatestPaymentData.ID
             let avatar: Avatar
             let topIcon: Image?
             let description: String
@@ -124,7 +117,7 @@ extension PTSectionLatestPaymentsView {
                               updatedItems.append(contentsOf: latestPaymentsItems)
                      }
                     
-                    withAnimation {
+                    withAnimation(.easeInOut(duration: 1)) {
                         
                         self.items = updatedItems
                         
@@ -134,7 +127,8 @@ extension PTSectionLatestPaymentsView {
         
         lazy var baseButtons: [LatestPaymentButtonVM] = {
             [
-                .init(avatar: .icon(.ic24Star, .iconBlack),
+                .init(id: 0,
+                      avatar: .icon(.ic24Star, .iconBlack),
                       topIcon: nil,
                       description: "Шаблоны и автоплатежи",
                       action: { [weak self] in
@@ -189,18 +183,15 @@ struct PTSectionLatestPaymentsView: View {
                     case let .placeholder(placeholderVM):
                         PlaceholderView(viewModel: placeholderVM)
                             .shimmering(active: true, bounce: true)
-                        
                     }
                 }
                 Spacer()
             }.padding(.leading, 8)
-            
         }
     }
-    
 }
 
-//MARK: - LatestPaymentButtonView && PlaceholderView
+//MARK: - PlaceholderView
 
 extension PTSectionLatestPaymentsView {
     
@@ -213,7 +204,7 @@ extension PTSectionLatestPaymentsView {
             VStack(alignment: .center, spacing: 8) {
                 
                 Circle()
-                    .fill(Color.mainColorsGrayLightest)
+                    .fill(Color.mainColorsGray.opacity(0.4))
                     .frame(width: 56, height: 56)
                 
                 Spacer()
@@ -226,12 +217,17 @@ extension PTSectionLatestPaymentsView {
                             RoundedRectangle(cornerRadius: 6)
                                 .frame(width: 45, height: 8, alignment: .center)
                             
-                        }.foregroundColor(.mainColorsGrayLightest)
+                        }.foregroundColor(.mainColorsGray.opacity(0.4))
                     }
             }
             
         }
     }
+}
+
+//MARK: - LatestPaymentButtonView
+
+extension PTSectionLatestPaymentsView {
     
     struct LatestPaymentButtonView: View {
         
@@ -451,6 +447,7 @@ extension PTSectionLatestPaymentsView.ViewModel.LatestPaymentButtonVM {
         }
         
         self.action = action
+        self.id = data.id
     }
             
 }

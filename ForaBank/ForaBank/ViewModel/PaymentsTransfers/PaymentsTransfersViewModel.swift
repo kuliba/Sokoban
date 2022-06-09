@@ -9,6 +9,7 @@ import SwiftUI
 import Combine
 
 class PaymentsTransfersViewModel: ObservableObject {
+    typealias TransfersSectionVM = PTSectionTransfersView.ViewModel
     
     @Published var sections: [PaymentsTransfersSectionViewModel]
     
@@ -34,7 +35,6 @@ class PaymentsTransfersViewModel: ObservableObject {
         self.model = model
     }
     
-    
     func bindSections(_ sections: [PaymentsTransfersSectionViewModel]) {
         for section in sections {
             
@@ -43,16 +43,56 @@ class PaymentsTransfersViewModel: ObservableObject {
                 .sink { [unowned self] action in
                     
                     switch action {
+                    
+                    //LatestPayments Section Buttons
+                    case let payload as PTSectionLatestPaymentsViewAction.ButtonTapped.LatestPayment:
                         
-                    case _ as PaymentsTransfersViewModelAction.OpenChooseCountry:
+                        switch (payload.latestPayment.type, payload.latestPayment) {
+                        case (.phone, let paymentData as PaymentGeneralData):
+                            break //TODO:
+                        
+                        case (.country, let paymentData as PaymentCountryData):
+                            break //TODO:
+                            
+                        case (.service, let paymentData as PaymentServiceData):
+                            break //TODO:
+                                    
+                        case (.transport, let paymentData as PaymentServiceData):
+                            break //TODO:
+                            
+                        case (.internet, let paymentData as PaymentServiceData):
+                            break //TODO:
+                            
+                        case (.mobile, let paymentData as PaymentServiceData):
+                            break //TODO:
+                            
+                        case (.taxAndStateService, let paymentData as PaymentServiceData):
+                            break //TODO:
+                            
+                        default: //error matching
+                            break //TODO:
+                        }
+                    
+                    //LatestPayment Section TemplateButton
+                    case _ as PTSectionLatestPaymentsViewAction.ButtonTapped.Templates:
                         link = .chooseCountry
                         
-                    case _ as PaymentsTransfersViewModelAction.OpenCountryPayment:
-                        sheet = .init(type: .country)
+                    //Transfers Section
+                    case let payload as PTSectionTransfersViewAction.ButtonTapped.Transfer:
+                        switch TransfersSectionVM.TransfersButtonType(rawValue: payload.type) {
+                        case .abroad: link = .chooseCountry
+                        case .anotherCard: sheet = .init(type: .country)
+                        case .betweenSelf: break
+                        case .byBankDetails: break
+                        case .byPhoneNumber: break
                         
+                        default: break
+                            
+                        }
+                    
                     default:
                         break
-                        
+
                     }
                     
                 }.store(in: &bindings)
