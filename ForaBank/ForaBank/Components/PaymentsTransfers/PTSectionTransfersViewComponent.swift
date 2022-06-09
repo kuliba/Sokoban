@@ -62,7 +62,7 @@ extension PTSectionTransfersView {
         func transfersButtonsData() -> [TransfersButtonVM] {
             [
             .init(type: .byPhoneNumber, action: {
-                
+                self.action.send(PaymentsTransfersViewModelAction.OpenCountryPayment())
             }),
             .init(type: .betweenSelf, action: {
                 

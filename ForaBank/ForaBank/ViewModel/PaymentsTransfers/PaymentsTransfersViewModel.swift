@@ -47,6 +47,8 @@ class PaymentsTransfersViewModel: ObservableObject {
                     case _ as PaymentsTransfersViewModelAction.OpenChooseCountry:
                         link = .chooseCountry
                         
+                    case _ as PaymentsTransfersViewModelAction.OpenCountryPayment:
+                        sheet = .init(type: .country)
                         
                     default:
                         break
@@ -64,6 +66,7 @@ class PaymentsTransfersViewModel: ObservableObject {
         
         enum Kind {
             
+            case country
             case productProfile(ProductProfileViewModel)
             case userAccount(UserAccountViewModel)
             case messages(MessagesHistoryViewModel)
