@@ -54,7 +54,7 @@ extension PTSectionTransfersView {
                 TransfersButtonVM(type: item,
                                   action: { self.action.send(PTSectionTransfersViewAction
                                     .ButtonTapped
-                                    .Transfer(type: item.rawValue)) })
+                                    .Transfer(type: item)) })
             }
         }
         
@@ -148,7 +148,7 @@ enum PTSectionTransfersViewAction {
 
         struct Transfer: Action {
 
-            let type: PTSectionTransfersView.ViewModel.TransfersButtonVM.ID
+            let type: PTSectionTransfersView.ViewModel.TransfersButtonType
         }
     }
 }

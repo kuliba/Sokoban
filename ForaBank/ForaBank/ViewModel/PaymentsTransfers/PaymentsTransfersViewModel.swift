@@ -80,30 +80,28 @@ class PaymentsTransfersViewModel: ObservableObject {
                         
                     //Transfers Section
                     case let payload as PTSectionTransfersViewAction.ButtonTapped.Transfer:
-                        switch TransfersSectionVM.TransfersButtonType(rawValue: payload.type) {
-                        case .abroad: link = .chooseCountry //TODO:
-                        case .anotherCard: sheet = .init(type: .exampleDetail(payload.type))  //TODO:
-                        case .betweenSelf: sheet = .init(type: .exampleDetail(payload.type))   //TODO:
-                        case .byBankDetails: sheet = .init(type: .exampleDetail(payload.type)) //TODO:
-                        case .byPhoneNumber: sheet = .init(type: .exampleDetail(payload.type)) //TODO:
+                        switch payload.type {
+                        case .abroad: link = .exampleDetail(payload.type.rawValue) //TODO:
+                        case .anotherCard: sheet = .init(type: .exampleDetail(payload.type.rawValue))  //TODO:
+                        case .betweenSelf: sheet = .init(type: .exampleDetail(payload.type.rawValue))   //TODO:
+                        case .byBankDetails: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
+                        case .byPhoneNumber: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
                         
-                        default: break
                         }
                         
                     //Payments Section
                     case let payload as PTSectionPaymentsViewAction.ButtonTapped.Payment:
-                        switch PaymentsSectionVM.PaymentsType(rawValue: payload.type) {
-                        case .qrPayment: link = .chooseCountry //TODO: 
-                        case .mobile: sheet = .init(type: .exampleDetail(payload.type)) //TODO:
-                        case .service: sheet = .init(type: .exampleDetail(payload.type)) //TODO:
-                        case .internet: sheet = .init(type: .exampleDetail(payload.type)) //TODO:
-                        case .transport: sheet = .init(type: .exampleDetail(payload.type)) //TODO:
-                        case .taxAndStateService: sheet = .init(type: .exampleDetail(payload.type)) //TODO:
-                        case .socialAndGame: sheet = .init(type: .exampleDetail(payload.type)) //TODO:
-                        case .security: sheet = .init(type: .exampleDetail(payload.type)) //TODO:
-                        case .others: sheet = .init(type: .exampleDetail(payload.type)) //TODO:
+                        switch payload.type {
+                        case .qrPayment: link = .exampleDetail(payload.type.rawValue) //TODO:
+                        case .mobile: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
+                        case .service: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
+                        case .internet: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
+                        case .transport: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
+                        case .taxAndStateService: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
+                        case .socialAndGame: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
+                        case .security: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
+                        case .others: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
         
-                        default: break
                         }
                     
                     default:
@@ -129,7 +127,7 @@ class PaymentsTransfersViewModel: ObservableObject {
     
     enum Link {
         
-        case chooseCountry
+        case exampleDetail(String)
     }
     
 }

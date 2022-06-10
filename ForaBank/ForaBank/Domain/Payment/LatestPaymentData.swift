@@ -12,15 +12,15 @@ class LatestPaymentData: Codable, Identifiable {
 
     var id: Int { hashValue }
     let date: Date
-	let paymentDate: String
-	let type: Kind
-
-	init (date: Date, paymentDate: String, type: Kind) {
-
-		self.date = date
-		self.paymentDate = paymentDate
-		self.type = type
-	}
+    let paymentDate: String
+    let type: Kind
+    
+    init (date: Date, paymentDate: String, type: Kind) {
+        
+        self.date = date
+        self.paymentDate = paymentDate
+        self.type = type
+    }
 
 	private enum CodingKeys: String, CodingKey {
 		case date, paymentDate, type

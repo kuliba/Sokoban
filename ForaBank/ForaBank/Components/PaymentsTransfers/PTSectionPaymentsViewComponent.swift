@@ -35,7 +35,7 @@ extension PTSectionPaymentsView {
                 PaymentButtonVM(type: item,
                                 action: { self.action.send(PTSectionPaymentsViewAction
                                     .ButtonTapped
-                                    .Payment(type: item.rawValue)) })
+                                    .Payment(type: item)) })
             }
         }
         
@@ -227,7 +227,7 @@ enum PTSectionPaymentsViewAction {
 
         struct Payment: Action {
 
-            let type: PTSectionPaymentsView.ViewModel.PaymentButtonVM.ID
+            let type: PTSectionPaymentsView.ViewModel.PaymentsType
         }
     }
 }

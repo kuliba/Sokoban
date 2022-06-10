@@ -11,7 +11,6 @@ struct PaymentsTransfersView: View {
     
     @ObservedObject
     var viewModel: PaymentsTransfersViewModel
-    var previewMode: Bool = false
     
     var body: some View {
         
@@ -47,19 +46,8 @@ struct PaymentsTransfersView: View {
                         } //mainVerticalScrollView
                     } //geometry
                     
-                    if previewMode {
-                        if #available(iOS 14.0, *) {
-                            Rectangle()
-                                .ignoresSafeArea()
-                                .foregroundColor(.mainColorsGrayLightest)
-                                .frame(height: 56)
-                        } else {
-                            Color.mainColorsGrayLightest.frame(height: 56)
-                        }
-                    }
-                    
                 } //mainVStack
-                
+
                 if #available(iOS 14.0, *) {
                     Color.mainColorsGrayLightest
                         .frame(height: 48)
@@ -77,8 +65,8 @@ struct PaymentsTransfersView: View {
                         
                         switch link {
                             
-                        case .chooseCountry:
-                            ChooseCountryView()
+                        case let .exampleDetail(title):
+                            ExampleDetailMock(title: title)
                         }
                     }
                 }
@@ -141,23 +129,23 @@ extension PaymentsTransfersView {
 
 struct Payments_TransfersView_Previews: PreviewProvider {
     static var previews: some View {
-        PaymentsTransfersView(viewModel: .sample, previewMode: true)
+        PaymentsTransfersView(viewModel: .sample)
             .previewDevice(PreviewDevice(rawValue: "iPhone X 15.4"))
             .previewDisplayName("iPhone X")
         
-        PaymentsTransfersView(viewModel: .sample, previewMode: true)
+        PaymentsTransfersView(viewModel: .sample)
             .previewDevice(PreviewDevice(rawValue: "iPhone 13 Pro Max"))
             .previewDisplayName("iPhone 13 Pro Max")
         
-        PaymentsTransfersView(viewModel: .sample, previewMode: true)
+        PaymentsTransfersView(viewModel: .sample)
             .previewDevice("iPhone SE (3rd generation)")
             .previewDisplayName("iPhone SE (3rd generation)")
         
-        PaymentsTransfersView(viewModel: .sample, previewMode: true)
+        PaymentsTransfersView(viewModel: .sample)
             .previewDevice("iPhone 13 mini")
             .previewDisplayName("iPhone 13 mini")
         
-        PaymentsTransfersView(viewModel: .sample, previewMode: true)
+        PaymentsTransfersView(viewModel: .sample)
             .previewDevice("5se 15.4")
             .previewDisplayName("iPhone 5 SE")
             
