@@ -47,6 +47,7 @@ class Model {
     
     //MARK: LatestAllPayments
     let latestPayments: CurrentValueSubject<[LatestPaymentData], Never>
+    let latestPaymentsUpdating: CurrentValueSubject<Bool, Never>
     
     //MARK: Notifications
     let notifications: CurrentValueSubject<[NotificationData], Never>
@@ -112,6 +113,7 @@ class Model {
         self.paymentTemplates = .init([])
         self.paymentTemplatesViewSettings = .init(.initial)
         self.latestPayments = .init([])
+        self.latestPaymentsUpdating = .init(false)
         self.notifications = .init([])
         self.clientInfo = .init(nil)
         self.clientPhoto = .init(nil)

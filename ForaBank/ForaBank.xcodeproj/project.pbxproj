@@ -250,7 +250,7 @@
 		0CF3D7122836783B001A1BEA /* PaymentsTransfersSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF3D7112836783B001A1BEA /* PaymentsTransfersSectionViewModel.swift */; };
 		0CF3D71528368753001A1BEA /* PTSectionLatestPaymentsViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF3D71428368753001A1BEA /* PTSectionLatestPaymentsViewComponent.swift */; };
 		0CF3D7172836D203001A1BEA /* PTSectionTransfersViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF3D7162836D203001A1BEA /* PTSectionTransfersViewComponent.swift */; };
-		0CF3D7192836E141001A1BEA /* PTSectionPayGroupViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF3D7182836E141001A1BEA /* PTSectionPayGroupViewComponent.swift */; };
+		0CF3D7192836E141001A1BEA /* PTSectionPaymentsViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF3D7182836E141001A1BEA /* PTSectionPaymentsViewComponent.swift */; };
 		1CB9C8278920B424652C4AE2 /* Image+Illustrations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F88A9A4DBEADB3F8E16A822 /* Image+Illustrations.swift */; };
 		50164F1E2840F892004239A1 /* BottomSheetContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50164F1D2840F892004239A1 /* BottomSheetContentView.swift */; };
 		50164F202841009C004239A1 /* ToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50164F1F2841009C004239A1 /* ToggleView.swift */; };
@@ -1428,7 +1428,7 @@
 		0CF3D7112836783B001A1BEA /* PaymentsTransfersSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersSectionViewModel.swift; sourceTree = "<group>"; };
 		0CF3D71428368753001A1BEA /* PTSectionLatestPaymentsViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PTSectionLatestPaymentsViewComponent.swift; sourceTree = "<group>"; };
 		0CF3D7162836D203001A1BEA /* PTSectionTransfersViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PTSectionTransfersViewComponent.swift; sourceTree = "<group>"; };
-		0CF3D7182836E141001A1BEA /* PTSectionPayGroupViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PTSectionPayGroupViewComponent.swift; sourceTree = "<group>"; };
+		0CF3D7182836E141001A1BEA /* PTSectionPaymentsViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PTSectionPaymentsViewComponent.swift; sourceTree = "<group>"; };
 		50164F1D2840F892004239A1 /* BottomSheetContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetContentView.swift; sourceTree = "<group>"; };
 		50164F1F2841009C004239A1 /* ToggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleView.swift; sourceTree = "<group>"; };
 		502A98A3283A950900C6A621 /* GetProductListByTypeResponseServer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetProductListByTypeResponseServer.json; sourceTree = "<group>"; };
@@ -3073,7 +3073,7 @@
 			children = (
 				0CF3D71428368753001A1BEA /* PTSectionLatestPaymentsViewComponent.swift */,
 				0CF3D7162836D203001A1BEA /* PTSectionTransfersViewComponent.swift */,
-				0CF3D7182836E141001A1BEA /* PTSectionPayGroupViewComponent.swift */,
+				0CF3D7182836E141001A1BEA /* PTSectionPaymentsViewComponent.swift */,
 				0B04EBC427B0682C00893687 /* Payments */,
 			);
 			path = PaymentsTransfers;
@@ -4150,6 +4150,7 @@
 		77DA206228453AA700D7E005 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				ED65D6012851EAFE002EB565 /* CountryPaymentViewController */,
 				77DA206328453ADB00D7E005 /* CustomPopUpWithRateView+Legacy.swift */,
 			);
 			path = Controllers;
@@ -5280,6 +5281,13 @@
 				ED60A1E526DCEA01000F3208 /* MeToMeRequestController.swift */,
 			);
 			path = MeToMeRequestController;
+			sourceTree = "<group>";
+		};
+		ED65D6012851EAFE002EB565 /* CountryPaymentViewController */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = CountryPaymentViewController;
 			sourceTree = "<group>";
 		};
 		ED664BB0274512B80050D1E0 /* ResultAccountStatementController */ = {
@@ -7523,7 +7531,7 @@
 				EDC341A226864C4100FFFEF8 /* BottomInputView.swift in Sources */,
 				68D06F2226C3C0C100F9BE4C /* MainViewController.swift in Sources */,
 				77517FCE27A97913005CFB77 /* ColorData.swift in Sources */,
-				0CF3D7192836E141001A1BEA /* PTSectionPayGroupViewComponent.swift in Sources */,
+				0CF3D7192836E141001A1BEA /* PTSectionPaymentsViewComponent.swift in Sources */,
 				777167D627CE858500655D60 /* SettingsAgentMock.swift in Sources */,
 				0B747890267343B400C44F79 /* KeyExchangeDecodebleModel.swift in Sources */,
 				5A5ABF8227AAF4BF00D548AA /* LatestPaymentData.swift in Sources */,

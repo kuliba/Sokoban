@@ -8,18 +8,19 @@
 
 import Foundation
 
-class LatestPaymentData: Codable {
+class LatestPaymentData: Codable, Identifiable {
 
-	let date: Date
-	let paymentDate: String
-	let type: Kind
-
-	init (date: Date, paymentDate: String, type: Kind) {
-
-		self.date = date
-		self.paymentDate = paymentDate
-		self.type = type
-	}
+    var id: Int { hashValue }
+    let date: Date
+    let paymentDate: String
+    let type: Kind
+    
+    init (date: Date, paymentDate: String, type: Kind) {
+        
+        self.date = date
+        self.paymentDate = paymentDate
+        self.type = type
+    }
 
 	private enum CodingKeys: String, CodingKey {
 		case date, paymentDate, type
@@ -56,9 +57,15 @@ extension LatestPaymentData {
     }
 }
 
-extension LatestPaymentData: Equatable {
+extension LatestPaymentData: Equatable, Hashable {
 
 	static func == (lhs: LatestPaymentData, rhs: LatestPaymentData) -> Bool {
 		(lhs.date == rhs.date) && (lhs.paymentDate == rhs.paymentDate) && (lhs.type == rhs.type)
 	}
+    
+    func hash(into hasher: inout Hasher) {
+            hasher.combine(date)
+            hasher.combine(paymentDate)
+            hasher.combine(type)
+        }
 }

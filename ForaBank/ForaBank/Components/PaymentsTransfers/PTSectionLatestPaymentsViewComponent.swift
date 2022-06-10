@@ -7,39 +7,58 @@
 
 import SwiftUI
 import Combine
+import Shimmer
 
 //MARK: Section ViewModel
 
 extension PTSectionLatestPaymentsView {
     
     class ViewModel: PaymentsTransfersSectionViewModel {
-     
-        let action: PassthroughSubject<Action, Never> = .init()
         
-        @Published
-        var latestPaymentsButtons: [LatestPaymentButtonVM]
+        @Published var items: [ItemViewModel]
         
         override var type: PaymentsTransfersSectionType { .latestPayments }
         private let model: Model
         
         private var bindings = Set<AnyCancellable>()
         
-        init(latestPaymentsButtons: [LatestPaymentButtonVM], model: Model) {
-            self.latestPaymentsButtons = latestPaymentsButtons
+        init(items: [ItemViewModel], model: Model) {
+            self.items = items
             self.model = model
             super.init()
         }
         
         init(model: Model) {
-            self.latestPaymentsButtons = []
+            self.items = []
             self.model = model
             super.init()
             bind()
         }
         
+        enum ItemViewModel: Identifiable {
+
+            case templates(LatestPaymentButtonVM)
+            case latestPayment(LatestPaymentButtonVM)
+            case placeholder(PlaceholderViewModel)
+
+            var id: String {
+            
+               switch self {
+               case let .templates(templatesButtonViewModel): return String(templatesButtonViewModel.id)
+               case let .latestPayment(latestPaymentButtonVM): return String(latestPaymentButtonVM.id)
+               case let .placeholder(placeholderViewModel): return placeholderViewModel.id.uuidString
+               }
+            }
+        }
+
+        struct PlaceholderViewModel: Identifiable {
+
+            let id = UUID()
+        }
+        
         struct LatestPaymentButtonVM: Identifiable {
                
-            let id = UUID()
+            let id: LatestPaymentData.ID
             let avatar: Avatar
             let topIcon: Image?
             let description: String
@@ -55,33 +74,61 @@ extension PTSectionLatestPaymentsView {
         func bind() {
             
             model.latestPayments
+                .combineLatest(model.latestPaymentsUpdating)
                 .receive(on: DispatchQueue.main)
-                .sink { [unowned self] latestPayments in
+                .sink { [unowned self] data in
                     
-                    withAnimation {
+                    let latestPayments = data.0
+                    let isLatestPaymentsUpdating = data.1
+                    var updatedItems = [ItemViewModel]()
+                    
+                    let baseButtons = self.baseButtons.map { ItemViewModel.templates($0) }
+                    
+                    self.model.action.send(ModelAction.Contacts.PermissionStatus.Request())
+                    let latestPaymentsItems = latestPayments.map { item in
+                       
+                        ItemViewModel
+                           .latestPayment(.init(data: item,
+                                                model: self.model,
+                                                action: { [weak self] in
+                                                           self?.action.send(PTSectionLatestPaymentsViewAction
+                                                                            .ButtonTapped
+                                                                            .LatestPayment(latestPayment: item)) } ))
+                   }
+                    
+                    if isLatestPaymentsUpdating {
+             
+                         if latestPayments.isEmpty {
+                             
+                             updatedItems.append(contentsOf: baseButtons)
+                             updatedItems.append(contentsOf: Array(repeating: .placeholder(.init()), count: 4))
+                             
+                         } else {
+                             
+                             updatedItems.append(contentsOf: baseButtons)
+                             updatedItems.append(.placeholder(.init()))
+                             updatedItems.append(contentsOf:  latestPaymentsItems)
+                             
+                         }
+                     
+                     } else {
+
+                              updatedItems.append(contentsOf: baseButtons)
+                              updatedItems.append(contentsOf: latestPaymentsItems)
+                     }
+                    
+                    withAnimation(.easeInOut(duration: 1)) {
                         
-                        self.latestPaymentsButtons = self.baseButtons
+                        self.items = updatedItems
                         
-                        guard !latestPayments.isEmpty else { return }
-                        
-                        self.model.action.send(ModelAction.Contacts.PermissionStatus.Request())
-                        for item in latestPayments {
-                            
-                            latestPaymentsButtons
-                                .append(.init(data: item,
-                                              model: self.model,
-                                              action: { [weak self] in
-                                                        self?.action.send(PTSectionLatestPaymentsViewAction
-                                                                         .ButtonTapped
-                                                                         .LatestPayment(latestPayment: item)) } ))
-                        }
                     }
                 }.store(in: &bindings)
         }
         
         lazy var baseButtons: [LatestPaymentButtonVM] = {
             [
-                .init(avatar: .icon(.ic24Star, .iconBlack),
+                .init(id: 0,
+                      avatar: .icon(.ic24Star, .iconBlack),
                       topIcon: nil,
                       description: "Шаблоны и автоплатежи",
                       action: { [weak self] in
@@ -124,16 +171,58 @@ struct PTSectionLatestPaymentsView: View {
         
         ScrollView(.horizontal,showsIndicators: false) {
             HStack(spacing: 4) {
-                ForEach(viewModel.latestPaymentsButtons) { buttonVM in
+                ForEach(viewModel.items) { item in
                     
-                    LatestPaymentButtonView(viewModel: buttonVM)
+                    switch item {
+                    case let .templates(templateVM):
+                        LatestPaymentButtonView(viewModel: templateVM)
+                    
+                    case let .latestPayment(latestPaymentVM):
+                        LatestPaymentButtonView(viewModel: latestPaymentVM)
+                        
+                    case let .placeholder(placeholderVM):
+                        PlaceholderView(viewModel: placeholderVM)
+                            .shimmering(active: true, bounce: true)
+                    }
                 }
                 Spacer()
             }.padding(.leading, 8)
+        }
+    }
+}
+
+//MARK: - PlaceholderView
+
+extension PTSectionLatestPaymentsView {
+    
+    struct PlaceholderView: View {
+        
+        let viewModel: ViewModel.PlaceholderViewModel
+        
+        var body: some View {
+            
+            VStack(alignment: .center, spacing: 8) {
+                
+                Circle()
+                    .fill(Color.mainColorsGray.opacity(0.4))
+                    .frame(width: 56, height: 56)
+                
+                Spacer()
+                    .frame(width: 80, height: 32)
+                    .overlay13 {
+                        VStack(alignment: .center, spacing: 8) {
+                            RoundedRectangle(cornerRadius: 6)
+                                .frame(width: 65, height: 8, alignment: .center)
+                                
+                            RoundedRectangle(cornerRadius: 6)
+                                .frame(width: 45, height: 8, alignment: .center)
+                            
+                        }.foregroundColor(.mainColorsGray.opacity(0.4))
+                    }
+            }
             
         }
     }
-    
 }
 
 //MARK: - LatestPaymentButtonView
@@ -358,6 +447,7 @@ extension PTSectionLatestPaymentsView.ViewModel.LatestPaymentButtonVM {
         }
         
         self.action = action
+        self.id = data.id
     }
             
 }

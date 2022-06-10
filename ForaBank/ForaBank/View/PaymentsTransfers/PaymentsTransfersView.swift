@@ -11,66 +11,96 @@ struct PaymentsTransfersView: View {
     
     @ObservedObject
     var viewModel: PaymentsTransfersViewModel
-    var previewMode: Bool = false
     
     var body: some View {
         
-        ZStack(alignment: .top) {
-            VStack() {
+        NavigationView {
+            
+            ZStack(alignment: .top) {
                 
-                Color.clear.frame(height: 48) // mock SearchView
-                
-                GeometryReader { grProxy in
-                    ScrollView(.vertical, showsIndicators: false) {
+                VStack() {
+                    
+                    Color.clear.frame(height: 48) // mock SearchView
+                    
+                    GeometryReader { grProxy in
                         
-                        ForEach(viewModel.sections) { section in
+                        ScrollView(.vertical, showsIndicators: false) {
                             
-                            switch section {
-                            case let latestPaymentsSectionVM as PTSectionLatestPaymentsView.ViewModel:
-                                PTSectionLatestPaymentsView(viewModel: latestPaymentsSectionVM)
+                            ForEach(viewModel.sections) { section in
                                 
-                            case let transfersSectionVM as PTSectionTransfersView.ViewModel:
-                                PTSectionTransfersView(viewModel: transfersSectionVM)
-                                
-                            case let payGroupSectionVM as PTSectionPayGroupView.ViewModel:
-                                PTSectionPayGroupView(viewModel: payGroupSectionVM,
-                                                      heightBlock: grProxy.size.height)
-                            default:
-                                EmptyView()
+                                switch section {
+                                case let latestPaymentsSectionVM as PTSectionLatestPaymentsView.ViewModel:
+                                    PTSectionLatestPaymentsView(viewModel: latestPaymentsSectionVM)
+                                    
+                                case let transfersSectionVM as PTSectionTransfersView.ViewModel:
+                                    PTSectionTransfersView(viewModel: transfersSectionVM)
+                                    
+                                case let payGroupSectionVM as PTSectionPaymentsView.ViewModel:
+                                    PTSectionPaymentsView(viewModel: payGroupSectionVM,
+                                                          heightBlock: grProxy.size.height)
+                                default:
+                                    EmptyView()
+                                }
                             }
-                        }
-                        
-                    } //mainVerticalScrollView
-                } //geometry
+                            
+                        } //mainVerticalScrollView
+                    } //geometry
+                    
+                } //mainVStack
+
+                if #available(iOS 14.0, *) {
+                    Color.mainColorsGrayLightest
+                        .frame(height: 48)
+                        .ignoresSafeArea()
+                        .overlay(TopSearchViewMock())
+                } else {
+                    Color.mainColorsGrayLightest
+                        .frame(height: 48)
+                        .overlay(TopSearchViewMock())
+                } //mock topSearchView
                 
-                if previewMode {
-                    if #available(iOS 14.0, *) {
-                        Rectangle()
-                            .ignoresSafeArea()
-                            .foregroundColor(.mainColorsGrayLightest)
-                            .frame(height: 56)
-                    } else {
-                        Color.mainColorsGrayLightest.frame(height: 56)
+                NavigationLink("", isActive: $viewModel.isLinkActive) {
+                    
+                    if let link = viewModel.link  {
+                        
+                        switch link {
+                            
+                        case let .exampleDetail(title):
+                            ExampleDetailMock(title: title)
+                        }
                     }
                 }
                 
-            } //mainVStack
-            
-            if #available(iOS 14.0, *) {
-                Color.mainColorsGrayLightest
-                    .frame(height: 48)
-                    .ignoresSafeArea()
-                    .overlay(TopSearchViewMock())
-            } else {
-                Color.mainColorsGrayLightest
-                    .frame(height: 48)
-                    .overlay(TopSearchViewMock())
-            } //mock topSearchView
-            
-        } //mainZStack
-        
+            } //mainZStack
+            .sheet(item: $viewModel.sheet, content: { sheet in
+                switch sheet.type {
+                
+                case let .exampleDetail(title):    //TODO: 
+                    ExampleDetailMock(title: title)
+                    
+                }
+            })
+            .navigationBarHidden(true)
+        }
     }
 }
+
+//MARK: - LatestPaymentDetailMock
+
+extension PaymentsTransfersView {
+    
+    struct ExampleDetailMock: View {
+        var title: String
+        
+        var body: some View {
+            
+            Text("TypeButton: \(title)")
+                .font(.title)
+        }
+    }
+    
+}
+
 
 extension PaymentsTransfersView {
  
@@ -99,23 +129,23 @@ extension PaymentsTransfersView {
 
 struct Payments_TransfersView_Previews: PreviewProvider {
     static var previews: some View {
-        PaymentsTransfersView(viewModel: .sample, previewMode: true)
+        PaymentsTransfersView(viewModel: .sample)
             .previewDevice(PreviewDevice(rawValue: "iPhone X 15.4"))
             .previewDisplayName("iPhone X")
         
-        PaymentsTransfersView(viewModel: .sample, previewMode: true)
+        PaymentsTransfersView(viewModel: .sample)
             .previewDevice(PreviewDevice(rawValue: "iPhone 13 Pro Max"))
             .previewDisplayName("iPhone 13 Pro Max")
         
-        PaymentsTransfersView(viewModel: .sample, previewMode: true)
+        PaymentsTransfersView(viewModel: .sample)
             .previewDevice("iPhone SE (3rd generation)")
             .previewDisplayName("iPhone SE (3rd generation)")
         
-        PaymentsTransfersView(viewModel: .sample, previewMode: true)
+        PaymentsTransfersView(viewModel: .sample)
             .previewDevice("iPhone 13 mini")
             .previewDisplayName("iPhone 13 mini")
         
-        PaymentsTransfersView(viewModel: .sample, previewMode: true)
+        PaymentsTransfersView(viewModel: .sample)
             .previewDevice("5se 15.4")
             .previewDisplayName("iPhone 5 SE")
             
