@@ -153,7 +153,6 @@ extension MessagesHistoryViewModel {
         enum SheetType {
             
             case item(MessagesHistoryDetailViewModel)
-            case button
         }
     }
 }

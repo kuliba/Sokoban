@@ -55,14 +55,8 @@ struct MessagesHistoryView: View {
             } content: { sheet in
 
                 switch sheet.sheetType {
-                case .button:
-
-                    Color.mainColorsGrayLightest
-                        .frame(height: 250)
-
                 case let .item(model):
                     MessagesHistoryDetailView(model: model)
-                    
                 }
             }
         }
