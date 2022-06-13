@@ -7,13 +7,14 @@
 
 import Foundation
 
-struct NotificationData: Equatable {
+struct NotificationData: Equatable, Identifiable {
     
-    var date: Date
     let title: String
     let state: State
     let text: String
     let type: Kind
+    var id: Int { hashValue }
+    var date: Date
     
     var sortIndex: Int? {
         

@@ -13,7 +13,7 @@ extension MessagesHistoryItemView {
     
     class ViewModel: Identifiable {
         
-        let id = UUID()
+        let id: NotificationData.ID
         let icon: Image
         let title: String
         let content: String
@@ -21,6 +21,7 @@ extension MessagesHistoryItemView {
 
         internal init(icon: Image, title: String, content: String, time: String) {
             
+            self.id = 1
             self.icon = icon
             self.title = title
             self.content = content
@@ -29,7 +30,8 @@ extension MessagesHistoryItemView {
         
         internal init(notification: NotificationData) {
             
-            self.icon = Image("Payments List Sample")
+            self.id = notification.id
+            self.icon = Image.ic16List
             self.title = notification.title
             self.content = notification.text
             self.time = DateFormatter.minutsAndSecond.string(from: notification.date)
@@ -89,5 +91,5 @@ struct MessagesHistoryItemView_Previews: PreviewProvider {
 
 extension MessagesHistoryItemView.ViewModel {
     
-    static let sample = MessagesHistoryItemView.ViewModel(icon: Image("Payments List Sample"), title: "Срок вашей карты истекает 29.08.2021 г.", content: "Оставте он-лайн заявку или обратитесь в ближайшее отделение банка", time: "17:56")
+    static let sample = MessagesHistoryItemView.ViewModel(icon: Image.ic16List, title: "Срок вашей карты истекает 29.08.2021 г.", content: "Оставте он-лайн заявку или обратитесь в ближайшее отделение банка", time: "17:56")
 }

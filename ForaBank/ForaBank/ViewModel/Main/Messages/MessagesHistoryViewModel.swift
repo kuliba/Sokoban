@@ -33,10 +33,10 @@ class MessagesHistoryViewModel: ObservableObject {
         self.state = state
     }
     
-    func createSections (with notifications: [NotificationData]) {
+    func createSections (with notifications: [NotificationData]) -> [MessagesHistorySectionView.ViewModel] {
         
         var keyArray = [Int]()
-        
+        var messages: [MessagesHistorySectionView.ViewModel] = []
         notifications.forEach { item in
             guard let section = item.groupIndex else { return }
             keyArray.append(section)
@@ -55,11 +55,11 @@ class MessagesHistoryViewModel: ObservableObject {
             
             guard let section = items.map({$0.date}).first else { return }
             
-            let messages = MessagesHistorySectionView.ViewModel(section: DateFormatter.historyDateFormatter.string(from:section),
+            let message = MessagesHistorySectionView.ViewModel(title: DateFormatter.historyDateFormatter.string(from:section),
                                                                 items: items)
-            self.sections.append(messages)
+            messages.append(message)
         }
-        
+        return messages
     }
     
     func bind() {
@@ -68,7 +68,7 @@ class MessagesHistoryViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] notifications in
                 
-                createSections(with: notifications)
+                self.sections = createSections(with: notifications)
                 bindSections(sections)
             }.store(in: &bindings)
         
@@ -104,25 +104,32 @@ class MessagesHistoryViewModel: ObservableObject {
     }
     
     func bindSections(_ sections: [MessagesHistorySectionView.ViewModel]) {
-        
-        for section in sections {
             
-            section.action
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] action in
-                    
-                    switch action {
-                        
-                    case let payload as MessagesHistoryViewModelAction.ItemTapped:
-                        
-                        sheet = .init(sheetType: .item(payload.item))
-                        
-                    default:
-                        break
-                    }
-                }.store(in: &bindings)
+            for section in sections {
+                
+                section.action
+                    .receive(on: DispatchQueue.main)
+                    .sink { [unowned self] action in
+
+                        switch action {
+                        case let payload as MessagesHistorySectionViewAction.ItemTapped:
+                            
+                            guard let notificationData = model.notifications.value.first( where: {$0.id == payload.itemId})  else { return }
+                            let notificationDetailViewModel = MessagesHistoryDetailViewModel(item: .init(notification: notificationData))
+                            sheet = .init(sheetType: .item(notificationDetailViewModel))
+                            
+                        default:
+                            break
+                        }
+                    }.store(in: &bindings)
+            }
         }
-    }
+    
+    struct ItemTapped: Action {
+            let item: MessagesHistoryDetailViewModel
+        }
+
+
 }
 
 extension MessagesHistoryViewModel {

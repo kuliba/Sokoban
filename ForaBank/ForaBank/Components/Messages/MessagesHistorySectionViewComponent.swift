@@ -16,22 +16,18 @@ extension MessagesHistorySectionView {
         
         let action: PassthroughSubject<Action, Never> = .init()
         
-        let section: String
+        let id = UUID()
+        let title: String
         var items: [MessagesHistoryItemView.ViewModel]
         
-        internal init(section: String, items: [MessagesHistoryItemView.ViewModel]) {
-            self.section = section
+        internal init(title: String, items: [MessagesHistoryItemView.ViewModel]) {
+            self.title = title
             self.items = items
         }
         
-        init(section: String, items: [NotificationData]) {
-            self.section = section
+        init(title: String, items: [NotificationData]) {
+            self.title = title
             self.items = items.map { MessagesHistoryItemView.ViewModel(notification: $0)}
-        }
-           
-        func itemTapped(item: MessagesHistoryItemView.ViewModel) {
-            let massege = MessagesHistoryDetailViewModel(item: item)
-            self.action.send(MessagesHistoryViewModelAction.ItemTapped(item: massege))
         }
     }
 }
@@ -47,7 +43,7 @@ struct MessagesHistorySectionView: View {
         
         VStack(alignment: .leading, spacing: 4)  {
             
-            Text(viewModel.section)
+            Text(viewModel.title)
                 .font(.textBodyMSB14200())
                 .foregroundColor(.textSecondary)
                 .padding(.top, 10)
@@ -57,13 +53,22 @@ struct MessagesHistorySectionView: View {
             ForEach(viewModel.items) { item in
                 MessagesHistoryItemView.init(viewModel: item)
                     .onTapGesture {
-                        viewModel.itemTapped(item: item)
-                }
-                
+                        viewModel.action.send(MessagesHistorySectionViewAction.ItemTapped(itemId: item.id))
+                    }
             }
         }
     }
 }
+                                              
+
+enum MessagesHistorySectionViewAction {
+
+   struct ItemTapped: Action {
+
+     let itemId: NotificationData.ID
+   }
+}
+
 
 //MARK: - Preview
 
@@ -81,8 +86,8 @@ struct MessagesHistorySectionView_Previews: PreviewProvider {
 extension MessagesHistorySectionView.ViewModel {
     
     static let sample = MessagesHistorySectionView.ViewModel(
-        section: "25 агуста, ср",
-        items: [MessagesHistoryItemView.ViewModel(icon: Image("Payments List Sample"), title: "Срок вашей карты истекает 29.08.2021 г.", content: "Оставте он-лайн заявку или обратитесь в ближайшее отделение банка", time: "17:56"),
-                MessagesHistoryItemView.ViewModel(icon: Image("Payments List Sample"), title: "Отказ. Недостаточно средств.", content: "LIQPAY*IP Artur Danilo, Moscow Интернет-оплата. Карта / счет .4387 16:59", time: "17:56")
+        title: "25 агуста, ср",
+        items: [MessagesHistoryItemView.ViewModel(icon: Image.ic16List, title: "Срок вашей карты истекает 29.08.2021 г.", content: "Оставте он-лайн заявку или обратитесь в ближайшее отделение банка", time: "17:56"),
+                MessagesHistoryItemView.ViewModel(icon: Image.ic16List, title: "Отказ. Недостаточно средств.", content: "LIQPAY*IP Artur Danilo, Moscow Интернет-оплата. Карта / счет .4387 16:59", time: "17:56")
                ])
 }
