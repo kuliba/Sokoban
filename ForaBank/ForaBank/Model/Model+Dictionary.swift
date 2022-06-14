@@ -40,7 +40,7 @@ extension ModelAction {
     
     enum Dictionary {
         
-        static let cached: [Kind] = [.anywayOperators, .fmsList, .fsspDebtList, .fsspDocumentList, .ftsList, .productCatalogList, .bannerCatalogList, .atmList, .atmServiceList, .atmTypeList, .atmMetroStationList, .atmCityList, .atmRegionList, .currencyList, .countries, .banks]
+        static let cached: [Kind] = [.anywayOperators, .fmsList, .fsspDebtList, .fsspDocumentList, .ftsList, .productCatalogList, .bannerCatalogList, .atmList, .atmServiceList, .atmTypeList, .atmMetroStationList, .atmCityList, .atmRegionList, .currencyList, .countries, .banks, .paymentSystemList]
         
         enum UpdateCache {
             
@@ -544,6 +544,8 @@ extension Model {
                         return
                     }
                     
+                    countriesList.value = data.countriesList
+                    
                     do {
                         
                         try self.localAgent.store(data.countriesList, serial: data.serial)
@@ -584,7 +586,7 @@ extension Model {
                         return
                     }
                     
-                    self.currencyList = data.currencyList
+                    self.currencyList.value = data.currencyList
                     
                     do {
                         
@@ -903,6 +905,8 @@ extension Model {
                     guard data.paymentSystemList.count > 0 else {
                         return
                     }
+                    
+                    paymentSystemList.value = data.paymentSystemList
                     
                     do {
                         

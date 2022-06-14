@@ -21,6 +21,8 @@ struct ChooseCountryHeaderViewModel {
     var countryImage: UIImage?
     var bank: BanksList?
 
+    private let model = Model.shared
+    
     init(model: GetPaymentCountriesDatum) {
         self.countryName = model.countryName ?? ""
         self.countryCode = model.countryCode ?? ""
@@ -36,8 +38,9 @@ struct ChooseCountryHeaderViewModel {
     }
     
     private mutating func setCountry(code: String) {
-        let list = Dict.shared.countries
-        list?.forEach({ country in
+        let countries = model.countriesList.value
+        let countriesList = countries.map { $0.getCountriesList() }
+        countriesList.forEach({ country in
             if country.code == countryCode {
                 self.country = country
                 self.countryImage = country.svgImage?.convertSVGStringToImage()
@@ -46,16 +49,16 @@ struct ChooseCountryHeaderViewModel {
     }
     
     private mutating func findBankByPuref(purefString: String) {
-        let paymentSystems = Dict.shared.paymentList
-        paymentSystems?.forEach({ paymentSystem in
+        let paymentSystems = model.paymentSystemList.value.map { $0.getPaymentSystem() }
+        let bankList = model.bankList.value.map { $0.getBanksList() }
+        paymentSystems.forEach({ paymentSystem in
             if paymentSystem.code == "DIRECT" {
                 let purefList = paymentSystem.purefList
                 purefList?.forEach({ puref in
                     puref.forEach({ (key, value) in
                         value.forEach { purefList in
                             if purefList.puref == purefString {
-                                let bankList = Model.shared.dictionaryBankListLegacy
-                                bankList?.forEach({ bank in
+                                bankList.forEach({ bank in
                                     if bank.memberID == key {
                                         self.bank = bank
                                     }
@@ -67,6 +70,7 @@ struct ChooseCountryHeaderViewModel {
             }
         })
     }
+
     
 }
 

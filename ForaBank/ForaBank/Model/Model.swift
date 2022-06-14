@@ -33,7 +33,11 @@ class Model {
     //MARK: Dictionaries
     let catalogProducts: CurrentValueSubject<[CatalogProductData], Never>
     let catalogBanners: CurrentValueSubject<[BannerCatalogListData], Never>
-    var currencyList: [CurrencyData]
+    let currencyList: CurrentValueSubject<[CurrencyData], Never>
+    let countriesList: CurrentValueSubject<[CountryData], Never>
+    let paymentSystemList: CurrentValueSubject<[PaymentSystemData], Never>
+    
+    
     //TODO: remove wrapper for dicts
     let bankList: CurrentValueSubject<[BankData], Never>
     
@@ -109,6 +113,8 @@ class Model {
         self.catalogBanners = .init([])
         self.currencyList = .init([])
         self.bankList = .init([])
+        self.countriesList = .init([])
+        self.paymentSystemList = .init([])
         self.deposits = .init([])
         self.paymentTemplates = .init([])
         self.paymentTemplatesViewSettings = .init(.initial)
@@ -536,12 +542,22 @@ private extension Model {
         
         if let currency = localAgent.load(type: [CurrencyData].self) {
             
-            self.currencyList = currency
+            self.currencyList.value = currency
         }
         
         if let bankList = localAgent.load(type: [BankData].self) {
             
             self.bankList.value = bankList
+        }
+        
+        if let countriesList = localAgent.load(type: [CountryData].self) {
+            
+            self.countriesList.value = countriesList
+        }
+        
+        if let paymentSystemList = localAgent.load(type: [PaymentSystemData].self) {
+            
+            self.paymentSystemList.value = paymentSystemList
         }
         
         self.products.value = productsCacheLoadData()

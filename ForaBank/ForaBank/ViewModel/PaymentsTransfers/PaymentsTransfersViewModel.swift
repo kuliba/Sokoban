@@ -81,7 +81,12 @@ class PaymentsTransfersViewModel: ObservableObject {
                     //Transfers Section
                     case let payload as PTSectionTransfersViewAction.ButtonTapped.Transfer:
                         switch payload.type {
-                        case .abroad: link = .exampleDetail(payload.type.rawValue) //TODO:
+                            
+                        case .abroad:
+                            link = .chooseCountry(.init(closeAction: {
+                                self.link = nil
+                            }))
+                            
                         case .anotherCard: sheet = .init(type: .exampleDetail(payload.type.rawValue))  //TODO:
                         case .betweenSelf: sheet = .init(type: .exampleDetail(payload.type.rawValue))   //TODO:
                         case .byBankDetails: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
@@ -128,6 +133,7 @@ class PaymentsTransfersViewModel: ObservableObject {
     enum Link {
         
         case exampleDetail(String)
+        case chooseCountry(ChooseCountryViewModel)
     }
     
 }

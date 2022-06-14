@@ -12,7 +12,8 @@ class ChooseCountryTableViewController: UITableViewController {
     //MARK: - Vars
     let headerReuseIdentifier = "CustomHeaderView"
     private let searchController = UISearchController(searchResultsController: nil)
-//    private var timer: Timer?
+    var viewModel: ChooseCountryViewModel? = nil
+    private let model = Model.shared
     private var countries = [CountriesList]() {
         didSet {
             DispatchQueue.main.async {
@@ -86,27 +87,8 @@ class ChooseCountryTableViewController: UITableViewController {
     
     
     private func loadCountries() {
-        if let countries = Dict.shared.countries {
-            self.configureVC(with: countries)
-        } else {
-            
-            guard let documentsDirectoryUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
-            let filePath = documentsDirectoryUrl.appendingPathComponent("CountriesList.json")
-            
-            // Read data from .json file and transform data into an array
-            do {
-                let data = try Data(contentsOf: filePath, options: [])
-                
-                let list = try JSONDecoder().decode(GetCountriesDataClass.self, from: data)
-                
-                guard let countries = list.countriesList else { return }
-//                Country.countries = countries
-                self.configureVC(with: countries)
-                
-            } catch {
-                print(error)
-            }
-        }
+        let countries = model.countriesList.value.map { $0.getCountriesList() }
+        configureVC(with: countries)
     }
     
     private func configureVC(with countries: [CountriesList]) {
@@ -174,7 +156,11 @@ class ChooseCountryTableViewController: UITableViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     @objc func onTouchCancelButton() {
-        dismiss(animated: true)
+        if viewModel != nil {
+            viewModel?.closeAction()
+        } else {
+            dismiss(animated: true)
+        }
     }
 
     // MARK: - Table view data source

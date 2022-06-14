@@ -956,6 +956,10 @@
 		ED684CF22763955E00AA7A33 /* DocDepositTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED684CF02763955E00AA7A33 /* DocDepositTableViewCell.swift */; };
 		ED684CF32763955E00AA7A33 /* DocDepositTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED684CF12763955E00AA7A33 /* DocDepositTableViewCell.xib */; };
 		ED687C2D2768906800A38E87 /* DepositInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED687C2C2768906800A38E87 /* DepositInfoViewController.swift */; };
+		ED733D5A285895DF00F22D42 /* CountriesList+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED733D59285895DE00F22D42 /* CountriesList+Legacy.swift */; };
+		ED733D5C285895F700F22D42 /* PaymentSystemList+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED733D5B285895F700F22D42 /* PaymentSystemList+Legacy.swift */; };
+		ED733D5E2858960C00F22D42 /* CurrencyData+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED733D5D2858960C00F22D42 /* CurrencyData+Legacy.swift */; };
+		ED733D602858963200F22D42 /* ChooseCountryView+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED733D5F2858963200F22D42 /* ChooseCountryView+Legacy.swift */; };
 		ED75CDF926E245EE0074F5D5 /* GoogleService-Info-test.plist in Resources */ = {isa = PBXBuildFile; fileRef = ED75CDF826E245EE0074F5D5 /* GoogleService-Info-test.plist */; };
 		ED75CDFB26E27F150074F5D5 /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED75CDFA26E27F150074F5D5 /* UIApplication.swift */; };
 		ED75CDFD26E2AA5B0074F5D5 /* RequestMeToMeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED75CDFC26E2AA5B0074F5D5 /* RequestMeToMeModel.swift */; };
@@ -2125,6 +2129,10 @@
 		ED684CF02763955E00AA7A33 /* DocDepositTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocDepositTableViewCell.swift; sourceTree = "<group>"; };
 		ED684CF12763955E00AA7A33 /* DocDepositTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DocDepositTableViewCell.xib; sourceTree = "<group>"; };
 		ED687C2C2768906800A38E87 /* DepositInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositInfoViewController.swift; sourceTree = "<group>"; };
+		ED733D59285895DE00F22D42 /* CountriesList+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CountriesList+Legacy.swift"; sourceTree = "<group>"; };
+		ED733D5B285895F700F22D42 /* PaymentSystemList+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentSystemList+Legacy.swift"; sourceTree = "<group>"; };
+		ED733D5D2858960C00F22D42 /* CurrencyData+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CurrencyData+Legacy.swift"; sourceTree = "<group>"; };
+		ED733D5F2858963200F22D42 /* ChooseCountryView+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ChooseCountryView+Legacy.swift"; path = "ForaBank/Legacy/Controllers/CountryPaymentViewController/ChooseCountryView+Legacy.swift"; sourceTree = SOURCE_ROOT; };
 		ED75CDF826E245EE0074F5D5 /* GoogleService-Info-test.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-test.plist"; sourceTree = "<group>"; };
 		ED75CDFA26E27F150074F5D5 /* UIApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplication.swift; sourceTree = "<group>"; };
 		ED75CDFC26E2AA5B0074F5D5 /* RequestMeToMeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestMeToMeModel.swift; sourceTree = "<group>"; };
@@ -4147,7 +4155,10 @@
 			children = (
 				689ECA802846A4CA0098664F /* Model+Legacy.swift */,
 				77DA205F284539BC00D7E005 /* ProductData+Legacy.swift */,
+				ED733D59285895DE00F22D42 /* CountriesList+Legacy.swift */,
+				ED733D5B285895F700F22D42 /* PaymentSystemList+Legacy.swift */,
 				68F5E11928509FD2003018E5 /* BankData+Legacy.swift */,
+				ED733D5D2858960C00F22D42 /* CurrencyData+Legacy.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -4155,10 +4166,9 @@
 		77DA206228453AA700D7E005 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				77DA206328453ADB00D7E005 /* MeToMeView+Legacy.swift */,
+				ED733D612858964600F22D42 /* CountryPaymentViewController */,
 				68629334284E558D00B25EB6 /* ContactsView+Legacy.swift */,
-				ED65D6012851EAFE002EB565 /* CountryPaymentViewController */,
-				77DA206328453ADB00D7E005 /* CustomPopUpWithRateView+Legacy.swift */,
+				77DA206328453ADB00D7E005 /* MeToMeView+Legacy.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -5290,13 +5300,6 @@
 			path = MeToMeRequestController;
 			sourceTree = "<group>";
 		};
-		ED65D6012851EAFE002EB565 /* CountryPaymentViewController */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = CountryPaymentViewController;
-			sourceTree = "<group>";
-		};
 		ED664BB0274512B80050D1E0 /* ResultAccountStatementController */ = {
 			isa = PBXGroup;
 			children = (
@@ -5312,6 +5315,14 @@
 				ED664BB6274530320050D1E0 /* AccountStatementPDFController.swift */,
 			);
 			path = AccountStatementPDFController;
+			sourceTree = "<group>";
+		};
+		ED733D612858964600F22D42 /* CountryPaymentViewController */ = {
+			isa = PBXGroup;
+			children = (
+				ED733D5F2858963200F22D42 /* ChooseCountryView+Legacy.swift */,
+			);
+			path = CountryPaymentViewController;
 			sourceTree = "<group>";
 		};
 		ED75CDFE26E2AA640074F5D5 /* Model */ = {
@@ -7021,6 +7032,7 @@
 				0B931B4F26DE334500CA8017 /* GKHHistoryHeaderView.swift in Sources */,
 				77E1804727AC3AD30006ACC9 /* FSSPData.swift in Sources */,
 				EDFFCAF32682461F004EE095 /* CardCell.swift in Sources */,
+				ED733D5C285895F700F22D42 /* PaymentSystemList+Legacy.swift in Sources */,
 				ED60A1E626DCEA01000F3208 /* MeToMeRequestController.swift in Sources */,
 				0B8C1C4B273B09CD00BA5CAC /* QRErrorViewController.swift in Sources */,
 				77F5CE1128056EF600611B66 /* Model+Location.swift in Sources */,
@@ -7185,6 +7197,7 @@
 				EDA0DCD72739BAB00013F47E /* UIControl.swift in Sources */,
 				7728A17D283632D600EE4CA6 /* MainProductsGroupSettings.swift in Sources */,
 				F81EF91A27D2180E0096DC70 /* MainSectionPromoViewComponent.swift in Sources */,
+				ED733D602858963200F22D42 /* ChooseCountryView+Legacy.swift in Sources */,
 				77DC12612770F03D00C917B0 /* TransferData.swift in Sources */,
 				EDDFE3C12757D8F800F57C71 /* SelectDepositPeriodViewCell.swift in Sources */,
 				EDDFE39F2756A99E00F57C71 /* GCDHelper.swift in Sources */,
@@ -7310,6 +7323,7 @@
 				68FFA565269464FF002DADFA /* TransferByRequisitesConfirmViewController.swift in Sources */,
 				ED353B6A26FB5ADA00F17F00 /* SetUserSettingDecodableModel.swift in Sources */,
 				0BB24A9226EFC6AB00DDA4F6 /* GetProductTemplateList.swift in Sources */,
+				ED733D5A285895DF00F22D42 /* CountriesList+Legacy.swift in Sources */,
 				0B8C1C49273B04DE00BA5CAC /* QRScanerInfoView.swift in Sources */,
 				68E803E627D9280B00B75D41 /* ProductProfileViewModel.swift in Sources */,
 				0BA14E18270DF8F60098E422 /* AppLockerHelper.swift in Sources */,
@@ -7500,6 +7514,7 @@
 				681E073F273D478700551FAD /* ProductViewControllerDelegate.swift in Sources */,
 				7758400927B13F8700251969 /* ValidatorProtocol.swift in Sources */,
 				68D06F2426C3C0F300F9BE4C /* MainViewControllerLayout.swift in Sources */,
+				ED733D5E2858960C00F22D42 /* CurrencyData+Legacy.swift in Sources */,
 				770DCE9627BBFA6D004099C1 /* RootViewHostingViewController.swift in Sources */,
 				0B3FE8E12704DBEE00CBDB4E /* GetLatestMobilePaymentsDecodableModel.swift in Sources */,
 				686A1C9827ED5867002972F0 /* ServerCommands+Loan.swift in Sources */,
