@@ -31,9 +31,8 @@ struct AddressBookContact: Identifiable {
     }
 
     private func firstChar(_ str: String?) -> String {
- //       guard let str = str else { return "" }
-        return ""
-        //String(str[str.startIndex])
+        guard let first = str?.first else { return "" }
+         return String(first)
     }
 
 }
