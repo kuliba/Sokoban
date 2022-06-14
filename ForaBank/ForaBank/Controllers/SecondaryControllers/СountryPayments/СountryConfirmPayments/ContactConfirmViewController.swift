@@ -202,8 +202,6 @@ class ConfirmViewControllerModel {
 
 class ContactConfurmViewController: UIViewController {
     
-    
-    lazy var realm = try? Realm()
     var confurmVCModel: ConfirmViewControllerModel? {
         didSet {
             guard let model = confurmVCModel else { return }
@@ -545,7 +543,7 @@ class ContactConfurmViewController: UIViewController {
             
             bankField.text = model.bank?.memberNameRus ?? "" //"АйДиБанк"
             bankField.imageView.image = model.bank?.svgImage?.convertSVGStringToImage()
-            
+
             nameField.text =  model.fullName ?? "" //"Колотилин Михаил Алексеевич"
             countryField.text = model.country?.name?.capitalizingFirstLetter() ?? "" // "Армения"
             numberTransctionField.text = model.numberTransction  //"1235634790"
@@ -612,7 +610,6 @@ class ContactConfurmViewController: UIViewController {
                 products.append(i.userAllProducts())
             }
         }
-        
     
         if let cardModelFrom = model.cardFrom {
             cardFromField.cardModel = cardModelFrom
@@ -695,6 +692,24 @@ class ContactConfurmViewController: UIViewController {
         view.addSubview(doneButton)        
         doneButton.anchor(left: stackView.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: stackView.rightAnchor,
                           paddingLeft: 20, paddingBottom: 20, paddingRight: 20, height: 44)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y == 0 {
+                self.view.frame.origin.y -= keyboardSize.height
+            }
+        }
+    }
+
+    @objc func keyboardWillHide(notification: NSNotification) {
+        if self.view.frame.origin.y != 0 {
+            self.view.frame.origin.y = 0
+        }
     }
     
     func doneButtonIsEnabled(_ isEnabled: Bool) {

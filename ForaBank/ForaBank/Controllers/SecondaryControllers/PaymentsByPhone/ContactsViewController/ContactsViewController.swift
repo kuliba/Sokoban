@@ -11,6 +11,7 @@ import ContactsUI
 
 class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFieldText{
     
+    let model: Model = .shared
     let userPhoneView = EPContactSelfDataView()
     let tableView = UITableView(frame: .zero, style: .plain)
     // MARK: - Properties
@@ -45,7 +46,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
     var delegate: PassTextFieldText? = nil
     let contactView = UIView()
     var banksList = [BanksList]()
-    
+
     var reserveContacts = [PhoneContact]()
     var numberPhone: String?
     
@@ -85,7 +86,9 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        banksList = Dict.shared.banks?.filter({$0.paymentSystemCodeList?.first == "SFP"}) ?? []
+
+        banksList = model.dictionaryBankListLegacy?.filter({$0.paymentSystemCodeList?.first == "SFP"}) ?? []
+
         let viewLine = UIView()
         
         tableView.keyboardDismissMode = .interactive
@@ -141,7 +144,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
         lastPaymentsCollectionView.showsHorizontalScrollIndicator = false
         viewLine.anchor(width:  UIScreen.main.bounds.width + 20, height: 1)
         viewLine.backgroundColor = UIColor(red: 0.96, green: 0.96, blue: 0.97, alpha: 1)
-    
+        
         userPhoneView.topLineView.isHidden = true
         switch seeall {
         case true:
@@ -177,7 +180,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
             if phone.first == "7" {
                 let mask = StringMask(mask: "+0 (000) 000-00-00")
                 let maskPhone = mask.mask(string: phone)
-
+                
                 self.selectPhoneNumber = maskPhone
                 
                 self.selectPhoneNumber = maskPhone
@@ -252,13 +255,13 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
         dismiss(animated: true, completion: nil)
     }
     
-        func showSelfPhoneView(_ value: Bool) {
-            if value == true {
-                userPhoneView.isHidden = false
-            } else {
-                userPhoneView.isHidden = true
-            }
+    func showSelfPhoneView(_ value: Bool) {
+        if value == true {
+            userPhoneView.isHidden = false
+        } else {
+            userPhoneView.isHidden = true
         }
+    }
     
     
     func passTextFieldText(textField: UITextField) {
