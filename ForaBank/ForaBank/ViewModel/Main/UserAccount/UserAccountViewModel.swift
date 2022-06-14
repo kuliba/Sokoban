@@ -33,7 +33,7 @@ class UserAccountViewModel: ObservableObject {
         
     }
     
-    init(model: Model, clientInfo: ClientInfoData) {
+    init(model: Model, clientInfo: ClientInfoData, dismissAction: @escaping () -> Void) {
         
         //TODO: fill viewModel with ClientInfoData
         
@@ -41,7 +41,7 @@ class UserAccountViewModel: ObservableObject {
         self.navigationBar = .init(
             title: "Профиль",
             backButton: .init(icon: .ic24ChevronLeft, action: {
-                print("back")
+                dismissAction()
             }),
             settingsButton: .init(icon: .ic24Settings, action: {
                 print("right")
