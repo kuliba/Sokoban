@@ -19,7 +19,7 @@ class ContactInputViewController: UIViewController {
     var cardIsSelect = false
     var selectedCardNumber = ""
     var puref = ""
-    var currency = "RUR" {
+    var currency = "" {
         didSet {
             guard let system = paymentSystem else { return }
             setupCurrencyButton(system: system)
@@ -348,7 +348,7 @@ class ContactInputViewController: UIViewController {
                     currArr?.forEach({ currency in
                         if currency.code == cardCurrency {
 
-                            cur = [cardCurrency, "RUR"]
+                            cur = [cardCurrency]
                             self.currency = cardCurrency
                         }
                     })
@@ -356,6 +356,23 @@ class ContactInputViewController: UIViewController {
             }
             //
             let controller = ChooseCurrencyPaymentController()
+            let currencyKeyArray = ["RUR","USD","EUR"]
+            var currencyArrayFirstElements = [String]()
+            var currencyArrayLastElements = [String]()
+            currencyKeyArray.forEach { key in
+                if cur.contains(key) {
+                currencyArrayFirstElements.append(key)
+                }
+            }
+            
+            cur.forEach { key in
+                if !currencyKeyArray.contains(key) {
+                    currencyArrayLastElements.append(key)
+                }
+            }
+            
+            cur = currencyArrayFirstElements + currencyArrayLastElements.sorted(by: <)
+            
             controller.elements = cur
             controller.itemIsSelect = { currency in
                 self.currency = currency
