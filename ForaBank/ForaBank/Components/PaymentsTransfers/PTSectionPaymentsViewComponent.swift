@@ -1,5 +1,5 @@
 //
-//  PTSectionPayGroupViewComponent.swift
+//  PTSectionPaymentsViewComponent.swift
 //  ForaBank
 //
 //  Created by Dmitry Martynov on 19.05.2022.
@@ -11,53 +11,64 @@ import Combine
 
 //MARK: Section ViewModel
 
-extension PTSectionPayGroupView {
+extension PTSectionPaymentsView {
     
     class ViewModel: PaymentsTransfersSectionViewModel {
-     
+        
         @Published
-        var payGroupButtons: [PayGroupButtonVM]
+        var paymentButtons: [PaymentButtonVM]
 
-        override var type: PaymentsTransfersSectionType { .payGroup }
+        override var type: PaymentsTransfersSectionType { .payments }
         let const = ViewSettingsConst()
         
-        struct PayGroupButtonVM: Identifiable {
-            var id: String { title }
+        struct PaymentButtonVM: Identifiable {
+            var id: String { type.rawValue }
             
-            let title: String
-            let image: String
+            let type: PaymentsType
             let action: () -> Void
         }
         
         override init() {
-            self.payGroupButtons = Self.payGroupButtonsData
+            self.paymentButtons = []
+            super.init()
+            self.paymentButtons = PaymentsType.allCases.map { item in
+                PaymentButtonVM(type: item,
+                                action: { self.action.send(PTSectionPaymentsViewAction
+                                    .ButtonTapped
+                                    .Payment(type: item)) })
+            }
+        }
+        
+        init(paymentButtons: [PaymentButtonVM]) {
+            self.paymentButtons = paymentButtons
             super.init()
         }
         
-        init(payGroupButtons: [PayGroupButtonVM]) {
-            self.payGroupButtons = payGroupButtons
-            super.init()
+        enum PaymentsType: String, CaseIterable {
+            case qrPayment, mobile, service, internet,
+                 transport, taxAndStateService, socialAndGame, security, others
+            
+            var apearance: (title: String, imageName: String) {
+                switch self {
+                case .qrPayment: return (title: "Оплата по QR", imageName: "ic24BarcodeScanner2")
+                case .mobile: return (title: "Мобильная связь", imageName: "ic24Smartphone")
+                case .service: return (title: "Услуги ЖКХ", imageName: "ic24Bulb")
+                case .internet: return (title: "Интернет, ТВ", imageName: "ic24Tv")
+                case .transport: return (title: "Штрафы", imageName: "ic24Car")
+                case .taxAndStateService: return (title: "Госуслуги", imageName: "ic24Emblem")
+                case .socialAndGame: return (title: "Соцсети, игры, карты", imageName: "ic24Gamepad")
+                case .security: return (title: "Охранные системы", imageName: "ic24Key")
+                case .others: return (title: "Прочее", imageName: "ic24ShoppingCart")
+                }
+            }
         }
         
-        static let payGroupButtonsData: [PayGroupButtonVM] = {
-            [
-            .init(title: "Оплата по QR", image: "ic24BarcodeScanner2", action: {}),
-            .init(title: "Мобильная связь", image: "ic24Smartphone", action: {}),
-            .init(title: "Услуги ЖКХ", image: "ic24Bulb", action: {}),
-            .init(title: "Интернет, ТВ", image: "ic24Tv", action: {}),
-            .init(title: "Штрафы", image: "ic24Car", action: {}),
-            .init(title: "Госуслуги", image: "ic24Emblem", action: {}),
-            .init(title: "Соцсети, игры, карты", image: "ic24Gamepad", action: {}),
-            .init(title: "Охранные системы", image: "ic24Key", action: {}),
-            .init(title: "Прочее", image: "ic24ShoppingCart", action: {})
-            ]
-        }()
     }
 }
 
 //MARK: Section View
 
-struct PTSectionPayGroupView: View {
+struct PTSectionPaymentsView: View {
     
     @ObservedObject
     var viewModel: ViewModel
@@ -92,16 +103,16 @@ struct PTSectionPayGroupView: View {
                                           count: rowsCount)
 
                     LazyHGrid(rows: gridItems, spacing: 64) {
-                        ForEach(viewModel.payGroupButtons.indices, id: \.self) { index in
+                        ForEach(viewModel.paymentButtons.indices, id: \.self) { index in
 
-                            ButtonPayGroupView(viewModel: viewModel.payGroupButtons[index])
+                            ButtonPayGroupView(viewModel: viewModel.paymentButtons[index])
                                 .scrollId(index)
                         }
                     }
 
                 } else {
                 
-                    let payButtonsCount = viewModel.payGroupButtons.count
+                    let payButtonsCount = viewModel.paymentButtons.count
                     let columnsCount = (payButtonsCount / rowsCount)
                                      + (payButtonsCount % rowsCount == 0 ? 0 : 1)
                     
@@ -111,7 +122,7 @@ struct PTSectionPayGroupView: View {
                                 
                                 let index = rowsCount * column + row
                                 if payButtonsCount > index {
-                                    ButtonPayGroupView(viewModel: viewModel.payGroupButtons[index])
+                                    ButtonPayGroupView(viewModel: viewModel.paymentButtons[index])
                                             .scrollId(index)
                                     
                                 } else { Spacer() }
@@ -153,10 +164,10 @@ struct PTSectionPayGroupView: View {
 
 //MARK: - ButtonPayGroupView
 
-extension PTSectionPayGroupView {
+extension PTSectionPaymentsView {
     
     struct ButtonPayGroupView: View {
-        let viewModel: ViewModel.PayGroupButtonVM
+        let viewModel: ViewModel.PaymentButtonVM
         
         var body: some View {
             Button(action: viewModel.action,  label: {
@@ -170,11 +181,11 @@ extension PTSectionPayGroupView {
                                 .frame(width: 48, height: 48)
                                 .cornerRadius(8)
                             
-                            Image(viewModel.image)
+                            Image(viewModel.type.apearance.imageName)
                                 .resizable()
                                 .frame(width: 24, height: 24)
                         }
-                        Text(viewModel.title).font(.textH4R16240())
+                        Text(viewModel.type.apearance.title).font(.textH4R16240())
                     }
                 }.foregroundColor(.textSecondary)
             })
@@ -184,7 +195,7 @@ extension PTSectionPayGroupView {
 
 //MARK: - Constant
 
-extension PTSectionPayGroupView.ViewModel {
+extension PTSectionPaymentsView.ViewModel {
     
     struct ViewSettingsConst { //allSizeWithoutSafeAreaInsets with paddings
         
@@ -208,13 +219,26 @@ extension PTSectionPayGroupView.ViewModel {
     }
 }
 
+//MARK: - Action PTSectionPaymentsViewAction
+
+enum PTSectionPaymentsViewAction {
+
+    enum ButtonTapped {
+
+        struct Payment: Action {
+
+            let type: PTSectionPaymentsView.ViewModel.PaymentsType
+        }
+    }
+}
+
 //MARK: - Preview
 
 struct PTSectionPayGroupView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        PTSectionPayGroupView(viewModel: .init(), heightBlock: 100)
+        PTSectionPaymentsView(viewModel: .init(), heightBlock: 100)
             .previewLayout(.fixed(width: 410, height: 280))
             .previewDisplayName("Section PayGroup")
     }

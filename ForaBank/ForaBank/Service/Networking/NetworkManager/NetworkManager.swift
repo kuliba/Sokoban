@@ -30,8 +30,14 @@ final class NetworkManager<T: NetworkModelProtocol> {
 
         let s = RouterSassionConfiguration()
         let session = s.returnSession()
-
-        if let token = CSRFToken.token {
+        
+        if let cookies = Model.shared.cookies {
+            
+            request.allHTTPHeaderFields = HTTPCookie.requestHeaderFields(with: cookies)
+        }
+        
+        if let token = Model.shared.token {
+            
             request.allHTTPHeaderFields = ["X-XSRF-TOKEN": token]
         }
         

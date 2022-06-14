@@ -29,8 +29,8 @@ extension String {
     func getSymbol() -> String? {
         
         var resultString = ""
-        let currArr = Dict.shared.currencyList
-        currArr?.forEach({ currency in
+        let currArr = Model.shared.currencyList.value.map { $0.getCurrencyList() }
+        currArr.forEach({ currency in
             if currency.code == self {
                 
                 var symbolArr = currency.cssCode?.components(separatedBy: "\\")

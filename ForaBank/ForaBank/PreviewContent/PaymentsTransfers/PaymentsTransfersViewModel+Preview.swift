@@ -15,53 +15,91 @@ extension PTSectionLatestPaymentsView.ViewModel {
         
         let latestPaymentsButtons: [LatestPaymentButtonVM] =
             
-            ViewModel.templateButtonData + [
-            
-            .init(image: .image(Image("contactPlaceholder")),
+        [
+            .init(id: 1,
+                  avatar: .image(Image("contactPlaceholder")),
                   topIcon: Image("beline"),
                   description: "Любимая Diamond",
                   action: {}),
-            .init(image: .text("АБ"),
+            .init(id: 2,
+                  avatar: .text("АБ"),
                   topIcon: Image("Bank Logo Sample"),
                   description: "Андрей Брат",
                   action: {}),
-            .init(image: .icon(Image("ic24Smartphone"), .iconGray),
+            .init(id: 3,
+                  avatar: .icon(Image("ic24Smartphone"), .iconGray),
                   topIcon: Image("Bank Logo Sample"),
                   description: "+7 (903) 333-67-32",
                   action: {}),
-            .init(image: .text("ЭА"),
+            .init(id: 4,
+                  avatar: .text("ЭА"),
                   topIcon: Image("azerFlag"),
                   description: "Эмин Агаларов",
                   action: {}),
-            .init(image: .icon(Image("ic24Smartphone"), .iconGray),
+            .init(id: 5,
+                  avatar: .icon(Image("ic24Smartphone"), .iconGray),
                   topIcon: Image("azerFlag"),
                   description: "+994 12 493 23 87",
                   action: {})
         ]
         
-        return .init(latestPaymentsButtons: latestPaymentsButtons, model: .emptyMock)
+        let items = latestPaymentsButtons.map { ItemViewModel.latestPayment($0) }
+        
+        let latestPaymentsVM = ViewModel(items: items, model: .emptyMock)
+        let baseButtons = latestPaymentsVM.baseButtons.map { ItemViewModel.templates($0) }
+        latestPaymentsVM.items = baseButtons + latestPaymentsVM.items
+        return latestPaymentsVM
         
     }()
 }
 
+extension PTSectionTransfersView.ViewModel {
+            
+    static let transfersButtonsExample: [TransfersButtonVM]  = {
+        [
+            .init(type: .byPhoneNumber, action: {}),
+            .init(type: .betweenSelf, action: {}),
+            .init(type: .abroad, action: {}),
+            .init(type: .anotherCard, action: {}),
+            .init(type: .byBankDetails, action: {})
+        ]
+    }()
+}
+
+extension PTSectionPaymentsView.ViewModel {
+            
+    static let paymentButtonsData: [PaymentButtonVM]  = {
+        [
+            .init(type: .qrPayment, action: {}),
+            .init(type: .mobile, action: {}),
+            .init(type: .service, action: {}),
+            .init(type: .internet, action: {}),
+            .init(type: .transport, action: {}),
+            .init(type: .taxAndStateService, action: {}),
+            .init(type: .socialAndGame, action: {}),
+            .init(type: .security, action: {}),
+            .init(type: .others, action: {})
+        ]
+    }()
+}
+
 extension PaymentsTransfersViewModel {
-    
+            
     static let sample: PaymentsTransfersViewModel = {
-        
         typealias ViewModel = PaymentsTransfersViewModel
         
         let sections: [PaymentsTransfersSectionViewModel] =
         [
             PTSectionLatestPaymentsView.ViewModel(
-                latestPaymentsButtons: PTSectionLatestPaymentsView.ViewModel.sample.latestPaymentsButtons,
+                items: PTSectionLatestPaymentsView.ViewModel.sample.items,
                 model: .emptyMock
             ),
           
             PTSectionTransfersView.ViewModel(transfersButtons:
-                PTSectionTransfersView.ViewModel.transfersButtonsData),
+                PTSectionTransfersView.ViewModel.transfersButtonsExample),
             
-            PTSectionPayGroupView.ViewModel(payGroupButtons:
-                PTSectionPayGroupView.ViewModel.payGroupButtonsData)
+            PTSectionPaymentsView.ViewModel(paymentButtons:
+                PTSectionPaymentsView.ViewModel.paymentButtonsData)
         ]
         
         return .init(sections: sections, model: .emptyMock)

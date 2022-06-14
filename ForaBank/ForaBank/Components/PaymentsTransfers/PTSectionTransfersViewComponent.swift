@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 //MARK: Section ViewModel
 
@@ -27,7 +28,7 @@ extension PTSectionTransfersView {
             let action: () -> Void
         }
         
-        enum TransfersButtonType: String {
+        enum TransfersButtonType: String, CaseIterable {
             case byPhoneNumber
             case betweenSelf
             case abroad
@@ -46,24 +47,22 @@ extension PTSectionTransfersView {
         }
         
         override init() {
-            self.transfersButtons = Self.transfersButtonsData
+            
+            self.transfersButtons = []
             super.init()
+            self.transfersButtons = TransfersButtonType.allCases.map { item in
+                TransfersButtonVM(type: item,
+                                  action: { self.action.send(PTSectionTransfersViewAction
+                                    .ButtonTapped
+                                    .Transfer(type: item)) })
+            }
         }
         
         init(transfersButtons: [TransfersButtonVM]) {
+            
             self.transfersButtons = transfersButtons
             super.init()
         }
-        
-        static let transfersButtonsData: [TransfersButtonVM] = {
-            [
-            .init(type: .byPhoneNumber, action: {}),
-            .init(type: .betweenSelf, action: {}),
-            .init(type: .abroad, action: {}),
-            .init(type: .anotherCard, action: {}),
-            .init(type: .byBankDetails, action: {})
-            ]
-        }()
     }
 }
 
@@ -139,6 +138,19 @@ extension PTSectionTransfersView {
         }
     }
     
+}
+
+//MARK: - Action PTSectionTransfersViewAction
+
+enum PTSectionTransfersViewAction {
+
+    enum ButtonTapped {
+
+        struct Transfer: Action {
+
+            let type: PTSectionTransfersView.ViewModel.TransfersButtonType
+        }
+    }
 }
 
 //MARK: - Preview

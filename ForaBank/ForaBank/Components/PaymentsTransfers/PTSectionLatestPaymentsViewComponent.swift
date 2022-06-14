@@ -7,82 +7,150 @@
 
 import SwiftUI
 import Combine
+import Shimmer
 
 //MARK: Section ViewModel
 
 extension PTSectionLatestPaymentsView {
     
     class ViewModel: PaymentsTransfersSectionViewModel {
-     
-        @Published
-        var latestPaymentsButtons: [LatestPaymentButtonVM]
+        
+        @Published var items: [ItemViewModel]
         
         override var type: PaymentsTransfersSectionType { .latestPayments }
         private let model: Model
+        
         private var bindings = Set<AnyCancellable>()
         
-        struct LatestPaymentButtonVM: Identifiable {
-               
-            let id = UUID()
-            let image: ImageType
-            let topIcon: Image?
-            let description: String
-            let action: () -> Void
-
-            enum ImageType {
-                case image(Image)
-                case text(String)
-                case icon(Image, Color)
-            }
-            
+        init(items: [ItemViewModel], model: Model) {
+            self.items = items
+            self.model = model
+            super.init()
         }
         
         init(model: Model) {
-            self.latestPaymentsButtons = Self.templateButtonData
+            self.items = []
             self.model = model
-            self.model.action.send(ModelAction.LatestPayments.List.Requested())
             super.init()
             bind()
         }
         
-        init(latestPaymentsButtons: [LatestPaymentButtonVM], model: Model) {
-            self.latestPaymentsButtons = latestPaymentsButtons
-            self.model = model
-            super.init()
+        enum ItemViewModel: Identifiable {
+
+            case templates(LatestPaymentButtonVM)
+            case latestPayment(LatestPaymentButtonVM)
+            case placeholder(PlaceholderViewModel)
+
+            var id: String {
+            
+               switch self {
+               case let .templates(templatesButtonViewModel): return String(templatesButtonViewModel.id)
+               case let .latestPayment(latestPaymentButtonVM): return String(latestPaymentButtonVM.id)
+               case let .placeholder(placeholderViewModel): return placeholderViewModel.id.uuidString
+               }
+            }
+        }
+
+        struct PlaceholderViewModel: Identifiable {
+
+            let id = UUID()
+        }
+        
+        struct LatestPaymentButtonVM: Identifiable {
+               
+            let id: LatestPaymentData.ID
+            let avatar: Avatar
+            let topIcon: Image?
+            let description: String
+            let action: () -> Void
+
+            enum Avatar {
+                case image(Image)
+                case text(String)
+                case icon(Image, Color)
+            }
         }
         
         func bind() {
-            // data updates from model
-            model.latestPayments
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] latestPayments in
-                    
-                    withAnimation {
-                        
-                        if !latestPayments.isEmpty {
-                            
-                            self.latestPaymentsButtons = Self.templateButtonData
-                            //TODO: handle model -> viewModel
-                            
-                        } else {
-                            
-                            self.latestPaymentsButtons = Self.templateButtonData
-                        }
-                     
-                    }
-        
-                }.store(in: &bindings)
             
+            model.latestPayments
+                .combineLatest(model.latestPaymentsUpdating)
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] data in
+                    
+                    let latestPayments = data.0
+                    let isLatestPaymentsUpdating = data.1
+                    var updatedItems = [ItemViewModel]()
+                    
+                    let baseButtons = self.baseButtons.map { ItemViewModel.templates($0) }
+                    
+                    self.model.action.send(ModelAction.Contacts.PermissionStatus.Request())
+                    let latestPaymentsItems = latestPayments.map { item in
+                       
+                        ItemViewModel
+                           .latestPayment(.init(data: item,
+                                                model: self.model,
+                                                action: { [weak self] in
+                                                           self?.action.send(PTSectionLatestPaymentsViewAction
+                                                                            .ButtonTapped
+                                                                            .LatestPayment(latestPayment: item)) } ))
+                   }
+                    
+                    if isLatestPaymentsUpdating {
+             
+                         if latestPayments.isEmpty {
+                             
+                             updatedItems.append(contentsOf: baseButtons)
+                             updatedItems.append(contentsOf: Array(repeating: .placeholder(.init()), count: 4))
+                             
+                         } else {
+                             
+                             updatedItems.append(contentsOf: baseButtons)
+                             updatedItems.append(.placeholder(.init()))
+                             updatedItems.append(contentsOf:  latestPaymentsItems)
+                             
+                         }
+                     
+                     } else {
+
+                              updatedItems.append(contentsOf: baseButtons)
+                              updatedItems.append(contentsOf: latestPaymentsItems)
+                     }
+                    
+                    withAnimation(.easeInOut(duration: 1)) {
+                        
+                        self.items = updatedItems
+                        
+                    }
+                }.store(in: &bindings)
         }
         
-        static let templateButtonData: [LatestPaymentButtonVM] = {
+        lazy var baseButtons: [LatestPaymentButtonVM] = {
             [
-                .init(image: .icon(Image("ic24Star"), .iconBlack),
-                    topIcon: nil,
-                    description: "Шаблоны и автоплатежи",
-                    action: {})
+                .init(id: 0,
+                      avatar: .icon(.ic24Star, .iconBlack),
+                      topIcon: nil,
+                      description: "Шаблоны и автоплатежи",
+                      action: { [weak self] in
+                          self?.action.send(PTSectionLatestPaymentsViewAction.ButtonTapped.Templates())
+                      })
             ]
         }()
+    }
+}
+
+//MARK: - Action PTSectionLatestPaymentsViewAction
+
+enum PTSectionLatestPaymentsViewAction {
+
+    enum ButtonTapped {
+
+        struct Templates: Action {}
+
+        struct LatestPayment: Action {
+
+            let latestPayment: LatestPaymentData
+        }
     }
 }
 
@@ -103,16 +171,58 @@ struct PTSectionLatestPaymentsView: View {
         
         ScrollView(.horizontal,showsIndicators: false) {
             HStack(spacing: 4) {
-                ForEach(viewModel.latestPaymentsButtons) { buttonVM in
+                ForEach(viewModel.items) { item in
                     
-                    LatestPaymentButtonView(viewModel: buttonVM)
+                    switch item {
+                    case let .templates(templateVM):
+                        LatestPaymentButtonView(viewModel: templateVM)
+                    
+                    case let .latestPayment(latestPaymentVM):
+                        LatestPaymentButtonView(viewModel: latestPaymentVM)
+                        
+                    case let .placeholder(placeholderVM):
+                        PlaceholderView(viewModel: placeholderVM)
+                            .shimmering(active: true, bounce: true)
+                    }
                 }
                 Spacer()
             }.padding(.leading, 8)
+        }
+    }
+}
+
+//MARK: - PlaceholderView
+
+extension PTSectionLatestPaymentsView {
+    
+    struct PlaceholderView: View {
+        
+        let viewModel: ViewModel.PlaceholderViewModel
+        
+        var body: some View {
+            
+            VStack(alignment: .center, spacing: 8) {
+                
+                Circle()
+                    .fill(Color.mainColorsGray.opacity(0.4))
+                    .frame(width: 56, height: 56)
+                
+                Spacer()
+                    .frame(width: 80, height: 32)
+                    .overlay13 {
+                        VStack(alignment: .center, spacing: 8) {
+                            RoundedRectangle(cornerRadius: 6)
+                                .frame(width: 65, height: 8, alignment: .center)
+                                
+                            RoundedRectangle(cornerRadius: 6)
+                                .frame(width: 45, height: 8, alignment: .center)
+                            
+                        }.foregroundColor(.mainColorsGray.opacity(0.4))
+                    }
+            }
             
         }
     }
-    
 }
 
 //MARK: - LatestPaymentButtonView
@@ -120,10 +230,11 @@ struct PTSectionLatestPaymentsView: View {
 extension PTSectionLatestPaymentsView {
     
     struct LatestPaymentButtonView: View {
+        
         let viewModel: ViewModel.LatestPaymentButtonVM
         
         var body: some View {
-            Button(action: {}, label: {
+            Button(action: viewModel.action, label: {
                 VStack(alignment: .center, spacing: 8) {
                     ZStack {
                         
@@ -132,7 +243,7 @@ extension PTSectionLatestPaymentsView {
                             .frame(height: 56)
                             .overlay13 {
                                 
-                                switch viewModel.image {
+                                switch viewModel.avatar {
                                 case let .image(image):
                                    
                                     image
@@ -160,6 +271,7 @@ extension PTSectionLatestPaymentsView {
                         if let topIcon = viewModel.topIcon {
                             topIcon
                                 .resizable()
+                                .clipShape(Circle())
                                 .frame(width: 24, height: 24)
                         }
                     }
@@ -175,6 +287,169 @@ extension PTSectionLatestPaymentsView {
         }
     }
 
+}
+
+//MARK: default LatestPaymentButton by type
+
+extension LatestPaymentData.Kind {
+    
+    var defaultName: String {
+        
+        switch self {
+        case .country: return "За рубеж"
+        case .phone: return "По телефону"
+        case .service: return "Услуги ЖКХ"
+        case .mobile: return "Услуги связи"
+        case .internet: return "Услуги интернет"
+        case .transport: return "Услуги Транспорта"
+        case .taxAndStateService: return  "Госуслуги"
+        }
+    }
+    
+    var defaultIcon: Image {
+        
+        switch self {
+        case .country: return .ic24Globe
+        case .phone: return .ic24Smartphone
+        case .service: return .ic24ZKX
+        case .mobile: return .ic24Smartphone
+        case .internet: return .ic24Tv
+        case .transport: return .ic24Car
+        case .taxAndStateService: return .ic24Emblem
+        }
+    }
+}
+
+//MARK: LatestPaymentButtonVM init
+
+extension PTSectionLatestPaymentsView.ViewModel.LatestPaymentButtonVM {
+    
+    init(data: LatestPaymentData, model: Model, action: @escaping () -> Void) {
+        
+        func fullName(for phoneNumber: String?) -> String? {
+            
+            guard case .available = model.contactsPermissionStatus,
+                  let phoneNumber = phoneNumber,
+                  let contact = model.contact(for: phoneNumber)
+            else { return nil }
+            
+            return contact.fullName
+        }
+                
+        func avatar(for phoneNumber: String?) -> Self.Avatar? {
+            
+            guard case .available = model.contactsPermissionStatus,
+                  let phoneNumber = phoneNumber,
+                  let contact = model.contact(for: phoneNumber)
+            else { return nil }
+            
+            if let avatar = contact.avatar,
+               let avatarImg = Image(data: avatar.data) {
+                
+                return .image(avatarImg)
+                
+            } else if let initials = contact.initials {
+                
+                return .text(initials)
+                
+            } else {
+                
+                return nil
+            }
+        }
+        
+        switch (data.type, data) {
+        case (.phone, let paymentData as PaymentGeneralData):
+            
+            self.avatar = avatar(for: paymentData.phoneNumber) ?? .icon(data.type.defaultIcon, .iconGray)
+            self.topIcon = model.dictionaryBank(for: paymentData.bankId)?.svgImage.image
+            self.description = fullName(for: paymentData.phoneNumber)
+                                ?? (paymentData.phoneNumber.isEmpty
+                                    ? data.type.defaultName : paymentData.phoneNumber)
+            
+        case (.country, let paymentData as PaymentCountryData):
+
+            self.avatar = avatar(for: paymentData.phoneNumber)
+                            ?? (!paymentData.shortName.isEmpty
+                                ? .text(String(paymentData.shortName.first!).uppercased())
+                                : .icon(data.type.defaultIcon, .iconGray))
+            self.description = fullName(for: paymentData.phoneNumber)
+                                ?? (paymentData.shortName.isEmpty
+                                    ? data.type.defaultName : paymentData.shortName)
+            self.topIcon = model.dictionaryCountry(for: paymentData.countryCode)?.svgImage?.image
+                    
+        case (.service, let paymentData as PaymentServiceData):
+     
+            if let image = model.dictionaryAnywayOperator(for: paymentData.puref)?
+                .logotypeList.first?.svgImage?.image {
+                self.avatar = .image(image)
+            } else {
+                self.avatar = .icon(data.type.defaultIcon, .iconGray)
+            }
+            self.description = model.dictionaryAnywayOperator(for: paymentData.puref)?.name
+                                ?? data.type.defaultName
+            self.topIcon = nil
+                    
+        case (.transport, let paymentData as PaymentServiceData):
+            
+            if let image = model.dictionaryAnywayOperator(for: paymentData.puref)?
+                .logotypeList.first?.svgImage?.image {
+                self.avatar = .image(image)
+            } else {
+                self.avatar = .icon(data.type.defaultIcon, .iconGray)
+            }
+            self.description = model.dictionaryAnywayOperator(for: paymentData.puref)?.name
+                                ?? data.type.defaultName
+            self.topIcon = nil
+                    
+        case (.internet, let paymentData as PaymentServiceData):
+            
+            if let image = model.dictionaryAnywayOperator(for: paymentData.puref)?
+                .logotypeList.first?.svgImage?.image {
+                self.avatar = .image(image)
+            } else {
+                self.avatar = .icon(data.type.defaultIcon, .iconGray)
+            }
+            self.description = model.dictionaryAnywayOperator(for: paymentData.puref)?.name
+                                ?? data.type.defaultName
+            self.topIcon = nil
+            
+        case (.mobile, let paymentData as PaymentServiceData):
+                
+            self.avatar = avatar(for: paymentData.additionalList.first?.fieldValue)
+                          ?? .icon(data.type.defaultIcon, .iconGray)
+            if let phoneNumber = paymentData.additionalList.first?.fieldValue,
+               !phoneNumber.isEmpty {
+                self.description = fullName(for: phoneNumber) ?? phoneNumber
+            } else {
+                self.description = data.type.defaultName
+            }
+            self.topIcon = model.dictionaryAnywayOperator(for: paymentData.puref)?
+                            .logotypeList.first?.svgImage?.image
+
+                
+        case (.taxAndStateService, let paymentData as PaymentServiceData):
+           
+            if let image = model.dictionaryAnywayOperator(for: paymentData.puref)?
+                .logotypeList.first?.svgImage?.image {
+                self.avatar = .image(image)
+            } else {
+                self.avatar = .icon(data.type.defaultIcon, .iconGray)
+            }
+            self.description = model.dictionaryAnywayOperator(for: paymentData.puref)?.name
+                                ?? data.type.defaultName
+            self.topIcon = nil
+            
+        default: //error matching, init default
+            self.avatar = .icon(data.type.defaultIcon, .iconGray)
+            self.topIcon = nil
+            self.description = data.type.defaultName
+        }
+        
+        self.action = action
+        self.id = data.id
+    }
+            
 }
 
 //MARK: - Preview

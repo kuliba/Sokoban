@@ -9,6 +9,7 @@ import Foundation
 
 class PaymentByPhoneViewModel {
     
+    let model: Model = .shared
     var template: PaymentTemplateData?
     var amount: Double?
     var phoneNumber: String?
@@ -40,7 +41,7 @@ class PaymentByPhoneViewModel {
     }
     
     func getBank(id: String) -> BanksList? {
-        let banksList = Dict.shared.banks
+        let banksList = model.dictionaryBankListLegacy
         var bankToReturn: BanksList? = nil
         banksList?.forEach { bank in
             if bank.memberID == id {
@@ -50,10 +51,15 @@ class PaymentByPhoneViewModel {
         return bankToReturn
     }
     
-    
     private func getUserCard() -> UserAllCardsModel?  {
-        let cards = ReturnAllCardList.cards()
-        let filterProduct = cards.filter({
+        
+        var products: [UserAllCardsModel] = []
+        
+        let data = model.products.value
+
+        products = data.flatMap({$0.value}).compactMap({$0.userAllProducts()})
+        
+        let filterProduct = products.filter({
             ($0.productType == "CARD" || $0.productType == "ACCOUNT") && $0.currency == "RUB" })
         
         if filterProduct.count > 0 {

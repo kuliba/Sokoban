@@ -12,14 +12,11 @@ extension ContactInputViewController {
     
     func getBankList(completion: @escaping (_ banksList: [BanksList]?, _ error: String?)->()) {
         
-        NetworkHelper.request(.getBanks) { banksList , error in
-            if error != nil {
-                completion(nil, error)
-            }
-            guard let banksList = banksList as? [BanksList] else { return }
-            completion(banksList, nil)
-            print("DEBUG: Load Banks List... Count is: ", banksList.count)
+        guard let banks = model.dictionaryBankListLegacy else {
+            return completion(nil, "Не удалось загрузить список банков")
         }
+            
+        completion(banks, nil)
     }
     
     func contaktPayment(with card: UserAllCardsModel, surname: String, name: String, secondName: String, amount: Double, completion: @escaping (_ model: ConfirmViewControllerModel? ,_ error: String?) -> ()) {

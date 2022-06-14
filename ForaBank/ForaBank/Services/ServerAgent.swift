@@ -37,7 +37,7 @@ class ServerAgent: NSObject, ServerAgentProtocol {
     
     private let encoder: JSONEncoder
     private let decoder: JSONDecoder
-    private var cookies: [HTTPCookie]?
+    var cookies: [HTTPCookie]?
 
     internal init(enviroment: Environment) {
         
@@ -91,6 +91,7 @@ class ServerAgent: NSObject, ServerAgentProtocol {
                 } catch {
                     
                     completion(.failure(.curruptedData(error)))
+                     
                 }
      
             }.resume()

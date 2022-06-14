@@ -1,9 +1,13 @@
 {
   "data": [
     {
-      "date": "2022-01-24T15:00:32.250Z",
-      "paymentDate": "21.12.2021 11:04:26",
-      "type": "phone"
+        "paymentDate": "26.05.2022 16:09:11",
+        "date": 1653570551608,
+        "type": "phone",
+        "phoneNumber": "9636124249",
+        "bankName": "ФОРА-БАНК",
+        "bankId": "100000000217",
+        "amount": "10000.00"
     }
   ],
   "errorMessage": "string",

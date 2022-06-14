@@ -71,7 +71,6 @@ extension PaymentsViewController: UICollectionViewDelegate {
                 let model = ConfirmViewControllerModel(type: .card2card)
                 let popView = CustomPopUpWithRateView()
                 popView.viewModel = model
-//                popView.onlyMy = false
                 popView.modalPresentationStyle = .custom
                 popView.transitioningDelegate = self
                 self.present(popView, animated: true, completion: nil)
@@ -252,7 +251,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
                     puref.forEach({ (key, value) in
                         value.forEach { purefList in
                             if purefList.puref == purefString {
-                                let bankList = Dict.shared.banks
+                                let bankList = Model.shared.dictionaryBankListLegacy
                                 bankList?.forEach({ bank in
                                     if bank.memberID == key {
                                         bankValue = bank

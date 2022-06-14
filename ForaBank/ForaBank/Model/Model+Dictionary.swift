@@ -24,7 +24,13 @@ extension Model {
         }
         
         return dictionaryCurrencyList.first(where: {$0.codeNumeric == currencyCode})
-        
+
+    }
+    
+    //MARK: BankList helper
+    
+    var dictionaryBankList: [BankData]? {
+        return localAgent.load(type: [BankData].self)
     }
 }
 
@@ -34,7 +40,7 @@ extension ModelAction {
     
     enum Dictionary {
         
-        static let cached: [Kind] = [.anywayOperators, .fmsList, .fsspDebtList, .fsspDocumentList, .ftsList, .productCatalogList, .bannerCatalogList, .atmList, .atmServiceList, .atmTypeList, .atmMetroStationList, .atmCityList, .atmRegionList, .currencyList, .banks]
+        static let cached: [Kind] = [.anywayOperators, .fmsList, .fsspDebtList, .fsspDocumentList, .ftsList, .productCatalogList, .bannerCatalogList, .atmList, .atmServiceList, .atmTypeList, .atmMetroStationList, .atmCityList, .atmRegionList, .currencyList, .countries, .banks, .paymentSystemList]
         
         enum UpdateCache {
             
@@ -282,6 +288,7 @@ extension Model {
 
 extension Model {
     
+    //Operators&OperatorGroups
     func dictionaryAnywayOperatorGroups() -> [OperatorGroupData]? {
         
         return localAgent.load(type: [OperatorGroupData].self)
@@ -313,6 +320,34 @@ extension Model {
         
         return anywayOperators.first(where: { $0.code == code })
     }
+    
+    //Banks
+    
+    func dictionaryBanks() -> [BankData]? {
+        
+        return localAgent.load(type: [BankData].self)
+    }
+    
+    func dictionaryBank(for memberId: String) -> BankData? {
+        
+        guard let banksList = dictionaryBanks() else { return nil }
+        return banksList.first(where: { $0.memberId == memberId })
+    }
+    
+    //Countries
+    
+    func dictionaryCountries() -> [CountryData]? {
+        
+        return localAgent.load(type: [CountryData].self)
+    }
+    
+    func dictionaryCountry(for code: String) -> CountryData? {
+        
+        guard let countries = dictionaryCountries() else { return nil }
+        return countries.first(where: { $0.code == code })
+    }
+    
+    //FMSList
     
     func dictionaryFMSList() -> [FMSData]? {
         
@@ -509,6 +544,8 @@ extension Model {
                         return
                     }
                     
+                    countriesList.value = data.countriesList
+                    
                     do {
                         
                         try self.localAgent.store(data.countriesList, serial: data.serial)
@@ -549,7 +586,7 @@ extension Model {
                         return
                     }
                     
-                    self.currencyList = data.currencyList
+                    self.currencyList.value = data.currencyList
                     
                     do {
                         
@@ -868,6 +905,8 @@ extension Model {
                     guard data.paymentSystemList.count > 0 else {
                         return
                     }
+                    
+                    paymentSystemList.value = data.paymentSystemList
                     
                     do {
                         

@@ -29,12 +29,10 @@ class ConfirmViewControllerModel {
             } else if cardFrom.productType == "ACCOUNT" {
                 cardFromAccountId = "\(cardFrom.id)"
                 cardFromCardId = ""
+            } else if cardFrom.productType == "DEPOSIT" {
+                cardFromAccountId = "\(cardFrom.accountID)"
+                cardFromCardId = ""
             }
-//            else if cardFrom.productType == "DEPOSIT" {
-//                cardFromAccountId = "\(cardFrom.accountID)"
-//                cardFromCardId = ""
-//            }
-            
         }
     }
     var cardFrom: GetProductListDatum? {
@@ -204,8 +202,6 @@ class ConfirmViewControllerModel {
 
 class ContactConfurmViewController: UIViewController {
     
-    
-    lazy var realm = try? Realm()
     var confurmVCModel: ConfirmViewControllerModel? {
         didSet {
             guard let model = confurmVCModel else { return }
@@ -305,7 +301,6 @@ class ContactConfurmViewController: UIViewController {
         NotificationCenter.default.addObserver(forName: NSNotification.Name("dismissSwiftUI"), object: nil, queue: nil) { data in
             let vc = PaymentsDetailsSuccessViewController()
             vc.modalPresentationStyle = .fullScreen
-    //            vc.confurmView.operatorImageView = ""
             vc.confurmView.statusImageView.image = UIImage(named: "waiting")
             vc.confurmView.summLabel.text = self.summTransctionField.text
             vc.confurmView.statusLabel.text = "Перевод отменен!"
@@ -548,7 +543,7 @@ class ContactConfurmViewController: UIViewController {
             
             bankField.text = model.bank?.memberNameRus ?? "" //"АйДиБанк"
             bankField.imageView.image = model.bank?.svgImage?.convertSVGStringToImage()
-            
+
             nameField.text =  model.fullName ?? "" //"Колотилин Михаил Алексеевич"
             countryField.text = model.country?.name?.capitalizingFirstLetter() ?? "" // "Армения"
             numberTransctionField.text = model.numberTransction  //"1235634790"
@@ -604,6 +599,18 @@ class ContactConfurmViewController: UIViewController {
             }
         }
         
+        var products: [UserAllCardsModel] = []
+        
+        let data = Model.shared.products.value
+        
+        for i in data {
+            
+            for i in i.value {
+                
+                products.append(i.userAllProducts())
+            }
+        }
+    
         if let cardModelFrom = model.cardFrom {
             cardFromField.cardModel = cardModelFrom
             if cardModelFrom.productType == "CARD" {
@@ -613,9 +620,8 @@ class ContactConfurmViewController: UIViewController {
             }
         } else {
             if model.cardFromCardId != "" || model.cardFromAccountId != "" || model.cardFromCardNumber.digits.count != 0 {
-                let cardList = self.realm?.objects(UserAllCardsModel.self)
-                let cards = cardList?.compactMap { $0 } ?? []
-                cards.forEach({ card in
+                
+                products.forEach({ card in
                     if String(card.id) == model.cardFromCardId || String(card.id) == model.cardFromAccountId || card.number?.suffix(4) == model.cardFromCardNumber.suffix(4) {
                         cardFromField.model = card
                         if card.productType == "CARD" {
@@ -641,9 +647,7 @@ class ContactConfurmViewController: UIViewController {
             toTitle = "На карту"
         } else {
             if model.cardToCardId != "" || model.cardToAccountId != "" || model.cardToCardNumber != ""{
-                let cardList = self.realm?.objects(UserAllCardsModel.self)
-                let cards = cardList?.compactMap { $0 } ?? []
-                cards.forEach({ card in
+                products.forEach({ card in
                     if String(card.id) == model.cardToCardId || String(card.id) == model.cardToAccountId || card.number?.suffix(4) == model.cardToCardNumber.suffix(4){
                         cardToField.model = card
                         if card.productType == "CARD" {
@@ -688,6 +692,24 @@ class ContactConfurmViewController: UIViewController {
         view.addSubview(doneButton)        
         doneButton.anchor(left: stackView.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: stackView.rightAnchor,
                           paddingLeft: 20, paddingBottom: 20, paddingRight: 20, height: 44)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y == 0 {
+                self.view.frame.origin.y -= keyboardSize.height
+            }
+        }
+    }
+
+    @objc func keyboardWillHide(notification: NSNotification) {
+        if self.view.frame.origin.y != 0 {
+            self.view.frame.origin.y = 0
+        }
     }
     
     func doneButtonIsEnabled(_ isEnabled: Bool) {

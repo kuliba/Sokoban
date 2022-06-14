@@ -33,7 +33,11 @@ class Model {
     //MARK: Dictionaries
     let catalogProducts: CurrentValueSubject<[CatalogProductData], Never>
     let catalogBanners: CurrentValueSubject<[BannerCatalogListData], Never>
-    var currencyList: [CurrencyData]
+    let currencyList: CurrentValueSubject<[CurrencyData], Never>
+    let countriesList: CurrentValueSubject<[CountryData], Never>
+    let paymentSystemList: CurrentValueSubject<[PaymentSystemData], Never>
+    
+    
     //TODO: remove wrapper for dicts
     let bankList: CurrentValueSubject<[BankData], Never>
     
@@ -46,7 +50,8 @@ class Model {
     let paymentTemplatesViewSettings: CurrentValueSubject<TemplatesListViewModel.Settings, Never>
     
     //MARK: LatestAllPayments
-    let latestPayments: CurrentValueSubject<[PaymentData], Never>
+    let latestPayments: CurrentValueSubject<[LatestPaymentData], Never>
+    let latestPaymentsUpdating: CurrentValueSubject<Bool, Never>
     
     //MARK: Notifications
     let notifications: CurrentValueSubject<[NotificationData], Never>
@@ -71,6 +76,7 @@ class Model {
     internal let settingsAgent: SettingsAgentProtocol
     internal let biometricAgent: BiometricAgentProtocol
     internal let locationAgent: LocationAgentProtocol
+    internal let contactsAgent: ContactsAgentProtocol
     
     // private
     private var bindings: Set<AnyCancellable>
@@ -93,7 +99,7 @@ class Model {
         return credentials
     }
     
-    init(sessionAgent: SessionAgentProtocol, serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol, settingsAgent: SettingsAgentProtocol, biometricAgent: BiometricAgentProtocol, locationAgent: LocationAgentProtocol) {
+    init(sessionAgent: SessionAgentProtocol, serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol, settingsAgent: SettingsAgentProtocol, biometricAgent: BiometricAgentProtocol, locationAgent: LocationAgentProtocol, contactsAgent: ContactsAgentProtocol) {
         
         self.action = .init()
         self.auth = .init(.registerRequired)
@@ -107,10 +113,13 @@ class Model {
         self.catalogBanners = .init([])
         self.currencyList = .init([])
         self.bankList = .init([])
+        self.countriesList = .init([])
+        self.paymentSystemList = .init([])
         self.deposits = .init([])
         self.paymentTemplates = .init([])
         self.paymentTemplatesViewSettings = .init(.initial)
         self.latestPayments = .init([])
+        self.latestPaymentsUpdating = .init(false)
         self.notifications = .init([])
         self.clientInfo = .init(nil)
         self.clientPhoto = .init(nil)
@@ -124,13 +133,13 @@ class Model {
         self.settingsAgent = settingsAgent
         self.biometricAgent = biometricAgent
         self.locationAgent = locationAgent
+        self.contactsAgent = contactsAgent
         self.bindings = []
         
         loadCachedData()
         loadSettings()
         bind()
     }
-    
     //FIXME: remove after refactoring
     static var shared: Model = {
         
@@ -145,7 +154,7 @@ class Model {
 #endif
         
         let serverAgent = ServerAgent(enviroment: enviroment)
-        
+
         // local agent
         let localContext = LocalAgent.Context(cacheFolderName: "cache", encoder: .serverDate, decoder: .serverDate, fileManager: FileManager.default)
         let localAgent = LocalAgent(context: localContext)
@@ -162,7 +171,10 @@ class Model {
         // location agent
         let locationAgent = LocationAgent()
         
-        return Model(sessionAgent: sessionAgent, serverAgent: serverAgent, localAgent: localAgent, keychainAgent: keychainAgent, settingsAgent: settingsAgent, biometricAgent: biometricAgent, locationAgent: locationAgent)
+        // contacts agent
+        let contactsAgent = ContactsAgent()
+        
+        return Model(sessionAgent: sessionAgent, serverAgent: serverAgent, localAgent: localAgent, keychainAgent: keychainAgent, settingsAgent: settingsAgent, biometricAgent: biometricAgent, locationAgent: locationAgent, contactsAgent: contactsAgent)
     }()
     
     private func bind() {
@@ -177,6 +189,8 @@ class Model {
                     action.send(ModelAction.ClientInfo.Fetch.Request())
                     action.send(ModelAction.Rates.Update.All())
                     action.send(ModelAction.Deposits.List.Request())
+                    
+                    action.send(ModelAction.LatestPayments.List.Requested())
                     
                 case .inactive:
                     if let pincode = try? authStoredPincode() {
@@ -479,6 +493,11 @@ class Model {
                 case _ as ModelAction.Location.Updates.Stop:
                     handleLocationUpdateStop()
                     
+                    //MARK: - ContactsAgent Actions
+                    
+                case _ as ModelAction.Contacts.PermissionStatus.Request:
+                    handleContactsPermissionStatusRequest()
+                    
                 default:
                     break
                 }
@@ -523,12 +542,22 @@ private extension Model {
         
         if let currency = localAgent.load(type: [CurrencyData].self) {
             
-            self.currencyList = currency
+            self.currencyList.value = currency
         }
         
         if let bankList = localAgent.load(type: [BankData].self) {
             
             self.bankList.value = bankList
+        }
+        
+        if let countriesList = localAgent.load(type: [CountryData].self) {
+            
+            self.countriesList.value = countriesList
+        }
+        
+        if let paymentSystemList = localAgent.load(type: [PaymentSystemData].self) {
+            
+            self.paymentSystemList.value = paymentSystemList
         }
         
         self.products.value = productsCacheLoadData()
