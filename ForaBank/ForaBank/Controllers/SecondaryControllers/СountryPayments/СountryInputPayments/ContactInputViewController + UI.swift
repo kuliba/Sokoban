@@ -18,7 +18,7 @@ extension ContactInputViewController {
         saveAreaView.anchor(top: view.safeAreaLayoutGuide.bottomAnchor, left: view.leftAnchor,
                             bottom: view.bottomAnchor, right: view.rightAnchor)
         view.addSubview(bottomView)
-        bottomView.currencySymbol = "₽"
+//        bottomView.currencySymbol = ""
         
         cardFromField.titleLabel.text = "Счет списания"
         cardFromField.titleLabel.textColor = #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
@@ -132,9 +132,35 @@ extension ContactInputViewController {
     
     func setupCurrencyButton(system: PaymentSystemList) {
         bottomView.currencySwitchButton.isHidden = system.code == "CONTACT" ? false : true
-        bottomView.currencySwitchButton.setAttributedTitle(setupButtonTitle(title: currency.getSymbol() ?? "₽"), for: .normal)
+        
+        var currentArray = self.country?.sendCurr?.components(separatedBy: ";").compactMap { $0 } ?? []
+        let currencyKeyArray = ["RUR","USD","EUR"]
+        var currencyArrayFirstElements = [String]()
+        var currencyArrayLastElements = [String]()
+        currencyKeyArray.forEach { key in
+            if currentArray.contains(key) {
+            currencyArrayFirstElements.append(key)
+            }
+        }
+        
+        currentArray.forEach { key in
+            if !currencyKeyArray.contains(key) {
+                currencyArrayLastElements.append(key)
+            }
+        }
+        
+        currentArray = currencyArrayFirstElements + currencyArrayLastElements.sorted(by: <)
+        
+        if currency == "" {
+            currency = currentArray.first ?? ""
+        }
+        /// Если есть рубль, то он первый
+        /// Если нет рубля, то доллар
+        /// Если нет доллара и рубля, то евро
+    
+        bottomView.currencySwitchButton.setAttributedTitle(setupButtonTitle(title: currency.getSymbol() ?? ""), for: .normal)
         bottomView.currencyButtonWidth.constant = 40
-        bottomView.currencySymbol = currency.getSymbol() ?? "₽"
+        bottomView.currencySymbol = currency.getSymbol() ?? ""
         
     }
     
@@ -245,6 +271,22 @@ extension ContactInputViewController: UIViewControllerTransitioningDelegate {
         let presenter = PresentationController(presentedViewController: presented, presenting: presenting)
         var cur = self.country?.sendCurr?.components(separatedBy: ";").compactMap { $0 } ?? []
         cur.removeLast()
+        let currencyKeyArray = ["RUR","USD","EUR"]
+        var currencyArrayFirstElements = [String]()
+        var currencyArrayLastElements = [String]()
+        currencyKeyArray.forEach { key in
+            if cur.contains(key) {
+            currencyArrayFirstElements.append(key)
+            }
+        }
+        
+        cur.forEach { key in
+            if !currencyKeyArray.contains(key) {
+                currencyArrayLastElements.append(key)
+            }
+        }
+        
+        cur = currencyArrayFirstElements + currencyArrayLastElements.sorted(by: <)
         
         presenter.height = (cur.count * 40) + 160
         return presenter
