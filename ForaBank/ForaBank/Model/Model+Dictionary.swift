@@ -24,7 +24,13 @@ extension Model {
         }
         
         return dictionaryCurrencyList.first(where: {$0.codeNumeric == currencyCode})
-        
+
+    }
+    
+    //MARK: BankList helper
+    
+    var dictionaryBankList: [BankData]? {
+        return localAgent.load(type: [BankData].self)
     }
 }
 

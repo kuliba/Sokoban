@@ -20,7 +20,7 @@ struct ChooseCountryHeaderViewModel {
     var country: CountriesList?
     var countryImage: UIImage?
     var bank: BanksList?
-    
+
     init(model: GetPaymentCountriesDatum) {
         self.countryName = model.countryName ?? ""
         self.countryCode = model.countryCode ?? ""
@@ -54,7 +54,7 @@ struct ChooseCountryHeaderViewModel {
                     puref.forEach({ (key, value) in
                         value.forEach { purefList in
                             if purefList.puref == purefString {
-                                let bankList = Dict.shared.banks
+                                let bankList = Model.shared.dictionaryBankListLegacy
                                 bankList?.forEach({ bank in
                                     if bank.memberID == key {
                                         self.bank = bank
