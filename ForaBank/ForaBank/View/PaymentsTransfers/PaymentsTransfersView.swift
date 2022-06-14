@@ -67,6 +67,9 @@ struct PaymentsTransfersView: View {
                             
                         case let .exampleDetail(title):
                             ExampleDetailMock(title: title)
+                            
+                        case .mobile(let model):
+                            MobilePayView(viewModel: model)
                         }
                     }
                 }

@@ -182,6 +182,7 @@
 		0BB24AB726F0C6AC00DDA4F6 /* UnBlockCardDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB24AB626F0C6AC00DDA4F6 /* UnBlockCardDecodableModel.swift */; };
 		0BB24ABA26F2884A00DDA4F6 /* ReturnAllCardList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB24AB926F2884A00DDA4F6 /* ReturnAllCardList.swift */; };
 		0BB24ABC26F370A300DDA4F6 /* GetProductDetailsDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB24ABB26F370A300DDA4F6 /* GetProductDetailsDecodableModel.swift */; };
+		0BB673A72858850100C54E15 /* MobilePayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB673A62858850100C54E15 /* MobilePayView.swift */; };
 		0BB8817026D6AE4200015E27 /* UserAllCardsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB8816F26D6AE4200015E27 /* UserAllCardsModel.swift */; };
 		0BBAFAAA277CB748006D9323 /* PhoneNumberKitHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBAFAA9277CB748006D9323 /* PhoneNumberKitHelper.swift */; };
 		0BBDFBDE27BAE25700A30D6D /* PaymentsSwitchViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBDFBDD27BAE25700A30D6D /* PaymentsSwitchViewComponent.swift */; };
@@ -1360,6 +1361,7 @@
 		0BB24AB626F0C6AC00DDA4F6 /* UnBlockCardDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnBlockCardDecodableModel.swift; sourceTree = "<group>"; };
 		0BB24AB926F2884A00DDA4F6 /* ReturnAllCardList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReturnAllCardList.swift; sourceTree = "<group>"; };
 		0BB24ABB26F370A300DDA4F6 /* GetProductDetailsDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetProductDetailsDecodableModel.swift; sourceTree = "<group>"; };
+		0BB673A62858850100C54E15 /* MobilePayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilePayView.swift; sourceTree = "<group>"; };
 		0BB8816F26D6AE4200015E27 /* UserAllCardsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAllCardsModel.swift; sourceTree = "<group>"; };
 		0BBAFAA9277CB748006D9323 /* PhoneNumberKitHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberKitHelper.swift; sourceTree = "<group>"; };
 		0BBDFBDD27BAE25700A30D6D /* PaymentsSwitchViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsSwitchViewComponent.swift; sourceTree = "<group>"; };
@@ -4152,6 +4154,7 @@
 			children = (
 				ED65D6012851EAFE002EB565 /* CountryPaymentViewController */,
 				77DA206328453ADB00D7E005 /* CustomPopUpWithRateView+Legacy.swift */,
+				0BB673A62858850100C54E15 /* MobilePayView.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -6817,6 +6820,7 @@
 				77F158232812CD7B00CA5E4E /* ForaApplication.swift in Sources */,
 				EDBEEA1D26B1AF2F00265683 /* FullBankInfoCell.swift in Sources */,
 				A578AA842795F70900F1867B /* MosParkingViewController.swift in Sources */,
+				0BB673A72858850100C54E15 /* MobilePayView.swift in Sources */,
 				EDCF8A1826CEFF2100DC9F54 /* TextFieldWithPadding.swift in Sources */,
 				A5B55E9827E2620C00C0B695 /* FastPaymentContractFindListDO.swift in Sources */,
 				EDF68211266F9EC800FD5C07 /* RequestError.swift in Sources */,

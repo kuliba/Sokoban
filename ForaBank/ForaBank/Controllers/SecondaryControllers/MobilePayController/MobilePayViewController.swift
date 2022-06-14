@@ -11,7 +11,7 @@ import RealmSwift
 class MobilePayViewController: UIViewController, UITextFieldDelegate {
     
     lazy var realm = try? Realm()
-    
+    var viewModel: MobilePayViewModel? = nil
     var recipiendId = String()
     var phoneNumber: String?
     var regEx = ""

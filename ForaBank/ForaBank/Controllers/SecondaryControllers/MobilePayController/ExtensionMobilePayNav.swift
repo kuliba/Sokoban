@@ -36,8 +36,12 @@ extension MobilePayViewController {
     }
     
     @objc func backAction() {
+        if let model = viewModel {
+            model.closeAction()
+        } else {
         dismiss(animated: true, completion: nil)
         navigationController?.dismiss(animated: true, completion: nil)
+        }
     }
     
     @objc private func updateNameTemplate() {
