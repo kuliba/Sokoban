@@ -11,6 +11,7 @@ import RealmSwift
 class ContactInputViewController: UIViewController {
     
     lazy var realm = try? Realm()
+    let model = Model.shared
     var typeOfPay: PaymentType = .contact {
         didSet {
             readAndSetupCard(type: typeOfPay)
@@ -299,8 +300,9 @@ class ContactInputViewController: UIViewController {
         
         cardListView.didCardTapped = { cardId in
             DispatchQueue.main.async {
-                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
-                cardList.forEach({ card in
+                let products: [UserAllCardsModel] = self.cardListView.cardList
+                
+                products.forEach({ card in
                     if card.id == cardId {
                         self.cardFromField.model = card
                         self.selectedCardNumber = card.number ?? ""
@@ -338,8 +340,8 @@ class ContactInputViewController: UIViewController {
                     self.currency = cardCurrency
                     
                 } else {
-                    let currArr = Dict.shared.currencyList
-                    currArr?.forEach({ currency in
+                    let currArr = self.model.currencyList.value.map { $0.getCurrencyList() }
+                    currArr.forEach({ currency in
                         if currency.code == cardCurrency {
                             
                             cur = [cardCurrency, "RUR"]
@@ -407,8 +409,8 @@ class ContactInputViewController: UIViewController {
     
     func getCountry(code: String) -> CountriesList {
         var countryValue: CountriesList?
-        let list = Dict.shared.countries
-        list?.forEach({ country in
+        let list = model.countriesList.value.map { $0.getCountriesList() }
+        list.forEach({ country in
             if country.code == code || country.contactCode == code {
                 countryValue = country
             }
@@ -418,16 +420,17 @@ class ContactInputViewController: UIViewController {
     
     func findBankByPuref(purefString: String) -> BanksList? {
         var bankValue: BanksList?
-        let paymentSystems = Dict.shared.paymentList
-        paymentSystems?.forEach({ paymentSystem in
+        let paymentSystems = model.paymentSystemList.value.map { $0.getPaymentSystem() }
+        let bankList = model.bankList.value.map { $0.getBanksList() }
+        
+        paymentSystems.forEach({ paymentSystem in
             if paymentSystem.code == "DIRECT" {
                 let purefList = paymentSystem.purefList
                 purefList?.forEach({ puref in
                     puref.forEach({ (key, value) in
                         value.forEach { purefList in
                             if purefList.puref == purefString {
-                                let bankList = Model.shared.dictionaryBankListLegacy
-                                bankList?.forEach({ bank in
+                                bankList.forEach({ bank in
                                     if bank.memberID == key {
                                         bankValue = bank
                                     }
@@ -469,11 +472,14 @@ class ContactInputViewController: UIViewController {
     
     private func readAndSetupCard(type: PaymentType) {
         DispatchQueue.main.async {
+            var products: [UserAllCardsModel] = []
+            let types: [ProductType] = [.card, .account]
+            types.forEach { type in
+                products.append(contentsOf: self.model.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
+            }
             
-            let cards = ReturnAllCardList.cards()
             var filterProduct: [UserAllCardsModel] = []
-            cards.forEach({ card in
-                if (card.productType == "CARD" || card.productType == "ACCOUNT") {
+            products.forEach({ card in
                     
                     if type == .contact
                         ? (card.currency == "RUB" || card.currency == "USD" || card.currency == "EUR")
@@ -481,7 +487,6 @@ class ContactInputViewController: UIViewController {
                         
                         filterProduct.append(card)
                     }
-                }
             })
             
             self.cardListView.cardList = filterProduct
@@ -509,6 +514,7 @@ class ContactInputViewController: UIViewController {
                     self.selectedCardNumber = cardNumber
                     self.cardIsSelect = true
                 }
+//                }
             }
         }
     }
@@ -517,7 +523,7 @@ class ContactInputViewController: UIViewController {
         
         var filteredbanksList : [BanksList] = []
 
-        Model.shared.dictionaryBankListLegacy?.forEach { bank in
+        model.dictionaryBankListLegacy?.forEach { bank in
             guard let codeList = bank.paymentSystemCodeList else { return }
             guard let countrylist = self.country?.paymentSystemCodeList else { return }
                     countrylist.forEach { code in

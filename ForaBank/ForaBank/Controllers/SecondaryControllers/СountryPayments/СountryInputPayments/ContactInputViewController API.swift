@@ -12,7 +12,7 @@ extension ContactInputViewController {
     
     func getBankList(completion: @escaping (_ banksList: [BanksList]?, _ error: String?)->()) {
         
-        guard let banks = Model.shared.dictionaryBankListLegacy else {
+        guard let banks = model.dictionaryBankListLegacy else {
             return completion(nil, "Не удалось загрузить список банков")
         }
             

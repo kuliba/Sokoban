@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+import Introspect
 
 struct PaymentsTransfersView: View {
     
     @ObservedObject
     var viewModel: PaymentsTransfersViewModel
-    
+    @State private var tabBarController: UITabBarController?
+
     var body: some View {
         
         NavigationView {
@@ -67,6 +69,17 @@ struct PaymentsTransfersView: View {
                             
                         case let .exampleDetail(title):
                             ExampleDetailMock(title: title)
+                            
+                        case .chooseCountry(let model):
+                            ChooseCountryView(viewModel: model)
+                                .navigationBarHidden(true)
+//                                .navigationBarTitle("", displayMode: .inline)
+                                .introspectTabBarController(customize: { tabBarController in
+                                    hideTabBar(tabBarController)
+                                })
+                                .onDisappear {
+                                    showTabBar(self.tabBarController)
+                                }
                         }
                     }
                 }
@@ -81,6 +94,20 @@ struct PaymentsTransfersView: View {
                 }
             })
             .navigationBarHidden(true)
+        }
+    }
+    
+    private func hideTabBar(_ tabBarController: UITabBarController) {
+        self.tabBarController = tabBarController
+        tabBarController.tabBar.isHidden = true
+        UIView.transition(with: tabBarController.view, duration: 0.35, options: .transitionCrossDissolve, animations: nil)
+    }
+    
+    private func showTabBar(_ tabBarController: UITabBarController?) {
+        if let tabBarController = tabBarController {
+            
+            tabBarController.tabBar.isHidden = false
+            UIView.transition(with: tabBarController.view, duration: 0.35, options: .transitionCrossDissolve, animations: nil)
         }
     }
 }

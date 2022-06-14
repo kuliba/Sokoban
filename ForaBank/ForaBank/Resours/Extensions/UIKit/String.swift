@@ -29,7 +29,7 @@ extension String {
     func getSymbol() -> String? {
         
         var resultString = ""
-        let currArr = Model.shared.currencyList
+        let currArr = Model.shared.currencyList.value.map { $0.getCurrencyList() }
         currArr.forEach({ currency in
             if currency.code == self {
                 

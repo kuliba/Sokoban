@@ -62,8 +62,8 @@ extension ChooseCurrencyPaymentController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellReuse, for: indexPath) as? ChooseCurrencyTableViewCell else { return UITableViewCell() }
 
         cell.titleLabel.text = ""
-        let currArr = Dict.shared.currencyList
-        currArr?.forEach({ currency in
+        let currArr = Model.shared.currencyList.value.map { $0.getCurrencyList() }
+        currArr.forEach({ currency in
             if currency.code == elements[indexPath.row] {
                 cell.titleLabel.text = currency.name
             }
