@@ -341,7 +341,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         tableView.showsVerticalScrollIndicator = false
         
         scrollView.addSubview(tableView)
-        tableView.anchor(top: headerView.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingLeft: 20, paddingBottom: 29, paddingRight: 20, height: UIScreen.main.bounds.height - 80)
+        tableView.anchor(top: headerView.bottomAnchor, left: view.leftAnchor, bottom: scrollView.bottomAnchor, right: view.rightAnchor, paddingLeft: 20, paddingRight: 20, height: UIScreen.main.bounds.height - 200)
         
         tableView.dataSource = self
         tableView.delegate = self
@@ -486,7 +486,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
                 heightConstraint = detailView.view.heightAnchor.constraint(equalToConstant: 0)
                 
                 secondStackView.addArrangedSubview(detailView.view)
-                scrollView.contentSize.height += 500
+                scrollView.contentSize.height += 1500
                 detailView.view.anchor(top: secondStackView.topAnchor, paddingTop: 20)
                 detailView.view.isHidden = false
                 secondStackView.isHidden = false
@@ -647,7 +647,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
                     self.heightConstraint = self.detailView.view.heightAnchor.constraint(equalToConstant: 0)
                     
                     self.secondStackView.addArrangedSubview(self.detailView.view)
-                    self.scrollView.contentSize.height += 300
+                    self.scrollView.contentSize.height += 1300
                     self.detailView.view.anchor(top: self.secondStackView.topAnchor, paddingTop: 20)
                     self.detailView.view.isHidden = false
                     self.secondStackView.isHidden = false

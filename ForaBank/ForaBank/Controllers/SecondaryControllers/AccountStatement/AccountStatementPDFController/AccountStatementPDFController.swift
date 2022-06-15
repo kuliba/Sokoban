@@ -72,6 +72,15 @@ class AccountStatementPDFController: UIViewController, URLSessionDownloadDelegat
             ] as [String: AnyObject]
             
             createPdfDocument(body)
+        case ProductType.loan.rawValue:
+            let body = [
+                "id" : id,
+                "startDate": "\(model.startDate)",
+                "endDate": "\(model.endDate)",
+                "cardNumber": ""
+            ] as [String: AnyObject]
+            createPdfDocument(body)
+
         default:
             let printType = printFormType ?? ""
             let body = [

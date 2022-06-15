@@ -126,6 +126,8 @@ final class CardChooseView: UIView {
         default:
             break
         }
+        self.nameLabel.text = model.customName ?? model.additionalField ?? ""
+        self.cardTypeImage.image = model.paymentSystemImage?.convertSVGStringToImage()
     }
     
     private func setupData(with model: GetProductListDatum) {

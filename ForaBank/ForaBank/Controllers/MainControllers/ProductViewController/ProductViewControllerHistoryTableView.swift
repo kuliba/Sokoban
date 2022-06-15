@@ -192,9 +192,8 @@ extension ProductViewController: UITableViewDelegate, UITableViewDataSource, Ske
                         }
                     })
                     
-                    amounPeriodLabel.text = "- \(sumSalary.currencyFormatter(symbol: "RUB"))"
+                    amounPeriodLabel.text = "- \(sumSalary.currencyFormatter(symbol: product?.currency ?? ""))"
                 }
-                
             }
         case "DEPOSIT":
             if self.sortedDeposit.count != 0 {
@@ -217,7 +216,7 @@ extension ProductViewController: UITableViewDelegate, UITableViewDataSource, Ske
                         }
                     })
                     
-                    amounPeriodLabel.text = "- \(sumSalary.currencyFormatter(symbol: "RUB"))"
+                    amounPeriodLabel.text = "- \(sumSalary.currencyFormatter(symbol: product?.currency ?? ""))"
                 }
                 
             }
@@ -244,7 +243,7 @@ extension ProductViewController: UITableViewDelegate, UITableViewDataSource, Ske
                         }
                     })
                     
-                    amounPeriodLabel.text = "- \(sumSalary.currencyFormatter(symbol: "RUB"))"
+                    amounPeriodLabel.text = "- \(sumSalary.currencyFormatter(symbol: product?.currency ?? ""))"
                 }
                 
                 
