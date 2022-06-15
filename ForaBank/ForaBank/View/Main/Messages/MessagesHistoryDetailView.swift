@@ -37,9 +37,9 @@ struct MessagesHistoryDetailView: View {
                             Color.clear.preference(key: ContentLengthPreference.self,
                                                    value: proxy.size.height)
                         }
-                    )
+                    ) .padding()
             }
-            .frame( height: self.textHeight > maxHight ? maxHight : self.textHeight )
+            .frame( height: self.textHeight > maxHight ? maxHight : self.textHeight + 100 )
             .onPreferenceChange(ContentLengthPreference.self) { value in
                 self.textHeight = value }
             
