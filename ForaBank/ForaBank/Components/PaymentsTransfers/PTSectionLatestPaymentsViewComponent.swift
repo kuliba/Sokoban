@@ -361,21 +361,37 @@ extension PTSectionLatestPaymentsView.ViewModel.LatestPaymentButtonVM {
         switch (data.type, data) {
         case (.phone, let paymentData as PaymentGeneralData):
             
-            self.avatar = avatar(for: paymentData.phoneNumber) ?? .icon(data.type.defaultIcon, .iconGray)
+            let phoneNumberRu = "+7" + paymentData.phoneNumber
+            let phoneFormatter = PhoneNumberFormater()
+            
+            self.avatar = avatar(for: phoneNumberRu) ?? .icon(data.type.defaultIcon, .iconGray)
             self.topIcon = model.dictionaryBank(for: paymentData.bankId)?.svgImage.image
-            self.description = fullName(for: paymentData.phoneNumber)
-                                ?? (paymentData.phoneNumber.isEmpty
-                                    ? data.type.defaultName : paymentData.phoneNumber)
+            self.description = fullName(for: phoneNumberRu)
+                ?? (paymentData.phoneNumber.isEmpty
+                    ? data.type.defaultName : phoneFormatter.format(phoneNumberRu))
             
         case (.country, let paymentData as PaymentCountryData):
 
-            self.avatar = avatar(for: paymentData.phoneNumber)
-                            ?? (!paymentData.shortName.isEmpty
+            if let phoneNumber = paymentData.phoneNumber,
+               !phoneNumber.isEmpty {
+            
+                let phoneNumberInt = "+" + phoneNumber
+                let phoneFormatter = PhoneNumberFormater()
+            
+                self.avatar = avatar(for: phoneNumberInt)
+                                ?? (!paymentData.shortName.isEmpty
+                                    ? .text(String(paymentData.shortName.first!).uppercased())
+                                    : .icon(data.type.defaultIcon, .iconGray))
+                self.description = fullName(for: phoneNumberInt)
+                    ?? (paymentData.shortName.isEmpty
+                        ? phoneFormatter.format(phoneNumberInt) : paymentData.shortName)
+            } else {
+                self.avatar = !paymentData.shortName.isEmpty
                                 ? .text(String(paymentData.shortName.first!).uppercased())
-                                : .icon(data.type.defaultIcon, .iconGray))
-            self.description = fullName(for: paymentData.phoneNumber)
-                                ?? (paymentData.shortName.isEmpty
-                                    ? data.type.defaultName : paymentData.shortName)
+                                : .icon(data.type.defaultIcon, .iconGray)
+                self.description = paymentData.shortName.isEmpty
+                                ? paymentData.type.defaultName : paymentData.shortName
+            }
             self.topIcon = model.dictionaryCountry(for: paymentData.countryCode)?.svgImage?.image
                     
         case (.service, let paymentData as PaymentServiceData):
@@ -416,12 +432,16 @@ extension PTSectionLatestPaymentsView.ViewModel.LatestPaymentButtonVM {
             
         case (.mobile, let paymentData as PaymentServiceData):
                 
-            self.avatar = avatar(for: paymentData.additionalList.first?.fieldValue)
-                          ?? .icon(data.type.defaultIcon, .iconGray)
             if let phoneNumber = paymentData.additionalList.first?.fieldValue,
                !phoneNumber.isEmpty {
-                self.description = fullName(for: phoneNumber) ?? phoneNumber
+                
+                let phoneNumberRu = "+7" + phoneNumber
+                let phoneFormatter = PhoneNumberFormater()
+                
+                self.avatar = avatar(for: phoneNumberRu) ?? .icon(data.type.defaultIcon, .iconGray)
+                self.description = fullName(for: phoneNumberRu) ?? phoneFormatter.format(phoneNumberRu)
             } else {
+                self.avatar = .icon(data.type.defaultIcon, .iconGray)
                 self.description = data.type.defaultName
             }
             self.topIcon = model.dictionaryAnywayOperator(for: paymentData.puref)?

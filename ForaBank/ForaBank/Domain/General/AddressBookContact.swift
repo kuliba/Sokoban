@@ -15,24 +15,23 @@ struct AddressBookContact: Identifiable {
     let avatar: ImageData?
         
     var initials: String? {
-        let str = firstChar(firstName) + firstChar(lastName)
-        return str.isEmpty ? nil : str.uppercased()
+        let letters = [firstName, lastName]
+            .compactMap { $0?.replacingOccurrences(of: " ", with: "").first }
+            .map{ $0.uppercased() }
+        
+        guard !letters.isEmpty else { return nil }
+        return letters.reduce("", +)
     }
     
     var fullName: String? {
-        var str = ""
-        for elem in [firstName, middleName, lastName] {
-            if let elem = elem {
-                str += str.isEmpty ? elem : " " + elem
-            }
-        }
         
-        return str.isEmpty ? nil : str
-    }
-
-    private func firstChar(_ str: String?) -> String {
-        guard let str = str else { return "" }
-        return String(str[str.startIndex])
+        let elements = [firstName, middleName, lastName]
+            .compactMap { $0?.trimmingCharacters(in: .whitespaces) }
+            .filter { !$0.trimmingCharacters(in: .whitespaces).isEmpty }
+            .map{ $0 + " " }
+        
+        guard elements.isEmpty == false else { return nil }
+        return String(elements.reduce("", +).dropLast())
     }
 
 }

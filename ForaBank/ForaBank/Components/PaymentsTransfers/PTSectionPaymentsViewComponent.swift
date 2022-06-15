@@ -88,7 +88,7 @@ struct PTSectionPaymentsView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .font(.textH2SB20282())
             .foregroundColor(.textSecondary)
-            .padding(.top, 30)
+            .padding(.top, 4)
             .padding(.bottom, 14)
             .padding(.leading, 20)
       

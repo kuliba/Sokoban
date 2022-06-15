@@ -2975,14 +2975,6 @@
 			path = REALMModels;
 			sourceTree = "<group>";
 		};
-		0BBAFAA8277CB71C006D9323 /* PhoneNumberKitHelper */ = {
-			isa = PBXGroup;
-			children = (
-				0BBAFAA9277CB748006D9323 /* PhoneNumberKitHelper.swift */,
-			);
-			path = PhoneNumberKitHelper;
-			sourceTree = "<group>";
-		};
 		0BD1CA9926E6B52C00CFE993 /* GetCountries */ = {
 			isa = PBXGroup;
 			children = (
@@ -4723,6 +4715,7 @@
 				7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */,
 				7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */,
 				7772978827C39EF70099EF91 /* String+Extensions.swift */,
+				0BBAFAA9277CB748006D9323 /* PhoneNumberKitHelper.swift */,
 				773E49A927D0C72900D8264E /* URLCache+Extensions.swift */,
 				77A76A9127FB512000A271B3 /* CLLocation+Extensions.swift */,
 				7767049D27FDAF3D00996A07 /* CLLocationCoordinate2D+Extensions.swift */,
@@ -5712,7 +5705,6 @@
 		EDB143B6265FDEAD0028EF5A /* Resours */ = {
 			isa = PBXGroup;
 			children = (
-				0BBAFAA8277CB71C006D9323 /* PhoneNumberKitHelper */,
 				0B216FC426D1E9C20023C878 /* NotificationName */,
 				ED4FC5FE266B91360092B4AB /* Helpers */,
 				ED4FC5FD266B90FB0092B4AB /* AppAndSceneDelegate */,
