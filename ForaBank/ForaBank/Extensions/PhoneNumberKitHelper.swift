@@ -12,24 +12,20 @@ protocol PhoneNumberFormaterProtocol {
     func format(_ phoneNumber: String) -> String
 }
 
+
 struct PhoneNumberFormater: PhoneNumberFormaterProtocol {
+    
+    private let phoneNumberKit = PhoneNumberKit()
     
     func format(_ phoneNumber: String) -> String {
         
-        let phoneNumberKit = PhoneNumberKit()
-        
-        var returnValue = ""
-        
-        do {
-            let phoneNumber = try phoneNumberKit.parse(phoneNumber, ignoreType: true)
-            returnValue = phoneNumberKit.format(phoneNumber, toType: .international)
-        } catch {
-            print("Something went wrong \(phoneNumber), Error: \(error.localizedDescription)")
-        }
-        
-        return returnValue
+        guard let phoneNumberParsed = try? phoneNumberKit.parse(phoneNumber, ignoreType: true)
+        else { return phoneNumber }
+                
+        return phoneNumberKit.format(phoneNumberParsed, toType: .international)
     }
     
+    //TODO: remove afrer refactoring
     func format(_ textField: PhoneNumberTextField) -> String {
         
         var returnValue = ""
@@ -47,3 +43,5 @@ struct PhoneNumberFormater: PhoneNumberFormaterProtocol {
     }
     
 }
+
+

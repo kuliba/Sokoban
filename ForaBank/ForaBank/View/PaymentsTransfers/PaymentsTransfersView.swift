@@ -50,16 +50,10 @@ struct PaymentsTransfersView: View {
                     
                 } //mainVStack
 
-                if #available(iOS 14.0, *) {
-                    Color.mainColorsGrayLightest
-                        .frame(height: 48)
-                        .ignoresSafeArea()
-                        .overlay(TopSearchViewMock())
-                } else {
-                    Color.mainColorsGrayLightest
-                        .frame(height: 48)
-                        .overlay(TopSearchViewMock())
-                } //mock topSearchView
+                Color.mainColorsGrayLightest //mock topSearchView
+                    .frame(height: 48)
+                    .edgesIgnoringSafeArea(.top)
+                    .overlay(TopSearchViewMock())
                 
                 NavigationLink("", isActive: $viewModel.isLinkActive) {
                     
