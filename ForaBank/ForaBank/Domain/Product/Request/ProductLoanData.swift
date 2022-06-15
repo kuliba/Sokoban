@@ -77,7 +77,7 @@ class ProductLoanData: ProductData {
         try container.encode(principalDebtAccount, forKey: .principalDebtAccount)
         try container.encode(settlementAccount, forKey: .settlementAccount)
         try container.encode(settlementAccountId, forKey: .settlementAccountId)
-        try container.encode(dateLong, forKey: .dateLong)
+        try container.encode(Int(dateLong.timeIntervalSince1970) * 1000, forKey: .dateLong)
         try container.encode(strDateLong, forKey: .strDateLong)
 
         try super.encode(to: encoder)

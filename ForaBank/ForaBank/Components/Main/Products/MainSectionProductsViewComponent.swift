@@ -67,15 +67,13 @@ extension MainSectionProductsView {
                                 if let currentProductViewModel = currentProductsViewModels.first(where: { $0.id == product.id }) {
                                     
                                     // just update existing view model with product data
-                                    currentProductViewModel.update(with: product)
+                                    currentProductViewModel.update(with: product, model: model)
                                     productsViewModelsUpdated.append(currentProductViewModel)
                                     
                                 } else {
                                     
-                                    // try to create new product view model
-                                    guard let productViewModel = ProductView.ViewModel(with: product, action: { [weak self] in  self?.action.send(MainSectionViewModelAction.Products.ProductDidTapped(productId: product.id)) }) else {
-                                        continue
-                                    }
+                                    // create new product view model
+                                    let productViewModel = ProductView.ViewModel(with: product, size: .normal, style: .main, model: model, action: { [weak self] in  self?.action.send(MainSectionViewModelAction.Products.ProductDidTapped(productId: product.id)) })
                                     productsViewModelsUpdated.append(productViewModel)
                                 }
                             }

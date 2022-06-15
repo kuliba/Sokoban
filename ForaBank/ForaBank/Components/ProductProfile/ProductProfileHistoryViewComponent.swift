@@ -13,256 +13,425 @@ import Shimmer
 
 extension ProductProfileHistoryView {
     
-    class ViewModel: ObservableObject {
+    class ViewModel: ObservableObject, Identifiable {
         
         let action: PassthroughSubject<Action, Never> = .init()
         
-        let title = "История операций"
-        @Published var listState: OperationsListState
-        @Published var dateOperations: [OperationsDateViewModel]
-        @Published var spendingViewModel: SegmentedBarView.ViewModel?
-        @Published var isLoading = true
-        let productId: Int
+        var id: ProductData.ID { productId }
+        let productId: ProductData.ID
+        //TODO: button action
+        lazy var header: HeaderViewModel = HeaderViewModel(button: .init(action: {}))
+        
+        @Published var content: Content
         
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        internal init(dateOperations: [OperationsDateViewModel], spendingViewModel: SegmentedBarView.ViewModel?, productId: Int, model: Model = .emptyMock) {
+        internal init(productId: ProductData.ID, state: Content, model: Model = .emptyMock) {
             
-            self.dateOperations = dateOperations
-            self.listState = .list(dateOperations)
-            self.spendingViewModel = spendingViewModel
             self.productId = productId
+            self.content = state
             self.model = model
-            
         }
         
-        init(_ model: Model, productId: Int, productType: ProductType) {
+        init(_ model: Model, productId: ProductData.ID) {
             
-            self.dateOperations = []
-            self.spendingViewModel = nil
-            self.model = model
-            self.listState = .error(.init(button: .init(action: {_ in })))
             self.productId = productId
-  
-            //FIXME: temp disabled
-            /*
-            self.dateOperations = []
-            self.spendingViewModel = nil
+            self.content = .loading
             self.model = model
-            self.listState = .loading
-            self.productId = productId
+ 
             bind()
-            
-            model.action.send(ModelAction.Statement.List.Request(productId: productId, productType: productType))
-             */
+            action.send(ProductProfileHistoryViewModelAction.DownloadLatest())
         }
         
         private func bind() {
             
-            model.action
+            action
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] action in
                     
                     switch action {
-                    case let payload as ModelAction.Statement.List.Response:
-                        switch payload.result {
-                        case .failure(message: _):
-                            self.listState = .error(.init(button: .init(action: {_ in
-                                self.model.action.send(ModelAction.Statement.List.Request(productId: self.productId, productType: .card))
-                                self.listState = .loading
-                            })))
-                            
-                        case .success(statement: let statement):
-                            
-                            self.listState = .list(separationDate(operations: statement))
-                            self.dateOperations = separationDate(operations: statement)
-                            if sumDeifferentGroup(operations: statement).count > 0 {
-                                
-                                self.spendingViewModel = .init(value: sumDeifferentGroup(operations: statement))
-                            }
-                        }
+                    case _ as ProductProfileHistoryViewModelAction.DownloadLatest:
+                        model.action.send(ModelAction.Statement.List.Request(productId: productId, direction: .latest))
+                        
+                    case _ as ProductProfileHistoryViewModelAction.DidTapped.More:
+                        model.action.send(ModelAction.Statement.List.Request(productId: productId, direction: .eldest))
+                        
+                    case let payload as ProductProfileHistoryViewModelAction.DidTapped.Detail:
+                        print("detail for :\(payload.statementId)")
+                        
                     default:
                         break
                     }
                     
                 }.store(in: &bindings)
             
-            model.statement
+            model.statements
+                .combineLatest(model.statementsUpdating)
                 .receive(on: DispatchQueue.main)
-                .sink {[unowned self] operations in
+                .sink { [unowned self] data in
                     
-                    guard let statement = operations.productStatement[productId] else { return }
-                    self.dateOperations = separationDate(operations: statement)
-                    if sumDeifferentGroup(operations: statement).count > 0 {
-                        
-                        self.spendingViewModel = .init(value: sumDeifferentGroup(operations: statement))
+                    let storages = data.0
+                    let states = data.1
+                    
+                    guard let storage = storages[id] else {
+                        return
                     }
                     
-                    self.isLoading = false
-                    if self.dateOperations.count > 0 {
-                        
-                        self.listState = .list(self.dateOperations)
-                    } else {
-                        self.listState = .error(.init(button: .init(action: { [self]_ in model.action.send(ModelAction.Statement.List.Request(productId: productId, productType: .card))})))
+                    updateContent(with: storage)
+                    updateContent(with: states[id] ?? .idle, storage: storage)
+                    
+                }.store(in: &bindings)
+            
+            model.images
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] images in
+                    
+                    guard images.isEmpty == false, case .list(let historyListViewModel) = content else {
+                        return
                     }
                     
+                    let operations = historyListViewModel.groups.flatMap{ $0.operations }
+                    for operation in operations {
+                        
+                        guard operation.image == nil else {
+                            continue
+                        }
+                        
+                        withAnimation {
+                            
+                            operation.image = images[operation.statement.imageId]?.image
+                        }
+                    }
+     
                 }.store(in: &bindings)
         }
         
-        enum OperationsListState {
+        func updateContent(with storage: ProductStatementsStorage) {
             
-            case empty(OperationsEmptyViewModel)
-            case list([OperationsDateViewModel])
-            case error(OperationsErrorViewModel)
-            case loading
-            
-        }
-        
-        struct OperationsEmptyViewModel {
-            
-            let image = Image.ic24Search
-            let title = "Нет операций"
-        }
-        
-        struct OperationsErrorViewModel {
-            
-            let errorTitle = "Превышено время ожидания"
-            let subTitle = "Попробуйте повторить запрос позже"
-            let image = Image.ic24Clock
-            let button: ButtonViewModel
-            
-            struct ButtonViewModel {
+            if storage.statements.isEmpty == false {
                 
-                let title = "Повторить"
-                let action: (Action) -> Void
+                var downloadImagesIds = [String]()
+                
+                if case .list(let historyListViewModel) = content {
+                    
+                    let updatedGroupsData = reduce(groups: historyListViewModel.groups, statements: storage.statements, images: model.images.value, model: model){ [weak self] statementId in
+                        { self?.action.send(ProductProfileHistoryViewModelAction.DidTapped.Detail(statementId: statementId)) }
+                    }
+                    downloadImagesIds = updatedGroupsData.downloadImagesIds
+                    
+                    withAnimation {
+                        
+                        historyListViewModel.groups = updatedGroupsData.groups
+                    }
+                    
+                } else {
+                    
+                    let groupsData = reduce(groups: [], statements: storage.statements, images: model.images.value, model: model) { [weak self] statementId in
+                        { self?.action.send(ProductProfileHistoryViewModelAction.DidTapped.Detail(statementId: statementId)) }
+                    }
+                    downloadImagesIds = groupsData.downloadImagesIds
+                    let listViewModel = HistoryListViewModel(expences: nil, latestUpdate: nil, groups: groupsData.groups, eldestUpdate: nil)
+                   
+                    withAnimation {
+                        
+                        content = .list(listViewModel)
+                    }
+                }
+                
+                if downloadImagesIds.isEmpty == false {
+                    
+                    model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: downloadImagesIds))
+                }
+                
+            } else {
+                
+                content = .empty(.init())
             }
         }
         
-        struct OperationsDateViewModel: Identifiable {
+        func updateContent(with state: ProductStatementsUpdateState, storage: ProductStatementsStorage) {
             
-            let id = UUID()
-            let date: String
-            let operations: [Operation]
+            withAnimation {
+                
+                switch state {
+                case .idle:
+                    switch content {
+                    case let .list(listViewModel):
+                        listViewModel.latestUpdate = nil
+                        
+                        if storage.isHistoryComplete == false {
+                            
+                            listViewModel.eldestUpdate = .more(.init(title: "Смотреть еще", isEnabled: true, action: {[weak self] in self?.action.send(ProductProfileHistoryViewModelAction.DidTapped.More())}))
+                        } else {
+                            
+                            listViewModel.eldestUpdate = nil
+                        }
+
+                    default:
+                        content = .empty(.init())
+                    }
+                    
+                case let .downloading(downloadingType):
+                    switch content {
+                    case let .list(listViewModel):
+                        switch downloadingType {
+                        case .latest:
+                            listViewModel.latestUpdate = .updating
+                            listViewModel.eldestUpdate = nil
+                            
+                        case .eldest:
+                            listViewModel.latestUpdate = nil
+                            listViewModel.eldestUpdate = .updating
+                        }
+       
+                    default:
+                        content = .loading
+                    }
+                    
+                case .failed:
+                    switch content {
+                    case let .list(listViewModel):
+                        if listViewModel.latestUpdate != nil {
+                            
+                            //TODO: formatted period from storage
+                            let failViewModel = HistoryListViewModel.LatestUpdateState.FailViewModel(title: "Ошибка! Попробуйте позже.", subtitle: "Отражены данные на ...")
+                            listViewModel.latestUpdate = .fail(failViewModel)
+                        }
+                        listViewModel.eldestUpdate = nil
+                        
+                    default:
+                       break
+                    }
+                }
+            }
+        }
+    }
+}
+
+//MARK: - Action
+
+enum ProductProfileHistoryViewModelAction {
+    
+    enum DidTapped {
+   
+        struct Detail: Action {
+            
+            let statementId: ProductStatementData.ID
+        }
+        
+        struct More: Action {}
+    }
+    
+    struct DownloadLatest: Action {}
+}
+
+//MARK: - Types
+
+extension ProductProfileHistoryView.ViewModel {
+    
+    struct HeaderViewModel {
+        
+        let title = "История операций"
+        let button: ButtonViewModel
+        
+        struct ButtonViewModel {
+            
+            let icon = Image.ic16Sliders
             let action: () -> Void
+        }
+    }
+    
+    enum Content {
+        
+        case empty(EmptyListViewModel)
+        case list(HistoryListViewModel)
+        case loading
+    }
+    
+    struct EmptyListViewModel {
+        
+        let title = "Нет операций"
+        let image = Image.ic24Search
+    }
+    
+    class HistoryListViewModel: ObservableObject {
+        
+        @Published var expences: MonthExpencesViewModel?
+        @Published var latestUpdate: LatestUpdateState?
+        @Published var groups: [DayGroupViewModel]
+        @Published var eldestUpdate: EldestUpdateState?
+        
+        init(expences: MonthExpencesViewModel?, latestUpdate: LatestUpdateState?, groups: [DayGroupViewModel], eldestUpdate: EldestUpdateState?) {
             
-            internal init(date: String, operations: [Operation], action: @escaping () -> Void) {
+            self.expences = expences
+            self.latestUpdate = latestUpdate
+            self.groups = groups
+            self.eldestUpdate = eldestUpdate
+        }
+        
+        struct MonthExpencesViewModel {
+            
+            let title: String
+            let total: String
+            let amounts: [Double]
+        }
+        
+        enum LatestUpdateState {
+            
+            case updating
+            case fail(FailViewModel)
+            
+            struct FailViewModel {
                 
-                self.date = date
+                let title: String
+                let subtitle: String
+            }
+        }
+
+        enum EldestUpdateState {
+            
+            case more(ButtonSimpleView.ViewModel)
+            case updating
+        }
+        
+        struct DayGroupViewModel: Identifiable {
+            
+            let id: Int
+            let title: String
+            let operations: [Operation]
+            
+            init(id: Int, title: String, operations: [Operation]) {
+                
+                self.id = id
+                self.title = title
                 self.operations = operations
-                self.action = action
             }
             
-            struct Operation: Identifiable {
+            class Operation: Identifiable, ObservableObject {
                 
-                let id: String
+                var id: ProductStatementData.ID { statement.id }
+                let statement: StatementBasicData
                 let title: String
-                let image: Image?
+                @Published var image: Image?
                 let subtitle: String
                 let amount: String?
-                let type: OperationType
+                let action: () -> Void
                 
-                internal init(id: String, title: String, image: Image?, subtitle: String, amount: String, type: OperationType) {
+                internal init(statement: StatementBasicData, title: String, image: Image?, subtitle: String, amount: String?, action: @escaping () -> Void = {}) {
                     
-                    self.id = id
+                    self.statement = statement
                     self.title = title
                     self.image = image
                     self.subtitle = subtitle
                     self.amount = amount
-                    self.type = type
+                    self.action = action
                 }
                 
-                init(productStatementData: ProductStatementData) {
+                init(statement: ProductStatementData, model: Model, action: @escaping () -> Void) {
                     
-                    if let operationId = productStatementData.operationId {
+                    self.statement = StatementBasicData(statement: statement)
+                    self.title = statement.merchant
+                    self.image = statement.svgImage?.image
+                    self.subtitle = statement.groupName
+                    if statement.operationType != .open {
                         
-                        self.id = operationId
-                    } else {
-                        self.id = ""
-                    }
-                    
-                    if let name = productStatementData.merchantNameRus {
-                        
-                        title = name
-                    } else {
-                        title = productStatementData.merchantName
-                    }
-                    if let image = productStatementData.svgImage.image {
-                        
-                        self.image = image
+                        self.amount = model.amountFormatted(amount: statement.signedAmount, currencyCodeNumeric: statement.currencyCodeNumeric, style: .normal) ?? "\(statement.signedAmount)"
                     } else {
                         
-                        self.image = nil
+                        self.amount = nil
                     }
-                    
-                    self.subtitle = productStatementData.groupName
-                    self.type = productStatementData.operationType
-                    
-                    self.amount = productStatementData.amountFormattedtWithCurrency
+   
+                    self.action = action
                 }
+                
+                struct StatementBasicData {
+     
+                    let id: ProductStatementData.ID
+                    let date: Date
+                    let imageId: String
+                    
+                    internal init(id: ProductStatementData.ID, date: Date, imageId: String) {
+                        
+                        self.id = id
+                        self.date = date
+                        self.imageId = imageId
+                    }
+                    
+                    init(statement: ProductStatementData) {
+                        
+                        self.id = statement.id
+                        self.date = statement.date
+                        self.imageId = statement.md5hash
+                    }
+                }
+                
             }
         }
     }
 }
 
-enum HistoryViewModelAction {
-    
-    enum DetailTapped {
-        
-        struct Detail: Action {
-            
-            let statement: String
-        }
-    }
-}
+//MARK: - Reducers
 
 extension ProductProfileHistoryView.ViewModel {
     
-    func separationDate(operations: [ProductStatementData]) -> [OperationsDateViewModel] {
+    func reduce(groups: [HistoryListViewModel.DayGroupViewModel], statements: [ProductStatementData], images: [String: ImageData], model: Model, shortDateFormatter: DateFormatter = .historyShortDateFormatter, fullDateFormatter: DateFormatter = .historyFullDateFormatter, action: (ProductStatementData.ID) -> () -> Void) -> (groups: [HistoryListViewModel.DayGroupViewModel], downloadImagesIds: [String]) {
         
-        let groupByDate = Dictionary(grouping: operations) { (operation) -> String in
+        func groupDateFormatted(date: Date) -> String {
             
-            let dateFormatter = DateFormatter.historyDateFormatter
-            let localDate = dateFormatter.string(from: operation.tranDate)
+            let dateYear = calendar.component(.year, from: date)
             
-            return localDate
+            return dateYear == currentYear ? shortDateFormatter.string(from: date) : fullDateFormatter.string(from: date)
         }
         
-        let sortedArray = groupByDate.sorted(by: { $0.0 > $1.0 })
+        let operations = groups.flatMap{ $0.operations }
+        let operationsUpdateResult = reduce(operations: operations, statements: statements, images: images, model: model, action: action)
         
-        var dateOperations: [OperationsDateViewModel] = []
+        let grouppedOperations = Dictionary(grouping: operationsUpdateResult.operations, by: { $0.statement.date.groupDayIndex }).sorted(by: { $0.0 > $1.0 })
         
-        for date in sortedArray {
+        let calendar = Calendar.current
+        let currentYear = calendar.component(.year, from: Date())
+        var groupsResult = [HistoryListViewModel.DayGroupViewModel]()
+        
+        for group in grouppedOperations {
             
-            var operations = [OperationsDateViewModel.Operation]()
+            let date = group.value[0].statement.date
+            let dateString = groupDateFormatted(date: date)
             
-            for operation in date.value {
-                
-                operations.append(OperationsDateViewModel.Operation(productStatementData: operation))
-            }
-            
-            dateOperations.append(OperationsDateViewModel(date: date.key, operations: operations, action: {}))
+            groupsResult.append(HistoryListViewModel.DayGroupViewModel(id: group.key, title: dateString, operations: group.value))
         }
         
-        return dateOperations
+        return (groupsResult, operationsUpdateResult.downloadImagesIds)
     }
     
-    func sumDeifferentGroup(operations: [ProductStatementData]) -> [Double] {
+    func reduce(operations: [HistoryListViewModel.DayGroupViewModel.Operation], statements: [ProductStatementData], images: [String: ImageData], model: Model, action: (ProductStatementData.ID) -> () -> Void) -> (operations: [HistoryListViewModel.DayGroupViewModel.Operation], downloadImagesIds: [String]) {
         
-        let groupByName = Dictionary(grouping: operations) { (operation) -> String in
-            return operation.groupName
+        var updatedOperations = operations
+        var downloadImagesIds = [String]()
+        
+        for statement in statements {
+            
+            guard operations.contains(where: { $0.id == statement.id }) == false else {
+                continue
+            }
+            
+            let operation = HistoryListViewModel.DayGroupViewModel.Operation(statement: statement, model: model, action: action(statement.id))
+            let imageId = statement.md5hash
+            if let imageData = images[imageId] {
+                
+                operation.image = imageData.image
+                
+            } else {
+                
+                downloadImagesIds.append(imageId)
+            }
+            
+            updatedOperations.append(operation)
         }
         
-        var sumArray = [Double]()
-        
-        for operation in groupByName {
-            sumArray.append(operation.value.reduce(0) { partialResult, y in
-                partialResult + y.amount
-            })
-        }
-        
-        return sumArray
+        return (updatedOperations, downloadImagesIds)
     }
+    
 }
 
 //MARK: - View
@@ -275,6 +444,35 @@ struct ProductProfileHistoryView: View {
         
         VStack {
             
+            HeaderView(viewModel: viewModel.header)
+                .padding(.bottom, 15)
+
+            switch viewModel.content {
+            case .empty(let emptyListViewModel):
+                EmptyListView(viewModel: emptyListViewModel)
+                    .padding(.top, 20)
+                
+            case let .list(listViewModel):
+                ListView(viewModel: listViewModel)
+                
+            case .loading:
+                LoadingView()
+            }
+            
+        }.padding(.horizontal, 20)
+    }
+}
+
+//MARK: - Nested Views
+
+extension ProductProfileHistoryView {
+    
+    struct HeaderView: View {
+        
+        let viewModel: ProductProfileHistoryView.ViewModel.HeaderViewModel
+        
+        var body: some View {
+            
             HStack(alignment: .center) {
                 
                 Text(viewModel.title)
@@ -282,160 +480,48 @@ struct ProductProfileHistoryView: View {
                 
                 Spacer()
                 
-                Button {
+                Button(action: viewModel.button.action) {
                     
-                } label: {
-                    
-                    Image.ic16Sliders
-                        .foregroundColor(.black)
-                        .frame(width: 32, height: 32)
-                    
-                }
-                .background(Color.mainColorsGrayLightest)
-                .cornerRadius(90)
-                
-            }
-            .padding(.bottom, 15)
-            
-            if let spending = viewModel.spendingViewModel {
-                
-                SegmentedBarView(viewModel: spending)
-                    .frame(height: 44)
-                    .padding(.bottom, 32)
-            }
-            
-            switch viewModel.listState {
-            case .empty(let emptyViewModel):
-                EmptyOperationsView(viewModel: emptyViewModel)
-                    .padding(.top, 20)
-                
-            case .list(_):
-                
-                ForEach(viewModel.dateOperations) { operation in
-                    
-                    VStack(alignment: .leading, spacing: 0){
+                    ZStack {
                         
-                        Text(operation.date)
-                            .font(.system(size: 14))
-                            .fontWeight(.semibold)
-                            .padding(.bottom, 16)
+                        Circle()
+                            .foregroundColor(.mainColorsGrayLightest)
                         
-                        ForEach(operation.operations) { item in
-                            
-                            HStack(alignment: .top, spacing: 20) {
-                                
-                                if let image = item.image {
-                                    
-                                    image
-                                        .resizable()
-                                        .frame(width: 40, height: 40)
-                                } else {
-                                    
-                                    Circle()
-                                        .background(Color.mainColorsGrayLightest)
-                                        .frame(width: 40, height: 40)
-                                }
-                                
-                                VStack(alignment: .leading, spacing: 8) {
-                                    
-                                    Text(item.title)
-                                        .font(.system(size: 16))
-                                        .fontWeight(.regular)
-                                        .lineLimit(1)
-                                    
-                                    Text(item.subtitle)
-                                        .font(.system(size: 12))
-                                        .foregroundColor(.mainColorsGray)
-                                        .fontWeight(.light)
-                                }
-                                
-                                Spacer()
-                                
-                                if let amount = item.amount {
-                                    
-                                    Text(amount)
-                                }
-                            }
-                            .padding(.vertical, 8)
-                            .onTapGesture {
-                            
-                                self.viewModel.action.send(HistoryViewModelAction.DetailTapped.Detail(statement: item.id))
-                            }
-                        }
+                        viewModel.button.icon
+                            .renderingMode(.template)
+                            .resizable()
+                            .frame(width: 16, height: 16)
+                            .foregroundColor(.iconBlack)
                     }
                 }
-                .padding(.bottom, 32)
-                
-            case .error(let errorViewModel):
-                ErrorRequestView(viewModel: errorViewModel)
-                    .padding(.top, 20)
-                
-            case .loading:
-                LoadingPlaceholder()
-            }
-        }
-        .padding(.horizontal, 20)
-    }
-    
-    struct LoadingPlaceholder: View {
-        
-        var body: some View {
-            
-            VStack(alignment: .leading, spacing: 20){
-                
-                ForEach(0..<3) { _ in
-                    
-                    Color.mainColorsGrayMedium
-                        .frame(width: 189, height: 20)
-                        .clipShape(RoundedRectangle(cornerRadius: 2))
-                        .shimmering(active: true, bounce: true)
-                        .frame(alignment: .leading)
-                    
-                    HStack(spacing: 20) {
-                        
-                        Color.mainColorsGrayMedium
-                            .frame(width: 40, height: 40)
-                            .clipShape(RoundedRectangle(cornerRadius: 90))
-                            .shimmering(active: true, bounce: true)
-                        
-                        VStack(spacing: 8) {
-                            
-                            Color.mainColorsGrayMedium
-                                .frame(width: 189, height: 20)
-                                .clipShape(RoundedRectangle(cornerRadius: 2))
-                                .shimmering(active: true, bounce: true)
-                            
-                            Color.mainColorsGrayMedium
-                                .frame(width: 189, height: 12)
-                                .clipShape(RoundedRectangle(cornerRadius: 2))
-                                .shimmering(active: true, bounce: true)
-                        }
-                        
-                        Color.mainColorsGrayMedium
-                            .frame(height: 20)
-                            .clipShape(RoundedRectangle(cornerRadius: 2))
-                            .shimmering(active: true, bounce: true)
-                            .frame(alignment: .top)
-                    }
-                }
+                .buttonStyle(PushButtonStyle())
+                .frame(width: 32, height: 32)
             }
         }
     }
     
-    struct EmptyOperationsView: View {
+    struct EmptyListView: View {
         
-        var viewModel: ViewModel.OperationsEmptyViewModel
+        let viewModel: ViewModel.EmptyListViewModel
         
         var body: some View {
             
             VStack(spacing: 24) {
                 
-                viewModel.image
-                    .foregroundColor(.mainColorsGray)
-                    .frame(width: 64, height: 64)
-                    .background(Color.mainColorsGrayLightest)
-                    .cornerRadius(90)
+                ZStack {
+                    
+                    Circle()
+                        .frame(width: 64, height: 64)
+                        .foregroundColor(.mainColorsGrayLightest)
+                    
+                    viewModel.image
+                        .renderingMode(.template)
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                        .foregroundColor(.iconBlack)
+                }
                 
+                //FIXME: set font and color from style guide
                 Text(viewModel.title)
                     .font(Font.system(size: 14, weight: .light))
                     .foregroundColor(.mainColorsGray)
@@ -443,41 +529,252 @@ struct ProductProfileHistoryView: View {
         }
     }
     
-    struct ErrorRequestView: View {
+    struct ListView: View {
         
-        var viewModel: ViewModel.OperationsErrorViewModel
+        @ObservedObject var viewModel: ProductProfileHistoryView.ViewModel.HistoryListViewModel
         
         var body: some View {
             
-            VStack(spacing: 24) {
+            if #available(iOS 14.0, *) {
                 
-                viewModel.image
-                    .foregroundColor(.mainColorsBlack)
-                    .frame(width: 76, height: 76)
-                    .background(Color.mainColorsGrayLightest)
-                    .cornerRadius(90)
-                
-                VStack(spacing: 13) {
-                    Text(viewModel.errorTitle)
-                        .font(Font.system(size: 20, weight: .semibold))
-                        .foregroundColor(.mainColorsBlackMedium)
+                LazyVStack {
                     
-                    Text(viewModel.subTitle)
-                        .font(Font.system(size: 16, weight: .light))
-                        .foregroundColor(.gray)
+                    //TODO: expences view
+                    
+                    if let latestUpdate = viewModel.latestUpdate {
+                        
+                        switch latestUpdate {
+                        case .updating:
+                            ProductProfileHistoryView.LoadingItemView()
+                            
+                        case .fail(let failViewModel):
+                            ProductProfileHistoryView.EldestUpdateFailView(viewModel: failViewModel)
+                        }
+                    }
+                    
+                    ForEach(viewModel.groups) { groupViewModel in
+                        
+                        ProductProfileHistoryView.GroupView(viewModel: groupViewModel)
+                            .padding(.bottom, 32)
+                    }
+                    
+                    if let eldestUpdate = viewModel.eldestUpdate {
+                        
+                        switch eldestUpdate {
+                        case .more(let buttonViewModel):
+                            ButtonSimpleView(viewModel: buttonViewModel)
+                                .frame(height: 48)
+                            
+                        case .updating:
+                            ProductProfileHistoryView.LoadingItemView()
+                        }
+                    }
                 }
                 
-                Button {
-                    
-                } label: {
-                    Text(viewModel.button.title)
-                        .foregroundColor(.mainColorsBlackMedium)
-                        .frame(width: 300, height: 48, alignment: .center)
-                        .padding(.horizontal, 20)
-                }
-                .background(Color.buttonSecondary)
-                .cornerRadius(8)
+            } else {
                 
+                VStack {
+                    
+                    //TODO: expences view
+                    
+                    if let latestUpdate = viewModel.latestUpdate {
+                        
+                        switch latestUpdate {
+                        case .updating:
+                            ProductProfileHistoryView.LoadingItemView()
+                            
+                        case .fail(let failViewModel):
+                            ProductProfileHistoryView.EldestUpdateFailView(viewModel: failViewModel)
+                        }
+                    }
+                    
+                    ForEach(viewModel.groups) { groupViewModel in
+                        
+                        ProductProfileHistoryView.GroupView(viewModel: groupViewModel)
+                            .padding(.bottom, 32)
+                    }
+                    
+                    if let eldestUpdate = viewModel.eldestUpdate {
+                        
+                        switch eldestUpdate {
+                        case .more(let buttonViewModel):
+                            ButtonSimpleView(viewModel: buttonViewModel)
+                                .frame(height: 48)
+                            
+                        case .updating:
+                            ProductProfileHistoryView.LoadingItemView()
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    struct GroupView: View {
+        
+        let viewModel: ProductProfileHistoryView.ViewModel.HistoryListViewModel.DayGroupViewModel
+        
+        var body: some View {
+            
+            VStack(alignment: .leading, spacing: 0) {
+                
+                Text(viewModel.title)
+                    .font(.textBodyMSB14200())
+                    .foregroundColor(.textSecondary)
+                    .padding(.bottom, 16)
+          
+                ForEach(viewModel.operations) { operationViewModel in
+                    
+                    ProductProfileHistoryView.OperationView(viewModel: operationViewModel)
+                        .frame(height: 56)
+                }
+            }
+        }
+    }
+    
+    struct OperationView: View {
+        
+        @ObservedObject var viewModel: ProductProfileHistoryView.ViewModel.HistoryListViewModel.DayGroupViewModel.Operation
+        
+        var body: some View {
+            
+            HStack(alignment: .top, spacing: 20) {
+                
+                if let image = viewModel.image {
+                    
+                    image
+                        .resizable()
+                        .frame(width: 40, height: 40)
+                    
+                } else {
+                    
+                    Circle()
+                        .foregroundColor(.mainColorsGrayMedium)
+                        .frame(width: 40, height: 40)
+                        .shimmering(active: true, bounce: false)
+                }
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    
+                    Text(viewModel.title)
+                        .font(.textH4M16240())
+                        .foregroundColor(.textSecondary)
+                        .lineLimit(1)
+                    
+                    Text(viewModel.subtitle)
+                        .font(.textBodySR12160())
+                        .foregroundColor(.textPlaceholder)
+                }
+                
+                Spacer()
+                
+                if let amount = viewModel.amount {
+                    
+                    Text(amount)
+                        .font(.textH4M16240())
+                        .foregroundColor(.textSecondary)
+                }
+            }
+            .onTapGesture {
+            
+                viewModel.action()
+            }
+        }
+    }
+    
+    struct LoadingView: View {
+        
+        var body: some View {
+            
+            VStack( spacing: 20){
+                
+                ForEach(0..<3) { _ in
+                    
+                    ProductProfileHistoryView.LoadingItemView()
+                }
+            }
+        }
+    }
+    
+    struct LoadingItemView: View {
+        
+        let color = Color.mainColorsGrayMedium
+        
+        var body: some View {
+            
+            VStack(alignment: .leading, spacing: 20) {
+                
+                RoundedRectangle(cornerRadius: 4)
+                    .foregroundColor(color)
+                    .frame(width: 189, height: 20)
+                    
+                HStack(spacing: 15) {
+                    
+                    Circle()
+                        .foregroundColor(color)
+                        .frame(width: 40, height: 40)
+                    
+                    VStack(spacing: 8) {
+                        
+                        RoundedRectangle(cornerRadius: 4)
+                            .foregroundColor(color)
+                            .frame(height: 20)
+                        
+                        RoundedRectangle(cornerRadius: 4)
+                            .foregroundColor(color)
+                            .frame(height: 12)
+                    }
+                    .padding(.leading, 5)
+                    
+                    VStack {
+                        
+                        RoundedRectangle(cornerRadius: 4)
+                            .foregroundColor(color)
+                            .frame(width: 72, height: 20)
+                        
+                        Spacer()
+                    }
+                }
+                .padding(.vertical, 8)
+                .frame(height: 56)
+            }
+            .shimmering(active: true, bounce: false)
+        }
+    }
+    
+    struct EldestUpdateFailView: View {
+        
+        let viewModel: ProductProfileHistoryView.ViewModel.HistoryListViewModel.LatestUpdateState.FailViewModel
+        
+        var body: some View {
+            
+            
+            HStack(alignment: .top, spacing: 20) {
+                
+                ZStack {
+                    
+                    Circle()
+                        .foregroundColor(.systemColorWarning)
+                        .frame(width: 40, height: 40)
+                    
+                    Image.ic24AlertOctagon
+                        .renderingMode(.template)
+                        .foregroundColor(.textWhite)
+                }
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    
+                    Text(viewModel.title)
+                        .font(.textH4M16240())
+                        .foregroundColor(.textSecondary)
+                        .lineLimit(1)
+                    
+                    Text(viewModel.subtitle)
+                        .font(.textBodySR12160())
+                        .foregroundColor(.textPlaceholder)
+                }
+                
+                Spacer()
             }
         }
     }
@@ -491,14 +788,26 @@ struct HistoryViewComponent_Previews: PreviewProvider {
         
         Group {
             
-            ProductProfileHistoryView(viewModel: .init(dateOperations: [.init(date: "25 августа, ср", operations: [.init(id: "", title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .debit), .init(id: "", title: "Selhozmarket", image: Image.init("GKH", bundle: nil), subtitle: "Магазин", amount: "-230 Р", type: .credit)], action: {}), .init(date: "26 августа, ср", operations: [.init(id: "", title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .debit)], action: {})], spendingViewModel: .spending, productId: 1, model: .emptyMock))
-                .previewLayout(.fixed(width: 360, height: 500))
+            ProductProfileHistoryView(viewModel: .sample)
+                .previewLayout(.fixed(width: 375, height: 500))
             
-            ProductProfileHistoryView(viewModel: .init(dateOperations: [.init(date: "25 августа, ср", operations: [.init(id: "", title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .debit)], action: {}), .init(date: "26 августа, ср", operations: [.init(id: "", title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .debit)], action: {})], spendingViewModel: nil, productId: 1, model: .emptyMock))
-                .previewLayout(.fixed(width: 400, height: 400))
+            ProductProfileHistoryView(viewModel: .sampleSecond)
+                .previewLayout(.fixed(width: 375, height: 400))
             
-            ProductProfileHistoryView(viewModel: .init(dateOperations: [], spendingViewModel: nil, productId: 1, model: .emptyMock))
-                .previewLayout(.fixed(width: 400, height: 400))
+            ProductProfileHistoryView.EmptyListView(viewModel: .init())
+                .previewLayout(.fixed(width: 375, height: 300))
+            
+            ProductProfileHistoryView.LoadingView()
+                .padding(.horizontal, 20)
+                .previewLayout(.fixed(width: 375, height: 400))
+            
+            ProductProfileHistoryView.EldestUpdateFailView(viewModel: .sample)
+                .padding(.horizontal, 20)
+                .previewLayout(.fixed(width: 375, height: 80))
+            
+            ProductProfileHistoryView.LoadingItemView()
+                .padding(.horizontal, 20)
+                .previewLayout(.fixed(width: 375, height: 120))
             
         }
     }
@@ -506,15 +815,23 @@ struct HistoryViewComponent_Previews: PreviewProvider {
 
 //MARK: - Preview Content
 
-extension ProductProfileHistoryView.ViewModel.OperationsDateViewModel {
+extension ProductProfileHistoryView.ViewModel.HistoryListViewModel.DayGroupViewModel {
     
-    static let debitOperation = Operation(id: "", title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р", type: .credit)
+    static let debitOperation = Operation(statement: .init(id: 0, date: Date(), imageId: ""), title: "Плата за обслуживание", image: Image("MigAvatar"), subtitle: "Услуги банка", amount: "-65 Р")
     
-    static let creditOperation = Operation(id: "", title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit)
+    static let creditOperation = Operation(statement: .init(id: 1, date: Date(), imageId: ""), title: "Оплата банка", image: Image.init("foraContactImage"), subtitle: "Услуги банка", amount: "-100 Р")
+}
+
+extension ProductProfileHistoryView.ViewModel.HistoryListViewModel.LatestUpdateState.FailViewModel {
     
+    static let sample = ProductProfileHistoryView.ViewModel.HistoryListViewModel.LatestUpdateState.FailViewModel(title: "Ошибка! Попробуйте позже.", subtitle: "Отражены данные на ...")
 }
 
 extension ProductProfileHistoryView.ViewModel {
     
-    static let sampleHistory = ProductProfileHistoryView.ViewModel( dateOperations: [.init(date: "12 декабря", operations: [.init(id: "", title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(id: "", title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(id: "", title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(id: "", title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit), .init(id: "", title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р", type: .credit)], action: {})], spendingViewModel: .init(value: [100, 300]), productId: 1, model: .emptyMock)
+    static let sample = ProductProfileHistoryView.ViewModel(productId: 1, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "25 августа, ср", operations: [.init(statement: .init(id: 0, date: Date(), imageId: ""), title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р"), .init(statement: .init(id: 1, date: Date(), imageId: ""), title: "Selhozmarket", image: Image.init("GKH", bundle: nil), subtitle: "Магазин", amount: "-230 Р")]), .init(id: 1, title: "26 августа, ср", operations: [.init(statement: .init(id: 2, date: Date(), imageId: ""), title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р")])], eldestUpdate: nil)))
+    
+    static let sampleSecond = ProductProfileHistoryView.ViewModel(productId: 2, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "25 августа, ср", operations: [.init(statement: .init(id: 0, date: Date(), imageId: ""), title: "Плата за обслуживание", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-65 Р")]), .init(id: 1, title: "26 августа, ср", operations: [.init(statement: .init(id: 1, date: Date(), imageId: ""), title: "Оплата банка", image: Image.init("foraContactImage", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р")])], eldestUpdate: .more(.init(title: "Смотреть еще", isEnabled: true, action: {}))) ))
+    
+    static let sampleHistory = ProductProfileHistoryView.ViewModel(productId: 3, state: .list(.init(expences: nil, latestUpdate: nil, groups: [.init(id: 0, title: "12 декабря", operations: [.init(statement: .init(id: 0, date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р"), .init(statement: .init(id: 1, date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р"), .init(statement: .init(id: 2, date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р"), .init(statement: .init(id: 3, date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р"), .init(statement: .init(id: 4, date: Date(), imageId: ""), title: "Оплата банка", image: Image("MigAvatar", bundle: nil), subtitle: "Услуги банка", amount: "-100 Р")])], eldestUpdate: nil)))
 }

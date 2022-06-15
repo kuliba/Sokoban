@@ -155,15 +155,20 @@ extension ProductData {
     
     var displayNumber: String? {
         
-        switch productType {
-        case .deposit:
-            guard let accountNumber = accountNumber else {
+        if let depositProduct = self as? ProductDepositData {
+            
+            guard let accountNumber = depositProduct.accountNumber else {
                return nil
             }
             
             return String(accountNumber.suffix(4))
             
-        default:
+        } else if let loanProduct = self as? ProductLoanData {
+            
+            return String(loanProduct.settlementAccount.suffix(4))
+            
+        } else {
+            
             guard let number = number else {
                 return nil
             }
@@ -172,17 +177,25 @@ extension ProductData {
         }
     }
     
-    var displayName: String { customName ?? mainField }
-    
-    var displayBalance: String? {
+    var displayPeriod: String? {
         
-        guard let balance = balance else {
+        let formatter = DateFormatter.productPeriod
+        
+        if let cardProduct = self as? ProductCardData {
+            
+            return formatter.string(from: cardProduct.validThru)
+            
+        } else if let loanProduct = self as? ProductLoanData {
+            
+            return formatter.string(from: loanProduct.dateLong)
+            
+        } else {
+            
             return nil
         }
-        
-        //FIXME: refactor formatter
-        return balance.currencyFormatter(symbol: currency)
     }
+    
+    var displayName: String { customName ?? mainField }
 }
 
 extension ProductData: Equatable {

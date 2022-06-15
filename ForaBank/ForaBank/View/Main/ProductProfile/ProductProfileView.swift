@@ -18,51 +18,59 @@ struct ProductProfileView: View {
         
         ZStack(alignment: .top) {
             
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 
-                GeometryReader { geometry in
+                ZStack {
                     
-                    ZStack {
+                    Group {
                         
-                        if geometry.frame(in: .global).minY <= 0 {
+                        GeometryReader { geometry in
                             
-                            viewModel.accentColor.contrast(0.5)
-                                .frame(width: geometry.size.width, height: geometry.size.height)
-                                .offset(y: geometry.frame(in: .global).minY / 9)
-                                .clipped()
-                            
-                        } else {
-                            
-                            viewModel.accentColor.contrast(0.5)
-                                .frame(width: geometry.size.width, height: geometry.size.height + geometry.frame(in: .global).minY)
-                                .clipped()
-                                .offset(y: -geometry.frame(in: .global).minY)
+                            ZStack {
+                                
+                                if geometry.frame(in: .global).minY <= 0 {
+                                    
+                                    viewModel.accentColor.contrast(0.5)
+                                        .frame(width: geometry.size.width, height: 204)
+                                        .offset(y: geometry.frame(in: .global).minY / 9)
+                                        .clipped()
+                                    
+                                } else {
+                                    
+                                    viewModel.accentColor.contrast(0.5)
+                                        .frame(width: geometry.size.width, height: 204 + geometry.frame(in: .global).minY)
+                                        .clipped()
+                                        .offset(y: -geometry.frame(in: .global).minY)
+                                }
+                            }
                         }
                     }
-                }
-                .frame(height: 204)
-       
-                VStack(spacing: 0) {
+                    .zIndex(0)
                     
-                    ProductProfileCardView(viewModel: viewModel.product)
-                    
-                    VStack(spacing: 32) {
+                    VStack(spacing: 0) {
                         
-                        ProductProfileButtonsSectionView(viewModel: viewModel.selector)
+                        ProductProfileCardView(viewModel: viewModel.product)
                         
-                        if let detailAccount = viewModel.detail {
+                        VStack(spacing: 32) {
                             
-                            ProductProfileAccountDetailView(viewModel: detailAccount)
+                            ProductProfileButtonsView(viewModel: viewModel.buttons)
                                 .padding(.horizontal, 20)
-                        }
-                        
-                        if let historyViewModel = viewModel.history {
                             
-                            ProductProfileHistoryView(viewModel: historyViewModel)
+                            if let detailAccount = viewModel.detail {
+                                
+                                ProductProfileDetailView(viewModel: detailAccount)
+                                    .padding(.horizontal, 20)
+                            }
+                            
+                            if let historyViewModel = viewModel.history {
+                                
+                                ProductProfileHistoryView(viewModel: historyViewModel)
+                            }
                         }
                     }
+                    .padding(.top, 56)
+                    .zIndex(1)
                 }
-                .offset(x: 0, y: -156)
             }
             
             StatusView(viewModel: viewModel.statusBar)
@@ -182,7 +190,7 @@ struct ProfileView_Previews: PreviewProvider {
 
 extension ProductProfileViewModel {
     
-    static let sample = ProductProfileViewModel(statusBar: .sample, product: .sample, selector: .sample, detail: .sample, history: .sampleHistory)
+    static let sample = ProductProfileViewModel(statusBar: .sample, product: .sample, buttons: .sample, detail: .sample, history: .sampleHistory)
 }
 
 extension ProductProfileViewModel.StatusBarViewModel {

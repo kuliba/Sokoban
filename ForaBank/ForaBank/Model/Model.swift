@@ -22,8 +22,9 @@ class Model {
     let productsHidden: CurrentValueSubject<[ProductData.ID], Never>
     var productsAllowed: Set<ProductType> { [.card, .account, .deposit, .loan] }
     
-    //MARK: Statement
-    var statement: CurrentValueSubject<ProductStatementDataCacheble, Never>
+    //MARK: Statements
+    let statements: CurrentValueSubject<StatementsData, Never>
+    let statementsUpdating: CurrentValueSubject<[ProductData.ID: ProductStatementsUpdateState], Never>
     
     //MARK: Currency rates
     let rates: CurrentValueSubject<[ExchangeRateData], Never>
@@ -36,10 +37,8 @@ class Model {
     let currencyList: CurrentValueSubject<[CurrencyData], Never>
     let countriesList: CurrentValueSubject<[CountryData], Never>
     let paymentSystemList: CurrentValueSubject<[PaymentSystemData], Never>
-    
-    
-    //TODO: remove wrapper for dicts
     let bankList: CurrentValueSubject<[BankData], Never>
+    var images: CurrentValueSubject<[String: ImageData], Never>
     
     //MARK: Deposits
     let deposits: CurrentValueSubject<[DepositProductData], Never>
@@ -106,7 +105,8 @@ class Model {
         self.products = .init([:])
         self.productsUpdating = .init([])
         self.productsHidden = .init([])
-        self.statement = .init(.init(productStatement: [:]))
+        self.statements = .init([:])
+        self.statementsUpdating = .init([:])
         self.rates = .init([])
         self.ratesUpdating = .init([])
         self.catalogProducts = .init([])
@@ -115,6 +115,7 @@ class Model {
         self.bankList = .init([])
         self.countriesList = .init([])
         self.paymentSystemList = .init([])
+        self.images = .init([:])
         self.deposits = .init([])
         self.paymentTemplates = .init([])
         self.paymentTemplatesViewSettings = .init(.initial)
@@ -185,10 +186,12 @@ class Model {
                 
                 switch auth {
                 case .active:
+                    //FIXME: status active after register requested before register process complete
                     action.send(ModelAction.Products.Update.Total.All())
                     action.send(ModelAction.ClientInfo.Fetch.Request())
                     action.send(ModelAction.Rates.Update.All())
                     action.send(ModelAction.Deposits.List.Request())
+                    action.send(ModelAction.Notification.Fetch.New.Request())
                     
                     action.send(ModelAction.LatestPayments.List.Requested())
                     
@@ -318,6 +321,7 @@ class Model {
                     
                 case _ as ModelAction.Auth.Logout:
                     handleAuthLogoutRequest()
+                    clearCachedData()
                     
                     //MARK: - Products Actions
                     
@@ -477,6 +481,9 @@ class Model {
                         handleDictionaryAtmRegionDataList(payload.serial)
                     }
                     
+                case let payload as ModelAction.Dictionary.DownloadImages.Request:
+                    handleDictionaryDownloadImages(payload: payload)
+                    
                     //MARK: - Deposits
                     
                 case _ as ModelAction.Deposits.List.Request:
@@ -562,6 +569,11 @@ private extension Model {
         
         self.products.value = productsCacheLoadData()
         
+        if let statements = localAgent.load(type: StatementsData.self) {
+            
+            self.statements.value = statements
+        }
+        
         if let rates = localAgent.load(type: [ExchangeRateData].self) {
             
             self.rates.value = rates
@@ -574,6 +586,11 @@ private extension Model {
         if let deposits = localAgent.load(type: [DepositProductData].self) {
             
             self.deposits.value = deposits
+        }
+        
+        if let images = localAgent.load(type: [String: ImageData].self) {
+            
+            self.images.value = images
         }
     }
     
@@ -592,6 +609,8 @@ private extension Model {
     
     func clearCachedData() {
         
+        print("Model: clearCachedData")
+        
         do {
             
             try localAgent.clear(type: [PaymentTemplateData].self)
@@ -608,6 +627,15 @@ private extension Model {
         } catch {
             
             print("Model: clearCachedData: products error: \(error.localizedDescription)")
+        }
+        
+        do {
+            
+            try localAgent.clear(type: StatementsData.self)
+            
+        } catch {
+            
+            print("Model: clearCachedData: statements error: \(error.localizedDescription)")
         }
         
         do {

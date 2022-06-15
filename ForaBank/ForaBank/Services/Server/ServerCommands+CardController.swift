@@ -49,7 +49,7 @@ extension ServerCommands {
         struct GetCardStatement: ServerCommand {
             
             let token: String?
-            let endpoint = "/rest/getCardStatement"
+            let endpoint = "/rest/getCardStatement_V2"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
             let payload: BasePayload?
@@ -66,6 +66,44 @@ extension ServerCommands {
                 
                 self.token = token
                 self.payload = payload
+            }
+            
+            init(token: String, productId: ProductData.ID) {
+                
+                self.init(token: token, payload: .init(id: productId))
+            }
+        }
+        
+        /*
+         http://10.1.206.21:8080/swagger-ui/index.html#/CardController/getCardStatementForPeriod_V2
+         */
+        
+        //TODO: - tests
+        struct GetCardStatementForPeriod: ServerCommand {
+            
+            let token: String?
+            let endpoint = "/rest/getCardStatementForPeriod_V2"
+            let method: ServerCommandMethod = .post
+            let parameters: [ServerCommandParameter]? = nil
+            let payload: BasePayload?
+            let timeout: TimeInterval? = nil
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: [ProductStatementData]?
+            }
+            
+            internal init(token: String, payload: BasePayload) {
+                
+                self.token = token
+                self.payload = payload
+            }
+            
+            init(token: String, productId: ProductData.ID, period: Period) {
+                
+                self.init(token: token, payload: .init(id: productId, startDate: period.start, endDate: period.end))
             }
         }
         
@@ -124,6 +162,11 @@ extension ServerCommands {
                 self.token = token
                 self.payload = payload
             }
+            
+            init(token: String, productId: ProductData.ID, name: String) {
+                
+                self.init(token: token, payload: .init(id: productId, name: name))
+            }
         }
         
         /*
@@ -160,12 +203,12 @@ extension ServerCommands {
         
         struct BasePayload: Encodable {
             
-            let cardNumber: String?
-            let endDate: Date?
             let id: Int
-            let name: String?
-            let startDate: Date?
-            let statementFormat: StatementFormat?
+            var name: String? = nil
+            var startDate: Date? = nil
+            var endDate: Date? = nil
+            var statementFormat: StatementFormat? = nil
+            var cardNumber: String? = nil
         }
         
         struct BlockResponseData: Codable, Equatable {

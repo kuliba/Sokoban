@@ -18,3 +18,18 @@ struct CurrencyData: Codable, Equatable {
     let name: String
     let unicode: String?
 }
+
+extension CurrencyData {
+    
+    var currencySymbol: String? {
+        
+        guard let unicodeData = cssCode?.components(separatedBy: "\\").last,
+              let unicodeValue = UInt32(unicodeData, radix: 16),
+              let unicodeScalar = UnicodeScalar(unicodeValue) else {
+            
+            return nil
+        }
+        
+        return String(unicodeScalar)
+    }
+}

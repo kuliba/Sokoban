@@ -297,7 +297,7 @@ extension ServerAgent {
             
             switch self {
             case .test:
-                return "https://test.inn4b.ru/dbo/api/v3"
+                return "https://pl.forabank.ru/dbo/api/v3/"
             case .prod:
                 return "https://bg.forabank.ru/dbo/api/v4/f437e29a3a094bcfa73cea12366de95b"
             }

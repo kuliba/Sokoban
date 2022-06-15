@@ -10,7 +10,7 @@ import Combine
 
 //MARK: - ViewModel
 
-extension ProductProfileAccountDetailView {
+extension ProductProfileDetailView {
     
     class ViewModel: ObservableObject {
         
@@ -20,268 +20,16 @@ extension ProductProfileAccountDetailView {
         @Published var headerView: HeaderViewModel
         @Published var state: State
         @Published var amountViewModel: [AmountViewModel?]
-        @Published var dateViewModel: DateViewModel?
+        @Published var dateViewModel: DateProgressViewModel?
         @Published var footerViewModel: [FooterViewModel]?
         @Published var secondButtonsViewModel:[FooterViewModel]?
-        
         @Published var circleViewModel: CircleViewModel?
-        
-        struct HeaderViewModel {
-            
-            let title = "Детали счета"
-            var subTitle: SubTitleViewModel
-            var collapsed: Bool
-            
-            enum SubTitleViewModel {
-                
-                case paid
-                case start
-                case interval
-                case delayCredit
-                case mortgage
-                case consumer
-                
-                var subTitle: String {
-                    
-                    switch self {
-                        
-                    case .paid: return "Обязательный платеж погашен!\nУ вас нет задолженности"
-                    case .start: return "Поздравляем 🎉, Вы стали обладателем кредитной карты. Оплачивайте покупки и получайте Кешбэк и скидки от партнеров."
-                    case .interval: return "Отчетный период \(Date().startOfPreviusDate()) - \(Date().endOfMonth()) "
-                    case .delayCredit: return "Вносите платеж вовремя"
-                    case .consumer: return "Очередной платеж по кредиту"
-                    case .mortgage: return "Очередной платеж по ипотеке"
-                    }
-                }
-            }
-        }
-        
-        struct CircleViewModel {
-            
-            var debt: Double
-            
-            var ownFound: Double
-            
-            var available: Double
-            
-            var colors: [Color] = [ .buttonPrimary, .white]
-            
-            var circleLimit: Double {
-                
-                let percent = (debt / (available + ownFound))
-                return Double(percent)
-                
-            }
-            
-            var circleOwn: Double {
-                
-                let percent = 1 - circleLimit
-                return Double(percent)
-                
-            }
-            
-            var total: Double {
-                
-                let total = ownFound + available
-                return Double(total)
-            }
-            
-        }
-        
-        struct DateViewModel {
-            
-            var longInt: Int?
-            
-            var creditDate: String? {
-                
-                if let longInt = longInt {
-                    let date = Date(timeIntervalSince1970: TimeInterval(longInt/1000))
-                    let dateFormatter = DateFormatter.dateAndMonth
-                    
-                    dateFormatter.timeZone = .current
-                    dateFormatter.locale = Locale(identifier: "ru_RU")
-                    let localDate = dateFormatter.string(from: date)
-                    
-                    return "Дата платежа - \(localDate)"
-                } else {
-                    return nil
-                }
-            }
-            
-            var date: String {
-                
-                let currentDate = Date()
-                var components = Calendar.current.dateComponents([.year, .month], from: currentDate)
-                components.month = (components.month ?? 0) + 1
-                components.hour = (components.hour ?? 0) - 1
-                let endOfMonth = Calendar.current.date(from: components)!
-                let formatter = DateFormatter.dateAndMonth
-                let date = formatter.string(from: endOfMonth)
-                
-                return "Дата платежа - \(date)"
-            }
-            
-            var lostDays: String {
-                
-                if let longInt = longInt {
-                    
-                    let date = Date(timeIntervalSince1970: TimeInterval(longInt/1000))
-                    let currentDate = Date()
-                    var components = Calendar.current.dateComponents([.year, .month, .day], from: date)
-                    components.day = (components.day ?? 0) + 1
-                    let endOfMonth = Calendar.current.date(from: components)!
-                    let distance = currentDate.distance(to: endOfMonth)
-                    return "\(distance.stringFormatted()) Дней"
-                    
-                } else {
-                    
-                    let currentDate = Date()
-                    var components = Calendar.current.dateComponents([.year, .month], from: currentDate)
-                    components.month = (components.month ?? 0) + 1
-                    components.hour = (components.hour ?? 0) + 1
-                    let endOfMonth = Calendar.current.date(from: components)!
-                    let distance = currentDate.distance(to: endOfMonth)
-                    return "\(distance.stringFormatted()) Дней"
-                }
-            }
-            
-            var value: Double {
-                
-                var now: Double {
-                    
-                    let now = Calendar.current.component(.day, from: Date())
-                    
-                    return Double(now)
-                }
-                
-                var maxValue: Int {
-                    
-                    if let longInt = longInt {
-                        
-                        let date = Date(timeIntervalSince1970: TimeInterval(longInt/1000))
-                        let currentDate = Date()
-                        
-                        let interval = date - currentDate
-                        
-                        guard let interval = interval.day else {
-                            return 0
-                        }
-                        return interval
-                        
-                    } else {
-                        let nowDate = Date()
-                        let calendar = Calendar.current
-                        
-                        let dateComponents = DateComponents(year: calendar.component(.year, from: nowDate), month: calendar.component(.month, from: nowDate))
-                        let date = calendar.date(from: dateComponents)!
-                        
-                        let range = calendar.range(of: .day, in: .month, for: date)!
-                        let numDays = range.count
-                        
-                        return numDays
-                    }
-                }
-                
-                var percentage = now / Double(maxValue)
-                
-                if longInt != nil {
-                    percentage = 1.0 - (Double(maxValue) / 31.0)
-                }
-                
-                return Double(percentage)
-            }
-            
-            init(longInt: Int?) {
-                
-                self.longInt = longInt
-            }
-        }
-        
-        struct AmountViewModel: Hashable {
-            
-            var title: Title
-            var foregraundColor: Color
-            var amount: String
-            var availebelAmount: String?
-            
-            enum Title: Hashable {
-                
-                case debt
-                case available
-                case ownfunds
-                case limit
-                case repaid
-                case creditAmount
-                
-                var title: String {
-                    
-                    switch self {
-                        
-                    case .debt: return "Задолженность"
-                    case .available: return "Доступно"
-                    case .ownfunds: return "Собственные средства"
-                    case .limit: return "Кредитный лимит"
-                    case .repaid: return "Уже погашено"
-                    case .creditAmount: return "Сумма кредита"
-                        
-                    }
-                }
-            }
-            
-        }
-        
-        struct FooterViewModel: Identifiable, Hashable {
-            
-            let id = UUID()
-            var amount: String
-            var title: Title
-            var image: Image?
-            var foregraund: Color
-            var background: Color
-            let action: () -> Void
-            
-            enum Title: Hashable {
-                
-                case minimal
-                case preferential
-                case totalDebt
-                case available
-                case delay
-                case minimalCredit
-                
-                var title: String {
-                    
-                    switch self {
-                        
-                    case .minimal: return "Минимальный платеж"
-                    case .preferential: return "Льготный платеж"
-                    case .totalDebt: return "Общая задолженность"
-                    case .available: return "Доступно"
-                    case .delay: return "Включая просрочку"
-                    case .minimalCredit: return "Внести платеж"
-                    }
-                }
-            }
-            
-            static func == (lhs: ProductProfileAccountDetailView.ViewModel.FooterViewModel, rhs: ProductProfileAccountDetailView.ViewModel.FooterViewModel) -> Bool {
-                return lhs.amount == rhs.amount
-            }
-            
-            func hash(into hasher: inout Hasher) {
-                hasher.combine(amount)
-            }
-        }
-        
-        struct State {
-            
-            var collapsed: Bool
-        }
         
         internal init(with loanBase: ProductCardData.LoanBaseParamInfoData?, status: StatusPC, availableExceedLimit: String, minimumPayment: String, gracePeriodPayment: String, overduePayment: String, ownFunds: String, debtAmount: String, totalAvailableAmount: String, totalDebtAmount: String, isCredit: Bool, productName: String?, longInt: Int?, sumAvailable: String?) {
             
             self.state = .init(collapsed: false)
             
-            self.dateViewModel = .init(.init(longInt: nil))
+            self.dateViewModel = nil
             self.footerViewModel = nil
             self.headerView = .init(subTitle: .paid, collapsed: false)
             self.amountViewModel = [.init(title: .debt, foregraundColor: .mainColorsBlackMedium, amount: debtAmount, availebelAmount: nil), .init(title: .limit, foregraundColor: .buttonPrimary, amount: availableExceedLimit, availebelAmount: totalAvailableAmount)]
@@ -303,7 +51,6 @@ extension ProductProfileAccountDetailView {
             if let overduePaymentData = loanBase?.overduePayment, overduePaymentData > 0 {
                 
                 self.headerView = .init(subTitle: .interval, collapsed: false)
-                self.dateViewModel = .init(.init(longInt: nil))
                 self.amountViewModel = [.init(title: .debt, foregraundColor: .mainColorsBlackMedium, amount: debtAmount, availebelAmount: nil), .init(title: .available, foregraundColor: .buttonPrimary, amount: availableExceedLimit, availebelAmount: totalAvailableAmount)]
                 self.footerViewModel = [.init(amount: minimumPayment, title: .minimal, image: nil, foregraund: .white, background: .textPrimary, action: {
                     NotificationCenter.default.post(name: NSNotification.Name("openPaymentsView"), object: nil, userInfo: nil)
@@ -316,7 +63,6 @@ extension ProductProfileAccountDetailView {
             if let availableExceedLimit = loanBase?.availableExceedLimit, availableExceedLimit == 0 {
                 
                 self.headerView = .init(subTitle: .paid, collapsed: false)
-                self.dateViewModel = .init(.init(longInt: nil))
                 self.footerViewModel = [.init(amount: minimumPayment, title: .minimal, image: nil, foregraund: .white, background: .textPrimary, action: {
                     NotificationCenter.default.post(name: NSNotification.Name("openPaymentsView"), object: nil, userInfo: nil)
                 }), .init(amount: gracePeriodPayment, title: .preferential, image: nil, foregraund: .white, background: .clear, action: {})]
@@ -326,7 +72,6 @@ extension ProductProfileAccountDetailView {
             if let minimumPaymentData = loanBase?.minimumPayment, minimumPaymentData <= 0, let overduePaymenData = loanBase?.overduePayment, overduePaymenData <= 0 {
                 
                 self.headerView = .init(subTitle: .interval, collapsed: false)
-                self.dateViewModel = .init(.init(longInt: nil))
                 self.amountViewModel = [.init(title: .debt, foregraundColor: .mainColorsBlackMedium, amount: debtAmount, availebelAmount: nil), .init(title: .available, foregraundColor: .buttonPrimary, amount: availableExceedLimit, availebelAmount: totalAvailableAmount)]
                
                 self.footerViewModel = [.init(amount: "Внесен", title: .minimal, image: Image.ic24Check, foregraund: .white, background: .textPrimary, action: {
@@ -338,7 +83,6 @@ extension ProductProfileAccountDetailView {
             if let gracePeriodPaymentData = loanBase?.gracePeriodPayment, gracePeriodPaymentData > 0, let minimumPaymentData = loanBase?.minimumPayment, minimumPaymentData > 0 {
                 
                 self.headerView = .init(subTitle: .interval, collapsed: false)
-                self.dateViewModel = .init(.init(longInt: nil))
                 self.footerViewModel = [.init(amount: minimumPayment, title: .minimal, image: nil, foregraund: .white, background: .textPrimary, action: {
                     NotificationCenter.default.post(name: NSNotification.Name("openPaymentsView"), object: nil, userInfo: nil)
                 }), .init(amount: gracePeriodPayment, title: .preferential, image: nil, foregraund: .white, background: .clear, action: {})]
@@ -363,7 +107,6 @@ extension ProductProfileAccountDetailView {
             if let overduePayment = loanBase?.overduePayment, overduePayment == 0, loanBase?.gracePeriodPayment == 0, let ownFound = loanBase?.ownFunds, ownFound < 0 {
                 
                 self.headerView = .init(subTitle: .interval, collapsed: false)
-                self.dateViewModel = .init(.init(longInt: nil))
                 self.amountViewModel = [.init(title: .debt, foregraundColor: .mainColorsBlackMedium, amount: debtAmount, availebelAmount: nil), .init(title: .available, foregraundColor: .buttonPrimary, amount: availableExceedLimit, availebelAmount: totalAvailableAmount)]
                 self.footerViewModel = [.init(amount: minimumPayment, title: .minimal, image: nil, foregraund: .white, background: .textPrimary, action: {
                     NotificationCenter.default.post(name: NSNotification.Name("openPaymentsView"), object: nil, userInfo: nil)
@@ -375,7 +118,6 @@ extension ProductProfileAccountDetailView {
             if loanBase?.overduePayment == 0, let gracePeriodPayment = loanBase?.gracePeriodPayment, gracePeriodPayment >= 0, let debtAmountData = loanBase?.debtAmount, debtAmountData > 0, let minimumPaymentData = loanBase?.minimumPayment, minimumPaymentData > 0 {
                 
                 self.headerView = .init(subTitle: .interval, collapsed: false)
-                self.dateViewModel = .init(.init(longInt: nil))
                 self.amountViewModel = [.init(title: .debt, foregraundColor: .mainColorsBlackMedium, amount: debtAmount, availebelAmount: nil), .init(title: .available, foregraundColor: .buttonPrimary, amount: availableExceedLimit, availebelAmount: totalAvailableAmount)]
                 self.footerViewModel = [.init(amount: minimumPayment, title: .minimal, image: nil, foregraund: .white, background: .textPrimary, action: {
                     NotificationCenter.default.post(name: NSNotification.Name("openPaymentsView"), object: nil, userInfo: nil)
@@ -386,7 +128,6 @@ extension ProductProfileAccountDetailView {
             if let overduePaymentData = loanBase?.overduePayment, overduePaymentData > 0, let gracePeriodPaymentData = loanBase?.gracePeriodPayment, gracePeriodPaymentData >= 0, let debtAmountData = loanBase?.debtAmount, debtAmountData > 0 {
                 
                 self.headerView = .init(subTitle: .interval, collapsed: false)
-                self.dateViewModel = .init(.init(longInt: nil))
                 self.amountViewModel = [.init(title: .debt, foregraundColor: .mainColorsBlackMedium, amount: debtAmount, availebelAmount: nil), .init(title: .available, foregraundColor: .buttonPrimary, amount: availableExceedLimit, availebelAmount: totalAvailableAmount)]
                 self.footerViewModel = [.init(amount: minimumPayment, title: .minimal, image: nil, foregraund: .white, background: .textPrimary, action: {
                     NotificationCenter.default.post(name: NSNotification.Name("openPaymentsView"), object: nil, userInfo: nil)
@@ -406,7 +147,10 @@ extension ProductProfileAccountDetailView {
                     self.headerView = .init(subTitle: .mortgage, collapsed: false)
                 }
                 
-                self.dateViewModel = .init(.init(longInt: longInt))
+                if let longInt = longInt {
+                    
+                    self.dateViewModel = .init(paymentDate: Date(timeIntervalSince1970: TimeInterval(longInt / 1000)), currentDate: Date())
+                }
                 
                 self.amountViewModel = [.init(title: .creditAmount, foregraundColor: .mainColorsBlackMedium, amount: totalDebtAmount, availebelAmount: nil), .init(title: .repaid, foregraundColor: .buttonPrimary, amount: totalAvailableAmount, availebelAmount: nil)]
                 
@@ -438,7 +182,10 @@ extension ProductProfileAccountDetailView {
                     self.headerView = .init(subTitle: .mortgage, collapsed: false)
                 }
                 
-                self.dateViewModel = .init(.init(longInt: longInt))
+                if let longInt = longInt {
+                    
+                    self.dateViewModel = .init(paymentDate: Date(timeIntervalSince1970: TimeInterval(longInt / 1000)), currentDate: Date())
+                }
                 
                 self.amountViewModel = [.init(title: .creditAmount, foregraundColor: .mainColorsBlackMedium, amount: totalDebtAmount, availebelAmount: nil), .init(title: .repaid, foregraundColor: .buttonPrimary, amount: totalAvailableAmount, availebelAmount: nil)]
                 if let totalDebtAmount = loanBase?.totalDebtAmount, let ownFunds = loanBase?.ownFunds {
@@ -478,11 +225,158 @@ extension ProductProfileAccountDetailView {
     }
 }
 
+//MARK: - Types
+
+extension ProductProfileDetailView.ViewModel {
+    
+    struct HeaderViewModel {
+        
+        let title = "Детали счета"
+        var subTitle: SubTitleViewModel
+        var collapsed: Bool
+        
+        enum SubTitleViewModel {
+            
+            case paid
+            case start
+            case interval
+            case delayCredit
+            case mortgage
+            case consumer
+            
+            var subTitle: String {
+                
+                switch self {
+                    
+                case .paid: return "Обязательный платеж погашен!\nУ вас нет задолженности"
+                case .start: return "Поздравляем 🎉, Вы стали обладателем кредитной карты. Оплачивайте покупки и получайте Кешбэк и скидки от партнеров."
+                case .interval: return "Отчетный период \(Date().startOfPreviusDate()) - \(Date().endOfMonth()) "
+                case .delayCredit: return "Вносите платеж вовремя"
+                case .consumer: return "Очередной платеж по кредиту"
+                case .mortgage: return "Очередной платеж по ипотеке"
+                }
+            }
+        }
+    }
+    
+    struct CircleViewModel {
+        
+        var debt: Double
+        
+        var ownFound: Double
+        
+        var available: Double
+        
+        var colors: [Color] = [ .buttonPrimary, .white]
+        
+        var circleLimit: Double {
+            
+            let percent = (debt / (available + ownFound))
+            return Double(percent)
+            
+        }
+        
+        var circleOwn: Double {
+            
+            let percent = 1 - circleLimit
+            return Double(percent)
+            
+        }
+        
+        var total: Double {
+            
+            let total = ownFound + available
+            return Double(total)
+        }
+        
+    }
+    
+    struct AmountViewModel: Hashable {
+        
+        var title: Title
+        var foregraundColor: Color
+        var amount: String
+        var availebelAmount: String?
+        
+        enum Title: Hashable {
+            
+            case debt
+            case available
+            case ownfunds
+            case limit
+            case repaid
+            case creditAmount
+            
+            var title: String {
+                
+                switch self {
+                    
+                case .debt: return "Задолженность"
+                case .available: return "Доступно"
+                case .ownfunds: return "Собственные средства"
+                case .limit: return "Кредитный лимит"
+                case .repaid: return "Уже погашено"
+                case .creditAmount: return "Сумма кредита"
+                    
+                }
+            }
+        }
+        
+    }
+    
+    struct FooterViewModel: Identifiable, Hashable {
+        
+        let id = UUID()
+        var amount: String
+        var title: Title
+        var image: Image?
+        var foregraund: Color
+        var background: Color
+        let action: () -> Void
+        
+        enum Title: Hashable {
+            
+            case minimal
+            case preferential
+            case totalDebt
+            case available
+            case delay
+            case minimalCredit
+            
+            var title: String {
+                
+                switch self {
+                    
+                case .minimal: return "Минимальный платеж"
+                case .preferential: return "Льготный платеж"
+                case .totalDebt: return "Общая задолженность"
+                case .available: return "Доступно"
+                case .delay: return "Включая просрочку"
+                case .minimalCredit: return "Внести платеж"
+                }
+            }
+        }
+        
+        static func == (lhs: ProductProfileDetailView.ViewModel.FooterViewModel, rhs: ProductProfileDetailView.ViewModel.FooterViewModel) -> Bool {
+            return lhs.amount == rhs.amount
+        }
+        
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(amount)
+        }
+    }
+    
+    struct State {
+        
+        var collapsed: Bool
+    }
+}
+
 //MARK: - View
 
-struct ProductProfileAccountDetailView: View {
+struct ProductProfileDetailView: View {
     
-    @ObservedObject var viewModel: ProductProfileAccountDetailView.ViewModel
+    @ObservedObject var viewModel: ProductProfileDetailView.ViewModel
     
     var body: some View {
         
@@ -495,8 +389,8 @@ struct ProductProfileAccountDetailView: View {
                 
                 if let dateProgress = viewModel.dateViewModel {
                     
-                    DateProgressView(viewModel: dateProgress)
-                        .padding(.horizontal, 20)
+//                    DateProgressView(viewModel: dateProgress)
+//                        .padding(.horizontal, 20)
                 } else {
                     
                     Divider()
@@ -538,8 +432,8 @@ struct ProductProfileAccountDetailView: View {
                 
                 if let dateProgress = viewModel.dateViewModel {
                     
-                    DateProgressView(viewModel: dateProgress)
-                        .padding(.horizontal, 20)
+//                    DateProgressView(viewModel: dateProgress)
+//                        .padding(.horizontal, 20)
                 }
             }
         }
@@ -551,7 +445,7 @@ struct ProductProfileAccountDetailView: View {
     
     struct HeaderView: View {
         
-        @Binding var viewModel: ProductProfileAccountDetailView.ViewModel.HeaderViewModel
+        @Binding var viewModel: ProductProfileDetailView.ViewModel.HeaderViewModel
         
         var body: some View {
             
@@ -593,103 +487,9 @@ struct ProductProfileAccountDetailView: View {
         }
     }
     
-    struct DateProgressView: View {
-        
-        var viewModel: ViewModel.DateViewModel?
-        
-        var body: some View {
-            
-            VStack(alignment: .leading, spacing: 12) {
-                
-                HStack {
-                    
-                    if let creditDate = viewModel?.creditDate {
-                        
-                        Text(creditDate)
-                            .foregroundColor(.white)
-                            .font(.system(size: 16))
-                    } else if let date = viewModel?.date {
-                        
-                        Text(date)
-                            .foregroundColor(.white)
-                            .font(.system(size: 16))
-                    }
-                    
-                    Spacer()
-                    
-                    Image.ic24HistoryInactive
-                        .resizable()
-                        .foregroundColor(.gray)
-                        .frame(width: 12, height: 12)
-                    
-                    if let lostDays = viewModel?.lostDays {
-                        
-                        Text(lostDays)
-                            .font(.system(size: 12))
-                            .foregroundColor(.gray)
-                    }
-                }
-                
-                HStack {
-                    
-                    GeometryReader { geometry in
-                        
-                        ZStack(alignment: .trailing) {
-                            
-                            Rectangle()
-                                .border(Color.textPrimary, width: 1)
-                                .frame(width: geometry.size.width, height: 6, alignment: .center)
-                                .cornerRadius(90)
-                                .background(Color.clear)
-                                .foregroundColor(Color.clear)
-                            
-                            Rectangle()
-                                .fill(LinearGradient(
-                                    gradient: .init(colors: [Color(hex: "22C183"), Color(hex: "FFBB36") ,Color(hex: "FF3636")]),
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                ))
-                                .cornerRadius(90)
-                                .padding(.vertical, 2)
-                                .padding(.horizontal, 2)
-                            
-                            VStack {
-                                
-                                ZStack(alignment: .trailing) {
-                                    
-                                    Rectangle()
-                                        .fill(LinearGradient(
-                                            gradient: .init(colors: [Color.mainColorsBlack, Color.mainColorsBlack]),
-                                            startPoint: .trailing,
-                                            endPoint: .leading
-                                        ))
-                                        .frame(width: geometry.size.width * (1.0 - (viewModel?.value ?? 0.0)), height: 2)
-                                        .cornerRadius(90)
-                                    
-                                    VStack(alignment: .trailing) {
-                                        
-                                        CustomLineShapeWithAlignment(stratPoint: .trailing, endPoint: .leading)
-                                            .stroke(style: StrokeStyle(lineWidth: 2.0, lineCap: .round, lineJoin: .round, miterLimit: .leastNonzeroMagnitude, dash: [1, 8], dashPhase: 3.0))
-                                            .frame(height: 1.0)
-                                            .foregroundColor(Color.textPrimary)
-                                            .frame(width: geometry.size.width * (1.0 - (viewModel?.value ?? 0.0)))
-                                    }
-                                }
-                                
-                            }
-                            .padding(.trailing, 2)
-                        }
-                        .frame(width: geometry.size.width, height: 6)
-                    }
-                }
-                .frame(height: 10)
-            }
-        }
-    }
-    
     struct MainBlock: View {
         
-        let viewModel: ProductProfileAccountDetailView.ViewModel
+        let viewModel: ProductProfileDetailView.ViewModel
         
         var body: some View {
             
@@ -739,7 +539,7 @@ struct ProductProfileAccountDetailView: View {
     
     struct AmountView: View {
         
-        var viewModel: ProductProfileAccountDetailView.ViewModel.AmountViewModel
+        var viewModel: ProductProfileDetailView.ViewModel.AmountViewModel
         
         var body: some View {
             
@@ -773,7 +573,7 @@ struct ProductProfileAccountDetailView: View {
     
     struct FooterView: View {
         
-        var viewModel: [ProductProfileAccountDetailView.ViewModel.FooterViewModel?]
+        var viewModel: [ProductProfileDetailView.ViewModel.FooterViewModel?]
         @State var showInfoModalView: Bool = false
         
         var body: some View {
@@ -831,25 +631,25 @@ struct ProductProfileAccountDetailView: View {
 
 //MARK: - Preview
 
-struct ProductProfileAccountDetailView_Previews: PreviewProvider {
+struct ProductProfileDetailView_Previews: PreviewProvider {
     
     static var previews: some View {
 
         Group {
             
-            ProductProfileAccountDetailView(viewModel: .start)
+            ProductProfileDetailView(viewModel: .start)
                 .previewLayout(.fixed(width: 375, height: 300))
 
-            ProductProfileAccountDetailView(viewModel: .collapsed)
+            ProductProfileDetailView(viewModel: .collapsed)
                 .previewLayout(.fixed(width: 375, height: 300))
 
-            ProductProfileAccountDetailView(viewModel: .sample)
+            ProductProfileDetailView(viewModel: .sample)
                 .previewLayout(.fixed(width: 375, height: 300))
 
-            ProductProfileAccountDetailView(viewModel: .full)
+            ProductProfileDetailView(viewModel: .full)
                 .previewLayout(.fixed(width: 375, height: 300))
 
-            ProductProfileAccountDetailView(viewModel: .fullwithButton)
+            ProductProfileDetailView(viewModel: .fullwithButton)
                 .previewLayout(.fixed(width: 375, height: 400))
         }
     }
@@ -857,17 +657,17 @@ struct ProductProfileAccountDetailView_Previews: PreviewProvider {
 
 //MARK: - Preview Content
 
-extension ProductProfileAccountDetailView.ViewModel {
+extension ProductProfileDetailView.ViewModel {
 
-    static let start = ProductProfileAccountDetailView.ViewModel(with: .sample, status: .notActivated, isCredit: false, productName: nil, longInt: nil)
+    static let start = ProductProfileDetailView.ViewModel(with: .sample, status: .notActivated, isCredit: false, productName: nil, longInt: nil)
 
-    static let sample = ProductProfileAccountDetailView.ViewModel(with: .sample, status: .notActivated, isCredit: false, productName: nil, longInt: nil)
+    static let sample = ProductProfileDetailView.ViewModel(with: .sample, status: .notActivated, isCredit: false, productName: nil, longInt: nil)
 
-    static let collapsed = ProductProfileAccountDetailView.ViewModel(with: .sample, status: .notActivated, isCredit: false, productName: nil, longInt: nil)
+    static let collapsed = ProductProfileDetailView.ViewModel(with: .sample, status: .notActivated, isCredit: false, productName: nil, longInt: nil)
 
-    static let full = ProductProfileAccountDetailView.ViewModel(with: .sample, status: .notActivated, isCredit: false, productName: nil, longInt: nil)
+    static let full = ProductProfileDetailView.ViewModel(with: .sample, status: .notActivated, isCredit: false, productName: nil, longInt: nil)
 
-    static let fullwithButton = ProductProfileAccountDetailView.ViewModel(with: .sample, status: .notActivated, isCredit: false, productName: nil, longInt: nil)
+    static let fullwithButton = ProductProfileDetailView.ViewModel(with: .sample, status: .notActivated, isCredit: false, productName: nil, longInt: nil)
     
 }
 

@@ -245,11 +245,11 @@ extension Model {
                         continue
                     }
                     
-                    // update products
-                    self.products.value = reduce(products: self.products.value, with: result.products, allowed: self.productsAllowed)
-
                     // cache products
                     try productsCaheData(products: result.products, serial: result.serial)
+
+                    // update products
+                    self.products.value = reduce(products: self.products.value, with: result.products, allowed: self.productsAllowed)
 
                 } catch {
                     
@@ -356,7 +356,7 @@ extension Model {
         
         switch payload.productType {
         case .card:
-            let command = ServerCommands.CardController.SaveCardName(token: token, payload: .init(cardNumber: nil, endDate: nil, id: id, name: name, startDate: nil, statementFormat: nil))
+            let command = ServerCommands.CardController.SaveCardName(token: token, productId: id, name: name)
             serverAgent.executeCommand(command: command) { result in
                 
                 switch result {
@@ -376,7 +376,7 @@ extension Model {
             }
             
         case .account:
-            let command = ServerCommands.AccountController.SaveAccountName(token: token, payload: .init(accountNumber: nil, endDate: nil, id: id, name: name, startDate: nil, statementFormat: nil))
+            let command = ServerCommands.AccountController.SaveAccountName(token: token, productId: id, name: name)
             serverAgent.executeCommand(command: command) { result in
                 
                 switch result {
@@ -396,7 +396,7 @@ extension Model {
             }
             
         case .deposit:
-            let command = ServerCommands.DepositController.SaveDepositName(token: token, payload: .init(endDate: nil, id: id, name: name, startDate: nil, statementFormat: nil))
+            let command = ServerCommands.DepositController.SaveDepositName(token: token, productId: id, name: name)
             serverAgent.executeCommand(command: command) { result in
                 
                 switch result {
