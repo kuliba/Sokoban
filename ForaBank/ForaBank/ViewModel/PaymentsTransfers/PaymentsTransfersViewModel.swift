@@ -80,18 +80,26 @@ class PaymentsTransfersViewModel: ObservableObject {
                         
                     //Transfers Section
                     case let payload as PTSectionTransfersViewAction.ButtonTapped.Transfer:
+                        
                         switch payload.type {
-                            
                         case .abroad:
-                            link = .chooseCountry(.init(closeAction: {
-                                self.link = nil
+                            link = .chooseCountry(.init(closeAction: { [weak self] in
+                                self?.link = nil
                             }))
                             
                         case .anotherCard: sheet = .init(type: .exampleDetail(payload.type.rawValue))  //TODO:
-                        case .betweenSelf: sheet = .init(type: .exampleDetail(payload.type.rawValue))   //TODO:
+                        case .betweenSelf:
+                            let meToMeViewModel = MeToMeViewModel { [weak self] in
+                                    self?.link = nil
+                            }
+                            link = .meToMe(meToMeViewModel)
+                            
                         case .byBankDetails: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
-                        case .byPhoneNumber: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
-                        
+                        case .byPhoneNumber:
+                            let transferByPhoneViewModel = TransferByPhoneViewModel { [weak self] in
+                                self?.link = nil
+                            }
+                            link = .transferByPhone(transferByPhoneViewModel)
                         }
                         
                     //Payments Section
@@ -126,7 +134,6 @@ class PaymentsTransfersViewModel: ObservableObject {
         enum Kind {
             
             case exampleDetail(String)
-
         }
     }
     
@@ -134,6 +141,8 @@ class PaymentsTransfersViewModel: ObservableObject {
         
         case exampleDetail(String)
         case chooseCountry(ChooseCountryViewModel)
+        case meToMe(MeToMeViewModel)
+        case transferByPhone(TransferByPhoneViewModel)
     }
     
 }

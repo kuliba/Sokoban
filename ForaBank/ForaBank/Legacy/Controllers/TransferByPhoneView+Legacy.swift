@@ -1,5 +1,5 @@
 //
-//  PaymentByPhone.swift
+//  TransferByPhoneView.swift
 //  ForaBank
 //
 //  Created by Дмитрий on 06.06.2022.
@@ -8,7 +8,9 @@
 import Foundation
 import SwiftUI
 
-struct ContactsView: UIViewControllerRepresentable {
+struct TransferByPhoneView: UIViewControllerRepresentable {
+    
+    let viewModel: TransferByPhoneViewModel
     
     func makeUIViewController(context: Context) -> ContactsViewController {
         
@@ -19,4 +21,9 @@ struct ContactsView: UIViewControllerRepresentable {
     }
     
     func updateUIViewController(_ uiViewController: ContactsViewController, context: Context) {}
+}
+
+struct TransferByPhoneViewModel {
+    
+    var closeAction: () -> Void
 }

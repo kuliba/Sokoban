@@ -426,7 +426,7 @@
 		6849888227BBB41400E84E6B /* AuthProductsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6849888127BBB41300E84E6B /* AuthProductsViewModel.swift */; };
 		6849888627BBB8D200E84E6B /* AuthProductsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6849888527BBB8D200E84E6B /* AuthProductsView.swift */; };
 		684AD35A26B7D2520071C762 /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 684AD35926B7D2520071C762 /* CryptoSwift */; };
-		68629335284E558D00B25EB6 /* ContactsView+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68629334284E558D00B25EB6 /* ContactsView+Legacy.swift */; };
+		68629335284E558D00B25EB6 /* TransferByPhoneView+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68629334284E558D00B25EB6 /* TransferByPhoneView+Legacy.swift */; };
 		6862B53E27B6886A006E833F /* AuthLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6862B53C27B6886A006E833F /* AuthLoginView.swift */; };
 		6862B55327B688CC006E833F /* AuthLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6862B54C27B688CC006E833F /* AuthLoginViewModel.swift */; };
 		6862B55427B688CC006E833F /* AuthPinCodeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6862B54E27B688CC006E833F /* AuthPinCodeViewModel.swift */; };
@@ -1621,7 +1621,7 @@
 		6849887E27BAD96C00E84E6B /* AuthPinCodeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthPinCodeView.swift; sourceTree = "<group>"; };
 		6849888127BBB41300E84E6B /* AuthProductsViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthProductsViewModel.swift; sourceTree = "<group>"; };
 		6849888527BBB8D200E84E6B /* AuthProductsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthProductsView.swift; sourceTree = "<group>"; };
-		68629334284E558D00B25EB6 /* ContactsView+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContactsView+Legacy.swift"; sourceTree = "<group>"; };
+		68629334284E558D00B25EB6 /* TransferByPhoneView+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TransferByPhoneView+Legacy.swift"; sourceTree = "<group>"; };
 		6862B53C27B6886A006E833F /* AuthLoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthLoginView.swift; sourceTree = "<group>"; };
 		6862B54C27B688CC006E833F /* AuthLoginViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthLoginViewModel.swift; sourceTree = "<group>"; };
 		6862B54E27B688CC006E833F /* AuthPinCodeViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthPinCodeViewModel.swift; sourceTree = "<group>"; };
@@ -4206,7 +4206,7 @@
 			isa = PBXGroup;
 			children = (
 				ED733D612858964600F22D42 /* CountryPaymentViewController */,
-				68629334284E558D00B25EB6 /* ContactsView+Legacy.swift */,
+				68629334284E558D00B25EB6 /* TransferByPhoneView+Legacy.swift */,
 				77DA206328453ADB00D7E005 /* MeToMeView+Legacy.swift */,
 			);
 			path = Controllers;
@@ -6900,7 +6900,7 @@
 				77A76A7827FAFCEE00A271B3 /* AtmServiceData.swift in Sources */,
 				7758400027B13C3A00251969 /* PaymentsDataModel.swift in Sources */,
 				0BB24AA826F002B100DDA4F6 /* GetLatestPaymentsSaved.swift in Sources */,
-				68629335284E558D00B25EB6 /* ContactsView+Legacy.swift in Sources */,
+				68629335284E558D00B25EB6 /* TransferByPhoneView+Legacy.swift in Sources */,
 				684192F52799C34400B4E184 /* ConsentMe2MePullData.swift in Sources */,
 				77A411E727EB962100D36E46 /* MainSectionsSettings.swift in Sources */,
 				6849888627BBB8D200E84E6B /* AuthProductsView.swift in Sources */,

@@ -66,14 +66,32 @@ struct PaymentsTransfersView: View {
                     if let link = viewModel.link  {
                         
                         switch link {
-                            
                         case let .exampleDetail(title):
                             ExampleDetailMock(title: title)
                             
                         case .chooseCountry(let model):
                             ChooseCountryView(viewModel: model)
                                 .navigationBarHidden(true)
-//                                .navigationBarTitle("", displayMode: .inline)
+                                .introspectTabBarController(customize: { tabBarController in
+                                    hideTabBar(tabBarController)
+                                })
+                                .onDisappear {
+                                    showTabBar(self.tabBarController)
+                                }
+                            
+                        case let .meToMe(viewModel):
+                            MeToMeView(viewModel: viewModel)
+                                .navigationBarTitle("", displayMode: .inline)
+                                .introspectTabBarController(customize: { tabBarController in
+                                    hideTabBar(tabBarController)
+                                })
+                                .onDisappear {
+                                    showTabBar(self.tabBarController)
+                                }
+                            
+                        case let .transferByPhone(transferByPhoneViewModel):
+                            TransferByPhoneView(viewModel: transferByPhoneViewModel)
+                                .navigationBarTitle("", displayMode: .inline)
                                 .introspectTabBarController(customize: { tabBarController in
                                     hideTabBar(tabBarController)
                                 })
@@ -86,8 +104,8 @@ struct PaymentsTransfersView: View {
                 
             } //mainZStack
             .sheet(item: $viewModel.sheet, content: { sheet in
+               
                 switch sheet.type {
-                
                 case let .exampleDetail(title):    //TODO: 
                     ExampleDetailMock(title: title)
                     

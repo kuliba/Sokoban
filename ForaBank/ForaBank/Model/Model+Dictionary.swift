@@ -11,33 +11,21 @@ import Foundation
 
 extension Model {
     
-    var dictionaryCurrencyList: [CurrencyData]? {
-        
-        return localAgent.load(type: [CurrencyData].self)
-    }
-    
     func dictionaryCurrency(for currencyCode: Int) -> CurrencyData? {
         
-        guard let dictionaryCurrencyList = dictionaryCurrencyList else {
-            return nil
-        }
-        
-        return dictionaryCurrencyList.first(where: { $0.codeNumeric == currencyCode })
+        return currencyList.value.first(where: { $0.codeNumeric == currencyCode })
     }
     
     func dictionaryCurrency(for code: String) -> CurrencyData? {
-        
-        guard let dictionaryCurrencyList = dictionaryCurrencyList else {
-            return nil
-        }
-        
-        return dictionaryCurrencyList.first(where: { $0.code == code })
+
+        return currencyList.value.first(where: { $0.code == code })
     }
     
     //MARK: BankList helper
     
-    var dictionaryBankList: [BankData]? {
-        return localAgent.load(type: [BankData].self)
+    var dictionaryBankList: [BankData] {
+        
+        return bankList.value
     }
 }
 

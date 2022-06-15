@@ -20,9 +20,7 @@ extension Model {
     
     var dictionaryBankListLegacy: [BanksList]? {
 
-        guard let bankList = dictionaryBankList else { return nil }
-       
-        return bankList.map{ $0.getBanksList() }
+        return bankList.value.map{ $0.getBanksList() }
    }
 
     var productsLegacy: [UserAllCardsModel] {
