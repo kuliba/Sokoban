@@ -10,6 +10,8 @@ import SwiftUI
 
 struct MeToMeView: UIViewControllerRepresentable {
     
+    let viewModel: MeToMeViewModel
+    
     func makeUIViewController(context: Context) -> CustomPopUpWithRateView {
         
         let model = ConfirmViewControllerModel(type: .card2card)
@@ -21,4 +23,9 @@ struct MeToMeView: UIViewControllerRepresentable {
     }
     
     func updateUIViewController(_ uiViewController: CustomPopUpWithRateView, context: Context) {}
+}
+
+struct MeToMeViewModel {
+    
+    var closeAction: () -> Void
 }
