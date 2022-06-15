@@ -11,11 +11,11 @@ import Combine
 
 class UserAccountViewModel: ObservableObject {
     
-    let navigationBar: NavigationViewModel
+    let navigationBar: NavigationBarView.ViewModel
     
-    @Published var avatar: AvatarViewModel
+    @Published var avatar: AvatarViewModel?
     @Published var sections: [AccountSectionViewModel]
-    @Published var exitButton: AccountCellFullButtonView.ViewModel
+    @Published var exitButton: AccountCellFullButtonView.ViewModel? = nil
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
     @Published var isLinkActive: Bool = false
     @Published var sheet: Sheet?
@@ -23,7 +23,7 @@ class UserAccountViewModel: ObservableObject {
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
-    init(navigationBar: NavigationViewModel, avatar: AvatarViewModel, sections: [AccountSectionViewModel], exitButton: AccountCellFullButtonView.ViewModel, model: Model = .emptyMock) {
+    init(navigationBar: NavigationBarView.ViewModel, avatar: AvatarViewModel, sections: [AccountSectionViewModel], exitButton: AccountCellFullButtonView.ViewModel, model: Model = .emptyMock) {
         
         self.model = model
         self.navigationBar = navigationBar
@@ -38,28 +38,33 @@ class UserAccountViewModel: ObservableObject {
         //TODO: fill viewModel with ClientInfoData
         
         self.model = model
-        self.navigationBar = .init(
+        sections = []
+        navigationBar = .init(
             title: "Профиль",
-            backButton: .init(icon: .ic24ChevronLeft, action: {
-                dismissAction()
-            }),
-            settingsButton: .init(icon: .ic24Settings, action: {
-                print("right")
-            }))
-        self.avatar = .init(
+            leftButtons: [
+                .init(icon: .ic24ChevronLeft, action: {
+                    dismissAction()
+                })
+            ]
+        )
+        
+        avatar = .init(
             image: nil,
             action: {
-                print("Open peacker")
+                self.openPeackerAction()
             })
         
-        self.exitButton = .init(
+        exitButton = .init(
             icon: .ic24LogOut,
             content: "Выход из приложения",
             action: {
-                print("Exit action")
+                self.exitAction()
             })
         
-        self.sections = []
+        navigationBar.rightButtons = [
+            .init(icon: .ic24Settings, action: {
+                self.settingsAction()
+            })]
         
         bind()
         model.action.send(ModelAction.ClientInfo.Fetch.Request())
@@ -73,15 +78,27 @@ class UserAccountViewModel: ObservableObject {
                 
                 guard let clientInfo = clientInfo else { return }
                 
-                createSections(userData: clientInfo)
+                sections = createSections(userData: clientInfo)
 
             }.store(in: &bindings)
         
     }
     
-    func createSections(userData: ClientInfoData) {
+    func settingsAction() {
         
-        var accountContactsItems = [
+    }
+    
+    func openPeackerAction() {
+        
+    }
+    
+    func exitAction() {
+        
+    }
+    
+    func createSections(userData: ClientInfoData) -> [AccountSectionViewModel] {
+        
+        let accountContactsItems = [
             AccountCellButtonView.ViewModel(
                 icon: .ic24User,
                 content: userData.firstName,
@@ -95,33 +112,27 @@ class UserAccountViewModel: ObservableObject {
                 icon: .ic24Smartphone,
                 content: userData.phone,
                 title: "Телефон"
-            )]
-        
-        if let email = userData.email {
-            accountContactsItems.append(AccountCellInfoView.ViewModel(
+            ),
+            
+            AccountCellInfoView.ViewModel(
                 icon: .ic24Mail,
-                content: email,
+                content: userData.email ?? "",
                 title: "Электронная почта"
-            ))
-        }
-        
+            )
+        ]
+                
         var accountDocuments: [AccountCellDefaultViewModel] = [
             DocumentCellView.ViewModel(
                 itemType: .passport,
                 content: userData.pasportNumber,
                 action: {
-                    print("Open Паспорт")
-                    self.link = .userDocument(UserDocumentViewModel(
-                        model: self.model, itemType: .passport,
-                        navigationBar: .init(
-                            title: DocumentCellType.passport.title,
-                            backButton: .init(icon: .ic24ChevronLeft, action: {
-                                self.link = nil
-                            }),
-                            rightButton: .init(icon: .ic24Share, action: {
-                                print("right")
-                            }))))
                     
+                    self.link = .userDocument(UserDocumentViewModel(
+                        clientInfo: userData, itemType: .passport, dismissAction: {
+                            self.link = nil
+                            self.isLinkActive = false
+                        }
+                    ))
                 })
         ]
         
@@ -172,25 +183,15 @@ class UserAccountViewModel: ObservableObject {
                 content: addressResidential,
                 action: {
                     print("Open Адрес проживания")
-                    self.link = .userDocument(UserDocumentViewModel(
-                        model: self.model, itemType: .adress,
-                        navigationBar: .init(
-                            title: DocumentCellType.adress.title,
-                            backButton: .init(icon: .ic24ChevronLeft, action: {
-                                self.link = nil
-                            }),
-                            rightButton: .init(icon: .ic24Share, action: {
-                                print("right")
-//                                
-                            })
-                        ))
-                    )
+                    self.sheet = .init(sheetType: .inn(.init(
+                        itemType: .adressPass,
+                        content: userData.address
+                    )))
                 })
             )
         }
         
-        
-        self.sections = [
+        return [
             UserAccountContactsView.ViewModel(
                 items: accountContactsItems,
                 isCollapsed: false),

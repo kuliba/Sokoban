@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import Introspect
 
 struct UserDocumentView: View {
     
     @ObservedObject var viewModel: UserDocumentViewModel
+    @State private var tabBarController: UITabBarController?
     
     var body: some View {
         
@@ -23,11 +25,11 @@ struct UserDocumentView: View {
                         
                         ZStack {
                             
-                            BackgroundHeaderView(geometry: geometry, color: viewModel.itemType.backgroundColor)
+                            BackgroundHeaderView(geometry: geometry, color: viewModel.navigationBar.background)
                             
                         }
                     }
-                    .frame(height: 100)
+                    .frame(height: 0)
                 }
                 
                 VStack(spacing: 24) {
@@ -58,67 +60,42 @@ struct UserDocumentView: View {
             
             ZStack {
                 
-                viewModel.itemType.backgroundColor
+                viewModel.navigationBar.background
                     .contrast(0.8)
                     .clipped()
                     .edgesIgnoringSafeArea(.all)
                     .frame(height: 50)
                 
-                NavigationBarView
             }
             
             VStack {
                 
                 Spacer()
-                
-                ButtonSimpleView(viewModel: viewModel.copyButton)
-                    .frame(height: 48)
-                    .padding(20)
+                if let button = viewModel.copyButton {
+                    ButtonSimpleView(viewModel: button)
+                        .frame(height: 48)
+                        .padding(20)
+                }
             }
         }
-        .navigationBarHidden(true)
-        .navigationBarBackButtonHidden(true)
-    }
-        
-    var NavigationBarView: some View {
-        
-        HStack {
+        .navigationBar(with: viewModel.navigationBar)
+        .introspectTabBarController(customize: { tabBarController in
             
-            Button {
+            self.tabBarController = tabBarController
+            tabBarController.tabBar.isHidden = true
+            UIView.transition(with: tabBarController.view, duration: 0.05, options: .transitionCrossDissolve, animations: nil)
+        })
+        .onDisappear {
+            
+            if let tabBarController = tabBarController {
                 
-                viewModel.navigationBar.backButton.action()
-                
-            } label: {
-                
-                viewModel.navigationBar.backButton.icon
-                    .foregroundColor(.iconWhite)
+                tabBarController.tabBar.isHidden = false
+                UIView.transition(with: tabBarController.view, duration: 0.05, options: .transitionCrossDissolve, animations: nil)
             }
             
-            Spacer()
-            
-            VStack {
-                
-                Text(viewModel.navigationBar.title)
-                    .font(.textH3M18240())
-                    .foregroundColor(.iconWhite)
-            }
-            
-            Spacer()
-            
-            Button {
-                
-                viewModel.navigationBar.rightButton.action()
-                
-            } label: {
-                
-                viewModel.navigationBar.rightButton.icon
-                    .foregroundColor(.iconWhite)
-            }
         }
-        .padding(.horizontal, 20)
-        .padding(.bottom, 10)
-        .background(Color.clear)
     }
+    
     
     struct BackgroundHeaderView: View {
         
@@ -150,11 +127,24 @@ struct UserDocumentView: View {
 
 struct UserDocumentView_Previews: PreviewProvider {
     
+    static let type = DocumentCellType.passport
+    
+    static let navBar = NavigationBarView.ViewModel(
+        title: type.title,
+        leftButtons: [
+            .init(icon: .ic24ChevronLeft, action: { })
+        ],
+        rightButtons: [
+            .init(icon: .ic24Share, action: { })
+        ],
+        background: type.backgroundColor,
+        foreground: .textWhite)
+    
     static var previews: some View {
     
         UserDocumentView(viewModel: .init(
             model: Model.emptyMock,
-            navigationBar: .sample,
+            navigationBar: navBar,
             items: DocumentDelailCellView.ViewModel.exampleArr,
             itemType: .passport))
     }

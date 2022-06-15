@@ -11,21 +11,15 @@ import Combine
 
 class UserDocumentViewModel: ObservableObject {
     
-    let navigationBar: NavigationViewModel
+    let navigationBar: NavigationBarView.ViewModel
     let itemType: DocumentCellType
-    @Published var copyButton: ButtonSimpleView.ViewModel
+    @Published var copyButton: ButtonSimpleView.ViewModel?
     
-    var items: [DocumentDelailCellView.ViewModel]
-    
-    private let model: Model
-    private var bindings = Set<AnyCancellable>()
-    
-    
-    init(model: Model, navigationBar: UserDocumentViewModel.NavigationViewModel, items: [DocumentDelailCellView.ViewModel], itemType: DocumentCellType) {
-        
-        self.model = model
-        self.navigationBar = navigationBar
+    var items: [DocumentDelailCellView.ViewModel] = []
+            
+    init(model: Model, navigationBar: NavigationBarView.ViewModel, items: [DocumentDelailCellView.ViewModel], itemType: DocumentCellType) {
         self.itemType = itemType
+        self.navigationBar = navigationBar
         self.items = items
         
         self.copyButton = .init(
@@ -35,58 +29,59 @@ class UserDocumentViewModel: ObservableObject {
                 
                 print("Copy action")
             })
-        
     }
     
-//    init(clientInfo: ClientInfoData, itemType: DocumentCellType, dismissAction: @escaping () -> Void) {
-
-    init(model: Model, itemType: DocumentCellType, navigationBar: UserDocumentViewModel.NavigationViewModel) {
-                
-        self.model = model
-        self.navigationBar = navigationBar
+    init(clientInfo: ClientInfoData, itemType: DocumentCellType, dismissAction: @escaping () -> Void) {
+        
         self.itemType = itemType
-        self.items = []
-        self.copyButton = .init(
+        navigationBar = .init(
+            title: itemType.title,
+            leftButtons: [
+                .init(icon: .ic24ChevronLeft, action: {
+                    dismissAction()
+                })
+            ],
+            rightButtons: [],
+            background: itemType.backgroundColor,
+            foreground: .textWhite)
+                
+        items = createItems(from: clientInfo, itemType: itemType)
+        
+        navigationBar.rightButtons = [
+            .init(icon: .ic24Share, action: {
+                self.shareAction()
+            })
+        ]
+        
+        copyButton = .init(
             title: "Скопировать все",
             style: .gray,
             action: {
-                print("Copy action")
+                self.copyAction(with: clientInfo, for: itemType)
             })
         
-        bind()
     }
         
-    func bind() {
+    func copyAction(with clientInfo: ClientInfoData, for itemType: DocumentCellType ) {
+        var info = ""
         
-        model.clientInfo
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] clientInfo in
-                
-                guard let clientInfo = clientInfo else { return }
-                items = createItems(from: clientInfo)
-
-            }.store(in: &bindings)
+        switch itemType {
+        case .passport:
+            info = "ФИО: \(clientInfo.lastName) \(clientInfo.firstName) \(clientInfo.patronymic ?? "") \nПаспорт: \(clientInfo.regSeries ?? "") \(clientInfo.regNumber)\nДата выдачи: \(clientInfo.dateOfIssue ?? "") Код подразделения: \(clientInfo.codeDepartment ?? "")\nМесто рождения: \(clientInfo.birthPlace ?? "")/nДата рождения: \(clientInfo.birthDay ?? "")"
+            
+        default:
+            break
+        }
+        
+        UIPasteboard.general.string = info
+        copyButton?.title = "Скопировано"
+    }
+    
+    func shareAction() {
         
     }
     
-    
-    // addressInfo.country
-    // addressInfo.region
-    // addressInfo.area
-    // addressInfo.street
-    // addressInfo.house addressInfo.frame addressInfo.flat
-    // addressInfo.postIndex
-
-    // addressResidentialInfo
-    
-    // lastName firstName patronymic
-    // regSeries regNumber
-    // dateOfIssue
-    // codeDepartment
-    // birthPlace
-    // birthDay
-    
-    func createItems(from: ClientInfoData) -> [DocumentDelailCellView.ViewModel] {
+    func createItems(from: ClientInfoData, itemType: DocumentCellType) -> [DocumentDelailCellView.ViewModel] {
         
         switch itemType {
             
@@ -130,37 +125,3 @@ class UserDocumentViewModel: ObservableObject {
     }
 }
 
-
-extension UserDocumentViewModel {
-    
-    struct NavigationViewModel {
-        
-        let title: String
-        let backButton: NavigationButtonViewModel
-        let rightButton: NavigationButtonViewModel
-        
-        struct NavigationButtonViewModel {
-            
-            let icon: Image
-            let action: () -> Void
-            
-            init(icon: Image, action: @escaping () -> Void) {
-                
-                self.icon = icon
-                self.action = action
-            }
-        }
-    }
-}
-
-extension UserDocumentViewModel.NavigationViewModel {
-    
-    static let sample = UserDocumentViewModel.NavigationViewModel(
-        title: "Паспорт РФ",
-        backButton: .init(icon: .ic24ChevronLeft, action: {
-            print("back")
-        }),
-        rightButton: .init(icon: .ic24Share, action: {
-            print("right")
-        }))
-}

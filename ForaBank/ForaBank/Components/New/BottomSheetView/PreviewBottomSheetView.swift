@@ -31,11 +31,11 @@ class BottomSheetViewModel: ObservableObject {
         action
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
-
+                
                 switch action {
                 case _ as BottomSheetViewModelAction.Tapped.Button:
                     sheet = .init(sheetType: .button)
-
+                    
                 default:
                     break
                 }

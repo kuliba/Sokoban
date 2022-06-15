@@ -193,6 +193,19 @@ extension View {
     }
 }
 
+extension NavigationBarView.ViewModel {
+    
+    static let sample = NavigationBarView.ViewModel(
+        title: "Заголовок экрана",
+        leftButtons: [
+            .init(icon: .ic24ChevronLeft, action: { })
+        ],
+        rightButtons: [
+//            .init(icon: .ic24Share, action: { }),
+            .init(icon: .ic24Settings, action: { })
+        ])
+}
+
 struct NavigationBarView_Previews: PreviewProvider {
     
     static let model = NavigationBarView.ViewModel(
