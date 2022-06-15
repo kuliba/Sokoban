@@ -36,18 +36,39 @@ extension ProductProfileCardView {
         
         init?(_ model: Model, productData: ProductData) {
             
-            guard let productViewModel = ProductView.ViewModel(with: productData, action: {}) else {
+            // fetch app products of type
+            guard let productsForType = model.products.value[productData.productType],
+                  productsForType.isEmpty == false,
+                  productsForType.contains(where: { $0.id == productData.id }) else {
+                
                 return nil
             }
-
-            self.products = [productViewModel]
+            
+            // generate products view models
+            var productsViewModels = [ProductView.ViewModel]()
+            for product in productsForType {
+                
+                let productViewModel = ProductView.ViewModel(with: product, size: .large, style: .profile, model: model, action: {})
+                productsViewModels.append(productViewModel)
+            }
+            
+            // check if generated products view models list is not empty
+            guard productsViewModels.isEmpty == false else {
+                return nil
+            }
+            
+            // filter products data with products view models
+            let productsViewModelsIds = productsViewModels.map{ $0.id }
+            let productsForTypeDisplayed = productsForType.filter({ productsViewModelsIds.contains($0.id)})
+            
+            self.selector = SelectorViewModel(with: productsForTypeDisplayed, selected: productData.id)
+            self.products = productsViewModels
             self.active = productData.id
             self.productType = productData.productType
             self.model = model
             
             bind()
-
-            action.send(ModelAction.Products.Update.Fast.Single.Request(productId: productData.id, productType: productData.productType))
+            bind(selector)
         }
         
         private func bind() {
@@ -56,31 +77,48 @@ extension ProductProfileCardView {
                 .receive(on: DispatchQueue.main)
                 .sink {[unowned self] productsData in
                     
-                    guard let productsForType = productsData[productType], productsForType.isEmpty == false else {
+                    if let productsForType = productsData[productType], productsForType.isEmpty == false {
                         
-                        return
-                    }
-                    
-                    var updatedProducts = [ProductView.ViewModel]()
-            
-                    for product in productsForType {
-                        
-                        //TODO: - action
-                        guard let productViewModel = ProductView.ViewModel(with: product, action: {}) else {
-                            continue
+                        // update products view models
+                        var updatedProducts = [ProductView.ViewModel]()
+                        for product in productsForType {
+                            
+                            if let productViewModel = self.products.first(where: { $0.id == product.id }) {
+                                
+                                productViewModel.update(with: product, model: model)
+                                //TODO: - action
+                                productViewModel.action = {}
+                                updatedProducts.append(productViewModel)
+                                
+                            } else {
+                                
+                                //TODO: - action
+                                let productViewModel = ProductView.ViewModel(with: product, size: .large, style: .profile, model: model, action: {})
+                                updatedProducts.append(productViewModel)
+                            }
                         }
                         
-                        updatedProducts.append(productViewModel)
-                    }
-                                        
-                    products = updatedProducts
-                    selector = SelectorViewModel(with: productsForType, selected: active)
-                    bind(selector)
-                    
-                    if products.contains(where: { $0.id == active }) == false {
+                        products = updatedProducts
                         
-                        active = products[0].id
+                        // update selector
+                        let productsViewModelsIds = updatedProducts.map{ $0.id }
+                        let productsForTypeDisplayed = productsForType.filter({ productsViewModelsIds.contains($0.id)})
+                        selector = SelectorViewModel(with: productsForTypeDisplayed, selected: active)
+                        bind(selector)
+                        
+                        // update selected product
+                        if products.contains(where: { $0.id == active }) == false {
+                            
+                            active = products[0].id
+                        }
+                        
+                    } else {
+                        
+                        // nothing to display
+                        //TODO: dismiss action
+                        
                     }
+       
                 }.store(in: &bindings)
             
             $active
@@ -90,6 +128,7 @@ extension ProductProfileCardView {
                     withAnimation {
                         
                         selector?.selected = active
+                        action.send(ModelAction.Products.Update.Fast.Single.Request(productId: active, productType: productType))
                         
                     }
                     

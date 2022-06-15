@@ -59,7 +59,7 @@ extension Model {
     func handleServerCommandStatus<Command: ServerCommand>(command: Command, serverStatusCode: ServerStatusCode, errorMessage: String?) {
         
         //TODO: handle unexpected server status
-        print("Unexpected status code: \(serverStatusCode), errorMessage: \(String(describing: errorMessage))")
+        print("Unexpected status code: \(serverStatusCode), errorMessage: \(String(describing: errorMessage)), endpoint: \(command.endpoint)")
     }
 
     func handleServerCommandError<Command: ServerCommand>(error: Error, command: Command) {

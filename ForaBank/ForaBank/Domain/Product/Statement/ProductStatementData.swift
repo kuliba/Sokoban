@@ -7,13 +7,9 @@
 
 import Foundation
 
-struct ProductStatementDataCacheble: Codable {
+struct ProductStatementData: Codable, Equatable, Hashable, Identifiable {
     
-    var productStatement: [Int: [ProductStatementData]]
-}
-
-struct ProductStatementData: Codable, Equatable {
-    
+    var id: Int { hashValue }
     let mcc: Int?
     let accountId: Int?
     let accountNumber: String
@@ -29,23 +25,23 @@ struct ProductStatementData: Codable, Equatable {
     let documentId: Int?
     let fastPayment: FastPayment?
     let groupName: String
-    let isCancellation: Bool
+    let isCancellation: Bool?
     let md5hash: String
-    let merchantName: String
+    let merchantName: String?
     let merchantNameRus: String?
     let opCode: Int?
     let operationId: String?
     let operationType: OperationType
     let paymentDetailType: Kind
-    let svgImage: SVGImageData
+    let svgImage: SVGImageData?
     let terminalCode: String?
-    let tranDate: Date
+    let tranDate: Date?
     let type: OperationEnvironment
 }
 
 extension ProductStatementData {
     
-    struct FastPayment: Codable, Equatable {
+    struct FastPayment: Codable, Equatable, Hashable {
         
         let documentComment: String
         let foreignBankBIC: String
@@ -56,7 +52,7 @@ extension ProductStatementData {
         let opkcid: String
     }
     
-    enum Kind: String, Codable {
+    enum Kind: String, Codable, Hashable {
         
         case betweenTheir = "BETWEEN_THEIR"
         case contactAddressless = "CONTACT_ADDRESSLESS"
@@ -76,6 +72,8 @@ extension ProductStatementData {
         case transport = "TRANSPORT"
         case taxes = "TAX_AND_STATE_SERVICE"
         case c2b = "C2B_PAYMENT"
+        case insideDeposit = "INSIDE_DEPOSIT"
+        //TODO: case unknown
     }
 }
 
@@ -96,7 +94,17 @@ extension ProductStatementData {
         self.mcc = try container.decodeIfPresent(Int.self, forKey: .mcc)
         self.accountId = try container.decodeIfPresent(Int.self, forKey: .accountId)
         self.accountNumber = try container.decode(String.self, forKey: .accountNumber)
-        self.amount = try container.decode(Double.self, forKey: .amount)
+        
+        //FIXME: dirty hack for NOT_FINANCE paymentDetailType
+        if let amount = try container.decodeIfPresent(Double.self, forKey: .amount) {
+            
+            self.amount = amount
+            
+        } else {
+            
+            self.amount = 0
+        }
+        
         self.cardTranNumber = try container.decodeIfPresent(String.self, forKey: .cardTranNumber)
         self.city = try container.decodeIfPresent(String.self, forKey: .city)
         self.comment = try container.decode(String.self, forKey: .comment)
@@ -108,19 +116,27 @@ extension ProductStatementData {
         self.documentAmount = try container.decodeIfPresent(Double.self, forKey: .documentAmount)
         self.documentId = try container.decodeIfPresent(Int.self, forKey: .documentId)
         self.groupName = try container.decode(String.self, forKey: .groupName)
-        self.isCancellation = try container.decode(Bool.self, forKey: .isCancellation)
+        self.isCancellation = try container.decodeIfPresent(Bool.self, forKey: .isCancellation)
         self.md5hash = try container.decode(String.self, forKey: .md5hash)
-        self.merchantName = try container.decode(String.self, forKey: .merchantName)
+        self.merchantName = try container.decodeIfPresent(String.self, forKey: .merchantName)
         self.merchantNameRus = try container.decodeIfPresent(String.self, forKey: .merchantNameRus)
         self.opCode = try container.decodeIfPresent(Int.self, forKey: .opCode)
         self.operationId = try container.decodeIfPresent(String.self, forKey: .operationId)
         self.terminalCode = try container.decodeIfPresent(String.self, forKey: .terminalCode)
-        let tranDateValue = try container.decode(Int.self, forKey: .tranDate)
-        self.tranDate = Date(timeIntervalSince1970: TimeInterval(tranDateValue / 1000))
+        
+        if let tranDateValue = try container.decodeIfPresent(Int.self, forKey: .tranDate) {
+            
+            self.tranDate = Date(timeIntervalSince1970: TimeInterval(tranDateValue / 1000))
+            
+        } else {
+            
+            self.tranDate = nil
+        }
+        
         self.fastPayment = try container.decodeIfPresent(FastPayment.self, forKey: .fastPayment)
         self.operationType = try container.decode(OperationType.self, forKey: .operationType)
         self.paymentDetailType = try container.decode(ProductStatementData.Kind.self, forKey: .paymentDetailType)
-        self.svgImage = try container.decode(SVGImageData.self, forKey: .svgImage)
+        self.svgImage = try container.decodeIfPresent(SVGImageData.self, forKey: .svgImage)
         self.type = try container.decode(OperationEnvironment.self, forKey: .type)
     }
     
@@ -143,27 +159,40 @@ extension ProductStatementData {
         try container.encodeIfPresent(documentId, forKey: .documentId)
         try container.encodeIfPresent(fastPayment, forKey: .fastPayment)
         try container.encode(groupName, forKey: .groupName)
-        try container.encode(isCancellation, forKey: .isCancellation)
+        try container.encodeIfPresent(isCancellation, forKey: .isCancellation)
         try container.encode(md5hash, forKey: .md5hash)
-        try container.encode(merchantName, forKey: .merchantName)
+        try container.encodeIfPresent(merchantName, forKey: .merchantName)
         try container.encodeIfPresent(merchantNameRus, forKey: .merchantNameRus)
         try container.encodeIfPresent(opCode, forKey: .opCode)
         try container.encodeIfPresent(operationId, forKey: .operationId)
         try container.encode(operationType, forKey: .operationType)
         try container.encode(paymentDetailType, forKey: .paymentDetailType)
-        try container.encode(svgImage, forKey: .svgImage)
+        try container.encodeIfPresent(svgImage, forKey: .svgImage)
         try container.encodeIfPresent(terminalCode, forKey: .terminalCode)
-        try container.encode(Int(tranDate.timeIntervalSince1970) * 1000, forKey: .tranDate)
+        
+        if let tranDate = tranDate {
+            
+            try container.encode(Int(tranDate.timeIntervalSince1970) * 1000, forKey: .tranDate)
+        }
+        
         try container.encode(type, forKey: .type)
     }
 }
 
+//MARK: - Helpers
+
 extension ProductStatementData {
     
-    var amountFormattedtWithCurrency: String? {
+    //TODO: ask business what merchant name placeholder should we use
+    static let merchantNamePlaceholder = "--"
+    
+    var merchant: String { merchantNameRus ?? merchantName ?? Self.merchantNamePlaceholder }
+    
+    var signedAmount: Double {
         
-        let currency = Model.shared.currency(for: currencyCodeNumeric)
-        guard let currencyCode = currency?.code else { return nil }
-        return self.amount.currencyFormatter(symbol: currencyCode)
+        switch operationType {
+        case .debit: return -amount
+        default: return amount
+        }
     }
 }

@@ -763,8 +763,8 @@ internal extension Model {
             //TODO: log error
             print("Model: handleAuthLogoutRequest: unable clear pincode with error: \(error.localizedDescription)")
         }
-        
-        //TODO: clean authorized zone cache
+    
+        print("Model: keychain cleared")
         //TODO: clean face/touch id preferences
         
         auth.value = .registerRequired

@@ -102,29 +102,6 @@ class ServerCommandsDepositControllerTests: XCTestCase {
 
 	//MARK: - GetDepositStatement
 
-	func testGetDepositStatement_Response_Encoding() throws {
-
-		// given
-		let endDate = formatter.date(from: "2022-01-31T08:41:30.815Z")
-		let startDate = formatter.date(from: "2022-01-31T08:41:30.816Z")
-
-		let command = ServerCommands.DepositController.GetDepositStatement(token: "",
-																		   endDate: endDate,
-																		   id: 10000184511,
-																		   name: "string",
-																		   startDate: startDate,
-																		   statementFormat: .csv)
-
-		let expected = "{\"statementFormat\":\"CSV\",\"id\":10000184511,\"endDate\":\"2022-01-31T08:41:30.815Z\",\"name\":\"string\",\"startDate\":\"2022-01-31T08:41:30.816Z\"}"
-
-		// when
-		let result = try encoder.encode(command.payload)
-		let resultString = String(decoding: result, as: UTF8.self)
-
-		// then
-		XCTAssertEqual(resultString, expected)
-	}
-
 	func testGetDepositStatement_Response_Decoding() throws {
 
 		// given
@@ -197,25 +174,19 @@ class ServerCommandsDepositControllerTests: XCTestCase {
 										deviceCode: nil,
 										documentAmount: nil,
 										documentId: nil,
-										fastPayment: .init(documentComment: "string",
-														   foreignBankBIC: "044525491",
-														   foreignBankID: "10000001153",
-														   foreignBankName: "КУ ООО ПИР Банк - ГК \\\"АСВ\\\"",
-														   foreignName: "Петров Петр Петрович",
-														   foreignPhoneNumber: "70115110217",
-														   opkcid: "A1355084612564010000057CAFC75755"),
+										fastPayment: nil,
 										groupName: "Прочие операции",
-										isCancellation: false,
+										isCancellation: nil,
 										md5hash: "75f3ee3b2d44e5808f41777c613f23c9",
-										merchantName: "DBO MERCHANT FORA, Zubovskiy 2",
+										merchantName: nil,
 										merchantNameRus: nil,
 										opCode: nil,
 										operationId: nil,
 										operationType: .debit,
 										paymentDetailType: .betweenTheir,
-										svgImage: .init(description: "string"),
+										svgImage: nil,
 										terminalCode: nil,
-										tranDate: date,
+										tranDate: nil,
 										type: .inside)
 
 		let expected = ServerCommands.DepositController.GetDepositStatement.Response(statusCode: .ok,

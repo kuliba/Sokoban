@@ -17,7 +17,7 @@ extension ServerCommands {
 		struct GetAccountStatement: ServerCommand {
 
 			let token: String?
-			let endpoint = "/rest/getAccountStatement"
+			let endpoint = "/rest/getAccountStatement_V2"
 			let method: ServerCommandMethod = .post
 			let parameters: [ServerCommandParameter]? = nil
 			var payload: BasePayload?
@@ -30,35 +30,50 @@ extension ServerCommands {
 				let data: [ProductStatementData]?
 			}
 
-			internal init(token: String,
-						  accountNumber: String?,
-						  endDate: Date?,
-						  id: Int,
-						  name: String?,
-						  startDate: Date?,
-						  statementFormat: StatementFormat?) {
+            internal init(token: String, payload: BasePayload) {
 
-				let formatter = DateFormatter.iso8601
-				self.token = token
-
-				var endDateString: String? = nil
-				if let endDate = endDate {
-					endDateString = formatter.string(from: endDate)
-				}
-
-				var startDateString: String? = nil
-				if let startDate = startDate {
-					startDateString = formatter.string(from: startDate)
-				}
-
-				self.payload = Payload(accountNumber: accountNumber,
-									   endDate: endDateString,
-									   id: id,
-									   name: name,
-									   startDate: startDateString,
-									   statementFormat: statementFormat)
-			}
+                self.token = token
+                self.payload = payload
+            }
+            
+            init(token: String, productId: ProductData.ID) {
+                
+                self.init(token: token, payload: .init(id: productId))
+            }
 		}
+        
+        /*
+         http://10.1.206.21:8080/swagger-ui/index.html#/AccountController/getAccountStatementForPeriod_V2
+         */
+        
+        //TODO: - tests
+        struct GetAccountStatementForPeriod: ServerCommand {
+
+            let token: String?
+            let endpoint = "/rest/getAccountStatementForPeriod_V2"
+            let method: ServerCommandMethod = .post
+            let parameters: [ServerCommandParameter]? = nil
+            var payload: BasePayload?
+            let timeout: TimeInterval? = nil
+
+            struct Response: ServerResponse {
+
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: [ProductStatementData]?
+            }
+
+            internal init(token: String, payload: BasePayload) {
+
+                self.token = token
+                self.payload = payload
+            }
+            
+            init(token: String, productId: ProductData.ID, period: Period) {
+                
+                self.init(token: token, payload: .init(id: productId, startDate: period.start, endDate: period.end))
+            }
+        }
 
 		/*
 		 https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/AccountController/getPrintFormForAccountStatementUsingPOST
@@ -73,34 +88,16 @@ extension ServerCommands {
             let timeout: TimeInterval? = nil
             let cachePolicy: URLRequest.CachePolicy = .reloadIgnoringCacheData
 
-			internal init(token: String,
-						  accountNumber: String?,
-						  endDate: Date?,
-						  id: Int,
-						  name: String?,
-						  startDate: Date?,
-						  statementFormat: StatementFormat?) {
+            internal init(token: String, payload: BasePayload) {
 
-				let formatter = DateFormatter.iso8601
-				self.token = token
-
-				var endDateString: String? = nil
-				if let endDate = endDate {
-					endDateString = formatter.string(from: endDate)
-				}
-
-				var startDateString: String? = nil
-				if let startDate = startDate {
-					startDateString = formatter.string(from: startDate)
-				}
-
-				self.payload = Payload(accountNumber: accountNumber,
-									   endDate: endDateString,
-									   id: id,
-									   name: name,
-									   startDate: startDateString,
-									   statementFormat: statementFormat)
+                self.token = token
+                self.payload = payload
 			}
+            
+            init(token: String, productId: ProductData.ID) {
+                
+                self.init(token: token, payload: .init(id: productId))
+            }
 		}
         
         /*
@@ -127,16 +124,21 @@ extension ServerCommands {
                 self.token = token
                 self.payload = payload
             }
+            
+            init(token: String, productId: ProductData.ID, name: String) {
+                
+                self.init(token: token, payload: .init(id: productId, name: name))
+            }
         }
         
         struct BasePayload: Encodable {
             
-            let accountNumber: String?
-            let endDate: String?
             let id: Int
-            let name: String?
-            let startDate: String?
-            let statementFormat: StatementFormat?
+            var name: String? = nil
+            var startDate: Date? = nil
+            var endDate: Date? = nil
+            var statementFormat: StatementFormat? = nil
+            var accountNumber: String? = nil
         }
 	}
 }

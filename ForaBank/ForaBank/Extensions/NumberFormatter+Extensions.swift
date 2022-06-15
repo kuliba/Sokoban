@@ -30,6 +30,7 @@ extension NumberFormatter {
         return formatter
     }
 
+    //FIXME: refactor this
     static func decimal(totalBalance: String) -> String {
 
         let currencyFormatter = NumberFormatter()
@@ -47,6 +48,7 @@ extension NumberFormatter {
         return balance
     }
 
+    //FIXME: refactor this
     static func currency(balance: String) -> String {
 
         let currencySymbol = "₽"
