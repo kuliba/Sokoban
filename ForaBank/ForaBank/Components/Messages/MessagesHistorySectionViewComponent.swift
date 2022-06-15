@@ -87,7 +87,7 @@ extension MessagesHistorySectionView.ViewModel {
     
     static let sample = MessagesHistorySectionView.ViewModel(
         title: "25 агуста, ср",
-        items: [MessagesHistoryItemView.ViewModel(icon: Image.ic16List, title: "Срок вашей карты истекает 29.08.2021 г.", content: "Оставте он-лайн заявку или обратитесь в ближайшее отделение банка", time: "17:56"),
-                MessagesHistoryItemView.ViewModel(icon: Image.ic16List, title: "Отказ. Недостаточно средств.", content: "LIQPAY*IP Artur Danilo, Moscow Интернет-оплата. Карта / счет .4387 16:59", time: "17:56")
+        items: [MessagesHistoryItemView.ViewModel(icon: Image.ic24Slash, title: "Срок вашей карты истекает 29.08.2021 г.", content: "Оставте он-лайн заявку или обратитесь в ближайшее отделение банка", time: "17:56"),
+                MessagesHistoryItemView.ViewModel(icon: Image.ic24Slash, title: "Отказ. Недостаточно средств.", content: "LIQPAY*IP Artur Danilo, Moscow Интернет-оплата. Карта / счет .4387 16:59", time: "17:56")
                ])
 }

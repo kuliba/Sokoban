@@ -31,7 +31,7 @@ extension MessagesHistoryItemView {
         internal init(notification: NotificationData) {
             
             self.id = notification.id
-            self.icon = Image.ic16List
+            self.icon = Image.ic24Slash
             self.title = notification.title
             self.content = notification.text
             self.time = DateFormatter.minutsAndSecond.string(from: notification.date)
@@ -52,8 +52,10 @@ struct MessagesHistoryItemView: View {
             VStack(alignment: .center) {
                 viewModel.icon
                     .resizable()
-                    .frame(width: 40, height: 40)
-                    .padding(.leading, 4)
+                    .frame(width: 24, height: 24)
+                    .foregroundColor(.iconWhite)
+                    .background(Circle().frame(width: 40, height: 40).foregroundColor(.bGIconRedLight))
+                    .padding(.init(top: 12, leading: 16, bottom: 0, trailing: 12))
                 Spacer()
             }
             
@@ -91,5 +93,5 @@ struct MessagesHistoryItemView_Previews: PreviewProvider {
 
 extension MessagesHistoryItemView.ViewModel {
     
-    static let sample = MessagesHistoryItemView.ViewModel(icon: Image.ic16List, title: "Срок вашей карты истекает 29.08.2021 г.", content: "Оставте он-лайн заявку или обратитесь в ближайшее отделение банка", time: "17:56")
+    static let sample = MessagesHistoryItemView.ViewModel(icon: Image.ic24Slash, title: "Срок вашей карты истекает 29.08.2021 г.", content: "Оставте он-лайн заявку или обратитесь в ближайшее отделение банка", time: "17:56")
 }

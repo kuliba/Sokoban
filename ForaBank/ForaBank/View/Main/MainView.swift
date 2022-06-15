@@ -77,6 +77,8 @@ struct MainView: View {
                     switch link {
                     case .productProfile(let productProfileViewModel):
                         ProductProfileView(viewModel: productProfileViewModel)
+                    case .messages(let messagesHistoryViewModel):
+                        MessagesHistoryView(viewModel: messagesHistoryViewModel)
                     }
                 }
             }

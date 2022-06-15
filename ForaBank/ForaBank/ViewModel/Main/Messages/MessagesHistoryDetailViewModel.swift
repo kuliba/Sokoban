@@ -18,7 +18,7 @@ struct MessagesHistoryDetailViewModel: Identifiable {
         
         self.title = item.title
         self.content = item.content
-        self.icon = Image.ic16List
+        self.icon = Image.ic24Slash
         self.id = item.id
     }
     
@@ -26,7 +26,7 @@ struct MessagesHistoryDetailViewModel: Identifiable {
         
         self.title = notificationData.title
         self.content = notificationData.text
-        self.icon = Image.ic16List
+        self.icon = Image.ic24Slash
         self.id = notificationData.id
     }
 }
