@@ -124,8 +124,6 @@ private extension TemplatesListViewModel {
             .sink { [unowned self] action in
                 
                 switch action {
-                    
-                    
                 case let payload as TemplatesListViewModelAction.ItemTapped:
                     guard let temp = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == payload.itemId}) else { return }
                     switch temp.type {
@@ -170,9 +168,10 @@ private extension TemplatesListViewModel {
                         
                     case .externalIndividual:
                         self.action.send(TemplatesListViewModelAction.Present.PaymentRequisites(viewModel: temp))
+                        
+                    default:
+                        break
                     }
-                   
-                                        
                     
                 case _ as TemplatesListViewModelAction.ToggleStyle:
                     
@@ -492,7 +491,7 @@ private extension TemplatesListViewModel {
         let optionAll = Option(id: categoryIndexAll, name: "Все")
         options.insert(optionAll, at: 0)
         
-        return OptionSelectorView.ViewModel(options: options, selected: optionAll.id, style: .template)
+        return OptionSelectorView.ViewModel(options: options, selected: optionAll.id, style: .template, horizontalPadding: 20)
     }
     
     func isCategorySelectorContainsCategory(categoryId: Option.ID) -> Bool {

@@ -16,12 +16,14 @@ extension OptionSelectorView {
         @Published var options: [OptionViewModel]
         @Published var selected: Option.ID
         let style: Style
+        let horizontalPadding: CGFloat
      
-        internal init(options: [Option], selected: Option.ID, style: Style) {
+        internal init(options: [Option], selected: Option.ID, style: Style, horizontalPadding: CGFloat = 0) {
            
             self.options = []
             self.selected = selected
             self.style = style
+            self.horizontalPadding = horizontalPadding
             
             self.options = options.map{ OptionViewModel(id: $0.id, title: $0.name, style: style, action: { [weak self] optionId in self?.selected = optionId })}
         }
@@ -69,7 +71,8 @@ struct OptionSelectorView: View {
                     
                     OptionButtonView(viewModel: optionViewModel, isSelected: viewModel.selected == optionViewModel.id)
                 }
-            }
+                
+            }.padding(.horizontal, 20)
         }
     }
 }

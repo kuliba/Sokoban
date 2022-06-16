@@ -40,6 +40,9 @@ extension PaymentTemplateData {
         case mobile = "MOBILE"
         case internet = "INTERNET"
         case transport = "TRANSPORT"
+        case taxAndStateService = "TAX_AND_STATE_SERVICE"
+        case interestDeposit = "INTEREST_DEPOSIT"
+        case unknown
         
         var description: String {
             
@@ -57,6 +60,9 @@ extension PaymentTemplateData {
             case .mobile: return "Мобильная связь"
             case .internet: return "Интернет, ТВ"
             case .transport: return "Транспорт"
+            case .taxAndStateService: return "Налоги и госуслуги"
+            case.interestDeposit: return "Проценты по депозитам"
+            case .unknown: return "Неизвестно"
             }
         }
     }
@@ -107,7 +113,8 @@ extension PaymentTemplateData: Codable {
         productTemplate = try container.decodeIfPresent(ProductTemplateData.self, forKey: .productTemplate)
         sort = try container.decode(Int.self, forKey: .sort)
         svgImage = try container.decode(SVGImageData.self, forKey: .svgImage)
-        type = try container.decode(Kind.self, forKey: .type)
+        let typeString = try container.decode(String.self, forKey: .type)
+        type = Kind(rawValue: typeString) ?? .unknown
     }
 }
 
