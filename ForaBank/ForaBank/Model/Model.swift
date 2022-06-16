@@ -126,6 +126,11 @@ class Model {
             .sink {[unowned self] action in
                 
                 switch action {
+                    
+                //MARK: - Lagacy Auth
+                    
+                case  _ as ModelAction.LoggedIn:
+                    self.action.send(ModelAction.PaymentTemplate.List.Requested())
                 
                 //MARK: - Auth Actions
                     
