@@ -103,6 +103,9 @@ struct PaymentsTransfersView: View {
                 case let .exampleDetail(title):    //TODO: 
                     ExampleDetailMock(title: title)
                     
+                case let .taxAndStateService(taxAndStateServiceVM):
+                    PaymentsView(viewModel: taxAndStateServiceVM)
+                    
                 }
             })
             .navigationBarHidden(true)
