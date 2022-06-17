@@ -11,6 +11,8 @@ import Combine
 
 class UserAccountViewModel: ObservableObject {
     
+    let action: PassthroughSubject<Action, Never> = .init()
+    
     let navigationBar: NavigationBarView.ViewModel
     
     @Published var avatar: AvatarViewModel?
@@ -125,12 +127,11 @@ class UserAccountViewModel: ObservableObject {
             DocumentCellView.ViewModel(
                 itemType: .passport,
                 content: userData.pasportNumber,
-                action: {
+                action: { [weak self] in
                     
-                    self.link = .userDocument(UserDocumentViewModel(
+                    self?.link = .userDocument(UserDocumentViewModel(
                         clientInfo: userData, itemType: .passport, dismissAction: { [weak self] in
                             self?.link = nil
-                            self?.isLinkActive = false
                         }
                     ))
                 })
@@ -140,14 +141,14 @@ class UserAccountViewModel: ObservableObject {
             accountDocuments.append(DocumentCellView.ViewModel(
                 itemType: .inn,
                 content: userInn,
-                action: {
+                action: { [weak self] in
                    
                     let innViewModel = UserAccountDocumentInfoView.ViewModel(
                         itemType: .inn,
                         content: userInn
                     )
                     
-                    self.sheet = .init(sheetType: .inn(innViewModel))
+                    self?.sheet = .init(sheetType: .inn(innViewModel))
                     
                 })
             )
@@ -156,9 +157,9 @@ class UserAccountViewModel: ObservableObject {
         accountDocuments.append(DocumentCellView.ViewModel(
             itemType: .adressPass,
             content: userData.address,
-            action: {
+            action: { [weak self] in
                 
-                self.sheet = .init(sheetType: .inn(.init(
+                self?.sheet = .init(sheetType: .inn(.init(
                     itemType: .adressPass,
                     content: userData.address
                 )))
@@ -169,9 +170,9 @@ class UserAccountViewModel: ObservableObject {
             accountDocuments.append(DocumentCellView.ViewModel(
                 itemType: .adress,
                 content: addressResidential,
-                action: {
+                action: { [weak self] in
                     
-                    self.sheet = .init(sheetType: .inn(.init(
+                    self?.sheet = .init(sheetType: .inn(.init(
                         itemType: .adressPass,
                         content: userData.address
                     )))
@@ -311,4 +312,12 @@ extension UserAccountViewModel.NavigationViewModel {
         settingsButton: .init(icon: .ic24Settings, action: {
             print("right")
         }))
+}
+
+
+enum UserAccountModelAction {
+
+    struct PullToRefresh: Action {}
+    
+    struct CloseLink: Action {}
 }

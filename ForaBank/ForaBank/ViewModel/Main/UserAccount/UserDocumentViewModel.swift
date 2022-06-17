@@ -37,9 +37,7 @@ class UserDocumentViewModel: ObservableObject {
         navigationBar = .init(
             title: itemType.title,
             leftButtons: [
-                .init(icon: .ic24ChevronLeft, action: {
-                    dismissAction()
-                })
+                .init(icon: .ic24ChevronLeft, action: dismissAction )
             ],
             rightButtons: [],
             background: itemType.backgroundColor,
@@ -48,8 +46,8 @@ class UserDocumentViewModel: ObservableObject {
         items = createItems(from: clientInfo, itemType: itemType)
         
         navigationBar.rightButtons = [
-            .init(icon: .ic24Share, action: {
-                self.shareAction()
+            .init(icon: .ic24Share, action: { [weak self] in
+                self?.shareAction()
             })
         ]
         

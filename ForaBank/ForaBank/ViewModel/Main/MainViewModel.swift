@@ -63,8 +63,8 @@ class MainViewModel: ObservableObject {
                     guard let clientInfo = model.clientInfo.value else {
                         return
                     }
-                    link = .userAccount(.init(model: model, clientInfo: clientInfo, dismissAction: {
-                        self.link = nil
+                    link = .userAccount(.init(model: model, clientInfo: clientInfo, dismissAction: { [weak self] in
+                        self?.action.send(MainViewModelAction.CloseLink())
                     }))
                     
                 case _ as MainViewModelAction.ButtonTapped.Messages:
@@ -74,6 +74,9 @@ class MainViewModel: ObservableObject {
                 case _ as MainViewModelAction.PullToRefresh:
                     model.action.send(ModelAction.Products.Update.Total.All())
                 
+                case _ as MainViewModelAction.CloseLink:
+                    self.link = nil
+                    
                 default:
                     break
                 }
@@ -234,5 +237,7 @@ enum MainViewModelAction {
     }
     
     struct PullToRefresh: Action {}
+    
+    struct CloseLink: Action {}
 }
 
