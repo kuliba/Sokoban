@@ -147,14 +147,11 @@ class PaymentsTransfersViewModel: ObservableObject {
     enum Link {
         
         case exampleDetail(String)
-<<<<<<< HEAD
         case mobile(MobilePayViewModel)
-=======
         case chooseCountry(ChooseCountryViewModel)
         case meToMe(MeToMeViewModel)
         case transferByPhone(TransferByPhoneViewModel)
 
->>>>>>> main-screens
     }
     
 }

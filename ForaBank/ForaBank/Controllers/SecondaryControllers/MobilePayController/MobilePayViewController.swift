@@ -10,7 +10,7 @@ import RealmSwift
 
 class MobilePayViewController: UIViewController, UITextFieldDelegate {
     
-    lazy var realm = try? Realm()
+    let model = Model.shared
     var viewModel: MobilePayViewModel? = nil
     var recipiendId = String()
     var phoneNumber: String?
@@ -26,7 +26,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
     
     var stackView = UIStackView(arrangedSubviews: [])
     
-    var cardListView = CardsScrollView(onlyMy: true)
+    var cardListView = CardsScrollView(onlyMy: true, deleteDeposit: true)
     
     var bottomView = BottomInputView()
     
@@ -78,9 +78,20 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func getUserCard() -> UserAllCardsModel?  {
-        let cards = ReturnAllCardList.cards()
-        let filterProduct = cards.filter({
-            ($0.productType == "CARD" || $0.productType == "ACCOUNT") && $0.currency == "RUB" })
+        var products: [UserAllCardsModel] = []
+        let types: [ProductType] = [.card]
+        types.forEach { type in
+            products.append(contentsOf: self.model.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
+        }
+        
+        var filterProduct: [UserAllCardsModel] = []
+        products.forEach({ card in
+                
+                if card.currency == "RUB" {
+                    
+                    filterProduct.append(card)
+                }
+        })
         
         if filterProduct.count > 0 {
             if let template = self.paymentTemplate,
@@ -131,8 +142,23 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
         
         cardListView.didCardTapped = { cardId in
             DispatchQueue.main.async {
-                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
-                cardList.forEach({ card in
+                // Все карты
+                var products: [UserAllCardsModel] = []
+                let types: [ProductType] = [.card]
+                types.forEach { type in
+                    products.append(contentsOf: self.model.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
+                }
+                
+                var filterProduct: [UserAllCardsModel] = []
+                products.forEach({ card in
+                        
+                        if card.currency == "RUB" {
+                            
+                            filterProduct.append(card)
+                        }
+                })
+ 
+                filterProduct.forEach({ card in
                     if card.id == cardId {
                         self.cardField.model = card
                         if self.cardListView.isHidden == false {
