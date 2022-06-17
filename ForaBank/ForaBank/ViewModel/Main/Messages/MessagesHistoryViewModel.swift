@@ -115,7 +115,7 @@ class MessagesHistoryViewModel: ObservableObject {
                         case let payload as MessagesHistorySectionViewAction.ItemTapped:
                             
                             guard let notificationData = model.notifications.value.first( where: {$0.id == payload.itemId})  else { return }
-                            let notificationDetailViewModel = MessagesHistoryDetailViewModel(item: .init(notification: notificationData))
+                            let notificationDetailViewModel = MessagesHistoryDetailViewModel(notificationData: notificationData)
                             sheet = .init(sheetType: .item(notificationDetailViewModel))
                             
                         default:

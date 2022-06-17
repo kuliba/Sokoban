@@ -14,19 +14,11 @@ struct MessagesHistoryDetailViewModel: Identifiable {
     let content: String
     let icon: Image
     
-    internal init(id: NotificationData.ID, title: String, content: String, icon: Image) {
+    init(id: NotificationData.ID, title: String, content: String, icon: Image) {
         self.id = id
         self.title = title
         self.content = content
         self.icon = icon
-    }
-    
-    init(item: MessagesHistoryItemView.ViewModel) {
-
-        self.title = item.title
-        self.content = item.content
-        self.icon = Image.ic24Slash
-        self.id = item.id
     }
     
     init(notificationData: NotificationData) {
