@@ -50,20 +50,20 @@ class UserAccountViewModel: ObservableObject {
         
         avatar = .init(
             image: nil,
-            action: {
-                self.openPeackerAction()
+            action: { [weak self] in
+                self?.openPeackerAction()
             })
         
         exitButton = .init(
             icon: .ic24LogOut,
             content: "Выход из приложения",
-            action: {
-                self.exitAction()
+            action: { [weak self] in
+                self?.exitAction()
             })
         
         navigationBar.rightButtons = [
-            .init(icon: .ic24Settings, action: {
-                self.settingsAction()
+            .init(icon: .ic24Settings, action: { [weak self] in
+                self?.settingsAction()
             })]
         
         bind()
@@ -85,15 +85,15 @@ class UserAccountViewModel: ObservableObject {
     }
     
     func settingsAction() {
-        
+        //TODO: Кнопка настроек справа вверху
     }
     
     func openPeackerAction() {
-        
+        //TODO: открытие фотокамеры
     }
     
     func exitAction() {
-        
+        //TODO: сделать выход из приложения
     }
     
     func createSections(userData: ClientInfoData) -> [AccountSectionViewModel] {
@@ -103,7 +103,7 @@ class UserAccountViewModel: ObservableObject {
                 icon: .ic24User,
                 content: userData.firstName,
                 title: "Имя",
-                button: .init(icon: .ic24Edit2, action: {
+                button: .init(icon: .ic24Edit2, action: { [weak self] in
                     print("Open Изменить Имя")
                 } )
             ),
@@ -128,9 +128,9 @@ class UserAccountViewModel: ObservableObject {
                 action: {
                     
                     self.link = .userDocument(UserDocumentViewModel(
-                        clientInfo: userData, itemType: .passport, dismissAction: {
-                            self.link = nil
-                            self.isLinkActive = false
+                        clientInfo: userData, itemType: .passport, dismissAction: { [weak self] in
+                            self?.link = nil
+                            self?.isLinkActive = false
                         }
                     ))
                 })
@@ -141,18 +141,7 @@ class UserAccountViewModel: ObservableObject {
                 itemType: .inn,
                 content: userInn,
                 action: {
-                    print("Open ИНН")
-                    
-                    let button = ButtonSimpleView.ViewModel(
-                        title: "Скопировать",
-                        style: .gray,
-                        action: {
-//                            button.title = "Скопировано"
-//                            button.style = .inactive
-                            print("Скопировано")
-                        }
-                    )
-                    
+                   
                     let innViewModel = UserAccountDocumentInfoView.ViewModel(
                         itemType: .inn,
                         content: userInn
@@ -168,8 +157,7 @@ class UserAccountViewModel: ObservableObject {
             itemType: .adressPass,
             content: userData.address,
             action: {
-                print("Open Адрес регистрации")
-                                
+                
                 self.sheet = .init(sheetType: .inn(.init(
                     itemType: .adressPass,
                     content: userData.address
@@ -182,7 +170,7 @@ class UserAccountViewModel: ObservableObject {
                 itemType: .adress,
                 content: addressResidential,
                 action: {
-                    print("Open Адрес проживания")
+                    
                     self.sheet = .init(sheetType: .inn(.init(
                         itemType: .adressPass,
                         content: userData.address
@@ -205,7 +193,7 @@ class UserAccountViewModel: ObservableObject {
                     AccountCellButtonView.ViewModel(
                         icon: Image("sbp-logo"),
                         content: "Система быстрых платежей",
-                        button: .init(icon: .ic24ChevronRight, action: {
+                        button: .init(icon: .ic24ChevronRight, action: { [weak self] in
                             print("Open Система быстрых платежей")
                         }))
                 ],
