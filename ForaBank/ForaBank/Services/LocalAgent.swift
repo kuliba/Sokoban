@@ -57,11 +57,16 @@ class LocalAgent: LocalAgentProtocol {
     func clear<T>(type: T.Type) throws  {
         
         let fileName = fileName(for: type)
-        try context.fileManager.removeItem(at: fileURL(with: fileName))
+        let dataFileURL = try fileURL(with: fileName)
+        if context.fileManager.fileExists(atPath: dataFileURL.path) {
+        
+            try context.fileManager.removeItem(at: dataFileURL)
+        }
         
         serials[fileName] = nil
         let serialsData = try JSONEncoder().encode(serials)
-        try serialsData.write(to: fileURL(with: context.serialsFileName))
+        let serialsFileURL = try fileURL(with: context.serialsFileName)
+        try serialsData.write(to: serialsFileURL)
     }
     
     //MARK: - Serial

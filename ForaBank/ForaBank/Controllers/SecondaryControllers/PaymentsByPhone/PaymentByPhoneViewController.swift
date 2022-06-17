@@ -11,10 +11,9 @@ import AnyFormatKit
 import SwiftUI
 
 class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
-
-    lazy var realm = try? Realm()
     
     var viewModel: PaymentByPhoneViewModel
+    let model: Model = .shared
     
     var banks: [BanksList]? {
         didSet {
@@ -106,8 +105,6 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        AddAllUserCardtList.add() { }
-        
         phoneField.textField.delegate = self
         phoneField.textField.maskString = "+0 000 000-00-00"
         
@@ -126,11 +123,28 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
         if viewModel.amount != nil {
             setupAmount()
         }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = false
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y == 0 {
+                self.view.frame.origin.y -= keyboardSize.height
+            }
+        }
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        if self.view.frame.origin.y != 0 {
+            self.view.frame.origin.y = 0
+        }
     }
     
     //MARK: - Helpers
@@ -161,26 +175,19 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
     }
     
     func setupBankList() {
-        getBankList { [weak self]  banksList, error in
-            DispatchQueue.main.async {
-                if error != nil {
-                    self?.showAlert(with: "Ошибка", and: error!)
+        
+        var filteredbanksList : [BanksList] = []
+        
+        model.dictionaryBankListLegacy?.forEach { bank in
+            let codeList = bank.paymentSystemCodeList
+            codeList?.forEach { code in
+                if code == "SFP" {
+                    filteredbanksList.append(bank)
                 }
-                
-                guard let banksList = banksList else { return }
-                var filteredbanksList : [BanksList] = []
-                
-                banksList.forEach { bank in
-                    guard let codeList = bank.paymentSystemCodeList else { return }
-                    codeList.forEach { code in
-                        if code == "SFP" {
-                            filteredbanksList.append(bank)
-                        }
-                    }
-                }
-                self?.banks = filteredbanksList
             }
         }
+        self.banks = filteredbanksList
+        
     }
     
     func setupActions() {
@@ -190,8 +197,14 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
         
         cardListView.didCardTapped = { cardId in
             DispatchQueue.main.async {
-                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
-                cardList.forEach({ card in
+                
+                var products: [UserAllCardsModel] = []
+                
+                let data = self.model.products.value
+                
+                products = data.flatMap({$0.value}).compactMap({$0.userAllProducts()})
+                
+                products.forEach({ card in
                     if card.id == cardId {
                         self.cardField.model = card
                         if self.bankListView.isHidden == false {
@@ -335,14 +348,14 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
             
             if text.isEmpty != true {
                 if text.count < 20 {
-                Model.shared.action.send(ModelAction.PaymentTemplate.Update.Requested(
-                    name: text,
-                    parameterList: nil,
-                    paymentTemplateId: templateId))
+                    Model.shared.action.send(ModelAction.PaymentTemplate.Update.Requested(
+                        name: text,
+                        parameterList: nil,
+                        paymentTemplateId: templateId))
                     
-                // FIXME: В рефактре нужно слушатель на обновление title
-                self.title = text
-                
+                    // FIXME: В рефактре нужно слушатель на обновление title
+                    self.title = text
+                    
                 } else {
                     self.showAlert(with: "Ошибка", and: "В названии шаблона не должно быть более 20 символов")
                 }
@@ -355,13 +368,11 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
     //MARK: - API
     
     func getBankList(completion: @escaping (_ banksList: [BanksList]?, _ error: String?) -> () ) {
-        NetworkHelper.request(.getBanks) { banksList , error in
-            if error != nil {
-                completion(nil, error)
-            }
-            guard let banksList = banksList as? [BanksList] else { return }
-            completion(banksList, nil)
+        guard let banks = Model.shared.dictionaryBankListLegacy else {
+            return completion(nil, "Не удалось загрузить список банков")
         }
+            
+        completion(banks, nil)
     }
     
     func createTransfer(amount: String, card: UserAllCardsModel?, completion: @escaping (_ error: String?) -> ()) {
@@ -436,7 +447,7 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
         guard let number = phoneField.textField.unmaskedText else { return }
         guard let comment = commentField.textField.text else { return }
         showActivity()
-  
+        
         let newBody = [
             "check" : false,
             "amount" : amount,
@@ -454,14 +465,14 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
                     "fieldvalue": number
                 ],
                 [
-                  "fieldid": "2",
-                  "fieldname": "BankRecipientID",
-                  "fieldvalue": viewModel.bankId
+                    "fieldid": "2",
+                    "fieldname": "BankRecipientID",
+                    "fieldvalue": viewModel.bankId
                 ],
                 [
-                  "fieldid": "3",
-                  "fieldname": "Ustrd",
-                  "fieldvalue": comment
+                    "fieldid": "3",
+                    "fieldname": "Ustrd",
+                    "fieldvalue": comment
                 ]
             ]
         ] as [String: AnyObject]

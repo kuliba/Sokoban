@@ -49,7 +49,7 @@ class CountryListView: UIView {
         isHidden = true
         alpha = 0
         
-        guard let countries = Dict.shared.countries else { return }
+        let countries = Model.shared.countriesList.value.map { $0.getCountriesList() }
         self.configureVC(with: countries)
     }
     

@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+import Introspect
 
 struct PaymentsTransfersView: View {
     
     @ObservedObject
     var viewModel: PaymentsTransfersViewModel
-    
+    @State private var tabBarController: UITabBarController?
+
     var body: some View {
         
         NavigationView {
@@ -48,42 +50,82 @@ struct PaymentsTransfersView: View {
                     
                 } //mainVStack
 
-                if #available(iOS 14.0, *) {
-                    Color.mainColorsGrayLightest
-                        .frame(height: 48)
-                        .ignoresSafeArea()
-                        .overlay(TopSearchViewMock())
-                } else {
-                    Color.mainColorsGrayLightest
-                        .frame(height: 48)
-                        .overlay(TopSearchViewMock())
-                } //mock topSearchView
+                Color.mainColorsGrayLightest //mock topSearchView
+                    .frame(height: 48)
+                    .edgesIgnoringSafeArea(.top)
+                    .overlay(TopSearchViewMock())
                 
                 NavigationLink("", isActive: $viewModel.isLinkActive) {
                     
                     if let link = viewModel.link  {
                         
                         switch link {
-                            
                         case let .exampleDetail(title):
                             ExampleDetailMock(title: title)
                             
                         case .mobile(let model):
                             MobilePayView(viewModel: model)
+                            
+                        case .chooseCountry(let model):
+                            ChooseCountryView(viewModel: model)
+                                .navigationBarHidden(true)
+                                .introspectTabBarController(customize: { tabBarController in
+                                    hideTabBar(tabBarController)
+                                })
+                                .onDisappear {
+                                    showTabBar(self.tabBarController)
+                                }
+                            
+                        case let .meToMe(viewModel):
+                            MeToMeView(viewModel: viewModel)
+                                .navigationBarTitle("", displayMode: .inline)
+                                .introspectTabBarController(customize: { tabBarController in
+                                    hideTabBar(tabBarController)
+                                })
+                                .onDisappear {
+                                    showTabBar(self.tabBarController)
+                                }
+                            
+                        case let .transferByPhone(transferByPhoneViewModel):
+                            TransferByPhoneView(viewModel: transferByPhoneViewModel)
+                                .navigationBarTitle("", displayMode: .inline)
+                                .introspectTabBarController(customize: { tabBarController in
+                                    hideTabBar(tabBarController)
+                                })
+                                .onDisappear {
+                                    showTabBar(self.tabBarController)
+                                }
                         }
                     }
                 }
                 
             } //mainZStack
             .sheet(item: $viewModel.sheet, content: { sheet in
+               
                 switch sheet.type {
-                
                 case let .exampleDetail(title):    //TODO: 
                     ExampleDetailMock(title: title)
+                    
+                case let .taxAndStateService(taxAndStateServiceVM):
+                    PaymentsView(viewModel: taxAndStateServiceVM)
                     
                 }
             })
             .navigationBarHidden(true)
+        }
+    }
+    
+    private func hideTabBar(_ tabBarController: UITabBarController) {
+        self.tabBarController = tabBarController
+        tabBarController.tabBar.isHidden = true
+        UIView.transition(with: tabBarController.view, duration: 0.35, options: .transitionCrossDissolve, animations: nil)
+    }
+    
+    private func showTabBar(_ tabBarController: UITabBarController?) {
+        if let tabBarController = tabBarController {
+            
+            tabBarController.tabBar.isHidden = false
+            UIView.transition(with: tabBarController.view, duration: 0.35, options: .transitionCrossDissolve, animations: nil)
         }
     }
 }

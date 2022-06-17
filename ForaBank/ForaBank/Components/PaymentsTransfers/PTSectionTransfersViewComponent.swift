@@ -106,7 +106,7 @@ extension PTSectionTransfersView {
             ZStack(alignment: .bottom){
                 
                 RoundedRectangle(cornerRadius: 12)
-                    .frame(width: 80, height: 60)
+                    .frame(width: 78, height: 60)
                     .shadow(color: .mainColorsBlackMedium.opacity(0.4), radius: 12, y: 6)
                 
                 Button(action: viewModel.action, label: {
@@ -135,6 +135,7 @@ extension PTSectionTransfersView {
                 .background(Color.mainColorsBlackMedium)
                 .cornerRadius(12)
             }
+            .frame(width: 104 , height: 150, alignment: .top)
         }
     }
     

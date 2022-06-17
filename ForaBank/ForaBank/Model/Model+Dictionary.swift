@@ -11,20 +11,21 @@ import Foundation
 
 extension Model {
     
-    var dictionaryCurrencyList: [CurrencyData]? {
+    func dictionaryCurrency(for currencyCode: Int) -> CurrencyData? {
         
-        return localAgent.load(type: [CurrencyData].self)
-        
+        return currencyList.value.first(where: { $0.codeNumeric == currencyCode })
     }
     
-    func currency(for currencyCode: Int) -> CurrencyData? {
+    func dictionaryCurrency(for code: String) -> CurrencyData? {
+
+        return currencyList.value.first(where: { $0.code == code })
+    }
+    
+    //MARK: BankList helper
+    
+    var dictionaryBankList: [BankData] {
         
-        guard let dictionaryCurrencyList = dictionaryCurrencyList else {
-            return nil
-        }
-        
-        return dictionaryCurrencyList.first(where: {$0.codeNumeric == currencyCode})
-        
+        return bankList.value
     }
 }
 
@@ -34,7 +35,7 @@ extension ModelAction {
     
     enum Dictionary {
         
-        static let cached: [Kind] = [.anywayOperators, .fmsList, .fsspDebtList, .fsspDocumentList, .ftsList, .productCatalogList, .bannerCatalogList, .atmList, .atmServiceList, .atmTypeList, .atmMetroStationList, .atmCityList, .atmRegionList, .currencyList, .countries, .banks]
+        static let cached: [Kind] = [.anywayOperators, .fmsList, .fsspDebtList, .fsspDocumentList, .ftsList, .productCatalogList, .bannerCatalogList, .atmList, .atmServiceList, .atmTypeList, .atmMetroStationList, .atmCityList, .atmRegionList, .currencyList, .countries, .banks, .paymentSystemList]
         
         enum UpdateCache {
             
@@ -49,6 +50,19 @@ extension ModelAction {
                 
                 let type: Kind
                 let serial: String?
+            }
+        }
+        
+        enum DownloadImages {
+            
+            struct Request: Action {
+                
+                let imagesIds: [String]
+            }
+            
+            struct Response: Action {
+                
+                let result: Result<[(id: String, imageData: ImageData)], Error>
             }
         }
         
@@ -404,6 +418,18 @@ extension Model {
             }
         })
     }
+    
+    func dictionaryImagesReduce(images: [String: ImageData], updateItems: [(id: String, image: ImageData)]) -> [String: ImageData] {
+        
+        var imagesUpdated = images
+        
+        for item in updateItems {
+            
+            imagesUpdated[item.id] = item.image
+        }
+        
+        return imagesUpdated
+    }
 }
 
 //MARK: - Handlers
@@ -538,6 +564,8 @@ extension Model {
                         return
                     }
                     
+                    countriesList.value = data.countriesList
+                    
                     do {
                         
                         try self.localAgent.store(data.countriesList, serial: data.serial)
@@ -578,7 +606,7 @@ extension Model {
                         return
                     }
                     
-                    self.currencyList = data.currencyList
+                    self.currencyList.value = data.currencyList
                     
                     do {
                         
@@ -897,6 +925,8 @@ extension Model {
                     guard data.paymentSystemList.count > 0 else {
                         return
                     }
+                    
+                    paymentSystemList.value = data.paymentSystemList
                     
                     do {
                         
@@ -1231,5 +1261,67 @@ extension Model {
             }
         }
     }
+    
+    //AtmRegionDataList
+    func handleDictionaryDownloadImages(payload: ModelAction.Dictionary.DownloadImages.Request) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.DictionaryController.GetSvgImageList(token: token, payload: .init(md5HashList: payload.imagesIds))
+        serverAgent.executeCommand(command: command) {[unowned self] result in
+            
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    guard let data = response.data else {
+                        self.action.send(ModelAction.Dictionary.DownloadImages.Response(result: .failure(ModelDictionaryError.emptyData(message: response.errorMessage))))
+                        return
+                    }
+                    
+                    let responseItems: [(String, ImageData)] = data.svgImageList.compactMap { item in
+                        
+                        guard let imageData = ImageData(with: item.svgImage) else {
+                            return nil
+                        }
+                        
+                        return (item.md5hash, imageData)
+                    }
+                    self.images.value = dictionaryImagesReduce(images: self.images.value, updateItems: responseItems)
+                    self.action.send(ModelAction.Dictionary.DownloadImages.Response.init(result: .success(responseItems)))
+                    
+                    do {
+                        
+                        try self.localAgent.store(images.value, serial: nil)
+                        
+                    } catch {
+                        
+                        handleServerCommandCachingError(error: error, command: command)
+                    }
+                    
+                default:
+                    self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.action.send(ModelAction.Dictionary.DownloadImages.Response(result: .failure(ModelDictionaryError.statusError(status: response.statusCode, message: response.errorMessage))))
+                }
+                
+            case .failure(let error):
+                handleServerCommandError(error: error, command: command)
+                self.action.send(ModelAction.Dictionary.DownloadImages.Response(result: .failure(ModelDictionaryError.serverCommandError(error: error))))
+            }
+        }
+    }
+}
+
+
+//MARK: - Error
+
+enum ModelDictionaryError: Swift.Error {
+    
+    case emptyData(message: String?)
+    case statusError(status: ServerStatusCode, message: String?)
+    case serverCommandError(error: Error)
 }
 

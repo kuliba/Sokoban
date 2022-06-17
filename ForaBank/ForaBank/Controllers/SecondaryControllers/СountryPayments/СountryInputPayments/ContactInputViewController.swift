@@ -11,6 +11,7 @@ import RealmSwift
 class ContactInputViewController: UIViewController {
     
     lazy var realm = try? Realm()
+    let model = Model.shared
     var typeOfPay: PaymentType = .contact {
         didSet {
             readAndSetupCard(type: typeOfPay)
@@ -98,7 +99,7 @@ class ContactInputViewController: UIViewController {
             showChooseButton: true))
     
     var bankListView = BankListView()
-            
+    
     var cardFromField = CardChooseView()
     
     var cardListView = CardsScrollView(onlyMy: false, deleteDeposit: true, loadProducts: false)
@@ -147,7 +148,7 @@ class ContactInputViewController: UIViewController {
                 self.foraSwitchView.bankByPhoneSwitch.isOn = false
                 self.foraSwitchView.bankByPhoneSwitch.layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
                 self.foraSwitchView.bankByPhoneSwitch.thumbTintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-            
+                
                 if let surName = model.additional.first(where: { $0.fieldname == "bName" })?.fieldvalue {
                     self.surnameField.text = surName
                 }
@@ -156,9 +157,9 @@ class ContactInputViewController: UIViewController {
                 }
                 if let middleName = model.additional.first(where: { $0.fieldname == "bSurName" })?.fieldvalue {
                     self.secondNameField.text = middleName
-                }                
+                }
             }
-                
+            
         default :
             break
         }
@@ -198,7 +199,7 @@ class ContactInputViewController: UIViewController {
         navigationController?.view.backgroundColor = UIColor.white
         navigationController?.navigationBar.backgroundColor = UIColor.white
     }
-
+    
     //MARK: - Actions
     @objc func titleDidTaped() {
         UIView.animate(withDuration: 0.2) {
@@ -211,7 +212,7 @@ class ContactInputViewController: UIViewController {
             }
         }
     }
-
+    
     func setupContactCountryCode(codeList: String) -> String {
         var codeDict: [[String:String]] = []
         var codeString = ""
@@ -299,8 +300,9 @@ class ContactInputViewController: UIViewController {
         
         cardListView.didCardTapped = { cardId in
             DispatchQueue.main.async {
-                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
-                cardList.forEach({ card in
+                let products: [UserAllCardsModel] = self.cardListView.cardList
+                
+                products.forEach({ card in
                     if card.id == cardId {
                         self.cardFromField.model = card
                         self.selectedCardNumber = card.number ?? ""
@@ -318,7 +320,7 @@ class ContactInputViewController: UIViewController {
                         }
                     }
                 })
-            }    
+            }
         }
         
         cardListView.lastItemTap = {
@@ -338,10 +340,10 @@ class ContactInputViewController: UIViewController {
                     self.currency = cardCurrency
                     
                 } else {
-                    let currArr = Dict.shared.currencyList
-                    currArr?.forEach({ currency in
+                    let currArr = self.model.currencyList.value.map { $0.getCurrencyList() }
+                    currArr.forEach({ currency in
                         if currency.code == cardCurrency {
-
+                            
                             cur = [cardCurrency, "RUR"]
                             self.currency = cardCurrency
                         }
@@ -407,8 +409,8 @@ class ContactInputViewController: UIViewController {
     
     func getCountry(code: String) -> CountriesList {
         var countryValue: CountriesList?
-        let list = Dict.shared.countries
-        list?.forEach({ country in
+        let list = model.countriesList.value.map { $0.getCountriesList() }
+        list.forEach({ country in
             if country.code == code || country.contactCode == code {
                 countryValue = country
             }
@@ -418,16 +420,17 @@ class ContactInputViewController: UIViewController {
     
     func findBankByPuref(purefString: String) -> BanksList? {
         var bankValue: BanksList?
-        let paymentSystems = Dict.shared.paymentList
-        paymentSystems?.forEach({ paymentSystem in
+        let paymentSystems = model.paymentSystemList.value.map { $0.getPaymentSystem() }
+        let bankList = model.bankList.value.map { $0.getBanksList() }
+        
+        paymentSystems.forEach({ paymentSystem in
             if paymentSystem.code == "DIRECT" {
                 let purefList = paymentSystem.purefList
                 purefList?.forEach({ puref in
                     puref.forEach({ (key, value) in
                         value.forEach { purefList in
                             if purefList.puref == purefString {
-                                let bankList = Dict.shared.banks
-                                bankList?.forEach({ bank in
+                                bankList.forEach({ bank in
                                     if bank.memberID == key {
                                         bankValue = bank
                                     }
@@ -469,11 +472,14 @@ class ContactInputViewController: UIViewController {
     
     private func readAndSetupCard(type: PaymentType) {
         DispatchQueue.main.async {
-
-            let cards = ReturnAllCardList.cards()
+            var products: [UserAllCardsModel] = []
+            let types: [ProductType] = [.card, .account]
+            types.forEach { type in
+                products.append(contentsOf: self.model.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
+            }
+            
             var filterProduct: [UserAllCardsModel] = []
-            cards.forEach({ card in
-                if (card.productType == "CARD" || card.productType == "ACCOUNT") {
+            products.forEach({ card in
                     
                     if type == .contact
                         ? (card.currency == "RUB" || card.currency == "USD" || card.currency == "EUR")
@@ -481,7 +487,6 @@ class ContactInputViewController: UIViewController {
                         
                         filterProduct.append(card)
                     }
-                }
             })
             
             self.cardListView.cardList = filterProduct
@@ -509,62 +514,53 @@ class ContactInputViewController: UIViewController {
                     self.selectedCardNumber = cardNumber
                     self.cardIsSelect = true
                 }
+//                }
             }
         }
     }
     
     func setupBankList() {
-        getBankList { [weak self]  banksList, error in
-            DispatchQueue.main.async {
-                if error != nil {
-                    self?.showAlert(with: "Ошибка", and: error!)
-                }
-                
-                guard let banksList = banksList else { return }
-                var filteredbanksList : [BanksList] = []
-                
-                banksList.forEach { bank in
-                    guard let codeList = bank.paymentSystemCodeList else { return }
-                    guard let countrylist = self?.country?.paymentSystemCodeList else { return }
+        
+        var filteredbanksList : [BanksList] = []
+
+        model.dictionaryBankListLegacy?.forEach { bank in
+            guard let codeList = bank.paymentSystemCodeList else { return }
+            guard let countrylist = self.country?.paymentSystemCodeList else { return }
                     countrylist.forEach { code in
                         if codeList.contains(code) {
                             filteredbanksList.append(bank)
                         }
                     }
                 }
-                self?.banks = filteredbanksList
-            }
-        }
+        self.banks = filteredbanksList
     }
-    
-
 }
 
 //MARK: EPContactsPicker delegates
 extension ContactInputViewController: EPPickerDelegate {
     
-        func epContactPicker(_: EPContactsPicker, didContactFetchFailed error : NSError) {
-            print("Failed with error \(error.description)")
+    func epContactPicker(_: EPContactsPicker, didContactFetchFailed error : NSError) {
+        print("Failed with error \(error.description)")
+    }
+    
+    func epContactPicker(_: EPContactsPicker, didSelectContact contact : EPContact) {
+        let phoneFromContact = contact.phoneNumbers.first?.phoneNumber
+        let numbers = phoneFromContact?.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
+        let mask = StringMask(mask: "+000-0000-00-00")
+        let maskPhone = mask.mask(string: numbers)
+        phoneField.text = maskPhone ?? ""
+    }
+    
+    func epContactPicker(_: EPContactsPicker, didCancel error : NSError) {
+        print("User canceled the selection");
+    }
+    
+    func epContactPicker(_: EPContactsPicker, didSelectMultipleContacts contacts: [EPContact]) {
+        print("The following contacts are selected")
+        for contact in contacts {
+            print("\(contact.displayName())")
         }
-        
-        func epContactPicker(_: EPContactsPicker, didSelectContact contact : EPContact) {
-            let phoneFromContact = contact.phoneNumbers.first?.phoneNumber
-            let numbers = phoneFromContact?.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
-            let mask = StringMask(mask: "+000-0000-00-00")
-            let maskPhone = mask.mask(string: numbers)
-            phoneField.text = maskPhone ?? ""
-        }
-        
-        func epContactPicker(_: EPContactsPicker, didCancel error : NSError) {
-            print("User canceled the selection");
-        }
-        
-        func epContactPicker(_: EPContactsPicker, didSelectMultipleContacts contacts: [EPContact]) {
-            print("The following contacts are selected")
-            for contact in contacts {
-                print("\(contact.displayName())")
-            }
-        }
+    }
     
     func epUserPhone(_ phone: String) {
         var numbers = phone.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
@@ -572,7 +568,7 @@ extension ContactInputViewController: EPPickerDelegate {
             let mask = StringMask(mask: "+0 (000) 000-00-00")
             let maskPhone = mask.mask(string: numbers)
             phoneField.text = maskPhone ?? ""
-
+            
         } else if numbers.first == "8" {
             numbers.removeFirst()
             let mask = StringMask(mask: "+7 (000) 000-00-00")
@@ -580,5 +576,5 @@ extension ContactInputViewController: EPPickerDelegate {
             phoneField.text = maskPhone ?? ""
         }
     }
-
+    
 }

@@ -80,13 +80,26 @@ class PaymentsTransfersViewModel: ObservableObject {
                         
                     //Transfers Section
                     case let payload as PTSectionTransfersViewAction.ButtonTapped.Transfer:
-                        switch payload.type {
-                        case .abroad: link = .exampleDetail(payload.type.rawValue) //TODO:
-                        case .anotherCard: sheet = .init(type: .exampleDetail(payload.type.rawValue))  //TODO:
-                        case .betweenSelf: sheet = .init(type: .exampleDetail(payload.type.rawValue))   //TODO:
-                        case .byBankDetails: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
-                        case .byPhoneNumber: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
                         
+                        switch payload.type {
+                        case .abroad:
+                            link = .chooseCountry(.init(closeAction: { [weak self] in
+                                self?.link = nil
+                            }))
+                            
+                        case .anotherCard: sheet = .init(type: .exampleDetail(payload.type.rawValue))  //TODO:
+                        case .betweenSelf:
+                            let meToMeViewModel = MeToMeViewModel { [weak self] in
+                                    self?.link = nil
+                            }
+                            link = .meToMe(meToMeViewModel)
+                            
+                        case .byBankDetails: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
+                        case .byPhoneNumber:
+                            let transferByPhoneViewModel = TransferByPhoneViewModel { [weak self] in
+                                self?.link = nil
+                            }
+                            link = .transferByPhone(transferByPhoneViewModel)
                         }
                         
                     //Payments Section
@@ -100,7 +113,10 @@ class PaymentsTransfersViewModel: ObservableObject {
                         case .service: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
                         case .internet: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
                         case .transport: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
-                        case .taxAndStateService: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
+                        case .taxAndStateService:
+                            let taxAndStateServiceVM = PaymentsViewModel(model, category: Payments.Category.taxes)
+                            sheet = .init(type: .taxAndStateService(taxAndStateServiceVM))
+                            
                         case .socialAndGame: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
                         case .security: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
                         case .others: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
@@ -124,14 +140,21 @@ class PaymentsTransfersViewModel: ObservableObject {
         enum Kind {
             
             case exampleDetail(String)
-
+            case taxAndStateService(PaymentsViewModel)
         }
     }
     
     enum Link {
         
         case exampleDetail(String)
+<<<<<<< HEAD
         case mobile(MobilePayViewModel)
+=======
+        case chooseCountry(ChooseCountryViewModel)
+        case meToMe(MeToMeViewModel)
+        case transferByPhone(TransferByPhoneViewModel)
+
+>>>>>>> main-screens
     }
     
 }

@@ -11,13 +11,8 @@ import RealmSwift
 /// Получаем из  REALM  карты пользователя
 struct ReturnAllCardList {
     
-    static func cards() ->  [UserAllCardsModel]{
-        let realm = try? Realm()
-        let cards = realm?.objects(UserAllCardsModel.self)
-        var cardsArray = [UserAllCardsModel]()
-        cards?.forEach { card in
-            cardsArray.append(card)
-        }
-        return cardsArray
+    static func cards() ->  [UserAllCardsModel] {
+        
+        Model.shared.products.value.values.flatMap({ $0 }).map{ $0.userAllProducts() }
     }
 }

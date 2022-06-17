@@ -21,6 +21,8 @@ class EPContactCell: UITableViewCell {
     var banks: BanksList?
     var needChek = false
 
+    let model: Model = .shared
+    
     override func awakeFromNib() {
         
         super.awakeFromNib()
@@ -48,11 +50,11 @@ class EPContactCell: UITableViewCell {
     
     func updateBankCell(){
         contactContainerView.layer.cornerRadius = 0
-        guard let banksList = Dict.shared.banks else {
+        guard let banksList = model.dictionaryBankListLegacy else {
             return
         }
         for item in banksList {
-            if item.memberID == banks?.memberID{
+            if item.memberID == banks?.memberID {
                 self.contactImageView?.image = item.svgImage?.convertSVGStringToImage()
             self.contactImageView.isHidden = false
             }

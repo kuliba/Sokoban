@@ -56,7 +56,7 @@ class ServerCommandsNotificationTests: XCTestCase {
         let url = bundle.url(forResource: "GetNotificationsResponseGeneric", withExtension: "json")!
         let json = try Data(contentsOf: url)
         let date = formatter.date(from: "27.12.2021 18:22:58")!
-        let expected = ServerCommands.NotificationController.GetNotifications.Response(statusCode: .ok, errorMessage: "string", data: [.init(date: date, title: "Cмс", state: .sent, text: "27.12.2022 18:22:58: Успешный вход в приложение", type: .push)])
+        let expected = ServerCommands.NotificationController.GetNotifications.Response(statusCode: .ok, errorMessage: "string", data: [.init(date: date, title: "Смс", state: .sent, text: "27.12.2022 18:22:58: Успешный вход в приложение", type: .push)])
         
         // when
         let result = try decoder.decode(ServerCommands.NotificationController.GetNotifications.Response.self, from: json)

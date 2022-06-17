@@ -17,4 +17,15 @@ extension Model {
         
         return actualServerAgent.cookies
     }
+    
+    var dictionaryBankListLegacy: [BanksList]? {
+
+        return bankList.value.map{ $0.getBanksList() }
+   }
+
+    var productsLegacy: [UserAllCardsModel] {
+
+       products.value.values.flatMap({ $0 }).map{ $0.userAllProducts() }
+    }
+
 }

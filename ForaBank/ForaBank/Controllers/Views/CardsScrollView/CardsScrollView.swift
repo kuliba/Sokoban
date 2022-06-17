@@ -16,7 +16,7 @@ final class CardsScrollView: UIView {
     let allReuseIdentifier = "AllCardCell"
 
     let model: Model = .shared
-
+    
     var cardListRealm: Results<UserAllCardsModel>? = nil
     
     var cardList = [UserAllCardsModel]() {
@@ -86,14 +86,7 @@ final class CardsScrollView: UIView {
             var products: [UserAllCardsModel] = []
             
             let data = model.products.value
-            
-            for i in data {
-                
-                for i in i.value {
-                    
-                    products.append(i.userAllProducts())
-                }
-            }
+            products = data.flatMap({$0.value}).compactMap({$0.userAllProducts()})
             
             products.forEach({ op in
                 if onlyCard {

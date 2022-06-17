@@ -251,7 +251,7 @@ extension PaymentsViewController: UICollectionViewDelegate {
                     puref.forEach({ (key, value) in
                         value.forEach { purefList in
                             if purefList.puref == purefString {
-                                let bankList = Dict.shared.banks
+                                let bankList = Model.shared.dictionaryBankListLegacy
                                 bankList?.forEach({ bank in
                                     if bank.memberID == key {
                                         bankValue = bank

@@ -29,7 +29,7 @@ extension ProductData {
                                      allowDebit: allowDebit,
                                      allowCredit: allowCredit,
                                      customName: customName,
-                                     cardID: nil,
+                                     cardID: id,
                                      accountID: card.accountId,
                                      name: card.name,
                                      validThru: Int(card.validThru.timeIntervalSince1970),
