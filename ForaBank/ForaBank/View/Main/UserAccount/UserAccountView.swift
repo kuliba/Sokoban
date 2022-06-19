@@ -48,7 +48,6 @@ struct UserAccountView: View {
                     AccountCellFullButtonView(viewModel: button)
                 }
             }
-            .padding(20)
             
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
@@ -88,7 +87,7 @@ struct UserAccountView: View {
             if let tabBarController = tabBarController {
                 
                 tabBarController.tabBar.isHidden = false
-                UIView.transition(with: tabBarController.view, duration: 0.05, options: .transitionCrossDissolve, animations: nil)
+//                UIView.transition(with: tabBarController.view, duration: 0.05, options: .transitionCrossDissolve, animations: nil)
             }
             
         }

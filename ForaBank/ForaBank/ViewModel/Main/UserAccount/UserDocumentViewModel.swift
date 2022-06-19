@@ -37,7 +37,7 @@ class UserDocumentViewModel: ObservableObject {
         navigationBar = .init(
             title: itemType.title,
             leftButtons: [
-                .init(icon: .ic24ChevronLeft, action: dismissAction )
+                NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft)
             ],
             rightButtons: [],
             background: itemType.backgroundColor,

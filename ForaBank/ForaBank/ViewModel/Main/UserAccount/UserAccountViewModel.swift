@@ -44,9 +44,7 @@ class UserAccountViewModel: ObservableObject {
         navigationBar = .init(
             title: "Профиль",
             leftButtons: [
-                .init(icon: .ic24ChevronLeft, action: {
-                    dismissAction()
-                })
+                NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft)
             ]
         )
         
@@ -69,7 +67,7 @@ class UserAccountViewModel: ObservableObject {
             })]
         
         bind()
-        model.action.send(ModelAction.ClientInfo.Fetch.Request())
+//        model.action.send(ModelAction.ClientInfo.Fetch.Request())
     }
         
     func bind() {

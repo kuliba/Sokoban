@@ -132,7 +132,7 @@ struct UserDocumentView_Previews: PreviewProvider {
     static let navBar = NavigationBarView.ViewModel(
         title: type.title,
         leftButtons: [
-            .init(icon: .ic24ChevronLeft, action: { })
+            NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft)
         ],
         rightButtons: [
             .init(icon: .ic24Share, action: { })

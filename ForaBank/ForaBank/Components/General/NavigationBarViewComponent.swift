@@ -14,7 +14,7 @@ extension NavigationBarView {
         @Published var title: String
         @Published var subtitle: String?
         
-        @Published var leftButtons: [ButtonViewModel]
+        @Published var leftButtons: [BaseButtonViewModel]
         @Published var rightButtons: [ButtonViewModel]
         
         let background: Color
@@ -22,7 +22,7 @@ extension NavigationBarView {
         
         internal init(title: String,
                       subtitle: String? = nil,
-                      leftButtons: [ButtonViewModel] = [],
+                      leftButtons: [BaseButtonViewModel] = [],
                       rightButtons: [ButtonViewModel] = [],
                       background: Color = Color.textWhite,
                       foreground: Color = Color.textSecondary) {
@@ -35,9 +35,13 @@ extension NavigationBarView {
             self.foreground = foreground
         }
         
-        struct ButtonViewModel: Identifiable {
+        class BaseButtonViewModel: Identifiable {
             
             let id: UUID = UUID()
+        }
+        
+        class ButtonViewModel: BaseButtonViewModel {
+            
             let icon: Image
             let action: () -> Void
             
@@ -45,6 +49,18 @@ extension NavigationBarView {
                 
                 self.icon = icon
                 self.action = action
+                super.init()
+            }
+        }
+        
+        class BackButtonViewModel: BaseButtonViewModel {
+            
+            let icon: Image
+            
+            init(icon: Image) {
+                
+                self.icon = icon
+                super.init()
             }
         }
     }
@@ -53,133 +69,112 @@ extension NavigationBarView {
 struct NavigationBarView: View {
 
     @ObservedObject var viewModel: ViewModel
+    @Environment(\.presentationMode) var mode: Binding<PresentationMode>
     
-    var leftPlaceholders: Int {
+    var leftPlaceholdersCount: Int {
         
-        let left = viewModel.leftButtons.count
-        let right = viewModel.rightButtons.count
-        
-        if left < right {
-            return right - left
-        } else {
-            return 0
-        }
+        return max(viewModel.rightButtons.count - viewModel.leftButtons.count, 0)
     }
     
-    var rightPlaceholders: Int {
+    var rightPlaceholdersCount: Int {
         
-        let left = viewModel.leftButtons.count
-        let right = viewModel.rightButtons.count
-        
-        if left > right {
-            return left - right
-        } else {
-            return 0
-        }
+        return max(viewModel.leftButtons.count - viewModel.rightButtons.count, 0)
     }
     
     var body: some View {
         
-        VStack(alignment: .center) {
+        HStack(spacing: 0) {
             
-            ZStack {
+            HStack(alignment: .center, spacing: 18) {
                 
-                viewModel.background
-                    .clipped()
-                    .edgesIgnoringSafeArea(.all)
-                    .frame(height: 48)
-                
-                HStack {
+                ForEach(viewModel.leftButtons) { button in
                     
-                    HStack(alignment: .center, spacing: 18) {
-                        
-                        ForEach(viewModel.leftButtons) { button in
+                    switch button {
+                    case let backButtonViewModel as NavigationBarView.ViewModel.BackButtonViewModel:
+                        Button {
                             
-                            Button {
-                                
-                                button.action()
-                                
-                            } label: {
-                                
-                                button.icon
-                                    .resizable()
-                                    .frame(width: 24, height: 24)
-                                    .foregroundColor(viewModel.foreground)
-                            }
-                        }
-                        
-                        ForEach(0..<leftPlaceholders, id: \.self) { _ in
-                            Spacer().frame(width: 24, height: 24)
-                        }
-                    }
-                    
-                    Spacer()
-                    
-                    VStack(alignment: .center, spacing: 0) {
-                        
-                        Text(viewModel.title)
-                            .font(.textH3M18240())
-                            .foregroundColor(viewModel.foreground)
-                            .lineLimit(1)
-                           
-                        if let subtitle = viewModel.subtitle {
+                            mode.wrappedValue.dismiss()
                             
-                            Text(subtitle)
-                                .font(.textBodySR12160())
+                        } label: {
+                            
+                            backButtonViewModel.icon
+                                .resizable()
+                                .frame(width: 24, height: 24)
                                 .foregroundColor(viewModel.foreground)
-                                .lineLimit(1)
-                        }
-                    }
-                    
-                    Spacer()
-                    
-                    HStack(alignment: .center, spacing: 18) {
-                        
-                        ForEach(0..<rightPlaceholders, id: \.self) { _ in
-                            Spacer().frame(width: 24, height: 24)
                         }
                         
-                        ForEach(viewModel.rightButtons) { button in
+                    case let buttonViewModel as NavigationBarView.ViewModel.ButtonViewModel:
+                        Button(action: buttonViewModel.action){
                             
-                            Button {
-                                
-                                button.action()
-                                
-                            } label: {
-                                
-                                button.icon
-                                    .resizable()
-                                    .frame(width: 24, height: 24)
-                                    .foregroundColor(viewModel.foreground)
-                            }
+                            buttonViewModel.icon
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .foregroundColor(viewModel.foreground)
                         }
+                    default:
+                        EmptyView()
                     }
                 }
-                .padding(.horizontal, 18)
-                .background(viewModel.background)
+                
+                ForEach(0..<leftPlaceholdersCount, id: \.self) { _ in
+                    Spacer().frame(width: 24, height: 24)
+                }
             }
             
             Spacer()
+            
+            VStack(alignment: .center, spacing: 0) {
+                
+                Text(viewModel.title)
+                    .font(.textH3M18240())
+                    .foregroundColor(viewModel.foreground)
+                    .lineLimit(1)
+                   
+                if let subtitle = viewModel.subtitle {
+                    
+                    Text(subtitle)
+                        .font(.textBodySR12160())
+                        .foregroundColor(viewModel.foreground)
+                        .lineLimit(1)
+                }
+            }
+            
+            Spacer()
+            
+            HStack(alignment: .center, spacing: 18) {
+                
+                ForEach(0..<rightPlaceholdersCount, id: \.self) { _ in
+                    Spacer().frame(width: 24, height: 24)
+                }
+                
+                ForEach(viewModel.rightButtons) { button in
+                    
+                    Button(action: button.action) {
+                        
+                        button.icon
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .foregroundColor(viewModel.foreground)
+                    }
+                }
+            }
         }
+        .frame(height: 48)
+        .padding(.horizontal, 18)
+        .background(viewModel.background.edgesIgnoringSafeArea(.top))
     }
 }
 
 struct NavigationBarViewModifier: ViewModifier {
     
-    @ObservedObject var viewModel: NavigationBarView.ViewModel
+    let viewModel: NavigationBarView.ViewModel
     
     func body(content: Content) -> some View {
         
-        ZStack {
-            
-            VStack {
-                
-                Spacer().frame(height: 48)
-                
-                content
-            }
+        VStack(spacing: 0) {
             
             NavigationBarView(viewModel: viewModel)
+            content
         }
         .navigationBarHidden(true)
     }
@@ -198,7 +193,7 @@ extension NavigationBarView.ViewModel {
     static let sample = NavigationBarView.ViewModel(
         title: "Заголовок экрана",
         leftButtons: [
-            .init(icon: .ic24ChevronLeft, action: { })
+            NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft)
         ],
         rightButtons: [
 //            .init(icon: .ic24Share, action: { }),
@@ -212,7 +207,7 @@ struct NavigationBarView_Previews: PreviewProvider {
         title: "Перевод по номеру телефона",
         subtitle: "* 4329",                     //Optional
         leftButtons: [
-            .init(icon: .ic24ChevronLeft, action: { })
+            NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft)
         ],
         rightButtons: [
             .init(icon: .ic24Share, action: { }),
