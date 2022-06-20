@@ -963,6 +963,7 @@
 		ED51D66E2688B27E005FD655 /* SeparatorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED51D66D2688B27E005FD655 /* SeparatorView.xib */; };
 		ED51D6702688B287005FD655 /* SeparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED51D66F2688B287005FD655 /* SeparatorView.swift */; };
 		ED59E7AE27713F1300E8AC12 /* ChangeReturnCountryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED59E7AD27713F1300E8AC12 /* ChangeReturnCountryController.swift */; };
+		ED5A122D285CC21000621E26 /* AnotherCardView+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED5A122C285CC21000621E26 /* AnotherCardView+Legacy.swift */; };
 		ED5F2885273BE78F006A10BF /* AccountStatementController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED5F2884273BE78F006A10BF /* AccountStatementController.swift */; };
 		ED60A1E126DC10A3000F3208 /* GetClientConsentMe2MePullDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED60A1E026DC10A3000F3208 /* GetClientConsentMe2MePullDecodableModel.swift */; };
 		ED60A1E326DC1600000F3208 /* ChangeClientConsentMe2MePullDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED60A1E226DC1600000F3208 /* ChangeClientConsentMe2MePullDecodableModel.swift */; };
@@ -2156,6 +2157,7 @@
 		ED51D66D2688B27E005FD655 /* SeparatorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SeparatorView.xib; sourceTree = "<group>"; };
 		ED51D66F2688B287005FD655 /* SeparatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorView.swift; sourceTree = "<group>"; };
 		ED59E7AD27713F1300E8AC12 /* ChangeReturnCountryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeReturnCountryController.swift; sourceTree = "<group>"; };
+		ED5A122C285CC21000621E26 /* AnotherCardView+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AnotherCardView+Legacy.swift"; sourceTree = "<group>"; };
 		ED5F2884273BE78F006A10BF /* AccountStatementController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountStatementController.swift; sourceTree = "<group>"; };
 		ED60A1E026DC10A3000F3208 /* GetClientConsentMe2MePullDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetClientConsentMe2MePullDecodableModel.swift; sourceTree = "<group>"; };
 		ED60A1E226DC1600000F3208 /* ChangeClientConsentMe2MePullDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeClientConsentMe2MePullDecodableModel.swift; sourceTree = "<group>"; };
@@ -4215,6 +4217,7 @@
 				ED733D612858964600F22D42 /* CountryPaymentViewController */,
 				68629334284E558D00B25EB6 /* TransferByPhoneView+Legacy.swift */,
 				77DA206328453ADB00D7E005 /* MeToMeView+Legacy.swift */,
+				ED5A122C285CC21000621E26 /* AnotherCardView+Legacy.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -7085,6 +7088,7 @@
 				EDF6821A266F9EC800FD5C07 /* RouterUrlList.swift in Sources */,
 				0B8C1C44273ADF7E00BA5CAC /* QRCoordinator.swift in Sources */,
 				77A6A9CC27F46B3800CE7E28 /* PlacesMapView.swift in Sources */,
+				ED5A122D285CC21000621E26 /* AnotherCardView+Legacy.swift in Sources */,
 				F8E529B427BBABF600222394 /* AuthProductsViewModel+Preview.swift in Sources */,
 				77E1803327AC04320006ACC9 /* NotificationData.swift in Sources */,
 				0CA1CDE9284551A000021671 /* PaymentData.swift in Sources */,

@@ -15,7 +15,7 @@ class MemeDetailVC : AddHeaderImageViewController {
     
     var onlyMy = false
     var onlyCard = true
-    
+    var anotherCardModel: AnotherCardViewModel?
     var paymentTemplate: PaymentTemplateData? = nil
     
     var viewModel = ConfirmViewControllerModel(type: .card2card) {
@@ -34,7 +34,7 @@ class MemeDetailVC : AddHeaderImageViewController {
     
     var stackView = UIStackView(arrangedSubviews: [])
     
-    lazy var realm = try? Realm()
+    let model = Model.shared
     var token: NotificationToken?
     
     
@@ -59,10 +59,7 @@ class MemeDetailVC : AddHeaderImageViewController {
         setupConstraint()
         setupActions()
         setupCardViewActions()
-        /// Add REALM
-        AddAllUserCardtList.add() {
-            print("REALM Add")
-        }
+        
         if let template = paymentTemplate {
             addBackButton()
             updateObjectWithTamplate(paymentTemplate: template)
@@ -213,29 +210,25 @@ class MemeDetailVC : AddHeaderImageViewController {
     }
     
     func updateObjectWithNotification(cardId: Int? = nil) {
-        let object = realm?.objects(UserAllCardsModel.self)
+        var products: [UserAllCardsModel] = []
+        let types: [ProductType] = [.card]
+        types.forEach { type in
+            products.append(contentsOf: self.model.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
+        }
+        
+        cardFromListView.cardList = products
+        cardToListView.cardList = products
+        
         if let cardId = cardId {
-            let card = object?.first(where: { $0.id == cardId })
+            
+            let card = products.first(where: { $0.id == cardId })
             self.cardFromField.model = card
             self.viewModel.cardFromRealm = card
+            
         } else {
-            token = object?.observe { ( changes: RealmCollectionChange) in
-                switch changes {
-                case .initial:
-                    //                print("REALM Initial")
-                    //                self.cardFromListView.cardList = self.updateCardsList(with: object)
-                    self.cardFromField.model = self.updateCardsList(with: object).first
-                    self.viewModel.cardFromRealm = self.updateCardsList(with: object).first
-                    //                self.cardToListView.cardList = self.updateCardsList(with: object)
-                case .update:
-                    //                print("REALM Update")
-                    //                self.cardFromListView.cardList = self.updateCardsList(with: object)
-                    self.cardFromField.model = self.updateCardsList(with: object).first
-                    //                self.cardToListView.cardList = self.updateCardsList(with: object)
-                case .error(let error):
-                    fatalError("\(error)")
-                }
-            }
+            
+            self.cardFromField.model = products.first
+            self.viewModel.cardFromRealm = products.first
         }
     }
     
@@ -346,8 +339,12 @@ class MemeDetailVC : AddHeaderImageViewController {
         
         cardFromListView.didCardTapped = { (cardId) in
             DispatchQueue.main.async {
-                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
-                cardList.forEach({ card in
+                var products: [UserAllCardsModel] = []
+                let types: [ProductType] = [.card]
+                types.forEach { type in
+                    products.append(contentsOf: self.model.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
+                }
+                products.forEach({ card in
                     if card.id == cardId {
                         self.viewModel.cardFromRealm = card
                         self.cardFromField.model = card
@@ -404,8 +401,12 @@ class MemeDetailVC : AddHeaderImageViewController {
         }
         cardToListView.didCardTapped = { (cardId) in
             DispatchQueue.main.async {
-                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
-                cardList.forEach({ card in
+                var products: [UserAllCardsModel] = []
+                let types: [ProductType] = [.card]
+                types.forEach { type in
+                    products.append(contentsOf: self.model.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
+                }
+                products.forEach({ card in
                     if card.id == cardId {
                         self.viewModel.cardToRealm = card
                         self.cardToField.model = card
