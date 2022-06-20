@@ -15,6 +15,16 @@ extension Model {
         case clipped
     }
     
+    func amountFormatted(amount: Double, currencyCode: String?, style: AmountFormatStyle) -> String? {
+        
+        guard let currencyCode = currencyCode,
+              let currencyData = dictionaryCurrency(for: currencyCode) else {
+            return nil
+        }
+        
+        return amountFormatted(amount: amount, currencyData: currencyData, style: style)
+    }
+    
     func amountFormatted(amount: Double, currencyCode: String, style: AmountFormatStyle) -> String? {
         
         guard let currencyData = dictionaryCurrency(for: currencyCode) else {

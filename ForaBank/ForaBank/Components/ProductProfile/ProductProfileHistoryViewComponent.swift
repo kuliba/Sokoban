@@ -67,20 +67,47 @@ extension ProductProfileHistoryView {
                 }.store(in: &bindings)
             
             model.statements
-                .combineLatest(model.statementsUpdating)
                 .receive(on: DispatchQueue.main)
-                .sink { [unowned self] data in
-                    
-                    let storages = data.0
-                    let states = data.1
+                .sink { [unowned self] storages in
                     
                     guard let storage = storages[id] else {
                         return
                     }
+
+                    Task.detached(priority: .high) { [self] in
+                        
+                        let update = await reduce(content: content, statements: storage.statements, images: model.images.value, model: model) { [weak self] statementId in
+                            { self?.action.send(ProductProfileHistoryViewModelAction.DidTapped.Detail(statementId: statementId)) }
+                        }
+                        
+                        await MainActor.run {
+    
+                            updateContent(with: update.groups)
+                            
+                            if let state = model.statementsUpdating.value[id] {
+                                
+                                updateContent(with: state, storage: storage)
+                            }
+
+                            if update.downloadImagesIds.isEmpty == false {
+                                
+                                model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: update.downloadImagesIds))
+                            }
+                        }
+                    }
+
+                }.store(in: &bindings)
+            
+            model.statementsUpdating
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] states in
                     
-                    updateContent(with: storage)
-                    updateContent(with: states[id] ?? .idle, storage: storage)
+                    guard let state = states[id], let storage = model.statements.value[id] else {
+                        return
+                    }
                     
+                    updateContent(with: state, storage: storage)
+
                 }.store(in: &bindings)
             
             model.images
@@ -107,41 +134,25 @@ extension ProductProfileHistoryView {
                 }.store(in: &bindings)
         }
         
-        func updateContent(with storage: ProductStatementsStorage) {
+        func updateContent(with groups: [HistoryListViewModel.DayGroupViewModel]) {
             
-            if storage.statements.isEmpty == false {
-                
-                var downloadImagesIds = [String]()
-                
+            if groups.isEmpty == false {
+
                 if case .list(let historyListViewModel) = content {
-                    
-                    let updatedGroupsData = reduce(groups: historyListViewModel.groups, statements: storage.statements, images: model.images.value, model: model){ [weak self] statementId in
-                        { self?.action.send(ProductProfileHistoryViewModelAction.DidTapped.Detail(statementId: statementId)) }
-                    }
-                    downloadImagesIds = updatedGroupsData.downloadImagesIds
-                    
+
                     withAnimation {
                         
-                        historyListViewModel.groups = updatedGroupsData.groups
+                        historyListViewModel.groups = groups
                     }
                     
                 } else {
-                    
-                    let groupsData = reduce(groups: [], statements: storage.statements, images: model.images.value, model: model) { [weak self] statementId in
-                        { self?.action.send(ProductProfileHistoryViewModelAction.DidTapped.Detail(statementId: statementId)) }
-                    }
-                    downloadImagesIds = groupsData.downloadImagesIds
-                    let listViewModel = HistoryListViewModel(expences: nil, latestUpdate: nil, groups: groupsData.groups, eldestUpdate: nil)
+
+                    let listViewModel = HistoryListViewModel(expences: nil, latestUpdate: nil, groups: groups, eldestUpdate: nil)
                    
                     withAnimation {
                         
                         content = .list(listViewModel)
                     }
-                }
-                
-                if downloadImagesIds.isEmpty == false {
-                    
-                    model.action.send(ModelAction.Dictionary.DownloadImages.Request(imagesIds: downloadImagesIds))
                 }
                 
             } else {
@@ -207,6 +218,82 @@ extension ProductProfileHistoryView {
             }
         }
     }
+}
+
+//MARK: - Reducers
+
+extension ProductProfileHistoryView.ViewModel {
+    
+    func reduce(content: Content, statements: [ProductStatementData], images: [String: ImageData], model: Model, shortDateFormatter: DateFormatter = .historyShortDateFormatter, fullDateFormatter: DateFormatter = .historyFullDateFormatter, action: (ProductStatementData.ID) -> () -> Void) async -> (groups: [HistoryListViewModel.DayGroupViewModel], downloadImagesIds: [String]) {
+        
+        switch content {
+        case .list(let historyListViewModel):
+            
+            return await reduce(groups: historyListViewModel.groups, statements: statements, images: images, model: model, action: action)
+            
+        default:
+            
+            return await reduce(groups: [], statements: statements, images: images, model: model, action: action)
+        }
+    }
+    
+    func reduce(groups: [HistoryListViewModel.DayGroupViewModel], statements: [ProductStatementData], images: [String: ImageData], model: Model, shortDateFormatter: DateFormatter = .historyShortDateFormatter, fullDateFormatter: DateFormatter = .historyFullDateFormatter, action: (ProductStatementData.ID) -> () -> Void) async -> (groups: [HistoryListViewModel.DayGroupViewModel], downloadImagesIds: [String]) {
+        
+        func groupDateFormatted(date: Date) -> String {
+            
+            let dateYear = calendar.component(.year, from: date)
+            
+            return dateYear == currentYear ? shortDateFormatter.string(from: date) : fullDateFormatter.string(from: date)
+        }
+        
+        let operations = groups.flatMap{ $0.operations }
+        let operationsUpdateResult = await reduce(operations: operations, statements: statements, images: images, model: model, action: action)
+        
+        let grouppedOperations = Dictionary(grouping: operationsUpdateResult.operations, by: { $0.statement.date.groupDayIndex }).sorted(by: { $0.0 > $1.0 })
+        
+        let calendar = Calendar.current
+        let currentYear = calendar.component(.year, from: Date())
+        var groupsResult = [HistoryListViewModel.DayGroupViewModel]()
+        
+        for group in grouppedOperations {
+            
+            let date = group.value[0].statement.date
+            let dateString = groupDateFormatted(date: date)
+            
+            groupsResult.append(HistoryListViewModel.DayGroupViewModel(id: group.key, title: dateString, operations: group.value))
+        }
+        
+        return (groupsResult, operationsUpdateResult.downloadImagesIds)
+    }
+    
+    func reduce(operations: [HistoryListViewModel.DayGroupViewModel.Operation], statements: [ProductStatementData], images: [String: ImageData], model: Model, action: (ProductStatementData.ID) -> () -> Void) async -> (operations: [HistoryListViewModel.DayGroupViewModel.Operation], downloadImagesIds: [String]) {
+        
+        var updatedOperations = operations
+        var downloadImagesIds = [String]()
+        
+        for statement in statements {
+            
+            guard operations.contains(where: { $0.id == statement.id }) == false else {
+                continue
+            }
+            
+            let operation = HistoryListViewModel.DayGroupViewModel.Operation(statement: statement, model: model, action: action(statement.id))
+            let imageId = statement.md5hash
+            if let imageData = images[imageId] {
+                
+                operation.image = imageData.image
+                
+            } else {
+                
+                downloadImagesIds.append(imageId)
+            }
+            
+            updatedOperations.append(operation)
+        }
+        
+        return (updatedOperations, downloadImagesIds)
+    }
+    
 }
 
 //MARK: - Action
@@ -369,69 +456,6 @@ extension ProductProfileHistoryView.ViewModel {
             }
         }
     }
-}
-
-//MARK: - Reducers
-
-extension ProductProfileHistoryView.ViewModel {
-    
-    func reduce(groups: [HistoryListViewModel.DayGroupViewModel], statements: [ProductStatementData], images: [String: ImageData], model: Model, shortDateFormatter: DateFormatter = .historyShortDateFormatter, fullDateFormatter: DateFormatter = .historyFullDateFormatter, action: (ProductStatementData.ID) -> () -> Void) -> (groups: [HistoryListViewModel.DayGroupViewModel], downloadImagesIds: [String]) {
-        
-        func groupDateFormatted(date: Date) -> String {
-            
-            let dateYear = calendar.component(.year, from: date)
-            
-            return dateYear == currentYear ? shortDateFormatter.string(from: date) : fullDateFormatter.string(from: date)
-        }
-        
-        let operations = groups.flatMap{ $0.operations }
-        let operationsUpdateResult = reduce(operations: operations, statements: statements, images: images, model: model, action: action)
-        
-        let grouppedOperations = Dictionary(grouping: operationsUpdateResult.operations, by: { $0.statement.date.groupDayIndex }).sorted(by: { $0.0 > $1.0 })
-        
-        let calendar = Calendar.current
-        let currentYear = calendar.component(.year, from: Date())
-        var groupsResult = [HistoryListViewModel.DayGroupViewModel]()
-        
-        for group in grouppedOperations {
-            
-            let date = group.value[0].statement.date
-            let dateString = groupDateFormatted(date: date)
-            
-            groupsResult.append(HistoryListViewModel.DayGroupViewModel(id: group.key, title: dateString, operations: group.value))
-        }
-        
-        return (groupsResult, operationsUpdateResult.downloadImagesIds)
-    }
-    
-    func reduce(operations: [HistoryListViewModel.DayGroupViewModel.Operation], statements: [ProductStatementData], images: [String: ImageData], model: Model, action: (ProductStatementData.ID) -> () -> Void) -> (operations: [HistoryListViewModel.DayGroupViewModel.Operation], downloadImagesIds: [String]) {
-        
-        var updatedOperations = operations
-        var downloadImagesIds = [String]()
-        
-        for statement in statements {
-            
-            guard operations.contains(where: { $0.id == statement.id }) == false else {
-                continue
-            }
-            
-            let operation = HistoryListViewModel.DayGroupViewModel.Operation(statement: statement, model: model, action: action(statement.id))
-            let imageId = statement.md5hash
-            if let imageData = images[imageId] {
-                
-                operation.image = imageData.image
-                
-            } else {
-                
-                downloadImagesIds.append(imageId)
-            }
-            
-            updatedOperations.append(operation)
-        }
-        
-        return (updatedOperations, downloadImagesIds)
-    }
-    
 }
 
 //MARK: - View

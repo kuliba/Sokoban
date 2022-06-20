@@ -214,24 +214,6 @@ extension ProductCardData {
             self.totalAvailableAmount = totalAvailableAmount
             self.totalDebtAmount = totalDebtAmount
         }
-        
-//        convenience init?(paramInfo: ProductCardData.LoanBaseParamInfoData) {
-//
-//            self.loanId = paramInfo.loanId
-//            self.clientId = paramInfo.clientId
-//            self.number = paramInfo.number
-//            self.currencyID = paramInfo.currencyID
-//            self.currencyNumber = paramInfo.currencyNumber
-//            self.currencyCode = paramInfo.currencyCode
-//            self.minimumPayment = paramInfo.minimumPayment
-//            self.gracePeriodPayment = paramInfo.gracePeriodPayment
-//            self.overduePayment = paramInfo.overduePayment
-//            self.availableExceedLimit = paramInfo.availableExceedLimit
-//            self.ownFunds = paramInfo.ownFunds
-//            self.debtAmount = paramInfo.debtAmount
-//            self.totalAvailableAmount = paramInfo.totalAvailableAmount
-//            self.totalDebtAmount = paramInfo.totalAvailableAmount
-//        }
     }
 }
 

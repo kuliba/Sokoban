@@ -18,7 +18,7 @@ struct ProductProfileView: View {
         
         ZStack(alignment: .top) {
             
-            ScrollView(showsIndicators: false) {
+            ScrollView {
                 
                 ZStack {
                     
@@ -58,8 +58,8 @@ struct ProductProfileView: View {
                             
                             if let detailAccount = viewModel.detail {
                                 
-                                ProductProfileDetailView(viewModel: detailAccount)
-                                    .padding(.horizontal, 20)
+//                                ProductProfileDetailView(viewModel: detailAccount)
+//                                    .padding(.horizontal, 20)
                             }
                             
                             if let historyViewModel = viewModel.history {
@@ -190,7 +190,7 @@ struct ProfileView_Previews: PreviewProvider {
 
 extension ProductProfileViewModel {
     
-    static let sample = ProductProfileViewModel(statusBar: .sample, product: .sample, buttons: .sample, detail: .sample, history: .sampleHistory)
+    static let sample = ProductProfileViewModel(statusBar: .sample, product: .sample, buttons: .sample, detail: nil, history: .sampleHistory)
 }
 
 extension ProductProfileViewModel.StatusBarViewModel {
