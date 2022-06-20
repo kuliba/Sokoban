@@ -29,7 +29,7 @@ struct UserDocumentView: View {
                             
                         }
                     }
-                    .frame(height: 0)
+                    .frame(height: 50)
                 }
                 
                 VStack(spacing: 24) {
@@ -56,16 +56,6 @@ struct UserDocumentView: View {
                 .padding(.horizontal, 20)
                 .padding(.bottom, 24)
                 .edgesIgnoringSafeArea(.top)
-            }
-            
-            ZStack {
-                
-                viewModel.navigationBar.background
-                    .contrast(0.8)
-                    .clipped()
-                    .edgesIgnoringSafeArea(.all)
-                    .frame(height: 50)
-                
             }
             
             VStack {

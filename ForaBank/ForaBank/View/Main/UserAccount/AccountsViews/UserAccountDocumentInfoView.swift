@@ -15,9 +15,7 @@ extension UserAccountDocumentInfoView {
         let content: String
         
         @Published var button: ButtonSimpleView.ViewModel?
-        
-//        var action: () -> Void
-        
+                
         internal init(itemType: DocumentCellType, content: String) {
             
             self.itemType = itemType

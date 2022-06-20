@@ -31,7 +31,7 @@ class UserDocumentViewModel: ObservableObject {
             })
     }
     
-    init(clientInfo: ClientInfoData, itemType: DocumentCellType, dismissAction: @escaping () -> Void) {
+    init(clientInfo: ClientInfoData, itemType: DocumentCellType) {
         
         self.itemType = itemType
         navigationBar = .init(

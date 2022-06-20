@@ -46,6 +46,7 @@ struct UserAccountView: View {
                 
                 if let button = viewModel.exitButton {
                     AccountCellFullButtonView(viewModel: button)
+                        .padding(.horizontal, 20)
                 }
             }
             
@@ -60,27 +61,28 @@ struct UserAccountView: View {
                 }
             }
         }
-        .bottomSheet(item: $viewModel.sheet) {
-            
-            // onDismiss action
-            
-        } content: { sheet in
-            
+        .sheet(item: $viewModel.sheet, content: { sheet in
+            switch sheet.sheetType {
+                
+            case let .userDocument(userDocumentViewModel):
+                UserDocumentView(viewModel: userDocumentViewModel)
+                
+            }
+        })
+        .bottomSheet(item: $viewModel.bottomSheet, content: { sheet in
             switch sheet.sheetType {
                 
             case let .inn(model):
                 UserAccountDocumentInfoView(viewModel: model)
                 
-            default:
-                EmptyView()
             }
-        }
+        })
         .navigationBar(with: viewModel.navigationBar)
         .introspectTabBarController(customize: { tabBarController in
             
             self.tabBarController = tabBarController
             tabBarController.tabBar.isHidden = true
-            UIView.transition(with: tabBarController.view, duration: 0.05, options: .transitionCrossDissolve, animations: nil)
+//            UIView.transition(with: tabBarController.view, duration: 0.05, options: .transitionCrossDissolve, animations: nil)
         })
         .onDisappear {
             

@@ -63,9 +63,7 @@ class MainViewModel: ObservableObject {
                     guard let clientInfo = model.clientInfo.value else {
                         return
                     }
-                    link = .userAccount(.init(model: model, clientInfo: clientInfo, dismissAction: { [weak self] in
-                        self?.action.send(MainViewModelAction.CloseLink())
-                    }))
+                    link = .userAccount(.init(model: model, clientInfo: clientInfo))
                     
                 case _ as MainViewModelAction.ButtonTapped.Messages:
                     let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model)

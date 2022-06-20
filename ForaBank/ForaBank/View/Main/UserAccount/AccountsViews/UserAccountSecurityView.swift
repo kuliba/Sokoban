@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 extension UserAccountSecurityView {
     
@@ -14,11 +15,48 @@ extension UserAccountSecurityView {
         override var type: UserAccountViewModel.AccountSectionType { .security }
         var items: [AccountCellDefaultViewModel]
         
+        let faceId = AccountCellSwitchView.ViewModel(
+            content: "Вход по Face ID",
+            icon: .ic24FaceId)
+        
+        let push = AccountCellSwitchView.ViewModel(
+            content: "Push-уведомления",
+            icon: .ic24Bell)
+        
+        private var bindings = Set<AnyCancellable>()
+        
         internal init(items: [AccountCellDefaultViewModel], isCollapsed: Bool) {
             
             self.items = items
             super.init(isCollapsed: isCollapsed)
         }
+        
+        internal override init(isCollapsed: Bool) {
+            
+            self.items = [faceId, push]
+            super.init(isCollapsed: isCollapsed)
+            bind()
+        }
+        
+        func bind() {
+            
+            faceId.$isActive
+                .dropFirst()
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] isActive in
+                    action.send(UserAccountModelAction.FaceIdSwitch(value: isActive))
+                    
+                }.store(in: &bindings)
+            
+            push.$isActive
+                .dropFirst()
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] isActive in
+                    action.send(UserAccountModelAction.NotificationSwitch(value: isActive))
+                    
+                }.store(in: &bindings)
+        }
+        
     }
 }
 
@@ -30,7 +68,7 @@ struct UserAccountSecurityView: View {
     
     var body: some View {
         
-        CollapsableSectionView(title: viewModel.title, isCollapsed: $viewModel.isCollapsed) {
+        CollapsableSectionView(title: viewModel.title, edges: .horizontal, padding: 20, isCollapsed: $viewModel.isCollapsed) {
             
             VStack(spacing: 4) {
                 
@@ -40,7 +78,7 @@ struct UserAccountSecurityView: View {
                         AccountCellSwitchView(viewModel: viewModel)
                     }
                 }
-            }
+            }.padding(.horizontal, 20)
         }
     }
 }

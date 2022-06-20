@@ -19,6 +19,19 @@ extension UserAccountPaymentsView {
             self.items = items
             super.init(isCollapsed: isCollapsed)
         }
+        
+        internal override init(isCollapsed: Bool) {
+            
+            self.items = []
+            super.init(isCollapsed: isCollapsed)
+            
+            self.items = [AccountCellButtonView.ViewModel(
+                icon: Image("sbp-logo"),
+                content: "Система быстрых платежей",
+                button: .init(icon: .ic24ChevronRight, action: { [weak self] in
+                    self?.action.send(UserAccountModelAction.OpenFastPayment())
+                }))]
+        }
     }
 }
 
@@ -30,7 +43,7 @@ struct UserAccountPaymentsView: View {
     
     var body: some View {
         
-        CollapsableSectionView(title: viewModel.title, isCollapsed: $viewModel.isCollapsed) {
+        CollapsableSectionView(title: viewModel.title, edges: .horizontal, padding: 20, isCollapsed: $viewModel.isCollapsed) {
             
             VStack(spacing: 4) {
                 
@@ -40,7 +53,7 @@ struct UserAccountPaymentsView: View {
                         AccountCellButtonView(viewModel: viewModel)
                     }
                 }
-            }
+            }.padding(.horizontal, 20)
         }
     }
 }
