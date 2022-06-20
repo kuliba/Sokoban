@@ -12,22 +12,25 @@ import SwiftUI
 extension ProductProfileDetailView.ViewModel {
         
     struct DateProgressViewModel {
-
+        
         let title: String
+        let dateTitle: String
         let remain: String
         let progress: Double
         
-        internal init(title: String, remain: String, progress: Double) {
+        internal init(title: String, dateTitle: String, remain: String, progress: Double) {
             
             self.title = title
+            self.dateTitle = dateTitle
             self.remain = remain
             self.progress = progress
         }
         
-        init(paymentDate: Date, currentDate: Date) {
+        init(title: String, paymentDate: Date, currentDate: Date) {
             
+            self.title = title
             let dateFormatter = DateFormatter.dateAndMonth
-            self.title = "Дата платежа - " + dateFormatter.string(from: paymentDate)
+            self.dateTitle = "Дата платежа - " + dateFormatter.string(from: paymentDate)
             
             let calendar = Calendar.current
             let daysBetween = calendar.numberOfDaysBetween(currentDate, and: paymentDate)
@@ -35,7 +38,30 @@ extension ProductProfileDetailView.ViewModel {
             self.remain = "\(daysBetween) дней"
             self.progress = 1.0 - (Double(max(daysBetween, 0)) / Double(daysFromMonthStart))
         }
-
+        
+        /*
+        enum SubTitleViewModel {
+            
+            case paid
+            case start
+            case interval
+            case delayCredit
+            case mortgage
+            case consumer
+            
+            var subTitle: String {
+                
+                switch self {
+                case .paid: return "Обязательный платеж погашен!\nУ вас нет задолженности"
+                case .start: return "Поздравляем 🎉, Вы стали обладателем кредитной карты. Оплачивайте покупки и получайте Кешбэк и скидки от партнеров."
+                case .interval: return "Отчетный период \(Date().startOfPreviusDate()) - \(Date().endOfMonth()) "
+                case .delayCredit: return "Вносите платеж вовремя"
+                case .consumer: return "Очередной платеж по кредиту"
+                case .mortgage: return "Очередной платеж по ипотеке"
+                }
+            }
+        }
+         */
     }
 }
 
@@ -49,77 +75,40 @@ extension ProductProfileDetailView {
         
         var body: some View {
             
-            VStack(spacing: 12) {
+            VStack(alignment: .leading, spacing: 8) {
+                
+                Text(viewModel.title)
+                    .font(.textBodySR12160())
+                    .foregroundColor(.textPlaceholder)
                 
                 HStack {
                     
-                    Text(viewModel.title)
-                        .foregroundColor(.white)
+                    //FIXME: font
+                    Text(viewModel.dateTitle)
                         .font(.system(size: 16))
-                    
+                        .foregroundColor(.textWhite)
+
                     Spacer()
                     
                     HStack {
                         
+                        //FIXME: color
                         Image.ic24HistoryInactive
                             .resizable()
                             .foregroundColor(.gray)
                         .frame(width: 12, height: 12)
                         
+                        //FIXME: font
                         Text(viewModel.remain)
                             .font(.system(size: 12))
-                            .foregroundColor(.gray)
+                            .foregroundColor(.textPlaceholder)
                     }
                 }
                 
-                GeometryReader { geometry in
-                    
-                    ZStack() {
-                        
-                        Capsule()
-                            .stroke(Color.textPrimary, lineWidth: 1)
-                            .frame(height: 6)
-                            .foregroundColor(.textPrimary)
-                        
-                        HStack(spacing: (geometry.size.width - 44) / 39) {
-                            
-                            ForEach(0..<40) { _ in
-                                
-                                Capsule()
-                                    .frame(width: 1, height: 2)
-                                    .foregroundColor(.textPrimary)
-                            }
-                        }
-                        
-                        Capsule()
-                            .fill(LinearGradient(
-                                gradient: .init(colors: [Color(hex: "22C183"), Color(hex: "FFBB36") ,Color(hex: "FF3636")]),
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            ))
-                            .padding(2)
-                            .clipShape(ClipArea(width: geometry.size.width * viewModel.progress))
-  
-                    }.frame(height: 6)
-                }
+                LineProgressView(progress: .constant(CGFloat(viewModel.progress)))
+                    .padding(.top, 4)
             }
         }
-    }
-}
-
-fileprivate struct ClipArea: Shape {
-    
-    let width: CGFloat
-    
-    func path(in rect: CGRect) -> Path {
-        
-        var path = Path()
-        path.move(to: CGPoint(x: rect.minX, y: rect.minY))
-        path.addLine(to: CGPoint(x: width, y: rect.minY))
-        path.addLine(to: CGPoint(x: width, y: rect.maxY))
-        path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
-        
-        return path
     }
 }
 
@@ -132,13 +121,13 @@ struct ProductProfileDetailDateProgressViewComponent_Previews: PreviewProvider {
         Group {
             
             ProductProfileDetailView.DateProgressView(viewModel: .sample)
-                .previewLayout(.fixed(width: 375, height: 60))
+                .previewLayout(.fixed(width: 375, height: 80))
             
             ProductProfileDetailView.DateProgressView(viewModel: .sampleNormal)
-                .previewLayout(.fixed(width: 375, height: 60))
+                .previewLayout(.fixed(width: 375, height: 80))
             
             ProductProfileDetailView.DateProgressView(viewModel: .sampleOverdue)
-                .previewLayout(.fixed(width: 375, height: 60))
+                .previewLayout(.fixed(width: 375, height: 80))
             
         }.background(Color.black)
     }
@@ -148,19 +137,12 @@ struct ProductProfileDetailDateProgressViewComponent_Previews: PreviewProvider {
 
 extension ProductProfileDetailView.ViewModel.DateProgressViewModel {
     
-    static let sample = ProductProfileDetailView.ViewModel.DateProgressViewModel(title: "Дата платежа - 4 июня", remain: "5 дней", progress: 0.7)
+    static let sample = ProductProfileDetailView.ViewModel.DateProgressViewModel(title: "Отчетный период 1 мая - 31 мая", dateTitle: "Дата платежа - 4 июня", remain: "5 дней", progress: 0.7)
     
-    static let sampleNormal = ProductProfileDetailView.ViewModel.DateProgressViewModel(paymentDate: Date.date(year: 2022, month: 6, day: 28), currentDate: Date.date(year: 2022, month: 6, day: 10))
+    static let sampleNormal = ProductProfileDetailView.ViewModel.DateProgressViewModel(title: "Отчетный период 1 мая - 31 мая", dateTitle: "Дата платежа - 4 июня", remain: "5 дней", progress: 0.3)
+
     
-    static let sampleOverdue = ProductProfileDetailView.ViewModel.DateProgressViewModel(paymentDate: Date.date(year: 2022, month: 6, day: 10), currentDate: Date.date(year: 2022, month: 6, day: 25))
+    static let sampleOverdue = ProductProfileDetailView.ViewModel.DateProgressViewModel(title: "Вносите платеж вовремя", dateTitle: "Дата платежа - 4 июня", remain: "-20 дней", progress: 1.0)
 }
-                                                                
-fileprivate extension Date {
-    
-    static func date(year: Int, month: Int, day: Int) -> Date {
-        
-        let components = DateComponents(year: year, month: month, day: day, hour: 5)
-        return Calendar.current.date(from: components)!
-    }
-}
+
                                                                                       
