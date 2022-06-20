@@ -541,6 +541,7 @@
 		68EB187827CEDFC600745558 /* ProductProfileHistoryViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68EB187727CEDFC600745558 /* ProductProfileHistoryViewComponent.swift */; };
 		68EB187A27CEE85700745558 /* SegmentedBarViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68EB187927CEE85700745558 /* SegmentedBarViewComponent.swift */; };
 		68F5E11A28509FD2003018E5 /* BankData+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F5E11928509FD2003018E5 /* BankData+Legacy.swift */; };
+		68F5E1242858F1B0003018E5 /* TransferByRequisitsView+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F5E1232858F1B0003018E5 /* TransferByRequisitsView+Legacy.swift */; };
 		68F6816F269E5E56008157CE /* SearchBanksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F6816E269E5E56008157CE /* SearchBanksViewController.swift */; };
 		68F9A06B27ECC348006C552C /* ProductViewControllerHistoryTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F9A06A27ECC348006C552C /* ProductViewControllerHistoryTableView.swift */; };
 		68FB358B2760C1C80097AECE /* AntifraudView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FB358A2760C1C80097AECE /* AntifraudView.swift */; };
@@ -1743,6 +1744,7 @@
 		68EB187727CEDFC600745558 /* ProductProfileHistoryViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductProfileHistoryViewComponent.swift; sourceTree = "<group>"; };
 		68EB187927CEE85700745558 /* SegmentedBarViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedBarViewComponent.swift; sourceTree = "<group>"; };
 		68F5E11928509FD2003018E5 /* BankData+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BankData+Legacy.swift"; sourceTree = "<group>"; };
+		68F5E1232858F1B0003018E5 /* TransferByRequisitsView+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TransferByRequisitsView+Legacy.swift"; sourceTree = "<group>"; };
 		68F6816E269E5E56008157CE /* SearchBanksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBanksViewController.swift; sourceTree = "<group>"; };
 		68F9A06A27ECC348006C552C /* ProductViewControllerHistoryTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductViewControllerHistoryTableView.swift; sourceTree = "<group>"; };
 		68FB358A2760C1C80097AECE /* AntifraudView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AntifraudView.swift; sourceTree = "<group>"; };
@@ -4217,6 +4219,7 @@
 				ED733D612858964600F22D42 /* CountryPaymentViewController */,
 				68629334284E558D00B25EB6 /* TransferByPhoneView+Legacy.swift */,
 				77DA206328453ADB00D7E005 /* MeToMeView+Legacy.swift */,
+				68F5E1232858F1B0003018E5 /* TransferByRequisitsView+Legacy.swift */,
 				ED5A122C285CC21000621E26 /* AnotherCardView+Legacy.swift */,
 			);
 			path = Controllers;
@@ -7329,6 +7332,8 @@
 				77F1581F2810909B00CA5E4E /* SessionAgent.swift in Sources */,
 				770DCE8F27BBE6AB004099C1 /* Model+Auth.swift in Sources */,
 				68D099D2273A73CA0017D777 /* SettingViewCoordinator.swift in Sources */,
+				68F5E1242858F1B0003018E5 /* TransferByRequisitsView+Legacy.swift in Sources */,
+				68D3F8D527CECB00002753BD /* ProductProfileButtonsSectionViewComponent.swift in Sources */,
 				68D3F8D527CECB00002753BD /* ProductProfileButtonsViewComponent.swift in Sources */,
 				77EC58F4277381970054D75C /* OperationType.swift in Sources */,
 				0BEC893B2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift in Sources */,
