@@ -87,7 +87,11 @@ class PaymentsTransfersViewModel: ObservableObject {
                                 self?.link = nil
                             }))
                             
-                        case .anotherCard: sheet = .init(type: .exampleDetail(payload.type.rawValue))  //TODO:
+                        case .anotherCard:
+                            sheet = .init(type: .anotherCard(.init(closeAction: { [weak self] in
+                                self?.sheet = nil
+                            })))
+                            
                         case .betweenSelf:
                             let meToMeViewModel = MeToMeViewModel { [weak self] in
                                     self?.link = nil
@@ -138,6 +142,7 @@ class PaymentsTransfersViewModel: ObservableObject {
             
             case exampleDetail(String)
             case taxAndStateService(PaymentsViewModel)
+            case anotherCard(AnotherCardViewModel)
         }
     }
     

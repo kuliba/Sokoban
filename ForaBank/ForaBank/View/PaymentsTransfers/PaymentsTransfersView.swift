@@ -106,6 +106,13 @@ struct PaymentsTransfersView: View {
                 case let .taxAndStateService(taxAndStateServiceVM):
                     PaymentsView(viewModel: taxAndStateServiceVM)
                     
+                case .anotherCard(let model):
+                    //TODO: как то нужно открыть не молным модальным откном, UIViewControllerTransitioningDelegate не работает
+                    VStack {
+                        Spacer()
+                        AnotherCardView(viewModel: model)
+                            .frame(height: 490)
+                    }
                 }
             })
             .navigationBarHidden(true)

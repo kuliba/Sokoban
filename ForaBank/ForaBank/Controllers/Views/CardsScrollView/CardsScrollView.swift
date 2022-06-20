@@ -16,9 +16,7 @@ final class CardsScrollView: UIView {
     let allReuseIdentifier = "AllCardCell"
 
     let model: Model = .shared
-    
-    var cardListRealm: Results<UserAllCardsModel>? = nil
-    
+        
     var cardList = [UserAllCardsModel]() {
         didSet {
             DispatchQueue.main.async {
