@@ -92,6 +92,15 @@ struct PaymentsTransfersView: View {
                                 .onDisappear {
                                     showTabBar(self.tabBarController)
                                 }
+                        case let .transferByRequisites(transferByRequisitesViewModel):
+                            TransferByRequisitesView(viewModel: transferByRequisitesViewModel)
+                                .navigationBarTitle("", displayMode: .inline)
+                                .introspectTabBarController(customize: { tabBarController in
+                                    hideTabBar(tabBarController)
+                                })
+                                .onDisappear {
+                                    showTabBar(self.tabBarController)
+                                }
                         }
                     }
                 }
@@ -100,12 +109,12 @@ struct PaymentsTransfersView: View {
             .sheet(item: $viewModel.sheet, content: { sheet in
                
                 switch sheet.type {
-                case let .exampleDetail(title):    //TODO: 
+                case let .exampleDetail(title):    //TODO:
                     ExampleDetailMock(title: title)
                     
                 case let .taxAndStateService(taxAndStateServiceVM):
                     PaymentsView(viewModel: taxAndStateServiceVM)
-                    
+                
                 case .anotherCard(let model):
                     //TODO: как то нужно открыть не молным модальным откном, UIViewControllerTransitioningDelegate не работает
                     VStack {

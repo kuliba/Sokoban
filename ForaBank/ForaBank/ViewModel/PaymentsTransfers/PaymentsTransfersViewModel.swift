@@ -152,6 +152,7 @@ class PaymentsTransfersViewModel: ObservableObject {
         case chooseCountry(ChooseCountryViewModel)
         case meToMe(MeToMeViewModel)
         case transferByPhone(TransferByPhoneViewModel)
+        case transferByRequisites(TransferByRequisitesViewModel)
 
     }
     
