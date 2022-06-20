@@ -78,14 +78,12 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func getUserCard() -> UserAllCardsModel?  {
-        var products: [UserAllCardsModel] = []
-        let types: [ProductType] = [.card]
-        types.forEach { type in
-            products.append(contentsOf: self.model.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
-        }
+        let productTypes: [ProductType] = [.card, .account]
+        let productsFilterred = self.model.products.value.values.flatMap({ $0 }).filter{ productTypes.contains($0.productType) && $0.currency == "RUB" }
+        let productsFilterredMapped = productsFilterred.map{ $0.userAllProducts() }
         
         var filterProduct: [UserAllCardsModel] = []
-        products.forEach({ card in
+        productsFilterredMapped.forEach({ card in
                 
                 if card.currency == "RUB" {
                     
@@ -143,8 +141,8 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
         cardListView.didCardTapped = { cardId in
             DispatchQueue.main.async {
                 // Все карты
-                var products: [UserAllCardsModel] = []
-                let types: [ProductType] = [.card]
+                var products = self.model.products.value.values.flatMap({ $0 }).map { $0.userAllProducts() }
+                let types: [ProductType] = [.card, .account]
                 types.forEach { type in
                     products.append(contentsOf: self.model.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
                 }
