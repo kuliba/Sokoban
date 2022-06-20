@@ -87,7 +87,7 @@ extension Model {
                 .init(id: Payments.Parameter.Identifier.amount.rawValue, value: nil),
                 title: "Сумма перевода",
                 currency: .init(description: "RUB"),
-                validator: .init(minAmount: 1, maxAmount: product.balance))
+                validator: .init(minAmount: 1, maxAmount: product.balance ?? 0))
             parameters.append(amountParameter)
         }
         

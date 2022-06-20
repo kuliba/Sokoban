@@ -615,37 +615,43 @@ extension Model {
         }
     }
     
+    var productsData: [ProductData] { products.value.values.flatMap { $0 } }
+        
+    
+    
     func paymentsProductType(for productId: Int) -> ProductType? {
         
-        guard let realm = try? Realm() else {
-            return nil
-        }
-        
-        let products = realm.objects(UserAllCardsModel.self)
-        
-        return products.first(where: { $0.id == productId })?.productTypeEnum
+        //guard let realm = try? Realm() else {
+        //    return nil
+        //}
+
+        //let products = realm.objects(UserAllCardsModel.self)
+    
+        //return products.first(where: { $0.id == productId })?.productTypeEnum
+        return productsData.first(where: { $0.id == productId })?.productType
     }
     
     func paymentsFirstProductId(of type: ProductType, currency: Currency) -> Int? {
         
-        guard let realm = try? Realm() else {
-            return nil
-        }
+        //guard let realm = try? Realm() else {
+        //    return nil
+        //}
         
-        let products = realm.objects(UserAllCardsModel.self)
+        //let products = realm.objects(UserAllCardsModel.self)
         
-        return products.first(where: { $0.productType == type.rawValue && $0.currency == currency.description })?.id
+        //return products.first(where: { $0.productType == type.rawValue && $0.currency == currency.description })?.id
+        return productsData.first(where: { $0.productType == type && $0.currency == currency.description })?.id
     }
     
-    func paymentsProduct(with id: Int) -> UserAllCardsModel? {
+    func paymentsProduct(with id: Int) -> ProductData? { //UserAllCardsModel? {
         
-        guard let realm = try? Realm() else {
-            return nil
-        }
+        //guard let realm = try? Realm() else {
+        //    return nil
+        //}
         
-        let products = realm.objects(UserAllCardsModel.self)
-        
-        return products.first(where: { $0.id == id })
+        //let products = realm.objects(UserAllCardsModel.self)
+        //return products.first(where: { $0.id == id })
+        return productsData.first(where: { $0.id == id })
     }
     
     func paymentsTransferAmount(with parameters: [ParameterRepresentable]) -> Double? {
