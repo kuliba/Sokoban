@@ -16,8 +16,6 @@ extension MainSectionProductsView {
     
     class ViewModel: MainSectionCollapsableViewModel {
         
-        let action: PassthroughSubject<Action, Never> = .init()
-        
         override var type: MainSectionType { .products }
         @Published var typeSelector: OptionSelectorView.ViewModel?
         @Published var selectedTypeId: Option.ID = ""

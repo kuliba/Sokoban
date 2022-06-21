@@ -54,10 +54,10 @@ struct MainView: View {
                         }
                     }
                 }
-
             }
             .padding(20)
         }
+        .ignoreKeyboard()
         .sheet(item: $viewModel.sheet, content: { sheet in
             switch sheet {
             case .productProfile(let productProfileViewModel):
@@ -76,6 +76,20 @@ struct MainView: View {
                 PlacesView(viewModel: placesViewModel)
             }
         })
+        .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
+
+            switch bottomSheet.type {
+            case let .openAccount(model):
+
+                if let productsList = model.accountProductsList.value {
+
+                    let viewModel: OpenAccountViewModel = .init(model: model, items: OpenAccountViewModel.reduce(products: productsList))
+
+                    OpenAccountView(viewModel: viewModel)
+                        .frame(height: 454)
+                }
+            }
+        }
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarItems(leading:
                                 UserAccountButton(viewModel: viewModel.userAccountButton),

@@ -1,13 +1,13 @@
 //
 //  BottomSheetContentView.swift
-//  ForaBank
+//  BottomSheetView
 //
-//  Created by Pavel Samsonov on 27.05.2022.
+//  Created by Pavel Samsonov on 30.05.2022.
 //
 
 import SwiftUI
 
-//MARK: - BottomSheetContentView
+// MARK: - View
 
 struct BottomSheetContentView<Content: View>: View {
 
@@ -44,6 +44,8 @@ extension BottomSheetContentView {
 
     struct DimmingView: View {
 
+        @ObservedObject var keyboardPublisher = KeyboardPublisher()
+
         @Binding var isShowBottomSheet: Bool
 
         init(_ isShowBottomSheet: Binding<Bool>) {
@@ -56,8 +58,18 @@ extension BottomSheetContentView {
                 .opacity(0.3)
                 .edgesIgnoringSafeArea(.all)
                 .onTapGesture {
-                    isShowBottomSheet.toggle()
+                    onTapGesture()
                 }
+        }
+
+        private func onTapGesture() {
+
+            guard keyboardPublisher.isKeyboardPresented == false else {
+                UIApplication.shared.endEditing()
+                return
+            }
+
+            isShowBottomSheet.toggle()
         }
     }
 
@@ -76,9 +88,9 @@ extension BottomSheetContentView {
 
                 Capsule()
                     .fill(Color.mainColorsGrayMedium)
-                    .frame(width: 48, height: 4)
+                    .frame(width: 48, height: 5)
             }
-            .frame(width: UIScreen.main.bounds.width, height: 20)
+            .frame(width: UIScreen.main.bounds.width, height: 21)
             .onTapGesture {
                 isShowBottomSheet.toggle()
             }
@@ -130,10 +142,21 @@ private struct BottomSheetViewModifier: ViewModifier {
 
 private struct BottomSheetContentViewModifier: ViewModifier {
 
+    @ObservedObject var keyboardPublisher = KeyboardPublisher()
+
     @Binding var isShowBottomSheet: Bool
 
     @State private var offset: CGSize = .zero
     @State private var contentSize: CGSize = .zero
+
+    private var keyboardHeight: CGFloat {
+
+        if keyboardPublisher.isKeyboardPresented == true {
+            return keyboardPublisher.keyboardHeight * 0.71
+        }
+
+        return 0
+    }
 
     var onDismiss: (() -> Void)?
 
@@ -150,7 +173,7 @@ private struct BottomSheetContentViewModifier: ViewModifier {
             .modifier(BottomSheetViewModifier())
             .onPreferenceChange(BottomSheetPreferenceKey.self, perform: { self.contentSize = $0 })
             .cornerRadius(12)
-            .offset(y: offset.height)
+            .offset(y: offset.height + keyboardHeight)
             .shadow(color: .mainColorsGray, radius: 4)
             .animation(.spring())
             .transition(.move(edge: .bottom))
