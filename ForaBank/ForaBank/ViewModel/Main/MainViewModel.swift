@@ -68,7 +68,7 @@ class MainViewModel: ObservableObject {
                     
                 case _ as MainViewModelAction.ButtonTapped.Messages:
                     let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model)
-                    sheet = .init(type: .messages(messagesHistoryViewModel))
+                    link = .messages(messagesHistoryViewModel)
                     
                 case _ as MainViewModelAction.PullToRefresh:
                     model.action.send(ModelAction.Products.Update.Total.All())
@@ -218,6 +218,7 @@ extension MainViewModel {
     enum Link {
         
         case productProfile(ProductProfileViewModel)
+        case messages(MessagesHistoryViewModel)
     }
 }
 

@@ -7,13 +7,14 @@
 
 import Foundation
 
-struct NotificationData: Equatable, Hashable {
+struct NotificationData: Equatable, Identifiable, Hashable {
     
-    var date: Date
     let title: String
     let state: State
     let text: String
     let type: Kind
+    var id: Int { hashValue }
+    var date: Date
     
     enum State: String, Codable, Equatable, Hashable {
         
