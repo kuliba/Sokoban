@@ -13,22 +13,29 @@ extension MessagesHistoryItemView {
     
     class ViewModel: Identifiable {
         
-        let id = UUID()
+        let id: NotificationData.ID
         let icon: Image
         let title: String
         let content: String
         let time: String
-        let action: () -> Void
-        
-        internal init(icon: Image, title: String, content: String, time: String, action: @escaping () -> Void) {
+
+        internal init(icon: Image, title: String, content: String, time: String) {
             
+            self.id = 1
             self.icon = icon
             self.title = title
             self.content = content
             self.time = time
-            self.action = action
         }
         
+        internal init(notification: NotificationData) {
+            
+            self.id = notification.id
+            self.icon = Image.ic24Slash
+            self.title = notification.title
+            self.content = notification.text
+            self.time = DateFormatter.minutsAndSecond.string(from: notification.date)
+        }
     }
 }
 
@@ -45,8 +52,10 @@ struct MessagesHistoryItemView: View {
             VStack(alignment: .center) {
                 viewModel.icon
                     .resizable()
-                    .frame(width: 40, height: 40)
-                    .padding(.leading, 4)
+                    .frame(width: 24, height: 24)
+                    .foregroundColor(.iconWhite)
+                    .background(Circle().frame(width: 40, height: 40).foregroundColor(.bGIconRedLight))
+                    .padding(.init(top: 12, leading: 16, bottom: 0, trailing: 12))
                 Spacer()
             }
             
@@ -84,5 +93,5 @@ struct MessagesHistoryItemView_Previews: PreviewProvider {
 
 extension MessagesHistoryItemView.ViewModel {
     
-    static let sample = MessagesHistoryItemView.ViewModel(icon: Image("Payments List Sample"), title: "Срок вашей карты истекает 29.08.2021 г.", content: "Оставте он-лайн заявку или обратитесь в ближайшее отделение банка", time: "17:56", action: {})
+    static let sample = MessagesHistoryItemView.ViewModel(icon: Image.ic24Slash, title: "Срок вашей карты истекает 29.08.2021 г.", content: "Оставте он-лайн заявку или обратитесь в ближайшее отделение банка", time: "17:56")
 }
