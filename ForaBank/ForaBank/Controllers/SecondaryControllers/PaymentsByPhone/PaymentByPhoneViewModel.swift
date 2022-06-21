@@ -54,10 +54,10 @@ class PaymentByPhoneViewModel {
     private func getUserCard() -> UserAllCardsModel?  {
         
         var products: [UserAllCardsModel] = []
-        
-        let data = model.products.value
-
-        products = data.flatMap({$0.value}).compactMap({$0.userAllProducts()})
+        let types: [ProductType] = [.card, .account, .deposit, .loan]
+        types.forEach { type in
+            products.append(contentsOf: self.model.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
+        }
         
         let filterProduct = products.filter({
             ($0.productType == "CARD" || $0.productType == "ACCOUNT") && $0.currency == "RUB" })
