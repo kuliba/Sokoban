@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct NotificationData: Equatable, Identifiable {
+struct NotificationData: Equatable, Identifiable, Hashable {
     
     let title: String
     let state: State

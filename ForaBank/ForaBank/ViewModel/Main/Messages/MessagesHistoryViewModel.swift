@@ -38,7 +38,7 @@ class MessagesHistoryViewModel: ObservableObject {
         var keyArray = [Int]()
         var messages: [MessagesHistorySectionView.ViewModel] = []
         notifications.forEach { item in
-            guard let section = item.groupIndex else { return }
+            let section = item.date.groupDayIndex
             keyArray.append(section)
         }
         
@@ -49,13 +49,13 @@ class MessagesHistoryViewModel: ObservableObject {
         
         sortedKeyArray.forEach { key in
             
-            var items = notifications.filter { $0.groupIndex == key }
+            var items = notifications.filter { $0.date.groupDayIndex == key }
             
-            items.sort{ $0.sortIndex ?? 0 > $1.sortIndex ?? 0 }
+            items.sort{ $0.date > $1.date }
             
             guard let section = items.map({$0.date}).first else { return }
             
-            let message = MessagesHistorySectionView.ViewModel(title: DateFormatter.historyDateFormatter.string(from:section),
+            let message = MessagesHistorySectionView.ViewModel(title: DateFormatter.historyShortDateFormatter.string(from:section),
                                                                 items: items)
             messages.append(message)
         }
