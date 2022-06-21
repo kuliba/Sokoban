@@ -50,10 +50,10 @@ class PaymentsTransfersViewModel: ObservableObject {
                         
                         switch (payload.latestPayment.type, payload.latestPayment) {
                         case (.phone, let paymentData as PaymentGeneralData):
-                            sheet = .init(type: .exampleDetail(paymentData.type.rawValue)) //TODO:
+                            sheet = .init(type: .phone(PaymentByPhoneViewModel(phoneNumber: paymentData.phoneNumber, bankId: paymentData.bankId)))
                         
                         case (.country, let paymentData as PaymentCountryData):
-                            sheet = .init(type: .exampleDetail(paymentData.type.rawValue)) //TODO:
+                            sheet = .init(type: .country(paymentData))
                             
                         case (.service, let paymentData as PaymentServiceData):
                             sheet = .init(type: .exampleDetail(paymentData.type.rawValue)) //TODO:
@@ -143,6 +143,8 @@ class PaymentsTransfersViewModel: ObservableObject {
             case exampleDetail(String)
             case taxAndStateService(PaymentsViewModel)
             case anotherCard(AnotherCardViewModel)
+            case phone(PaymentByPhoneViewModel)
+            case country(PaymentCountryData)
         }
     }
     

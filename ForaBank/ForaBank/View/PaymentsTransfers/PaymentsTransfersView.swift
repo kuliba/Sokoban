@@ -111,6 +111,10 @@ struct PaymentsTransfersView: View {
                 switch sheet.type {
                 case let .exampleDetail(title):    //TODO:
                     ExampleDetailMock(title: title)
+                case let .phone(phoneData):
+                    PaymentPhoneView(viewModel: phoneData)
+                case let .country(countryData):
+                    CountryPaymentView(viewModel: .init(countryData: countryData))
                     
                 case let .taxAndStateService(taxAndStateServiceVM):
                     PaymentsView(viewModel: taxAndStateServiceVM)
