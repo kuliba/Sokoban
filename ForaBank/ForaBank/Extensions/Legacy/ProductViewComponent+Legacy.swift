@@ -10,45 +10,40 @@ import SwiftUI
 
 extension ProductView.ViewModel {
     
-    convenience init?(data: UserAllCardsModel, action: @escaping () -> Void) {
+    convenience init?(productData: ProductData, action: @escaping () -> Void) {
         
-        guard let cardNumber = data.accountNumber?.suffix(4),
-        let name = data.customName ?? data.mainField,
-        let currency = data.currency,
-        let fontColor = data.fontDesignColor,
-        let backgroundColor = data.background.first?.color,
-        let productTypeData = data.productType,
-        let productType = ProductType(rawValue: productTypeData) else {
-            
-            return nil
-        }
+        guard let cardNumber = productData.accountNumber?.suffix(4),
+              let backgroundColor = productData.background.first?.color
+        else { return nil }
         
-        let balance = data.balance.currencyFormatter(symbol: currency)
-      
-        let productId = data.id
+        let name = productData.customName ?? productData.mainField
+        let balance = (productData.balance ?? 0).currencyFormatter(symbol: productData.currency)
+        
         let header = ProductView.ViewModel.HeaderViewModel(logo: nil, number: String(cardNumber), period: nil)
         let footer = ProductView.ViewModel.FooterViewModel(balance: balance, paymentSystem: nil)
         
-        func appearance(fontColorData: String, backgroundColorData: String, backgroundImage: UIImage?) -> ProductView.ViewModel.Appearance {
-            
-            if let backgroundImage = backgroundImage {
+        let appearance: ProductView.ViewModel.Appearance
+        if let backgroundImage = productData.mediumDesign.uiImage {
                 
-                return ProductView.ViewModel.Appearance(textColor: Color(hex: fontColorData), background: .init(color: Color(hex: backgroundColorData), image: Image(uiImage: backgroundImage)), size: .small)
+            appearance = ProductView.ViewModel.Appearance(textColor: productData.fontDesignColor.color,
+                                                          background: .init(color: backgroundColor,
+                                                                            image: Image(uiImage: backgroundImage)),
+                                                          size: .small)
+        } else {
                 
-            } else {
-                
-                return ProductView.ViewModel.Appearance(textColor: Color(hex: fontColorData), background: .init(color: Color(hex: backgroundColorData), image: nil), size: .small)
-            }
+            appearance = ProductView.ViewModel.Appearance(textColor: productData.fontDesignColor.color,
+                                                          background: .init(color: backgroundColor, image: nil),
+                                                          size: .small)
         }
         
-        self.init(id: productId,
+        self.init(id: productData.id,
                   header: header,
                   name: name,
                   footer: footer,
                   statusAction: nil,
-                  appearance: appearance(fontColorData: fontColor, backgroundColorData: backgroundColor, backgroundImage: data.mediumDesign?.convertSVGStringToImage()),
+                  appearance: appearance,
                   isUpdating: false,
-                  productType: productType,
+                  productType: productData.productType,
                   action: action)
     }
 }
