@@ -59,6 +59,7 @@ class Model {
     let clientInfo: CurrentValueSubject<ClientInfoData?, Never>
     let clientPhoto: CurrentValueSubject<ClientPhotoData?, Never>
     let clientName: CurrentValueSubject<ClientNameData?, Never>
+    let fastPaymentContractFullInfo: CurrentValueSubject<[FastPaymentContractFullInfoType]?, Never>
     
     //MARK: Loacation
     let currentUserLoaction: CurrentValueSubject<LocationData?, Never>
@@ -125,6 +126,7 @@ class Model {
         self.clientInfo = .init(nil)
         self.clientPhoto = .init(nil)
         self.clientName = .init(nil)
+        self.fastPaymentContractFullInfo = .init(nil)
         self.currentUserLoaction = .init(nil)
         
         self.sessionAgent = sessionAgent
@@ -192,7 +194,7 @@ class Model {
                     action.send(ModelAction.Rates.Update.All())
                     action.send(ModelAction.Deposits.List.Request())
                     action.send(ModelAction.Notification.Fetch.New.Request())
-                    
+                    action.send(ModelAction.FastPaymentSettings.ContractFindList.Requested())
                     action.send(ModelAction.LatestPayments.List.Requested())
                     
                 case .inactive:
