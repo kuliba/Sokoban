@@ -15,14 +15,6 @@ extension UserAccountSecurityView {
         override var type: UserAccountViewModel.AccountSectionType { .security }
         var items: [AccountCellDefaultViewModel]
         
-        let faceId = AccountCellSwitchView.ViewModel(
-            content: "Вход по Face ID",
-            icon: .ic24FaceId)
-        
-        let push = AccountCellSwitchView.ViewModel(
-            content: "Push-уведомления",
-            icon: .ic24Bell)
-        
         private var bindings = Set<AnyCancellable>()
         
         internal init(items: [AccountCellDefaultViewModel], isCollapsed: Bool) {
@@ -31,32 +23,30 @@ extension UserAccountSecurityView {
             super.init(isCollapsed: isCollapsed)
         }
         
-        internal override init(isCollapsed: Bool) {
+        internal init(isActiveFaceId: Bool, isActivePush: Bool, isCollapsed: Bool) {
             
-            self.items = [faceId, push]
+            let items = [
+                AccountCellSwitchView.ViewModel(type: .faceId, isActive: isActiveFaceId),
+                AccountCellSwitchView.ViewModel(type: .notification, isActive: isActivePush)]
+            self.items = items
             super.init(isCollapsed: isCollapsed)
-            bind()
+            bind(items)
         }
         
-        func bind() {
+        func bind(_ items: [AccountCellSwitchView.ViewModel]) {
             
-            faceId.$isActive
-                .dropFirst()
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] isActive in
-                    action.send(UserAccountModelAction.FaceIdSwitch(value: isActive))
-                    
-                }.store(in: &bindings)
-            
-            push.$isActive
-                .dropFirst()
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] isActive in
-                    action.send(UserAccountModelAction.NotificationSwitch(value: isActive))
-                    
-                }.store(in: &bindings)
+            for item in items {
+                
+                item.$isActive
+                    .dropFirst()
+                    .receive(on: DispatchQueue.main)
+                    .sink { [unowned self] isActive in
+                        action.send(UserAccountModelAction.Switch(type: item.type, value: isActive))
+                        
+                    }.store(in: &bindings)
+                
+            }
         }
-        
     }
 }
 

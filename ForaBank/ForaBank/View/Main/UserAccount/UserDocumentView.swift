@@ -68,6 +68,13 @@ struct UserDocumentView: View {
                 }
             }
         }
+        .sheet(item: $viewModel.sheet, content: { sheet in
+            switch sheet.sheetType {
+                
+            case let .share(model):
+                ActivityView(viewModel: model)
+            }
+        })
         .navigationBar(with: viewModel.navigationBar)
         .introspectTabBarController(customize: { tabBarController in
             

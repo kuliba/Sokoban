@@ -921,6 +921,7 @@
 		ED302A3126D3E56600161243 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED302A3026D3E56600161243 /* UIImage.swift */; };
 		ED353B6A26FB5ADA00F17F00 /* SetUserSettingDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED353B6926FB5ADA00F17F00 /* SetUserSettingDecodableModel.swift */; };
 		ED353B6C26FB5E8300F17F00 /* GetUserSettingDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED353B6B26FB5E8300F17F00 /* GetUserSettingDecodableModel.swift */; };
+		ED374C8F2861FBCE00A97219 /* ActivityViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED374C8E2861FBCE00A97219 /* ActivityViewComponent.swift */; };
 		ED39EC88268B308800158E46 /* SDWebImageSVGCoder in Frameworks */ = {isa = PBXBuildFile; productRef = ED39EC87268B308800158E46 /* SDWebImageSVGCoder */; };
 		ED39EC8C268B4F0800158E46 /* CardChooseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED39EC8B268B4F0800158E46 /* CardChooseView.swift */; };
 		ED39EC91268C8FA800158E46 /* SVGKit in Frameworks */ = {isa = PBXBuildFile; productRef = ED39EC90268C8FA800158E46 /* SVGKit */; };
@@ -2103,6 +2104,7 @@
 		ED302A3026D3E56600161243 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		ED353B6926FB5ADA00F17F00 /* SetUserSettingDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetUserSettingDecodableModel.swift; sourceTree = "<group>"; };
 		ED353B6B26FB5E8300F17F00 /* GetUserSettingDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetUserSettingDecodableModel.swift; sourceTree = "<group>"; };
+		ED374C8E2861FBCE00A97219 /* ActivityViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityViewComponent.swift; sourceTree = "<group>"; };
 		ED39EC8B268B4F0800158E46 /* CardChooseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardChooseView.swift; sourceTree = "<group>"; };
 		ED39EC92268C9AE900158E46 /* NewCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCardCell.swift; sourceTree = "<group>"; };
 		ED3A966D2690A80B00252857 /* PresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationController.swift; sourceTree = "<group>"; };
@@ -3869,6 +3871,7 @@
 				77C3828E27E0C9D600B5246E /* TextFieldMaskableViewComponent.swift */,
 				77C3829B27E31EBA00B5246E /* TextFieldFormatableViewComponent.swift */,
 				ED8E5CDF284A4AC4008DB72E /* NavigationBarViewComponent.swift */,
+				ED374C8E2861FBCE00A97219 /* ActivityViewComponent.swift */,
 			);
 			path = General;
 			sourceTree = "<group>";
@@ -7039,6 +7042,7 @@
 				6862B55427B688CC006E833F /* AuthPinCodeViewModel.swift in Sources */,
 				77DC12652770F08300C917B0 /* SVGImageData.swift in Sources */,
 				774E318F27A05197005A067B /* TemplatesListViewModel+Preview.swift in Sources */,
+				ED374C8F2861FBCE00A97219 /* ActivityViewComponent.swift in Sources */,
 				77EC58E9277237190054D75C /* ModelAction.swift in Sources */,
 				ED684CD52760C75600AA7A33 /* MakeDepositDecodableModel.swift in Sources */,
 				6862B55627B688CC006E833F /* AuthPermissionsViewModel.swift in Sources */,

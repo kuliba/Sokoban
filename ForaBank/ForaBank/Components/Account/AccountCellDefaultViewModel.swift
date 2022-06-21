@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-class AccountCellDefaultViewModel: Identifiable {
+class AccountCellDefaultViewModel: Identifiable, Equatable {
     
     let id: UUID
     let icon: Image
@@ -19,6 +19,10 @@ class AccountCellDefaultViewModel: Identifiable {
         self.icon = icon
         self.content = content
         self.title = title
+    }
+    
+    static func == (lhs: AccountCellDefaultViewModel, rhs: AccountCellDefaultViewModel) -> Bool {
+        lhs.id == rhs.id
     }
     
 }

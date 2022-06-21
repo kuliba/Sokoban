@@ -13,12 +13,48 @@ extension AccountCellSwitchView {
     
     class ViewModel: AccountCellDefaultViewModel, ObservableObject {
         
+        var type: Kind
+        
         @Published var isActive = true
         
-        internal init(content: String, icon: Image, title: String? = nil) {
+        enum Kind {
+            
+            case faceId
+            case notification
+            
+            var title: String {
+                switch self {
+                case .faceId:
+                    return "Вход по Face ID"
+                    
+                case .notification:
+                    return "Push-уведомления"
+                
+                }
+            }
+            
+            var icon: Image {
+                switch self {
+                case .faceId:
+                    return .ic24FaceId
+                    
+                case .notification:
+                    return .ic24Bell
+                
+                }
+            }
+        }
+        
+        internal init(content: String, type: Kind, icon: Image, title: String? = nil) {
+            self.type = type
             super.init(id: UUID(), icon: icon, content: content, title: title)
         }
         
+        internal init(type: Kind, isActive: Bool) {
+            self.type = type
+            super.init(id: UUID(), icon: type.icon, content: type.title, title: nil)
+            self.isActive = isActive
+        }
     }
 }
 
@@ -92,12 +128,10 @@ struct AccountCellSwitchView_Previews: PreviewProvider {
 extension AccountCellSwitchView.ViewModel {
     
     static let appleId = AccountCellSwitchView.ViewModel
-        .init(content: "Вход по Face ID",
-              icon: .ic24FaceId)
+        .init(type: .faceId, isActive: true)
     
     static let push = AccountCellSwitchView.ViewModel
-        .init(content: "Push-уведомления",
-              icon: .ic24Bell)
+        .init(type: .notification, isActive: false)
     
 }
 

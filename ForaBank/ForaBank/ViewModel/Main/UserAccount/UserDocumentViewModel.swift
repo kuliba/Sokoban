@@ -11,12 +11,17 @@ import Combine
 
 class UserDocumentViewModel: ObservableObject {
     
+    let action: PassthroughSubject<Action, Never> = .init()
+    
     let navigationBar: NavigationBarView.ViewModel
     let itemType: DocumentCellType
     @Published var copyButton: ButtonSimpleView.ViewModel?
+    @Published var sheet: Sheet?
     
     var items: [DocumentDelailCellView.ViewModel] = []
             
+    private var bindings = Set<AnyCancellable>()
+    
     init(model: Model, navigationBar: NavigationBarView.ViewModel, items: [DocumentDelailCellView.ViewModel], itemType: DocumentCellType) {
         self.itemType = itemType
         self.navigationBar = navigationBar
@@ -45,38 +50,57 @@ class UserDocumentViewModel: ObservableObject {
                 
         items = createItems(from: clientInfo, itemType: itemType)
         
-        navigationBar.rightButtons = [
-            .init(icon: .ic24Share, action: { [weak self] in
-                self?.shareAction()
-            })
-        ]
+        navigationBar.rightButtons = [.init(icon: .ic24Share, action: { [weak self] in
+            self?.action.send(UserDocumentViewModelAction.Share(clientInfo: clientInfo, itemType: itemType))
+        })]
         
-        copyButton = .init(
-            title: "Скопировать все",
-            style: .gray,
-            action: {
-                self.copyAction(with: clientInfo, for: itemType)
-            })
+        copyButton = .init(title: "Скопировать все", style: .gray, action: { [weak self] in
+            self?.action.send(UserDocumentViewModelAction.Copy(clientInfo: clientInfo, itemType: itemType))
+        })
         
-    }
-        
-    func copyAction(with clientInfo: ClientInfoData, for itemType: DocumentCellType ) {
-        var info = ""
-        
-        switch itemType {
-        case .passport:
-            info = "ФИО: \(clientInfo.lastName) \(clientInfo.firstName) \(clientInfo.patronymic ?? "") \nПаспорт: \(clientInfo.regSeries ?? "") \(clientInfo.regNumber)\nДата выдачи: \(clientInfo.dateOfIssue ?? "") Код подразделения: \(clientInfo.codeDepartment ?? "")\nМесто рождения: \(clientInfo.birthPlace ?? "")/nДата рождения: \(clientInfo.birthDay ?? "")"
-            
-        default:
-            break
-        }
-        
-        UIPasteboard.general.string = info
-        copyButton?.title = "Скопировано"
+        bind()
     }
     
-    func shareAction() {
+    func bind() {
         
+        action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+
+                case let payload as UserDocumentViewModelAction.Copy:
+                    var info = ""
+                    
+                    switch payload.itemType {
+                    case .passport:
+                        info = "ФИО: \(payload.clientInfo.lastName) \(payload.clientInfo.firstName) \(payload.clientInfo.patronymic ?? "") \nПаспорт: \(payload.clientInfo.regSeries ?? "") \(payload.clientInfo.regNumber)\nДата выдачи: \(payload.clientInfo.dateOfIssue ?? "") Код подразделения: \(payload.clientInfo.codeDepartment ?? "")\nМесто рождения: \(payload.clientInfo.birthPlace ?? "")\nДата рождения: \(payload.clientInfo.birthDay ?? "")"
+                        
+                    default:
+                        break
+                    }
+                    
+                    UIPasteboard.general.string = info
+                    copyButton?.title = "Скопировано"
+                    
+                case let payload as UserDocumentViewModelAction.Share:
+                    var info = ""
+                    switch payload.itemType {
+                    case .passport:
+                        info = "ФИО: \(payload.clientInfo.lastName) \(payload.clientInfo.firstName) \(payload.clientInfo.patronymic ?? "") \nПаспорт: \(payload.clientInfo.regSeries ?? "") \(payload.clientInfo.regNumber)\nДата выдачи: \(payload.clientInfo.dateOfIssue ?? "") Код подразделения: \(payload.clientInfo.codeDepartment ?? "")\nМесто рождения: \(payload.clientInfo.birthPlace ?? "")\nДата рождения: \(payload.clientInfo.birthDay ?? "")"
+                        
+                    default:
+                        break
+                    }
+                    
+                    sheet = .init(sheetType: .share(ActivityView.ViewModel(activityItems: [info])))
+                    
+                default:
+                    break
+                    
+                }
+                
+            }.store(in: &bindings)
     }
     
     func createItems(from: ClientInfoData, itemType: DocumentCellType) -> [DocumentDelailCellView.ViewModel] {
@@ -98,11 +122,8 @@ class UserDocumentViewModel: ObservableObject {
                 .init(title: "Страна", content: from.addressInfo?.country),
                 .init(title: "Регион", content: from.addressInfo?.region),
                 .init(title: "Район", content: from.addressInfo?.area),
-//                .init(title: "Город", content: from.codeDepartment),
-//                .init(title: "Населенный пункт", content: from.birthPlace),
                 .init(title: "Улица", content: from.addressInfo?.street),
                 .init(title: "Индекс", content: from.addressInfo?.postIndex)
-                
             ]
             
         case .adress:
@@ -110,16 +131,38 @@ class UserDocumentViewModel: ObservableObject {
                 .init(title: "Страна", content: from.addressResidentialInfo?.country),
                 .init(title: "Регион", content: from.addressResidentialInfo?.region),
                 .init(title: "Район", content: from.addressResidentialInfo?.area),
-//                .init(title: "Город", content: from.codeDepartment),
-//                .init(title: "Населенный пункт", content: from.birthPlace),
                 .init(title: "Улица", content: from.addressResidentialInfo?.street),
                 .init(title: "Индекс", content: from.addressResidentialInfo?.postIndex)
-                
             ]
             
         default:
             return []
         }
     }
+    
+    struct Sheet: Identifiable {
+        
+        let id = UUID()
+        let sheetType: SheetType
+        
+        enum SheetType {
+            case share(ActivityView.ViewModel)
+        }
+    }
 }
 
+enum UserDocumentViewModelAction {
+
+    struct Share: Action {
+        
+        let clientInfo: ClientInfoData
+        let itemType: DocumentCellType
+    }
+    
+    struct Copy: Action {
+        
+        let clientInfo: ClientInfoData
+        let itemType: DocumentCellType
+    }
+    
+}

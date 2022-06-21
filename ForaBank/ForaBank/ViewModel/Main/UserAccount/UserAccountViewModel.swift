@@ -114,11 +114,15 @@ class UserAccountViewModel: ObservableObject {
                     case _ as UserAccountModelAction.OpenFastPayment:
                         print("Open FastPayment")
                         
-                    case let payload as UserAccountModelAction.NotificationSwitch:
-                        print("Open NotificationSwitch", payload.value)
-                        
-                    case let payload as UserAccountModelAction.FaceIdSwitch:
-                        print("Open FaceIdSwitch", payload.value)
+                    case let payload as UserAccountModelAction.Switch:
+                        switch payload.type {
+                            
+                        case .faceId:
+                            print("Open FaceIdSwitch", payload.value)
+                            
+                        case .notification:
+                            print("Open NotificationSwitch", payload.value)
+                        }
                         
                     case let payload as UserAccountModelAction.OpenDocument:
                         guard let clientInfo = model.clientInfo.value else { return }
@@ -157,7 +161,7 @@ class UserAccountViewModel: ObservableObject {
             UserAccountContactsView.ViewModel(userData: userData, isCollapsed: false),
             UserAccountDocumentsView.ViewModel(userData: userData, isCollapsed: false),
             UserAccountPaymentsView.ViewModel(isCollapsed: false),
-            UserAccountSecurityView.ViewModel(isCollapsed: false)
+            UserAccountSecurityView.ViewModel(isActiveFaceId: false, isActivePush: true, isCollapsed: false)
         ]
     }
 }
@@ -261,11 +265,9 @@ enum UserAccountModelAction {
     
     struct OpenFastPayment: Action {}
     
-    struct FaceIdSwitch: Action {
-        let value: Bool
-    }
-    
-    struct NotificationSwitch: Action {
+    struct Switch: Action {
+        
+        let type: AccountCellSwitchView.ViewModel.Kind
         let value: Bool
     }
 }
