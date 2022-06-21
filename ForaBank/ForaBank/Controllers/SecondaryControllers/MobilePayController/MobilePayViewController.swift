@@ -82,25 +82,16 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
         let productsFilterred = self.model.products.value.values.flatMap({ $0 }).filter{ productTypes.contains($0.productType) && $0.currency == "RUB" }
         let productsFilterredMapped = productsFilterred.map{ $0.userAllProducts() }
         
-        var filterProduct: [UserAllCardsModel] = []
-        productsFilterredMapped.forEach({ card in
-                
-                if card.currency == "RUB" {
-                    
-                    filterProduct.append(card)
-                }
-        })
-        
-        if filterProduct.count > 0 {
+        if productsFilterredMapped.count > 0 {
             if let template = self.paymentTemplate,
                let transfer = template.parameterList.first as? TransferAnywayData,
                let cardId = transfer.payer.cardId {
                 
-                let card = filterProduct.first(where: { $0.id == cardId })
+                let card = productsFilterredMapped.first(where: { $0.id == cardId })
                 return card
                 
             } else {
-                return filterProduct.first
+                return productsFilterredMapped.first
             }
         }
         return nil
@@ -139,33 +130,21 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
         }
         
         cardListView.didCardTapped = { cardId in
-            DispatchQueue.main.async {
-                // Все карты
-                var products = self.model.products.value.values.flatMap({ $0 }).map { $0.userAllProducts() }
-                let types: [ProductType] = [.card, .account]
-                types.forEach { type in
-                    products.append(contentsOf: self.model.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
-                }
-                
-                var filterProduct: [UserAllCardsModel] = []
-                products.forEach({ card in
-                        
-                        if card.currency == "RUB" {
-                            
-                            filterProduct.append(card)
-                        }
-                })
- 
-                filterProduct.forEach({ card in
-                    if card.id == cardId {
-                        self.cardField.model = card
-                        if self.cardListView.isHidden == false {
-                            self.hideView(self.cardListView, needHide: true)
-                        }
+                    DispatchQueue.main.async {
+
+                        let products = self.model.products.value.values.flatMap({ $0 }).map { $0.userAllProducts() }
+
+                        products.forEach({ card in
+                            if card.id == cardId {
+                                self.cardField.model = card
+                                if self.cardListView.isHidden == false {
+                                    self.hideView(self.cardListView, needHide: true)
+                                }
+                            }
+                        })
                     }
-                })
-            }
-        }
+                }
+
         
         cardListView.lastItemTap = {
             let vc = AllCardListViewController()
