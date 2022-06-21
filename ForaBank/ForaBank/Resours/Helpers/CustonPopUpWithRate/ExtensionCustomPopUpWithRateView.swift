@@ -311,7 +311,7 @@ extension CustomPopUpWithRateView {
     
     /// Инициализация нижних карт
     private func setupListTo() {
-        cardToListView = CardsScrollView(onlyMy: onlyMy)
+        cardToListView = CardsScrollView(onlyMy: onlyMy, deleteDeposit: true)
         cardToListView.didCardTapped = { (cardId) in
             DispatchQueue.main.async {
                 let cardList = self.cardFromListView.cardList

@@ -82,10 +82,11 @@ final class CardsScrollView: UIView {
         if loadProducts {
             
             var products: [UserAllCardsModel] = []
-            
-            let data = model.products.value
-            products = data.flatMap({$0.value}).compactMap({$0.userAllProducts()})
-            
+            let types: [ProductType] = [.card, .account, .deposit, .loan]
+            types.forEach { type in
+                products.append(contentsOf: self.model.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
+            }
+                
             products.forEach({ op in
                 if onlyCard {
                     if ( op.productType == "CARD" && op.isMain == true && op.ownerID == clientId ?? 0) {
