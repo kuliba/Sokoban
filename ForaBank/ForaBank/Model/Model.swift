@@ -194,7 +194,7 @@ class Model {
                     action.send(ModelAction.Rates.Update.All())
                     action.send(ModelAction.Deposits.List.Request())
                     action.send(ModelAction.Notification.Fetch.New.Request())
-                    action.send(ModelAction.FastPaymentSettings.ContractFindList.Requested())
+                    action.send(ModelAction.FastPaymentSettings.ContractFindList.Request())
                     action.send(ModelAction.LatestPayments.List.Requested())
                     
                 case .inactive:
@@ -376,6 +376,9 @@ class Model {
                     
                 case _ as ModelAction.ClientInfo.Fetch.Request:
                     handleClientInfoFetchRequest()
+                    
+                case _ as ModelAction.FastPaymentSettings.ContractFindList.Request:
+                    handleContractFindListRequest()
                     
                     //MARK: - Settings Actions
                     

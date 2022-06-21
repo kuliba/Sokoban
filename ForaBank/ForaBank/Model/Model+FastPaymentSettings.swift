@@ -15,7 +15,7 @@ extension ModelAction {
         
         enum ContractFindList {
             
-            struct Requested: Action {}
+            struct Request: Action {}
             
             struct Response: Action {
                 let result: Result<[FastPaymentContractFullInfoType]?, Error>

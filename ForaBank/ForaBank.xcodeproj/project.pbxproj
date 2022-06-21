@@ -242,6 +242,7 @@
 		0C4B0BB828620C35004B7F69 /* FastPaymentContractFullInfoType+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4B0BB728620C35004B7F69 /* FastPaymentContractFullInfoType+Legacy.swift */; };
 		0C4B0BBA28620F9F004B7F69 /* FastPaymentContractFullInfoType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4B0BB928620F9F004B7F69 /* FastPaymentContractFullInfoType.swift */; };
 		0C4B0BBC28623DD5004B7F69 /* Model+FastPaymentSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4B0BBB28623DD5004B7F69 /* Model+FastPaymentSettings.swift */; };
+		0C4B0BBF28624B97004B7F69 /* MeToMeSettingView+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4B0BBE28624B97004B7F69 /* MeToMeSettingView+Legacy.swift */; };
 		0C6508CF28299C6D0058916A /* PaymentsTransfersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6508CE28299C6D0058916A /* PaymentsTransfersView.swift */; };
 		0C6508D228299DAF0058916A /* PaymentsTransfersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6508D128299DAF0058916A /* PaymentsTransfersViewModel.swift */; };
 		0C8CF960282179E80047DDAE /* SendMailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C8CF95F282179E80047DDAE /* SendMailView.swift */; };
@@ -1455,6 +1456,7 @@
 		0C4B0BB728620C35004B7F69 /* FastPaymentContractFullInfoType+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FastPaymentContractFullInfoType+Legacy.swift"; sourceTree = "<group>"; };
 		0C4B0BB928620F9F004B7F69 /* FastPaymentContractFullInfoType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastPaymentContractFullInfoType.swift; sourceTree = "<group>"; };
 		0C4B0BBB28623DD5004B7F69 /* Model+FastPaymentSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+FastPaymentSettings.swift"; sourceTree = "<group>"; };
+		0C4B0BBE28624B97004B7F69 /* MeToMeSettingView+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MeToMeSettingView+Legacy.swift"; sourceTree = "<group>"; };
 		0C6508CE28299C6D0058916A /* PaymentsTransfersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersView.swift; sourceTree = "<group>"; };
 		0C6508D128299DAF0058916A /* PaymentsTransfersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersViewModel.swift; sourceTree = "<group>"; };
 		0C8CF95F282179E80047DDAE /* SendMailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendMailView.swift; sourceTree = "<group>"; };
@@ -3085,6 +3087,14 @@
 			path = ClearRealm;
 			sourceTree = "<group>";
 		};
+		0C4B0BBD28624A5E004B7F69 /* FastPaymentSettings */ = {
+			isa = PBXGroup;
+			children = (
+				0C4B0BBE28624B97004B7F69 /* MeToMeSettingView+Legacy.swift */,
+			);
+			path = FastPaymentSettings;
+			sourceTree = "<group>";
+		};
 		0C6508CD28299B4D0058916A /* PaymentsTransfers */ = {
 			isa = PBXGroup;
 			children = (
@@ -4234,6 +4244,7 @@
 		77DA206228453AA700D7E005 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				0C4B0BBD28624A5E004B7F69 /* FastPaymentSettings */,
 				ED733D612858964600F22D42 /* CountryPaymentViewController */,
 				68629334284E558D00B25EB6 /* TransferByPhoneView+Legacy.swift */,
 				77DA206328453ADB00D7E005 /* MeToMeView+Legacy.swift */,
@@ -6952,6 +6963,7 @@
 				688B9BAC26DE7D7E00407A75 /* ProductViewController.swift in Sources */,
 				77E1804927AC3B810006ACC9 /* FTSData.swift in Sources */,
 				0BB24AB526F0C62500DDA4F6 /* BlockCardDecodableModel.swift in Sources */,
+				0C4B0BBF28624B97004B7F69 /* MeToMeSettingView+Legacy.swift in Sources */,
 				EDB1451C26652D370028EF5A /* UILabel.swift in Sources */,
 				0BA409342806440E001326CE /* SettingPhotoCell.swift in Sources */,
 				77DC126F2770F8C900C917B0 /* ServerCommands+PaymentTemplate.swift in Sources */,
