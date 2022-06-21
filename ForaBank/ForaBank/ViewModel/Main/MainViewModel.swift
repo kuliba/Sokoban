@@ -63,8 +63,7 @@ class MainViewModel: ObservableObject {
                     guard let clientInfo = model.clientInfo.value else {
                         return
                     }
-                    let userAccountViewModel: UserAccountViewModel = .init(model: model, clientInfo: clientInfo)
-                    sheet = .init(type: .userAccount(userAccountViewModel))
+                    link = .userAccount(.init(model: model, clientInfo: clientInfo))
                     
                 case _ as MainViewModelAction.ButtonTapped.Messages:
                     let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model)
@@ -73,6 +72,9 @@ class MainViewModel: ObservableObject {
                 case _ as MainViewModelAction.PullToRefresh:
                     model.action.send(ModelAction.Products.Update.Total.All())
                 
+                case _ as MainViewModelAction.CloseLink:
+                    self.link = nil
+                    
                 default:
                     break
                 }
@@ -208,7 +210,6 @@ extension MainViewModel {
         enum Kind {
             
             case productProfile(ProductProfileViewModel)
-            case userAccount(UserAccountViewModel)
             case messages(MessagesHistoryViewModel)
             case myProducts(MyProductsViewModel)
             case places(PlacesViewModel)
@@ -217,6 +218,7 @@ extension MainViewModel {
     
     enum Link {
         
+        case userAccount(UserAccountViewModel)
         case productProfile(ProductProfileViewModel)
         case messages(MessagesHistoryViewModel)
     }
@@ -234,5 +236,7 @@ enum MainViewModelAction {
     }
     
     struct PullToRefresh: Action {}
+    
+    struct CloseLink: Action {}
 }
 

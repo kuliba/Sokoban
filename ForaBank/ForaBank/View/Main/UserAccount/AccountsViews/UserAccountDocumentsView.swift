@@ -19,6 +19,55 @@ extension UserAccountDocumentsView {
             self.items = items
             super.init(isCollapsed: isCollapsed)
         }
+    
+        internal init(userData: ClientInfoData, isCollapsed: Bool) {
+            
+            self.items = []
+            super.init(isCollapsed: isCollapsed)
+            
+            self.items = createItems(from: userData)
+        }
+        
+        func createItems(from userData: ClientInfoData) -> [AccountCellDefaultViewModel] {
+            
+            var accountDocuments: [AccountCellDefaultViewModel] = [
+                DocumentCellView.ViewModel(
+                    itemType: .passport,
+                    content: userData.pasportNumber,
+                    action: { [weak self] in
+                        self?.action.send(UserAccountModelAction.OpenDocument(type: .passport))
+                    })
+            ]
+            
+            if let userInn = userData.INN {
+                accountDocuments.append(DocumentCellView.ViewModel(
+                    itemType: .inn,
+                    content: userInn,
+                    action: { [weak self] in
+                        self?.action.send(UserAccountModelAction.OpenDocument(type: .inn))
+                    })
+                )
+            }
+            
+            accountDocuments.append(DocumentCellView.ViewModel(
+                itemType: .adressPass,
+                content: userData.address,
+                action: { [weak self] in
+                    self?.action.send(UserAccountModelAction.OpenDocument(type: .adressPass))
+                })
+            )
+            
+            if let addressResidential = userData.addressResidential {
+                accountDocuments.append(DocumentCellView.ViewModel(
+                    itemType: .adress,
+                    content: addressResidential,
+                    action: { [weak self] in
+                        self?.action.send(UserAccountModelAction.OpenDocument(type: .adress))
+                    })
+                )
+            }
+            return accountDocuments
+        }
     }
 }
 
@@ -30,7 +79,7 @@ struct UserAccountDocumentsView: View {
     
     var body: some View {
         
-        CollapsableSectionView(title: viewModel.title, isCollapsed: $viewModel.isCollapsed) {
+        CollapsableSectionView(title: viewModel.title, edges: .horizontal, padding: 20, isCollapsed: $viewModel.isCollapsed) {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 
@@ -38,10 +87,11 @@ struct UserAccountDocumentsView: View {
                     
                     ForEach(viewModel.items) { itemViewModel in
                         if let viewModel = itemViewModel as? DocumentCellView.ViewModel {
+                            
                             DocumentCellView(viewModel: viewModel)
                         }
                     }
-                }
+                }.padding(.horizontal, 20)
             }
         }
     }

@@ -75,6 +75,10 @@ struct MainView: View {
                 if let link = viewModel.link  {
                     
                     switch link {
+                        
+                    case .userAccount(let userAccountViewModel):
+                        UserAccountView(viewModel: userAccountViewModel)
+                        
                     case .productProfile(let productProfileViewModel):
                         ProductProfileView(viewModel: productProfileViewModel)
                     case .messages(let messagesHistoryViewModel):
@@ -85,12 +89,10 @@ struct MainView: View {
         }
         .sheet(item: $viewModel.sheet, content: { sheet in
             switch sheet.type {
+                
             case .productProfile(let productProfileViewModel):
                 ProductProfileView(viewModel: productProfileViewModel)
-                
-            case .userAccount(let userAccountViewModel):
-                UserAccountView(viewModel: userAccountViewModel)
-                
+             
             case .messages(let messagesHistoryViewModel):
                 MessagesHistoryView(viewModel: messagesHistoryViewModel)
                 
