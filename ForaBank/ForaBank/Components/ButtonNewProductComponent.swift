@@ -10,26 +10,22 @@ import SwiftUI
 //MARK: - ViewModel
 
 extension ButtonNewProduct {
-    
-    class ViewModel: MainSectionProductsListItemViewModel {
-        
+
+    struct ViewModel: Identifiable {
+
+        let id: UUID
         let icon: Image
         let title: String
         let subTitle: String
         let action: () -> Void
-        
-        internal init(id: String = UUID().uuidString, icon: Image, title: String, subTitle: String, action: @escaping () -> Void) {
-            
+
+        internal init(id: UUID = UUID(), icon: Image, title: String, subTitle: String, action: @escaping () -> Void) {
+
+            self.id = id
             self.icon = icon
             self.title = title
             self.subTitle = subTitle
             self.action = action
-            super.init(id: id)
-        }
-        
-        static func == (lhs: ViewModel, rhs: ViewModel) -> Bool {
-            
-            lhs.id == rhs.id
         }
     }
 }
@@ -37,61 +33,59 @@ extension ButtonNewProduct {
 //MARK: - View
 
 struct ButtonNewProduct: View {
-    
-    var viewModel: ViewModel
-    
-    var body: some View {
-        
-        Button {
 
-            viewModel.action()
-            
-        } label: {
-            
-            ZStack {
-                
+    var viewModel: ViewModel
+
+    var body: some View {
+
+        Button(action: viewModel.action) {
+
+            ZStack(alignment: .leading) {
+
                 RoundedRectangle(cornerRadius: 12)
                     .foregroundColor(.mainColorsGrayLightest)
-                
-                
+
                 VStack(alignment: .leading) {
 
                     viewModel.icon
                         .renderingMode(.original)
-                        .padding(.leading, 12)
-                        .padding(.top, 12)
-                        .padding(.bottom, 36)
-                        .frame(alignment: .leading)
+
+                    Spacer()
 
                     VStack(alignment: .leading, spacing: 4) {
 
-                        Text(verbatim: viewModel.title)
+                        Text(viewModel.title)
                             .font(.textBodyMM14200())
-                                .foregroundColor(.textSecondary)
-                                .frame(alignment: .leading)
+                            .foregroundColor(.textSecondary)
 
-                        Text(verbatim: viewModel.subTitle)
+                        Text(viewModel.subTitle)
                             .font(.textBodyMR14200())
-                                .foregroundColor(.gray)
-                                .frame(alignment: .leading)
+                            .foregroundColor(.textPlaceholder)
+                            .lineLimit(1)
                     }
-                    .padding(.leading, 12)
-                    .padding(.trailing, 10)
-                    .padding(.bottom, 12)
                 }
+                .padding(11)
             }
-        }
+
+        }.buttonStyle(PushButtonStyle())
     }
 }
 
 //MARK: - Preview
 
 struct ButtonNewProduct_Previews: PreviewProvider {
-    
+
     static var previews: some View {
-        
+
         Group {
+
             ButtonNewProduct(viewModel: .sample)
+                .previewLayout(.fixed(width: 112, height: 124))
+
+            ButtonNewProduct(viewModel: .sampleEmptySubtitle)
+                .previewLayout(.fixed(width: 112, height: 124))
+
+            ButtonNewProduct(viewModel: .sampleLongSubtitle)
                 .previewLayout(.fixed(width: 112, height: 124))
         }
     }
@@ -100,9 +94,10 @@ struct ButtonNewProduct_Previews: PreviewProvider {
 //MARK: - Preview Content
 
 extension ButtonNewProduct.ViewModel {
-    
-    static let sample =  ButtonNewProduct.ViewModel.init(icon: .ic24NewCardColor,
-                                                         title: "Карту",
-                                                         subTitle: "62 дня без %",
-                                                         action: {})
+
+    static let sample =  ButtonNewProduct.ViewModel.init(icon: .ic24NewCardColor, title: "Карту", subTitle: "62 дня без %", action: {})
+
+    static let sampleEmptySubtitle =  ButtonNewProduct.ViewModel.init(icon: .ic24NewCardColor, title: "Карту", subTitle: "", action: {})
+
+    static let sampleLongSubtitle =  ButtonNewProduct.ViewModel.init(icon: .ic24NewCardColor, title: "Карту", subTitle: "13,08 % годовых", action: {})
 }

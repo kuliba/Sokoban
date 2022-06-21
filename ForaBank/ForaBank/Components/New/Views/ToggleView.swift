@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// MARK: - View
+
 struct ToggleView: View {
 
     @Binding var isOn: Bool
@@ -115,7 +117,7 @@ struct PreviewToggleView: View {
 struct ToggleView_Previews: PreviewProvider {
     static var previews: some View {
         PreviewToggleView()
-            .frame(width: 375, height: 64)
+            .previewLayout(.sizeThatFits)
             .padding()
     }
 }

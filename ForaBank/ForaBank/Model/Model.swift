@@ -21,6 +21,9 @@ class Model {
     let products: CurrentValueSubject<[ProductType: [ProductData]], Never>
     let productsUpdateState: CurrentValueSubject<ProductsUpdateState, Never>
     var productsAllowed: Set<ProductType> { [.card, .account, .deposit, .loan] }
+
+    //MARK: Account
+    let accountProductsList: CurrentValueSubject<[OpenAccountProductData], Never>
     
     //MARK: Statement
     var statement: CurrentValueSubject<ProductStatementDataCacheble, Never>
@@ -88,6 +91,7 @@ class Model {
         self.action = .init()
         self.auth = .init(.registerRequired)
         self.products = .init([:])
+        self.accountProductsList = .init([])
         self.statement = .init(.init(productStatement: [:]))
         self.productsUpdateState = .init(.idle)
         self.catalogProducts = .init([])
@@ -156,6 +160,7 @@ class Model {
                 case .active:
                     action.send(ModelAction.Products.Update.Total.All())
                     action.send(ModelAction.Settings.GetClientInfo.Requested())
+                    action.send(ModelAction.Account.ProductList.Request())
                     
                 case .inactive:
                     if let pincode = try? authStoredPincode() {
@@ -464,6 +469,17 @@ class Model {
                 case _ as ModelAction.Location.Updates.Stop:
                     handleLocationUpdateStop()
 
+                // MARK: - Account
+
+                case _ as ModelAction.Account.ProductList.Request:
+                    handleAccountProductsListUpdate()
+
+                case _ as ModelAction.Account.PrepareOpenAccount.Request:
+                    handlePrepareOpenAccount()
+
+                case let payload as ModelAction.Account.MakeOpenAccount.Request:
+                    handleMakeOpenAccount(payload)
+
                 default:
                     break
                 }
@@ -518,6 +534,10 @@ private extension Model {
         if let products = localAgent.load(type: [ProductData].self) {
             self.products.value = reduce(products: self.products.value, with: products)
         }
+
+        if let productsList = productsListCacheLoadData() {
+            self.accountProductsList.value = productsList
+        }
     }
     
     func clearCachedData() {
@@ -529,6 +549,15 @@ private extension Model {
         } catch {
             
             print("Model: clearCachedData: error: \(error.localizedDescription)")
+        }
+
+        do {
+
+            try productsListCacheClearData()
+
+        } catch {
+
+            print("Model: clearCachedData: productsList error: \(error.localizedDescription)")
         }
     }
 }

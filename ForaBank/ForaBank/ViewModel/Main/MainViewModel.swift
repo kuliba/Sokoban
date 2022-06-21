@@ -19,6 +19,7 @@ class MainViewModel: ObservableObject {
     @Published var isRefreshing: Bool
     @Published var productProfile: ProfileViewModel?
     @Published var sheet: Sheet?
+    @Published var bottomSheet: BottomSheet?
     
     private var model: Model
     private var bindings = Set<AnyCancellable>()
@@ -102,6 +103,28 @@ class MainViewModel: ObservableObject {
                         }
                         
                     }.store(in: &bindings)
+
+            case let openProductSection as MainSectionOpenProductView.ViewModel:
+                openProductSection.action
+                    .receive(on: DispatchQueue.main)
+                    .sink { [unowned self] action in
+
+                        switch action {
+                        case let payload as MainSectionViewModelAction.OpenProduct.ButtonTapped:
+
+                            switch payload.productType {
+                            case .account:
+                                bottomSheet = .init(type: .openAccount(model))
+
+                            default:
+                                break
+                            }
+
+                        default:
+                            break
+                        }
+
+                    }.store(in: &bindings)
                 
             case let atmSection as MainSectionAtmView.ViewModel:
                 atmSection.action
@@ -164,6 +187,17 @@ extension MainViewModel {
         case messages(MessagesHistoryViewModel)
         case myProducts(MyProductsViewModel)
         case places(PlacesViewModel)
+    }
+
+    struct BottomSheet: Identifiable {
+
+        let id = UUID()
+        let type: BottomSheetType
+
+        enum BottomSheetType {
+
+            case openAccount(Model)
+        }
     }
 }
 

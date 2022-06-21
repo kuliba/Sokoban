@@ -7,20 +7,95 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 //MARK: - ViewModel
 
 extension MainSectionOpenProductView {
-    
+
     class ViewModel: MainSectionCollapsableViewModel {
 
         override var type: MainSectionType { .openProduct }
-        let items: [ButtonNewProduct.ViewModel]
+        @Published var items: [ButtonNewProduct.ViewModel]
 
-        internal init(items: [ButtonNewProduct.ViewModel], isCollapsed: Bool) {
-            
+        private let displayButtonsTypes: [ProductType] = [.card, .deposit, .loan, .account]
+
+        private let model: Model
+        private var bindings = Set<AnyCancellable>()
+
+        init(items: [ButtonNewProduct.ViewModel], model: Model = .emptyMock, isCollapsed: Bool) {
+
             self.items = items
+            self.model = model
             super.init(isCollapsed: isCollapsed)
+        }
+
+        init(_ model: Model) {
+
+            self.items = []
+            self.model = model
+            super.init(isCollapsed: false)
+
+            self.items = createItems()
+        }
+
+        private func createItems() -> [ButtonNewProduct.ViewModel] {
+
+            displayButtonsTypes.map { type in
+
+                let icon = type.openButtonIcon
+                let title = type.openButtonTitle
+                let subTitle = description(for: type)
+                let action: () -> Void = { [weak self] in
+                    self?.action.send(MainSectionViewModelAction.OpenProduct.ButtonTapped(productType: type))
+                }
+
+                return ButtonNewProduct.ViewModel(icon: icon, title: title, subTitle: subTitle, action: action)
+            }
+        }
+
+        private func description(for type: ProductType) -> String {
+
+            switch type {
+            case .card: return "62 дня без %"
+            case .account: return "8% годовых"
+            case .deposit: return "8% годовых"
+            case .loan: return "от 7% годов."
+            }
+        }
+
+        private func depositDescription(with deposits: [DepositProductData]) -> String {
+
+            guard let maxRate = deposits.map({ $0.generalСondition.maxRate }).max(),
+                  let maxRateString = NumberFormatter.persent.string(from: NSNumber(value: maxRate / 100)) else {
+
+                return "..."
+            }
+
+            return "\(maxRateString) годовых"
+        }
+    }
+}
+
+extension ProductType {
+
+    var openButtonIcon: Image {
+
+        switch self {
+        case .card: return .ic24NewCardColor
+        case .account: return .ic24FilePluseColor
+        case .deposit: return .ic24DepositPlusColor
+        case .loan: return .ic24CreditColor
+        }
+    }
+
+    var openButtonTitle: String {
+
+        switch self {
+        case .card: return "Карту"
+        case .account: return "Счет"
+        case .deposit: return "Вклад"
+        case .loan: return "Кредит"
         }
     }
 }
@@ -28,20 +103,21 @@ extension MainSectionOpenProductView {
 //MARK: - View
 
 struct MainSectionOpenProductView: View {
-    
+
     @ObservedObject var viewModel: ViewModel
-    
+
     var body: some View {
-        
+
         MainSectionCollapsableView(title: viewModel.title, isCollapsed: $viewModel.isCollapsed) {
-            
-            ScrollView(.horizontal) {
-                
+
+            ScrollView(.horizontal, showsIndicators: false) {
+
                 HStack(spacing: 8) {
-                    
+
                     ForEach(viewModel.items) { itemViewModel in
-                        
+
                         ButtonNewProduct(viewModel: itemViewModel)
+                            .frame(width: 112, height: 124)
                     }
                 }
             }
@@ -51,10 +127,10 @@ struct MainSectionOpenProductView: View {
 //MARK: - Preview
 
 struct MainBlockOpenProductsView_Previews: PreviewProvider {
-    
+
     static var previews: some View {
-        
-        MainSectionOpenProductView(viewModel: .sample)
+
+        MainSectionOpenProductView(viewModel: .previewSample)
             .previewLayout(.fixed(width: 375, height: 300))
     }
 }
@@ -63,5 +139,7 @@ struct MainBlockOpenProductsView_Previews: PreviewProvider {
 
 extension MainSectionOpenProductView.ViewModel {
 
-    static let sample = MainSectionOpenProductView.ViewModel(items: [.sample, .sample, .sample,.sample], isCollapsed: false)
+    static let previewSample = MainSectionOpenProductView.ViewModel(items: [.sample, .sample, .sample,.sample], isCollapsed: false)
+
+    static let sample = MainSectionOpenProductView.ViewModel(.emptyMock)
 }

@@ -125,6 +125,10 @@ extension String {
             partialResult + (value as NSString).substring(with: result.range)
         }
     }
+
+    func filterred() -> String {
+        filter { ("0"..."9").contains($0) }
+    }
     
     func cropped(max: Int) -> String {
         

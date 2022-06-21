@@ -15,8 +15,6 @@ extension MainSectionAtmView {
 
     class ViewModel: MainSectionCollapsableViewModel {
         
-        let action: PassthroughSubject<Action, Never> = .init()
-        
         override var type: MainSectionType { .atm }
         let content: String
         

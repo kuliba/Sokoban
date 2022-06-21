@@ -6,8 +6,11 @@
 //
 
 import Foundation
+import Combine
 
 class MainSectionViewModel: ObservableObject, Identifiable {
+
+    let action: PassthroughSubject<Action, Never> = .init()
     
     var id: String { type.rawValue }
     var type: MainSectionType { fatalError("Implement in subclass")}
@@ -43,6 +46,19 @@ enum MainSectionType: String, CaseIterable, Codable {
         case .currencyExchange: return "Обмен валют"
         case .openProduct: return "Открыть продукт"
         case .atm: return "Отделения и банкоматы"
+        }
+    }
+}
+
+//MARK: - Action
+
+enum MainSectionViewModelAction {
+
+    enum OpenProduct {
+
+        struct ButtonTapped: Action {
+
+            let productType: ProductType
         }
     }
 }

@@ -28,6 +28,25 @@ extension Double {
         return String(self)
         
     }
+
+    func currencyDepositFormatter(symbol: String = "") -> String {
+
+        let currencyFormatter = NumberFormatter()
+        currencyFormatter.usesGroupingSeparator = true
+        currencyFormatter.numberStyle = .currency
+        currencyFormatter.locale = Locale(identifier: "ru_RU")
+        currencyFormatter.currencySymbol = symbol
+
+        if String(self).components(separatedBy: ".").last == "0" {
+            currencyFormatter.maximumFractionDigits = 0
+        }
+
+        if let priceString = currencyFormatter.string(from: NSNumber(value: self)) {
+            return priceString
+        }
+
+        return String(self)
+    }
     
     func currencyFormatterForMain() -> String {
         
