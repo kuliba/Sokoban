@@ -7375,7 +7375,7 @@
 				770DCE8F27BBE6AB004099C1 /* Model+Auth.swift in Sources */,
 				68D099D2273A73CA0017D777 /* SettingViewCoordinator.swift in Sources */,
 				68F5E1242858F1B0003018E5 /* TransferByRequisitsView+Legacy.swift in Sources */,
-				68D3F8D527CECB00002753BD /* ProductProfileButtonsSectionViewComponent.swift in Sources */,
+				68D3F8D527CECB00002753BD /* ProductProfileButtonsViewComponent.swift in Sources */,
 				68D3F8D527CECB00002753BD /* ProductProfileButtonsViewComponent.swift in Sources */,
 				77EC58F4277381970054D75C /* OperationType.swift in Sources */,
 				0BEC893B2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift in Sources */,

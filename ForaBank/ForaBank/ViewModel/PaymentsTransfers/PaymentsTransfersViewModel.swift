@@ -93,17 +93,19 @@ class PaymentsTransfersViewModel: ObservableObject {
                             })))
                             
                         case .betweenSelf:
-                            let meToMeViewModel = MeToMeViewModel { [weak self] in
-                                    self?.link = nil
-                            }
-                            link = .meToMe(meToMeViewModel)
                             
-                        case .byBankDetails: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
-                        case .byPhoneNumber:
-                            let transferByPhoneViewModel = TransferByPhoneViewModel { [weak self] in
+                            sheet = .init(type: .meToMe(.init(closeAction: { [weak self] in
+                                self?.sheet = nil
+                            })))
+                            
+                        case .byBankDetails:
+                            link = .transferByRequisites(.init(closeAction: { [weak self] in
                                 self?.link = nil
-                            }
-                            link = .transferByPhone(transferByPhoneViewModel)
+                            }))
+                        case .byPhoneNumber:
+                            sheet = .init(type: .transferByPhone(.init(closeAction: { [weak self] in
+                                self?.sheet = nil
+                            })))
                         }
                         
                     //Payments Section
@@ -145,6 +147,9 @@ class PaymentsTransfersViewModel: ObservableObject {
             case anotherCard(AnotherCardViewModel)
             case phone(PaymentByPhoneViewModel)
             case country(PaymentCountryData)
+            case meToMe(MeToMeViewModel)
+            case transferByPhone(TransferByPhoneViewModel)
+
         }
     }
     
@@ -152,8 +157,6 @@ class PaymentsTransfersViewModel: ObservableObject {
         
         case exampleDetail(String)
         case chooseCountry(ChooseCountryViewModel)
-        case meToMe(MeToMeViewModel)
-        case transferByPhone(TransferByPhoneViewModel)
         case transferByRequisites(TransferByRequisitesViewModel)
 
     }

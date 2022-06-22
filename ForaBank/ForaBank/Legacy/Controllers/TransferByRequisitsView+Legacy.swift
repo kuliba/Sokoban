@@ -26,4 +26,6 @@ struct TransferByRequisitesView: UIViewControllerRepresentable {
 struct TransferByRequisitesViewModel {
     
     var closeAction: () -> Void
+    let title = "Перевести"
+    let subtitle = "Человеку или организации"
 }
