@@ -17,13 +17,13 @@ class ProductData: Identifiable, Codable {
     let numberMasked: String? //4444-XXXX-XXXX-1122
     let accountNumber: String? // 40817810000000000001
     
-    var balance: Double?
-    var balanceRub: Double?
+    private(set) var balance: Double?
+    private(set) var balanceRub: Double?
     let currency: String // example: RUB
     
     let mainField: String // example: Gold
     let additionalField: String? // example: Зарплатная
-    var customName: String? // example: Моя карта
+    private(set) var customName: String? // example: Моя карта
     let productName: String // example: VISA REWARDS R-5
     
     let openDate: Date?
@@ -155,20 +155,18 @@ extension ProductData {
     
     var displayNumber: String? {
         
-        if let depositProduct = self as? ProductDepositData {
+        switch self {
+        case let loanProduct as ProductLoanData:
+            return String(loanProduct.settlementAccount.suffix(4))
             
+        case let depositProduct as ProductDepositData:
             guard let accountNumber = depositProduct.accountNumber else {
                return nil
             }
             
             return String(accountNumber.suffix(4))
             
-        } else if let loanProduct = self as? ProductLoanData {
-            
-            return String(loanProduct.settlementAccount.suffix(4))
-            
-        } else {
-            
+        default:
             guard let number = number else {
                 return nil
             }
@@ -196,6 +194,7 @@ extension ProductData {
     }
     
     var displayName: String { customName ?? mainField }
+    var balanceValue: Double { balance ?? 0 }
 }
 
 extension ProductData: Equatable {

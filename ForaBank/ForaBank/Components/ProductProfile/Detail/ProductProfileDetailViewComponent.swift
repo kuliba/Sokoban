@@ -71,14 +71,9 @@ extension ProductProfileDetailView {
                             
                             isCollapsed.toggle()
                         }
-                        
-                    /*
-                    case _ as AntifraudViewModelAction.Cancel:
-                        NotificationCenter.default.post(name: NSNotification.Name("openPaymentsView"), object: nil, userInfo: nil)
-                     */
+  
                     default:
                         break
-                        
                     }
                     
                 }.store(in: &bindings)
@@ -204,7 +199,6 @@ enum ProductProfileDetailViewModelAction {
     struct ToggleCollapsed: Action {}
 }
 
-
 //MARK: - View
 
 struct ProductProfileDetailView: View {
@@ -222,8 +216,7 @@ struct ProductProfileDetailView: View {
                 
                 ProductProfileDetailView.HeaderView(viewModel: viewModel.header)
                 
-                ProductProfileDetailView.InfoView(viewModel: viewModel.info)
-                    .frame(height: 62)
+                ProductProfileDetailView.InfoView(viewModel: viewModel.info, isCollapsed: $viewModel.isCollapsed)
                     .padding(.top, 16)
                 
                 if viewModel.isCollapsed == false {
@@ -268,14 +261,12 @@ struct ProductProfileDetailView: View {
                 if viewModel.isCollapsed == true {
                     
                     ProductProfileDetailView.HeaderView(viewModel: viewModel.header)
-                    ProductProfileDetailView.InfoView(viewModel: viewModel.info)
-                        .frame(height: 62)
+                    ProductProfileDetailView.InfoView(viewModel: viewModel.info, isCollapsed: $viewModel.isCollapsed)
                     
                 } else {
                     
                     ProductProfileDetailView.HeaderView(viewModel: viewModel.header)
-                    ProductProfileDetailView.InfoView(viewModel: viewModel.info)
-                        .frame(height: 62)
+                    ProductProfileDetailView.InfoView(viewModel: viewModel.info, isCollapsed: $viewModel.isCollapsed)
                     
                     ProductProfileDetailView.MainBlockView(viewModel: viewModel.mainBlock)
                         .frame(height: 112)

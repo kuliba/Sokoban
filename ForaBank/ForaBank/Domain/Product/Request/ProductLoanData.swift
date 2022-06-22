@@ -123,3 +123,8 @@ extension ProductLoanData {
     }
 }
 
+extension ProductLoanData {
+    
+    var totalAmountDebtValue: Double { totalAmountDebt ?? 0 }
+}
+

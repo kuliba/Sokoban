@@ -115,7 +115,7 @@ class MainViewModel: ObservableObject {
                     case let payload as MainSectionViewModelAction.Products.ProductDidTapped:
                     
                         guard let prooduct = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.productId }),
-                            let productProfileViewModel = ProductProfileViewModel(model, productData: prooduct, dismissAction: { [weak self] in self?.link = nil }) else {
+                            let productProfileViewModel = ProductProfileViewModel(model, product: prooduct, dismissAction: { [weak self] in self?.link = nil }) else {
                             return
                         }
                         link = .productProfile(productProfileViewModel)

@@ -692,5 +692,7 @@ private extension Model {
             
             print("Model: clearCachedData: LoansData error: \(error.localizedDescription)")
         }
+        
+        print("Model: cached data cleared")
     }
 }
