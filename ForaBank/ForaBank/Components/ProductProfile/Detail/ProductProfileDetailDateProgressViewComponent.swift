@@ -26,42 +26,43 @@ extension ProductProfileDetailView.ViewModel {
             self.progress = progress
         }
         
-        init(title: String, paymentDate: Date, currentDate: Date) {
+        init(currentDate: Date) {
             
-            self.title = title
-            let dateFormatter = DateFormatter.dateAndMonth
-            self.dateTitle = "Дата платежа - " + dateFormatter.string(from: paymentDate)
+            let reportPeriodStart = Date.getStartOfPrevMonth(for: currentDate)
+            let reportPeriodEnd = Date.getEndOfMonth(for: reportPeriodStart)
+            
+            let paymentPeriodStart = Date.getStartOfCurrentMonth(for: currentDate)
+            let paymentPeriodEnd = Date.getEndOfMonth(for: currentDate)
             
             let calendar = Calendar.current
-            let daysBetween = calendar.numberOfDaysBetween(currentDate, and: paymentDate)
-            let daysFromMonthStart = calendar.component(.day, from: paymentDate)
-            self.remain = "\(daysBetween) дней"
-            self.progress = 1.0 - (Double(max(daysBetween, 0)) / Double(daysFromMonthStart))
+            let totalPaymentDays = calendar.numberOfDaysBetween(paymentPeriodStart, and: paymentPeriodEnd)
+            let remanPaymentDays = calendar.numberOfDaysBetween(currentDate, and: paymentPeriodEnd)
+            let passedPaymentDays = calendar.numberOfDaysBetween(paymentPeriodStart, and: currentDate)
+           
+            let formatter = DateFormatter.dateAndMonth
+ 
+            self.title = "Отчетный период " + formatter.string(from: reportPeriodStart) + " - " + formatter.string(from: reportPeriodEnd)
+            self.dateTitle = "Дата платежа - " + formatter.string(from: paymentPeriodEnd)
+            self.remain = "\(remanPaymentDays) дней"
+            self.progress = 1.0 - (Double(passedPaymentDays) / Double(totalPaymentDays))
         }
         
-        /*
-        enum SubTitleViewModel {
+        init(title: String, paymentDate: Date, currentDate: Date) {
             
-            case paid
-            case start
-            case interval
-            case delayCredit
-            case mortgage
-            case consumer
-            
-            var subTitle: String {
-                
-                switch self {
-                case .paid: return "Обязательный платеж погашен!\nУ вас нет задолженности"
-                case .start: return "Поздравляем 🎉, Вы стали обладателем кредитной карты. Оплачивайте покупки и получайте Кешбэк и скидки от партнеров."
-                case .interval: return "Отчетный период \(Date().startOfPreviusDate()) - \(Date().endOfMonth()) "
-                case .delayCredit: return "Вносите платеж вовремя"
-                case .consumer: return "Очередной платеж по кредиту"
-                case .mortgage: return "Очередной платеж по ипотеке"
-                }
-            }
+            let paymentPeriodStart = Date.getMonthBack(from: paymentDate)
+
+            let calendar = Calendar.current
+            let totalPaymentDays = calendar.numberOfDaysBetween(paymentPeriodStart, and: paymentDate)
+            let remanPaymentDays = max(calendar.numberOfDaysBetween(currentDate, and: paymentDate), 0)
+            let passedPaymentDays = calendar.numberOfDaysBetween(paymentPeriodStart, and: currentDate)
+           
+            let formatter = DateFormatter.dateAndMonth
+ 
+            self.title = title
+            self.dateTitle = "Дата платежа - " + formatter.string(from: paymentDate)
+            self.remain = "\(remanPaymentDays) дней"
+            self.progress = 1.0 - (Double(passedPaymentDays) / Double(totalPaymentDays))
         }
-         */
     }
 }
 

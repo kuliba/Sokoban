@@ -22,11 +22,12 @@ class ProductProfileViewModel: ObservableObject {
     @Published var operationDetail: OperationDetailViewModel?
     @Published var accentColor: Color
 
-    private var historyPool = [ProductData.ID : ProductProfileHistoryView.ViewModel]()
+    private let productType: ProductType
+    private var historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel]
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
-    init(statusBar: StatusBarViewModel, product: ProductProfileCardView.ViewModel, buttons: ProductProfileButtonsView.ViewModel, detail: ProductProfileDetailView.ViewModel?, history: ProductProfileHistoryView.ViewModel?, alert: Alert.ViewModel? = nil, operationDetail: OperationDetailViewModel? = nil, accentColor: Color = .purple, model: Model = .emptyMock) {
+    init(statusBar: StatusBarViewModel, product: ProductProfileCardView.ViewModel, buttons: ProductProfileButtonsView.ViewModel, detail: ProductProfileDetailView.ViewModel?, history: ProductProfileHistoryView.ViewModel?, alert: Alert.ViewModel? = nil, operationDetail: OperationDetailViewModel? = nil, accentColor: Color = .purple, productType: ProductType = .card, historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:] , model: Model = .emptyMock) {
         
         self.statusBar = statusBar
         self.product = product
@@ -36,6 +37,8 @@ class ProductProfileViewModel: ObservableObject {
         self.alert = alert
         self.operationDetail = operationDetail
         self.accentColor = accentColor
+        self.productType = productType
+        self.historyPool = historyPool
         self.model = model
     }
     
@@ -44,14 +47,33 @@ class ProductProfileViewModel: ObservableObject {
         guard let productViewModel = ProductProfileCardView.ViewModel(model, productData: productData) else {
             return nil
         }
+        
         self.statusBar = ProductProfileViewModel.StatusBarViewModel(backButton: .init(icon: .ic24ChevronLeft, action: dismissAction), title: "Platinum", subtitle: "· 4329", actionButton: .init(icon: .ic24Edit2, action: {}), color: .iconBlack)
         self.product = productViewModel
         self.buttons = .init(with: productData)
-        let historyViewModel = ProductProfileHistoryView.ViewModel(model, productId: productData.id)
-        self.history = historyViewModel
         self.accentColor = .clear
+        self.productType = productData.productType
+        self.historyPool = [:]
         self.model = model
         
+        // detail view model
+        switch productData {
+        case let productCard as ProductCardData:
+            self.detail = .init(productCard: productCard, model: model)
+            
+        case let productLoan as ProductLoanData:
+            if let loanData = model.loans.value.first(where: { $0.loandId == productLoan.id }) {
+                
+                self.detail = .init(productLoan: productLoan, loanData: loanData, model: model)
+            }
+            
+        default:
+            break
+        }
+        
+        // history view model
+        let historyViewModel = makeHistoryViewModel(productType: productData.productType, productId: productData.id, model: model)
+        self.history = historyViewModel
         self.historyPool[productData.id] = historyViewModel
 
         bind()
@@ -83,6 +105,25 @@ class ProductProfileViewModel: ObservableObject {
                 }
             }.store(in: &bindings)
         
+        model.loans
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] loans in
+                
+                let productId = product.active
+                guard loans.contains(where: { $0.loandId == productId }) else {
+                    return
+                }
+                
+                let historyViewModel = makeHistoryViewModel(productType: productType, productId: productId, model: model)
+
+                withAnimation {
+                    history = historyViewModel
+                }
+                
+                historyPool[productId] = historyViewModel
+                
+            }.store(in: &bindings)
+        
         product.$active
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] active in
@@ -107,8 +148,8 @@ class ProductProfileViewModel: ObservableObject {
                     
                 } else {
                     
-                    let historyViewModel = ProductProfileHistoryView.ViewModel(model, productId: productViewModel.id)
-                   
+                    let historyViewModel = makeHistoryViewModel(productType: productType, productId: productViewModel.id, model: model)
+
                     withAnimation {
                         history = historyViewModel
                     }
@@ -117,6 +158,15 @@ class ProductProfileViewModel: ObservableObject {
                 }
                 
             }.store(in: &bindings)
+    }
+    
+    func makeHistoryViewModel(productType: ProductType, productId: ProductData.ID, model: Model) -> ProductProfileHistoryView.ViewModel? {
+        
+        guard productType != .loan else {
+            return nil
+        }
+        
+        return ProductProfileHistoryView.ViewModel(model, productId: productId)
     }
 }
 

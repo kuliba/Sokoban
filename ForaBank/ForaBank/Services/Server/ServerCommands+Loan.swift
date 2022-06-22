@@ -32,7 +32,13 @@ extension ServerCommands {
 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: PersonsCreditItem?
+                let data: ResultData?
+                
+                struct ResultData: Codable, Equatable {
+                    
+                    let original: PersonsCreditData
+                    let customName: String?
+                }
             }
             
             internal init(token: String, payload: Payload) {
