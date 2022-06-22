@@ -9,6 +9,7 @@ import UIKit
 import RealmSwift
 import AnyFormatKit
 import SwiftUI
+import IQKeyboardManagerSwift
 
 class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
     
@@ -102,9 +103,16 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
         phoneField.textField.delegate = self
         phoneField.textField.maskString = "+0 000 000-00-00"
         

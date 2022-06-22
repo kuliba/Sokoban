@@ -72,28 +72,10 @@ struct PaymentsTransfersView: View {
                                 .onDisappear {
                                     showTabBar(self.tabBarController)
                                 }
-                            
-                        case let .meToMe(viewModel):
-                            MeToMeView(viewModel: viewModel)
-                                .navigationBarTitle("", displayMode: .inline)
-                                .introspectTabBarController(customize: { tabBarController in
-                                    hideTabBar(tabBarController)
-                                })
-                                .onDisappear {
-                                    showTabBar(self.tabBarController)
-                                }
-                            
-                        case let .transferByPhone(transferByPhoneViewModel):
-                            TransferByPhoneView(viewModel: transferByPhoneViewModel)
-                                .navigationBarTitle("", displayMode: .inline)
-                                .introspectTabBarController(customize: { tabBarController in
-                                    hideTabBar(tabBarController)
-                                })
-                                .onDisappear {
-                                    showTabBar(self.tabBarController)
-                                }
                         case let .transferByRequisites(transferByRequisitesViewModel):
                             TransferByRequisitesView(viewModel: transferByRequisitesViewModel)
+                                .edgesIgnoringSafeArea(.all)
+                                .navigationBarTitle(transferByRequisitesViewModel.title)
                                 .navigationBarTitle("", displayMode: .inline)
                                 .introspectTabBarController(customize: { tabBarController in
                                     hideTabBar(tabBarController)
@@ -106,7 +88,8 @@ struct PaymentsTransfersView: View {
                 }
                 
             } //mainZStack
-            .sheet(item: $viewModel.sheet, content: { sheet in
+            .bottomSheet(item: $viewModel.sheet) {
+            } content: { sheet in
                
                 switch sheet.type {
                 case let .exampleDetail(title):    //TODO:
@@ -119,15 +102,39 @@ struct PaymentsTransfersView: View {
                 case let .taxAndStateService(taxAndStateServiceVM):
                     PaymentsView(viewModel: taxAndStateServiceVM)
                 
+                case let .transferByPhone(transferByPhoneViewModel):
+                    TransferByPhoneView(viewModel: transferByPhoneViewModel)
+                        .navigationBarTitle("", displayMode: .inline)
+                        .introspectTabBarController(customize: { tabBarController in
+                            hideTabBar(tabBarController)
+                        })
+                        .onDisappear {
+                            showTabBar(self.tabBarController)
+                        }
+                case let .meToMe(viewModel):
+                    MeToMeView(viewModel: viewModel)
+                        .frame(height: 490)
+                        .navigationBarTitle("", displayMode: .inline)
+                        .introspectTabBarController(customize: { tabBarController in
+                            hideTabBar(tabBarController)
+                        })
+                        .onDisappear {
+                            showTabBar(self.tabBarController)
+                        }
                 case .anotherCard(let model):
                     //TODO: как то нужно открыть не молным модальным откном, UIViewControllerTransitioningDelegate не работает
-                    VStack {
-                        Spacer()
-                        AnotherCardView(viewModel: model)
-                            .frame(height: 490)
-                    }
+
+                    AnotherCardView(viewModel: model)
+                        .frame(height: 490)
+                        .navigationBarTitle("", displayMode: .inline)
+                        .introspectTabBarController(customize: { tabBarController in
+                            hideTabBar(tabBarController)
+                        })
+                        .onDisappear {
+                            showTabBar(self.tabBarController)
+                        }
                 }
-            })
+            }
             .navigationBarHidden(true)
         }
     }

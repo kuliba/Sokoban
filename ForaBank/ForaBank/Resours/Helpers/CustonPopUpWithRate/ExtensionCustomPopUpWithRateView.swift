@@ -8,10 +8,13 @@
 import UIKit
 import RealmSwift
 import AnyFormatKit
+import IQKeyboardManagerSwift
 
 extension CustomPopUpWithRateView {
     override func viewDidLoad() {
         super.viewDidLoad()
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
         setupUI()
         setupConstraint()
         
@@ -35,6 +38,12 @@ extension CustomPopUpWithRateView {
                 self.setupAmount(amount: template.amount)
             }
         }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
     }
     
     override func viewDidLayoutSubviews() {
