@@ -149,6 +149,12 @@ extension OpenAccountPerformView {
                     switch action {
                     case _ as OpenAccountPerformAction.Button.Tapped:
 
+                        if item.header.isAccountOpened == true {
+                            item.header.isAccountOpened = false
+                            item.card.numberCard = "XXXXXXXXXXXXXXXX"
+                            confirmCode = ""
+                        }
+
                         operationType = .opening
                         model.action.send(ModelAction.Account.PrepareOpenAccount.Request())
 
@@ -366,6 +372,9 @@ struct OpenAccountPerformView: View {
             }
 
             Spacer()
+        }
+        .alert(item: $viewModel.alert) { alert in
+            Alert(with: alert)
         }
         .padding([.leading, .trailing, .bottom], 20)
         .padding(.top, 12)
