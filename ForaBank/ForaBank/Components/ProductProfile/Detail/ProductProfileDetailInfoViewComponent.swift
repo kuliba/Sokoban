@@ -59,6 +59,7 @@ extension ProductProfileDetailView {
     struct InfoView: View {
         
         let viewModel: ProductProfileDetailView.ViewModel.InfoViewModel
+        @Binding var isCollapsed: Bool
         
         var body: some View {
 
@@ -73,8 +74,16 @@ extension ProductProfileDetailView {
                     
                     Spacer()
                     
-                    Color.textPlaceholder
-                        .frame(height: 0.5)
+                    if isCollapsed == false {
+                        
+                        Color.textPlaceholder
+                            .frame(height: 0.5)
+                        
+                    } else {
+                        
+                        Color.clear
+                            .frame(height: 0.5)
+                    }
                 }
                 
             case let .progress(dateProgressViewModel):
@@ -96,13 +105,13 @@ struct ProductProfileDetailInfoViewComponent_Previews: PreviewProvider {
             
             VStack(spacing: 40) {
                 
-                ProductProfileDetailView.InfoView(viewModel: .sampleMessage)
+                ProductProfileDetailView.InfoView(viewModel: .sampleMessage, isCollapsed: .constant(false))
                     .frame(height: 62)
                 
-                ProductProfileDetailView.InfoView(viewModel: .sampleMessageShort)
+                ProductProfileDetailView.InfoView(viewModel: .sampleMessageShort, isCollapsed: .constant(false))
                     .frame(height: 62)
                 
-                ProductProfileDetailView.InfoView(viewModel: .sampleProgress)
+                ProductProfileDetailView.InfoView(viewModel: .sampleProgress, isCollapsed: .constant(false))
                     .frame(height: 62)
             }
             .padding(.horizontal, 20)

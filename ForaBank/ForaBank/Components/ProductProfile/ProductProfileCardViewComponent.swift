@@ -16,20 +16,20 @@ extension ProductProfileCardView {
         
         let action: PassthroughSubject<Action, Never> = .init()
         
-        @Published var selector: SelectorViewModel?
+        @Published var selector: SelectorViewModel
         @Published var products: [ProductView.ViewModel]
-        @Published var active: ProductData.ID
+        @Published var activeProductId: ProductData.ID
         
-        private let productType: ProductType
+        let productType: ProductType
         
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        init(selector: SelectorViewModel?, products: [ProductView.ViewModel], active: ProductData.ID, productType: ProductType, model: Model = .emptyMock) {
+        init(selector: SelectorViewModel, products: [ProductView.ViewModel], activeProductId: ProductData.ID, productType: ProductType, model: Model = .emptyMock) {
  
             self.selector = selector
             self.products = products
-            self.active = active
+            self.activeProductId = activeProductId
             self.productType = productType
             self.model = model
         }
@@ -63,7 +63,7 @@ extension ProductProfileCardView {
             
             self.selector = SelectorViewModel(with: productsForTypeDisplayed, selected: productData.id)
             self.products = productsViewModels
-            self.active = productData.id
+            self.activeProductId = productData.id
             self.productType = productData.productType
             self.model = model
             
@@ -103,13 +103,13 @@ extension ProductProfileCardView {
                         // update selector
                         let productsViewModelsIds = updatedProducts.map{ $0.id }
                         let productsForTypeDisplayed = productsForType.filter({ productsViewModelsIds.contains($0.id)})
-                        selector = SelectorViewModel(with: productsForTypeDisplayed, selected: active)
+                        selector = SelectorViewModel(with: productsForTypeDisplayed, selected: activeProductId)
                         bind(selector)
                         
                         // update selected product
-                        if products.contains(where: { $0.id == active }) == false {
+                        if products.contains(where: { $0.id == activeProductId }) == false {
                             
-                            active = products[0].id
+                            activeProductId = products[0].id
                         }
                         
                     } else {
@@ -121,13 +121,13 @@ extension ProductProfileCardView {
        
                 }.store(in: &bindings)
             
-            $active
+            $activeProductId
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] active in
                     
                     withAnimation {
                         
-                        selector?.selected = active
+                        selector.selected = active
                         action.send(ModelAction.Products.Update.Fast.Single.Request(productId: active, productType: productType))
                         
                     }
@@ -149,7 +149,7 @@ extension ProductProfileCardView {
                     case let payload as ProductProfileCardView.ViewModel.SelectorViewModelAction.ThumbnailSelected:
                         withAnimation {
                             
-                            active = payload.thunmbnailId
+                            activeProductId = payload.thunmbnailId
                         }
     
                     default:
@@ -169,28 +169,19 @@ extension ProductProfileCardView.ViewModel {
         
         @Published var thumbnails: [ThumbnailViewModel]
         @Published var selected: ThumbnailViewModel.ID
-        @Published var moreButton: MoreButtonViewModel?
         
-        init(thumbnails: [ThumbnailViewModel], selected: ThumbnailViewModel.ID, moreButton: MoreButtonViewModel?) {
+        init(thumbnails: [ThumbnailViewModel], selected: ThumbnailViewModel.ID) {
             
             self.thumbnails = thumbnails
             self.selected = selected
-            self.moreButton = moreButton
         }
         
-        init?(with products: [ProductData], selected: ProductData.ID, moreButton: MoreButtonViewModel? = nil) {
-            
-            let displayProducts = products.prefix(5)
-            
-            guard displayProducts.isEmpty == false else {
-                return nil
-            }
+        init(with products: [ProductData], selected: ProductData.ID) {
             
             self.thumbnails = []
             self.selected = selected
-            self.moreButton = moreButton
             
-            self.thumbnails = displayProducts.map { product in
+            self.thumbnails = products.map { product in
                 
                 ThumbnailViewModel(with: product) { [weak self] productId in
                     self?.selected = productId
@@ -259,14 +250,11 @@ struct ProductProfileCardView: View {
         
         VStack(spacing: 0) {
             
-            if let selectorViewModel = viewModel.selector {
-                
-                SelectorView(viewModel: selectorViewModel)
-            }
+            SelectorView(viewModel: viewModel.selector)
             
             if #available(iOS 14.0, *) {
                 
-                TabView(selection: $viewModel.active) {
+                TabView(selection: $viewModel.activeProductId) {
                     
                     ForEach(viewModel.products) { product in
                         
@@ -321,17 +309,26 @@ extension ProductProfileCardView {
         @ObservedObject var viewModel: ProductProfileCardView.ViewModel.SelectorViewModel
         
         var body: some View {
-            
-            HStack(alignment: .center, spacing: 8) {
+
+            ScrollView(.horizontal, showsIndicators: false) { proxy in
                 
-                ForEach(viewModel.thumbnails) { thumbnail in
+                HStack(alignment: .center, spacing: 8) {
                     
-                    ProductProfileCardView.ThumbnailView(viewModel: thumbnail, isSelected: viewModel.selected == thumbnail.id)
+                    ForEach(viewModel.thumbnails) { thumbnail in
+                        
+                        ProductProfileCardView.ThumbnailView(viewModel: thumbnail, isSelected: viewModel.selected == thumbnail.id)
+                            .scrollId(thumbnail.id)
+                    }
                 }
-                
-                if let moreButtonViewModel = viewModel.moreButton {
-                    
-                    ProductProfileCardView.MoreButtonView(viewModel: moreButtonViewModel)
+                .padding(.horizontal, UIScreen.main.bounds.size.width / 2 - 48 + 48 / 2)
+                .onReceive(viewModel.$selected) { selected in
+                    proxy.scrollTo(selected, alignment: .center, animated: true)
+                }
+                .onAppear {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(10)) {
+                        proxy.scrollTo(viewModel.selected, alignment: .center, animated: false)
+                        
+                    }
                 }
             }
         }
@@ -434,7 +431,7 @@ struct ProductProfileCardView_Previews: PreviewProvider {
 
 extension ProductProfileCardView.ViewModel {
     
-    static let sample = ProductProfileCardView.ViewModel(selector: .sample, products: [.notActivateProfile, .classicProfile, .accountProfile, .blockedProfile, .depositProfile], active: 4, productType: .account, model: .emptyMock)
+    static let sample = ProductProfileCardView.ViewModel(selector: .sample, products: [.notActivateProfile, .classicProfile, .accountProfile, .blockedProfile, .depositProfile], activeProductId: 4, productType: .account, model: .emptyMock)
 }
 
 extension ProductProfileCardView.ViewModel.SelectorViewModel.ThumbnailViewModel {
@@ -448,6 +445,6 @@ extension ProductProfileCardView.ViewModel.SelectorViewModel.ThumbnailViewModel 
 
 extension ProductProfileCardView.ViewModel.SelectorViewModel {
     
-    static let sample = ProductProfileCardView.ViewModel.SelectorViewModel(thumbnails: [.sampleColorPurpule, .sampleColorBlue, .sampleColorOrange], selected: 0, moreButton: .init(action: {}))
+    static let sample = ProductProfileCardView.ViewModel.SelectorViewModel(thumbnails: [.sampleColorPurpule, .sampleColorBlue, .sampleColorOrange], selected: 0)
 }
 

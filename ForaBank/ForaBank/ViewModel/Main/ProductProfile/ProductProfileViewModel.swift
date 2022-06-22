@@ -22,12 +22,11 @@ class ProductProfileViewModel: ObservableObject {
     @Published var operationDetail: OperationDetailViewModel?
     @Published var accentColor: Color
 
-    private let productType: ProductType
     private var historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel]
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
-    init(statusBar: StatusBarViewModel, product: ProductProfileCardView.ViewModel, buttons: ProductProfileButtonsView.ViewModel, detail: ProductProfileDetailView.ViewModel?, history: ProductProfileHistoryView.ViewModel?, alert: Alert.ViewModel? = nil, operationDetail: OperationDetailViewModel? = nil, accentColor: Color = .purple, productType: ProductType = .card, historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:] , model: Model = .emptyMock) {
+    init(statusBar: StatusBarViewModel, product: ProductProfileCardView.ViewModel, buttons: ProductProfileButtonsView.ViewModel, detail: ProductProfileDetailView.ViewModel?, history: ProductProfileHistoryView.ViewModel?, alert: Alert.ViewModel? = nil, operationDetail: OperationDetailViewModel? = nil, accentColor: Color = .purple, historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:] , model: Model = .emptyMock) {
         
         self.statusBar = statusBar
         self.product = product
@@ -37,44 +36,35 @@ class ProductProfileViewModel: ObservableObject {
         self.alert = alert
         self.operationDetail = operationDetail
         self.accentColor = accentColor
-        self.productType = productType
         self.historyPool = historyPool
         self.model = model
     }
     
-    init?(_ model: Model, productData: ProductData, dismissAction: @escaping () -> Void) {
+    init?(_ model: Model, product: ProductData, dismissAction: @escaping () -> Void) {
         
-        guard let productViewModel = ProductProfileCardView.ViewModel(model, productData: productData) else {
+        guard let productViewModel = ProductProfileCardView.ViewModel(model, productData: product) else {
             return nil
         }
         
-        self.statusBar = ProductProfileViewModel.StatusBarViewModel(backButton: .init(icon: .ic24ChevronLeft, action: dismissAction), title: "Platinum", subtitle: "· 4329", actionButton: .init(icon: .ic24Edit2, action: {}), color: .iconBlack)
+        // status bar
+        let statusBarTitle = Self.statusBarTitle(with: product)
+        let statusBarSubtitle = Self.statusBarSubtitle(with: product)
+        let statusBarTextColor = Self.statusBarTextColor(with: product)
+        self.statusBar = ProductProfileViewModel.StatusBarViewModel(backButton: .init(icon: .ic24ChevronLeft, action: dismissAction), title: statusBarTitle, subtitle: statusBarSubtitle, actionButton: .init(icon: .ic24Edit2, action: {}), textColor: statusBarTextColor)
+        
         self.product = productViewModel
-        self.buttons = .init(with: productData)
-        self.accentColor = .clear
-        self.productType = productData.productType
+        self.buttons = .init(with: product)
+        self.accentColor = Self.accentColor(with: product)
         self.historyPool = [:]
         self.model = model
         
         // detail view model
-        switch productData {
-        case let productCard as ProductCardData:
-            self.detail = .init(productCard: productCard, model: model)
-            
-        case let productLoan as ProductLoanData:
-            if let loanData = model.loans.value.first(where: { $0.loandId == productLoan.id }) {
-                
-                self.detail = .init(productLoan: productLoan, loanData: loanData, model: model)
-            }
-            
-        default:
-            break
-        }
+        self.detail = detailViewModel(with: product)
         
         // history view model
-        let historyViewModel = makeHistoryViewModel(productType: productData.productType, productId: productData.id, model: model)
+        let historyViewModel = makeHistoryViewModel(productType: product.productType, productId: product.id, model: model)
         self.history = historyViewModel
-        self.historyPool[productData.id] = historyViewModel
+        self.historyPool[product.id] = historyViewModel
 
         bind()
     }
@@ -109,7 +99,8 @@ class ProductProfileViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] loans in
                 
-                let productId = product.active
+                let productId = product.activeProductId
+                let productType = product.productType
                 guard loans.contains(where: { $0.loandId == productId }) else {
                     return
                 }
@@ -124,23 +115,30 @@ class ProductProfileViewModel: ObservableObject {
                 
             }.store(in: &bindings)
         
-        product.$active
+        product.$activeProductId
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] active in
+            .sink { [unowned self] activeProductId in
                 
-                guard let productViewModel = product.products.first(where: { $0.id == active }) else {
+                guard let product = model.products.value.values.flatMap({ $0 }).first(where: { $0.id == activeProductId }) else {
                     return
                 }
                 
+                // status bar update
                 withAnimation {
                     
-                    statusBar.title = productViewModel.name
-                    statusBar.subtitle = productViewModel.header.number ?? ""
-                    statusBar.color = productViewModel.appearance.textColor
-                    accentColor = productViewModel.appearance.background.color
+                    statusBar.title = Self.statusBarTitle(with: product)
+                    statusBar.subtitle = Self.statusBarSubtitle(with: product)
+                    statusBar.textColor = Self.statusBarTextColor(with: product)
+                    accentColor = Self.accentColor(with: product)
                 }
                 
-                if let historyViewModel = historyPool[productViewModel.id] {
+                // detail update
+                withAnimation {
+                    detail = detailViewModel(with: product)
+                }
+                
+                // history update
+                if let historyViewModel = historyPool[activeProductId] {
                     
                     withAnimation {
                         history = historyViewModel
@@ -148,25 +146,80 @@ class ProductProfileViewModel: ObservableObject {
                     
                 } else {
                     
-                    let historyViewModel = makeHistoryViewModel(productType: productType, productId: productViewModel.id, model: model)
+                    let historyViewModel = makeHistoryViewModel(productType: product.productType, productId: activeProductId, model: model)
 
                     withAnimation {
                         history = historyViewModel
                     }
                     
-                    historyPool[productViewModel.id] = historyViewModel
+                    historyPool[activeProductId] = historyViewModel
                 }
                 
             }.store(in: &bindings)
     }
     
     func makeHistoryViewModel(productType: ProductType, productId: ProductData.ID, model: Model) -> ProductProfileHistoryView.ViewModel? {
-        
+    
         guard productType != .loan else {
             return nil
         }
         
         return ProductProfileHistoryView.ViewModel(model, productId: productId)
+    }
+    
+    static func statusBarTitle(with productData: ProductData) -> String {
+        
+        return productData.displayName
+    }
+    
+    static func statusBarSubtitle(with productData: ProductData) -> String {
+        
+        guard let number = productData.displayNumber else {
+            return ""
+        }
+        
+        switch productData {
+        case let productLoan as ProductLoanData:
+            if let rate = NumberFormatter.persent.string(from: NSNumber(value: productLoan.currentInterestRate / 100)) {
+                
+                return "· \(number) · \(rate)"
+                
+            } else {
+                
+                return "· \(number)"
+            }
+            
+        default:
+            return "· \(number)"
+        }
+    }
+    
+    static func statusBarTextColor(with product: ProductData) -> Color {
+        
+        return product.fontDesignColor.color
+    }
+    
+    static func accentColor(with product: ProductData) -> Color {
+        
+        return product.background.first?.color ?? .mainColorsBlackMedium
+    }
+    
+    func detailViewModel(with product: ProductData) -> ProductProfileDetailView.ViewModel? {
+        
+        switch product {
+        case let productCard as ProductCardData:
+            return .init(productCard: productCard, model: model)
+            
+        case let productLoan as ProductLoanData:
+            guard let loanData = model.loans.value.first(where: { $0.loandId == productLoan.id }) else {
+                return nil
+            }
+            
+            return .init(productLoan: productLoan, loanData: loanData, model: model)
+            
+        default:
+            return nil
+        }
     }
 }
 
@@ -180,15 +233,15 @@ extension ProductProfileViewModel {
         @Published var title: String
         @Published var subtitle: String
         @Published var actionButton: ButtonViewModel?
-        @Published var color: Color
+        @Published var textColor: Color
         
-        init(backButton: ButtonViewModel, title: String, subtitle: String, actionButton: ButtonViewModel?, color: Color = .iconWhite) {
+        init(backButton: ButtonViewModel, title: String, subtitle: String, actionButton: ButtonViewModel?, textColor: Color = .iconWhite) {
             
             self.backButton = backButton
             self.title = title
             self.subtitle = subtitle
             self.actionButton = actionButton
-            self.color = color
+            self.textColor = textColor
         }
         
         struct ButtonViewModel {
