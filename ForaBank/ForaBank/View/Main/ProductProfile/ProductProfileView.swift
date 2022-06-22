@@ -58,8 +58,8 @@ struct ProductProfileView: View {
                             
                             if let detailAccount = viewModel.detail {
                                 
-//                                ProductProfileDetailView(viewModel: detailAccount)
-//                                    .padding(.horizontal, 20)
+                                ProductProfileDetailView(viewModel: detailAccount)
+                                    .padding(.horizontal, 20)
                             }
                             
                             if let historyViewModel = viewModel.history {

@@ -242,3 +242,22 @@ extension ProductCardData {
         return true
     }
 }
+
+extension ProductCardData.LoanBaseParamInfoData {
+    
+    var minimumPaymentValue: Double { minimumPayment ?? 0 }
+    var gracePeriodPaymentValue: Double { gracePeriodPayment ?? 0 }
+    var overduePaymentValue: Double { overduePayment ?? 0 }
+    var availableExceedLimitValue: Double { availableExceedLimit ?? 0 }
+    var ownFundsValue: Double { ownFunds ?? 0 }
+    var debtAmountValue: Double {
+        
+        guard let debtAmount = debtAmount else {
+            return 0
+        }
+        
+        return max(debtAmount, 0)
+    }
+    var totalAvailableAmountValue: Double { totalAvailableAmount ?? 0 }
+    var totalDebtAmountValue: Double { totalDebtAmount ?? 0 }
+}

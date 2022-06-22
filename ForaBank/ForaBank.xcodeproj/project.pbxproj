@@ -3464,14 +3464,6 @@
 			path = ResultOperationView;
 			sourceTree = "<group>";
 		};
-		686A1C9427ED56FA002972F0 /* Loan */ = {
-			isa = PBXGroup;
-			children = (
-				686A1C9527ED5726002972F0 /* PersonsCreditData.swift */,
-			);
-			path = Loan;
-			sourceTree = "<group>";
-		};
 		6876D10027F50AA2000240CC /* BottomSheetView */ = {
 			isa = PBXGroup;
 			children = (
@@ -4024,6 +4016,7 @@
 				7772979E27C8EADF0099EF91 /* CatalogProductData.swift */,
 				6830A02127D37821003CA4F1 /* DepositProductData.swift */,
 				7769F5C527D8B19300F80607 /* ProductDynamicParams.swift */,
+				686A1C9527ED5726002972F0 /* PersonsCreditData.swift */,
 			);
 			path = Product;
 			sourceTree = "<group>";
@@ -4265,7 +4258,6 @@
 				77E1805827AC84D20006ACC9 /* Payment */,
 				77EC58A8277114400054D75C /* Transfer */,
 				682092A027AC04CE003DCAFD /* Suggest */,
-				686A1C9427ED56FA002972F0 /* Loan */,
 				684192F32799C32E00B4E184 /* Consent */,
 				77A411E527EB95EB00D36E46 /* Settings */,
 				77E1805427AC7A860006ACC9 /* Template */,
