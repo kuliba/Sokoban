@@ -60,7 +60,7 @@ class Model {
     let clientInfo: CurrentValueSubject<ClientInfoData?, Never>
     let clientPhoto: CurrentValueSubject<ClientPhotoData?, Never>
     let clientName: CurrentValueSubject<ClientNameData?, Never>
-    let fastPaymentContractFullInfo: CurrentValueSubject<[FastPaymentContractFullInfoType]?, Never>
+    let fastPaymentContractFullInfo: CurrentValueSubject<[FastPaymentContractFullInfoType], Never>
     
     //MARK: Loacation
     let currentUserLoaction: CurrentValueSubject<LocationData?, Never>
@@ -128,7 +128,7 @@ class Model {
         self.clientInfo = .init(nil)
         self.clientPhoto = .init(nil)
         self.clientName = .init(nil)
-        self.fastPaymentContractFullInfo = .init(nil)
+        self.fastPaymentContractFullInfo = .init([])
         self.currentUserLoaction = .init(nil)
         
         self.sessionAgent = sessionAgent
@@ -590,6 +590,12 @@ private extension Model {
         if let rates = localAgent.load(type: [ExchangeRateData].self) {
             
             self.rates.value = rates
+        }
+        
+        if let fastPaymentSettings = localAgent
+            .load(type: [FastPaymentContractFullInfoType].self) {
+            
+            self.fastPaymentContractFullInfo.value = fastPaymentSettings
         }
         
         self.clientInfo.value = localAgent.load(type: ClientInfoData.self)

@@ -53,22 +53,33 @@ extension Model {
                             .send(ModelAction
                                 .FastPaymentSettings
                                 .ContractFindList
-                                .Response(result: .failure(ModelClientInfoError
+                                .Response(result: .failure(ModelFastPaymentSettingsError
                                     .emptyData(message: response.errorMessage))))
                         return
                     }
-                     
+                    
                     self.fastPaymentContractFullInfo.value = fastPaymentContractFull
                     self.action.send(ModelAction
                                     .FastPaymentSettings
                                     .ContractFindList
                                     .Response(result: .success(fastPaymentContractFull)))
                     
+                    //cache
+                    do {
+                        
+                        try self.localAgent.store(self.fastPaymentContractFullInfo.value,
+                                                  serial: nil)
+                        
+                    } catch {
+                        
+                        self.handleServerCommandCachingError(error: error, command: command)
+                    }
+                    
                 default:
                     self.action.send(ModelAction
                                     .FastPaymentSettings
                                     .ContractFindList
-                                    .Response(result: .failure(ModelClientInfoError
+                                    .Response(result: .failure(ModelFastPaymentSettingsError
                                         .statusError(status: response.statusCode,
                                                      message: response.errorMessage))))
                     
@@ -82,10 +93,20 @@ extension Model {
                 self.action.send(ModelAction
                                 .FastPaymentSettings
                                 .ContractFindList
-                                .Response(result: .failure(ModelClientInfoError
+                                .Response(result: .failure(ModelFastPaymentSettingsError
                                     .serverCommandError(error: error))))
             }
             
         }
     }
+}
+
+//MARK: - Error
+
+enum ModelFastPaymentSettingsError: Swift.Error {
+    
+    case emptyData(message: String?)
+    case statusError(status: ServerStatusCode, message: String?)
+    case serverCommandError(error: Error)
+    case cacheError(Error)
 }

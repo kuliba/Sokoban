@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct FastPaymentContractFullInfoType: Decodable, Equatable {
+struct FastPaymentContractFullInfoType: Codable, Equatable {
     
     let fastPaymentContractAccountAttributeList: [FastPaymentContractAccountAttributeTypeData]?
     let fastPaymentContractAttributeList: [FastPaymentContractAttributeTypeData]?

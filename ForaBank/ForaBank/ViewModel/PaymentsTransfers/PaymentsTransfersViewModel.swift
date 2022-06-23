@@ -113,7 +113,7 @@ class PaymentsTransfersViewModel: ObservableObject {
                         switch payload.type {
                         case .qrPayment:
                             let viewModel = MeToMeSettingView.ViewModel
-                                                .init(model: model.fastPaymentContractFullInfo.value?
+                                .init(model: model.fastPaymentContractFullInfo.value
                                                         .map { $0.getFastPaymentContractFindListDatum() },
                                                       newModel: model,
                                                       closeAction: { [weak self] in self?.link = nil })
