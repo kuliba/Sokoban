@@ -75,8 +75,8 @@ class PaymentsTransfersViewModel: ObservableObject {
                         }
                     
                     //LatestPayment Section TemplateButton
-                    case _ as PTSectionLatestPaymentsViewAction.ButtonTapped.Templates:
-                        sheet = .init(type: .exampleDetail("Шаблоны")) //TODO:
+                    case let payload as PTSectionLatestPaymentsViewAction.ButtonTapped.Templates:
+                        sheet = .init(type: .template(payload.viewModel))
                         
                     //Transfers Section
                     case let payload as PTSectionTransfersViewAction.ButtonTapped.Transfer:
@@ -103,9 +103,7 @@ class PaymentsTransfersViewModel: ObservableObject {
                                 self?.link = nil
                             }))
                         case .byPhoneNumber:
-                            sheet = .init(type: .transferByPhone(.init(closeAction: { [weak self] in
-                                self?.sheet = nil
-                            })))
+                            sheet = .init(type: .transferByPhone)
                         }
                         
                     //Payments Section
@@ -157,7 +155,8 @@ class PaymentsTransfersViewModel: ObservableObject {
             case phone(PaymentByPhoneViewModel)
             case country(PaymentCountryData)
             case meToMe(MeToMeViewModel)
-            case transferByPhone(TransferByPhoneViewModel)
+            case transferByPhone
+            case template(TemplatesListViewModel)
 
         }
     }

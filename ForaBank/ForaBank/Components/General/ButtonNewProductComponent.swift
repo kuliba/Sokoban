@@ -66,7 +66,7 @@ struct ButtonNewProduct: View {
                 }
                 .padding(11)
             }
-            
+
         }.buttonStyle(PushButtonStyle())
     }
 }

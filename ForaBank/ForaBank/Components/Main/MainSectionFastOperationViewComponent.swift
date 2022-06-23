@@ -15,12 +15,60 @@ extension MainSectionFastOperationView {
     class ViewModel: MainSectionCollapsableViewModel {
         
         override var type: MainSectionType { .fastOperations }
-        let items: [ButtonIconTextView.ViewModel]
+        @Published var items: [ButtonIconTextView.ViewModel]
+        private let displayButtonsTypes: [FastOperations] = [.byQr, .byPhone, .templates]
 
         internal init(items: [ButtonIconTextView.ViewModel], isCollapsed: Bool) {
             
-            self.items = items
+            self.items = []
             super.init(isCollapsed: isCollapsed)
+            self.items = createItems()
+
+        }
+        
+        init() {
+            
+            self.items = []
+            super.init(isCollapsed: false)
+            
+            self.items = createItems()
+        }
+        
+        private func createItems() -> [ButtonIconTextView.ViewModel] {
+            
+            displayButtonsTypes.map { type in
+                
+                let icon = type.icon
+                let title = type.title
+                let action: () -> Void = { [weak self] in
+                    self?.action.send(MainSectionViewModelAction.FastPayment.ButtonTapped(operationType: type))
+                }
+                                      
+                return ButtonIconTextView.ViewModel.init(icon: icon, title: title, orientation: .vertical, appearance: .circle, action: action)
+            }
+        }
+        
+        enum FastOperations {
+            
+            case byQr, byPhone, templates
+            
+            var title: String {
+                
+                switch self {
+                case .byQr: return "Оплата по QR"
+                case .byPhone: return "Перевод по телефону"
+                case .templates: return "Шаблоны"
+                }
+            }
+            
+            var icon: Image {
+                
+                switch self {
+                case .byQr: return .ic24BarcodeScanner2
+                case .byPhone: return .ic24Smartphone
+                case .templates: return .ic24Star
+                }
+            }
         }
     }
 }
