@@ -112,6 +112,13 @@ class UserAccountViewModel: ObservableObject {
                         print("Open Изменить Имя")
                         
                     case _ as UserAccountModelAction.OpenFastPayment:
+                        let viewModel = MeToMeSettingView.ViewModel
+                            .init(model: model.fastPaymentContractFullInfo.value
+                                .map { $0.getFastPaymentContractFindListDatum() },
+                                  newModel: model,
+                                  closeAction: { [weak self] in self?.link = nil })
+                        link = .fastPaymentSettings(viewModel)
+                       
                         print("Open FastPayment")
                         
                     case let payload as UserAccountModelAction.Switch:
@@ -220,6 +227,7 @@ extension UserAccountViewModel {
     enum Link {
         
         case userDocument(UserDocumentViewModel)
+        case fastPaymentSettings(MeToMeSettingView.ViewModel)
     }
     
 

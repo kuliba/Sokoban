@@ -86,16 +86,6 @@ struct PaymentsTransfersView: View {
                                 .onDisappear {
                                     showTabBar(self.tabBarController)
                                 }
-                        case let .fastPaymentsSettings(viewModel):
-                            MeToMeSettingView(viewModel: viewModel)
-                                .navigationBarTitle("", displayMode: .inline)
-                                .introspectTabBarController(customize: { tabBarController in
-                                    hideTabBar(tabBarController)
-                                })
-                                .onDisappear {
-                                    showTabBar(self.tabBarController)
-                                }
-                            
                         }
                     }
                 }
