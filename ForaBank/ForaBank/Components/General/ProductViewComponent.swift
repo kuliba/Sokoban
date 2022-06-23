@@ -221,21 +221,114 @@ struct ProductView: View {
     
     @ObservedObject var viewModel: ViewModel
     
+    var headerPaddingLeading: CGFloat {
+        
+        switch viewModel.appearance.size {
+        case .large: return 43
+        case .normal: return 43
+        case .small: return 29
+        }
+    }
+    
+    var cardPadding: CGFloat {
+        
+        switch viewModel.appearance.size {
+        case .large: return 12
+        case .normal: return 12
+        case .small: return 8
+        }
+    }
+    
+    var nameFont: Font {
+        
+        switch viewModel.appearance.size {
+        case .large: return .textBodyMR14200()
+        case .normal: return .textBodyMR14200()
+        case .small: return .textBodyXSR11140()
+        }
+    }
+    
+    var nameSpacing: CGFloat {
+        
+        switch viewModel.appearance.size {
+        case .large: return 6
+        case .normal: return 6
+        case .small: return 4
+        }
+    }
+    
+    var cornerRadius: CGFloat {
+        
+        switch viewModel.appearance.size {
+        case .large: return 12
+        case .normal: return 12
+        case .small: return 8
+        }
+    }
+    
     var body: some View {
         
-        if viewModel.isUpdating == true {
+        ZStack {
             
-            ZStack {
+            if let backgroundImage = viewModel.appearance.background.image {
                 
-                ContentView(viewModel: viewModel)
+                backgroundImage
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .zIndex(0)
+                
+            } else {
+                
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .foregroundColor(viewModel.appearance.background.color)
+                    .zIndex(0)
+            }
+            
+            VStack(alignment: .leading, spacing: 0) {
+                
+                ProductView.HeaderView(viewModel: viewModel.header, appearance: viewModel.appearance)
+                    .padding(.leading, headerPaddingLeading)
+                    .padding(.top, 4)
+                
+                Spacer()
+                
+                VStack(alignment: .leading, spacing: nameSpacing) {
+                    
+                    Text(viewModel.name)
+                        .font(nameFont)
+                        .foregroundColor(viewModel.appearance.textColor)
+                        .opacity(0.5)
+                    
+                    ProductView.FooterView(viewModel: viewModel.footer, appearance: viewModel.appearance)
+                }
+            }
+            .padding(cardPadding)
+            .zIndex(1)
+                            
+            if let statusActionViewModel = viewModel.statusAction {
+                
+                ProductView.StatusActionView(viewModel: statusActionViewModel, color: viewModel.appearance.background.color, style: viewModel.appearance.style)
+                    .zIndex(2)
+            }
+            
+            if viewModel.isUpdating == true {
+                
+                HStack(spacing: 3) {
+                    
+                    ProductView.AnimatedDotView(duration: 0.6, delay: 0)
+                    ProductView.AnimatedDotView(duration: 0.6, delay: 0.2)
+                    ProductView.AnimatedDotView(duration: 0.6, delay: 0.4)
+                }
+                .zIndex(3)
+                
                 AnimatedGradientView(duration: 3.0)
                     .blendMode(.colorDodge)
+                    .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
+                    .zIndex(4)
             }
-            .clipped()
-            
-        } else {
-            
-            ContentView(viewModel: viewModel)
+        }
+        .onTapGesture {
+            viewModel.action()
         }
     }
 }
@@ -243,112 +336,6 @@ struct ProductView: View {
 //MARK: - Internal Views
 
 extension ProductView {
-    
-    struct ContentView: View {
-        
-        @ObservedObject var viewModel: ViewModel
-        
-        var headerPaddingLeading: CGFloat {
-            
-            switch viewModel.appearance.size {
-            case .large: return 43
-            case .normal: return 43
-            case .small: return 29
-            }
-        }
-        
-        var cardPadding: CGFloat {
-            
-            switch viewModel.appearance.size {
-            case .large: return 12
-            case .normal: return 12
-            case .small: return 8
-            }
-        }
-        
-        var nameFont: Font {
-            
-            switch viewModel.appearance.size {
-            case .large: return .textBodyMR14200()
-            case .normal: return .textBodyMR14200()
-            case .small: return .textBodyXSR11140()
-            }
-        }
-        
-        var nameSpacing: CGFloat {
-            
-            switch viewModel.appearance.size {
-            case .large: return 6
-            case .normal: return 6
-            case .small: return 4
-            }
-        }
-        
-        var cornerRadius: CGFloat {
-            
-            switch viewModel.appearance.size {
-            case .large: return 12
-            case .normal: return 12
-            case .small: return 8
-            }
-        }
-        
-        var body: some View {
-            
-            ZStack {
-                
-                if let backgroundImage = viewModel.appearance.background.image {
-                    
-                    backgroundImage
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                    
-                } else {
-                    
-                    RoundedRectangle(cornerRadius: cornerRadius)
-                        .foregroundColor(viewModel.appearance.background.color)
-                }
-                
-                VStack(alignment: .leading, spacing: 0) {
-                    
-                    ProductView.HeaderView(viewModel: viewModel.header, appearance: viewModel.appearance)
-                        .padding(.leading, headerPaddingLeading)
-                        .padding(.top, 4)
-                    
-                    Spacer()
-                    
-                    VStack(alignment: .leading, spacing: nameSpacing) {
-                        
-                        Text(viewModel.name)
-                            .font(nameFont)
-                            .foregroundColor(viewModel.appearance.textColor)
-                            .opacity(0.5)
-                        
-                        ProductView.FooterView(viewModel: viewModel.footer, appearance: viewModel.appearance)
-                    }
-                }
-                .padding(cardPadding)
-                
-                if viewModel.isUpdating == true {
-                    
-                    HStack(spacing: 3) {
-                        
-                        ProductView.AnimatedDotView(duration: 0.6, delay: 0)
-                        ProductView.AnimatedDotView(duration: 0.6, delay: 0.2)
-                        ProductView.AnimatedDotView(duration: 0.6, delay: 0.4)
-                    }
-                }
-                
-                if let statusActionViewModel = viewModel.statusAction {
-                    
-                    ProductView.StatusActionView(viewModel: statusActionViewModel, color: viewModel.appearance.background.color, style: viewModel.appearance.style)
-                }
-            }
-            .onTapGesture {
-                viewModel.action()
-            }
-        }
-    }
     
     struct HeaderView: View {
         

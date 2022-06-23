@@ -105,6 +105,13 @@ extension Model {
                         
                         self.action.send(ModelAction.Statement.List.Response(result: .success(statementsList)))
                         
+                        // if we failed download statements because next statements earlier than requested period
+                        if statementsList.isEmpty == true,
+                           self.statements.value[product.id]?.isHistoryComplete == false {
+                            
+                            self.action.send(ModelAction.Statement.List.Request(productId: product.id, direction: .eldest))
+                        }
+                        
                     default:
                         self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
                         self.action.send(ModelAction.Statement.List.Response(result: .failure(ModelStatementsError.statusError(status: response.statusCode, message: response.errorMessage))))

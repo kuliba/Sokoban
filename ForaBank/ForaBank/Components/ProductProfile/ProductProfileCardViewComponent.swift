@@ -121,6 +121,42 @@ extension ProductProfileCardView {
        
                 }.store(in: &bindings)
             
+            model.productsUpdating
+                .combineLatest(model.productsFastUpdating)
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] data in
+                    
+                    let totalUpdating = data.0
+                    let fastUpdating = data.1
+                    
+                    withAnimation {
+                        
+                        if totalUpdating.contains(productType) {
+                            
+                            for product in products {
+                                
+                                product.isUpdating = true
+                            }
+                            
+                        } else {
+                            
+                            for product in products {
+                                
+                                if fastUpdating.contains(product.id) {
+                                    
+                                    product.isUpdating = true
+                                    
+                                } else {
+                                    
+                                    product.isUpdating = false
+                                }
+                            }
+                        }
+                    }
+                    
+                    
+                }.store(in: &bindings)
+            
             $activeProductId
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] active in
@@ -128,11 +164,10 @@ extension ProductProfileCardView {
                     withAnimation {
                         
                         selector.selected = active
-                        action.send(ModelAction.Products.Update.Fast.Single.Request(productId: active, productType: productType))
-                        
                     }
                     
                 }.store(in: &bindings)
+            
         }
         
         func bind(_ selector: SelectorViewModel?) {
@@ -375,36 +410,6 @@ extension ProductProfileCardView {
                     }
                 }
                 .frame(width: 48, height: 48)
-            }
-        }
-    }
-    
-    struct MoreButtonView: View {
-        
-        let viewModel: ProductProfileCardView.ViewModel.SelectorViewModel.MoreButtonViewModel
-        
-        var body: some View {
-            
-            Button(action: viewModel.action) {
-                
-                ZStack {
-                    
-                    Color.white
-                        .frame(width: 32, height: 22)
-                        .cornerRadius(3)
-                    
-                    HStack(spacing: 3) {
-                        
-                        ForEach(0..<3) { _ in
-                            
-                            Circle()
-                                .foregroundColor(.iconBlack)
-                                .frame(width: 2, height: 2)
-                        }
-                    }
-                }
-                .frame(width: 48, height: 48)
-                .opacity(0.4)
             }
         }
     }

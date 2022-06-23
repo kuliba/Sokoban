@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import Shimmer
 
 //MARK: - ViewModel
 
@@ -21,15 +22,21 @@ extension ProductProfileDetailView {
         @Published var mainBlock: MainBlockViewModel
         @Published var footer: FooterViewModel?
         @Published var isCollapsed: Bool
+        @Published var isUpdating: Bool
         
+        private let productId: ProductData.ID
+        private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        internal init(info: InfoViewModel, mainBlock: MainBlockViewModel, footer: FooterViewModel?, isCollapsed: Bool) {
+        internal init(info: InfoViewModel, mainBlock: MainBlockViewModel, footer: FooterViewModel?, isCollapsed: Bool, isUpdating: Bool = false, productId: ProductData.ID = 0, model: Model = .emptyMock) {
             
             self.info = info
             self.mainBlock = mainBlock
             self.footer = footer
             self.isCollapsed = isCollapsed
+            self.isUpdating = isUpdating
+            self.productId = productId
+            self.model = model
             
             bind()
         }
@@ -45,6 +52,9 @@ extension ProductProfileDetailView {
             self.mainBlock = .init(configuration: configuration, loanData: loanData, model: model, action: {})
             self.footer = .init(configuration: configuration, loanData: loanData, model: model)
             self.isCollapsed = configuration == .notActivated ? true : false
+            self.isUpdating = false
+            self.productId = productCard.id
+            self.model = model
             
             bind()
         }
@@ -55,8 +65,30 @@ extension ProductProfileDetailView {
             self.mainBlock = .init(productLoan: productLoan, loanData: loanData, model: model, action: {})
             self.footer = .init(productLoan: productLoan, loanData: loanData, model: model)
             self.isCollapsed = false
+            self.isUpdating = false
+            self.productId = productLoan.id
+            self.model = model
             
             bind()
+        }
+        
+        func update(productCard: ProductCardData, model: Model) {
+            
+            guard let loanData = productCard.loanBaseParam,
+                  let configuration = Configuration(productCard: productCard, loanData: loanData) else {
+                return
+            }
+            
+            info = .init(configuration: configuration)
+            mainBlock = .init(configuration: configuration, loanData: loanData, model: model, action: {})
+            footer = .init(configuration: configuration, loanData: loanData, model: model)
+        }
+        
+        func update(productLoan: ProductLoanData, loanData: PersonsCreditData, model: Model) {
+            
+            info = .init(loanData: loanData, loanType: productLoan.loanType)
+            mainBlock = .init(productLoan: productLoan, loanData: loanData, model: model, action: {})
+            footer = .init(productLoan: productLoan, loanData: loanData, model: model)
         }
 
         private func bind() {
@@ -76,6 +108,39 @@ extension ProductProfileDetailView {
                         break
                     }
                     
+                }.store(in: &bindings)
+            
+            model.loansUpdating
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] loansUpdating in
+                    
+                    withAnimation {
+                      
+                        isUpdating = loansUpdating.contains(productId)
+                    }
+                    
+                }.store(in: &bindings)
+            
+            model.productsUpdating
+                .combineLatest(model.productsFastUpdating)
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] data in
+    
+                    let totalUpdating = data.0
+                    let fastUpdating = data.1
+                    
+                    withAnimation {
+                        
+                        if totalUpdating.contains(.card) {
+                            
+                            isUpdating = true
+                            
+                        } else {
+                            
+                            isUpdating = fastUpdating.contains(productId)
+                        }
+                    }
+    
                 }.store(in: &bindings)
             
             $isCollapsed
@@ -212,7 +277,13 @@ struct ProductProfileDetailView: View {
         
         if #available(iOS 14, *) {
             
-            VStack(spacing: 0) {
+            ZStack {
+                
+                RoundedRectangle(cornerRadius: 12)
+                    .foregroundColor(.mainColorsBlack)
+                    .zIndex(0)
+                
+                VStack(spacing: 0) {
                 
                 ProductProfileDetailView.HeaderView(viewModel: viewModel.header)
                 
@@ -249,10 +320,20 @@ struct ProductProfileDetailView: View {
                         .frame(height: 0.05)
                 }
             }
-            .padding(.horizontal, 20)
-            .padding(.top, 16)
-            .padding(.bottom, 18)
-            .background(RoundedRectangle(cornerRadius: 12).foregroundColor(.mainColorsBlack))
+                .padding(.horizontal, 20)
+                .padding(.top, 16)
+                .padding(.bottom, 18)
+                .zIndex(1)
+                
+                
+                if viewModel.isUpdating == true {
+                    
+                    Color.mainColorsBlackMedium
+                        .shimmering()
+                        .blendMode(.colorDodge)
+                        .zIndex(2)
+                }
+            }
             
         } else {
             
