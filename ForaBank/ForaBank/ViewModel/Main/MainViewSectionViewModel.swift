@@ -85,6 +85,14 @@ enum MainSectionViewModelAction {
         }
     }
     
+    enum FastPayment {
+    
+        struct ButtonTapped: Action {
+            
+            let operationType: MainSectionFastOperationView.ViewModel.FastOperations
+        }
+    }
+    
     enum Atm {
     
         struct ButtonTapped: Action {}

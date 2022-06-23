@@ -10,8 +10,6 @@ import SwiftUI
 
 struct TransferByPhoneView: UIViewControllerRepresentable {
     
-    let viewModel: TransferByPhoneViewModel
-    
     func makeUIViewController(context: Context) -> ContactsViewController {
         
         let vc = ContactsViewController()
@@ -21,9 +19,4 @@ struct TransferByPhoneView: UIViewControllerRepresentable {
     }
     
     func updateUIViewController(_ uiViewController: ContactsViewController, context: Context) {}
-}
-
-struct TransferByPhoneViewModel {
-    
-    var closeAction: () -> Void
 }

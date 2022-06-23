@@ -59,7 +59,9 @@ extension MainSectionOpenProductView {
                 let icon = type.openButtonIcon
                 let title = type.openButtonTitle
                 let subTitle = description(for: type)
-                let action: () -> Void = { [weak self] in self?.action.send(MainSectionViewModelAction.OpenProduct.ButtonTapped(productType: type))}
+                let action: () -> Void = { [weak self] in
+                    self?.action.send(MainSectionViewModelAction.OpenProduct.ButtonTapped(productType: type))
+                }
                 
                 return ButtonNewProduct.ViewModel(icon: icon, title: title, subTitle: subTitle, action: action)
             }
@@ -70,9 +72,7 @@ extension MainSectionOpenProductView {
             switch type {
             case .card: return "62 дня без %"
             case .account: return "8% годовых"
-            case .deposit:
-                return depositDescription(with: model.deposits.value)
-                
+            case .deposit: return depositDescription(with: model.deposits.value)
             case .loan: return "от 7% годов."
             }
         }
@@ -89,27 +89,6 @@ extension MainSectionOpenProductView {
         }
     }
 }
-
-/*
- guard let maxRate = deposits.map({ $0.generalСondition.maxRate }).max(),
- let openDepositIndex = openProductViewModels.firstIndex(where: { $0.id == 98 }) else {
-     return
- }
-
- let formatter = NumberFormatter()
- formatter.numberStyle = .percent
- formatter.maximumFractionDigits = 1
- 
- guard let maxRateString = formatter.string(from: NSNumber(value: maxRate / 100)) else {
-     return
- }
- 
- var openProductMutable = openProductViewModels
- var depositProduct = openProductMutable[openDepositIndex]
- depositProduct.description = "\(maxRateString) годовых"
- openProductMutable[openDepositIndex] = depositProduct
- openProductViewModels = openProductMutable
- */
 
 extension ProductType {
     
@@ -165,7 +144,7 @@ struct MainBlockOpenProductsView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        MainSectionOpenProductView(viewModel: .sample)
+        MainSectionOpenProductView(viewModel: .previewSample)
             .previewLayout(.fixed(width: 375, height: 300))
     }
 }
@@ -174,5 +153,7 @@ struct MainBlockOpenProductsView_Previews: PreviewProvider {
 
 extension MainSectionOpenProductView.ViewModel {
 
-    static let sample = MainSectionOpenProductView.ViewModel(items: [.sample, .sample, .sample,.sample], isCollapsed: false)
+    static let previewSample = MainSectionOpenProductView.ViewModel(items: [.sample, .sample, .sample,.sample], isCollapsed: false)
+
+    static let sample = MainSectionOpenProductView.ViewModel(.emptyMock)
 }

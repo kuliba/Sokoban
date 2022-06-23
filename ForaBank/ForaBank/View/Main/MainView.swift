@@ -86,6 +86,16 @@ struct MainView: View {
                     }
                 }
             }
+            
+            if let url = viewModel.externalURL {
+                
+                    Color.clear
+                        .onAppear {
+                            
+                            UIApplication.shared.open(url)
+                            viewModel.externalURL = nil
+                        }
+            }
         }
         .sheet(item: $viewModel.sheet, content: { sheet in
             switch sheet.type {
@@ -101,6 +111,10 @@ struct MainView: View {
                 
             case .places(let placesViewModel):
                 PlacesView(viewModel: placesViewModel)
+            case .templates(let templatesViewModel):
+                TemplatesListView(viewModel: templatesViewModel)
+            case .byPhone:
+                TransferByPhoneView()
             }
         })
         .navigationBarTitle("", displayMode: .inline)

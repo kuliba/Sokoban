@@ -21,6 +21,7 @@ class MainViewModel: ObservableObject {
     @Published var sheet: Sheet?
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
     @Published var isLinkActive: Bool = false
+    @Published var externalURL: URL? = nil
     
     private var model: Model
     private var bindings = Set<AnyCancellable>()
@@ -37,7 +38,7 @@ class MainViewModel: ObservableObject {
         
         self.navButtonsRight = []
         self.sections = [MainSectionProductsView.ViewModel(model),
-                         MainSectionFastOperationView.ViewModel.sample,
+                         MainSectionFastOperationView.ViewModel.init(),
                          MainSectionPromoView.ViewModel(model),
                          MainSectionCurrencyView.ViewModel(model),
                          MainSectionOpenProductView.ViewModel(model),
@@ -106,6 +107,56 @@ class MainViewModel: ObservableObject {
         
         for section in sections {
             
+            switch section {
+            case let openProductSection as MainSectionOpenProductView.ViewModel:
+                openProductSection.action
+                    .receive(on: DispatchQueue.main)
+                    .sink { [unowned self] action in
+                        
+                        switch action {
+                        case let payload as MainSectionViewModelAction.OpenProduct.ButtonTapped:
+                            
+                            switch payload.productType {
+                            case .card:
+                                let url = URL(string: "https://promo.forabank.ru/")
+                                externalURL = url
+                                
+                            default:
+                                break
+                            }
+                            
+                        default:
+                            break
+                        }
+                        
+                    }.store(in: &bindings)
+                
+            case let fastPayment as MainSectionFastOperationView.ViewModel:
+                fastPayment.action
+                    .receive(on: DispatchQueue.main)
+                    .sink { [unowned self] action in
+                        
+                        switch action {
+                        case let payload as MainSectionViewModelAction.FastPayment.ButtonTapped:
+                            
+                            switch payload.operationType {
+                            case .templates:
+                                sheet = .init(type: .templates(.init(model)))
+                            case .byPhone:
+                                sheet = .init(type: .byPhone)
+                            default:
+                                break
+                            }
+                            
+                        default:
+                            break
+                        }
+                        
+                    }.store(in: &bindings)
+                
+            default: break
+            }
+            
             section.action
                 .receive(on: DispatchQueue.main)
                 .sink { [unowned self] action in
@@ -135,7 +186,6 @@ class MainViewModel: ObservableObject {
                         break
                         
                     }
-                    
                 }.store(in: &bindings)
             
             if let collapsableSection = section as? MainSectionCollapsableViewModel {
@@ -213,6 +263,8 @@ extension MainViewModel {
             case messages(MessagesHistoryViewModel)
             case myProducts(MyProductsViewModel)
             case places(PlacesViewModel)
+            case templates(TemplatesListViewModel)
+            case byPhone
         }
     }
     

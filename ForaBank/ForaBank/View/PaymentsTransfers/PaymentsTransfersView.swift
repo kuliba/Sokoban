@@ -102,8 +102,8 @@ struct PaymentsTransfersView: View {
                 case let .taxAndStateService(taxAndStateServiceVM):
                     PaymentsView(viewModel: taxAndStateServiceVM)
                 
-                case let .transferByPhone(transferByPhoneViewModel):
-                    TransferByPhoneView(viewModel: transferByPhoneViewModel)
+                case .transferByPhone:
+                    TransferByPhoneView()
                         .navigationBarTitle("", displayMode: .inline)
                         .introspectTabBarController(customize: { tabBarController in
                             hideTabBar(tabBarController)
@@ -127,6 +127,14 @@ struct PaymentsTransfersView: View {
                     AnotherCardView(viewModel: model)
                         .frame(height: 490)
                         .navigationBarTitle("", displayMode: .inline)
+                        .introspectTabBarController(customize: { tabBarController in
+                            hideTabBar(tabBarController)
+                        })
+                        .onDisappear {
+                            showTabBar(self.tabBarController)
+                        }
+                case let .template(viewModel):
+                    TemplatesListView(viewModel: viewModel)
                         .introspectTabBarController(customize: { tabBarController in
                             hideTabBar(tabBarController)
                         })
