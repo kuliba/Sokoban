@@ -112,7 +112,10 @@ class PaymentsTransfersViewModel: ObservableObject {
                     case let payload as PTSectionPaymentsViewAction.ButtonTapped.Payment:
                         switch payload.type {
                         case .qrPayment: link = .exampleDetail(payload.type.rawValue) //TODO:
-                        case .mobile: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
+                        case .mobile:
+                            link = .mobile(.init(closeAction: {
+                                self.link = nil
+                            }))
                         case .service: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
                         case .internet: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
                         case .transport: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
@@ -156,6 +159,7 @@ class PaymentsTransfersViewModel: ObservableObject {
     enum Link {
         
         case exampleDetail(String)
+        case mobile(MobilePayViewModel)
         case chooseCountry(ChooseCountryViewModel)
         case transferByRequisites(TransferByRequisitesViewModel)
 

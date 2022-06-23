@@ -10,7 +10,6 @@ import RealmSwift
 
 class ContactInputViewController: UIViewController {
     
-    lazy var realm = try? Realm()
     let model = Model.shared
     var typeOfPay: PaymentType = .contact {
         didSet {

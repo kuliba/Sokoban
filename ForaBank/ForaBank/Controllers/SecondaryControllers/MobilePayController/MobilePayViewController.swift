@@ -10,8 +10,8 @@ import RealmSwift
 
 class MobilePayViewController: UIViewController, UITextFieldDelegate {
     
-    lazy var realm = try? Realm()
-    
+    let model = Model.shared
+    var viewModel: MobilePayViewModel? = nil
     var recipiendId = String()
     var phoneNumber: String?
     var regEx = ""
@@ -26,7 +26,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
     
     var stackView = UIStackView(arrangedSubviews: [])
     
-    var cardListView = CardsScrollView(onlyMy: true)
+    var cardListView = CardsScrollView(onlyMy: true, deleteDeposit: true)
     
     var bottomView = BottomInputView()
     
@@ -78,20 +78,20 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func getUserCard() -> UserAllCardsModel?  {
-        let cards = ReturnAllCardList.cards()
-        let filterProduct = cards.filter({
-            ($0.productType == "CARD" || $0.productType == "ACCOUNT") && $0.currency == "RUB" })
+        let productTypes: [ProductType] = [.card, .account]
+        let productsFilterred = self.model.products.value.values.flatMap({ $0 }).filter{ productTypes.contains($0.productType) && $0.currency == "RUB" }
+        let productsFilterredMapped = productsFilterred.map{ $0.userAllProducts() }
         
-        if filterProduct.count > 0 {
+        if productsFilterredMapped.count > 0 {
             if let template = self.paymentTemplate,
                let transfer = template.parameterList.first as? TransferAnywayData,
                let cardId = transfer.payer.cardId {
                 
-                let card = filterProduct.first(where: { $0.id == cardId })
+                let card = productsFilterredMapped.first(where: { $0.id == cardId })
                 return card
                 
             } else {
-                return filterProduct.first
+                return productsFilterredMapped.first
             }
         }
         return nil
@@ -130,18 +130,21 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
         }
         
         cardListView.didCardTapped = { cardId in
-            DispatchQueue.main.async {
-                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
-                cardList.forEach({ card in
-                    if card.id == cardId {
-                        self.cardField.model = card
-                        if self.cardListView.isHidden == false {
-                            self.hideView(self.cardListView, needHide: true)
-                        }
+                    DispatchQueue.main.async {
+
+                        let products = self.model.products.value.values.flatMap({ $0 }).map { $0.userAllProducts() }
+
+                        products.forEach({ card in
+                            if card.id == cardId {
+                                self.cardField.model = card
+                                if self.cardListView.isHidden == false {
+                                    self.hideView(self.cardListView, needHide: true)
+                                }
+                            }
+                        })
                     }
-                })
-            }
-        }
+                }
+
         
         cardListView.lastItemTap = {
             let vc = AllCardListViewController()
