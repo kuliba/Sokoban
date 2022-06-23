@@ -57,9 +57,6 @@ extension ProductProfileHistoryView {
                     case _ as ProductProfileHistoryViewModelAction.DidTapped.More:
                         model.action.send(ModelAction.Statement.List.Request(productId: productId, direction: .eldest))
                         
-                    case let payload as ProductProfileHistoryViewModelAction.DidTapped.Detail:
-                        print("detail for :\(payload.statementId)")
-                        
                     default:
                         break
                     }

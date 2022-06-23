@@ -21,6 +21,7 @@ class ProductProfileViewModel: ObservableObject {
     @Published var alert: Alert.ViewModel?
     @Published var operationDetail: OperationDetailViewModel?
     @Published var accentColor: Color
+    @Published var sheet: Sheet?
 
     private var historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel]
     private let model: Model
@@ -65,6 +66,7 @@ class ProductProfileViewModel: ObservableObject {
         let historyViewModel = makeHistoryViewModel(productType: product.productType, productId: product.id, model: model)
         self.history = historyViewModel
         self.historyPool[product.id] = historyViewModel
+        bind(history: historyViewModel)
 
         bind()
     }
@@ -174,10 +176,41 @@ class ProductProfileViewModel: ObservableObject {
                     }
                     
                     historyPool[activeProductId] = historyViewModel
+                    bind(history: historyViewModel)
                 }
                 
             }.store(in: &bindings)
     }
+    
+    func bind(history: ProductProfileHistoryView.ViewModel?) {
+           
+        guard let history = history else {
+            return
+        }
+           history.action
+               .receive(on: DispatchQueue.main)
+               .sink { [weak self] action in
+                   
+                   guard let self = self else { return }
+                   
+                   switch action {
+                   case let payload as ProductProfileHistoryViewModelAction.DidTapped.Detail:
+                       guard let storage = self.model.statements.value[self.product.activeProductId],
+                             let statementData = storage.statements.first(where: { $0.id == payload.statementId }),
+                             let productData = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId }),
+                             let operationDetailViewModel = OperationDetailViewModel(productStatement: statementData, product: productData, model: self.model) else {
+                           
+                           return
+                       }
+                       
+                       self.sheet = .init(type: .operationDetail(operationDetailViewModel))
+                       
+                   default:
+                       break
+                   }
+                   
+               }.store(in: &bindings)
+       }
     
     func makeHistoryViewModel(productType: ProductType, productId: ProductData.ID, model: Model) -> ProductProfileHistoryView.ViewModel? {
     
@@ -269,6 +302,17 @@ extension ProductProfileViewModel {
             
             let icon: Image
             let action: () -> Void
+        }
+    }
+    
+    struct Sheet: Identifiable {
+        
+        let id = UUID()
+        let type: Kind
+        
+        enum Kind {
+            
+            case operationDetail(OperationDetailViewModel)
         }
     }
 }
