@@ -62,6 +62,7 @@ class Model {
     let clientInfo: CurrentValueSubject<ClientInfoData?, Never>
     let clientPhoto: CurrentValueSubject<ClientPhotoData?, Never>
     let clientName: CurrentValueSubject<ClientNameData?, Never>
+    let fastPaymentContractFullInfo: CurrentValueSubject<[FastPaymentContractFullInfoType], Never>
     
     //MARK: Loacation
     let currentUserLoaction: CurrentValueSubject<LocationData?, Never>
@@ -131,6 +132,7 @@ class Model {
         self.clientInfo = .init(nil)
         self.clientPhoto = .init(nil)
         self.clientName = .init(nil)
+        self.fastPaymentContractFullInfo = .init([])
         self.currentUserLoaction = .init(nil)
         
         self.sessionAgent = sessionAgent
@@ -198,6 +200,7 @@ class Model {
                     action.send(ModelAction.Rates.Update.All())
                     action.send(ModelAction.Deposits.List.Request())
                     action.send(ModelAction.Notification.Fetch.New.Request())
+                    action.send(ModelAction.FastPaymentSettings.ContractFindList.Request())
                     action.send(ModelAction.LatestPayments.List.Requested())
                     
                 case .inactive:
@@ -386,6 +389,9 @@ class Model {
                     
                 case _ as ModelAction.ClientInfo.Fetch.Request:
                     handleClientInfoFetchRequest()
+                    
+                case _ as ModelAction.FastPaymentSettings.ContractFindList.Request:
+                    handleContractFindListRequest()
                     
                     //MARK: - Settings Actions
                     
@@ -589,6 +595,12 @@ private extension Model {
         if let rates = localAgent.load(type: [ExchangeRateData].self) {
             
             self.rates.value = rates
+        }
+        
+        if let fastPaymentSettings = localAgent
+            .load(type: [FastPaymentContractFullInfoType].self) {
+            
+            self.fastPaymentContractFullInfo.value = fastPaymentSettings
         }
         
         self.clientInfo.value = localAgent.load(type: ClientInfoData.self)

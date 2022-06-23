@@ -9,6 +9,7 @@ import UIKit
 
 class MeToMeSettingViewController: UIViewController {
 
+    var newModel: Model = Model.shared
     var model: [FastPaymentContractFindListDatum]? {
         didSet {
             guard let model = model else { return }
@@ -260,25 +261,14 @@ class MeToMeSettingViewController: UIViewController {
         completion()
     }
     
-    
-    
-    //MARK: - API
     func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?)->()) {
-        let param = ["isCard": "true", "isAccount": "true", "isDeposit": "false", "isLoan": "false"]
+       
+        let cardList = newModel.products.value
+            .filter { $0.key == .card || $0.key == .account }
+            .values.flatMap { $0 }
+            .map { $0.getProductListDatum() }
         
-        NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
-            if error != nil {
-                completion(nil, error)
-            }
-            guard let model = model else { return }
-            if model.statusCode == 0 {
-                guard let cardList = model.data else { return }
-                completion(cardList, nil)
-            } else {
-                guard let error = model.errorMessage else { return }
-                completion(nil, error)
-            }
-        }
+        completion(cardList, nil)
     }
     
     func updateContract(contractId: Int?, cardModel: GetProductListDatum, isOff: Bool ,completion: @escaping (_ success: Bool, _ error: String?)->()) {

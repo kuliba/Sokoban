@@ -48,15 +48,17 @@ class BanksView: UIView {
     }
     
     private func setupList(consentList: [ConsentList]) {
+        
         DispatchQueue.main.async {
-            let allBanks = Dict.shared.bankFullInfoList
+            let allBanks = Model.shared.dictionaryFullBankInfoList()
             
             var banks: [String] = []
             
             consentList.forEach { bank in
                 allBanks?.forEach({ fullBank in
-                    if fullBank.memberID == bank.bankId {
-                        banks.append(fullBank.rusName ?? "")
+                    let fullBankItem = fullBank.fullBankInfoList
+                    if fullBankItem.memberID == bank.bankId {
+                        banks.append(fullBankItem.rusName ?? "")
                     }
                 })
             }

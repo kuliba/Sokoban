@@ -111,11 +111,17 @@ class PaymentsTransfersViewModel: ObservableObject {
                     //Payments Section
                     case let payload as PTSectionPaymentsViewAction.ButtonTapped.Payment:
                         switch payload.type {
-                        case .qrPayment: link = .exampleDetail(payload.type.rawValue) //TODO:
                         case .mobile:
                             link = .mobile(.init(closeAction: {
                                 self.link = nil
                             }))
+                        case .qrPayment:
+                            let viewModel = MeToMeSettingView.ViewModel
+                                .init(model: model.fastPaymentContractFullInfo.value
+                                                        .map { $0.getFastPaymentContractFindListDatum() },
+                                                      newModel: model,
+                                                      closeAction: { [weak self] in self?.link = nil })
+                            link = .fastPaymentsSettings(viewModel)
                         case .service: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
                         case .internet: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
                         case .transport: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
@@ -162,6 +168,7 @@ class PaymentsTransfersViewModel: ObservableObject {
         case mobile(MobilePayViewModel)
         case chooseCountry(ChooseCountryViewModel)
         case transferByRequisites(TransferByRequisitesViewModel)
+        case fastPaymentsSettings(MeToMeSettingView.ViewModel)
 
     }
     

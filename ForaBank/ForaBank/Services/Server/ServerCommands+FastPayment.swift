@@ -57,13 +57,6 @@ extension ServerCommands {
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: [FastPaymentContractFullInfoType]?
-                
-                struct FastPaymentContractFullInfoType: Decodable, Equatable {
-                    
-                    let fastPaymentContractAccountAttributeList: [FastPaymentContractAccountAttributeTypeData]?
-                    let fastPaymentContractAttributeList: [FastPaymentContractAttributeTypeData]?
-                    let fastPaymentContractClAttributeList: [FastPaymentContractClAttributeTypeData]?
-                }
             }
             
             internal init(token: String) {

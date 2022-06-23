@@ -46,7 +46,7 @@ class ServerCommandsFastPaymentTests: XCTestCase {
             return
         }
         let json = try Data(contentsOf: url)
-        let fastPaymentContractFullInfoType = ServerCommands.FastPaymentController.FastPaymentContractFindList.Response.FastPaymentContractFullInfoType(fastPaymentContractAccountAttributeList: [.init(accountID: 0, accountNumber: "string", flagPossibAddAccount: FastPaymentFlag.empty, maxAddAccount: 0, minAddAccount: 0)], fastPaymentContractAttributeList: [.init(accountID: 0, branchBIC: "string", branchID: 0, clientID: 0, flagBankDefault: FastPaymentFlag.empty, flagClientAgreementIn: FastPaymentFlag.empty, flagClientAgreementOut: FastPaymentFlag.empty, fpcontractID: 0, phoneNumber: "string")], fastPaymentContractClAttributeList: [.init(clientInfo: .init(address: "string", clientID: 0, clientName: "string", clientPatronymicName: "string", clientSurName: "string", docType: "string", inn: "string", name: "string", nm: "string", regNumber: "string", regSeries: "string"))])
+        let fastPaymentContractFullInfoType = FastPaymentContractFullInfoType(fastPaymentContractAccountAttributeList: [.init(accountID: 0, accountNumber: "string", flagPossibAddAccount: FastPaymentFlag.empty, maxAddAccount: 0, minAddAccount: 0)], fastPaymentContractAttributeList: [.init(accountID: 0, branchBIC: "string", branchID: 0, clientID: 0, flagBankDefault: FastPaymentFlag.empty, flagClientAgreementIn: FastPaymentFlag.empty, flagClientAgreementOut: FastPaymentFlag.empty, fpcontractID: 0, phoneNumber: "string")], fastPaymentContractClAttributeList: [.init(clientInfo: .init(address: "string", clientID: 0, clientName: "string", clientPatronymicName: "string", clientSurName: "string", docType: "string", inn: "string", name: "string", nm: "string", regNumber: "string", regSeries: "string"))])
         
         let expected = ServerCommands.FastPaymentController.FastPaymentContractFindList.Response(statusCode: .ok, errorMessage: "string", data: [fastPaymentContractFullInfoType])
         
@@ -65,7 +65,7 @@ class ServerCommandsFastPaymentTests: XCTestCase {
             return
         }
         let json = try Data(contentsOf: url)
-        let fastPaymentContractFullInfoType = ServerCommands.FastPaymentController.FastPaymentContractFindList.Response.FastPaymentContractFullInfoType(fastPaymentContractAccountAttributeList: [.init(accountID: nil, accountNumber: nil, flagPossibAddAccount: nil, maxAddAccount: nil, minAddAccount: nil)], fastPaymentContractAttributeList: [.init(accountID: nil, branchBIC: nil, branchID: nil, clientID: nil, flagBankDefault: nil, flagClientAgreementIn: nil, flagClientAgreementOut: nil, fpcontractID: nil, phoneNumber: nil)], fastPaymentContractClAttributeList: [.init(clientInfo: nil)])
+        let fastPaymentContractFullInfoType = FastPaymentContractFullInfoType(fastPaymentContractAccountAttributeList: [.init(accountID: nil, accountNumber: nil, flagPossibAddAccount: nil, maxAddAccount: nil, minAddAccount: nil)], fastPaymentContractAttributeList: [.init(accountID: nil, branchBIC: nil, branchID: nil, clientID: nil, flagBankDefault: nil, flagClientAgreementIn: nil, flagClientAgreementOut: nil, fpcontractID: nil, phoneNumber: nil)], fastPaymentContractClAttributeList: [.init(clientInfo: nil)])
         
         let expected = ServerCommands.FastPaymentController.FastPaymentContractFindList.Response(statusCode: .ok, errorMessage: "string", data: [fastPaymentContractFullInfoType])
         
