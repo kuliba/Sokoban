@@ -89,5 +89,5 @@ struct PaymentsSuccessScreenView_Previews: PreviewProvider {
 
 extension PaymentsSuccessViewModel {
     
-    static let sample = PaymentsSuccessViewModel(header: .init(stateIcon: Image("OkOperators"), title: "Успешный перевод", description: "1 000,00 ₽", operatorIcon: Image("Payments Service Sample")), optionButtons: [PaymentsSuccessOptionButtonView.ViewModel(id: UUID(), icon: Image("Payments Icon Success Info"), title: "Детали", action: {}), PaymentsSuccessOptionButtonView.ViewModel(id: UUID(), icon: Image("Payments Icon Success File"),title: "Документ", action: {}) ], actionButton: .init(title: "На главную", isEnabled: true, action: {}))
+    static let sample = PaymentsSuccessViewModel(header: .init(stateIcon: Image("OkOperators"), title: "Успешный перевод", description: "1 000,00 ₽", operatorIcon: Image("Payments Service Sample")), optionButtons: [PaymentsSuccessOptionButtonView.ViewModel(id: UUID(), icon: Image("Payments Icon Success Info"), title: "Детали", action: {}), PaymentsSuccessOptionButtonView.ViewModel(id: UUID(), icon: Image("Payments Icon Success File"),title: "Документ", action: {}) ], actionButton: .init(title: "На главную", style: .red, action: {}))
 }

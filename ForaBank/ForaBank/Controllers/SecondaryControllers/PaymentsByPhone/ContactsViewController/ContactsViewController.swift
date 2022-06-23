@@ -7,6 +7,7 @@
 
 import UIKit
 import ContactsUI
+import IQKeyboardManagerSwift
 
 
 class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFieldText{
@@ -83,10 +84,16 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
     }// array of PhoneContact(It is model find it below)
     var filter: ContactsFilter = .none
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
         banksList = model.dictionaryBankListLegacy?.filter({$0.paymentSystemCodeList?.first == "SFP"}) ?? []
 
         let viewLine = UIView()

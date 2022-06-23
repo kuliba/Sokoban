@@ -58,8 +58,8 @@ struct ProductProfileView: View {
                             
                             if let detailAccount = viewModel.detail {
                                 
-//                                ProductProfileDetailView(viewModel: detailAccount)
-//                                    .padding(.horizontal, 20)
+                                ProductProfileDetailView(viewModel: detailAccount)
+                                    .padding(.horizontal, 20)
                             }
                             
                             if let historyViewModel = viewModel.history {
@@ -130,7 +130,7 @@ extension ProductProfileView {
                 Button(action: viewModel.backButton.action) {
                     
                     viewModel.backButton.icon
-                        .foregroundColor(viewModel.color)
+                        .foregroundColor(viewModel.textColor)
                 }
 
                 Spacer()
@@ -139,11 +139,11 @@ extension ProductProfileView {
                     
                     Text(viewModel.title)
                         .font(.textH3M18240())
-                        .foregroundColor(viewModel.color)
+                        .foregroundColor(viewModel.textColor)
                     
                     Text(viewModel.subtitle)
                         .font(.textBodySR12160())
-                        .foregroundColor(viewModel.color)
+                        .foregroundColor(viewModel.textColor)
                 }
                 
                 Spacer()
@@ -153,7 +153,7 @@ extension ProductProfileView {
                     Button(action: actionButtonViewModel.action) {
                         
                         actionButtonViewModel.icon
-                            .foregroundColor(viewModel.color)
+                            .foregroundColor(viewModel.textColor)
                     }
                     
                 } else {
@@ -195,9 +195,9 @@ extension ProductProfileViewModel {
 
 extension ProductProfileViewModel.StatusBarViewModel {
     
-    static let sample = ProductProfileViewModel.StatusBarViewModel(backButton: .init(icon: .ic24ChevronLeft, action: {}), title: "Platinum", subtitle: "· 4329", actionButton: .init(icon: .ic24Edit2, action: {}), color: .iconBlack)
+    static let sample = ProductProfileViewModel.StatusBarViewModel(backButton: .init(icon: .ic24ChevronLeft, action: {}), title: "Platinum", subtitle: "· 4329", actionButton: .init(icon: .ic24Edit2, action: {}), textColor: .iconBlack)
     
-    static let sampleNoActionButton = ProductProfileViewModel.StatusBarViewModel(backButton: .init(icon: .ic24ChevronLeft, action: {}), title: "Platinum", subtitle: "· 4329", actionButton: nil, color: .iconBlack)
+    static let sampleNoActionButton = ProductProfileViewModel.StatusBarViewModel(backButton: .init(icon: .ic24ChevronLeft, action: {}), title: "Platinum", subtitle: "· 4329", actionButton: nil, textColor: .iconBlack)
 }
 
 

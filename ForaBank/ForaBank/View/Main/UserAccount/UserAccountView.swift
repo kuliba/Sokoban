@@ -6,69 +6,92 @@
 //
 
 import SwiftUI
+import Introspect
 
 struct UserAccountView: View {
     
     @ObservedObject var viewModel: UserAccountViewModel
     
+    @State private var tabBarController: UITabBarController?
+    
     var body: some View {
         
-        NavigationView {
+        ScrollView(showsIndicators: false) {
             
-            ScrollView(showsIndicators: false) {
+            VStack(spacing: 20) {
                 
-                VStack(spacing: 20) {
+                avatarView
+                
+                ForEach(viewModel.sections) { section in
                     
-                    avatarView
-                    
-                    ForEach(viewModel.sections) { section in
+                    switch section {
                         
-                        switch section {
-                            
-                        case let sectionViewModel as UserAccountContactsView.ViewModel:
-                            UserAccountContactsView(viewModel: sectionViewModel)
-                            
-                        case let sectionViewModel as UserAccountPaymentsView.ViewModel:
-                            UserAccountPaymentsView(viewModel: sectionViewModel)
-
-                        case let sectionViewModel as UserAccountSecurityView.ViewModel:
-                            UserAccountSecurityView(viewModel: sectionViewModel)
-                            
-                        case let sectionViewModel as UserAccountDocumentsView.ViewModel:
-                            UserAccountDocumentsView(viewModel: sectionViewModel)
-                            
-                        default:
-                            EmptyView()
-                        }
+                    case let sectionViewModel as UserAccountContactsView.ViewModel:
+                        UserAccountContactsView(viewModel: sectionViewModel)
                         
+                    case let sectionViewModel as UserAccountPaymentsView.ViewModel:
+                        UserAccountPaymentsView(viewModel: sectionViewModel)
+                        
+                    case let sectionViewModel as UserAccountSecurityView.ViewModel:
+                        UserAccountSecurityView(viewModel: sectionViewModel)
+                        
+                    case let sectionViewModel as UserAccountDocumentsView.ViewModel:
+                        UserAccountDocumentsView(viewModel: sectionViewModel)
+                        
+                    default:
+                        EmptyView()
                     }
                     
-                    AccountCellFullButtonView(viewModel: viewModel.exitButton)
-                    
                 }
-                .padding(20)
+                
+                if let button = viewModel.exitButton {
+                    AccountCellFullButtonView(viewModel: button)
+                        .padding(.horizontal, 20)
+                }
             }
-            .navigationBarTitle(
-                Text(viewModel.navigationBar.title).font(.textH3M18240()),
-                displayMode: .inline)
-            .navigationBarBackButtonHidden(true)
-            .navigationBarItems(leading: backButton, trailing: settingButton)
+            
+            NavigationLink("", isActive: $viewModel.isLinkActive) {
+                
+                if let link = viewModel.link  {
+                    
+                    switch link {
+                    case .userDocument(let userDocumentViewModel):
+                        UserDocumentView(viewModel: userDocumentViewModel)
+                    }
+                }
+            }
         }
-    }
-    
-    var backButton: some View {
-        
-        Button(action: viewModel.navigationBar.backButton.action) {
-            viewModel.navigationBar.backButton.icon
-                .foregroundColor(.iconBlack)
-        }
-    }
-    
-    var settingButton: some View {
-        
-        Button(action: viewModel.navigationBar.rightButton.action) {
-            viewModel.navigationBar.rightButton.icon
-                .foregroundColor(.iconGray)
+        .sheet(item: $viewModel.sheet, content: { sheet in
+            switch sheet.sheetType {
+                
+            case let .userDocument(userDocumentViewModel):
+                UserDocumentView(viewModel: userDocumentViewModel)
+                
+            }
+        })
+        .bottomSheet(item: $viewModel.bottomSheet, content: { sheet in
+            switch sheet.sheetType {
+                
+            case let .inn(model):
+                UserAccountDocumentInfoView(viewModel: model)
+                
+            }
+        })
+        .navigationBar(with: viewModel.navigationBar)
+        .introspectTabBarController(customize: { tabBarController in
+            
+            self.tabBarController = tabBarController
+            tabBarController.tabBar.isHidden = true
+//            UIView.transition(with: tabBarController.view, duration: 0.05, options: .transitionCrossDissolve, animations: nil)
+        })
+        .onDisappear {
+            
+            if let tabBarController = tabBarController {
+                
+                tabBarController.tabBar.isHidden = false
+//                UIView.transition(with: tabBarController.view, duration: 0.05, options: .transitionCrossDissolve, animations: nil)
+            }
+            
         }
     }
     
@@ -76,43 +99,46 @@ struct UserAccountView: View {
         
         ZStack {
             
-            if let avatar = viewModel.avatar.image {
+            if let avatar = viewModel.avatar {
                 
-                avatar
-                    .resizable()
-                    .scaledToFill()
-                    .clipShape(Circle())
-                    .frame(width: 96, height: 96)
-                    .overlay(Circle()
-                        .stroke(lineWidth: 0)
-                    )
-                
-            } else {
-                
-                //Avatar Placeholder
-                Circle()
-                    .foregroundColor(.mainColorsGrayLightest)
-                    .frame(width: 96, height: 96)
-                
-                Image.ic24User
-                    .resizable()
-                    .frame(width: 48, height: 48)
-                    .foregroundColor(.iconGray)
-            }
-            
-            Button(action: viewModel.avatar.action) {
-                
-                ZStack {
+                if let avatarImage = avatar.image {
                     
+                    avatarImage
+                        .resizable()
+                        .scaledToFill()
+                        .clipShape(Circle())
+                        .frame(width: 96, height: 96)
+                        .overlay(Circle()
+                            .stroke(lineWidth: 0)
+                        )
+                    
+                } else {
+                    
+                    //Avatar Placeholder
                     Circle()
-                        .foregroundColor(.iconBlack)
-                        .frame(width: 32, height: 32)
+                        .foregroundColor(.mainColorsGrayLightest)
+                        .frame(width: 96, height: 96)
                     
-                    Image.ic16Edit2
-                        .foregroundColor(.iconWhite)
+                    Image.ic24User
+                        .resizable()
+                        .frame(width: 48, height: 48)
+                        .foregroundColor(.iconGray)
                 }
+                
+                Button(action: avatar.action) {
+                    
+                    ZStack {
+                        
+                        Circle()
+                            .foregroundColor(.iconBlack)
+                            .frame(width: 32, height: 32)
+                        
+                        Image.ic16Edit2
+                            .foregroundColor(.iconWhite)
+                    }
+                }
+                .offset(x: 32, y: -32)
             }
-            .offset(x: 32, y: -32)
         }
     }
 }
@@ -128,7 +154,6 @@ struct UserAccountView_Previews: PreviewProvider {
 extension UserAccountViewModel {
     
     static let sample = UserAccountViewModel(
-        model: Model.emptyMock,
         navigationBar: .sample,
         avatar: .init(
             image: Image("imgMainBanner2"),
@@ -141,5 +166,12 @@ extension UserAccountViewModel {
              UserAccountDocumentsView.ViewModel.documents,
              UserAccountPaymentsView.ViewModel.payments,
              UserAccountSecurityView.ViewModel.security
-            ])
+            ],
+        exitButton: .init(
+            icon: .ic24LogOut,
+            content: "Выход из приложения",
+            action: {
+                print("Exit action")
+            })
+    )
 }

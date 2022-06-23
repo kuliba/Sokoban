@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 extension UserAccountSecurityView {
     
@@ -14,10 +15,37 @@ extension UserAccountSecurityView {
         override var type: UserAccountViewModel.AccountSectionType { .security }
         var items: [AccountCellDefaultViewModel]
         
+        private var bindings = Set<AnyCancellable>()
+        
         internal init(items: [AccountCellDefaultViewModel], isCollapsed: Bool) {
             
             self.items = items
             super.init(isCollapsed: isCollapsed)
+        }
+        
+        internal init(isActiveFaceId: Bool, isActivePush: Bool, isCollapsed: Bool) {
+            
+            let items = [
+                AccountCellSwitchView.ViewModel(type: .faceId, isActive: isActiveFaceId),
+                AccountCellSwitchView.ViewModel(type: .notification, isActive: isActivePush)]
+            self.items = items
+            super.init(isCollapsed: isCollapsed)
+            bind(items)
+        }
+        
+        func bind(_ items: [AccountCellSwitchView.ViewModel]) {
+            
+            for item in items {
+                
+                item.$isActive
+                    .dropFirst()
+                    .receive(on: DispatchQueue.main)
+                    .sink { [unowned self] isActive in
+                        action.send(UserAccountModelAction.Switch(type: item.type, value: isActive))
+                        
+                    }.store(in: &bindings)
+                
+            }
         }
     }
 }
@@ -30,7 +58,7 @@ struct UserAccountSecurityView: View {
     
     var body: some View {
         
-        CollapsableSectionView(title: viewModel.title, isCollapsed: $viewModel.isCollapsed) {
+        CollapsableSectionView(title: viewModel.title, edges: .horizontal, padding: 20, isCollapsed: $viewModel.isCollapsed) {
             
             VStack(spacing: 4) {
                 
@@ -40,7 +68,7 @@ struct UserAccountSecurityView: View {
                         AccountCellSwitchView(viewModel: viewModel)
                     }
                 }
-            }
+            }.padding(.horizontal, 20)
         }
     }
 }

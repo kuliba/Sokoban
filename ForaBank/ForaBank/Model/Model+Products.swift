@@ -11,6 +11,7 @@ import Foundation
 
 typealias ProductsData = [ProductType : [ProductData]]
 typealias ProductsDynamicParams = [ServerCommands.ProductController.GetProductDynamicParamsList.Response.List.DynamicListParams]
+typealias LoansData = [PersonsCreditData]
 
 extension ModelAction {
     
@@ -88,6 +89,28 @@ extension ModelAction {
                 
                 case success(productDetails: ProductDetailsData)
                 case failure(message: String)
+            }
+        }
+    }
+    
+    enum Loans {
+        
+        enum Update {
+       
+            struct All: Action {}
+            
+            enum Single {
+                
+                struct Request: Action {
+                    
+                    let productId: ProductData.ID
+                }
+                
+                struct Response: Action {
+                    
+                    let productId: ProductData.ID
+                    let result: Result<PersonsCreditData, Error>
+                }
             }
         }
     }
@@ -250,6 +273,12 @@ extension Model {
 
                     // update products
                     self.products.value = reduce(products: self.products.value, with: result.products, allowed: self.productsAllowed)
+                    
+                    // update loans data
+                    if productType == .loan {
+                        
+                        self.action.send(ModelAction.Loans.Update.All())
+                    }
 
                 } catch {
                     
@@ -482,6 +511,85 @@ extension Model {
     }
 }
 
+//MARK: - Loans
+
+extension Model {
+    
+    func handleLoansUpdateAllRequest() {
+        
+        guard let loanProducts = products.value[.loan], loanProducts.isEmpty == false else {
+            return
+        }
+        
+        for loan in loanProducts {
+            
+            action.send(ModelAction.Loans.Update.Single.Request(productId: loan.id))
+        }
+    }
+    
+    func handleLoansUpdateSingleRequest(_ payload: ModelAction.Loans.Update.Single.Request) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        Task {
+            
+            let command = ServerCommands.LoanController.GetPersonsCredit(token: token, payload: .init(id: payload.productId))
+            
+            do {
+                
+                let result = try await loansFetchWithCommand(command: command)
+                self.loans.value = reduce(loans: self.loans.value, personsCreditData: result.original, productId: payload.productId)
+                
+                //TODO: update loan product's custom name with result.customName?
+                
+                do {
+                    
+                    try localAgent.store(self.loans.value, serial: nil)
+                    
+                } catch {
+                    
+                    print("Model: handleLoansUpdateSingleRequest: caching LoansData error: \(error)")
+                }
+
+            } catch {
+                
+                self.handleServerCommandError(error: error, command: command)
+                self.action.send(ModelAction.Loans.Update.Single.Response(productId: payload.productId, result: .failure(error)))
+            }
+        }
+    }
+   
+    func loansFetchWithCommand(command: ServerCommands.LoanController.GetPersonsCredit) async throws -> ServerCommands.LoanController.GetPersonsCredit.Response.ResultData {
+        
+        try await withCheckedThrowingContinuation { continuation in
+            
+            serverAgent.executeCommand(command: command) { result in
+                switch result{
+                case .success(let response):
+                    switch response.statusCode {
+                    case .ok:
+                        
+                        guard let data = response.data else {
+                            continuation.resume(with: .failure(ModelProductsError.emptyData(message: response.errorMessage)))
+                            return
+                        }
+                        
+                        continuation.resume(returning: data)
+
+                    default:
+                        continuation.resume(with: .failure(ModelProductsError.statusError(status: response.statusCode, message: response.errorMessage)))
+                    }
+                case .failure(let error):
+                    continuation.resume(with: .failure(ModelProductsError.serverCommandError(error: error.localizedDescription)))
+                }
+            }
+        }
+    }
+}
+
 //MARK: - Reducers
 
 //TODO: tests
@@ -581,6 +689,35 @@ extension Model {
         productCard.statusPc = .active
 
         return products
+    }
+    
+    func reduce(loans: LoansData, personsCreditData: PersonsCreditData, productId: ProductData.ID) -> LoansData {
+
+        if loans.contains(where: { $0.loandId == productId}) {
+            
+            var updated = LoansData()
+            
+            for item in loans {
+                
+                if item.loandId == productId {
+                    
+                    updated.append(personsCreditData)
+                    
+                } else {
+                    
+                    updated.append(item)
+                }
+            }
+            
+            return updated
+            
+        } else {
+            
+            var updated = loans
+            updated.append(personsCreditData)
+            
+            return updated
+        }
     }
 }
 

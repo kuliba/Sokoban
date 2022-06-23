@@ -12,7 +12,13 @@ import RealmSwift
 struct ReturnAllCardList {
     
     static func cards() ->  [UserAllCardsModel] {
-        
-        Model.shared.products.value.values.flatMap({ $0 }).map{ $0.userAllProducts() }
+
+        var products: [UserAllCardsModel] = []
+        let types: [ProductType] = [.card, .account, .deposit, .loan]
+        types.forEach { type in
+            
+            products.append(contentsOf: Model.shared.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
+        }
+        return products
     }
 }

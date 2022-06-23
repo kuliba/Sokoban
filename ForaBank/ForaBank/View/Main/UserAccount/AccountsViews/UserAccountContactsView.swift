@@ -19,6 +19,35 @@ extension UserAccountContactsView {
             self.items = items
             super.init(isCollapsed: isCollapsed)
         }
+        
+        internal init(userData: ClientInfoData, isCollapsed: Bool) {
+            
+            self.items = []
+            super.init(isCollapsed: isCollapsed)
+            
+            self.items = [
+                AccountCellButtonView.ViewModel(
+                    icon: .ic24User,
+                    content: userData.firstName,
+                    title: "Имя",
+                    button: .init(icon: .ic24Edit2, action: { [weak self] in
+                        self?.action.send(UserAccountModelAction.ChangeUserName())
+                    })
+                ),
+                
+                AccountCellInfoView.ViewModel(
+                    icon: .ic24Smartphone,
+                    content: userData.phone,
+                    title: "Телефон"
+                ),
+                
+                AccountCellInfoView.ViewModel(
+                    icon: .ic24Mail,
+                    content: userData.email ?? "",
+                    title: "Электронная почта"
+                )
+            ]
+        }
     }
 }
 
@@ -30,7 +59,7 @@ struct UserAccountContactsView: View {
     
     var body: some View {
         
-        CollapsableSectionView(title: viewModel.title, isCollapsed: $viewModel.isCollapsed) {
+        CollapsableSectionView(title: viewModel.title, edges: .horizontal, padding: 20, isCollapsed: $viewModel.isCollapsed) {
             
             VStack(spacing: 4) {
                 
@@ -48,7 +77,7 @@ struct UserAccountContactsView: View {
                         EmptyView()
                     }
                 }
-            }
+            }.padding(.horizontal, 20)
         }
     }
 }

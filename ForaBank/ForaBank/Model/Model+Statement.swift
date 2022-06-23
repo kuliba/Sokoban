@@ -52,7 +52,6 @@ extension Model {
             return
         }
         
-        print(requestProperties)
         statementsUpdating.value[payload.productId] = .downloading(payload.direction)
 
         switch product.productType {

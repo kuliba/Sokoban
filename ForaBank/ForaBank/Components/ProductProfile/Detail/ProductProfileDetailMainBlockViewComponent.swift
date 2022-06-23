@@ -22,21 +22,48 @@ extension ProductProfileDetailView.ViewModel {
             self.progress = progress
         }
 
-        init(loanData: ProductCardData.LoanBaseParamInfoData, model: Model, action: @escaping () -> Void) {
+        init(configuration: ProductProfileDetailView.ViewModel.Configuration, loanData: ProductCardData.LoanBaseParamInfoData, model: Model, action: @escaping () -> Void) {
             
-            let debtAmount = loanData.debtAmount ?? 0
-            let availableAmountCurrent = loanData.availableExceedLimit ?? 0
-            let availableAmountTotal = loanData.totalAvailableAmount ?? 0
+            switch configuration {
+            case .loanRepaidAndOwnFunds:
+                let progressValue = loanData.availableExceedLimitValue > 0 ? loanData.ownFundsValue / loanData.availableExceedLimitValue : 1
+                
+                let ownFunds = model.amountFormatted(amount: loanData.ownFundsValue, currencyCode: loanData.currencyCode, style: .normal) ?? String(loanData.ownFundsValue)
+                let availableLimit = model.amountFormatted(amount: loanData.availableExceedLimitValue, currencyCode: loanData.currencyCode, style: .normal) ?? String(loanData.availableExceedLimitValue)
+                
+                self.items = [
+                    .init(type: .ownFunds, value: ownFunds, prefix: .legend(.mainColorsWhite)),
+                    .init(type: .loanLimit, value: availableLimit, prefix: .legend(.mainColorsRed), postfix: .value(availableLimit))
+                ]
+                
+                self.progress = .init(progress: progressValue, primaryColor: .mainColorsRed, secondaryColor: .mainColorsWhite, action: action)
+                
+            default:
+                let progressValue = loanData.totalAvailableAmountValue > 0 ? loanData.debtAmountValue / loanData.totalAvailableAmountValue : 1
+                
+                let debtAmount = model.amountFormatted(amount: loanData.debtAmountValue, currencyCode: loanData.currencyCode, style: .normal) ?? String(loanData.debtAmountValue)
+                let availableAmount = model.amountFormatted(amount: loanData.availableExceedLimitValue, currencyCode: loanData.currencyCode, style: .normal) ?? String(loanData.availableExceedLimitValue)
+                let totalAmount = model.amountFormatted(amount: loanData.totalAvailableAmountValue, currencyCode: loanData.currencyCode, style: .normal) ?? String(loanData.totalAvailableAmountValue)
+      
+                self.items = [
+                    .init(type: .debt, value: debtAmount, prefix: .legend(.textPlaceholder)),
+                    .init(type: .available, value: availableAmount, prefix: .legend(.mainColorsRed), postfix: .value(totalAmount))
+                ]
+                
+                self.progress = .init(progress: progressValue, primaryColor: .mainColorsRed, secondaryColor: .textPlaceholder, action: action)
+            }
+        }
+        
+        init(productLoan: ProductLoanData, loanData: PersonsCreditData, model: Model, action: @escaping () -> Void) {
             
-            let progressValue = availableAmountTotal > 0 ? availableAmountCurrent / availableAmountTotal : 1
+            let progressValue = loanData.amountCreditValue > 0 ? loanData.amountRepaidValue / loanData.amountCreditValue : 1
             
-            let debtAmountFormatted = model.amountFormatted(amount: debtAmount, currencyCode: loanData.currencyCode, style: .normal) ?? String(debtAmount)
-            let availableAmountCurrentFormatted = model.amountFormatted(amount: availableAmountCurrent, currencyCode: loanData.currencyCode, style: .normal) ?? String(availableAmountCurrent)
-            let availableAmountTotalFormatted = model.amountFormatted(amount: availableAmountTotal, currencyCode: loanData.currencyCode, style: .normal) ?? String(availableAmountTotal)
-  
+            let loanAmount = model.amountFormatted(amount: loanData.amountCreditValue, currencyCode: productLoan.currency, style: .normal) ?? String(loanData.amountCreditValue)
+            let repaidAmount = model.amountFormatted(amount: loanData.amountRepaidValue, currencyCode: productLoan.currency, style: .normal) ?? String(loanData.amountRepaidValue)
+            
             self.items = [
-                .init(title: "Задолженность", value: debtAmountFormatted, prefix: .legend(.textPlaceholder)),
-                .init(title: "Доступно", value: availableAmountCurrentFormatted, prefix: .legend(.mainColorsRed), postfix: .value(availableAmountTotalFormatted))
+                .init(type: .loanAmount, value: loanAmount, prefix: .legend(.textPlaceholder)),
+                .init(type: .repaid, value: repaidAmount, prefix: .legend(.mainColorsRed))
             ]
             
             self.progress = .init(progress: progressValue, primaryColor: .mainColorsRed, secondaryColor: .textPlaceholder, action: action)
@@ -111,13 +138,13 @@ extension ProductProfileDetailView.ViewModel.MainBlockViewModel {
 extension ProductProfileDetailView.ViewModel.AmountViewModel {
 
     
-    static let sampleLegendCreditCardOne = ProductProfileDetailView.ViewModel.AmountViewModel(title: "Задолженность", value: "60 000 ₽", prefix: .legend(.textPlaceholder))
+    static let sampleLegendCreditCardOne = ProductProfileDetailView.ViewModel.AmountViewModel(type: .debt, value: "60 000 ₽", prefix: .legend(.textPlaceholder))
     
-    static let sampleLegendCreditCardTwo = ProductProfileDetailView.ViewModel.AmountViewModel(title: "Доступно", value: "240 000 ₽", prefix: .legend(.mainColorsRed), postfix: .value("300 000 ₽"))
+    static let sampleLegendCreditCardTwo = ProductProfileDetailView.ViewModel.AmountViewModel(type: .available, value: "240 000 ₽", prefix: .legend(.mainColorsRed), postfix: .value("300 000 ₽"))
     
-    static let sampleLegendCreditOne = ProductProfileDetailView.ViewModel.AmountViewModel(title: "Собственные средства", value: "60 056 ₽", prefix: .legend(.mainColorsWhite))
+    static let sampleLegendCreditOne = ProductProfileDetailView.ViewModel.AmountViewModel(type: .ownFunds, value: "60 056 ₽", prefix: .legend(.mainColorsWhite))
     
-    static let sampleLegendCreditTwo = ProductProfileDetailView.ViewModel.AmountViewModel(title: "Кредитный лимит", value: "34 056 ₽", prefix: .legend(.mainColorsRed), postfix: .value("250 000 ₽"))
+    static let sampleLegendCreditTwo = ProductProfileDetailView.ViewModel.AmountViewModel(type: .loanLimit, value: "34 056 ₽", prefix: .legend(.mainColorsRed), postfix: .value("250 000 ₽"))
 }
 
 extension ProductProfileDetailView.ViewModel.CircleProgressViewModel {

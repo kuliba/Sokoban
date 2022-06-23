@@ -11,61 +11,56 @@ import Combine
 
 class UserAccountViewModel: ObservableObject {
     
-    let navigationBar: NavigationViewModel
+    let action: PassthroughSubject<Action, Never> = .init()
     
-    @Published var avatar: AvatarViewModel
+    let navigationBar: NavigationBarView.ViewModel
+    
+    @Published var avatar: AvatarViewModel?
     @Published var sections: [AccountSectionViewModel]
-    @Published var exitButton: AccountCellFullButtonView.ViewModel
+    @Published var exitButton: AccountCellFullButtonView.ViewModel? = nil
+    @Published var link: Link? { didSet { isLinkActive = link != nil } }
+    @Published var isLinkActive: Bool = false
+    @Published var bottomSheet: BottomSheet?
+    @Published var sheet: Sheet?
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
-    init(model: Model, navigationBar: UserAccountViewModel.NavigationViewModel, avatar: AvatarViewModel, sections: [AccountSectionViewModel]) {
+    init(navigationBar: NavigationBarView.ViewModel, avatar: AvatarViewModel, sections: [AccountSectionViewModel], exitButton: AccountCellFullButtonView.ViewModel, model: Model = .emptyMock) {
         
         self.model = model
         self.navigationBar = navigationBar
         self.avatar = avatar
         self.sections = sections
-        
-        self.exitButton = .init(
-            icon: .ic24LogOut,
-            content: "Выход из приложения",
-            action: {
-                print("Exit action")
-            })
+        self.exitButton = exitButton
         
     }
     
     init(model: Model, clientInfo: ClientInfoData) {
         
-        //TODO: fill viewModel with ClientInfoData
-        
         self.model = model
-        self.navigationBar = .init(
-            title: "Профиль",
-            backButton: .init(icon: .ic24ChevronLeft, action: {
-                print("back")
-            }),
-            rightButton: .init(icon: .ic24Settings, action: {
-                print("right")
-            }))
-        self.avatar = .init(
-            image: nil,
-            action: {
-                print("Open peacker")
+        sections = []
+        navigationBar = .init(title: "Профиль", leftButtons: [
+            NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft)
+        ])
+        
+        avatar = .init(
+            image: nil, action: { [weak self] in
+                self?.action.send(UserAccountModelAction.AvatarAction())
             })
         
-        self.exitButton = .init(
-            icon: .ic24LogOut,
-            content: "Выход из приложения",
-            action: {
-                print("Exit action")
+        exitButton = .init(
+            icon: .ic24LogOut, content: "Выход из приложения", action: { [weak self] in
+                self?.action.send(UserAccountModelAction.ExitAction())
             })
         
-        self.sections = []
+        navigationBar.rightButtons = [
+            .init(icon: .ic24Settings, action: { [weak self] in
+                self?.action.send(UserAccountModelAction.SettingsAction())
+            })]
         
         bind()
-        model.action.send(ModelAction.ClientInfo.Fetch.Request())
+//        model.action.send(ModelAction.ClientInfo.Fetch.Request())
     }
         
     func bind() {
@@ -75,133 +70,103 @@ class UserAccountViewModel: ObservableObject {
             .sink { [unowned self] clientInfo in
                 
                 guard let clientInfo = clientInfo else { return }
+                sections = createSections(userData: clientInfo)
+                bind(sections)
                 
-                createSections(userData: clientInfo)
-
             }.store(in: &bindings)
         
-    }
-    
-    func createSections(userData: ClientInfoData) {
-        
-        var accountContactsItems = [
-            AccountCellButtonView.ViewModel(
-                icon: .ic24User,
-                content: userData.firstName,
-                title: "Имя",
-                button: .init(icon: .ic24Edit2, action: {
-                    print("Open Изменить Имя")
-                } )
-            ),
-            
-            AccountCellInfoView.ViewModel(
-                icon: .ic24Smartphone,
-                content: userData.phone,
-                title: "Телефон"
-            )]
-        
-        if let email = userData.email {
-            accountContactsItems.append(AccountCellInfoView.ViewModel(
-                icon: .ic24Mail,
-                content: email,
-                title: "Электронная почта"
-            ))
-        }
-        
-        var accountDocuments: [AccountCellDefaultViewModel] = [
-            DocumentCellView.ViewModel(
-            icon: .ic24Passport,
-            content: "Паспорт РФ",
-            title: userData.pasportNumber,
-            action: {
-                print("Open Паспорт")
-            })
-        ]
-        
-        if let userInn = userData.INN {
-            accountDocuments.append(DocumentCellView.ViewModel(
-                icon: .ic24FileHash,
-                content: "ИНН",
-                title: userInn,
-                action: {
-                    print("Open ИНН")
-                })
-            )
-        }
-        
-        accountDocuments.append(DocumentCellView.ViewModel(
-            icon: .ic24Passport,
-            content: "Адрес регистрации",
-            title: userData.address,
-            action: {
-                print("Open Адрес регистрации")
-            }))
-        
-        if let addressResidential = userData.addressResidential {
-            accountDocuments.append(DocumentCellView.ViewModel(
-                icon: .ic24Passport,
-                content: "Адрес проживания",
-                title: addressResidential,
-                action: {}))
-        }
-        
-        
-        self.sections = [
-            UserAccountContactsView.ViewModel(
-                items: accountContactsItems,
-                isCollapsed: false),
-            
-            UserAccountDocumentsView.ViewModel(
-                items: accountDocuments,
-                isCollapsed: false),
-            
-            UserAccountPaymentsView.ViewModel(
-                items: [
-                    AccountCellButtonView.ViewModel(
-                        icon: Image("sbp-logo"),
-                        content: "Система быстрых платежей",
-                        button: .init(icon: .ic24ChevronRight, action: {
-                            print("Open Система быстрых платежей")
-                        }))
-                ],
-                isCollapsed: false),
-            
-            UserAccountSecurityView.ViewModel(
-                items: [
-                    AccountCellSwitchView.ViewModel(
-                        content: "Вход по Face ID",
-                        icon: .ic24FaceId),
+        action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+
+                case _ as UserAccountModelAction.AvatarAction:
+                    print("Open AvatarAction")
                     
-                    AccountCellSwitchView.ViewModel(
-                        content: "Push-уведомления",
-                        icon: .ic24Bell)],
-                isCollapsed: false)
-        ]
+                case _ as UserAccountModelAction.SettingsAction:
+                    print("Open SettingsAction")
+                    
+                case _ as UserAccountModelAction.ExitAction:
+                    print("Open ExitAction")
+                    
+                default:
+                    break
+                    
+                }
+                
+            }.store(in: &bindings)
     }
     
+    private func bind(_ sections: [AccountSectionViewModel]) {
+        
+        for section in sections {
+            
+            section.action
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
+                    
+                    switch action {
+
+                    case _ as UserAccountModelAction.ChangeUserName:
+                        print("Open Изменить Имя")
+                        
+                    case _ as UserAccountModelAction.OpenFastPayment:
+                        print("Open FastPayment")
+                        
+                    case let payload as UserAccountModelAction.Switch:
+                        switch payload.type {
+                            
+                        case .faceId:
+                            print("Open FaceIdSwitch", payload.value)
+                            
+                        case .notification:
+                            print("Open NotificationSwitch", payload.value)
+                        }
+                        
+                    case let payload as UserAccountModelAction.OpenDocument:
+                        guard let clientInfo = model.clientInfo.value else { return }
+                        switch payload.type {
+                            
+                        case .passport:
+                            
+                            self.sheet = .init(sheetType: .userDocument(.init(clientInfo: clientInfo, itemType: .passport)))
+                            
+                        case .inn:
+                            
+                            guard let inn = clientInfo.INN else { return }
+                            self.bottomSheet = .init(sheetType: .inn(.init(itemType: payload.type, content: inn)))
+                            
+                        case .adressPass:
+                            
+                            self.bottomSheet = .init(sheetType: .inn(.init(itemType: payload.type, content: clientInfo.address)))
+                            
+                        case .adress:
+                            
+                            guard let addressResidential = clientInfo.addressResidential else { return }
+                            self.bottomSheet = .init(sheetType: .inn(.init(itemType: payload.type, content: addressResidential)))
+                        }
+                        
+                    default:
+                        break
+                        
+                    }
+                    
+                }.store(in: &bindings)
+        }
+    }
+    
+    func createSections(userData: ClientInfoData) -> [AccountSectionViewModel] {
+        [
+            UserAccountContactsView.ViewModel(userData: userData, isCollapsed: false),
+            UserAccountDocumentsView.ViewModel(userData: userData, isCollapsed: false),
+            UserAccountPaymentsView.ViewModel(isCollapsed: false),
+            UserAccountSecurityView.ViewModel(isActiveFaceId: false, isActivePush: true, isCollapsed: false)
+        ]
+    }
 }
 
-
 extension UserAccountViewModel {
-    
-    struct NavigationViewModel {
-        
-        let title: String
-        let backButton: NavigationButtonViewModel
-        let rightButton: NavigationButtonViewModel
-        
-        struct NavigationButtonViewModel {
-            
-            let icon: Image
-            let action: () -> Void
-            
-            init(icon: Image, action: @escaping () -> Void) {
-                
-                self.icon = icon
-                self.action = action
-            }
-        }
-    }
     
     class AvatarViewModel: ObservableObject {
         
@@ -215,6 +180,8 @@ extension UserAccountViewModel {
     }
     
     class AccountSectionViewModel: ObservableObject, Identifiable {
+        
+        let action: PassthroughSubject<Action, Never> = .init()
         
         var id: String { type.rawValue }
         var type: AccountSectionType { fatalError("Implement in subclass")}
@@ -250,16 +217,57 @@ extension UserAccountViewModel {
         }
     }
     
+    enum Link {
+        
+        case userDocument(UserDocumentViewModel)
+    }
+    
+
+    struct Sheet: Identifiable {
+        
+        let id = UUID()
+        let sheetType: SheetType
+        
+        enum SheetType {
+            case userDocument(UserDocumentViewModel)
+        }
+    }
+    
+    struct BottomSheet: Identifiable {
+        
+        let id = UUID()
+        let sheetType: SheetType
+        
+        enum SheetType {
+            case inn(UserAccountDocumentInfoView.ViewModel)
+        }
+    }
+    
 }
 
-extension UserAccountViewModel.NavigationViewModel {
+enum UserAccountModelAction {
+
+    struct PullToRefresh: Action {}
     
-    static let sample = UserAccountViewModel.NavigationViewModel(
-        title: "Профиль",
-        backButton: .init(icon: .ic24ChevronLeft, action: {
-            print("back")
-        }),
-        rightButton: .init(icon: .ic24Settings, action: {
-            print("right")
-        }))
+    struct CloseLink: Action {}
+    
+    struct ChangeUserName: Action {}
+    
+    struct AvatarAction: Action {}
+    
+    struct SettingsAction: Action {}
+    
+    struct ExitAction: Action {}
+    
+    struct OpenDocument: Action {
+        let type: DocumentCellType
+    }
+    
+    struct OpenFastPayment: Action {}
+    
+    struct Switch: Action {
+        
+        let type: AccountCellSwitchView.ViewModel.Kind
+        let value: Bool
+    }
 }

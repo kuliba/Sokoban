@@ -36,26 +36,27 @@ extension ProductProfileDetailView {
         
         init?(productCard: ProductCardData, model: Model) {
             
-            // check if it credit card
-            
-            guard let loanData = productCard.loanBaseParam else {
+            guard let loanData = productCard.loanBaseParam,
+                  let configuration = Configuration(productCard: productCard, loanData: loanData) else {
                 return nil
             }
             
-            if productCard.isActivated == true {
-                
-                
-            } else {
-                
-                // credit card is not activated yet
-                
-                self.info = .message("Поздравляем 🎉, Вы стали обладателем кредитной карты. Оплачивайте покупки и получайте Кешбэк и скидки от партнеров.")
-                self.mainBlock = .init(loanData: loanData, model: model, action: {})
-                self.isCollapsed = true
-                
-            }
+            self.info = .init(configuration: configuration)
+            self.mainBlock = .init(configuration: configuration, loanData: loanData, model: model, action: {})
+            self.footer = .init(configuration: configuration, loanData: loanData, model: model)
+            self.isCollapsed = configuration == .notActivated ? true : false
             
-            return nil
+            bind()
+        }
+        
+        init(productLoan: ProductLoanData, loanData: PersonsCreditData, model: Model) {
+            
+            self.info = .init(loanData: loanData, loanType: productLoan.loanType)
+            self.mainBlock = .init(productLoan: productLoan, loanData: loanData, model: model, action: {})
+            self.footer = .init(productLoan: productLoan, loanData: loanData, model: model)
+            self.isCollapsed = false
+            
+            bind()
         }
 
         private func bind() {
@@ -70,14 +71,9 @@ extension ProductProfileDetailView {
                             
                             isCollapsed.toggle()
                         }
-                        
-                    /*
-                    case _ as AntifraudViewModelAction.Cancel:
-                        NotificationCenter.default.post(name: NSNotification.Name("openPaymentsView"), object: nil, userInfo: nil)
-                     */
+  
                     default:
                         break
-                        
                     }
                     
                 }.store(in: &bindings)
@@ -96,6 +92,106 @@ extension ProductProfileDetailView {
     }
 }
 
+//MARK: - Configuration
+
+extension ProductProfileDetailView.ViewModel {
+    
+    enum Configuration {
+        
+        case notActivated
+        case minimumPaymentAndGrasePeriod
+        case overdue
+        case loanRepaidAndOwnFunds
+        case entireLoanUsed
+        case minimumPaymentMade
+        case overdraft
+        case withoutGrasePeriod
+        case withoutGrasePeriodWithOverdue
+        case minimumPaymentMadeGrasePeriodRemain
+        
+        init?(productCard: ProductCardData, loanData: ProductCardData.LoanBaseParamInfoData) {
+            
+            if productCard.isActivated == true {
+                
+                if let minimumPayment = loanData.minimumPayment,
+                   let gracePeriodPayment = loanData.gracePeriodPayment,
+                   minimumPayment > 0 && gracePeriodPayment > 0 {
+                    
+                    self = .minimumPaymentAndGrasePeriod
+                    
+                } else if let overduePayment = loanData.overduePayment,
+                          overduePayment > 0 {
+                    
+                    self = .overdue
+                    
+                } else if let ownFunds = loanData.ownFunds,
+                          ownFunds > 0 {
+                    
+                    self = .loanRepaidAndOwnFunds
+                    
+                } else if let availableExceedLimit = loanData.availableExceedLimit,
+                          availableExceedLimit == 0 {
+                    
+                    self = .entireLoanUsed
+                    
+                } else if let minimumPayment = loanData.minimumPayment,
+                          let overduePayment = loanData.overduePayment,
+                          minimumPayment <= 0,
+                          overduePayment <= 0 {
+                    
+                    self = .minimumPaymentMade
+                    
+                } else if let overduePayment = loanData.overduePayment,
+                          let gracePeriodPayment = loanData.gracePeriodPayment,
+                          let ownFunds = loanData.ownFunds,
+                          overduePayment == 0,
+                          gracePeriodPayment == 0,
+                          ownFunds < 0 {
+                    
+                    self = .overdraft
+                    
+                } else if let gracePeriodPayment = loanData.gracePeriodPayment,
+                          let overduePayment = loanData.overduePayment,
+                          let debtAmount = loanData.debtAmount,
+                          let minimumPayment = loanData.minimumPayment,
+                          gracePeriodPayment >= 0,
+                          overduePayment == 0,
+                          debtAmount > 0,
+                          minimumPayment > 0 {
+                    
+                    self = .withoutGrasePeriod
+                    
+                } else if let gracePeriodPayment = loanData.gracePeriodPayment,
+                          let overduePayment = loanData.overduePayment,
+                          let debtAmount = loanData.debtAmount,
+                          gracePeriodPayment >= 0,
+                          overduePayment > 0,
+                          debtAmount > 0 {
+                    
+                    self = .withoutGrasePeriodWithOverdue
+                    
+                } else if let gracePeriodPayment = loanData.gracePeriodPayment,
+                          let minimumPayment = loanData.minimumPayment,
+                          let overduePayment = loanData.overduePayment,
+                          gracePeriodPayment >= 0,
+                          minimumPayment <= 0,
+                          overduePayment <= 0 {
+                    
+                    self = .minimumPaymentMadeGrasePeriodRemain
+                    
+                } else {
+                    
+                    return nil
+                }
+                
+            } else {
+                
+                self = .notActivated
+            }
+        }
+    }
+}
+
 //MARK: - Actions
 
 enum ProductProfileDetailViewModelAction {
@@ -104,6 +200,7 @@ enum ProductProfileDetailViewModelAction {
 }
 
 //MARK: - View
+
 struct ProductProfileDetailView: View {
     
     @ObservedObject var viewModel: ProductProfileDetailView.ViewModel
@@ -115,18 +212,19 @@ struct ProductProfileDetailView: View {
         
         if #available(iOS 14, *) {
             
-            VStack {
+            VStack(spacing: 0) {
                 
                 ProductProfileDetailView.HeaderView(viewModel: viewModel.header)
                 
-                ProductProfileDetailView.InfoView(viewModel: viewModel.info)
-                    .frame(height: 62)
+                ProductProfileDetailView.InfoView(viewModel: viewModel.info, isCollapsed: $viewModel.isCollapsed)
+                    .padding(.top, 16)
                 
                 if viewModel.isCollapsed == false {
                     
                     ProductProfileDetailView.MainBlockView(viewModel: viewModel.mainBlock)
                         .matchedGeometryEffect(id: "main", in: namespace)
                         .frame(height: 112)
+                        .padding(.top, 22)
                     
                 } else {
                     
@@ -141,6 +239,7 @@ struct ProductProfileDetailView: View {
                         
                         ProductProfileDetailView.FooterView(viewModel: footerViewModel)
                             .matchedGeometryEffect(id: "footer", in: namespace)
+                            .padding(.top, 26)
                     }
                     
                 } else {
@@ -162,14 +261,12 @@ struct ProductProfileDetailView: View {
                 if viewModel.isCollapsed == true {
                     
                     ProductProfileDetailView.HeaderView(viewModel: viewModel.header)
-                    ProductProfileDetailView.InfoView(viewModel: viewModel.info)
-                        .frame(height: 62)
+                    ProductProfileDetailView.InfoView(viewModel: viewModel.info, isCollapsed: $viewModel.isCollapsed)
                     
                 } else {
                     
                     ProductProfileDetailView.HeaderView(viewModel: viewModel.header)
-                    ProductProfileDetailView.InfoView(viewModel: viewModel.info)
-                        .frame(height: 62)
+                    ProductProfileDetailView.InfoView(viewModel: viewModel.info, isCollapsed: $viewModel.isCollapsed)
                     
                     ProductProfileDetailView.MainBlockView(viewModel: viewModel.mainBlock)
                         .frame(height: 112)

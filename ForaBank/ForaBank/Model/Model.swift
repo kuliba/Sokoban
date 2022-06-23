@@ -21,6 +21,7 @@ class Model {
     let productsUpdating: CurrentValueSubject<[ProductType], Never>
     let productsHidden: CurrentValueSubject<[ProductData.ID], Never>
     var productsAllowed: Set<ProductType> { [.card, .account, .deposit, .loan] }
+    let loans: CurrentValueSubject<LoansData, Never>
     
     //MARK: Statements
     let statements: CurrentValueSubject<StatementsData, Never>
@@ -106,6 +107,7 @@ class Model {
         self.products = .init([:])
         self.productsUpdating = .init([])
         self.productsHidden = .init([])
+        self.loans = .init([])
         self.statements = .init([:])
         self.statementsUpdating = .init([:])
         self.rates = .init([])
@@ -344,6 +346,12 @@ class Model {
                     
                 case let payload as ModelAction.Products.ProductDetails.Request:
                     handleProductDetails(payload)
+                    
+                case _ as ModelAction.Loans.Update.All:
+                    handleLoansUpdateAllRequest()
+                    
+                case let payload as ModelAction.Loans.Update.Single.Request:
+                    handleLoansUpdateSingleRequest(payload)
                     
                     //MARK: - Statement
                     
@@ -597,6 +605,11 @@ private extension Model {
             
             self.images.value = images
         }
+        
+        if let loans = localAgent.load(type: LoansData.self) {
+            
+            self.loans.value = loans
+        }
     }
     
     func loadSettings() {
@@ -613,9 +626,7 @@ private extension Model {
     }
     
     func clearCachedData() {
-        
-        print("Model: clearCachedData")
-        
+                
         do {
             
             try localAgent.clear(type: [PaymentTemplateData].self)
@@ -678,5 +689,16 @@ private extension Model {
             
             print("Model: clearCachedData: ClientNameData error: \(error.localizedDescription)")
         }
+        
+        do {
+            
+            try localAgent.clear(type: LoansData.self)
+            
+        } catch {
+            
+            print("Model: clearCachedData: LoansData error: \(error.localizedDescription)")
+        }
+        
+        print("Model: cached data cleared")
     }
 }

@@ -9,15 +9,19 @@ import SwiftUI
 
 //MARK: - ViewModel
 
+
 extension DocumentCellView {
     
     class ViewModel: AccountCellDefaultViewModel, ObservableObject {
-                
+              
+        let itemType: DocumentCellType
         let action: () -> Void
         
-        internal init(id: UUID = UUID(), icon: Image, content: String, title: String? = nil, action: @escaping () -> Void) {
+        internal init(id: UUID = UUID(), itemType: DocumentCellType, content: String, action: @escaping () -> Void) {
+            
             self.action = action
-            super.init(id: id, icon: icon, content: content, title: title)
+            self.itemType = itemType
+            super.init(id: id, icon: itemType.icon, content: itemType.title, title: content)
         }
         
     }
@@ -31,10 +35,10 @@ struct DocumentCellView: View {
     
     var body: some View {
         
-        
         Button {
             
             viewModel.action()
+            
         } label: {
             
             VStack(alignment: .leading, spacing: 0) {
@@ -44,12 +48,11 @@ struct DocumentCellView: View {
                     ZStack {
                         
                         RoundedRectangle(cornerRadius: 20)
-                            .foregroundColor(.bGIconDeepPurpleMedium)
+                            .foregroundColor(viewModel.itemType.iconBackground)
                             .frame(width: 40, height: 40)
                         
                         viewModel.icon
                             .foregroundColor(.iconWhite)
-                        
                     }
                     
                     Spacer()
@@ -71,7 +74,6 @@ struct DocumentCellView: View {
                             .foregroundColor(.textPlaceholder)
                     }
                 }
-                
             }
             .padding(12)
             .frame(width: 132, height: 134)
@@ -90,10 +92,13 @@ struct DocumentCellView_Previews: PreviewProvider {
         Group {
             DocumentCellView(viewModel: .passport)
                 .previewLayout(.fixed(width: 175, height: 180))
+            
             DocumentCellView(viewModel: .inn)
                 .previewLayout(.fixed(width: 175, height: 180))
+            
             DocumentCellView(viewModel: .address)
                 .previewLayout(.fixed(width: 175, height: 180))
+            
             DocumentCellView(viewModel: .address2)
                 .previewLayout(.fixed(width: 175, height: 180))
         }
@@ -104,28 +109,24 @@ struct DocumentCellView_Previews: PreviewProvider {
 
 extension DocumentCellView.ViewModel {
     
-    static let passport = DocumentCellView.ViewModel
-        .init(icon: .ic24Passport,
-              content: "Паспорт РФ",
-              title: "38 06 ****75",
-              action: {})
+    static let passport = DocumentCellView.ViewModel(
+        itemType: .passport,
+        content: "38 06 ****75",
+        action: {})
     
-    static let inn = DocumentCellView.ViewModel
-        .init(icon: .ic24FileHash,
-              content: "ИНН",
-              title: "6525****3942",
-              action: {})
+    static let inn = DocumentCellView.ViewModel(
+        itemType: .inn,
+        content: "6525****3942",
+        action: {})
     
-    static let address = DocumentCellView.ViewModel
-        .init(icon: .ic24Passport,
-              content: "Адрес регистрации",
-              title: "г. Москва, Кут.",
-              action: {})
+    static let address = DocumentCellView.ViewModel(
+        itemType: .adressPass,
+        content: "г. Москва, Кут.",
+        action: {})
     
-    static let address2 = DocumentCellView.ViewModel
-        .init(icon: .ic24Passport,
-              content: "Адрес проживания",
-              title: "г. Москва, Кут.",
-              action: {})
+    static let address2 = DocumentCellView.ViewModel(
+        itemType: .adress,
+        content: "г. Москва, Кут.",
+        action: {})
     
 }

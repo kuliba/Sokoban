@@ -40,14 +40,13 @@ extension ProductView {
        
         convenience init(with productData: ProductData, size: Appearance.Size, style: Appearance.Style, model: Model, action: @escaping () -> Void) {
             
-            let balance = Self.balanceFormatted(product: productData, style: style, model: model) ?? "--"
-            
+            let balance = Self.balanceFormatted(product: productData, style: style, model: model)
             let number = productData.displayNumber
             let period = Self.period(product: productData, style: style)
             let name = productData.displayName
             let textColor = productData.fontDesignColor.color
             let productType = productData.productType
-            let backgroundColor = productData.background.first?.color ?? .bGIconBlack
+            let backgroundColor = productData.background.first?.color ?? .mainColorsBlackMedium
             let backgroundImage = Self.backgroundImage(with: productData, size: size)
             
             self.init(id: productData.id, header: .init(number: number, period: period), name: name, footer: .init(balance: balance), statusAction: nil, appearance: .init(textColor: textColor, background: .init(color: backgroundColor, image: backgroundImage), size: size, style: style), isUpdating: false, productType: productType, action: action)
@@ -56,65 +55,43 @@ extension ProductView {
         func update(with productData: ProductData, model: Model) {
             
             name = productData.displayName
-   
-            if let balanceFormatted = Self.balanceFormatted(product: productData, style: appearance.style, model: model) {
-                
-                footer.balance = balanceFormatted
+            footer.balance = Self.balanceFormatted(product: productData, style: appearance.style, model: model)
+        }
+        
+        
+        
+        static func balanceFormatted(product: ProductData, style: Appearance.Style, model: Model) -> String {
+            
+            switch product {
+            case let loanProduct as ProductLoanData:
+                return Self.balanceFormatted(amount: loanProduct.amount, debt: loanProduct.totalAmountDebtValue, currency: loanProduct.currency, style: style, model: model)
+            default:
+                return Self.balanceFormatted(balance: product.balanceValue, currency: product.currency, style: style, model: model)
             }
         }
         
-        static func balanceFormatted(product: ProductData, style: Appearance.Style, model: Model) -> String? {
-            
-            if let loanProduct = product as? ProductLoanData {
-                
-                return Self.balanceFormatted(amount: loanProduct.amount, totalAmountDebt: loanProduct.totalAmountDebt, currency: loanProduct.currency, style: style, model: model)
-                
-            } else {
-                
-                return Self.balanceFormatted(balance: product.balance, currency: product.currency, style: style, model: model)
-            }
-        }
-        
-        static func balanceFormatted(balance: Double?, currency: String, style: Appearance.Style, model: Model) -> String? {
-            
-            guard let balance = balance else {
-                return nil
-            }
+        static func balanceFormatted(balance: Double, currency: String, style: Appearance.Style, model: Model) -> String {
             
             switch style {
             case .main:
-                return model.amountFormatted(amount: balance, currencyCode: currency, style: .clipped)
+                return model.amountFormatted(amount: balance, currencyCode: currency, style: .clipped) ?? String(balance)
                 
             case .profile:
-                return model.amountFormatted(amount: balance, currencyCode: currency, style: .normal)
+                return model.amountFormatted(amount: balance, currencyCode: currency, style: .normal) ?? String(balance)
             }
         }
         
-        static func balanceFormatted(amount: Double, totalAmountDebt: Double?, currency: String, style: Appearance.Style, model: Model) -> String? {
+        static func balanceFormatted(amount: Double, debt: Double, currency: String, style: Appearance.Style, model: Model) -> String {
             
             switch style {
             case .main:
-                return model.amountFormatted(amount: amount, currencyCode: currency, style: .clipped)
+                return model.amountFormatted(amount: debt, currencyCode: currency, style: .clipped) ?? String(amount)
                 
             case .profile:
-                if let totalAmountDebt = totalAmountDebt {
-                    
-                    guard let debt = model.amountFormatted(amount: totalAmountDebt, currencyCode: currency, style: .normal),
-                          let total = model.amountFormatted(amount: amount, currencyCode: currency, style: .normal) else {
-                        return nil
-                    }
-                    
-                    return debt + " / " + total
-                    
-                } else {
-                    
-                    guard let debt = model.amountFormatted(amount: 0, currencyCode: currency, style: .normal),
-                          let total = model.amountFormatted(amount: amount, currencyCode: currency, style: .normal) else {
-                        return nil
-                    }
-                    
-                    return debt + " / " + total
-                }
+                let debtFormatted = model.amountFormatted(amount: debt, currencyCode: currency, style: .normal) ?? String(debt)
+                let amountFormatted = model.amountFormatted(amount: amount, currencyCode: currency, style: .normal) ?? String(amount)
+                
+                return debtFormatted + " / " + amountFormatted
             }
         }
         

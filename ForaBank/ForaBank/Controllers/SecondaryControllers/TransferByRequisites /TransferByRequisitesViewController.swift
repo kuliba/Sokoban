@@ -7,6 +7,7 @@
 
 import UIKit
 import RealmSwift
+import IQKeyboardManagerSwift
 
 struct Fio {
     var name, patronymic, surname: String
@@ -102,7 +103,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
             errorText: "Необязательное поле"))
     
     var cardField = CardChooseView()
-    var cardListView = CardsScrollView(onlyMy: true)
+    var cardListView = CardsScrollView(onlyMy: true, deleteDeposit: true)
     var stackView = UIStackView(arrangedSubviews: [])
     var fioStackView = UIStackView(arrangedSubviews: [])
     var fio = Fio(name: "", patronymic: "", surname: "") {
@@ -282,6 +283,15 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         loadCard()
         setupUI()
         setupActions()
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
+        
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
     }
     
     func sendData(kpp: String, name: String) {

@@ -14,15 +14,15 @@ extension ProductProfileDetailView.ViewModel {
     struct AmountViewModel: Identifiable {
 
         let id: UUID
-        let title: String
+        let type: Kind
         let value: String
         let prefix: Prefix?
         let postfix: Postfix?
         let backgroundColor: Color?
         
-        internal init(id: UUID = UUID(), title: String, value: String, prefix: Prefix? = nil, postfix: Postfix? = nil, backgroundColor: Color? = nil) {
+        internal init(id: UUID = UUID(), type: Kind, value: String, prefix: Prefix? = nil, postfix: Postfix? = nil, backgroundColor: Color? = nil) {
             self.id = id
-            self.title = title
+            self.type = type
             self.value = value
             self.prefix = prefix
             self.postfix = postfix
@@ -40,56 +40,39 @@ extension ProductProfileDetailView.ViewModel {
             case info(color: Color, action: () -> Void)
             case checkmark
         }
+        
+        enum Kind: Hashable {
+            
+            case debt
+            case available
+            case ownFunds
+            case loanLimit
+            case repaid
+            case loanAmount
+            case minimalPayment
+            case gracePayment
+            case totalDebt
+            case includingDelay
+            case makePayment
+            
+            var title: String {
+                
+                switch self {
+                case .debt: return "Задолженность"
+                case .available: return "Доступно"
+                case .ownFunds: return "Собственные средства"
+                case .loanLimit: return "Кредитный лимит"
+                case .repaid: return "Уже погашено"
+                case .loanAmount: return "Сумма кредита"
+                case .minimalPayment: return "Минимальный платеж"
+                case .gracePayment: return "Льготный платеж"
+                case .totalDebt: return "Общая задолженность"
+                case .includingDelay: return "Включая просрочку"
+                case .makePayment: return "Внести платеж"
+                }
+            }
+        }
     }
-    
-    /*
-     enum Kind: Hashable {
-         
-         case debt
-         case available
-         case ownfunds
-         case limit
-         case repaid
-         case creditAmount
-         
-         var title: String {
-             
-             switch self {
-             case .debt: return "Задолженность"
-             case .available: return "Доступно"
-             case .ownfunds: return "Собственные средства"
-             case .limit: return "Кредитный лимит"
-             case .repaid: return "Уже погашено"
-             case .creditAmount: return "Сумма кредита"
-                 
-             }
-         }
-     }
-     */
-    /*
-     enum Title: Hashable {
-         
-         case minimal
-         case preferential
-         case totalDebt
-         case available
-         case delay
-         case minimalCredit
-         
-         var title: String {
-             
-             switch self {
-                 
-             case .minimal: return "Минимальный платеж"
-             case .preferential: return "Льготный платеж"
-             case .totalDebt: return "Общая задолженность"
-             case .available: return "Доступно"
-             case .delay: return "Включая просрочку"
-             case .minimalCredit: return "Внести платеж"
-             }
-         }
-     }
-     */
 }
 
 //MARK: - View
@@ -110,7 +93,7 @@ extension ProductProfileDetailView {
                 HStack {
                     VStack(alignment: .leading, spacing: 8) {
                         
-                        Text(viewModel.title)
+                        Text(viewModel.type.title)
                             .font(.textBodySR12160())
                             .foregroundColor(.textPlaceholder)
                         
@@ -204,17 +187,17 @@ struct ProductProfileDetailAmountViewComponent_Previews: PreviewProvider {
 
 extension ProductProfileDetailView.ViewModel.AmountViewModel {
     
-    static let sample = ProductProfileDetailView.ViewModel.AmountViewModel(title: "Минимальный платеж", value: "3 417.01 ₽")
+    static let sample = ProductProfileDetailView.ViewModel.AmountViewModel(type: .minimalPayment, value: "3 417.01 ₽")
     
-    static let sampleLegend = ProductProfileDetailView.ViewModel.AmountViewModel(title: "Задолженность", value: "60 056 ₽", prefix: .legend(.textPlaceholder))
+    static let sampleLegend = ProductProfileDetailView.ViewModel.AmountViewModel(type: .debt, value: "60 056 ₽", prefix: .legend(.textPlaceholder))
     
-    static let sampleLegendValue = ProductProfileDetailView.ViewModel.AmountViewModel(title: "Уже погашено", value: "434 056,77 ₽", prefix: .legend(.mainColorsRed), postfix: .value("434 056,77 ₽"))
+    static let sampleLegendValue = ProductProfileDetailView.ViewModel.AmountViewModel(type: .repaid, value: "434 056,77 ₽", prefix: .legend(.mainColorsRed), postfix: .value("434 056,77 ₽"))
     
-    static let sampleCheckmark = ProductProfileDetailView.ViewModel.AmountViewModel(title: "Минимальный платеж", value: "Внесен", postfix: .checkmark)
+    static let sampleCheckmark = ProductProfileDetailView.ViewModel.AmountViewModel(type: .minimalPayment, value: "Внесен", postfix: .checkmark)
     
-    static let sampleInfo = ProductProfileDetailView.ViewModel.AmountViewModel(title: "Включая просрочку", value: "367.25 ₽", postfix: .info(color: .mainColorsRed, action: {}))
+    static let sampleInfo = ProductProfileDetailView.ViewModel.AmountViewModel(type: .includingDelay, value: "367.25 ₽", postfix: .info(color: .mainColorsRed, action: {}))
     
-    static let sampleBackground = ProductProfileDetailView.ViewModel.AmountViewModel(title: "Минимальный платеж", value: "3 417.01 ₽", backgroundColor: .mainColorsBlackMedium)
+    static let sampleBackground = ProductProfileDetailView.ViewModel.AmountViewModel(type: .minimalPayment, value: "3 417.01 ₽", backgroundColor: .mainColorsBlackMedium)
 }
 
 

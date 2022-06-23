@@ -101,3 +101,30 @@ class ProductLoanData: ProductData {
         lhs.strDateLong == rhs.strDateLong
     }
 }
+
+extension ProductLoanData {
+    
+    enum LoanType {
+     
+        case mortgage
+        case consumer
+    }
+}
+
+extension ProductLoanData {
+    
+    var loanType: LoanType {
+        
+        switch productName {
+        case "Ф_ПотКред": return .consumer
+        case "Ф_ИпКред": return .mortgage
+        default: return .consumer
+        }
+    }
+}
+
+extension ProductLoanData {
+    
+    var totalAmountDebtValue: Double { totalAmountDebt ?? 0 }
+}
+

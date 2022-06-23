@@ -50,3 +50,49 @@ extension Date {
         return result / 100
     }
 }
+
+extension Date {
+    
+    var startOfDay: Date {
+        
+         return Calendar.current.startOfDay(for: self)
+     }
+    
+    static func getStartOfCurrentMonth(for date: Date) -> Date {
+        
+        let calendar = Calendar(identifier: .gregorian)
+        let components = calendar.dateComponents([.year, .month], from: date)
+
+        return  calendar.date(from: components)!
+    }
+    
+    static func getStartOfPrevMonth(for date: Date) -> Date {
+        
+        let calendar = Calendar(identifier: .gregorian)
+        var components = DateComponents()
+        components.month = -1
+        let startOfMonthDate = Date.getStartOfCurrentMonth(for: date)
+        
+        return calendar.date(byAdding: components, to: startOfMonthDate)!
+    }
+    
+    static func getEndOfMonth(for date: Date) -> Date {
+        
+        let calendar = Calendar(identifier: .gregorian)
+        var components = DateComponents()
+        components.month = 1
+        components.second = -1
+        let startOfMonthDate = Date.getStartOfCurrentMonth(for: date)
+        
+        return calendar.date(byAdding: components, to: startOfMonthDate)!
+    }
+    
+    static func getMonthBack(from date: Date) -> Date {
+        
+        let calendar = Calendar(identifier: .gregorian)
+        var components = DateComponents()
+        components.month = -1
+
+        return calendar.date(byAdding: components, to: date)!
+    }
+}
