@@ -28,13 +28,11 @@ extension ModelAction {
                     struct Request: Action {
                         
                         let productId: ProductData.ID
-                        let productType: ProductType
                     }
                     
                     struct Response: Action {
                         
                         let productId: ProductData.ID
-                        let productType: ProductType
                         let result: Result<ProductDynamicParamsData, Error>
                     }
                 }
@@ -128,9 +126,13 @@ extension Model {
         }
         
         let productsList = products.value.values.flatMap{ $0 }
+        productsFastUpdating.value = Set(productsList.map{ $0.id })
+        
         let command = ServerCommands.ProductController.GetProductDynamicParamsList(token: token, products: productsList)
         
         serverAgent.executeCommand(command: command) { result in
+            
+            self.productsFastUpdating.value = []
             
             switch result {
             case .success(let response):
@@ -166,39 +168,25 @@ extension Model {
     
     func handleProductsUpdateFastSingleRequest(_ payload: ModelAction.Products.Update.Fast.Single.Request) {
         
+        guard productsFastUpdating.value.contains(payload.productId) == false else {
+            return
+        }
+        
         guard let token = token else {
             handledUnauthorizedCommandAttempt()
             return
         }
         
-        guard let command = createCommand() else {
+        guard let product = products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.productId }),
+              let command = createCommand(productId: product.id, productType: product.productType) else {
             return
         }
         
-        func createCommand() -> ServerCommands.ProductController.GetProductDynamicParams? {
-            
-            switch payload.productType {
-            case .card:
-                
-                let command = ServerCommands.ProductController.GetProductDynamicParams(token: token, payload: .init(accountId: nil, cardId: payload.productId.description, depositId: nil))
-                return command
-                
-            case .account:
-                
-                let command = ServerCommands.ProductController.GetProductDynamicParams(token: token, payload: .init(accountId: payload.productId.description, cardId: nil, depositId: nil))
-                return command
-                
-            case .deposit:
-                
-                let command = ServerCommands.ProductController.GetProductDynamicParams(token: token, payload: .init(accountId: nil, cardId: nil, depositId: payload.productId.description))
-                return command
-                
-            case .loan:
-                return nil
-            }
-        }
-        
+        productsFastUpdating.value.insert(product.id)
+
         serverAgent.executeCommand(command: command) { result in
+            
+            self.productsFastUpdating.value.remove(product.id)
             
             switch result {
             case .success(let response):
@@ -226,6 +214,29 @@ extension Model {
                 }
             case .failure(let error):
                 self.handleServerCommandError(error: error, command: command)
+            }
+        }
+        
+        func createCommand(productId: ProductData.ID, productType: ProductType) -> ServerCommands.ProductController.GetProductDynamicParams? {
+            
+            switch productType {
+            case .card:
+                
+                let command = ServerCommands.ProductController.GetProductDynamicParams(token: token, payload: .init(accountId: nil, cardId: productId.description, depositId: nil))
+                return command
+                
+            case .account:
+                
+                let command = ServerCommands.ProductController.GetProductDynamicParams(token: token, payload: .init(accountId: productId.description, cardId: nil, depositId: nil))
+                return command
+                
+            case .deposit:
+                
+                let command = ServerCommands.ProductController.GetProductDynamicParams(token: token, payload: .init(accountId: nil, cardId: nil, depositId: productId.description))
+                return command
+                
+            case .loan:
+                return nil
             }
         }
     }
@@ -529,6 +540,10 @@ extension Model {
     
     func handleLoansUpdateSingleRequest(_ payload: ModelAction.Loans.Update.Single.Request) {
         
+        guard loansUpdating.value.contains(payload.productId) == false else {
+            return
+        }
+        
         guard let token = token else {
             handledUnauthorizedCommandAttempt()
             return
@@ -540,8 +555,13 @@ extension Model {
             
             do {
                 
+                self.loansUpdating.value.insert(payload.productId)
+                
                 let result = try await loansFetchWithCommand(command: command)
+                
+                self.loansUpdating.value.remove(payload.productId)
                 self.loans.value = reduce(loans: self.loans.value, personsCreditData: result.original, productId: payload.productId)
+                
                 
                 //TODO: update loan product's custom name with result.customName?
                 
@@ -556,6 +576,7 @@ extension Model {
 
             } catch {
                 
+                self.loansUpdating.value.remove(payload.productId)
                 self.handleServerCommandError(error: error, command: command)
                 self.action.send(ModelAction.Loans.Update.Single.Response(productId: payload.productId, result: .failure(error)))
             }

@@ -59,7 +59,7 @@ class ProductProfileViewModel: ObservableObject {
         self.model = model
         
         // detail view model
-        self.detail = detailViewModel(with: product)
+        self.detail = makeDetailViewModel(with: product)
         
         // history view model
         let historyViewModel = makeHistoryViewModel(productType: product.productType, productId: product.id, model: model)
@@ -75,6 +75,14 @@ class ProductProfileViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 switch action {
+                case _ as ProductProfileViewModelAction.PullToRefresh:
+                    model.action.send(ModelAction.Products.Update.Fast.Single.Request(productId: product.activeProductId))
+                    model.action.send(ModelAction.Statement.List.Request(productId: product.activeProductId, direction: .latest))
+                    if product.productType == .loan {
+                        
+                        model.action.send(ModelAction.Loans.Update.Single.Request(productId: product.activeProductId))
+                    }
+                    
                 case _ as ProductProfileViewModelAction.ActivateCard:
                     alert = .init(title: "Активировать карту?", message: "После активации карта будет готова к использованию", primary: .init(type: .default, title: "Отмена", action: { [weak self] in
                         self?.alert = nil
@@ -90,6 +98,7 @@ class ProductProfileViewModel: ObservableObject {
                         self?.model.action.send(ModelAction.Card.Unblock.Request(cardId: 1))
                         self?.alert = nil
                     }))
+                    
                 default:
                     break
                 }
@@ -99,20 +108,32 @@ class ProductProfileViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] loans in
                 
-                let productId = product.activeProductId
-                let productType = product.productType
-                guard loans.contains(where: { $0.loandId == productId }) else {
-                    return
+                guard product.productType == .loan else {
+                   return
                 }
                 
-                let historyViewModel = makeHistoryViewModel(productType: productType, productId: productId, model: model)
-
-                withAnimation {
-                    history = historyViewModel
+                if let productLoan = model.products.value[.loan]?.first(where: { $0.id == product.activeProductId }) as? ProductLoanData,
+                   let loanData = loans.first(where: { $0.loandId == product.activeProductId}) {
+                    
+                    withAnimation {
+                        
+                        if let detail = detail {
+                            
+                            detail.update(productLoan: productLoan, loanData: loanData, model: model)
+                            
+                        } else {
+                            
+                            detail = .init(productLoan: productLoan, loanData: loanData, model: model)
+                        }
+                    }
+                    
+                } else {
+                    
+                    withAnimation {
+                        detail = nil
+                    }
                 }
-                
-                historyPool[productId] = historyViewModel
-                
+ 
             }.store(in: &bindings)
         
         product.$activeProductId
@@ -134,7 +155,7 @@ class ProductProfileViewModel: ObservableObject {
                 
                 // detail update
                 withAnimation {
-                    detail = detailViewModel(with: product)
+                    detail = makeDetailViewModel(with: product)
                 }
                 
                 // history update
@@ -204,7 +225,7 @@ class ProductProfileViewModel: ObservableObject {
         return product.background.first?.color ?? .mainColorsBlackMedium
     }
     
-    func detailViewModel(with product: ProductData) -> ProductProfileDetailView.ViewModel? {
+    func makeDetailViewModel(with product: ProductData) -> ProductProfileDetailView.ViewModel? {
         
         switch product {
         case let productCard as ProductCardData:
@@ -276,4 +297,6 @@ enum ProductProfileViewModelAction {
         
         let productId: Int
     }
+    
+    struct PullToRefresh: Action {}
 }

@@ -19,9 +19,11 @@ class Model {
     //MARK: Products
     let products: CurrentValueSubject<ProductsData, Never>
     let productsUpdating: CurrentValueSubject<[ProductType], Never>
+    let productsFastUpdating: CurrentValueSubject<Set<ProductData.ID>, Never>
     let productsHidden: CurrentValueSubject<[ProductData.ID], Never>
     var productsAllowed: Set<ProductType> { [.card, .account, .deposit, .loan] }
     let loans: CurrentValueSubject<LoansData, Never>
+    let loansUpdating: CurrentValueSubject<Set<ProductData.ID>, Never>
     
     //MARK: Statements
     let statements: CurrentValueSubject<StatementsData, Never>
@@ -46,7 +48,7 @@ class Model {
     
     //MARK: Templates
     let paymentTemplates: CurrentValueSubject<[PaymentTemplateData], Never>
-    //TODO: store in cache
+    //TODO: move to settings agent
     let paymentTemplatesViewSettings: CurrentValueSubject<TemplatesListViewModel.Settings, Never>
     
     //MARK: LatestAllPayments
@@ -105,8 +107,10 @@ class Model {
         self.auth = .init(.registerRequired)
         self.products = .init([:])
         self.productsUpdating = .init([])
+        self.productsFastUpdating = .init([])
         self.productsHidden = .init([])
         self.loans = .init([])
+        self.loansUpdating = .init([])
         self.statements = .init([:])
         self.statementsUpdating = .init([:])
         self.rates = .init([])
@@ -323,6 +327,7 @@ class Model {
                 case _ as ModelAction.Auth.Logout:
                     handleAuthLogoutRequest()
                     clearCachedData()
+                    clearMemoryData()
                     
                     //MARK: - Products Actions
                     
@@ -694,5 +699,27 @@ private extension Model {
         }
         
         print("Model: cached data cleared")
+    }
+    
+    func clearMemoryData() {
+        
+        products.value = [:]
+        productsUpdating.value = []
+        productsHidden.value = []
+        loans.value = []
+        loansUpdating.value = []
+        statements.value = [:]
+        statementsUpdating.value = [:]
+        paymentTemplates.value = []
+        paymentTemplatesViewSettings.value = .initial
+        latestPayments.value = []
+        latestPaymentsUpdating.value = false
+        notifications.value = []
+        clientInfo.value = nil
+        clientPhoto.value = nil
+        clientName.value = nil
+        currentUserLoaction.value = nil
+        
+        print("Model: memory data cleaned")
     }
 }

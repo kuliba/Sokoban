@@ -71,7 +71,21 @@ struct ProductProfileView: View {
                     .padding(.top, 56)
                     .zIndex(1)
                 }
-            }
+                .background(GeometryReader { geo in
+                    
+                    Color.clear
+                        .preference(key: ScrollOffsetKey.self, value: -geo.frame(in: .named("scroll")).origin.y)
+           
+                })
+                .onPreferenceChange(ScrollOffsetKey.self) { offset in
+                    
+                    if offset < -100 {
+                        
+                        viewModel.action.send(ProductProfileViewModelAction.PullToRefresh())
+                    }
+                }
+                
+            }.coordinateSpace(name: "scroll")
             
             StatusView(viewModel: viewModel.statusBar)
                 .frame(height: 48)
@@ -91,23 +105,6 @@ struct ProductProfileView: View {
                 tabBarController.tabBar.isHidden = false
                 UIView.transition(with: tabBarController.view, duration: 0.35, options: .transitionCrossDissolve, animations: nil)
             }
-            
-            /*
-            if let detailViewModel = viewModel.detailOperation {
-                
-                ZStack(alignment: .bottom) {
-                    
-                     VStack(spacing: 0) {
-                         
-                         OperationDetailView(viewModel: detailViewModel)
-                     }
-                     .layoutPriority(1)
-                     .frame(alignment: .top)
-                     .animation(.linear(duration: 0.3))
-                     .shadow(color: .black, radius: 0.2, x: 10, y: 10)
-                 }.edgesIgnoringSafeArea(.all)
-            }
-             */
         }
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
@@ -164,6 +161,18 @@ extension ProductProfileView {
             }
             .padding(.horizontal, 20)
             .background(Color.clear)
+        }
+    }
+}
+
+extension ProductProfileView {
+    
+    struct ScrollOffsetKey: PreferenceKey {
+        
+        typealias Value = CGFloat
+        static var defaultValue = CGFloat.zero
+        static func reduce(value: inout Value, nextValue: () -> Value) {
+            value += nextValue()
         }
     }
 }
