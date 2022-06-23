@@ -15,6 +15,7 @@ struct MeToMeSettingView: UIViewControllerRepresentable {
         
         let vc = MeToMeSettingViewController()
         vc.model = viewModel.model
+        vc.newModel = viewModel.newModel
         let navigation = UINavigationController(rootViewController: vc)
         return navigation
     }
@@ -23,6 +24,7 @@ struct MeToMeSettingView: UIViewControllerRepresentable {
     
     struct ViewModel {
         let model: [FastPaymentContractFindListDatum]?
+        let newModel: Model
         let closeAction: () -> Void
     }
     

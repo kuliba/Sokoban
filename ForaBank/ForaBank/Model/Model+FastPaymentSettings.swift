@@ -18,7 +18,7 @@ extension ModelAction {
             struct Request: Action {}
             
             struct Response: Action {
-                let result: Result<[FastPaymentContractFullInfoType]?, Error>
+                let result: Result<[FastPaymentContractFullInfoType], Error>
             }
         
         }
@@ -47,33 +47,43 @@ extension Model {
                 switch response.statusCode {
                 case .ok:
                     
-                    if let fastPaymentContractFull = response.data {
-                     
-                        self.fastPaymentContractFullInfo.value = fastPaymentContractFull
-                        self.action.send(ModelAction
-                                        .FastPaymentSettings
-                                        .ContractFindList
-                                        .Response(result: .success(fastPaymentContractFull)))
-                    } else {
-                        
-                        self.fastPaymentContractFullInfo.value = nil
-                        self.action.send(ModelAction
-                                        .FastPaymentSettings
-                                        .ContractFindList
-                                        .Response(result: .success(nil)))
+                    guard let fastPaymentContractFull = response.data
+                    else {
+                        self.action
+                            .send(ModelAction
+                                .FastPaymentSettings
+                                .ContractFindList
+                                .Response(result: .failure(ModelClientInfoError
+                                    .emptyData(message: response.errorMessage))))
+                        return
                     }
+                     
+                    self.fastPaymentContractFullInfo.value = fastPaymentContractFull
+                    self.action.send(ModelAction
+                                    .FastPaymentSettings
+                                    .ContractFindList
+                                    .Response(result: .success(fastPaymentContractFull)))
                     
                 default:
+                    self.action.send(ModelAction
+                                    .FastPaymentSettings
+                                    .ContractFindList
+                                    .Response(result: .failure(ModelClientInfoError
+                                        .statusError(status: response.statusCode,
+                                                     message: response.errorMessage))))
+                    
                     self.handleServerCommandStatus(command: command,
                                                    serverStatusCode: response.statusCode,
                                                    errorMessage: response.errorMessage)
                 }
+            
             case .failure(let error):
                 
                 self.action.send(ModelAction
                                 .FastPaymentSettings
                                 .ContractFindList
-                                .Response(result: .failure(error)))
+                                .Response(result: .failure(ModelClientInfoError
+                                    .serverCommandError(error: error))))
             }
             
         }
