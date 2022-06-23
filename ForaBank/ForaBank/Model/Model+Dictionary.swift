@@ -35,7 +35,7 @@ extension ModelAction {
     
     enum Dictionary {
         
-        static let cached: [Kind] = [.anywayOperators, .fmsList, .fsspDebtList, .fsspDocumentList, .ftsList, .productCatalogList, .bannerCatalogList, .atmList, .atmServiceList, .atmTypeList, .atmMetroStationList, .atmCityList, .atmRegionList, .currencyList, .countries, .banks, .paymentSystemList]
+        static let cached: [Kind] = [.anywayOperators, .fmsList, .fsspDebtList, .fsspDocumentList, .ftsList, .productCatalogList, .bannerCatalogList, .atmList, .atmServiceList, .atmTypeList, .atmMetroStationList, .atmCityList, .atmRegionList, .currencyList, .countries, .banks, .paymentSystemList, .fullBankInfoList]
         
         enum UpdateCache {
             
@@ -341,7 +341,13 @@ extension Model {
         guard let banksList = dictionaryBanks() else { return nil }
         return banksList.first(where: { $0.memberId == memberId })
     }
+     
+    // FullBankInfoList
     
+    func dictionaryFullBankInfoList() -> [BankFullInfoData]? {
+        localAgent.load(type: [BankFullInfoData].self)
+    }
+        
     //Countries
     
     func dictionaryCountries() -> [CountryData]? {
