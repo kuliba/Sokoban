@@ -57,6 +57,9 @@ struct UserAccountView: View {
                     switch link {
                     case .userDocument(let userDocumentViewModel):
                         UserDocumentView(viewModel: userDocumentViewModel)
+                        
+                    case let .fastPaymentSettings(meToMeSettingsViewModel):
+                        MeToMeSettingView(viewModel: meToMeSettingsViewModel)
                     }
                 }
             }
