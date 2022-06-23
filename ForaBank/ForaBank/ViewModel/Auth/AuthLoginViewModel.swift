@@ -24,7 +24,7 @@ class AuthLoginViewModel: ObservableObject {
     @Published var isProductsViewPresented: Bool
     var productsViewModel: AuthProductsViewModel?
     
-    @Published var cardScanner: AuthCardScannerViewModel?
+    @Published var cardScanner: CardScannerViewModel?
     @Published var alert: Alert.ViewModel?
     
     private let rootActions: RootViewModel.AuthActions
@@ -95,18 +95,16 @@ class AuthLoginViewModel: ObservableObject {
                     isProductsViewPresented = true
                     
                 case _ as AuthLoginViewModelAction.Show.Scaner:
-                    cardScanner = .init(scannedAction: { [weak self] value in
-                        
-                        guard let self = self else {
+                    cardScanner = .init(closeAction: { number in
+                        guard let value = number else {
+                            self.cardScanner = nil
                             return
                         }
-                        
                         let filterredValue = (try? value.filterred(regEx: self.card.textField.regExp)) ?? value
                         let maskedValue = filterredValue.masked(masks: self.card.textField.masks)
                         self.card.textField.text = maskedValue
                         self.cardScanner = nil
-                        
-                    }, dismissAction: { [weak self] in self?.cardScanner = nil })
+                    })
                     
                 case _ as AuthLoginViewModelAction.Dismiss.Confirm:
                     confirmViewModel = nil
@@ -158,6 +156,19 @@ class AuthLoginViewModel: ObservableObject {
                 
             }.store(in: &bindings)
     }
+    
+//    func bind(scaner: CardScannerViewModel?) {
+//        scaner?.$cardNumder
+//            .dropFirst()
+//            .receive(on: DispatchQueue.main)
+//            .sink { [unowned self] value in
+//                guard let value = value else { return }
+//                let filterredValue = (try? value.filterred(regEx: self.card.textField.regExp)) ?? value
+//                let maskedValue = filterredValue.masked(masks: self.card.textField.masks)
+//                self.card.textField.text = maskedValue
+//
+//            }.store(in: &bindings)
+//    }
     
     deinit {
         
