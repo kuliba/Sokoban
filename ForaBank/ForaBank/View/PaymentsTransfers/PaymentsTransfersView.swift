@@ -86,6 +86,15 @@ struct PaymentsTransfersView: View {
                                 .onDisappear {
                                     showTabBar(self.tabBarController)
                                 }
+                        case .internetOperators(let model):
+                            OperatorsView(viewModel: model)
+
+                        case .serviceOperators(let model):
+                            OperatorsView(viewModel: model)
+
+                        case .transportOperators(let model):
+                            OperatorsView(viewModel: model)
+                            
                         }
                     }
                 }

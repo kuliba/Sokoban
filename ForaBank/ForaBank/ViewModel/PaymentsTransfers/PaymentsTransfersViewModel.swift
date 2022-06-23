@@ -113,10 +113,19 @@ class PaymentsTransfersViewModel: ObservableObject {
                             link = .mobile(.init(closeAction: {
                                 self.link = nil
                             }))
-                        case .qrPayment: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
-                        case .service: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
-                        case .internet: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
-                        case .transport: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
+                        case .qrPayment: link = .exampleDetail(payload.type.rawValue) //TODO:
+                        case .service:
+                            let serviceOperators = OperatorsViewModel(closeAction: {self.link = nil})
+                            link = .serviceOperators(serviceOperators)
+                            InternetTVMainViewModel.filter = GlobalModule.UTILITIES_CODE
+                        case .internet:
+                            let internetOperators = OperatorsViewModel(closeAction: {self.link = nil})
+                            link = .internetOperators(internetOperators)
+                            InternetTVMainViewModel.filter = GlobalModule.INTERNET_TV_CODE
+                        case .transport:
+                            let transportOperators = OperatorsViewModel(closeAction: {self.link = nil})
+                            link = .transportOperators(transportOperators)
+                            InternetTVMainViewModel.filter = GlobalModule.PAYMENT_TRANSPORT
                         case .taxAndStateService:
                             let taxAndStateServiceVM = PaymentsViewModel(model, category: Payments.Category.taxes)
                             sheet = .init(type: .taxAndStateService(taxAndStateServiceVM))
@@ -161,7 +170,9 @@ class PaymentsTransfersViewModel: ObservableObject {
         case mobile(MobilePayViewModel)
         case chooseCountry(ChooseCountryViewModel)
         case transferByRequisites(TransferByRequisitesViewModel)
-
+        case serviceOperators(OperatorsViewModel)
+        case internetOperators(OperatorsViewModel)
+        case transportOperators(OperatorsViewModel)
     }
     
 }

@@ -190,6 +190,8 @@
 		0BBDFBE227BBF75600A30D6D /* PaymentsServicesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBDFBE127BBF75600A30D6D /* PaymentsServicesViewModel.swift */; };
 		0BBDFBE427BD05FD00A30D6D /* PaymentsOperationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBDFBE327BD05FD00A30D6D /* PaymentsOperationView.swift */; };
 		0BBDFC3A27BE48EE00A30D6D /* PaymentsOperationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBDFC3927BE48EE00A30D6D /* PaymentsOperationViewModel.swift */; };
+		0BC4ADC02860A92100921AE2 /* OperatorsView+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC4ADBF2860A92100921AE2 /* OperatorsView+Legacy.swift */; };
+		0BC4ADC22860DADE00921AE2 /* OperatorGroupData+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC4ADC12860DADE00921AE2 /* OperatorGroupData+Legacy.swift */; };
 		0BCFBE012812DD17003F2F36 /* Model+Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCFBE002812DD17003F2F36 /* Model+Notifications.swift */; };
 		0BCFBE032817F77D003F2F36 /* ModelNotificationsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCFBE022817F77D003F2F36 /* ModelNotificationsTests.swift */; };
 		0BD1CA9B26E6B55F00CFE993 /* GetCountriesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD1CA9A26E6B55F00CFE993 /* GetCountriesList.swift */; };
@@ -1415,6 +1417,8 @@
 		0BBDFBE127BBF75600A30D6D /* PaymentsServicesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsServicesViewModel.swift; sourceTree = "<group>"; };
 		0BBDFBE327BD05FD00A30D6D /* PaymentsOperationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsOperationView.swift; sourceTree = "<group>"; };
 		0BBDFC3927BE48EE00A30D6D /* PaymentsOperationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsOperationViewModel.swift; sourceTree = "<group>"; };
+		0BC4ADBF2860A92100921AE2 /* OperatorsView+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OperatorsView+Legacy.swift"; sourceTree = "<group>"; };
+		0BC4ADC12860DADE00921AE2 /* OperatorGroupData+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OperatorGroupData+Legacy.swift"; sourceTree = "<group>"; };
 		0BCFBE002812DD17003F2F36 /* Model+Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Notifications.swift"; sourceTree = "<group>"; };
 		0BCFBE022817F77D003F2F36 /* ModelNotificationsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelNotificationsTests.swift; sourceTree = "<group>"; };
 		0BD1CA9A26E6B55F00CFE993 /* GetCountriesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCountriesList.swift; sourceTree = "<group>"; };
@@ -4255,6 +4259,7 @@
 				68F5E11928509FD2003018E5 /* BankData+Legacy.swift */,
 				0C4B0BC028635898004B7F69 /* BankFullInfoData+Legacy.swift */,
 				ED733D5D2858960C00F22D42 /* CurrencyData+Legacy.swift */,
+				0BC4ADC12860DADE00921AE2 /* OperatorGroupData+Legacy.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -4274,6 +4279,7 @@
 				68F5E1232858F1B0003018E5 /* TransferByRequisitsView+Legacy.swift */,
 				ED5A122C285CC21000621E26 /* AnotherCardView+Legacy.swift */,
 				ED374CE82863AEC000A97219 /* CardScannerView.swift */,
+				0BC4ADBF2860A92100921AE2 /* OperatorsView+Legacy.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -7103,6 +7109,7 @@
 				F81EF91D27D21A240096DC70 /* MainSectionCurrencyViewComponent.swift in Sources */,
 				68673B5C26F4B84900F67A8C /* PayViewController.swift in Sources */,
 				77988490285DD30F0023CA65 /* ProductProfileDetailInfoViewComponent.swift in Sources */,
+				0BC4ADC02860A92100921AE2 /* OperatorsView+Legacy.swift in Sources */,
 				0B283FBB26FBC9C800B5E925 /* Coordinator.swift in Sources */,
 				6820928727AB0EC3003DCAFD /* MosParkingData.swift in Sources */,
 				687FB23026E8D41A004A479F /* OfferCard.swift in Sources */,
@@ -7212,6 +7219,7 @@
 				0B8BE091266FDA1B00E96CAA /* CheckClientDecodebleModel.swift in Sources */,
 				7772979327C77C190099EF91 /* MainViewModel.swift in Sources */,
 				EDB16595266A4438007E6030 /* DevelopViewController.swift in Sources */,
+				0BC4ADC22860DADE00921AE2 /* OperatorGroupData+Legacy.swift in Sources */,
 				6820928C27AB0FD7003DCAFD /* FastPaymentContractAttributeTypeData.swift in Sources */,
 				6833E0B22732B69E004C070F /* DetailOperationViewController.swift in Sources */,
 				6862B55327B688CC006E833F /* AuthLoginViewModel.swift in Sources */,
