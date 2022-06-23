@@ -1,5 +1,4 @@
 import Foundation
-import RealmSwift
 
 class InternetTVMainViewModel {
 
@@ -23,8 +22,7 @@ class InternetTVMainViewModel {
     }
     var customGroups = [CustomGroup(name: "Автодор", puref: "avtodor", childPurefs: "iFora||AVDТ;iFora||AVDD", parentCode: "iFora||1051062")]
     var arrCustomOrg = [CustomGroup]()
-    var operatorsList: Results<GKHOperatorsModel>? = nil
-    lazy var realm = try? Realm()
+
 
     init() {
         if InternetTVMainViewModel.filter == GlobalModule.UTILITIES_CODE {
@@ -33,8 +31,14 @@ class InternetTVMainViewModel {
         if InternetTVMainViewModel.filter == GlobalModule.INTERNET_TV_CODE || InternetTVMainViewModel.filter == GlobalModule.PAYMENT_TRANSPORT  {
             InternetTVLatestOperationRealm.load()
         }
-        operatorsList = realm?.objects(GKHOperatorsModel.self)
-        operatorsList?.forEach({ op in
+     
+        let operatorsList = (Model.shared.dictionaryAnywayOperatorGroups()?.compactMap { $0.returnOperators() }) ?? []
+        
+        let operatorCodes = [GlobalModule.UTILITIES_CODE, GlobalModule.INTERNET_TV_CODE, GlobalModule.PAYMENT_TRANSPORT]
+        let parameterTypes = ["INPUT"]
+        let gkhOperators = GKHOperatorsModel.childOperators(with: operatorsList, operatorCodes: operatorCodes, parameterTypes: parameterTypes)
+
+        gkhOperators.forEach({ op in
             if !op.parameterList.isEmpty && op.parentCode?.contains(InternetTVMainViewModel.filter) ?? false {
                 getCustomOrgs(op: op)
                 arrOrganizations.append(op)

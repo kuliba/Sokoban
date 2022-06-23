@@ -9,25 +9,25 @@ import Foundation
 import RealmSwift
 
 final class NetworkManager<T: NetworkModelProtocol> {
-
+    
     static func addRequest(_ requestType: RouterManager,
                            _ urlParametrs: [String: String],
                            _ requestBody: [String: AnyObject],
                            completion: @escaping (_ model: T?, _ error: String?)->()) {
         
         var debuggedApi = [String]()
-                debuggedApi.append("createC2BTransfer")
-                debuggedApi.append("updateFastPaymentContract")
-                debuggedApi.append("createFastPaymentContract")
-                debuggedApi.append("getQRData")
-                debuggedApi.append("make")
-                debuggedApi.append("getOperationDetailByPaymentId")
-                debuggedApi.append("createAnywayTransfer")
-                debuggedApi.append("createAnywayTransferNew")
-                debuggedApi.append("getOperationDetailByPaymentId")
-
+        debuggedApi.append("createC2BTransfer")
+        debuggedApi.append("updateFastPaymentContract")
+        debuggedApi.append("createFastPaymentContract")
+        debuggedApi.append("getQRData")
+        debuggedApi.append("make")
+        debuggedApi.append("getOperationDetailByPaymentId")
+        debuggedApi.append("createAnywayTransfer")
+        debuggedApi.append("createAnywayTransferNew")
+        debuggedApi.append("getOperationDetailByPaymentId")
+        
         guard var request = requestType.request() else { return }
-
+        
         let s = RouterSassionConfiguration()
         let session = s.returnSession()
         
@@ -42,51 +42,51 @@ final class NetworkManager<T: NetworkModelProtocol> {
         }
         
         debuggedApi.forEach { filter in
-                    if (request.url?.absoluteString ?? "").contains(filter) {
-                        print("NET5555", request.url?.absoluteString ?? "")
-                    }
-                }
-
+            if (request.url?.absoluteString ?? "").contains(filter) {
+                print("NET5555", request.url?.absoluteString ?? "")
+            }
+        }
+        
         print("DEBUG: urlParametrs count",urlParametrs.count)
         if request.httpMethod != "GET" {
             /// URL Parameters
             if var urlComponents = URLComponents(url: request.url!,
-                    resolvingAgainstBaseURL: false), !urlParametrs.isEmpty {
-
+                                                 resolvingAgainstBaseURL: false), !urlParametrs.isEmpty {
+                
                 urlComponents.queryItems = [URLQueryItem]()
-
+                
                 urlParametrs.forEach({ (key, value) in
                     let queryItem = URLQueryItem(name: key,
-                            value: "\(value)".addingPercentEncoding(withAllowedCharacters: .urlHostAllowed))
+                                                 value: "\(value)".addingPercentEncoding(withAllowedCharacters: .urlHostAllowed))
                     urlComponents.queryItems?.append(queryItem)
                 })
-
+                
                 print("DEBUG: URLrequest:", urlComponents.query ?? "")
                 request.url = urlComponents.url
             }
             request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
-
+            
             if request.value(forHTTPHeaderField: "Content-Type") == nil {
                 request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
             }
-
+            
             /// Request Body
-
+            
             do {
                 let jsonAsData = try JSONSerialization.data(withJSONObject: requestBody, options: [])
                 request.httpBody = jsonAsData
                 
                 debuggedApi.forEach { filter in
-                                    if (request.url?.absoluteString ?? "").contains(filter) {
-                                        if let data = request.httpBody, let str = String(data: data, encoding: .utf8) {
-                                            print("NET5555 Request \(str)")
-                                            //                        if let prettyPrintedData = try? JSONSerialization.data(withJSONObject: requestBody, options: .prettyPrinted) {
-                                            //                            print("NET5555 Request \(String(bytes: prettyPrintedData, encoding: String.Encoding.utf8) ?? "NIL")")
-                                            //                        }
-                                        }
-                                    }
-                                }
-
+                    if (request.url?.absoluteString ?? "").contains(filter) {
+                        if let data = request.httpBody, let str = String(data: data, encoding: .utf8) {
+                            print("NET5555 Request \(str)")
+                            //                        if let prettyPrintedData = try? JSONSerialization.data(withJSONObject: requestBody, options: .prettyPrinted) {
+                            //                            print("NET5555 Request \(String(bytes: prettyPrintedData, encoding: String.Encoding.utf8) ?? "NIL")")
+                            //                        }
+                        }
+                    }
+                }
+                
                 
                 if request.value(forHTTPHeaderField: "Content-Type") == nil {
                     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -94,21 +94,21 @@ final class NetworkManager<T: NetworkModelProtocol> {
             } catch {
                 debugPrint(NetworkError.encodingFailed)
             }
-
+            
         }
-
+        
         if request.httpMethod == "GET" {
             if var urlComponents = URLComponents(url: request.url!,
-                    resolvingAgainstBaseURL: false), !urlParametrs.isEmpty {
-
+                                                 resolvingAgainstBaseURL: false), !urlParametrs.isEmpty {
+                
                 urlComponents.queryItems = [URLQueryItem]()
-
+                
                 urlParametrs.forEach({ (key, value) in
                     let queryItem = URLQueryItem(name: key,
-                            value: "\(value)".addingPercentEncoding(withAllowedCharacters: .urlHostAllowed))
+                                                 value: "\(value)".addingPercentEncoding(withAllowedCharacters: .urlHostAllowed))
                     urlComponents.queryItems?.append(queryItem)
                 })
-
+                
                 print("DEBUG: URLrequest:", urlComponents.url ?? "")
                 request.url = urlComponents.url
             }
@@ -120,7 +120,7 @@ final class NetworkManager<T: NetworkModelProtocol> {
                     completion(nil, "Пожалуйста, проверьте ваше сетевое соединение.")
                 }
                 //print("test5555 \(response.request.content.body)")
-
+                
                 if let response = response as? HTTPURLResponse {
                     let result = handleNetworkResponse(response)
                     switch result {
@@ -129,23 +129,23 @@ final class NetworkManager<T: NetworkModelProtocol> {
                             completion(nil, NetworkResponse.noData.rawValue)
                             return
                         }
-                    
+                        
                         let updatingTimeObject = returnRealmModel()
                         debuggedApi.forEach { filter in
-                                                    if (request.url?.absoluteString ?? "").contains(filter) {
-                                                        do {
-                                                            if let dataUnw = data, let str = String(data: dataUnw, encoding: .utf8) {
-                                                                print("NET5555 Answer \(response.url?.absoluteString ?? "") ", str)
-                                                                //                        let dataForJson = try JSONDecoder().decode([Form].self, from: str)
-                                                                //                        if let prettyPrintedData = try? JSONSerialization.data(withJSONObject: dataForJson, options: .prettyPrinted) {
-                                                                //                            print("NET5555 Answer \(response.url?.absoluteString ?? "") ", String(bytes: prettyPrintedData, encoding: String.Encoding.utf8) ?? "NIL")
-                                                                //                        }
-                                                            }
-                                                        } catch {
-                                                            //debugPrint(NetworkError.encodingFailed)
-                                                        }
-                                                    }
-                                                }
+                            if (request.url?.absoluteString ?? "").contains(filter) {
+                                do {
+                                    if let dataUnw = data, let str = String(data: dataUnw, encoding: .utf8) {
+                                        print("NET5555 Answer \(response.url?.absoluteString ?? "") ", str)
+                                        //                        let dataForJson = try JSONDecoder().decode([Form].self, from: str)
+                                        //                        if let prettyPrintedData = try? JSONSerialization.data(withJSONObject: dataForJson, options: .prettyPrinted) {
+                                        //                            print("NET5555 Answer \(response.url?.absoluteString ?? "") ", String(bytes: prettyPrintedData, encoding: String.Encoding.utf8) ?? "NIL")
+                                        //                        }
+                                    }
+                                } catch {
+                                    //debugPrint(NetworkError.encodingFailed)
+                                }
+                            }
+                        }
                         
                         /// Сохраняем в REALM
                         let r = try? Realm()
@@ -160,7 +160,7 @@ final class NetworkManager<T: NetworkModelProtocol> {
                         }
                         do {
                             let returnValue = try T (data: data!)
-
+                            
                             completion(returnValue, nil)
                         } catch {
                             print(error)
@@ -173,7 +173,7 @@ final class NetworkManager<T: NetworkModelProtocol> {
             }
         }
         task.resume()
-
+        
         func handleNetworkResponse(_ response: HTTPURLResponse) -> SessionResult<String>{
             switch response.statusCode {
             case 200...299: return .success
@@ -196,14 +196,14 @@ func returnRealmModel() -> GetSessionTimeout {
     print("Debugging NetworkManager", mustCheckTimeOut)
     // Сохраняем текущее время
     let updatingTimeObject = GetSessionTimeout()
-
+    
     updatingTimeObject.lastActionTimestamp = lastActionTimestamp
     updatingTimeObject.renewSessionTimeStamp = Date().localDate()
     updatingTimeObject.maxTimeOut = maxTimeOut
     updatingTimeObject.mustCheckTimeOut = mustCheckTimeOut
-
+    
     return updatingTimeObject
-
+    
 }
 
 public enum NetworkError : String, Error {

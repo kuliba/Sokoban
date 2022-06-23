@@ -1,24 +1,26 @@
 import UIKit
-import RealmSwift
 
 class InternetTVCitySearchController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate {
 
     static let ALL_REGION = "Все регионы"
 
-    var operatorsList: Results<GKHOperatorsModel>? = nil
+    var operatorsList: [GKHOperatorsModel]? = nil
     var searchText = ""
 
     var regionsArr = [String]()
     var allRegionsArr = [String]()
     var searching = false
-    lazy var realm = try? Realm()
-
+    
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var tableView: UITableView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        operatorsList = realm?.objects(GKHOperatorsModel.self)
+        let operators = (Model.shared.dictionaryAnywayOperatorGroups()?.compactMap { $0.returnOperators() }) ?? []
+        
+        let operatorCodes = [GlobalModule.UTILITIES_CODE, GlobalModule.INTERNET_TV_CODE, GlobalModule.PAYMENT_TRANSPORT]
+        let parameterTypes = ["INPUT"]
+        operatorsList = GKHOperatorsModel.childOperators(with: operators, operatorCodes: operatorCodes, parameterTypes: parameterTypes)
         getRegions()
         textField.delegate = self
     }

@@ -18,14 +18,18 @@ class InternetTVLatestOperationsViewModel {
     func getData() -> [InternetLatestOpsDO] {
         var resultArr = [InternetLatestOpsDO]()
         let realm = try? Realm()
-        let operatorsArray = realm?.objects(GKHOperatorsModel.self)
+        let operatorsList = (Model.shared.dictionaryAnywayOperatorGroups()?.compactMap { $0.returnOperators() }) ?? []
+        let operatorCodes = [GlobalModule.UTILITIES_CODE, GlobalModule.INTERNET_TV_CODE, GlobalModule.PAYMENT_TRANSPORT]
+        let parameterTypes = ["INPUT"]
+        let operatorsArray = GKHOperatorsModel.childOperators(with: operatorsList, operatorCodes: operatorCodes, parameterTypes: parameterTypes)
+        
         if InternetTVMainViewModel.filter == GlobalModule.UTILITIES_CODE {
             let payModelArray = realm?.objects(GKHHistoryModel.self)
             payModelArray?.forEach({ lastOperation in
-                let found = operatorsArray?.filter {op in
+                let found = operatorsArray.filter {op in
                     op.puref == lastOperation.puref
                 }
-                if let arr = found, arr.count > 0, let op = arr.first {
+                if found.count > 0, let op = found.first {
                     var additional = [AdditionalListModel]()
                     additional.append(contentsOf: lastOperation.additionalList)
                     let ob = fillLatestDO(name: op.name?.capitalizingFirstLetter().uppercased() ?? "", amountDouble: lastOperation.amount, svgImageUnw: op.logotypeList.first?.svgImage, additionalList: additional, op: op)
@@ -35,10 +39,10 @@ class InternetTVLatestOperationsViewModel {
         } else if InternetTVMainViewModel.filter == GlobalModule.INTERNET_TV_CODE {
             let payModelArray = realm?.objects(InternetTVLatestOperationsModel.self)
             payModelArray?.forEach({ lastOperation in
-                let found = operatorsArray?.filter {op in
+                let found = operatorsArray.filter {op in
                     op.puref == lastOperation.puref
                 }
-                if let arr = found, arr.count > 0, let op = arr.first {
+                if found.count > 0, let op = found.first {
                     var additional = [AdditionalListModel]()
                     additional.append(contentsOf: lastOperation.additionalList)
                     let ob = fillLatestDO(name: op.name?.capitalizingFirstLetter().uppercased() ?? "", amountDouble: lastOperation.amount, svgImageUnw: op.logotypeList.first?.svgImage, additionalList: additional, op: op)
@@ -48,10 +52,10 @@ class InternetTVLatestOperationsViewModel {
         } else if InternetTVMainViewModel.filter == GlobalModule.PAYMENT_TRANSPORT {
             let payModelArray = realm?.objects(InternetTVLatestOperationsTransport.self)
             payModelArray?.forEach({ lastOperation in
-                let found = operatorsArray?.filter {op in
+                let found = operatorsArray.filter {op in
                     op.puref == lastOperation.puref
                 }
-                if let arr = found, arr.count > 0, let op = arr.first {
+                if found.count > 0, let op = found.first {
                     var additional = [AdditionalListModel]()
                     additional.append(contentsOf: lastOperation.additionalList)
                     let ob = fillLatestDO(name: op.name?.capitalizingFirstLetter().uppercased() ?? "", amountDouble: lastOperation.amount, svgImageUnw: op.logotypeList.first?.svgImage, additionalList: additional, op: op)
