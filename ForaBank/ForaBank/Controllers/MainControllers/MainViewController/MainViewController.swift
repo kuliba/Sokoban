@@ -161,10 +161,6 @@ class MainViewController: UIViewController {
             
             self.startUpdate()
         }
-        model.action.send(ModelAction.Deposits.List.Request())
-        model.action.send(ModelAction.Settings.GetClientInfo.Requested())
-        model.action.send(ModelAction.Products.Update.Total.All())
-        model.action.send(ModelAction.Notification.Fetch.New.Request())
     }
     
     func updateProductsViewModels(with products: Results<UserAllCardsModel>) {
@@ -294,9 +290,9 @@ class MainViewController: UIViewController {
         
         for section in Section.allCases {
             
-            if let isExpanded = settings.sectionsExpanded[section.mainSectionType] {
+            if let isCollapsed = settings.collapsed[section.mainSectionType] {
                 
-                expanded[section] = isExpanded
+                expanded[section] = !isCollapsed
                 
             } else {
                 
@@ -317,8 +313,8 @@ class MainViewController: UIViewController {
         
         // updating settings
         var settings = model.settingsMainSections
-        settings.update(isExpanded: expandedSectionValue, sectionType: section.mainSectionType)
-        model.settingsUpdate(settings)
+        settings.update(sectionType: section.mainSectionType, isCollapsed: !expandedSectionValue)
+        model.settingsMainSectionsUpdate(settings)
     }
     
     private func setupSearchBar() {
@@ -396,14 +392,15 @@ class MainViewController: UIViewController {
                     case .failure(let error):
                         print("loading deposits list error: \(error)")
                     }
-                    
+                  
+                    /*
                 case let payload as ModelAction.Settings.GetClientInfo.Complete:
                     let userName = UserDefaults.standard.object(forKey: "userName") as? String
                     if userName != nil {
                         searchBar.textField.text = userName
                     } else {
                         searchBar.textField.text = payload.user.firstName
-                    }
+                    }*/
                     
                 default:
                     break

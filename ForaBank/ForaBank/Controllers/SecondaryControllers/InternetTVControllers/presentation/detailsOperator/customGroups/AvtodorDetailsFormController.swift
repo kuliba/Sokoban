@@ -1,10 +1,10 @@
 import UIKit
-import RealmSwift
 import Foundation
 
 
 class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSource, UIPopoverPresentationControllerDelegate, UIViewControllerTransitioningDelegate {
 
+    let model = Model.shared
     static let msgUpdateTable = 3
 
     public static func storyboardInstance() -> AvtodorDetailsFormController? {
@@ -52,7 +52,7 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
     @IBOutlet weak var bottomInputView: BottomInputView?
     @IBOutlet weak var goButton: UIButton?
 
-    lazy var realm = try? Realm()
+
     let footerView = InternetTVSourceView()
 
     override func viewDidAppear(_ animated: Bool) {
@@ -84,7 +84,7 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
         setupToolbar()
         goButton?.add_CornerRadius(5)
         tableView?.register(UINib(nibName: "InternetInputCell", bundle: nil), forCellReuseIdentifier: InternetTVInputCell.reuseId)
-        AddAllUserCardtList.add {}
+       
 //        setupCardList { error in
 //            guard let error = error else { return }
 //            self.showAlert(with: "Ошибка", and: error)
@@ -375,32 +375,27 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
 
     private func readAndSetupCard() {
         DispatchQueue.main.async {
-            let cards = ReturnAllCardList.cards()
-            var filterProduct: [UserAllCardsModel] = []
-            cards.forEach({ card in
-                if (card.productType == "CARD" || card.productType == "ACCOUNT") {
-                    if card.currency == "RUB" {
-                        filterProduct.append(card)
-                    }
-                }
-            })
-            self.footerView.cardListView.cardList = filterProduct
+            let productTypes: [ProductType] = [.card, .account]
+            let productsFilterred = self.model.products.value.values.flatMap({ $0 }).filter({ productTypes.contains($0.productType) && $0.currency == "RUB" })
+            let productsFilterredMapped = productsFilterred.map{ $0.userAllProducts() }
+
+            self.footerView.cardListView.cardList = productsFilterredMapped
             
-            if filterProduct.count > 0 {
+            if productsFilterredMapped.count > 0 {
                 
                 if let cardId = self.template?.parameterList.first?.payer.cardId {
                     
-                    let card = filterProduct.first(where: { $0.id == cardId })
+                    let card = productsFilterredMapped.first(where: { $0.id == cardId })
                     self.footerView.cardFromField.model = card
                     
                 } else if let accountId = self.template?.parameterList.first?.payer.accountId {
                     
-                    let card = filterProduct.first(where: { $0.id == accountId })
+                    let card = productsFilterredMapped.first(where: { $0.id == accountId })
                     self.footerView.cardFromField.model = card
                     
                 } else {
                     
-                    self.footerView.cardFromField.model = filterProduct.first
+                    self.footerView.cardFromField.model = productsFilterredMapped.first
                     
                 }
             }

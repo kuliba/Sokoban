@@ -136,6 +136,15 @@
       }
     },
     {
+      "identity" : "presentation",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SwiftUI-Plus/Presentation.git",
+      "state" : {
+        "revision" : "d3c31bf2e5bd834ac4624b6629849232ffb83f2c",
+        "version" : "1.3.0"
+      }
+    },
+    {
       "identity" : "progresshud",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/relatedcode/ProgressHUD.git",
@@ -230,8 +239,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Juanpe/SkeletonView.git",
       "state" : {
-        "revision" : "b640c1d8eee79c3a5ad6e0ae1afd2ae0fea30423",
-        "version" : "1.29.3"
+        "revision" : "9e61ff3a85a3780a2cdfceae0257ad32fa8ae4d3",
+        "version" : "1.29.2"
       }
     },
     {

@@ -7,6 +7,54 @@
 
 import Foundation
 
+//MARK: - Action
+
+extension ModelAction {
+    
+    enum Notification {
+        
+        enum ChangeNotificationStatus {
+            
+            struct Requested: Action {
+                
+                let eventId: String
+                let cloudId: String
+                let status: ServerCommands.NotificationController.ChangeNotificationStatus.CodingKeys
+            }
+            
+            struct Complete: Action {}
+            
+            struct Failed: Action {
+                
+                let error: Error
+            }
+        }
+        
+        enum Fetch {
+            
+            enum New {
+                
+                struct Request: Action {}
+                
+                struct Response: Action {
+                    
+                    let result: Result<[NotificationData], Error>
+                }
+            }
+            
+            enum Next {
+                
+                struct Request: Action {}
+                
+                struct Response: Action {
+                    
+                    let result: Result<[NotificationData], Error>
+                }
+            }
+        }
+    }
+}
+
 //MARK: - Handlers
 
 extension Model {
@@ -26,7 +74,7 @@ extension Model {
             return
         }
         
-        let command = ServerCommands.NotificationController.GetNotifications(token: token, offset: 0, limit: 100, types: [.push, .sms, .email], states: [.new, .inProgress, .sent, .error, .delivered, .read])
+        let command = ServerCommands.NotificationController.GetNotifications(token: token, offset: 0, limit: 15, types: [.push, .sms, .email], states: [.new, .inProgress, .sent, .error, .delivered, .read])
         
         serverAgent.executeCommand(command: command) { result in
             
@@ -82,7 +130,7 @@ extension Model {
         
         let offset = notifications.value.count
         
-        let command = ServerCommands.NotificationController.GetNotifications(token: token, offset: offset, limit: 100, types: [.push, .sms, .email], states: [.new, .inProgress, .sent, .error, .delivered, .read])
+        let command = ServerCommands.NotificationController.GetNotifications(token: token, offset: offset, limit: 15, types: [.push, .sms, .email], states: [.new, .inProgress, .sent, .error, .delivered, .read])
         
         serverAgent.executeCommand(command: command) { result in
             
@@ -126,51 +174,27 @@ extension Model {
             }
         }
     }
-}
-
-//MARK: - Action
-
-extension ModelAction {
     
-    enum Notification {
+    func handleNotificationsChangeNotificationStatusRequest(payload: ModelAction.Notification.ChangeNotificationStatus.Requested) {
         
-        enum ChangeNotificationStatus {
-            
-            struct Requested: Action {
-                
-                let eventId: String
-                let cloudId: String
-                let status: ServerCommands.NotificationController.ChangeNotificationStatus.CodingKeys
-            }
-            
-            struct Complete: Action {}
-            
-            struct Failed: Action {
-                
-                let error: Error
-            }
+        guard let token = token else {
+            //TODO: handle not authoried server request attempt
+            return
         }
-        
-        enum Fetch {
+        let command = ServerCommands.NotificationController.ChangeNotificationStatus (token: token, payload: .init(eventId: payload.eventId, cloudId: payload.cloudId, status: payload.status))
+        serverAgent.executeCommand(command: command) { result in
             
-            enum New {
-                
-                struct Request: Action {}
-                
-                struct Response: Action {
-                    
-                    let result: Result<[NotificationData], Error>
+            switch result {
+            case .success(let response):
+                switch response.statusCode {
+                case .ok:
+                    self.action.send(ModelAction.Notification.ChangeNotificationStatus.Complete())
+                default:
+                    //TODO: handle not ok server status
+                    return
                 }
-            }
-            
-            enum Next {
-                
-                struct Request: Action {}
-                
-                struct Response: Action {
-                    
-                    let result: Result<[NotificationData], Error>
-                }
+            case .failure(let error):
+                self.action.send(ModelAction.Notification.ChangeNotificationStatus.Failed(error: error))
             }
         }
     }

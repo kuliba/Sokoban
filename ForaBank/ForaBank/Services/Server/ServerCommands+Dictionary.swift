@@ -715,5 +715,48 @@ extension ServerCommands {
                 self.parameters = parameters
             }
         }
+        
+        /*
+         http://10.1.206.21:8080/swagger-ui/index.html#/DictionaryController/getImageList
+         */
+        //TODO: - tests
+        struct GetSvgImageList: ServerCommand {
+
+            var token: String?
+            let endpoint = "/dict/getSvgImageList"
+            let method: ServerCommandMethod = .post
+            let parameters: [ServerCommandParameter]? = nil
+            let payload: Payload?
+            let timeout: TimeInterval? = nil
+
+            struct Payload: Encodable {
+                
+                let md5HashList: [String]
+            }
+
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: SvgImageListData?
+                
+                struct SvgImageListData: Codable, Equatable {
+                    
+                    let svgImageList: [ListItemData]
+                    
+                    struct ListItemData: Codable, Equatable {
+                        
+                        let md5hash: String
+                        let svgImage: SVGImageData
+                    }
+                }
+            }
+            
+            init(token: String, payload: Payload) {
+                
+                self.token = token
+                self.payload = payload
+            }
+        }
      }
  }

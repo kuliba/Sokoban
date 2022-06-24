@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct CurrencyData: Codable, Equatable, Cachable {
+struct CurrencyData: Codable, Equatable {
     
     let code: String
     let codeISO: Int
@@ -17,4 +17,19 @@ struct CurrencyData: Codable, Equatable, Cachable {
     let id: String
     let name: String
     let unicode: String?
+}
+
+extension CurrencyData {
+    
+    var currencySymbol: String? {
+        
+        guard let unicodeData = cssCode?.components(separatedBy: "\\").last,
+              let unicodeValue = UInt32(unicodeData, radix: 16),
+              let unicodeScalar = UnicodeScalar(unicodeValue) else {
+            
+            return nil
+        }
+        
+        return String(unicodeScalar)
+    }
 }

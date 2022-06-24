@@ -130,9 +130,6 @@ extension ProductViewController: UITableViewDelegate, UITableViewDataSource, Ske
             return
         }
         
-        let operationDetailVC = OperationDetailHostingViewController(with: operationDetailViewModel)
-        
-        present(operationDetailVC, animated: true)
     }
     
     private func operationDetailViewModel(for indexPath: IndexPath) -> OperationDetailViewModel? {

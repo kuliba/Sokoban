@@ -8,7 +8,7 @@
 import Foundation
 import CoreText
 
-struct PaymentTemplateData: Equatable, Cachable, Identifiable {
+struct PaymentTemplateData: Identifiable, Equatable {
     
     var id: Int { paymentTemplateId }
     let groupName: String

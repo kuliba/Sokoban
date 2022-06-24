@@ -9,6 +9,7 @@ import Foundation
 
 class PaymentByPhoneViewModel {
     
+    let model: Model = .shared
     var template: PaymentTemplateData?
     var amount: Double?
     var phoneNumber: String?
@@ -16,6 +17,10 @@ class PaymentByPhoneViewModel {
     var selectedBank: BanksList? {
         getBank(id: bankId)
     }
+    
+    var setBackAction: Bool = false
+    var closeAction: () -> Void = {}
+
     var maskPhoneNumber: String? {
         guard let phoneNumber = phoneNumber else { return nil }
         var phoneNumberFixed = phoneNumber
@@ -40,7 +45,7 @@ class PaymentByPhoneViewModel {
     }
     
     func getBank(id: String) -> BanksList? {
-        let banksList = Dict.shared.banks
+        let banksList = model.dictionaryBankListLegacy
         var bankToReturn: BanksList? = nil
         banksList?.forEach { bank in
             if bank.memberID == id {
@@ -50,10 +55,15 @@ class PaymentByPhoneViewModel {
         return bankToReturn
     }
     
-    
     private func getUserCard() -> UserAllCardsModel?  {
-        let cards = ReturnAllCardList.cards()
-        let filterProduct = cards.filter({
+        
+        var products: [UserAllCardsModel] = []
+        let types: [ProductType] = [.card, .account, .deposit, .loan]
+        types.forEach { type in
+            products.append(contentsOf: self.model.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
+        }
+        
+        let filterProduct = products.filter({
             ($0.productType == "CARD" || $0.productType == "ACCOUNT") && $0.currency == "RUB" })
         
         if filterProduct.count > 0 {
@@ -74,10 +84,11 @@ class PaymentByPhoneViewModel {
         return nil
     }
     
-    internal init(phoneNumber: String? = nil, bankId: String = "", amount: Double? = 0) {
+    internal init(phoneNumber: String? = nil, bankId: String = "", amount: Double? = 0, closeAction: @escaping () -> Void = {}) {
         self.phoneNumber = phoneNumber
         self.bankId = bankId
         self.amount = amount
+        self.closeAction = closeAction
     }
     
     // Init for SPF with Template

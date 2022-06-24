@@ -77,7 +77,7 @@ class ProductLoanData: ProductData {
         try container.encode(principalDebtAccount, forKey: .principalDebtAccount)
         try container.encode(settlementAccount, forKey: .settlementAccount)
         try container.encode(settlementAccountId, forKey: .settlementAccountId)
-        try container.encode(dateLong, forKey: .dateLong)
+        try container.encode(Int(dateLong.timeIntervalSince1970) * 1000, forKey: .dateLong)
         try container.encode(strDateLong, forKey: .strDateLong)
 
         try super.encode(to: encoder)
@@ -101,3 +101,30 @@ class ProductLoanData: ProductData {
         lhs.strDateLong == rhs.strDateLong
     }
 }
+
+extension ProductLoanData {
+    
+    enum LoanType {
+     
+        case mortgage
+        case consumer
+    }
+}
+
+extension ProductLoanData {
+    
+    var loanType: LoanType {
+        
+        switch productName {
+        case "Ф_ПотКред": return .consumer
+        case "Ф_ИпКред": return .mortgage
+        default: return .consumer
+        }
+    }
+}
+
+extension ProductLoanData {
+    
+    var totalAmountDebtValue: Double { totalAmountDebt ?? 0 }
+}
+

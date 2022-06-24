@@ -7,14 +7,16 @@
 
 import Foundation
 
-struct NotificationData: Equatable, Cachable {
+struct NotificationData: Equatable, Identifiable, Hashable {
     
-    let date: Date
+    let title: String
     let state: State
     let text: String
     let type: Kind
+    var id: Int { hashValue }
+    var date: Date
     
-    enum State: String, Codable, Equatable {
+    enum State: String, Codable, Equatable, Hashable {
         
         case delivered = "DELIVERED"
         case error = "ERROR"
@@ -24,7 +26,7 @@ struct NotificationData: Equatable, Cachable {
         case sent = "SENT"
     }
     
-    enum Kind: String, Codable, Equatable {
+    enum Kind: String, Codable, Equatable, Hashable {
         
         case email = "EMAIL"
         case push = "PUSH"
@@ -37,7 +39,7 @@ struct NotificationData: Equatable, Cachable {
 extension NotificationData: Codable {
     
     private enum CodingKeys : String, CodingKey {
-        case date, state, text, type
+        case date, title, state, text, type
     }
     
     init(from decoder: Decoder) throws {
@@ -52,6 +54,7 @@ extension NotificationData: Codable {
         self.state = try container.decode(State.self, forKey: .state)
         self.text = try container.decode(String.self, forKey: .text)
         self.type = try container.decode(Kind.self, forKey: .type)
+        self.title = try container.decode(String.self, forKey: .title)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -61,30 +64,11 @@ extension NotificationData: Codable {
         try container.encode(formatter.string(from: date), forKey: .date)
         try container.encode(state, forKey: .state)
         try container.encode(text, forKey: .text)
+        try container.encode(text, forKey: .title)
         try container.encode(type, forKey: .type)
     }
     
     enum DecodingError: Error {
         case unableDecodeDate
-    }
-}
-
-//MARK: - Hashable
-
-extension NotificationData: Hashable {
-    
-    static func == (lhs: NotificationData, rhs: NotificationData) -> Bool {
-        return lhs.date == rhs.date
-               && lhs.text == rhs.text
-               && lhs.state == rhs.state
-               && lhs.type == rhs.type
-               
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(date)
-        hasher.combine(text)
-        hasher.combine(state)
-        hasher.combine(type)
     }
 }

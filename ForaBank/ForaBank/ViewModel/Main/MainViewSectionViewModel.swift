@@ -7,9 +7,12 @@
 
 import Foundation
 import Combine
+import SwiftUI
 
 class MainSectionViewModel: ObservableObject, Identifiable {
 
+    let action: PassthroughSubject<Action, Never> = .init()
+    
     let action: PassthroughSubject<Action, Never> = .init()
     
     var id: String { type.rawValue }
@@ -27,6 +30,8 @@ class MainSectionCollapsableViewModel: MainSectionViewModel {
         super.init()
     }
 }
+
+//MARK: - Types
 
 enum MainSectionType: String, CaseIterable, Codable {
     
@@ -53,12 +58,45 @@ enum MainSectionType: String, CaseIterable, Codable {
 //MARK: - Action
 
 enum MainSectionViewModelAction {
-
+    
+    enum Products {
+ 
+        struct ProductDidTapped: Action {
+            
+            let productId: ProductData.ID
+        }
+        
+        struct ScrollToGroup: Action {
+            
+            let groupId: MainSectionProductsGroupView.ViewModel.ID
+        }
+        
+        struct MoreButtonTapped: Action {}
+        
+        struct HorizontalOffsetDidChanged: Action {
+            
+            let offset: CGFloat
+        }
+    }
+    
     enum OpenProduct {
-
+    
         struct ButtonTapped: Action {
-
+            
             let productType: ProductType
         }
+    }
+    
+    enum FastPayment {
+    
+        struct ButtonTapped: Action {
+            
+            let operationType: MainSectionFastOperationView.ViewModel.FastOperations
+        }
+    }
+    
+    enum Atm {
+    
+        struct ButtonTapped: Action {}
     }
 }

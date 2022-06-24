@@ -9,55 +9,6 @@ import Foundation
 import UIKit
 import FirebaseMessaging
 
-extension Model {
-    
-    var authPincodeLength: Int { 4 }
-    var authVerificationCodeLength: Int { 6 }
-    var authVerificationCodeResendDelay: TimeInterval { 30 }
-    var authUnlockAttemptsAvailable: Int { 3 }
-    var authAvailableBiometricSensorType: BiometricSensorType? { biometricAgent.availableSensor }
-    var authIsBiometricSensorEnabled: Bool {
-        
-        guard let isSensorEnabled: Bool = try? settingsAgent.load(type: .security(.sensor)) else {
-            return false
-        }
-        
-        return isSensorEnabled
-    }
-    
-    var authIsBiometricSensorSettingsSet: Bool {
-        
-        let isSensorEnabled: Bool? = try? settingsAgent.load(type: .security(.sensor))
-        
-        return isSensorEnabled != nil
-    }
-    
-    var authDefaultErrorMessage: String { "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения." }
-        
-    func authStoredPincode() throws -> String {
-        
-        try keychainAgent.load(type: .pincode)
-    }
-    
-    func authServerDeviceGUID() throws -> String {
-        
-       try keychainAgent.load(type: .serverDeviceGUID)
-    }
-}
-
-enum ModelAuthError: Error {
-    
-    case unauthorizedCommandAttempt
-    case emptyCSRFData(status: ServerStatusCode, message: String?)
-    case identifierForVendorObtainFailed
-    case fcmTokenObtainFailed
-    case installPushDeviceFailed(status: ServerStatusCode, message: String?)
-    case keyExchangeFailed(status: ServerStatusCode, message: String?)
-    case checkClientFailed(status: ServerStatusCode, message: String?)
-    case setDeviceSettingsFailed(status: ServerStatusCode, message: String?)
-    
-}
-
 //MARK: - Actions
 
 extension ModelAction {
@@ -84,20 +35,6 @@ extension ModelAction {
                     
                     let result: Result<TimeInterval, Error>
                 }
-            }
-        }
-        
-        enum ProductImage {
-            
-            struct Request: Action {
-                
-                let endpoint: String
-            }
-            
-            struct Response: Action {
-                
-                let endpoint: String
-                let result: Result<Data, Error>
             }
         }
         
@@ -239,7 +176,10 @@ extension ModelAction {
         
         enum SetDeviceSettings {
             
-            struct Request: Action {}
+            struct Request: Action {
+                
+                let sensorType: BiometricSensorType?
+            }
             
             enum Response: Action {
                 
@@ -270,6 +210,44 @@ extension ModelAction {
         }
         
         struct Logout: Action {}
+    }
+}
+
+//MARK: - Data Helpers
+
+extension Model {
+    
+    var authPincodeLength: Int { 4 }
+    var authVerificationCodeLength: Int { 6 }
+    var authVerificationCodeResendDelay: TimeInterval { 30 }
+    var authUnlockAttemptsAvailable: Int { 3 }
+    var authAvailableBiometricSensorType: BiometricSensorType? { biometricAgent.availableSensor }
+    var authIsBiometricSensorEnabled: Bool {
+        
+        guard let isSensorEnabled: Bool = try? settingsAgent.load(type: .security(.sensor)) else {
+            return false
+        }
+        
+        return isSensorEnabled
+    }
+    
+    var authIsBiometricSensorSettingsSet: Bool {
+        
+        let isSensorEnabled: Bool? = try? settingsAgent.load(type: .security(.sensor))
+        
+        return isSensorEnabled != nil
+    }
+    
+    var authDefaultErrorMessage: String { "Возникла техническая ошибка. Свяжитесь с технической поддержкой банка для уточнения." }
+        
+    func authStoredPincode() throws -> String {
+        
+        try keychainAgent.load(type: .pincode)
+    }
+    
+    func authServerDeviceGUID() throws -> String {
+        
+       try keychainAgent.load(type: .serverDeviceGUID)
     }
 }
 
@@ -321,21 +299,6 @@ internal extension Model {
 
             case .failure(let error):
                 self.action.send(ModelAction.Auth.Session.Extend.Response(result: .failure(error)))
-            }
-        }
-    }
-
-    func handleAuthProductImageRequest(_ payload: ModelAction.Auth.ProductImage.Request) {
-        
-        let command = ServerCommands.DictionaryController.GetProductCatalogImage(endpoint: payload.endpoint)
-        serverAgent.executeDownloadCommand(command: command) {[unowned self] result in
-            
-            switch result {
-            case .success(let data):
-                action.send(ModelAction.Auth.ProductImage.Response(endpoint: payload.endpoint, result: .success(data)))
-                
-            case .failure(let error):
-                action.send(ModelAction.Auth.ProductImage.Response(endpoint: payload.endpoint, result: .failure(error)))
             }
         }
     }
@@ -712,7 +675,7 @@ internal extension Model {
                     return
                 }
                
-                try await authSetDeviceSettingsNotEncrypted(credentials: credentials)
+                try await authSetDeviceSettingsNotEncrypted(credentials: credentials, sensorType: payload.sensorType)
                 action.send(ModelAction.Auth.SetDeviceSettings.Response.success)
                 
             } catch {
@@ -803,8 +766,8 @@ internal extension Model {
             //TODO: log error
             print("Model: handleAuthLogoutRequest: unable clear pincode with error: \(error.localizedDescription)")
         }
-        
-        //TODO: clean authorized zone cache
+    
+        print("Model: keychain cleared")
         //TODO: clean face/touch id preferences
         
         auth.value = .registerRequired
@@ -951,7 +914,7 @@ extension Model {
         })
     }
     
-    func authSetDeviceSettingsNotEncrypted(credentials: SessionCredentials) async throws {
+    func authSetDeviceSettingsNotEncrypted(credentials: SessionCredentials, sensorType: BiometricSensorType?) async throws {
         
         print("SessionAgent: SET DEVICE SETTINGS: REQUESTED")
         
@@ -961,7 +924,7 @@ extension Model {
         let pincode = try authStoredPincode()
         let loginValue = try pincode.sha256String()
         
-        let payload = ServerCommands.RegistrationContoller.SetDeviceSettings.Payload(cryptoVersion: nil, pushDeviceId: pushDeviceId, pushFcmToken: pushFcmToken, serverDeviceGUID: serverDeviceGUID, settings: [.init(type: "pin", value: loginValue, isActive: true), .init(type: "touchId", value: nil, isActive: false), .init(type: "faceId", value: nil, isActive: false)])
+        let payload = ServerCommands.RegistrationContoller.SetDeviceSettings.Payload(cryptoVersion: nil, pushDeviceId: pushDeviceId, pushFcmToken: pushFcmToken, serverDeviceGUID: serverDeviceGUID, settings: [.init(type: "pin", value: loginValue, isActive: true), .init(type: "touchId", value: sensorType == .touch ? loginValue : nil, isActive: sensorType == .touch ? true : false), .init(type: "faceId", value: sensorType == .face ? loginValue : nil, isActive: sensorType == .face ? true : false)])
         
         let command = ServerCommands.RegistrationContoller.SetDeviceSettings(token: credentials.token, payload: payload)
         
@@ -1026,4 +989,18 @@ extension Model {
     var authOperationSystem: String { "IOS" }
 }
 
+//MARK: - Errors
+
+enum ModelAuthError: Error {
+    
+    case unauthorizedCommandAttempt
+    case emptyCSRFData(status: ServerStatusCode, message: String?)
+    case identifierForVendorObtainFailed
+    case fcmTokenObtainFailed
+    case installPushDeviceFailed(status: ServerStatusCode, message: String?)
+    case keyExchangeFailed(status: ServerStatusCode, message: String?)
+    case checkClientFailed(status: ServerStatusCode, message: String?)
+    case setDeviceSettingsFailed(status: ServerStatusCode, message: String?)
+    
+}
 

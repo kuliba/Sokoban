@@ -45,6 +45,16 @@ extension DateFormatter {
         return formatter
     }()
     
+    static let minutsAndSecond: DateFormatter = {
+        
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ru_RU")
+        formatter.timeZone = TimeZone(identifier: "UTC")
+        formatter.dateFormat = "HH:mm"
+        
+        return formatter
+    }()
+    
     
     static let dateAndTime: DateFormatter = {
         
@@ -73,10 +83,38 @@ extension DateFormatter {
         return formatter
     }()
     
-    
-    static let historyDateFormatter: DateFormatter = {
+    static let historyShortDateFormatter: DateFormatter = {
+        
         let formatter = DateFormatter()
-        formatter.dateFormat =  "d MMMM, E"
+        formatter.dateFormat = "d MMMM, E"
+        formatter.timeZone = .current
+        formatter.locale = Locale(identifier: "ru_RU")
+        
+        return formatter
+    }()
+    
+    static let historyFullDateFormatter: DateFormatter = {
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d MMMM yyyy"
+        formatter.timeZone = .current
+        formatter.locale = Locale(identifier: "ru_RU")
+        
+        return formatter
+    }()
+    
+    static let detailFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat =  "d MMMM yyyy"
+        formatter.locale = Locale(identifier: "ru_RU")
+        
+        return formatter
+    }()
+    
+    static let productPeriod: DateFormatter = {
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d/MM"
         formatter.timeZone = .current
         formatter.locale = Locale(identifier: "ru_RU")
         

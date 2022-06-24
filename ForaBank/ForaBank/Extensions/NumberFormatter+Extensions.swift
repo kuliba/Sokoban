@@ -29,6 +29,67 @@ extension NumberFormatter {
         
         return formatter
     }
+
+    //FIXME: refactor this
+    static func decimal(totalBalance: String) -> String {
+
+        let currencyFormatter = NumberFormatter()
+        currencyFormatter.numberStyle = .decimal
+        currencyFormatter.locale = Locale(identifier: "ru_RU")
+        currencyFormatter.maximumFractionDigits = totalBalance
+            .components(separatedBy: ".").last == "0" ? 0 : 2
+
+        guard
+            let value = Double(totalBalance),
+            let balance = currencyFormatter.string(from: .init(value: value)) else {
+            return totalBalance
+        }
+
+        return balance
+    }
+
+    //FIXME: refactor this
+    static func currency(balance: String) -> String {
+
+        let currencySymbol = "₽"
+        let lowerBound: Double = 1_000_000
+        let upperBound: Double = 1_000_000_000
+
+        let currencyFormatter = NumberFormatter()
+        currencyFormatter.numberStyle = .currency
+        currencyFormatter.locale = Locale(identifier: "ru_RU")
+        currencyFormatter.maximumFractionDigits = balance
+            .components(separatedBy: ".").last == "0" ? 0 : 2
+
+        guard let value = Double(balance) else {
+            return balance
+        }
+
+        if value < lowerBound {
+
+            currencyFormatter.currencySymbol = currencySymbol
+
+            if let balance = currencyFormatter.string(from: .init(value: value)) {
+                return balance
+            }
+        } else if lowerBound...upperBound ~= value {
+
+            currencyFormatter.currencySymbol = "Млн. \(currencySymbol)"
+
+            if let balance = currencyFormatter.string(from: .init(value: value / lowerBound)) {
+                return balance
+            }
+        } else if value >= upperBound {
+
+            currencyFormatter.currencySymbol = "Млрд. \(currencySymbol)"
+
+            if let balance = currencyFormatter.string(from: .init(value: value / upperBound)) {
+                return balance
+            }
+        }
+
+        return balance
+    }
     
     static var distance: LengthFormatter {
         
@@ -39,26 +100,26 @@ extension NumberFormatter {
         
         return formatter
     }
-
+    
     static var currencyRate: NumberFormatter {
-
+        
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = 2
         formatter.locale = Locale(identifier: "ru_RU")
-
+        
         return formatter
     }
-
+    
     static var persent: NumberFormatter {
-
+        
         let formatter = NumberFormatter()
         formatter.numberStyle = .percent
         formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = 2
         formatter.locale = Locale(identifier: "ru_RU")
-
+        
         return formatter
     }
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct CatalogProductData: Decodable, Equatable, Cachable {
+struct CatalogProductData: Codable, Equatable {
 
     let name: String
     let description: [String]

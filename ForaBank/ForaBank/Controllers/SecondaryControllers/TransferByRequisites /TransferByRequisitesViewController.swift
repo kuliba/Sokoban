@@ -7,6 +7,7 @@
 
 import UIKit
 import RealmSwift
+import IQKeyboardManagerSwift
 
 struct Fio {
     var name, patronymic, surname: String
@@ -14,13 +15,12 @@ struct Fio {
 
 class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate, MyProtocol {
     
-    lazy var realm = try? Realm()
+    let model: Model = .shared
     var cardIsSelect = false
     
     var byCompany = false
     var paymentTemplate: PaymentTemplateData? = nil
     var viewModel = ConfirmViewControllerModel(type: .requisites)
-    
     var selectedBank: BankFullInfoList? {
         didSet {
             guard let bank = selectedBank else {
@@ -274,15 +274,27 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                 }
             }
         }
+        
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        AddAllUserCardtList.add() {}
         
         loadCard()
         setupUI()
         setupActions()
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+        IQKeyboardManager.shared.enableAutoToolbar = true
+        
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
     }
     
     func sendData(kpp: String, name: String) {
@@ -458,10 +470,14 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         
         cardListView.didCardTapped = { cardId in
             DispatchQueue.main.async {
-                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap {
-                    $0
-                } ?? []
-                cardList.forEach({ card in
+                
+                var products: [UserAllCardsModel] = []
+                
+                let data = self.model.products.value
+                
+                products = data.flatMap({$0.value}).map({$0.userAllProducts()})
+                
+                products.forEach({ card in
                     if card.id == cardId {
                         self.cardField.model = card
                         self.selectedCardNumber = String(card.cardID)
@@ -530,10 +546,25 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         hideView(cardListView, needHide: true)
     }
     
+    @objc func onTouchBackButton() {
+            viewModel.closeAction()
+    }
     
     func setupUI() {
         
-        paymentTemplate == nil ? self.addCloseButton() : addBackButton()
+        if paymentTemplate != nil {
+            
+            addBackButton()
+        } else {
+            
+            let button = UIBarButtonItem(image: UIImage(systemName: "xmark"),
+                                         landscapeImagePhone: nil,
+                                         style: .done,
+                                         target: self,
+                                         action: #selector(onTouchBackButton))
+            button.tintColor = .black
+            navigationItem.leftBarButtonItem = button
+        }
         
         view.backgroundColor = .white
         let saveAreaView = UIView()
@@ -544,6 +575,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         view.addSubview(bottomView)
         
         self.navigationItem.titleView = setTitle(title: "Перевести", subtitle: "Человеку или организации")
+        self.navigationController?.navigationBar.backgroundColor = .white
         
         //        bottomView.currencySymbol = "₽"
         
@@ -817,8 +849,11 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                         vc.modalPresentationStyle = .fullScreen
                         vc.title = "Подтвердите реквизиты"
                         vc.confurmVCModel = self.viewModel
-                        
-                        self.navigationController?.pushViewController(vc, animated: true)
+                        vc.addCloseButton()
+
+                        let navController = UINavigationController(rootViewController: vc)
+                        navController.modalPresentationStyle = .fullScreen
+                        self.present(navController, animated: true, completion: nil)
                     }
                 } else {
                     self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")

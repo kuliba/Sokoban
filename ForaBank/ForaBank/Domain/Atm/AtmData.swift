@@ -9,7 +9,7 @@ import Foundation
 import CoreLocation
 import SwiftUI
 
-struct AtmData: Identifiable, Codable, Equatable, Cachable {
+struct AtmData: Identifiable, Codable, Equatable {
     
     let id: String
     let name: String

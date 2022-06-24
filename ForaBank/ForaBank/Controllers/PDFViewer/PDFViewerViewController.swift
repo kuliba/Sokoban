@@ -17,7 +17,7 @@ class PDFViewerViewController: UIViewController, URLSessionDownloadDelegate {
     var printFormType: String?
     var id: Int?
     var pdfURL: URL!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Сохранить или отправить"
@@ -51,12 +51,12 @@ class PDFViewerViewController: UIViewController, URLSessionDownloadDelegate {
         button.addTarget(self, action: #selector(sharePDF), for: .touchUpInside)
         
     }
-        
+    
     @objc func sharePDF(){
         guard let pdfDocument = pdfView.document?.dataRepresentation() else { return }
         var filesToShare = [Any]()
         filesToShare.append(pdfDocument)
-
+        
         let activityViewController = UIActivityViewController(activityItems: filesToShare , applicationActivities: [])
         present(activityViewController, animated: true, completion: nil)
     }
@@ -64,6 +64,12 @@ class PDFViewerViewController: UIViewController, URLSessionDownloadDelegate {
     func createPdfDocument(_ requestBody: [String: AnyObject]?) {
         
         var router = RouterManager.getPrintForm.request()
+        
+        if let cookies = Model.shared.cookies {
+            
+            router?.allHTTPHeaderFields = HTTPCookie.requestHeaderFields(with: cookies)
+        }
+        
         do {
             let jsonAsData = try JSONSerialization.data(withJSONObject: requestBody!, options: [])
             router?.httpBody = jsonAsData
@@ -76,14 +82,18 @@ class PDFViewerViewController: UIViewController, URLSessionDownloadDelegate {
         }
         
         let session = URLSession(configuration: .default, delegate: self, delegateQueue: .main)
+        session.configuration.httpCookieAcceptPolicy = .never
+        session.configuration.httpShouldSetCookies = false
+        
         router?.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        if let token = CSRFToken.token {
+        
+        if let token = Model.shared.token {
             router?.allHTTPHeaderFields = ["X-XSRF-TOKEN": token]
         }
         
         session.downloadTask(with: router!) { (url, response, err) in
             
-            if let _ = response as? HTTPURLResponse {
+            if response is HTTPURLResponse {
                 if let document = PDFDocument(url: url!) {
                     self.pdfView.pageBreakMargins = UIEdgeInsets(top: 20, left: 20, bottom: 0, right: 20)
                     self.pdfView.autoScales = true

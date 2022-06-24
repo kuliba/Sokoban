@@ -8,13 +8,17 @@
 import UIKit
 import RealmSwift
 import AnyFormatKit
+import IQKeyboardManagerSwift
 
 extension CustomPopUpWithRateView {
     override func viewDidLoad() {
         super.viewDidLoad()
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+        IQKeyboardManager.shared.enableAutoToolbar = true
         setupUI()
         setupConstraint()
-        AddAllUserCardtList.add() { }
+        
         if let template = paymentTemplate {
             
             if let cardId = template.parameterList.first?.payer.cardId {
@@ -35,6 +39,14 @@ extension CustomPopUpWithRateView {
                 self.setupAmount(amount: template.amount)
             }
         }
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
     }
     
     override func viewDidLayoutSubviews() {
@@ -48,8 +60,6 @@ extension CustomPopUpWithRateView {
         setupFieldTo()
         setupListFrom()
         setupListTo()
-        
-        paymentTemplate != nil ? nil : addHeaderImage()
         
         view.layer.cornerRadius = 16
         view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
@@ -83,7 +93,6 @@ extension CustomPopUpWithRateView {
         titleLabel.anchor(
             top: view.topAnchor,
             left: view.leftAnchor,
-            paddingTop: 28,
             paddingLeft: 20)
         
         view.addSubview(bottomView)
@@ -135,17 +144,17 @@ extension CustomPopUpWithRateView {
         case .betweenTheir:
             if let transfer = paymentTemplate.parameterList.first as? TransferGeneralData {
                 
-                let object = realm?.objects(UserAllCardsModel.self)
+                let object = model.products.value.compactMap({$0.value}).first
                 
                 if let cardId = transfer.payeeInternal?.cardId {
                     
-                    let card = object?.first(where: { $0.id == cardId })
+                    let card = object?.first(where: { $0.id == cardId })?.userAllProducts()
                     self.cardToField.model = card
                     self.viewModel.cardToRealm = card
                     
                 } else if let accountId = transfer.payeeInternal?.accountId {
                     
-                    let card = object?.first(where: { $0.id == accountId })
+                    let card = object?.first(where: { $0.id == accountId })?.userAllProducts()
                     self.cardToField.model = card
                     self.viewModel.cardToRealm = card
                 }
@@ -169,7 +178,7 @@ extension CustomPopUpWithRateView {
             
             if text.isEmpty != true {
                 if text.count < 20 {
-                    Model.shared.action.send(ModelAction.PaymentTemplate.Update.Requested(
+                    self.model.action.send(ModelAction.PaymentTemplate.Update.Requested(
                         name: text,
                         parameterList: nil,
                         paymentTemplateId: templateId))
@@ -195,27 +204,12 @@ extension CustomPopUpWithRateView {
     }
     
     func updateObjectWithNotification(cardId: Int? = nil) {
-        let object = realm?.objects(UserAllCardsModel.self)
-        if let cardId = cardId {
-            let card = object?.first(where: { $0.id == cardId })
-            self.cardFromField.model = card
-            self.viewModel.cardFromRealm = card
-        }
+        let object = model.products.value.compactMap({$0.value}).first
         
-        token = object?.observe { [weak self] changes in
-            
-            guard let self = self else { return }
-            switch changes {
-            case .initial:
-                print("REALM Initial")
-                self.allCardsFromRealm = self.updateCardsList(with: object)
-            case .update:
-                print("REALM Update")
-                self.allCardsFromRealm = self.updateCardsList(with: object)
-            case .error(let error):
-                print("DEBUG token fatalError:", error)
-                fatalError("\(error)")
-            }
+        if let cardId = cardId {
+            let card = object?.first(where: { $0.id == cardId })?.userAllProducts()
+            self.cardFromField.model = card
+            self.viewModel.cardFromRealm =  card
         }
     }
     
@@ -223,9 +217,9 @@ extension CustomPopUpWithRateView {
         var cardsArray = [UserAllCardsModel]()
         let cards = result?.compactMap { $0 } ?? []
         cards.forEach { card in
-            if card.productType == "CARD", card.productType != ProductType.loan.rawValue {
+            if card.productType == ProductType.card.rawValue, card.productType != ProductType.loan.rawValue {
                 cardsArray.append(card)
-            } else if !onlyCard && (card.productType == "ACCOUNT" || card.productType == "DEPOSIT" ), card.productType != ProductType.loan.rawValue {
+            } else if !onlyCard && (card.productType == ProductType.account.rawValue || card.productType == ProductType.account.rawValue ), card.productType != ProductType.loan.rawValue {
                 cardsArray.append(card)
             }
         }
@@ -376,7 +370,7 @@ extension CustomPopUpWithRateView {
         
         cardToListView.didCardTapped = { (cardId) in
             DispatchQueue.main.async {
-                guard let cardList = self.allCardsFromRealm else { return }
+                let cardList = self.cardFromListView.cardList
                 cardList.forEach({ card in
                     if card.id == cardId {
                         self.viewModel.cardToRealm = card
@@ -429,5 +423,5 @@ extension CustomPopUpWithRateView {
             self.present(navVc, animated: true, completion: nil)
         }
     }
-   
+    
 }

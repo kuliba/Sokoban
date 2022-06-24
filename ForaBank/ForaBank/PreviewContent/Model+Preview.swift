@@ -10,35 +10,36 @@ import UIKit
 
 extension Model {
     
-    static let emptyMock = Model(sessionAgent: SessionAgentEmptyMock(), serverAgent: ServerAgentEmptyMock(), localAgent: LocalAgentEmptyMock(), keychainAgent: KeychainAgentMock(), settingsAgent: SettingsAgentMock(), biometricAgent: BiometricAgentMock(), locationAgent: LocationAgentMock())
+    static let emptyMock = Model(sessionAgent: SessionAgentEmptyMock(), serverAgent: ServerAgentEmptyMock(), localAgent: LocalAgentEmptyMock(), keychainAgent: KeychainAgentMock(), settingsAgent: SettingsAgentMock(), biometricAgent: BiometricAgentMock(), locationAgent: LocationAgentMock(), contactsAgent: ContactsAgentMock())
     
     static let productsMock: Model = {
         
-        let model = Model(sessionAgent: SessionAgentEmptyMock(), serverAgent: ServerAgentEmptyMock(), localAgent: LocalAgentEmptyMock(), keychainAgent: KeychainAgentMock(), settingsAgent: SettingsAgentMock(), biometricAgent: BiometricAgentMock(), locationAgent: LocationAgentMock())
+        let model = Model(sessionAgent: SessionAgentEmptyMock(), serverAgent: ServerAgentEmptyMock(), localAgent: LocalAgentEmptyMock(), keychainAgent: KeychainAgentMock(), settingsAgent: SettingsAgentMock(), biometricAgent: BiometricAgentMock(), locationAgent: LocationAgentMock(), contactsAgent: ContactsAgentMock())
         
         let bundle = Bundle(for: Model.self)
-        let url = bundle.url(forResource: "ProductsListSample", withExtension: "json")!
-        let json = try! Data(contentsOf: url)
-        let decoder = JSONDecoder.serverDate
-        let productsData = try! decoder.decode([ProductData].self, from: json)
         
-        model.products.value = model.reduce(products: model.products.value, with: productsData)
-        
+        if let url = bundle.url(forResource: "ProductsListSample", withExtension: "json"),
+           let json = try? Data(contentsOf: url),
+           let productsData = try? JSONDecoder.serverDate.decode([ProductData].self, from: json)  {
+            
+            model.products.value = model.reduce(products: [:], with: productsData, allowed: model.productsAllowed)
+        }
         return model
     }()
     
     static let statementMock: Model = {
         
-        let model = Model(sessionAgent: SessionAgentEmptyMock(), serverAgent: ServerAgentEmptyMock(), localAgent: LocalAgentEmptyMock(), keychainAgent: KeychainAgentMock(), settingsAgent: SettingsAgentMock(), biometricAgent: BiometricAgentMock(), locationAgent: LocationAgentMock())
+        let model = Model(sessionAgent: SessionAgentEmptyMock(), serverAgent: ServerAgentEmptyMock(), localAgent: LocalAgentEmptyMock(), keychainAgent: KeychainAgentMock(), settingsAgent: SettingsAgentMock(), biometricAgent: BiometricAgentMock(), locationAgent: LocationAgentMock(), contactsAgent: ContactsAgentMock())
         
         let bundle = Bundle(for: Model.self)
-        let url = bundle.url(forResource: "StatementSample", withExtension: "json")!
-        let json = try! Data(contentsOf: url)
-        let decoder = JSONDecoder.serverDate
-        let statement = try! decoder.decode([ProductStatementData].self, from: json)
         
-        model.statement.value = model.reduce(statements: model.statement.value, with: statement, productId: 1)
-
+        if let url = bundle.url(forResource: "StatementSample", withExtension: "json"),
+           let json = try? Data(contentsOf: url),
+           let statements = try? JSONDecoder.serverDate.decode([ProductStatementData].self, from: json)  {
+            
+            let update = ProductStatementsStorage.Update(period: Period(daysBack: 1, from: Date()), statements: statements, direction: .eldest, limitDate: Date())
+//            model.statements.value = Model.reduce(statements: [:], with: update, for: .sa)
+        }
         
         return model
     }()

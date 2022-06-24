@@ -9,13 +9,13 @@ import UIKit
 import RealmSwift
 import AnyFormatKit
 
-class MemeDetailVC : AddHeaderImageViewController {
+class MemeDetailVC: UIViewController {
 
-    var titleLabel = UILabel(text: "Между своими", font: .boldSystemFont(ofSize: 18), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
+    var titleLabel = UILabel(text: "На другую карту", font: .boldSystemFont(ofSize: 18), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
     
     var onlyMy = false
     var onlyCard = true
-    
+    var anotherCardModel: AnotherCardViewModel?
     var paymentTemplate: PaymentTemplateData? = nil
     
     var viewModel = ConfirmViewControllerModel(type: .card2card) {
@@ -34,7 +34,7 @@ class MemeDetailVC : AddHeaderImageViewController {
     
     var stackView = UIStackView(arrangedSubviews: [])
     
-    lazy var realm = try? Realm()
+    let model = Model.shared
     var token: NotificationToken?
     
     init() {
@@ -57,8 +57,6 @@ class MemeDetailVC : AddHeaderImageViewController {
         setupConstraint()
         setupActions()
         setupCardViewActions()
-    
-        AddAllUserCardtList.add() {}
         
         if let template = paymentTemplate {
             addBackButton()
@@ -89,7 +87,7 @@ class MemeDetailVC : AddHeaderImageViewController {
         setupListFrom()
         setupListTo()
                 
-        paymentTemplate == nil ? self.addHeaderImage() : nil
+//        paymentTemplate == nil ? self.addHeaderImage() : nil
         
         self.view.layer.cornerRadius = 16
         self.view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
@@ -208,23 +206,25 @@ class MemeDetailVC : AddHeaderImageViewController {
     }
     
     func updateObjectWithNotification(cardId: Int? = nil) {
-        let object = realm?.objects(UserAllCardsModel.self)
+        var products: [UserAllCardsModel] = []
+        let types: [ProductType] = [.card, .account]
+        types.forEach { type in
+            products.append(contentsOf: self.model.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
+        }
+        
+        cardFromListView.cardList = products
+        cardToListView.cardList = products
+        
         if let cardId = cardId {
-            let card = object?.first(where: { $0.id == cardId })
+            
+            let card = products.first(where: { $0.id == cardId })
             self.cardFromField.model = card
             self.viewModel.cardFromRealm = card
+            
         } else {
-            token = object?.observe { ( changes: RealmCollectionChange) in
-                switch changes {
-                case .initial:
-                    self.cardFromField.model = self.updateCardsList(with: object).first
-                    self.viewModel.cardFromRealm = self.updateCardsList(with: object).first
-                case .update:
-                    self.cardFromField.model = self.updateCardsList(with: object).first
-                case .error(let error):
-                    fatalError("\(error)")
-                }
-            }
+            
+            self.cardFromField.model = products.first
+            self.viewModel.cardFromRealm = products.first
         }
     }
     
@@ -333,8 +333,12 @@ class MemeDetailVC : AddHeaderImageViewController {
         
         cardFromListView.didCardTapped = { (cardId) in
             DispatchQueue.main.async {
-                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
-                cardList.forEach({ card in
+                var products: [UserAllCardsModel] = []
+                let types: [ProductType] = [.card]
+                types.forEach { type in
+                    products.append(contentsOf: self.model.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
+                }
+                products.forEach({ card in
                     if card.id == cardId {
                         self.viewModel.cardFromRealm = card
                         self.cardFromField.model = card
@@ -390,8 +394,12 @@ class MemeDetailVC : AddHeaderImageViewController {
         }
         cardToListView.didCardTapped = { (cardId) in
             DispatchQueue.main.async {
-                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
-                cardList.forEach({ card in
+                var products: [UserAllCardsModel] = []
+                let types: [ProductType] = [.card]
+                types.forEach { type in
+                    products.append(contentsOf: self.model.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
+                }
+                products.forEach({ card in
                     if card.id == cardId {
                         self.viewModel.cardToRealm = card
                         self.cardToField.model = card

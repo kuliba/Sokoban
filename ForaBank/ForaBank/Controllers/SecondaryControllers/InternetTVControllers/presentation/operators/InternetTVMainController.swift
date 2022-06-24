@@ -1,5 +1,4 @@
 import UIKit
-import RealmSwift
 import AVFoundation
 
 protocol IMsg {
@@ -8,6 +7,8 @@ protocol IMsg {
 
 class InternetTVMainController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, IMsg {
 
+    let model = Model.shared
+    let operatorsViewModel: OperatorsViewModel? = nil
     public static var iMsg: IMsg? = nil
     public static let msgHideLatestOperation = 1
     public static let msgShowLatestOperation = 3
@@ -125,7 +126,7 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
         }
         tableView.delegate = self
         tableView.dataSource = self
-        AddAllUserCardtList.add {}
+        
         navigationController?.isNavigationBarHidden = false
         reqView.add_CornerRadius(5)
         zayavka.add_CornerRadius(5)
@@ -166,8 +167,12 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
 
     @objc func backAction() {
         //self.delegate?.goToBack()
+        if self.operatorsViewModel != nil {
+            self.operatorsViewModel?.closeAction()
+        } else {
         dismiss(animated: true, completion: nil)
         navigationController?.dismiss(animated: true, completion: nil)
+        }
     }
 
     @objc func onQR() {

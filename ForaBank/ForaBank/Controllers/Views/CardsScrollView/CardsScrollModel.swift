@@ -7,7 +7,6 @@
 
 import UIKit
 
-
 struct CardsScrollModel {
     
     let card: UserAllCardsModel
@@ -47,7 +46,6 @@ struct CardsScrollModel {
             label.frame = CGRect(x: 0, y: 0, width: 13, height: 13)
             label.textAlignment = .center
             label.layer.cornerRadius = 3
-//            label.layer.borderWidth = 1.25
             label.layer.borderColor = UIColor.white.cgColor
             return UIImage.imageWithLabel(label: label)
         } else {

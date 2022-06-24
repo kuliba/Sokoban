@@ -56,7 +56,7 @@ extension ContactInputViewController {
         guard let country = country else { return }
         
         var filterPaymentList: [PaymentSystemList] = []
-        guard let paymentList = Dict.shared.paymentList else { return }
+        let paymentList = model.paymentSystemList.value.map { $0.getPaymentSystem() }
         paymentList.forEach({ payment in
             country.paymentSystemCodeList?.forEach({ countryPayment in
                 if countryPayment == payment.code {

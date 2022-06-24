@@ -176,7 +176,6 @@ class BottomInputView: UIView {
                 let resultSum = ( tempValue * ((self.currencyFrom?.rateBuy ?? 0) / (self.currencyTo?.rateSell ?? 0))).rounded(toPlaces: 2)
                 let a = String(((self.currencyFrom?.rateBuy ?? 0) / (self.currencyTo?.rateSell ?? 0)).rounded(toPlaces: 2))
                 
-                
                 let tempBottomLable = String(resultSum) + currencyToSimbol + "  |  " + "1" + currencyFromSimbol + " - " + a +  currencyToSimbol
                 let tempLable = tempBottomLable.replacingOccurrences(of: ".", with: ",")
                 self.buttomLabel.text = tempLable

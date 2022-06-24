@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ProductData: Identifiable, Cachable {
+class ProductData: Identifiable, Codable {
     
     let id: Int
     
@@ -17,13 +17,13 @@ class ProductData: Identifiable, Cachable {
     let numberMasked: String? //4444-XXXX-XXXX-1122
     let accountNumber: String? // 40817810000000000001
     
-    var balance: Double?
-    var balanceRub: Double?
+    private(set) var balance: Double?
+    private(set) var balanceRub: Double?
     let currency: String // example: RUB
     
     let mainField: String // example: Gold
     let additionalField: String? // example: Зарплатная
-    var customName: String? // example: Моя карта
+    private(set) var customName: String? // example: Моя карта
     let productName: String // example: VISA REWARDS R-5
     
     let openDate: Date?
@@ -65,6 +65,14 @@ class ProductData: Identifiable, Cachable {
         self.fontDesignColor = fontDesignColor
         self.background = background
         
+    }
+    
+    private enum CodingKeys: String, CodingKey {
+        
+        case extraLargeDesign = "XLDesign"
+        case balanceRub = "balanceRUB"
+        case ownerId = "ownerID"
+        case accountNumber, additionalField, allowCredit, allowDebit, background, balance, branchId, currency, customName, fontDesignColor, id, largeDesign, mainField, mediumDesign, number, numberMasked, openDate, productName, productType, smallDesign
     }
     
     required init(from decoder: Decoder) throws {
@@ -132,20 +140,9 @@ class ProductData: Identifiable, Cachable {
     }
 }
 
-extension ProductData: Codable {
-    
-    private enum CodingKeys: String, CodingKey {
-        
-        case extraLargeDesign = "XLDesign"
-        case balanceRub = "balanceRUB"
-        case ownerId = "ownerID"
-        case accountNumber, additionalField, allowCredit, allowDebit, background, balance, branchId, currency, customName, fontDesignColor, id, largeDesign, mainField, mediumDesign, number, numberMasked, openDate, productName, productType, smallDesign
-    }
-}
-
 extension ProductData {
     
-    func updated(with params: ProductDynamicParamsData) {
+    func update(with params: ProductDynamicParamsData) {
         
         self.balance = params.balance
         self.customName = params.customName
@@ -156,35 +153,48 @@ extension ProductData {
 
 extension ProductData {
     
-    var viewNumber: String? {
+    var displayNumber: String? {
         
-        switch productType {
-        case .deposit:
-            if let accountNumber = accountNumber {
-                return String(accountNumber.suffix(4))
-            } else {
-                return nil
+        switch self {
+        case let loanProduct as ProductLoanData:
+            return String(loanProduct.settlementAccount.suffix(4))
+            
+        case let depositProduct as ProductDepositData:
+            guard let accountNumber = depositProduct.accountNumber else {
+               return nil
             }
+            
+            return String(accountNumber.suffix(4))
+            
         default:
-            if let number = number {
-                return String(number.suffix(4))
-            } else {
+            guard let number = number else {
                 return nil
             }
+            
+            return String(number.suffix(4))
         }
     }
     
-    var viewName: String { customName ?? mainField }
-    
-    var viewBalance: String? {
+    var displayPeriod: String? {
         
-        if let balance = balance {
+        let formatter = DateFormatter.productPeriod
+        
+        if let cardProduct = self as? ProductCardData {
             
-            return balance.currencyFormatter(symbol: currency)
+            return formatter.string(from: cardProduct.validThru)
+            
+        } else if let loanProduct = self as? ProductLoanData {
+            
+            return formatter.string(from: loanProduct.dateLong)
+            
         } else {
+            
             return nil
         }
     }
+    
+    var displayName: String { customName ?? mainField }
+    var balanceValue: Double { balance ?? 0 }
 }
 
 extension ProductData: Equatable {

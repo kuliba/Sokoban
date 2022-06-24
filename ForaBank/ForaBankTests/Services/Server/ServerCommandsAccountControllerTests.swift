@@ -16,31 +16,7 @@ class ServerCommandsAccountControllerTests: XCTestCase {
 	let encoder = JSONEncoder.serverDate
 	let formatter = DateFormatter.iso8601
 
-	//MARK: - GetAccountStatementResponseGeneric
-
-	func testGetAccountStatement_Payload_Encoding() throws {
-
-		// given
-		let endDate = formatter.date(from: "2022-01-20T16:44:35.147Z")
-		let startDate = formatter.date(from: "2022-01-20T16:44:35.147Z")
-
-		let command = ServerCommands.AccountController.GetAccountStatement(token: "",
-																		   accountNumber: "string",
-																		   endDate: endDate,
-																		   id: 0,
-																		   name: "string",
-																		   startDate: startDate,
-																		   statementFormat: .csv)
-
-		let expected = "{\"statementFormat\":\"CSV\",\"id\":0,\"endDate\":\"2022-01-20T16:44:35.147Z\",\"name\":\"string\",\"startDate\":\"2022-01-20T16:44:35.147Z\",\"accountNumber\":\"string\"}"
-
-		// when
-		let result = try encoder.encode(command.payload)
-		let resultString = String(decoding: result, as: UTF8.self)
-
-		// then
-		XCTAssertEqual(resultString, expected)
-	}
+	//MARK: - GetAccountStatement
 
 	func testGetAccountStatement_Response_Decoding() throws {
 
@@ -94,7 +70,7 @@ class ServerCommandsAccountControllerTests: XCTestCase {
 		XCTAssertEqual(result, expected)
 	}
 	
-	func testGetAccountStatement_MinResponse_Decoding() throws {
+	func testGetAccountStatement_Response_Min_Decoding() throws {
 
 		// given
 		let url = bundle.url(forResource: "GetAccountStatementResponseGenericMin", withExtension: "json")!
@@ -122,17 +98,17 @@ class ServerCommandsAccountControllerTests: XCTestCase {
 																		   foreignPhoneNumber: "70115110217",
                                                                            opkcid: "A1355084612564010000057CAFC75755", operTypeFP: nil),
 														groupName: "Прочие операции",
-														isCancellation: false,
+														isCancellation: nil,
 														md5hash: "75f3ee3b2d44e5808f41777c613f23c9",
-														merchantName: "DBO MERCHANT FORA, Zubovskiy 2",
+														merchantName: nil,
 														merchantNameRus: nil,
 														opCode: nil,
 														operationId: nil,
 														operationType: .debit,
 														paymentDetailType: .betweenTheir,
-														svgImage: .init(description: "string"),
+														svgImage: nil,
 														terminalCode: nil,
-														tranDate: date,
+														tranDate: nil,
 														type: .inside)
 
 		let expected = ServerCommands.AccountController.GetAccountStatement.Response(statusCode: .ok,
@@ -146,34 +122,20 @@ class ServerCommandsAccountControllerTests: XCTestCase {
 		XCTAssertEqual(result, expected)
 	}
 	
-	
-
-	//MARK: - GetPrintFormForAccountStatement
-
-	func testGetPrintFormForAccountStatement_Payload_Encoding() throws {
-
-		// given
-		let endDate = formatter.date(from: "2022-01-20T16:46:58.563Z")
-		let startDate = formatter.date(from: "2022-01-20T16:46:58.563Z")
-
-		let command = ServerCommands.AccountController.GetAccountStatement(token: "",
-																		   accountNumber: "string",
-																		   endDate: endDate,
-																		   id: 0,
-																		   name: "string",
-																		   startDate: startDate,
-																		   statementFormat: .csv)
-
-		let expected = "{\"statementFormat\":\"CSV\",\"id\":0,\"endDate\":\"2022-01-20T16:46:58.563Z\",\"name\":\"string\",\"startDate\":\"2022-01-20T16:46:58.563Z\",\"accountNumber\":\"string\"}"
-		
-		// when
-		let result = try encoder.encode(command.payload)
-		let resultString = String(decoding: result, as: UTF8.self)
-		
-		// then
-		XCTAssertEqual(resultString, expected)
-	}
     
+    func testGetAccountStatement_Response_From_Server_Decoding() throws {
+
+        // given
+        guard let url = bundle.url(forResource: "GetAccountStatementResponseServer", withExtension: "json") else {
+            XCTFail()
+            return
+        }
+        
+        let json = try Data(contentsOf: url)
+
+        XCTAssertNoThrow(try decoder.decode(ServerCommands.AccountController.GetAccountStatement.Response.self, from: json))
+    }
+	
     //MARK: - SaveAccountName
 
     func testSaveAccountName_Response_Decoding() throws {

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import Presentation
 
 struct AuthLoginView: View {
     
@@ -53,13 +54,10 @@ struct AuthLoginView: View {
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })
-        .sheet(item: $viewModel.cardScanner, onDismiss: {
+        .present(item: $viewModel.cardScanner, style: .fullScreen, content: { cardScannerViewModel in
             
-            viewModel.cardScanner = nil
-            
-        }, content: { cardScannerViewModel in
-            
-            AuthCardScannerView(viewModel: cardScannerViewModel)
+            CardScannerView(viewModel: cardScannerViewModel)
+                .edgesIgnoringSafeArea(.all)
         })
         .padding(.top, 24)
         .background(

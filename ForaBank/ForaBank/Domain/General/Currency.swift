@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Currency: CustomStringConvertible, Equatable  {
+struct Currency: CustomStringConvertible, Equatable, Hashable  {
     
     let description: String
 }
@@ -30,4 +30,18 @@ extension Currency: Codable {
 extension Currency {
     
     static let rub = Currency(description: "RUB")
+    static let usd = Currency(description: "USD")
+    static let eur = Currency(description: "EUR")
+}
+
+//MARK: - Type
+
+extension Currency {
+    
+    struct Rate {
+        
+        let code: String
+        let name: String
+        
+    }
 }

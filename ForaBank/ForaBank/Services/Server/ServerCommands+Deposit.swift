@@ -20,9 +20,14 @@ extension ServerCommands {
 			let endpoint = "/rest/getDepositInfo"
 			let method: ServerCommandMethod = .post
 			let parameters: [ServerCommandParameter]? = nil
-			let payload: BasePayload?
+            let payload: Payload?
             let timeout: TimeInterval? = nil
 
+            struct Payload: Encodable {
+                
+                let id: Int
+            }
+            
 			struct Response: ServerResponse {
 
 				let statusCode: ServerStatusCode
@@ -30,25 +35,10 @@ extension ServerCommands {
 				let data: DepositInfoDataItem?
 			}
 
-			internal init(token: String, endDate: Date?, id: Int, name: String?, startDate: Date?, statementFormat: StatementFormat?) {
+            internal init(token: String, payload: Payload) {
 
-				let formatter = DateFormatter.iso8601
 				self.token = token
-				var endDateString: String? = nil
-				if let endDate = endDate {
-					endDateString = formatter.string(from: endDate)
-				}
-
-				var startDateString: String? = nil
-				if let startDate = startDate {
-					startDateString = formatter.string(from: startDate)
-				}
-
-				self.payload = BasePayload(endDate: endDateString,
-														id: id,
-														name: name,
-														startDate: startDateString,
-														statementFormat: statementFormat)
+				self.payload = payload
 			}
 		}
 
@@ -58,7 +48,7 @@ extension ServerCommands {
 		struct GetDepositStatement: ServerCommand {
 
 			let token: String?
-			let endpoint = "/rest/getDepositStatement"
+			let endpoint = "/rest/getDepositStatement_V2"
 			let method: ServerCommandMethod = .post
 			let parameters: [ServerCommandParameter]? = nil
 			let payload: BasePayload?
@@ -71,27 +61,50 @@ extension ServerCommands {
 				let data: [ProductStatementData]?
 			}
 
-			internal init(token: String, endDate: Date?, id: Int, name: String?, startDate: Date?, statementFormat: StatementFormat?) {
-
-				let formatter = DateFormatter.iso8601
-				self.token = token
-				var endDateString: String? = nil
-				if let endDate = endDate {
-					endDateString = formatter.string(from: endDate)
-				}
-
-				var startDateString: String? = nil
-				if let startDate = startDate {
-					startDateString = formatter.string(from: startDate)
-				}
-
-				self.payload = BasePayload(endDate: endDateString,
-														id: id,
-														name: name,
-														startDate: startDateString,
-														statementFormat: statementFormat)
-			}
+            internal init(token: String, payload: BasePayload) {
+                
+                self.token = token
+                self.payload = payload
+            }
+            
+            init(token: String, productId: ProductData.ID) {
+                
+                self.init(token: token, payload: .init(id: productId))
+            }
 		}
+        
+        /*
+         http://10.1.206.21:8080/swagger-ui/index.html#/DepositController/getDepositStatementForPeriod_V2
+         */
+        
+        //TODO: - tests
+        struct GetDepositStatementForPeriod: ServerCommand {
+
+            let token: String?
+            let endpoint = "/rest/getDepositStatementForPeriod_V2"
+            let method: ServerCommandMethod = .post
+            let parameters: [ServerCommandParameter]? = nil
+            let payload: BasePayload?
+            let timeout: TimeInterval? = nil
+
+            struct Response: ServerResponse {
+
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: [ProductStatementData]?
+            }
+
+            internal init(token: String, payload: BasePayload) {
+                
+                self.token = token
+                self.payload = payload
+            }
+            
+            init(token: String, productId: ProductData.ID, period: Period) {
+                
+                self.init(token: token, payload: .init(id: productId, startDate: period.start, endDate: period.end))
+            }
+        }
 
 		/*
 		 https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/DepositController/openDepositUsingPOST
@@ -141,6 +154,11 @@ extension ServerCommands {
                 
                 self.token = token
                 self.payload = payload
+            }
+            
+            init(token: String, productId: ProductData.ID, name: String) {
+                
+                self.init(token: token, payload: .init(id: productId, name: name))
             }
         }
         
@@ -220,11 +238,11 @@ extension ServerCommands {
         
         struct BasePayload: Encodable {
 
-            let endDate: String?
             let id: Int
-            let name: String?
-            let startDate: String?
-            let statementFormat: StatementFormat?
+            var name: String? = nil
+            var startDate: Date? = nil
+            var endDate: Date? = nil
+            var statementFormat: StatementFormat? = nil
         }
 	}
 }

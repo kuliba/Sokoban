@@ -24,12 +24,28 @@ struct AuthPinCodeView: View {
             Spacer()
             
             FooterView(viewModel: viewModel.footer)
+            
+            
+            NavigationLink("", isActive: $viewModel.isPermissionsViewPresented) {
+                
+                if let permissionViewModel = viewModel.permissionsViewModel {
+                    
+                    AuthPermissionsView(viewModel: permissionViewModel)
+                    
+                } else {
+                    
+                    EmptyView()
+                }
+            }
         }
         .background(Color.white)
         .navigationBarHidden(true)
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })
+        .onAppear {
+            viewModel.action.send(AuthPinCodeViewModelAction.Appear())
+        }
     }
 }
 

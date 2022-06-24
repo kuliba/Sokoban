@@ -7,11 +7,21 @@
 
 import Foundation
 
-struct BannerCatalogListData: Codable, Equatable, Cachable  {
+struct BannerCatalogListData: Codable, Equatable, Identifiable {
     
-    let conditionLink: URL
-    let imageLink: String
-    let orderLink: URL
+    var id: String { imageEndpoint }
     let productName: String
-    let txtСondition: [String]
+    let conditions: [String]
+    let imageEndpoint: String
+    let orderURL: URL
+    let conditionURL: URL
+    
+    enum CodingKeys : String, CodingKey, Decodable {
+        
+        case productName
+        case conditions = "txtСondition"
+        case imageEndpoint = "imageLink"
+        case orderURL = "orderLink"
+        case conditionURL = "conditionLink"
+    }
 }

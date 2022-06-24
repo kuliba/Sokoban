@@ -20,7 +20,7 @@ public class CardScannerController: UIViewController {
         preview.videoGravity = .resizeAspect
         return preview
     }()
-
+    
     private let device = AVCaptureDevice.default(for: .video)
 
     private var viewGuide: PartialTransparentView!
@@ -79,9 +79,9 @@ public class CardScannerController: UIViewController {
         setupCaptureSession()
         captureSession.startRunning()
         title = viewTitle
-
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
         let buttomItem = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(scanCompleted))
-        buttomItem.tintColor = .black
+        buttomItem.tintColor = .white
         navigationItem.leftBarButtonItem = buttomItem
     }
 

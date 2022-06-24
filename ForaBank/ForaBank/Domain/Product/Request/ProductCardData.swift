@@ -8,8 +8,7 @@
 import Foundation
 
 class ProductCardData: ProductData {
-    
-    let cardId: Int?
+
     let accountId: Int?
     let name: String
     let validThru: Date
@@ -22,13 +21,12 @@ class ProductCardData: ProductData {
     let paymentSystemName: String?
     let paymentSystemImage: SVGImageData?
     let loanBaseParam: LoanBaseParamInfoData?
-    let statusPc: ProductData.StatusPC?
+    var statusPc: ProductData.StatusPC?
     let isMain: Bool?
     let externalId: Int?
     
-    internal init(id: Int, productType: ProductType, number: String, numberMasked: String, accountNumber: String, balance: Double, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date, ownerId: Int, branchId: Int, allowCredit: Bool, allowDebit: Bool,extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], cardId: Int?, accountId: Int?, name: String, validThru: Date, status: Status, expireDate: String?, holderName: String?, product: String?, branch: String, miniStatement: [PaymentDataItem]?, paymentSystemName: String?, paymentSystemImage: SVGImageData?, loanBaseParam: LoanBaseParamInfoData?, statusPc: ProductData.StatusPC?, isMain: Bool?, externalId: Int?) {
-        
-        self.cardId = cardId
+    internal init(id: Int, productType: ProductType, number: String, numberMasked: String, accountNumber: String, balance: Double, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date, ownerId: Int, branchId: Int, allowCredit: Bool, allowDebit: Bool,extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], accountId: Int?, name: String, validThru: Date, status: Status, expireDate: String?, holderName: String?, product: String?, branch: String, miniStatement: [PaymentDataItem]?, paymentSystemName: String?, paymentSystemImage: SVGImageData?, loanBaseParam: LoanBaseParamInfoData?, statusPc: ProductData.StatusPC?, isMain: Bool?, externalId: Int?) {
+
         self.accountId = accountId
         self.name = name
         self.validThru = validThru
@@ -60,7 +58,6 @@ class ProductCardData: ProductData {
     required init(from decoder: Decoder) throws {
 
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        cardId = try container.decodeIfPresent(Int.self, forKey: .cardId)
         accountId = try container.decodeIfPresent(Int.self, forKey: .accountId)
         name = try container.decode(String.self, forKey: .name)
         let validThruValue = try container.decode(Int.self, forKey: .validThru)
@@ -84,18 +81,18 @@ class ProductCardData: ProductData {
     override func encode(to encoder: Encoder) throws {
         
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(cardId, forKey: .cardId)
-        try container.encode(accountId, forKey: .accountId)
+        try container.encodeIfPresent(accountId, forKey: .accountId)
         try container.encode(name, forKey: .name)
-        try container.encodeIfPresent(validThru, forKey: .validThru)
-        try container.encodeIfPresent(status, forKey: .status)
+        try container.encode(Int(validThru.timeIntervalSince1970) * 1000, forKey: .validThru)
+        try container.encode(status, forKey: .status)
         try container.encodeIfPresent(expireDate, forKey: .expireDate)
-        try container.encode(holderName, forKey: .holderName)
-        try container.encode(product, forKey: .product)
+        try container.encodeIfPresent(holderName, forKey: .holderName)
+        try container.encodeIfPresent(product, forKey: .product)
         try container.encode(branch, forKey: .branch)
+        try container.encodeIfPresent(miniStatement, forKey: .miniStatement)
         try container.encodeIfPresent(paymentSystemName, forKey: .paymentSystemName)
         try container.encodeIfPresent(paymentSystemImage, forKey: .paymentSystemImage)
-        try container.encode(loanBaseParam, forKey: .loanBaseParam)
+        try container.encodeIfPresent(loanBaseParam, forKey: .loanBaseParam)
         try container.encodeIfPresent(statusPc, forKey: .statusPc)
         try container.encodeIfPresent(isMain, forKey: .isMain)
         try container.encodeIfPresent(externalId, forKey: .externalId)
@@ -108,7 +105,6 @@ class ProductCardData: ProductData {
     static func == (lhs: ProductCardData, rhs: ProductCardData) -> Bool {
         
         return  lhs.product == rhs.product &&
-        lhs.cardId == rhs.cardId &&
         lhs.accountId == rhs.accountId &&
         lhs.name == rhs.name &&
         lhs.validThru == rhs.validThru &&
@@ -218,24 +214,50 @@ extension ProductCardData {
             self.totalAvailableAmount = totalAvailableAmount
             self.totalDebtAmount = totalDebtAmount
         }
-        
-//        convenience init?(paramInfo: ProductCardData.LoanBaseParamInfoData) {
-//
-//            self.loanId = paramInfo.loanId
-//            self.clientId = paramInfo.clientId
-//            self.number = paramInfo.number
-//            self.currencyID = paramInfo.currencyID
-//            self.currencyNumber = paramInfo.currencyNumber
-//            self.currencyCode = paramInfo.currencyCode
-//            self.minimumPayment = paramInfo.minimumPayment
-//            self.gracePeriodPayment = paramInfo.gracePeriodPayment
-//            self.overduePayment = paramInfo.overduePayment
-//            self.availableExceedLimit = paramInfo.availableExceedLimit
-//            self.ownFunds = paramInfo.ownFunds
-//            self.debtAmount = paramInfo.debtAmount
-//            self.totalAvailableAmount = paramInfo.totalAvailableAmount
-//            self.totalDebtAmount = paramInfo.totalAvailableAmount
-//        }
     }
 }
 
+extension ProductCardData {
+
+    var isNotActivated: Bool {
+
+        guard status == .active || status == .issuedToClient,
+              statusPc == .notActivated else {
+                  return false
+              }
+
+        return true
+    }
+    
+    var isActivated: Bool {
+        isNotActivated == false
+    }
+
+    var isBlocked: Bool {
+
+        guard status == .blockedByBank || status == .blockedByClient, statusPc == .operationsBlocked || statusPc == .blockedByBank || statusPc == .lost || statusPc == .stolen || statusPc == .temporarilyBlocked || statusPc == .blockedByClient else {
+            return false
+        }
+
+        return true
+    }
+}
+
+extension ProductCardData.LoanBaseParamInfoData {
+    
+    var minimumPaymentValue: Double { minimumPayment ?? 0 }
+    var gracePeriodPaymentValue: Double { gracePeriodPayment ?? 0 }
+    var overduePaymentValue: Double { overduePayment ?? 0 }
+    var availableExceedLimitValue: Double { availableExceedLimit ?? 0 }
+    var ownFundsValue: Double { ownFunds ?? 0 }
+    var debtAmountValue: Double {
+        
+        guard let debtAmount = debtAmount else {
+            return 0
+        }
+        
+        return max(debtAmount, 0)
+    }
+    var totalAvailableAmountValue: Double { totalAvailableAmount ?? 0 }
+    var totalDebtAmountValue: Double { totalDebtAmount ?? 0 }
+}
