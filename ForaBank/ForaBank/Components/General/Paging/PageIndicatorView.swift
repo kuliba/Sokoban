@@ -26,7 +26,7 @@ struct PageIndicatorView: View {
     var body: some View {
 
         HStack {
-            ForEach(0..<pageCount){ index in
+            ForEach(0..<pageCount, id: \.self){ index in
                 Circle()
                     .foregroundColor(currentIndex == index ? .mainColorsGray : .mainColorsGrayLightest)
                     .animation(.spring())

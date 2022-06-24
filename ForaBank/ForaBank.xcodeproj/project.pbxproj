@@ -3319,20 +3319,6 @@
 			path = PaymentsTransfers;
 			sourceTree = "<group>";
 		};
-		50164F1A2840F74B004239A1 /* New */ = {
-			isa = PBXGroup;
-			children = (
-				5059D4482863B75900DA446D /* CurrencyWallet */,
-				5088A08728560B13003C39D7 /* OpenAccount */,
-				50E9CD6428442A6400FAF99C /* BottomSheetView */,
-				509EE0E0285F852C002281BF /* Keyboard */,
-				5088A0862855F411003C39D7 /* Paging */,
-				508BC62428604FD500F15DCD /* Views */,
-				508BC62528604FE900F15DCD /* Components */,
-			);
-			path = New;
-			sourceTree = "<group>";
-		};
 		503F073028252B7900E84A77 /* DepositCalculator */ = {
 			isa = PBXGroup;
 			children = (
@@ -3389,22 +3375,6 @@
 			path = CurrencyWallet;
 			sourceTree = "<group>";
 		};
-		5069892028465E5100C3DEEE /* New */ = {
-			isa = PBXGroup;
-			children = (
-				506989382846CF6500C3DEEE /* OpenAccount */,
-			);
-			path = New;
-			sourceTree = "<group>";
-		};
-		506989272846609400C3DEEE /* New */ = {
-			isa = PBXGroup;
-			children = (
-				506989392846CF7500C3DEEE /* OpenAccount */,
-			);
-			path = New;
-			sourceTree = "<group>";
-		};
 		506989382846CF6500C3DEEE /* OpenAccount */ = {
 			isa = PBXGroup;
 			children = (
@@ -3437,17 +3407,9 @@
 				504748732856752D0007128F /* OpenAccountPerformViewComponent.swift */,
 				5088A08A2856240C003C39D7 /* OpenAccountCardViewComponent.swift */,
 				5047487128566C130007128F /* OpenAccountButtonViewComponent.swift */,
+				508BC62528604FE900F15DCD /* Components */,
 			);
 			path = OpenAccount;
-			sourceTree = "<group>";
-		};
-		508BC62428604FD500F15DCD /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				50087819285345390033DDD5 /* SpinnerRefreshView.swift */,
-				50164F1F2841009C004239A1 /* ToggleView.swift */,
-			);
-			path = Views;
 			sourceTree = "<group>";
 		};
 		508BC62528604FE900F15DCD /* Components */ = {
@@ -3491,14 +3453,6 @@
 			path = Roboto;
 			sourceTree = "<group>";
 		};
-		509EE0E0285F852C002281BF /* Keyboard */ = {
-			isa = PBXGroup;
-			children = (
-				509EE0E1285F855D002281BF /* KeyboardPublisher.swift */,
-			);
-			path = Keyboard;
-			sourceTree = "<group>";
-		};
 		50A1993F280F1A240094CFA5 /* Modifiers */ = {
 			isa = PBXGroup;
 			children = (
@@ -3506,14 +3460,6 @@
 				50A19942280F1AF80094CFA5 /* SwipeSidesModifier.swift */,
 			);
 			path = Modifiers;
-			sourceTree = "<group>";
-		};
-		50E9CD6428442A6400FAF99C /* BottomSheetView */ = {
-			isa = PBXGroup;
-			children = (
-				50164F1D2840F892004239A1 /* BottomSheetContentView.swift */,
-			);
-			path = BottomSheetView;
 			sourceTree = "<group>";
 		};
 		5A5ABF9527AAF7DD00D548AA /* PaymentOperationDetailContoller */ = {
@@ -3932,16 +3878,18 @@
 			children = (
 				68A07C47281B18C800797A54 /* OpenDepositView.swift */,
 				68B55C5A28249D8F00ACAF46 /* ProductDetailView.swift */,
+				503F074228252D3B00E84A77 /* DepositCalculator */,
 			);
 			path = OpenDeposit;
 			sourceTree = "<group>";
 		};
-		68A07C49281B18EB00797A54 /* OpenDepositViewModel */ = {
+		68A07C49281B18EB00797A54 /* OpenDeposit */ = {
 			isa = PBXGroup;
 			children = (
 				68A07C4A281B190800797A54 /* OpenDepositViewModel.swift */,
+				503F073528252CBA00E84A77 /* DepositCalculator */,
 			);
-			path = OpenDepositViewModel;
+			path = OpenDeposit;
 			sourceTree = "<group>";
 		};
 		68AD340327997CB300647665 /* Product */ = {
@@ -4218,6 +4166,8 @@
 				6806FAAB27E9424D00EA005A /* CircleSegmentedBarView.swift */,
 				7784D2A7285B73F600E81005 /* LineProgressView.swift */,
 				774A8B7F2865FF3600B81140 /* RefreshView.swift */,
+				50087819285345390033DDD5 /* SpinnerRefreshView.swift */,
+				50164F1F2841009C004239A1 /* ToggleView.swift */,
 				774A8B812865FF4A00B81140 /* TagsGridView.swift */,
 				6876D10027F50AA2000240CC /* BottomSheetView */,
 				7728A1752833EA0300EE4CA6 /* Shapes */,
@@ -4246,6 +4196,9 @@
 				ED8E5CDF284A4AC4008DB72E /* NavigationBarViewComponent.swift */,
 				774A8B7D2865FF1400B81140 /* TextFieldFormatableViewComponent.swift */,
 				774A8B7B2865FF0900B81140 /* TextFieldMaskableViewComponent.swift */,
+				509EE0E1285F855D002281BF /* KeyboardPublisher.swift */,
+				50164F1D2840F892004239A1 /* BottomSheetContentView.swift */,
+				5088A0862855F411003C39D7 /* Paging */,
 				ED374C8E2861FBCE00A97219 /* ActivityViewComponent.swift */,
 			);
 			path = General;
@@ -4493,6 +4446,7 @@
 				774A8B2E2865FCDD00B81140 /* UserAccount */,
 				774A8B3E2865FD1800B81140 /* Messages */,
 				68A07C46281B18A700797A54 /* OpenDeposit */,
+				506989382846CF6500C3DEEE /* OpenAccount */,
 				77A6A9CA27F46A8F00CE7E28 /* Places */,
 			);
 			path = Main;
@@ -4529,7 +4483,8 @@
 				774A8B232865FC6F00B81140 /* MyProducts */,
 				774A8B172865FBFF00B81140 /* UserAccount */,
 				774A8B1E2865FC4200B81140 /* Messages */,
-				68A07C49281B18EB00797A54 /* OpenDepositViewModel */,
+				68A07C49281B18EB00797A54 /* OpenDeposit */,
+				506989392846CF7500C3DEEE /* OpenAccount */,
 				77A6A9CD27F46DAB00CE7E28 /* Places */,
 			);
 			path = Main;
@@ -4747,8 +4702,6 @@
 		77DC125C277098C600C917B0 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				506989272846609400C3DEEE /* New */,
-				503F073528252CBA00E84A77 /* DepositCalculator */,
 				770DCE9027BBF7F4004099C1 /* RootViewModel.swift */,
 				6862B54B27B688CC006E833F /* Auth */,
 				7772979127C77BFF0099EF91 /* Main */,
@@ -4761,8 +4714,6 @@
 		77DC125D277098D500C917B0 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				503F074228252D3B00E84A77 /* DepositCalculator */,
-				5069892028465E5100C3DEEE /* New */,
 				770DCE9427BBFA49004099C1 /* Root */,
 				6862B53B27B6886A006E833F /* Auth */,
 				7769F5BA27D3A2D900F80607 /* Main */,
@@ -4934,14 +4885,15 @@
 		77EA0DB92779B04A00C6ED12 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				503F073028252B7900E84A77 /* DepositCalculator */,
 				68A07C44281ADEBB00797A54 /* OfferProductViewComponent.swift */,
 				7709C77B2833E56800C1A8B6 /* General */,
 				7709C77A2833ACF700C1A8B6 /* View */,
 				7772978227C38F2F0099EF91 /* Main */,
 				681142DE27C7D784008D3D67 /* ProductProfile */,
 				0CF3D713283686AC001A1BEA /* PaymentsTransfers */,
-				50164F1A2840F74B004239A1 /* New */,
+				503F073028252B7900E84A77 /* DepositCalculator */,
+				5088A08728560B13003C39D7 /* OpenAccount */,
+				5059D4482863B75900DA446D /* CurrencyWallet */,
 				ED15DAE32811639D00BF7E9F /* Account */,
 				0B4145BA2810931A0097430C /* Messages */,
 			);
