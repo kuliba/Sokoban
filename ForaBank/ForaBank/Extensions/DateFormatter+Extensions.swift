@@ -21,6 +21,20 @@ extension DateFormatter {
   
         return formatter
     }
+
+    static var shortDate: DateFormatter {
+
+        let dateFormatter = DateFormatter()
+
+        dateFormatter.timeStyle = DateFormatter.Style.none
+        dateFormatter.dateStyle = DateFormatter.Style.long
+
+        dateFormatter.dateFormat =  "dd.MM.yy"
+        dateFormatter.timeZone = .current
+        dateFormatter.locale = Locale(identifier: "ru_RU")
+
+        return dateFormatter
+    }
     
     static let iso8601: DateFormatter = {
         
@@ -55,6 +69,16 @@ extension DateFormatter {
         formatter.timeZone = TimeZone(identifier: "UTC")
         formatter.locale = Locale(identifier: "ru_RU")
         formatter.dateFormat = "HH:mm"
+        
+        return formatter
+    }()
+    
+    
+    static let historyDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat =  "d MMMM, E"
+        formatter.timeZone = .current
+        formatter.locale = Locale(identifier: "ru_RU")
         
         return formatter
     }()

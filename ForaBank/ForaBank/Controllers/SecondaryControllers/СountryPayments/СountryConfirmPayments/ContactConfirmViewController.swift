@@ -1004,27 +1004,6 @@ class ContactConfurmViewController: UIViewController {
 
 }
 
-
-extension ConfirmViewControllerModel {
-    
-    convenience init?(operation: OperationDetailDatum) {
-        
-        guard let transferType = operation.transferEnum, let operationType = PaymentType(with: transferType) else {
-            return nil
-        }
-
-        self.init(type: operationType)
-        
-        fullName = operation.payeeFullName
-        phone = operation.payeePhone
-        currancyTransction  =   operation.payerCurrency ?? ""
-        dateOfTransction = operation.transferDate ?? ""
-        taxTransction = String(operation.payerFee ?? 0)
-        summTransction = String(operation.payerAmount ?? 0)
-        cardFromAccountNumber = operation.payerAccountNumber ?? ""
-    }
-}
-
 extension ConfirmViewControllerModel {
     
     enum TemplateButtonViewModel {

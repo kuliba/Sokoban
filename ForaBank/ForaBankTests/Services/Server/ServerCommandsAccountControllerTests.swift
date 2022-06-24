@@ -47,11 +47,10 @@ class ServerCommandsAccountControllerTests: XCTestCase {
 		// given
 		let url = bundle.url(forResource: "GetAccountStatementResponseGeneric", withExtension: "json")!
 		let json = try Data(contentsOf: url)
-		let date = formatter.date(from: "2022-01-25T10:32:41.777Z")!
-		let tranDate = formatter.date(from: "2022-01-25T10:32:41.777Z")!
+        let date = Date(timeIntervalSince1970: TimeInterval(1648512000000 / 1000))
 
-		let accountStatementData = ProductStatementData(MCC: 3245,
-														accountID: 10004111477,
+		let accountStatementData = ProductStatementData(mcc: 3245,
+														accountId: 10004111477,
 														accountNumber: "70601810711002740401",
 														amount: 144.21,
 														cardTranNumber: "4256901080508437",
@@ -62,7 +61,7 @@ class ServerCommandsAccountControllerTests: XCTestCase {
 														date: date,
 														deviceCode: "string",
 														documentAmount: 144.21,
-														documentID: 10230444722,
+														documentId: 10230444722,
 														fastPayment: .init(documentComment: "string",
 																		   foreignBankBIC: "044525491",
 																		   foreignBankID: "10000001153",
@@ -81,7 +80,7 @@ class ServerCommandsAccountControllerTests: XCTestCase {
 														paymentDetailType: .betweenTheir,
 														svgImage: .init(description: "string"),
 														terminalCode: "41010601",
-														tranDate: tranDate,
+														tranDate: date,
 														type: .inside)
 
 		let expected = ServerCommands.AccountController.GetAccountStatement.Response(statusCode: .ok,
@@ -100,11 +99,10 @@ class ServerCommandsAccountControllerTests: XCTestCase {
 		// given
 		let url = bundle.url(forResource: "GetAccountStatementResponseGenericMin", withExtension: "json")!
 		let json = try Data(contentsOf: url)
-		let date = formatter.date(from: "2022-01-25T10:32:41.777Z")!
-		let tranDate = formatter.date(from: "2022-01-25T10:32:41.777Z")!
+		let date = Date(timeIntervalSince1970: TimeInterval(1648512000000 / 1000))
 
-		let accountStatementData = ProductStatementData(MCC: nil,
-														accountID: nil,
+		let accountStatementData = ProductStatementData(mcc: nil,
+														accountId: nil,
 														accountNumber: "70601810711002740401",
 														amount: 144.21,
 														cardTranNumber: nil,
@@ -115,7 +113,7 @@ class ServerCommandsAccountControllerTests: XCTestCase {
 														date: date,
 														deviceCode: nil,
 														documentAmount: nil,
-														documentID: nil,
+														documentId: nil,
 														fastPayment: .init(documentComment: "string",
 																		   foreignBankBIC: "044525491",
 																		   foreignBankID: "10000001153",
@@ -134,7 +132,7 @@ class ServerCommandsAccountControllerTests: XCTestCase {
 														paymentDetailType: .betweenTheir,
 														svgImage: .init(description: "string"),
 														terminalCode: nil,
-														tranDate: tranDate,
+														tranDate: date,
 														type: .inside)
 
 		let expected = ServerCommands.AccountController.GetAccountStatement.Response(statusCode: .ok,

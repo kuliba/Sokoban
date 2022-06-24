@@ -24,18 +24,6 @@ struct AuthPinCodeView: View {
             Spacer()
             
             FooterView(viewModel: viewModel.footer)
-            
-            NavigationLink("", isActive: $viewModel.isPermissionsViewPresented) {
-                
-                if let permissionsViewModel = viewModel.permissionsViewModel {
-                    
-                    AuthPermissionsView(viewModel: permissionsViewModel)
-                    
-                } else {
-                    
-                    EmptyView()
-                }
-            }
         }
         .background(Color.white)
         .navigationBarHidden(true)

@@ -12,7 +12,7 @@ extension ServerCommands {
     enum RatesController {
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/RatesController/getExchangeCurrencyRatesUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/RatesController/getExchangeCurrencyRatesUsingPOST
          */
         struct GetExchangeCurrencyRates: ServerCommand {
 

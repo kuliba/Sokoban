@@ -33,7 +33,12 @@ extension MainViewController: UICollectionViewDelegate {
                     productsList.append(product)
                 }
                 
-                delegate?.goProductViewController(product: productsList[productIndex], products: productsList)
+                let model = Model.shared
+                let profileViewModel = ProfileViewModel(productViewModel: .init(model, productId: productsList[productIndex].id, productType: productsList[productIndex].productTypeEnum), model: model)
+                let profileViewController = ProfileViewHostingViewController(with: profileViewModel, model: model)
+                let navigationViewController = UINavigationController(rootViewController: profileViewController)
+                navigationViewController.modalPresentationStyle = .fullScreen
+                present(navigationViewController, animated: true)
             }
             
         case .offer:

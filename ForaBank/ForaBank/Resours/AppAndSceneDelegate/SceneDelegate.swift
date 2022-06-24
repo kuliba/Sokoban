@@ -35,17 +35,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
-        /*
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
         let rootViewController = RootViewHostingViewController(with: .init(Model.shared))
         window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()
-//        rootViewController.showLogin()
-         */
+        
+        
         
         //LEGACY
+        /*
         // MARK: Window
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
@@ -57,6 +57,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let tapGesture = UITapGestureRecognizer(target: self, action: nil)
         tapGesture.delegate = self
         window?.addGestureRecognizer(tapGesture)
+         */
         
         // NetMonitoring observer
         self.observeNetworkStatus()
@@ -106,7 +107,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func sceneWillEnterForeground(_ scene: UIScene) {
         
-        AppDelegate.shared.model.action.send(ModelAction.Dictionary.UpdateCache.All())
+//        AppDelegate.shared.model.sessionAgent.action.send(SessionAgentAction.App.Activated())
+          AppDelegate.shared.model.action.send(ModelAction.Dictionary.UpdateCache.All())
+    }
+    
+    func sceneDidEnterBackground(_ scene: UIScene) {
+        
+        AppDelegate.shared.model.sessionAgent.action.send(SessionAgentAction.App.Inactivated())
     }
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {

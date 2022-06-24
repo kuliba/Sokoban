@@ -500,7 +500,7 @@ extension TemplatesListView {
                     }
                 }
             }
-            .modifier(TemplatesListView.SwipeSidesModifier(leftAction: {
+            .modifier(SwipeSidesModifier(leftAction: {
                 
                 guard style == .list else {
                     return
@@ -646,7 +646,7 @@ extension TemplatesListView {
                     }
                 }
             }
-            .modifier(TemplatesListView.SwipeSidesModifier(leftAction: {
+            .modifier(SwipeSidesModifier(leftAction: {
                 
                 guard style == .list else {
                     return
@@ -924,31 +924,6 @@ extension TemplatesListView {
 }
 
 //MARK: - Helpers
-
-extension TemplatesListView {
-    
-    struct SwipeSidesModifier: ViewModifier {
-   
-        let leftAction: () -> Void
-        let rightAction: () -> Void
-        
-        func body(content: Content) -> some View {
-            
-            content
-                .gesture(DragGesture(minimumDistance: 3.0, coordinateSpace: .local)
-                            .onEnded { value in
-
-                                if value.translation.width < 0 && value.translation.height > -30 && value.translation.height < 30 {
-                                    
-                                    leftAction()
-                                    
-                                } else if value.translation.width > 0 && value.translation.height > -30 && value.translation.height < 30 {
-                                    
-                                    rightAction()
-                                }})
-        }
-    }
-}
 
 struct TemplatesListView_Previews: PreviewProvider {
     

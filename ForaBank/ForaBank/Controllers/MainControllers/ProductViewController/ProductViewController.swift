@@ -38,8 +38,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
     
     weak var delegatePaymentVc: ProductViewControllerDelegate?
     
-    var swiftUIView = DetailAccountViewComponent(viewModel: .init(with: .init(), status: .notActivated, isCredit: false, productName: nil, longInt: nil))
-    var detailView = SelfSizingHostingController(rootView: DetailAccountViewComponent(viewModel: .init(with: .init(), status: .notActivated, isCredit: false, productName: nil, longInt: nil)))
+//    var swiftUIView = DetailAccountViewComponent(viewModel: .init(with: .init(), status: .notActivated, isCredit: false, productName: nil, longInt: nil))
+//    var detailView = SelfSizingHostingController(rootView: DetailAccountViewComponent(viewModel: .init(with: .init(), status: .notActivated, isCredit: false, productName: nil, longInt: nil)))
     
     var emptySpending = UIView()
     
@@ -425,8 +425,6 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
         }
         
         secondStackView.isHidden = true
-        secondStackView.removeArrangedSubview(detailView.view)
-        detailView.view.isHidden = true
         
         statusBarView.isHidden = false
         statusBarView.layer.cornerRadius = 8
@@ -577,7 +575,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
                 personsCredit(id: productId)
             }
             
-            secondStackView.removeArrangedSubview(detailView.view)
+//            secondStackView.removeArrangedSubview(detailView.view)
             
             guard let number = self.product?.settlementAccount else { return }
             

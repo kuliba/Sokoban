@@ -31,7 +31,7 @@ class OperationDetailViewModel: ObservableObject {
     private let animationDuration: Double = 0.5
     private var paymentTemplateId: Int?
     
-    init?(productStatement: ProductStatementProxy, product: UserAllCardsModel) {
+    init?(productStatement: ProductStatementProxy, product: ProductData) {
 
         let tranDateString = DateFormatter.operation.string(from: productStatement.tranDate)
         self.featureButtons = []
@@ -180,8 +180,10 @@ class OperationDetailViewModel: ObservableObject {
 
             self.featureButtons = [infoFeatureButtonViewModel]
         }
-        
-        fetchOperationDetail(productStatement: productStatement, product: product)
+        guard let documentId = productStatement.documentId else {
+            return
+        }
+        model.action.send(ModelAction.Payment.OperationDetail.Request(documentId: documentId))
         bind()
     }
 
@@ -205,31 +207,30 @@ class OperationDetailViewModel: ObservableObject {
                         }
                     }
                     featureButtons = featureButtonsUpdated
-
+                case _ as ModelAction.Payment.OperationDetail.Request:
+                    
+                    break
                 default:
                     break
                 }
 
             }.store(in: &bindings)
     }
-
-    private func fetchOperationDetail(productStatement: ProductStatementProxy, product: UserAllCardsModel) {
+    
+    private func fetchOperationDetail(productStatement: ProductStatementProxy, product: ProductData, operationDetail: OperationDetailData?) {
+        
         guard let documentId = productStatement.documentId else {
             withAnimation(.easeInOut(duration: self.animationDuration)) {
                 self.isLoading = false
             }
             return
         }
-
-        let body = [ "documentId" : documentId] as [String : AnyObject]
-        NetworkManager<GetOperationDetailDecodebleModel>.addRequest(.getOperationDetail, [:], body) { [weak self] model, error in
-            guard let self = self else {
-                return
-            }
+            
             withAnimation(.easeInOut(duration: self.animationDuration)) {
                 self.isLoading = false
             }
-            guard error == nil, let model = model, model.statusCode == 0, let operationDetail = model.data else {
+            
+            guard let operationDetail = operationDetail else {
                 return
             }
             DispatchQueue.main.async {
@@ -281,7 +282,7 @@ class OperationDetailViewModel: ObservableObject {
                     self.featureButtons = featureButtonsUpdated
                 }
             }
-        }
+        
     }
 }
 
@@ -289,28 +290,19 @@ class OperationDetailViewModel: ObservableObject {
 
 private extension OperationDetailViewModel {
     
-    func infoFeatureButtonViewModel(with productStatement: ProductStatementProxy, product: UserAllCardsModel, operationDetail: OperationDetailDatum? = nil) -> FeatureButtonViewModel? {
-        return FeatureButtonViewModel(kind: .info, icon: "Operation Details Info", name: "Детали", action: { [weak self] in
-            self?.operationDetailInfoViewModel = OperationDetailInfoViewModel(
-                with: productStatement,
-                operation: operationDetail,
-                product: product,
-                dismissAction: { [weak self] in
-                    self?.operationDetailInfoViewModel = nil}
-            )}
-        )
+    func infoFeatureButtonViewModel(with productStatement: ProductStatementProxy, product: ProductData, operationDetail: OperationDetailData? = nil) -> FeatureButtonViewModel? {
+        return FeatureButtonViewModel(kind: .info, icon: "Operation Details Info", name: "Детали", action: { [weak self] in self?.operationDetailInfoViewModel = OperationDetailInfoViewModel(with: productStatement, operation: operationDetail, product: product, dismissAction: { [weak self] in self?.operationDetailInfoViewModel = nil})})
     }
     
-    func documentButtonViewModel(with operationDetail: OperationDetailDatum) -> FeatureButtonViewModel? {
+    func documentButtonViewModel(with operationDetail: OperationDetailData) -> FeatureButtonViewModel? {
         
-        guard let paymentOperationDetailID = operationDetail.paymentOperationDetailID, let printFormType = operationDetail.printFormType else {
-            return nil
-        }
+        let paymentOperationDetailID = operationDetail.paymentOperationDetailId
+        let printFormType = operationDetail.printFormType
         
-        return FeatureButtonViewModel(kind: .document, icon: "Operation Details Document", name: "Документ", action: { [weak self] in self?.action.send(OperationDetailViewModelAction.ShowDocument(paymentOperationDetailID: paymentOperationDetailID, printFormType: printFormType))})
+        return FeatureButtonViewModel(kind: .document, icon: "Operation Details Document", name: "Документ", action: {})
     }
     
-    func templateButtonViewModel(with productStatement: ProductStatementProxy, operationDetail: OperationDetailDatum) -> FeatureButtonViewModel? {
+    func templateButtonViewModel(with productStatement: ProductStatementProxy, operationDetail: OperationDetailData) -> FeatureButtonViewModel? {
         
         // check if template allowed for this operation type
         guard model.paymentTemplatesAllowed.contains(productStatement.paymentDetailType) else {
@@ -323,17 +315,17 @@ private extension OperationDetailViewModel {
             
         } else {
             
-            guard let name = templateName(with: productStatement, operationDetail: operationDetail),
-                  let paymentOperationDetailId = operationDetail.paymentOperationDetailID else {
+            guard let name = templateName(with: productStatement, operationDetail: operationDetail) else {
                 return nil
             }
+            let paymentOperationDetailId = operationDetail.paymentOperationDetailId
             
             let action = ModelAction.PaymentTemplate.Save.Requested(name: name, paymentOperationDetailId: paymentOperationDetailId)
             return FeatureButtonViewModel(kind: .template(false), icon: "Operation Details Template", name: "+ Шаблон", action: { [weak self] in self?.model.action.send(action)})
         }
     }
     
-    func templateName(with productStatement: ProductStatementProxy, operationDetail: OperationDetailDatum) -> String? {
+    func templateName(with productStatement: ProductStatementProxy, operationDetail: OperationDetailData) -> String? {
 
         switch productStatement.paymentDetailType {
         case .betweenTheir, .insideBank, .housingAndCommunalService, .internet, .direct, .sfp, .contactAddressless, .transport, .iNSIDE_DEPOSIT:
@@ -356,38 +348,38 @@ private extension OperationDetailViewModel {
         }
     }
     
-    func actionButtons(with operationDetail: OperationDetailDatum, product: UserAllCardsModel) -> [ActionButtonViewModel] {
+    func actionButtons(with operationDetail: OperationDetailData, product: ProductData) -> [ActionButtonViewModel] {
         
         var actionButtons = [ActionButtonViewModel]()
         
-        let changeButton = ActionButtonViewModel(name: "Изменить",
-                                                 action: { [weak self] in
-            self?.action.send(OperationDetailViewModelAction.Change(
-                amount: (operationDetail.amount ?? 0).currencyFormatter(symbol: operationDetail.currencyAmount ?? ""),
-                name: operationDetail.payeeFirstName ?? "",
-                surname: operationDetail.payeeSurName ?? "",
-                secondName: operationDetail.payeeMiddleName ?? "",
-                paymentOperationDetailId: operationDetail.paymentOperationDetailID ?? 0,
-                transferReference: operationDetail.transferReference ?? "",
-                product: product)
-            )
-        })
-        actionButtons.append(changeButton)
-        
-        let returnButton = ActionButtonViewModel(name: "Вернуть",
-                                                 action: { [weak self] in
-            self?.action.send(OperationDetailViewModelAction.Return(
-                amount: (operationDetail.amount ?? 0).currencyFormatter(symbol: operationDetail.currencyAmount ?? ""),
-                fullName: operationDetail.payeeFullName ?? "",
-                name: operationDetail.payeeFirstName ?? "",
-                surname: operationDetail.payeeSurName ?? "",
-                secondName: operationDetail.payeeMiddleName ?? "",
-                paymentOperationDetailId: operationDetail.paymentOperationDetailID ?? 0,
-                transferReference: operationDetail.transferReference ?? "",
-                product: product)
-            )
-        })
-        actionButtons.append(returnButton)
+//        let changeButton = ActionButtonViewModel(name: "Изменить",
+//                                                 action: { [weak self] in
+//            self?.action.send(OperationDetailViewModelAction.Change(
+//                amount: (operationDetail.amount ?? 0).currencyFormatter(symbol: operationDetail.currencyAmount ?? ""),
+//                name: operationDetail.payeeFirstName ?? "",
+//                surname: operationDetail.payeeSurName ?? "",
+//                secondName: operationDetail.payeeMiddleName ?? "",
+//                paymentOperationDetailId: operationDetail.paymentOperationDetailID ?? 0,
+//                transferReference: operationDetail.transferReference ?? "",
+//                product: product)
+//            )
+//        })
+//        actionButtons.append(changeButton)
+//
+//        let returnButton = ActionButtonViewModel(name: "Вернуть",
+//                                                 action: { [weak self] in
+//            self?.action.send(OperationDetailViewModelAction.Return(
+//                amount: (operationDetail.amount ?? 0).currencyFormatter(symbol: operationDetail.currencyAmount ?? ""),
+//                fullName: operationDetail.payeeFullName ?? "",
+//                name: operationDetail.payeeFirstName ?? "",
+//                surname: operationDetail.payeeSurName ?? "",
+//                secondName: operationDetail.payeeMiddleName ?? "",
+//                paymentOperationDetailId: operationDetail.paymentOperationDetailID ?? 0,
+//                transferReference: operationDetail.transferReference ?? "",
+//                product: product)
+//            )
+//        })
+//        actionButtons.append(returnButton)
         
         return actionButtons
     }
@@ -454,8 +446,8 @@ extension OperationDetailViewModel {
             OperationViewModel(bankLogo: bankLogo, payee: payee, amount: amount, fee: fee, description: description, date: date)
         }
         
-        func updated(with productStatement: ProductStatementProxy, operation: OperationDetailDatum, viewModel: OperationDetailViewModel) -> OperationViewModel {
-
+        func updated(with productStatement: ProductStatementProxy, operation: OperationDetailData, viewModel: OperationDetailViewModel) -> OperationViewModel {
+            
             var operationViewModel = self
 
             switch productStatement.paymentDetailType {
@@ -472,7 +464,7 @@ extension OperationDetailViewModel {
                 }
                 
             case .direct:
-                if let memberId = operation.memberID,
+                if let memberId = operation.memberId,
                    let bank = Dict.shared.banks?.first(where: { $0.memberID == memberId }),
                    let bankLogoSVG = bank.svgImage {
                     
@@ -601,9 +593,11 @@ extension OperationDetailViewModel {
             self.amount = amount
         }
         
-        init?(with operation: OperationDetailDatum, currencyCode: String) {
+        init?(with operation: OperationDetailData, currencyCode: String) {
             
-            guard let feeAmount = operation.payerFee, feeAmount >= 0 else {
+            let feeAmount = operation.payerFee
+            
+            guard feeAmount >= 0 else {
                 return nil
             }
             //FIXME: localization required
@@ -685,90 +679,32 @@ extension OperationDetailViewModel {
 
 extension OperationDetailViewModel {
     
-    convenience init?(with statement: GetDepositStatementDatum, currency: String, product: UserAllCardsModel) {
+    convenience init?(with statement: ProductStatementData, currency: String, product: ProductData) {
         
-        guard let paymentDetailType = statement.paymentDetailType,
-              let svgImageData = statement.svgImage,
-              let groupName = statement.groupName,
-              var amount = statement.documentAmount else {
+        guard let svgImageData = statement.svgImage.image,
+              var amount = statement.documentAmount else{
                   return nil
               }
         
-        if let amountStatement = statement.amount {
-            amount = amountStatement
-        } else if let documentAmount = statement.documentAmount{
-            amount = documentAmount
-        }
+        let amountStatement = statement.amount
+        let groupName = statement.groupName
         
-        let documentId = statement.documentID
-        let svgImage = Image(uiImage: svgImageData.convertSVGStringToImage())
-        let merchantName = (statement.merchantNameRus ?? statement.merchantName) ?? ""
+//        if let amountStatement = statement.amount {
+//            amount = amountStatement
+//        } else if let documentAmount = statement.documentAmount{
+//            amount = documentAmount
+//        }
+        
+        let paymentDetailType = statement.paymentDetailType
+        let documentId = statement.documentId
+        let merchantName = (statement.merchantNameRus ?? statement.merchantName)
         let mcc = statement.mcc ?? 0
-        let tranDate = statement.transactionDate
+        let tranDate = statement.tranDate
         let foreignPhoneNumber = statement.fastPayment?.foreignPhoneNumber
         let documentComment = statement.fastPayment?.documentComment
-        let operationType = statement.operationTypeEnum
+        let operationType = statement.operationType
         
-        let productStatement = ProductStatementProxy(paymentDetailType: paymentDetailType, documentId: documentId, svgImage: svgImage, merchantName: merchantName, groupName: groupName, mcc: mcc, amount: amount, currencyCode: currency, tranDate: tranDate, foreignPhoneNumber: foreignPhoneNumber, documentComment: documentComment, operationType: operationType, fastPayment: statement.fastPayment, comment: statement.comment)
-        
-        self.init(productStatement: productStatement, product: product)
-    }
-    
-    convenience init?(with statement: GetCardStatementDatum, currency: String, product: UserAllCardsModel) {
-        
-        guard let paymentDetailType = statement.paymentDetailType,
-              let svgImageData = statement.svgImage,
-              let groupName = statement.groupName,
-              var amount = statement.amount
-        else {
-                  return nil
-              }
-        
-        if let amountStatement = statement.amount {
-            amount = amountStatement
-        } else if let documentAmount = statement.documentAmount{
-            amount = documentAmount
-        }
-        
-        let documentId = statement.documentID
-        let svgImage = Image(uiImage: svgImageData.convertSVGStringToImage())
-        let merchantName = (statement.merchantNameRus ?? statement.merchantName) ?? ""
-        let mcc = statement.mcc ?? 0
-        let tranDate = statement.transactionDate
-        let foreignPhoneNumber = statement.fastPayment?.foreignPhoneNumber
-        let documentComment = statement.fastPayment?.documentComment
-        let operationType = statement.operationTypeEnum
-        
-        let productStatement = ProductStatementProxy(paymentDetailType: paymentDetailType, documentId: documentId, svgImage: svgImage, merchantName: merchantName, groupName: groupName, mcc: mcc, amount: amount, currencyCode: currency, tranDate: tranDate, foreignPhoneNumber: foreignPhoneNumber, documentComment: documentComment, operationType: operationType, fastPayment: statement.fastPayment, comment: statement.comment)
-        
-        self.init(productStatement: productStatement, product: product)
-    }
-    
-    convenience init?(with statement: GetAccountStatementDatum, currency: String, product: UserAllCardsModel) {
-        
-        
-        guard let paymentDetailType = statement.paymentDetailType,
-              let svgImageData = statement.svgImage,
-              let groupName = statement.groupName,
-              var amount = statement.documentAmount else {
-                  return nil
-              }
-        
-        if let amountStatement = statement.amount {
-            amount = amountStatement
-        } else if let documentAmount = statement.documentAmount{
-            amount = documentAmount
-        }
-        let documentId = statement.documentID
-        let svgImage = Image(uiImage: svgImageData.convertSVGStringToImage())
-        let merchantName = (statement.merchantNameRus ?? statement.merchantName) ?? ""
-        let mcc = statement.mcc ?? 0
-        let tranDate = statement.transactionDate
-        let foreignPhoneNumber = statement.fastPayment?.foreignPhoneNumber
-        let documentComment = statement.fastPayment?.documentComment
-        let operationType = statement.operationTypeEnum
-        
-        let productStatement = ProductStatementProxy(paymentDetailType: paymentDetailType, documentId: documentId, svgImage: svgImage, merchantName: merchantName, groupName: groupName, mcc: mcc, amount: amount, currencyCode: currency, tranDate: tranDate, foreignPhoneNumber: foreignPhoneNumber, documentComment: documentComment, operationType: operationType, fastPayment: statement.fastPayment, comment: statement.comment)
+        let productStatement = ProductStatementProxy(paymentDetailType: paymentDetailType, documentId: documentId, svgImage: svgImageData, merchantName: merchantName, groupName: groupName, mcc: mcc, amount: amount, currencyCode: currency, tranDate: tranDate, foreignPhoneNumber: foreignPhoneNumber, documentComment: documentComment, operationType: operationType, fastPayment: statement.fastPayment, comment: statement.comment)
         
         self.init(productStatement: productStatement, product: product)
     }
@@ -780,7 +716,9 @@ extension OperationDetailViewModel {
     
     static let sampleComplete: OperationDetailViewModel = {
         
-        var viewModel = OperationDetailViewModel(productStatement: .init(paymentDetailType: .sfp, documentId: 0, svgImage: Image(uiImage: UIImage(named: "Operation Group Sample")!), merchantName: "Merchant Name", groupName: "Group Name", mcc: 234, amount: 1234, currencyCode: "RUS", tranDate: Date(), foreignPhoneNumber: nil, documentComment: nil, operationType: .debit, fastPayment: nil, comment: nil), product: UserAllCardsModel())!
+        let productData = ProductData(id: 10002585800, productType: .card, number: "4444555566661122", numberMasked: "4444-XXXX-XXXX-1122", accountNumber: "40817810000000000001", balance: 1000123, balanceRub: nil, currency: "RUB", mainField: "Gold", additionalField: "Зарплатная", customName: "Моя карта", productName: "VISA REWARDS R-5", openDate: nil, ownerId: 10001639855, branchId: 2000, allowCredit: true, allowDebit: true, extraLargeDesign: .init(description: "string"), largeDesign: .init(description: "string"), mediumDesign: .init(description: "string"), smallDesign: .init(description: "string"), fontDesignColor: .init(description: "FFFFFF"), background: [.init(description: "FFBB36")])
+        
+        var viewModel = OperationDetailViewModel(productStatement: .init(paymentDetailType: .sfp, documentId: 0, svgImage: Image(uiImage: UIImage(named: "Operation Group Sample")!), merchantName: "Merchant Name", groupName: "Group Name", mcc: 234, amount: 1234, currencyCode: "RUS", tranDate: Date(), foreignPhoneNumber: nil, documentComment: nil, operationType: .debit, fastPayment: nil, comment: nil), product: productData)!
         
         viewModel.header = HeaderViewModel(logo: viewModel.header.logo, status: .success, title: viewModel.header.title,  category: viewModel.header.category)
         
@@ -796,7 +734,9 @@ extension OperationDetailViewModel {
     
     static let sampleMin: OperationDetailViewModel = {
        
-        var viewModel = OperationDetailViewModel(productStatement: .init(paymentDetailType: .sfp, documentId: 0, svgImage: Image(uiImage: UIImage(named: "Operation Group Sample")!), merchantName: "Merchant Name", groupName: "Group Name", mcc: 234, amount: 1234, currencyCode: "RUS", tranDate: Date(), foreignPhoneNumber: nil, documentComment: nil, operationType: .debit, fastPayment: nil, comment: nil), product: UserAllCardsModel())!
+        let productData = ProductData(id: 10002585800, productType: .card, number: "4444555566661122", numberMasked: "4444-XXXX-XXXX-1122", accountNumber: "40817810000000000001", balance: 1000123, balanceRub: nil, currency: "RUB", mainField: "Gold", additionalField: "Зарплатная", customName: "Моя карта", productName: "VISA REWARDS R-5", openDate: nil, ownerId: 10001639855, branchId: 2000, allowCredit: true, allowDebit: true, extraLargeDesign: .init(description: "string"), largeDesign: .init(description: "string"), mediumDesign: .init(description: "string"), smallDesign: .init(description: "string"), fontDesignColor: .init(description: "FFFFFF"), background: [.init(description: "FFBB36")])
+        
+        var viewModel = OperationDetailViewModel(productStatement: .init(paymentDetailType: .sfp, documentId: 0, svgImage: Image(uiImage: UIImage(named: "Operation Group Sample")!), merchantName: "Merchant Name", groupName: "Group Name", mcc: 234, amount: 1234, currencyCode: "RUS", tranDate: Date(), foreignPhoneNumber: nil, documentComment: nil, operationType: .debit, fastPayment: nil, comment: nil), product: productData)!
         
         viewModel.header = HeaderViewModel(logo: viewModel.header.logo, status: nil, title: viewModel.header.title,  category: nil)
         

@@ -26,8 +26,8 @@ class ProductStatementDataTests: XCTestCase {
         let result = try decoder.decode(ProductStatementData.self, from: json)
         
         // then
-        XCTAssertEqual(result.MCC, 3245)
-        XCTAssertEqual(result.accountID, 10004111477)
+        XCTAssertEqual(result.mcc, 3245)
+        XCTAssertEqual(result.accountId, 10004111477)
         XCTAssertEqual(result.accountNumber, "70601810711002740401")
         XCTAssertEqual(result.amount, 144.21)
         XCTAssertEqual(result.cardTranNumber, "4256901080508437")
@@ -37,13 +37,11 @@ class ProductStatementDataTests: XCTestCase {
         XCTAssertEqual(result.currencyCodeNumeric, 810)
 
         //"2022-01-20T13:44:17.810Z"
-        XCTAssertEqual(calendar.component(.year, from: result.date), 2022)
-        XCTAssertEqual(calendar.component(.month, from: result.date), 01)
-        XCTAssertEqual(calendar.component(.day, from: result.date), 20)
-        
+        XCTAssertEqual(result.date, Date(timeIntervalSince1970: TimeInterval(1648512000000 / 1000)))
+
         XCTAssertEqual(result.deviceCode, "string")
         XCTAssertEqual(result.documentAmount, 144.21)
-        XCTAssertEqual(result.documentID, 10230444722)
+        XCTAssertEqual(result.documentId, 10230444722)
         XCTAssertEqual(result.fastPayment, fastPayment)
         XCTAssertEqual(result.groupName, "Прочие операции")
         XCTAssertEqual(result.isCancellation, false)
@@ -57,10 +55,7 @@ class ProductStatementDataTests: XCTestCase {
         XCTAssertEqual(result.svgImage, SVGImageData.init(description: "string"))
         XCTAssertEqual(result.terminalCode, "41010601")
         
-        //"2022-01-20T13:44:17.810Z"
-        XCTAssertEqual(calendar.component(.year, from: result.tranDate), 2022)
-        XCTAssertEqual(calendar.component(.month, from: result.tranDate), 01)
-        XCTAssertEqual(calendar.component(.day, from: result.tranDate), 20)
+        XCTAssertEqual(result.tranDate, Date(timeIntervalSince1970: TimeInterval(1648512000000 / 1000)))
         
         XCTAssertEqual(result.type, OperationEnvironment.inside)
     }

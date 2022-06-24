@@ -12,7 +12,7 @@ extension ServerCommands {
     enum PushDeviceController {
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/PushDeviceController/registerPushDeviceForUserUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/PushDeviceController/registerPushDeviceForUserUsingPOST
          */
         struct RegisterPushDeviceForUser: ServerCommand {
 
@@ -38,7 +38,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/PushDeviceController/installPushDeviceUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/PushDeviceController/installPushDeviceUsingPOST
          */
         struct InstallPushDevice: ServerCommand {
 
@@ -51,11 +51,13 @@ extension ServerCommands {
             
             struct Payload: Encodable {
                 
-                let cryptoVersion: String
+                let cryptoVersion: String?
                 let model: String
                 let operationSystem: String = "IOS"
                 let pushDeviceId: String
                 let pushFcmToken: String
+                let operationSystemVersion: String?
+                let appVersion: String?
             }
             
             struct Response: ServerResponse {
@@ -73,7 +75,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/PushDeviceController/uninstallPushDeviceUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/PushDeviceController/uninstallPushDeviceUsingPOST
          */
         struct UninstallPushDevice: ServerCommand {
 

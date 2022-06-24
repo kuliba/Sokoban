@@ -5,7 +5,7 @@
 	  "amount": 144.21,
 	  "comment": "Перевод денежных средств. НДС не облагается.",
 	  "currencyCodeNumeric": 810,
-	  "date": "2022-02-03T08:52:38.454Z",
+	  "date": 1648512000000,
 	  "fastPayment": {
 		"documentComment": "string",
 		"foreignBankBIC": "044525491",
@@ -22,7 +22,7 @@
 	  "operationType": "DEBIT",
 	  "paymentDetailType": "BETWEEN_THEIR",
 	  "svgImage": "string",
-	  "tranDate": "2022-02-03T08:52:38.454Z",
+	  "tranDate": 1648512000000,
 	  "type": "INSIDE"
 	}
   ],

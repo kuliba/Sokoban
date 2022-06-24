@@ -13,7 +13,7 @@ extension ServerCommands {
     enum DictionaryController {
  
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/dict/getAnywayOperatorsList
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/dict/getAnywayOperatorsList
          */
         struct GetAnywayOperatorsList: ServerCommand {
             
@@ -55,7 +55,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/dict/getBanks
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/dict/getBanks
          */
         struct GetBanks: ServerCommand {
             
@@ -97,7 +97,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/dict/getCountries
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/dict/getCountries
          */
         struct GetCountries: ServerCommand {
             
@@ -139,7 +139,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/dict/getCurrencyList
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/dict/getCurrencyList
          */
         struct GetCurrencyList: ServerCommand {
             
@@ -181,7 +181,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getFMSListUsingGET
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getFMSListUsingGET
          */
         struct GetFMSList: ServerCommand {
             
@@ -233,7 +233,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/dict/getFSSPDebtList
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/dict/getFSSPDebtList
          */
         struct GetFSSPDebtList: ServerCommand {
             
@@ -285,7 +285,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/dict/getFSSPDocumentList
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/dict/getFSSPDocumentList
          */
         struct GetFSSPDocumentList: ServerCommand {
             
@@ -337,7 +337,7 @@ extension ServerCommands {
         }
                 
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getFTSListUsingGET
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getFTSListUsingGET
          */
         struct GetFTSList: ServerCommand {
             
@@ -389,7 +389,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/dict/getFullBankInfoList
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/dict/getFullBankInfoList
          */
         struct GetFullBankInfoList: ServerCommand {
             
@@ -459,7 +459,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/dict/getMobileList
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/dict/getMobileList
          */
         struct GetMobileList: ServerCommand {
             
@@ -501,7 +501,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/dict/getMosParkingList
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/dict/getMosParkingList
          */
         struct GetMosParkingList: ServerCommand {
             
@@ -543,7 +543,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/dict/getPaymentSystemList
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/dict/getPaymentSystemList
          */
         struct GetPaymentSystemList: ServerCommand {
             
@@ -584,7 +584,7 @@ extension ServerCommands {
         }
         
          /*
-          https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getProductCatalogListUsingGET
+          https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getProductCatalogListUsingGET
           */
          struct GetProductCatalogList: ServerCommand {
 
@@ -630,7 +630,7 @@ extension ServerCommands {
          }
          
          /*
-          https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getProductCatalogImageUsingGET
+          https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getProductCatalogImageUsingGET
           */
          struct GetProductCatalogImage: ServerDownloadCommand {
 
@@ -651,7 +651,7 @@ extension ServerCommands {
          }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getBannerCatalogListUsingGet
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getBannerCatalogListUsingGet
          */
         struct GetBannerCatalogList: ServerCommand {
 
@@ -693,7 +693,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController//dict/getBannerCatalogImageUsingGet
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController//dict/getBannerCatalogImageUsingGet
          */
         struct GetBannerCatalogImage: ServerDownloadCommand {
 

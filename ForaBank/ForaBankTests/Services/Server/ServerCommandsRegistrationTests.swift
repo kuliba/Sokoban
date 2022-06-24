@@ -49,11 +49,12 @@ class ServerCommandsRegistrationTests: XCTestCase {
     
     //MARK: - DoRegistration
 
+    /*
     func testDoRegistration_Payload_Encoding() throws {
         
         // given
-        let command = ServerCommands.RegistrationContoller.DoRegistration(token: "", payload: .init(cryptoVersion: "1.0", model: "iPhone SE", pushDeviceId: "", pushFcmToken: ""))
-        let expected = "{\"cryptoVersion\":\"1.0\",\"model\":\"iPhone SE\",\"pushDeviceId\":\"\",\"operationSystem\":\"iOS\",\"pushFcmToken\":\"\"}"
+        let command = ServerCommands.RegistrationContoller.DoRegistration(token: "", payload: .init(cryptoVersion: "1.0", model: "iPhone SE", operationSystem: "IOS", pushDeviceId: "", pushFcmToken: ""))
+        let expected = "{\"cryptoVersion\":\"1.0\",\"model\":\"iPhone SE\",\"pushDeviceId\":\"\",\"operationSystem\":\"IOS\",\"pushFcmToken\":\"\"}"
         
         // when
         let result = try encoder.encode(command.payload)
@@ -62,7 +63,7 @@ class ServerCommandsRegistrationTests: XCTestCase {
         // then
         XCTAssertEqual(resultString, expected)
     }
-    
+    */
     
     func testDoRegistration_Response_Decoding() throws {
         
@@ -72,7 +73,7 @@ class ServerCommandsRegistrationTests: XCTestCase {
             return
         }
         let json = try Data(contentsOf: url)
-        let expected = ServerCommands.RegistrationContoller.DoRegistration.Response(statusCode: .ok, errorMessage: "string", data: EmptyData())
+        let expected = ServerCommands.RegistrationContoller.DoRegistration.Response(statusCode: .ok, errorMessage: "string", data: "string")
         
         // when
         let result = try decoder.decode(ServerCommands.RegistrationContoller.DoRegistration.Response.self, from: json)
@@ -110,10 +111,10 @@ class ServerCommandsRegistrationTests: XCTestCase {
             return
         }
         let json = try Data(contentsOf: url)
-        let expected = ServerCommands.RegistrationContoller.DoRegistration.Response(statusCode: .ok, errorMessage: "string", data: EmptyData())
+        let expected = ServerCommands.RegistrationContoller.SetDeviceSettings.Response(statusCode: .ok, errorMessage: "string", data: EmptyData())
         
         // when
-        let result = try decoder.decode(ServerCommands.RegistrationContoller.DoRegistration.Response.self, from: json)
+        let result = try decoder.decode(ServerCommands.RegistrationContoller.SetDeviceSettings.Response.self, from: json)
         
         // then
         XCTAssertEqual(result, expected)

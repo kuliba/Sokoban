@@ -35,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         UIApplication.shared.applicationIconBadgeNumber = 0
 
-        RealmConfiguration()
+//        RealmConfiguration()
 
         /// FirebaseApp configure
         var filePath = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist")!
@@ -50,12 +50,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         application.registerForRemoteNotifications()
         
         requestNotificationAuthorization(application: application)
-        customizeUiInApp()
+//        customizeUiInApp()
         
-        self.initRealmTimerParameters()
+//        self.initRealmTimerParameters()
         // Зарузка кэша
-        downloadCash.download()
+//        downloadCash.download()
+        
+        // send user interaction events to session agent
+        if let foraApplication = application as? ForaApplication {
+            
+            foraApplication.didTouchEvent = {
+                
+                self.model.sessionAgent.action.send(SessionAgentAction.Event.UserInteraction())
+            }
+        }
 
+        print("Lifecycle: LAUNCHED")
+        
         return true
     }
     

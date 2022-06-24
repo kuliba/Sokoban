@@ -69,6 +69,17 @@ extension Model {
                 switch response.statusCode {
                 case .ok:
                     guard let clientInfo = response.data else { return }
+                    
+                    //                    do {
+                    //                        try self.settingsAgent.store(clientInfo, type: .personal(.allData))
+                    //
+                    //                    } catch {
+                    //
+                    //                        //TODO: log
+                    //                        print(error.localizedDescription)
+                    //                    }
+                    
+                    self.userSettingData.value = .authorized(user: clientInfo)
                     self.action.send(ModelAction.Settings.GetClientInfo.Complete(user: clientInfo))
                 default:
                     //TODO: handle not ok server status

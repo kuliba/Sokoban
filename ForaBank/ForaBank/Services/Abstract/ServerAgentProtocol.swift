@@ -7,8 +7,11 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 protocol ServerAgentProtocol {
+    
+    var action: PassthroughSubject<Action, Never> { get }
     
     func executeCommand<Command: ServerCommand>(command: Command, completion: @escaping (Result<Command.Response, ServerAgentError>) -> Void)
     func executeDownloadCommand<Command: ServerDownloadCommand>(command: Command, completion: @escaping (Result<Command.Response, ServerAgentError>) -> Void)
@@ -123,4 +126,9 @@ struct ServerCommandParameter: CustomDebugStringConvertible {
     let value: String
     
     var debugDescription: String { "\(name), \(value)" }
+}
+
+enum ServerAgentAction {
+    
+    struct NetworkActivityEvent: Action {}
 }

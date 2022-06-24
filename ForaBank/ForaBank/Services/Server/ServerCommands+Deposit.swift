@@ -12,7 +12,7 @@ extension ServerCommands {
 	enum DepositController {
 
 		/*
-		 https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DepositController/getDepositInfoUsingPOST
+		 https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/DepositController/getDepositInfoUsingPOST
 		 */
 		struct GetDepositInfo: ServerCommand {
 
@@ -53,7 +53,7 @@ extension ServerCommands {
 		}
 
 		/*
-		 https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DepositController/getDepositStatementUsingPOST
+		 https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/DepositController/getDepositStatementUsingPOST
 		 */
 		struct GetDepositStatement: ServerCommand {
 
@@ -94,7 +94,7 @@ extension ServerCommands {
 		}
 
 		/*
-		 https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DepositController/openDepositUsingPOST
+		 https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/DepositController/openDepositUsingPOST
 		 */
 		struct OpenDeposit: ServerCommand {
 

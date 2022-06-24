@@ -12,7 +12,7 @@ extension ServerCommands {
     enum Default {
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/default/login.doUsingPOST
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/default/login.doUsingPOST
          */
         struct Login: ServerCommand {
 
@@ -20,10 +20,21 @@ extension ServerCommands {
             let endpoint = "/login.do"
             let method: ServerCommandMethod = .post
             let parameters: [ServerCommandParameter]? = nil
-            let payload: Payload? = nil
+            let payload: Payload?
             let timeout: TimeInterval? = nil
             
-            struct Payload: Encodable {}
+            struct Payload: Encodable {
+                
+                let cryptoVersion: String?
+                let appId: String
+                let pushDeviceId: String
+                let pushFcmToken: String
+                let serverDeviceGUID: String
+                let loginValue: String
+                let type: String
+                let operationSystemVersion: String?
+                let appVersion: String?
+            }
             
             struct Response: ServerResponse {
 
@@ -32,9 +43,10 @@ extension ServerCommands {
                 let data: EmptyData?
             }
             
-            internal init(token: String) {
+            internal init(token: String, payload: Payload) {
                 
                 self.token = token
+                self.payload = payload
             }
         }
     }

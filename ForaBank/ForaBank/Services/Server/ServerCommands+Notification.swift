@@ -12,7 +12,7 @@ extension ServerCommands {
     enum NotificationController {
 
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/NotificationController/changeNotificationStatus
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/NotificationController/changeNotificationStatus
          */
         struct ChangeNotificationStatus: ServerCommand {
 
@@ -51,7 +51,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/NotificationController/getNotificationsUsingGET
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/NotificationController/getNotificationsUsingGET
          */
         struct GetNotifications: ServerCommand {
 
@@ -71,7 +71,7 @@ extension ServerCommands {
                 let data: [NotificationData]?
             }
             
-            internal init(token: String, offset: Int?, limit: Int?, type: NotificationData.Kind, state: NotificationData.State) {
+            internal init(token: String, offset: Int?, limit: Int?, types: [NotificationData.Kind], states: [NotificationData.State]) {
                 
                 self.token = token
                 var parameters = [ServerCommandParameter]()
@@ -85,9 +85,21 @@ extension ServerCommands {
                     
                     parameters.append(.init(name: "limit", value: "\(limit)"))
                 }
+                // [SEND, PUSH, MAIL]
+                let typesList = types.reduce("", { partialResult, type in
+                    var updated = partialResult
+                    updated += "\(type.rawValue),"
+                    return updated
+                }).dropLast()
                 
-                parameters.append(.init(name: "notificationType", value: type.rawValue))
-                parameters.append(.init(name: "notificationState", value: state.rawValue))
+                let statesList = states.reduce("", { partialResult, state in
+                    var updated = partialResult
+                    updated += "\(state.rawValue),"
+                    return updated
+                }).dropLast()
+                
+                parameters.append(.init(name: "notificationType", value: "[\(typesList)]"))
+                parameters.append(.init(name: "notificationState", value: "[\(statesList)]"))
                 
                 self.parameters = parameters
             }

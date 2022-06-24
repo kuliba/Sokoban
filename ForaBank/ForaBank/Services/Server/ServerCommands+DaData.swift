@@ -12,7 +12,7 @@ extension ServerCommands {
     enum DaDataController {
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/rest/getPhoneInfo
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/rest/getPhoneInfo
          */
         struct GetPhoneInfo: ServerCommand {
 

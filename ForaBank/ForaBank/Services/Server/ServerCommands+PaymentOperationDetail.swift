@@ -12,7 +12,7 @@ extension ServerCommands {
 	enum PaymentOperationDetailContoller {
 		
 		/*
-		 https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/PaymentOperationDetailController/getAllLatestPaymentsUsingGET
+		 https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/PaymentOperationDetailController/getAllLatestPaymentsUsingGET
 		 */
 		struct GetAllLatestPayments: ServerCommand {
 			
@@ -49,7 +49,7 @@ extension ServerCommands {
 		}
 		
 		/*
-		 https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/PaymentOperationDetailController/getLatestInternetPaymentsUsingGET
+		 https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/PaymentOperationDetailController/getLatestInternetPaymentsUsingGET
 		 */
 		struct GetLatestInternetPayments: ServerCommand {
 			
@@ -77,7 +77,7 @@ extension ServerCommands {
 		}
 
 		/*
-		 https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/PaymentOperationDetailController/getLatestMobilePaymentsUsingGET
+		 https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/PaymentOperationDetailController/getLatestMobilePaymentsUsingGET
 		 */
 		struct GetLatestMobilePayments: ServerCommand {
 			
@@ -105,7 +105,7 @@ extension ServerCommands {
 		}
 
 		/*
-		 https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/PaymentOperationDetailController/getLatestPaymentsUsingGET
+		 https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/PaymentOperationDetailController/getLatestPaymentsUsingGET
 		 */
 		struct GetLatestPayments: ServerCommand {
 			
@@ -133,7 +133,7 @@ extension ServerCommands {
 		}
 
 		/*
-		 https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/PaymentOperationDetailController/getLatestPhonePaymentsUsingPOST
+		 https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/PaymentOperationDetailController/getLatestPhonePaymentsUsingPOST
 		 */
 		struct GetLatestPhonePayments: ServerCommand {
 			
@@ -164,7 +164,7 @@ extension ServerCommands {
 		}
 
 		/*
-		 https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/PaymentOperationDetailController/getLatestServicePaymentsUsingGET
+		 https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/PaymentOperationDetailController/getLatestServicePaymentsUsingGET
 		 */
 		struct GetLatestServicePayments: ServerCommand {
 			
@@ -192,7 +192,7 @@ extension ServerCommands {
 		}
 
 		/*
-		 https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/PaymentOperationDetailController/getLatestTransportPaymentsUsingGET
+		 https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/PaymentOperationDetailController/getLatestTransportPaymentsUsingGET
 		 */
 		struct GetLatestTransportPayments: ServerCommand {
 			
@@ -220,7 +220,7 @@ extension ServerCommands {
 		}
 
 		/*
-		 https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/PaymentOperationDetailController/getOperationDetailUsingPOST
+		 https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/PaymentOperationDetailController/getOperationDetailUsingPOST
 		 */
 		struct GetOperationDetail: ServerCommand {
 			
@@ -251,7 +251,7 @@ extension ServerCommands {
 		}
 
 		/*
-		 https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/PaymentOperationDetailController/getPaymentCountriesUsingGET
+		 https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/PaymentOperationDetailController/getPaymentCountriesUsingGET
 		 */
 		struct GetPaymentCountries: ServerCommand {
 			

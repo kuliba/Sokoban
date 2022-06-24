@@ -91,6 +91,14 @@ extension ModelAction {
                 case failure(String)
             }
         }
+        
+        enum OperationDetail {
+            
+            struct Request: Action {
+                
+                let documentId: Int
+            }
+        }
     }
 }
 

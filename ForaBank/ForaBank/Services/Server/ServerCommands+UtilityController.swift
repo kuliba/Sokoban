@@ -12,7 +12,7 @@ extension ServerCommands {
     enum UtilityController {
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/csrf
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/csrf
          */
         struct Csrf: ServerCommand {
             
@@ -35,7 +35,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/getSessionTimeout
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/getSessionTimeout
          */
         struct GetSessionTimeout: ServerCommand {
             
@@ -52,7 +52,7 @@ extension ServerCommands {
                 
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
-                let data: Int
+                let data: Int?
             }
             
             internal init(token: String) {
@@ -62,7 +62,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/keyExchange
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/keyExchange
          */
         struct KeyExchange: ServerCommand {
             
@@ -95,7 +95,7 @@ extension ServerCommands {
         }
         
         /*
-         https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/rest/isLogin
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/rest/isLogin
          */
         struct IsLogin: ServerCommand {
             

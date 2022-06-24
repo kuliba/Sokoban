@@ -1,0 +1,41 @@
+{
+  "statusCode": 0,
+  "errorMessage": "string",
+  "data": {
+    "dynamicProductParamsList": [
+      {
+        "id": 10000192282,
+        "type": "CARD",
+        "dynamicParams": {
+          "customName": "Моя карта",
+          "balance": 1000123,
+          "balanceRUB": 1000123,
+          "status": "Действует",
+          "availableExceedLimit": 56305.61,
+          "debtAmount": 56305.61,
+          "totalDebtAmount": 56305.61,
+          "statusPC": "0"
+        }
+      },
+      {
+        "id": 10000192282,
+        "type": "ACCOUNT",
+        "dynamicParams": {
+          "customName": "Моя карта",
+          "balance": 1000123,
+          "balanceRUB": 1000123,
+          "status": "Действует"
+        }
+      },
+      {
+        "id": 10000192282,
+        "type": "DEPOSIT",
+        "dynamicParams": {
+          "customName": "Моя карта",
+          "balance": 1000123,
+          "balanceRUB": 1000123
+        }
+      }
+    ]
+  }
+}
