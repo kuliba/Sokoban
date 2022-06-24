@@ -61,7 +61,7 @@ class AuthPermissionsViewModel: ObservableObject {
         case .touch:
             buttons = [ButtonViewModel(title: "Использовать отпечаток", style: .accept,
                                        action: { [weak self] in
-                self?.action.send(AuthPermissionsViewModelAction.Confirm())
+                self?.action.send(AuthPermissionsViewModelAction.Confirm(sensorType: .touch))
             }),
                        ButtonViewModel(title: "Пропустить", style: .skip,
                                        action: { [weak self] in
@@ -71,7 +71,7 @@ class AuthPermissionsViewModel: ObservableObject {
         case .face:
             buttons = [ButtonViewModel(title: "Использовать Face ID", style: .accept,
                                        action: { [weak self] in
-                self?.action.send(AuthPermissionsViewModelAction.Confirm())
+                self?.action.send(AuthPermissionsViewModelAction.Confirm(sensorType: .face))
             }),
                        ButtonViewModel(title: "Пропустить", style: .skip,
                                        action: { [weak self] in
@@ -149,6 +149,10 @@ extension AuthPermissionsViewModel {
 
 enum AuthPermissionsViewModelAction {
     
-    struct Confirm: Action { }
+    struct Confirm: Action {
+        
+        let sensorType: BiometricSensorType
+    }
+    
     struct Skip: Action { }
 }
