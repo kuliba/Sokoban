@@ -10,7 +10,7 @@ import SwiftUI
 
 extension PaymentsCardView.ViewModel {
     
-    convenience init(parameterCard: Payments.ParameterCard) {
+    convenience init(parameterCard: Payments.ParameterCard, model: Model) {
         
         self.init(title: "",
                   cardIcon: Self.cardIconPlaceholder,
@@ -19,7 +19,7 @@ extension PaymentsCardView.ViewModel {
                   amount: "",
                   captionItems: [],
                   state: .normal,
-                  model: .emptyMock,
+                  model: model,
                   parameterCard: parameterCard)
         
         if let value = parameterCard.parameter.value,

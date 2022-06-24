@@ -336,7 +336,7 @@ class PaymentsOperationViewModel: ObservableObject {
                     with: parameterSelectSimple))
                 
             case let parameterCard as Payments.ParameterCard:
-                result.append(PaymentsCardView.ViewModel(parameterCard: parameterCard))
+                result.append(PaymentsCardView.ViewModel(parameterCard: parameterCard, model: model))
                 
             default:
                 continue
