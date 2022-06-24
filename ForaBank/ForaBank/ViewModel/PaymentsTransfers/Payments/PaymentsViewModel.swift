@@ -12,6 +12,7 @@ import Combine
 class PaymentsViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
+    var closeAction: (() -> Void )? = nil
     
     @Published var content: ContentType
     @Published var successViewModel: PaymentsSuccessViewModel?
@@ -107,6 +108,12 @@ class PaymentsViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 switch action {
+                    
+                case _ as PaymentsViewModelAction.Dismiss:
+                    withAnimation {
+                        closeAction?()
+                    }
+                    
                 case _ as PaymentsViewModelAction.Spinner.Show:
                     withAnimation {
                         spinner = .init(isAnimating: true)
