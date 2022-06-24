@@ -22,6 +22,7 @@ class UserAccountViewModel: ObservableObject {
     @Published var isLinkActive: Bool = false
     @Published var bottomSheet: BottomSheet?
     @Published var sheet: Sheet?
+    @Published var isShowExitAlert: AlertViewModel?
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
@@ -88,8 +89,9 @@ class UserAccountViewModel: ObservableObject {
                     print("Open SettingsAction")
                     
                 case _ as UserAccountModelAction.ExitAction:
-                    print("Open ExitAction")
-                    
+                    isShowExitAlert = AlertViewModel(title: "Выход", message: "Вы действительно хотите выйти из учетной записи?\nДля повторного входа Вам необходимо будет пройти повторную регистрацию", primaryButton: .destructive(Text("Выход"), action: {
+                        self.model.action.send(ModelAction.Auth.Logout())
+                    }), secondaryButton: .cancel(Text("Отмена")))
                 default:
                     break
                     
@@ -170,6 +172,25 @@ class UserAccountViewModel: ObservableObject {
             UserAccountPaymentsView.ViewModel(isCollapsed: false),
             UserAccountSecurityView.ViewModel(isActiveFaceId: false, isActivePush: true, isCollapsed: false)
         ]
+    }
+}
+
+extension UserAccountViewModel {
+    
+    struct AlertViewModel: Identifiable {
+        
+        let id = UUID()
+        let title: String
+        let message: String
+        let primaryButton: Alert.Button
+        let secondaryButton: Alert.Button
+        
+        internal init(title: String, message: String, primaryButton: Alert.Button, secondaryButton: Alert.Button) {
+            self.title = title
+            self.message = message
+            self.primaryButton = primaryButton
+            self.secondaryButton = secondaryButton
+        }
     }
 }
 

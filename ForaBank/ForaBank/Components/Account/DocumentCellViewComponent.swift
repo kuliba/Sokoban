@@ -66,12 +66,14 @@ struct DocumentCellView: View {
                         .font(.textBodyMM14200())
                         .foregroundColor(.textSecondary)
                         .multilineTextAlignment(.leading)
+                        .lineLimit(2)
                     
                     if let placeholder = viewModel.title {
                         
                         Text(verbatim: placeholder)
                             .font(.textBodyMR14200())
                             .foregroundColor(.textPlaceholder)
+                            .lineLimit(1)
                     }
                 }
             }

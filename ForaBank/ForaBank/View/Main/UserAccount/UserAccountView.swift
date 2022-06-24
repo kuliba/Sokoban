@@ -64,6 +64,9 @@ struct UserAccountView: View {
                 }
             }
         }
+        .alert(item: $viewModel.isShowExitAlert) { alert in
+            Alert(title: Text(alert.title), message: Text(alert.message), primaryButton: alert.primaryButton, secondaryButton: alert.secondaryButton)
+        }
         .sheet(item: $viewModel.sheet, content: { sheet in
             switch sheet.sheetType {
                 
