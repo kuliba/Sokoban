@@ -162,7 +162,8 @@ struct PaymentsTransfersView: View {
                     //TODO: как то нужно открыть не молным модальным откном, UIViewControllerTransitioningDelegate не работает
 
                     AnotherCardView(viewModel: model)
-                        .frame(height: 490)
+                        .edgesIgnoringSafeArea(.bottom)
+                        .frame(height: 540)
                         .navigationBarTitle("", displayMode: .inline)
 
                 case let .template(viewModel):

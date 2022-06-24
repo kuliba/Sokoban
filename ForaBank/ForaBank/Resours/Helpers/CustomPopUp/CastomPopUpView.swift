@@ -9,9 +9,9 @@ import UIKit
 import RealmSwift
 import AnyFormatKit
 
-class MemeDetailVC : AddHeaderImageViewController {
+class MemeDetailVC: UIViewController {
 
-    var titleLabel = UILabel(text: "Между своими", font: .boldSystemFont(ofSize: 18), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
+    var titleLabel = UILabel(text: "На другую карту", font: .boldSystemFont(ofSize: 18), color: #colorLiteral(red: 0.1098039216, green: 0.1098039216, blue: 0.1098039216, alpha: 1))
     
     var onlyMy = false
     var onlyCard = true
@@ -89,7 +89,7 @@ class MemeDetailVC : AddHeaderImageViewController {
         setupListFrom()
         setupListTo()
                 
-        paymentTemplate == nil ? self.addHeaderImage() : nil
+//        paymentTemplate == nil ? self.addHeaderImage() : nil
         
         self.view.layer.cornerRadius = 16
         self.view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
@@ -211,7 +211,7 @@ class MemeDetailVC : AddHeaderImageViewController {
     
     func updateObjectWithNotification(cardId: Int? = nil) {
         var products: [UserAllCardsModel] = []
-        let types: [ProductType] = [.card]
+        let types: [ProductType] = [.card, .account]
         types.forEach { type in
             products.append(contentsOf: self.model.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
         }
