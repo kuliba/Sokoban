@@ -19,8 +19,8 @@ extension CurrencySwapView {
         let action: PassthroughSubject<Action, Never> = .init()
 
         let quotesInfo: String
-        let haveCurrencySwap: SwapViewModel
-        let getCurrencySwap: SwapViewModel
+        let haveCurrencySwap: CurrencyViewModel
+        let getCurrencySwap: CurrencyViewModel
 
         private var bindings = Set<AnyCancellable>()
 
@@ -28,15 +28,7 @@ extension CurrencySwapView {
             action.send(CurrencySwapAction.Button.Tapped())
         }
 
-        var bottomTransition: AnyTransition {
-            .asymmetric(insertion: .move(edge: .bottom), removal: .identity)
-        }
-
-        var topTransition: AnyTransition {
-            .asymmetric(insertion: .move(edge: .top), removal: .identity)
-        }
-
-        init(quotesInfo: String, haveCurrencySwap: SwapViewModel, getCurrencySwap: SwapViewModel) {
+        init(quotesInfo: String, haveCurrencySwap: CurrencyViewModel, getCurrencySwap: CurrencyViewModel) {
 
             self.quotesInfo = quotesInfo
             self.haveCurrencySwap = haveCurrencySwap
@@ -70,7 +62,7 @@ extension CurrencySwapView.ViewModel {
 
     // MARK: - Swap
 
-    class SwapViewModel: ObservableObject {
+    class CurrencyViewModel: ObservableObject {
 
         let icon: Image
         let title: String
@@ -146,9 +138,9 @@ extension CurrencySwapView {
 
     // MARK: - Swap
 
-    struct SwapView: View {
+    struct CurrencyView: View {
 
-        @ObservedObject var viewModel: ViewModel.SwapViewModel
+        @ObservedObject var viewModel: ViewModel.CurrencyViewModel
 
         var body: some View {
 
@@ -185,17 +177,21 @@ extension CurrencySwapView {
 
         @ObservedObject var viewModel: ViewModel
 
+        var bottomTransition: AnyTransition {
+            .asymmetric(insertion: .move(edge: .bottom), removal: .identity)
+        }
+
         var body: some View {
 
             if viewModel.isSwapCurrency == true {
 
-                CurrencySwapView.SwapView(viewModel: viewModel.haveCurrencySwap)
-                    .transition(viewModel.bottomTransition)
+                CurrencySwapView.CurrencyView(viewModel: viewModel.haveCurrencySwap)
+                    .transition(bottomTransition)
 
             } else {
 
-                CurrencySwapView.SwapView(viewModel: viewModel.getCurrencySwap)
-                    .transition(viewModel.bottomTransition)
+                CurrencySwapView.CurrencyView(viewModel: viewModel.getCurrencySwap)
+                    .transition(bottomTransition)
             }
         }
     }
@@ -206,17 +202,21 @@ extension CurrencySwapView {
 
         @ObservedObject var viewModel: ViewModel
 
+        var topTransition: AnyTransition {
+            .asymmetric(insertion: .move(edge: .top), removal: .identity)
+        }
+
         var body: some View {
 
             if viewModel.isSwapCurrency == true {
 
-                CurrencySwapView.SwapView(viewModel: viewModel.getCurrencySwap)
-                    .transition(viewModel.topTransition)
+                CurrencySwapView.CurrencyView(viewModel: viewModel.getCurrencySwap)
+                    .transition(topTransition)
 
             } else {
 
-                CurrencySwapView.SwapView(viewModel: viewModel.haveCurrencySwap)
-                    .transition(viewModel.topTransition)
+                CurrencySwapView.CurrencyView(viewModel: viewModel.haveCurrencySwap)
+                    .transition(topTransition)
             }
         }
     }

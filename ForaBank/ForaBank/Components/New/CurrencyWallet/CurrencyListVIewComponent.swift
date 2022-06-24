@@ -10,7 +10,7 @@ import Combine
 
 // MARK: - ViewModel
 
-extension CurrencyListVIew {
+extension CurrencyListView {
 
     class ViewModel: ObservableObject {
 
@@ -29,7 +29,7 @@ extension CurrencyListVIew {
     }
 }
 
-extension CurrencyListVIew.ViewModel {
+extension CurrencyListView.ViewModel {
 
     // MARK: - Item
 
@@ -70,7 +70,7 @@ extension CurrencyListVIew.ViewModel {
 
 // MARK: - View
 
-struct CurrencyListVIew: View {
+struct CurrencyListView: View {
 
     @ObservedObject var viewModel: ViewModel
 
@@ -93,7 +93,7 @@ struct CurrencyListVIew: View {
     }
 }
 
-extension CurrencyListVIew {
+extension CurrencyListView {
 
     // MARK: - Item
 
@@ -188,11 +188,11 @@ enum CurrencyListAction {
 
 // MARK: - Previews
 
-struct CurrencyListVIewComponent_Previews: PreviewProvider {
+struct CurrencyListViewComponent_Previews: PreviewProvider {
 
     static var previews: some View {
 
-        CurrencyListVIew(viewModel: .init(items: [
+        CurrencyListView(viewModel: .init(items: [
             .init(icon: .init("Flag USD"),
                   currencyType: "USD",
                   rateBuy: "68.19",
