@@ -3209,7 +3209,6 @@
 			path = DepositCalculator;
 			sourceTree = "<group>";
 		};
-		503F074F28252E0C00E84A77 /* Roboto */ = {
 		0C6508CD28299B4D0058916A /* Payments&Transfers */ = {
 			isa = PBXGroup;
 			children = (
@@ -3387,6 +3386,8 @@
 				503F075528252E1B00E84A77 /* Inter-SemiBold.ttf */,
 			);
 			path = Inter;
+            sourceTree = "<group>";
+        };
 		509EE0E0285F852C002281BF /* Keyboard */ = {
 			isa = PBXGroup;
 			children = (
