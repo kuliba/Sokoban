@@ -48,6 +48,7 @@ extension DateFormatter {
     static let minutsAndSecond: DateFormatter = {
         
         let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ru_RU")
         formatter.timeZone = TimeZone(identifier: "UTC")
         formatter.dateFormat = "HH:mm"
         

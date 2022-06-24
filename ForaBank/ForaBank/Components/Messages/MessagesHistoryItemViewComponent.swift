@@ -31,7 +31,7 @@ extension MessagesHistoryItemView {
         internal init(notification: NotificationData) {
             
             self.id = notification.id
-            self.icon = Image.ic24Slash
+            self.icon = Image.ic24MoreHorizontal
             self.title = notification.title
             self.content = notification.text
             self.time = DateFormatter.minutsAndSecond.string(from: notification.date)
@@ -47,7 +47,7 @@ struct MessagesHistoryItemView: View {
     
     var body: some View {
         
-        HStack(alignment: .top, spacing: 20) {
+        HStack(alignment: .top) {
             
             VStack(alignment: .center) {
                 viewModel.icon
@@ -59,7 +59,7 @@ struct MessagesHistoryItemView: View {
                 Spacer()
             }
             
-            VStack(alignment: .leading, spacing: 4)  {
+            VStack(alignment: .leading)  {
                 
                 Text(viewModel.title)
                     .font(.textH4M16240())
@@ -68,13 +68,15 @@ struct MessagesHistoryItemView: View {
                 Text(viewModel.content)
                     .font(.textBodySR12160())
                     .foregroundColor(.gray)
+                    .lineLimit(2)
                 
                 Text(viewModel.time)
                     .font(.textBodySR12160())
                     .foregroundColor(.gray)
+                    .padding(.top, 4)
             }
             Spacer()
-        }
+        } .padding(.trailing, 19)
     }
 }
 
@@ -93,5 +95,5 @@ struct MessagesHistoryItemView_Previews: PreviewProvider {
 
 extension MessagesHistoryItemView.ViewModel {
     
-    static let sample = MessagesHistoryItemView.ViewModel(icon: Image.ic24Slash, title: "Срок вашей карты истекает 29.08.2021 г.", content: "Оставте он-лайн заявку или обратитесь в ближайшее отделение банка", time: "17:56")
+    static let sample = MessagesHistoryItemView.ViewModel(icon: Image.ic24MoreHorizontal, title: "Срок вашей карты истекает 29.08.2021 г.", content: "Оставте он-лайн заявку или обратитесь в ближайшее отделение банка", time: "17:56")
 }

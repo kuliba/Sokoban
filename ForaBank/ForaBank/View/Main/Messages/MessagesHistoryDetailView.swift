@@ -19,8 +19,10 @@ struct MessagesHistoryDetailView: View {
             
             model.icon
                 .resizable()
+                .frame(width: 24, height: 24)
+                .foregroundColor(.iconWhite)
+                .background(Circle().frame(width: 40, height: 40).foregroundColor(.bGIconRedLight))
                 .frame(width: 32, height: 32)
-                .foregroundColor(.mainColorsGray)
                 .background(Circle().frame(width: 64, height: 64).foregroundColor(.bGIconRedLight))
                 .padding(32)
             
