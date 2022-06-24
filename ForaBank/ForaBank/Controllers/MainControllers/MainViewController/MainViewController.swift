@@ -482,7 +482,7 @@ class MainViewController: UIViewController {
     }
     
     func setupData() {
-        
+       /*
         let baners = model.catalogBanners.value
         var items: [PaymentsModel] = []
         baners.forEach { baner in
@@ -496,10 +496,12 @@ class MainViewController: UIViewController {
             let cell = PaymentsModel(name: baner.productName, iconName: urlString, controllerName: baner.orderLink.absoluteString)
             items.append(cell)
         }
+        
         promoViewModels = items
         exchangeRatesViewModels = MockItems.returnCurrency()
         paymentsViewModels = MockItems.returnFastPay()
         openProductViewModels = MockItems.returnOpenProduct()
+        */
     }
     
     private func setupCollectionView() {

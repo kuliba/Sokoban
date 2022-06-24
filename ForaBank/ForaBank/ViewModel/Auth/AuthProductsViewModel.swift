@@ -111,7 +111,8 @@ class AuthProductsViewModel: ObservableObject {
         
         for product in products {
         
-            model.action.send(ModelAction.Auth.ProductImage.Request(endpoint: product.generalСondition.imageLink))
+            //FIXME: - posible wrong
+            model.action.send(ModelAction.General.DownloadImage.Request(endpoint: product.generalСondition.imageLink))
         }
     }
 }

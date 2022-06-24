@@ -122,6 +122,9 @@ class MainViewModel: ObservableObject {
                                 let url = URL(string: "https://promo.forabank.ru/")
                                 externalURL = url
                                 
+                            case .account:
+                                bottomSheet = .init(type: .openAccount(model))
+                                
                             default:
                                 break
                             }
@@ -132,6 +135,7 @@ class MainViewModel: ObservableObject {
                         
                     }.store(in: &bindings)
 
+                /*
             case let openProductSection as MainSectionOpenProductView.ViewModel:
                 openProductSection.action
                     .receive(on: DispatchQueue.main)
@@ -153,6 +157,7 @@ class MainViewModel: ObservableObject {
                         }
 
                     }.store(in: &bindings)
+                 */
                 
             case let fastPayment as MainSectionFastOperationView.ViewModel:
                 fastPayment.action

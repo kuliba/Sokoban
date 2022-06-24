@@ -13,8 +13,6 @@ class MainSectionViewModel: ObservableObject, Identifiable {
 
     let action: PassthroughSubject<Action, Never> = .init()
     
-    let action: PassthroughSubject<Action, Never> = .init()
-    
     var id: String { type.rawValue }
     var type: MainSectionType { fatalError("Implement in subclass")}
 }

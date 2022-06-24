@@ -18,8 +18,8 @@ class CustomPopUpWithRateView: UIViewController {
     
     var onlyMy = true
     var cardTo: UserAllCardsModel?
-    let model: Model = .shared
-    
+    var cardFrom: UserAllCardsModel?
+    var withProducts: Bool = true
     var paymentTemplate: PaymentTemplateData? = nil
     var depositClose: Bool = false
     var sumMax: Double?

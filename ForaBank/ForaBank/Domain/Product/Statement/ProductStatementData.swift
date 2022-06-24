@@ -50,6 +50,9 @@ extension ProductStatementData {
         let foreignName: String
         let foreignPhoneNumber: String
         let opkcid: String
+        let operTypeFP: String
+        let tradeName: String
+        let guid: String
     }
     
     enum Kind: String, Codable, Hashable {

@@ -9,7 +9,7 @@ import CoreMedia
 
 // MARK: - OpenAccountProductData
 
-struct OpenAccountProductData: Codable, Equatable, Cachable {
+struct OpenAccountProductData: Codable, Equatable {
 
     let currencyAccount: String
     let open: Bool

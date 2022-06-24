@@ -15,8 +15,10 @@ class ProductDepositData: ProductData {
     let accountId: Int
     let creditMinimumAmount: Double?
     let minimumBalance: Double?
+    let endDate: Date?
+    let endDateNf: Bool?
     
-    internal init(id: Int, productType: ProductType, number: String, numberMasked: String, accountNumber: String, balance: Double, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date, ownerId: Int, branchId: Int, allowCredit: Bool, allowDebit: Bool,extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], depositProductId: Int, depositId: Int, interestRate: Double, accountId: Int, creditMinimumAmount: Double, minimumBalance: Double) {
+    internal init(id: Int, productType: ProductType, number: String, numberMasked: String, accountNumber: String, balance: Double, balanceRub: Double?, currency: String, mainField: String, additionalField: String?, customName: String?, productName: String, openDate: Date, ownerId: Int, branchId: Int, allowCredit: Bool, allowDebit: Bool,extraLargeDesign: SVGImageData, largeDesign: SVGImageData, mediumDesign: SVGImageData, smallDesign: SVGImageData, fontDesignColor: ColorData, background: [ColorData], depositProductId: Int, depositId: Int, interestRate: Double, accountId: Int, creditMinimumAmount: Double, minimumBalance: Double, endDate: Date?, endDateNf: Bool?) {
         
         self.depositProductId = depositProductId
         self.depositId = depositId
@@ -24,6 +26,8 @@ class ProductDepositData: ProductData {
         self.accountId = accountId
         self.creditMinimumAmount = creditMinimumAmount
         self.minimumBalance = minimumBalance
+        self.endDate = endDate
+        self.endDateNf = endDateNf
         
         super.init(id: id, productType: productType, number: number, numberMasked: numberMasked, accountNumber: accountNumber, balance: balance, balanceRub: balanceRub, currency: currency, mainField: mainField, additionalField: additionalField, customName: customName, productName: productName, openDate: openDate, ownerId: ownerId, branchId: branchId, allowCredit: allowCredit, allowDebit: allowDebit, extraLargeDesign: extraLargeDesign, largeDesign: largeDesign, mediumDesign: mediumDesign, smallDesign: smallDesign, fontDesignColor: fontDesignColor, background: background)
     }
@@ -34,6 +38,8 @@ class ProductDepositData: ProductData {
         case depositId = "depositID"
         case accountId = "accountID"
         case interestRate, creditMinimumAmount, minimumBalance
+        case endDate
+        case endDateNf = "endDate_nf"
     }
     
     required init(from decoder: Decoder) throws {
@@ -44,6 +50,15 @@ class ProductDepositData: ProductData {
         accountId = try container.decode(Int.self, forKey: .accountId)
         creditMinimumAmount = try container.decodeIfPresent(Double.self, forKey: .creditMinimumAmount)
         minimumBalance = try container.decodeIfPresent(Double.self, forKey: .minimumBalance)
+        if let endDateValue = try container.decodeIfPresent(Int.self, forKey: .endDate) {
+            
+            endDate = Date(timeIntervalSince1970: TimeInterval(endDateValue / 1000))
+            
+        } else {
+            
+            endDate = nil
+        }
+        endDateNf = try container.decodeIfPresent(Bool.self, forKey: .endDateNf)
 
         try super.init(from: decoder)
     }
@@ -56,6 +71,11 @@ class ProductDepositData: ProductData {
         try container.encode(accountId, forKey: .accountId)
         try container.encodeIfPresent(creditMinimumAmount, forKey: .creditMinimumAmount)
         try container.encodeIfPresent(minimumBalance, forKey: .minimumBalance)
+        if let endDate = endDate {
+            
+            try container.encode(Int(endDate.timeIntervalSince1970) * 1000, forKey: .endDate)
+        }
+        try container.encodeIfPresent(endDateNf, forKey: .endDateNf)
 
         try super.encode(to: encoder)
     }

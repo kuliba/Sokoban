@@ -76,7 +76,7 @@ class OpenDepositViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] action in
                 switch action {
-                case let payload as ModelAction.Auth.ProductImage.Response:
+                case let payload as ModelAction.General.DownloadImage.Response:
                     switch payload.result {
                     case .success(let data):
                         
@@ -119,7 +119,7 @@ class OpenDepositViewModel: ObservableObject {
         
         for product in products {
             
-            model.action.send(ModelAction.Auth.ProductImage.Request(endpoint: product.imageEndpoint))
+            model.action.send(ModelAction.General.DownloadImage.Request(endpoint: product.imageEndpoint))
         }
     }
     
@@ -127,7 +127,7 @@ class OpenDepositViewModel: ObservableObject {
         
         for product in products {
             
-            model.action.send(ModelAction.Auth.ProductImage.Request(endpoint: product.generalСondition.imageLink))
+            model.action.send(ModelAction.General.DownloadImage.Request(endpoint: product.generalСondition.imageLink))
         }
     }
 }

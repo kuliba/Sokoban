@@ -24,7 +24,7 @@ class DepositInfoDataItem: Decodable, Equatable {
 	let termDay: String
     let sumPayPrc: Double?
     
-    internal init(balance: Double, dateEnd: Date, dateNext: Date, dateOpen: Date, id: Int, initialAmount: Double, interestRate: Double, sumAccInt: Double, sumCredit: Double?, sumDebit: Double?, sumPayInt: Double, termDay: String) {
+    internal init(balance: Double, dateEnd: Date, dateNext: Date, dateOpen: Date, id: Int, initialAmount: Double, interestRate: Double, sumAccInt: Double, sumCredit: Double?, sumDebit: Double?, sumPayInt: Double, termDay: String, sumPayPrc: Double?) {
         
         self.id = id
         self.balance = balance
@@ -38,11 +38,12 @@ class DepositInfoDataItem: Decodable, Equatable {
         self.sumDebit = sumDebit
         self.sumPayInt = sumPayInt
         self.termDay = termDay
+        self.sumPayPrc = sumPayPrc
     }
     
     private enum CodingKeys: String, CodingKey {
         
-        case balance, dateEnd, dateNext, dateOpen, id, initialAmount, interestRate, sumAccInt, sumCredit, sumDebit, sumPayInt, termDay
+        case balance, dateEnd, dateNext, dateOpen, id, initialAmount, interestRate, sumAccInt, sumCredit, sumDebit, sumPayInt, termDay, sumPayPrc
     }
     
     required init(from decoder: Decoder) throws {
@@ -67,6 +68,7 @@ class DepositInfoDataItem: Decodable, Equatable {
         sumDebit = try container.decodeIfPresent(Double.self, forKey: .sumDebit)
         sumPayInt = try container.decode(Double.self, forKey: .sumPayInt)
         termDay = try container.decode(String.self, forKey: .termDay)
+        sumPayPrc = try container.decodeIfPresent(Double.self, forKey: .sumPayPrc)
     }
     
     static func == (lhs: DepositInfoDataItem, rhs: DepositInfoDataItem) -> Bool {

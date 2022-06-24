@@ -55,7 +55,7 @@ extension ModelAction {
             
             enum Response: Action {
                 
-                case complete(name: String)
+                case complete(productId: ProductData.ID, name: String)
                 case failed(message: String)
             }
         }

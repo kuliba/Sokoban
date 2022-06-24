@@ -593,13 +593,6 @@ extension ContactInputViewController: EPPickerDelegate {
         func epContactPicker(_: EPContactsPicker, didCancel error : NSError) {
             print("User canceled the selection");
         }
-        
-        func epContactPicker(_: EPContactsPicker, didSelectMultipleContacts contacts: [EPContact]) {
-            print("The following contacts are selected")
-            for contact in contacts {
-                print("\(contact.displayName())")
-            }
-        }
     
     func epUserPhone(_ phone: String) {
         var numbers = phone.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)

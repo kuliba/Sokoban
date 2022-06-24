@@ -88,10 +88,12 @@ extension MainViewController: UICollectionViewDelegate {
         case .openProduct:
             if indexPath.row == 1 {
                 
+                /*
                 let vc = OpenProductHostingViewController(with: .init(self.model, products: self.model.depositsProducts.value, style: .deposit))
                 vc.hidesBottomBarWhenPushed = true
                 let navigationViewController = UINavigationController(rootViewController: vc)
                 present(navigationViewController, animated: true)
+                 */
 
             } else {
                 

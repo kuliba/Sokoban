@@ -36,7 +36,7 @@ class OpenProductViewModel: ObservableObject {
         
         self.depositId = depositId
         
-        let deposit = model.depositsProducts.value.first(where: { $0.depositProductID == depositId })!
+        let deposit = model.deposits.value.first(where: { $0.depositProductID == depositId })!
         
         self.productDetail = .init(name: deposit.name, detail: [.init(title: "Срок вклада", description: deposit.generalСondition.maxTermTxt), .init(title: "Процентная ставка", description: "до \(deposit.generalСondition.maxRate.currencyFormatterForMain()) %")], minAmount: .init(title: "Минимальная  сумма вклада", description: deposit.generalСondition.minSum.currencyFormatter()))
         
@@ -859,14 +859,14 @@ extension ProductDetailView {
             
             let vc = ConfurmOpenDepositViewController()
             
-            let deposit = viewModel.model.depositsProducts.value.first(where: { $0.depositProductID == viewModel.depositId })!
+            let deposit = viewModel.model.deposits.value.first(where: { $0.depositProductID == viewModel.depositId })!
             
             vc.product = proxyDepositProductData(data: deposit)
             
             var termRateSumTermRateList: [TermRateSumTermRateList] = []
             var termRateSumTermRateListCap: [TermRateSumTermRateList] = []
 
-            for i in viewModel.model.depositsProducts.value.first(where: { $0.depositProductID == viewModel.depositId })!.termRateList {
+            for i in viewModel.model.deposits.value.first(where: { $0.depositProductID == viewModel.depositId })!.termRateList {
                 
                 if let termList = i.termRateSum
                     .compactMap({$0})
@@ -883,7 +883,7 @@ extension ProductDetailView {
             
             vc.choosenRateList = termRateSumTermRateList
 
-            if let capitalization = viewModel.calculator.capitalization, capitalization.isOn, let capList = viewModel.model.depositsProducts.value.first(where: { $0.depositProductID == viewModel.depositId })!.termRateCapList {
+            if let capitalization = viewModel.calculator.capitalization, capitalization.isOn, let capList = viewModel.model.deposits.value.first(where: { $0.depositProductID == viewModel.depositId })!.termRateCapList {
                 
                 for i in capList {
                     

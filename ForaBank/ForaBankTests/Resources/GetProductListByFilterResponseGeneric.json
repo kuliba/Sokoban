@@ -62,6 +62,8 @@
       "largeDesign": "string",
       "background": ["FFBB36"],
       "openDate": 1648512000000,
+      "endDate": 1648512000000,
+      "endDate_nf": true,
       "branchId": 2000,
       "depositProductID": 10000003006,
       "depositID": 10002585800,

@@ -25,6 +25,8 @@
                 "largeDesign": "string",
                 "background": ["FFBB36"],
                 "openDate": 1648512000000,
+                "endDate": 1648512000000,
+                "endDate_nf": true,
                 "branchId": 2000,
                 "externalID": 10000788533,
                 "name": "ВСФ",

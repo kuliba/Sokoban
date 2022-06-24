@@ -491,7 +491,7 @@ private extension TemplatesListViewModel {
         let optionAll = Option(id: categoryIndexAll, name: "Все")
         options.insert(optionAll, at: 0)
         
-        return OptionSelectorView.ViewModel(options: options, selected: optionAll.id, style: .template, horizontalPadding: 20)
+        return OptionSelectorView.ViewModel(options: options, selected: optionAll.id, style: .template)
     }
     
     func isCategorySelectorContainsCategory(categoryId: Option.ID) -> Bool {

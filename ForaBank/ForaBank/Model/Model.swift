@@ -619,11 +619,6 @@ private extension Model {
             self.catalogBanners.value = catalogBanner
         }
         
-        if let depositsProducts = localAgent.load(type: [DepositProductData].self) {
-            
-            self.depositsProducts.value = depositsProducts
-        }
-        
         if let currency = localAgent.load(type: [CurrencyData].self) {
             
             self.currencyList.value = currency

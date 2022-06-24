@@ -21,7 +21,10 @@
         "foreignBankName": "КУ ООО ПИР Банк - ГК \\\"АСВ\\\"",
         "foreignName": "Петров Петр Петрович",
         "foreignPhoneNumber": "70115110217",
-        "opkcid": "A1355084612564010000057CAFC75755"
+        "opkcid": "A1355084612564010000057CAFC75755",
+        "operTypeFP": "string",
+        "tradeName": "string",
+        "guid": "string"
       },
       "groupName": "Прочие операции",
       "isCancellation": false,
