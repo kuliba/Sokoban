@@ -21,7 +21,6 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
     var byCompany = false
     var paymentTemplate: PaymentTemplateData? = nil
     var viewModel = ConfirmViewControllerModel(type: .requisites)
-    
     var selectedBank: BankFullInfoList? {
         didSet {
             guard let bank = selectedBank else {
@@ -275,6 +274,9 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
                 }
             }
         }
+        
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
     }
     
     override func viewDidLoad() {
@@ -283,8 +285,6 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         loadCard()
         setupUI()
         setupActions()
-        IQKeyboardManager.shared.enable = true
-        IQKeyboardManager.shared.enableAutoToolbar = true
         
     }
     
@@ -543,10 +543,25 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         hideView(cardListView, needHide: true)
     }
     
+    @objc func onTouchBackButton() {
+            viewModel.closeAction()
+    }
     
     func setupUI() {
         
-        paymentTemplate == nil ? self.addCloseButton() : addBackButton()
+        if paymentTemplate != nil {
+            
+            addBackButton()
+        } else {
+            
+            let button = UIBarButtonItem(image: UIImage(systemName: "xmark"),
+                                         landscapeImagePhone: nil,
+                                         style: .done,
+                                         target: self,
+                                         action: #selector(onTouchBackButton))
+            button.tintColor = .black
+            navigationItem.leftBarButtonItem = button
+        }
         
         view.backgroundColor = .white
         let saveAreaView = UIView()
@@ -557,6 +572,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         view.addSubview(bottomView)
         
         self.navigationItem.titleView = setTitle(title: "Перевести", subtitle: "Человеку или организации")
+        self.navigationController?.navigationBar.backgroundColor = .white
         
         //        bottomView.currencySymbol = "₽"
         

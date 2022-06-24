@@ -10,13 +10,21 @@ import SwiftUI
 
 struct TransferByPhoneView: UIViewControllerRepresentable {
     
-    func makeUIViewController(context: Context) -> ContactsViewController {
+    let viewModel: TransferByPhoneViewModel
+    
+    func makeUIViewController(context: Context) -> UINavigationController {
         
         let vc = ContactsViewController()
         vc.modalPresentationStyle = .custom
-  
-        return vc
+        vc.viewModel = viewModel
+        let navigation = UINavigationController(rootViewController: vc)
+        return navigation
     }
     
-    func updateUIViewController(_ uiViewController: ContactsViewController, context: Context) {}
+    func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {}
+}
+
+struct TransferByPhoneViewModel {
+    
+    let closeAction: () -> Void
 }

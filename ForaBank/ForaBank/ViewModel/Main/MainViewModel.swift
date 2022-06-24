@@ -143,7 +143,9 @@ class MainViewModel: ObservableObject {
                             case .templates:
                                 sheet = .init(type: .templates(.init(model)))
                             case .byPhone:
-                                sheet = .init(type: .byPhone)
+                                sheet = .init(type: .byPhone(.init(closeAction: { [weak self] in
+                                    self?.sheet = nil
+                                })))
                             default:
                                 break
                             }
@@ -264,7 +266,7 @@ extension MainViewModel {
             case myProducts(MyProductsViewModel)
             case places(PlacesViewModel)
             case templates(TemplatesListViewModel)
-            case byPhone
+            case byPhone(TransferByPhoneViewModel)
         }
     }
     

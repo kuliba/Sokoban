@@ -113,8 +113,8 @@ struct MainView: View {
                 PlacesView(viewModel: placesViewModel)
             case .templates(let templatesViewModel):
                 TemplatesListView(viewModel: templatesViewModel)
-            case .byPhone:
-                TransferByPhoneView()
+            case .byPhone(let viewModel):
+                    TransferByPhoneView(viewModel: viewModel)
             }
         })
         .navigationBarTitle("", displayMode: .inline)

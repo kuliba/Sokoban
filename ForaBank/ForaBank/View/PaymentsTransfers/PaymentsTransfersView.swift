@@ -68,24 +68,38 @@ struct PaymentsTransfersView: View {
                             
                         case .chooseCountry(let model):
                             ChooseCountryView(viewModel: model)
+                                .edgesIgnoringSafeArea(.all)
                                 .navigationBarHidden(true)
-                                .introspectTabBarController(customize: { tabBarController in
-                                    hideTabBar(tabBarController)
-                                })
-                                .onDisappear {
-                                    showTabBar(self.tabBarController)
+                                .introspectTabBarController { (UITabBarController) in
+                                    hideTabBar(UITabBarController)
                                 }
+                                .onDisappear {
+                                    showTabBar(tabBarController)
+                                }
+
                         case let .transferByRequisites(transferByRequisitesViewModel):
                             TransferByRequisitesView(viewModel: transferByRequisitesViewModel)
                                 .edgesIgnoringSafeArea(.all)
-                                .navigationBarTitle(transferByRequisitesViewModel.title)
-                                .navigationBarTitle("", displayMode: .inline)
-                                .introspectTabBarController(customize: { tabBarController in
-                                    hideTabBar(tabBarController)
-                                })
-                                .onDisappear {
-                                    showTabBar(self.tabBarController)
+                                .navigationBarHidden(true)
+                                .introspectTabBarController { (UITabBarController) in
+                                    hideTabBar(UITabBarController)
                                 }
+                                .onDisappear {
+                                    showTabBar(tabBarController)
+                                }
+
+                        case let .phone(phoneData):
+                                
+                                PaymentPhoneView(viewModel: phoneData)
+                                    .edgesIgnoringSafeArea(.all)
+                                    .navigationBarHidden(true)
+                                    .introspectTabBarController { (UITabBarController) in
+                                        hideTabBar(UITabBarController)
+                                    }
+                                    .onDisappear {
+                                        showTabBar(tabBarController)
+                                    }
+     
                         case .internetOperators(let model):
                             OperatorsView(viewModel: model)
 
@@ -98,7 +112,6 @@ struct PaymentsTransfersView: View {
                         }
                     }
                 }
-                
             } //mainZStack
             .bottomSheet(item: $viewModel.sheet) {
             } content: { sheet in
@@ -106,53 +119,61 @@ struct PaymentsTransfersView: View {
                 switch sheet.type {
                 case let .exampleDetail(title):    //TODO:
                     ExampleDetailMock(title: title)
-                case let .phone(phoneData):
-                    PaymentPhoneView(viewModel: phoneData)
                 case let .country(countryData):
                     CountryPaymentView(viewModel: .init(countryData: countryData))
+                        .introspectTabBarController { (UITabBarController) in
+                            hideTabBar(UITabBarController)
+                        }
+                        .onDisappear {
+                            showTabBar(tabBarController)
+                        }
                     
                 case let .taxAndStateService(taxAndStateServiceVM):
                     PaymentsView(viewModel: taxAndStateServiceVM)
-                
-                case .transferByPhone:
-                    TransferByPhoneView()
-                        .navigationBarTitle("", displayMode: .inline)
-                        .introspectTabBarController(customize: { tabBarController in
-                            hideTabBar(tabBarController)
-                        })
-                        .onDisappear {
-                            showTabBar(self.tabBarController)
+                        .introspectTabBarController { (UITabBarController) in
+                            hideTabBar(UITabBarController)
                         }
+                        .onDisappear {
+                            showTabBar(tabBarController)
+                        }
+                
+                case let .transferByPhone(viewModel):
+                    TransferByPhoneView(viewModel: viewModel)
+                        .edgesIgnoringSafeArea(.all)
+                        .introspectTabBarController { (UITabBarController) in
+                            hideTabBar(UITabBarController)
+                        }
+                        .onDisappear {
+                            showTabBar(tabBarController)
+                        }
+        
                 case let .meToMe(viewModel):
                     MeToMeView(viewModel: viewModel)
-                        .frame(height: 490)
-                        .navigationBarTitle("", displayMode: .inline)
-                        .introspectTabBarController(customize: { tabBarController in
-                            hideTabBar(tabBarController)
-                        })
-                        .onDisappear {
-                            showTabBar(self.tabBarController)
+                        .edgesIgnoringSafeArea(.bottom)
+                        .frame(height: 540)
+                        .introspectTabBarController { (UITabBarController) in
+                            hideTabBar(UITabBarController)
                         }
+                        .onDisappear {
+                            showTabBar(tabBarController)
+                        }
+
                 case .anotherCard(let model):
                     //TODO: как то нужно открыть не молным модальным откном, UIViewControllerTransitioningDelegate не работает
 
                     AnotherCardView(viewModel: model)
                         .frame(height: 490)
                         .navigationBarTitle("", displayMode: .inline)
-                        .introspectTabBarController(customize: { tabBarController in
-                            hideTabBar(tabBarController)
-                        })
-                        .onDisappear {
-                            showTabBar(self.tabBarController)
-                        }
+
                 case let .template(viewModel):
                     TemplatesListView(viewModel: viewModel)
-                        .introspectTabBarController(customize: { tabBarController in
-                            hideTabBar(tabBarController)
-                        })
-                        .onDisappear {
-                            showTabBar(self.tabBarController)
+                        .introspectTabBarController { (UITabBarController) in
+                            hideTabBar(UITabBarController)
                         }
+                        .onDisappear {
+                            showTabBar(tabBarController)
+                        }
+
                 }
             }
             .navigationBarHidden(true)
@@ -162,14 +183,11 @@ struct PaymentsTransfersView: View {
     private func hideTabBar(_ tabBarController: UITabBarController) {
         self.tabBarController = tabBarController
         tabBarController.tabBar.isHidden = true
-        UIView.transition(with: tabBarController.view, duration: 0.35, options: .transitionCrossDissolve, animations: nil)
     }
     
     private func showTabBar(_ tabBarController: UITabBarController?) {
         if let tabBarController = tabBarController {
-            
             tabBarController.tabBar.isHidden = false
-            UIView.transition(with: tabBarController.view, duration: 0.35, options: .transitionCrossDissolve, animations: nil)
         }
     }
 }

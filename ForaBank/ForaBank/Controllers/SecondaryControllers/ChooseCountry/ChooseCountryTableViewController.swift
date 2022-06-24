@@ -125,7 +125,7 @@ class ChooseCountryTableViewController: UITableViewController {
         label.text = modalPresent ? "Выберите страну" : "В какую страну?"
         self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(customView: label)
         
-        let cancelButton = UIBarButtonItem(title: "Закрыть", style: .plain, target: self, action: #selector(onTouchCancelButton))
+        let cancelButton = UIBarButtonItem(title: "Закрыть", style: .plain, target: self, action: #selector(onTouchBackButton))
         
         self.navigationItem.rightBarButtonItem = cancelButton
         self.navigationItem.rightBarButtonItem?.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .normal)
@@ -155,7 +155,7 @@ class ChooseCountryTableViewController: UITableViewController {
         
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    @objc func onTouchCancelButton() {
+    @objc func onTouchBackButton() {
         if viewModel != nil {
             viewModel?.closeAction()
         } else {

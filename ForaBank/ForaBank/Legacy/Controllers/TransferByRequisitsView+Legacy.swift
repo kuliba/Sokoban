@@ -12,20 +12,21 @@ struct TransferByRequisitesView: UIViewControllerRepresentable {
     
     let viewModel: TransferByRequisitesViewModel
     
-    func makeUIViewController(context: Context) -> TransferByRequisitesViewController {
+    func makeUIViewController(context: Context) -> UINavigationController {
         
-        let popView = TransferByRequisitesViewController()
-        popView.modalPresentationStyle = .fullScreen
+        let vc = TransferByRequisitesViewController()
+        vc.modalPresentationStyle = .fullScreen
+        vc.viewModel.closeAction = viewModel.closeAction
+
+        let navigation = UINavigationController(rootViewController: vc)
+        return navigation
   
-        return popView
     }
     
-    func updateUIViewController(_ uiViewController: TransferByRequisitesViewController, context: Context) {}
+    func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {}
 }
 
 struct TransferByRequisitesViewModel {
     
-    var closeAction: () -> Void
-    let title = "Перевести"
-    let subtitle = "Человеку или организации"
+    let closeAction: () -> Void
 }

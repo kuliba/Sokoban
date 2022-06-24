@@ -17,6 +17,10 @@ class PaymentByPhoneViewModel {
     var selectedBank: BanksList? {
         getBank(id: bankId)
     }
+    
+    var setBackAction: Bool = false
+    var closeAction: () -> Void = {}
+
     var maskPhoneNumber: String? {
         guard let phoneNumber = phoneNumber else { return nil }
         var phoneNumberFixed = phoneNumber
@@ -80,10 +84,11 @@ class PaymentByPhoneViewModel {
         return nil
     }
     
-    internal init(phoneNumber: String? = nil, bankId: String = "", amount: Double? = 0) {
+    internal init(phoneNumber: String? = nil, bankId: String = "", amount: Double? = 0, closeAction: @escaping () -> Void = {}) {
         self.phoneNumber = phoneNumber
         self.bankId = bankId
         self.amount = amount
+        self.closeAction = closeAction
     }
     
     // Init for SPF with Template

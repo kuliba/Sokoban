@@ -19,6 +19,7 @@ class ConfirmViewControllerModel {
     var paymentSystem: PaymentSystemList?
     var templateButtonViewModel: TemplateButtonViewModel?
     var template: PaymentTemplateData?
+    var closeAction: () -> Void = {}
     
     var cardFromRealm: UserAllCardsModel? {
         didSet {

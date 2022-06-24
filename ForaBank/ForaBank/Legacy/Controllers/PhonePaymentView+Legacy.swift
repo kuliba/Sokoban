@@ -12,18 +12,15 @@ struct PaymentPhoneView: UIViewControllerRepresentable {
     
     let viewModel: PaymentByPhoneViewModel
     
-    func makeUIViewController(context: Context) -> PaymentByPhoneViewController {
+    func makeUIViewController(context: Context) -> UINavigationController {
         
-        let vc = PaymentByPhoneViewController(viewModel: PaymentByPhoneViewModel(phoneNumber: viewModel.phoneNumber, bankId: viewModel.bankId))
+        let vc = PaymentByPhoneViewController(viewModel: PaymentByPhoneViewModel(phoneNumber: viewModel.phoneNumber, bankId: viewModel.bankId, closeAction: viewModel.closeAction))
         vc.modalPresentationStyle = .fullScreen
-  
-        return vc
+        vc.viewModel.setBackAction = true
+        let navigation = UINavigationController(rootViewController: vc)
+        return navigation
+
     }
     
-    func updateUIViewController(_ uiViewController: PaymentByPhoneViewController, context: Context) {}
-}
-
-struct PaymentPhoneViewModel {
-    
-    var closeAction: () -> Void
+    func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {}
 }
