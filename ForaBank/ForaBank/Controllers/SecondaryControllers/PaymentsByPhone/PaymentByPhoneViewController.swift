@@ -106,6 +106,7 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
         IQKeyboardManager.shared.enableAutoToolbar = false
     }
     

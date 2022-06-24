@@ -285,6 +285,9 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         loadCard()
         setupUI()
         setupActions()
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+        IQKeyboardManager.shared.enableAutoToolbar = true
         
     }
     

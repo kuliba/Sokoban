@@ -63,8 +63,9 @@ class CastomCardView: UIView, UITextFieldDelegate {
 //        IQKeyboardManager.shared.toolbarDoneBarButtonItemText = "Продолжить"
 
         let config = IQBarButtonItemConfiguration(title: "Продолжить", action: #selector(doneButtonClicked))
-        cardTextField.addKeyboardToolbarWithTarget(target: self, titleText: "Продолжить", rightBarButtonConfiguration: config)
-        nameTextField.addKeyboardToolbarWithTarget(target: self, titleText: "Продолжить", rightBarButtonConfiguration: config)
+        cardTextField.addKeyboardToolbarWithTarget(target: self, titleText: "", rightBarButtonConfiguration: config)
+        nameTextField.addKeyboardToolbarWithTarget(target: self, titleText: "", rightBarButtonConfiguration: config)
+        
 //        nameTextField.addKeyboardToolbar(withTarget: self, titleText: "Продолжить" , rightBarButtonConfiguration: config, previousBarButtonConfiguration: nil, nextBarButtonConfiguration: nil)
 
         //  any color you like
