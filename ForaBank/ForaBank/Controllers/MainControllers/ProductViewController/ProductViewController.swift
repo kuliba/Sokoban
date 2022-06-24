@@ -476,6 +476,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
             tableView.isHidden = false
             headerView.isHidden = false
             
+            /*
             if product?.productType == ProductType.loan.rawValue || product?.loanBaseParam?.number != "", let loanBase = product?.loanBaseParam {
                 
                 swiftUIView = DetailAccountViewComponent(viewModel: .init(with: loanBase , status: StatusPC(rawValue: product?.statusPC ?? "0") ?? .notActivated, isCredit: false, productName: nil, longInt: nil))
@@ -490,6 +491,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
                 secondStackView.isHidden = false
                 
             }
+             */
+            
             button.addTarget(self, action: #selector(showAlert(sender:)), for: .touchUpInside)
             
             if product?.statusPC == "17", product?.status == "Действует" || product?.status == "Выдано клиенту" {
@@ -636,6 +639,7 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
                         return
                     }
                     
+                    /*
                     self.detailView.view = nil
                     
                     let swiftUIView = DetailAccountViewComponent(viewModel: .init(with: .init(with: .init(loanID: data.loanId ?? 0, clientID: data.clientId, number: data.number ?? "", currencyID: data.currencyId, currencyNumber: data.currencyNumber, currencyCode: data.currencyCode, minimumPayment: data.amountPayment, gracePeriodPayment: nil, overduePayment: data.overduePayment, availableExceedLimit: nil, ownFunds: nil, debtAmount: nil, totalAvailableAmount: data.amountRepaid, totalDebtAmount: data.amountCredit)), status: .active, isCredit: true, productName: self.product?.productName, longInt: data.datePayment))
@@ -649,6 +653,8 @@ class ProductViewController: UIViewController, UICollectionViewDelegate, UIScrol
                     self.detailView.view.anchor(top: self.secondStackView.topAnchor, paddingTop: 20)
                     self.detailView.view.isHidden = false
                     self.secondStackView.isHidden = false
+                     
+                     */
                     
                 }
             } else {

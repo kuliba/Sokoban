@@ -64,8 +64,4 @@ extension String {
         let mask = StringMask(mask: "+7 (000) 000-00-00")
         return mask.mask(string: self) ?? ""
     }
-
-    func filterred() -> String {
-        filter { ("0"..."9").contains($0) }
-    }
 }
