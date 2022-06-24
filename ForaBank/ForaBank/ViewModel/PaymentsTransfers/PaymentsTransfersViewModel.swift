@@ -130,9 +130,11 @@ class PaymentsTransfersViewModel: ObservableObject {
                             let transportOperators = OperatorsViewModel(closeAction: {self.link = nil})
                             link = .transportOperators(transportOperators)
                             InternetTVMainViewModel.filter = GlobalModule.PAYMENT_TRANSPORT
+                       
                         case .taxAndStateService:
                             let taxAndStateServiceVM = PaymentsViewModel(model, category: Payments.Category.taxes)
-                            sheet = .init(type: .taxAndStateService(taxAndStateServiceVM))
+                            taxAndStateServiceVM.closeAction = { [weak self] in self?.link = nil }
+                            link = .init(.taxAndStateService(taxAndStateServiceVM))
                             
                         case .socialAndGame: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
                         case .security: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
@@ -156,7 +158,6 @@ class PaymentsTransfersViewModel: ObservableObject {
         enum Kind {
             
             case exampleDetail(String)
-            case taxAndStateService(PaymentsViewModel)
             case anotherCard(AnotherCardViewModel)
             case country(PaymentCountryData)
             case meToMe(MeToMeViewModel)
@@ -172,7 +173,7 @@ class PaymentsTransfersViewModel: ObservableObject {
         case chooseCountry(ChooseCountryViewModel)
         case transferByRequisites(TransferByRequisitesViewModel)
         case phone(PaymentByPhoneViewModel)
-
+        case taxAndStateService(PaymentsViewModel)
         case serviceOperators(OperatorsViewModel)
         case internetOperators(OperatorsViewModel)
         case transportOperators(OperatorsViewModel)

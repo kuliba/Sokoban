@@ -76,6 +76,17 @@ struct PaymentsTransfersView: View {
                                 .onDisappear {
                                     showTabBar(tabBarController)
                                 }
+                            
+                        case let .taxAndStateService(taxAndStateServiceVM):
+                            PaymentsView(viewModel: taxAndStateServiceVM)
+                                .edgesIgnoringSafeArea(.all)
+                                .navigationBarHidden(true)
+                                .introspectTabBarController { (UITabBarController) in
+                                    hideTabBar(UITabBarController)
+                                }
+                                .onDisappear {
+                                    showTabBar(tabBarController)
+                                }
 
                         case let .transferByRequisites(transferByRequisitesViewModel):
                             TransferByRequisitesView(viewModel: transferByRequisitesViewModel)
@@ -121,15 +132,6 @@ struct PaymentsTransfersView: View {
                     ExampleDetailMock(title: title)
                 case let .country(countryData):
                     CountryPaymentView(viewModel: .init(countryData: countryData))
-                        .introspectTabBarController { (UITabBarController) in
-                            hideTabBar(UITabBarController)
-                        }
-                        .onDisappear {
-                            showTabBar(tabBarController)
-                        }
-                    
-                case let .taxAndStateService(taxAndStateServiceVM):
-                    PaymentsView(viewModel: taxAndStateServiceVM)
                         .introspectTabBarController { (UITabBarController) in
                             hideTabBar(UITabBarController)
                         }
