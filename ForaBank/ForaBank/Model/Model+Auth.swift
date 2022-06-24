@@ -176,7 +176,10 @@ extension ModelAction {
         
         enum SetDeviceSettings {
             
-            struct Request: Action {}
+            struct Request: Action {
+                
+                let sensorType: BiometricSensorType?
+            }
             
             enum Response: Action {
                 
@@ -672,7 +675,7 @@ internal extension Model {
                     return
                 }
                
-                try await authSetDeviceSettingsNotEncrypted(credentials: credentials)
+                try await authSetDeviceSettingsNotEncrypted(credentials: credentials, sensorType: payload.sensorType)
                 action.send(ModelAction.Auth.SetDeviceSettings.Response.success)
                 
             } catch {
@@ -911,7 +914,7 @@ extension Model {
         })
     }
     
-    func authSetDeviceSettingsNotEncrypted(credentials: SessionCredentials) async throws {
+    func authSetDeviceSettingsNotEncrypted(credentials: SessionCredentials, sensorType: BiometricSensorType?) async throws {
         
         print("SessionAgent: SET DEVICE SETTINGS: REQUESTED")
         
@@ -921,7 +924,7 @@ extension Model {
         let pincode = try authStoredPincode()
         let loginValue = try pincode.sha256String()
         
-        let payload = ServerCommands.RegistrationContoller.SetDeviceSettings.Payload(cryptoVersion: nil, pushDeviceId: pushDeviceId, pushFcmToken: pushFcmToken, serverDeviceGUID: serverDeviceGUID, settings: [.init(type: "pin", value: loginValue, isActive: true), .init(type: "touchId", value: nil, isActive: false), .init(type: "faceId", value: nil, isActive: false)])
+        let payload = ServerCommands.RegistrationContoller.SetDeviceSettings.Payload(cryptoVersion: nil, pushDeviceId: pushDeviceId, pushFcmToken: pushFcmToken, serverDeviceGUID: serverDeviceGUID, settings: [.init(type: "pin", value: loginValue, isActive: true), .init(type: "touchId", value: sensorType == .touch ? loginValue : nil, isActive: sensorType == .touch ? true : false), .init(type: "faceId", value: sensorType == .face ? loginValue : nil, isActive: sensorType == .face ? true : false)])
         
         let command = ServerCommands.RegistrationContoller.SetDeviceSettings(token: credentials.token, payload: payload)
         

@@ -145,8 +145,11 @@ class Model {
         self.contactsAgent = contactsAgent
         self.bindings = []
         
-        loadCachedData()
-        loadSettings()
+        queue.async {
+            
+            self.loadCachedPublicData()
+        }
+        
         bind()
     }
     //FIXME: remove after refactoring
@@ -189,12 +192,14 @@ class Model {
     private func bind() {
         
         sessionAgent.sessionState
-            .receive(on: DispatchQueue.main)
+            .receive(on: queue)
             .sink { [unowned self] auth in
                 
                 switch auth {
                 case .active:
                     //FIXME: status active after register requested before register process complete
+                    loadCachedAuthorizedData()
+                    loadSettings()
                     action.send(ModelAction.Products.Update.Total.All())
                     action.send(ModelAction.ClientInfo.Fetch.Request())
                     action.send(ModelAction.Rates.Update.All())
@@ -548,16 +553,11 @@ class Model {
 
 private extension Model {
     
-    func loadCachedData() {
+    func loadCachedPublicData() {
         
         if let catalogProducts = localAgent.load(type: [CatalogProductData].self) {
             
             self.catalogProducts.value = catalogProducts
-        }
-        
-        if let paymentTemplates = localAgent.load(type: [PaymentTemplateData].self) {
-            
-            self.paymentTemplates.value = paymentTemplates
         }
         
         if let catalogBanner = localAgent.load(type: [BannerCatalogListData].self) {
@@ -585,16 +585,34 @@ private extension Model {
             self.paymentSystemList.value = paymentSystemList
         }
         
+        if let rates = localAgent.load(type: [ExchangeRateData].self) {
+            
+            self.rates.value = rates
+        }
+
+        if let deposits = localAgent.load(type: [DepositProductData].self) {
+            
+            self.deposits.value = deposits
+        }
+        
+        if let images = localAgent.load(type: [String: ImageData].self) {
+            
+            self.images.value = images
+        }
+    }
+    
+    func loadCachedAuthorizedData() {
+        
         self.products.value = productsCacheLoadData()
+        
+        if let paymentTemplates = localAgent.load(type: [PaymentTemplateData].self) {
+            
+            self.paymentTemplates.value = paymentTemplates
+        }
         
         if let statements = localAgent.load(type: StatementsData.self) {
             
             self.statements.value = statements
-        }
-        
-        if let rates = localAgent.load(type: [ExchangeRateData].self) {
-            
-            self.rates.value = rates
         }
         
         if let fastPaymentSettings = localAgent
@@ -606,16 +624,6 @@ private extension Model {
         self.clientInfo.value = localAgent.load(type: ClientInfoData.self)
         self.clientPhoto.value = localAgent.load(type: ClientPhotoData.self)
         self.clientName.value = localAgent.load(type: ClientNameData.self)
-        
-        if let deposits = localAgent.load(type: [DepositProductData].self) {
-            
-            self.deposits.value = deposits
-        }
-        
-        if let images = localAgent.load(type: [String: ImageData].self) {
-            
-            self.images.value = images
-        }
         
         if let loans = localAgent.load(type: LoansData.self) {
             

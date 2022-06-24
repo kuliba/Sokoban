@@ -153,7 +153,19 @@ class AuthPinCodeViewModel: ObservableObject {
                     switch payload {
                     case .success:
                         feedbackGenerator.notificationOccurred(.success)
-                        model.action.send(ModelAction.Auth.SetDeviceSettings.Request())
+                        if let sensor = model.authAvailableBiometricSensorType {
+                            
+                            let permissionsViewModel = AuthPermissionsViewModel(model, sensorType: sensor, dismissAction: {})
+                            
+                            self.permissionsViewModel = permissionsViewModel
+                            isPermissionsViewPresented = true
+                            
+                           bind(permissionsViewModel)
+                            
+                        } else {
+                            
+                            model.action.send(ModelAction.Auth.SetDeviceSettings.Request(sensorType: nil))
+                        }
                         
                     case .failure(message: let message):
                         alert = Alert.ViewModel(title: "Ошибка", message: message, primary: .init(type: .default, title: "Ok", action: {[weak self] in
@@ -365,6 +377,15 @@ class AuthPinCodeViewModel: ObservableObject {
             .sink { [unowned self] action in
                 
                 switch action {
+                case _ as AuthPinCodeViewModelAction.Appear:
+                    guard case .unlock(_) = mode,
+                          let sensor = model.authAvailableBiometricSensorType,
+                          model.authIsBiometricSensorEnabled == true else {
+                        return
+                    }
+                    
+                    model.action.send(ModelAction.Auth.Sensor.Evaluate.Request(sensor: sensor))
+    
                 case let payload as AuthPinCodeViewModelAction.Continue:
                     guard case .unlock(attempt: let attempt) = mode else {
                         return
@@ -389,6 +410,27 @@ class AuthPinCodeViewModel: ObservableObject {
                 case _ as AuthPinCodeViewModelAction.Exit:
                     model.action.send(ModelAction.Auth.Logout())
                 
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+    }
+    
+    func bind(_ permissionsViewModel: AuthPermissionsViewModel) {
+        
+        permissionsViewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] action in
+                
+                guard let self = self else {
+                    return
+                }
+                
+                switch action {
+                case let payload as AuthPermissionsViewModelAction.Confirm:
+                    self.model.action.send(ModelAction.Auth.SetDeviceSettings.Request(sensorType: payload.sensorType))
+                    
                 default:
                     break
                 }
@@ -647,4 +689,6 @@ enum AuthPinCodeViewModelAction {
         
         struct Failed: Action {}
     }
+    
+    struct Appear: Action {}
 }
