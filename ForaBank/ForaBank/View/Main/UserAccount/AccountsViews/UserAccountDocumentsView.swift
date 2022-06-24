@@ -33,7 +33,7 @@ extension UserAccountDocumentsView {
             var accountDocuments: [AccountCellDefaultViewModel] = [
                 DocumentCellView.ViewModel(
                     itemType: .passport,
-                    content: userData.pasportNumber,
+                    content: userData.pasportNumber.addMask(for: .passport),
                     action: { [weak self] in
                         self?.action.send(UserAccountModelAction.OpenDocument(type: .passport))
                     })
@@ -42,7 +42,7 @@ extension UserAccountDocumentsView {
             if let userInn = userData.INN {
                 accountDocuments.append(DocumentCellView.ViewModel(
                     itemType: .inn,
-                    content: userInn,
+                    content: userInn.addMask(for: .inn),
                     action: { [weak self] in
                         self?.action.send(UserAccountModelAction.OpenDocument(type: .inn))
                     })
@@ -51,7 +51,7 @@ extension UserAccountDocumentsView {
             
             accountDocuments.append(DocumentCellView.ViewModel(
                 itemType: .adressPass,
-                content: userData.address,
+                content: userData.address.addMask(for: .adressPass),
                 action: { [weak self] in
                     self?.action.send(UserAccountModelAction.OpenDocument(type: .adressPass))
                 })
@@ -60,13 +60,30 @@ extension UserAccountDocumentsView {
             if let addressResidential = userData.addressResidential {
                 accountDocuments.append(DocumentCellView.ViewModel(
                     itemType: .adress,
-                    content: addressResidential,
+                    content: addressResidential.addMask(for: .adress),
                     action: { [weak self] in
                         self?.action.send(UserAccountModelAction.OpenDocument(type: .adress))
                     })
                 )
             }
             return accountDocuments
+        }
+    }
+}
+
+private extension String {
+    
+    func addMask(for type: DocumentCellType) -> String {
+        switch type {
+        case .passport:
+            return String(self.prefix(4)) + "****" + String(self.suffix(2))
+            
+        case .inn:
+            
+            return String(self.prefix(4)) + "****" + String(self.suffix(4))
+            
+        default:
+            return self
         }
     }
 }
