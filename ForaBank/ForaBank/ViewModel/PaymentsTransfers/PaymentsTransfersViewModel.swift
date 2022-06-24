@@ -50,7 +50,9 @@ class PaymentsTransfersViewModel: ObservableObject {
                         
                         switch (payload.latestPayment.type, payload.latestPayment) {
                         case (.phone, let paymentData as PaymentGeneralData):
-                            sheet = .init(type: .phone(PaymentByPhoneViewModel(phoneNumber: paymentData.phoneNumber, bankId: paymentData.bankId)))
+                            link = .init(.phone(PaymentByPhoneViewModel(phoneNumber: paymentData.phoneNumber, bankId: paymentData.bankId, closeAction: { [weak self] in
+                                self?.link = nil
+                            })))
                         
                         case (.country, let paymentData as PaymentCountryData):
                             sheet = .init(type: .country(paymentData))
@@ -103,7 +105,9 @@ class PaymentsTransfersViewModel: ObservableObject {
                                 self?.link = nil
                             }))
                         case .byPhoneNumber:
-                            sheet = .init(type: .transferByPhone)
+                            sheet = .init(type: .transferByPhone(.init(closeAction: { [weak self] in
+                                self?.sheet = nil
+                            })))
                         }
                         
                     //Payments Section
@@ -135,7 +139,6 @@ class PaymentsTransfersViewModel: ObservableObject {
                         case .others: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
         
                         }
-                    
                     default:
                         break
 
@@ -155,12 +158,10 @@ class PaymentsTransfersViewModel: ObservableObject {
             case exampleDetail(String)
             case taxAndStateService(PaymentsViewModel)
             case anotherCard(AnotherCardViewModel)
-            case phone(PaymentByPhoneViewModel)
             case country(PaymentCountryData)
             case meToMe(MeToMeViewModel)
-            case transferByPhone
+            case transferByPhone(TransferByPhoneViewModel)
             case template(TemplatesListViewModel)
-
         }
     }
     
@@ -170,9 +171,10 @@ class PaymentsTransfersViewModel: ObservableObject {
         case mobile(MobilePayViewModel)
         case chooseCountry(ChooseCountryViewModel)
         case transferByRequisites(TransferByRequisitesViewModel)
+        case phone(PaymentByPhoneViewModel)
+
         case serviceOperators(OperatorsViewModel)
         case internetOperators(OperatorsViewModel)
         case transportOperators(OperatorsViewModel)
     }
-    
 }

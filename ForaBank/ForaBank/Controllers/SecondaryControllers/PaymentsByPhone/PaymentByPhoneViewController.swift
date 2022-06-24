@@ -111,8 +111,6 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        IQKeyboardManager.shared.enable = true
-        IQKeyboardManager.shared.enableAutoToolbar = true
         phoneField.textField.delegate = self
         phoneField.textField.maskString = "+0 000 000-00-00"
         
@@ -138,6 +136,8 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
         navigationController?.navigationBar.isHidden = false
     }
     
@@ -241,8 +241,7 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
                 delegate: self,
                 multiSelection: false,
                 subtitleCellType: SubtitleCellValue.phoneNumber)
-            let navigationController = UINavigationController(rootViewController: contactPickerScene)
-            self.present(navigationController, animated: true, completion: nil)
+            self.present(contactPickerScene, animated: true, completion: nil)
         }
         
         bottomView.didDoneButtonTapped = {(amount) in
@@ -333,8 +332,22 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
             } else {
                 title = "Перевод по номеру телефона"
             }
+            
+            if viewModel.setBackAction {
+                let button = UIBarButtonItem(image: UIImage(systemName: "xmark"),
+                                             landscapeImagePhone: nil,
+                                             style: .done,
+                                             target: self,
+                                             action: #selector(onTouchBackButton))
+                button.tintColor = .black
+                navigationItem.leftBarButtonItem = button
+            }
         }
         setupBankField(bank: viewModel.selectedBank)
+    }
+    
+    @objc func onTouchBackButton() {
+            viewModel.closeAction()
     }
     
     private func setupBankField(bank: BanksList?) {
@@ -589,4 +602,3 @@ extension PaymentByPhoneViewController: EPPickerDelegate {
         }
     }
 }
-

@@ -106,8 +106,8 @@ extension CustomPopUpWithRateView {
                                 
                                 let nav = UINavigationController(rootViewController: vc)
                                 nav.modalPresentationStyle = .fullScreen
+                                viewModel.closeAction()
                                 self?.present(nav, animated: true, completion: nil)
-                                
                             }
                         } else {
                             viewModel.status = .succses
@@ -116,6 +116,7 @@ extension CustomPopUpWithRateView {
                             
                             let nav = UINavigationController(rootViewController: vc)
                             nav.modalPresentationStyle = .fullScreen
+                            viewModel.closeAction()
                             self?.present(nav, animated: true, completion: nil)
                         }
                     } else {

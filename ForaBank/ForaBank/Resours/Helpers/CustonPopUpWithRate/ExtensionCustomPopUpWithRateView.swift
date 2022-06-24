@@ -13,8 +13,6 @@ import IQKeyboardManagerSwift
 extension CustomPopUpWithRateView {
     override func viewDidLoad() {
         super.viewDidLoad()
-        IQKeyboardManager.shared.enable = true
-        IQKeyboardManager.shared.enableAutoToolbar = true
         setupUI()
         setupConstraint()
         
@@ -38,6 +36,8 @@ extension CustomPopUpWithRateView {
                 self.setupAmount(amount: template.amount)
             }
         }
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {

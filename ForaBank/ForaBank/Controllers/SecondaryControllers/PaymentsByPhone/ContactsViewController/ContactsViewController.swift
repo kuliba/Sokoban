@@ -17,6 +17,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
     let tableView = UITableView(frame: .zero, style: .plain)
     // MARK: - Properties
     
+    var viewModel: TransferByPhoneViewModel?
     open weak var contactDelegate: EPPickerDelegate?
     var contactsStore: CNContactStore?
     var resultSearchController = Bool()
@@ -94,6 +95,7 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
         super.viewDidLoad()
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.enableAutoToolbar = true
+        getFastPaymentContractList()
         banksList = model.dictionaryBankListLegacy?.filter({$0.paymentSystemCodeList?.first == "SFP"}) ?? []
 
         let viewLine = UIView()
@@ -215,6 +217,37 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
         
     }
     
+    func getFastPaymentContractList() {
+        NetworkManager<FastPaymentContractFindListDecodableModel>.addRequest(.fastPaymentContractFindList, [:], [:]) { model, error in
+            if error != nil {
+                print("DEBUG: Error: ")
+            }
+            guard let model = model else { return }
+            
+            let a = model.data?.first
+            var b = a?.fastPaymentContractAttributeList?.first?.phoneNumber ?? ""
+            let clientID = a?.fastPaymentContractAttributeList?.first?.clientID ?? 0
+            if model.statusCode == 0 {
+                UserDefaults.standard.set(b, forKey: "UserPhone")
+                UserDefaults.standard.set(clientID, forKey: "clientId")
+                
+                if b.first == "7" {
+                    let mask = StringMask(mask: "+0 (000) 000-00-00")
+                    let maskPhone = mask.mask(string: b)
+                    self.userPhoneView.userPhone.text = maskPhone?.description
+                    
+                } else if b.first == "8" {
+                    b.removeFirst()
+                    let mask = StringMask(mask: "+7 (000) 000-00-00")
+                    let maskPhone = mask.mask(string: b)
+                    self.userPhoneView.userPhone.text = maskPhone?.description
+                }
+            } else {
+                print("DEBUG: Error: ", model.errorMessage ?? "")
+            }
+        }
+    }
+    
     fileprivate func configureTableView() {
         tableView.dataSource = self
         tableView.delegate = self
@@ -259,7 +292,11 @@ class ContactsViewController: UIViewController, UITextFieldDelegate, PassTextFie
     }
     
     @objc func backButton(){
-        dismiss(animated: true, completion: nil)
+        if let viewModel = viewModel {
+            viewModel.closeAction()
+        } else {
+            dismiss(animated: true, completion: nil)
+        }
     }
     
     func showSelfPhoneView(_ value: Bool) {

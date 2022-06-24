@@ -551,7 +551,7 @@
 		68EB187827CEDFC600745558 /* ProductProfileHistoryViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68EB187727CEDFC600745558 /* ProductProfileHistoryViewComponent.swift */; };
 		68EB187A27CEE85700745558 /* SegmentedBarViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68EB187927CEE85700745558 /* SegmentedBarViewComponent.swift */; };
 		68ECC2BA285C580900A95CE8 /* PhonePaymentView+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68ECC2B9285C580900A95CE8 /* PhonePaymentView+Legacy.swift */; };
-		68ECC2BE285C693500A95CE8 /* CounryPaymentView+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68ECC2BD285C693500A95CE8 /* CounryPaymentView+Legacy.swift */; };
+		68ECC2BE285C693500A95CE8 /* CountryPaymentView+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68ECC2BD285C693500A95CE8 /* CountryPaymentView+Legacy.swift */; };
 		68F5E11A28509FD2003018E5 /* BankData+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F5E11928509FD2003018E5 /* BankData+Legacy.swift */; };
 		68F5E1242858F1B0003018E5 /* TransferByRequisitsView+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F5E1232858F1B0003018E5 /* TransferByRequisitsView+Legacy.swift */; };
 		68F6816F269E5E56008157CE /* SearchBanksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F6816E269E5E56008157CE /* SearchBanksViewController.swift */; };
@@ -1775,7 +1775,7 @@
 		68EB187727CEDFC600745558 /* ProductProfileHistoryViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductProfileHistoryViewComponent.swift; sourceTree = "<group>"; };
 		68EB187927CEE85700745558 /* SegmentedBarViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedBarViewComponent.swift; sourceTree = "<group>"; };
 		68ECC2B9285C580900A95CE8 /* PhonePaymentView+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhonePaymentView+Legacy.swift"; sourceTree = "<group>"; };
-		68ECC2BD285C693500A95CE8 /* CounryPaymentView+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CounryPaymentView+Legacy.swift"; sourceTree = "<group>"; };
+		68ECC2BD285C693500A95CE8 /* CountryPaymentView+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CountryPaymentView+Legacy.swift"; sourceTree = "<group>"; };
 		68F5E11928509FD2003018E5 /* BankData+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BankData+Legacy.swift"; sourceTree = "<group>"; };
 		68F5E1232858F1B0003018E5 /* TransferByRequisitsView+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TransferByRequisitsView+Legacy.swift"; sourceTree = "<group>"; };
 		68F6816E269E5E56008157CE /* SearchBanksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBanksViewController.swift; sourceTree = "<group>"; };
@@ -4267,15 +4267,13 @@
 		77DA206228453AA700D7E005 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				ED65D6012851EAFE002EB565 /* CountryPaymentViewController */,
-				77DA206328453ADB00D7E005 /* CustomPopUpWithRateView+Legacy.swift */,
 				0BB673A62858850100C54E15 /* MobilePayView.swift */,
 				0C4B0BBD28624A5E004B7F69 /* FastPaymentSettings */,
 				ED733D612858964600F22D42 /* CountryPaymentViewController */,
 				68629334284E558D00B25EB6 /* TransferByPhoneView+Legacy.swift */,
 				77DA206328453ADB00D7E005 /* MeToMeView+Legacy.swift */,
 				68ECC2B9285C580900A95CE8 /* PhonePaymentView+Legacy.swift */,
-				68ECC2BD285C693500A95CE8 /* CounryPaymentView+Legacy.swift */,
+				68ECC2BD285C693500A95CE8 /* CountryPaymentView+Legacy.swift */,
 				68F5E1232858F1B0003018E5 /* TransferByRequisitsView+Legacy.swift */,
 				ED5A122C285CC21000621E26 /* AnotherCardView+Legacy.swift */,
 				ED374CE82863AEC000A97219 /* CardScannerView.swift */,
@@ -7459,7 +7457,7 @@
 				A58F263627E12E0D00A73778 /* C2BDetailsViewController.swift in Sources */,
 				EDB14516266526B10028EF5A /* CreditCardEntryView.swift in Sources */,
 				68FB358B2760C1C80097AECE /* AntifraudView.swift in Sources */,
-				68ECC2BE285C693500A95CE8 /* CounryPaymentView+Legacy.swift in Sources */,
+				68ECC2BE285C693500A95CE8 /* CountryPaymentView+Legacy.swift in Sources */,
 				0B37F984267A18AC007728FC /* MakeCard2CardDecodableModel.swift in Sources */,
 				77D2D9AF275AB90A0097234D /* Array+Extensions.swift in Sources */,
 				77E2899C2858EF440048141B /* ProductProfileDetailDateProgressViewComponent.swift in Sources */,

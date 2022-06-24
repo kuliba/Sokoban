@@ -17,6 +17,7 @@ struct MeToMeView: UIViewControllerRepresentable {
         let model = ConfirmViewControllerModel(type: .card2card)
         let popView = CustomPopUpWithRateView()
         popView.viewModel = model
+        popView.viewModel.closeAction = viewModel.closeAction
         popView.modalPresentationStyle = .custom
   
         return popView
@@ -27,5 +28,5 @@ struct MeToMeView: UIViewControllerRepresentable {
 
 struct MeToMeViewModel {
     
-    var closeAction: () -> Void
+    let closeAction: () -> Void
 }
