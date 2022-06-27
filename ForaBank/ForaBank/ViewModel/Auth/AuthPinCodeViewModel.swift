@@ -14,6 +14,7 @@ class AuthPinCodeViewModel: ObservableObject {
 
     let action: PassthroughSubject<Action, Never> = .init()
     
+    let pincodeValue: CurrentValueSubject<String, Never>
     let pinCode: PinCodeViewModel
     @Published var numpad: NumPadViewModel
     @Published var footer: FooterViewModel
@@ -31,9 +32,12 @@ class AuthPinCodeViewModel: ObservableObject {
     private let dismissAction: () -> Void
     private var bindings = Set<AnyCancellable>()
     private let feedbackGenerator = UINotificationFeedbackGenerator()
+    
+    var isPincodeComplete: Bool { pincodeValue.value.count >= model.authPincodeLength }
 
-    init(pinCode: PinCodeViewModel, numpad: NumPadViewModel, footer: FooterViewModel, dismissAction: @escaping () -> Void, model: Model = .emptyMock, mode: Mode = .unlock(attempt: 3), stage: Stage = .editing, isPermissionsViewPresented: Bool = false, mistakes: Int = 0) {
+    init(pincodeValue: CurrentValueSubject<String, Never>, pinCode: PinCodeViewModel, numpad: NumPadViewModel, footer: FooterViewModel, dismissAction: @escaping () -> Void, model: Model = .emptyMock, mode: Mode = .unlock(attempt: 3), stage: Stage = .editing, isPermissionsViewPresented: Bool = false, mistakes: Int = 0) {
         
+        self.pincodeValue = pincodeValue
         self.pinCode = pinCode
         self.numpad = numpad
         self.footer = footer
@@ -47,6 +51,7 @@ class AuthPinCodeViewModel: ObservableObject {
     
     init(_ model: Model, mode: Mode, dismissAction: @escaping () -> Void) {
  
+        self.pincodeValue = .init("")
         switch mode {
         case .unlock:
             self.pinCode = PinCodeViewModel(title: "Введите код", pincodeLength: model.authPincodeLength)
@@ -137,6 +142,21 @@ class AuthPinCodeViewModel: ObservableObject {
                 case let payload as ModelAction.Auth.Sensor.Evaluate.Response:
                     switch payload {
                     case .success(let sensorType):
+                        
+                        // lock numpad
+                        numpad.isEnabled = false
+                        
+                        // taptic feedback
+                        feedbackGenerator.notificationOccurred(.success)
+                        
+                        pinCode.update(with: "0000", pincodeLength: model.authPincodeLength)
+                        pinCode.style = .correct
+                        
+                        withAnimation {
+                            
+                            pinCode.isAnimated = true
+                        }
+                        
                         switch sensorType {
                         case .face:
                             self.model.action.send(ModelAction.Auth.Login.Request(type: .faceId))
@@ -217,15 +237,15 @@ class AuthPinCodeViewModel: ObservableObject {
                 case let payload as NumPadViewModelAction.Button:
                     switch payload {
                     case .digit(let number):
-                        pinCode.value = pinCode.value + String(number)
+                        pincodeValue.value = pincodeValue.value + String(number)
                         // button click sound
                         AudioServicesPlaySystemSound(1104)
                     
                     case .delete:
-                        guard pinCode.value.count > 0 else {
+                        guard pincodeValue.value.count > 0 else {
                             return
                         }
-                        pinCode.value = String(pinCode.value.dropLast())
+                        pincodeValue.value = String(pincodeValue.value.dropLast())
                         // delete click sound
                         AudioServicesPlaySystemSound(1155)
                         
@@ -240,7 +260,7 @@ class AuthPinCodeViewModel: ObservableObject {
                     case .back:
                         self.mode = .create(step: .one)
                         self.pinCode.title = "Придумайте код"
-                        self.pinCode.value = ""
+                        self.pincodeValue.value = ""
                         self.numpad.update(button: .init(type: .empty, action: .none), left: true)
                         // option click sound
                         AudioServicesPlaySystemSound(1156)
@@ -261,11 +281,13 @@ class AuthPinCodeViewModel: ObservableObject {
                 
             }.store(in: &bindings)
         
-        pinCode.$value
+        pincodeValue
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] value in
                 
-                if pinCode.isComplete == true {
+                pinCode.update(with: value, pincodeLength: model.authPincodeLength)
+                
+                if isPincodeComplete == true {
                     
                     switch mode {
                     case .unlock:
@@ -278,7 +300,7 @@ class AuthPinCodeViewModel: ObservableObject {
                             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(200)) {
                                 
                                 self.pinCode.title = "Подтвердите код"
-                                self.pinCode.value = ""
+                                self.pincodeValue.value = ""
                                 self.numpad.update(button: .init(type: .text("Назад"), action: .back), left: true)
                             }
 
@@ -299,7 +321,7 @@ class AuthPinCodeViewModel: ObservableObject {
                     switch mode {
                     case .unlock:
                         
-                        if pinCode.value.count > 0 {
+                        if pincodeValue.value.count > 0 {
                             
                             self.numpad.update(button: .init(type: .icon(.ic40Delete), action: .delete), left: false)
                             
@@ -329,6 +351,7 @@ class AuthPinCodeViewModel: ObservableObject {
   
                 switch stage {
                 case .mistake:
+                    pinCode.isAnimated = false
                     withAnimation {
                         // show incorrect pincode state
                         mistakes += 1
@@ -345,7 +368,7 @@ class AuthPinCodeViewModel: ObservableObject {
                             // back to editing
                             self.stage = .editing
                             self.pinCode.style = .normal
-                            self.pinCode.value = ""
+                            self.pincodeValue.value = ""
                             self.numpad.isEnabled = true
                         }
                     }
@@ -357,13 +380,17 @@ class AuthPinCodeViewModel: ObservableObject {
                     
                     switch mode {
                     case .unlock(let attempt):
-                        model.action.send(ModelAction.Auth.Pincode.Check.Request(pincode: pinCode.value, attempt: attempt))
+                        withAnimation {
+                            pinCode.isAnimated = true
+                        }
+                        model.action.send(ModelAction.Auth.Pincode.Check.Request(pincode: pincodeValue.value, attempt: attempt))
                         
                     case .create:
+                        pinCode.style = .correct
                         withAnimation {
-                            pinCode.style = .correct
+                            pinCode.isAnimated = true
                         }
-                        model.action.send(ModelAction.Auth.Pincode.Set.Request(pincode: pinCode.value))
+                        model.action.send(ModelAction.Auth.Pincode.Set.Request(pincode: pincodeValue.value))
                     }
                     
                 default:
@@ -400,7 +427,7 @@ class AuthPinCodeViewModel: ObservableObject {
                         // back to editing
                         self.stage = .editing
                         pinCode.style = .normal
-                        pinCode.value = ""
+                        pincodeValue.value = ""
                         numpad.isEnabled = true
                     }
                     
@@ -476,41 +503,34 @@ extension AuthPinCodeViewModel {
     class PinCodeViewModel: ObservableObject {
 
         @Published var title: String
-        @Published var value: String
         @Published var dots: [DotViewModel]
         @Published var style: Style
-        
-        var isComplete: Bool { value.count >= pincodeLength }
-        
-        private let pincodeLength: Int
-        private var bindings = Set<AnyCancellable>()
-        
-        init(title: String, pincodeLength: Int, pincode: String = "", style: Style = .normal) {
+        @Published var isAnimated: Bool
+
+        init(title: String, dots: [DotViewModel], style: Style, isAnimated: Bool = false) {
             
             self.title = title
-            self.value = pincode
-            self.dots = Self.dots(pincode: pincode, length: pincodeLength)
+            self.dots = dots
             self.style = style
-            self.pincodeLength = pincodeLength
-            
-            bind()
+            self.isAnimated = isAnimated
         }
         
-        func bind() {
+        init(title: String, pincodeValue: String = "", pincodeLength: Int, style: Style = .normal) {
             
-            $value
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] value in
- 
-                    dots = Self.dots(pincode: value, length: pincodeLength)
-                    
-                }.store(in: &bindings)
+            self.title = title
+            self.dots = Self.dots(pincodeValue, pincodeLength)
+            self.style = style
+            self.isAnimated = false
         }
         
-        
-        static func dots(pincode: String, length: Int) -> [DotViewModel] {
+        func update(with pincodeValue: String, pincodeLength: Int) {
             
-            return (0..<length).map{ pincode.count > $0 ? .init(isFilled: true) : .init(isFilled: false) }
+            dots = Self.dots(pincodeValue, pincodeLength)
+        }
+        
+        static private func dots(_ pincodeValue: String, _ pincodeLength: Int) -> [DotViewModel] {
+            
+            return (0..<pincodeLength).map{ pincodeValue.count > $0 ? .init(isFilled: true) : .init(isFilled: false) }
         }
         
         enum Style {
