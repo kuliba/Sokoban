@@ -257,6 +257,10 @@
 		50164F1E2840F892004239A1 /* BottomSheetContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50164F1D2840F892004239A1 /* BottomSheetContentView.swift */; };
 		50164F202841009C004239A1 /* ToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50164F1F2841009C004239A1 /* ToggleView.swift */; };
 		502A98A4283A950900C6A621 /* GetProductListByTypeResponseServer.json in Resources */ = {isa = PBXBuildFile; fileRef = 502A98A3283A950900C6A621 /* GetProductListByTypeResponseServer.json */; };
+		503069D7286A5BE700308CC1 /* BottomSheetPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503069D3286A5BE700308CC1 /* BottomSheetPresentationController.swift */; };
+		503069D8286A5BE700308CC1 /* BottomSheetTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503069D4286A5BE700308CC1 /* BottomSheetTransitioningDelegate.swift */; };
+		503069D9286A5BE700308CC1 /* BottomSheetHostingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503069D5286A5BE700308CC1 /* BottomSheetHostingController.swift */; };
+		503069DA286A5BE700308CC1 /* BottomSheetPresentedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503069D6286A5BE700308CC1 /* BottomSheetPresentedView.swift */; };
 		503CF6AD282BE12B0069253E /* TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503CF6AC282BE12B0069253E /* TextField.swift */; };
 		503F073328252B7900E84A77 /* DepositToggleViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503F073128252B7900E84A77 /* DepositToggleViewComponent.swift */; };
 		503F073428252B7900E84A77 /* DepositSliderViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503F073228252B7900E84A77 /* DepositSliderViewComponent.swift */; };
@@ -1585,6 +1589,10 @@
 		50164F1D2840F892004239A1 /* BottomSheetContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetContentView.swift; sourceTree = "<group>"; };
 		50164F1F2841009C004239A1 /* ToggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleView.swift; sourceTree = "<group>"; };
 		502A98A3283A950900C6A621 /* GetProductListByTypeResponseServer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = GetProductListByTypeResponseServer.json; sourceTree = "<group>"; };
+		503069D3286A5BE700308CC1 /* BottomSheetPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomSheetPresentationController.swift; sourceTree = "<group>"; };
+		503069D4286A5BE700308CC1 /* BottomSheetTransitioningDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomSheetTransitioningDelegate.swift; sourceTree = "<group>"; };
+		503069D5286A5BE700308CC1 /* BottomSheetHostingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomSheetHostingController.swift; sourceTree = "<group>"; };
+		503069D6286A5BE700308CC1 /* BottomSheetPresentedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomSheetPresentedView.swift; sourceTree = "<group>"; };
 		503CF6AC282BE12B0069253E /* TextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextField.swift; sourceTree = "<group>"; };
 		503F073128252B7900E84A77 /* DepositToggleViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositToggleViewComponent.swift; sourceTree = "<group>"; };
 		503F073228252B7900E84A77 /* DepositSliderViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositSliderViewComponent.swift; sourceTree = "<group>"; };
@@ -3319,6 +3327,17 @@
 			path = PaymentsTransfers;
 			sourceTree = "<group>";
 		};
+		503069D2286A5BE700308CC1 /* BottomSheetPresented */ = {
+			isa = PBXGroup;
+			children = (
+				503069D6286A5BE700308CC1 /* BottomSheetPresentedView.swift */,
+				503069D5286A5BE700308CC1 /* BottomSheetHostingController.swift */,
+				503069D3286A5BE700308CC1 /* BottomSheetPresentationController.swift */,
+				503069D4286A5BE700308CC1 /* BottomSheetTransitioningDelegate.swift */,
+			);
+			path = BottomSheetPresented;
+			sourceTree = "<group>";
+		};
 		503F073028252B7900E84A77 /* DepositCalculator */ = {
 			isa = PBXGroup;
 			children = (
@@ -4198,6 +4217,7 @@
 				774A8B7B2865FF0900B81140 /* TextFieldMaskableViewComponent.swift */,
 				509EE0E1285F855D002281BF /* KeyboardPublisher.swift */,
 				50164F1D2840F892004239A1 /* BottomSheetContentView.swift */,
+				503069D2286A5BE700308CC1 /* BottomSheetPresented */,
 				5088A0862855F411003C39D7 /* Paging */,
 				ED374C8E2861FBCE00A97219 /* ActivityViewComponent.swift */,
 			);
@@ -7390,6 +7410,7 @@
 				681E073D273D3FCF00551FAD /* ProductViewControllerRequest.swift in Sources */,
 				0BA09E3026ADEC300065D623 /* GHKCell.swift in Sources */,
 				0B2A8D2C26E8D9B600651BCB /* GetLatestPhonePayments.swift in Sources */,
+				503069D7286A5BE700308CC1 /* BottomSheetPresentationController.swift in Sources */,
 				774A8B702865FEB200B81140 /* OptionSelectorViewComponent.swift in Sources */,
 				EDDFE3BA2756ED7A00F57C71 /* DepositCalculatorViewControllerDataSource.swift in Sources */,
 				ED2BE17F26A0498400647CB1 /* AllCardListViewController.swift in Sources */,
@@ -7608,6 +7629,7 @@
 				EDB1452026661B030028EF5A /* StringMask.swift in Sources */,
 				EDB16586266A0883007E6030 /* NSDirectionalEdgeInsets.swift in Sources */,
 				EDE212F82742ED2B005D9821 /* ChooseCurrencyTableViewCell.swift in Sources */,
+				503069DA286A5BE700308CC1 /* BottomSheetPresentedView.swift in Sources */,
 				77B6B3562850976B00E3001B /* ProductStatementsStorage.swift in Sources */,
 				687F9B0727FBF2B2007A38A5 /* ProductCardData.swift in Sources */,
 				0C4245782846200600899EB2 /* PaymentPhoneData.swift in Sources */,
@@ -7934,6 +7956,7 @@
 				EDB1451E26652F170028EF5A /* UIView.swift in Sources */,
 				68FFA565269464FF002DADFA /* TransferByRequisitesConfirmViewController.swift in Sources */,
 				ED353B6A26FB5ADA00F17F00 /* SetUserSettingDecodableModel.swift in Sources */,
+				503069D8286A5BE700308CC1 /* BottomSheetTransitioningDelegate.swift in Sources */,
 				0BB24A9226EFC6AB00DDA4F6 /* GetProductTemplateList.swift in Sources */,
 				ED733D5A285895DF00F22D42 /* CountriesList+Legacy.swift in Sources */,
 				0B8C1C49273B04DE00BA5CAC /* QRScanerInfoView.swift in Sources */,
@@ -8025,6 +8048,7 @@
 				0B66E8D826CC5EC400FD735D /* ExtensionDevice.swift in Sources */,
 				0B216FC326D1B30C0023C878 /* ExtensionGKHCitySearchController.swift in Sources */,
 				ED60A1E126DC10A3000F3208 /* GetClientConsentMe2MePullDecodableModel.swift in Sources */,
+				503069D9286A5BE700308CC1 /* BottomSheetHostingController.swift in Sources */,
 				ED4B54462703465200C87A1A /* CardsScrollModel.swift in Sources */,
 				ED4FC5FA266B8D5A0092B4AB /* SmsCodeBasicAttributes.swift in Sources */,
 				68D099D9273B5D110017D777 /* PaymentByPhoneCoordinator.swift in Sources */,

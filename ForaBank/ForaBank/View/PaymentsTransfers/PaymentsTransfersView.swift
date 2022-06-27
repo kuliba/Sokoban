@@ -124,7 +124,7 @@ struct PaymentsTransfersView: View {
                     }
                 }
             } //mainZStack
-            .bottomSheet(item: $viewModel.sheet) {
+            .contentBottomSheet(item: $viewModel.sheet) {
             } content: { sheet in
                
                 switch sheet.type {

@@ -58,7 +58,7 @@ struct MessagesHistoryView: View {
                 UIView.transition(with: tabBarController.view, duration: 0.05, options: .transitionCrossDissolve, animations: nil)
             }
         }
-        .bottomSheet(item: $viewModel.sheet) {
+        .contentBottomSheet(item: $viewModel.sheet) {
         } content: { sheet in
             
             switch sheet.sheetType {

@@ -118,7 +118,7 @@ struct MainView: View {
                     TransferByPhoneView(viewModel: viewModel)
             }
         })
-        .bottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
+        .contentBottomSheet(item: $viewModel.bottomSheet) { bottomSheet in
 
             switch bottomSheet.type {
             case let .openAccount(model):

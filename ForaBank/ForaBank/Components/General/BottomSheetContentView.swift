@@ -244,7 +244,7 @@ struct BottomSheetContentView_Previews: PreviewProvider {
 
 extension View {
 
-    func bottomSheet<Content: View>(
+    func contentBottomSheet<Content: View>(
         isPresented: Binding<Bool>,
         onDismiss: (() -> Void)? = nil,
         @ViewBuilder content: @escaping () -> Content
@@ -256,7 +256,7 @@ extension View {
         }
     }
 
-    func bottomSheet<Item, Content>(
+    func contentBottomSheet<Item, Content>(
         item: Binding<Item?>,
         onDismiss: (() -> Void)? = nil,
         @ViewBuilder content: @escaping (Item) -> Content
@@ -270,7 +270,7 @@ extension View {
             }
         }
 
-        return bottomSheet(isPresented: isShowBottomSheet, onDismiss: onDismiss) {
+        return contentBottomSheet(isPresented: isShowBottomSheet, onDismiss: onDismiss) {
 
             if let unwrapedItem = item.wrappedValue {
                 content(unwrapedItem)
