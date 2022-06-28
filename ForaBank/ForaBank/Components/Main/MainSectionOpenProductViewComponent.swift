@@ -59,11 +59,15 @@ extension MainSectionOpenProductView {
                 let icon = type.openButtonIcon
                 let title = type.openButtonTitle
                 let subTitle = description(for: type)
-                let action: () -> Void = { [weak self] in
-                    self?.action.send(MainSectionViewModelAction.OpenProduct.ButtonTapped(productType: type))
+                switch type {
+                case .card:
+                    return ButtonNewProduct.ViewModel(icon: icon, title: title, subTitle: subTitle, url: model.productsOpenAccountURL)
+                    
+                default:
+                    return ButtonNewProduct.ViewModel(icon: icon, title: title, subTitle: subTitle, action: { [weak self] in
+                        self?.action.send(MainSectionViewModelAction.OpenProduct.ButtonTapped(productType: type))
+                    })
                 }
-                
-                return ButtonNewProduct.ViewModel(icon: icon, title: title, subTitle: subTitle, action: action)
             }
         }
         

@@ -773,6 +773,7 @@
 		7758754F27996E610080115D /* FileManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7758754E27996E610080115D /* FileManager+Extensions.swift */; };
 		775E068327E8921E006A9886 /* Model+PaymentsTaxesFMSMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775E068227E8921E006A9886 /* Model+PaymentsTaxesFMSMock.swift */; };
 		775E068527E8A0D1006A9886 /* Model+PaymentsTaxesFNSMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775E068427E8A0D1006A9886 /* Model+PaymentsTaxesFNSMock.swift */; };
+		775F2B99286B6ECE000C33E1 /* HideTabBarModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775F2B98286B6ECE000C33E1 /* HideTabBarModifier.swift */; };
 		7763A690279DAFD10064B037 /* EncryptionProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7763A68F279DAFD10064B037 /* EncryptionProtocols.swift */; };
 		7763A692279DB1CB0064B037 /* CSRFAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7763A691279DB1CB0064B037 /* CSRFAgentProtocol.swift */; };
 		7767049A27FD82C100996A07 /* PlacesControlViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7767049927FD82C100996A07 /* PlacesControlViewModel.swift */; };
@@ -2101,6 +2102,7 @@
 		7758754E27996E610080115D /* FileManager+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+Extensions.swift"; sourceTree = "<group>"; };
 		775E068227E8921E006A9886 /* Model+PaymentsTaxesFMSMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTaxesFMSMock.swift"; sourceTree = "<group>"; };
 		775E068427E8A0D1006A9886 /* Model+PaymentsTaxesFNSMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PaymentsTaxesFNSMock.swift"; sourceTree = "<group>"; };
+		775F2B98286B6ECE000C33E1 /* HideTabBarModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HideTabBarModifier.swift; sourceTree = "<group>"; };
 		7763A68F279DAFD10064B037 /* EncryptionProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptionProtocols.swift; sourceTree = "<group>"; };
 		7763A691279DB1CB0064B037 /* CSRFAgentProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRFAgentProtocol.swift; sourceTree = "<group>"; };
 		7767049927FD82C100996A07 /* PlacesControlViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesControlViewModel.swift; sourceTree = "<group>"; };
@@ -3475,6 +3477,7 @@
 			children = (
 				774A8B832865FF6800B81140 /* FullScreenCoverLagacyModifier.swift */,
 				50A19942280F1AF80094CFA5 /* SwipeSidesModifier.swift */,
+				775F2B98286B6ECE000C33E1 /* HideTabBarModifier.swift */,
 			);
 			path = Modifiers;
 			sourceTree = "<group>";
@@ -7713,6 +7716,7 @@
 				0B22AEAE26CE8DFE00B11E7F /* GKHDataCaseImage.swift in Sources */,
 				EDDFE3B82756E6F900F57C71 /* DetailInformationCollectionViewCell.swift in Sources */,
 				EDB14385265FDA410028EF5A /* LoginCardEntryViewController.swift in Sources */,
+				775F2B99286B6ECE000C33E1 /* HideTabBarModifier.swift in Sources */,
 				68E765262796B38B005860FE /* ServerCommands+Registration.swift in Sources */,
 				EDB02AE42816EB07005F64B5 /* AccountCellFullButtonViewComponent.swift in Sources */,
 				0B37F98626807620007728FC /* NetworkHelper.swift in Sources */,

@@ -13,6 +13,15 @@ typealias ProductsData = [ProductType : [ProductData]]
 typealias ProductsDynamicParams = [ServerCommands.ProductController.GetProductDynamicParamsList.Response.List.DynamicListParams]
 typealias LoansData = [PersonsCreditData]
 
+//MARK: - Helpers
+
+extension Model {
+    
+    var productsOpenAccountURL: URL { URL(string: "https://promo.forabank.ru/")! }
+}
+
+//MARK: - Action
+
 extension ModelAction {
     
     enum Products {

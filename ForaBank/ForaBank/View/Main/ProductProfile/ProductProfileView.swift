@@ -6,14 +6,11 @@
 //
 
 import SwiftUI
-import Introspect
 
 struct ProductProfileView: View {
     
     @ObservedObject var viewModel: ProductProfileViewModel
-    
-    @State private var tabBarController: UITabBarController?
-    
+
     var body: some View {
         
         ZStack(alignment: .top) {
@@ -92,20 +89,6 @@ struct ProductProfileView: View {
                 .background(viewModel.accentColor.contrast(0.5).edgesIgnoringSafeArea(.top))
         }
         .navigationBarHidden(true)
-        .introspectTabBarController(customize: { tabBarController in
-            
-            self.tabBarController = tabBarController
-            tabBarController.tabBar.isHidden = true
-            UIView.transition(with: tabBarController.view, duration: 0.35, options: .transitionCrossDissolve, animations: nil)
-        })
-        .onDisappear {
-            
-            if let tabBarController = tabBarController {
-                
-                tabBarController.tabBar.isHidden = false
-                UIView.transition(with: tabBarController.view, duration: 0.35, options: .transitionCrossDissolve, animations: nil)
-            }
-        }
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })

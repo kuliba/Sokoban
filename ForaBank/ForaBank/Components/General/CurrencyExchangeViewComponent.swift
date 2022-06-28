@@ -48,12 +48,12 @@ extension CurrencyExchangeView {
                     
                     for currency in displayCurrencies {
                         
-                        guard let rate = ratesData.first(where: { $0.currency == currency }),
-                              let rateViewModel = CurrencyRateViewModel(with: rate) else {
+                        guard let rate = ratesData.first(where: { $0.currency == currency }) else {
                             
                             continue
                         }
                         
+                        let rateViewModel = CurrencyRateViewModel(with: rate)
                         updated.append(rateViewModel)
                     }
                     
@@ -93,13 +93,11 @@ extension CurrencyExchangeView.ViewModel {
             self.sell = sell
         }
         
-        init?(with rate: ExchangeRateData) {
+        init(with rate: ExchangeRateData) {
             
             let formatter = NumberFormatter.currencyRate
-            guard let buyValue = formatter.string(from: NSNumber(value: rate.rateBuy)),
-                let sellValue = formatter.string(from: NSNumber(value: rate.rateSell)) else {
-                return nil
-            }
+            let buyValue = formatter.string(from: NSNumber(value: rate.rateSell)) ?? String(rate.rateSell)
+            let sellValue = formatter.string(from: NSNumber(value: rate.rateBuy)) ?? String(rate.rateBuy)
             
             self.id = rate.currency
             self.title = rate.currencyName

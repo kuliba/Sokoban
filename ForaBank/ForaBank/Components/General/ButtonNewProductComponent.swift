@@ -17,7 +17,13 @@ extension ButtonNewProduct {
         let icon: Image
         let title: String
         let subTitle: String
-        let action: () -> Void
+        let tapActionType: TapActionType
+        
+        enum TapActionType {
+            
+            case action(() -> Void)
+            case url(URL)
+        }
         
         internal init(id: UUID = UUID(), icon: Image, title: String, subTitle: String, action: @escaping () -> Void) {
             
@@ -25,7 +31,16 @@ extension ButtonNewProduct {
             self.icon = icon
             self.title = title
             self.subTitle = subTitle
-            self.action = action
+            self.tapActionType = .action(action)
+        }
+        
+        internal init(id: UUID = UUID(), icon: Image, title: String, subTitle: String, url: URL) {
+            
+            self.id = id
+            self.icon = icon
+            self.title = title
+            self.subTitle = subTitle
+            self.tapActionType = .url(url)
         }
     }
 }
@@ -38,36 +53,111 @@ struct ButtonNewProduct: View {
     
     var body: some View {
         
-        Button(action: viewModel.action) {
-            
-            ZStack(alignment: .leading) {
+        switch viewModel.tapActionType {
+        case let .action(action):
+            Button(action: action) {
                 
-                RoundedRectangle(cornerRadius: 12)
-                    .foregroundColor(.mainColorsGrayLightest)
-                
-                VStack(alignment: .leading) {
+                ZStack(alignment: .leading) {
                     
-                    viewModel.icon
-                        .renderingMode(.original)
+                    RoundedRectangle(cornerRadius: 12)
+                        .foregroundColor(.mainColorsGrayLightest)
                     
-                    Spacer()
-                    
-                    VStack(alignment: .leading, spacing: 4) {
+                    VStack(alignment: .leading) {
                         
-                        Text(viewModel.title)
-                            .font(.textBodyMM14200())
-                            .foregroundColor(.textSecondary)
+                        viewModel.icon
+                            .renderingMode(.original)
                         
-                        Text(viewModel.subTitle)
-                            .font(.textBodyMR14200())
-                            .foregroundColor(.textPlaceholder)
-                            .lineLimit(1)
-                    }
+                        Spacer()
+                        
+                        VStack(alignment: .leading, spacing: 4) {
+                            
+                            Text(viewModel.title)
+                                .font(.textBodyMM14200())
+                                .foregroundColor(.textSecondary)
+                            
+                            Text(viewModel.subTitle)
+                                .font(.textBodyMR14200())
+                                .foregroundColor(.textPlaceholder)
+                                .lineLimit(1)
+                        }
+                        
+                    }.padding(11)
                 }
-                .padding(11)
-            }
 
-        }.buttonStyle(PushButtonStyle())
+            }.buttonStyle(PushButtonStyle())
+            
+        case let .url(url):
+            if #available(iOS 14.0, *) {
+                
+                Link(destination: url) {
+                    
+                    ZStack(alignment: .leading) {
+                        
+                        RoundedRectangle(cornerRadius: 12)
+                            .foregroundColor(.mainColorsGrayLightest)
+                        
+                        VStack(alignment: .leading) {
+                            
+                            viewModel.icon
+                                .renderingMode(.original)
+                            
+                            Spacer()
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                
+                                Text(viewModel.title)
+                                    .font(.textBodyMM14200())
+                                    .foregroundColor(.textSecondary)
+                                
+                                Text(viewModel.subTitle)
+                                    .font(.textBodyMR14200())
+                                    .foregroundColor(.textPlaceholder)
+                                    .lineLimit(1)
+                            }
+                            
+                        }.padding(11)
+                    }
+                    
+                }.buttonStyle(PushButtonStyle())
+                
+            } else {
+                
+                Button{
+                    
+                    UIApplication.shared.open(url)
+                    
+                } label: {
+                    
+                    ZStack(alignment: .leading) {
+                        
+                        RoundedRectangle(cornerRadius: 12)
+                            .foregroundColor(.mainColorsGrayLightest)
+                        
+                        VStack(alignment: .leading) {
+                            
+                            viewModel.icon
+                                .renderingMode(.original)
+                            
+                            Spacer()
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                
+                                Text(viewModel.title)
+                                    .font(.textBodyMM14200())
+                                    .foregroundColor(.textSecondary)
+                                
+                                Text(viewModel.subTitle)
+                                    .font(.textBodyMR14200())
+                                    .foregroundColor(.textPlaceholder)
+                                    .lineLimit(1)
+                            }
+                        }
+                        .padding(11)
+                    }
+                    
+                }.buttonStyle(PushButtonStyle())
+            }
+        }
     }
 }
 
