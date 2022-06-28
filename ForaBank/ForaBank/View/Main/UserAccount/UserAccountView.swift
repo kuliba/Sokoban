@@ -75,7 +75,7 @@ struct UserAccountView: View {
                 
             }
         })
-        .contentBottomSheet(item: $viewModel.bottomSheet, content: { sheet in
+        .bottomSheet(item: $viewModel.bottomSheet, content: { sheet in
             switch sheet.sheetType {
                 
             case let .inn(model):

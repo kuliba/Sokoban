@@ -16,7 +16,7 @@ final class BottomSheetPresentationController: UIPresentationController {
     let panGestureRecognizer = UIPanGestureRecognizer()
 
     private let topDragSize: CGSize = .init(width: 48, height: 5)
-    private let maxHeight: CGFloat = 0.9
+    private let multiplier: CGFloat = 0.9
 
     private lazy var dimmingView: UIView = {
 
@@ -56,22 +56,26 @@ final class BottomSheetPresentationController: UIPresentationController {
         }
     }
 
+    var sizeThatFits: CGSize {
+
+        guard let containerView = containerView,
+              let presentedView = presentedView else {
+                  return .zero
+              }
+
+        return presentedView.sizeThatFits(containerView.frame.size)
+    }
+
     override var frameOfPresentedViewInContainerView: CGRect {
 
-        guard let containerView = containerView, let presentedView = presentedView else {
-            return .zero
-        }
+        guard let containerView = containerView,
+              let window = UIApplication.shared.windows.filter({ $0.isKeyWindow }).first else {
+                  return .zero
+              }
 
-        let containerSize = CGSize(width: containerView.frame.width, height: containerView.frame.height)
-        let sizeThatFits = presentedView.sizeThatFits(containerSize)
-
-        let height = min(sizeThatFits.height, containerView.frame.height * maxHeight)
+        let height = min(sizeThatFits.height, containerView.frame.height * multiplier)
         let contentHeight: CGFloat = containerView.bounds.height - height
         let topDragOffset: CGFloat = 42
-
-        guard let window = UIApplication.shared.windows.filter({ $0.isKeyWindow }).first else {
-            return .zero
-        }
 
         return CGRect(x: 0,
                       y: contentHeight - topDragOffset + window.safeAreaInsets.bottom,
@@ -79,8 +83,7 @@ final class BottomSheetPresentationController: UIPresentationController {
                       height: height + topDragOffset)
     }
 
-    override func presentationTransitionWillBegin() {
-        super.presentationTransitionWillBegin()
+    private func configure() {
 
         guard let containerView = containerView,
               let presentedView = presentedView else {
@@ -97,6 +100,7 @@ final class BottomSheetPresentationController: UIPresentationController {
 
         containerView.addGestureRecognizer(panGestureRecognizer)
         dimmingView.addGestureRecognizer(tapGestureRecognizer)
+        topContainerView.addGestureRecognizer(tapDragGestureRecognizer)
 
         [dimmingView.topAnchor.constraint(equalTo: containerView.topAnchor),
          dimmingView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
@@ -116,11 +120,9 @@ final class BottomSheetPresentationController: UIPresentationController {
          topDragView.heightAnchor.constraint(equalToConstant: topDragSize.height)]
             .forEach { $0.isActive = true }
 
-        tapDragGestureRecognizer.addTarget(self, action: #selector(handleTapGesture))
         tapGestureRecognizer.addTarget(self, action: #selector(handleTapGesture))
         panGestureRecognizer.addTarget(self, action: #selector(handlePanGesture))
-
-        topContainerView.addGestureRecognizer(tapDragGestureRecognizer)
+        tapDragGestureRecognizer.addTarget(self, action: #selector(handleTapGesture))
 
         cornerRadius = 12
 
@@ -134,6 +136,12 @@ final class BottomSheetPresentationController: UIPresentationController {
         }
     }
 
+    override func presentationTransitionWillBegin() {
+        super.presentationTransitionWillBegin()
+
+        configure()
+    }
+    
     override func dismissalTransitionWillBegin() {
         super.dismissalTransitionWillBegin()
 
@@ -161,7 +169,28 @@ final class BottomSheetPresentationController: UIPresentationController {
     override func containerViewWillLayoutSubviews() {
         super.containerViewWillLayoutSubviews()
 
-        presentedView?.frame = frameOfPresentedViewInContainerView
+        updatePresentedView()
+    }
+
+    private func updatePresentedView() {
+
+        guard let presentedView = presentedView else {
+            return
+        }
+
+        presentedView.frame = frameOfPresentedViewInContainerView
+    }
+
+    private func presentationControllerShouldDismiss() {
+
+        guard let shouldDismiss = delegate?.presentationControllerShouldDismiss else {
+            presentingViewController.dismiss(animated: true)
+            return
+        }
+
+        if shouldDismiss(self) {
+            presentingViewController.dismiss(animated: true)
+        }
     }
 
     private func setTransparencyViews(_ hidden: Bool) {
@@ -172,29 +201,23 @@ final class BottomSheetPresentationController: UIPresentationController {
 
     @objc private func handleTapGesture(_ sender: UITapGestureRecognizer) {
 
-        guard let shouldDismissSheetMethod = delegate?.presentationControllerShouldDismiss else {
-            presentingViewController.dismiss(animated: true)
-            return
-        }
-
-        if shouldDismissSheetMethod(self) {
-            presentingViewController.dismiss(animated: true)
-        }
+        presentationControllerShouldDismiss()
     }
 
     @objc private func handlePanGesture(_ sender: UIPanGestureRecognizer) {
 
-        guard sender.state == .began else {
-            return
-        }
+        switch sender.state {
 
-        guard let shouldDismissSheetMethod = delegate?.presentationControllerShouldDismiss else {
-            presentingViewController.dismiss(animated: true)
-            return
-        }
+        case .began:
+            
+            presentationControllerShouldDismiss()
 
-        if shouldDismissSheetMethod(self) {
-            presentingViewController.dismiss(animated: true)
+        case .ended:
+
+            updatePresentedView()
+
+        default:
+            break
         }
     }
 }
