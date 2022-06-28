@@ -18,7 +18,7 @@ struct MainView: View {
             
             ScrollView(showsIndicators: false) {
                 
-                VStack(spacing: 20) {
+                VStack(spacing: 32) {
                     
                     ForEach(viewModel.sections) { section in
                         
@@ -69,38 +69,27 @@ struct MainView: View {
                 RefreshView()
                     .zIndex(1)
             }
-            
+                
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
                 if let link = viewModel.link  {
                     
                     switch link {
-                        
                     case .userAccount(let userAccountViewModel):
                         UserAccountView(viewModel: userAccountViewModel)
                         
                     case .productProfile(let productProfileViewModel):
                         ProductProfileView(viewModel: productProfileViewModel)
+                        
                     case .messages(let messagesHistoryViewModel):
                         MessagesHistoryView(viewModel: messagesHistoryViewModel)
                     }
                 }
             }
-            
-            if let url = viewModel.externalURL {
-                
-                    Color.clear
-                        .onAppear {
-                            
-                            UIApplication.shared.open(url)
-                            viewModel.externalURL = nil
-                        }
-            }
         }
         .ignoreKeyboard()
         .sheet(item: $viewModel.sheet, content: { sheet in
             switch sheet.type {
-                
             case .productProfile(let productProfileViewModel):
                 ProductProfileView(viewModel: productProfileViewModel)
              
@@ -132,6 +121,7 @@ struct MainView: View {
                 }
             }
         }
+        .tabBar(isHidden: $viewModel.isTabBarHidden)
         .navigationBarTitle("", displayMode: .inline)
         .navigationBarItems(leading:
                                 UserAccountButton(viewModel: viewModel.userAccountButton),

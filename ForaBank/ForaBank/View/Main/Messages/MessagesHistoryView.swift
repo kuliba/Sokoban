@@ -7,14 +7,12 @@
 
 import SwiftUI
 import Combine
-import Introspect
 
 struct MessagesHistoryView: View {
     
     @ObservedObject var viewModel: MessagesHistoryViewModel
     @State private var height: CGFloat = .zero
-    @State private var tabBarController: UITabBarController?
-    
+
     var body: some View {
         
         ScrollView {
@@ -44,20 +42,6 @@ struct MessagesHistoryView: View {
         }
         .coordinateSpace(name: "scroll")
         .navigationBar(with: viewModel.navigationBar)
-        .introspectTabBarController(customize: { tabBarController in
-            
-            self.tabBarController = tabBarController
-            tabBarController.tabBar.isHidden = true
-            UIView.transition(with: tabBarController.view, duration: 0.05, options: .transitionCrossDissolve, animations: nil)
-        })
-        .onDisappear {
-            
-            if let tabBarController = tabBarController {
-                
-                tabBarController.tabBar.isHidden = false
-                UIView.transition(with: tabBarController.view, duration: 0.05, options: .transitionCrossDissolve, animations: nil)
-            }
-        }
         .bottomSheet(item: $viewModel.sheet) {
         } content: { sheet in
             

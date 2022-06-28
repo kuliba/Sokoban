@@ -19,6 +19,6 @@ struct MainProductsGroupSettings {
 
 extension MainProductsGroupSettings {
     
-    static let base = MainProductsGroupSettings(minVisibleProductsAmount: 2,
+    static let base = MainProductsGroupSettings(minVisibleProductsAmount: 3,
                                                 maxCardsAmountRequeredNewProduct: 1)
 }

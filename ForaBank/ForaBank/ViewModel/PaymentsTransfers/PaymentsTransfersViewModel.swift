@@ -15,8 +15,9 @@ class PaymentsTransfersViewModel: ObservableObject {
     @Published var sections: [PaymentsTransfersSectionViewModel]
     
     @Published var sheet: Sheet?
-    @Published var link: Link? { didSet { isLinkActive = link != nil } }
+    @Published var link: Link? { didSet { isLinkActive = link != nil; isTabBarHidden = link != nil } }
     @Published var isLinkActive: Bool = false
+    @Published var isTabBarHidden: Bool = false
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()

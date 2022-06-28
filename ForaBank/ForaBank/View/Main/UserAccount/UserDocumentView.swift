@@ -6,13 +6,11 @@
 //
 
 import SwiftUI
-import Introspect
 
 struct UserDocumentView: View {
     
     @ObservedObject var viewModel: UserDocumentViewModel
-    @State private var tabBarController: UITabBarController?
-    
+
     var body: some View {
         
         ZStack(alignment: .top) {
@@ -76,24 +74,8 @@ struct UserDocumentView: View {
             }
         })
         .navigationBar(with: viewModel.navigationBar)
-        .introspectTabBarController(customize: { tabBarController in
-            
-            self.tabBarController = tabBarController
-            tabBarController.tabBar.isHidden = true
-            UIView.transition(with: tabBarController.view, duration: 0.05, options: .transitionCrossDissolve, animations: nil)
-        })
-        .onDisappear {
-            
-            if let tabBarController = tabBarController {
-                
-                tabBarController.tabBar.isHidden = false
-                UIView.transition(with: tabBarController.view, duration: 0.05, options: .transitionCrossDissolve, animations: nil)
-            }
-            
-        }
     }
-    
-    
+
     struct BackgroundHeaderView: View {
         
         let geometry: GeometryProxy
