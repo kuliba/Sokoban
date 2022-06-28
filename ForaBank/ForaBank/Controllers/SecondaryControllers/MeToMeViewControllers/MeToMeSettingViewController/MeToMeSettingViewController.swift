@@ -158,6 +158,7 @@ class MeToMeSettingViewController: UIViewController {
         banksView.didChooseButtonTapped = { () in
             print("bankField didChooseButtonTapped")
             let settingVC = MeToMeSearchBanksViewController()
+            settingVC.rootVC = self
             let navVC = UINavigationController(rootViewController: settingVC)
             self.present(navVC, animated: true, completion: nil)
         }

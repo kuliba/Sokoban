@@ -12,10 +12,11 @@ class BanksView: UIView {
     //MARK: - Property
     let kContentXibName = "BanksView"
     
+    @IBOutlet weak var collectionView: UICollectionView!
     
     @IBOutlet var labelArray: [UILabel]!
     
-    
+    var banksName: [String]?
     var consentList: [ConsentList]? {
         didSet {
             guard let list = consentList else { return }
@@ -44,6 +45,11 @@ class BanksView: UIView {
         contentView.fixInView(self)
         self.anchor(height: 130)
         
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        let nib = UINib(nibName: "BanksCollectionViewCell", bundle: nil)
+        collectionView.register(nib, forCellWithReuseIdentifier: BanksCollectionViewCell.refCell)
+        
         
     }
     
@@ -63,6 +69,9 @@ class BanksView: UIView {
                 })
             }
             if banks.count > 0 {
+                
+                self.banksName = banks
+                self.collectionView.reloadData()
                 
                 for i in 0..<banks.count {
                     if i < self.labelArray.count {
@@ -90,5 +99,35 @@ class BanksView: UIView {
         didChooseButtonTapped?()
     }
     
+    
+}
+
+extension BanksView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+            return 1
+        }
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    return banksName?.count ?? 0
+        }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView
+                .dequeueReusableCell(withReuseIdentifier: BanksCollectionViewCell.refCell,
+                    for: indexPath) as! BanksCollectionViewCell
+            
+        let bank = banksName?[indexPath.item]
+        cell.configure(with: bank, and: indexPath)
+            
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        let count = banksName?[indexPath.item].count ?? 0
+        return CGSize(width:  count > 25 ? 230 : count * 11, height: 32)
+    }
     
 }

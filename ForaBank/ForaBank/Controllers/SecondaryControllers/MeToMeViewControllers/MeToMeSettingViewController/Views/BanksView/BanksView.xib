@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
-        <array key="Inter-VariableFont_slnt,wght.ttf">
+        <array key="Inter-Regular.ttf">
             <string>Inter-Regular</string>
         </array>
     </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="BanksView" customModule="ForaBank" customModuleProvider="target">
             <connections>
+                <outlet property="collectionView" destination="MWH-dU-UA8" id="eYJ-kn-FHh"/>
                 <outlet property="contentView" destination="iN0-l3-epB" id="QPO-RF-zLm"/>
                 <outletCollection property="labelArray" destination="6Kn-2h-LpX" collectionClass="NSMutableArray" id="TOr-PR-lfT"/>
                 <outletCollection property="labelArray" destination="R0T-sE-nhT" collectionClass="NSMutableArray" id="DTV-KG-hLD"/>
@@ -32,20 +33,20 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="BankIcon" translatesAutoresizingMaskIntoConstraints="NO" id="Z6Z-km-xZE">
-                    <rect key="frame" x="20" y="113" width="32" height="32"/>
+                    <rect key="frame" x="20" y="137" width="32" height="32"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="32" id="3l8-qc-PfO"/>
                         <constraint firstAttribute="height" constant="32" id="OmR-qM-gfZ"/>
                     </constraints>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Банки из которых разрешено запрашивать переводы" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1NZ-yc-kQt">
-                    <rect key="frame" x="68" y="206" width="327" height="15"/>
+                    <rect key="frame" x="68" y="254" width="327" height="15"/>
                     <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
                     <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NCQ-HM-lJk">
-                    <rect key="frame" x="363" y="113" width="32" height="32"/>
+                    <rect key="frame" x="363" y="137" width="32" height="32"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="32" id="5uA-ch-OQH"/>
                         <constraint firstAttribute="width" constant="32" id="rFd-yK-5SH"/>
@@ -65,14 +66,14 @@
                     <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ICn-hA-Dd2">
-                    <rect key="frame" x="68" y="197" width="327" height="1"/>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ICn-hA-Dd2" userLabel="LineView">
+                    <rect key="frame" x="68" y="245" width="327" height="1"/>
                     <color key="backgroundColor" red="0.91764705882352937" green="0.92156862745098034" blue="0.92156862745098034" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="1" id="ffC-Su-j62"/>
                     </constraints>
                 </view>
-                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="pzx-NU-uwi">
+                <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="pzx-NU-uwi" userLabel="Stack ViewM">
                     <rect key="frame" x="68" y="73" width="279" height="112"/>
                     <subviews>
                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="KMX-sz-anH">
@@ -182,35 +183,67 @@
                         </stackView>
                     </subviews>
                     <gestureRecognizers/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="112" id="6dA-kA-pDY"/>
+                    </constraints>
                     <connections>
                         <outletCollection property="gestureRecognizers" destination="G2G-KW-thB" appends="YES" id="r8h-GU-FSU"/>
                     </connections>
                 </stackView>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="MWH-dU-UA8">
+                    <rect key="frame" x="68" y="73" width="279" height="160"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="160" id="065-Ca-xrF"/>
+                    </constraints>
+                    <inset key="scrollIndicatorInsets" minX="0.0" minY="0.0" maxX="4" maxY="0.0"/>
+                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="3" minimumInteritemSpacing="1" id="eJL-r9-fj3">
+                        <size key="itemSize" width="128" height="128"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                    <connections>
+                        <outlet property="dataSource" destination="iN0-l3-epB" id="daH-WG-eWE"/>
+                        <outlet property="delegate" destination="iN0-l3-epB" id="QGT-6j-SY4"/>
+                    </connections>
+                </collectionView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
+                <constraint firstItem="ICn-hA-Dd2" firstAttribute="top" secondItem="MWH-dU-UA8" secondAttribute="bottom" constant="12" id="3fT-RQ-efR"/>
                 <constraint firstItem="318-89-bIZ" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="8" id="9vn-3d-G4z"/>
+                <constraint firstItem="MWH-dU-UA8" firstAttribute="top" secondItem="318-89-bIZ" secondAttribute="bottom" constant="4" id="Aki-4s-CA9"/>
                 <constraint firstItem="pzx-NU-uwi" firstAttribute="centerY" secondItem="Z6Z-km-xZE" secondAttribute="centerY" id="EJI-Q2-87Z"/>
                 <constraint firstItem="ICn-hA-Dd2" firstAttribute="leading" secondItem="318-89-bIZ" secondAttribute="leading" id="EPd-av-DmB"/>
                 <constraint firstItem="NCQ-HM-lJk" firstAttribute="leading" secondItem="pzx-NU-uwi" secondAttribute="trailing" constant="16" id="HLi-Lp-zU4"/>
                 <constraint firstItem="Z6Z-km-xZE" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="IEb-Kt-SjH"/>
                 <constraint firstItem="pzx-NU-uwi" firstAttribute="leading" secondItem="Z6Z-km-xZE" secondAttribute="trailing" constant="16" id="ITi-zr-vro"/>
                 <constraint firstItem="1NZ-yc-kQt" firstAttribute="leading" secondItem="ICn-hA-Dd2" secondAttribute="leading" id="Lbj-pl-Isf"/>
+                <constraint firstItem="NCQ-HM-lJk" firstAttribute="leading" secondItem="MWH-dU-UA8" secondAttribute="trailing" constant="16" id="NJh-mn-APy"/>
+                <constraint firstItem="MWH-dU-UA8" firstAttribute="centerY" secondItem="Z6Z-km-xZE" secondAttribute="centerY" id="OxZ-ZN-Ny6"/>
                 <constraint firstItem="ICn-hA-Dd2" firstAttribute="trailing" secondItem="NCQ-HM-lJk" secondAttribute="trailing" id="PPt-D1-F0t"/>
+                <constraint firstItem="NCQ-HM-lJk" firstAttribute="centerY" secondItem="MWH-dU-UA8" secondAttribute="centerY" id="Pz3-SH-0aR"/>
                 <constraint firstItem="ICn-hA-Dd2" firstAttribute="top" secondItem="pzx-NU-uwi" secondAttribute="bottom" constant="12" id="RR5-sR-8yn"/>
                 <constraint firstItem="1NZ-yc-kQt" firstAttribute="top" secondItem="ICn-hA-Dd2" secondAttribute="bottom" constant="8" id="bMB-vf-7RA"/>
                 <constraint firstItem="1NZ-yc-kQt" firstAttribute="trailing" secondItem="ICn-hA-Dd2" secondAttribute="trailing" id="c3S-v9-1bd"/>
                 <constraint firstItem="pzx-NU-uwi" firstAttribute="top" secondItem="318-89-bIZ" secondAttribute="bottom" constant="4" id="cPI-af-5vT"/>
                 <constraint firstItem="NCQ-HM-lJk" firstAttribute="leading" secondItem="318-89-bIZ" secondAttribute="trailing" constant="16" id="e19-Ta-APN"/>
+                <constraint firstItem="MWH-dU-UA8" firstAttribute="leading" secondItem="Z6Z-km-xZE" secondAttribute="trailing" constant="16" id="ht7-fy-WoG"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="NCQ-HM-lJk" secondAttribute="trailing" constant="20" id="k9m-NU-J1F"/>
                 <constraint firstItem="318-89-bIZ" firstAttribute="leading" secondItem="Z6Z-km-xZE" secondAttribute="trailing" constant="16" id="pAG-RM-RkB"/>
                 <constraint firstItem="pzx-NU-uwi" firstAttribute="centerY" secondItem="NCQ-HM-lJk" secondAttribute="centerY" id="pU4-DN-qLK"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <variation key="default">
+                <mask key="subviews">
+                    <exclude reference="pzx-NU-uwi"/>
+                </mask>
+            </variation>
             <point key="canvasLocation" x="138.40579710144928" y="-111.16071428571428"/>
         </view>
-        <tapGestureRecognizer id="G2G-KW-thB">
+        <tapGestureRecognizer enabled="NO" id="G2G-KW-thB">
             <connections>
                 <action selector="chooseButtonTapped:" destination="-1" id="zdh-Ip-rcd"/>
             </connections>

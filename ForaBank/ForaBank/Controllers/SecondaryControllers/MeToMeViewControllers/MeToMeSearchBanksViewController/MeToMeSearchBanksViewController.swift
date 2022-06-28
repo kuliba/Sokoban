@@ -9,6 +9,8 @@ import UIKit
 
 class MeToMeSearchBanksViewController: UIViewController {
     
+    weak var rootVC: MeToMeSettingViewController?
+    
     var allBanks = [BankFullInfoList]()
     var banks = [BankFullInfoList]() {
         didSet {
@@ -166,6 +168,10 @@ class MeToMeSearchBanksViewController: UIViewController {
             bankList.append(bank.memberID ?? "")
         }
         
+        rootVC?.banksView.consentList = selectedBanks.map {
+            ConsentList(active: nil, bankId: $0.memberID, beginDate: nil, consentId: nil, endDate: nil, oneTimeConsent: nil)
+        }
+
         let body = ["bankIdList" : bankList] as [String: AnyObject]
         self.showActivity()
         NetworkManager<ChangeClientConsentMe2MePullDecodableModel>.addRequest(.changeClientConsentMe2MePull, [:], body) { model, error in
