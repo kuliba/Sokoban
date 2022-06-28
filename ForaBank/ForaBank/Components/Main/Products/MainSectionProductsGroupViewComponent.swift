@@ -30,9 +30,10 @@ extension MainSectionProductsGroupView {
         
         private var products: CurrentValueSubject<[ProductView.ViewModel], Never> = .init([])
         private let settings: MainProductsGroupSettings
+        private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        init(productType: ProductType, visible: [ProductView.ViewModel], newProduct: ButtonNewProduct.ViewModel?, groupButton: GroupButtonViewModel?, isCollapsed: Bool, isSeparator: Bool, isUpdating: Bool, settings: MainProductsGroupSettings = .base) {
+        init(productType: ProductType, visible: [ProductView.ViewModel], newProduct: ButtonNewProduct.ViewModel?, groupButton: GroupButtonViewModel?, isCollapsed: Bool, isSeparator: Bool, isUpdating: Bool, settings: MainProductsGroupSettings = .base, model: Model = .emptyMock) {
             
             self.productType = productType
             self.visible = visible
@@ -43,9 +44,10 @@ extension MainSectionProductsGroupView {
             self.isUpdating = isUpdating
             self.products.value = visible
             self.settings = settings
+            self.model = model
         }
         
-        init(productType: ProductType, products: [ProductView.ViewModel], settings: MainProductsGroupSettings = .base) {
+        init(productType: ProductType, products: [ProductView.ViewModel], settings: MainProductsGroupSettings = .base, model: Model) {
             
             self.productType = productType
             self.products.value = products
@@ -55,6 +57,7 @@ extension MainSectionProductsGroupView {
             self.isCollapsed = true
             self.isSeparator = true
             self.isUpdating = false
+            self.model = model
             
             bind()
         }
@@ -129,8 +132,11 @@ extension MainSectionProductsGroupView {
                         
                         if productType == .card, visible.count <= settings.maxCardsAmountRequeredNewProduct {
                             
-                            //TODO: real action required
-                            newProduct = ButtonNewProduct.ViewModel(icon: .ic24NewCardColor, title: "Хочу карту", subTitle: "Бесплатно", action: {})
+                            newProduct = ButtonNewProduct.ViewModel(icon: .ic24NewCardColor, title: "Хочу карту", subTitle: "Бесплатно", url: model.productsOpenAccountURL)
+                            
+                        } else {
+                            
+                            newProduct = nil
                         }
                     }
                     
@@ -255,35 +261,53 @@ struct MainSectionProductsGroupView: View {
     
     var body: some View {
         
-        HStack(spacing: viewModel.dimensions.spacing) {
+        HStack(alignment: .top, spacing: viewModel.dimensions.spacing) {
             
             ForEach(viewModel.visible) { productViewModel in
-                
-                ProductView(viewModel: productViewModel)
-                    .frame(width: viewModel.dimensions.widths.product)
+
+                VStack {
+                    
+                    ZStack {
+                        
+                        RoundedRectangle(cornerRadius: 12)
+                            .frame(width: viewModel.dimensions.widths.product - 25 * 2, height: 104)
+                            .foregroundColor(.mainColorsBlack)
+                            .opacity(0.15)
+                            .offset(x: 0, y: 13)
+                            .blur(radius: 8)
+                        
+                        ProductView(viewModel: productViewModel)
+                            .frame(width: viewModel.dimensions.widths.product, height: 104)
+                    }
+                    
+                    Spacer()
+                    
+                }.frame(height: 127)
+
             }
             
             if let newProductViewModel = viewModel.newProduct {
                 
                 ButtonNewProduct(viewModel: newProductViewModel)
-                    .frame(width: viewModel.dimensions.widths.new)
+                    .frame(width: viewModel.dimensions.widths.new, height: 104)
+                
             }
             
             if let groupButtonViewModel = viewModel.groupButton {
                 
                 GroupButtonView(viewModel: groupButtonViewModel)
-                    .frame(width: viewModel.dimensions.widths.button)
+                    .frame(width: viewModel.dimensions.widths.button, height: 104)
             }
             
             if viewModel.isSeparator == true {
                 
                 Capsule(style: .continuous)
-                    .frame(width: viewModel.dimensions.widths.separator)
                     .foregroundColor(.mainColorsGrayLightest)
                     .padding(.vertical, 20)
+                    .frame(width: viewModel.dimensions.widths.separator, height: 104)
             }
-        }
-        .frame(height: 104)
+            
+        }.frame(height: 132)
     }
 }
 
@@ -311,8 +335,7 @@ extension MainSectionProductsGroupView {
                         .foregroundColor(.iconBlack)
                 }
                 
-            }
-            .onTapGesture { viewModel.action() }
+            }.onTapGesture { viewModel.action() }
         }
     }
 }
@@ -362,9 +385,9 @@ extension MainSectionProductsGroupView.ViewModel {
     
     static let sampleGroupCollapsed = MainSectionProductsGroupView.ViewModel(productType: .card, visible: [.classic], newProduct: nil, groupButton: .init(content: .title("+5"), action: {}), isCollapsed: true, isSeparator: true, isUpdating: false)
     
-    static let sampleProducts = MainSectionProductsGroupView.ViewModel(productType: .card, products: [.classic, .account, .blocked])
+    static let sampleProducts = MainSectionProductsGroupView.ViewModel(productType: .card, products: [.classic, .account, .blocked], model: .emptyMock)
     
-    static let sampleProductsOne = MainSectionProductsGroupView.ViewModel(productType: .card, products: [.classic])
+    static let sampleProductsOne = MainSectionProductsGroupView.ViewModel(productType: .card, products: [.classic], model: .emptyMock)
 }
 
 extension ButtonNewProduct.ViewModel {

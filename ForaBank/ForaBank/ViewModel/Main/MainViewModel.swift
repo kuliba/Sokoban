@@ -19,9 +19,9 @@ class MainViewModel: ObservableObject {
     @Published var isRefreshing: Bool
     @Published var productProfile: ProductProfileViewModel?
     @Published var sheet: Sheet?
-    @Published var link: Link? { didSet { isLinkActive = link != nil } }
+    @Published var link: Link? { didSet { isLinkActive = link != nil; isTabBarHidden = link != nil } }
     @Published var isLinkActive: Bool = false
-    @Published var externalURL: URL? = nil
+    @Published var isTabBarHidden: Bool = false
     @Published var bottomSheet: BottomSheet?
     
     private var model: Model
@@ -118,10 +118,6 @@ class MainViewModel: ObservableObject {
                         case let payload as MainSectionViewModelAction.OpenProduct.ButtonTapped:
                             
                             switch payload.productType {
-                            case .card:
-                                let url = URL(string: "https://promo.forabank.ru/")
-                                externalURL = url
-                                
                             case .account:
                                 bottomSheet = .init(type: .openAccount(model))
                                 
@@ -134,30 +130,6 @@ class MainViewModel: ObservableObject {
                         }
                         
                     }.store(in: &bindings)
-
-                /*
-            case let openProductSection as MainSectionOpenProductView.ViewModel:
-                openProductSection.action
-                    .receive(on: DispatchQueue.main)
-                    .sink { [unowned self] action in
-
-                        switch action {
-                        case let payload as MainSectionViewModelAction.OpenProduct.ButtonTapped:
-
-                            switch payload.productType {
-                            case .account:
-                                bottomSheet = .init(type: .openAccount(model))
-
-                            default:
-                                break
-                            }
-
-                        default:
-                            break
-                        }
-
-                    }.store(in: &bindings)
-                 */
                 
             case let fastPayment as MainSectionFastOperationView.ViewModel:
                 fastPayment.action
