@@ -30,6 +30,10 @@ class MeToMeSettingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        newModel.action.send(ModelAction
+                            .FastPaymentSettings
+                            .ContractFindList.Request())
         view.backgroundColor = .white
         setupPaymentsUI()
         setupStackView()
@@ -83,14 +87,17 @@ class MeToMeSettingViewController: UIViewController {
             if contract?.flagClientAgreementIn == "YES"
                 && contract?.flagClientAgreementOut == "YES" {
                 
-                topSwitch.bankByPhoneSwitch.isOn = true
                 topSwitch.configViewWithValue(true)
+                banksView.isHidden = false
                 cardFromField.isHidden = false
             } else {
                 topSwitch.configViewWithValue(false)
+                banksView.isHidden = true
                 cardFromField.isHidden = true
             }
         } else {
+            
+            banksView.isHidden = true
             topSwitch.configViewWithValue(false)
             cardFromField.isHidden = true
         }
@@ -201,9 +208,12 @@ class MeToMeSettingViewController: UIViewController {
     
     func setupTopSwitch() {
         topSwitch.bankByPhoneSwitch.isEnabled = false
+        
         topSwitch.switchIsChanged = { (sender) in
             self.showActivity()
             guard let model = self.model else { return }
+            self.banksView.isHidden = !sender.isOn
+            
             if model.isEmpty {
                 self.createContract(cardModel: self.cardFromField.cardModel!) { success, error in
                     

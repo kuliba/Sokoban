@@ -31,7 +31,6 @@ class BanksView: UIView {
     
     @IBOutlet var contentView: UIView!
     
-    
     var didChooseButtonTapped: (() -> Void)?
     
     //MARK: - Viewlifecicle
@@ -50,11 +49,19 @@ class BanksView: UIView {
         contentView.fixInView(self)
         self.anchor(height: 130)
         
+        let layout = LeftAlignedCollectionViewFlowLayout()
+                
+        layout.scrollDirection = .vertical
+        
+        layout.minimumInteritemSpacing = 3
+        layout.minimumLineSpacing = 2
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        collectionView.collectionViewLayout = layout
+        
         collectionView.delegate = self
         collectionView.dataSource = self
         let nib = UINib(nibName: "BanksCollectionViewCell", bundle: nil)
         collectionView.register(nib, forCellWithReuseIdentifier: BanksCollectionViewCell.refCell)
-        
         
     }
     
@@ -75,29 +82,8 @@ class BanksView: UIView {
             }
             
             self.banksName = banks
-            
-//            if banks.count > 0 {
-//                for i in 0..<banks.count {
-//                    if i < self.labelArray.count {
-//                        self.labelArray[i].text = banks[i]
-//                    }
-//                }
-//
-//                self.labelArray.forEach { label in
-//                    if label.text == "" {
-//                        label.isHidden = true
-//                    }
-//                }
-//
-//
-//            } else {
-//                self.labelArray.forEach { label in
-//                    label.isHidden = true
-//                }
-//            }
         }
     }
-    
     
     @IBAction private func chooseButtonTapped(_ sender: Any) {
         didChooseButtonTapped?()
@@ -106,7 +92,9 @@ class BanksView: UIView {
     
 }
 
-extension BanksView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension BanksView: UICollectionViewDelegate,
+                     UICollectionViewDataSource,
+                     UICollectionViewDelegateFlowLayout {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
             return 1
@@ -118,13 +106,16 @@ extension BanksView: UICollectionViewDelegate, UICollectionViewDataSource, UICol
 
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+            
         let cell = collectionView
-                .dequeueReusableCell(withReuseIdentifier: BanksCollectionViewCell.refCell,
-                    for: indexPath) as! BanksCollectionViewCell
-            
-        let bank = banksName?[indexPath.item]
-        cell.configure(with: bank, and: indexPath)
-            
+                    .dequeueReusableCell(withReuseIdentifier: BanksCollectionViewCell.refCell,
+                                         for: indexPath)
+                    
+        if let bankCell = cell as? BanksCollectionViewCell {
+                    
+            bankCell.configure(with: banksName?[indexPath.item], and: indexPath)
+        }
+                    
         return cell
     }
     
@@ -135,22 +126,35 @@ extension BanksView: UICollectionViewDelegate, UICollectionViewDataSource, UICol
                       ? 230 : count * 11, height: 32)
     }
     
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 3
-    }
-        
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 2
-    }
-    
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+    class LeftAlignedCollectionViewFlowLayout: UICollectionViewFlowLayout {
+
+        override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+            let attributes = super.layoutAttributesForElements(in: rect)?.map { $0.copy() as! UICollectionViewLayoutAttributes }
+
+            var leftMargin = sectionInset.left
+            var maxY: CGFloat = -1.0
+            
+            attributes?.forEach { layoutAttribute in
+                guard layoutAttribute.representedElementCategory == .cell
+                else { return }
+
+                if Int(layoutAttribute.frame.origin.y) >= Int(maxY)
+                    || layoutAttribute.frame.origin.x == sectionInset.left {
+                        leftMargin = sectionInset.left
+                }
+
+                if layoutAttribute.frame.origin.x == sectionInset.left {
+                    leftMargin = sectionInset.left
+                }
+                else { layoutAttribute.frame.origin.x = leftMargin
+                }
+
+                leftMargin += layoutAttribute.frame.width + minimumInteritemSpacing
+                maxY = max(layoutAttribute.frame.maxY , maxY)
+            }
+
+            return attributes
+        }
     }
     
 }
