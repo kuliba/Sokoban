@@ -196,7 +196,6 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="160" id="065-Ca-xrF"/>
                     </constraints>
-                    <inset key="scrollIndicatorInsets" minX="0.0" minY="0.0" maxX="4" maxY="0.0"/>
                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="3" minimumInteritemSpacing="1" id="eJL-r9-fj3">
                         <size key="itemSize" width="128" height="128"/>
                         <size key="headerReferenceSize" width="0.0" height="0.0"/>

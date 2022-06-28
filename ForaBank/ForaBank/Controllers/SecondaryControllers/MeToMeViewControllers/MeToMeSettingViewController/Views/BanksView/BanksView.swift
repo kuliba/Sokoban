@@ -16,7 +16,12 @@ class BanksView: UIView {
     
     @IBOutlet var labelArray: [UILabel]!
     
-    var banksName: [String]?
+    var banksName: [String]? {
+        didSet {
+            guard banksName != nil else { return }
+            collectionView.reloadData()
+        }
+    }
     var consentList: [ConsentList]? {
         didSet {
             guard let list = consentList else { return }
@@ -68,29 +73,28 @@ class BanksView: UIView {
                     }
                 })
             }
-            if banks.count > 0 {
-                
-                self.banksName = banks
-                self.collectionView.reloadData()
-                
-                for i in 0..<banks.count {
-                    if i < self.labelArray.count {
-                        self.labelArray[i].text = banks[i]
-                    }
-                }
-                
-                self.labelArray.forEach { label in
-                    if label.text == "" {
-                        label.isHidden = true
-                    }
-                }
-                
-                
-            } else {
-                self.labelArray.forEach { label in
-                    label.isHidden = true
-                }
-            }
+            
+            self.banksName = banks
+            
+//            if banks.count > 0 {
+//                for i in 0..<banks.count {
+//                    if i < self.labelArray.count {
+//                        self.labelArray[i].text = banks[i]
+//                    }
+//                }
+//
+//                self.labelArray.forEach { label in
+//                    if label.text == "" {
+//                        label.isHidden = true
+//                    }
+//                }
+//
+//
+//            } else {
+//                self.labelArray.forEach { label in
+//                    label.isHidden = true
+//                }
+//            }
         }
     }
     
@@ -127,7 +131,26 @@ extension BanksView: UICollectionViewDelegate, UICollectionViewDataSource, UICol
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         let count = banksName?[indexPath.item].count ?? 0
-        return CGSize(width:  count > 25 ? 230 : count * 11, height: 32)
+        return CGSize(width:  count > 22
+                      ? 230 : count * 11, height: 32)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 3
+    }
+        
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 3
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
     
 }
