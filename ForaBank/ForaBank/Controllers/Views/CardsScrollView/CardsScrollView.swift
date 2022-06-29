@@ -78,7 +78,8 @@ final class CardsScrollView: UIView {
         self.onlyMy = onlyMy
         self.onlyCard = onlyCard
         
-        let clientId = UserDefaults.standard.object(forKey: "clientId") as? Int
+        let clientId = Model.shared.clientInfo.value?.id
+        
         if loadProducts {
             
             var products: [UserAllCardsModel] = []
@@ -99,7 +100,7 @@ final class CardsScrollView: UIView {
                             cardList.append(op)
                         }
                     } else {
-                        if (op.ownerID == clientId ?? 0 && op.isMain == true) {
+                        if (op.ownerID == clientId) {
                             
                             cardList.append(op)
                         }
