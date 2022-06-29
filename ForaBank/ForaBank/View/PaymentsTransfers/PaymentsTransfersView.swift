@@ -91,6 +91,16 @@ struct PaymentsTransfersView: View {
                             
                         case .transportOperators(let model):
                             OperatorsView(viewModel: model)
+                            
+                        case .transport(let viewModel):
+                            AvtodorDetailsView(viewModel: viewModel)
+                            
+                        case .internet(let viewModel):
+                            InternetTVDetailsView(viewModel: viewModel)
+                            
+                        case .service(let viewModel):
+                            OperatorsView(viewModel: viewModel)
+                            
                         }
                     }
                 }

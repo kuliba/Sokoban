@@ -83,6 +83,12 @@ struct MainView: View {
                         
                     case .messages(let messagesHistoryViewModel):
                         MessagesHistoryView(viewModel: messagesHistoryViewModel)
+                        
+                    case .openDeposit(let openDepositViewModel):
+                        OpenDepositView(viewModel: openDepositViewModel)
+                        
+                    case .templates(let templatesViewModel):
+                        TemplatesListView(viewModel: templatesViewModel)
                     }
                 }
             }
@@ -101,8 +107,7 @@ struct MainView: View {
                 
             case .places(let placesViewModel):
                 PlacesView(viewModel: placesViewModel)
-            case .templates(let templatesViewModel):
-                TemplatesListView(viewModel: templatesViewModel)
+
             case .byPhone(let viewModel):
                     TransferByPhoneView(viewModel: viewModel)
             }

@@ -310,7 +310,7 @@ extension CustomPopUpWithRateView {
             cardFromListView = CardsScrollView(onlyMy: onlyMy, deleteDeposit: true)
             cardFromListView.didCardTapped = { (cardId) in
                 DispatchQueue.main.async {
-                    guard let cardList = self.allCardsFromRealm else { return }
+                    let cardList = ReturnAllCardList.cards()
                     cardList.forEach({ card in
                         if card.id == cardId {
                             self.viewModel.cardFromRealm = card

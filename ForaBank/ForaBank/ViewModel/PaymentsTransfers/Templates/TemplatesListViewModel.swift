@@ -22,6 +22,9 @@ class TemplatesListViewModel: ObservableObject {
     @Published var onboarding: OnboardingViewModel?
     @Published var contextMenu: ContextMenuViewModel?
     @Published var deletePannel: DeletePannelViewModel?
+    @Published var link: Link? { didSet { isLinkActive = link != nil } }
+    @Published var isLinkActive: Bool = false
+    @Published var sheet: Sheet?
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
@@ -126,51 +129,54 @@ private extension TemplatesListViewModel {
                 switch action {
                 case let payload as TemplatesListViewModelAction.ItemTapped:
                     guard let temp = model.paymentTemplates.value.first(where: { $0.paymentTemplateId == payload.itemId}) else { return }
+                    
                     switch temp.type {
                         
                     case .otherBank:
                         print("Скорее всего не будет сделано в ближайшее время")
                         
                     case .betweenTheir:
-                        self.action.send(TemplatesListViewModelAction.Present.PaymentToMyCard(viewModel: temp))
-                        
+                        sheet = .init(type: .betweenTheir(.init(closeAction: {[weak self] in self?.link = nil }, paymentTemplate: temp)))
                     case .insideBank:
-                        self.action.send(TemplatesListViewModelAction.Present.PaymentInsideBankByCard(viewModel: temp))
-                        
+                        sheet = .init(type: .betweenTheir(.init(closeAction: {[weak self] in self?.link = nil }, paymentTemplate: temp)))
                     case .byPhone:
-                        let paymentViewModel = PaymentByPhoneViewModel(insideByPhone: temp)
-                        self.action.send(TemplatesListViewModelAction.Present.PaymentInsideBankByPhone(viewModel: paymentViewModel))
+                        link = .byPhone(.init(insideByPhone: temp))
                         
                     case .sfp:
-                        let paymentViewModel = PaymentByPhoneViewModel(spf: temp)
-                        self.action.send(TemplatesListViewModelAction.Present.PaymentSFP(viewModel: paymentViewModel))
-                        
+                        link = .byPhone(.init(spf: temp))
+
                     case .direct:
-                        self.action.send(TemplatesListViewModelAction.Present.PaymentMig(viewModel: temp))
-                        
+                        link = .direct(temp)
+
                     case .contactAdressless:
-                        self.action.send(TemplatesListViewModelAction.Present.PaymentContact(viewModel: temp))
+                        link = .contactAdressless(temp)
                         
                     case .housingAndCommunalService:
-                        self.action.send(TemplatesListViewModelAction.Present.GKHPayment(viewModel: temp))
-                        
+                        link = .housingAndCommunalService(.init(model: model, closeAction: {[weak self] in self?.link = nil }, paymentTemplate: temp))
+
                     case .mobile:
-                        self.action.send(TemplatesListViewModelAction.Present.MobilePayment(viewModel: temp))
+                        link = .mobile(temp)
                         
                     case .internet:
-                        self.action.send(TemplatesListViewModelAction.Present.InterneetPayment(viewModel: temp))
-                        
+                        link = .internet(.init(model: model, closeAction: {[weak self] in self?.link = nil }, paymentTemplate: temp))
+
                     case .transport:
-                        self.action.send(TemplatesListViewModelAction.Present.TransportPayment(viewModel: temp))
-                        
+                        link = .transport(.init(model: model, closeAction: {[weak self] in self?.link = nil }, paymentTemplate: temp))
+
                     case .externalEntity:
-                        self.action.send(TemplatesListViewModelAction.Present.OrgPaymentRequisites(viewModel: temp))
-                        
+                        link = .externalEntity(.init(closeAction: {[weak self] in self?.link = nil }, paymentTemplate: temp))
+
                     case .externalIndividual:
-                        self.action.send(TemplatesListViewModelAction.Present.PaymentRequisites(viewModel: temp))
-                        
+                        link = .externalEntity(.init(closeAction: {[weak self] in self?.link = nil }, paymentTemplate: temp))
+
                     default:
                         break
+                    }
+                    
+                case _ as TemplatesListViewModelAction.AddTemplate:
+                    
+                    if let product = model.products.value.values.flatMap({ $0 }).first, let viewModel: ProductProfileViewModel = .init(model, product: product, dismissAction: {[weak self] in self?.link = nil }) {
+                        link = .openProduct(viewModel)
                     }
                     
                 case _ as TemplatesListViewModelAction.ToggleStyle:
@@ -322,6 +328,33 @@ extension TemplatesListViewModel {
         let style: Style
         
         static let initial = Settings(style: .list)
+    }
+    
+    struct Sheet: Identifiable {
+        
+        let id = UUID()
+        let type: Kind
+        
+        enum Kind {
+            
+            case betweenTheir(MeToMeViewModel)
+        }
+    }
+    
+    enum Link {
+
+        case byPhone(PaymentByPhoneViewModel)
+        case sfp(PaymentByPhoneViewModel)
+        case direct(PaymentTemplateData)
+        case contactAdressless(PaymentTemplateData)
+        case housingAndCommunalService(InternetTVDetailsViewModel)
+        case mobile(PaymentTemplateData)
+        case internet(InternetTVDetailsViewModel)
+        case transport(AvtodorDetailsViewModel)
+        case externalEntity(TransferByRequisitesViewModel)
+        case externalIndividual(TransferByRequisitesViewModel)
+        case openProduct(ProductProfileViewModel)
+                           
     }
 }
 
