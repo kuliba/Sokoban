@@ -370,7 +370,7 @@ extension CustomPopUpWithRateView {
         
         cardToListView.didCardTapped = { (cardId) in
             DispatchQueue.main.async {
-                let cardList = self.cardFromListView.cardList
+                let cardList = ReturnAllCardList.cards()
                 cardList.forEach({ card in
                     if card.id == cardId {
                         self.viewModel.cardToRealm = card
