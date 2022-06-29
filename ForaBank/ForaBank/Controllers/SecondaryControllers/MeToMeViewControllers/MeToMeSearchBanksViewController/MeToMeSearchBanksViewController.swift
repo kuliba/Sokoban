@@ -9,6 +9,8 @@ import UIKit
 
 class MeToMeSearchBanksViewController: UIViewController {
     
+    weak var rootVC: MeToMeSettingViewController?
+    
     var allBanks = [BankFullInfoList]()
     var banks = [BankFullInfoList]() {
         didSet {
@@ -165,15 +167,20 @@ class MeToMeSearchBanksViewController: UIViewController {
         selectedBanks.forEach { bank in
             bankList.append(bank.memberID ?? "")
         }
-        
+
         let body = ["bankIdList" : bankList] as [String: AnyObject]
         self.showActivity()
-        NetworkManager<ChangeClientConsentMe2MePullDecodableModel>.addRequest(.changeClientConsentMe2MePull, [:], body) { model, error in
+        NetworkManager<ChangeClientConsentMe2MePullDecodableModel>.addRequest(.changeClientConsentMe2MePull, [:], body) { [unowned self] model, error in
             DispatchQueue.main.async {
                 self.dismissActivity()
                 if error != nil {
                     self.showAlert(with: "Ошибка", and: error!)
                 } else {
+                    
+                    let nameBanksSelected = self.selectedBanks
+                        .compactMap { $0.rusName == nil ? $0.fullName : $0.rusName }
+                    self.rootVC?.banksView.banksName = nameBanksSelected
+                    
                     self.dismiss(animated: true, completion: nil)
                 }
             }

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class MeToMeSettingViewController: UIViewController {
 
@@ -16,6 +17,8 @@ class MeToMeSettingViewController: UIViewController {
             configure(with: model)
         }
     }
+    
+    private var bindings = Set<AnyCancellable>()
     
     var topSwitch = MeToMeSetupSwitchView()
     var cardFromField = CardChooseView()
@@ -30,12 +33,15 @@ class MeToMeSettingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         view.backgroundColor = .white
         setupPaymentsUI()
         setupStackView()
         setupTopSwitch()
         setupCardFromView()
         setupBankField()
+        bind()
+        
         setupCardList { [weak self] error in
             if error != nil {
                 self?.showAlert(with: "Ошибка", and: error!)
@@ -43,6 +49,7 @@ class MeToMeSettingViewController: UIViewController {
                 self?.topSwitch.bankByPhoneSwitch.isEnabled = true
             }
         }
+        
         cardListView.didCardTapped = { card in
             self.cardFromField.cardModel = card
             DispatchQueue.main.async {
@@ -57,6 +64,7 @@ class MeToMeSettingViewController: UIViewController {
             
             guard let contractId = self.model?.first?.fastPaymentContractAttributeList?.first else { return }
             self.showActivity()
+            
             self.updateContract(contractId: contractId.fpcontractID,
                                 cardModel: card,
                                 isOff: true) { success, error in
@@ -77,20 +85,45 @@ class MeToMeSettingViewController: UIViewController {
         }
     }
     
+    func bind() {
+       
+        newModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                switch action {
+                case let payload as ModelAction.FastPaymentSettings.ContractFindList.Response:
+                    
+                    switch payload.result {
+                    case let .success(fastPaymentContractFullInfoType):
+                        self.model = fastPaymentContractFullInfoType.map { $0.getFastPaymentContractFindListDatum() }
+                    default: break
+                    }
+                    
+                    self.dismissActivity()
+                
+                default: break
+                }
+        }.store(in: &bindings)
+        
+    }
+    
     func configure(with model: [FastPaymentContractFindListDatum]) {
         if !model.isEmpty {
             let contract = model.first?.fastPaymentContractAttributeList?.first
             if contract?.flagClientAgreementIn == "YES"
                 && contract?.flagClientAgreementOut == "YES" {
                 
-                topSwitch.bankByPhoneSwitch.isOn = true
                 topSwitch.configViewWithValue(true)
+                banksView.isHidden = false
                 cardFromField.isHidden = false
             } else {
                 topSwitch.configViewWithValue(false)
+                banksView.isHidden = true
                 cardFromField.isHidden = true
             }
         } else {
+            
+            banksView.isHidden = true
             topSwitch.configViewWithValue(false)
             cardFromField.isHidden = true
         }
@@ -158,6 +191,7 @@ class MeToMeSettingViewController: UIViewController {
         banksView.didChooseButtonTapped = { () in
             print("bankField didChooseButtonTapped")
             let settingVC = MeToMeSearchBanksViewController()
+            settingVC.rootVC = self
             let navVC = UINavigationController(rootViewController: settingVC)
             self.present(navVC, animated: true, completion: nil)
         }
@@ -179,7 +213,9 @@ class MeToMeSettingViewController: UIViewController {
                 }
                 
                 self?.cardListView.cardList = filterProduct
-                guard let contractId = self?.model?.first?.fastPaymentContractAttributeList?.first else { return }
+                guard let contractId = self?.model?.first?.fastPaymentContractAttributeList?.first
+                else { return }
+                
                 if filterProduct.count > 0 {
                     filterProduct.forEach { product in
                         if product.productType == "CARD" {
@@ -200,10 +236,14 @@ class MeToMeSettingViewController: UIViewController {
     
     func setupTopSwitch() {
         topSwitch.bankByPhoneSwitch.isEnabled = false
+        
         topSwitch.switchIsChanged = { (sender) in
             self.showActivity()
             guard let model = self.model else { return }
+            self.banksView.isHidden = !sender.isOn
+            
             if model.isEmpty {
+                
                 self.createContract(cardModel: self.cardFromField.cardModel!) { success, error in
                     
                     DispatchQueue.main.async {
@@ -213,6 +253,9 @@ class MeToMeSettingViewController: UIViewController {
                                 self.hideView(self.cardListView, needHide: true) { }
                             }
                         }
+                        self.newModel.action.send(ModelAction
+                                                 .FastPaymentSettings
+                                                 .ContractFindList.Request())
                     }
                 }
             } else {
@@ -221,6 +264,7 @@ class MeToMeSettingViewController: UIViewController {
                 self.updateContract(contractId: contractId.fpcontractID,
                                     cardModel: self.cardFromField.cardModel!,
                                     isOff: sender.isOn) { success, error in
+                    
                     DispatchQueue.main.async {
                         self.dismissActivity()
                         self.hideView(self.cardFromField, needHide: !sender.isOn) {
@@ -228,6 +272,9 @@ class MeToMeSettingViewController: UIViewController {
                                 self.hideView(self.cardListView, needHide: true) { }
                             }
                         }
+                        self.newModel.action.send(ModelAction
+                                                 .FastPaymentSettings
+                                                 .ContractFindList.Request())
                     }
                 }
             }

@@ -19,7 +19,7 @@ final class BottomSheetPresentationController: UIPresentationController {
     private let multiplier: CGFloat = 0.9
     
     private lazy var dimmingView: UIView = {
-        
+
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .black
@@ -29,7 +29,7 @@ final class BottomSheetPresentationController: UIPresentationController {
     }()
     
     private lazy var topDragView: UIView = {
-        
+
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.isUserInteractionEnabled = false
@@ -40,7 +40,7 @@ final class BottomSheetPresentationController: UIPresentationController {
     }()
     
     private lazy var topContainerView: UIView = {
-        
+
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.isUserInteractionEnabled = true
@@ -50,14 +50,14 @@ final class BottomSheetPresentationController: UIPresentationController {
     }()
     
     var cornerRadius: CGFloat = 0 {
-        
+
         didSet {
             presentedView?.layer.cornerRadius = cornerRadius
         }
     }
     
     var sizeThatFits: CGSize {
-        
+
         guard let containerView = containerView,
               let presentedView = presentedView else {
                   return .zero
@@ -67,7 +67,7 @@ final class BottomSheetPresentationController: UIPresentationController {
     }
     
     override var frameOfPresentedViewInContainerView: CGRect {
-        
+
         guard let containerView = containerView,
               let window = UIApplication.shared.windows.filter({ $0.isKeyWindow }).first else {
                   return .zero
@@ -76,7 +76,7 @@ final class BottomSheetPresentationController: UIPresentationController {
         let height = min(sizeThatFits.height, containerView.frame.height * multiplier)
         let contentHeight: CGFloat = containerView.bounds.height - height
         let topDragOffset: CGFloat = 42
-        
+
         return CGRect(x: 0,
                       y: contentHeight - topDragOffset + window.safeAreaInsets.bottom,
                       width: containerView.bounds.width,
@@ -84,7 +84,7 @@ final class BottomSheetPresentationController: UIPresentationController {
     }
     
     private func configure() {
-        
+
         guard let containerView = containerView,
               let presentedView = presentedView else {
                   return
@@ -128,7 +128,7 @@ final class BottomSheetPresentationController: UIPresentationController {
         tapDragGestureRecognizer.addTarget(self, action: #selector(handleTapGesture))
         
         cornerRadius = 12
-        
+
         if let transitionCoordinator = presentedViewController.transitionCoordinator {
             presentedView.bringSubviewToFront(topContainerView)
             transitionCoordinator.animate(alongsideTransition: { _ in
@@ -141,7 +141,7 @@ final class BottomSheetPresentationController: UIPresentationController {
     
     override func presentationTransitionWillBegin() {
         super.presentationTransitionWillBegin()
-        
+
         configure()
     }
     
@@ -149,7 +149,7 @@ final class BottomSheetPresentationController: UIPresentationController {
         super.dismissalTransitionWillBegin()
         
         delegate?.presentationControllerWillDismiss?(self)
-        
+
         if let transitionCoordinator = presentedViewController.transitionCoordinator {
             transitionCoordinator.animate(alongsideTransition: { _ in
                 self.setTransparencyViews(true)
@@ -185,12 +185,12 @@ final class BottomSheetPresentationController: UIPresentationController {
     }
     
     private func presentationControllerShouldDismiss() {
-        
+
         guard let shouldDismiss = delegate?.presentationControllerShouldDismiss else {
             presentingViewController.dismiss(animated: true)
             return
         }
-        
+
         if shouldDismiss(self) {
             presentingViewController.dismiss(animated: true)
         }
@@ -218,7 +218,7 @@ final class BottomSheetPresentationController: UIPresentationController {
         case .ended:
             
             updatePresentedView()
-            
+
         default:
             break
         }

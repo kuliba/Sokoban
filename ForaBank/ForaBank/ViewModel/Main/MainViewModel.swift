@@ -121,6 +121,9 @@ class MainViewModel: ObservableObject {
                             case .account:
                                 bottomSheet = .init(type: .openAccount(model))
                                 
+                            case .deposit:
+                                link = .openDeposit(.init(model, products: self.model.deposits.value, style: .deposit))
+                                
                             default:
                                 break
                             }
@@ -141,7 +144,7 @@ class MainViewModel: ObservableObject {
                             
                             switch payload.operationType {
                             case .templates:
-                                sheet = .init(type: .templates(.init(model)))
+                                link = .templates(.init(model))
                             case .byPhone:
                                 sheet = .init(type: .byPhone(.init(closeAction: { [weak self] in
                                     self?.sheet = nil
@@ -265,7 +268,6 @@ extension MainViewModel {
             case messages(MessagesHistoryViewModel)
             case myProducts(MyProductsViewModel)
             case places(PlacesViewModel)
-            case templates(TemplatesListViewModel)
             case byPhone(TransferByPhoneViewModel)
         }
     }
@@ -275,6 +277,9 @@ extension MainViewModel {
         case userAccount(UserAccountViewModel)
         case productProfile(ProductProfileViewModel)
         case messages(MessagesHistoryViewModel)
+        case openDeposit(OpenDepositViewModel)
+        case templates(TemplatesListViewModel)
+
     }
 
     struct BottomSheet: Identifiable {
@@ -299,6 +304,8 @@ enum MainViewModelAction {
         
         struct Messages: Action {}
     }
+    
+    struct OpenProduct: Action {}
     
     struct PullToRefresh: Action {}
     

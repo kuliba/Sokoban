@@ -7,7 +7,6 @@
 
     import UIKit
     import AnyFormatKit
-    import RealmSwift
 
     class ConfurmOpenDepositViewController: PaymentViewController {
         
@@ -25,7 +24,7 @@
                 }
             }
         }
-        lazy var realm = try? Realm()
+        
         var product: OpenDepositDatum? {
             didSet {
                 guard let product = product else { return }
@@ -251,7 +250,7 @@
             
             cardListView.didCardTapped = { cardId in
                 DispatchQueue.main.async {
-                    let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
+                    let cardList = ReturnAllCardList.cards()
                     cardList.forEach({ card in
                         if card.id == cardId {
                             self.cardFromField.model = card

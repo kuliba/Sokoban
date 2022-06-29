@@ -12,11 +12,12 @@ extension CountryPaymentView {
     
     struct ViewModel {
         
-        let puref: String
+        let puref: String?
         let country: CountriesList?
         let paymentType: PaymentType
         let bank: BanksList?
-        
+        var paymentTemplate: PaymentTemplateData? = nil
+
         struct AddressViewModel {
             
             let firstName: String
@@ -33,6 +34,7 @@ extension CountryPaymentView {
             
             case address(adressViewModel: AddressViewModel)
             case withOutAddress(withOutViewModel: WithOutAddress)
+            case template(templateViewModel: PaymentTemplateData)
         }
         
         init(countryData: PaymentCountryData) {
@@ -49,6 +51,15 @@ extension CountryPaymentView {
             self.puref = countryData.puref
             self.country = Model.shared.dictionaryCountry(for: countryData.countryCode)?.getCountriesList()
             self.bank = Model.shared.dictionaryBankList.first(where: {$0.memberNameRus == countryData.puref})?.getBanksList()
+        }
+        
+        init(paymentTemplate: PaymentTemplateData) {
+            
+            self.paymentTemplate = paymentTemplate
+            self.paymentType = .template(templateViewModel: paymentTemplate)
+            self.puref = nil
+            self.country = nil
+            self.bank = nil
         }
     }
 }
@@ -83,6 +94,67 @@ struct CountryPaymentView: UIViewControllerRepresentable {
             let mask = StringMask(mask: "+000-0000-00-00")
             let maskPhone = mask.mask(string: withOutViewModel.phoneNumber)
             vc.phoneField.text = maskPhone ?? ""
+            
+        case let .template(templateViewModel):
+           
+            //MARK: ContactInputViewController init(117)
+
+            switch templateViewModel.type {
+                
+            case .direct:
+                if let model = templateViewModel.parameterList.first as? TransferAnywayData {
+                    let country = vc.getCountry(code: "AM")
+                    vc.typeOfPay = .mig
+                    vc.configure(with: country, byPhone: true)
+                    
+                    if let bank = vc.findBankByPuref(purefString: model.puref ?? "") {
+                        vc.selectedBank = bank
+                        vc.setupBankField(bank: bank)
+                    }
+                    
+                    let mask = StringMask(mask: "+000-0000-00-00")
+                    let phone = model.additional.first(where: { $0.fieldname == "RECP" })
+                    let maskPhone = mask.mask(string: phone?.fieldvalue)
+                    vc.phoneField.text = maskPhone ?? ""
+                }
+                
+            case .contactAdressless:
+                if let model = templateViewModel.parameterList.first as? TransferAnywayData {
+                    
+                    vc.typeOfPay = .contact
+                    
+                    if let countryCode = model.additional.first(where: { $0.fieldname == "trnPickupPoint" })?.fieldvalue {
+                        
+                        let country = vc.getCountry(code: countryCode)
+                        vc.configure(with: country, byPhone: false)
+                        
+                        
+                    }
+                    
+                    vc.foraSwitchView.bankByPhoneSwitch.isOn = false
+                    vc.foraSwitchView.bankByPhoneSwitch.layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                    vc.foraSwitchView.bankByPhoneSwitch.thumbTintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+                    
+                    if let surName = model.additional.first(where: { $0.fieldname == "bName" })?.fieldvalue {
+                        vc.surnameField.text = surName
+                    }
+                    
+                    if let firstName = model.additional.first(where: { $0.fieldname == "bLastName" })?.fieldvalue {
+                        vc.nameField.text = firstName
+                    }
+                    
+                    if let middleName = model.additional.first(where: { $0.fieldname == "bSurName" })?.fieldvalue {
+                        vc.secondNameField.text = middleName
+                    }
+                    
+                    if let phone = model.additional.first(where: { $0.fieldname == "bPhone" })?.fieldvalue {
+                        vc.phoneField.text = phone
+                    }
+                }
+                
+            default :
+                break
+            }
         }
         
         vc.addCloseButton()
