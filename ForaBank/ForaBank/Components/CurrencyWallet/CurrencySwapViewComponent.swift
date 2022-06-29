@@ -47,8 +47,16 @@ extension CurrencySwapView {
                     switch action {
                     case _ as CurrencySwapAction.Button.Tapped:
 
-                        withAnimation(.easeInOut(duration: 0.25)) {
-                            self.isSwapCurrency.toggle()
+                        if #available(iOS 14.0, *) {
+
+                            withAnimation {
+                                self.isSwapCurrency.toggle()
+                            }
+                        } else {
+
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                self.isSwapCurrency.toggle()
+                            }
                         }
                     default:
                         break
@@ -91,7 +99,16 @@ extension CurrencySwapView.ViewModel {
 
 struct CurrencySwapView: View {
 
+    @Namespace private var namespace
     @ObservedObject var viewModel: ViewModel
+
+    var topTransition: AnyTransition {
+        .asymmetric(insertion: .move(edge: .top), removal: .identity)
+    }
+
+    var bottomTransition: AnyTransition {
+        .asymmetric(insertion: .move(edge: .bottom), removal: .identity)
+    }
 
     var body: some View {
 
@@ -102,7 +119,30 @@ struct CurrencySwapView: View {
 
             VStack(alignment: .leading, spacing: 4) {
 
-                TopSwapView(viewModel: viewModel)
+                if viewModel.isSwapCurrency == true {
+
+                    if #available(iOS 14.0, *) {
+
+                        CurrencySwapView.CurrencyView(viewModel: viewModel.haveCurrencySwap)
+                            .matchedGeometryEffect(id: "haveCurrency", in: namespace)
+                    } else {
+
+                        CurrencySwapView.CurrencyView(viewModel: viewModel.haveCurrencySwap)
+                            .transition(bottomTransition)
+                    }
+
+                } else {
+
+                    if #available(iOS 14.0, *) {
+
+                        CurrencySwapView.CurrencyView(viewModel: viewModel.getCurrencySwap)
+                            .matchedGeometryEffect(id: "getCurrency", in: namespace)
+                    } else {
+
+                        CurrencySwapView.CurrencyView(viewModel: viewModel.getCurrencySwap)
+                            .transition(bottomTransition)
+                    }
+                }
 
                 HStack(spacing: 20) {
 
@@ -113,7 +153,30 @@ struct CurrencySwapView: View {
                     SwapButtonView(viewModel: viewModel.swapButton)
                 }
 
-                BottomSwapView(viewModel: viewModel)
+                if viewModel.isSwapCurrency == true {
+
+                    if #available(iOS 14.0, *) {
+
+                        CurrencySwapView.CurrencyView(viewModel: viewModel.getCurrencySwap)
+                            .matchedGeometryEffect(id: "getCurrency", in: namespace)
+                    } else {
+
+                        CurrencySwapView.CurrencyView(viewModel: viewModel.getCurrencySwap)
+                            .transition(topTransition)
+                    }
+
+                } else {
+
+                    if #available(iOS 14.0, *) {
+
+                        CurrencySwapView.CurrencyView(viewModel: viewModel.haveCurrencySwap)
+                            .matchedGeometryEffect(id: "haveCurrency", in: namespace)
+                    } else {
+
+                        CurrencySwapView.CurrencyView(viewModel: viewModel.haveCurrencySwap)
+                            .transition(topTransition)
+                    }
+                }
             }
 
             VStack(spacing: 0) {
@@ -130,7 +193,9 @@ struct CurrencySwapView: View {
                 }
             }.padding(20)
 
-        }.frame(height: 160)
+        }
+        .frame(height: 160)
+        .padding(20)
     }
 }
 
@@ -171,56 +236,6 @@ extension CurrencySwapView {
         }
     }
 
-    // MARK: - Top
-
-    struct TopSwapView: View {
-
-        @ObservedObject var viewModel: ViewModel
-
-        var bottomTransition: AnyTransition {
-            .asymmetric(insertion: .move(edge: .bottom), removal: .identity)
-        }
-
-        var body: some View {
-
-            if viewModel.isSwapCurrency == true {
-
-                CurrencySwapView.CurrencyView(viewModel: viewModel.haveCurrencySwap)
-                    .transition(bottomTransition)
-
-            } else {
-
-                CurrencySwapView.CurrencyView(viewModel: viewModel.getCurrencySwap)
-                    .transition(bottomTransition)
-            }
-        }
-    }
-
-    // MARK: - Bottom
-
-    struct BottomSwapView: View {
-
-        @ObservedObject var viewModel: ViewModel
-
-        var topTransition: AnyTransition {
-            .asymmetric(insertion: .move(edge: .top), removal: .identity)
-        }
-
-        var body: some View {
-
-            if viewModel.isSwapCurrency == true {
-
-                CurrencySwapView.CurrencyView(viewModel: viewModel.getCurrencySwap)
-                    .transition(topTransition)
-
-            } else {
-
-                CurrencySwapView.CurrencyView(viewModel: viewModel.haveCurrencySwap)
-                    .transition(topTransition)
-            }
-        }
-    }
-
     // MARK: - Button
 
     struct SwapButtonView: View {
@@ -250,24 +265,32 @@ enum CurrencySwapAction {
     }
 }
 
+// MARK: - Preview Content
+
+extension CurrencySwapView.ViewModel {
+
+    static let sample: CurrencySwapView.ViewModel = .init(
+        quotesInfo: "1$ = 64.50 ₽",
+        haveCurrencySwap: .init(
+            icon: .init("Flag RUB"),
+            title: "У меня есть",
+            currency: "64.50",
+            currencyType: "RUB"),
+        getCurrencySwap: .init(
+            icon: .init("Flag USD"),
+            title: "Я получу",
+            currency: "1,00",
+            currencyType: "USD"))
+}
+
+// MARK: - Previews
+
 struct CurrencySwapVIewComponent_Previews: PreviewProvider {
     static var previews: some View {
 
         VStack {
 
-            CurrencySwapView(
-                viewModel: .init(
-                    quotesInfo: "1$ = 64.50 ₽",
-                    haveCurrencySwap: .init(
-                        icon: .init("Flag RUB"),
-                        title: "У меня есть",
-                        currency: "64.50",
-                        currencyType: "RUB"),
-                    getCurrencySwap: .init(
-                        icon: .init("Flag USD"),
-                        title: "Я получу",
-                        currency: "1,00",
-                        currencyType: "USD")))
+            CurrencySwapView(viewModel: .sample)
         }
         .padding()
         .previewLayout(.sizeThatFits)

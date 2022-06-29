@@ -186,34 +186,42 @@ enum CurrencyListAction {
     }
 }
 
+// MARK: - Preview Content
+
+extension CurrencyListView.ViewModel {
+
+    static let sample: CurrencyListView.ViewModel = .init(items: [
+        .init(icon: .init("Flag USD"),
+              currencyType: "USD",
+              rateBuy: "68.19",
+              rateSell: "69.45",
+              isSelected: true),
+        .init(icon: .init("Flag EUR"),
+              currencyType: "EUR",
+              rateBuy: "69.23",
+              rateSell: "70.01"),
+        .init(icon: .init("Flag GBP"),
+              currencyType: "GBP",
+              rateBuy: "75.65",
+              rateSell: "76.83"),
+        .init(icon: .init("Flag CHF"),
+              currencyType: "CHF",
+              rateBuy: "64.89",
+              rateSell: "65.09"),
+        .init(icon: .init("Flag CHY"),
+              currencyType: "CHY",
+              rateBuy: "18.45",
+              rateSell: "19.26")
+    ])
+}
+
 // MARK: - Previews
 
 struct CurrencyListViewComponent_Previews: PreviewProvider {
 
     static var previews: some View {
 
-        CurrencyListView(viewModel: .init(items: [
-            .init(icon: .init("Flag USD"),
-                  currencyType: "USD",
-                  rateBuy: "68.19",
-                  rateSell: "69.45",
-                  isSelected: true),
-            .init(icon: .init("Flag EUR"),
-                  currencyType: "EUR",
-                  rateBuy: "69.23",
-                  rateSell: "70.01"),
-            .init(icon: .init("Flag GBP"),
-                  currencyType: "GBP",
-                  rateBuy: "75.65",
-                  rateSell: "76.83"),
-            .init(icon: .init("Flag CHF"),
-                  currencyType: "CHF",
-                  rateBuy: "64.89",
-                  rateSell: "65.09"),
-            .init(icon: .init("Flag CHY"),
-                  currencyType: "CHY",
-                  rateBuy: "18.45",
-                  rateSell: "19.26")
-        ])).previewLayout(.sizeThatFits)
+        CurrencyListView(viewModel: .sample)
+            .previewLayout(.sizeThatFits)
     }
 }
