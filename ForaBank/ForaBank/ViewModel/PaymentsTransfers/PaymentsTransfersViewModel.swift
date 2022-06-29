@@ -59,16 +59,21 @@ class PaymentsTransfersViewModel: ObservableObject {
                             sheet = .init(type: .country(paymentData))
                             
                         case (.service, let paymentData as PaymentServiceData):
-                            sheet = .init(type: .exampleDetail(paymentData.type.rawValue)) //TODO:
+                            link = .service(.init(model: model, closeAction: {[weak self] in
+                                self?.link = nil }, paymentServiceData: paymentData))
+
                                     
                         case (.transport, let paymentData as PaymentServiceData):
-                            sheet = .init(type: .exampleDetail(paymentData.type.rawValue)) //TODO:
+                            link = .transport(.init(model: model, closeAction: {[weak self] in
+                                self?.link = nil }, paymentServiceData: paymentData))
                             
                         case (.internet, let paymentData as PaymentServiceData):
-                            sheet = .init(type: .exampleDetail(paymentData.type.rawValue)) //TODO:
+                            link = .internet(.init(model: model, closeAction: {[weak self] in
+                                self?.link = nil }, paymentServiceData: paymentData))
+
                             
                         case (.mobile, let paymentData as PaymentServiceData):
-                            sheet = .init(type: .exampleDetail(paymentData.type.rawValue)) //TODO:
+                            link = .mobile(.init(paymentServiceData: paymentData))
                             
                         case (.taxAndStateService, let paymentData as PaymentServiceData):
                             sheet = .init(type: .exampleDetail(paymentData.type.rawValue)) //TODO:
@@ -99,12 +104,12 @@ class PaymentsTransfersViewModel: ObservableObject {
                             
                             sheet = .init(type: .meToMe(.init(closeAction: { [weak self] in
                                 self?.sheet = nil
-                            })))
+                            }, paymentTemplate: nil)))
                             
                         case .byBankDetails:
                             link = .transferByRequisites(.init(closeAction: { [weak self] in
                                 self?.link = nil
-                            }))
+                            }, paymentTemplate: nil))
                         case .byPhoneNumber:
                             sheet = .init(type: .transferByPhone(.init(closeAction: { [weak self] in
                                 self?.sheet = nil
@@ -115,26 +120,29 @@ class PaymentsTransfersViewModel: ObservableObject {
                     case let payload as PTSectionPaymentsViewAction.ButtonTapped.Payment:
                         switch payload.type {
                         case .mobile:
-                            link = .mobile(.init(closeAction: {
-                                self.link = nil
-                            }))
+                            link = .mobile(.init(closeAction: {[weak self] in
+                                self?.link = nil }))
                         case .qrPayment: link = .exampleDetail(payload.type.rawValue) //TODO:
                         case .service:
-                            let serviceOperators = OperatorsViewModel(closeAction: {self.link = nil})
+                            let serviceOperators = OperatorsViewModel(closeAction: {[weak self] in
+                                self?.link = nil }, template: nil)
                             link = .serviceOperators(serviceOperators)
                             InternetTVMainViewModel.filter = GlobalModule.UTILITIES_CODE
                         case .internet:
-                            let internetOperators = OperatorsViewModel(closeAction: {self.link = nil})
+                            let internetOperators = OperatorsViewModel(closeAction: {[weak self] in
+                                self?.link = nil }, template: nil)
                             link = .internetOperators(internetOperators)
                             InternetTVMainViewModel.filter = GlobalModule.INTERNET_TV_CODE
                         case .transport:
-                            let transportOperators = OperatorsViewModel(closeAction: {self.link = nil})
+                            let transportOperators = OperatorsViewModel(closeAction: {[weak self] in
+                                self?.link = nil }, template: nil)
                             link = .transportOperators(transportOperators)
                             InternetTVMainViewModel.filter = GlobalModule.PAYMENT_TRANSPORT
                        
                         case .taxAndStateService:
                             let taxAndStateServiceVM = PaymentsViewModel(model, category: Payments.Category.taxes)
-                            taxAndStateServiceVM.closeAction = { [weak self] in self?.link = nil }
+                            taxAndStateServiceVM.closeAction = { [weak self] in
+                                self?.link = nil }
                             link = .init(.taxAndStateService(taxAndStateServiceVM))
                             
                         case .socialAndGame: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
@@ -178,5 +186,8 @@ class PaymentsTransfersViewModel: ObservableObject {
         case serviceOperators(OperatorsViewModel)
         case internetOperators(OperatorsViewModel)
         case transportOperators(OperatorsViewModel)
+        case service(OperatorsViewModel)
+        case internet(InternetTVDetailsViewModel)
+        case transport(AvtodorDetailsViewModel)
     }
 }

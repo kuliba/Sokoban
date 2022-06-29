@@ -478,7 +478,7 @@ class ContactInputViewController: UIViewController {
         }
     }
     
-    private func setupBankField(bank: BanksList) {
+    func setupBankField(bank: BanksList) {
         self.bankField.text = bank.memberNameRus ?? ""
         self.bankField.imageView.image = bank.svgImage?.convertSVGStringToImage()
         

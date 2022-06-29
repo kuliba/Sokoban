@@ -84,6 +84,51 @@ struct TemplatesListView: View {
                         }
                     }
                     
+                    NavigationLink("", isActive: $viewModel.isLinkActive) {
+                        
+                        if let link = viewModel.link  {
+                            
+                            switch link {
+                            case .byPhone(let paymentPhoneView):
+                                PaymentPhoneView(viewModel: paymentPhoneView)
+                                
+                            case .sfp(let paymentPhoneView):
+                                PaymentPhoneView(viewModel: paymentPhoneView)
+
+                            case .direct(let paymentTemplateData):
+                                CountryPaymentView(viewModel: .init(paymentTemplate: paymentTemplateData))
+                                
+                            case .contactAdressless(let paymentTemplateData):
+                                CountryPaymentView(viewModel: .init(paymentTemplate: paymentTemplateData))
+                                
+                            case .housingAndCommunalService(let internetTVDetailsViewModel):
+                                InternetTVDetailsView(viewModel: internetTVDetailsViewModel)
+                                
+                            case .mobile(let paymentTemplateData):
+                                MobilePayView(viewModel: .init(paymentTemplate: paymentTemplateData))
+                                
+                            case .internet(let internetTVDetailsViewModel):
+                                InternetTVDetailsView(viewModel: internetTVDetailsViewModel)
+
+                            case .transport(let avtodorDetailsViewModel):
+                                AvtodorDetailsView(viewModel: avtodorDetailsViewModel)
+                                
+                            case .externalEntity(let transferByRequisitesView):
+                                TransferByRequisitesView(viewModel: transferByRequisitesView)
+                                
+                            case .externalIndividual(let transferByRequisitesView):
+                                TransferByRequisitesView(viewModel: transferByRequisitesView)
+                            
+                            case .openProduct(let productProfileViewModel):
+                                ProductProfileView(viewModel: productProfileViewModel)
+                                
+                            default:
+                                EmptyView()
+                            }
+                            
+                        }
+                    }
+                    
                     if let contextMenuViewModel = viewModel.contextMenu {
                         
                         ZStack(alignment: .topTrailing) {
@@ -117,6 +162,15 @@ struct TemplatesListView: View {
                     }
                 }
     )
+        .bottomSheet(item: $viewModel.sheet, content: { sheet in
+            switch sheet.type {
+                
+            case .betweenTheir(let meToMeViewModel):
+                MeToMeView(viewModel: .init(closeAction: {}, paymentTemplate: meToMeViewModel.paymentTemplate))
+                    .frame(height: 540, alignment: .bottom)
+
+            }
+        })
     }
 }
 
