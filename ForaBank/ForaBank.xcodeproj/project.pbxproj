@@ -227,6 +227,8 @@
 		0BF348A1269E0CDA005138A8 /* LogoutDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF348A0269E0CDA005138A8 /* LogoutDecodableModel.swift */; };
 		0BF816FA27E11E9600AC890D /* EPContactSelfDataView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0BF816F927E11E9600AC890D /* EPContactSelfDataView.xib */; };
 		0BF816FC27E122AF00AC890D /* EPContactSelfDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF816FB27E122AF00AC890D /* EPContactSelfDataView.swift */; };
+		0C03FB52286A786500C2A100 /* BanksCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0C03FB51286A786500C2A100 /* BanksCollectionViewCell.xib */; };
+		0C03FB54286A89A900C2A100 /* BanksCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C03FB53286A89A900C2A100 /* BanksCollectionViewCell.swift */; };
 		0C4245782846200600899EB2 /* PaymentPhoneData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4245772846200600899EB2 /* PaymentPhoneData.swift */; };
 		0C42457A2846C79E00899EB2 /* ContactsAgentMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4245792846C79E00899EB2 /* ContactsAgentMock.swift */; };
 		0C42457C2846D51700899EB2 /* Model+Contacts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C42457B2846D51700899EB2 /* Model+Contacts.swift */; };
@@ -1557,6 +1559,8 @@
 		0BF348A0269E0CDA005138A8 /* LogoutDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutDecodableModel.swift; sourceTree = "<group>"; };
 		0BF816F927E11E9600AC890D /* EPContactSelfDataView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EPContactSelfDataView.xib; sourceTree = "<group>"; };
 		0BF816FB27E122AF00AC890D /* EPContactSelfDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPContactSelfDataView.swift; sourceTree = "<group>"; };
+		0C03FB51286A786500C2A100 /* BanksCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BanksCollectionViewCell.xib; sourceTree = "<group>"; };
+		0C03FB53286A89A900C2A100 /* BanksCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BanksCollectionViewCell.swift; sourceTree = "<group>"; };
 		0C4245772846200600899EB2 /* PaymentPhoneData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentPhoneData.swift; sourceTree = "<group>"; };
 		0C4245792846C79E00899EB2 /* ContactsAgentMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsAgentMock.swift; sourceTree = "<group>"; };
 		0C42457B2846D51700899EB2 /* Model+Contacts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Contacts.swift"; sourceTree = "<group>"; };
@@ -6047,7 +6051,9 @@
 			isa = PBXGroup;
 			children = (
 				EDA563AD26F881AF0093F0C8 /* BanksView.swift */,
+				0C03FB51286A786500C2A100 /* BanksCollectionViewCell.xib */,
 				EDA563AF26F881D60093F0C8 /* BanksView.xib */,
+				0C03FB53286A89A900C2A100 /* BanksCollectionViewCell.swift */,
 			);
 			path = BanksView;
 			sourceTree = "<group>";
@@ -7085,6 +7091,7 @@
 				ED0FE466281AD286000CF73F /* DetailCapitCollectionViewCell.xib in Resources */,
 				0BA4093628064484001326CE /* SettingPhotoCell.xib in Resources */,
 				EDB1654D26678E87007E6030 /* LaunchScreen.storyboard in Resources */,
+				0C03FB52286A786500C2A100 /* BanksCollectionViewCell.xib in Resources */,
 				A55A52D92746FC3B00641DD0 /* InternetTV.storyboard in Resources */,
 				ED75CDF926E245EE0074F5D5 /* GoogleService-Info-test.plist in Resources */,
 				ED75CE0926E2BA6F0074F5D5 /* TarifView.xib in Resources */,
@@ -8174,6 +8181,7 @@
 				77DC126D2770F84B00C917B0 /* ServerStatusCode.swift in Sources */,
 				5A5ABF9027AAF59F00D548AA /* ServerCommands+PaymentOperationDetail.swift in Sources */,
 				A5ECD4CA27ECC2BE008FBEEC /* C2BDetailsFormViewController.swift in Sources */,
+				0C03FB54286A89A900C2A100 /* BanksCollectionViewCell.swift in Sources */,
 				5ADDC85227984CEF00488139 /* ServerCommands+AccountController.swift in Sources */,
 				0B01073C27D1159D006462E6 /* PaymentsSuccessViewModel.swift in Sources */,
 				ED84994426A6F647005205C6 /* ChooseCountryHeaderCell.swift in Sources */,
