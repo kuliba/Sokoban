@@ -16,21 +16,36 @@ struct PagerContentView<Content: View>: View {
     @State var contentSize: CGSize = .zero
     @GestureState private var translation: CGFloat = 0
 
+    var paddingShowIndicator: CGFloat {
+
+        guard isShowIndicator == true else {
+            return 0
+        }
+
+        return paddingIndicator
+    }
+
     private let pageCount: Int
     private let spacing: CGFloat
     private let padding: CGFloat
+    private let paddingIndicator: CGFloat
+    private let isShowIndicator: Bool
     private let content: Content
 
     init(pageCount: Int,
          currentIndex: Binding<Int>,
          spacing: CGFloat = 10,
          padding: CGFloat = 20,
+         paddingIndicator: CGFloat = 26,
+         isShowIndicator: Bool = true,
          @ViewBuilder content: () -> Content) {
 
         self.pageCount = pageCount
         _currentIndex = currentIndex
         self.spacing = spacing
         self.padding = padding
+        self.paddingIndicator = paddingIndicator
+        self.isShowIndicator = isShowIndicator
         self.content = content()
     }
 
@@ -66,9 +81,11 @@ struct PagerContentView<Content: View>: View {
             .onPreferenceChange(PagerPreferenceKey.self) { self.contentSize = $0 }
             .animation(.spring())
 
-            PageIndicatorView(pageCount: pageCount, currentIndex: $currentIndex)
+            if isShowIndicator == true {
+                PageIndicatorView(pageCount: pageCount, currentIndex: $currentIndex)
+            }
 
-        }.frame(height: 226)
+        }.frame(height: contentSize.height + paddingShowIndicator)
     }
 }
 
