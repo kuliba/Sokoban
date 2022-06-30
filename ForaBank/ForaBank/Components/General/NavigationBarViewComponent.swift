@@ -56,10 +56,12 @@ extension NavigationBarView {
         class BackButtonViewModel: BaseButtonViewModel {
             
             let icon: Image
+            let action: () -> Void
             
-            init(icon: Image) {
+            init(icon: Image, action: @escaping () -> Void) {
                 
                 self.icon = icon
+                self.action = action
                 super.init()
             }
         }
@@ -94,6 +96,7 @@ struct NavigationBarView: View {
                         Button {
                             
                             mode.wrappedValue.dismiss()
+                            backButtonViewModel.action()
                             
                         } label: {
                             
@@ -193,7 +196,7 @@ extension NavigationBarView.ViewModel {
     static let sample = NavigationBarView.ViewModel(
         title: "Заголовок экрана",
         leftButtons: [
-            NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft)
+            NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft, action: {})
         ],
         rightButtons: [
 //            .init(icon: .ic24Share, action: { }),
@@ -207,7 +210,7 @@ struct NavigationBarView_Previews: PreviewProvider {
         title: "Перевод по номеру телефона",
         subtitle: "* 4329",                     //Optional
         leftButtons: [
-            NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft)
+            NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft, action: {})
         ],
         rightButtons: [
             .init(icon: .ic24Share, action: { }),

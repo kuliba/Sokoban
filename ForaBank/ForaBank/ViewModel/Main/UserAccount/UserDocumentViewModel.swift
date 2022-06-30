@@ -15,40 +15,33 @@ class UserDocumentViewModel: ObservableObject {
     
     let navigationBar: NavigationBarView.ViewModel
     let itemType: DocumentCellType
+    var items: [DocumentDelailCellView.ViewModel]
     @Published var copyButton: ButtonSimpleView.ViewModel?
     @Published var sheet: Sheet?
-    
-    var items: [DocumentDelailCellView.ViewModel] = []
-            
+     
     private var bindings = Set<AnyCancellable>()
     
-    init(model: Model, navigationBar: NavigationBarView.ViewModel, items: [DocumentDelailCellView.ViewModel], itemType: DocumentCellType) {
-        self.itemType = itemType
-        self.navigationBar = navigationBar
-        self.items = items
+    init(navigationBar: NavigationBarView.ViewModel, itemType: DocumentCellType, items: [DocumentDelailCellView.ViewModel], copyButton: ButtonSimpleView.ViewModel?) {
         
-        self.copyButton = .init(
-            title: "Скопировать все",
-            style: .gray,
-            action: {
-                
-                print("Copy action")
-            })
+        self.navigationBar = navigationBar
+        self.itemType = itemType
+        self.items = items
+        self.copyButton = copyButton
     }
     
-    init(clientInfo: ClientInfoData, itemType: DocumentCellType) {
+    init(clientInfo: ClientInfoData, itemType: DocumentCellType, dismissAction: @escaping () -> Void) {
         
         self.itemType = itemType
-        navigationBar = .init(
+        self.navigationBar = .init(
             title: itemType.title,
             leftButtons: [
-                NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft)
+                NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft, action: dismissAction)
             ],
             rightButtons: [],
             background: itemType.backgroundColor,
             foreground: .textWhite)
                 
-        items = createItems(from: clientInfo, itemType: itemType)
+        self.items = Self.createItems(from: clientInfo, itemType: itemType)
         
         navigationBar.rightButtons = [.init(icon: .ic24Share, action: { [weak self] in
             self?.action.send(UserDocumentViewModelAction.Share(clientInfo: clientInfo, itemType: itemType))
@@ -103,7 +96,7 @@ class UserDocumentViewModel: ObservableObject {
             }.store(in: &bindings)
     }
     
-    func createItems(from: ClientInfoData, itemType: DocumentCellType) -> [DocumentDelailCellView.ViewModel] {
+    static func createItems(from: ClientInfoData, itemType: DocumentCellType) -> [DocumentDelailCellView.ViewModel] {
         
         switch itemType {
             

@@ -12,15 +12,27 @@ struct PaymentPhoneView: UIViewControllerRepresentable {
     
     let viewModel: PaymentByPhoneViewModel
     
-    func makeUIViewController(context: Context) -> UINavigationController {
+    func makeUIViewController(context: Context) -> PaymentByPhoneViewController {
         
-        let vc = PaymentByPhoneViewController(viewModel: PaymentByPhoneViewModel(phoneNumber: viewModel.phoneNumber, bankId: viewModel.bankId, closeAction: viewModel.closeAction))
-        vc.modalPresentationStyle = .fullScreen
-        vc.viewModel.setBackAction = true
-        let navigation = UINavigationController(rootViewController: vc)
-        return navigation
-
+        let controller = PaymentByPhoneViewController(viewModel: viewModel)
+        controller.modalPresentationStyle = .fullScreen
+        controller.viewModel.setBackAction = true
+        
+        context.coordinator.parentObserver = controller.observe(\.parent, changeHandler: { vc, _ in
+            vc.parent?.navigationItem.title = vc.navigationItem.title
+            vc.parent?.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem
+            vc.parent?.navigationItem.rightBarButtonItems = vc.navigationItem.rightBarButtonItems
+        })
+        
+        return controller
     }
     
-    func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {}
+    func updateUIViewController(_ uiViewController: PaymentByPhoneViewController, context: Context) {}
+    
+    class Coordinator {
+        
+        var parentObserver: NSKeyValueObservation?
+    }
+    
+    func makeCoordinator() -> Self.Coordinator { Coordinator() }
 }

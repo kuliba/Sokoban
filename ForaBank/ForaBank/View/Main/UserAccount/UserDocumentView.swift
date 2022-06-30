@@ -111,7 +111,7 @@ struct UserDocumentView_Previews: PreviewProvider {
     static let navBar = NavigationBarView.ViewModel(
         title: type.title,
         leftButtons: [
-            NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft)
+            NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft, action: {})
         ],
         rightButtons: [
             .init(icon: .ic24Share, action: { })
@@ -122,9 +122,7 @@ struct UserDocumentView_Previews: PreviewProvider {
     static var previews: some View {
     
         UserDocumentView(viewModel: .init(
-            model: Model.emptyMock,
             navigationBar: navBar,
-            items: DocumentDelailCellView.ViewModel.exampleArr,
-            itemType: .passport))
+            itemType: .passport, items: DocumentDelailCellView.ViewModel.exampleArr, copyButton: .init(title: "Copy", style: .gray, action: {})))
     }
 }

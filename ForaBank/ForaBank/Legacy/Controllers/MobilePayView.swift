@@ -12,7 +12,7 @@ struct MobilePayView: UIViewControllerRepresentable {
     
     var viewModel: MobilePayViewModel
     
-    func makeUIViewController(context: Context) -> UINavigationController {
+    func makeUIViewController(context: Context) -> MobilePayViewController {
         
         let controller = MobilePayViewController()
         controller.viewModel = viewModel
@@ -28,6 +28,7 @@ struct MobilePayView: UIViewControllerRepresentable {
                     controller.selectNumber = maskPhone
                     controller.phoneField.textField.text = maskPhone
             }
+            
         case .paymentServiceData(let paymentServiceData):
             
             let phoneNumber = paymentServiceData.additionalList.filter {
@@ -45,11 +46,23 @@ struct MobilePayView: UIViewControllerRepresentable {
             break
         }
         
-        let navigation = UINavigationController(rootViewController: controller)
-        return navigation
+        context.coordinator.parentObserver = controller.observe(\.parent, changeHandler: { vc, _ in
+            vc.parent?.navigationItem.title = vc.navigationItem.title
+            vc.parent?.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem
+            vc.parent?.navigationItem.rightBarButtonItems = vc.navigationItem.rightBarButtonItems
+        })
+        
+        return controller
     }
     
-    func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {}
+    func updateUIViewController(_ uiViewController: MobilePayViewController, context: Context) {}
+    
+    class Coordinator {
+        
+        var parentObserver: NSKeyValueObservation?
+    }
+    
+    func makeCoordinator() -> Self.Coordinator { Coordinator() }
 }
 
 struct MobilePayViewModel {

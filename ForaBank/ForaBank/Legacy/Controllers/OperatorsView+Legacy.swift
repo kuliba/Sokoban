@@ -12,13 +12,32 @@ struct OperatorsView: UIViewControllerRepresentable {
     
     let viewModel: OperatorsViewModel
  
-    func makeUIViewController(context: Context) -> InternetTVMainController {
+    func makeUIViewController(context: Context) -> UIViewController {
         
-        let vc = InternetTVMainController.storyboardInstance()!
-        return vc
+        guard let controller = InternetTVMainController.storyboardInstance() else {
+            return UIViewController()
+        }
+        controller.operatorsViewModel = viewModel
+        
+        context.coordinator.parentObserver = controller.observe(\.parent, changeHandler: { vc, _ in
+            vc.parent?.navigationItem.titleView = vc.navigationItem.titleView
+            vc.parent?.navigationItem.searchController = vc.navigationItem.searchController
+            vc.parent?.navigationItem.hidesSearchBarWhenScrolling = vc.navigationItem.hidesSearchBarWhenScrolling
+            vc.parent?.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem
+            vc.parent?.navigationItem.rightBarButtonItems = vc.navigationItem.rightBarButtonItems
+        })
+        
+        return controller
     }
     
-    func updateUIViewController(_ uiViewController: InternetTVMainController, context: Context) {}
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
+    
+    class Coordinator {
+        
+        var parentObserver: NSKeyValueObservation?
+    }
+    
+    func makeCoordinator() -> Self.Coordinator { Coordinator() }
 }
 
 struct OperatorsViewModel {

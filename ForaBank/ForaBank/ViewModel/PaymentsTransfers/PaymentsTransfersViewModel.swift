@@ -9,11 +9,15 @@ import SwiftUI
 import Combine
 
 class PaymentsTransfersViewModel: ObservableObject {
+    
     typealias TransfersSectionVM = PTSectionTransfersView.ViewModel
     typealias PaymentsSectionVM = PTSectionPaymentsView.ViewModel
     
+    let action: PassthroughSubject<Action, Never> = .init()
+    
     @Published var sections: [PaymentsTransfersSectionViewModel]
     
+    @Published var bottomSheet: BottomSheet?
     @Published var sheet: Sheet?
     @Published var link: Link? { didSet { isLinkActive = link != nil; isTabBarHidden = link != nil } }
     @Published var isLinkActive: Bool = false
@@ -29,12 +33,36 @@ class PaymentsTransfersViewModel: ObservableObject {
             PTSectionPaymentsView.ViewModel()
         ]
         self.model = model
+        bind()
         bindSections(sections)
     }
     
     init(sections: [PaymentsTransfersSectionViewModel], model: Model) {
         self.sections = sections
         self.model = model
+    }
+    
+    func bind() {
+        
+        action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as PaymentsTransfersViewModelAction.Close.BottomSheet:
+                    bottomSheet = nil
+                    
+                case _ as PaymentsTransfersViewModelAction.Close.Sheet:
+                    sheet = nil
+                    
+                case _ as PaymentsTransfersViewModelAction.Close.Link:
+                    link = nil
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
     }
     
     func bindSections(_ sections: [PaymentsTransfersSectionViewModel]) {
@@ -45,109 +73,110 @@ class PaymentsTransfersViewModel: ObservableObject {
                 .sink { [unowned self] action in
                     
                     switch action {
-                    
+                        
                     //LatestPayments Section Buttons
                     case let payload as PTSectionLatestPaymentsViewAction.ButtonTapped.LatestPayment:
                         
                         switch (payload.latestPayment.type, payload.latestPayment) {
                         case (.phone, let paymentData as PaymentGeneralData):
-                            link = .init(.phone(PaymentByPhoneViewModel(phoneNumber: paymentData.phoneNumber, bankId: paymentData.bankId, closeAction: { [weak self] in
-                                self?.link = nil
+                            link = .init(.phone(PaymentByPhoneViewModel(phoneNumber: paymentData.phoneNumber, bankId: paymentData.bankId, closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                             })))
                         
                         case (.country, let paymentData as PaymentCountryData):
-                            sheet = .init(type: .country(paymentData))
+                            bottomSheet = .init(type: .country(paymentData))
                             
                         case (.service, let paymentData as PaymentServiceData):
-                            link = .service(.init(model: model, closeAction: {[weak self] in
-                                self?.link = nil }, paymentServiceData: paymentData))
-
+                            link = .service(.init(model: model, closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            }, paymentServiceData: paymentData))
                                     
                         case (.transport, let paymentData as PaymentServiceData):
-                            link = .transport(.init(model: model, closeAction: {[weak self] in
-                                self?.link = nil }, paymentServiceData: paymentData))
+                            link = .transport(.init(model: model, closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            }, paymentServiceData: paymentData))
                             
                         case (.internet, let paymentData as PaymentServiceData):
-                            link = .internet(.init(model: model, closeAction: {[weak self] in
-                                self?.link = nil }, paymentServiceData: paymentData))
-
+                            link = .internet(.init(model: model, closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            }, paymentServiceData: paymentData))
                             
                         case (.mobile, let paymentData as PaymentServiceData):
                             link = .mobile(.init(paymentServiceData: paymentData))
                             
                         case (.taxAndStateService, let paymentData as PaymentServiceData):
-                            sheet = .init(type: .exampleDetail(paymentData.type.rawValue)) //TODO:
+                            bottomSheet = .init(type: .exampleDetail(paymentData.type.rawValue)) //TODO:
                             
                         default: //error matching
-                            sheet = .init(type: .exampleDetail(payload.latestPayment.type.rawValue)) //TODO:
+                            bottomSheet = .init(type: .exampleDetail(payload.latestPayment.type.rawValue)) //TODO:
                         }
                     
                     //LatestPayment Section TemplateButton
-                    case let payload as PTSectionLatestPaymentsViewAction.ButtonTapped.Templates:
-                        sheet = .init(type: .template(payload.viewModel))
+                    case _ as PTSectionLatestPaymentsViewAction.ButtonTapped.Templates:
+                        let viewModel = TemplatesListViewModel(model, dismissAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                        })
+                        link = .template(viewModel)
                         
                     //Transfers Section
                     case let payload as PTSectionTransfersViewAction.ButtonTapped.Transfer:
                         
                         switch payload.type {
                         case .abroad:
-                            link = .chooseCountry(.init(closeAction: { [weak self] in
-                                self?.link = nil
+                            link = .chooseCountry(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                             }))
                             
                         case .anotherCard:
-                            sheet = .init(type: .anotherCard(.init(closeAction: { [weak self] in
-                                self?.sheet = nil
+                            bottomSheet = .init(type: .anotherCard(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
                             })))
                             
                         case .betweenSelf:
                             
-                            sheet = .init(type: .meToMe(.init(closeAction: { [weak self] in
-                                self?.sheet = nil
+                            bottomSheet = .init(type: .meToMe(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
                             }, paymentTemplate: nil)))
                             
                         case .byBankDetails:
-                            link = .transferByRequisites(.init(closeAction: { [weak self] in
-                                self?.link = nil
+                            link = .transferByRequisites(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                             }, paymentTemplate: nil))
+                            
                         case .byPhoneNumber:
-                            sheet = .init(type: .transferByPhone(.init(closeAction: { [weak self] in
-                                self?.sheet = nil
+                            sheet = .init(type: .transferByPhone(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
                             })))
                         }
                         
                     //Payments Section
                     case let payload as PTSectionPaymentsViewAction.ButtonTapped.Payment:
+                        
                         switch payload.type {
                         case .mobile:
-                            link = .mobile(.init(closeAction: {[weak self] in
-                                self?.link = nil }))
-                        case .qrPayment: link = .exampleDetail(payload.type.rawValue) //TODO:
+                            link = .mobile(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            }))
+                            
+                        case .qrPayment:
+                            bottomSheet = .init(type: .exampleDetail(payload.type.rawValue)) 
+
                         case .service:
-                            let serviceOperators = OperatorsViewModel(closeAction: {[weak self] in
-                                self?.link = nil }, template: nil)
+                            let serviceOperators = OperatorsViewModel(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            }, template: nil)
                             link = .serviceOperators(serviceOperators)
                             InternetTVMainViewModel.filter = GlobalModule.UTILITIES_CODE
+                            
                         case .internet:
-                            let internetOperators = OperatorsViewModel(closeAction: {[weak self] in
-                                self?.link = nil }, template: nil)
+                            let internetOperators = OperatorsViewModel(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            }, template: nil)
                             link = .internetOperators(internetOperators)
                             InternetTVMainViewModel.filter = GlobalModule.INTERNET_TV_CODE
+                            
                         case .transport:
-                            let transportOperators = OperatorsViewModel(closeAction: {[weak self] in
-                                self?.link = nil }, template: nil)
+                            let transportOperators = OperatorsViewModel(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            }, template: nil)
                             link = .transportOperators(transportOperators)
                             InternetTVMainViewModel.filter = GlobalModule.PAYMENT_TRANSPORT
                        
                         case .taxAndStateService:
                             let taxAndStateServiceVM = PaymentsViewModel(model, category: Payments.Category.taxes)
-                            taxAndStateServiceVM.closeAction = { [weak self] in
-                                self?.link = nil }
+                            taxAndStateServiceVM.closeAction = { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            }
                             link = .init(.taxAndStateService(taxAndStateServiceVM))
                             
-                        case .socialAndGame: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
-                        case .security: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
-                        case .others: sheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
+                        case .socialAndGame: bottomSheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
+                        case .security: bottomSheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
+                        case .others: bottomSheet = .init(type: .exampleDetail(payload.type.rawValue)) //TODO:
         
                         }
                     default:
@@ -159,7 +188,7 @@ class PaymentsTransfersViewModel: ObservableObject {
         }
     }
     
-    struct Sheet: Identifiable {
+    struct BottomSheet: Identifiable {
         
         let id = UUID()
         let type: Kind
@@ -170,8 +199,17 @@ class PaymentsTransfersViewModel: ObservableObject {
             case anotherCard(AnotherCardViewModel)
             case country(PaymentCountryData)
             case meToMe(MeToMeViewModel)
+        }
+    }
+    
+    struct Sheet: Identifiable {
+        
+        let id = UUID()
+        let type: Kind
+        
+        enum Kind {
+            
             case transferByPhone(TransferByPhoneViewModel)
-            case template(TemplatesListViewModel)
         }
     }
     
@@ -189,5 +227,18 @@ class PaymentsTransfersViewModel: ObservableObject {
         case service(OperatorsViewModel)
         case internet(InternetTVDetailsViewModel)
         case transport(AvtodorDetailsViewModel)
+        case template(TemplatesListViewModel)
+    }
+}
+
+enum PaymentsTransfersViewModelAction {
+    
+    enum Close {
+    
+        struct BottomSheet: Action {}
+        
+        struct Sheet: Action {}
+        
+        struct Link: Action {}
     }
 }
