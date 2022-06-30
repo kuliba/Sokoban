@@ -5,6 +5,8 @@
 //  Created by Pavel Samsonov on 13.06.2022.
 //
 
+import Foundation
+
 // MARK: - Handlers
 
 extension Model {
@@ -119,6 +121,8 @@ extension Model {
                 currencyCode: payload.currencyCode))
         let productsListError = ProductsListError.emptyData(message: ProductsListError.errorMessage)
 
+        informer.value = .init(message: "\(payload.currencyName) счет открывается")
+
         serverAgent.executeCommand(command: command) { result in
 
             switch result {
@@ -134,6 +138,7 @@ extension Model {
                         return
                     }
 
+                    self.informer.value = .init(message: "\(payload.currencyName) счет открыт")
                     self.action.send(ModelAction.Account.MakeOpenAccount.Response.complete(data))
 
                 default:
@@ -149,6 +154,37 @@ extension Model {
                 self.action.send(ModelAction.Account.MakeOpenAccount.Response.failed(error: .serverCommandError(error: error.localizedDescription)))
             }
         }
+    }
+}
+
+// MARK: - Reset
+
+extension Model {
+
+    func handleMakeOpenAccountUpdate(payload: ModelAction.Account.MakeOpenAccount.Response) {
+
+        switch payload {
+        case .complete:
+
+            // Обновление открытых счетов на главном экране
+            handleProductsUpdateTotalProduct(.account)
+
+            // Обновление списка счетов
+            handleAccountProductsListUpdate()
+
+        case .failed:
+
+            resetInformer()
+            return
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+            self.resetInformer()
+        }
+    }
+
+    private func resetInformer() {
+        informer.value = nil
     }
 }
 
@@ -225,6 +261,7 @@ extension ModelAction {
             struct Request: Action {
 
                 let verificationCode: String
+                let currencyName: String
                 let currencyCode: Int
             }
 

@@ -191,6 +191,7 @@ extension OpenAccountPerformView {
                         operationType = .confirm
                         model.action.send(ModelAction.Account.MakeOpenAccount.Request(
                             verificationCode: confirmCode,
+                            currencyName: currencyName,
                             currencyCode: item.currencyCode)
                         )
 

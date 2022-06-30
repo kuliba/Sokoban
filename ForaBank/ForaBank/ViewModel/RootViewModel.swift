@@ -14,6 +14,7 @@ class RootViewModel: ObservableObject {
     let action: PassthroughSubject<Action, Never> = .init()
     
     @Published var selected: TabType
+    @Published var informerViewModel: InformerView.ViewModel?
 
     let mainViewModel: MainViewModel
     let paymentsViewModel: PaymentsTransfersViewModel
@@ -54,6 +55,20 @@ class RootViewModel: ObservableObject {
                     action.send(RootViewModelAction.Cover.Hide())
                 }
                 
+            }.store(in: &bindings)
+
+        model.informer
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] data in
+
+                guard let data = data else {
+                    
+                    informerViewModel = nil
+                    return
+                }
+
+                informerViewModel = .init(message: data.message)
+
             }.store(in: &bindings)
         
         model.action

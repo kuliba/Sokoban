@@ -249,7 +249,7 @@ extension Model {
             }
         }
     }
-    
+
     func handleProductsUpdateTotalAll() {
         
         guard self.productsUpdating.value.isEmpty == true else {
@@ -311,6 +311,65 @@ extension Model {
                     self.handleServerCommandError(error: error, command: command)
                     //TODO: show error message in UI
                 }
+            }
+        }
+    }
+
+    func handleProductsUpdateTotalProduct(_ productType: ProductType) {
+
+        guard productsUpdating.value.contains(productType) == false,
+              productsAllowed.contains(productType) == true else {
+                  return
+              }
+
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+
+        Task {
+
+            self.productsUpdating.value.append(productType)
+
+            let serial = productsCacheSerial(for: productType)
+            let command = ServerCommands.ProductController.GetProductListByType(token: token, serial: serial, productType: productType)
+
+            do {
+
+                let result = try await productsFetchWithCommand(command: command)
+
+                // updating status
+                if let index = self.productsUpdating.value.firstIndex(of: productType) {
+
+                    self.productsUpdating.value.remove(at: index)
+                }
+
+                guard result.products.isEmpty == false else {
+                    return
+                }
+
+                // cache products
+                try productsCaheData(products: result.products, serial: result.serial)
+
+                // update products
+                self.products.value = reduce(products: self.products.value, with: result.products, allowed: self.productsAllowed)
+
+                // update loans data
+                if productType == .loan {
+
+                    self.action.send(ModelAction.Loans.Update.All())
+                }
+
+            } catch {
+
+                // updating status
+                if let index = self.productsUpdating.value.firstIndex(of: productType) {
+
+                    self.productsUpdating.value.remove(at: index)
+                }
+
+                self.handleServerCommandError(error: error, command: command)
+                //TODO: show error message in UI
             }
         }
     }
