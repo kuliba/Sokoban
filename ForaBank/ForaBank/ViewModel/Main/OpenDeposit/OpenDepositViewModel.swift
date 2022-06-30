@@ -13,6 +13,7 @@ class OpenDepositViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
     
+    let navButtonBack: NavigationBarButtonViewModel
     @Published var products: [OfferProductView.ViewModel]
     @Published var isShowSheet: Bool = false
     
@@ -22,15 +23,17 @@ class OpenDepositViewModel: ObservableObject {
     private var bindings = Set<AnyCancellable>()
 
     
-    init(_ model: Model = .emptyMock, products: [OfferProductView.ViewModel], style: Style) {
+    init(_ model: Model = .emptyMock, navButtonBack: NavigationBarButtonViewModel, products: [OfferProductView.ViewModel], style: Style) {
         
+        self.navButtonBack = navButtonBack
         self.style = style
         self.products = products
         self.model = model
     }
     
-    init(_ model: Model, products: [CatalogProductData], style: Style) {
+    init(_ model: Model, products: [CatalogProductData], style: Style, dismissAction: @escaping () -> Void) {
         
+        self.navButtonBack = .init(icon: .ic24ChevronLeft, action: dismissAction)
         self.style = .catalog
         self.products = products.enumerated().map({ product in
             
@@ -43,8 +46,9 @@ class OpenDepositViewModel: ObservableObject {
         requestImages(for: products)
     }
     
-    init(_ model: Model, products: [DepositProductData], style: Style) {
+    init(_ model: Model, products: [DepositProductData], style: Style, dismissAction: @escaping () -> Void) {
         
+        self.navButtonBack = .init(icon: .ic24ChevronLeft, action: dismissAction)
         self.style = .deposit
         self.products = products.enumerated().map({ product in
             

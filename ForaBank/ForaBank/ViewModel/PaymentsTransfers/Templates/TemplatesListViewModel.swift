@@ -16,6 +16,7 @@ class TemplatesListViewModel: ObservableObject {
     @Published var state: State
     @Published var style: Style
     @Published var title: String
+    let navButtonBack: NavigationBarButtonViewModel
     @Published var navButtonsRight: [NavigationBarButtonViewModel]
     @Published var categorySelector: OptionSelectorView.ViewModel?
     @Published var items: [ItemViewModel]
@@ -32,11 +33,12 @@ class TemplatesListViewModel: ObservableObject {
     private let itemsRaw: CurrentValueSubject<[ItemViewModel], Never> = .init([])
     private let categoryIndexAll = "TemplatesListViewModelCategoryAll"
     
-    init(_ model: Model) {
+    init(_ model: Model, dismissAction: @escaping () -> Void) {
         
         self.state = .normal
         self.style = model.paymentTemplatesViewSettings.value.style
         self.title = "Шаблоны"
+        self.navButtonBack = .init(icon: .ic24ChevronLeft, action: dismissAction)
         self.navButtonsRight = []
         self.items = []
         self.model = model
@@ -45,11 +47,12 @@ class TemplatesListViewModel: ObservableObject {
         bind()
     }
     
-    internal init(state: State, style: Style, title: String, navButtonsRight: [NavigationBarButtonViewModel], categorySelector: OptionSelectorView.ViewModel, items: [ItemViewModel], contextMenu: ContextMenuViewModel?, deletePannel: DeletePannelViewModel?, model: Model) {
+    internal init(state: State, style: Style, title: String, navButtonBack: NavigationBarButtonViewModel, navButtonsRight: [NavigationBarButtonViewModel], categorySelector: OptionSelectorView.ViewModel, items: [ItemViewModel], contextMenu: ContextMenuViewModel?, deletePannel: DeletePannelViewModel?, model: Model) {
         
         self.state = state
         self.style = style
         self.title = title
+        self.navButtonBack = navButtonBack
         self.navButtonsRight = navButtonsRight
         self.categorySelector = categorySelector
         self.items = items

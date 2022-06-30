@@ -350,7 +350,7 @@ class MainViewController: UIViewController {
         }
         
         searchBar.trailingRightAction = {
-            let pushModel = MessagesHistoryViewModel(model: self.model)
+            let pushModel = MessagesHistoryViewModel(model: self.model, dismissAction: {})
             
             let pushHistory = MessagesHistoryView(viewModel: pushModel)
             let nc = UIHostingController(rootView: pushHistory)

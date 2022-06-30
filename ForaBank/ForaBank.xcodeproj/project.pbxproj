@@ -597,6 +597,8 @@
 		68FE3984286A50B30026CBD7 /* AvtodorDetailsView+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FE3983286A50B30026CBD7 /* AvtodorDetailsView+Legacy.swift */; };
 		68FE3986286A878B0026CBD7 /* GIBDDFineDetailsView+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FE3985286A878B0026CBD7 /* GIBDDFineDetailsView+Legacy.swift */; };
 		68FE3988286A89450026CBD7 /* InternetTVDetailsView+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FE3987286A89450026CBD7 /* InternetTVDetailsView+Legacy.swift */; };
+		68FE398B286BD9D00026CBD7 /* Model+Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FE398A286BD9D00026CBD7 /* Model+Version.swift */; };
+		68FE398D286C17920026CBD7 /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FE398C286C17920026CBD7 /* AppInfo.swift */; };
 		68FFA5282682AF2C002DADFA /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA5272682AF2C002DADFA /* ContactsViewController.swift */; };
 		68FFA52C2682AF62002DADFA /* ContactCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA52A2682AF62002DADFA /* ContactCollectionViewCell.swift */; };
 		68FFA52D2682AF62002DADFA /* ContactCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68FFA52B2682AF62002DADFA /* ContactCollectionViewCell.xib */; };
@@ -1931,6 +1933,8 @@
 		68FE3983286A50B30026CBD7 /* AvtodorDetailsView+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AvtodorDetailsView+Legacy.swift"; sourceTree = "<group>"; };
 		68FE3985286A878B0026CBD7 /* GIBDDFineDetailsView+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GIBDDFineDetailsView+Legacy.swift"; sourceTree = "<group>"; };
 		68FE3987286A89450026CBD7 /* InternetTVDetailsView+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InternetTVDetailsView+Legacy.swift"; sourceTree = "<group>"; };
+		68FE398A286BD9D00026CBD7 /* Model+Version.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Version.swift"; sourceTree = "<group>"; };
+		68FE398C286C17920026CBD7 /* AppInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfo.swift; sourceTree = "<group>"; };
 		68FFA5272682AF2C002DADFA /* ContactsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewController.swift; sourceTree = "<group>"; };
 		68FFA52A2682AF62002DADFA /* ContactCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactCollectionViewCell.swift; sourceTree = "<group>"; };
 		68FFA52B2682AF62002DADFA /* ContactCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ContactCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -4691,6 +4695,7 @@
 				682092A127AC04DE003DCAFD /* ClientInfoData.swift */,
 				682092BA27AC170B003DCAFD /* DaDataPhoneData.swift */,
 				77E1803227AC04320006ACC9 /* NotificationData.swift */,
+				68FE398C286C17920026CBD7 /* AppInfo.swift */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -4727,6 +4732,7 @@
 				689ECA842848DDAA0098664F /* Model+Transfers.swift */,
 				0CC8FCA828315F3500F0E9BD /* Model+LatestPayments.swift */,
 				77BF27AE284651D4009624BB /* Model+Formatters.swift */,
+				68FE398A286BD9D00026CBD7 /* Model+Version.swift */,
 				77583FFE27B13C1600251969 /* Payments */,
 			);
 			path = Model;
@@ -6937,6 +6943,7 @@
 				EDB1437B265FDA410028EF5A /* Resources */,
 				0B5F3DB7277CD16F003CC723 /* Embed Frameworks */,
 				A51568342821B927000D4455 /* Embed App Extensions */,
+				68FE3989286B36EF0026CBD7 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -7372,6 +7379,26 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		68FE3989286B36EF0026CBD7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\n#   Increment Build Number Bool (Increment ON with true, increment OFF with false)\nshouldIncrement=false\n\n#   App vesion / Build version constants\nsourceFilePath=\"$PROJECT_DIR/$PROJECT_NAME/LaunchScreen.storyboard\"\nversionNumber=\"$MARKETING_VERSION\"\nbuildNumber=\"$CURRENT_PROJECT_VERSION\"\n\n\n#   Increment build number\nif [ \"$shouldIncrement\" = true ]; then\n    buildNumber=$(($buildNumber + 1))\n    /usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$INFOPLIST_FILE\"\nfi\n\n#   Output version & build numbers into a label on LaunchScreen.storyboard\nsed -i .bak -e \"/userLabel=\\\"APP_VERSION\\\"/s/text=\\\"[^\\\"]*\\\"/text=\\\"version $versionNumber\\\"/\" \"$sourceFilePath\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		A51568282821B927000D4455 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -7443,6 +7470,7 @@
 				0B1DBA9C26D4032F009F3E98 /* CreateContactAddresslessTransferDecodableModel.swift in Sources */,
 				0BF3485B268E5907005138A8 /* GetExchangeCurrencyRatesDecodableModel.swift in Sources */,
 				77A76A7827FAFCEE00A271B3 /* AtmServiceData.swift in Sources */,
+				68FE398B286BD9D00026CBD7 /* Model+Version.swift in Sources */,
 				7758400027B13C3A00251969 /* PaymentsDataModel.swift in Sources */,
 				0BB24AA826F002B100DDA4F6 /* GetLatestPaymentsSaved.swift in Sources */,
 				68629335284E558D00B25EB6 /* TransferByPhoneView+Legacy.swift in Sources */,
@@ -7744,6 +7772,7 @@
 				0B95C40026B6C99A00AA57E6 /* RoundedDoubleExtension.swift in Sources */,
 				77067CDD275FCBA5000C442B /* DownloadQueueSerialsStorage.swift in Sources */,
 				0B283FBD26FBC9F100B5E925 /* Presentable.swift in Sources */,
+				68FE398D286C17920026CBD7 /* AppInfo.swift in Sources */,
 				0B8C1C58273C599A00BA5CAC /* GKHNavigationController.swift in Sources */,
 				774A8B802865FF3600B81140 /* RefreshView.swift in Sources */,
 				509EE0E4285F8599002281BF /* Publishers+Extension.swift in Sources */,
@@ -8619,7 +8648,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 13;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -8629,7 +8658,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 8.3;
+				MARKETING_VERSION = 8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -8649,7 +8678,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ForaBank/Info.plist;
@@ -8658,7 +8687,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 8.3;
+				MARKETING_VERSION = 8.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.forabank.sense;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
