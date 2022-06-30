@@ -56,6 +56,9 @@ struct RootView: View {
             
         }
         .accentColor(.black)
+        .alert(item: $viewModel.alert, content: { alertViewModel in
+            Alert(with: alertViewModel)
+        })
     }
 }
 

@@ -69,7 +69,7 @@ class Model {
     
     //MARK: Loacation
     let currentUserLoaction: CurrentValueSubject<LocationData?, Never>
-    
+
     //TODO: remove when all templates will be implemented
     let paymentTemplatesAllowed: [ProductStatementData.Kind] = [.sfp, .insideBank, .betweenTheir, .direct, .contactAddressless, .externalIndivudual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
     let paymentTemplatesDisplayed: [PaymentTemplateData.Kind] = [.sfp, .byPhone, .insideBank, .betweenTheir, .direct, .contactAdressless, .externalIndividual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
@@ -213,6 +213,7 @@ class Model {
                     action.send(ModelAction.LatestPayments.List.Requested())
                     action.send(ModelAction.PaymentTemplate.List.Requested())
                     action.send(ModelAction.Account.ProductList.Request())
+                    action.send(ModelAction.AppVersion.Request())
                     
                 case .inactive:
                     if let pincode = try? authStoredPincode() {
@@ -582,6 +583,9 @@ class Model {
                 case let payload as ModelAction.Account.MakeOpenAccount.Request:
                     handleMakeOpenAccount(payload)
 
+                //MARK: - AppStore Version
+                case _ as ModelAction.AppVersion.Request:
+                    handleVersionAppStore()
                 default:
                     break
                 }
