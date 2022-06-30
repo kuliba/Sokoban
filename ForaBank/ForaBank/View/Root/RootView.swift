@@ -27,14 +27,17 @@ struct RootView: View {
             }
             .tag(RootViewModel.TabType.main)
             
-            PaymentsTransfersView(viewModel: viewModel.paymentsViewModel)
-                .tabItem {
-                    
-                    RootViewModel.TabType.payments.image(for: viewModel.selected)
-                    Text(RootViewModel.TabType.payments.name)
-                        .foregroundColor(.black)
-                }
-                .tag(RootViewModel.TabType.payments)
+            NavigationView {
+                
+                PaymentsTransfersView(viewModel: viewModel.paymentsViewModel)
+            }
+            .tabItem {
+                
+                RootViewModel.TabType.payments.image(for: viewModel.selected)
+                Text(RootViewModel.TabType.payments.name)
+                    .foregroundColor(.black)
+            }
+            .tag(RootViewModel.TabType.payments)
             
             Color.white
                 .tabItem {

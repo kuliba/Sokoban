@@ -83,7 +83,7 @@ struct MessagesHistoryView_Previews: PreviewProvider {
 
 extension MessagesHistoryViewModel {
     
-    static let sample = MessagesHistoryViewModel(sections: [
+    static let sample = MessagesHistoryViewModel(navigationBar: .sample, sections: [
         .init(
             title: "25 агуста, ср",
             items: [MessagesHistoryItemView.ViewModel(icon: Image.ic24MoreHorizontal, title: "Срок вашей карты истекает 29.08.2021 г.", content: "Оставте он-лайн заявку или обратитесь в ближайшее отделение банка", time: "17:56"),
@@ -102,5 +102,5 @@ extension MessagesHistoryViewModel {
                       MessagesHistoryItemView.ViewModel(icon: Image.ic24MoreHorizontal, title: "Отказ. Недостаточно средств.", content: "LIQPAY*IP Artur Danilo, Moscow Интернет-оплата. Карта / счет .4387 16:59", time: "17:56")
                      ])
         
-    ], model: Model.emptyMock, state: .stating)
+    ], state: .stating)
 }

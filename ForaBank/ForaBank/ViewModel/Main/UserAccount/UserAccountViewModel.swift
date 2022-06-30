@@ -37,12 +37,12 @@ class UserAccountViewModel: ObservableObject {
         
     }
     
-    init(model: Model, clientInfo: ClientInfoData) {
+    init(model: Model, clientInfo: ClientInfoData, dismissAction: @escaping () -> Void) {
         
         self.model = model
         sections = []
         navigationBar = .init(title: "Профиль", leftButtons: [
-            NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft)
+            NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft, action: dismissAction)
         ])
         
         avatar = .init(
@@ -81,7 +81,6 @@ class UserAccountViewModel: ObservableObject {
             .sink { [unowned self] action in
                 
                 switch action {
-
                 case _ as UserAccountModelAction.AvatarAction:
                     print("Open AvatarAction")
                     
@@ -92,6 +91,7 @@ class UserAccountViewModel: ObservableObject {
                     isShowExitAlert = AlertViewModel(title: "Выход", message: "Вы действительно хотите выйти из учетной записи?\nДля повторного входа Вам необходимо будет пройти повторную регистрацию", primaryButton: .destructive(Text("Выход"), action: {
                         self.model.action.send(ModelAction.Auth.Logout())
                     }), secondaryButton: .cancel(Text("Отмена")))
+                    
                 default:
                     break
                     
@@ -109,7 +109,6 @@ class UserAccountViewModel: ObservableObject {
                 .sink { [unowned self] action in
                     
                     switch action {
-
                     case _ as UserAccountModelAction.ChangeUserName:
                         print("Open Изменить Имя")
                         
@@ -118,10 +117,8 @@ class UserAccountViewModel: ObservableObject {
                             .init(model: model.fastPaymentContractFullInfo.value
                                 .map { $0.getFastPaymentContractFindListDatum() },
                                   newModel: model,
-                                  closeAction: { [weak self] in self?.link = nil })
+                                  closeAction: {[weak self] in self?.action.send(UserAccountModelAction.CloseLink())})
                         link = .fastPaymentSettings(viewModel)
-                       
-                        print("Open FastPayment")
                         
                     case let payload as UserAccountModelAction.Switch:
                         switch payload.type {
@@ -138,23 +135,22 @@ class UserAccountViewModel: ObservableObject {
                         switch payload.type {
                             
                         case .passport:
-                            
-                            self.sheet = .init(sheetType: .userDocument(.init(clientInfo: clientInfo, itemType: .passport)))
+                            self.link = .userDocument(.init(clientInfo: clientInfo, itemType: .passport, dismissAction: {[weak self] in self?.action.send(UserAccountModelAction.CloseLink())}))
                             
                         case .inn:
-                            
                             guard let inn = clientInfo.INN else { return }
                             self.bottomSheet = .init(sheetType: .inn(.init(itemType: payload.type, content: inn)))
                             
                         case .adressPass:
-                            
                             self.bottomSheet = .init(sheetType: .inn(.init(itemType: payload.type, content: clientInfo.address)))
                             
                         case .adress:
-                            
                             guard let addressResidential = clientInfo.addressResidential else { return }
                             self.bottomSheet = .init(sheetType: .inn(.init(itemType: payload.type, content: addressResidential)))
                         }
+                        
+                    case _ as UserAccountModelAction.CloseLink:
+                        link = nil
                         
                     default:
                         break

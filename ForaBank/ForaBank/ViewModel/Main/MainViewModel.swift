@@ -65,10 +65,10 @@ class MainViewModel: ObservableObject {
                     guard let clientInfo = model.clientInfo.value else {
                         return
                     }
-                    link = .userAccount(.init(model: model, clientInfo: clientInfo))
+                    link = .userAccount(.init(model: model, clientInfo: clientInfo, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.CloseLink())}))
                     
                 case _ as MainViewModelAction.ButtonTapped.Messages:
-                    let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model)
+                    let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.CloseLink())})
                     link = .messages(messagesHistoryViewModel)
                     
                 case _ as MainViewModelAction.PullToRefresh:
@@ -120,7 +120,8 @@ class MainViewModel: ObservableObject {
                                 bottomSheet = .init(type: .openAccount(model))
                                 
                             case .deposit:
-                                link = .openDeposit(.init(model, products: self.model.deposits.value, style: .deposit))
+                                link = .openDeposit(.init(model, products: self.model.deposits.value, style: .deposit, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.CloseLink())
+                                }))
                                 
                             default:
                                 break
@@ -139,13 +140,14 @@ class MainViewModel: ObservableObject {
                         
                         switch action {
                         case let payload as MainSectionViewModelAction.FastPayment.ButtonTapped:
-                            
                             switch payload.operationType {
                             case .templates:
-                                link = .templates(.init(model))
+                                link = .templates(.init(model, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.CloseLink())
+                                }))
+                                
                             case .byPhone:
                                 sheet = .init(type: .byPhone(.init(closeAction: { [weak self] in
-                                    self?.sheet = nil
+                                    self?.action.send(MainViewModelAction.CloseLink())
                                 })))
                             default:
                                 break

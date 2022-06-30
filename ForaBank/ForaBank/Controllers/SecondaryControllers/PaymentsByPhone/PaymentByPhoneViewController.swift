@@ -320,7 +320,6 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
                                          action: #selector(updateNameTemplate))
             button.tintColor = .black
             navigationItem.rightBarButtonItem = button
-            addBackButton()
             
         } else {
             if viewModel.isSbp {

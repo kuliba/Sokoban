@@ -20,7 +20,7 @@ extension MobilePayViewController {
                                          action: #selector(updateNameTemplate))
             button.tintColor = .black
             navigationItem.rightBarButtonItem = button
-            addBackButton()
+            navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "back_button") , style: .plain, target: self, action: #selector(backAction))
             
         } else {
         
@@ -36,11 +36,14 @@ extension MobilePayViewController {
     }
     
     @objc func backAction() {
+        
         if let model = viewModel {
+            
             model.closeAction()
+            
         } else {
-        dismiss(animated: true, completion: nil)
-        navigationController?.dismiss(animated: true, completion: nil)
+            
+            navigationController?.popViewController(animated: true)
         }
     }
     
