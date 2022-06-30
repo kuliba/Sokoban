@@ -18,7 +18,8 @@ class RootViewModel: ObservableObject {
     let mainViewModel: MainViewModel
     let paymentsViewModel: PaymentsTransfersViewModel
     let chatViewModel: ChatViewModel
-    
+    @Published var alert: Alert.ViewModel?
+
     private let model: Model
     private var bindings = Set<AnyCancellable>()
 
@@ -53,6 +54,39 @@ class RootViewModel: ObservableObject {
                     action.send(RootViewModelAction.Cover.Hide())
                 }
                 
+            }.store(in: &bindings)
+        
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as ModelAction.AppVersion.Response:
+                 
+                    withAnimation {
+                        
+                        switch payload.result {
+                        case let .success(appInfo):
+                            
+                            if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String, appInfo.version > appVersion {
+
+                                self.alert = .init(title: "Новая версия", message: "Доступна новая версия \(appInfo.version).", primary: .init(type: .default, title: "Не сейчас", action: {}), secondary: .init(type: .default, title: "Обновить", action: {
+                                    guard let url = URL(string: "\(appInfo.trackViewUrl)") else {
+                                        return
+                                    }
+                                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                                    
+                                }))
+                            }
+                            
+                        case let .failure(error):
+                            
+                            print("AppVersion Response error: \(error) ")
+                        }
+                    }
+                default:
+                    break
+                }
             }.store(in: &bindings)
     }
     

@@ -98,9 +98,7 @@ class MainViewModel: ObservableObject {
             .combineLatest(model.clientPhoto, model.clientName)
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] clientData in
-                
                 userAccountButton = userAccountButton(clientInfo: clientData.0, clientPhoto: clientData.1, clientName: clientData.2)
-                
             }.store(in: &bindings)
     }
     
