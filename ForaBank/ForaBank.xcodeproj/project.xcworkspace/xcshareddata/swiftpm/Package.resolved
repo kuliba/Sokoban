@@ -19,6 +19,15 @@
       }
     },
     {
+      "identity" : "anyimagekit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/AnyImageProject/AnyImageKit.git",
+      "state" : {
+        "revision" : "35cd536e9dd2e740b1721c18ac0be7711a7e5486",
+        "version" : "0.14.4"
+      }
+    },
+    {
       "identity" : "boringssl-swiftpm",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/boringssl-SwiftPM.git",
@@ -106,6 +115,15 @@
       "state" : {
         "revision" : "9ab144a1a6c6ae8dad25840610c072709b15d8b5",
         "version" : "6.5.10"
+      }
+    },
+    {
+      "identity" : "kingfisher",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/onevcat/Kingfisher.git",
+      "state" : {
+        "revision" : "022e4eeb79f817748544b318b991d9a70036bbf8",
+        "version" : "7.2.4"
       }
     },
     {
@@ -241,6 +259,15 @@
       "state" : {
         "revision" : "b640c1d8eee79c3a5ad6e0ae1afd2ae0fea30423",
         "version" : "1.29.3"
+      }
+    },
+    {
+      "identity" : "snapkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SnapKit/SnapKit",
+      "state" : {
+        "revision" : "f222cbdf325885926566172f6f5f06af95473158",
+        "version" : "5.6.0"
       }
     },
     {

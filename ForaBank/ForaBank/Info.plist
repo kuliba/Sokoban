@@ -66,7 +66,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Можно сканировать номер карты, а не заполнять с клавиатуры</string>
+	<string>Разрешите доступ к камере</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Разрешите доступ к фото</string>
 	<key>NSContactsUsageDescription</key>
 	<string>Разрешите доступ к контактам</string>
 	<key>NSFaceIDUsageDescription</key>

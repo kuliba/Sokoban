@@ -23,6 +23,14 @@ extension ModelAction {
             }
         }
     }
+    
+    enum ClientPhoto {
+        
+        struct Save: Action {
+            
+            let image: ImageData
+        }
+    }
 }
 
 //MARK: - Handlers
@@ -71,6 +79,20 @@ extension Model {
             case .failure(let error):
                 self.action.send(ModelAction.ClientInfo.Fetch.Response(result: .failure(ModelClientInfoError.serverCommandError(error: error))))
             }
+        }
+    }
+    
+    func handleClientPhotoRequest(_ payload: ModelAction.ClientPhoto.Save) {
+        
+        clientPhoto.value = payload.image
+        
+        do {
+            
+            try localAgent.store(payload.image, serial: nil)
+            
+        } catch {
+            
+            print("Model: store: ClientPhotoData error: \(error.localizedDescription)")
         }
     }
 }

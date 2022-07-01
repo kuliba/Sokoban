@@ -35,7 +35,7 @@ extension UserAccountDocumentsView {
                     itemType: .passport,
                     content: userData.pasportNumber.addMask(for: .passport),
                     action: { [weak self] in
-                        self?.action.send(UserAccountModelAction.OpenDocument(type: .passport))
+                        self?.action.send(UserAccountViewModelAction.OpenDocument(type: .passport))
                     })
             ]
             
@@ -44,7 +44,7 @@ extension UserAccountDocumentsView {
                     itemType: .inn,
                     content: userInn.addMask(for: .inn),
                     action: { [weak self] in
-                        self?.action.send(UserAccountModelAction.OpenDocument(type: .inn))
+                        self?.action.send(UserAccountViewModelAction.OpenDocument(type: .inn))
                     })
                 )
             }
@@ -53,7 +53,7 @@ extension UserAccountDocumentsView {
                 itemType: .adressPass,
                 content: userData.address.addMask(for: .adressPass),
                 action: { [weak self] in
-                    self?.action.send(UserAccountModelAction.OpenDocument(type: .adressPass))
+                    self?.action.send(UserAccountViewModelAction.OpenDocument(type: .adressPass))
                 })
             )
             
@@ -62,7 +62,7 @@ extension UserAccountDocumentsView {
                     itemType: .adress,
                     content: addressResidential.addMask(for: .adress),
                     action: { [weak self] in
-                        self?.action.send(UserAccountModelAction.OpenDocument(type: .adress))
+                        self?.action.send(UserAccountViewModelAction.OpenDocument(type: .adress))
                     })
                 )
             }

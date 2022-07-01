@@ -10,7 +10,7 @@ import SwiftUI
 struct UserAccountView: View {
     
     @ObservedObject var viewModel: UserAccountViewModel
-    
+        
     var body: some View {
         
         ScrollView(showsIndicators: false) {
@@ -78,9 +78,29 @@ struct UserAccountView: View {
             case let .inn(model):
                 UserAccountDocumentInfoView(viewModel: model)
                 
+            case let .camera(model):
+                UserAccountPhotoSourceView(viewModel: model)
             }
         })
+        .present(item: $viewModel.sheetFullscreen, style: .fullScreen, content: { item in
+            switch item.type {
+                
+            case .imageCapture(let imageCapture):
+                ImageCapture(viewModel: imageCapture)
+                    .edgesIgnoringSafeArea(.all)
+                    .onDisappear { viewModel.sheetFullscreen = nil }
+                
+            case .imagePicker(let imagePicker):
+                ImagePicker(viewModel: imagePicker)
+                    .edgesIgnoringSafeArea(.all)
+                    .onDisappear { viewModel.sheetFullscreen = nil }
+            }
+        })
+        .alert(item: $viewModel.alert, content: { alertViewModel in
+            Alert(with: alertViewModel)
+        })
         .navigationBar(with: viewModel.navigationBar)
+        
     }
     
     var avatarView: some View {
