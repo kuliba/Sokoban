@@ -573,7 +573,8 @@ class MainViewController: UIViewController {
     
     func createRefreshView() -> UIView {
         
-        UIHostingController(rootView: RefreshView()).view
+//        UIHostingController(rootView: RefreshingIndicatorView()).view
+        UIView()
     }
     
     func reloadData(with searchText: String?) {

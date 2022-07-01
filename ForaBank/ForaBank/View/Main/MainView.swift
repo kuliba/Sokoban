@@ -64,11 +64,8 @@ struct MainView: View {
             .coordinateSpace(name: "scroll")
             .zIndex(0)
             
-            if viewModel.isRefreshing == true {
-                
-                RefreshView()
-                    .zIndex(1)
-            }
+            RefreshingIndicatorView(viewModel: viewModel.refreshingIndicator)
+                .zIndex(1)
                 
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
@@ -236,7 +233,7 @@ struct MainView_Previews: PreviewProvider {
 
 extension MainViewModel {
     
-    static let sample = MainViewModel(navButtonsRight: [.init(icon: .ic24Search, action: {}), .init(icon: .ic24Bell, action: {})], sections: [MainSectionProductsView.ViewModel.sample, MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample], isRefreshing: true)
+    static let sample = MainViewModel(refreshingIndicator: .init(isActive: true), navButtonsRight: [.init(icon: .ic24Search, action: {}), .init(icon: .ic24Bell, action: {})], sections: [MainSectionProductsView.ViewModel.sample, MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample])
     
-    static let sampleProducts = MainViewModel(navButtonsRight: [.init(icon: .ic24Search, action: {}), .init(icon: .ic24Bell, action: {})], sections: [MainSectionProductsView.ViewModel(.productsMock), MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample], isRefreshing: false)
+    static let sampleProducts = MainViewModel(refreshingIndicator: .init(isActive: false),navButtonsRight: [.init(icon: .ic24Search, action: {}), .init(icon: .ic24Bell, action: {})], sections: [MainSectionProductsView.ViewModel(.productsMock), MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample])
 }
