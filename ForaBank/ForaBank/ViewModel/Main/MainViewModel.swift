@@ -12,9 +12,9 @@ import SwiftUI
 class MainViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
-
+    
+    lazy var userAccountButton: UserAccountButtonViewModel = .init(logo: .ic12LogoForaColor, name: "", avatar: nil, action: { [weak self] in self?.action.send(MainViewModelAction.ButtonTapped.UserAccount())})
     let refreshingIndicator: RefreshingIndicatorView.ViewModel
-    @Published var userAccountButton: UserAccountButtonViewModel?
     @Published var navButtonsRight: [NavigationBarButtonViewModel]
     @Published var sections: [MainSectionViewModel]
     @Published var productProfile: ProductProfileViewModel?
@@ -98,7 +98,9 @@ class MainViewModel: ObservableObject {
             .combineLatest(model.clientPhoto, model.clientName)
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] clientData in
-                userAccountButton = userAccountButton(clientInfo: clientData.0, clientPhoto: clientData.1, clientName: clientData.2)
+                
+                userAccountButton.update(clientInfo: clientData.0, clientPhoto: clientData.1, clientName: clientData.2)
+                
             }.store(in: &bindings)
     }
     
@@ -234,27 +236,33 @@ class MainViewModel: ObservableObject {
          .init(icon: .ic24Bell, action: {[weak self] in self?.action.send(MainViewModelAction.ButtonTapped.Messages())})]
     }
     
-    private func userAccountButton(clientInfo: ClientInfoData?, clientPhoto: ClientPhotoData?, clientName: ClientNameData?) -> UserAccountButtonViewModel? {
-        
-        guard let clientInfo = clientInfo else {
-            return nil
-        }
-        
-        let name = clientName ?? clientInfo.firstName
-        let avatar = clientPhoto?.image
-        
-        return  UserAccountButtonViewModel(logo: .ic12LogoForaColor, avatar: avatar, name: name, action: { [weak self] in self?.action.send(MainViewModelAction.ButtonTapped.UserAccount())})
-    }
 }
 
 extension MainViewModel {
     
-    struct UserAccountButtonViewModel {
+    class UserAccountButtonViewModel: ObservableObject {
         
         let logo: Image
-        let avatar: Image?
-        let name: String
+        @Published var avatar: Image?
+        @Published var name: String
+        
         let action: () -> Void
+        
+        internal init(logo: Image, name: String, avatar: Image?, action: @escaping () -> Void) {
+            self.logo = logo
+            self.name = name
+            self.avatar = avatar
+            self.action = action
+        }
+        
+        func update(clientInfo: ClientInfoData?, clientPhoto: ClientPhotoData?, clientName: ClientNameData?) {
+            
+            guard let clientInfo = clientInfo else { return }
+            
+            self.name = clientName ?? clientInfo.firstName
+            self.avatar = clientPhoto?.image
+            
+        }
     }
     
     struct Sheet: Identifiable {

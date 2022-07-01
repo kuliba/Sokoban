@@ -26,7 +26,8 @@ extension UserAccountSecurityView {
         internal init(isActiveFaceId: Bool, isActivePush: Bool, isCollapsed: Bool) {
             
             let items = [
-                AccountCellSwitchView.ViewModel(type: .faceId, isActive: isActiveFaceId),
+                //TODO: - Временно убран Switch FaceId
+//                AccountCellSwitchView.ViewModel(type: .faceId, isActive: isActiveFaceId),
                 AccountCellSwitchView.ViewModel(type: .notification, isActive: isActivePush)]
             self.items = items
             super.init(isCollapsed: isCollapsed)
@@ -41,7 +42,7 @@ extension UserAccountSecurityView {
                     .dropFirst()
                     .receive(on: DispatchQueue.main)
                     .sink { [unowned self] isActive in
-                        action.send(UserAccountModelAction.Switch(type: item.type, value: isActive))
+                        action.send(UserAccountViewModelAction.Switch(type: item.type, value: isActive))
                         
                     }.store(in: &bindings)
                 

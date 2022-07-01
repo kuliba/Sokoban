@@ -10,11 +10,11 @@ import UIKit
 
 extension Model {
     
-    static let emptyMock = Model(sessionAgent: SessionAgentEmptyMock(), serverAgent: ServerAgentEmptyMock(), localAgent: LocalAgentEmptyMock(), keychainAgent: KeychainAgentMock(), settingsAgent: SettingsAgentMock(), biometricAgent: BiometricAgentMock(), locationAgent: LocationAgentMock(), contactsAgent: ContactsAgentMock())
+    static let emptyMock = Model(sessionAgent: SessionAgentEmptyMock(), serverAgent: ServerAgentEmptyMock(), localAgent: LocalAgentEmptyMock(), keychainAgent: KeychainAgentMock(), settingsAgent: SettingsAgentMock(), biometricAgent: BiometricAgentMock(), locationAgent: LocationAgentMock(), contactsAgent: ContactsAgentMock(), cameraAgent: CameraAgentMock(), imageGalleryAgent: ImageGalleryAgentMock())
     
     static let productsMock: Model = {
         
-        let model = Model(sessionAgent: SessionAgentEmptyMock(), serverAgent: ServerAgentEmptyMock(), localAgent: LocalAgentEmptyMock(), keychainAgent: KeychainAgentMock(), settingsAgent: SettingsAgentMock(), biometricAgent: BiometricAgentMock(), locationAgent: LocationAgentMock(), contactsAgent: ContactsAgentMock())
+        let model = Model(sessionAgent: SessionAgentEmptyMock(), serverAgent: ServerAgentEmptyMock(), localAgent: LocalAgentEmptyMock(), keychainAgent: KeychainAgentMock(), settingsAgent: SettingsAgentMock(), biometricAgent: BiometricAgentMock(), locationAgent: LocationAgentMock(), contactsAgent: ContactsAgentMock(), cameraAgent: CameraAgentMock(), imageGalleryAgent: ImageGalleryAgentMock())
         
         let bundle = Bundle(for: Model.self)
         
@@ -29,7 +29,7 @@ extension Model {
     
     static let statementMock: Model = {
         
-        let model = Model(sessionAgent: SessionAgentEmptyMock(), serverAgent: ServerAgentEmptyMock(), localAgent: LocalAgentEmptyMock(), keychainAgent: KeychainAgentMock(), settingsAgent: SettingsAgentMock(), biometricAgent: BiometricAgentMock(), locationAgent: LocationAgentMock(), contactsAgent: ContactsAgentMock())
+        let model = Model(sessionAgent: SessionAgentEmptyMock(), serverAgent: ServerAgentEmptyMock(), localAgent: LocalAgentEmptyMock(), keychainAgent: KeychainAgentMock(), settingsAgent: SettingsAgentMock(), biometricAgent: BiometricAgentMock(), locationAgent: LocationAgentMock(), contactsAgent: ContactsAgentMock(), cameraAgent: CameraAgentMock(), imageGalleryAgent: ImageGalleryAgentMock())
         
         let bundle = Bundle(for: Model.self)
         
