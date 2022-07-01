@@ -13,10 +13,10 @@ class MainViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
 
+    let refreshingIndicator: RefreshingIndicatorView.ViewModel
     @Published var userAccountButton: UserAccountButtonViewModel?
     @Published var navButtonsRight: [NavigationBarButtonViewModel]
     @Published var sections: [MainSectionViewModel]
-    @Published var isRefreshing: Bool
     @Published var productProfile: ProductProfileViewModel?
     @Published var sheet: Sheet?
     @Published var link: Link? { didSet { isLinkActive = link != nil; isTabBarHidden = link != nil } }
@@ -27,16 +27,17 @@ class MainViewModel: ObservableObject {
     private var model: Model
     private var bindings = Set<AnyCancellable>()
     
-    init(navButtonsRight: [NavigationBarButtonViewModel], sections: [MainSectionViewModel], isRefreshing: Bool, model: Model = .emptyMock) {
+    init(refreshingIndicator: RefreshingIndicatorView.ViewModel, navButtonsRight: [NavigationBarButtonViewModel], sections: [MainSectionViewModel], model: Model = .emptyMock) {
         
+        self.refreshingIndicator = refreshingIndicator
         self.navButtonsRight = navButtonsRight
         self.sections = sections
-        self.isRefreshing = isRefreshing
         self.model = model
     }
     
     init(_ model: Model) {
         
+        self.refreshingIndicator = .init(isActive: false)
         self.navButtonsRight = []
         self.sections = [MainSectionProductsView.ViewModel(model),
                          MainSectionFastOperationView.ViewModel.init(),
@@ -45,7 +46,6 @@ class MainViewModel: ObservableObject {
                          MainSectionOpenProductView.ViewModel(model),
                          MainSectionAtmView.ViewModel.initial]
         
-        self.isRefreshing = false
         self.model = model
         
         navButtonsRight = createNavButtonsRight()
@@ -89,7 +89,7 @@ class MainViewModel: ObservableObject {
                 
                 withAnimation {
                     
-                    self.isRefreshing = productsUpdating.isEmpty ? false : true
+                    refreshingIndicator.isActive = productsUpdating.isEmpty ? false : true
                 }
                 
             }.store(in: &bindings)

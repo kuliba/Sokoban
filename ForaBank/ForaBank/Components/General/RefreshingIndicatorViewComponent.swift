@@ -7,22 +7,49 @@
 
 import SwiftUI
 
-struct RefreshView: View {
+//MARK: - View Model
+
+extension RefreshingIndicatorView {
     
-    var body: some View {
+    class ViewModel: ObservableObject {
         
-        ZStack {
+        @Published var isActive: Bool
+        
+        init(isActive: Bool) {
             
-            AnimatedRectView(color: .mainColorsRed, width: 100, duration: 2.0)
-            AnimatedRectView(color: .mainColorsRed, width: 200, duration: 2.0, delay: 1.0)
-            AnimatedRectView(color: .mainColorsBlack, width: 200, duration: 2.0, delay: 0.3)
-            AnimatedRectView(color: .mainColorsBlack, width: 100, duration: 2.0, delay: 1.3)
+            self.isActive = isActive
         }
-        .frame(height: 3)
     }
 }
 
-extension RefreshView {
+//MARK: - View
+
+struct RefreshingIndicatorView: View {
+    
+    @ObservedObject var viewModel: ViewModel
+    
+    var body: some View {
+        
+        if viewModel.isActive == true {
+            
+            ZStack {
+                
+                AnimatedRectView(color: .mainColorsRed, width: 100, duration: 2.0)
+                AnimatedRectView(color: .mainColorsRed, width: 200, duration: 2.0, delay: 1.0)
+                AnimatedRectView(color: .mainColorsBlack, width: 200, duration: 2.0, delay: 0.3)
+                AnimatedRectView(color: .mainColorsBlack, width: 100, duration: 2.0, delay: 1.3)
+            }
+            .frame(height: 3)
+            
+        } else {
+            
+            Color.clear
+                .frame(height: 1)
+        }
+    }
+}
+
+extension RefreshingIndicatorView {
     
     struct AnimatedRectView: View {
         
@@ -58,7 +85,7 @@ extension RefreshView {
 
 struct RefreshView_Previews: PreviewProvider {
     static var previews: some View {
-        RefreshView()
+        RefreshingIndicatorView(viewModel: .init(isActive: true))
             .previewLayout(.fixed(width: 375, height: 20))
     }
 }
