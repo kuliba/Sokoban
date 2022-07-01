@@ -704,7 +704,7 @@
 		774A8B7A2865FEF100B81140 /* ProductViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774A8B792865FEF100B81140 /* ProductViewComponent.swift */; };
 		774A8B7C2865FF0A00B81140 /* TextFieldMaskableViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774A8B7B2865FF0900B81140 /* TextFieldMaskableViewComponent.swift */; };
 		774A8B7E2865FF1400B81140 /* TextFieldFormatableViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774A8B7D2865FF1400B81140 /* TextFieldFormatableViewComponent.swift */; };
-		774A8B802865FF3600B81140 /* RefreshView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774A8B7F2865FF3600B81140 /* RefreshView.swift */; };
+		774A8B802865FF3600B81140 /* RefreshingIndicatorViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774A8B7F2865FF3600B81140 /* RefreshingIndicatorViewComponent.swift */; };
 		774A8B822865FF4A00B81140 /* TagsGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774A8B812865FF4A00B81140 /* TagsGridView.swift */; };
 		774A8B842865FF6800B81140 /* FullScreenCoverLagacyModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774A8B832865FF6800B81140 /* FullScreenCoverLagacyModifier.swift */; };
 		774A8B862865FFC200B81140 /* CurrencyExchangeViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774A8B852865FFC200B81140 /* CurrencyExchangeViewComponent.swift */; };
@@ -2040,7 +2040,7 @@
 		774A8B792865FEF100B81140 /* ProductViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductViewComponent.swift; sourceTree = "<group>"; };
 		774A8B7B2865FF0900B81140 /* TextFieldMaskableViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldMaskableViewComponent.swift; sourceTree = "<group>"; };
 		774A8B7D2865FF1400B81140 /* TextFieldFormatableViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldFormatableViewComponent.swift; sourceTree = "<group>"; };
-		774A8B7F2865FF3600B81140 /* RefreshView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RefreshView.swift; sourceTree = "<group>"; };
+		774A8B7F2865FF3600B81140 /* RefreshingIndicatorViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RefreshingIndicatorViewComponent.swift; sourceTree = "<group>"; };
 		774A8B812865FF4A00B81140 /* TagsGridView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagsGridView.swift; sourceTree = "<group>"; };
 		774A8B832865FF6800B81140 /* FullScreenCoverLagacyModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullScreenCoverLagacyModifier.swift; sourceTree = "<group>"; };
 		774A8B852865FFC200B81140 /* CurrencyExchangeViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyExchangeViewComponent.swift; sourceTree = "<group>"; };
@@ -4199,7 +4199,6 @@
 				7769F5B627D26DD500F80607 /* CollapsableSectionView.swift */,
 				6806FAAB27E9424D00EA005A /* CircleSegmentedBarView.swift */,
 				7784D2A7285B73F600E81005 /* LineProgressView.swift */,
-				774A8B7F2865FF3600B81140 /* RefreshView.swift */,
 				50087819285345390033DDD5 /* SpinnerRefreshView.swift */,
 				50164F1F2841009C004239A1 /* ToggleView.swift */,
 				774A8B812865FF4A00B81140 /* TagsGridView.swift */,
@@ -4231,6 +4230,7 @@
 				774A8B7D2865FF1400B81140 /* TextFieldFormatableViewComponent.swift */,
 				774A8B7B2865FF0900B81140 /* TextFieldMaskableViewComponent.swift */,
 				509EE0E1285F855D002281BF /* KeyboardPublisher.swift */,
+				774A8B7F2865FF3600B81140 /* RefreshingIndicatorViewComponent.swift */,
 				503069D2286A5BE700308CC1 /* BottomSheetPresented */,
 				5088A0862855F411003C39D7 /* Paging */,
 				ED374C8E2861FBCE00A97219 /* ActivityViewComponent.swift */,
@@ -7774,7 +7774,7 @@
 				0B283FBD26FBC9F100B5E925 /* Presentable.swift in Sources */,
 				68FE398D286C17920026CBD7 /* AppInfo.swift in Sources */,
 				0B8C1C58273C599A00BA5CAC /* GKHNavigationController.swift in Sources */,
-				774A8B802865FF3600B81140 /* RefreshView.swift in Sources */,
+				774A8B802865FF3600B81140 /* RefreshingIndicatorViewComponent.swift in Sources */,
 				509EE0E4285F8599002281BF /* Publishers+Extension.swift in Sources */,
 				77499C432773A96500F6C079 /* Color+Extensions.swift in Sources */,
 				774A8B5D2865FDAF00B81140 /* PaymentsSwitchViewComponent.swift in Sources */,
