@@ -62,6 +62,15 @@ extension OpenAccountItemView.ViewModel {
         let title: String
         let detailTitle: String
 
+        var openTitle: String {
+
+            if isAccountOpened == true {
+                return "\(title) открыт "
+            }
+
+            return title
+        }
+
         init(title: String, detailTitle: String, isAccountOpened: Bool = false) {
 
             self.title = title
@@ -155,7 +164,7 @@ extension OpenAccountItemView {
 
                 VStack(alignment: .leading, spacing: 4) {
 
-                    Text(viewModel.title)
+                    Text(viewModel.openTitle)
                         .font(.textH3SB18240())
                         .foregroundColor(.mainColorsBlack)
 

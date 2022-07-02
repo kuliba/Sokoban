@@ -67,12 +67,26 @@ struct PagerContentView<Content: View>: View {
                 .gesture(
                     DragGesture()
                         .updating($translation, body: { value, state, _ in
-                            state = value.translation.width / 2
+
+                            let width = value.translation.width
+
+                            guard 1..<pageCount - 1 ~= currentIndex else {
+                                state = width / 3
+                                return
+                            }
+
+                            state = width / 2
                         })
                         .onEnded { value in
 
                             let offset = value.translation.width / (proxy.size.width / 2)
-                            let newIndex = (CGFloat(currentIndex) - offset).rounded()
+                            let newIndex = currentIndex - Int(offset)
+
+                            if offset > 0 && currentIndex == 0 { return }
+                            if offset < 0 && currentIndex == newIndex { return }
+
+                            if offset < 0 && currentIndex == pageCount - 1 { return }
+                            if offset > 0 && currentIndex == newIndex { return }
 
                             currentIndex = min(max(Int(newIndex), 0), pageCount - 1)
                         }

@@ -28,13 +28,23 @@ extension OpenAccountPerformView {
         private let model: Model
         private var bindings = Set<AnyCancellable>()
 
+        var currencyTitle: String {
+
+            switch item.currencyType {
+            case .RUB: return "счет"
+            default:
+                return "валютный счет"
+            }
+        }
+
         var infoTitle: String {
 
-            if operationType == .opened {
+            switch operationType {
+            case .opened:
                 return "Счет добавлен в “Мои продукты” на главном экране. Все детали и документацию вы можете найти в профиле продукта"
+            default:
+                return "Откройте \(currencyTitle) в один клик и проводите банковские операции без ограничений"
             }
-
-            return "Откройте валютный счет в один клик и проводите банковские операции без ограничений"
         }
 
         var resendOTPCount: Int {

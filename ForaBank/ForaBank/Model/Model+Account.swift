@@ -178,13 +178,13 @@ extension Model {
             return
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-            self.resetInformer()
-        }
+        self.resetInformer()
     }
 
     private func resetInformer() {
-        informer.value = nil
+        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+            self.informer.value = nil
+        }
     }
 }
 

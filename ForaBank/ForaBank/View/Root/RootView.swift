@@ -68,6 +68,7 @@ struct RootView: View {
             if let informerViewModel = viewModel.informerViewModel {
 
                 InformerView(viewModel: informerViewModel)
+                    .zIndex(1)
                     .padding(.top, 64)
             }
         }
