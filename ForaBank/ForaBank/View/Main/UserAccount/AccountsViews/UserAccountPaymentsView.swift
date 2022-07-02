@@ -29,7 +29,7 @@ extension UserAccountPaymentsView {
                 icon: Image("sbp-logo"),
                 content: "Система быстрых платежей",
                 button: .init(icon: .ic24ChevronRight, action: { [weak self] in
-                    self?.action.send(UserAccountModelAction.OpenFastPayment())
+                    self?.action.send(UserAccountViewModelAction.OpenFastPayment())
                 }))]
         }
     }
