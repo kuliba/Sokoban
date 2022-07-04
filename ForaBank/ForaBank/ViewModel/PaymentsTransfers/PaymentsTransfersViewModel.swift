@@ -15,8 +15,16 @@ class PaymentsTransfersViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
     
-    @Published var sections: [PaymentsTransfersSectionViewModel]
+    lazy var userAccountButton: MainViewModel.UserAccountButtonViewModel = .init(
+                                    logo: .ic12LogoForaColor,
+                                    name: "",
+                                    avatar: nil,
+                                    action: { [weak self] in
+                                        self?.action.send(PaymentsTransfersViewModelAction
+                                                            .ButtonTapped.UserAccount())})
     
+    @Published var sections: [PaymentsTransfersSectionViewModel]
+    @Published var navButtonsRight: [NavigationBarButtonViewModel]
     @Published var bottomSheet: BottomSheet?
     @Published var sheet: Sheet?
     @Published var link: Link? { didSet { isLinkActive = link != nil; isTabBarHidden = link != nil } }
@@ -27,19 +35,35 @@ class PaymentsTransfersViewModel: ObservableObject {
     private var bindings = Set<AnyCancellable>()
     
     init(model: Model) {
+        self.navButtonsRight = []
         self.sections = [
             PTSectionLatestPaymentsView.ViewModel(model: model),
             PTSectionTransfersView.ViewModel(),
             PTSectionPaymentsView.ViewModel()
         ]
         self.model = model
+        self.navButtonsRight = createNavButtonsRight()
+        
         bind()
         bindSections(sections)
     }
     
-    init(sections: [PaymentsTransfersSectionViewModel], model: Model) {
+    init(sections: [PaymentsTransfersSectionViewModel],
+         model: Model,
+         navButtonsRight: [NavigationBarButtonViewModel]) {
+        
         self.sections = sections
         self.model = model
+        self.navButtonsRight = navButtonsRight
+    }
+    
+    private func createNavButtonsRight() -> [NavigationBarButtonViewModel] {
+        
+        [.init(icon: .ic24BarcodeScanner2,
+              action: { [weak self] in
+                        self?.action.send(PaymentsTransfersViewModelAction
+                                            .ButtonTapped.Scanner())})
+        ]
     }
     
     func bind() {
@@ -49,6 +73,21 @@ class PaymentsTransfersViewModel: ObservableObject {
             .sink { [unowned self] action in
                 
                 switch action {
+                case _ as PaymentsTransfersViewModelAction.ButtonTapped.UserAccount:
+                    guard let clientInfo = model.clientInfo.value
+                    else {return }
+                    
+                    link = .userAccount(
+                            .init(model: model,
+                                  clientInfo: clientInfo,
+                                  dismissAction: {[weak self] in
+                                      self?.action.send(PaymentsTransfersViewModelAction
+                                                        .Close.Link() )}))
+                
+                case _ as PaymentsTransfersViewModelAction.ButtonTapped.Scanner:
+                   
+                    bottomSheet = .init(type: .exampleDetail("NavBar QR"))
+                    
                 case _ as PaymentsTransfersViewModelAction.Close.BottomSheet:
                     bottomSheet = nil
                     
@@ -61,7 +100,16 @@ class PaymentsTransfersViewModel: ObservableObject {
                 default:
                     break
                 }
+            }.store(in: &bindings)
+        
+        model.clientInfo
+            .combineLatest(model.clientPhoto, model.clientName)
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] clientData in
                 
+                userAccountButton.update(clientInfo: clientData.0,
+                                         clientPhoto: clientData.1,
+                                         clientName: clientData.2)
             }.store(in: &bindings)
     }
     
@@ -216,6 +264,7 @@ class PaymentsTransfersViewModel: ObservableObject {
     enum Link {
         
         case exampleDetail(String)
+        case userAccount(UserAccountViewModel)
         case mobile(MobilePayViewModel)
         case chooseCountry(ChooseCountryViewModel)
         case transferByRequisites(TransferByRequisitesViewModel)
@@ -232,6 +281,14 @@ class PaymentsTransfersViewModel: ObservableObject {
 }
 
 enum PaymentsTransfersViewModelAction {
+    
+    enum ButtonTapped {
+        
+        struct UserAccount: Action {}
+        
+        struct Scanner: Action {}
+        
+    }
     
     enum Close {
     

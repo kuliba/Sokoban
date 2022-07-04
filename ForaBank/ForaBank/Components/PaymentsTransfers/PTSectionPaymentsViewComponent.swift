@@ -19,7 +19,6 @@ extension PTSectionPaymentsView {
         var paymentButtons: [PaymentButtonVM]
 
         override var type: PaymentsTransfersSectionType { .payments }
-        let const = ViewSettingsConst()
         
         struct PaymentButtonVM: Identifiable {
             var id: String { type.rawValue }
@@ -28,14 +27,19 @@ extension PTSectionPaymentsView {
             let action: () -> Void
         }
         
+        static let allowedButtonsTypes: Set<PaymentsType> = [
+            .qrPayment, .mobile, .service, .internet, .transport, .taxAndStateService
+        ]
+        
         override init() {
             self.paymentButtons = []
             super.init()
-            self.paymentButtons = PaymentsType.allCases.map { item in
-                PaymentButtonVM(type: item,
-                                action: { self.action.send(PTSectionPaymentsViewAction
-                                    .ButtonTapped
-                                    .Payment(type: item)) })
+            self.paymentButtons = PaymentsType.allCases
+                .filter { Self.allowedButtonsTypes.contains($0) }
+                .map { item in PaymentButtonVM(type: item,
+                                       action: { self.action.send(PTSectionPaymentsViewAction
+                                                                    .ButtonTapped
+                                                                    .Payment(type: item)) })
             }
         }
         
@@ -54,8 +58,8 @@ extension PTSectionPaymentsView {
                 case .mobile: return (title: "Мобильная связь", imageName: "ic24Smartphone")
                 case .service: return (title: "Услуги ЖКХ", imageName: "ic24Bulb")
                 case .internet: return (title: "Интернет, ТВ", imageName: "ic24Tv")
-                case .transport: return (title: "Штрафы", imageName: "ic24Car")
-                case .taxAndStateService: return (title: "Госуслуги", imageName: "ic24Emblem")
+                case .transport: return (title: "Транспорт", imageName: "ic24Car")
+                case .taxAndStateService: return (title: "Налоги и госуслуги", imageName: "ic24Emblem")
                 case .socialAndGame: return (title: "Соцсети, игры, карты", imageName: "ic24Gamepad")
                 case .security: return (title: "Охранные системы", imageName: "ic24Key")
                 case .others: return (title: "Прочее", imageName: "ic24ShoppingCart")
@@ -72,14 +76,14 @@ struct PTSectionPaymentsView: View {
     
     @ObservedObject
     var viewModel: ViewModel
-    var heightBlock: CGFloat
+    let pageScrollViewWidth: CGFloat = 312
+    let rowsCount: Int = UIScreen.main.bounds.height > 890 ? 4 : 3
     
-    @State private var rowsCount: Int = UIScreen.main.bounds.height > 890 ? 4 : 3
     @State private var scrollProxy: AmzdScrollViewProxy?
     @State private var scrollOffsetX: CGFloat = 0
     
     private func scrollToRight() {
-        let itemIndex = (Int(scrollOffsetX / viewModel.const.pageScrollViewWidth) + 1) * rowsCount
+        let itemIndex = (Int(scrollOffsetX / pageScrollViewWidth) + 1) * rowsCount
         scrollProxy?.scrollTo(itemIndex, alignment: .leading, animated: true)
     }
     
@@ -106,11 +110,11 @@ struct PTSectionPaymentsView: View {
                         ForEach(viewModel.paymentButtons.indices, id: \.self) { index in
 
                             ButtonPayGroupView(viewModel: viewModel.paymentButtons[index])
-                                .scrollId(index)
+                                                                    .scrollId(index)
                         }
                     }
 
-                } else {
+                } else { //iOS13
                 
                     let payButtonsCount = viewModel.paymentButtons.count
                     let columnsCount = (payButtonsCount / rowsCount)
@@ -123,19 +127,9 @@ struct PTSectionPaymentsView: View {
                                 let index = rowsCount * column + row
                                 if payButtonsCount > index {
                                     ButtonPayGroupView(viewModel: viewModel.paymentButtons[index])
-                                            .scrollId(index)
+                                                                            .scrollId(index)
                                     
                                 } else { Spacer() }
-                            }
-                        }
-                        .onAppear {
-                            let scrollHeight = heightBlock - viewModel.const.fixHeightBlok
-                            let calcRowsCount = Int(round(10 * scrollHeight) / (10 * viewModel.const.payRowHeight))
-                            
-                            if calcRowsCount > 3 {
-                                rowsCount = calcRowsCount
-                            } else {
-                                rowsCount = viewModel.const.payRowCountIfZeroHeight
                             }
                         }
                     }
@@ -146,7 +140,7 @@ struct PTSectionPaymentsView: View {
                 .onAppear { scrollProxy = proxy }
 
             }
-            .frame(width: viewModel.const.pageScrollViewWidth)
+            .frame(width: pageScrollViewWidth)
             .introspectScrollView {
                 $0.isPagingEnabled = true
                 $0.clipsToBounds = false
@@ -193,32 +187,6 @@ extension PTSectionPaymentsView {
     }
 }
 
-//MARK: - Constant
-
-extension PTSectionPaymentsView.ViewModel {
-    
-    struct ViewSettingsConst { //allSizeWithoutSafeAreaInsets with paddings
-        
-        let searchViewHeight: CGFloat = 48
-        let tabBarHeight: CGFloat = 56
-        
-        let paymentsBlockHeight: CGFloat = (32 + 32 + 96)
-        let transfersBlockHeight: CGFloat = (44 + 24 + 104)
-        let payBlockTitleHeight: CGFloat = (44 + 24)
-        var fixHeightBlok: CGFloat {
-                    paymentsBlockHeight
-                  + transfersBlockHeight
-                  + payBlockTitleHeight
-                  + 45 
-        }
-        
-        let payRowHeight: CGFloat = (48 + 12)
-        let pageScrollViewWidth: CGFloat = 312
-        let payRowCountIfZeroHeight = 3
-        
-    }
-}
-
 //MARK: - Action PTSectionPaymentsViewAction
 
 enum PTSectionPaymentsViewAction {
@@ -238,7 +206,7 @@ struct PTSectionPayGroupView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        PTSectionPaymentsView(viewModel: .init(), heightBlock: 100)
+        PTSectionPaymentsView(viewModel: .init())
             .previewLayout(.fixed(width: 410, height: 280))
             .previewDisplayName("Section PayGroup")
     }

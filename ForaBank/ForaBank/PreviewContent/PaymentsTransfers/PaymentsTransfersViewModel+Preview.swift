@@ -102,7 +102,11 @@ extension PaymentsTransfersViewModel {
                 PTSectionPaymentsView.ViewModel.paymentButtonsData)
         ]
         
-        return .init(sections: sections, model: .emptyMock)
+        return .init(sections: sections,
+                     model: .emptyMock,
+                     navButtonsRight:
+                        [.init(icon: .ic24BarcodeScanner2,
+                               action: {} ) ])
     }()
     
 }
