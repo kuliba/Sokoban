@@ -248,8 +248,7 @@ extension ProductProfileCardView.ViewModel {
                     
                 } else {
                     
-                    let backgroundColor = productData.background.first?.color ?? .bGIconBlack
-                    self.background = .color(backgroundColor)
+                    self.background = .color(productData.backgroundColor)
                 }
                 
                 self.action = action

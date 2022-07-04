@@ -605,6 +605,12 @@ class Model {
                 //MARK: - AppStore Version
                 case _ as ModelAction.AppVersion.Request:
                     handleVersionAppStore()
+                    
+                //MARK: - Print Form
+                    
+                case let payload as ModelAction.PrintForm.Request:
+                    handlePrintFormRequest(payload)
+                    
                 default:
                     break
                 }

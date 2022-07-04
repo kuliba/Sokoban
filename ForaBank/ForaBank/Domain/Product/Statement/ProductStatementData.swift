@@ -198,4 +198,14 @@ extension ProductStatementData {
         default: return amount
         }
     }
+    
+    var isReturn: Bool {
+        
+        groupName.contains("Возврат")
+    }
+    
+    var fastPaymentComment: String? {
+        
+        isReturn ? "Возврат по операции": fastPayment?.documentComment
+    }
 }

@@ -14,173 +14,66 @@ struct OperationDetailView: View {
     
     var body: some View {
         
-        ZStack {
+        VStack {
             
-            Color.clear
+            // content
+            VStack(spacing: 0) {
+                
+                HeaderView(viewModel: viewModel.header)
+                OperationView(viewModel: viewModel.operation)
+                    .padding(.top, 24)
             
-            VStack {
-                
-                Spacer()
-                
-                VStack {
-                    // close button
-                    HStack(alignment: .top) {
-                        
-                        Spacer()
-                        
-                        Button {
-                            
-                            viewModel.dismissAction()
-                            
-                        } label: {
-                            
-                            Image("Operation Details Close Button Icon")
-                        }
-                        .padding()
-                    }
+                // change, return buttons
+                if let actionButtons = viewModel.actionButtons {
                     
-                    // content
-                    VStack(spacing: 0) {
+                    HStack(spacing: 15) {
                         
-                        HeaderView(viewModel: $viewModel.header)
-                        OperationView(viewModel: $viewModel.operation)
-                            .padding(.top, 24)
-
-                        // change, return buttons
-                        if let actionButtons = viewModel.actionButtons {
+                        ForEach(actionButtons) { buttonViewModel in
                             
-                            HStack(spacing: 15) {
+                            Button(buttonViewModel.name) {
                                 
-                                ForEach(actionButtons) { buttonViewModel in
-                                    
-                                    Button(buttonViewModel.name) {
-                                        
-                                        buttonViewModel.action()
-                                    }
-                                    .buttonStyle(OperationDetailsActionButton(width: 160))
-                                    .frame(height: 40)
-                                }
-                                
-                            }.padding(.top, 28)
-                        }
-                        
-                        // template, document, details buttons
-                        HStack(spacing: 52) {
-                            
-                            ForEach(viewModel.featureButtons) { buttonViewModel in
-                                
-                                FeatureButtonView(viewModel: buttonViewModel)
+                                buttonViewModel.action()
                             }
+                            .buttonStyle(OperationDetailsActionButton(width: 160))
+                            .frame(height: 40)
                         }
-                        .padding(.top, 28)
-                        .animation(nil)
-                    }
-                    
-                    if viewModel.isLoading {
                         
-                        LoadingPlaceholder()
-                    }
-                    
-                    // padding bottom
-                    Color.white
-                        .frame(height: 40)
-                    
+                    }.padding(.top, 28)
                 }
-                .background(Color.white)
-                .clipShape(RoundedCorner(radius: 16, corners: [.topLeft, .topRight]))
+
+                // template, document, details buttons
+                HStack(spacing: 52) {
+                    
+                    ForEach(viewModel.featureButtons) { buttonViewModel in
+                        
+                        FeatureButtonView(viewModel: buttonViewModel)
+                    }
+                }
+                .padding(.top, 28)
+            }
+            
+            if viewModel.isLoading {
                 
+                LoadingPlaceholder()
             }
         }
-        .transition(.scale)
+        .padding(.vertical, 40)
         .edgesIgnoringSafeArea(.bottom)
-        .sheet(item: $viewModel.operationDetailInfoViewModel) {  operationDetailInfoViewModel in
-            
-            OperationDetailInfoView(viewModel: operationDetailInfoViewModel)
+        .sheet(item: $viewModel.sheet) {  item in
+
+            switch item.type {
+            case .info(let operationDetailInfoViewModel):
+                OperationDetailInfoView(viewModel: operationDetailInfoViewModel)
+                
+            case .printForm(let printFormViewModel):
+                PrintFormView(viewModel: printFormViewModel)
+                
+            }
         }
     }
 }
 
 extension OperationDetailView {
-    
-    struct HeaderView: View {
-        
-        @Binding var viewModel: OperationDetailViewModel.HeaderViewModel
-        
-        var body: some View {
-            VStack(spacing: 0) {
-                
-                viewModel.logo?
-                    .resizable()
-                    .frame(width: 64, height: 64)
-                
-                if let status = viewModel.status {
-                    
-                    Text(status.name)
-                        .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(Color(hex: status.colorHex))
-                        .padding(.top, 24)
-                }
-                
-                Text(viewModel.title)
-                    .multilineTextAlignment(.center)
-                    .font(.system(size: 16, weight: .medium))
-                    .foregroundColor(.black)
-                    .padding(.top, 8)
-                    .padding(.horizontal, 24)
-                
-                if let category = viewModel.category {
-                    
-                    Text(category)
-                        .font(.system(size: 12, weight: .regular))
-                        .foregroundColor(.gray)
-                        .padding(.top, 8)
-                }
-            }
-        }
-    }
-    
-    struct OperationView: View {
-        
-        @Binding var viewModel: OperationDetailViewModel.OperationViewModel
-        
-        var body: some View {
-            
-            VStack(spacing: 0) {
-                
-                if let logo = viewModel.bankLogo {
-                    
-                    logo.resizable().frame(width: 32, height: 32)
-                }
-                
-                if let payee = viewModel.payee {
-                    
-                    OperationDetailView.PayeeView(viewModel: payee)
-                        .padding(.top, 8)
-                }
-                
-                OperationDetailView.AmountView(viewModel: viewModel.amount)
-                    .padding(.top, 32)
-                
-                if let fee = viewModel.fee {
-                    
-                    OperationDetailView.FeeView(viewModel: fee)
-                        .padding(.top, 32)
-                }
-                
-                if let description = viewModel.description {
-                    
-                    CapsuleText(text: description, color: .black, bgColor: Color(hex: "F6F6F7"), font: .system(size: 18, weight: .regular))
-                        .padding(.top, 16)
-                        .padding(.horizontal, 24)
-                }
-                
-                Text(viewModel.date)
-                    .font(.system(size: 12, weight: .regular))
-                    .foregroundColor(Color(hex: "999999"))
-                    .padding(.top, 16)
-            }
-        }
-    }
     
     struct PayeeView: View {
         
@@ -401,8 +294,27 @@ struct OperationDetailView_Previews: PreviewProvider {
     static var previews: some View {
         
         Group {
-            OperationDetailView(viewModel: .sampleComplete)
+            
             OperationDetailView(viewModel: .sampleComplete)
         }
     }
+}
+
+//MARK: - Sample Data
+
+extension OperationDetailViewModel {
+    
+    static let sampleComplete: OperationDetailViewModel = {
+        
+        let header = HeaderViewModel(logo: Image(uiImage: UIImage(named: "Bank Logo Sample")!), status: .success, title: "Заголовок",  category: "Прочее")
+        
+        let operation = OperationViewModel(bankLogo: Image(uiImage: UIImage(named: "Bank Logo Sample")!), payee: .doubleRow("payeeFullName", "payeeAccountNumber"), amount: .init(amount: "30,5 $", payService: .applePay, colorHex: "1C1C1C"), fee: .init(title: "Комиссия:", amount: "50,00"), description: "Описание операции", date: "22.11.22")
+        
+        let actionButtons = [ActionButtonViewModel(name: "Изменить", action: {}), ActionButtonViewModel(name: "Вернуть", action: {})]
+        
+        let featureButtons = [FeatureButtonViewModel(kind: .template(false), icon: "Operation Details Template", name: "+ Шаблон", action: {}), FeatureButtonViewModel(kind: .document, icon: "Operation Details Document", name: "Документ", action: {}), FeatureButtonViewModel(kind: .info, icon: "Operation Details Info", name: "Детали", action: {})]
+        
+        return OperationDetailViewModel(id: 1, header: header, operation: operation, actionButtons: actionButtons, featureButtons: featureButtons, isLoading: false)
+        
+    }()
 }
