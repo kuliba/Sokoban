@@ -12,6 +12,7 @@ import UIKit
 final class BottomSheetPresentationController: UIPresentationController {
 
     private let tapGestureRecognizer = UITapGestureRecognizer()
+    private let tapDragGestureRecognizer = UITapGestureRecognizer()
     let panGestureRecognizer = UIPanGestureRecognizer()
 
     private let topDragSize: CGSize = .init(width: 48, height: 5)
@@ -99,7 +100,7 @@ final class BottomSheetPresentationController: UIPresentationController {
 
         containerView.addGestureRecognizer(panGestureRecognizer)
         dimmingView.addGestureRecognizer(tapGestureRecognizer)
-        topContainerView.addGestureRecognizer(tapGestureRecognizer)
+        topContainerView.addGestureRecognizer(tapDragGestureRecognizer)
         topContainerView.addGestureRecognizer(panGestureRecognizer)
 
         NSLayoutConstraint.activate([
@@ -124,6 +125,7 @@ final class BottomSheetPresentationController: UIPresentationController {
         ])
 
         tapGestureRecognizer.addTarget(self, action: #selector(handleTapGesture))
+        tapDragGestureRecognizer.addTarget(self, action: #selector(handleTapGesture))
         panGestureRecognizer.addTarget(self, action: #selector(handlePanGesture))
 
         cornerRadius = 12
