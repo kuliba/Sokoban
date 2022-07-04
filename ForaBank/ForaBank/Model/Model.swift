@@ -383,6 +383,9 @@ class Model {
                     
                 case let payload as ModelAction.Loans.Update.Single.Request:
                     handleLoansUpdateSingleRequest(payload)
+
+                case let payload as ModelAction.Products.Update.Product:
+                    handleProductsUpdateTotalProduct(payload.productType)
                     
                     //MARK: - Statement
                     
@@ -607,6 +610,14 @@ class Model {
 
                 case let payload as ModelAction.Account.MakeOpenAccount.Response:
                     handleMakeOpenAccountUpdate(payload: payload)
+
+                // MARK: - Informer
+
+                case let payload as ModelAction.Account.Informer.Show:
+                    handleInformerShow(payload: payload)
+
+                case let payload as ModelAction.Account.Informer.Dismiss:
+                    handleInformerDismiss(payload: payload)
 
                 //MARK: - AppStore Version
                 case _ as ModelAction.AppVersion.Request:

@@ -121,7 +121,7 @@ extension Model {
                 currencyCode: payload.currencyCode))
         let productsListError = ProductsListError.emptyData(message: ProductsListError.errorMessage)
 
-        informer.value = .init(message: "\(payload.currencyName) счет открывается")
+        action.send(ModelAction.Account.Informer.Show(message: "\(payload.currencyName) счет открывается"))
 
         serverAgent.executeCommand(command: command) { result in
 
@@ -138,7 +138,7 @@ extension Model {
                         return
                     }
 
-                    self.informer.value = .init(message: "\(payload.currencyName) счет открыт")
+                    self.action.send(ModelAction.Account.Informer.Show(message: "\(payload.currencyName) счет открыт"))
                     self.action.send(ModelAction.Account.MakeOpenAccount.Response.complete(data))
 
                 default:
@@ -167,22 +167,32 @@ extension Model {
         case .complete:
 
             // Обновление открытых счетов на главном экране
-            handleProductsUpdateTotalProduct(.account)
+            action.send(ModelAction.Products.Update.Product(productType: .account))
 
             // Обновление списка счетов
-            handleAccountProductsListUpdate()
+            action.send(ModelAction.Account.ProductList.Request())
+
+            // Скрыть уведомление об открытии счета
+            action.send(ModelAction.Account.Informer.Dismiss(after: 4))
 
         case .failed:
-
-            resetInformer()
-            return
+            // Скрыть уведомление об открытии счета
+            action.send(ModelAction.Account.Informer.Dismiss(after: 4))
         }
+    }
+}
 
-        self.resetInformer()
+// MARK: - Informer
+
+extension Model {
+
+    func handleInformerShow(payload: ModelAction.Account.Informer.Show) {
+        informer.value = .init(message: payload.message)
     }
 
-    private func resetInformer() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+    func handleInformerDismiss(payload: ModelAction.Account.Informer.Dismiss) {
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + payload.after) {
             self.informer.value = nil
         }
     }
@@ -269,6 +279,19 @@ extension ModelAction {
 
                 case complete(OpenAccountMakeData)
                 case failed(error: Model.ProductsListError)
+            }
+        }
+
+        enum Informer {
+
+            struct Show: Action {
+
+                let message: String
+            }
+
+            struct Dismiss: Action {
+
+                let after: TimeInterval
             }
         }
     }

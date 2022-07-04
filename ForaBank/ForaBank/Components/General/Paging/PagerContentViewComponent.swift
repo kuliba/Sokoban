@@ -108,7 +108,10 @@ struct PagerContentView<Content: View>: View {
                                 return
                             }
 
-                            let offset = value.translation.width / (proxy.size.width / 2)
+                            let width = value.translation.width
+                            let gesture = -100...100 ~= width ? proxy.size.width / 6 : proxy.size.width / 4
+
+                            let offset = value.translation.width / gesture
                             let newIndex = currentIndex - Int(offset)
 
                             if offset > 0 && currentIndex == 0 { return }

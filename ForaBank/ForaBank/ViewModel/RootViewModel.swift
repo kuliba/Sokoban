@@ -14,11 +14,11 @@ class RootViewModel: ObservableObject {
     let action: PassthroughSubject<Action, Never> = .init()
     
     @Published var selected: TabType
-    @Published var informerViewModel: InformerView.ViewModel?
 
     let mainViewModel: MainViewModel
     let paymentsViewModel: PaymentsTransfersViewModel
     let chatViewModel: ChatViewModel
+    let informerViewModel: InformerView.ViewModel
     @Published var alert: Alert.ViewModel?
 
     private let model: Model
@@ -30,6 +30,7 @@ class RootViewModel: ObservableObject {
         self.mainViewModel = MainViewModel(model)
         self.paymentsViewModel = .init(model: model)   //.sample
         self.chatViewModel = .init()
+        self.informerViewModel = .init()
         self.model = model
     
         bind()
@@ -63,11 +64,12 @@ class RootViewModel: ObservableObject {
 
                 guard let data = data else {
                     
-                    informerViewModel = nil
+                    informerViewModel.isShow = false
                     return
                 }
 
-                informerViewModel = .init(message: data.message)
+                informerViewModel.message = data.message
+                informerViewModel.isShow = true
 
             }.store(in: &bindings)
         

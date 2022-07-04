@@ -122,7 +122,7 @@ extension OpenAccountPerformView {
 
                             guard resendOTPCount > 0 else {
 
-                                resetAfterAttempts()
+                                self.action.send(OpenAccountPerformAction.Alert.Reset())
                                 return
                             }
 
@@ -137,7 +137,7 @@ extension OpenAccountPerformView {
                                 }
                             }
 
-                            makeAlert(error: error)
+                            self.action.send(OpenAccountPerformAction.Alert.Error(error: error))
                         }
 
                     case let payload as ModelAction.Account.MakeOpenAccount.Response:
@@ -146,7 +146,9 @@ extension OpenAccountPerformView {
                         case let .complete(data):
 
                             operationType = .opened
+
                             item.header.isAccountOpened = true
+                            item.header.title = "\(item.header.title) открыт "
 
                             let accountNumber = data.accountNumber
 
@@ -162,12 +164,12 @@ extension OpenAccountPerformView {
 
                             guard resendOTPCount > 0 else {
 
-                                resetAfterAttempts()
+                                self.action.send(OpenAccountPerformAction.Alert.Reset())
                                 return
                             }
 
                             operationType = .edit
-                            makeAlert(error: error)
+                            self.action.send(OpenAccountPerformAction.Alert.Error(error: error))
                         }
 
                     case let payload as ModelAction.Auth.VerificationCode.PushRecieved:
@@ -189,7 +191,7 @@ extension OpenAccountPerformView {
                     case _ as OpenAccountPerformAction.Button.Tapped:
 
                         if item.header.isAccountOpened == true || resendOTPCount == 0 {
-                            resetAccountData()
+                            self.action.send(OpenAccountPerformAction.ResetData())
                         }
 
                         operationType = .opening
@@ -213,6 +215,25 @@ extension OpenAccountPerformView {
                         if let ratesLinkURL = item.ratesLinkURL {
                             openLinkURL(ratesLinkURL)
                         }
+
+                    case let payload as OpenAccountPerformAction.Alert.Error:
+                        makeAlert(error: payload.error)
+
+                    case _ as OpenAccountPerformAction.Alert.Reset:
+
+                        withAnimation {
+                            operationType = .open
+                        }
+
+                        self.action.send(OpenAccountPerformAction.Alert.Error(error: .statusError(
+                            status: .serverError,
+                            message: "Вы исчерпали все попытки :(")))
+
+                    case _ as OpenAccountPerformAction.ResetData:
+
+                        item.header.isAccountOpened = false
+                        item.card.numberCard = "XXXXXXXXXXXXXXXX"
+                        confirmCode = ""
 
                     default:
                         break
@@ -319,24 +340,6 @@ extension OpenAccountPerformView {
         private func endEditing() {
 
             UIApplication.shared.endEditing()
-        }
-
-        private func resetAccountData() {
-
-            item.header.isAccountOpened = false
-            item.card.numberCard = "XXXXXXXXXXXXXXXX"
-            confirmCode = ""
-        }
-
-        private func resetAfterAttempts() {
-
-            withAnimation {
-                operationType = .open
-            }
-            
-            makeAlert(error: .statusError(
-                status: .serverError,
-                message: "Вы исчерпали все попытки :("))
         }
     }
 }
@@ -453,6 +456,18 @@ enum OpenAccountPerformAction {
 
         let code: String
     }
+
+    enum Alert {
+
+        struct Error: Action {
+
+            let error: Model.ProductsListError
+        }
+
+        struct Reset: Action {}
+    }
+
+    struct ResetData: Action {}
 }
 
 // MARK: - PerformType

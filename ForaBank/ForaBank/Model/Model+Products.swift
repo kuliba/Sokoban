@@ -51,6 +51,11 @@ extension ModelAction {
                 
                 struct All: Action {}
             }
+
+            struct Product: Action {
+
+                let productType: ProductType
+            }
         }
         
         enum UpdateCustomName {
