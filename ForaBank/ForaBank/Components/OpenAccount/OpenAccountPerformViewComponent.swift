@@ -90,14 +90,13 @@ extension OpenAccountPerformView {
         init(model: Model,
              item: OpenAccountItemViewModel,
              spinnerIcon: Image = .init("Logo Fora Bank"),
-             currencyName: String,
-             operationType: OpenAccountPerformType = .open) {
+             currencyName: String) {
 
             self.model = model
             self.item = item
             self.spinnerIcon = spinnerIcon
             self.currencyName = currencyName
-            self.operationType = operationType
+            self.operationType = item.isAccountOpen ? .opened : .open
 
             prepareData = .init()
             self.confirmCode = ""
