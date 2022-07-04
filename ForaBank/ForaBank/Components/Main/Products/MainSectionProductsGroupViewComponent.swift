@@ -237,7 +237,7 @@ extension MainSectionProductsGroupView.ViewModel {
             let separator: CGFloat
         }
         
-        static let initial = Dimensions(spacing: 8, widths: .init(product: 164, new: 112, button: 48, separator: 1))
+        static let initial = Dimensions(spacing: 8, widths: .init(product: 170, new: 112, button: 48, separator: 1))
     }
     
     struct GroupButtonViewModel {

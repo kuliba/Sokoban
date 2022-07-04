@@ -466,7 +466,7 @@ extension MainSectionProductsView {
                     
                     RoundedRectangle(cornerRadius: 12)
                         .frame(width: 164, height: 104)
-                        .foregroundColor(.mainColorsGray)
+                        .foregroundColor(.mainColorsGrayLightest)
                         .shimmering(active: true, bounce: false)
                 }
             }

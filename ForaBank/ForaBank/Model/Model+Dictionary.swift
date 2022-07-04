@@ -345,7 +345,14 @@ extension Model {
     // FullBankInfoList
     
     func dictionaryFullBankInfoList() -> [BankFullInfoData]? {
+        
         localAgent.load(type: [BankFullInfoData].self)
+    }
+    
+    func dictionaryFullBankInfoBank(for bic: String) -> BankFullInfoData? {
+        
+        guard let banksList = dictionaryFullBankInfoList() else { return nil }
+        return banksList.first(where: { $0.bic == bic })
     }
         
     //Countries
