@@ -9,20 +9,17 @@ import SwiftUI
 
 // MARK: - ViewModel
 
-extension PagerContentView {
+class PagerContentViewModel: ObservableObject {
 
-    class ViewModel: ObservableObject {
+    @Published var pageCount: Int
+    @Published var currentIndex: Int
+    @Published var isUserInteractionEnabled: Bool
 
-        @Published var pageCount: Int
-        @Published var currentIndex: Int
-        @Published var isUserInteractionEnabled: Bool
+    init(pageCount: Int, currentIndex: Int = 0, isUserInteractionEnabled: Bool = true) {
 
-        init(pageCount: Int, currentIndex: Int = 0, isUserInteractionEnabled: Bool = true) {
-
-            self.pageCount = pageCount
-            self.currentIndex = currentIndex
-            self.isUserInteractionEnabled = isUserInteractionEnabled
-        }
+        self.pageCount = pageCount
+        self.currentIndex = currentIndex
+        self.isUserInteractionEnabled = isUserInteractionEnabled
     }
 }
 
@@ -30,7 +27,7 @@ extension PagerContentView {
 
 struct PagerContentView<Content: View>: View {
 
-    @ObservedObject var viewModel: ViewModel
+    @ObservedObject var viewModel: PagerContentViewModel
 
     @State var contentSize: CGSize = .zero
     @GestureState private var translation: CGFloat = 0
@@ -62,7 +59,7 @@ struct PagerContentView<Content: View>: View {
     private let isShowIndicator: Bool
     private let content: Content
 
-    init(viewModel: ViewModel,
+    init(viewModel: PagerContentViewModel,
          spacing: CGFloat = 10,
          padding: CGFloat = 20,
          paddingIndicator: CGFloat = 26,

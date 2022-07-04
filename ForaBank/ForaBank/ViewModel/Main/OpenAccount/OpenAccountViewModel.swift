@@ -24,9 +24,7 @@ class OpenAccountViewModel: ObservableObject {
         items[safe: pagerViewModel.currentIndex]
     }
 
-    lazy var pagerViewModel: PagerContentView<
-        ForEach<[OpenAccountItemViewModel], String, OpenAccountItemView>
-    >.ViewModel = .init(pageCount: items.count)
+    let pagerViewModel: PagerContentViewModel
 
     init(model: Model,
          items: [OpenAccountItemViewModel],
@@ -36,6 +34,8 @@ class OpenAccountViewModel: ObservableObject {
         self.item = .empty
         self.items = items
         self.currencyName = currencyName
+
+        pagerViewModel = .init(pageCount: items.count)
 
         if let currentItem = currentItem {
             self.item = currentItem
