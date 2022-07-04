@@ -14,7 +14,6 @@ class OpenAccountViewModel: ObservableObject {
 
     @Published var item: OpenAccountItemViewModel
     @Published var items: [OpenAccountItemViewModel]
-    @Published var currentIndex: Int
     @Published var currencyName: String
 
     let model: Model
@@ -22,18 +21,20 @@ class OpenAccountViewModel: ObservableObject {
     private var bindings = Set<AnyCancellable>()
 
     var currentItem: OpenAccountItemViewModel? {
-        items[safe: currentIndex]
+        items[safe: pagerViewModel.currentIndex]
     }
+
+    lazy var pagerViewModel: PagerContentView<
+        ForEach<[OpenAccountItemViewModel], String, OpenAccountItemView>
+    >.ViewModel = .init(pageCount: items.count)
 
     init(model: Model,
          items: [OpenAccountItemViewModel],
-         currentIndex: Int = 0,
          currencyName: String = "") {
 
         self.model = model
         self.item = .empty
         self.items = items
-        self.currentIndex = currentIndex
         self.currencyName = currencyName
 
         if let currentItem = currentItem {
@@ -45,7 +46,23 @@ class OpenAccountViewModel: ObservableObject {
 
     private func bind() {
 
-        $currentIndex
+        model.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+
+                switch action {
+                case _ as ModelAction.Account.MakeOpenAccount.Request:
+                    pagerViewModel.isUserInteractionEnabled = false
+
+                case _ as ModelAction.Account.MakeOpenAccount.Response:
+                    pagerViewModel.isUserInteractionEnabled = true
+
+                default:
+                    break
+                }
+            }.store(in: &bindings)
+
+        pagerViewModel.$currentIndex
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] currentIndex in
 

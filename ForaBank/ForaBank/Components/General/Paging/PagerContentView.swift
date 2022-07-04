@@ -7,11 +7,30 @@
 
 import SwiftUI
 
+// MARK: - ViewModel
+
+extension PagerContentView {
+
+    class ViewModel: ObservableObject {
+
+        @Published var pageCount: Int
+        @Published var currentIndex: Int
+        @Published var isUserInteractionEnabled: Bool
+
+        init(pageCount: Int, currentIndex: Int = 0, isUserInteractionEnabled: Bool = true) {
+
+            self.pageCount = pageCount
+            self.currentIndex = currentIndex
+            self.isUserInteractionEnabled = isUserInteractionEnabled
+        }
+    }
+}
+
 // MARK: - View
 
 struct PagerContentView<Content: View>: View {
 
-    @Binding var currentIndex: Int
+    @ObservedObject var viewModel: ViewModel
 
     @State var contentSize: CGSize = .zero
     @GestureState private var translation: CGFloat = 0
@@ -25,23 +44,32 @@ struct PagerContentView<Content: View>: View {
         return paddingIndicator
     }
 
-    private let pageCount: Int
+    private var pageCount: Int {
+        viewModel.pageCount
+    }
+
+    private var currentIndex: Int {
+        viewModel.currentIndex
+    }
+
+    private var isUserInteractionEnabled: Bool {
+        viewModel.isUserInteractionEnabled
+    }
+
     private let spacing: CGFloat
     private let padding: CGFloat
     private let paddingIndicator: CGFloat
     private let isShowIndicator: Bool
     private let content: Content
 
-    init(pageCount: Int,
-         currentIndex: Binding<Int>,
+    init(viewModel: ViewModel,
          spacing: CGFloat = 10,
          padding: CGFloat = 20,
          paddingIndicator: CGFloat = 26,
          isShowIndicator: Bool = true,
          @ViewBuilder content: () -> Content) {
 
-        self.pageCount = pageCount
-        _currentIndex = currentIndex
+        self.viewModel = viewModel
         self.spacing = spacing
         self.padding = padding
         self.paddingIndicator = paddingIndicator
@@ -63,7 +91,7 @@ struct PagerContentView<Content: View>: View {
                 .offset(x: -CGFloat(currentIndex) * (contentSize.width + spacing))
                 .offset(x: translation)
                 .padding(.horizontal, padding)
-                .onDisappear { currentIndex = 0 }
+                .onDisappear { viewModel.currentIndex = 0 }
                 .gesture(
                     DragGesture()
                         .updating($translation, body: { value, state, _ in
@@ -79,6 +107,10 @@ struct PagerContentView<Content: View>: View {
                         })
                         .onEnded { value in
 
+                            guard isUserInteractionEnabled else {
+                                return
+                            }
+
                             let offset = value.translation.width / (proxy.size.width / 2)
                             let newIndex = currentIndex - Int(offset)
 
@@ -88,7 +120,7 @@ struct PagerContentView<Content: View>: View {
                             if offset < 0 && currentIndex == pageCount - 1 { return }
                             if offset > 0 && currentIndex == newIndex { return }
 
-                            currentIndex = min(max(Int(newIndex), 0), pageCount - 1)
+                            viewModel.currentIndex = min(max(Int(newIndex), 0), pageCount - 1)
                         }
                 )
             }
@@ -96,7 +128,9 @@ struct PagerContentView<Content: View>: View {
             .animation(.spring())
 
             if isShowIndicator == true {
-                PageIndicatorView(pageCount: pageCount, currentIndex: $currentIndex)
+                PageIndicatorView(
+                    pageCount: pageCount,
+                    currentIndex: $viewModel.currentIndex)
             }
 
         }.frame(height: contentSize.height + paddingShowIndicator)
@@ -134,6 +168,7 @@ private struct PagerViewModifier: ViewModifier {
 struct PagerComponentPreview: View {
 
     @State var currentIndex: Int = 0
+    @State var isUserInteractionEnabled = true
 
     var itemsCount: Int {
         OpenAccountViewModel.sample.items.count
@@ -141,11 +176,14 @@ struct PagerComponentPreview: View {
 
     var body: some View {
 
-        PagerContentView(pageCount: itemsCount, currentIndex: $currentIndex) {
-            ForEach(OpenAccountViewModel.sample.items) { item in
-                OpenAccountItemView(viewModel: item)
-            }
-        }.padding(.top, 8)
+        PagerContentView(viewModel: .init(
+            pageCount: itemsCount,
+            currentIndex: currentIndex,
+            isUserInteractionEnabled: isUserInteractionEnabled)) {
+                ForEach(OpenAccountViewModel.sample.items) { item in
+                    OpenAccountItemView(viewModel: item)
+                }
+            }.padding(.top, 8)
     }
 }
 

@@ -17,14 +17,11 @@ struct OpenAccountView: View {
 
         VStack {
 
-            PagerContentView(
-                pageCount: viewModel.items.count,
-                currentIndex: $viewModel.currentIndex) {
-
-                    ForEach(viewModel.items) { item in
-                        OpenAccountItemView(viewModel: item)
-                    }
-                }.padding(.top, 8)
+            PagerContentView(viewModel: viewModel.pagerViewModel) {
+                ForEach(viewModel.items) { item in
+                    OpenAccountItemView(viewModel: item)
+                }
+            }.padding(.top, 8)
 
             OpenAccountPerformView(
                 viewModel: .init(
