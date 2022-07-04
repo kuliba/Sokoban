@@ -241,6 +241,11 @@ extension ProductCardData {
 
         return true
     }
+    
+    var isCreditCard: Bool {
+        
+        loanBaseParam != nil
+    }
 }
 
 extension ProductCardData.LoanBaseParamInfoData {

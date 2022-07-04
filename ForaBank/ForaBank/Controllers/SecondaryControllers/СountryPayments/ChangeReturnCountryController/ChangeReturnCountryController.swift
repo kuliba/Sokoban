@@ -6,7 +6,7 @@
 //
 
 import UIKit
-//import RealmSwift
+import IQKeyboardManagerSwift
 
 class ChangeReturnCountryController: UIViewController {
     
@@ -17,7 +17,6 @@ class ChangeReturnCountryController: UIViewController {
     
     var type: ChangeReturnType
     
-//    lazy var realm = try? Realm()
     var confurmVCModel: ConfirmViewControllerModel? {
         didSet {
             guard let model = confurmVCModel else { return }
@@ -63,8 +62,11 @@ class ChangeReturnCountryController: UIViewController {
     
     let doneButton = UIButton(title: "Продолжить")
     
-    init(type: ChangeReturnType) {
+    let closeAction: () -> Void
+    
+    init(type: ChangeReturnType, closeAction: @escaping () -> Void) {
         self.type = type
+        self.closeAction = closeAction
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -81,10 +83,15 @@ class ChangeReturnCountryController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = false
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
     }
     
     fileprivate func setupUI() {
@@ -187,6 +194,7 @@ class ChangeReturnCountryController: UIViewController {
                     controller.confurmVCModel = model
                     controller.printFormType = "returnOutgoing"
                     controller.modalPresentationStyle = .fullScreen
+                    controller.closeAction = self.closeAction
                     self.present(controller, animated: true, completion: nil)
                 } else {
                     self.showAlert(with: "Ошибка", and: modelResp?.errorMessage ?? "")

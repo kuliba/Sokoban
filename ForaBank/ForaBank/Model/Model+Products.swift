@@ -18,6 +18,11 @@ typealias LoansData = [PersonsCreditData]
 extension Model {
     
     var productsOpenAccountURL: URL { URL(string: "https://promo.forabank.ru/")! }
+    
+    func product(productId: ProductData.ID) -> ProductData? {
+        
+        products.value.values.flatMap({ $0 }).first(where: { $0.id == productId })
+    }
 }
 
 //MARK: - Action

@@ -17,44 +17,46 @@ struct PaymentsTransfersView: View {
         ZStack(alignment: .top) {
             
             VStack() {
-                
-                Color.clear.frame(height: 48) // mock SearchView
-                
-                GeometryReader { grProxy in
+           
+                ScrollView(.vertical, showsIndicators: false) {
                     
-                    ScrollView(.vertical, showsIndicators: false) {
+                    ForEach(viewModel.sections) { section in
                         
-                        ForEach(viewModel.sections) { section in
+                        switch section {
+                        case let latestPaymentsSectionVM as PTSectionLatestPaymentsView.ViewModel:
+                            PTSectionLatestPaymentsView(viewModel: latestPaymentsSectionVM)
                             
-                            switch section {
-                            case let latestPaymentsSectionVM as PTSectionLatestPaymentsView.ViewModel:
-                                PTSectionLatestPaymentsView(viewModel: latestPaymentsSectionVM)
-                                
-                            case let transfersSectionVM as PTSectionTransfersView.ViewModel:
-                                PTSectionTransfersView(viewModel: transfersSectionVM)
-                                
-                            case let payGroupSectionVM as PTSectionPaymentsView.ViewModel:
-                                PTSectionPaymentsView(viewModel: payGroupSectionVM,
-                                                      heightBlock: grProxy.size.height)
-                            default:
-                                EmptyView()
-                            }
+                        case let transfersSectionVM as PTSectionTransfersView.ViewModel:
+                            PTSectionTransfersView(viewModel: transfersSectionVM)
+                            
+                        case let payGroupSectionVM as PTSectionPaymentsView.ViewModel:
+                            PTSectionPaymentsView(viewModel: payGroupSectionVM)
+                        default:
+                            EmptyView()
                         }
-                        
-                    } //mainVerticalScrollView
-                } //geometry
-                
+                    }
+                    
+                } //mainVerticalScrollView
             } //mainVStack
-
-            Color.mainColorsGrayLightest //mock topSearchView
-                .frame(height: 48)
-                .edgesIgnoringSafeArea(.top)
-                .overlay(TopSearchViewMock())
+            .navigationBarTitle("", displayMode: .inline)
+            .navigationBarItems(
+                leading: MainView.UserAccountButton(viewModel: viewModel.userAccountButton),
+                trailing:
+                    HStack {
+                        ForEach(viewModel.navButtonsRight) { navButtonViewModel in
+                                            
+                            NavBarButton(viewModel: navButtonViewModel)
+                        }
+                    })
  
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
                 if let link = viewModel.link  {
+                    
                     switch link {
+                    case let .userAccount(userAccountViewModel):
+                        UserAccountView(viewModel: userAccountViewModel)
+                        
                     case let .exampleDetail(title):
                         ExampleDetailMock(title: title)
                         
@@ -155,7 +157,6 @@ struct PaymentsTransfersView: View {
                     .edgesIgnoringSafeArea(.all)
             }
         })
-        .navigationBarHidden(true)
         .tabBar(isHidden: $viewModel.isTabBarHidden)
     }
 }
@@ -168,9 +169,10 @@ extension PaymentsTransfersView {
         var title: String
         
         var body: some View {
-            
+            Spacer()
             Text("TypeButton: \(title)")
                 .font(.title)
+            Spacer()
         }
     }
     
@@ -179,22 +181,20 @@ extension PaymentsTransfersView {
 
 extension PaymentsTransfersView {
  
-//MARK: - ViewMock
+//MARK: - ViewBarButton
 
-    struct TopSearchViewMock: View {
+    struct NavBarButton: View {
+        
+        let viewModel: NavigationBarButtonViewModel
+        
         var body: some View {
             
-            HStack {
-                Image("ic24Search")
-                Text("Название категории, ИНН")
-                    .font(.textBodyMR14200())
-                    .foregroundColor(Color(hex: "#999999"))
-                Spacer()
-                Image("ic24BarcodeScanner2")
+            Button(action: viewModel.action) {
+                
+                viewModel.icon
+                    .renderingMode(.template)
+                    .foregroundColor(.iconBlack)
             }
-            .padding(18)
-            .background(Color.mainColorsGrayLightest)
-            
         }
     }
 
