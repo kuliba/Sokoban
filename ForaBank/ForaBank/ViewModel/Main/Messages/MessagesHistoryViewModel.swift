@@ -28,13 +28,12 @@ class MessagesHistoryViewModel: ObservableObject {
         self.model = model
     }
     
-    init( model: Model, dismissAction: @escaping () -> Void) {
+    init( model: Model, closeAction: @escaping () -> Void ) {
         
-        
-        self.sections = []
+        self.sections = Self.reduce(sections: [], with: model.notifications.value)
         self.state = .stating
         self.navigationBar = .init(title: "Центр уведомлений",
-                                   leftButtons: [ NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft, action: dismissAction)])
+                                   leftButtons: [ NavigationBarView.ViewModel.BackButtonViewModel(icon: .ic24ChevronLeft, action: closeAction)])
         self.model = model
         
         bind()
@@ -47,8 +46,12 @@ class MessagesHistoryViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] notifications in
                 
-                self.sections = createSections(with: notifications)
+                withAnimation {
+                    sections = Self.reduce(sections: sections, with: notifications)
+                }
+                
                 bindSections(sections)
+                
             }.store(in: &bindings)
         
         model.action
@@ -105,34 +108,40 @@ class MessagesHistoryViewModel: ObservableObject {
         }
     }
     
-    func createSections(with notifications: [NotificationData]) -> [MessagesHistorySectionView.ViewModel] {
+    static func reduce(sections: [MessagesHistorySectionView.ViewModel], with notifications: [NotificationData]) -> [MessagesHistorySectionView.ViewModel] {
         
-        var keyArray = [Int]()
-        var messages: [MessagesHistorySectionView.ViewModel] = []
-        notifications.forEach { item in
-            let section = item.date.groupDayIndex
-            keyArray.append(section)
+        //TODO: implement update existing sections
+        
+        let formatter = DateFormatter.historyShortDateFormatter
+        var updated = [MessagesHistorySectionView.ViewModel]()
+        let groupDayIndexes = Self.groupDayIndexes(for: notifications)
+        
+        for index in groupDayIndexes {
+            
+            let items = notifications.filter { $0.dateUtc.groupDayIndex == index }
+            guard items.count > 0 else {
+                continue
+            }
+            
+            let itemsSorted = items.sorted(by: { $0.dateUtc > $1.dateUtc })
+            let sectionDate = itemsSorted[0].dateUtc
+            let sectionTitle = formatter.string(from: sectionDate)
+            
+            let section = MessagesHistorySectionView.ViewModel(id: index, title: sectionTitle, items: itemsSorted)
+        
+            updated.append(section)
         }
         
-        let uniqueKeyArray = Array(Set(keyArray))
-        let sortedKeyArray = uniqueKeyArray.sorted(by: >)
+        return updated
+    }
+    
+    static func groupDayIndexes(for notifications: [NotificationData]) -> [Int] {
         
-        self.sections.removeAll()
+        let indexes = notifications.map({ $0.dateUtc.groupDayIndex })
+        let uniqueIndexes = Array(Set(indexes))
+        let sortedIndexes = uniqueIndexes.sorted(by: >)
         
-        sortedKeyArray.forEach { key in
-            
-            var items = notifications.filter { $0.date.groupDayIndex == key }
-            
-            items.sort{ $0.date > $1.date }
-            
-            guard let section = items.map({$0.date}).first else { return }
-            
-            let message = MessagesHistorySectionView.ViewModel(title: DateFormatter.historyShortDateFormatter.string(from:section),
-                                                               items: items)
-            messages.append(message)
-        }
-        
-        return messages
+        return sortedIndexes
     }
 }
 

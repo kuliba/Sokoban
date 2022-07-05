@@ -264,29 +264,11 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         if let type = userInfo["type"] as? String {
             if type == "сonsentMe2MePull" {
                 
-                if isAuth == true {
-                    let meToMeReq = RequestMeToMeModel(userInfo: userInfo)
-                    let topvc = UIApplication.topViewController()
-                    
-                    let vc = MeToMeRequestController()
-                    vc.viewModel = meToMeReq
-                    vc.modalPresentationStyle = .fullScreen
-                    topvc?.present(vc, animated: true, completion: nil)
-                } else {
-                    UserDefaults.standard.set(userInfo, forKey: "ConsentMe2MePull")
-                }
+                model.action.send(ModelAction.Notification.Transition.Set(transition: .me2me))
             }
         } else {
-            if isAuth == true {
-                let topvc = UIApplication.topViewController()
-                
-                let pushHistory = PushHistoryViewController.storyboardInstance()!
-                let nc = UINavigationController(rootViewController: pushHistory)
-                nc.modalPresentationStyle = .fullScreen
-                topvc?.present(nc, animated: true)
-            } else {
-                UserDefaults.standard.set(userInfo, forKey: "AnyPull")
-            }
+            
+               model.action.send(ModelAction.Notification.Transition.Set(transition: .history))
         }
         completionHandler()
     }
@@ -301,9 +283,7 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         UNUserNotificationCenter.current().requestAuthorization(
             options: authOptions,
             completionHandler: {_, _ in })
-        
     }
-    
 }
 
 extension AppDelegate: MessagingDelegate {

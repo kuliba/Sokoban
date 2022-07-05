@@ -117,6 +117,21 @@ class PaymentsTransfersViewModel: ObservableObject {
                                          clientPhoto: clientData.1,
                                          clientName: clientData.2)
             }.store(in: &bindings)
+    
+        model.notificationsTransition
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] transition in
+               
+                switch transition {
+                case .me2me:
+                    sheet = .init(type: .meToMe(.init(closeAction: { [weak self] in
+                        self?.action.send(PaymentsTransfersViewModelAction.Close.Sheet())
+                    })))
+                    model.action.send(ModelAction.Notification.Transition.Clear())
+                default:
+                    break
+                }
+            }.store(in: &bindings)
     }
     
     func bindSections(_ sections: [PaymentsTransfersSectionViewModel]) {
@@ -263,7 +278,7 @@ class PaymentsTransfersViewModel: ObservableObject {
         let type: Kind
         
         enum Kind {
-            
+            case meToMe(MeToMeViewModel)
             case transferByPhone(TransferByPhoneViewModel)
         }
     }

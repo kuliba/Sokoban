@@ -145,6 +145,7 @@
 		0BA4093228063F45001326CE /* SettingsPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA4093128063F45001326CE /* SettingsPhotoViewController.swift */; };
 		0BA409342806440E001326CE /* SettingPhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA409332806440E001326CE /* SettingPhotoCell.swift */; };
 		0BA4093628064484001326CE /* SettingPhotoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0BA4093528064484001326CE /* SettingPhotoCell.xib */; };
+		0BA40B3E286F9AFF009C9B0D /* NotificationTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA40B3D286F9AFF009C9B0D /* NotificationTransition.swift */; };
 		0BA9FE032833D6050027FAD1 /* GetPrintFormForDepositConditionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA9FE022833D6050027FAD1 /* GetPrintFormForDepositConditionsModel.swift */; };
 		0BAC319626CB264B006E03FD /* ExtensionGKHMainTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAC319526CB264B006E03FD /* ExtensionGKHMainTableView.swift */; };
 		0BAC674126D408DC005AAD91 /* CreateDirectTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BAC674026D408DC005AAD91 /* CreateDirectTransferDecodableModel.swift */; };
@@ -1504,6 +1505,7 @@
 		0BA4093128063F45001326CE /* SettingsPhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPhotoViewController.swift; sourceTree = "<group>"; };
 		0BA409332806440E001326CE /* SettingPhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingPhotoCell.swift; sourceTree = "<group>"; };
 		0BA4093528064484001326CE /* SettingPhotoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingPhotoCell.xib; sourceTree = "<group>"; };
+		0BA40B3D286F9AFF009C9B0D /* NotificationTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTransition.swift; sourceTree = "<group>"; };
 		0BA9FE022833D6050027FAD1 /* GetPrintFormForDepositConditionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPrintFormForDepositConditionsModel.swift; sourceTree = "<group>"; };
 		0BAC319526CB264B006E03FD /* ExtensionGKHMainTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionGKHMainTableView.swift; sourceTree = "<group>"; };
 		0BAC674026D408DC005AAD91 /* CreateDirectTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateDirectTransferDecodableModel.swift; sourceTree = "<group>"; };
@@ -4909,6 +4911,7 @@
 				77517FED27A99383005CFB77 /* ExchangeRateData.swift */,
 				77F5CE0C28056BB700611B66 /* LocationData.swift */,
 				77B6B3532850961A00E3001B /* Period.swift */,
+				0BA40B3D286F9AFF009C9B0D /* NotificationTransition.swift */,
 			);
 			path = General;
 			sourceTree = "<group>";
@@ -7990,6 +7993,7 @@
 				68FFA5402682C6CF002DADFA /* LastPaymentsCollectionViewCell.swift in Sources */,
 				0BA251EF26C26AE700AD087A /* AntiFraudDecodableModel.swift in Sources */,
 				ED9C1A0027567F6B00AF9DFF /* OpenNewDepositViewControllerCell.swift in Sources */,
+				0BA40B3E286F9AFF009C9B0D /* NotificationTransition.swift in Sources */,
 				68FE398F286EBED80026CBD7 /* QrScannerView+Legacy.swift in Sources */,
 				682092A427AC0653003DCAFD /* ServerCommands+Person.swift in Sources */,
 				774A8B722865FEC000B81140 /* ContextMenuViewComponent.swift in Sources */,
@@ -8732,7 +8736,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBank.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
@@ -8762,7 +8766,7 @@
 				CODE_SIGN_ENTITLEMENTS = ForaBank/ForaBankRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = CK7QF6SQ3W;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ForaBank/Info.plist;

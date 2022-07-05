@@ -163,10 +163,16 @@ struct PaymentsTransfersView: View {
         .sheet(item: $viewModel.sheet, content: { sheet in
             
             switch sheet.type {
+                
             case let .transferByPhone(viewModel):
                 TransferByPhoneView(viewModel: viewModel)
                     .edgesIgnoringSafeArea(.all)
+                
+            case let .meToMe(viewModel):
+                MeToMeView(viewModel: viewModel)
+                    .edgesIgnoringSafeArea(.bottom)
             }
+            
         })
         .tabBar(isHidden: $viewModel.isTabBarHidden)
     }
