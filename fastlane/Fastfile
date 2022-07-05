@@ -42,6 +42,8 @@ platform :ios do
   lane :test do
 
     ENV["FASTLANE_XCODE_LIST_TIMEOUT"] = "120"
+    ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "120"
+
     run_tests(
       project: ENV["XCODE_PROJECT"],
       scheme: ENV["XCODE_SCHEME_TESTS"],
