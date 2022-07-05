@@ -7,10 +7,12 @@
 
 import UIKit
 import RealmSwift
+import IQKeyboardManagerSwift
 
 class MobilePayViewController: UIViewController, UITextFieldDelegate {
     
     let model = Model.shared
+    var operatorsViewModel: OperatorsViewModel?
     var viewModel: MobilePayViewModel? = nil
     var recipiendId = String()
     var phoneNumber: String?
@@ -68,7 +70,9 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = false
-        
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
         if let template = paymentTemplate {
             runBlockAfterDelay(0.2) {
                 
@@ -130,28 +134,28 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
         }
         
         cardListView.didCardTapped = { cardId in
-                    DispatchQueue.main.async {
-
-                        let products = self.model.products.value.values.flatMap({ $0 }).map { $0.userAllProducts() }
-
-                        products.forEach({ card in
-                            if card.id == cardId {
-                                self.cardField.model = card
-                                if self.cardListView.isHidden == false {
-                                    self.hideView(self.cardListView, needHide: true)
-                                }
-                            }
-                        })
+            DispatchQueue.main.async {
+                
+                let products = self.model.products.value.values.flatMap({ $0 }).map { $0.userAllProducts() }
+                
+                products.forEach({ card in
+                    if card.id == cardId {
+                        self.cardField.model = card
+                        if self.cardListView.isHidden == false {
+                            self.hideView(self.cardListView, needHide: true)
+                        }
                     }
-                }
-
+                })
+            }
+        }
+        
         
         cardListView.lastItemTap = {
             let vc = AllCardListViewController()
             vc.withTemplate = false
             vc.didCardTapped = { card in
                 self.cardField.cardModel = card
-//                self.selectedCardNumber = card.cardID ?? 0
+                //                self.selectedCardNumber = card.cardID ?? 0
                 self.hideView(self.cardListView, needHide: true)
                 vc.dismiss(animated: true, completion: nil)
             }
@@ -167,6 +171,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                 subtitleCellType: SubtitleCellValue.phoneNumber)
             
             let navigationController = UINavigationController(rootViewController: contactPickerScene)
+            navigationController.modalPresentationStyle = .automatic
             self.present(navigationController, animated: true, completion: nil)
         }
         
@@ -326,7 +331,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                             vc.confurmVCModel = model
                             vc.addCloseButton()
                             vc.title = "Подтвердите реквизиты"
-                            
+                            vc.operatorsViewModel = self?.operatorsViewModel
                             let navController = UINavigationController(rootViewController: vc)
                             navController.modalPresentationStyle = .fullScreen
                             self?.present(navController, animated: true, completion: nil)
@@ -340,6 +345,13 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
             }
             
         })
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = true
     }
     
 }

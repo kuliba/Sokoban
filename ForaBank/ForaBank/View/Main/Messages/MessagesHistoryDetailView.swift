@@ -34,6 +34,7 @@ struct MessagesHistoryDetailView: View {
                 Text(model.content)
                     .font(.textBodyMR14200())
                     .foregroundColor(.mainColorsBlack)
+                    .multilineTextAlignment(.center)
                     .overlay(
                         GeometryReader { proxy in
                             Color.clear.preference(key: ContentLengthPreference.self,

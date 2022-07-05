@@ -18,6 +18,7 @@ class RootViewModel: ObservableObject {
     let mainViewModel: MainViewModel
     let paymentsViewModel: PaymentsTransfersViewModel
     let chatViewModel: ChatViewModel
+    let informerViewModel: InformerView.ViewModel
     @Published var alert: Alert.ViewModel?
 
     private let model: Model
@@ -29,6 +30,7 @@ class RootViewModel: ObservableObject {
         self.mainViewModel = MainViewModel(model)
         self.paymentsViewModel = .init(model: model)   //.sample
         self.chatViewModel = .init()
+        self.informerViewModel = .init()
         self.model = model
     
         bind()
@@ -54,6 +56,15 @@ class RootViewModel: ObservableObject {
                     action.send(RootViewModelAction.Cover.Hide())
                 }
                 
+            }.store(in: &bindings)
+
+        model.informer
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] data in
+
+                withAnimation {
+                    informerViewModel.message = data?.message
+                }
             }.store(in: &bindings)
         
         model.action

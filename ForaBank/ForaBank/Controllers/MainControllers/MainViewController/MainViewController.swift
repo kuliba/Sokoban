@@ -350,7 +350,7 @@ class MainViewController: UIViewController {
         }
         
         searchBar.trailingRightAction = {
-            let pushModel = MessagesHistoryViewModel(model: self.model, dismissAction: {})
+            let pushModel = MessagesHistoryViewModel(model: self.model, closeAction: {})
             
             let pushHistory = MessagesHistoryView(viewModel: pushModel)
             let nc = UIHostingController(rootView: pushHistory)
@@ -779,6 +779,7 @@ extension MainViewController.Section {
         case .currencyExchange: self = .currentsExchange
         case .openProduct: self = .openProduct
         case .atm: self = .atm
+        case .currencyMetall: self = .currentsExchange
         }
     }
     

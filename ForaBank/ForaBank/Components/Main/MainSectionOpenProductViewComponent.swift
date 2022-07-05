@@ -75,7 +75,7 @@ extension MainSectionOpenProductView {
             
             switch type {
             case .card: return "62 дня без %"
-            case .account: return "8% годовых"
+            case .account: return "Бесплатно"
             case .deposit: return depositDescription(with: model.deposits.value)
             case .loan: return "от 7% годов."
             }

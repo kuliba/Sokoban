@@ -171,7 +171,7 @@ extension ServerCommands {
 
         /*
             https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/AccountController/prepareOpenAccount
-        q*/
+        */
 
         struct GetPrepareOpenAccount: ServerCommand {
 

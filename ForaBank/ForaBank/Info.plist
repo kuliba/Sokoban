@@ -67,14 +67,14 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Разрешите доступ к камере</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Разрешите доступ к фото</string>
 	<key>NSContactsUsageDescription</key>
 	<string>Разрешите доступ к контактам</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Доступ к камере позволит использовать FaceId</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Ваше местоположение позволит показать ближайшие банкоматы</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Разрешите доступ к фото</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Inter-Regular.ttf</string>

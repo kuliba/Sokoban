@@ -12,22 +12,30 @@ import Combine
 
 extension MessagesHistorySectionView {
     
-    class ViewModel: Identifiable {
-        
+    class ViewModel: Identifiable, Equatable {
+
         let action: PassthroughSubject<Action, Never> = .init()
         
-        let id = UUID()
+        let id: Int
         let title: String
         var items: [MessagesHistoryItemView.ViewModel]
         
-        internal init(title: String, items: [MessagesHistoryItemView.ViewModel]) {
+        init(id: Int = 0, title: String, items: [MessagesHistoryItemView.ViewModel]) {
+            
+            self.id = id
             self.title = title
             self.items = items
         }
         
-        init(title: String, items: [NotificationData]) {
+        init(id: Int, title: String, items: [NotificationData]) {
+            
+            self.id = id
             self.title = title
             self.items = items.map { MessagesHistoryItemView.ViewModel(notification: $0)}
+        }
+        
+        static func == (lhs: MessagesHistorySectionView.ViewModel, rhs: MessagesHistorySectionView.ViewModel) -> Bool {
+            lhs.id == rhs.id && lhs.title == rhs.title && lhs.items == rhs.items
         }
     }
 }

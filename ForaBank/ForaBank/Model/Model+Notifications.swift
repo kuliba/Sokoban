@@ -52,6 +52,18 @@ extension ModelAction {
                 }
             }
         }
+        
+        enum Transition {
+            
+            struct Set: Action {
+                
+                let transition: NotificationTransition
+            }
+            
+            struct Clear: Action {}
+            
+        }
+        
     }
 }
 
@@ -60,10 +72,21 @@ extension ModelAction {
 extension Model {
     
     static func dictinaryNotificationReduce(current: [NotificationData], update: [NotificationData]) -> [NotificationData] {
-            
-            let resultSet = Set(current).union(update)
-            return Array(resultSet).sorted(by: { $0.date < $1.date})
+        
+        let resultSet = Set(current).union(update)
+        return Array(resultSet).sorted(by: { $0.dateUtc < $1.dateUtc})
     }
+    
+    func handleNotificationTransitionSet(payload: ModelAction.Notification.Transition.Set) {
+
+        notificationsTransition.value = payload.transition
+    }
+
+    func handleNotificationTransitionClear() {
+
+        notificationsTransition.value = nil
+    }
+
     
     func handleNotificationsFetchNewRequest() {
         

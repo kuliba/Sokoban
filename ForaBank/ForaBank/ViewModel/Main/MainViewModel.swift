@@ -42,7 +42,7 @@ class MainViewModel: ObservableObject {
         self.sections = [MainSectionProductsView.ViewModel(model),
                          MainSectionFastOperationView.ViewModel.init(),
                          MainSectionPromoView.ViewModel(model),
-                         MainSectionCurrencyView.ViewModel(model),
+                         MainSectionCurrencyMetallView.ViewModel(),
                          MainSectionOpenProductView.ViewModel(model),
                          MainSectionAtmView.ViewModel.initial]
         
@@ -68,7 +68,7 @@ class MainViewModel: ObservableObject {
                     link = .userAccount(.init(model: model, clientInfo: clientInfo, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.CloseLink())}))
                     
                 case _ as MainViewModelAction.ButtonTapped.Messages:
-                    let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.CloseLink())})
+                    let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model, closeAction: {[weak self] in self?.action.send(MainViewModelAction.CloseLink())})
                     link = .messages(messagesHistoryViewModel)
                     
                 case _ as MainViewModelAction.PullToRefresh:
@@ -102,6 +102,23 @@ class MainViewModel: ObservableObject {
                 userAccountButton.update(clientInfo: clientData.0, clientPhoto: clientData.1, clientName: clientData.2)
                 
             }.store(in: &bindings)
+        
+        model.notificationsTransition
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] transition in
+               
+                switch transition {
+                case .history:
+                    let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model, closeAction: {
+                        self.action.send(MainViewModelAction.CloseLink())
+                    })
+                    link = .messages(messagesHistoryViewModel)
+                    model.notificationsTransition.value = nil
+                default:
+                    break
+                }
+            }.store(in: &bindings)
+        
     }
     
     private func bind(_ sections: [MainSectionViewModel]) {
@@ -183,7 +200,16 @@ class MainViewModel: ObservableObject {
                     case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
                         let myProductsViewModel: MyProductsViewModel = .init(model)
                         sheet = .init(type: .myProducts(myProductsViewModel))
-                       
+                        
+                        // CurrencyMetall section
+                    case let payload as MainSectionViewModelAction.CurrencyMetall.ItemDashboardDidTapped.Buy :
+                    
+                        print("mdy: Buy-\(payload.itemData)") // -> USD, GBR, EUR
+                        
+                    case let payload as MainSectionViewModelAction.CurrencyMetall.ItemDashboardDidTapped.Sell :
+                    
+                        print("mdy: Sell-\(payload.itemData)") // -> USD, GBR, EUR
+                        
                         // atm section
                     case _ as MainSectionViewModelAction.Atm.ButtonTapped:
                         guard let placesViewModel = PlacesViewModel(model) else {
