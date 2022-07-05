@@ -39,7 +39,7 @@ class EPContactSelfDataView: UIView {
     }
     
     private func addPhone() {
-        guard var phone = UserDefaults.standard.object(forKey: "UserPhone") as? String else { return }
+        guard var phone = Model.shared.clientInfo.value?.phone else { return }
         if phone.first == "7" {
             let mask = StringMask(mask: "+0 (000) 000-00-00")
             let maskPhone = mask.mask(string: phone)

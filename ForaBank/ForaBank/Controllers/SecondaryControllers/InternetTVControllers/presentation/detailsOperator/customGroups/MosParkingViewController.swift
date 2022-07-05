@@ -1,9 +1,10 @@
 import UIKit
 import Foundation
-
+import IQKeyboardManagerSwift
 
 class MosParkingViewController: BottomPopUpViewAdapter, UIPopoverPresentationControllerDelegate, UIViewControllerTransitioningDelegate, IMsg {
 
+    var operatorsViewModel: OperatorsViewModel?
     public static func storyboardInstance() -> InternetTVDetailsFormController? {
         let storyboard = UIStoryboard(name: "InternetTV", bundle: nil)
         return storyboard.instantiateViewController(withIdentifier: "InternetTVDetail") as? InternetTVDetailsFormController
@@ -92,6 +93,20 @@ class MosParkingViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         setupToolbar()
         handleMsg(what: -1)
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = true
+    }
 
     func setupToolbar() {
         let operatorsName = operatorData?.name ?? ""
@@ -148,6 +163,7 @@ class MosParkingViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
             }
             dc.operatorData = operatorData
             dc.selectedValue = value
+            dc.operatorsViewModel = operatorsViewModel
         }
     }
     

@@ -1,5 +1,6 @@
 import UIKit
 import AVFoundation
+import IQKeyboardManagerSwift
 
 protocol IMsg {
     func handleMsg(what: Int)
@@ -151,6 +152,8 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         navigationController?.isNavigationBarHidden = false
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -265,6 +268,7 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
             if let latestOp = InternetTVMainViewModel.latestOp {
                 dc.operatorData = latestOp.op
                 dc.latestOperation = latestOp
+                dc.operatorsViewModel = operatorsViewModel
                 InternetTVMainViewModel.latestOp = nil
             } else {
                 dc.operatorData = customGroup?.op
@@ -273,6 +277,7 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
                     let dc = segue.destination as! InternetTVDetailsFormController
                     dc.operatorData = viewModel.operatorFromQR
                     dc.qrData = viewModel.qrData
+                    dc.operatorsViewModel = operatorsViewModel
                 }
             }
             viewModel.qrData.removeAll()
@@ -293,6 +298,12 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
         case .some(_):
             break
         }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
     }
 }
 

@@ -8,7 +8,7 @@
 
 import UIKit
 import Contacts
-
+import IQKeyboardManagerSwift
 
 public protocol EPPickerDelegate: AnyObject {
 	func epContactPicker(_: EPContactsPicker, didContactFetchFailed error: NSError)
@@ -75,6 +75,20 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
             }
     }
     
+    override open func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+    }
+    
+    open override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
+    }
+    
     override open func viewDidLoad() {
         super.viewDidLoad()
         configureTableView()
@@ -87,7 +101,7 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
         
         view.backgroundColor = .white
         searchContact.buttonStackView.isHidden = false
-        searchContact.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 10, paddingLeft: 20, paddingRight: 20, height: 44)
+        searchContact.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 50, paddingLeft: 20, paddingRight: 20, height: 44)
         tableView.anchor(top: searchContact.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 16)
         searchContact.delegateNumber = self
         
@@ -96,7 +110,9 @@ open class EPContactsPicker: UIViewController, UISearchBarDelegate, UITableViewD
         }
         
         userPhoneView.tapClouser = {
-            guard var phone = UserDefaults.standard.object(forKey: "UserPhone") as? String else { return }
+    
+            guard var phone = Model.shared.clientInfo.value?.phone else { return }
+            
             if phone.first == "7" {
                 let mask = StringMask(mask: "+0 (000) 000-00-00")
                 let maskPhone = mask.mask(string: phone)
