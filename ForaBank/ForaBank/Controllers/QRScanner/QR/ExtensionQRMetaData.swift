@@ -1,6 +1,5 @@
 import UIKit
 import AVFoundation
-import RealmSwift
 
 extension QRViewController: AVCaptureMetadataOutputObjectsDelegate, CALayerDelegate {
 
@@ -52,29 +51,35 @@ extension QRViewController: AVCaptureMetadataOutputObjectsDelegate, CALayerDeleg
                 }
 
                 if foundOperators?.count ?? 0 > 1 {
-//                    let foundByName = foundOperators?.filter{item in
-//                        let nameOrg = dicQR["name"]
-//                        return nameOrg?.lowercased().contains(item.name?.lowercased() ?? "####") == true
-//                    }
-//                    if foundByName?.count == 1 {
-//                        navigationController?.popViewController(animated: true)
-//                        operators = foundOperators?.first
-//                        returnKey()
-//                    } else {
-                        GlobalModule.qrData = qrData
-                        QRErrorViewController.operators.removeAll()
-                        QRErrorViewController.operators.append(contentsOf: foundOperators!)
-                        performSegue(withIdentifier: "qrError", sender: nil)
-//                    }
+                    GlobalModule.qrData = qrData
+                    QRErrorViewController.operators.removeAll()
+                    if let foundOperators = foundOperators {
+                        
+                        QRErrorViewController.operators.append(contentsOf: foundOperators)
+                    }
+                    
+                    let storyboard = UIStoryboard(name: "QRCodeStoryboard", bundle: nil)
+                    
+                    if let vc = storyboard.instantiateViewController(withIdentifier: "qrError") as? QRErrorViewController {
+                        
+                        self.present(vc, animated: true)
+                    }
                 } else if foundOperators?.count ?? 0 == 1 {
-                    navigationController?.popViewController(animated: true)
+
                     operators = foundOperators?.first
                     returnKey()
                 } else if foundOperators?.count ?? 0 == 0 {
                     GlobalModule.qrData = nil
                     QRErrorViewController.operators.removeAll()
                     navigationController?.popViewController(animated: true)
-                    performSegue(withIdentifier: "qrError", sender: nil)
+                    dismiss(animated: true, completion: nil)
+                    self.viewModel?.closeAction()
+                    let storyboard = UIStoryboard(name: "QRCodeStoryboard", bundle: nil)
+                    
+                    if let vc = storyboard.instantiateViewController(withIdentifier: "qrError") as? QRErrorViewController {
+                        
+                        self.present(vc, animated: true)
+                    }
                 }
             } else {
                 DispatchQueue.main.async {

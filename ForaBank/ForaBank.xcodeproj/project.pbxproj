@@ -544,7 +544,6 @@
 		68B6755D26BC8A9B004DECA4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 68B6755C26BC8A9B004DECA4 /* GoogleService-Info.plist */; };
 		68BAECAF2744132E00E1BF65 /* GetDepositStatementDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BAECAE2744132D00E1BF65 /* GetDepositStatementDecodableModel.swift */; };
 		68BAECB12744157200E1BF65 /* GetDepositInfoDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BAECB02744157200E1BF65 /* GetDepositInfoDecodableModel.swift */; };
-		68C64626269DCBD800473DE7 /* QRScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C64625269DCBD800473DE7 /* QRScannerViewController.swift */; };
 		68C8D57026F0DF120076246B /* HistoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C8D56E26F0DF120076246B /* HistoryTableViewCell.swift */; };
 		68C8D57126F0DF120076246B /* HistoryTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68C8D56F26F0DF120076246B /* HistoryTableViewCell.xib */; };
 		68C8D57426F1FDB60076246B /* LargeCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68C8D57326F1FDB60076246B /* LargeCardCell.swift */; };
@@ -601,6 +600,7 @@
 		68FE3988286A89450026CBD7 /* InternetTVDetailsView+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FE3987286A89450026CBD7 /* InternetTVDetailsView+Legacy.swift */; };
 		68FE398B286BD9D00026CBD7 /* Model+Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FE398A286BD9D00026CBD7 /* Model+Version.swift */; };
 		68FE398D286C17920026CBD7 /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FE398C286C17920026CBD7 /* AppInfo.swift */; };
+		68FE398F286EBED80026CBD7 /* QrScannerView+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FE398E286EBED80026CBD7 /* QrScannerView+Legacy.swift */; };
 		68FFA5282682AF2C002DADFA /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA5272682AF2C002DADFA /* ContactsViewController.swift */; };
 		68FFA52C2682AF62002DADFA /* ContactCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68FFA52A2682AF62002DADFA /* ContactCollectionViewCell.swift */; };
 		68FFA52D2682AF62002DADFA /* ContactCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68FFA52B2682AF62002DADFA /* ContactCollectionViewCell.xib */; };
@@ -1901,7 +1901,6 @@
 		68B6755C26BC8A9B004DECA4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		68BAECAE2744132D00E1BF65 /* GetDepositStatementDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDepositStatementDecodableModel.swift; sourceTree = "<group>"; };
 		68BAECB02744157200E1BF65 /* GetDepositInfoDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDepositInfoDecodableModel.swift; sourceTree = "<group>"; };
-		68C64625269DCBD800473DE7 /* QRScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerViewController.swift; sourceTree = "<group>"; };
 		68C8D56E26F0DF120076246B /* HistoryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryTableViewCell.swift; sourceTree = "<group>"; };
 		68C8D56F26F0DF120076246B /* HistoryTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HistoryTableViewCell.xib; sourceTree = "<group>"; };
 		68C8D57326F1FDB60076246B /* LargeCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeCardCell.swift; sourceTree = "<group>"; };
@@ -1957,6 +1956,7 @@
 		68FE3987286A89450026CBD7 /* InternetTVDetailsView+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InternetTVDetailsView+Legacy.swift"; sourceTree = "<group>"; };
 		68FE398A286BD9D00026CBD7 /* Model+Version.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Version.swift"; sourceTree = "<group>"; };
 		68FE398C286C17920026CBD7 /* AppInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfo.swift; sourceTree = "<group>"; };
+		68FE398E286EBED80026CBD7 /* QrScannerView+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QrScannerView+Legacy.swift"; sourceTree = "<group>"; };
 		68FFA5272682AF2C002DADFA /* ContactsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewController.swift; sourceTree = "<group>"; };
 		68FFA52A2682AF62002DADFA /* ContactCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactCollectionViewCell.swift; sourceTree = "<group>"; };
 		68FFA52B2682AF62002DADFA /* ContactCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ContactCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -3979,7 +3979,6 @@
 			isa = PBXGroup;
 			children = (
 				0B66E8D426CC5CCB00FD735D /* QR */,
-				68C64625269DCBD800473DE7 /* QRScannerViewController.swift */,
 			);
 			path = QRScanner;
 			sourceTree = "<group>";
@@ -4727,6 +4726,7 @@
 				68FE3983286A50B30026CBD7 /* AvtodorDetailsView+Legacy.swift */,
 				68FE3985286A878B0026CBD7 /* GIBDDFineDetailsView+Legacy.swift */,
 				68FE3987286A89450026CBD7 /* InternetTVDetailsView+Legacy.swift */,
+				68FE398E286EBED80026CBD7 /* QrScannerView+Legacy.swift */,
 				77448C1228734643009EEEA8 /* ChangeReturnView+Legacy.swift */,
 			);
 			path = Controllers;
@@ -7514,7 +7514,6 @@
 				0B8C1C54273B393E00BA5CAC /* GKHCoordinator.swift in Sources */,
 				EDCF8A1026CE876600DC9F54 /* MeToMeSearchBanksViewController.swift in Sources */,
 				68EB187A27CEE85700745558 /* SegmentedBarViewComponent.swift in Sources */,
-				68C64626269DCBD800473DE7 /* QRScannerViewController.swift in Sources */,
 				682092A627AC0673003DCAFD /* ServerCommands+Suggest.swift in Sources */,
 				A50869DA2767F394004C5E17 /* InternetTVSuccessView.swift in Sources */,
 				EDFFCAF82683943A004EE095 /* UISwitch.swift in Sources */,
@@ -7994,6 +7993,7 @@
 				68FFA5402682C6CF002DADFA /* LastPaymentsCollectionViewCell.swift in Sources */,
 				0BA251EF26C26AE700AD087A /* AntiFraudDecodableModel.swift in Sources */,
 				ED9C1A0027567F6B00AF9DFF /* OpenNewDepositViewControllerCell.swift in Sources */,
+				68FE398F286EBED80026CBD7 /* QrScannerView+Legacy.swift in Sources */,
 				682092A427AC0653003DCAFD /* ServerCommands+Person.swift in Sources */,
 				774A8B722865FEC000B81140 /* ContextMenuViewComponent.swift in Sources */,
 				ED9D4D922750F937001AF471 /* OpenNewDepositViewController.swift in Sources */,

@@ -112,8 +112,8 @@ struct TemplatesListView: View {
                                 InternetTVDetailsView(viewModel: internetTVDetailsViewModel)
 
                             case .transport(let avtodorDetailsViewModel):
-                                AvtodorDetailsView(viewModel: avtodorDetailsViewModel)
-                                
+                                OperatorsView(viewModel: avtodorDetailsViewModel)
+
                             case .externalEntity(let transferByRequisitesView):
                                 TransferByRequisitesView(viewModel: transferByRequisitesView)
                                 

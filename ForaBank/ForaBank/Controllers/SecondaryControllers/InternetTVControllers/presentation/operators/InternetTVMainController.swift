@@ -174,6 +174,7 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
         } else {
             
             navigationController?.popViewController(animated: true)
+            dismiss(animated: true)
         }
     }
 

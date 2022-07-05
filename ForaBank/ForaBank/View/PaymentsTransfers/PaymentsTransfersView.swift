@@ -108,10 +108,16 @@ struct PaymentsTransfersView: View {
                             .edgesIgnoringSafeArea(.all)
                         
                     case .transport(let viewModel):
-                        AvtodorDetailsView(viewModel: viewModel)
+                        OperatorsView(viewModel: viewModel)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.all)
                         
                     case .internet(let viewModel):
-                        InternetTVDetailsView(viewModel: viewModel)
+                        OperatorsView(viewModel: viewModel)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.all)
                         
                     case .service(let viewModel):
                         OperatorsView(viewModel: viewModel)
@@ -122,6 +128,11 @@ struct PaymentsTransfersView: View {
                     case .template(let templateListViewModel):
                         TemplatesListView(viewModel: templateListViewModel)
                         
+                    case .qrScanner(let qrViewModel):
+                        QrScannerView(viewModel: qrViewModel)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.all)
                     }
                 }
             }
