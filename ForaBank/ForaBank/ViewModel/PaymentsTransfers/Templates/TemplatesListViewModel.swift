@@ -164,7 +164,7 @@ private extension TemplatesListViewModel {
                         link = .internet(.init(model: model, closeAction: {[weak self] in self?.link = nil }, paymentTemplate: temp))
 
                     case .transport:
-                        link = .transport(.init(model: model, closeAction: {[weak self] in self?.link = nil }, paymentTemplate: temp))
+                        link = .transport(.init(closeAction: {[weak self] in self?.link = nil }, template: temp))
 
                     case .externalEntity:
                         link = .externalEntity(.init(closeAction: {[weak self] in self?.link = nil }, paymentTemplate: temp))
@@ -353,7 +353,7 @@ extension TemplatesListViewModel {
         case housingAndCommunalService(InternetTVDetailsViewModel)
         case mobile(PaymentTemplateData)
         case internet(InternetTVDetailsViewModel)
-        case transport(AvtodorDetailsViewModel)
+        case transport(OperatorsViewModel)
         case externalEntity(TransferByRequisitesViewModel)
         case externalIndividual(TransferByRequisitesViewModel)
         case openProduct(ProductProfileViewModel)

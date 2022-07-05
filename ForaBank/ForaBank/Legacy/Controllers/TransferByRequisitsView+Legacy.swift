@@ -15,7 +15,6 @@ struct TransferByRequisitesView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> TransferByRequisitesViewController {
         
         let controller = TransferByRequisitesViewController()
-//        controller.modalPresentationStyle = .fullScreen
         controller.viewModel.closeAction = viewModel.closeAction
 
         if let paymentTemplate = viewModel.paymentTemplate, let parameter = paymentTemplate.parameterList.first as? TransferGeneralData {

@@ -7,10 +7,11 @@
 
 import UIKit
 import AVFoundation
-import RealmSwift
+
 import PDFKit
 import MobileCoreServices
 import UniformTypeIdentifiers
+import Combine
 
 
 protocol QRProtocol: AnyObject {
@@ -24,6 +25,7 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
             return storyboard.instantiateViewController(withIdentifier: "qr") as? QRViewController
         }
     
+    var viewModel: QrViewModel?
     weak var delegate: QRProtocol?
     var qrCodeLayer = AVCaptureVideoPreviewLayer()
     let qrCodesession = AVCaptureSession()
@@ -35,8 +37,7 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
 
     let bottomSpace: CGFloat = 80.0
     var squareView: SquareView? = nil
-    lazy var realm = try? Realm()
-    var operatorsList: Results<GKHOperatorsModel>? = nil
+    var operatorsList: [GKHOperatorsModel]? = nil
     var keyValue = ""
     var qrData = [String: String]()
     var operators: GKHOperatorsModel? = nil
@@ -54,7 +55,7 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
         info.add_CornerRadius(30)
         navigationController?.isNavigationBarHidden = true
         
-        operatorsList = realm?.objects(GKHOperatorsModel.self)
+        operatorsList = getOperatorsList(model: Model.shared)
         setupLayer()
         startQRCodeScanning()
         view.insertSubview(qrView, at: 1)
@@ -63,6 +64,15 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
     
     public func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
         controller.dismiss(animated: true)
+    }
+    
+    func getOperatorsList(model: Model) -> [GKHOperatorsModel] {
+        
+        let operators = (model.dictionaryAnywayOperatorGroups()?.compactMap { $0.returnOperators() }) ?? []
+        let operatorCodes = [GlobalModule.UTILITIES_CODE, GlobalModule.INTERNET_TV_CODE, GlobalModule.PAYMENT_TRANSPORT]
+        let parameterTypes = ["INPUT"]
+        let operatorsList = GKHOperatorsModel.childOperators(with: operators, operatorCodes: operatorCodes, parameterTypes: parameterTypes)
+        return operatorsList
     }
     
     @IBAction func info(_ sender: UIButton) {
@@ -149,7 +159,12 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
         })
         returnKey()
         } else {
-            performSegue(withIdentifier: "qrError", sender: nil)
+            
+            let storyboard = UIStoryboard(name: "QRCodeStoryboard", bundle: nil)
+            if let vc = storyboard.instantiateViewController(withIdentifier: "qrError") as? QRErrorViewController {
+                
+                self.present(vc, animated: true)
+            }
         }
     }
 
@@ -162,27 +177,42 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
 
     final func returnKey() {
         qrCodesession.stopRunning()
-        qrView.layer.sublayers?.removeLast()
         if operators != nil {
             GlobalModule.qrOperator = operators
             GlobalModule.qrData = qrData
             self.definesPresentationContext = true
-            dismiss(animated: false)
-//            self.presentingViewController?.dismiss(animated: true, completion: nil)
-//            navigationController?.popViewController(animated: true)
+            viewModel?.closeAction()
+            navigationController?.popViewController(animated: true)
+            self.presentingViewController?.dismiss(animated: true, completion: nil)
+
+            if GlobalModule.qrOperator != nil && GlobalModule.qrData != nil, let controller = InternetTVMainController.storyboardInstance() {
+                    let nc = UINavigationController(rootViewController: controller)
+                    nc.modalPresentationStyle = .fullScreen
+                    present(nc, animated: false)
+            }
+            
+            if GlobalModule.c2bURL != nil,  let controller = C2BDetailsViewController.storyboardInstance() {
+                let nc = UINavigationController(rootViewController: controller)
+                nc.modalPresentationStyle = .fullScreen
+                present(nc, animated: false)
+            }
+            
         } else {
-            performSegue(withIdentifier: "qrError", sender: nil)
+            
+            let storyboard = UIStoryboard(name: "QRCodeStoryboard", bundle: nil)
+            if let vc = storyboard.instantiateViewController(withIdentifier: "qrError") as? QRErrorViewController {
+                
+                self.present(vc, animated: true)
+            }
         }
     }
     
     @IBAction func back(_ sender: UIButton) {
+        
         qrCodesession.stopRunning()
-        qrView.layer.sublayers?.removeLast()
-//        dismiss(animated: false)
-
+        viewModel?.closeAction()
         self.definesPresentationContext = true
         self.presentingViewController?.dismiss(animated: true, completion: nil)
-//        navigationController?.popViewController(animated: true)
     }
 }
 
@@ -241,7 +271,12 @@ extension QRViewController {
             })
                 self?.returnKey()
             } else {
-                self?.performSegue(withIdentifier: "qrError", sender: nil)
+                
+                let storyboard = UIStoryboard(name: "QRCodeStoryboard", bundle: nil)
+                if let vc = storyboard.instantiateViewController(withIdentifier: "qrError") as? QRErrorViewController {
+                    
+                    self?.present(vc, animated: true)
+                }
             }
         }
     }

@@ -28,7 +28,7 @@ class PaymentsDetailsSuccessViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        button.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
+//        button.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
         confurmView.detailTapped = { () in
             self.openDetailVC()
         }

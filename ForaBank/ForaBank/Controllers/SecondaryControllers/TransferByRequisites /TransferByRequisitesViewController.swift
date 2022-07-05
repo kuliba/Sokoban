@@ -147,10 +147,11 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
     
     func checkQREvent() {
         if GlobalModule.qrOperator != nil && GlobalModule.qrData != nil {
-            let controller = InternetTVMainController.storyboardInstance()!
-            let nc = UINavigationController(rootViewController: controller)
-            self.modalPresentationStyle = .fullScreen
-            present(controller, animated: false)
+            if let controller = InternetTVMainController.storyboardInstance()  {
+                let nc = UINavigationController(rootViewController: controller)
+                self.modalPresentationStyle = .fullScreen
+                present(nc, animated: false)
+            }
         }
     }
     

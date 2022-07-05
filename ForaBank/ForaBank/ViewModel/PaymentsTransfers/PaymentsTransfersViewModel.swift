@@ -86,17 +86,23 @@ class PaymentsTransfersViewModel: ObservableObject {
                 
                 case _ as PaymentsTransfersViewModelAction.ButtonTapped.Scanner:
                    
-                    bottomSheet = .init(type: .exampleDetail("NavBar QR"))
+                    link = .qrScanner(.init(closeAction: {[weak self] in
+                        self?.action.send(PaymentsTransfersViewModelAction
+                                          .Close.Link() )}))
                     
                 case _ as PaymentsTransfersViewModelAction.Close.BottomSheet:
                     bottomSheet = nil
                     
                 case _ as PaymentsTransfersViewModelAction.Close.Sheet:
                     sheet = nil
-                    
+                
                 case _ as PaymentsTransfersViewModelAction.Close.Link:
                     link = nil
                     
+                case _ as PaymentsTransfersViewModelAction.OpenQr:
+                    link = .qrScanner(.init(closeAction:  { [weak self] in
+                        self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                    }))
                 default:
                     break
                 }
@@ -196,8 +202,9 @@ class PaymentsTransfersViewModel: ObservableObject {
                             }))
                             
                         case .qrPayment:
-                            bottomSheet = .init(type: .exampleDetail(payload.type.rawValue)) 
-
+                            link = .qrScanner(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            }))
+                            
                         case .service:
                             let serviceOperators = OperatorsViewModel(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
                             }, template: nil)
@@ -274,9 +281,10 @@ class PaymentsTransfersViewModel: ObservableObject {
         case internetOperators(OperatorsViewModel)
         case transportOperators(OperatorsViewModel)
         case service(OperatorsViewModel)
-        case internet(InternetTVDetailsViewModel)
-        case transport(AvtodorDetailsViewModel)
+        case internet(OperatorsViewModel)
+        case transport(OperatorsViewModel)
         case template(TemplatesListViewModel)
+        case qrScanner(QrViewModel)
     }
 }
 
@@ -298,4 +306,6 @@ enum PaymentsTransfersViewModelAction {
         
         struct Link: Action {}
     }
+    
+    struct OpenQr: Action {}
 }
