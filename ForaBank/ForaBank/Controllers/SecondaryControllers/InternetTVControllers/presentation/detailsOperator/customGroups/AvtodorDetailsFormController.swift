@@ -1,12 +1,12 @@
 import UIKit
 import Foundation
-
+import IQKeyboardManagerSwift
 
 class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSource, UIPopoverPresentationControllerDelegate, UIViewControllerTransitioningDelegate {
 
     let model = Model.shared
     static let msgUpdateTable = 3
-
+    var operatorsViewModel: OperatorsViewModel?
     public static func storyboardInstance() -> AvtodorDetailsFormController? {
         let storyboard = UIStoryboard(name: "InternetTV", bundle: nil)
         return storyboard.instantiateViewController(withIdentifier: "InternetTVDetail") as? AvtodorDetailsFormController
@@ -186,6 +186,7 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
             vc.taxTransactionField.isHidden = false
             vc.currTransactionField.isHidden = true
             vc.currencyTransactionField.isHidden = true
+            vc.operatorsViewModel = self.operatorsViewModel
             InternetTVSuccessView.svgImg = self.operatorData?.logotypeList.first?.svgImage ?? ""
             self.navigationController?.pushViewController(vc, animated: true)
         }
@@ -245,11 +246,21 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
             }
         }
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+    }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
         goButton?.isHidden = true
         qrData.removeAll()
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = true
     }
 
     func setupToolbar() {

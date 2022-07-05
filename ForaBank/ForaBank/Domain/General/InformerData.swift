@@ -7,5 +7,5 @@
 
 struct InformerData {
 
-    var message: String
+    var message: String?
 }

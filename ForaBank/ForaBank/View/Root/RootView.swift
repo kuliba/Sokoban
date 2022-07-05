@@ -59,11 +59,7 @@ struct RootView: View {
                     }
                     .tag(RootViewModel.TabType.chat)
 
-            }
-            .accentColor(.black)
-            .alert(item: $viewModel.alert, content: { alertViewModel in
-                Alert(with: alertViewModel)
-            })
+            }.accentColor(.black)
 
             InformerView(viewModel: viewModel.informerViewModel)
                 .zIndex(1)

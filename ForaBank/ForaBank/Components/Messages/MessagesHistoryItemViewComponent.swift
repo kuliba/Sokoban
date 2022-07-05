@@ -11,7 +11,7 @@ import SwiftUI
 
 extension MessagesHistoryItemView {
     
-    class ViewModel: Identifiable {
+    class ViewModel: Identifiable, Equatable {
         
         let id: NotificationData.ID
         let icon: Image
@@ -19,9 +19,9 @@ extension MessagesHistoryItemView {
         let content: String
         let time: String
 
-        internal init(icon: Image, title: String, content: String, time: String) {
+        internal init(id: NotificationData.ID = 1, icon: Image, title: String, content: String, time: String) {
             
-            self.id = 1
+            self.id = id
             self.icon = icon
             self.title = title
             self.content = content
@@ -34,7 +34,11 @@ extension MessagesHistoryItemView {
             self.icon = Image.ic24MoreHorizontal
             self.title = notification.title
             self.content = notification.text
-            self.time = DateFormatter.minutsAndSecond.string(from: notification.date)
+            self.time = DateFormatter.minutsAndSecond.string(from: notification.dateUtc)
+        }
+        
+        static func == (lhs: MessagesHistoryItemView.ViewModel, rhs: MessagesHistoryItemView.ViewModel) -> Bool {
+            lhs.id == rhs.id
         }
     }
 }
@@ -50,6 +54,7 @@ struct MessagesHistoryItemView: View {
         HStack(alignment: .top) {
             
             VStack(alignment: .center) {
+                
                 viewModel.icon
                     .resizable()
                     .frame(width: 24, height: 24)
@@ -59,21 +64,22 @@ struct MessagesHistoryItemView: View {
                 Spacer()
             }
             
-            VStack(alignment: .leading)  {
+            VStack(alignment: .leading, spacing: 6)  {
                 
-                Text(viewModel.title)
-                    .font(.textH4M16240())
-                    .foregroundColor(.textSecondary)
-                
-                Text(viewModel.content)
-                    .font(.textBodySR12160())
-                    .foregroundColor(.gray)
-                    .lineLimit(2)
-                
+                VStack(alignment: .leading) {
+                    
+                    Text(viewModel.title)
+                        .font(.textH4M16240())
+                        .foregroundColor(.textSecondary)
+                    
+                    Text(viewModel.content)
+                        .font(.textBodySR12160())
+                        .foregroundColor(.gray)
+                        .lineLimit(2)
+                }
                 Text(viewModel.time)
                     .font(.textBodySR12160())
                     .foregroundColor(.gray)
-                    .padding(.top, 4)
             }
             Spacer()
         } .padding(.trailing, 19)

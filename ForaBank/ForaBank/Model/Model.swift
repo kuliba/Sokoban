@@ -60,6 +60,7 @@ class Model {
     
     //MARK: Notifications
     let notifications: CurrentValueSubject<[NotificationData], Never>
+    let notificationsTransition: CurrentValueSubject<NotificationTransition?, Never>
     
     //MARK: - Client Info
     let clientInfo: CurrentValueSubject<ClientInfoData?, Never>
@@ -144,7 +145,8 @@ class Model {
         self.fastPaymentContractFullInfo = .init([])
         self.currentUserLoaction = .init(nil)
         self.informer = .init(nil)
-        
+        self.notificationsTransition = .init(nil)
+
         self.sessionAgent = sessionAgent
         self.serverAgent = serverAgent
         self.localAgent = localAgent

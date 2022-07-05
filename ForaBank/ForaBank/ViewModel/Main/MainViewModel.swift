@@ -68,7 +68,7 @@ class MainViewModel: ObservableObject {
                     link = .userAccount(.init(model: model, clientInfo: clientInfo, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.CloseLink())}))
                     
                 case _ as MainViewModelAction.ButtonTapped.Messages:
-                    let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.CloseLink())})
+                    let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model, closeAction: {[weak self] in self?.action.send(MainViewModelAction.CloseLink())})
                     link = .messages(messagesHistoryViewModel)
                     
                 case _ as MainViewModelAction.PullToRefresh:
@@ -102,6 +102,23 @@ class MainViewModel: ObservableObject {
                 userAccountButton.update(clientInfo: clientData.0, clientPhoto: clientData.1, clientName: clientData.2)
                 
             }.store(in: &bindings)
+        
+        model.notificationsTransition
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] transition in
+               
+                switch transition {
+                case .history:
+                    let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model, closeAction: {
+                        self.action.send(MainViewModelAction.CloseLink())
+                    })
+                    link = .messages(messagesHistoryViewModel)
+                    model.notificationsTransition.value = nil
+                default:
+                    break
+                }
+            }.store(in: &bindings)
+        
     }
     
     private func bind(_ sections: [MainSectionViewModel]) {

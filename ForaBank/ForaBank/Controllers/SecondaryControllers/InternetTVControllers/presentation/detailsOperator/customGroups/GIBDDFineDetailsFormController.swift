@@ -1,6 +1,6 @@
 import UIKit
 import Foundation
-
+import IQKeyboardManagerSwift
 
 class GIBDDFineDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSource, UIPopoverPresentationControllerDelegate, UIViewControllerTransitioningDelegate {
 
@@ -52,6 +52,13 @@ class GIBDDFineDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSou
         super.viewDidAppear(animated)
         goButton?.isHidden = !(bottomInputView?.isHidden ?? false)
         bottomInputView?.updateAmountUI(textAmount: latestOperation?.amount)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
     }
 
     override func viewDidLoad() {
@@ -252,6 +259,9 @@ class GIBDDFineDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSou
         super.viewWillDisappear(true)
         goButton?.isHidden = true
         qrData.removeAll()
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = true
     }
 
     func setupToolbar() {

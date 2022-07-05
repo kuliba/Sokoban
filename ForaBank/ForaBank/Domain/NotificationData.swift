@@ -9,13 +9,14 @@ import Foundation
 
 struct NotificationData: Equatable, Identifiable, Hashable {
     
+    var id: Int { hashValue }
+    
     let title: String
     let state: State
     let text: String
     let type: Kind
-    var id: Int { hashValue }
-    var date: Date
-    
+    let dateUtc: Date
+
     enum State: String, Codable, Equatable, Hashable {
         
         case delivered = "DELIVERED"
@@ -40,17 +41,14 @@ extension NotificationData: Codable {
     
     private enum CodingKeys : String, CodingKey {
         case date, title, state, text, type
+        case dateUtc = "dateUTC"
     }
     
     init(from decoder: Decoder) throws {
         
-        let formatter = DateFormatter.dateAndTime
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        let dateString = try container.decode(String.self, forKey: .date)
-        guard let date = formatter.date(from: dateString) else {
-            throw DecodingError.unableDecodeDate
-        }
-        self.date = date
+        let dateValue = try container.decode(Int.self, forKey: .dateUtc)
+        self.dateUtc = Date(timeIntervalSince1970: TimeInterval(dateValue / 1000))
         self.state = try container.decode(State.self, forKey: .state)
         self.text = try container.decode(String.self, forKey: .text)
         self.type = try container.decode(Kind.self, forKey: .type)
@@ -59,16 +57,11 @@ extension NotificationData: Codable {
     
     func encode(to encoder: Encoder) throws {
         
-        let formatter = DateFormatter.dateAndTime
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(formatter.string(from: date), forKey: .date)
+        try container.encode(Int(dateUtc.timeIntervalSince1970) * 1000, forKey: .dateUtc)
         try container.encode(state, forKey: .state)
         try container.encode(text, forKey: .text)
         try container.encode(text, forKey: .title)
         try container.encode(type, forKey: .type)
-    }
-    
-    enum DecodingError: Error {
-        case unableDecodeDate
     }
 }

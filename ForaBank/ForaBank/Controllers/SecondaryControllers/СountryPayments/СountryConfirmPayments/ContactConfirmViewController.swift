@@ -13,6 +13,7 @@ import Combine
 //TODO: отрефакторить под сетевые запросы, вынести в отдельный файл
 class ConfirmViewControllerModel {
     
+    var operatorsViewModel: OperatorsViewModel?
     static var svgIcon = ""
     lazy var realm = try? Realm()
     var type: PaymentType
@@ -206,6 +207,8 @@ class ConfirmViewControllerModel {
 
 class ContactConfurmViewController: UIViewController {
     
+    var operatorsViewModel: OperatorsViewModel?
+    
     var confurmVCModel: ConfirmViewControllerModel? {
         didSet {
             guard let model = confurmVCModel else { return }
@@ -321,6 +324,7 @@ class ContactConfurmViewController: UIViewController {
             vc.confurmView.operatorImageView.image = UIImage(named: "sbp-long")
             vc.confurmView.statusLabel.textColor = .red
             vc.confurmView.detailButtonsStackView.isHidden = true
+            vc.operatorsViewModel = self.operatorsViewModel
             if data.userInfo?.count ?? 0 > 0{
                 vc.confurmView.infoLabel.text = "Время на подтверждение\n перевода вышло"
                 vc.confurmView.infoLabel.isHidden = false
@@ -891,6 +895,7 @@ class ContactConfurmViewController: UIViewController {
                         }
                         
                         vc.confurmVCModel = self.confurmVCModel
+                        vc.operatorsViewModel = self.operatorsViewModel
                         let nav = UINavigationController(rootViewController: vc)
                         nav.modalPresentationStyle = .fullScreen
                         self.present(nav, animated: true, completion: nil)
@@ -969,6 +974,7 @@ class ContactConfurmViewController: UIViewController {
                         }
                         
                         vc.confurmVCModel = self.confurmVCModel
+                        vc.operatorsViewModel = self.operatorsViewModel
                         let nav = UINavigationController(rootViewController: vc)
                         nav.modalPresentationStyle = .fullScreen
                         self.present(nav, animated: true, completion: nil)

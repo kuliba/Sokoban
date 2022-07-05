@@ -62,14 +62,9 @@ class RootViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] data in
 
-                guard let data = data else {
-                    
-                    informerViewModel.message = nil
-                    return
+                withAnimation {
+                    informerViewModel.message = data?.message
                 }
-
-                informerViewModel.message = data.message
-
             }.store(in: &bindings)
         
         model.action
