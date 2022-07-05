@@ -37,6 +37,7 @@ enum MainSectionType: String, CaseIterable, Codable {
     case fastOperations
     case promo
     case currencyExchange
+    case currencyMetall
     case openProduct
     case atm
     
@@ -47,6 +48,7 @@ enum MainSectionType: String, CaseIterable, Codable {
         case .fastOperations: return "Быстрые операции"
         case .promo: return ""
         case .currencyExchange: return "Обмен валют"
+        case .currencyMetall: return "Валюты и металлы"
         case .openProduct: return "Открыть продукт"
         case .atm: return "Отделения и банкоматы"
         }
@@ -97,4 +99,21 @@ enum MainSectionViewModelAction {
     
         struct ButtonTapped: Action {}
     }
+    
+    enum CurrencyMetall {
+ 
+        enum ItemDashboardDidTapped  {
+            
+            struct Buy: Action {
+                
+                let itemData: String
+            }
+            
+            struct Sell: Action  {
+                
+                let itemData: String
+            }
+        }
+    }
+    
 }
