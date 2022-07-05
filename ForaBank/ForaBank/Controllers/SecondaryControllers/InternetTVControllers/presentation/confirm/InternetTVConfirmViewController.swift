@@ -1,7 +1,9 @@
 import UIKit
-
+import IQKeyboardManagerSwift
 
 class InternetTVConfirmViewController: UIViewController {
+    
+    var operatorsViewModel: OperatorsViewModel?
     var viewModel: InternetTVConfirmViewModel? {
         didSet {
             guard let model = viewModel else { return }
@@ -175,6 +177,7 @@ class InternetTVConfirmViewController: UIViewController {
                     self.viewModel?.statusIsSuccess = true
                     vc.confirmModel = self.viewModel
                     vc.id = model.data?.paymentOperationDetailId ?? 0
+                    vc.operatorsViewModel = self.operatorsViewModel
                     if self.viewModel?.type == .gkh {
                         vc.printFormType = "housingAndCommunalService"
                     } else if self.viewModel?.type == .internetTV {
@@ -190,5 +193,17 @@ class InternetTVConfirmViewController: UIViewController {
                 self.showAlert(with: "Ошибка", and: model.errorMessage ?? "")
             }
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
     }
 }

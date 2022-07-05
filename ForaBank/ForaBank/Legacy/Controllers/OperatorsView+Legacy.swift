@@ -46,7 +46,7 @@ struct OperatorsViewModel {
     var template: PaymentTemplateData?
     
     init(closeAction: @escaping () -> Void, template: PaymentTemplateData?) {
-        
+
         self.closeAction = closeAction
         self.template = template
     }

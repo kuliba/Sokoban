@@ -10,6 +10,7 @@ import Combine
 
 class PaymentsDetailsSuccessViewController: UIViewController {
     
+    var operatorsViewModel: OperatorsViewModel?
     var printFormType: String?
     let confurmView = PaymentsDetailsView()
     let button = UIButton(title: "На главную")
@@ -118,8 +119,8 @@ class PaymentsDetailsSuccessViewController: UIViewController {
     }
     
     @objc func doneButtonTapped() {
-        print(#function)
-        dismissViewControllers()
+            self.view.window?.rootViewController?.dismiss(animated: true)
+            operatorsViewModel?.closeAction()
     }
     
     func openDetailVC() {
@@ -134,15 +135,5 @@ class PaymentsDetailsSuccessViewController: UIViewController {
         vc.title = "Детали операции"
         let navVC = UINavigationController(rootViewController: vc)
         self.present(navVC, animated: true)
-    }
-    
-    // MARK:- Dismiss and Pop ViewControllers
-    func dismissViewControllers() {
-        
-        guard let closeAction = closeAction else {
-            return
-        }
-        
-        closeAction()
     }
 }

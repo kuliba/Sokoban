@@ -2,6 +2,7 @@ import UIKit
 
 class InternetTVSuccessViewController: UIViewController {
     
+    var operatorsViewModel: OperatorsViewModel?
     var id: Int?
     var printFormType: String?
     let mainView = InternetTVSuccessView()
@@ -50,8 +51,8 @@ class InternetTVSuccessViewController: UIViewController {
     }
     
     @objc func doneButtonTapped() {
-        print(#function)
-        dismissViewControllers()
+        view.window?.rootViewController?.dismiss(animated: true)
+        operatorsViewModel?.closeAction()
     }
     
     func openDetailVC() {
@@ -73,9 +74,5 @@ class InternetTVSuccessViewController: UIViewController {
         vc.title = "Детали операции"
         let navVC = UINavigationController(rootViewController: vc)
         present(navVC, animated: true)
-    }
-
-    func dismissViewControllers() {
-        view.window?.rootViewController?.dismiss(animated: true)
     }
 }
