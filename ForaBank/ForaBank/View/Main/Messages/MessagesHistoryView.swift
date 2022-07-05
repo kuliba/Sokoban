@@ -17,27 +17,55 @@ struct MessagesHistoryView: View {
         
         ScrollView {
             
-            VStack(spacing: 0) {
+            if #available(iOS 14, *) {
                 
-                ForEach(viewModel.sections) { section in
-                    MessagesHistorySectionView(viewModel: section)
+                LazyVStack(spacing: 0) {
+                    
+                    ForEach(viewModel.sections) { section in
+                        MessagesHistorySectionView(viewModel: section)
+                    }
                 }
-            }
-            .padding(.leading, 15)
-            .background(GeometryReader { geo in
-                
-                Color.clear
-                    .preference(key: ScrollOffsetKey.self, value: -geo.frame(in: .named("scroll")).origin.y)
-                    .preference(key: ScrollContentHeifgtKey.self, value: geo.frame(in: .named("scroll")).height)
-            })
-            .onPreferenceChange(ScrollOffsetKey.self) { offset in
-                
-                if offset > height - UIScreen.main.bounds.size.height {
-                    viewModel.action.send(MessagesHistoryViewModelAction.ScrolledToEnd())
+                .padding(.leading, 15)
+                .background(GeometryReader { geo in
+                    
+                    Color.clear
+                        .preference(key: ScrollOffsetKey.self, value: -geo.frame(in: .named("scroll")).origin.y)
+                        .preference(key: ScrollContentHeifgtKey.self, value: geo.frame(in: .named("scroll")).height)
+                })
+                .onPreferenceChange(ScrollOffsetKey.self) { offset in
+                    
+                    if offset > height - UIScreen.main.bounds.size.height {
+                        viewModel.action.send(MessagesHistoryViewModelAction.ScrolledToEnd())
+                    }
                 }
-            }
-            .onPreferenceChange(ScrollContentHeifgtKey.self) { height in
-                self.height = height
+                .onPreferenceChange(ScrollContentHeifgtKey.self) { height in
+                    self.height = height
+                }
+                
+            } else {
+                
+                VStack(spacing: 0) {
+                    
+                    ForEach(viewModel.sections) { section in
+                        MessagesHistorySectionView(viewModel: section)
+                    }
+                }
+                .padding(.leading, 15)
+                .background(GeometryReader { geo in
+                    
+                    Color.clear
+                        .preference(key: ScrollOffsetKey.self, value: -geo.frame(in: .named("scroll")).origin.y)
+                        .preference(key: ScrollContentHeifgtKey.self, value: geo.frame(in: .named("scroll")).height)
+                })
+                .onPreferenceChange(ScrollOffsetKey.self) { offset in
+                    
+                    if offset > height - UIScreen.main.bounds.size.height {
+                        viewModel.action.send(MessagesHistoryViewModelAction.ScrolledToEnd())
+                    }
+                }
+                .onPreferenceChange(ScrollContentHeifgtKey.self) { height in
+                    self.height = height
+                }
             }
         }
         .coordinateSpace(name: "scroll")
