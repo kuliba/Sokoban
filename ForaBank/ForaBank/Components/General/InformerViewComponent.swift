@@ -11,19 +11,16 @@ extension InformerView {
 
     class ViewModel: ObservableObject {
 
-        @Published var message: String
-        @Published var isShow: Bool
+        @Published var message: String?
 
         let icon: Image
         let color: Color
 
-        init(message: String = "",
-             isShow: Bool = false,
+        init(message: String? = nil,
              icon: Image = .init("Check Info Enabled"),
              color: Color = .systemColorWarning) {
 
             self.message = message
-            self.isShow = isShow
             self.icon = icon
             self.color = color
         }
@@ -36,7 +33,7 @@ struct InformerView: View {
 
     var body: some View {
 
-        if viewModel.isShow {
+        if let message = viewModel.message {
 
             ZStack {
 
@@ -46,7 +43,7 @@ struct InformerView: View {
                         .resizable()
                         .frame(width: 24, height: 24)
 
-                    Text(viewModel.message)
+                    Text(message)
                         .font(.textH4R16240())
                         .foregroundColor(.mainColorsWhite)
                 }
@@ -59,7 +56,7 @@ struct InformerView: View {
 
         } else {
 
-            Color.clear
+            EmptyView()
         }
     }
 }

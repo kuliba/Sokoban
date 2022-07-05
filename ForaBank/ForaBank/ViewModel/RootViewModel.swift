@@ -64,12 +64,11 @@ class RootViewModel: ObservableObject {
 
                 guard let data = data else {
                     
-                    informerViewModel.isShow = false
+                    informerViewModel.message = nil
                     return
                 }
 
                 informerViewModel.message = data.message
-                informerViewModel.isShow = true
 
             }.store(in: &bindings)
         

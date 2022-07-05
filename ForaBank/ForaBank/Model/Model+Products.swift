@@ -57,7 +57,7 @@ extension ModelAction {
                 struct All: Action {}
             }
 
-            struct Product: Action {
+            struct ForProductType: Action {
 
                 let productType: ProductType
             }
@@ -325,10 +325,10 @@ extension Model {
         }
     }
 
-    func handleProductsUpdateTotalProduct(_ productType: ProductType) {
+    func handleProductsUpdateTotalProduct(_ product: ModelAction.Products.Update.ForProductType) {
 
-        guard productsUpdating.value.contains(productType) == false,
-              productsAllowed.contains(productType) == true else {
+        guard productsUpdating.value.contains(product.productType) == false,
+              productsAllowed.contains(product.productType) == true else {
                   return
               }
 
@@ -339,17 +339,17 @@ extension Model {
 
         Task {
 
-            self.productsUpdating.value.append(productType)
+            self.productsUpdating.value.append(product.productType)
 
-            let serial = productsCacheSerial(for: productType)
-            let command = ServerCommands.ProductController.GetProductListByType(token: token, serial: serial, productType: productType)
+            let serial = productsCacheSerial(for: product.productType)
+            let command = ServerCommands.ProductController.GetProductListByType(token: token, serial: serial, productType: product.productType)
 
             do {
 
                 let result = try await productsFetchWithCommand(command: command)
 
                 // updating status
-                if let index = self.productsUpdating.value.firstIndex(of: productType) {
+                if let index = self.productsUpdating.value.firstIndex(of: product.productType) {
 
                     self.productsUpdating.value.remove(at: index)
                 }
@@ -365,7 +365,7 @@ extension Model {
                 self.products.value = reduce(products: self.products.value, with: result.products, allowed: self.productsAllowed)
 
                 // update loans data
-                if productType == .loan {
+                if product.productType == .loan {
 
                     self.action.send(ModelAction.Loans.Update.All())
                 }
@@ -373,7 +373,7 @@ extension Model {
             } catch {
 
                 // updating status
-                if let index = self.productsUpdating.value.firstIndex(of: productType) {
+                if let index = self.productsUpdating.value.firstIndex(of: product.productType) {
 
                     self.productsUpdating.value.remove(at: index)
                 }

@@ -68,7 +68,10 @@ struct RootView: View {
             InformerView(viewModel: viewModel.informerViewModel)
                 .zIndex(1)
                 .padding(.top, 64)
-        }
+            
+        }.alert(item: $viewModel.alert, content: { alertViewModel in
+            Alert(with: alertViewModel)
+        })
     }
 }
 

@@ -167,7 +167,7 @@ extension Model {
         case .complete:
 
             // Обновление открытых счетов на главном экране
-            action.send(ModelAction.Products.Update.Product(productType: .account))
+            action.send(ModelAction.Products.Update.ForProductType(productType: .account))
 
             // Обновление списка счетов
             action.send(ModelAction.Account.ProductList.Request())

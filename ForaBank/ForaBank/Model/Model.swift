@@ -384,8 +384,8 @@ class Model {
                 case let payload as ModelAction.Loans.Update.Single.Request:
                     handleLoansUpdateSingleRequest(payload)
 
-                case let payload as ModelAction.Products.Update.Product:
-                    handleProductsUpdateTotalProduct(payload.productType)
+                case let payload as ModelAction.Products.Update.ForProductType:
+                    handleProductsUpdateTotalProduct(payload)
                     
                     //MARK: - Statement
                     
