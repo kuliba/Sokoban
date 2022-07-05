@@ -151,8 +151,10 @@ class MainViewModel: ObservableObject {
                                 sheet = .init(type: .byPhone(.init(closeAction: { [weak self] in
                                     self?.action.send(MainViewModelAction.CloseLink())
                                 })))
-                            default:
-                                break
+                            case .byQr:
+                                link = .qrScanner(.init(closeAction: { [weak self] in
+                                    self?.action.send(MainViewModelAction.CloseLink())
+                                }))
                             }
                             
                         default:
@@ -287,6 +289,7 @@ extension MainViewModel {
         case messages(MessagesHistoryViewModel)
         case openDeposit(OpenDepositViewModel)
         case templates(TemplatesListViewModel)
+        case qrScanner(QrViewModel)
 
     }
 
