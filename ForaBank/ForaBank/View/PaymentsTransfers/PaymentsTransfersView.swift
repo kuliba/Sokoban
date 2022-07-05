@@ -14,131 +14,161 @@ struct PaymentsTransfersView: View {
 
     var body: some View {
         
-        NavigationView {
+        ZStack(alignment: .top) {
             
-            ZStack(alignment: .top) {
-                
-                VStack() {
+            VStack() {
+           
+                ScrollView(.vertical, showsIndicators: false) {
                     
-                    Color.clear.frame(height: 48) // mock SearchView
-                    
-                    GeometryReader { grProxy in
+                    ForEach(viewModel.sections) { section in
                         
-                        ScrollView(.vertical, showsIndicators: false) {
+                        switch section {
+                        case let latestPaymentsSectionVM as PTSectionLatestPaymentsView.ViewModel:
+                            PTSectionLatestPaymentsView(viewModel: latestPaymentsSectionVM)
                             
-                            ForEach(viewModel.sections) { section in
-                                
-                                switch section {
-                                case let latestPaymentsSectionVM as PTSectionLatestPaymentsView.ViewModel:
-                                    PTSectionLatestPaymentsView(viewModel: latestPaymentsSectionVM)
-                                    
-                                case let transfersSectionVM as PTSectionTransfersView.ViewModel:
-                                    PTSectionTransfersView(viewModel: transfersSectionVM)
-                                    
-                                case let payGroupSectionVM as PTSectionPaymentsView.ViewModel:
-                                    PTSectionPaymentsView(viewModel: payGroupSectionVM,
-                                                          heightBlock: grProxy.size.height)
-                                default:
-                                    EmptyView()
-                                }
-                            }
+                        case let transfersSectionVM as PTSectionTransfersView.ViewModel:
+                            PTSectionTransfersView(viewModel: transfersSectionVM)
                             
-                        } //mainVerticalScrollView
-                    } //geometry
-                    
-                } //mainVStack
-
-                Color.mainColorsGrayLightest //mock topSearchView
-                    .frame(height: 48)
-                    .edgesIgnoringSafeArea(.top)
-                    .overlay(TopSearchViewMock())
-     
-                NavigationLink("", isActive: $viewModel.isLinkActive) {
-                    
-                    if let link = viewModel.link  {
-                        switch link {
-                        case let .exampleDetail(title):
-                            ExampleDetailMock(title: title)
-                            
-                        case .mobile(let model):
-                            MobilePayView(viewModel: model)
-                            
-                        case .chooseCountry(let model):
-                            ChooseCountryView(viewModel: model)
-                                .edgesIgnoringSafeArea(.all)
-                                .navigationBarHidden(true)
-                            
-                        case let .taxAndStateService(taxAndStateServiceVM):
-                            PaymentsView(viewModel: taxAndStateServiceVM)
-                                .edgesIgnoringSafeArea(.all)
-                                .navigationBarHidden(true)
-                            
-                        case let .transferByRequisites(transferByRequisitesViewModel):
-                            TransferByRequisitesView(viewModel: transferByRequisitesViewModel)
-                                .edgesIgnoringSafeArea(.all)
-                                .navigationBarHidden(true)
-                            
-                        case let .phone(phoneData):
-                            PaymentPhoneView(viewModel: phoneData)
-                                .edgesIgnoringSafeArea(.all)
-                                .navigationBarHidden(true)
-                            
-                        case .internetOperators(let model):
-                            OperatorsView(viewModel: model)
-                            
-                        case .serviceOperators(let model):
-                            OperatorsView(viewModel: model)
-                            
-                        case .transportOperators(let model):
-                            OperatorsView(viewModel: model)
-                            
-                        case .transport(let viewModel):
-                            AvtodorDetailsView(viewModel: viewModel)
-                            
-                        case .internet(let viewModel):
-                            InternetTVDetailsView(viewModel: viewModel)
-                            
-                        case .service(let viewModel):
-                            OperatorsView(viewModel: viewModel)
-                            
+                        case let payGroupSectionVM as PTSectionPaymentsView.ViewModel:
+                            PTSectionPaymentsView(viewModel: payGroupSectionVM)
+                        default:
+                            EmptyView()
                         }
+                    }
+                    
+                } //mainVerticalScrollView
+            } //mainVStack
+            .navigationBarTitle("", displayMode: .inline)
+            .navigationBarItems(
+                leading: MainView.UserAccountButton(viewModel: viewModel.userAccountButton),
+                trailing:
+                    HStack {
+                        ForEach(viewModel.navButtonsRight) { navButtonViewModel in
+                                            
+                            NavBarButton(viewModel: navButtonViewModel)
+                        }
+                    })
+ 
+            NavigationLink("", isActive: $viewModel.isLinkActive) {
+                
+                if let link = viewModel.link  {
+                    
+                    switch link {
+                    case let .userAccount(userAccountViewModel):
+                        UserAccountView(viewModel: userAccountViewModel)
+                        
+                    case let .exampleDetail(title):
+                        ExampleDetailMock(title: title)
+                        
+                    case .mobile(let model):
+                        MobilePayView(viewModel: model)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.all)
+                        
+                    case .chooseCountry(let model):
+                        ChooseCountryView(viewModel: model)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.all)
+                        
+                    case let .taxAndStateService(taxAndStateServiceVM):
+                        PaymentsView(viewModel: taxAndStateServiceVM)
+                            .edgesIgnoringSafeArea(.all)
+                            .navigationBarHidden(true)
+                        
+                    case let .transferByRequisites(transferByRequisitesViewModel):
+                        TransferByRequisitesView(viewModel: transferByRequisitesViewModel)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.all)
+                        
+                    case let .phone(phoneData):
+                        PaymentPhoneView(viewModel: phoneData)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.all)
+                        
+                    case .internetOperators(let model):
+                        OperatorsView(viewModel: model)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.all)
+                        
+                    case .serviceOperators(let model):
+                        OperatorsView(viewModel: model)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.all)
+                        
+                    case .transportOperators(let model):
+                        OperatorsView(viewModel: model)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.all)
+                        
+                    case .transport(let viewModel):
+                        OperatorsView(viewModel: viewModel)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.all)
+                        
+                    case .internet(let viewModel):
+                        OperatorsView(viewModel: viewModel)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.all)
+                        
+                    case .service(let viewModel):
+                        OperatorsView(viewModel: viewModel)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.all)
+                        
+                    case .template(let templateListViewModel):
+                        TemplatesListView(viewModel: templateListViewModel)
+                        
+                    case .qrScanner(let qrViewModel):
+                        QrScannerView(viewModel: qrViewModel)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.all)
                     }
                 }
             }
-            .bottomSheet(item: $viewModel.sheet) {
-            } content: { sheet in
-                
-                switch sheet.type {
-                case let .exampleDetail(title):
-                    ExampleDetailMock(title: title)
-                    
-                case let .country(countryData):
-                    CountryPaymentView(viewModel: .init(countryData: countryData))
-                    
-                case let .transferByPhone(viewModel):
-                    TransferByPhoneView(viewModel: viewModel)
-                        .edgesIgnoringSafeArea(.all)
-                    
-                case let .meToMe(viewModel):
-                    MeToMeView(viewModel: viewModel)
-                        .edgesIgnoringSafeArea(.bottom)
-                        .frame(height: 540)
-                    
-                case .anotherCard(let model):
-                    //TODO: как то нужно открыть не молным модальным откном, UIViewControllerTransitioningDelegate не работает
-                    
-                    AnotherCardView(viewModel: model)
-                        .edgesIgnoringSafeArea(.bottom)
-                        .frame(height: 540)
-                        .navigationBarTitle("", displayMode: .inline)
-                    
-                case let .template(viewModel):
-                    TemplatesListView(viewModel: viewModel)
-                }
-            }
-            .navigationBarHidden(true)
-            .tabBar(isHidden: $viewModel.isTabBarHidden)
         }
+        .bottomSheet(item: $viewModel.bottomSheet) {} content: { sheet in
+            
+            switch sheet.type {
+            case let .exampleDetail(title):
+                ExampleDetailMock(title: title)
+                
+            case let .country(countryData):
+                CountryPaymentView(viewModel: .init(countryData: countryData))
+
+            case let .meToMe(viewModel):
+                MeToMeView(viewModel: viewModel)
+                    .edgesIgnoringSafeArea(.bottom)
+                    .frame(height: 540)
+                
+            case .anotherCard(let model):
+                //TODO: как то нужно открыть не молным модальным откном, UIViewControllerTransitioningDelegate не работает
+                
+                AnotherCardView(viewModel: model)
+                    .edgesIgnoringSafeArea(.bottom)
+                    .frame(height: 540)
+                    .navigationBarTitle("", displayMode: .inline)
+            }
+        }
+        .sheet(item: $viewModel.sheet, content: { sheet in
+            
+            switch sheet.type {
+            case let .transferByPhone(viewModel):
+                TransferByPhoneView(viewModel: viewModel)
+                    .edgesIgnoringSafeArea(.all)
+            }
+        })
+        .tabBar(isHidden: $viewModel.isTabBarHidden)
     }
 }
 
@@ -150,9 +180,10 @@ extension PaymentsTransfersView {
         var title: String
         
         var body: some View {
-            
+            Spacer()
             Text("TypeButton: \(title)")
                 .font(.title)
+            Spacer()
         }
     }
     
@@ -161,22 +192,20 @@ extension PaymentsTransfersView {
 
 extension PaymentsTransfersView {
  
-//MARK: - ViewMock
+//MARK: - ViewBarButton
 
-    struct TopSearchViewMock: View {
+    struct NavBarButton: View {
+        
+        let viewModel: NavigationBarButtonViewModel
+        
         var body: some View {
             
-            HStack {
-                Image("ic24Search")
-                Text("Название категории, ИНН")
-                    .font(.textBodyMR14200())
-                    .foregroundColor(Color(hex: "#999999"))
-                Spacer()
-                Image("ic24BarcodeScanner2")
+            Button(action: viewModel.action) {
+                
+                viewModel.icon
+                    .renderingMode(.template)
+                    .foregroundColor(.iconBlack)
             }
-            .padding(18)
-            .background(Color.mainColorsGrayLightest)
-            
         }
     }
 

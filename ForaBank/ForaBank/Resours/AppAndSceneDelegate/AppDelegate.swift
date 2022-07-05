@@ -404,15 +404,6 @@ enum VersionError: Error {
     case invalidBundleInfo, invalidResponse
 }
 
-class LookupResult: Decodable {
-    var results: [AppInfo]
-}
-
-class AppInfo: Decodable {
-    var version: String
-    var trackViewUrl: String
-}
-
 class AppUpdater: NSObject {
 
     private override init() {}
@@ -457,7 +448,7 @@ class AppUpdater: NSObject {
             do {
                 if let error = error { throw error }
                 guard let data = data else { throw VersionError.invalidResponse }
-                let result = try JSONDecoder().decode(LookupResult.self, from: data)
+                let result = try JSONDecoder().decode(AppInfoLookupResult.self, from: data)
                 guard let info = result.results.first else { throw VersionError.invalidResponse }
 
                 completion(info, nil)

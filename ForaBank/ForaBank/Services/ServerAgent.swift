@@ -225,6 +225,13 @@ internal extension ServerAgent {
         
         var request = URLRequest(url: url)
         
+        // cookies headers
+        request.httpShouldHandleCookies = false
+        if let cookies = self.cookies {
+           
+            request.allHTTPHeaderFields = HTTPCookie.requestHeaderFields(with: cookies)
+        }
+        
         // headers
         request.httpMethod = command.method.rawValue
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")

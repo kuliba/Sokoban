@@ -23,11 +23,12 @@ class PaymentsDetailsSuccessViewController: UIViewController {
     //TODO: remove after refactoring
     private let model: Model = Model.shared
     private var bindings = Set<AnyCancellable>()
+    var closeAction: (() -> Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        button.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
+//        button.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
         confurmView.detailTapped = { () in
             self.openDetailVC()
         }
@@ -42,13 +43,13 @@ class PaymentsDetailsSuccessViewController: UIViewController {
         }
         
         confurmView.changeTapped = { [weak self] () in
-            let controller = ChangeReturnCountryController(type: .changePay)
+            let controller = ChangeReturnCountryController(type: .changePay, closeAction: {})
             controller.confurmVCModel = self?.confurmVCModel
             self?.navigationController?.pushViewController(controller, animated: true)
         }
         
         confurmView.returnTapped = { [weak self] () in
-            let controller = ChangeReturnCountryController(type: .returnPay)
+            let controller = ChangeReturnCountryController(type: .returnPay, closeAction: {})
             controller.confurmVCModel = self?.confurmVCModel
             self?.navigationController?.pushViewController(controller, animated: true)
         }
@@ -137,9 +138,11 @@ class PaymentsDetailsSuccessViewController: UIViewController {
     
     // MARK:- Dismiss and Pop ViewControllers
     func dismissViewControllers() {
-        self.view.window?.rootViewController?.dismiss(animated: true)
+        
+        guard let closeAction = closeAction else {
+            return
+        }
+        
+        closeAction()
     }
-
-  
-    
 }

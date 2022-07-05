@@ -147,10 +147,11 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
     
     func checkQREvent() {
         if GlobalModule.qrOperator != nil && GlobalModule.qrData != nil {
-            let controller = InternetTVMainController.storyboardInstance()!
-            let nc = UINavigationController(rootViewController: controller)
-            self.modalPresentationStyle = .fullScreen
-            present(controller, animated: false)
+            if let controller = InternetTVMainController.storyboardInstance()  {
+                let nc = UINavigationController(rootViewController: controller)
+                self.modalPresentationStyle = .fullScreen
+                present(nc, animated: false)
+            }
         }
     }
     
@@ -554,7 +555,14 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         
         if paymentTemplate != nil {
             
-            addBackButton()
+            let button = UIBarButtonItem(image: UIImage(systemName: "xmark"),
+                                         landscapeImagePhone: nil,
+                                         style: .done,
+                                         target: self,
+                                         action: #selector(onTouchBackButton))
+            button.tintColor = .black
+            navigationItem.leftBarButtonItem = button
+            
         } else {
             
             let button = UIBarButtonItem(image: UIImage(systemName: "xmark"),

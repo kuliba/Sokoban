@@ -64,11 +64,8 @@ struct MainView: View {
             .coordinateSpace(name: "scroll")
             .zIndex(0)
             
-            if viewModel.isRefreshing == true {
-                
-                RefreshView()
-                    .zIndex(1)
-            }
+            RefreshingIndicatorView(viewModel: viewModel.refreshingIndicator)
+                .zIndex(1)
                 
             NavigationLink("", isActive: $viewModel.isLinkActive) {
                 
@@ -89,6 +86,11 @@ struct MainView: View {
                         
                     case .templates(let templatesViewModel):
                         TemplatesListView(viewModel: templatesViewModel)
+                    case .qrScanner(let qrViewModel):
+                        QrScannerView(viewModel: qrViewModel)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
+                            .edgesIgnoringSafeArea(.all)
                     }
                 }
             }
@@ -157,17 +159,24 @@ extension MainView {
     
     struct UserAccountButton: View {
     
-        let viewModel: MainViewModel.UserAccountButtonViewModel?
+        @ObservedObject var viewModel: MainViewModel.UserAccountButtonViewModel
         
         var body: some View {
             
-            if let viewModel = viewModel {
+            Button(action: viewModel.action) {
                 
-                Button(action: viewModel.action) {
-                   
-                    HStack {
+                HStack {
+                    
+                    ZStack {
                         
-                        ZStack {
+                        if let avatar = viewModel.avatar {
+                            
+                            avatar
+                                .resizable()
+                                .frame(width: 40, height: 40)
+                                .clipShape(Circle())
+                            
+                        } else {
                             
                             ZStack {
                                 
@@ -179,31 +188,26 @@ extension MainView {
                                     .renderingMode(.template)
                                     .foregroundColor(.iconGray)
                             }
-                           
-                            ZStack{
-                              
-                                Circle()
-                                    .foregroundColor(.iconWhite)
-                                    .frame(width: 20, height: 20)
-                                
-                                viewModel.logo
-                                    .renderingMode(.original)
-                            }
-                            .offset(x: 14, y: -14)
-                            
                         }
                         
-                        Text(viewModel.name)
-                            .foregroundColor(.textSecondary)
-                            .font(.textH4R16240())
+                        ZStack{
+                            
+                            Circle()
+                                .foregroundColor(.iconWhite)
+                                .frame(width: 20, height: 20)
+                            
+                            viewModel.logo
+                                .renderingMode(.original)
+                        }
+                        .offset(x: 14, y: -14)
+                        
                     }
+                    
+                    Text(viewModel.name)
+                        .foregroundColor(.textSecondary)
+                        .font(.textH4R16240())
                 }
-                
-            } else {
-                
-                Color.clear
             }
-            
         }
     }
     
@@ -236,7 +240,7 @@ struct MainView_Previews: PreviewProvider {
 
 extension MainViewModel {
     
-    static let sample = MainViewModel(navButtonsRight: [.init(icon: .ic24Search, action: {}), .init(icon: .ic24Bell, action: {})], sections: [MainSectionProductsView.ViewModel.sample, MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample], isRefreshing: true)
+    static let sample = MainViewModel(refreshingIndicator: .init(isActive: true), navButtonsRight: [.init(icon: .ic24Search, action: {}), .init(icon: .ic24Bell, action: {})], sections: [MainSectionProductsView.ViewModel.sample, MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample])
     
-    static let sampleProducts = MainViewModel(navButtonsRight: [.init(icon: .ic24Search, action: {}), .init(icon: .ic24Bell, action: {})], sections: [MainSectionProductsView.ViewModel(.productsMock), MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample], isRefreshing: false)
+    static let sampleProducts = MainViewModel(refreshingIndicator: .init(isActive: false),navButtonsRight: [.init(icon: .ic24Search, action: {}), .init(icon: .ic24Bell, action: {})], sections: [MainSectionProductsView.ViewModel(.productsMock), MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample])
 }

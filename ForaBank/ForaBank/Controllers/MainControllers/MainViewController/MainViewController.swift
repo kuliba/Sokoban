@@ -350,7 +350,7 @@ class MainViewController: UIViewController {
         }
         
         searchBar.trailingRightAction = {
-            let pushModel = MessagesHistoryViewModel(model: self.model)
+            let pushModel = MessagesHistoryViewModel(model: self.model, dismissAction: {})
             
             let pushHistory = MessagesHistoryView(viewModel: pushModel)
             let nc = UIHostingController(rootView: pushHistory)
@@ -573,7 +573,8 @@ class MainViewController: UIViewController {
     
     func createRefreshView() -> UIView {
         
-        UIHostingController(rootView: RefreshView()).view
+//        UIHostingController(rootView: RefreshingIndicatorView()).view
+        UIView()
     }
     
     func reloadData(with searchText: String?) {

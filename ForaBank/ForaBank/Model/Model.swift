@@ -69,7 +69,7 @@ class Model {
     
     //MARK: Loacation
     let currentUserLoaction: CurrentValueSubject<LocationData?, Never>
-    
+
     //TODO: remove when all templates will be implemented
     let paymentTemplatesAllowed: [ProductStatementData.Kind] = [.sfp, .insideBank, .betweenTheir, .direct, .contactAddressless, .externalIndivudual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
     let paymentTemplatesDisplayed: [PaymentTemplateData.Kind] = [.sfp, .byPhone, .insideBank, .betweenTheir, .direct, .contactAdressless, .externalIndividual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
@@ -83,6 +83,8 @@ class Model {
     internal let biometricAgent: BiometricAgentProtocol
     internal let locationAgent: LocationAgentProtocol
     internal let contactsAgent: ContactsAgentProtocol
+    internal let cameraAgent: CameraAgentProtocol
+    internal let imageGalleryAgent: ImageGalleryAgentProtocol
     
     // private
     private var bindings: Set<AnyCancellable>
@@ -105,7 +107,7 @@ class Model {
         return credentials
     }
     
-    init(sessionAgent: SessionAgentProtocol, serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol, settingsAgent: SettingsAgentProtocol, biometricAgent: BiometricAgentProtocol, locationAgent: LocationAgentProtocol, contactsAgent: ContactsAgentProtocol) {
+    init(sessionAgent: SessionAgentProtocol, serverAgent: ServerAgentProtocol, localAgent: LocalAgentProtocol, keychainAgent: KeychainAgentProtocol, settingsAgent: SettingsAgentProtocol, biometricAgent: BiometricAgentProtocol, locationAgent: LocationAgentProtocol, contactsAgent: ContactsAgentProtocol, cameraAgent: CameraAgentProtocol, imageGalleryAgent: ImageGalleryAgentProtocol) {
         
         self.action = .init()
         self.auth = .init(.registerRequired)
@@ -147,6 +149,8 @@ class Model {
         self.biometricAgent = biometricAgent
         self.locationAgent = locationAgent
         self.contactsAgent = contactsAgent
+        self.cameraAgent = cameraAgent
+        self.imageGalleryAgent = imageGalleryAgent
         self.bindings = []
         
         queue.async {
@@ -190,7 +194,13 @@ class Model {
         // contacts agent
         let contactsAgent = ContactsAgent()
         
-        return Model(sessionAgent: sessionAgent, serverAgent: serverAgent, localAgent: localAgent, keychainAgent: keychainAgent, settingsAgent: settingsAgent, biometricAgent: biometricAgent, locationAgent: locationAgent, contactsAgent: contactsAgent)
+        // camera agent
+        let cameraAgent = CameraAgent()
+        
+        // imageGallery agent
+        let imageGalleryAgent = ImageGalleryAgent()
+        
+        return Model(sessionAgent: sessionAgent, serverAgent: serverAgent, localAgent: localAgent, keychainAgent: keychainAgent, settingsAgent: settingsAgent, biometricAgent: biometricAgent, locationAgent: locationAgent, contactsAgent: contactsAgent, cameraAgent: cameraAgent, imageGalleryAgent: imageGalleryAgent)
     }()
     
     private func bind() {
@@ -213,6 +223,7 @@ class Model {
                     action.send(ModelAction.LatestPayments.List.Requested())
                     action.send(ModelAction.PaymentTemplate.List.Requested())
                     action.send(ModelAction.Account.ProductList.Request())
+                    action.send(ModelAction.AppVersion.Request())
                     
                 case .inactive:
                     if let pincode = try? authStoredPincode() {
@@ -395,18 +406,27 @@ class Model {
 
                 case let payload as ModelAction.Payment.OperationDetail.Request:
                     handleOperationDetailRequest(payload)
-                   
-                //MARK: - Transfers
+                    
+                    //MARK: - Transfers
                     
                 case let payload as ModelAction.Transfers.CreateInterestDepositTransfer.Request:
                     handleCreateInterestDepositTransferRequest(payload)
                     
-               
+                    //MARK: - Media
+                    
+                case _ as ModelAction.Media.CameraPermission.Request:
+                    handleMediaCameraPermissionStatusRequest()
+                    
+                case _ as ModelAction.Media.GalleryPermission.Request:
+                    handleMediaGalleryPermissionStatusRequest()
                     
                     //MARK: - Client Info
                     
                 case _ as ModelAction.ClientInfo.Fetch.Request:
                     handleClientInfoFetchRequest()
+                    
+                case let payload as ModelAction.ClientPhoto.Save:
+                    handleClientPhotoRequest(payload)
                     
                 case _ as ModelAction.FastPaymentSettings.ContractFindList.Request:
                     handleContractFindListRequest()
@@ -582,6 +602,15 @@ class Model {
                 case let payload as ModelAction.Account.MakeOpenAccount.Request:
                     handleMakeOpenAccount(payload)
 
+                //MARK: - AppStore Version
+                case _ as ModelAction.AppVersion.Request:
+                    handleVersionAppStore()
+                    
+                //MARK: - Print Form
+                    
+                case let payload as ModelAction.PrintForm.Request:
+                    handlePrintFormRequest(payload)
+                    
                 default:
                     break
                 }

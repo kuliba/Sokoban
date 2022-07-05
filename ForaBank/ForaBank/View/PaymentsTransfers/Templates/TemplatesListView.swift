@@ -40,6 +40,7 @@ struct TemplatesListView: View {
                             OptionSelectorView(viewModel: categorySelectorViewModel)
                                 .frame(height: 32)
                                 .padding(.top, 16)
+                                .padding(.horizontal, 20)
                         }
 
                         ScrollView {
@@ -111,8 +112,8 @@ struct TemplatesListView: View {
                                 InternetTVDetailsView(viewModel: internetTVDetailsViewModel)
 
                             case .transport(let avtodorDetailsViewModel):
-                                AvtodorDetailsView(viewModel: avtodorDetailsViewModel)
-                                
+                                OperatorsView(viewModel: avtodorDetailsViewModel)
+
                             case .externalEntity(let transferByRequisitesView):
                                 TransferByRequisitesView(viewModel: transferByRequisitesView)
                                 
@@ -122,10 +123,7 @@ struct TemplatesListView: View {
                             case .openProduct(let productProfileViewModel):
                                 ProductProfileView(viewModel: productProfileViewModel)
                                 
-                            default:
-                                EmptyView()
                             }
-                            
                         }
                     }
                     
@@ -148,7 +146,13 @@ struct TemplatesListView: View {
         }
         .transition(.identity)
         .navigationBarTitle(Text(viewModel.title), displayMode: .inline)
+        .navigationBarBackButtonHidden(true)
         .navigationBarItems(
+            leading: Button(action: viewModel.navButtonBack.action, label: {
+                viewModel.navButtonBack.icon
+                    .renderingMode(.template)
+                    .foregroundColor(.iconBlack)
+            }),
             trailing:
                 HStack {
                     ForEach(viewModel.navButtonsRight) { element in
@@ -163,8 +167,8 @@ struct TemplatesListView: View {
                 }
     )
         .bottomSheet(item: $viewModel.sheet, content: { sheet in
+            
             switch sheet.type {
-                
             case .betweenTheir(let meToMeViewModel):
                 MeToMeView(viewModel: .init(closeAction: {}, paymentTemplate: meToMeViewModel.paymentTemplate))
                     .frame(height: 540, alignment: .bottom)

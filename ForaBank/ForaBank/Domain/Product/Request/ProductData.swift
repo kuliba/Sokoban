@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 class ProductData: Identifiable, Codable {
     
@@ -181,7 +182,7 @@ extension ProductData {
         
         if let cardProduct = self as? ProductCardData {
             
-            return formatter.string(from: cardProduct.validThru)
+            return cardProduct.expireDate
             
         } else if let loanProduct = self as? ProductLoanData {
             
@@ -195,6 +196,7 @@ extension ProductData {
     
     var displayName: String { customName ?? mainField }
     var balanceValue: Double { balance ?? 0 }
+    var backgroundColor: Color { background.first?.color ?? .mainColorsBlackMedium }
 }
 
 extension ProductData: Equatable {

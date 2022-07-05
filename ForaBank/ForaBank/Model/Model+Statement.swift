@@ -31,6 +31,35 @@ extension ModelAction {
     }
 }
 
+//MARK: - Helpers
+
+extension Model {
+    
+    func statement(statementId: ProductStatementData.ID) -> ProductStatementData? {
+        
+        statements.value.values.flatMap({ $0.statements }).first(where: { $0.id == statementId })
+    }
+    
+    func product(statementId: ProductStatementData.ID) -> ProductData? {
+        
+        let statements = statements.value
+        
+        for productId in statements.keys {
+            
+            guard let storage = statements[productId] else {
+                continue
+            }
+            
+            if storage.statements.contains(where: { $0.id == statementId }) {
+                
+                return product(productId: productId)
+            }
+        }
+        
+        return nil
+    }
+}
+
 //MARK: - Handlers
 
 extension Model {

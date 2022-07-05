@@ -14,12 +14,9 @@ extension PaymentsProductSelectorView.ViewModel {
         self.init(categories: nil, products: [])
 
         var products = [ProductView.ViewModel]()
-        for cardData in productsData {
+        for product in productsData {
             
-            let productId = cardData.id
-            
-            guard let productViewModel = ProductView.ViewModel(productData: cardData, action:  { [weak self] in self?.action.send(PaymentsProductSelectorView.ViewModelAction.SelectedProduct(productId: productId))})
-            else { continue }
+            let productViewModel = ProductView.ViewModel(with: product, size: .small, style: .main, model: model, action: { [weak self] in self?.action.send(PaymentsProductSelectorView.ViewModelAction.SelectedProduct(productId: product.id))})
             
             products.append(productViewModel)
         }

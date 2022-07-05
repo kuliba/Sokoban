@@ -12,205 +12,61 @@ import Combine
 class OperationDetailViewModel: ObservableObject, Identifiable {
     
     let action: PassthroughSubject<Action, Never> = .init()
-    let id = UUID()
+    
+    let id: ProductStatementData.ID
     @Published var header: HeaderViewModel
     @Published var operation: OperationViewModel
     @Published var actionButtons: [ActionButtonViewModel]?
     @Published var featureButtons: [FeatureButtonViewModel]
-    let productStatement: ProductStatementData
-    let product: ProductData
-    
-    lazy var dismissAction: () -> Void = {[weak self] in
-        self?.action.send(OperationDetailViewModelAction.Dismiss())
-    }
-    
     @Published var isLoading: Bool
-    @Published var operationDetailInfoViewModel: OperationDetailInfoViewModel?
-    
+    @Published var sheet: Sheet?
+    @Published var fullScreenSheet: FullScreenSheet?
+
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     private let animationDuration: Double = 0.5
     private var paymentTemplateId: Int?
     
+    init(id: ProductStatementData.ID, header: HeaderViewModel, operation: OperationViewModel, actionButtons: [ActionButtonViewModel]?, featureButtons: [FeatureButtonViewModel], isLoading: Bool, model: Model = .emptyMock) {
+        
+        self.id = id
+        self.header = header
+        self.operation = operation
+        self.actionButtons = actionButtons
+        self.featureButtons = featureButtons
+        self.isLoading = isLoading
+        self.model = model
+    }
+    
     init?(productStatement: ProductStatementData, product: ProductData, model: Model) {
         
-        self.productStatement = productStatement
-        self.model = model
-        self.product = product
-        let dateString = DateFormatter.operation.string(from: productStatement.date)
-        
-        guard let currency = model.dictionaryCurrency(for: productStatement.currencyCodeNumeric)?.code else {
+        guard productStatement.paymentDetailType != .notFinance else {
             return nil
         }
         
-        let image = productStatement.svgImage?.image
-        
-        switch productStatement.paymentDetailType {
-        case .insideBank:
-            
-            self.header = HeaderViewModel(logo: image, status: nil, title: "Перевод на карту", category: productStatement.groupName)
-            
-            let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchant)
-            
-            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currency, operationType: productStatement.operationType, payService: nil)
-            
-            self.operation = OperationViewModel(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateString)
-            
-        case .betweenTheir:
-            
-            self.header = HeaderViewModel(logo: image, status: nil, title: productStatement.groupName, category: "Переводы")
-            
-            let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchant
-            )
-            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currency, operationType: productStatement.operationType, payService: nil)
-            self.operation = OperationViewModel(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateString)
-            
-        case .otherBank:
-            
-            self.header = HeaderViewModel(logo: image, status: nil, title: "Перевод на карту", category: productStatement.groupName)
-            
-            let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchant)
-            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currency, operationType: productStatement.operationType, payService: nil)
-            self.operation = OperationViewModel(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateString)
-            
-        case .contactAddressless, .direct:
-            
-            self.header = HeaderViewModel(logo: image, status: nil, title: productStatement.groupName, category: nil)
-            
-            let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchant)
-            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currency, operationType: productStatement.operationType, payService: nil)
-            self.operation = OperationViewModel(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateString)
-            
-        case .externalIndivudual, .externalEntity:
-            
-            self.header = HeaderViewModel(logo: image, status: nil, title: productStatement.groupName, category: nil)
-            
-            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currency, operationType: productStatement.operationType, payService: nil)
-            
-            if let documentComment = productStatement.fastPayment?.documentComment, documentComment != "" {
-                
-                self.operation = OperationViewModel(bankLogo: image, payee: nil, amount: amountViewModel, fee: nil, description: documentComment, date: dateString)
-                
-            } else {
-                
-                self.operation = OperationViewModel(bankLogo: image, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: dateString)
-            }
-            
-        case .housingAndCommunalService, .insideOther, .internet, .mobile:
-            self.header = HeaderViewModel(logo: image, status: nil, title: productStatement.merchant, category: "\(productStatement.groupName)")
-            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currency, operationType: productStatement.operationType, payService: nil)
-            self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: dateString)
-            
-        case .notFinance:
-            return nil
-            
-        case .outsideCash:
-            self.header = HeaderViewModel(logo: image, status: nil, title: productStatement.groupName, category: "Прочие")
-            let payeeViewModel: PayeeViewModel = .singleRow(productStatement.merchant)
-            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currency, operationType: productStatement.operationType, payService: nil)
-            self.operation = OperationViewModel(bankLogo: nil, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateString)
-            
-        case .outsideOther:
-            
-            if let mcc = productStatement.mcc {
-                
-                self.header = HeaderViewModel(logo: image, status: nil, title: productStatement.merchant, category: "\(productStatement.groupName) (MCC \(mcc))")
-            } else {
-                
-                self.header = HeaderViewModel(logo: image, status: nil, title: productStatement.merchant, category: "\(productStatement.groupName)")
-            }
-            
-            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currency, operationType: productStatement.operationType, payService: nil)
-            self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: dateString)
-            
-        case .sfp:
-            let sfpLogoImage = Image("Operation Type SFP Icon")
-            self.header = HeaderViewModel(logo: sfpLogoImage, status: nil, title: productStatement.groupName, category: nil)
-            var payeeViewModel: PayeeViewModel
-            
-            if let foreignPhoneNumber = productStatement.fastPayment?.foreignPhoneNumber.replacingOccurrences(of: " ", with: "") {
-                
-                let phoneFormatter = PhoneNumberFormater()
-                let formattedPhone = phoneFormatter.format(foreignPhoneNumber)
-                payeeViewModel = .doubleRow(productStatement.merchant, formattedPhone)
-                
-            } else {
-                
-                payeeViewModel = .singleRow(productStatement.merchant)
-            }
-            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currency, operationType: productStatement.operationType, payService: nil)
-            if let documentComment = productStatement.fastPayment?.documentComment, documentComment != "" {
-                
-                self.operation = OperationViewModel(bankLogo: image, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: documentComment, date: dateString)
-                
-            } else {
-                
-                self.operation = OperationViewModel(bankLogo: image, payee: payeeViewModel, amount: amountViewModel, fee: nil, description: nil, date: dateString)
-            }
-        case .transport:
-            self.header = HeaderViewModel(logo: image, status: nil, title: productStatement.merchant, category: "\(productStatement.groupName)")
-            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currency, operationType: productStatement.operationType, payService: nil)
-            self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: productStatement.date)
-        case .c2b:
-            let isReturn = productStatement.groupName.contains("Возврат")
-            let allBanks = Dict.shared.bankFullInfoList
-            let foundBank = allBanks?.filter({ $0.bic == productStatement.fastPayment?.foreignBankBIC })
-            
-            var imageBank: Image? = nil
-            if foundBank != nil && foundBank?.count ?? 0 > 0 {
-                let bankRusName = foundBank?[0].rusName ?? ""
-                let bankIconSvg = foundBank?[0].svgImage ?? ""
-                imageBank = Image(uiImage: bankIconSvg.convertSVGStringToImage())
-            }
-            
-            var comment: String? = nil
-            if isReturn {
-                comment = "Возврат по операции"
-            } else {
-                if productStatement.fastPayment?.documentComment.isEmpty != true {
-                    comment = productStatement.fastPayment?.documentComment
-                }
-            }
-            
-            self.header = HeaderViewModel(
-                logo: Image("sbpindetails"),
-                status: isReturn ? StatusViewModel.purchase_return : StatusViewModel.success,
-                title: "\(productStatement.groupName)",
-                category: nil)
-            
-            let amountViewModel = AmountViewModel(
-                amount: productStatement.amount,
-                currency: currency,
-                operationType: productStatement.operationType,
-                payService: nil)
-            
-            self.operation = OperationViewModel(
-                bankLogo: image ,
-                payee: .singleRow(productStatement.merchant),
-                amount: amountViewModel,
-                fee: nil,
-                description: comment,
-                date: productStatement.date)
-        default:
-            //FIXME: taxes
-            self.header = HeaderViewModel(logo: image, status: nil, title: productStatement.merchant, category: "\(productStatement.groupName)")
-            let amountViewModel = AmountViewModel(amount: productStatement.amount, currency: currency, operationType: productStatement.operationType, payService: nil)
-            self.operation = OperationViewModel(bankLogo: nil, payee: nil, amount: amountViewModel, fee: nil, description: nil, date: productStatement.date)
-        }
-        
+        self.id = productStatement.id
+        self.header = .init(statement: productStatement, model: model)
+        self.operation = .init(productStatement: productStatement, model: model)
         self.actionButtons = nil
         self.featureButtons = []
-        self.isLoading = true
+        self.isLoading = false
+        self.model = model
         
         if let infoFeatureButtonViewModel = infoFeatureButtonViewModel(with: productStatement, product: product) {
             
             self.featureButtons = [infoFeatureButtonViewModel]
         }
-        guard let documentId = productStatement.documentId else {
-            return
-        }
-        model.action.send(ModelAction.Payment.OperationDetail.Request(documentId: "\(documentId)"))
+        
         bind()
+        
+        if let documentId = productStatement.documentId {
+            
+            model.action.send(ModelAction.Payment.OperationDetail.Request(documentId: "\(documentId)"))
+            
+            withAnimation {
+                self.isLoading = true
+            }
+        }
     }
     
     private func bind() {
@@ -235,77 +91,140 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                     featureButtons = featureButtonsUpdated
                     
                 case let result as ModelAction.Payment.OperationDetail.Response:
-                    switch result {
-                    case .success(details: let details):
-                        self.fetchOperationDetail(productStatement: productStatement, product: product, operationDetail: details)
-                    case .failture:
+                    withAnimation {
                         self.isLoading = false
                     }
+                    switch result {
+                    case .success(details: let details):
+                        guard let statement = model.statement(statementId: id),
+                                let product = model.product(statementId: id) else {
+                            return
+                        }
+                        
+                        self.update(with: statement, product: product, operationDetail: details)
+                        
+                    default:
+                        break
+               
+                    }
+                    
                 default: break
+                }
+                
+            }.store(in: &bindings)
+        
+        action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as OperationDetailViewModelAction.ShowInfo:
+                    sheet = .init(type: .info(payload.viewModel))
+                
+                case let payload as OperationDetailViewModelAction.ShowDocument:
+                    let printFormViewModel = PrintFormView.ViewModel(paymentOperationDetailId: payload.paymentOperationDetailID, printFormType: payload.printFormType, model: model)
+                    sheet = .init(type: .printForm(printFormViewModel))
+                    
+                case let payload as OperationDetailViewModelAction.ShowChangeReturn:
+                    fullScreenSheet = .init(type: .changeReturn(payload.viewModel))
+                    
+                case _ as OperationDetailViewModelAction.CloseSheet:
+                    sheet = nil
+                    
+                case _ as OperationDetailViewModelAction.CloseFullScreenSheet:
+                    fullScreenSheet = nil
+                    
+                case let payload as OperationDetailViewModelAction.CopyNumber:
+                    UIPasteboard.general.string = payload.number
+
+                default:
+                    break
                 }
                 
             }.store(in: &bindings)
     }
     
-    private func fetchOperationDetail(productStatement: ProductStatementData, product: ProductData, operationDetail: OperationDetailData?) {
-        
-        guard let documentId = productStatement.documentId else {
-            withAnimation(.easeInOut(duration: self.animationDuration)) {
-                self.isLoading = false
-            }
-            return
-        }
-        
-        withAnimation(.easeInOut(duration: self.animationDuration)) {
-            self.isLoading = false
-        }
+    private func update(with productStatement: ProductStatementData, product: ProductData, operationDetail: OperationDetailData?) {
         
         guard let operationDetail = operationDetail else {
             return
         }
-        DispatchQueue.main.async {
-            //FIXME: refactor more elegant way without self
-            withAnimation(.easeInOut(duration: self.animationDuration)) {
-                self.operation = self.operation.updated(with: productStatement, operation: operationDetail, viewModel: self)
-            }
-            var actionButtonsUpdated: [ActionButtonViewModel]? = nil
-            var featureButtonsUpdated = [FeatureButtonViewModel]()
+        
+        withAnimation {
             
-            switch productStatement.paymentDetailType {
-            case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp, .transport, .c2b:
-                if let templateButtonViewModel = self.templateButtonViewModel(with: productStatement, operationDetail: operationDetail) {
-                    featureButtonsUpdated.append(templateButtonViewModel)
-                }
-                if let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
-                    featureButtonsUpdated.append(documentButtonViewModel)
-                }
-                if let infoButtonViewModel = self.infoFeatureButtonViewModel(with: productStatement, product: product, operationDetail: operationDetail) {
-                    featureButtonsUpdated.append(infoButtonViewModel)
-                }
-            case .contactAddressless:
-                if let templateButtonViewModel = self.templateButtonViewModel(with: productStatement, operationDetail: operationDetail) {
-                    featureButtonsUpdated.append(templateButtonViewModel)
-                }
-                if let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
-                    featureButtonsUpdated.append(documentButtonViewModel)
-                }
-                if let infoButtonViewModel = self.infoFeatureButtonViewModel(with: productStatement, product: product, operationDetail: operationDetail) {
-                    featureButtonsUpdated.append(infoButtonViewModel)
-                }
-                if operationDetail.transferReference != nil {
-                    actionButtonsUpdated = self.actionButtons(with: operationDetail, product: product)
-                }
-            default:
-                break
-            }
-            
-            withAnimation(.easeInOut(duration: self.animationDuration)) {
-                self.actionButtons = actionButtonsUpdated
-                self.featureButtons = featureButtonsUpdated
-            }
+            operation = operation.updated(with: productStatement, operation: operationDetail, viewModel: self)
         }
         
+        var actionButtonsUpdated: [ActionButtonViewModel]? = nil
+        var featureButtonsUpdated = [FeatureButtonViewModel]()
+        
+        switch productStatement.paymentDetailType {
+        case .betweenTheir, .insideBank, .externalIndivudual, .externalEntity, .housingAndCommunalService, .otherBank, .internet, .mobile, .direct, .sfp, .transport, .c2b:
+            if let templateButtonViewModel = self.templateButtonViewModel(with: productStatement, operationDetail: operationDetail) {
+                featureButtonsUpdated.append(templateButtonViewModel)
+            }
+            if let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
+                featureButtonsUpdated.append(documentButtonViewModel)
+            }
+            if let infoButtonViewModel = self.infoFeatureButtonViewModel(with: productStatement, product: product, operationDetail: operationDetail) {
+                featureButtonsUpdated.append(infoButtonViewModel)
+            }
+        case .contactAddressless:
+            if let templateButtonViewModel = self.templateButtonViewModel(with: productStatement, operationDetail: operationDetail) {
+                featureButtonsUpdated.append(templateButtonViewModel)
+            }
+            if let documentButtonViewModel = self.documentButtonViewModel(with: operationDetail) {
+                featureButtonsUpdated.append(documentButtonViewModel)
+            }
+            if let infoButtonViewModel = self.infoFeatureButtonViewModel(with: productStatement, product: product, operationDetail: operationDetail) {
+                featureButtonsUpdated.append(infoButtonViewModel)
+            }
+            if operationDetail.transferReference != nil {
+                actionButtonsUpdated = self.actionButtons(with: operationDetail, product: product, dismissAction: {[weak self] in self?.action.send(OperationDetailViewModelAction.CloseFullScreenSheet())})
+            }
+            
+        default:
+            break
+        }
+        
+        withAnimation {
+            
+            self.actionButtons = actionButtonsUpdated
+            self.featureButtons = featureButtonsUpdated
+        }
     }
+}
+
+//MARK: - Action
+
+enum OperationDetailViewModelAction {
+
+    struct Dismiss: Action {}
+    
+    struct ShowDocument: Action {
+        
+        let paymentOperationDetailID: Int
+        let printFormType: PrintFormType
+    }
+    
+    struct ShowInfo: Action {
+        
+        let viewModel: OperationDetailInfoViewModel
+    }
+    
+    struct ShowChangeReturn: Action {
+     
+        let viewModel: ChangeReturnViewModel
+    }
+    
+    struct CopyNumber: Action {
+        
+        let number: String
+    }
+    
+    struct CloseSheet: Action {}
+    
+    struct CloseFullScreenSheet: Action {}
 }
 
 //MARK: - Private helpers
@@ -313,15 +232,12 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
 private extension OperationDetailViewModel {
     
     func infoFeatureButtonViewModel(with productStatement: ProductStatementData, product: ProductData, operationDetail: OperationDetailData? = nil) -> FeatureButtonViewModel? {
-        return FeatureButtonViewModel(kind: .info, icon: "Operation Details Info", name: "Детали", action: { [weak self] in
-            self?.operationDetailInfoViewModel = OperationDetailInfoViewModel(
-                with: productStatement,
-                operation: operationDetail,
-                product: product,
-                dismissAction: { [weak self] in
-                    self?.operationDetailInfoViewModel = nil}, model: Model.shared
-            )}
-        )
+        
+        guard let operationDetailInfoViewModel = OperationDetailInfoViewModel(with: productStatement, operation: operationDetail, product: product, dismissAction: { [weak self] in self?.action.send(OperationDetailViewModelAction.CloseSheet())}, model: model) else {
+            return nil
+        }
+        
+    return FeatureButtonViewModel(kind: .info, icon: "Operation Details Info", name: "Детали", action: { [weak self] in self?.action.send(OperationDetailViewModelAction.ShowInfo(viewModel: operationDetailInfoViewModel)) })
     }
     
     func documentButtonViewModel(with operationDetail: OperationDetailData) -> FeatureButtonViewModel? {
@@ -329,7 +245,7 @@ private extension OperationDetailViewModel {
         let paymentOperationDetailID = operationDetail.paymentOperationDetailId
         let printFormType = operationDetail.printFormType
         
-        return FeatureButtonViewModel(kind: .document, icon: "Operation Details Document", name: "Документ", action: { [weak self] in self?.action.send(OperationDetailViewModelAction.ShowDocument(paymentOperationDetailID: paymentOperationDetailID, printFormType: printFormType.rawValue))})
+        return FeatureButtonViewModel(kind: .document, icon: "Operation Details Document", name: "Документ", action: { [weak self] in self?.action.send(OperationDetailViewModelAction.ShowDocument(paymentOperationDetailID: paymentOperationDetailID, printFormType: printFormType))})
     }
     
     func templateButtonViewModel(with productStatement: ProductStatementData, operationDetail: OperationDetailData) -> FeatureButtonViewModel? {
@@ -378,38 +294,41 @@ private extension OperationDetailViewModel {
         }
     }
     
-    func actionButtons(with operationDetail: OperationDetailData, product: ProductData) -> [ActionButtonViewModel] {
+    func actionButtons(with operationDetail: OperationDetailData, product: ProductData, dismissAction: @escaping () -> Void) -> [ActionButtonViewModel] {
         
         var actionButtons = [ActionButtonViewModel]()
         
-        //        let changeButton = ActionButtonViewModel(name: "Изменить",
-        //                                                 action: { [weak self] in
-        //            self?.action.send(OperationDetailViewModelAction.Change(
-        //                amount: (operationDetail.amount ?? 0).currencyFormatter(symbol: operationDetail.currencyAmount ?? ""),
-        //                name: operationDetail.payeeFirstName ?? "",
-        //                surname: operationDetail.payeeSurName ?? "",
-        //                secondName: operationDetail.payeeMiddleName ?? "",
-        //                paymentOperationDetailId: operationDetail.paymentOperationDetailID ?? 0,
-        //                transferReference: operationDetail.transferReference ?? "",
-        //                product: product)
-        //            )
-        //        })
-        //        actionButtons.append(changeButton)
-        //
-        //        let returnButton = ActionButtonViewModel(name: "Вернуть",
-        //                                                 action: { [weak self] in
-        //            self?.action.send(OperationDetailViewModelAction.Return(
-        //                amount: (operationDetail.amount ?? 0).currencyFormatter(symbol: operationDetail.currencyAmount ?? ""),
-        //                fullName: operationDetail.payeeFullName ?? "",
-        //                name: operationDetail.payeeFirstName ?? "",
-        //                surname: operationDetail.payeeSurName ?? "",
-        //                secondName: operationDetail.payeeMiddleName ?? "",
-        //                paymentOperationDetailId: operationDetail.paymentOperationDetailID ?? 0,
-        //                transferReference: operationDetail.transferReference ?? "",
-        //                product: product)
-        //            )
-        //        })
-        //        actionButtons.append(returnButton)
+        let amountFormatted = model.amountFormatted(amount: operationDetail.amount, currencyCode: operationDetail.currencyAmount, style: .normal) ?? String(operationDetail.amount)
+        
+        let changeViewModel = ChangeReturnViewModel(amount: amountFormatted,
+                                                          name: operationDetail.payeeFirstName ?? "",
+                                                          surname: operationDetail.payeeSurName ?? "",
+                                                          secondName: operationDetail.payeeMiddleName ?? "",
+                                                          paymentOperationDetailId: operationDetail.paymentOperationDetailId,
+                                                          transferReference: operationDetail.transferReference ?? "",
+                                                          product: product,
+                                                          type: .changePay, closeAction: dismissAction)
+        
+        let changeButton = ActionButtonViewModel(name: "Изменить",
+                                                 action: { [weak self] in
+            self?.action.send(OperationDetailViewModelAction.ShowChangeReturn(viewModel: changeViewModel))
+        })
+        actionButtons.append(changeButton)
+        
+        
+        let returnViewModel = ChangeReturnViewModel(amount: amountFormatted,
+                                                          name: operationDetail.payeeFirstName ?? "",
+                                                          surname: operationDetail.payeeSurName ?? "",
+                                                          secondName: operationDetail.payeeMiddleName ?? "",
+                                                          paymentOperationDetailId: operationDetail.paymentOperationDetailId,
+                                                          transferReference: operationDetail.transferReference ?? "",
+                                                          product: product,
+                                                          type: .returnPay, closeAction: dismissAction)
+        let returnButton = ActionButtonViewModel(name: "Вернуть",
+                                                 action: { [weak self] in
+            self?.action.send(OperationDetailViewModelAction.ShowChangeReturn(viewModel: returnViewModel))
+        })
+        actionButtons.append(returnButton)
         
         return actionButtons
     }
@@ -418,174 +337,7 @@ private extension OperationDetailViewModel {
 //MARK: - Types
 
 extension OperationDetailViewModel {
-    
-    struct HeaderViewModel {
-        
-        let logo: Image?
-        let status: StatusViewModel?
-        let title: String
-        let category: String?
-    }
-    
-    struct OperationViewModel {
-        
-        let bankLogo: Image?
-        let payee: PayeeViewModel?
-        let amount: AmountViewModel
-        let fee: FeeViewModel?
-        let description: String?
-        let date: String
-        
-        internal init(bankLogo: Image?, payee: PayeeViewModel?, amount: AmountViewModel, fee: FeeViewModel?, description: String?, date: String) {
-            
-            self.bankLogo = bankLogo
-            self.payee = payee
-            self.amount = amount
-            self.fee = fee
-            self.description = description
-            self.date = date
-        }
-        
-        internal init(bankLogo: Image?, payee: PayeeViewModel?, amount: AmountViewModel, fee: FeeViewModel?, description: String?, date: Date) {
-            
-            self.bankLogo = bankLogo
-            self.payee = payee
-            self.amount = amount
-            self.fee = fee
-            self.description = description
-            self.date = DateFormatter.operation.string(from: date)
-        }
-        
-        func updated(with bankLogo: Image) -> OperationViewModel {
-            
-            OperationViewModel(bankLogo: bankLogo, payee: payee, amount: amount, fee: fee, description: description, date: date)
-        }
-        
-        func updated(with payee: PayeeViewModel) -> OperationViewModel {
-            
-            OperationViewModel(bankLogo: bankLogo, payee: payee, amount: amount, fee: fee, description: description, date: date)
-        }
-        
-        func updated(with fee: FeeViewModel) -> OperationViewModel {
-            
-            OperationViewModel(bankLogo: bankLogo, payee: payee, amount: amount, fee: fee, description: description, date: date)
-        }
-        
-        func updated(with date: String) -> OperationViewModel {
-            
-            OperationViewModel(bankLogo: bankLogo, payee: payee, amount: amount, fee: fee, description: description, date: date)
-        }
-        
-        func updated(with productStatement: ProductStatementData, operation: OperationDetailData, viewModel: OperationDetailViewModel) -> OperationViewModel {
-            
-            var operationViewModel = self
-            //FIXME: get currency from currencyList
-            let currencyCode = "RUB"
-            
-            switch productStatement.paymentDetailType {
-            case .contactAddressless:
-                if let transferReference = operation.transferReference {
-                    let titleNumber = "Номер перевода:"
-                    let payeeViewModel: PayeeViewModel = .number(productStatement.merchant, titleNumber, transferReference, {[weak viewModel] in viewModel?.action.send(OperationDetailViewModelAction.CopyNumber(number: transferReference)) })
-                    
-                    operationViewModel = operationViewModel.updated(with: payeeViewModel)
-                }
-                
-                if let feeViewModel = FeeViewModel(with: operation, currencyCode: currencyCode)  {
-                    operationViewModel = operationViewModel.updated(with: feeViewModel)
-                }
-                
-            case .direct:
-                if let memberId = operation.memberId,
-                   let bank = Dict.shared.banks?.first(where: { $0.memberID == memberId }),
-                   let bankLogoSVG = bank.svgImage {
-                    
-                    let bankLogoImage = Image(uiImage: bankLogoSVG.convertSVGStringToImage())
-                    operationViewModel = operationViewModel.updated(with: bankLogoImage)
-                }
-                
-                if let payeePhone = operation.payeePhone {
-                    let phoneFormatter = PhoneNumberFormater()
-                    let formattedPhone = phoneFormatter.format(payeePhone)
-                    operationViewModel = operationViewModel.updated(with: .doubleRow(productStatement.merchant, formattedPhone))
-                }
-                
-                if let feeViewModel = FeeViewModel(with: operation, currencyCode: currencyCode)  {
-                    
-                    operationViewModel = operationViewModel.updated(with: feeViewModel)
-                }
-                
-            case .externalIndivudual, .externalEntity:
-                
-                if let bankBic = operation.payeeBankBIC,
-                   let bank = Dict.shared.bankFullInfoList?.first(where: {$0.bic == bankBic}),
-                   let bankLogoSVG = bank.svgImage {
-                    
-                    
-                    let bankLogoImage = Image(uiImage: bankLogoSVG.convertSVGStringToImage())
-                    operationViewModel = operationViewModel.updated(with: bankLogoImage)
-                }
-                
-                if let payeeFullName = operation.payeeFullName, let payeeAccountNumber = operation.payeeAccountNumber {
-                    
-                    operationViewModel = operationViewModel.updated(with: .doubleRow(payeeFullName, payeeAccountNumber))
-                }
-                
-                if var feeViewModel = FeeViewModel(with: operation, currencyCode: currencyCode)  {
-                    feeViewModel.title = "Комиссия:"
-                    operationViewModel = operationViewModel.updated(with: feeViewModel)
-                }
-                
-            case .internet:
-                if let feeViewModel = FeeViewModel(with: operation, currencyCode: currencyCode)  {
-                    
-                    operationViewModel = operationViewModel.updated(with: feeViewModel)
-                }
-                
-            case .mobile:
-                if let payeePhone = operation.payeePhone {
-                    let phoneFormatter = PhoneNumberFormater()
-                    let formattedPhone = phoneFormatter.format(payeePhone)
-                    
-                    operationViewModel = operationViewModel.updated(with: .singleRow(formattedPhone))
-                }
-                
-                if let feeViewModel = FeeViewModel(with: operation, currencyCode: currencyCode)  {
-                    
-                    operationViewModel = operationViewModel.updated(with: feeViewModel)
-                }
-                
-            case .otherBank, .housingAndCommunalService:
-                if let payeeCardNumber = operation.payeeCardNumber {
-                    
-                    operationViewModel = operationViewModel.updated(with: .singleRow(payeeCardNumber))
-                }
-                
-                if let feeViewModel = FeeViewModel(with: operation, currencyCode: currencyCode)  {
-                    
-                    operationViewModel = operationViewModel.updated(with: feeViewModel)
-                }
-                
-            case .sfp:
-                if var feeViewModel = FeeViewModel(with: operation, currencyCode: currencyCode)  {
-                    feeViewModel.title = "Комиссия:"
-                    operationViewModel = operationViewModel.updated(with: feeViewModel)
-                }
-            case .transport:
-                if let feeViewModel = FeeViewModel(with: operation, currencyCode: currencyCode)  {
-                    operationViewModel = operationViewModel.updated(with: feeViewModel)
-                }
-            case .outsideOther, .insideOther, .betweenTheir, .insideBank, .notFinance, .outsideCash:
-                return operationViewModel
-            default:
-                //FIXME: taxes & c2b
-                return operationViewModel
-            }
-            
-            return operationViewModel
-        }
-    }
-    
+
     enum PayeeViewModel {
         
         case singleRow(String)
@@ -594,20 +346,27 @@ extension OperationDetailViewModel {
     }
     
     struct AmountViewModel {
-        
+ 
         let amount: String
         let payService: PayServiceViewModel?
         let colorHex: String
         
-        init(amount: Double, currency: String, operationType: OperationType, payService: PayServiceViewModel?) {
+        internal init(amount: String, payService: OperationDetailViewModel.PayServiceViewModel?, colorHex: String) {
+           
+            self.amount = amount
+            self.payService = payService
+            self.colorHex = colorHex
+        }
+        
+        init(amount: Double, currencyCodeNumeric: Int, operationType: OperationType, payService: PayServiceViewModel?, model: Model) {
             
             switch operationType {
             case .credit:
-                self.amount = "+" + amount.currencyFormatter(symbol: currency)
+                self.amount = "+" + (model.amountFormatted(amount: amount, currencyCodeNumeric: currencyCodeNumeric, style: .normal) ?? String(amount))
                 self.colorHex = "1C1C1C"
                 
             case .debit:
-                self.amount = "-" + amount.currencyFormatter(symbol: currency)
+                self.amount = "-" + (model.amountFormatted(amount: amount, currencyCodeNumeric: currencyCodeNumeric, style: .normal) ?? String(amount))
                 self.colorHex = "1C1C1C"
                 
             case .open:
@@ -709,46 +468,36 @@ extension OperationDetailViewModel {
             case info
         }
     }
-}
-
-//MARK: - Samples
-
-extension OperationDetailViewModel {
     
-    static let sampleComplete: OperationDetailViewModel = {
+    struct Sheet: Identifiable, Equatable {
+
+        let id = UUID()
+        let type: Kind
         
-        let productData = ProductData(id: 10002585800, productType: .card, number: "4444555566661122", numberMasked: "4444-XXXX-XXXX-1122", accountNumber: "40817810000000000001", balance: 1000123, balanceRub: nil, currency: "RUB", mainField: "Gold", additionalField: "Зарплатная", customName: "Моя карта", productName: "VISA REWARDS R-5", openDate: nil, ownerId: 10001639855, branchId: 2000, allowCredit: true, allowDebit: true, extraLargeDesign: .init(description: "string"), largeDesign: .init(description: "string"), mediumDesign: .init(description: "string"), smallDesign: .init(description: "string"), fontDesignColor: .init(description: "FFFFFF"), background: [.init(description: "FFBB36")])
+        enum Kind {
+            
+            case info(OperationDetailInfoViewModel)
+            case printForm(PrintFormView.ViewModel)
+        }
         
-        var viewModel = OperationDetailViewModel(productStatement: .init(mcc: nil, accountId: nil, accountNumber: "", amount: 20.0, cardTranNumber: nil, city: nil, comment: "Comment", country: nil, currencyCodeNumeric: 810, date: Date(), deviceCode: nil, documentAmount: 20.0, documentId: nil, fastPayment: nil, groupName: "Group Name", isCancellation: false, md5hash: "", merchantName: "Merchant Name", merchantNameRus: "Merchant Name Rus", opCode: nil, operationId: nil, operationType: OperationType.credit, paymentDetailType: .c2b, svgImage: .init(description: "Operation Group Sample"), terminalCode: nil, tranDate: Date(), type: .inside), product: productData, model: .emptyMock)!
-        
-        viewModel.header = HeaderViewModel(logo: viewModel.header.logo, status: .success, title: viewModel.header.title,  category: viewModel.header.category)
-        
-        viewModel.operation = OperationViewModel(bankLogo: Image(uiImage: UIImage(named: "Bank Logo Sample")!), payee: .doubleRow("payeeFullName", "payeeAccountNumber"), amount: .init(amount: 1000.25, currency: "RUB", operationType: .debit, payService: .applePay), fee: .init(title: "Комиссия:", amount: "50,00"), description: "Описание операции", date: viewModel.operation.date)
-        
-        viewModel.actionButtons = [ActionButtonViewModel(name: "Изменить", action: {}), ActionButtonViewModel(name: "Вернуть", action: {})]
-        
-        viewModel.featureButtons = [FeatureButtonViewModel(kind: .template(false), icon: "Operation Details Template", name: "+ Шаблон", action: {}), FeatureButtonViewModel(kind: .document, icon: "Operation Details Document", name: "Документ", action: {}), FeatureButtonViewModel(kind: .info, icon: "Operation Details Info", name: "Детали", action: {})]
-        
-        return viewModel
-        
-    }()
+        static func == (lhs: OperationDetailViewModel.Sheet, rhs: OperationDetailViewModel.Sheet) -> Bool {
+            lhs.id == rhs.id
+        }
+    }
     
-    static let sampleMin: OperationDetailViewModel = {
+    struct FullScreenSheet: Identifiable, Equatable {
+
+        let id = UUID()
+        let type: Kind
         
-        let productData = ProductData(id: 10002585800, productType: .card, number: "4444555566661122", numberMasked: "4444-XXXX-XXXX-1122", accountNumber: "40817810000000000001", balance: 1000123, balanceRub: nil, currency: "RUB", mainField: "Gold", additionalField: "Зарплатная", customName: "Моя карта", productName: "VISA REWARDS R-5", openDate: nil, ownerId: 10001639855, branchId: 2000, allowCredit: true, allowDebit: true, extraLargeDesign: .init(description: "string"), largeDesign: .init(description: "string"), mediumDesign: .init(description: "string"), smallDesign: .init(description: "string"), fontDesignColor: .init(description: "FFFFFF"), background: [.init(description: "FFBB36")])
+        enum Kind {
+            
+            case changeReturn(ChangeReturnViewModel)
+        }
         
-        var viewModel = OperationDetailViewModel(productStatement: .init(mcc: nil, accountId: nil, accountNumber: "", amount: 20.0, cardTranNumber: nil, city: nil, comment: "Comment", country: nil, currencyCodeNumeric: 810, date: Date(), deviceCode: nil, documentAmount: 20.0, documentId: nil, fastPayment: nil, groupName: "Group Name", isCancellation: false, md5hash: "", merchantName: "Merchant Name", merchantNameRus: "Merchant Name Rus", opCode: nil, operationId: nil, operationType: OperationType.credit, paymentDetailType: .c2b, svgImage: .init(description: "Operation Group Sample"), terminalCode: nil, tranDate: Date(), type: .inside), product: productData, model: .emptyMock)!
-        
-        viewModel.header = HeaderViewModel(logo: viewModel.header.logo, status: nil, title: viewModel.header.title,  category: nil)
-        
-        viewModel.operation = OperationViewModel(bankLogo: nil, payee: .singleRow("Иванов"), amount: .init(amount: 1000.25, currency: "RUB", operationType: .debit, payService: nil), fee: nil, description: nil, date: viewModel.operation.date)
-        
-        viewModel.actionButtons = nil
-        
-        viewModel.featureButtons = [FeatureButtonViewModel(kind: .template(true), icon: "Operation Details Template Selected", name: "Шаблон", action: {}), FeatureButtonViewModel(kind: .document, icon: "Operation Details Document", name: "Документ", action: {}), FeatureButtonViewModel(kind: .info, icon: "Operation Details Info", name: "Детали", action: {})]
-        
-        return viewModel
-        
-    }()
+        static func == (lhs: OperationDetailViewModel.FullScreenSheet, rhs: OperationDetailViewModel.FullScreenSheet) -> Bool {
+            lhs.id == rhs.id
+        }
+    }
 }
 

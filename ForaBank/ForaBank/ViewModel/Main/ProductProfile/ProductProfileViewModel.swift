@@ -48,11 +48,7 @@ class ProductProfileViewModel: ObservableObject {
         }
         
         // status bar
-        let statusBarTitle = Self.statusBarTitle(with: product)
-        let statusBarSubtitle = Self.statusBarSubtitle(with: product)
-        let statusBarTextColor = Self.statusBarTextColor(with: product)
-        self.statusBar = ProductProfileViewModel.StatusBarViewModel(backButton: .init(icon: .ic24ChevronLeft, action: dismissAction), title: statusBarTitle, subtitle: statusBarSubtitle, actionButton: .init(icon: .ic24Edit2, action: {}), textColor: statusBarTextColor)
-        
+        self.statusBar = .init(product: product, dismissAction: dismissAction)
         self.product = productViewModel
         self.buttons = .init(with: product)
         self.accentColor = Self.accentColor(with: product)
@@ -149,9 +145,7 @@ class ProductProfileViewModel: ObservableObject {
                 // status bar update
                 withAnimation {
                     
-                    statusBar.title = Self.statusBarTitle(with: product)
-                    statusBar.subtitle = Self.statusBarSubtitle(with: product)
-                    statusBar.textColor = Self.statusBarTextColor(with: product)
+                    statusBar.update(with: product)
                     accentColor = Self.accentColor(with: product)
                 }
                 
@@ -221,41 +215,9 @@ class ProductProfileViewModel: ObservableObject {
         return ProductProfileHistoryView.ViewModel(model, productId: productId)
     }
     
-    static func statusBarTitle(with productData: ProductData) -> String {
-        
-        return productData.displayName
-    }
-    
-    static func statusBarSubtitle(with productData: ProductData) -> String {
-        
-        guard let number = productData.displayNumber else {
-            return ""
-        }
-        
-        switch productData {
-        case let productLoan as ProductLoanData:
-            if let rate = NumberFormatter.persent.string(from: NSNumber(value: productLoan.currentInterestRate / 100)) {
-                
-                return "· \(number) · \(rate)"
-                
-            } else {
-                
-                return "· \(number)"
-            }
-            
-        default:
-            return "· \(number)"
-        }
-    }
-    
-    static func statusBarTextColor(with product: ProductData) -> Color {
-        
-        return product.fontDesignColor.color
-    }
-    
     static func accentColor(with product: ProductData) -> Color {
         
-        return product.background.first?.color ?? .mainColorsBlackMedium
+        return product.backgroundColor
     }
     
     func makeDetailViewModel(with product: ProductData) -> ProductProfileDetailView.ViewModel? {
@@ -298,10 +260,57 @@ extension ProductProfileViewModel {
             self.textColor = textColor
         }
         
+        init(product: ProductData, dismissAction: @escaping () -> Void) {
+            
+            self.backButton = .init(icon: .ic24ChevronLeft, action: dismissAction)
+            self.title = Self.title(with: product)
+            self.subtitle = Self.subtitle(with: product)
+            self.textColor = Self.textColor(with: product)
+        }
+        
         struct ButtonViewModel {
             
             let icon: Image
             let action: () -> Void
+        }
+        
+        func update(with product: ProductData) {
+            
+            self.title = Self.title(with: product)
+            self.subtitle = Self.subtitle(with: product)
+            self.textColor = Self.textColor(with: product)
+        }
+        
+        static func title(with productData: ProductData) -> String {
+            
+            return productData.displayName
+        }
+        
+        static func subtitle(with productData: ProductData) -> String {
+            
+            guard let number = productData.displayNumber else {
+                return ""
+            }
+            
+            switch productData {
+            case let productLoan as ProductLoanData:
+                if let rate = NumberFormatter.persent.string(from: NSNumber(value: productLoan.currentInterestRate / 100)) {
+                    
+                    return "· \(number) · \(rate)"
+                    
+                } else {
+                    
+                    return "· \(number)"
+                }
+                
+            default:
+                return "· \(number)"
+            }
+        }
+        
+        static func textColor(with product: ProductData) -> Color {
+            
+            return product.fontDesignColor.color
         }
     }
     

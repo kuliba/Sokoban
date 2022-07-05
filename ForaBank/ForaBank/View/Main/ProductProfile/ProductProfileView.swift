@@ -92,7 +92,7 @@ struct ProductProfileView: View {
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })
-        .sheet(item: $viewModel.sheet, content: { sheet in
+        .bottomSheet(item: $viewModel.sheet, content: { sheet in
             
             switch sheet.type {
             case let .operationDetail(operationDetailViewModel):

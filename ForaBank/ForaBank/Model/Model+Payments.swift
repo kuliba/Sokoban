@@ -99,6 +99,7 @@ extension ModelAction {
             }
             
             enum Response: Action {
+                //FIXME: Result<OperationDetailData, Error>
                 case success(details: OperationDetailData)
                 case failture
             }
@@ -270,6 +271,7 @@ extension Model {
                     
                     guard let details = response.data else {
                         self.handleServerCommandEmptyData(command: command)
+                        self.action.send(ModelAction.Payment.OperationDetail.Response.failture)
                         return
                     }
                     
@@ -277,10 +279,12 @@ extension Model {
                     
                 default:
                     self.handleServerCommandStatus(command: command, serverStatusCode: response.statusCode, errorMessage: response.errorMessage)
+                    self.action.send(ModelAction.Payment.OperationDetail.Response.failture)
                 }
                 
             case .failure(let error):
                 self.handleServerCommandError(error: error, command: command)
+                self.action.send(ModelAction.Payment.OperationDetail.Response.failture)
             }
         }
     }

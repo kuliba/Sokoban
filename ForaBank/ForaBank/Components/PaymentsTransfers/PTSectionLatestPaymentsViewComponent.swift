@@ -132,7 +132,7 @@ extension PTSectionLatestPaymentsView {
                       topIcon: nil,
                       description: "Шаблоны и автоплатежи",
                       action: { [self] in
-                          self.action.send(PTSectionLatestPaymentsViewAction.ButtonTapped.Templates(viewModel: .init(model)))
+                          self.action.send(PTSectionLatestPaymentsViewAction.ButtonTapped.Templates())
                       })
             ]
         }()
@@ -145,10 +145,7 @@ enum PTSectionLatestPaymentsViewAction {
 
     enum ButtonTapped {
 
-        struct Templates: Action {
-            
-            let viewModel: TemplatesListViewModel
-        }
+        struct Templates: Action {}
 
         struct LatestPayment: Action {
 

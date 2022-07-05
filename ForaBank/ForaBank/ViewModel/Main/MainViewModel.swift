@@ -12,11 +12,11 @@ import SwiftUI
 class MainViewModel: ObservableObject {
     
     let action: PassthroughSubject<Action, Never> = .init()
-
-    @Published var userAccountButton: UserAccountButtonViewModel?
+    
+    lazy var userAccountButton: UserAccountButtonViewModel = .init(logo: .ic12LogoForaColor, name: "", avatar: nil, action: { [weak self] in self?.action.send(MainViewModelAction.ButtonTapped.UserAccount())})
+    let refreshingIndicator: RefreshingIndicatorView.ViewModel
     @Published var navButtonsRight: [NavigationBarButtonViewModel]
     @Published var sections: [MainSectionViewModel]
-    @Published var isRefreshing: Bool
     @Published var productProfile: ProductProfileViewModel?
     @Published var sheet: Sheet?
     @Published var link: Link? { didSet { isLinkActive = link != nil; isTabBarHidden = link != nil } }
@@ -27,16 +27,17 @@ class MainViewModel: ObservableObject {
     private var model: Model
     private var bindings = Set<AnyCancellable>()
     
-    init(navButtonsRight: [NavigationBarButtonViewModel], sections: [MainSectionViewModel], isRefreshing: Bool, model: Model = .emptyMock) {
+    init(refreshingIndicator: RefreshingIndicatorView.ViewModel, navButtonsRight: [NavigationBarButtonViewModel], sections: [MainSectionViewModel], model: Model = .emptyMock) {
         
+        self.refreshingIndicator = refreshingIndicator
         self.navButtonsRight = navButtonsRight
         self.sections = sections
-        self.isRefreshing = isRefreshing
         self.model = model
     }
     
     init(_ model: Model) {
         
+        self.refreshingIndicator = .init(isActive: false)
         self.navButtonsRight = []
         self.sections = [MainSectionProductsView.ViewModel(model),
                          MainSectionFastOperationView.ViewModel.init(),
@@ -45,7 +46,6 @@ class MainViewModel: ObservableObject {
                          MainSectionOpenProductView.ViewModel(model),
                          MainSectionAtmView.ViewModel.initial]
         
-        self.isRefreshing = false
         self.model = model
         
         navButtonsRight = createNavButtonsRight()
@@ -65,10 +65,10 @@ class MainViewModel: ObservableObject {
                     guard let clientInfo = model.clientInfo.value else {
                         return
                     }
-                    link = .userAccount(.init(model: model, clientInfo: clientInfo))
+                    link = .userAccount(.init(model: model, clientInfo: clientInfo, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.CloseLink())}))
                     
                 case _ as MainViewModelAction.ButtonTapped.Messages:
-                    let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model)
+                    let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.CloseLink())})
                     link = .messages(messagesHistoryViewModel)
                     
                 case _ as MainViewModelAction.PullToRefresh:
@@ -89,7 +89,7 @@ class MainViewModel: ObservableObject {
                 
                 withAnimation {
                     
-                    self.isRefreshing = productsUpdating.isEmpty ? false : true
+                    refreshingIndicator.isActive = productsUpdating.isEmpty ? false : true
                 }
                 
             }.store(in: &bindings)
@@ -99,7 +99,7 @@ class MainViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] clientData in
                 
-                userAccountButton = userAccountButton(clientInfo: clientData.0, clientPhoto: clientData.1, clientName: clientData.2)
+                userAccountButton.update(clientInfo: clientData.0, clientPhoto: clientData.1, clientName: clientData.2)
                 
             }.store(in: &bindings)
     }
@@ -122,7 +122,8 @@ class MainViewModel: ObservableObject {
                                 bottomSheet = .init(type: .openAccount(model))
                                 
                             case .deposit:
-                                link = .openDeposit(.init(model, products: self.model.deposits.value, style: .deposit))
+                                link = .openDeposit(.init(model, products: self.model.deposits.value, style: .deposit, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.CloseLink())
+                                }))
                                 
                             default:
                                 break
@@ -141,16 +142,19 @@ class MainViewModel: ObservableObject {
                         
                         switch action {
                         case let payload as MainSectionViewModelAction.FastPayment.ButtonTapped:
-                            
                             switch payload.operationType {
                             case .templates:
-                                link = .templates(.init(model))
+                                link = .templates(.init(model, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.CloseLink())
+                                }))
+                                
                             case .byPhone:
                                 sheet = .init(type: .byPhone(.init(closeAction: { [weak self] in
-                                    self?.sheet = nil
+                                    self?.action.send(MainViewModelAction.CloseLink())
                                 })))
-                            default:
-                                break
+                            case .byQr:
+                                link = .qrScanner(.init(closeAction: { [weak self] in
+                                    self?.action.send(MainViewModelAction.CloseLink())
+                                }))
                             }
                             
                         default:
@@ -234,27 +238,33 @@ class MainViewModel: ObservableObject {
          .init(icon: .ic24Bell, action: {[weak self] in self?.action.send(MainViewModelAction.ButtonTapped.Messages())})]
     }
     
-    private func userAccountButton(clientInfo: ClientInfoData?, clientPhoto: ClientPhotoData?, clientName: ClientNameData?) -> UserAccountButtonViewModel? {
-        
-        guard let clientInfo = clientInfo else {
-            return nil
-        }
-        
-        let name = clientName ?? clientInfo.firstName
-        let avatar = clientPhoto?.image
-        
-        return  UserAccountButtonViewModel(logo: .ic12LogoForaColor, avatar: avatar, name: name, action: { [weak self] in self?.action.send(MainViewModelAction.ButtonTapped.UserAccount())})
-    }
 }
 
 extension MainViewModel {
     
-    struct UserAccountButtonViewModel {
+    class UserAccountButtonViewModel: ObservableObject {
         
         let logo: Image
-        let avatar: Image?
-        let name: String
+        @Published var avatar: Image?
+        @Published var name: String
+        
         let action: () -> Void
+        
+        internal init(logo: Image, name: String, avatar: Image?, action: @escaping () -> Void) {
+            self.logo = logo
+            self.name = name
+            self.avatar = avatar
+            self.action = action
+        }
+        
+        func update(clientInfo: ClientInfoData?, clientPhoto: ClientPhotoData?, clientName: ClientNameData?) {
+            
+            guard let clientInfo = clientInfo else { return }
+            
+            self.name = clientName ?? clientInfo.firstName
+            self.avatar = clientPhoto?.image
+            
+        }
     }
     
     struct Sheet: Identifiable {
@@ -279,6 +289,7 @@ extension MainViewModel {
         case messages(MessagesHistoryViewModel)
         case openDeposit(OpenDepositViewModel)
         case templates(TemplatesListViewModel)
+        case qrScanner(QrViewModel)
 
     }
 

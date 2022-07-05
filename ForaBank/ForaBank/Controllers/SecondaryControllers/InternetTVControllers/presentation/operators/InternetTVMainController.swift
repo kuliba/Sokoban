@@ -8,7 +8,7 @@ protocol IMsg {
 class InternetTVMainController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, IMsg {
 
     let model = Model.shared
-    let operatorsViewModel: OperatorsViewModel? = nil
+    var operatorsViewModel: OperatorsViewModel?
     public static var iMsg: IMsg? = nil
     public static let msgHideLatestOperation = 1
     public static let msgShowLatestOperation = 3
@@ -168,10 +168,13 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
     @objc func backAction() {
         //self.delegate?.goToBack()
         if self.operatorsViewModel != nil {
+            
             self.operatorsViewModel?.closeAction()
+            
         } else {
-        dismiss(animated: true, completion: nil)
-        navigationController?.dismiss(animated: true, completion: nil)
+            
+            navigationController?.popViewController(animated: true)
+            dismiss(animated: true)
         }
     }
 

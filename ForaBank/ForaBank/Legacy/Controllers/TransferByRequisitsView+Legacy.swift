@@ -12,50 +12,60 @@ struct TransferByRequisitesView: UIViewControllerRepresentable {
     
     let viewModel: TransferByRequisitesViewModel
     
-    func makeUIViewController(context: Context) -> UINavigationController {
+    func makeUIViewController(context: Context) -> TransferByRequisitesViewController {
         
-        let vc = TransferByRequisitesViewController()
-        vc.modalPresentationStyle = .fullScreen
-        vc.viewModel.closeAction = viewModel.closeAction
+        let controller = TransferByRequisitesViewController()
+        controller.viewModel.closeAction = viewModel.closeAction
 
         if let paymentTemplate = viewModel.paymentTemplate, let parameter = paymentTemplate.parameterList.first as? TransferGeneralData {
                 
                 if let bik = parameter.payeeExternal?.bankBIC {
-                    vc.bikBankField.textField.text = bik
+                    controller.bikBankField.textField.text = bik
                 }
                 
                 if let account = parameter.payeeExternal?.accountNumber {
                     let mask = StringMask(mask: "00000 000 0 0000 0000000")
-                    vc.accountNumber.textField.text = mask.mask(string: account)
+                    controller.accountNumber.textField.text = mask.mask(string: account)
                 }
                 
                 if let fullName = parameter.payeeExternal?.name {
                     let full = fullName.components(separatedBy: " ")
-                    vc.fio.surname = full[0]
-                    vc.fioField.textField.text = full[0]
+                    controller.fio.surname = full[0]
+                    controller.fioField.textField.text = full[0]
                     
-                    vc.fio.name = full[1]
-                    vc.nameField.textField.text = full[1]
+                    controller.fio.name = full[1]
+                    controller.nameField.textField.text = full[1]
                     
-                    vc.fio.patronymic = full[2]
-                    vc.surField.textField.text = full[2]
+                    controller.fio.patronymic = full[2]
+                    controller.surField.textField.text = full[2]
                 }
                 
                 if let inn = parameter.payeeExternal?.inn {
-                    vc.innField.textField.text = inn
+                    controller.innField.textField.text = inn
                 }
                 
                 if let kpp = parameter.payeeExternal?.kpp {
-                    vc.kppField.textField.text = kpp
+                    controller.kppField.textField.text = kpp
                 }
         }
         
-        let navigation = UINavigationController(rootViewController: vc)
-        return navigation
-  
+        context.coordinator.parentObserver = controller.observe(\.parent, changeHandler: { vc, _ in
+            vc.parent?.navigationItem.titleView = vc.navigationItem.titleView
+            vc.parent?.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem
+            vc.parent?.navigationItem.rightBarButtonItems = vc.navigationItem.rightBarButtonItems
+        })
+        
+        return controller
     }
     
-    func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {}
+    func updateUIViewController(_ uiViewController: TransferByRequisitesViewController, context: Context) {}
+    
+    class Coordinator {
+        
+        var parentObserver: NSKeyValueObservation?
+    }
+    
+    func makeCoordinator() -> Self.Coordinator { Coordinator() }
 }
 
 struct TransferByRequisitesViewModel {
