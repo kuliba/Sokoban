@@ -35,6 +35,9 @@ struct MainView: View {
                         case let currencyViewModel as MainSectionCurrencyView.ViewModel:
                             MainSectionCurrencyView(viewModel: currencyViewModel)
                             
+                        case let currencyMetallViewModel as MainSectionCurrencyMetallView.ViewModel:
+                            MainSectionCurrencyMetallView(viewModel: currencyMetallViewModel)
+                            
                         case let openProductViewModel as MainSectionOpenProductView.ViewModel:
                             MainSectionOpenProductView(viewModel: openProductViewModel)
                             
@@ -240,7 +243,25 @@ struct MainView_Previews: PreviewProvider {
 
 extension MainViewModel {
     
-    static let sample = MainViewModel(refreshingIndicator: .init(isActive: true), navButtonsRight: [.init(icon: .ic24Search, action: {}), .init(icon: .ic24Bell, action: {})], sections: [MainSectionProductsView.ViewModel.sample, MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample])
+    static let sample = MainViewModel(
+                            refreshingIndicator: .init(isActive: true),
+                            navButtonsRight: [.init(icon: .ic24Search, action: {}),
+                                              .init(icon: .ic24Bell, action: {})],
+                            sections: [MainSectionProductsView.ViewModel.sample,
+                                       MainSectionFastOperationView.ViewModel.sample,
+                                       MainSectionPromoView.ViewModel.sample,
+                                       MainSectionCurrencyMetallView.ViewModel.sample,
+                                       MainSectionOpenProductView.ViewModel.sample])
     
     static let sampleProducts = MainViewModel(refreshingIndicator: .init(isActive: false),navButtonsRight: [.init(icon: .ic24Search, action: {}), .init(icon: .ic24Bell, action: {})], sections: [MainSectionProductsView.ViewModel(.productsMock), MainSectionFastOperationView.ViewModel.sample, MainSectionPromoView.ViewModel.sample, MainSectionCurrencyView.ViewModel.sample, MainSectionOpenProductView.ViewModel.sample])
+    
+    static let sampleOldCurrency = MainViewModel(
+                                    refreshingIndicator: .init(isActive: false),
+                                    navButtonsRight: [.init(icon: .ic24Search, action: {}),
+                                                      .init(icon: .ic24Bell, action: {})],
+                                    sections: [MainSectionProductsView.ViewModel(.productsMock),
+                                               MainSectionFastOperationView.ViewModel.sample,
+                                               MainSectionPromoView.ViewModel.sample,
+                                               MainSectionCurrencyView.ViewModel.sample,
+                                               MainSectionOpenProductView.ViewModel.sample])
 }

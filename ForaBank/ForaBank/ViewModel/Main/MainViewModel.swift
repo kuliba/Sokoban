@@ -42,7 +42,7 @@ class MainViewModel: ObservableObject {
         self.sections = [MainSectionProductsView.ViewModel(model),
                          MainSectionFastOperationView.ViewModel.init(),
                          MainSectionPromoView.ViewModel(model),
-                         MainSectionCurrencyView.ViewModel(model),
+                         MainSectionCurrencyMetallView.ViewModel(),
                          MainSectionOpenProductView.ViewModel(model),
                          MainSectionAtmView.ViewModel.initial]
         
@@ -183,7 +183,16 @@ class MainViewModel: ObservableObject {
                     case _ as MainSectionViewModelAction.Products.MoreButtonTapped:
                         let myProductsViewModel: MyProductsViewModel = .init(model)
                         sheet = .init(type: .myProducts(myProductsViewModel))
-                       
+                        
+                        // CurrencyMetall section
+                    case let payload as MainSectionViewModelAction.CurrencyMetall.ItemDashboardDidTapped.Buy :
+                    
+                        print("mdy: Buy-\(payload.itemData)") // -> USD, GBR, EUR
+                        
+                    case let payload as MainSectionViewModelAction.CurrencyMetall.ItemDashboardDidTapped.Sell :
+                    
+                        print("mdy: Sell-\(payload.itemData)") // -> USD, GBR, EUR
+                        
                         // atm section
                     case _ as MainSectionViewModelAction.Atm.ButtonTapped:
                         guard let placesViewModel = PlacesViewModel(model) else {
