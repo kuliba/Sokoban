@@ -779,6 +779,7 @@ extension MainViewController.Section {
         case .currencyExchange: self = .currentsExchange
         case .openProduct: self = .openProduct
         case .atm: self = .atm
+        case .currencyMetall: self = .currentsExchange
         }
     }
     

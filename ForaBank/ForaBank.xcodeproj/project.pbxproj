@@ -240,6 +240,7 @@
 		0C6508CF28299C6D0058916A /* PaymentsTransfersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6508CE28299C6D0058916A /* PaymentsTransfersView.swift */; };
 		0C6508D228299DAF0058916A /* PaymentsTransfersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C6508D128299DAF0058916A /* PaymentsTransfersViewModel.swift */; };
 		0C8CF960282179E80047DDAE /* SendMailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C8CF95F282179E80047DDAE /* SendMailView.swift */; };
+		0C99077728733835000831BB /* MainSectionCurrencyMetallComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C99077628733835000831BB /* MainSectionCurrencyMetallComponent.swift */; };
 		0CA1CDE12840720200021671 /* AddressBookContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA1CDE02840720200021671 /* AddressBookContact.swift */; };
 		0CA1CDE32840725600021671 /* ContactsAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA1CDE22840725600021671 /* ContactsAgent.swift */; };
 		0CA1CDE52840726F00021671 /* ContactsAgentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA1CDE42840726F00021671 /* ContactsAgentProtocol.swift */; };
@@ -1598,6 +1599,7 @@
 		0C6508CE28299C6D0058916A /* PaymentsTransfersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersView.swift; sourceTree = "<group>"; };
 		0C6508D128299DAF0058916A /* PaymentsTransfersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersViewModel.swift; sourceTree = "<group>"; };
 		0C8CF95F282179E80047DDAE /* SendMailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendMailView.swift; sourceTree = "<group>"; };
+		0C99077628733835000831BB /* MainSectionCurrencyMetallComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSectionCurrencyMetallComponent.swift; sourceTree = "<group>"; };
 		0CA1CDE02840720200021671 /* AddressBookContact.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressBookContact.swift; sourceTree = "<group>"; };
 		0CA1CDE22840725600021671 /* ContactsAgent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsAgent.swift; sourceTree = "<group>"; };
 		0CA1CDE42840726F00021671 /* ContactsAgentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsAgentProtocol.swift; sourceTree = "<group>"; };
@@ -4542,6 +4544,7 @@
 				7728A1772834FFF500EE4CA6 /* Products */,
 				F87F9B1D27C3A0FD007E3D94 /* MainSectionFastOperationViewComponent.swift */,
 				F81EF91927D2180E0096DC70 /* MainSectionPromoViewComponent.swift */,
+				0C99077628733835000831BB /* MainSectionCurrencyMetallComponent.swift */,
 				F81EF91C27D21A240096DC70 /* MainSectionCurrencyViewComponent.swift */,
 				F81EF91427D212990096DC70 /* MainSectionOpenProductViewComponent.swift */,
 				77F1582E28194DCD00CA5E4E /* MainSectionAtmViewComponent.swift */,
@@ -7684,6 +7687,7 @@
 				0B05163126A1F160005B7A30 /* GetPaymentCountriesDecodableModel.swift in Sources */,
 				503F073328252B7900E84A77 /* DepositToggleViewComponent.swift in Sources */,
 				ED3A966E2690A80B00252857 /* PresentationController.swift in Sources */,
+				0C99077728733835000831BB /* MainSectionCurrencyMetallComponent.swift in Sources */,
 				508BC629286050B600F15DCD /* TextFieldToolbarViewComponent.swift in Sources */,
 				ED0B489C267D41A60037EA06 /* PaymentsDetailsView.swift in Sources */,
 				6833E0CB273920CE004C070F /* LockerCoordinator.swift in Sources */,
