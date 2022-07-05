@@ -5,6 +5,8 @@
 //  Created by Pavel Samsonov on 13.06.2022.
 //
 
+import Foundation
+
 // MARK: - Handlers
 
 extension Model {
@@ -119,6 +121,8 @@ extension Model {
                 currencyCode: payload.currencyCode))
         let productsListError = ProductsListError.emptyData(message: ProductsListError.errorMessage)
 
+        action.send(ModelAction.Account.Informer.Show(message: "\(payload.currencyName) счет открывается"))
+
         serverAgent.executeCommand(command: command) { result in
 
             switch result {
@@ -134,6 +138,7 @@ extension Model {
                         return
                     }
 
+                    self.action.send(ModelAction.Account.Informer.Show(message: "\(payload.currencyName) счет открыт"))
                     self.action.send(ModelAction.Account.MakeOpenAccount.Response.complete(data))
 
                 default:
@@ -148,6 +153,47 @@ extension Model {
                 self.handleServerCommandError(error: error, command: command)
                 self.action.send(ModelAction.Account.MakeOpenAccount.Response.failed(error: .serverCommandError(error: error.localizedDescription)))
             }
+        }
+    }
+}
+
+// MARK: - Reset
+
+extension Model {
+
+    func handleMakeOpenAccountUpdate(payload: ModelAction.Account.MakeOpenAccount.Response) {
+
+        switch payload {
+        case .complete:
+
+            // Обновление открытых счетов на главном экране
+            action.send(ModelAction.Products.Update.ForProductType(productType: .account))
+
+            // Обновление списка счетов
+            action.send(ModelAction.Account.ProductList.Request())
+
+            // Скрыть уведомление об открытии счета
+            action.send(ModelAction.Account.Informer.Dismiss(after: 4))
+
+        case .failed:
+            // Скрыть уведомление об открытии счета
+            action.send(ModelAction.Account.Informer.Dismiss(after: 4))
+        }
+    }
+}
+
+// MARK: - Informer
+
+extension Model {
+
+    func handleInformerShow(payload: ModelAction.Account.Informer.Show) {
+        informer.value = .init(message: payload.message)
+    }
+
+    func handleInformerDismiss(payload: ModelAction.Account.Informer.Dismiss) {
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + payload.after) {
+            self.informer.value = nil
         }
     }
 }
@@ -225,6 +271,7 @@ extension ModelAction {
             struct Request: Action {
 
                 let verificationCode: String
+                let currencyName: String
                 let currencyCode: Int
             }
 
@@ -232,6 +279,19 @@ extension ModelAction {
 
                 case complete(OpenAccountMakeData)
                 case failed(error: Model.ProductsListError)
+            }
+        }
+
+        enum Informer {
+
+            struct Show: Action {
+
+                let message: String
+            }
+
+            struct Dismiss: Action {
+
+                let after: TimeInterval
             }
         }
     }

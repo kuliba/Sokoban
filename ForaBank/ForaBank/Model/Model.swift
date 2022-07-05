@@ -71,6 +71,9 @@ class Model {
     //MARK: Loacation
     let currentUserLoaction: CurrentValueSubject<LocationData?, Never>
 
+    //MARK: Informer
+    let informer: CurrentValueSubject<InformerData?, Never>
+
     //TODO: remove when all templates will be implemented
     let paymentTemplatesAllowed: [ProductStatementData.Kind] = [.sfp, .insideBank, .betweenTheir, .direct, .contactAddressless, .externalIndivudual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
     let paymentTemplatesDisplayed: [PaymentTemplateData.Kind] = [.sfp, .byPhone, .insideBank, .betweenTheir, .direct, .contactAdressless, .externalIndividual, .externalEntity, .mobile, .housingAndCommunalService, .transport, .internet]
@@ -141,8 +144,9 @@ class Model {
         self.clientName = .init(nil)
         self.fastPaymentContractFullInfo = .init([])
         self.currentUserLoaction = .init(nil)
+        self.informer = .init(nil)
         self.notificationsTransition = .init(nil)
-        
+
         self.sessionAgent = sessionAgent
         self.serverAgent = serverAgent
         self.localAgent = localAgent
@@ -366,7 +370,7 @@ class Model {
                     
                 case _ as ModelAction.Products.Update.Total.All:
                     handleProductsUpdateTotalAll()
-                    
+
                 case let payload as ModelAction.Products.UpdateCustomName.Request:
                     handleProductsUpdateCustomName(payload)
                     
@@ -381,6 +385,9 @@ class Model {
                     
                 case let payload as ModelAction.Loans.Update.Single.Request:
                     handleLoansUpdateSingleRequest(payload)
+
+                case let payload as ModelAction.Products.Update.ForProductType:
+                    handleProductsUpdateTotalProduct(payload)
                     
                     //MARK: - Statement
                     
@@ -591,7 +598,6 @@ class Model {
                     
                 case _ as ModelAction.Contacts.PermissionStatus.Request:
                     handleContactsPermissionStatusRequest()
-                    
 
                 // MARK: - Account
 
@@ -603,6 +609,17 @@ class Model {
 
                 case let payload as ModelAction.Account.MakeOpenAccount.Request:
                     handleMakeOpenAccount(payload)
+
+                case let payload as ModelAction.Account.MakeOpenAccount.Response:
+                    handleMakeOpenAccountUpdate(payload: payload)
+
+                // MARK: - Informer
+
+                case let payload as ModelAction.Account.Informer.Show:
+                    handleInformerShow(payload: payload)
+
+                case let payload as ModelAction.Account.Informer.Dismiss:
+                    handleInformerDismiss(payload: payload)
 
                 //MARK: - AppStore Version
                 case _ as ModelAction.AppVersion.Request:

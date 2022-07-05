@@ -57,9 +57,11 @@ extension OpenAccountItemView.ViewModel {
 
     class HeaderViewModel: ObservableObject {
 
+        @Published var title: String
+        
+        /// Для показа изображения после открытия счета
         @Published var isAccountOpened: Bool
 
-        let title: String
         let detailTitle: String
 
         init(title: String, detailTitle: String, isAccountOpened: Bool = false) {

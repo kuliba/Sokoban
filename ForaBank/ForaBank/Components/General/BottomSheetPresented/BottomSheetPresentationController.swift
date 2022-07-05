@@ -11,8 +11,8 @@ import UIKit
 
 final class BottomSheetPresentationController: UIPresentationController {
 
-    private let tapDragGestureRecognizer = UITapGestureRecognizer()
     private let tapGestureRecognizer = UITapGestureRecognizer()
+    private let tapDragGestureRecognizer = UITapGestureRecognizer()
     let panGestureRecognizer = UIPanGestureRecognizer()
 
     private let topDragSize: CGSize = .init(width: 48, height: 5)
@@ -101,28 +101,32 @@ final class BottomSheetPresentationController: UIPresentationController {
         containerView.addGestureRecognizer(panGestureRecognizer)
         dimmingView.addGestureRecognizer(tapGestureRecognizer)
         topContainerView.addGestureRecognizer(tapDragGestureRecognizer)
+        topContainerView.addGestureRecognizer(panGestureRecognizer)
 
-        [dimmingView.topAnchor.constraint(equalTo: containerView.topAnchor),
-         dimmingView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
-         dimmingView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-         dimmingView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor)]
-            .forEach { $0.isActive = true }
+        NSLayoutConstraint.activate([
+            dimmingView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            dimmingView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            dimmingView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            dimmingView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor)
+        ])
 
-        [topContainerView.topAnchor.constraint(equalTo: presentedView.topAnchor),
-         topContainerView.leadingAnchor.constraint(equalTo: presentedView.leadingAnchor),
-         topContainerView.trailingAnchor.constraint(equalTo: presentedView.trailingAnchor),
-         topContainerView.heightAnchor.constraint(equalToConstant: 21)]
-            .forEach { $0.isActive = true }
+        NSLayoutConstraint.activate([
+            topContainerView.topAnchor.constraint(equalTo: presentedView.topAnchor),
+            topContainerView.leadingAnchor.constraint(equalTo: presentedView.leadingAnchor),
+            topContainerView.trailingAnchor.constraint(equalTo: presentedView.trailingAnchor),
+            topContainerView.heightAnchor.constraint(equalToConstant: 21)
+        ])
 
-        [topDragView.topAnchor.constraint(equalTo: topContainerView.topAnchor, constant: 8),
-         topDragView.centerXAnchor.constraint(equalTo: topContainerView.centerXAnchor),
-         topDragView.widthAnchor.constraint(equalToConstant: topDragSize.width),
-         topDragView.heightAnchor.constraint(equalToConstant: topDragSize.height)]
-            .forEach { $0.isActive = true }
+        NSLayoutConstraint.activate([
+            topDragView.topAnchor.constraint(equalTo: topContainerView.topAnchor, constant: 8),
+            topDragView.centerXAnchor.constraint(equalTo: topContainerView.centerXAnchor),
+            topDragView.widthAnchor.constraint(equalToConstant: topDragSize.width),
+            topDragView.heightAnchor.constraint(equalToConstant: topDragSize.height)
+        ])
 
         tapGestureRecognizer.addTarget(self, action: #selector(handleTapGesture))
-        panGestureRecognizer.addTarget(self, action: #selector(handlePanGesture))
         tapDragGestureRecognizer.addTarget(self, action: #selector(handleTapGesture))
+        panGestureRecognizer.addTarget(self, action: #selector(handlePanGesture))
 
         cornerRadius = 12
 

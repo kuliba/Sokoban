@@ -94,6 +94,12 @@ struct TextFieldToolbarView: UIViewRepresentable {
 
             var filterred = text.filterred()
 
+            if viewModel.doneButton.isEnabled == true && string.isEmpty == false {
+
+                textField.text = filterred
+                return false
+            }
+
             if string.isEmpty && filterred.count > 0 {
 
                 guard let stringRange = Range(range, in: text) else {
