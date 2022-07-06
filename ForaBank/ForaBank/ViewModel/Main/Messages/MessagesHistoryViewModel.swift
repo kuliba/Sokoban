@@ -118,13 +118,13 @@ class MessagesHistoryViewModel: ObservableObject {
         
         for index in groupDayIndexes {
             
-            let items = notifications.filter { $0.dateUtc.groupDayIndex == index }
+            let items = notifications.filter { $0.date.groupDayIndex == index }
             guard items.count > 0 else {
                 continue
             }
             
-            let itemsSorted = items.sorted(by: { $0.dateUtc > $1.dateUtc })
-            let sectionDate = itemsSorted[0].dateUtc
+            let itemsSorted = items.sorted(by: { $0.date > $1.date })
+            let sectionDate = itemsSorted[0].date
             let sectionTitle = formatter.string(from: sectionDate)
             
             let section = MessagesHistorySectionView.ViewModel(id: index, title: sectionTitle, items: itemsSorted)
@@ -137,7 +137,7 @@ class MessagesHistoryViewModel: ObservableObject {
     
     static func groupDayIndexes(for notifications: [NotificationData]) -> [Int] {
         
-        let indexes = notifications.map({ $0.dateUtc.groupDayIndex })
+        let indexes = notifications.map({ $0.date.groupDayIndex })
         let uniqueIndexes = Array(Set(indexes))
         let sortedIndexes = uniqueIndexes.sorted(by: >)
         

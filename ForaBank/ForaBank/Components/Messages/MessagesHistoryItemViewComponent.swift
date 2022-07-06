@@ -34,7 +34,7 @@ extension MessagesHistoryItemView {
             self.icon = Image.ic24MoreHorizontal
             self.title = notification.title
             self.content = notification.text
-            self.time = DateFormatter.minutsAndSecond.string(from: notification.dateUtc)
+            self.time = DateFormatter.minutsAndSecond.string(from: notification.date)
         }
         
         static func == (lhs: MessagesHistoryItemView.ViewModel, rhs: MessagesHistoryItemView.ViewModel) -> Bool {
