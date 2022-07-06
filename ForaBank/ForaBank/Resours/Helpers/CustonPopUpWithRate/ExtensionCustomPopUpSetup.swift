@@ -128,21 +128,17 @@ extension CustomPopUpWithRateView {
                                     }
                                 }
                                 vc.confurmVCModel = viewModel
-                                
-                                let nav = UINavigationController(rootViewController: vc)
-                                nav.modalPresentationStyle = .fullScreen
-                                viewModel.closeAction()
-                                self?.present(nav, animated: true, completion: nil)
+                                vc.closeAction = viewModel.closeAction
+                                vc.modalPresentationStyle = .fullScreen
+                                self?.present(vc, animated: true, completion: nil)
                             }
                         } else {
                             viewModel.status = .succses
                             let vc = PaymentsDetailsSuccessViewController()
                             vc.confurmVCModel = viewModel
-                            
-                            let nav = UINavigationController(rootViewController: vc)
-                            nav.modalPresentationStyle = .fullScreen
-                            viewModel.closeAction()
-                            self?.present(nav, animated: true, completion: nil)
+                            vc.closeAction = viewModel.closeAction
+                            vc.modalPresentationStyle = .fullScreen
+                            self?.present(vc, animated: true, completion: nil)
                         }
                     } else {
                         print("DEBUG: ", #function, model.errorMessage ?? "nil")

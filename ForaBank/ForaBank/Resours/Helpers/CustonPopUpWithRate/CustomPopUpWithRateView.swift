@@ -153,9 +153,7 @@ class CustomPopUpWithRateView: UIViewController {
                         vc.confurmVCModel?.type = .closeDeposit
                         vc.printFormType = "closeDeposit"
                         
-                        let nav = UINavigationController(rootViewController: vc)
-                        nav.modalPresentationStyle = .fullScreen
-                        self.present(nav, animated: true, completion: nil)
+                        self.present(vc, animated: true, completion: nil)
                         
                     case .failure(let error):
                         self.showAlert(with: "Ошибка", and: error)
@@ -184,9 +182,7 @@ class CustomPopUpWithRateView: UIViewController {
                         vc.confurmVCModel?.type = .card2card
                         vc.printFormType = "closeDeposit"
                         
-                        let nav = UINavigationController(rootViewController: vc)
-                        nav.modalPresentationStyle = .fullScreen
-                        self.present(nav, animated: true, completion: nil)
+                        self.present(vc, animated: true, completion: nil)
                         
                     case .failure(let error):
                         self.showAlert(with: "Ошибка", and: error)

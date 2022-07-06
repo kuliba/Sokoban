@@ -70,7 +70,7 @@ struct CountryPaymentView: UIViewControllerRepresentable {
     
     func makeUIViewController(context: Context) -> ContactInputViewController {
         
-        let vc = ContactInputViewController()
+        var vc = ContactInputViewController()
         vc.country = viewModel.country
         
         //MARK: PaymentsViewController openCountryPaymentVC(206)
@@ -85,6 +85,7 @@ struct CountryPaymentView: UIViewControllerRepresentable {
             vc.nameField.text = adressViewModel.firstName
             vc.surnameField.text = adressViewModel.surName
             vc.secondNameField.text = adressViewModel.middleName
+            vc.addCloseButton()
             
         case let .withOutAddress(withOutViewModel):
             
@@ -94,6 +95,7 @@ struct CountryPaymentView: UIViewControllerRepresentable {
             let mask = StringMask(mask: "+000-0000-00-00")
             let maskPhone = mask.mask(string: withOutViewModel.phoneNumber)
             vc.phoneField.text = maskPhone ?? ""
+            vc.addCloseButton()
             
         case let .template(templateViewModel):
            
@@ -102,67 +104,35 @@ struct CountryPaymentView: UIViewControllerRepresentable {
             switch templateViewModel.type {
                 
             case .direct:
-                if let model = templateViewModel.parameterList.first as? TransferAnywayData {
-                    let country = vc.getCountry(code: "AM")
-                    vc.typeOfPay = .mig
-                    vc.configure(with: country, byPhone: true)
-                    
-                    if let bank = vc.findBankByPuref(purefString: model.puref ?? "") {
-                        vc.selectedBank = bank
-                        vc.setupBankField(bank: bank)
-                    }
-                    
-                    let mask = StringMask(mask: "+000-0000-00-00")
-                    let phone = model.additional.first(where: { $0.fieldname == "RECP" })
-                    let maskPhone = mask.mask(string: phone?.fieldvalue)
-                    vc.phoneField.text = maskPhone ?? ""
-                }
-                
+                vc = .init(paymentTemplate: templateViewModel)
+
             case .contactAdressless:
-                if let model = templateViewModel.parameterList.first as? TransferAnywayData {
-                    
-                    vc.typeOfPay = .contact
-                    
-                    if let countryCode = model.additional.first(where: { $0.fieldname == "trnPickupPoint" })?.fieldvalue {
-                        
-                        let country = vc.getCountry(code: countryCode)
-                        vc.configure(with: country, byPhone: false)
-                        
-                        
-                    }
-                    
-                    vc.foraSwitchView.bankByPhoneSwitch.isOn = false
-                    vc.foraSwitchView.bankByPhoneSwitch.layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                    vc.foraSwitchView.bankByPhoneSwitch.thumbTintColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-                    
-                    if let surName = model.additional.first(where: { $0.fieldname == "bName" })?.fieldvalue {
-                        vc.surnameField.text = surName
-                    }
-                    
-                    if let firstName = model.additional.first(where: { $0.fieldname == "bLastName" })?.fieldvalue {
-                        vc.nameField.text = firstName
-                    }
-                    
-                    if let middleName = model.additional.first(where: { $0.fieldname == "bSurName" })?.fieldvalue {
-                        vc.secondNameField.text = middleName
-                    }
-                    
-                    if let phone = model.additional.first(where: { $0.fieldname == "bPhone" })?.fieldvalue {
-                        vc.phoneField.text = phone
-                    }
-                }
+                vc = .init(paymentTemplate: templateViewModel)
                 
             default :
                 break
             }
+            
+            context.coordinator.parentObserver = vc.observe(\.parent, changeHandler: { vc, _ in
+
+                vc.parent?.navigationItem.titleView = vc.navigationItem.titleView
+                vc.parent?.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem
+                vc.parent?.navigationItem.rightBarButtonItems = vc.navigationItem.rightBarButtonItems
+            })
         }
         
-        vc.addCloseButton()
         vc.modalPresentationStyle = .fullScreen
-  
+        
         return vc
     }
     
     func updateUIViewController(_ uiViewController: ContactInputViewController, context: Context) {}
+    
+    class Coordinator {
+        
+        var parentObserver: NSKeyValueObservation?
+    }
+    
+    func makeCoordinator() -> Self.Coordinator { Coordinator() }
 }
 

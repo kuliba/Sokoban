@@ -14,11 +14,13 @@ struct TransferByRequisitesView: UIViewControllerRepresentable {
     
     func makeUIViewController(context: Context) -> TransferByRequisitesViewController {
         
-        let controller = TransferByRequisitesViewController()
+        var controller = TransferByRequisitesViewController()
         controller.viewModel.closeAction = viewModel.closeAction
 
         if let paymentTemplate = viewModel.paymentTemplate, let parameter = paymentTemplate.parameterList.first as? TransferGeneralData {
-                
+                    
+                controller = .init(paymentTemplate: paymentTemplate)
+            
                 if let bik = parameter.payeeExternal?.bankBIC {
                     controller.bikBankField.textField.text = bik
                 }
@@ -74,7 +76,7 @@ struct TransferByRequisitesViewModel {
     
     var paymentTemplate: PaymentTemplateData? = nil
     
-    init(closeAction: @escaping () -> Void,paymentTemplate: PaymentTemplateData?) {
+    init(closeAction: @escaping () -> Void, paymentTemplate: PaymentTemplateData?) {
         
         self.closeAction = closeAction
         self.paymentTemplate = paymentTemplate
