@@ -94,6 +94,8 @@ struct MainView: View {
                             .navigationBarTitle("", displayMode: .inline)
                             .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
+                    case let .currencyWallet(viewModel):
+                        CurrencyWalletView(viewModel: viewModel)
                     }
                 }
             }

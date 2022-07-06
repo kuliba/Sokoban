@@ -20,6 +20,13 @@ struct CurrencyWalletView: View {
             CurrencyListView(viewModel: viewModel.listViewModel)
             CurrencySwapView(viewModel: viewModel.swapViewModel)
         }
+        .navigationBarTitle(Text(viewModel.title), displayMode: .inline)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: Button(action: viewModel.backButton.action) {
+            viewModel.backButton.icon
+                .renderingMode(.template)
+                .foregroundColor(.iconBlack)
+        })
     }
 }
 
@@ -29,6 +36,7 @@ struct CurrencyWalletView_Previews: PreviewProvider {
     static var previews: some View {
         CurrencyWalletView(viewModel: .init(
             listViewModel: .sample,
-            swapViewModel: .sample))
+            swapViewModel: .sample,
+            action: {}))
     }
 }

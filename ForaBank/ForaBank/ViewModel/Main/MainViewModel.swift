@@ -206,9 +206,17 @@ class MainViewModel: ObservableObject {
                     
                         print("mdy: Buy-\(payload.itemData)") // -> USD, GBR, EUR
                         
+                        link = .currencyWallet(.init(listViewModel: .sample, swapViewModel: .sample) { [weak self] in
+                            self?.action.send(MainViewModelAction.CloseLink())
+                        })
+                        
                     case let payload as MainSectionViewModelAction.CurrencyMetall.ItemDashboardDidTapped.Sell :
                     
                         print("mdy: Sell-\(payload.itemData)") // -> USD, GBR, EUR
+                        
+                        link = .currencyWallet(.init(listViewModel: .sample, swapViewModel: .sample) { [weak self] in
+                            self?.action.send(MainViewModelAction.CloseLink())
+                        })
                         
                         // atm section
                     case _ as MainSectionViewModelAction.Atm.ButtonTapped:
@@ -316,6 +324,7 @@ extension MainViewModel {
         case openDeposit(OpenDepositViewModel)
         case templates(TemplatesListViewModel)
         case qrScanner(QrViewModel)
+        case currencyWallet(CurrencyWalletViewModel)
 
     }
 
