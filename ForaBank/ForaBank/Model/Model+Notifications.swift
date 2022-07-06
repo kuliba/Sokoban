@@ -74,7 +74,7 @@ extension Model {
     static func dictinaryNotificationReduce(current: [NotificationData], update: [NotificationData]) -> [NotificationData] {
         
         let resultSet = Set(current).union(update)
-        return Array(resultSet).sorted(by: { $0.dateUtc < $1.dateUtc})
+        return Array(resultSet).sorted(by: { $0.date < $1.date })
     }
     
     func handleNotificationTransitionSet(payload: ModelAction.Notification.Transition.Set) {

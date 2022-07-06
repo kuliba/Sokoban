@@ -55,8 +55,8 @@ class ServerCommandsNotificationTests: XCTestCase {
         // given
         let url = bundle.url(forResource: "GetNotificationsResponseGeneric", withExtension: "json")!
         let json = try Data(contentsOf: url)
-        let date = Date(timeIntervalSince1970: TimeInterval(1630530000000 / 1000))
-        let expected = ServerCommands.NotificationController.GetNotifications.Response(statusCode: .ok, errorMessage: "string", data: [.init(title: "Смс", state: .sent, text: "27.12.2022 18:22:58: Успешный вход в приложение", type: .push, dateUtc: date)])
+        let date = DateFormatter.iso8601.date(from: "2022-07-05T16:48:10.563Z")!
+        let expected = ServerCommands.NotificationController.GetNotifications.Response(statusCode: .ok, errorMessage: "string", data: [.init(title: "Смс", state: .sent, text: "27.12.2022 18:22:58: Успешный вход в приложение", type: .push, date: date)])
         
         // when
         let result = try decoder.decode(ServerCommands.NotificationController.GetNotifications.Response.self, from: json)
