@@ -485,15 +485,14 @@ class ContactConfurmViewController: UIViewController {
             if model.type == .phoneNumberSBP{
                 var sbpimage = UIImage()
                 
-                if let paymentSystems = Dict.shared.paymentList{
+                let paymentSystems = Model.shared.paymentSystemList.value.map { $0.getPaymentSystem() }
                 
-                    for system in paymentSystems{
-                        if system.code == "SFP"{
-                            sbpimage = system.svgImage?.convertSVGStringToImage() ?? UIImage()
-                        }
+                for system in paymentSystems {
+                    if system.code == "SFP" {
+                        sbpimage = system.svgImage?.convertSVGStringToImage() ?? UIImage()
                     }
-                    
-                }
+                } 
+                
                 let imageView = UIImageView(image: sbpimage)
                 let item = UIBarButtonItem(customView: imageView)
                 imageView.contentMode = .scaleAspectFit

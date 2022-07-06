@@ -32,6 +32,11 @@ class InternetTVDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSo
         super.viewDidAppear(animated)
         goButton?.isHidden = !(bottomInputView?.isHidden ?? false)
         bottomInputView?.updateAmountUI(textAmount: latestOperation?.amount)
+        
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+        IQKeyboardManager.shared.keyboardDistanceFromTextField = 30
     }
     
     override open func viewWillAppear(_ animated: Bool) {

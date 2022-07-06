@@ -283,7 +283,7 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(bottomView)
         bottomView.anchor(
             left: view.leftAnchor,
-            bottom: view.safeAreaLayoutGuide.bottomAnchor,
+            bottom: view.bottomAnchor,
             right: view.rightAnchor)
         
         bottomView.currencySymbol = "₽"
@@ -302,12 +302,11 @@ class PaymentByPhoneViewController: UIViewController, UITextFieldDelegate {
         
         var sbpimage = UIImage()
         
-        if let paymentSystems = Dict.shared.paymentList{
+        let paymentSystems = Model.shared.paymentSystemList.value.map { $0.getPaymentSystem() }
         
-            for system in paymentSystems{
-                if system.code == "SFP"{
-                    sbpimage = system.svgImage?.convertSVGStringToImage() ?? UIImage()
-                }
+        for system in paymentSystems {
+            if system.code == "SFP" {
+                sbpimage = system.svgImage?.convertSVGStringToImage() ?? UIImage()
             }
         }
         

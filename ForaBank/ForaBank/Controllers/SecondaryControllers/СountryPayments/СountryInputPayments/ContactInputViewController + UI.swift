@@ -165,7 +165,7 @@ extension ContactInputViewController {
     }
     
     func setupConstraint() {
-        bottomView.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
+        bottomView.anchor(left: view.leftAnchor, bottom: view.bottomAnchor,
                           right: view.rightAnchor)
         
         stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
