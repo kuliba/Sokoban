@@ -47,12 +47,6 @@ extension OpenAccountPerformView {
             }
         }
 
-        var resendOTPCount: Int {
-
-            get { prepareData.resendOTPCount }
-            set { prepareData.resendOTPCount = newValue }
-        }
-
         lazy var agreement: AgreementView.ViewModel = {
 
             let termsAction: () -> Void = { [weak self] in
@@ -119,24 +113,10 @@ extension OpenAccountPerformView {
                         case let .complete(data):
 
                             prepareData = OpenAccountPrepareViewModel.reduce(data: data)
-
-                            guard resendOTPCount > 0 else {
-
-                                self.action.send(OpenAccountPerformAction.Alert.Reset())
-                                return
-                            }
-
                             operationType = .edit
 
                         case let .failed(error: error):
-
-                            if resendOTPCount == 0 {
-
-                                withAnimation {
-                                    operationType = .open
-                                }
-                            }
-
+                            
                             self.action.send(OpenAccountPerformAction.Alert.Error(error: error))
                         }
 
@@ -159,16 +139,8 @@ extension OpenAccountPerformView {
                             item.card.numberCard = accountNumber
 
                         case let .failed(error: error):
-
-                            resendOTPCount -= 1
-
-                            guard resendOTPCount > 0 else {
-
-                                self.action.send(OpenAccountPerformAction.Alert.Reset())
-                                return
-                            }
-
-                            operationType = .edit
+                            
+                            handleRawResponse(error: error)
                             self.action.send(OpenAccountPerformAction.Alert.Error(error: error))
                         }
 
@@ -190,7 +162,7 @@ extension OpenAccountPerformView {
                     switch action {
                     case _ as OpenAccountPerformAction.Button.Tapped:
 
-                        if item.header.isAccountOpened == true || resendOTPCount == 0 {
+                        if item.header.isAccountOpened == true {
                             self.action.send(OpenAccountPerformAction.ResetData())
                         }
 
@@ -218,16 +190,6 @@ extension OpenAccountPerformView {
 
                     case let payload as OpenAccountPerformAction.Alert.Error:
                         makeAlert(error: payload.error)
-
-                    case _ as OpenAccountPerformAction.Alert.Reset:
-
-                        withAnimation {
-                            operationType = .open
-                        }
-
-                        self.action.send(OpenAccountPerformAction.Alert.Error(error: .statusError(
-                            status: .serverError,
-                            message: "Вы исчерпали все попытки :(")))
 
                     case _ as OpenAccountPerformAction.ResetData:
 
@@ -341,6 +303,40 @@ extension OpenAccountPerformView {
 
             UIApplication.shared.endEditing()
         }
+        
+        private func handleRawResponse(error: Model.ProductsListError) {
+            
+            var messageError = ""
+            
+            switch error {
+            case .emptyData(message: let message):
+                
+                guard let message = message else { return }
+                messageError = message
+                
+            case let .statusError(_, message: message):
+                
+                guard let message = message else { return }
+                messageError = message
+
+            case .serverCommandError(error: let error):
+                messageError = error
+            default:
+                break
+            }
+            
+            guard let rawValue = OpenAccountRawResponse(rawValue: messageError) else {
+                return
+            }
+            
+            switch rawValue {
+            case .incorrect:
+                operationType = .edit
+            case .exhaust:
+                operationType = .open
+                self.action.send(OpenAccountPerformAction.ResetData())
+            }
+        }
     }
 }
 
@@ -367,6 +363,33 @@ extension OpenAccountPrepareViewModel {
     static func reduce(data: OpenAccountPrepareData) -> OpenAccountPrepareViewModel {
 
         return .init(otpLength: data.otpLength, otpResendTime: data.otpResendTime, resendOTPCount: data.resendOTPCount)
+    }
+}
+
+// MARK: - RawResponse
+
+enum OpenAccountRawResponse: RawRepresentable {
+    
+    case incorrect
+    case exhaust
+    
+    var rawValue: String {
+        switch self {
+        case .incorrect:
+            return "Вы исчерпали все попытки"
+        case .exhaust:
+            return "Введен некорректный код. Попробуйте еще раз"
+        }
+    }
+    
+    init?(rawValue: String) {
+        
+        if rawValue.contains("исчерпали") {
+            self = .exhaust
+            return
+        }
+        
+        self = .incorrect
     }
 }
 
@@ -463,8 +486,6 @@ enum OpenAccountPerformAction {
 
             let error: Model.ProductsListError
         }
-
-        struct Reset: Action {}
     }
 
     struct ResetData: Action {}

@@ -172,12 +172,57 @@ extension Model {
             // Обновление списка счетов
             action.send(ModelAction.Account.ProductList.Request())
 
-            // Скрыть уведомление об открытии счета
+            // Скрыть уведомление об открытии счета через 4 сек
             action.send(ModelAction.Account.Informer.Dismiss(after: 4))
 
-        case .failed:
-            // Скрыть уведомление об открытии счета
-            action.send(ModelAction.Account.Informer.Dismiss(after: 4))
+        case .failed(error: let error):
+            
+            let time = handleRawResponse(error: error)
+            
+            // Скрыть уведомление об открытии счета:
+            // - некорректный код - через 2 сек
+            // - исчерпали все попытки - 0 сек
+            
+            action.send(ModelAction.Account.Informer.Dismiss(after: time))
+        }
+    }
+    
+    func handleRawResponse(error: Model.ProductsListError) -> TimeInterval {
+        
+        var messageError = ""
+        
+        switch error {
+        case .emptyData(message: let message):
+            
+            guard let message = message else {
+                return 0
+            }
+            
+            messageError = message
+            
+        case let .statusError(_, message: message):
+            
+            guard let message = message else {
+                return 0
+            }
+            
+            messageError = message
+
+        case .serverCommandError(error: let error):
+            messageError = error
+        default:
+            break
+        }
+        
+        guard let rawValue = OpenAccountRawResponse(rawValue: messageError) else {
+            return 0
+        }
+        
+        switch rawValue {
+        case .incorrect:
+            return 2
+        case .exhaust:
+            return 0
         }
     }
 }
