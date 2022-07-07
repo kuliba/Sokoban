@@ -15,13 +15,6 @@ protocol SessionAgentProtocol {
 }
 
 enum SessionAgentAction {
-    
-    enum App {
-    
-        struct Activated: Action {}
-        
-        struct Inactivated: Action {}
-    }
 
     enum Session {
     

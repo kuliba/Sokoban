@@ -161,6 +161,7 @@ class FaceTouchIdViewController: UIViewController {
                 if statusCode == 0 {
                     UserDefaults.standard.set(true, forKey: "UserIsRegister")
                     DispatchQueue.main.async {
+                        /*
                         AppDelegate.shared.getCSRF { errorMessage in
                             if errorMessage == nil {
                                 self.login(with: self.code ?? "", type: .pin) { error in
@@ -194,6 +195,7 @@ class FaceTouchIdViewController: UIViewController {
                                 self.dismissActivity()
                             }
                         }
+                         */
                     }
                 } else {
                     self.dismissActivity()

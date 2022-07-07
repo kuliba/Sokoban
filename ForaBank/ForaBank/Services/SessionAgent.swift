@@ -64,12 +64,6 @@ class SessionAgent: SessionAgentProtocol {
             .sink { [unowned self] action in
             
                 switch action {
-                case _ as SessionAgentAction.App.Activated:
-                    self.action.send(SessionAgentAction.Session.Start.Request())
-                    
-                case _ as SessionAgentAction.App.Inactivated:
-                    sessionState.send(.inactive)
-                    
                 case let payload as SessionAgentAction.Session.Start.Response:
                     switch payload.result {
                     case .success(let credentials):

@@ -31,6 +31,7 @@ class SettingViewCoordinator: Coordinator {
 
 extension SettingViewCoordinator: SettingTableViewControllerDelegate {
     func goLoginCardEntry() {
+        /*
         let mySceneDelegate = settingsViewController.view.window?.windowScene?.delegate as? SceneDelegate
 
         let appNavigation = UINavigationController()
@@ -42,5 +43,6 @@ extension SettingViewCoordinator: SettingTableViewControllerDelegate {
         mySceneDelegate?.window?.rootViewController = mySceneDelegate?.appCoordinator.toPresentable()
         mySceneDelegate?.window?.makeKeyAndVisible()
         mySceneDelegate?.appCoordinator.start()
+         */
     }
 }

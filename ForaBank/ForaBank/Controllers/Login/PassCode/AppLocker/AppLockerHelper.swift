@@ -12,6 +12,7 @@ struct AppLockerHelper {
     
     static func goVC(_ mode: ALMode) {
         
+        /*
         if AppDelegate.shared.isAuth ?? false {
             guard let topVc = UIApplication.getTopViewController() else {return}
             DispatchQueue.main.async {
@@ -21,6 +22,7 @@ struct AppLockerHelper {
                 topVc.present(locker, animated: true, completion: nil)
             }
         }
+         */
     }
     
 }
