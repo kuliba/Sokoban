@@ -36,14 +36,7 @@ extension DateFormatter {
         return dateFormatter
     }
     
-    static let iso8601: DateFormatter = {
-        
-        let formatter = DateFormatter()
-        formatter.timeZone = TimeZone(identifier: "UTC")
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-        
-        return formatter
-    }()
+    static let iso8601: DateFormatter = DateFormatterISO8601()
     
     static let minutsAndSecond: DateFormatter = {
         
@@ -118,4 +111,29 @@ extension DateFormatter {
         
         return formatter
     }()
+}
+
+class DateFormatterISO8601: DateFormatter {
+    
+    private let formatter: ISO8601DateFormatter
+    
+    override init() {
+        self.formatter = ISO8601DateFormatter()
+        super.init()
+        formatter.formatOptions = [.withInternetDateTime, .withDashSeparatorInDate, .withColonSeparatorInTime, .withFractionalSeconds, .withTimeZone]
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func date(from string: String) -> Date? {
+        
+        formatter.date(from: string)
+    }
+    
+    override func string(from date: Date) -> String {
+        
+        formatter.string(from: date)
+    }
 }
