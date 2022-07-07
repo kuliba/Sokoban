@@ -25,7 +25,7 @@ class InfoProductViewModel: ObservableObject {
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
-    internal init(product: ProductData, title: String, list: [ItemViewModel], additionalList: [ItemViewModel]?, shareButton: ButtonViewModel?, model: Model, bindings: Set<AnyCancellable> = Set<AnyCancellable>()) {
+    internal init(product: ProductData, title: String, list: [ItemViewModel], additionalList: [ItemViewModel]?, shareButton: ButtonViewModel?, model: Model) {
         
         self.product = product
         self.title = title
@@ -33,7 +33,6 @@ class InfoProductViewModel: ObservableObject {
         self.additionalList = additionalList
         self.shareButton = shareButton
         self.model = model
-        self.bindings = bindings
     }
     
     internal init(model: Model, product: ProductData, info: Bool = true) {

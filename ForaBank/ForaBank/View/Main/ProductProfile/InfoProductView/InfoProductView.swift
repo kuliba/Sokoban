@@ -81,7 +81,6 @@ struct InfoProductView: View {
                 
             }
         }
-        .navigationBarBackButtonHidden(true)
         .navigationBarTitle(Text(viewModel.title), displayMode: .inline)
         .navigationBarItems(trailing:
                                 

@@ -87,16 +87,33 @@ struct ProductProfileView: View {
             StatusView(viewModel: viewModel.statusBar)
                 .frame(height: 48)
                 .background(viewModel.accentColor.contrast(0.5).edgesIgnoringSafeArea(.top))
+            
+            NavigationLink("", isActive: $viewModel.isLinkActive) {
+                
+                if let link = viewModel.link  {
+                    
+                    switch link {
+                    case .productInfo(let productInfoViewModel):
+                        InfoProductView(viewModel: productInfoViewModel)
+                    }
+                }
+            }
         }
         .navigationBarHidden(true)
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })
-        .bottomSheet(item: $viewModel.sheet, content: { sheet in
+        .bottomSheet(item: $viewModel.bottomSheet, content: { sheet in
             
             switch sheet.type {
             case let .operationDetail(operationDetailViewModel):
                 OperationDetailView(viewModel: operationDetailViewModel)
+                
+            case let .optionsPannel(optionsPannelViewModel):
+                ProductProfileOptionsPannelView(viewModel: optionsPannelViewModel)
+                    .padding(.horizontal, 20)
+                    .padding(.top, 26)
+                    .padding(.bottom, 72)
             }
         })
     }
