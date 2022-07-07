@@ -20,7 +20,9 @@ extension UserAccountContactsView {
             super.init(isCollapsed: isCollapsed)
         }
         
-        internal init(userData: ClientInfoData, isCollapsed: Bool) {
+        internal init(userData: ClientInfoData, customName: String?, isCollapsed: Bool) {
+            
+            let name = customName != nil ? customName! : userData.firstName
             
             self.items = []
             super.init(isCollapsed: isCollapsed)
@@ -28,7 +30,7 @@ extension UserAccountContactsView {
             self.items = [
                 AccountCellButtonView.ViewModel(
                     icon: .ic24User,
-                    content: userData.firstName,
+                    content: name,
                     title: "Имя",
                     button: .init(icon: .ic24Edit2, action: { [weak self] in
                         self?.action.send(UserAccountViewModelAction.ChangeUserName())

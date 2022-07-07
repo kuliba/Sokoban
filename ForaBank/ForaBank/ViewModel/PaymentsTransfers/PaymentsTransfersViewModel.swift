@@ -152,7 +152,7 @@ class PaymentsTransfersViewModel: ObservableObject {
                             })))
                         
                         case (.country, let paymentData as PaymentCountryData):
-                            bottomSheet = .init(type: .country(paymentData))
+                            link = .init(.country(paymentData))
                             
                         case (.service, let paymentData as PaymentServiceData):
                             link = .service(.init(model: model, closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
@@ -188,10 +188,11 @@ class PaymentsTransfersViewModel: ObservableObject {
                         switch payload.type {
                         case .abroad:
                             link = .chooseCountry(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            }))
+                            }, template: nil))
                             
                         case .anotherCard:
-                            bottomSheet = .init(type: .anotherCard(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+                            bottomSheet = .init(type: .anotherCard(.init(closeAction: { [weak self] in
+                                self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
                             })))
                             
                         case .betweenSelf:
@@ -267,7 +268,6 @@ class PaymentsTransfersViewModel: ObservableObject {
             
             case exampleDetail(String)
             case anotherCard(AnotherCardViewModel)
-            case country(PaymentCountryData)
             case meToMe(MeToMeViewModel)
         }
     }
@@ -288,7 +288,7 @@ class PaymentsTransfersViewModel: ObservableObject {
         case exampleDetail(String)
         case userAccount(UserAccountViewModel)
         case mobile(MobilePayViewModel)
-        case chooseCountry(ChooseCountryViewModel)
+        case chooseCountry(OperatorsViewModel)
         case transferByRequisites(TransferByRequisitesViewModel)
         case phone(PaymentByPhoneViewModel)
         case taxAndStateService(PaymentsViewModel)
@@ -300,6 +300,7 @@ class PaymentsTransfersViewModel: ObservableObject {
         case transport(OperatorsViewModel)
         case template(TemplatesListViewModel)
         case qrScanner(QrViewModel)
+        case country(PaymentCountryData)
     }
 }
 

@@ -437,6 +437,9 @@ class Model {
                 case let payload as ModelAction.ClientPhoto.Save:
                     handleClientPhotoRequest(payload)
                     
+                case let payload as ModelAction.ClientName.Save:
+                    handleClientNameSave(payload)
+                    
                 case _ as ModelAction.FastPaymentSettings.ContractFindList.Request:
                     handleContractFindListRequest()
                     

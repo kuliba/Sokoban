@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Presentation
 
 struct UserAccountView: View {
     
@@ -45,6 +46,11 @@ struct UserAccountView: View {
                     AccountCellFullButtonView(viewModel: button)
                         .padding(.horizontal, 20)
                 }
+                
+                if let button = viewModel.deleteAccountButton {
+                    AccountCellFullButtonWithInfoView(viewModel: button)
+                        .padding(.horizontal, 20)
+                }
             }
             
             NavigationLink("", isActive: $viewModel.isLinkActive) {
@@ -61,9 +67,6 @@ struct UserAccountView: View {
                 }
             }
         }
-        .alert(item: $viewModel.isShowExitAlert) { alert in
-            Alert(title: Text(alert.title), message: Text(alert.message), primaryButton: alert.primaryButton, secondaryButton: alert.secondaryButton)
-        }
         .sheet(item: $viewModel.sheet, content: { sheet in
             switch sheet.sheetType {
                 
@@ -75,12 +78,18 @@ struct UserAccountView: View {
         .bottomSheet(item: $viewModel.bottomSheet, content: { sheet in
             switch sheet.sheetType {
                 
+            case let .deleteInfo(model):
+                UserAccountExitInfoView(viewModel: model)
+                
             case let .inn(model):
                 UserAccountDocumentInfoView(viewModel: model)
                 
             case let .camera(model):
                 UserAccountPhotoSourceView(viewModel: model)
             }
+        })
+        .actionSheet(item: $viewModel.camSheet, content: { buttons in
+            ActionSheet(title: Text("Изменить фото"), buttons: buttons.buttons)
         })
         .present(item: $viewModel.sheetFullscreen, style: .fullScreen, content: { item in
             switch item.type {
@@ -99,6 +108,7 @@ struct UserAccountView: View {
         .alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })
+        .textfieldAlert(alert: $viewModel.textFieldAlert)
         .navigationBar(with: viewModel.navigationBar)
         
     }
@@ -180,6 +190,10 @@ extension UserAccountViewModel {
             content: "Выход из приложения",
             action: {
                 print("Exit action")
-            })
+            }),
+        deleteAccountButton: .init(
+            icon: .ic24UserX, content: "Удалить учетную запись",
+            infoButton: .init(icon: .ic24Info, action: { }),
+            action: { })
     )
 }

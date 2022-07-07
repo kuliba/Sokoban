@@ -8,6 +8,7 @@
 import UIKit
 import RealmSwift
 import AnyFormatKit
+import IQKeyboardManagerSwift
 
 class MemeDetailVC: UIViewController {
 
@@ -75,6 +76,16 @@ class MemeDetailVC: UIViewController {
                 self.setupAmount(amount: template.amount)
             }
         }
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+        IQKeyboardManager.shared.keyboardDistanceFromTextField = 30
+        IQKeyboardManager.shared.enableAutoToolbar = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
     }
     
     deinit {
