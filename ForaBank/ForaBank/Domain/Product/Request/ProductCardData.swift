@@ -242,6 +242,11 @@ extension ProductCardData {
         return true
     }
     
+    var isCanBeUnblocked: Bool {
+        
+        return statusPc == .temporarilyBlocked || statusPc == .blockedByClient
+    }
+    
     var isCreditCard: Bool {
         
         loanBaseParam != nil

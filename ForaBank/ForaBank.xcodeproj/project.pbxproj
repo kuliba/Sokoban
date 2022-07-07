@@ -649,6 +649,7 @@
 		77448C0F2872FC05009EEEA8 /* PrintFormViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77448C0E2872FC05009EEEA8 /* PrintFormViewComponent.swift */; };
 		77448C112872FDBF009EEEA8 /* Model+PrintForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77448C102872FDBF009EEEA8 /* Model+PrintForm.swift */; };
 		77448C1328734643009EEEA8 /* ChangeReturnView+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77448C1228734643009EEEA8 /* ChangeReturnView+Legacy.swift */; };
+		77448C15287360CC009EEEA8 /* ProductProfileOptionsPannelViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77448C14287360CC009EEEA8 /* ProductProfileOptionsPannelViewComponent.swift */; };
 		7744940027FDE3B9001E2B9E /* PlacesFilterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774493FF27FDE3B9001E2B9E /* PlacesFilterViewModel.swift */; };
 		7744940227FDF9D7001E2B9E /* PlacesFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7744940127FDF9D7001E2B9E /* PlacesFilterView.swift */; };
 		7744944927FED1BE001E2B9E /* AtmFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7744944827FED1BE001E2B9E /* AtmFilter.swift */; };
@@ -826,6 +827,7 @@
 		7784D2A8285B73F600E81005 /* LineProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7784D2A7285B73F600E81005 /* LineProgressView.swift */; };
 		7784D2AA285B7BA300E81005 /* ProductProfileDetaiHeaderViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7784D2A9285B7BA300E81005 /* ProductProfileDetaiHeaderViewComponent.swift */; };
 		7788BE03285B849C00EAF14D /* ProductProfileDetailAmountViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7788BE02285B849C00EAF14D /* ProductProfileDetailAmountViewComponent.swift */; };
+		778E26A42875AF4D00D0ED60 /* RootViewModel+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778E26A32875AF4D00D0ED60 /* RootViewModel+Preview.swift */; };
 		77925575279AF54F00A85723 /* ECKeysProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77925574279AF54F00A85723 /* ECKeysProvider.swift */; };
 		7792557E279B1A5400A85723 /* JSONDecoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */; };
 		77925580279B1BCB00A85723 /* JSONEncoder+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */; };
@@ -2010,6 +2012,7 @@
 		77448C0E2872FC05009EEEA8 /* PrintFormViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintFormViewComponent.swift; sourceTree = "<group>"; };
 		77448C102872FDBF009EEEA8 /* Model+PrintForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+PrintForm.swift"; sourceTree = "<group>"; };
 		77448C1228734643009EEEA8 /* ChangeReturnView+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChangeReturnView+Legacy.swift"; sourceTree = "<group>"; };
+		77448C14287360CC009EEEA8 /* ProductProfileOptionsPannelViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductProfileOptionsPannelViewComponent.swift; sourceTree = "<group>"; };
 		774493FF27FDE3B9001E2B9E /* PlacesFilterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesFilterViewModel.swift; sourceTree = "<group>"; };
 		7744940127FDF9D7001E2B9E /* PlacesFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesFilterView.swift; sourceTree = "<group>"; };
 		7744944827FED1BE001E2B9E /* AtmFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtmFilter.swift; sourceTree = "<group>"; };
@@ -2186,6 +2189,7 @@
 		7784D2A7285B73F600E81005 /* LineProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineProgressView.swift; sourceTree = "<group>"; };
 		7784D2A9285B7BA300E81005 /* ProductProfileDetaiHeaderViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductProfileDetaiHeaderViewComponent.swift; sourceTree = "<group>"; };
 		7788BE02285B849C00EAF14D /* ProductProfileDetailAmountViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductProfileDetailAmountViewComponent.swift; sourceTree = "<group>"; };
+		778E26A32875AF4D00D0ED60 /* RootViewModel+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RootViewModel+Preview.swift"; sourceTree = "<group>"; };
 		77925574279AF54F00A85723 /* ECKeysProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECKeysProvider.swift; sourceTree = "<group>"; };
 		7792557D279B1A5400A85723 /* JSONDecoder+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONDecoder+Extensions.swift"; sourceTree = "<group>"; };
 		7792557F279B1BCB00A85723 /* JSONEncoder+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONEncoder+Extensions.swift"; sourceTree = "<group>"; };
@@ -3596,6 +3600,7 @@
 				68EB187727CEDFC600745558 /* ProductProfileHistoryViewComponent.swift */,
 				77E2899A2858EE6D0048141B /* Detail */,
 				6876D0F427F49167000240CC /* ProductProfileLoanDelayInfoViewComponent.swift */,
+				77448C14287360CC009EEEA8 /* ProductProfileOptionsPannelViewComponent.swift */,
 			);
 			path = ProductProfile;
 			sourceTree = "<group>";
@@ -4467,6 +4472,7 @@
 				774E318E27A05197005A067B /* TemplatesListViewModel+Preview.swift */,
 				F8E529B327BBABF600222394 /* AuthProductsViewModel+Preview.swift */,
 				770DCE9727BC0475004099C1 /* AuthPinCodeViewModel+Preview.swift */,
+				778E26A32875AF4D00D0ED60 /* RootViewModel+Preview.swift */,
 				77448C0C2872F7E0009EEEA8 /* sample_pdf.pdf */,
 				0BE6960A27F5C10A007F30D1 /* PlacesSampleData.json */,
 				7769F5BD27D7C9ED00F80607 /* ProductsListSample.json */,
@@ -7870,6 +7876,7 @@
 				770DCE9327BBF93B004099C1 /* RootView.swift in Sources */,
 				ED288CAA2874C95F00B9ABC6 /* AlertTextFieldComponent.swift in Sources */,
 				5047487228566C130007128F /* OpenAccountButtonViewComponent.swift in Sources */,
+				778E26A42875AF4D00D0ED60 /* RootViewModel+Preview.swift in Sources */,
 				77448C03286DF2A9009EEEA8 /* OperationDetailHeaderViewComponent.swift in Sources */,
 				0BF348A1269E0CDA005138A8 /* LogoutDecodableModel.swift in Sources */,
 				0BDCF00D274A8B0F00AAA1C3 /* IsSingleServiceDecodableModel.swift in Sources */,
@@ -8186,6 +8193,7 @@
 				77448C0B2872F54D009EEEA8 /* PDFDocumentView.swift in Sources */,
 				5066506F2857D9130039A745 /* Model+Account.swift in Sources */,
 				7744944927FED1BE001E2B9E /* AtmFilter.swift in Sources */,
+				77448C15287360CC009EEEA8 /* ProductProfileOptionsPannelViewComponent.swift in Sources */,
 				509EE0DF285F84AB002281BF /* UIApplication+Extension.swift in Sources */,
 				ED84994826A6FD97005205C6 /* CountryListView.swift in Sources */,
 				503F074A28252D3B00E84A77 /* DepositTotalAmountView.swift in Sources */,

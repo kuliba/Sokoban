@@ -28,10 +28,12 @@ class RootViewModel: ObservableObject {
         
         self.selected = .main
         self.mainViewModel = MainViewModel(model)
-        self.paymentsViewModel = .init(model: model)   //.sample
+        self.paymentsViewModel = .init(model: model)
         self.chatViewModel = .init()
         self.informerViewModel = .init()
         self.model = model
+        
+        mainViewModel.rootActions = rootActions
     
         bind()
     }
@@ -65,6 +67,22 @@ class RootViewModel: ObservableObject {
                 withAnimation {
                     informerViewModel.message = data?.message
                 }
+            }.store(in: &bindings)
+        
+        action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case let payload as RootViewModelAction.SwitchTab:
+                    withAnimation {
+                        selected = payload.tabType
+                    }
+
+                default:
+                    break
+                }
+                
             }.store(in: &bindings)
         
         model.action
@@ -124,6 +142,8 @@ class RootViewModel: ObservableObject {
         AuthPermissionsViewModel(model, sensorType: sensorType, dismissAction: {[weak self] in
             self?.action.send(RootViewModelAction.Cover.Hide()) })
     }
+    
+    lazy var rootActions: RootViewModel.RootActions  = .init(switchTab: { [weak self] tabType in self?.action.send(RootViewModelAction.SwitchTab(tabType: tabType)) })
 }
 
 extension RootViewModel {
@@ -180,6 +200,11 @@ extension RootViewModel {
             let hide: () -> Void
         }
     }
+    
+    struct RootActions {
+        
+        let switchTab: (RootViewModel.TabType) -> Void
+    }
 }
 
 //MARK: - Action
@@ -215,5 +240,10 @@ enum RootViewModelAction {
     struct ShowPermissions: Action {
         
         let sensorType: BiometricSensorType
+    }
+    
+    struct SwitchTab: Action {
+        
+        let tabType: RootViewModel.TabType
     }
 }

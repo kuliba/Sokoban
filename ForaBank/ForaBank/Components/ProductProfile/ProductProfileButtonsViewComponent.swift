@@ -37,34 +37,136 @@ extension ProductProfileButtonsView {
         private func updatedButtons(for product: ProductData) -> [ButtonIconTextRectView.ViewModel] {
             
             var result = [ButtonIconTextRectView.ViewModel]()
-            let buttonsTypes = buttonTypes(for: product)
-            for button in buttonsTypes {
+            for type in ButtonType.allCases {
                 
-                result.append(.init(id: button.type.rawValue,
-                                     icon: button.type.icon,
-                                     title: button.type.title,
-                                     isEnabled: button.isEnabled,
-                                     action: { [weak self] in self?.action.send(ProductProfileButtonsSectionViewAction.ButtonDidTapped(buttonType: button.type))}))
+                let icon = buttonIcon(for: type, for: product)
+                let title = buttonName(for: type, for: product)
+                let isEnabled = buttonEnabled(for: type, for: product)
+                
+                result.append(.init(id: type.rawValue,
+                                    icon: icon,
+                                    title: title,
+                                    isEnabled: isEnabled,
+                                    action: { [weak self] in self?.action.send(ProductProfileButtonsSectionViewAction.ButtonDidTapped(buttonType: type))}))
             }
             
             return result
         }
-      
-        private func buttonTypes(for product: ProductData) -> [(type: ButtonType, isEnabled: Bool)] {
+              
+        func buttonEnabled(for buttonType: ButtonType, for product: ProductData) -> Bool {
             
-            switch product.productType {
-            case .card:
-                //TODO: ublock
-                return [(.pay, true), (.transfer, true), (.requisites, true), (.block, true)]
+            switch buttonType {
+            case .topLeft:
+                switch product.productType {
+                case .card:
+                    guard let cardProduct = product as? ProductCardData else {
+                        return true
+                    }
+                    
+                    return cardProduct.isBlocked ? false : true
+                    
+                default: return true
+                }
                 
-            case .account:
-                return [(.pay, true), (.transfer, true), (.requisites, true), (.close, false)]
+            case .bottomLeft: return true
                 
-            case .deposit:
-                return [(.pay, true), (.transfer, true), (.details, true), (.control, false)]
+            case .topRight:
+                switch product.productType {
+                case .card:
+                    guard let cardProduct = product as? ProductCardData else {
+                        return true
+                    }
+                    
+                    return cardProduct.isBlocked ? false : true
+                    
+                case .deposit:
+                    guard let depositProduct = product as? ProductDepositData else {
+                        return false
+                    }
+                    
+                    return depositProduct.isTransferEnabled
+                    
+                case .loan: return false
+                default: return true
+                }
                 
-            case .loan:
-                return [(.pay, true), (.control, true), (.requisites, true), (.repay, true)]
+            case .bottomRight:
+                switch product.productType {
+                case .card:
+                    guard let cardProduct = product as? ProductCardData else {
+                        return false
+                    }
+                    
+                    return cardProduct.isCanBeUnblocked ? true : false
+                case .account: return false
+                default: return true
+                }
+            }
+        }
+        
+        func buttonName(for buttonType: ButtonType, for product: ProductData) -> String {
+            
+            switch buttonType {
+            case .topLeft: return "Пополнить"
+                
+            case .bottomLeft:
+                switch product.productType {
+                case .deposit: return "Детали"
+                default: return "Реквизиты и выписки"
+                }
+                
+            case .topRight:
+                switch product.productType {
+                case .loan: return "Управление"
+                default: return "Перевести"
+                }
+                
+            case .bottomRight:
+                switch product.productType {
+                case .card:
+                    guard let cardProduct = product as? ProductCardData else {
+                        return "Блокировать"
+                    }
+                    
+                    return cardProduct.isBlocked ? "Разблокировать" : "Блокировать"
+                    
+                case .account: return "Закрыть"
+                case .deposit: return "Управление"
+                case .loan: return "Погасить досрочно"
+                }
+            }
+        }
+        
+        func buttonIcon(for buttonType: ButtonType, for product: ProductData) -> Image {
+            
+            switch buttonType {
+            case .topLeft: return .ic24Plus
+                
+            case .bottomLeft:
+                switch product.productType {
+                case .deposit: return .ic24Info
+                default: return .ic24FileText
+                }
+                
+            case .topRight:
+                switch product.productType {
+                case .loan: return .ic24Server
+                default: return .ic24ArrowUpRight
+                }
+                
+            case .bottomRight:
+                switch product.productType {
+                case .card:
+                    guard let cardProduct = product as? ProductCardData else {
+                        return .ic24Lock
+                    }
+                    
+                    return cardProduct.isBlocked ? .ic24Unlock : .ic24Lock
+                    
+                case .account: return .ic24Lock
+                case .deposit: return .ic24Server
+                case .loan: return .ic24Clock
+                }
             }
         }
     }
@@ -74,47 +176,12 @@ extension ProductProfileButtonsView {
 
 extension ProductProfileButtonsView.ViewModel {
     
-    enum ButtonType: String {
+    enum ButtonType: String, CaseIterable {
         
-        case pay
-        case requisites
-        case transfer
-        case control
-        case block
-        case unblock
-        case repay
-        case details
-        case close
-        
-        var title: String {
-            
-            switch self {
-            case .pay: return "Пополнить"
-            case .requisites: return "Реквизиты и выписка"
-            case .transfer: return "Перевести"
-            case .control: return "Управление"
-            case .block: return "Блокировать"
-            case .unblock: return "Разблокировать"
-            case .repay: return "Погасить досрочно"
-            case .details: return "Детали"
-            case .close: return "Закрыть"
-            }
-        }
-        
-        var icon: Image {
-            
-            switch self {
-            case .pay: return .ic24Plus
-            case .requisites: return .ic24FileText
-            case .transfer: return .ic24ArrowUpRight
-            case .control: return .ic24Server
-            case .block: return .ic24Lock
-            case .unblock: return .ic24Unlock
-            case .repay: return .ic24Clock
-            case .details: return .ic24Info
-            case .close: return .ic24Lock
-            }
-        }
+        case topLeft
+        case topRight
+        case bottomLeft
+        case bottomRight
     }
 }
 

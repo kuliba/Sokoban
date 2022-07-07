@@ -43,8 +43,8 @@ extension MainSectionFastOperationView {
                 let action: () -> Void = { [weak self] in
                     self?.action.send(MainSectionViewModelAction.FastPayment.ButtonTapped(operationType: type))
                 }
-                                      
-                return ButtonIconTextView.ViewModel.init(icon: icon, title: title, orientation: .vertical, appearance: .circle, action: action)
+            
+                return ButtonIconTextView.ViewModel(icon: .init(image: icon, background: .circle), title: .init(text: title), orientation: .vertical, action: action)
             }
         }
         
