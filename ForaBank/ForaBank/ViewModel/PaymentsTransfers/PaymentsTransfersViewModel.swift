@@ -205,8 +205,7 @@ class PaymentsTransfersViewModel: ObservableObject {
                             }, paymentTemplate: nil))
                             
                         case .byPhoneNumber:
-                            sheet = .init(type: .transferByPhone(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
-                            })))
+                            sheet = .init(type: .transferByPhone(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Sheet())})))
                         }
                         
                     //Payments Section

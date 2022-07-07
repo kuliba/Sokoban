@@ -67,18 +67,20 @@ class MainViewModel: ObservableObject {
                     guard let clientInfo = model.clientInfo.value else {
                         return
                     }
-                    link = .userAccount(.init(model: model, clientInfo: clientInfo, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.CloseLink())}))
+                    link = .userAccount(.init(model: model, clientInfo: clientInfo, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.CloseAction.Link())}))
                     
                 case _ as MainViewModelAction.ButtonTapped.Messages:
-                    let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model, closeAction: {[weak self] in self?.action.send(MainViewModelAction.CloseLink())})
+                    let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model, closeAction: {[weak self] in self?.action.send(MainViewModelAction.CloseAction.Link())})
                     link = .messages(messagesHistoryViewModel)
                     
                 case _ as MainViewModelAction.PullToRefresh:
                     model.action.send(ModelAction.Products.Update.Total.All())
                 
-                case _ as MainViewModelAction.CloseLink:
+                case _ as MainViewModelAction.CloseAction.Link:
                     self.link = nil
                     
+                case _ as MainViewModelAction.CloseAction.Sheet:
+                    self.sheet = nil
                 default:
                     break
                 }
@@ -112,7 +114,7 @@ class MainViewModel: ObservableObject {
                 switch transition {
                 case .history:
                     let messagesHistoryViewModel: MessagesHistoryViewModel = .init(model: model, closeAction: {
-                        self.action.send(MainViewModelAction.CloseLink())
+                        self.action.send(MainViewModelAction.CloseAction.Link())
                     })
                     link = .messages(messagesHistoryViewModel)
                     model.notificationsTransition.value = nil
@@ -141,7 +143,7 @@ class MainViewModel: ObservableObject {
                                 bottomSheet = .init(type: .openAccount(model))
                                 
                             case .deposit:
-                                link = .openDeposit(.init(model, products: self.model.deposits.value, style: .deposit, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.CloseLink())
+                                link = .openDeposit(.init(model, products: self.model.deposits.value, style: .deposit, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.CloseAction.Link())
                                 }))
                                 
                             default:
@@ -163,16 +165,16 @@ class MainViewModel: ObservableObject {
                         case let payload as MainSectionViewModelAction.FastPayment.ButtonTapped:
                             switch payload.operationType {
                             case .templates:
-                                link = .templates(.init(model, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.CloseLink())
+                                link = .templates(.init(model, dismissAction: {[weak self] in self?.action.send(MainViewModelAction.CloseAction.Link())
                                 }))
                                 
                             case .byPhone:
                                 sheet = .init(type: .byPhone(.init(closeAction: { [weak self] in
-                                    self?.action.send(MainViewModelAction.CloseLink())
+                                    self?.action.send(MainViewModelAction.CloseAction.Sheet())
                                 })))
                             case .byQr:
                                 link = .qrScanner(.init(closeAction: { [weak self] in
-                                    self?.action.send(MainViewModelAction.CloseLink())
+                                    self?.action.send(MainViewModelAction.CloseAction.Link())
                                 }))
                             }
                             
@@ -349,6 +351,11 @@ enum MainViewModelAction {
     
     struct PullToRefresh: Action {}
     
-    struct CloseLink: Action {}
+    enum CloseAction {
+     
+        struct Link: Action {}
+        
+        struct Sheet: Action {}
+    }
 }
 
