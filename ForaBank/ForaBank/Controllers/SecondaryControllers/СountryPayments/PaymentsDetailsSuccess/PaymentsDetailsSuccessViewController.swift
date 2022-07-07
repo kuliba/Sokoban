@@ -29,7 +29,7 @@ class PaymentsDetailsSuccessViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-//        button.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action:#selector(doneButtonTapped), for: .touchUpInside)
         confurmView.detailTapped = { () in
             self.openDetailVC()
         }
@@ -135,5 +135,16 @@ class PaymentsDetailsSuccessViewController: UIViewController {
         vc.title = "Детали операции"
         let navVC = UINavigationController(rootViewController: vc)
         self.present(navVC, animated: true)
+    }
+    
+    // MARK:- Dismiss and Pop ViewControllers
+    func dismissViewControllers() {
+        
+        self.dismiss(animated: false)
+        guard let closeAction = closeAction else {
+            return
+        }
+        
+        closeAction()
     }
 }

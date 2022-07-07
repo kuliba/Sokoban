@@ -13,9 +13,6 @@ import IQKeyboardManagerSwift
 extension CustomPopUpWithRateView {
     override func viewDidLoad() {
         super.viewDidLoad()
-        IQKeyboardManager.shared.enable = true
-        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
-        IQKeyboardManager.shared.enableAutoToolbar = true
         setupUI()
         setupConstraint()
         
@@ -41,6 +38,9 @@ extension CustomPopUpWithRateView {
         }
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.enableAutoToolbar = true
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false   
+        IQKeyboardManager.shared.keyboardDistanceFromTextField = 30
+
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -98,7 +98,7 @@ extension CustomPopUpWithRateView {
         view.addSubview(bottomView)
         bottomView.anchor(
             left: view.leftAnchor,
-            bottom: view.safeAreaLayoutGuide.bottomAnchor,
+            bottom: view.bottomAnchor,
             right: view.rightAnchor)
         let saveAreaView = UIView()
         saveAreaView.backgroundColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1)
@@ -143,18 +143,18 @@ extension CustomPopUpWithRateView {
         switch paymentTemplate.type {
         case .betweenTheir:
             if let transfer = paymentTemplate.parameterList.first as? TransferGeneralData {
-                
-                let object = model.products.value.compactMap({$0.value}).first
-                
+                                
                 if let cardId = transfer.payeeInternal?.cardId {
                     
-                    let card = object?.first(where: { $0.id == cardId })?.userAllProducts()
+                    let object = model.products.value[.card]?.map({ $0.userAllProducts()}) ?? []
+                    let card = object.first(where: { $0.id == cardId })
                     self.cardToField.model = card
                     self.viewModel.cardToRealm = card
                     
                 } else if let accountId = transfer.payeeInternal?.accountId {
                     
-                    let card = object?.first(where: { $0.id == accountId })?.userAllProducts()
+                    let accounts = model.products.value[.account]?.map({ $0.userAllProducts()}) ?? []
+                    let card = accounts.first(where: { $0.id == accountId })
                     self.cardToField.model = card
                     self.viewModel.cardToRealm = card
                 }
@@ -339,6 +339,7 @@ extension CustomPopUpWithRateView {
                 vc.didCardTapped = { card in
                     self.viewModel.cardFrom = card
                     self.reversCard = ""
+                    self.bottomView.models.from = card.currency ?? ""
                     self.cardFromField.cardModel = card
                     if !self.cardFromListView.isHidden {
                         self.hideView(self.cardFromListView, needHide: true) {
@@ -398,6 +399,7 @@ extension CustomPopUpWithRateView {
                 self.viewModel.cardTo = card
                 self.reversCard = ""
                 self.cardToField.cardModel = card
+                self.bottomView.models.to = card.currency ?? ""
                 self.hideView(self.cardToListView, needHide: true) {
                     if let cardFromListView = self.cardFromListView, !cardFromListView.isHidden {
                         self.hideView(self.cardFromListView, needHide: true) { }

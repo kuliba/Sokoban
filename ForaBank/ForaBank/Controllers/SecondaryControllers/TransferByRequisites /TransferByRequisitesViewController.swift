@@ -164,7 +164,6 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
     init(paymentTemplate: PaymentTemplateData) {
         super.init(nibName: nil, bundle: nil)
         self.paymentTemplate = paymentTemplate
-        
         if let parameter = paymentTemplate.parameterList.first as? TransferGeneralData {
             
             if let bik = parameter.payeeExternal?.bankBIC {
@@ -201,7 +200,6 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
     init(orgPaymentTemplate: PaymentTemplateData) {
         super.init(nibName: nil, bundle: nil)
         self.paymentTemplate = orgPaymentTemplate
-        
         if let parameter = orgPaymentTemplate.parameterList.first as? TransferGeneralData {
             
             self.byCompany = true
@@ -549,6 +547,8 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
     
     @objc func onTouchBackButton() {
             viewModel.closeAction()
+            dismiss(animated: true)
+            navigationController?.popViewController(animated: true)
     }
     
     func setupUI() {
@@ -648,7 +648,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
     func setupConstraint() {
         bottomView.anchor(
             left: view.leftAnchor,
-            bottom: view.safeAreaLayoutGuide.bottomAnchor,
+            bottom: view.bottomAnchor,
             right: view.rightAnchor)
         
         stackView.anchor(

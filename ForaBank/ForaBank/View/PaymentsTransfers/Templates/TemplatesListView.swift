@@ -92,37 +92,53 @@ struct TemplatesListView: View {
                             switch link {
                             case .byPhone(let paymentPhoneView):
                                 PaymentPhoneView(viewModel: paymentPhoneView)
-                                
+                                    .edgesIgnoringSafeArea(.all)
+
                             case .sfp(let paymentPhoneView):
                                 PaymentPhoneView(viewModel: paymentPhoneView)
+                                    .edgesIgnoringSafeArea(.all)
 
                             case .direct(let paymentTemplateData):
                                 CountryPaymentView(viewModel: .init(paymentTemplate: paymentTemplateData))
-                                
+                                    .edgesIgnoringSafeArea(.bottom)
+
                             case .contactAdressless(let paymentTemplateData):
                                 CountryPaymentView(viewModel: .init(paymentTemplate: paymentTemplateData))
-                                
+                                    .edgesIgnoringSafeArea(.bottom)
+
                             case .housingAndCommunalService(let internetTVDetailsViewModel):
                                 InternetTVDetailsView(viewModel: internetTVDetailsViewModel)
-                                
+                                    .edgesIgnoringSafeArea(.bottom)
+
                             case .mobile(let paymentTemplateData):
                                 MobilePayView(viewModel: .init(paymentTemplate: paymentTemplateData))
-                                
+                                    .edgesIgnoringSafeArea(.bottom)
+
                             case .internet(let internetTVDetailsViewModel):
                                 InternetTVDetailsView(viewModel: internetTVDetailsViewModel)
+                                    .edgesIgnoringSafeArea(.bottom)
 
                             case .transport(let avtodorDetailsViewModel):
                                 OperatorsView(viewModel: avtodorDetailsViewModel)
+                                    .edgesIgnoringSafeArea(.bottom)
 
                             case .externalEntity(let transferByRequisitesView):
                                 TransferByRequisitesView(viewModel: transferByRequisitesView)
-                                
+                                    .navigationBarBackButtonHidden(true)
+                                    .edgesIgnoringSafeArea(.bottom)
+
                             case .externalIndividual(let transferByRequisitesView):
                                 TransferByRequisitesView(viewModel: transferByRequisitesView)
-                            
+                                    .navigationBarBackButtonHidden(true)
+                                    .edgesIgnoringSafeArea(.bottom)
+
                             case .openProduct(let productProfileViewModel):
                                 ProductProfileView(viewModel: productProfileViewModel)
                                 
+                            case .betweenTheir(let meToMeViewModel):
+                                MeToMeView(viewModel: .init(closeAction: {}, paymentTemplate: meToMeViewModel.paymentTemplate))
+                                    .navigationBarHidden(false)
+                                    .edgesIgnoringSafeArea(.bottom)
                             }
                         }
                     }
@@ -170,9 +186,12 @@ struct TemplatesListView: View {
             
             switch sheet.type {
             case .betweenTheir(let meToMeViewModel):
-                MeToMeView(viewModel: .init(closeAction: {}, paymentTemplate: meToMeViewModel.paymentTemplate))
-                    .frame(height: 540, alignment: .bottom)
-
+                NavigationView {
+                    MeToMeView(viewModel: .init(closeAction: {}, paymentTemplate: meToMeViewModel.paymentTemplate))
+                        .navigationBarTitle("", displayMode: .inline)
+                        .navigationBarBackButtonHidden(true)
+                        .edgesIgnoringSafeArea(.all)
+                }
             }
         })
     }

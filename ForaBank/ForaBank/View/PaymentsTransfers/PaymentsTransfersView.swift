@@ -150,7 +150,6 @@ struct PaymentsTransfersView: View {
                 MeToMeView(viewModel: viewModel)
                     .edgesIgnoringSafeArea(.bottom)
                     .frame(height: 540)
-                
             case .anotherCard(let model):
                 //TODO: как то нужно открыть не молным модальным откном, UIViewControllerTransitioningDelegate не работает
                 

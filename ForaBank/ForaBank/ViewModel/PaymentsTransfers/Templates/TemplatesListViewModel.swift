@@ -139,9 +139,11 @@ private extension TemplatesListViewModel {
                         print("Скорее всего не будет сделано в ближайшее время")
                         
                     case .betweenTheir:
-                        sheet = .init(type: .betweenTheir(.init(closeAction: {[weak self] in self?.link = nil }, paymentTemplate: temp)))
+                        link = .betweenTheir(.init(closeAction: {[weak self] in self?.link = nil }, paymentTemplate: temp))
+                        
                     case .insideBank:
-                        sheet = .init(type: .betweenTheir(.init(closeAction: {[weak self] in self?.link = nil }, paymentTemplate: temp)))
+                        link = .betweenTheir(.init(closeAction: {[weak self] in self?.link = nil }, paymentTemplate: temp))
+                        
                     case .byPhone:
                         link = .byPhone(.init(insideByPhone: temp))
                         
@@ -164,7 +166,7 @@ private extension TemplatesListViewModel {
                         link = .internet(.init(model: model, closeAction: {[weak self] in self?.link = nil }, paymentTemplate: temp))
 
                     case .transport:
-                        link = .transport(.init(closeAction: {[weak self] in self?.link = nil }, template: temp))
+                        link = .internet(.init(model: model, closeAction: {[weak self] in self?.link = nil }, paymentTemplate: temp))
 
                     case .externalEntity:
                         link = .externalEntity(.init(closeAction: {[weak self] in self?.link = nil }, paymentTemplate: temp))
@@ -357,6 +359,7 @@ extension TemplatesListViewModel {
         case externalEntity(TransferByRequisitesViewModel)
         case externalIndividual(TransferByRequisitesViewModel)
         case openProduct(ProductProfileViewModel)
+        case betweenTheir(MeToMeViewModel)
                            
     }
 }
