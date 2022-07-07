@@ -429,7 +429,7 @@ extension ServerCommands {
                 }
             }
             
-            internal init(token: String, payload: Payload) {
+            internal init(token: String, payload: Payload?) {
                 
                 self.token = token
                 self.payload = payload
@@ -512,23 +512,6 @@ extension ServerCommands {
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: CreateTransferResponseData?
-                
-                struct CreateTransferResponseData: Decodable, Equatable {
-                    
-                    let needMake: Bool?
-                    let needOTP: Bool?
-                    let amount: Double?
-                    let creditAmount: Double?
-                    let fee: Double?
-                    let currencyAmount: String?
-                    let currencyPayer: String?
-                    let currencyPayee: String?
-                    let currencyRate: Double?
-                    let debitAmount: Double?
-                    let payeeName: String?
-                    let paymentOperationDetailId: Int
-                    let documentStatus: TransferResponseBaseData.DocumentStatus
-                }
             }
             
             internal init(token: String, payload: Payload) {

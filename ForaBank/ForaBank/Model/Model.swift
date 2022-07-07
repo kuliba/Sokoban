@@ -303,6 +303,14 @@ class Model {
                 
                 switch action {
                     
+                    //MARK: - App
+                    
+                case _ as ModelAction.App.Activated:
+                    self.action.send(ModelAction.Dictionary.UpdateCache.All())
+                    
+                case _ as ModelAction.App.Inactivated:
+                    break
+                    
                     //MARK: - General
                     
                 case let payload as ModelAction.General.DownloadImage.Request:
@@ -420,6 +428,14 @@ class Model {
                     
                 case let payload as ModelAction.Transfers.CreateInterestDepositTransfer.Request:
                     handleCreateInterestDepositTransferRequest(payload)
+                    
+                    //MARK: - CurrencyWallet
+                    
+                case let payload as ModelAction.CurrencyWallet.ExchangeOperations.Start.Request:
+                    handlerCurrencyWalletExchangeOperationsStartRequest(payload)
+                    
+                case _ as ModelAction.CurrencyWallet.ExchangeOperations.Approve.Request:
+                    handlerCurrencyWalletExchangeOperationsApproveRequest()
                     
                     //MARK: - Media
                     

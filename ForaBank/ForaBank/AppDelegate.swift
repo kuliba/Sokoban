@@ -1,0 +1,159 @@
+//
+//  AppDelegate.swift
+//  ForaBank
+//
+//  Created by Mikhail on 27.05.2021.
+//
+
+import UIKit
+import Firebase
+import FirebaseMessaging
+
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    
+    //FIXME: remove singletone after refactoring
+    let model = Model.shared
+    
+    static var shared: AppDelegate { return UIApplication.shared.delegate as! AppDelegate }
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        UIApplication.shared.applicationIconBadgeNumber = 0
+
+        /// FirebaseApp configure
+        var filePath = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist")!
+        #if DEBUG
+        filePath = Bundle.main.path(forResource: "GoogleService-Info-test", ofType: "plist")!
+        #endif
+        
+        if let fileopts = FirebaseOptions.init(contentsOfFile: filePath) {
+            
+            FirebaseApp.configure(options: fileopts)
+        }
+
+        // remote notifications
+        UNUserNotificationCenter.current().delegate = self
+        application.registerForRemoteNotifications()
+        
+        // send user interaction events to session agent
+        if let foraApplication = application as? ForaApplication {
+            
+            foraApplication.didTouchEvent = {
+                
+                self.model.sessionAgent.action.send(SessionAgentAction.Event.UserInteraction())
+            }
+        }
+        
+        return true
+    }
+
+    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        // Called when a new scene session is being created.
+        // Use this method to select a configuration to create the new scene with.
+        
+        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+    }
+}
+
+//MARK: - Push Notifications
+
+extension AppDelegate : UNUserNotificationCenterDelegate {
+    
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        
+        Messaging.messaging().apnsToken = deviceToken
+
+        // request authorization for push notifications
+        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+        UNUserNotificationCenter.current().requestAuthorization(
+            options: authOptions,
+            completionHandler: {_, _ in })
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        
+        let userInfo = notification.request.content.userInfo
+        if (userInfo["aps"]) != nil  || (userInfo["otp"] as? String) != nil {
+
+            NotificationCenter.default.post(name: Notification.Name("otpCode"), object: nil, userInfo: userInfo)
+        }
+
+        if let eventId = userInfo["event_id"] as? String, let cloudId = userInfo["cloud_id"] as? String {
+
+            model.action.send(ModelAction.Notification.ChangeNotificationStatus.Requested(eventId: eventId,
+                                                                                          cloudId: cloudId,
+                                                                                          status: .delivered))
+        }
+        
+        if let otpCode = otpCode(with: userInfo) {
+            
+            Model.shared.action.send(ModelAction.Auth.VerificationCode.PushRecieved(code: otpCode))
+        }
+        
+        func otpCode(with info: [AnyHashable : Any]) -> String? {
+            
+            if let code = info["otp"] as? String  {
+                
+                return code.filter { "0"..."9" ~= $0 }
+                
+            } else if let code = info["aps.alert.body"] as? String {
+                
+                return code.filter { "0"..."9" ~= $0 }
+                
+            } else {
+                
+                return nil
+            }
+        }
+
+        completionHandler([[.alert, .sound]])
+    }
+
+    func userNotificationCenter(_ center: UNUserNotificationCenter,didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        
+        let userInfo = response.notification.request.content.userInfo
+        
+        if let type = userInfo["type"] as? String {
+            if type == "сonsentMe2MePull" {
+                
+                model.action.send(ModelAction.Notification.Transition.Set(transition: .me2me))
+            }
+        } else {
+            
+               model.action.send(ModelAction.Notification.Transition.Set(transition: .history))
+        }
+        completionHandler()
+    }
+}
+
+//MARK: - Deep Links
+
+extension AppDelegate {
+    
+    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+        
+        GlobalModule.c2bURL = "\(url.description)  d"
+        return true
+    }
+
+    func application(_ application: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:] ) -> Bool {
+
+        // Determine who sent the URL.
+        print("qr5555 application application UIApplication open")
+        GlobalModule.c2bURL = url.description
+        let sendingAppID = options[.sourceApplication]
+        // Process the URL.
+        guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true),
+            let albumPath = components.path,
+            let params = components.queryItems else {
+                return false
+        }
+        if let photoIndex = params.first(where: { $0.name == "id" })?.value {
+            return true
+        } else {
+            return false
+        }
+    }
+}
+
+

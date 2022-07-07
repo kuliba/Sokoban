@@ -50,6 +50,7 @@ class LoginCardEntryViewController: UIViewController {
                     
                 } else {
                     DispatchQueue.main.async {
+                        /*
                         AppDelegate.shared.getCSRF { error in
                             if error != nil {
                                 self?.dismissActivity()
@@ -67,6 +68,7 @@ class LoginCardEntryViewController: UIViewController {
                                 }
                             }
                         }
+                         */
                     }
                 }
             }

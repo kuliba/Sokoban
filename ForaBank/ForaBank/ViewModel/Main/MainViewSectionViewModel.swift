@@ -48,7 +48,7 @@ enum MainSectionType: String, CaseIterable, Codable {
         case .fastOperations: return "Быстрые операции"
         case .promo: return ""
         case .currencyExchange: return "Обмен валют"
-        case .currencyMetall: return "Валюты и металлы"
+        case .currencyMetall: return "Обмен валюты"
         case .openProduct: return "Открыть продукт"
         case .atm: return "Отделения и банкоматы"
         }
