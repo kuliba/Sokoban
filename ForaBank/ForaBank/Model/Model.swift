@@ -421,6 +421,14 @@ class Model {
                 case let payload as ModelAction.Transfers.CreateInterestDepositTransfer.Request:
                     handleCreateInterestDepositTransferRequest(payload)
                     
+                    //MARK: - CurrencyWallet
+                    
+                case let payload as ModelAction.CurrencyWallet.ExchangeOperations.Start.Request:
+                    handlerCurrencyWalletExchangeOperationsStartRequest(payload)
+                    
+                case _ as ModelAction.CurrencyWallet.ExchangeOperations.Approve.Request:
+                    handlerCurrencyWalletExchangeOperationsApproveRequest()
+                    
                     //MARK: - Media
                     
                 case _ as ModelAction.Media.CameraPermission.Request:

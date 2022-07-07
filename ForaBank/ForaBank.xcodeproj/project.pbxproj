@@ -249,6 +249,9 @@
 		0CBA6AF0284E525F00FDF10A /* ContactsAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CBA6AEF284E525F00FDF10A /* ContactsAgentTests.swift */; };
 		0CC8FCA7283145E900F0E9BD /* PaymentsTransfersViewModel+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC8FCA6283145E900F0E9BD /* PaymentsTransfersViewModel+Preview.swift */; };
 		0CC8FCA928315F3500F0E9BD /* Model+LatestPayments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC8FCA828315F3500F0E9BD /* Model+LatestPayments.swift */; };
+		0CEA32012875D8E7005B80BA /* Model+CurrencyWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CEA32002875D8E7005B80BA /* Model+CurrencyWallet.swift */; };
+		0CEA3203287618CE005B80BA /* CreateTransterResponseData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CEA3202287618CE005B80BA /* CreateTransterResponseData.swift */; };
+		0CEA3206287732FF005B80BA /* CurrencyExchangeConfirmationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CEA3205287732FF005B80BA /* CurrencyExchangeConfirmationData.swift */; };
 		0CF3D7122836783B001A1BEA /* PaymentsTransfersSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF3D7112836783B001A1BEA /* PaymentsTransfersSectionViewModel.swift */; };
 		0CF3D71528368753001A1BEA /* PTSectionLatestPaymentsViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF3D71428368753001A1BEA /* PTSectionLatestPaymentsViewComponent.swift */; };
 		0CF3D7172836D203001A1BEA /* PTSectionTransfersViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF3D7162836D203001A1BEA /* PTSectionTransfersViewComponent.swift */; };
@@ -1616,6 +1619,9 @@
 		0CBA6AEF284E525F00FDF10A /* ContactsAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsAgentTests.swift; sourceTree = "<group>"; };
 		0CC8FCA6283145E900F0E9BD /* PaymentsTransfersViewModel+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsTransfersViewModel+Preview.swift"; sourceTree = "<group>"; };
 		0CC8FCA828315F3500F0E9BD /* Model+LatestPayments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+LatestPayments.swift"; sourceTree = "<group>"; };
+		0CEA32002875D8E7005B80BA /* Model+CurrencyWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+CurrencyWallet.swift"; sourceTree = "<group>"; };
+		0CEA3202287618CE005B80BA /* CreateTransterResponseData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTransterResponseData.swift; sourceTree = "<group>"; };
+		0CEA3205287732FF005B80BA /* CurrencyExchangeConfirmationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyExchangeConfirmationData.swift; sourceTree = "<group>"; };
 		0CF3D7112836783B001A1BEA /* PaymentsTransfersSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsTransfersSectionViewModel.swift; sourceTree = "<group>"; };
 		0CF3D71428368753001A1BEA /* PTSectionLatestPaymentsViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PTSectionLatestPaymentsViewComponent.swift; sourceTree = "<group>"; };
 		0CF3D7162836D203001A1BEA /* PTSectionTransfersViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PTSectionTransfersViewComponent.swift; sourceTree = "<group>"; };
@@ -4486,6 +4492,8 @@
 			children = (
 				77517F9C27A86321005CFB77 /* TransferResponseBaseData.swift */,
 				77517F9827A858C2005CFB77 /* TransferResponseData.swift */,
+				0CEA3205287732FF005B80BA /* CurrencyExchangeConfirmationData.swift */,
+				0CEA3202287618CE005B80BA /* CreateTransterResponseData.swift */,
 				77517F9A27A858F8005CFB77 /* TransferAnywayResponseData.swift */,
 			);
 			path = Response;
@@ -4792,6 +4800,7 @@
 				7769F5C127D8AC4800F80607 /* Model+Products.swift */,
 				5066506E2857D9130039A745 /* Model+Account.swift */,
 				0C4B0BBB28623DD5004B7F69 /* Model+FastPaymentSettings.swift */,
+				0CEA32002875D8E7005B80BA /* Model+CurrencyWallet.swift */,
 				68DF16C92804F58E005D8D3E /* Model+Statement.swift */,
 				77333DA0283E9CEA00C3036F /* Model+Rates.swift */,
 				77583FF827AED4E700251969 /* Model+Dictionary.swift */,
@@ -7913,6 +7922,7 @@
 				0BD1CA9D26E6B63900CFE993 /* CountriesListSaved.swift in Sources */,
 				68FFA55B268586D3002DADFA /* HeaderBanksCollectionReusableView.swift in Sources */,
 				774706A3277DD4E400B524F1 /* OperationDetailViewModel.swift in Sources */,
+				0CEA32012875D8E7005B80BA /* Model+CurrencyWallet.swift in Sources */,
 				68C8D57026F0DF120076246B /* HistoryTableViewCell.swift in Sources */,
 				687FB23626F0189C004A479F /* ProductViewControllerDataSource.swift in Sources */,
 				EDA5637A26F386AD0093F0C8 /* SettingTableViewController.swift in Sources */,
@@ -8036,6 +8046,7 @@
 				0BEC893B2672335C00D8BD22 /* RegistredPushDeviceTorUserDecodebleModel.swift in Sources */,
 				ED8AB46226C3EA2E006F0D03 /* MeToMeSettingViewController.swift in Sources */,
 				6822EFD626B935FF00125EEC /* BaseTableViewCell.swift in Sources */,
+				0CEA3206287732FF005B80BA /* CurrencyExchangeConfirmationData.swift in Sources */,
 				774A8B392865FCDD00B81140 /* UserAccountDocumentInfoView.swift in Sources */,
 				77F1582B28183BD900CA5E4E /* CryptoKit+Extensions.swift in Sources */,
 				6820927D27AB0DD9003DCAFD /* OperatorGroupData.swift in Sources */,
@@ -8336,6 +8347,7 @@
 				681E073F273D478700551FAD /* ProductViewControllerDelegate.swift in Sources */,
 				7758400927B13F8700251969 /* ValidatorProtocol.swift in Sources */,
 				68D06F2426C3C0F300F9BE4C /* MainViewControllerLayout.swift in Sources */,
+				0CEA3203287618CE005B80BA /* CreateTransterResponseData.swift in Sources */,
 				ED733D5E2858960C00F22D42 /* CurrencyData+Legacy.swift in Sources */,
 				770DCE9627BBFA6D004099C1 /* RootViewHostingViewController.swift in Sources */,
 				0B3FE8E12704DBEE00CBDB4E /* GetLatestMobilePaymentsDecodableModel.swift in Sources */,
