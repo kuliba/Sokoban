@@ -20,6 +20,7 @@ final class TimerTimeInit {
     
     func timeResult() {
         
+        /*
         DispatchQueue.main.async {
             switch AppDelegate.shared.isAuth {
             case nil: self.authState = false
@@ -28,6 +29,7 @@ final class TimerTimeInit {
             case .some(_): self.authState = false
             }
         }
+         */
         lazy var realm = try? Realm()
         
         if authState ?? false {

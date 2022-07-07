@@ -128,7 +128,7 @@ class SettingsViewController: UIViewController {
     
     private func cleanAllData() {
         UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
-        AppDelegate.shared.isAuth = false
+//        AppDelegate.shared.isAuth = false
     }
     
     func getFastPaymentContractList(_ completion: @escaping (_ model: [FastPaymentContractFindListDatum]? ,_ error: String?) -> Void) {

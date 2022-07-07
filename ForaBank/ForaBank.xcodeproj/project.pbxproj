@@ -34,7 +34,6 @@
 		0B283FC126FCB31600B5E925 /* GetPhoneInfoDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B283FC026FCB31600B5E925 /* GetPhoneInfoDecodableModel.swift */; };
 		0B283FC32701016100B5E925 /* CreateMobileTransferDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B283FC22701016100B5E925 /* CreateMobileTransferDecodableModel.swift */; };
 		0B283FC52703722900B5E925 /* GetSessionTimeoutDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B283FC42703722900B5E925 /* GetSessionTimeoutDecodableModel.swift */; };
-		0B283FC72703815900B5E925 /* ExtensionSceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B283FC62703815900B5E925 /* ExtensionSceneDelegate.swift */; };
 		0B283FC927038C2600B5E925 /* GetSessionTimeout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B283FC827038C2600B5E925 /* GetSessionTimeout.swift */; };
 		0B283FCB27038C5400B5E925 /* GetSessionTimeoutSaved.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B283FCA27038C5400B5E925 /* GetSessionTimeoutSaved.swift */; };
 		0B283FCE2704D0D600B5E925 /* GetAccountStatementDecodableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B283FCD2704D0D600B5E925 /* GetAccountStatementDecodableModel.swift */; };
@@ -1406,7 +1405,6 @@
 		0B283FC026FCB31600B5E925 /* GetPhoneInfoDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPhoneInfoDecodableModel.swift; sourceTree = "<group>"; };
 		0B283FC22701016100B5E925 /* CreateMobileTransferDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateMobileTransferDecodableModel.swift; sourceTree = "<group>"; };
 		0B283FC42703722900B5E925 /* GetSessionTimeoutDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetSessionTimeoutDecodableModel.swift; sourceTree = "<group>"; };
-		0B283FC62703815900B5E925 /* ExtensionSceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionSceneDelegate.swift; sourceTree = "<group>"; };
 		0B283FC827038C2600B5E925 /* GetSessionTimeout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetSessionTimeout.swift; sourceTree = "<group>"; };
 		0B283FCA27038C5400B5E925 /* GetSessionTimeoutSaved.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetSessionTimeoutSaved.swift; sourceTree = "<group>"; };
 		0B283FCD2704D0D600B5E925 /* GetAccountStatementDecodableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetAccountStatementDecodableModel.swift; sourceTree = "<group>"; };
@@ -5794,10 +5792,7 @@
 		ED4FC5FD266B90FB0092B4AB /* AppAndSceneDelegate */ = {
 			isa = PBXGroup;
 			children = (
-				EDB14380265FDA410028EF5A /* AppDelegate.swift */,
-				0B283FC62703815900B5E925 /* ExtensionSceneDelegate.swift */,
 				EDB1453B2666AEB90028EF5A /* AppDelegate UI extension.swift */,
-				EDB14382265FDA410028EF5A /* SceneDelegate.swift */,
 			);
 			path = AppAndSceneDelegate;
 			sourceTree = "<group>";
@@ -6235,7 +6230,8 @@
 		EDB1437F265FDA410028EF5A /* ForaBank */ = {
 			isa = PBXGroup;
 			children = (
-				A50C44B72827070B00746947 /* ForaBankRelease.entitlements */,
+				EDB14380265FDA410028EF5A /* AppDelegate.swift */,
+				EDB14382265FDA410028EF5A /* SceneDelegate.swift */,
 				77DC12592770988B00C917B0 /* Domain */,
 				77DC125B277098B800C917B0 /* Model */,
 				77DC12672770F5E200C917B0 /* Services */,
@@ -6254,6 +6250,7 @@
 				EDB1452926663BD90028EF5A /* Controllers */,
 				68935F70276970B7002F56C2 /* ViewModel */,
 				EDB143B0265FDB380028EF5A /* ForaBank.entitlements */,
+				A50C44B72827070B00746947 /* ForaBankRelease.entitlements */,
 				EDB143B4265FDE960028EF5A /* Assets.xcassets */,
 				EDB1654C26678E87007E6030 /* LaunchScreen.storyboard */,
 				68B6755C26BC8A9B004DECA4 /* GoogleService-Info.plist */,
@@ -7812,7 +7809,6 @@
 				0BC4ADC22860DADE00921AE2 /* OperatorGroupData+Legacy.swift in Sources */,
 				6820928C27AB0FD7003DCAFD /* FastPaymentContractAttributeTypeData.swift in Sources */,
 				6862B55327B688CC006E833F /* AuthLoginViewModel.swift in Sources */,
-				0B283FC72703815900B5E925 /* ExtensionSceneDelegate.swift in Sources */,
 				7744940027FDE3B9001E2B9E /* PlacesFilterViewModel.swift in Sources */,
 				EDE7090627976AB90048CA94 /* TemplatesListViewModelAction.swift in Sources */,
 				774A8B4B2865FD3600B81140 /* MyProductsMoneyView.swift in Sources */,
