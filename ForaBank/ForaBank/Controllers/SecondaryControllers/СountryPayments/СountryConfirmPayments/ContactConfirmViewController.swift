@@ -333,7 +333,7 @@ class ContactConfurmViewController: UIViewController {
                 vc.confurmView.infoLabel.text = ""
             }
 
-            self.present(vc, animated: true, completion: nil)
+            self.navigationController?.pushViewController(vc, animated: true)
         }
     }
     
@@ -895,9 +895,7 @@ class ContactConfurmViewController: UIViewController {
                         
                         vc.confurmVCModel = self.confurmVCModel
                         vc.operatorsViewModel = self.operatorsViewModel
-                        let nav = UINavigationController(rootViewController: vc)
-                        nav.modalPresentationStyle = .fullScreen
-                        self.present(nav, animated: true, completion: nil)
+                        self.navigationController?.pushViewController(vc, animated: true)
                         
                     }
                 } else {
@@ -974,9 +972,7 @@ class ContactConfurmViewController: UIViewController {
                         
                         vc.confurmVCModel = self.confurmVCModel
                         vc.operatorsViewModel = self.operatorsViewModel
-                        let nav = UINavigationController(rootViewController: vc)
-                        nav.modalPresentationStyle = .fullScreen
-                        self.present(nav, animated: true, completion: nil)
+                        self.navigationController?.pushViewController(vc, animated: true)
                     }
                 } else if model.statusCode == 102 {
                     self.doneButtonIsEnabled(false)
@@ -1028,9 +1024,7 @@ class ContactConfurmViewController: UIViewController {
                 let vc = PaymentsDetailsSuccessViewController()
                 self.confurmVCModel?.status = .timeOut
                 vc.confurmVCModel = self.confurmVCModel
-                let nav = UINavigationController(rootViewController: vc)
-                nav.modalPresentationStyle = .fullScreen
-                self.present(nav, animated: true, completion: nil)
+                self.navigationController?.pushViewController(vc, animated: true)
                 complition()
             }
         }

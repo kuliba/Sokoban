@@ -12,8 +12,8 @@ class ChooseCountryTableViewController: UITableViewController {
     //MARK: - Vars
     let headerReuseIdentifier = "CustomHeaderView"
     private let searchController = UISearchController(searchResultsController: nil)
-    var viewModel: ChooseCountryViewModel? = nil
     private let model = Model.shared
+    var viewModel: OperatorsViewModel?
     private var countries = [CountriesList]() {
         didSet {
             DispatchQueue.main.async {
@@ -135,7 +135,7 @@ class ChooseCountryTableViewController: UITableViewController {
     private func openCountryPaymentVC(model: ChooseCountryHeaderViewModel) {
         let vc = ContactInputViewController()
         vc.country = model.country
-        
+        vc.operatorsViewModel = self.viewModel
         if model.country?.code == "TR" {
             if model.firstName != nil, model.middleName != nil, model.surName != nil, model.phoneNumber != nil {
                 vc.typeOfPay = .contact
@@ -240,6 +240,7 @@ class ChooseCountryTableViewController: UITableViewController {
             self.dismiss(animated: true, completion: nil)
         } else {
             let vc = ContactInputViewController()
+            vc.operatorsViewModel = self.viewModel
             vc.country = selectedCountry
             self.navigationController?.pushViewController(vc, animated: true)
         }
