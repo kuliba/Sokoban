@@ -393,8 +393,6 @@ enum UserAccountViewModelAction {
     
     struct AvatarAction: Action {}
     
-//    struct SettingsAction: Action {}
-    
     struct ExitAction: Action {}
     
     struct DeleteAction: Action {}

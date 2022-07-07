@@ -49,10 +49,10 @@ class RootViewModel: ObservableObject {
                     action.send(RootViewModelAction.Cover.ShowLogin(viewModel: loginViewModel(with: model)))
                     
                 case .signInRequired(pincode: let pincode):
-                    action.send(RootViewModelAction.Cover.ShowLock(viewModel: lockViewModel(with: model, pincode: pincode), animated: false))
+                    action.send(RootViewModelAction.Cover.ShowLock(viewModel: lockViewModel(with: model, pincode: pincode, autoUnlock: true), animated: false))
                     
                 case .unlockRequired(pincode: let pincode):
-                    action.send(RootViewModelAction.Cover.ShowLock(viewModel: lockViewModel(with: model, pincode: pincode), animated: true))
+                    action.send(RootViewModelAction.Cover.ShowLock(viewModel: lockViewModel(with: model, pincode: pincode, autoUnlock: false), animated: true))
                     
                 case .authorized:
                     action.send(RootViewModelAction.Cover.Hide())
@@ -130,10 +130,9 @@ class RootViewModel: ObservableObject {
         })))
     }
     
-    private func lockViewModel(with model: Model, pincode: String) -> AuthPinCodeViewModel {
+    private func lockViewModel(with model: Model, pincode: String, autoUnlock: Bool) -> AuthPinCodeViewModel {
         
-        //TODO: pass pincode to AuthPinCodeViewModel
-        AuthPinCodeViewModel(model, mode: .unlock(attempt: 0), dismissAction: {[weak self] in
+        AuthPinCodeViewModel(model, mode: .unlock(attempt: 0, auto: autoUnlock), dismissAction: {[weak self] in
             self?.action.send(RootViewModelAction.Cover.Hide()) })
     }
     
