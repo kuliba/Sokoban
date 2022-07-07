@@ -35,7 +35,7 @@ class AuthPinCodeViewModel: ObservableObject {
     
     var isPincodeComplete: Bool { pincodeValue.value.count >= model.authPincodeLength }
 
-    init(pincodeValue: CurrentValueSubject<String, Never>, pinCode: PinCodeViewModel, numpad: NumPadViewModel, footer: FooterViewModel, dismissAction: @escaping () -> Void, model: Model = .emptyMock, mode: Mode = .unlock(attempt: 3), stage: Stage = .editing, isPermissionsViewPresented: Bool = false, mistakes: Int = 0) {
+    init(pincodeValue: CurrentValueSubject<String, Never>, pinCode: PinCodeViewModel, numpad: NumPadViewModel, footer: FooterViewModel, dismissAction: @escaping () -> Void, model: Model = .emptyMock, mode: Mode = .unlock(attempt: 3, auto: false), stage: Stage = .editing, isPermissionsViewPresented: Bool = false, mistakes: Int = 0) {
         
         self.pincodeValue = pincodeValue
         self.pinCode = pinCode
@@ -105,10 +105,10 @@ class AuthPinCodeViewModel: ObservableObject {
                         self.model.action.send(ModelAction.Auth.Login.Request(type: .pin))
                         
                     case .incorrect(remain: let remainAttempts):
-                        guard case .unlock(attempt: let lastAttempt) = mode else {
+                        guard case .unlock(attempt: let lastAttempt, auto: let auto) = mode else {
                             return
                         }
-                        mode = .unlock(attempt: lastAttempt + 1)
+                        mode = .unlock(attempt: lastAttempt + 1, auto: auto)
                         
                         withAnimation {
                             // show incorrect pincode state
@@ -379,7 +379,7 @@ class AuthPinCodeViewModel: ObservableObject {
                     numpad.isEnabled = false
                     
                     switch mode {
-                    case .unlock(let attempt):
+                    case .unlock(let attempt, auto: _):
                         withAnimation {
                             pinCode.isAnimated = true
                         }
@@ -405,20 +405,24 @@ class AuthPinCodeViewModel: ObservableObject {
                 
                 switch action {
                 case _ as AuthPinCodeViewModelAction.Appear:
-                    guard case .unlock(_) = mode,
+                    guard case .unlock(attempt: _ , auto: let auto) = mode,
+                          auto == true,
                           let sensor = model.authAvailableBiometricSensorType,
                           model.authIsBiometricSensorEnabled == true else {
                         return
                     }
                     
-                    model.action.send(ModelAction.Auth.Sensor.Evaluate.Request(sensor: sensor))
-    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
+                        
+                        model.action.send(ModelAction.Auth.Sensor.Evaluate.Request(sensor: sensor))
+                    }
+                    
                 case let payload as AuthPinCodeViewModelAction.Continue:
-                    guard case .unlock(attempt: let attempt) = mode else {
+                    guard case .unlock(attempt: let attempt, auto: let auto) = mode else {
                         return
                     }
                     let currentAttempt = attempt + 1
-                    mode = .unlock(attempt: currentAttempt)
+                    mode = .unlock(attempt: currentAttempt, auto: auto)
                     model.action.send(ModelAction.Auth.Pincode.Check.Request(pincode: payload.code, attempt: currentAttempt))
                     
                 case _ as AuthPinCodeViewModelAction.Unlock.Attempt:
@@ -473,7 +477,7 @@ extension AuthPinCodeViewModel {
     enum Mode {
         
         // unlock screen mode
-        case unlock(attempt: Int)
+        case unlock(attempt: Int, auto: Bool)
         
         // create pincode mode
         case create(step: Step)

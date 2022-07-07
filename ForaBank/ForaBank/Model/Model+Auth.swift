@@ -636,7 +636,21 @@ internal extension Model {
                 
             case .failure(let error):
                 
-                self.action.send(ModelAction.Auth.Sensor.Evaluate.Response.failure(message: error.localizedDescription))
+                switch error {
+                case .unableUsePolicy(let error):
+                    if let error = error {
+                        
+                        self.action.send(ModelAction.Auth.Sensor.Evaluate.Response.failure(message: "Невозможно ипользовать политику .deviceOwnerAuthenticationWithBiometrics ошибка: \(error.localizedDescription)"))
+                        
+                    } else {
+                        
+                        self.action.send(ModelAction.Auth.Sensor.Evaluate.Response.failure(message: "Невозможно ипользовать политику .deviceOwnerAuthenticationWithBiometrics"))
+                    }
+                    
+                case .failedEvaluatePolicyWithError(let error):
+                    
+                    self.action.send(ModelAction.Auth.Sensor.Evaluate.Response.failure(message: "При попытке авторизации через сенсор возникла ошибка: \(error.localizedDescription)"))
+                }
             }
         }
     }
