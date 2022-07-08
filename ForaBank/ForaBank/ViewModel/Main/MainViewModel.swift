@@ -42,9 +42,9 @@ class MainViewModel: ObservableObject, Resetable {
         self.refreshingIndicator = .init(isActive: false)
         self.navButtonsRight = []
         self.sections = [MainSectionProductsView.ViewModel(model),
-                         MainSectionFastOperationView.ViewModel.init(),
+                         MainSectionFastOperationView.ViewModel(),
                          MainSectionPromoView.ViewModel(model),
-                         MainSectionCurrencyMetallView.ViewModel(),
+                         MainSectionCurrencyView.ViewModel(model),
                          MainSectionOpenProductView.ViewModel(model),
                          MainSectionAtmView.ViewModel.initial]
         

@@ -37,6 +37,8 @@ enum SessionAgentAction {
                 let result: Result<TimeInterval, Error>
             }
         }
+        
+        struct Terminate: Action {}
     }
     
     enum Event {

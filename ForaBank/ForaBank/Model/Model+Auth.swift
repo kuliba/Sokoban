@@ -767,25 +767,6 @@ internal extension Model {
             }
         }
     }
-    
-    func handleAuthLogoutRequest() {
-        
-        do {
-            
-            try keychainAgent.clear(type: .pincode)
-            try keychainAgent.clear(type: .serverDeviceGUID)
-
-        } catch {
-            
-            //TODO: log error
-            print("Model: handleAuthLogoutRequest: unable clear pincode with error: \(error.localizedDescription)")
-        }
-    
-        print("Model: keychain cleared")
-        //TODO: clean face/touch id preferences
-        
-        auth.value = .registerRequired
-    }
 }
 
 //MARK: - Helpers
