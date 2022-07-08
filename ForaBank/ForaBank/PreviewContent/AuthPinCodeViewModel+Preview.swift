@@ -20,7 +20,7 @@ extension AuthPinCodeViewModel {
                                              cancelButton: .init(title: "Отменить",
                                                                  action: {}))
         
-        return AuthPinCodeViewModel(pincodeValue: .init(""), pinCode: pinCode, numpad: numpad, footer: footer, dismissAction: {})
+        return AuthPinCodeViewModel(pincodeValue: .init(""), pinCode: pinCode, numpad: numpad, footer: footer, rootActions: .emptyMock)
     }()
 }
 

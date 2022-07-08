@@ -29,19 +29,19 @@ class AuthPinCodeViewModel: ObservableObject {
     @Published var mistakes: Int
     
     private let model: Model
-    private let dismissAction: () -> Void
+    private let rootActions: RootViewModel.RootActions
     private var bindings = Set<AnyCancellable>()
     private let feedbackGenerator = UINotificationFeedbackGenerator()
     
     var isPincodeComplete: Bool { pincodeValue.value.count >= model.authPincodeLength }
 
-    init(pincodeValue: CurrentValueSubject<String, Never>, pinCode: PinCodeViewModel, numpad: NumPadViewModel, footer: FooterViewModel, dismissAction: @escaping () -> Void, model: Model = .emptyMock, mode: Mode = .unlock(attempt: 3, auto: false), stage: Stage = .editing, isPermissionsViewPresented: Bool = false, mistakes: Int = 0) {
+    init(pincodeValue: CurrentValueSubject<String, Never>, pinCode: PinCodeViewModel, numpad: NumPadViewModel, footer: FooterViewModel, rootActions: RootViewModel.RootActions, model: Model = .emptyMock, mode: Mode = .unlock(attempt: 3, auto: false), stage: Stage = .editing, isPermissionsViewPresented: Bool = false, mistakes: Int = 0) {
         
         self.pincodeValue = pincodeValue
         self.pinCode = pinCode
         self.numpad = numpad
         self.footer = footer
-        self.dismissAction = dismissAction
+        self.rootActions = rootActions
         self.model = model
         self.mode = mode
         self.stage = stage
@@ -49,7 +49,7 @@ class AuthPinCodeViewModel: ObservableObject {
         self.mistakes = mistakes
     }
     
-    init(_ model: Model, mode: Mode, dismissAction: @escaping () -> Void) {
+    init(_ model: Model, mode: Mode, rootActions: RootViewModel.RootActions) {
  
         self.pincodeValue = .init("")
         switch mode {
@@ -75,7 +75,7 @@ class AuthPinCodeViewModel: ObservableObject {
             self.mode = .create(step: .one)
         }
         
-        self.dismissAction = dismissAction
+        self.rootActions = rootActions
         self.stage = .editing
         self.isPermissionsViewPresented = false
         self.mistakes = 0

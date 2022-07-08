@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-class ChatViewModel: ObservableObject {
+class ChatViewModel: ObservableObject, Resetable {
     
     let title: String
     let subTitle: String
@@ -20,6 +20,11 @@ class ChatViewModel: ObservableObject {
         self.subTitle = "Вы всегда можете обратиться в нашу службу поддержки с вопросами и предложениями"
         self.icon = Image("chatImage")
         self.buttonBlock = ButtonBlockViewModel()
+    }
+    
+    func reset() {
+        
+        
     }
 }
 

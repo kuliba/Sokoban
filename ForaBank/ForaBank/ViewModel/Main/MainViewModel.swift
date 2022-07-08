@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import SwiftUI
 
-class MainViewModel: ObservableObject {
+class MainViewModel: ObservableObject, Resetable {
     
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -54,6 +54,14 @@ class MainViewModel: ObservableObject {
         bind()
         update(sections, with: model.settingsMainSections)
         bind(sections)
+    }
+    
+    func reset() {
+        
+        sheet = nil
+        link = nil
+        bottomSheet = nil
+        isTabBarHidden = false
     }
     
     private func bind() {
