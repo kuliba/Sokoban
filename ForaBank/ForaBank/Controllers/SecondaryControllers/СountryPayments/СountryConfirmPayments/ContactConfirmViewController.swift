@@ -9,6 +9,7 @@ import UIKit
 import RealmSwift
 import SwiftUI
 import Combine
+import IQKeyboardManagerSwift
 
 //TODO: отрефакторить под сетевые запросы, вынести в отдельный файл
 class ConfirmViewControllerModel {
@@ -295,6 +296,20 @@ class ContactConfurmViewController: UIViewController {
 
     var fromTitle = "От куда"
     var toTitle = "Куда"
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -836,6 +851,11 @@ class ContactConfurmViewController: UIViewController {
                         case "REJECTED": self.confurmVCModel?.status = .error
                         default:
                             print("Не известный статус документа")
+                        }
+                        
+                        if let closeAction = self.confurmVCModel?.closeAction {
+                            
+                            vc.closeAction = closeAction
                         }
                         
                         self.confurmVCModel?.paymentOperationDetailId = model.data?.paymentOperationDetailId ?? 0

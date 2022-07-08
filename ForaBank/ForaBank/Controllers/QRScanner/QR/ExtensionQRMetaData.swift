@@ -71,9 +71,6 @@ extension QRViewController: AVCaptureMetadataOutputObjectsDelegate, CALayerDeleg
                 } else if foundOperators?.count ?? 0 == 0 {
                     GlobalModule.qrData = nil
                     QRErrorViewController.operators.removeAll()
-                    navigationController?.popViewController(animated: true)
-                    dismiss(animated: true, completion: nil)
-                    self.viewModel?.closeAction()
                     let storyboard = UIStoryboard(name: "QRCodeStoryboard", bundle: nil)
                     
                     if let vc = storyboard.instantiateViewController(withIdentifier: "qrError") as? QRErrorViewController {

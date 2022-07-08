@@ -170,9 +170,16 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
 
     final func onC2B(link: String) {
         qrCodesession.stopRunning()
-        qrView.layer.sublayers?.removeLast()
         GlobalModule.c2bURL = link
-        dismiss(animated: false)
+        viewModel?.closeAction()
+        navigationController?.popViewController(animated: true)
+        self.presentingViewController?.dismiss(animated: true, completion: nil)
+        
+        if GlobalModule.c2bURL != nil,  let controller = C2BDetailsViewController.storyboardInstance() {
+            let nc = UINavigationController(rootViewController: controller)
+            nc.modalPresentationStyle = .fullScreen
+            present(nc, animated: false)
+        }
     }
 
     final func returnKey() {
@@ -189,12 +196,6 @@ final class QRViewController: BottomPopUpViewAdapter, UIDocumentPickerDelegate, 
                     let nc = UINavigationController(rootViewController: controller)
                     nc.modalPresentationStyle = .fullScreen
                     present(nc, animated: false)
-            }
-            
-            if GlobalModule.c2bURL != nil,  let controller = C2BDetailsViewController.storyboardInstance() {
-                let nc = UINavigationController(rootViewController: controller)
-                nc.modalPresentationStyle = .fullScreen
-                present(nc, animated: false)
             }
             
         } else {
