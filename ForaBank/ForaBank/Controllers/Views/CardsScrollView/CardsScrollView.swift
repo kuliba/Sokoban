@@ -87,10 +87,12 @@ final class CardsScrollView: UIView {
             types.forEach { type in
                 products.append(contentsOf: self.model.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
             }
-                
-            products.forEach({ op in
+            
+            let filteredProducts = products.filter({$0.ownerID == clientId})
+            
+            filteredProducts.forEach({ op in
                 if onlyCard {
-                    if ( op.productType == "CARD" && op.isMain == true && op.ownerID == clientId ?? 0) {
+                    if op.productType == "CARD" {
                         
                         cardList.append(op)
                     }

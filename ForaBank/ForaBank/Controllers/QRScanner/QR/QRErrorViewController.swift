@@ -42,8 +42,9 @@ class QRErrorViewController: UIViewController , UITableViewDelegate, UITableView
     
     @IBAction func goToGKH(_ sender: UIButton) {
         let vc = TransferByRequisitesViewController()
-        vc.modalPresentationStyle = .fullScreen
-        navigationController?.pushViewController(vc, animated: true)
+        let navController = UINavigationController.init(rootViewController: vc)
+        navController.modalPresentationStyle = .fullScreen
+        present(navController, animated: true)
     }
 }
 

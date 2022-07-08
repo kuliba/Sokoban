@@ -82,10 +82,10 @@ struct MobilePayViewModel {
         self.paymentType = nil
     }
     
-    init(paymentServiceData: PaymentServiceData) {
+    init(paymentServiceData: PaymentServiceData, closeAction: @escaping () -> Void) {
         
         self.paymentType = .paymentServiceData(paymentServiceData)
-        self.closeAction = {}
+        self.closeAction = closeAction
     }
     
     enum PaymentType {

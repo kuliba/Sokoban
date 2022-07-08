@@ -166,7 +166,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             }, paymentServiceData: paymentData))
                             
                         case (.mobile, let paymentData as PaymentServiceData):
-                            link = .mobile(.init(paymentServiceData: paymentData))
+                            link = .mobile(.init(paymentServiceData: paymentData, closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            }))
                             
                         case (.taxAndStateService, let paymentData as PaymentServiceData):
                             bottomSheet = .init(type: .exampleDetail(paymentData.type.rawValue)) //TODO:

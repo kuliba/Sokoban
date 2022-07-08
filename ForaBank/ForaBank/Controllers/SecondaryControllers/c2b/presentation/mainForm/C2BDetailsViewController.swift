@@ -1,7 +1,6 @@
 import UIKit
-import RealmSwift
 import Foundation
-
+import IQKeyboardManagerSwift
 
 class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationControllerDelegate, UIViewControllerTransitioningDelegate {
     
@@ -11,7 +10,6 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
     }
 
     let currencySymbol = "₽"
-    lazy var realm = try? Realm()
     var cardFromField = CardChooseView()
     var cardListView = CardsScrollView(onlyMy: false, deleteDeposit: true, loadProducts: false)
     var qrData = [String: String]()
@@ -98,8 +96,6 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         goButton?.backgroundColor = .lightGray
         
         bottomInputView?.currencySymbol = "₽"
-        AddAllUserCardtList.add {
-        }
         
         bottomInputView?.didDoneButtonTapped = { amount in
             self.doPayment(amountArg: amount)
@@ -108,7 +104,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         sourceHolder.addArrangedSubview(cardFromField)
         sourceHolder.addArrangedSubview(cardListView)
 
-        cardFromField.titleLabel.text = "              Счёт списания"
+        cardFromField.titleLabel.text = "Счёт списания"
         cardFromField.didChooseButtonTapped = { () in
             self.viewReceiver.isHidden = !self.viewReceiver.isHidden
             self.openOrHideView(self.cardListView)
@@ -117,7 +113,7 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         cardListView.didCardTapped = { cardId in
             DispatchQueue.main.async {
                 self.viewReceiver.isHidden = false
-                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
+                let cardList = ReturnAllCardList.cards()
                 cardList.forEach({ card in
                     if card.id == cardId {
                         self.cardFromField.model = card
@@ -129,10 +125,6 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
             }
         }
         readAndSetupCard()
-
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-
         if GlobalModule.c2bURL ?? "" == "success" {
             dismissActivity()
             openSuccessScreen()
@@ -140,27 +132,6 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         }
     }
 
-    @objc func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            //rootView.frame.origin.y -= keyboardSize.height
-            //rootView.layoutIfNeeded()
-            for constraint in rootView.constraints {
-                if constraint.identifier == "myBottomHolderConstr" {
-                    constraint.constant -= keyboardSize.height
-                }
-            }
-            rootView.layoutIfNeeded()
-        }
-    }
-
-    @objc func keyboardWillHide(notification: NSNotification) {
-        for constraint in rootView.constraints {
-            if constraint.identifier == "myBottomHolderConstr" {
-                constraint.constant = 0
-            }
-        }
-        rootView.layoutIfNeeded()
-    }
 
     func openOrHideView(_ view: UIView) {
         DispatchQueue.main.async {
@@ -225,12 +196,12 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         if (bankRecipientFound != nil && bankRecipientFound?.count ?? 0 > 0) {
             bankRecipientCode = bankRecipientFound?[0].value ?? ""
         }
-        let allBanks = Dict.shared.bankFullInfoList
-        let foundBank = allBanks?.filter({ $0.memberID == bankRecipientCode })
-        if foundBank != nil && foundBank?.count ?? 0 > 0 {
-            let bankRusName = foundBank?[0].rusName ?? ""
-            let bankIconSvg = foundBank?[0].svgImage ?? ""
-            imgBank.image = bankIconSvg.convertSVGStringToImage()
+        guard let allBanks = Model.shared.dictionaryFullBankInfoList() else { return }
+        let banks = allBanks.map({$0.fullBankInfoList})
+        let foundBank = banks.filter({ $0.memberID == bankRecipientCode })
+        if foundBank.count > 0, let bankRusName = foundBank[0].rusName {
+            let bankIconSvg = foundBank[0].svgImage
+            imgBank.image = bankIconSvg?.convertSVGStringToImage()
             labelBank.text = bankRusName
             C2BSuccessView.bankImg = imgBank.image
             C2BSuccessView.bankName = bankRusName
@@ -442,10 +413,22 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+        IQKeyboardManager.shared.keyboardDistanceFromTextField = 30
+        IQKeyboardManager.shared.enableAutoToolbar = true
+        
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
         goButton?.isHidden = true
         qrData.removeAll()
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
     }
     
     func setupToolbar() {
