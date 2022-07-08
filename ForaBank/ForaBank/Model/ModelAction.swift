@@ -22,6 +22,8 @@ enum ModelAction {
     
     enum App {
     
+        struct Launched: Action {}
+        
         struct Activated: Action {}
         
         struct Inactivated: Action {}

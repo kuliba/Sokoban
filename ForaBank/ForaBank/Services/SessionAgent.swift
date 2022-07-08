@@ -68,13 +68,12 @@ class SessionAgent: SessionAgentProtocol {
                     switch payload.result {
                     case .success(let credentials):
                         let start = Date.timeIntervalSinceReferenceDate
-                        sessionState.send(.active(start: start, credentials: credentials))
+                        sessionState.value = .active(start: start, credentials: credentials)
                         updateLastNetworkActivityTime()
                         self.action.send(SessionAgentAction.Session.Extend.Request())
-                        print("SessionAgent: session: STARTED")
                         
                     case .failure(let error):
-                        sessionState.send(.failed(error))
+                        sessionState.value = .failed(error)
                     }
                     
                 case let payload as SessionAgentAction.Session.Extend.Response:
@@ -82,41 +81,22 @@ class SessionAgent: SessionAgentProtocol {
                     case .success(let duration):
                         sessionDuration = duration
                         updateLastNetworkActivityTime()
-                        print("SessionAgent: session: EXTENDED")
                         
                     case .failure(let error):
-                        sessionState.send(.failed(error))
+                        sessionState.value = .failed(error)
                     }
                     
                 case _ as SessionAgentAction.Event.Network:
-                    print("SessionAgent: NETWORK EVENT")
                     updateLastNetworkActivityTime()
                     
                 case _ as SessionAgentAction.Event.UserInteraction:
-                    print("SessionAgent: UI EVENT")
                     updateLastUserActivityTime()
+                    
+                case _ as SessionAgentAction.Session.Terminate:
+                    sessionState.value = .inactive
                     
                 default:
                     break
-                }
-                
-            }.store(in: &bindings)
-        
-        sessionState
-            .sink { [unowned self] state in
-                
-                switch state {
-                case .inactive:
-                    print("SessionAgent: state: INACTIVE")
-                    
-                case .active:
-                    print("SessionAgent: state: ACTIVE")
-                    
-                case .expired:
-                    print("SessionAgent: state: EXPIRED")
-                    
-                case .failed:
-                    print("SessionAgent: state: FAILED")
                 }
                 
             }.store(in: &bindings)

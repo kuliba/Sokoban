@@ -9,10 +9,16 @@ import Foundation
 
 enum SettingType {
     
+    case general(General)
     case transfers(Transfers)
     case security(Security)
     case interface(Interface)
         
+    enum General: String {
+        
+        case isFirstLaunch
+    }
+    
     enum Transfers: String {
         
         case sfp
@@ -39,13 +45,16 @@ extension SettingType {
     var identifier: String {
         
         switch self {
-        case .transfers(let transfers):
+        case let .general(general):
+            return "setting_general_\(general.rawValue)"
+            
+        case let .transfers(transfers):
             return "setting_transfers_\(transfers.rawValue)"
             
-        case .security(let security):
+        case let .security(security):
             return "setting_security_\(security.rawValue)"
             
-        case .interface(let interface):
+        case let .interface(interface):
             return "setting_interface_\(interface.rawValue)"
         }
     }

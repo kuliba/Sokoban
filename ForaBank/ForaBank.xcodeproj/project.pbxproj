@@ -723,6 +723,7 @@
 		774A8B842865FF6800B81140 /* FullScreenCoverLagacyModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774A8B832865FF6800B81140 /* FullScreenCoverLagacyModifier.swift */; };
 		774A8B862865FFC200B81140 /* CurrencyExchangeViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774A8B852865FFC200B81140 /* CurrencyExchangeViewComponent.swift */; };
 		774CA5DA28782A2E00544C17 /* Resetable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774CA5D928782A2E00544C17 /* Resetable.swift */; };
+		774CA5DC28789E6E00544C17 /* LegacyKeychainAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774CA5DB28789E6E00544C17 /* LegacyKeychainAgent.swift */; };
 		774E318927A0509C005A067B /* ServerAgentEmptyMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774E318827A0509C005A067B /* ServerAgentEmptyMock.swift */; };
 		774E318B27A050DB005A067B /* Model+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774E318A27A050DB005A067B /* Model+Preview.swift */; };
 		774E318D27A05112005A067B /* LocalAgentEmptyMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774E318C27A05112005A067B /* LocalAgentEmptyMock.swift */; };
@@ -2089,6 +2090,7 @@
 		774A8B832865FF6800B81140 /* FullScreenCoverLagacyModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullScreenCoverLagacyModifier.swift; sourceTree = "<group>"; };
 		774A8B852865FFC200B81140 /* CurrencyExchangeViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyExchangeViewComponent.swift; sourceTree = "<group>"; };
 		774CA5D928782A2E00544C17 /* Resetable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Resetable.swift; sourceTree = "<group>"; };
+		774CA5DB28789E6E00544C17 /* LegacyKeychainAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyKeychainAgent.swift; sourceTree = "<group>"; };
 		774E318827A0509C005A067B /* ServerAgentEmptyMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAgentEmptyMock.swift; sourceTree = "<group>"; };
 		774E318A27A050DB005A067B /* Model+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Preview.swift"; sourceTree = "<group>"; };
 		774E318C27A05112005A067B /* LocalAgentEmptyMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAgentEmptyMock.swift; sourceTree = "<group>"; };
@@ -4856,6 +4858,7 @@
 				77EC58E2277217D20054D75C /* ServerAgent.swift */,
 				7758754C27996DCB0080115D /* LocalAgent.swift */,
 				77FF670C27BABFD3009FEA09 /* ValetKeychainAgent.swift */,
+				774CA5DB28789E6E00544C17 /* LegacyKeychainAgent.swift */,
 				774A82C827BAE74800E5A5E9 /* UserDefaultsSettingsAgent.swift */,
 				7705408E27BD1C6900094006 /* BiometricAgent.swift */,
 				77F5CE0A2804A10500611B66 /* LocationAgent.swift */,
@@ -8015,6 +8018,7 @@
 				EDB14381265FDA410028EF5A /* AppDelegate.swift in Sources */,
 				F81EF91527D212990096DC70 /* MainSectionOpenProductViewComponent.swift in Sources */,
 				0BDE453526E5385900B64A0A /* GetPaymentSystemList.swift in Sources */,
+				774CA5DC28789E6E00544C17 /* LegacyKeychainAgent.swift in Sources */,
 				681142DD27C7D729008D3D67 /* MainSectionProductsViewComponent.swift in Sources */,
 				77499C3A27738F6200F6C079 /* ProductType.swift in Sources */,
 				A5C7A1BD275C0B15003BEF6D /* InternetTVLatestOperationsViewModel.swift in Sources */,

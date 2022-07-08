@@ -18,17 +18,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        UIApplication.shared.applicationIconBadgeNumber = 0
-
         /// FirebaseApp configure
-        var filePath = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist")!
-        #if DEBUG
-        filePath = Bundle.main.path(forResource: "GoogleService-Info-test", ofType: "plist")!
-        #endif
-        
-        if let fileopts = FirebaseOptions.init(contentsOfFile: filePath) {
+        if let googleServiceInfoFilePath = Bundle.main.path(forResource: googleServiceInfoFileName, ofType: "plist"),
+           let firebaseOptions = FirebaseOptions.init(contentsOfFile: googleServiceInfoFilePath) {
             
-            FirebaseApp.configure(options: fileopts)
+            FirebaseApp.configure(options: firebaseOptions)
         }
 
         // remote notifications
@@ -44,6 +38,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
+        model.action.send(ModelAction.App.Launched())
+        
         return true
     }
 
@@ -52,6 +48,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to select a configuration to create the new scene with.
         
         return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+    }
+    
+    private var googleServiceInfoFileName: String {
+        
+        #if DEBUG
+        "GoogleService-Info-test"
+        #else
+        "GoogleService-Info"
+        #endif
     }
 }
 
@@ -68,6 +73,8 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         UNUserNotificationCenter.current().requestAuthorization(
             options: authOptions,
             completionHandler: {_, _ in })
+        
+        UIApplication.shared.applicationIconBadgeNumber = 0
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
