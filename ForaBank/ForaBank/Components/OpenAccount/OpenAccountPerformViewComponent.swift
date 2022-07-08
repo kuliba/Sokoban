@@ -46,6 +46,19 @@ extension OpenAccountPerformView {
                 return "Откройте \(currencyTitle) в один клик и проводите банковские операции без ограничений"
             }
         }
+        
+        private var openAccountTitle: String {
+            "\(item.currencyType.rawValue) счет открыт "
+        }
+        
+        private var currentOperationType: OpenAccountPerformType {
+            
+            if item.isAccountOpen {
+                return .opened
+            }
+            
+            return .open
+        }
 
         lazy var agreement: AgreementView.ViewModel = {
 
@@ -117,6 +130,7 @@ extension OpenAccountPerformView {
 
                         case let .failed(error: error):
                             
+                            operationType = currentOperationType
                             self.action.send(OpenAccountPerformAction.Alert.Error(error: error))
                         }
 
@@ -127,8 +141,9 @@ extension OpenAccountPerformView {
 
                             operationType = .opened
 
+                            item.isAccountOpen = true
                             item.header.isAccountOpened = true
-                            item.header.title = "\(item.header.title) открыт "
+                            item.header.title = openAccountTitle
 
                             let accountNumber = data.accountNumber
 
@@ -146,6 +161,7 @@ extension OpenAccountPerformView {
 
                     case let payload as ModelAction.Auth.VerificationCode.PushRecieved:
 
+                        confirm.enterCode = payload.code
                         confirmCode = payload.code
 
                     default:
@@ -172,8 +188,11 @@ extension OpenAccountPerformView {
                     case _ as OpenAccountPerformAction.Button.Confirm:
 
                         operationType = .confirm
+                        
+                        let verificationCode = confirmCode.isEmpty == true ? confirm.enterCode : confirmCode
+                        
                         model.action.send(ModelAction.Account.MakeOpenAccount.Request(
-                            verificationCode: confirmCode,
+                            verificationCode: verificationCode,
                             currencyName: currencyName,
                             currencyCode: item.currencyCode)
                         )
@@ -209,14 +228,13 @@ extension OpenAccountPerformView {
                     switch action {
 
                     case _ as ConfirmViewModelAction.Button.Done:
-
-                        confirmCode = confirm.enterCode
                         endEditing()
 
                     case _ as ConfirmViewModelAction.Button.Close:
                         endEditing()
 
                     case _ as ConfirmViewModelAction.Button.ResendCode:
+                        
                         model.action.send(ModelAction.Account.PrepareOpenAccount.Request())
 
                     default:
@@ -301,6 +319,7 @@ extension OpenAccountPerformView {
 
         private func endEditing() {
 
+            operationType = .edit
             UIApplication.shared.endEditing()
         }
         
@@ -333,7 +352,7 @@ extension OpenAccountPerformView {
             case .incorrect:
                 operationType = .edit
             case .exhaust:
-                operationType = .open
+                operationType = currentOperationType
                 self.action.send(OpenAccountPerformAction.ResetData())
             }
         }
@@ -437,7 +456,7 @@ struct OpenAccountPerformView: View {
                 ConfirmView(viewModel: viewModel.confirm)
                     .padding(.top, 4)
 
-                if viewModel.confirmCode.isEmpty == false {
+                if viewModel.confirm.enterCode.isEmpty == false {
 
                     OpenAccountButtonView(viewModel: viewModel.button)
                         .frame(height: 48)

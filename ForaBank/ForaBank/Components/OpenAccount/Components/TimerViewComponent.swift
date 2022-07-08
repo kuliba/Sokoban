@@ -78,13 +78,20 @@ struct TimerView: View {
     @ObservedObject var viewModel: ViewModel
 
     var body: some View {
+        
+        HStack {
 
-        Text(viewModel.value)
-            .font(.textBodySR12160())
-            .foregroundColor(.mainColorsRed)
-            .onDisappear {
-                viewModel.stopTimer()
-            }
+            Spacer()
+                .fixedSize()
+            
+            Text(viewModel.value)
+                .font(.textBodySR12160())
+                .foregroundColor(.mainColorsRed)
+
+            Spacer()
+        }
+        .frame(width: 56)
+        .offset(x: 16)
     }
 }
 

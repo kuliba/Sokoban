@@ -56,7 +56,7 @@ extension ConfirmView {
 
         var color: Color {
 
-            if confirmCode.isEmpty {
+            if enterCode.isEmpty {
                 return .mainColorsRed
             }
 
@@ -158,24 +158,24 @@ struct ConfirmView: View {
 
                     Spacer()
 
-                    if viewModel.confirmCode.isEmpty == true {
+                    if viewModel.confirmCode.isEmpty == false {
 
                         if viewModel.isResendCode == false {
 
-                            HStack {
-
-                                Spacer()
-                                    .fixedSize()
-
-                                TimerView(viewModel: viewModel.timer)
-
-                                Spacer()
-                            }
-                            .frame(width: 56)
-                            .offset(x: 16)
+                            TimerView(viewModel: viewModel.timer)
 
                         } else {
 
+                            ResendButton(viewModel: viewModel.resendButton)
+                        }
+                    } else {
+                        
+                        if viewModel.isResendCode == false {
+                            
+                            TimerView(viewModel: viewModel.timer)
+                            
+                        } else {
+                            
                             ResendButton(viewModel: viewModel.resendButton)
                         }
                     }
