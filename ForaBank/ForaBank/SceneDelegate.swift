@@ -6,20 +6,47 @@
 //
 
 import UIKit
+import Combine
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
+    private var bindings = Set<AnyCancellable>()
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        let rootViewController = RootViewHostingViewController(with: .init(AppDelegate.shared.model))
+        let rootViewModel = RootViewModel(AppDelegate.shared.model)
+        let rootViewController = RootViewHostingViewController(with: rootViewModel)
         window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()
+        
+        bind(rootViewModel: rootViewModel)
     } 
+}
+
+//MARK: - Bindings
+
+extension SceneDelegate {
+    
+    func bind(rootViewModel: RootViewModel) {
+        
+        rootViewModel.action
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as RootViewModelAction.DismissAll:
+                    window?.rootViewController?.dismiss(animated: false, completion: nil)
+                    
+                default:
+                    break
+                }
+                
+            }.store(in: &bindings)
+    }
 }
 
 //MARK: - Scene Lyfecycle
