@@ -38,13 +38,13 @@ extension OpenAccountPerformView {
         }
 
         var infoTitle: String {
-
-            switch operationType {
-            case .opened:
+            
+            if item.header.isAccountOpened == true {
+                
                 return "Счет добавлен в “Мои продукты” на главном экране. Все детали и документацию вы можете найти в профиле продукта"
-            default:
-                return "Откройте \(currencyTitle) в один клик и проводите банковские операции без ограничений"
             }
+
+            return "Откройте \(currencyTitle) в один клик и проводите банковские операции без ограничений"
         }
         
         private var openAccountTitle: String {
