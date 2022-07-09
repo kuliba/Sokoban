@@ -16,7 +16,7 @@ enum SettingType {
         
     enum General: String {
         
-        case isFirstLaunch
+        case launchedBefore
     }
     
     enum Transfers: String {
