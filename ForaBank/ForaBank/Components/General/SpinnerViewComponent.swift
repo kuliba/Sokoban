@@ -12,13 +12,13 @@ import SwiftUI
 
 extension SpinnerView {
     
-    class ViewModel: ObservableObject {
+    struct ViewModel {
+
+        let icon: Image
         
-        @Published var isAnimating: Bool
-        
-        init(isAnimating: Bool = true) {
+        init(icon: Image = .init("Logo Fora Bank")) {
             
-            self.isAnimating = isAnimating
+            self.icon = icon
         }
     }
 }
@@ -27,7 +27,7 @@ extension SpinnerView {
 
 struct SpinnerView: View {
     
-    @ObservedObject var viewModel: ViewModel
+    let viewModel: ViewModel
     
     var body: some View {
         
@@ -37,8 +37,7 @@ struct SpinnerView: View {
                 .opacity(0.3)
                 .edgesIgnoringSafeArea(.all)
             
-            ActivityIndicatorView(isAnimating: $viewModel.isAnimating)
-                .foregroundColor(.white)
+            SpinnerRefreshView(icon: viewModel.icon)
         }
     }
 }
