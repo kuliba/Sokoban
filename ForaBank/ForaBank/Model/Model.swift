@@ -205,7 +205,7 @@ class Model {
         return Model(sessionAgent: sessionAgent, serverAgent: serverAgent, localAgent: localAgent, keychainAgent: keychainAgent, settingsAgent: settingsAgent, biometricAgent: biometricAgent, locationAgent: locationAgent, contactsAgent: contactsAgent, cameraAgent: cameraAgent, imageGalleryAgent: imageGalleryAgent)
     }()
     
-    private func bind() {
+    private func bind(sessionAgent: SessionAgentProtocol) {
         
         sessionAgent.sessionState
             .receive(on: queue)
@@ -213,7 +213,33 @@ class Model {
                 
                 switch auth {
                 case .active:
-                    //FIXME: status active after register requested before register process complete
+                    // during the registration process, a technical session opens, which closes immediately after registration complete and another one opens for login
+                    // we get the authorized status only when the session is open and the credentials are stored in the keychain
+                    if authIsCredentialsStored {
+                        self.auth.value = .authorized
+                    }
+                    
+                case .inactive:
+                    self.auth.value = authIsCredentialsStored ? .signInRequired : .registerRequired
+                   
+                case .expired:
+                    self.auth.value = authIsCredentialsStored ? .unlockRequired : .registerRequired
+                    
+                case .failed:
+                    self.auth.value = authIsCredentialsStored ? .unlockRequired : .registerRequired
+                }
+                
+            }.store(in: &bindings)
+    }
+    
+    private func bind() {
+        
+        auth
+            .receive(on: queue)
+            .sink { [unowned self] auth in
+                
+                switch auth {
+                case .authorized:
                     loadCachedAuthorizedData()
                     loadSettings()
                     action.send(ModelAction.Products.Update.Total.All())
@@ -227,41 +253,12 @@ class Model {
                     action.send(ModelAction.Account.ProductList.Request())
                     action.send(ModelAction.AppVersion.Request())
                     
-                case .inactive:
-                    if let pincode = try? authStoredPincode() {
-                        
-                        self.auth.value = .signInRequired(pincode: pincode)
-                        
-                    } else {
-                        
-                        self.auth.value = .registerRequired
-                    }
-                    
-                case .expired:
-                    if let pincode = try? authStoredPincode() {
-                        
-                        self.auth.value = .unlockRequired(pincode: pincode)
-                        
-                    } else {
-                        
-                        self.auth.value = .registerRequired
-                    }
-                    
-                case .failed(let error):
-                    if let pincode = try? authStoredPincode() {
-                        
-                        self.auth.value = .unlockRequired(pincode: pincode)
-                        
-                    } else {
-                        
-                        self.auth.value = .registerRequired
-                    }
-                    
-                    //TODO: show error message
+                default:
+                    break
                 }
                 
             }.store(in: &bindings)
-        
+
         sessionAgent.action
             .receive(on: queue)
             .sink { [unowned self] action in
@@ -302,7 +299,8 @@ class Model {
                     //MARK: - App
                     
                 case _ as ModelAction.App.Launched:
-                    handleAppLaunch()
+                    handleAppFirstLaunch()
+                    bind(sessionAgent: sessionAgent)
                     queue.async {
                         
                         self.loadCachedPublicData()
@@ -470,14 +468,14 @@ class Model {
   
                     
                     //MARK: - Notifications
-                    
+                       
                 case _ as ModelAction.Notification.Fetch.New.Request:
                     handleNotificationsFetchNewRequest()
                     
                 case _ as ModelAction.Notification.Fetch.Next.Request:
                     handleNotificationsFetchNextRequest()
                     
-                case let payload as ModelAction.Notification.ChangeNotificationStatus.Requested:
+                case let payload as ModelAction.Notification.ChangeNotificationStatus.Request:
                     handleNotificationsChangeNotificationStatusRequest(payload: payload)
                     
                     //MARK: - LatestPayments Actions
@@ -584,31 +582,6 @@ class Model {
                 case let payload as ModelAction.Deposits.Close.Request:
                     handleCloseDepositRequest(payload)
                     
-                
-                //MARK: - Notification Action
-                
-                case let payload as ModelAction.Notification.ChangeNotificationStatus.Requested:
-                    guard let token = token else {
-                        //TODO: handle not authoried server request attempt
-                        return
-                    }
-                    let command = ServerCommands.NotificationController.ChangeNotificationStatus (token: token, payload: .init(eventId: payload.eventId, cloudId: payload.cloudId, status: payload.status))
-                    serverAgent.executeCommand(command: command) { result in
-                        
-                        switch result {
-                        case .success(let response):
-                            switch response.statusCode {
-                            case .ok:
-                                self.action.send(ModelAction.Notification.ChangeNotificationStatus.Complete())
-                            default:
-                                //TODO: handle not ok server status
-                                return
-                            }
-                        case .failure(let error):
-                            self.action.send(ModelAction.Notification.ChangeNotificationStatus.Failed(error: error))
-                        }
-                    }
-                    
                     //MARK: - Location Actions
                     
                 case _ as ModelAction.Location.Updates.Start:
@@ -678,13 +651,9 @@ class Model {
 
 private extension Model {
     
-    func handleAppLaunch() {
+    func handleAppFirstLaunch() {
         
-        let isFitstLaunch: Bool? = try? settingsAgent.load(type: .general(.isFirstLaunch))
-        
-        if isFitstLaunch == nil  {
-            
-            // this is first launch
+        if settingsLaunchedBefore == false {
             
             if let serverDeviceGUID = UserDefaults.standard.string(forKey: "serverDeviceGUID"),
                let legacyKeychainAgent = LegacyKeychainAgent(),
@@ -706,7 +675,7 @@ private extension Model {
                 do {
                     
                     // update first launch setting
-                    try settingsAgent.store(false, type: .general(.isFirstLaunch))
+                    try settingsAgent.store(true, type: .general(.launchedBefore))
                     
                 } catch {
                     
@@ -732,7 +701,7 @@ private extension Model {
                 
                 do {
                     
-                    try settingsAgent.store(false, type: .general(.isFirstLaunch))
+                    try settingsAgent.store(true, type: .general(.launchedBefore))
                     
                 } catch {
                     

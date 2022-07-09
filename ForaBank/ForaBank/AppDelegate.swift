@@ -87,7 +87,7 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
 
         if let eventId = userInfo["event_id"] as? String, let cloudId = userInfo["cloud_id"] as? String {
 
-            model.action.send(ModelAction.Notification.ChangeNotificationStatus.Requested(eventId: eventId,
+            model.action.send(ModelAction.Notification.ChangeNotificationStatus.Request(eventId: eventId,
                                                                                           cloudId: cloudId,
                                                                                           status: .delivered))
         }

@@ -27,13 +27,7 @@ extension ServerCommands {
                 
                 let eventId: String
                 let cloudId: String
-                let status: CodingKeys
-            }
-
-            enum CodingKeys: String, CodingKey, Encodable {
-                
-                case delivered = "DELIVERED"
-                case read = "READ"
+                let status: NotificationStatus
             }
             
             struct Response: ServerResponse {
