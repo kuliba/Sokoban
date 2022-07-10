@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 
-class PaymentsTransfersViewModel: ObservableObject {
+class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     typealias TransfersSectionVM = PTSectionTransfersView.ViewModel
     typealias PaymentsSectionVM = PTSectionPaymentsView.ViewModel
@@ -57,16 +57,15 @@ class PaymentsTransfersViewModel: ObservableObject {
         self.navButtonsRight = navButtonsRight
     }
     
-    private func createNavButtonsRight() -> [NavigationBarButtonViewModel] {
+    func reset() {
         
-        [.init(icon: .ic24BarcodeScanner2,
-              action: { [weak self] in
-                        self?.action.send(PaymentsTransfersViewModelAction
-                                            .ButtonTapped.Scanner())})
-        ]
+        bottomSheet = nil
+        sheet = nil
+        link = nil
+        isTabBarHidden = false
     }
     
-    func bind() {
+    private func bind() {
         
         action
             .receive(on: DispatchQueue.main)
@@ -134,7 +133,7 @@ class PaymentsTransfersViewModel: ObservableObject {
             }.store(in: &bindings)
     }
     
-    func bindSections(_ sections: [PaymentsTransfersSectionViewModel]) {
+    private func bindSections(_ sections: [PaymentsTransfersSectionViewModel]) {
         for section in sections {
             
             section.action
@@ -167,7 +166,8 @@ class PaymentsTransfersViewModel: ObservableObject {
                             }, paymentServiceData: paymentData))
                             
                         case (.mobile, let paymentData as PaymentServiceData):
-                            link = .mobile(.init(paymentServiceData: paymentData))
+                            link = .mobile(.init(paymentServiceData: paymentData, closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            }))
                             
                         case (.taxAndStateService, let paymentData as PaymentServiceData):
                             bottomSheet = .init(type: .exampleDetail(paymentData.type.rawValue)) //TODO:
@@ -258,6 +258,20 @@ class PaymentsTransfersViewModel: ObservableObject {
         }
     }
     
+    private func createNavButtonsRight() -> [NavigationBarButtonViewModel] {
+        
+        [.init(icon: .ic24BarcodeScanner2,
+              action: { [weak self] in
+                        self?.action.send(PaymentsTransfersViewModelAction
+                                            .ButtonTapped.Scanner())})
+        ]
+    }
+}
+
+//MARK: - Types
+
+extension PaymentsTransfersViewModel {
+    
     struct BottomSheet: Identifiable {
         
         let id = UUID()
@@ -301,7 +315,9 @@ class PaymentsTransfersViewModel: ObservableObject {
         case qrScanner(QrViewModel)
         case country(PaymentCountryData)
     }
+    
 }
+
 
 enum PaymentsTransfersViewModelAction {
     

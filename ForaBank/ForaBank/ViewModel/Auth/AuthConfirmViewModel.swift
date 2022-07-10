@@ -27,12 +27,12 @@ class AuthConfirmViewModel: ObservableObject {
     
     private var currentResendCodeAttempt = 0
     private let backAction: () -> Void
-    private let rootActions: RootViewModel.AuthActions
+    private let rootActions: RootViewModel.RootActions
     
     private let model: Model
     private var bindings = Set<AnyCancellable>()
     
-    init(navigationBar: NavigationBarViewModel, code: CodeViewModel, info: InfoViewModel?, isPincodeViewPresented: Bool = false, model: Model = .emptyMock, showingAlert: Bool = false, phoneNumber: String, resendCodeDelay: TimeInterval, backAction: @escaping () -> Void, rootActions: RootViewModel.AuthActions) {
+    init(navigationBar: NavigationBarViewModel, code: CodeViewModel, info: InfoViewModel?, isPincodeViewPresented: Bool = false, model: Model = .emptyMock, showingAlert: Bool = false, phoneNumber: String, resendCodeDelay: TimeInterval, backAction: @escaping () -> Void, rootActions: RootViewModel.RootActions) {
         
         self.navigationBar = navigationBar
         self.code = code
@@ -46,7 +46,7 @@ class AuthConfirmViewModel: ObservableObject {
         self.rootActions = rootActions
     }
     
-    init(_ model: Model, confirmCodeLength: Int, phoneNumber: String, resendCodeDelay: TimeInterval, backAction: @escaping () -> Void, rootActions: RootViewModel.AuthActions) {
+    init(_ model: Model, confirmCodeLength: Int, phoneNumber: String, resendCodeDelay: TimeInterval, backAction: @escaping () -> Void, rootActions: RootViewModel.RootActions) {
         
         self.model = model
         self.navigationBar = NavigationBarViewModel(action: backAction)
@@ -108,7 +108,7 @@ class AuthConfirmViewModel: ObservableObject {
                     rootActions.spinner.hide()
                     switch payload {
                     case .success:
-                        pincodeViewModel = AuthPinCodeViewModel(model, mode: .create(step: .one), dismissAction: rootActions.dismiss)
+                        pincodeViewModel = AuthPinCodeViewModel(model, mode: .create(step: .one), rootActions: rootActions)
                         isPincodeViewPresented = true
                         print("SessionAgent: REGISTER DONE, addr:\(Unmanaged.passUnretained(self).toOpaque())")
                         
@@ -416,7 +416,7 @@ extension AuthConfirmViewModel {
         
         let codeViewModel = CodeViewModel(title: "Введите код из сообщения", lenght: 6, state: .openening)
         let infoViewModel = InfoViewModel(title: "+7 ... ... 54 13", subtitle: "Повторно отправить можно через:", state: .button(.init(action: {})))
-        let viewModel = AuthConfirmViewModel(navigationBar: .init(action: {}), code: codeViewModel, info: infoViewModel, isPincodeViewPresented: false, model: .emptyMock, showingAlert: false, phoneNumber: "+7 ... ... 54 13", resendCodeDelay: 60, backAction: {}, rootActions: .init(dismiss: {}, spinner: .init(show: {}, hide: {})))
+        let viewModel = AuthConfirmViewModel(navigationBar: .init(action: {}), code: codeViewModel, info: infoViewModel, isPincodeViewPresented: false, model: .emptyMock, showingAlert: false, phoneNumber: "+7 ... ... 54 13", resendCodeDelay: 60, backAction: {}, rootActions: .emptyMock)
         
         return viewModel
     }()

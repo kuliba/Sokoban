@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import Combine
 
-class RootViewModel: ObservableObject {
+class RootViewModel: ObservableObject, Resetable {
     
     let action: PassthroughSubject<Action, Never> = .init()
     
@@ -38,6 +38,13 @@ class RootViewModel: ObservableObject {
         bind()
     }
     
+    func reset() {
+        
+        mainViewModel.reset()
+        paymentsViewModel.reset()
+        chatViewModel.reset()
+    }
+    
     private func bind() {
         
         model.auth
@@ -46,13 +53,18 @@ class RootViewModel: ObservableObject {
                 
                 switch auth {
                 case .registerRequired:
-                    action.send(RootViewModelAction.Cover.ShowLogin(viewModel: loginViewModel(with: model)))
+                    let loginViewModel = AuthLoginViewModel(model, rootActions: rootActions)
+                    action.send(RootViewModelAction.Cover.ShowLogin(viewModel: loginViewModel))
                     
-                case .signInRequired(pincode: let pincode):
-                    action.send(RootViewModelAction.Cover.ShowLock(viewModel: lockViewModel(with: model, pincode: pincode, autoUnlock: true), animated: false))
+                case .signInRequired:
+                    let lockViewModel = AuthPinCodeViewModel(model, mode: .unlock(attempt: 0, auto: true), rootActions: rootActions)
+                    action.send(RootViewModelAction.Cover.ShowLock(viewModel: lockViewModel, animated: false))
                     
-                case .unlockRequired(pincode: let pincode):
-                    action.send(RootViewModelAction.Cover.ShowLock(viewModel: lockViewModel(with: model, pincode: pincode, autoUnlock: false), animated: true))
+                case .unlockRequired:
+                    let lockViewModel = AuthPinCodeViewModel(model, mode: .unlock(attempt: 0, auto: false), rootActions: rootActions)
+                    action.send(RootViewModelAction.Cover.ShowLock(viewModel: lockViewModel, animated: true))
+                    action.send(RootViewModelAction.DismissAll())
+                    action.send(RootViewModelAction.SwitchTab(tabType: .main))
                     
                 case .authorized:
                     action.send(RootViewModelAction.Cover.Hide())
@@ -78,6 +90,9 @@ class RootViewModel: ObservableObject {
                     withAnimation {
                         selected = payload.tabType
                     }
+                    
+                case _ as RootViewModelAction.DismissAll:
+                    reset()
 
                 default:
                     break
@@ -118,32 +133,34 @@ class RootViewModel: ObservableObject {
                 }
             }.store(in: &bindings)
     }
-    
-    private func loginViewModel(with model: Model) -> AuthLoginViewModel {
+            
+    lazy var rootActions: RootViewModel.RootActions = {
         
-        AuthLoginViewModel(model, rootActions: .init(dismiss: {[weak self] in
+        let dismissCover: (() -> Void) = { [weak self] in
+            
             self?.action.send(RootViewModelAction.Cover.Hide())
-        }, spinner: .init(show: {[weak self] in
+        }
+        
+        let spinnerShow: (() -> Void) = { [weak self] in
+            
             self?.action.send(RootViewModelAction.Spinner.Show(viewModel: .init()))
-        }, hide: {[weak self] in
+        }
+        
+        let spinnerHide: (() -> Void) = { [weak self] in
+            
             self?.action.send(RootViewModelAction.Spinner.Hide())
-        })))
-    }
-    
-    private func lockViewModel(with model: Model, pincode: String, autoUnlock: Bool) -> AuthPinCodeViewModel {
+        }
         
-        AuthPinCodeViewModel(model, mode: .unlock(attempt: 0, auto: autoUnlock), dismissAction: {[weak self] in
-            self?.action.send(RootViewModelAction.Cover.Hide()) })
-    }
-    
-    private func permissionsViewModel(with model: Model, sensorType: BiometricSensorType) -> AuthPermissionsViewModel {
+        let switchTab: ((RootViewModel.TabType) -> Void) = { [weak self] tabType in
+            
+            self?.action.send(RootViewModelAction.SwitchTab(tabType: tabType))
+        }
         
-        AuthPermissionsViewModel(model, sensorType: sensorType, dismissAction: {[weak self] in
-            self?.action.send(RootViewModelAction.Cover.Hide()) })
-    }
-    
-    lazy var rootActions: RootViewModel.RootActions  = .init(switchTab: { [weak self] tabType in self?.action.send(RootViewModelAction.SwitchTab(tabType: tabType)) })
+        return .init(dismissCover: dismissCover, spinner: .init(show: spinnerShow, hide: spinnerHide), switchTab: switchTab)
+    }()
 }
+
+//MARK: - Types
 
 extension RootViewModel {
     
@@ -188,21 +205,17 @@ extension RootViewModel {
         }
     }
     
-    struct AuthActions {
+    struct RootActions {
         
-        let dismiss: () -> Void
+        let dismissCover: () -> Void
         let spinner: Spinner
+        let switchTab: (RootViewModel.TabType) -> Void
         
         struct Spinner {
             
             let show: () -> Void
             let hide: () -> Void
         }
-    }
-    
-    struct RootActions {
-        
-        let switchTab: (RootViewModel.TabType) -> Void
     }
 }
 
@@ -245,4 +258,6 @@ enum RootViewModelAction {
         
         let tabType: RootViewModel.TabType
     }
+    
+    struct DismissAll: Action {}
 }

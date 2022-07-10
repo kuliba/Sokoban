@@ -116,7 +116,7 @@ class PaymentsViewModel: ObservableObject {
                     
                 case _ as PaymentsViewModelAction.Spinner.Show:
                     withAnimation {
-                        spinner = .init(isAnimating: true)
+                        spinner = .init()
                     }
                     
                 case _ as PaymentsViewModelAction.Spinner.Hide:

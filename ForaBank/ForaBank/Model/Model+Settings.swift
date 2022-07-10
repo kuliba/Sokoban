@@ -24,6 +24,19 @@ extension ModelAction {
 
 extension Model {
     
+    var settingsLaunchedBefore: Bool {
+        
+        do {
+            
+            let launchedBefore: Bool = try settingsAgent.load(type: .general(.launchedBefore))
+            return launchedBefore
+            
+        } catch {
+            
+            return false
+        }
+    }
+    
     var settingsMainSections: MainSectionsSettings {
         
         do {

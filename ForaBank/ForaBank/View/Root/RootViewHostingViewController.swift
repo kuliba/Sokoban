@@ -164,16 +164,31 @@ class RootViewHostingViewController: UIHostingController<RootView> {
         let spinnerController = UIHostingController(rootView: spinnerView)
         spinnerController.view.backgroundColor = .clear
         
-        addChild(spinnerController)
-        view.addSubview(spinnerController.view)
-        spinnerController.view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            spinnerController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            spinnerController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            spinnerController.view.topAnchor.constraint(equalTo: view.topAnchor),
-            spinnerController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-        
+        if let cover = cover {
+            
+            cover.controller.addChild(spinnerController)
+            cover.controller.view.addSubview(spinnerController.view)
+            spinnerController.view.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                spinnerController.view.leadingAnchor.constraint(equalTo: cover.controller.view.leadingAnchor),
+                spinnerController.view.trailingAnchor.constraint(equalTo: cover.controller.view.trailingAnchor),
+                spinnerController.view.topAnchor.constraint(equalTo: cover.controller.view.topAnchor),
+                spinnerController.view.bottomAnchor.constraint(equalTo: cover.controller.view.bottomAnchor)
+            ])
+            
+        } else {
+         
+            addChild(spinnerController)
+            view.addSubview(spinnerController.view)
+            spinnerController.view.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                spinnerController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                spinnerController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                spinnerController.view.topAnchor.constraint(equalTo: view.topAnchor),
+                spinnerController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            ])
+        }
+
         spinnerController.view.alpha = 0
         UIView.animate(withDuration: 0.3) {
             

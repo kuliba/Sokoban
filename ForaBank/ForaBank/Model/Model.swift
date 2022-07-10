@@ -158,14 +158,10 @@ class Model {
         self.cameraAgent = cameraAgent
         self.imageGalleryAgent = imageGalleryAgent
         self.bindings = []
-        
-        queue.async {
-            
-            self.loadCachedPublicData()
-        }
-        
+
         bind()
     }
+    
     //FIXME: remove after refactoring
     static var shared: Model = {
         
@@ -209,7 +205,7 @@ class Model {
         return Model(sessionAgent: sessionAgent, serverAgent: serverAgent, localAgent: localAgent, keychainAgent: keychainAgent, settingsAgent: settingsAgent, biometricAgent: biometricAgent, locationAgent: locationAgent, contactsAgent: contactsAgent, cameraAgent: cameraAgent, imageGalleryAgent: imageGalleryAgent)
     }()
     
-    private func bind() {
+    private func bind(sessionAgent: SessionAgentProtocol) {
         
         sessionAgent.sessionState
             .receive(on: queue)
@@ -217,7 +213,33 @@ class Model {
                 
                 switch auth {
                 case .active:
-                    //FIXME: status active after register requested before register process complete
+                    // during the registration process, a technical session opens, which closes immediately after registration complete and another one opens for login
+                    // we get the authorized status only when the session is open and the credentials are stored in the keychain
+                    if authIsCredentialsStored {
+                        self.auth.value = .authorized
+                    }
+                    
+                case .inactive:
+                    self.auth.value = authIsCredentialsStored ? .signInRequired : .registerRequired
+                   
+                case .expired:
+                    self.auth.value = authIsCredentialsStored ? .unlockRequired : .registerRequired
+                    
+                case .failed:
+                    self.auth.value = authIsCredentialsStored ? .unlockRequired : .registerRequired
+                }
+                
+            }.store(in: &bindings)
+    }
+    
+    private func bind() {
+        
+        auth
+            .receive(on: queue)
+            .sink { [unowned self] auth in
+                
+                switch auth {
+                case .authorized:
                     loadCachedAuthorizedData()
                     loadSettings()
                     action.send(ModelAction.Products.Update.Total.All())
@@ -231,41 +253,12 @@ class Model {
                     action.send(ModelAction.Account.ProductList.Request())
                     action.send(ModelAction.AppVersion.Request())
                     
-                case .inactive:
-                    if let pincode = try? authStoredPincode() {
-                        
-                        self.auth.value = .signInRequired(pincode: pincode)
-                        
-                    } else {
-                        
-                        self.auth.value = .registerRequired
-                    }
-                    
-                case .expired:
-                    if let pincode = try? authStoredPincode() {
-                        
-                        self.auth.value = .unlockRequired(pincode: pincode)
-                        
-                    } else {
-                        
-                        self.auth.value = .registerRequired
-                    }
-                    
-                case .failed(let error):
-                    if let pincode = try? authStoredPincode() {
-                        
-                        self.auth.value = .unlockRequired(pincode: pincode)
-                        
-                    } else {
-                        
-                        self.auth.value = .registerRequired
-                    }
-                    
-                    //TODO: show error message
+                default:
+                    break
                 }
                 
             }.store(in: &bindings)
-        
+
         sessionAgent.action
             .receive(on: queue)
             .sink { [unowned self] action in
@@ -305,6 +298,14 @@ class Model {
                     
                     //MARK: - App
                     
+                case _ as ModelAction.App.Launched:
+                    handleAppFirstLaunch()
+                    bind(sessionAgent: sessionAgent)
+                    queue.async {
+                        
+                        self.loadCachedPublicData()
+                    }
+
                 case _ as ModelAction.App.Activated:
                     self.action.send(ModelAction.Dictionary.UpdateCache.All())
                     
@@ -364,9 +365,10 @@ class Model {
                     handleAuthLoginRequest(payload: payload)
                     
                 case _ as ModelAction.Auth.Logout:
-                    handleAuthLogoutRequest()
-                    clearCachedData()
+                    clearKeychainData()
+                    clearCachedAuthorizedData()
                     clearMemoryData()
+                    sessionAgent.action.send(SessionAgentAction.Session.Terminate())
                     
                     //MARK: - Products Actions
                     
@@ -466,14 +468,14 @@ class Model {
   
                     
                     //MARK: - Notifications
-                    
+                       
                 case _ as ModelAction.Notification.Fetch.New.Request:
                     handleNotificationsFetchNewRequest()
                     
                 case _ as ModelAction.Notification.Fetch.Next.Request:
                     handleNotificationsFetchNextRequest()
                     
-                case let payload as ModelAction.Notification.ChangeNotificationStatus.Requested:
+                case let payload as ModelAction.Notification.ChangeNotificationStatus.Request:
                     handleNotificationsChangeNotificationStatusRequest(payload: payload)
                     
                     //MARK: - LatestPayments Actions
@@ -580,31 +582,6 @@ class Model {
                 case let payload as ModelAction.Deposits.Close.Request:
                     handleCloseDepositRequest(payload)
                     
-                
-                //MARK: - Notification Action
-                
-                case let payload as ModelAction.Notification.ChangeNotificationStatus.Requested:
-                    guard let token = token else {
-                        //TODO: handle not authoried server request attempt
-                        return
-                    }
-                    let command = ServerCommands.NotificationController.ChangeNotificationStatus (token: token, payload: .init(eventId: payload.eventId, cloudId: payload.cloudId, status: payload.status))
-                    serverAgent.executeCommand(command: command) { result in
-                        
-                        switch result {
-                        case .success(let response):
-                            switch response.statusCode {
-                            case .ok:
-                                self.action.send(ModelAction.Notification.ChangeNotificationStatus.Complete())
-                            default:
-                                //TODO: handle not ok server status
-                                return
-                            }
-                        case .failure(let error):
-                            self.action.send(ModelAction.Notification.ChangeNotificationStatus.Failed(error: error))
-                        }
-                    }
-                    
                     //MARK: - Location Actions
                     
                 case _ as ModelAction.Location.Updates.Start:
@@ -673,6 +650,66 @@ class Model {
 //MARK: - Private Helpers
 
 private extension Model {
+    
+    func handleAppFirstLaunch() {
+        
+        if settingsLaunchedBefore == false {
+            
+            if let serverDeviceGUID = UserDefaults.standard.string(forKey: "serverDeviceGUID"),
+               let legacyKeychainAgent = LegacyKeychainAgent(),
+               let pincode = legacyKeychainAgent.pinCode {
+                
+                // user authorized in legacy version
+                
+                do {
+                    
+                    // move legacy auth to keychain
+                    try keychainAgent.store(pincode, type: .pincode)
+                    try keychainAgent.store(serverDeviceGUID, type: .serverDeviceGUID)
+                    
+                } catch {
+                    
+                    print("logger: legacy auth update error: \(error)")
+                }
+                
+                do {
+                    
+                    // update first launch setting
+                    try settingsAgent.store(true, type: .general(.launchedBefore))
+                    
+                } catch {
+                    
+                    print("logger: first launch setting update error: \(error)")
+                }
+                
+                do {
+                    
+                    // clean up legacy auth
+                    try legacyKeychainAgent.clearPincode()
+                    UserDefaults.standard.removeObject(forKey: "serverDeviceGUID")
+                    
+                } catch {
+                    
+                    print("logger: legacy auth cleanup error: \(error)")
+                }
+                
+            } else {
+                
+                // app just installed, remove previos keychan data that may remain from previous install
+                
+                clearKeychainData()
+                
+                do {
+                    
+                    try settingsAgent.store(true, type: .general(.launchedBefore))
+                    
+                } catch {
+                    
+                    print("logger: first launch setting update error: \(error)")
+                }
+            }
+        }
+    }
     
     func loadCachedPublicData() {
         
@@ -769,7 +806,21 @@ private extension Model {
         }
     }
     
-    func clearCachedData() {
+    func clearKeychainData() {
+        
+        do {
+            
+            try keychainAgent.clear(type: .pincode)
+            try keychainAgent.clear(type: .serverDeviceGUID)
+
+        } catch {
+            
+            //TODO: log error
+            print("Model: handleAuthLogoutRequest: unable clear pincode with error: \(error.localizedDescription)")
+        }
+    }
+    
+    func clearCachedAuthorizedData() {
                 
         do {
             

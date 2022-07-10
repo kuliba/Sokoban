@@ -16,7 +16,9 @@ class ValetKeychainAgent: KeychainAgentProtocol {
     
     init(valetName: String, encoder: JSONEncoder = .init(), decoder: JSONDecoder = .init()) {
         
-        let identifier = Identifier(nonEmpty: valetName)!
+        guard let identifier = Identifier(nonEmpty: valetName) else {
+            fatalError("unable create keychain valet identifier")
+        }
         self.valet = Valet.valet(with: identifier, accessibility: .whenUnlockedThisDeviceOnly)
         self.encoder = encoder
         self.decoder = decoder

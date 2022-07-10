@@ -27,11 +27,11 @@ class AuthLoginViewModel: ObservableObject {
     @Published var cardScanner: CardScannerViewModel?
     @Published var alert: Alert.ViewModel?
     
-    private let rootActions: RootViewModel.AuthActions
+    private let rootActions: RootViewModel.RootActions
     private let model: Model
     private var bindings = Set<AnyCancellable>()
 
-    init(header: HeaderViewModel = HeaderViewModel(), productsButton: ProductsButtonViewModel? = nil,  isConfirmViewPresented: Bool = false, isProductsViewPresented: Bool = false, rootActions: RootViewModel.AuthActions, model: Model = .emptyMock) {
+    init(header: HeaderViewModel = HeaderViewModel(), productsButton: ProductsButtonViewModel? = nil,  isConfirmViewPresented: Bool = false, isProductsViewPresented: Bool = false, rootActions: RootViewModel.RootActions, model: Model = .emptyMock) {
 
         self.header = header
         self.productsButton = productsButton
@@ -41,7 +41,7 @@ class AuthLoginViewModel: ObservableObject {
         self.model = model
     }
     
-    init(_ model: Model, rootActions: RootViewModel.AuthActions) {
+    init(_ model: Model, rootActions: RootViewModel.RootActions) {
         
         self.model = model
         self.header = HeaderViewModel()
