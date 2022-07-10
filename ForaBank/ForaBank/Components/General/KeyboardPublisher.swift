@@ -9,16 +9,16 @@ import SwiftUI
 import Combine
 
 class KeyboardPublisher: ObservableObject  {
-
-    @Published var keyboardHeight: CGFloat
-    @Published var isKeyboardPresented: Bool
+    
+    let keyboardHeight: CurrentValueSubject<CGFloat, Never>
+    let isKeyboardPresented: CurrentValueSubject<Bool, Never>
 
     private var bindings = Set<AnyCancellable>()
 
     init() {
 
-        keyboardHeight = 0
-        isKeyboardPresented = false
+        keyboardHeight = .init(0)
+        isKeyboardPresented = .init(false)
 
         bind()
     }
@@ -28,17 +28,17 @@ class KeyboardPublisher: ObservableObject  {
         Publishers.keyboardHeight
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] keyboardHeight in
+                
+                self.keyboardHeight.value = keyboardHeight
 
-                withAnimation(.spring(response: 0.3, dampingFraction: 1, blendDuration: 1)) {
-                    self.keyboardHeight = -keyboardHeight
-                }
             }.store(in: &bindings)
 
         Publishers.isKeyboardPresented
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] isKeyboardPresented in
 
-                self.isKeyboardPresented = isKeyboardPresented
+                self.isKeyboardPresented.value = isKeyboardPresented
+                
             }.store(in: &bindings)
     }
 }

@@ -17,18 +17,19 @@ struct OpenAccountView: View {
 
         VStack {
 
-            PagerContentView(viewModel: viewModel.pagerViewModel) {
+            PagerScrollView(viewModel: viewModel.pagerViewModel) {
                 ForEach(viewModel.items) { item in
                     OpenAccountItemView(viewModel: item)
                 }
-            }.padding(.top, 8)
+            }.padding(.top, 12)
 
             OpenAccountPerformView(
                 viewModel: .init(
                     model: viewModel.model,
                     item: viewModel.item,
                     currencyName: viewModel.currencyName))
-        }
+            
+        }.frame(height: 474)
     }
 }
 

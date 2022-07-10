@@ -256,6 +256,7 @@
 		0CF3D7172836D203001A1BEA /* PTSectionTransfersViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF3D7162836D203001A1BEA /* PTSectionTransfersViewComponent.swift */; };
 		0CF3D7192836E141001A1BEA /* PTSectionPaymentsViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF3D7182836E141001A1BEA /* PTSectionPaymentsViewComponent.swift */; };
 		1CB9C8278920B424652C4AE2 /* Image+Illustrations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F88A9A4DBEADB3F8E16A822 /* Image+Illustrations.swift */; };
+		50043665287B3747000545BD /* PagerScrollViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50043664287B3747000545BD /* PagerScrollViewComponent.swift */; };
 		5008781C2853453A0033DDD5 /* SpinnerRefreshView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50087819285345390033DDD5 /* SpinnerRefreshView.swift */; };
 		5008781D2853453A0033DDD5 /* PageIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5008781A285345390033DDD5 /* PageIndicatorView.swift */; };
 		5008781E2853453A0033DDD5 /* PagerContentViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5008781B2853453A0033DDD5 /* PagerContentViewComponent.swift */; };
@@ -1627,6 +1628,7 @@
 		0CF3D71428368753001A1BEA /* PTSectionLatestPaymentsViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PTSectionLatestPaymentsViewComponent.swift; sourceTree = "<group>"; };
 		0CF3D7162836D203001A1BEA /* PTSectionTransfersViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PTSectionTransfersViewComponent.swift; sourceTree = "<group>"; };
 		0CF3D7182836E141001A1BEA /* PTSectionPaymentsViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PTSectionPaymentsViewComponent.swift; sourceTree = "<group>"; };
+		50043664287B3747000545BD /* PagerScrollViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerScrollViewComponent.swift; sourceTree = "<group>"; };
 		50087819285345390033DDD5 /* SpinnerRefreshView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpinnerRefreshView.swift; sourceTree = "<group>"; };
 		5008781A285345390033DDD5 /* PageIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageIndicatorView.swift; sourceTree = "<group>"; };
 		5008781B2853453A0033DDD5 /* PagerContentViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagerContentViewComponent.swift; sourceTree = "<group>"; };
@@ -3493,6 +3495,7 @@
 			children = (
 				5008781A285345390033DDD5 /* PageIndicatorView.swift */,
 				5008781B2853453A0033DDD5 /* PagerContentViewComponent.swift */,
+				50043664287B3747000545BD /* PagerScrollViewComponent.swift */,
 			);
 			path = Paging;
 			sourceTree = "<group>";
@@ -8498,6 +8501,7 @@
 				503F074028252CBA00E84A77 /* DepositBottomSheetItemViewModel.swift in Sources */,
 				774A8B6C2865FE9500B81140 /* ButtonIconTextViewComponent.swift in Sources */,
 				F63D4B91E94C13AFD50FF312 /* GIBDDFineDetailsFormViewModel.swift in Sources */,
+				50043665287B3747000545BD /* PagerScrollViewComponent.swift in Sources */,
 				7538D9ADE22F0BF6C08AC91F /* Color+Assets.swift in Sources */,
 				503F074928252D3B00E84A77 /* DepositCalculateAmountView.swift in Sources */,
 				774A8B762865FED800B81140 /* AlertViewComponent.swift in Sources */,

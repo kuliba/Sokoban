@@ -29,7 +29,6 @@ struct PageIndicatorView: View {
             ForEach(0..<pageCount, id: \.self){ index in
                 Circle()
                     .foregroundColor(currentIndex == index ? .mainColorsGray : .mainColorsGrayLightest)
-                    .animation(.spring())
                     .frame(width: itemSize, height: itemSize)
             }
         }
