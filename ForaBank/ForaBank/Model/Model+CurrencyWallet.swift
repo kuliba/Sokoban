@@ -46,6 +46,8 @@ extension ModelAction {
 }
 
 extension Model {
+            
+//MARK: Handlers
     
     func handlerCurrencyWalletExchangeOperationsStartRequest(_ payload:
             ModelAction.CurrencyWallet.ExchangeOperations.Start.Request) {
@@ -114,7 +116,6 @@ extension Model {
             
         }
     }
-    
     
     func handlerCurrencyWalletExchangeOperationsApproveRequest() {
         
