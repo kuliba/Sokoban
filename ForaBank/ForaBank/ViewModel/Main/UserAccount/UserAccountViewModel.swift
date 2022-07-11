@@ -215,8 +215,17 @@ class UserAccountViewModel: ObservableObject {
                             title: "Имя", message: "Как к вам обращаться?",
                             primary: .init(type: .default, title: "ОК", action: { [weak self] text in
                                 
-                                self?.action.send(UserAccountViewModelAction.CloseFieldAlert())
-                                self?.model.action.send(ModelAction.ClientName.Save(name: text))
+                                if text?.count ?? 0 > 15 {
+                                    
+                                    self?.alert = .init(title: "Внимание", message: "Имя не должно превышать 15 символов", primary: .init(type: .cancel, title: "ОК", action: {
+                                        self?.action.send(UserAccountViewModelAction.CloseFieldAlert())
+                                    }))
+                                    
+                                } else {
+                                    
+                                    self?.action.send(UserAccountViewModelAction.CloseFieldAlert())
+                                    self?.model.action.send(ModelAction.ClientName.Save(name: text))
+                                }
                             }),
                             secondary: .init(type: .cancel, title: "Отмена", action: { [weak self] _ in
                                 self?.action.send(UserAccountViewModelAction.CloseFieldAlert())
