@@ -420,65 +420,64 @@ struct OpenAccountPerformView: View {
 
     var body: some View {
 
-        VStack {
+        VStack(alignment: .leading, spacing: 12) {
 
             switch viewModel.operationType {
             case .open, .opened:
 
-                HStack {
-
-                    Text(viewModel.infoTitle)
-                        .font(.textBodyMR14200())
-                        .foregroundColor(.mainColorsBlack)
-
-                    Spacer()
-
-                }.padding(.bottom, 20)
+                Text(viewModel.infoTitle)
+                    .font(.textBodyMR14200())
+                    .foregroundColor(.mainColorsBlack)
+                    .frame(height: 56, alignment: .top)
+                    .padding(.trailing)
 
                 OpenAccountButtonView(viewModel: viewModel.button)
                     .frame(height: 48)
 
-                HStack {
-
-                    AgreementView(viewModel: viewModel.agreement)
-
-                    Spacer()
-
-                }.padding(.top, 10)
+                AgreementView(viewModel: viewModel.agreement)
+                    .padding([.top, .bottom], 8)
 
             case .opening:
 
                 SpinnerRefreshView(icon: viewModel.spinnerIcon)
-                    .padding(.top, 56)
+                    .padding(.top)
 
             case .edit:
 
                 ConfirmView(viewModel: viewModel.confirm)
-                    .padding(.top, 4)
+                    .padding(.top)
 
                 if viewModel.confirm.enterCode.isEmpty == false {
 
                     OpenAccountButtonView(viewModel: viewModel.button)
                         .frame(height: 48)
-                        .padding(.top, 46)
+                        .padding(.top, 40)
                 }
+                
+                Spacer()
 
             case .confirm:
 
                 ConfirmView(viewModel: viewModel.confirm)
                     .padding(.top, 4)
 
-                SpinnerRefreshView(icon: viewModel.spinnerIcon)
-                    .padding(.top, 46)
+                HStack(alignment: .center) {
+    
+                    Spacer()
+                    
+                    SpinnerRefreshView(icon: viewModel.spinnerIcon)
+                        .padding(.top, 36)
+                    
+                    Spacer()
+                }
             }
-
-            Spacer()
         }
         .alert(item: $viewModel.alert) { alert in
             Alert(with: alert)
         }
-        .padding([.leading, .trailing, .bottom], 20)
-        .padding(.top, 12)
+        .frame(height: 190)
+        .padding([.leading, .trailing], 20)
+        .padding(.bottom, 8)
     }
 }
 
