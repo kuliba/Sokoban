@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 // MARK: - Presentation
 
@@ -14,9 +15,14 @@ final class BottomSheetPresentationController: UIPresentationController {
     private let tapGestureRecognizer = UITapGestureRecognizer()
     private let tapDragGestureRecognizer = UITapGestureRecognizer()
     let panGestureRecognizer = UIPanGestureRecognizer()
+    
+    private let keyboardPublisher = KeyboardPublisher()
+    private var bindings = Set<AnyCancellable>()
 
     private let topDragSize: CGSize = .init(width: 48, height: 5)
     private let multiplier: CGFloat = 0.9
+    
+    private var presentedViewBottomConstraint: NSLayoutConstraint?
 
     private lazy var dimmingView: UIView = {
 
@@ -82,7 +88,7 @@ final class BottomSheetPresentationController: UIPresentationController {
                       width: containerView.bounds.width,
                       height: height + topDragOffset)
     }
-
+    
     private func configure() {
 
         guard let containerView = containerView,
@@ -123,6 +129,8 @@ final class BottomSheetPresentationController: UIPresentationController {
             topDragView.widthAnchor.constraint(equalToConstant: topDragSize.width),
             topDragView.heightAnchor.constraint(equalToConstant: topDragSize.height)
         ])
+        
+        presentedViewBottomConstraint = presentedView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 0)
 
         tapGestureRecognizer.addTarget(self, action: #selector(handleTapGesture))
         tapDragGestureRecognizer.addTarget(self, action: #selector(handleTapGesture))
@@ -139,11 +147,36 @@ final class BottomSheetPresentationController: UIPresentationController {
             self.setTransparencyViews(false)
         }
     }
+    
+    private func observeKeyboardPublisher() {
+        
+        keyboardPublisher.keyboardHeight
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] keyboardHeight in
+                
+                guard let bottomConstraint = presentedViewBottomConstraint else {
+                    return
+                }
+                
+                bottomConstraint.constant = keyboardHeight / 3
+                
+                UIView.animate(withDuration: 0.25) {
+                                        
+                    self.presentedView?.setNeedsLayout()
+                    self.presentedView?.layoutIfNeeded()
+                    
+                    self.containerView?.setNeedsLayout()
+                    self.containerView?.layoutIfNeeded()
+                }
+                
+            }.store(in: &bindings)
+    }
 
     override func presentationTransitionWillBegin() {
         super.presentationTransitionWillBegin()
 
         configure()
+        observeKeyboardPublisher()
     }
     
     override func dismissalTransitionWillBegin() {
@@ -174,6 +207,16 @@ final class BottomSheetPresentationController: UIPresentationController {
         super.containerViewWillLayoutSubviews()
 
         updatePresentedView()
+        setupConstraint()
+    }
+    
+    private func setupConstraint() {
+        
+        guard let presentedViewBottomConstraint = presentedViewBottomConstraint else {
+            return
+        }
+        
+        presentedViewBottomConstraint.isActive = true
     }
 
     private func updatePresentedView() {
