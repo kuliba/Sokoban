@@ -169,7 +169,9 @@ class C2BDetailsViewController: BottomPopUpViewAdapter, UIPopoverPresentationCon
                     }
                 }
             })
-            self.cardListView.cardList = filterProduct
+            let clientId = Model.shared.clientInfo.value?.id
+            
+            self.cardListView.cardList = filterProduct.filter({$0.ownerID == clientId})
             self.cardFromField.model = filterProduct.first
         }
     }

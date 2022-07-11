@@ -524,7 +524,7 @@ class ContactInputViewController: UIViewController {
                     }
             })
             
-            self.cardListView.cardList = filterProduct
+            self.cardListView.cardList = filterProduct.filter({$0.ownerID == Model.shared.clientInfo.value?.id})
             if filterProduct.count > 0 {
                 if let cardId = self.paymentTemplate?.parameterList.first?.payer.cardId {
                     

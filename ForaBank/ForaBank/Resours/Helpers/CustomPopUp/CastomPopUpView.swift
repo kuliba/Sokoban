@@ -218,12 +218,13 @@ class MemeDetailVC: UIViewController {
     
     func updateObjectWithNotification(cardId: Int? = nil) {
         var products: [UserAllCardsModel] = []
-        let types: [ProductType] = [.card, .account]
+        let types: [ProductType] = [.card]
         types.forEach { type in
             products.append(contentsOf: self.model.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
         }
         
-        cardFromListView.cardList = products
+        let clientId = Model.shared.clientInfo.value?.id
+        cardFromListView.cardList = products.filter({$0.ownerID == clientId})
         cardToListView.cardList = products
         
         if let cardId = cardId {
