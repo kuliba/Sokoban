@@ -389,6 +389,9 @@ class AvtodorDetailsFormController: BottomPopUpViewAdapter, UITableViewDataSourc
             let productTypes: [ProductType] = [.card, .account]
             let productsFilterred = self.model.products.value.values.flatMap({ $0 }).filter({ productTypes.contains($0.productType) && $0.currency == "RUB" })
             let productsFilterredMapped = productsFilterred.map{ $0.userAllProducts() }
+            
+            let clientId = Model.shared.clientInfo.value?.id
+            productsFilterredMapped.filter({$0.ownerID == clientId})
 
             self.footerView.cardListView.cardList = productsFilterredMapped
             

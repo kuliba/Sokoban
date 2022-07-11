@@ -38,12 +38,14 @@ class Model {
     var ratesAllowed: Set<Currency> { [.usd, .eur] }
     
     //MARK: Dictionaries
+    let dictionariesUpdating: CurrentValueSubject<Set<DictionaryType>, Never>
     let catalogProducts: CurrentValueSubject<[CatalogProductData], Never>
     let catalogBanners: CurrentValueSubject<[BannerCatalogListData], Never>
     let currencyList: CurrentValueSubject<[CurrencyData], Never>
     let countriesList: CurrentValueSubject<[CountryData], Never>
     let paymentSystemList: CurrentValueSubject<[PaymentSystemData], Never>
     let bankList: CurrentValueSubject<[BankData], Never>
+    let currencyWalletList: CurrentValueSubject<[CurrencyWalletData], Never>
     var images: CurrentValueSubject<[String: ImageData], Never>
     
     //MARK: Deposits
@@ -129,6 +131,7 @@ class Model {
         self.catalogProducts = .init([])
         self.catalogBanners = .init([])
         self.currencyList = .init([])
+        self.currencyWalletList = .init([])
         self.bankList = .init([])
         self.countriesList = .init([])
         self.paymentSystemList = .init([])
@@ -146,6 +149,7 @@ class Model {
         self.currentUserLoaction = .init(nil)
         self.informer = .init(nil)
         self.notificationsTransition = .init(nil)
+        self.dictionariesUpdating = .init([])
 
         self.sessionAgent = sessionAgent
         self.serverAgent = serverAgent
@@ -566,6 +570,9 @@ class Model {
                         
                     case .atmRegionList:
                         handleDictionaryAtmRegionDataList(payload.serial)
+                    
+                    case .currencyWalletList:
+                        handleDictionaryCurrencyWalletList(payload.serial)
                     }
                     
                 case let payload as ModelAction.Dictionary.DownloadImages.Request:
@@ -761,6 +768,11 @@ private extension Model {
             
             self.images.value = images
         }
+        
+        if let currencyWalletList = localAgent.load(type: [CurrencyWalletData].self) {
+            
+            self.currencyWalletList.value = currencyWalletList
+        }
     }
     
     func loadCachedAuthorizedData() {
@@ -924,6 +936,8 @@ private extension Model {
         clientPhoto.value = nil
         clientName.value = nil
         currentUserLoaction.value = nil
+        dictionariesUpdating.value = []
+        currencyWalletList.value = []
         
         print("Model: memory data cleaned")
     }

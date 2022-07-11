@@ -139,6 +139,48 @@ extension ServerCommands {
         }
         
         /*
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/dict/getCurrencyWalletList
+         */
+        struct GetCurrencyWalletList: ServerCommand {
+            
+            let token: String? = nil
+            let endpoint = "/dict/getCurrencyWalletList"
+            let method: ServerCommandMethod = .get
+            let parameters: [ServerCommandParameter]?
+            let payload: Payload? = nil
+            let timeout: TimeInterval? = nil
+            
+            struct Payload: Encodable {}
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: CurrencyWalletListData?
+                
+                struct CurrencyWalletListData: Decodable, Equatable {
+                    
+                    let list: [CurrencyWalletData]
+                    let serial: String
+                }
+            }
+            
+            internal init(serial: String?) {
+                
+                if let serial = serial {
+                    
+                    var parameters = [ServerCommandParameter]()
+                    parameters.append(.init(name: "serial", value: serial))
+                    self.parameters = parameters
+                    
+                } else {
+                    
+                    self.parameters = nil
+                }
+            }
+        }
+        
+        /*
          https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/dict/getCurrencyList
          */
         struct GetCurrencyList: ServerCommand {
