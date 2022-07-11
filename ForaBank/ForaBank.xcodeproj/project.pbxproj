@@ -229,6 +229,8 @@
 		0BF816FC27E122AF00AC890D /* EPContactSelfDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF816FB27E122AF00AC890D /* EPContactSelfDataView.swift */; };
 		0C03FB52286A786500C2A100 /* BanksCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0C03FB51286A786500C2A100 /* BanksCollectionViewCell.xib */; };
 		0C03FB54286A89A900C2A100 /* BanksCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C03FB53286A89A900C2A100 /* BanksCollectionViewCell.swift */; };
+		0C1877B328776449004F7699 /* CurrencyWalletData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1877B228776449004F7699 /* CurrencyWalletData.swift */; };
+		0C35FD57287C0A4A00EB9039 /* DictionaryType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C35FD56287C0A4A00EB9039 /* DictionaryType.swift */; };
 		0C4245782846200600899EB2 /* PaymentPhoneData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4245772846200600899EB2 /* PaymentPhoneData.swift */; };
 		0C42457A2846C79E00899EB2 /* ContactsAgentMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4245792846C79E00899EB2 /* ContactsAgentMock.swift */; };
 		0C42457C2846D51700899EB2 /* Model+Contacts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C42457B2846D51700899EB2 /* Model+Contacts.swift */; };
@@ -1601,6 +1603,8 @@
 		0BF816FB27E122AF00AC890D /* EPContactSelfDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPContactSelfDataView.swift; sourceTree = "<group>"; };
 		0C03FB51286A786500C2A100 /* BanksCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BanksCollectionViewCell.xib; sourceTree = "<group>"; };
 		0C03FB53286A89A900C2A100 /* BanksCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BanksCollectionViewCell.swift; sourceTree = "<group>"; };
+		0C1877B228776449004F7699 /* CurrencyWalletData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyWalletData.swift; sourceTree = "<group>"; };
+		0C35FD56287C0A4A00EB9039 /* DictionaryType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryType.swift; sourceTree = "<group>"; };
 		0C4245772846200600899EB2 /* PaymentPhoneData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentPhoneData.swift; sourceTree = "<group>"; };
 		0C4245792846C79E00899EB2 /* ContactsAgentMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsAgentMock.swift; sourceTree = "<group>"; };
 		0C42457B2846D51700899EB2 /* Model+Contacts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Contacts.swift"; sourceTree = "<group>"; };
@@ -3339,6 +3343,14 @@
 			path = ClearRealm;
 			sourceTree = "<group>";
 		};
+		0C1877B1287763FD004F7699 /* CurrencyWallet */ = {
+			isa = PBXGroup;
+			children = (
+				0C1877B228776449004F7699 /* CurrencyWalletData.swift */,
+			);
+			path = CurrencyWallet;
+			sourceTree = "<group>";
+		};
 		0C4B0BBD28624A5E004B7F69 /* FastPaymentSettings */ = {
 			isa = PBXGroup;
 			children = (
@@ -4778,6 +4790,7 @@
 				77EC58EA2772375A0054D75C /* Abstract */,
 				77E1805027AC6B790006ACC9 /* General */,
 				77E1805727AC7D6A0006ACC9 /* Auth */,
+				0C1877B1287763FD004F7699 /* CurrencyWallet */,
 				6820927927AB0D82003DCAFD /* Dictionary */,
 				77517FCC27A9715B005CFB77 /* Product */,
 				77E1805627AC7B0A0006ACC9 /* Operation */,
@@ -4937,6 +4950,7 @@
 			isa = PBXGroup;
 			children = (
 				0CA1CDE02840720200021671 /* AddressBookContact.swift */,
+				0C35FD56287C0A4A00EB9039 /* DictionaryType.swift */,
 				77DC12702771080400C917B0 /* EmptyData.swift */,
 				77517FCD27A97913005CFB77 /* ColorData.swift */,
 				77DC12642770F08300C917B0 /* SVGImageData.swift */,
@@ -7578,6 +7592,7 @@
 				EDCF8A1826CEFF2100DC9F54 /* TextFieldWithPadding.swift in Sources */,
 				A5B55E9827E2620C00C0B695 /* FastPaymentContractFindListDO.swift in Sources */,
 				EDF68211266F9EC800FD5C07 /* RequestError.swift in Sources */,
+				0C1877B328776449004F7699 /* CurrencyWalletData.swift in Sources */,
 				509EE0DB285F820E002281BF /* View+Extension.swift in Sources */,
 				68E6A29526A033D900A1D9A1 /* DeleteProductTemplateDecodableModel.swift in Sources */,
 				0B1DBA9C26D4032F009F3E98 /* CreateContactAddresslessTransferDecodableModel.swift in Sources */,
@@ -7968,6 +7983,7 @@
 				77517FD227A97B51005CFB77 /* ProductDetailsData.swift in Sources */,
 				77A6A9D327F471EF00CE7E28 /* PlacesViewModel.swift in Sources */,
 				774A8B5F2865FDAF00B81140 /* PaymentsInputViewComponent.swift in Sources */,
+				0C35FD57287C0A4A00EB9039 /* DictionaryType.swift in Sources */,
 				0B216FBE26D15BDF0023C878 /* GKHInputCell.swift in Sources */,
 				0BBDFC3A27BE48EE00A30D6D /* PaymentsOperationViewModel.swift in Sources */,
 				0B3FE8E32705C86200CBDB4E /* GetMobileListDecodableModel.swift in Sources */,
