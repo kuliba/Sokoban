@@ -12,38 +12,59 @@ import SwiftUI
 extension ButtonIconTextView {
     
     struct ViewModel: Identifiable {
-        
+
         let id: UUID
-        let icon: Image
-        let title: String
+        let icon: Icon
+        let title: Title
         let orientation: Orientation
-        let appearance: Appearance
-        let iconColor: Color
         let action: () -> Void
+        
+        struct Icon {
+            
+            let image: Image
+            var style: Style = .color(.iconBlack)
+            let background: Background
+            
+            enum Style {
+                
+                case original
+                case color(Color)
+            }
+            
+            enum Background {
+                
+                case circle
+                case square
+            }
+        }
+        
+        struct Title {
+            
+            let text: String
+            var color: Color = .textSecondary
+            var style: Style = .normal
+            
+            enum Style {
+                
+                case normal
+                case bold
+            }
+        }
         
         enum Orientation {
             
             case vertical
             case horizontal
         }
-        
-        enum Appearance {
-            
-            case circle
-            case square
-        }
-        
-        internal init(id: UUID = UUID(), icon: Image, title: String, orientation: Orientation, appearance: Appearance, iconColor: Color = .iconBlack, action: @escaping () -> Void) {
-            
+
+        init(id: UUID = UUID(), icon: ButtonIconTextView.ViewModel.Icon, title: ButtonIconTextView.ViewModel.Title, orientation: ButtonIconTextView.ViewModel.Orientation, action: @escaping () -> Void) {
             self.id = id
             self.icon = icon
             self.title = title
             self.orientation = orientation
-            self.appearance = appearance
-            self.iconColor = iconColor
             self.action = action
         }
-        
+
         static func == (lhs: ViewModel, rhs: ViewModel) -> Bool {
             
             lhs.id == rhs.id
@@ -57,6 +78,14 @@ struct ButtonIconTextView: View {
     
     var viewModel: ViewModel
     
+    var titleFont: Font {
+        
+        switch viewModel.title.style {
+        case .normal: return .textBodySR12160()
+        case .bold: return .textH4M16240()
+        }
+    }
+    
     var body: some View {
         
         Button(action: viewModel.action) {
@@ -66,11 +95,11 @@ struct ButtonIconTextView: View {
 
                 VStack {
                     
-                   IconView(viewModel: viewModel)
+                    IconView(viewModel: viewModel.icon)
                     
-                    Text(viewModel.title)
-                        .font(.textBodySR12160())
-                        .foregroundColor(.textSecondary)
+                    Text(viewModel.title.text)
+                        .font(titleFont)
+                        .foregroundColor(viewModel.title.color)
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: 75)
                 }
@@ -79,11 +108,11 @@ struct ButtonIconTextView: View {
 
                 HStack(spacing: 16) {
                     
-                   IconView(viewModel: viewModel)
+                    IconView(viewModel: viewModel.icon)
                     
-                    Text(viewModel.title)
-                        .font(.textBodySR12160())
-                        .foregroundColor(.textSecondary)
+                    Text(viewModel.title.text)
+                        .font(titleFont)
+                        .foregroundColor(viewModel.title.color)
                         .multilineTextAlignment(.center)
                         
                 }
@@ -97,29 +126,51 @@ extension ButtonIconTextView {
     
     struct IconView: View {
         
-        let viewModel: ButtonIconTextView.ViewModel
+        let viewModel: ButtonIconTextView.ViewModel.Icon
+        
+        var side: CGFloat {
+            
+            switch viewModel.background {
+            case .circle: return 56
+            case .square: return 48
+            }
+        }
         
         var body: some View {
             
-            ZStack {
+            switch viewModel.style {
+            case .original:
+                viewModel.image
+                    .renderingMode(.original)
+                    .background(ButtonIconTextView.IconBackgroundView(viewModel: viewModel.background))
+                    .frame(width: side, height: side)
                 
-                switch viewModel.appearance {
-                case .circle:
-                    Circle()
-                        .foregroundColor(.mainColorsGrayLightest)
-                        .frame(width: 56, height: 56)
-                    
-                case .square:
-                    RoundedRectangle(cornerRadius: 8)
-                        .foregroundColor(.mainColorsGrayLightest)
-                        .frame(width: 48, height: 48)
-                }
-                
-                viewModel.icon
+            case .color(let color):
+                viewModel.image
                     .renderingMode(.template)
-                    .resizable()
-                    .foregroundColor(viewModel.iconColor)
-                    .frame(width: 24, height: 24)
+                    .foregroundColor(color)
+                    .background(ButtonIconTextView.IconBackgroundView(viewModel: viewModel.background))
+                    .frame(width: side, height: side)
+            }
+        }
+    }
+    
+    struct IconBackgroundView: View {
+        
+        let viewModel: ButtonIconTextView.ViewModel.Icon.Background
+        
+        var body: some View {
+            
+            switch viewModel {
+            case .circle:
+                Circle()
+                    .foregroundColor(.mainColorsGrayLightest)
+                    .frame(width: 56, height: 56)
+                
+            case .square:
+                RoundedRectangle(cornerRadius: 8)
+                    .foregroundColor(.mainColorsGrayLightest)
+                    .frame(width: 48, height: 48)
             }
         }
     }
@@ -137,11 +188,17 @@ struct FastOperationButtonView_Previews: PreviewProvider {
             
             ButtonIconTextView(viewModel: .verticalSquare)
                 .previewLayout(.fixed(width: 375, height: 200))
-            
+
             ButtonIconTextView(viewModel: .horizontalSquare)
                 .previewLayout(.fixed(width: 375, height: 200))
-            
+
             ButtonIconTextView(viewModel: .horizontalCircle)
+                .previewLayout(.fixed(width: 375, height: 200))
+
+            ButtonIconTextView(viewModel: .horizontalCircleBold)
+                .previewLayout(.fixed(width: 375, height: 200))
+
+            ButtonIconTextView(viewModel: .horizontalCircleBoldOriginal)
                 .previewLayout(.fixed(width: 375, height: 200))
         }
     }
@@ -151,15 +208,19 @@ struct FastOperationButtonView_Previews: PreviewProvider {
 
 extension ButtonIconTextView.ViewModel {
     
-    static let telephoneTranslation =  ButtonIconTextView.ViewModel.init(icon: .ic24Smartphone, title: "Перевод по телефону", orientation: .vertical, appearance: .circle, action: {})
+    static let telephoneTranslation = ButtonIconTextView.ViewModel(icon: .init(image: .ic24Smartphone, background: .circle), title: .init(text: "Перевод по телефону"), orientation: .vertical, action: {})
     
-    static let qrPayment = ButtonIconTextView.ViewModel.init(icon: .ic24BarcodeScanner2, title: "Оплата по QR", orientation: .vertical, appearance: .circle, action: {})
-    
-    static let templates = ButtonIconTextView.ViewModel.init(icon: .ic24Star, title: "Шаблоны", orientation: .vertical, appearance: .circle, action: {})
-    
-    static let verticalSquare = ButtonIconTextView.ViewModel.init(icon: .ic24BarcodeScanner2, title: "Оплата по QR", orientation: .vertical, appearance: .square, action: {})
-    
-    static let horizontalSquare = ButtonIconTextView.ViewModel.init(icon: .ic24BarcodeScanner2, title: "Оплата по QR", orientation: .horizontal, appearance: .square,action: {})
+    static let qrPayment = ButtonIconTextView.ViewModel(icon: .init(image: .ic24BarcodeScanner2, background: .circle), title: .init(text: "Оплата по QR"), orientation: .vertical, action: {})
 
-    static let horizontalCircle = ButtonIconTextView.ViewModel.init(icon: .ic24BarcodeScanner2, title: "Оплата по QR", orientation: .horizontal, appearance: .circle, action: {})
+    static let templates = ButtonIconTextView.ViewModel(icon: .init(image: .ic24Star, background: .circle), title: .init(text:  "Шаблоны"), orientation: .vertical, action: {})
+    
+    static let verticalSquare = ButtonIconTextView.ViewModel(icon: .init(image: .ic24BarcodeScanner2, background: .square), title: .init(text: "Оплата по QR"), orientation: .vertical, action: {})
+
+    static let horizontalSquare = ButtonIconTextView.ViewModel(icon: .init(image: .ic24BarcodeScanner2, background: .square), title: .init(text: "Оплата по QR"), orientation: .horizontal, action: {})
+
+    static let horizontalCircle = ButtonIconTextView.ViewModel(icon: .init(image: .ic24BarcodeScanner2, background: .circle), title: .init(text: "Оплата по QR"), orientation: .horizontal, action: {})
+    
+    static let horizontalCircleBold = ButtonIconTextView.ViewModel(icon: .init(image: .ic24BarcodeScanner2, background: .circle), title: .init(text: "Оплата по QR", style: .bold), orientation: .horizontal, action: {})
+    
+    static let horizontalCircleBoldOriginal = ButtonIconTextView.ViewModel(icon: .init(image: .ic40SBP, style: .original, background: .circle), title: .init(text: "С моего счета в другом банке", style: .bold), orientation: .horizontal, action: {})
 }

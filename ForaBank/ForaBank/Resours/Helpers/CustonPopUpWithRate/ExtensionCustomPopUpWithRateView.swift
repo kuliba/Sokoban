@@ -399,7 +399,6 @@ extension CustomPopUpWithRateView {
                 self.viewModel.cardTo = card
                 self.reversCard = ""
                 self.cardToField.cardModel = card
-                self.bottomView.models.to = card.currency ?? ""
                 self.hideView(self.cardToListView, needHide: true) {
                     if let cardFromListView = self.cardFromListView, !cardFromListView.isHidden {
                         self.hideView(self.cardFromListView, needHide: true) { }

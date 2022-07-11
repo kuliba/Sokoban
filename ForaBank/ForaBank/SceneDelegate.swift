@@ -6,117 +6,87 @@
 //
 
 import UIKit
-import Firebase
-import FirebaseMessaging
 import Combine
-import Network
-
-//protocol NetStatusProtocol: AnyObject {
-//    func netEnable()
-//    func netDesable()
-//}
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
-    // MARK: - NetMonitor
-    private var cancellables = Set<AnyCancellable>()
-    private let monitorQueue = DispatchQueue(label: "monitor")
-
     var window: UIWindow?
-    
-    var netAlert: NetDetectAlert!
-    var netStatus: Bool?
-    
-//    weak var netDetectDelegate: NetStatusProtocol?
-    
-    lazy var appNavigationController = UINavigationController()
-    lazy var appRouter = Router(navigationController: self.appNavigationController)
-    lazy var appCoordinator = MainCoordinator(router: self.appRouter)
+    private var bindings = Set<AnyCancellable>()
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        let rootViewController = RootViewHostingViewController(with: .init(Model.shared))
+        let rootViewModel = RootViewModel(AppDelegate.shared.model)
+        let rootViewController = RootViewHostingViewController(with: rootViewModel)
         window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()
         
-        
-        
-        //LEGACY
-        /*
-        // MARK: Window
-        guard let windowScene = (scene as? UIWindowScene) else { return }
-        window = UIWindow(frame: windowScene.coordinateSpace.bounds)
-        window?.windowScene = windowScene
-        window?.rootViewController = appCoordinator.toPresentable()
-        window?.backgroundColor = .white
-        window?.makeKeyAndVisible()
-        self.appCoordinator.start()
-        let tapGesture = UITapGestureRecognizer(target: self, action: nil)
-        tapGesture.delegate = self
-        window?.addGestureRecognizer(tapGesture)
-         */
-        
-        // NetMonitoring observer
-        self.observeNetworkStatus()
+        bind(rootViewModel: rootViewModel)
+    } 
+}
 
-        if let urlContext = connectionOptions.urlContexts.first {
-            let sendingAppID = urlContext.options.sourceApplication
-            
-            GlobalModule.c2bURL = urlContext.url.description
-        }
-    }
+//MARK: - Bindings
+
+extension SceneDelegate {
     
-    private func observeNetworkStatus() {
-        NWPathMonitor()
-            .publisher(queue: monitorQueue)
+    func bind(rootViewModel: RootViewModel) {
+        
+        rootViewModel.action
             .receive(on: DispatchQueue.main)
-            .sink { status in
-                DispatchQueue.main.async { [weak self] in
-                    if status == .satisfied {
-                        self?.netStatus = true
-                        self?.netAlert?.removeFromSuperview()
-//                        self?.netDetectDelegate?.netDesable()
-                        self?.netAlert = nil
-                    } else {
-                        guard let vc = UIApplication.getTopViewController() else {return}
-//                        self?.netDetectDelegate?.netEnable()
-                        if self?.netAlert == nil {
-                            self?.netAlert = NetDetectAlert(vc.view)
-                            vc.view.addSubview((self?.netAlert)!)
-                        }
-                    }
+            .sink { [unowned self] action in
+                
+                switch action {
+                case _ as RootViewModelAction.DismissAll:
+                    window?.rootViewController?.dismiss(animated: false, completion: nil)
+                    
+                default:
+                    break
                 }
-            }
-            .store(in: &cancellables)
+                
+            }.store(in: &bindings)
     }
+}
 
+//MARK: - Scene Lyfecycle
+
+extension SceneDelegate {
+    
     func sceneDidBecomeActive(_ scene: UIScene) {
+        
         DispatchQueue.main.async {
-            UIApplication.shared.keyWindow?.deleteBlure()
+            self.window?.deleteBlure()
         }
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
+        
         DispatchQueue.main.async {
-            UIApplication.shared.keyWindow?.addBlure()
+            self.window?.addBlure()
         }
     }
     
     func sceneWillEnterForeground(_ scene: UIScene) {
         
-//        AppDelegate.shared.model.sessionAgent.action.send(SessionAgentAction.App.Activated())
-          AppDelegate.shared.model.action.send(ModelAction.Dictionary.UpdateCache.All())
+        AppDelegate.shared.model.action.send(ModelAction.App.Activated())
     }
     
     func sceneDidEnterBackground(_ scene: UIScene) {
         
-        AppDelegate.shared.model.sessionAgent.action.send(SessionAgentAction.App.Inactivated())
+        AppDelegate.shared.model.action.send(ModelAction.App.Inactivated())
     }
+}
 
+//MARK: - DeepLinks
+
+extension SceneDelegate {
+    
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        
+        //FIXME: looks like some C2B deeplink
+        
+        /*
         guard let url = URLContexts.first?.url else { return }
         guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true),
               let params = components.queryItems else {
@@ -171,7 +141,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 UserDefaults.standard.set(bankId, forKey: "GetMe2MeDebitConsent")
             }
         }
+         */
     }
-
 }
-

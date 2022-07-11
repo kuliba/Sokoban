@@ -7,10 +7,12 @@
 
 import UIKit
 import RealmSwift
+import IQKeyboardManagerSwift
 
 class ContactInputViewController: UIViewController {
     
     let model = Model.shared
+    var operatorsViewModel: OperatorsViewModel?
     var typeOfPay: PaymentType = .contact {
         didSet {
             readAndSetupCard(type: typeOfPay)
@@ -183,6 +185,10 @@ class ContactInputViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+        IQKeyboardManager.shared.keyboardDistanceFromTextField = 30
+        IQKeyboardManager.shared.enableAutoToolbar = true
         navigationController?.view.backgroundColor = UIColor(red: 0.973, green: 0.973, blue: 0.973, alpha: 0.82)
         navigationController?.navigationBar.backgroundColor = UIColor(red: 0.973, green: 0.973, blue: 0.973, alpha: 0.82)
         if let template = paymentTemplate {
@@ -202,6 +208,8 @@ class ContactInputViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         navigationController?.view.backgroundColor = UIColor.white
         navigationController?.navigationBar.backgroundColor = UIColor.white
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
     }
     
     //MARK: - Actions
@@ -422,6 +430,7 @@ class ContactInputViewController: UIViewController {
     func goToConfurmVC(with model: ConfirmViewControllerModel) {
         DispatchQueue.main.async {
             let vc = ContactConfurmViewController()
+            vc.operatorsViewModel = self.operatorsViewModel
             vc.title = "Подтвердите реквизиты"
             vc.confurmVCModel = model
             self.navigationController?.pushViewController(vc, animated: true)
@@ -515,7 +524,7 @@ class ContactInputViewController: UIViewController {
                     }
             })
             
-            self.cardListView.cardList = filterProduct
+            self.cardListView.cardList = filterProduct.filter({$0.ownerID == Model.shared.clientInfo.value?.id})
             if filterProduct.count > 0 {
                 if let cardId = self.paymentTemplate?.parameterList.first?.payer.cardId {
                     

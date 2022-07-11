@@ -102,3 +102,33 @@ extension TransferData: CustomDebugStringConvertible {
         "TransferData | amount: \(String(describing: amount)), check: \(String(describing: check)), currencyAmount: \(String(describing: currencyAmount)), payer: \(payer.debugDescription)"
     }
 }
+
+extension TransferData.Payer {
+    
+    init?(productData: ProductData) {
+        
+        switch productData {
+        case let card as ProductCardData:
+           
+            self = .init(inn: nil, accountId: nil, accountNumber: nil,
+                         cardId: card.id,
+                         cardNumber: nil, phoneNumber: nil)
+            
+        case let account as ProductAccountData:
+           
+            self = .init(inn: nil,
+                         accountId: account.id,
+                         accountNumber: nil, cardId: nil,
+                         cardNumber: nil, phoneNumber: nil)
+            
+        case let deposit as ProductDepositData:
+           
+            self = .init(inn: nil, //TODO: after analit
+                         accountId: deposit.accountId,
+                         accountNumber: nil, cardId: nil,
+                         cardNumber: nil, phoneNumber: nil)
+            
+        default: return nil
+        }
+    }
+}

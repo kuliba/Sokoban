@@ -382,7 +382,7 @@ public class AppLocker: UIViewController {
         UserDefaults.standard.setValue(false, forKey: "UserIsRegister")
         //TODO: - Написать очистку данных после выхода из приложения
         ClearRealm.clear()
-        AppDelegate.shared.isAuth = false
+//        AppDelegate.shared.isAuth = false
     }
     
     func exit() {
@@ -393,7 +393,7 @@ public class AppLocker: UIViewController {
 //        let navVC = UINavigationController(rootViewController: LoginCardEntryViewController())
 //        navVC.modalPresentationStyle = .fullScreen
 //        self.present(navVC, animated: true, completion: nil)
-        
+        /*
         NetworkManager<LogoutDecodableModel>.addRequest(.logout, [:], [:]) { _,_  in
             DispatchQueue.main.async {
                 self.cleanAllData()
@@ -411,6 +411,7 @@ public class AppLocker: UIViewController {
                 mySceneDelegate?.appCoordinator.start()
             }
         }
+         */
     }
 }
 
@@ -428,6 +429,7 @@ extension AppLocker {
     func login(with code: String, type: BiometricType, completion: @escaping (_ error: String?) ->() ) {
         showActivity()
         DispatchQueue.main.async {
+            /*
             AppDelegate.shared.getCSRF { error in
                 
                 if let error = error {
@@ -592,6 +594,7 @@ extension AppLocker {
                     
                 }
             }
+             */
         }
     }
     

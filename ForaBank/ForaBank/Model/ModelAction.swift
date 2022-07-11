@@ -19,4 +19,13 @@ enum ModelAction {
         
         let message: String
     }
+    
+    enum App {
+    
+        struct Launched: Action {}
+        
+        struct Activated: Action {}
+        
+        struct Inactivated: Action {}
+    }
 }

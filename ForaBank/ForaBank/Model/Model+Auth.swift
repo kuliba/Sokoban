@@ -249,6 +249,21 @@ extension Model {
         
        try keychainAgent.load(type: .serverDeviceGUID)
     }
+    
+    var authIsCredentialsStored: Bool {
+        
+        do {
+            
+            let _ = try authStoredPincode()
+            let _ = try authServerDeviceGUID()
+            
+            return true
+            
+        } catch {
+            
+            return false
+        }
+    }
 }
 
 //MARK: - Handlers
@@ -636,7 +651,21 @@ internal extension Model {
                 
             case .failure(let error):
                 
-                self.action.send(ModelAction.Auth.Sensor.Evaluate.Response.failure(message: error.localizedDescription))
+                switch error {
+                case .unableUsePolicy(let error):
+                    if let error = error {
+                        
+                        self.action.send(ModelAction.Auth.Sensor.Evaluate.Response.failure(message: "Невозможно ипользовать политику .deviceOwnerAuthenticationWithBiometrics ошибка: \(error.localizedDescription)"))
+                        
+                    } else {
+                        
+                        self.action.send(ModelAction.Auth.Sensor.Evaluate.Response.failure(message: "Невозможно ипользовать политику .deviceOwnerAuthenticationWithBiometrics"))
+                    }
+                    
+                case .failedEvaluatePolicyWithError(let error):
+                    
+                    self.action.send(ModelAction.Auth.Sensor.Evaluate.Response.failure(message: "При попытке авторизации через сенсор возникла ошибка: \(error.localizedDescription)"))
+                }
             }
         }
     }
@@ -722,7 +751,6 @@ internal extension Model {
                     case .success(let response):
                         switch response.statusCode {
                         case .ok:
-                            self.auth.value = .authorized
                             self.action.send(ModelAction.Auth.Login.Response.success)
                             self.action.send(ModelAction.Auth.Session.Start.Response(result: .success(credentials)))
 
@@ -752,25 +780,6 @@ internal extension Model {
                 self.action.send(ModelAction.Auth.Login.Response.failure(message: self.authDefaultErrorMessage))
             }
         }
-    }
-    
-    func handleAuthLogoutRequest() {
-        
-        do {
-            
-            try keychainAgent.clear(type: .pincode)
-            try keychainAgent.clear(type: .serverDeviceGUID)
-
-        } catch {
-            
-            //TODO: log error
-            print("Model: handleAuthLogoutRequest: unable clear pincode with error: \(error.localizedDescription)")
-        }
-    
-        print("Model: keychain cleared")
-        //TODO: clean face/touch id preferences
-        
-        auth.value = .registerRequired
     }
 }
 

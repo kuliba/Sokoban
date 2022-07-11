@@ -10,6 +10,7 @@ import UIKit
 extension ContactInputViewController {
     func setupUI() {
         navigationController?.isNavigationBarHidden = false
+        navigationItem.largeTitleDisplayMode = .never
 //        addCloseButton()
         view.backgroundColor = .white
         let saveAreaView = UIView()
@@ -46,8 +47,11 @@ extension ContactInputViewController {
         view.addSubview(stackView)
         
         self.view.addSubview(countryListView)
-        countryListView.anchor(top: view.topAnchor, left: view.leftAnchor,
-                               right: view.rightAnchor, height: 100)
+        countryListView.anchor(
+            top: view.safeAreaLayoutGuide.topAnchor,
+            left: view.leftAnchor,
+            right: view.rightAnchor,
+            paddingTop: 30, height: 100)
         
         setupConstraint()
     }
@@ -165,12 +169,15 @@ extension ContactInputViewController {
     }
     
     func setupConstraint() {
-        bottomView.anchor(left: view.leftAnchor, bottom: view.bottomAnchor,
-                          right: view.rightAnchor)
+        bottomView.anchor(
+            left: view.leftAnchor,
+            bottom: view.bottomAnchor,
+            right: view.rightAnchor,
+            paddingBottom: 30)
         
         stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor,
                          left: view.leftAnchor, right: view.rightAnchor,
-                         paddingTop: 20)
+                         paddingTop: 80)
         
     }
     

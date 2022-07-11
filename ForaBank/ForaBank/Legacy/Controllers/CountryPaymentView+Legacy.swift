@@ -85,7 +85,7 @@ struct CountryPaymentView: UIViewControllerRepresentable {
             vc.nameField.text = adressViewModel.firstName
             vc.surnameField.text = adressViewModel.surName
             vc.secondNameField.text = adressViewModel.middleName
-            vc.addCloseButton()
+//            vc.addCloseButton()
             
         case let .withOutAddress(withOutViewModel):
             
@@ -95,7 +95,7 @@ struct CountryPaymentView: UIViewControllerRepresentable {
             let mask = StringMask(mask: "+000-0000-00-00")
             let maskPhone = mask.mask(string: withOutViewModel.phoneNumber)
             vc.phoneField.text = maskPhone ?? ""
-            vc.addCloseButton()
+//            vc.addCloseButton()
             
         case let .template(templateViewModel):
            
@@ -113,13 +113,13 @@ struct CountryPaymentView: UIViewControllerRepresentable {
                 break
             }
             
-            context.coordinator.parentObserver = vc.observe(\.parent, changeHandler: { vc, _ in
-
-                vc.parent?.navigationItem.titleView = vc.navigationItem.titleView
-                vc.parent?.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem
-                vc.parent?.navigationItem.rightBarButtonItems = vc.navigationItem.rightBarButtonItems
-            })
         }
+        context.coordinator.parentObserver = vc.observe(\.parent, changeHandler: { vc, _ in
+            
+            vc.parent?.navigationItem.titleView = vc.navigationItem.titleView
+            vc.parent?.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem
+            vc.parent?.navigationItem.rightBarButtonItems = vc.navigationItem.rightBarButtonItems
+        })
         
         vc.modalPresentationStyle = .fullScreen
         

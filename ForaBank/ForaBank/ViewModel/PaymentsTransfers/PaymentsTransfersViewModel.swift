@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 
-class PaymentsTransfersViewModel: ObservableObject {
+class PaymentsTransfersViewModel: ObservableObject, Resetable {
     
     typealias TransfersSectionVM = PTSectionTransfersView.ViewModel
     typealias PaymentsSectionVM = PTSectionPaymentsView.ViewModel
@@ -57,16 +57,15 @@ class PaymentsTransfersViewModel: ObservableObject {
         self.navButtonsRight = navButtonsRight
     }
     
-    private func createNavButtonsRight() -> [NavigationBarButtonViewModel] {
+    func reset() {
         
-        [.init(icon: .ic24BarcodeScanner2,
-              action: { [weak self] in
-                        self?.action.send(PaymentsTransfersViewModelAction
-                                            .ButtonTapped.Scanner())})
-        ]
+        bottomSheet = nil
+        sheet = nil
+        link = nil
+        isTabBarHidden = false
     }
     
-    func bind() {
+    private func bind() {
         
         action
             .receive(on: DispatchQueue.main)
@@ -134,7 +133,7 @@ class PaymentsTransfersViewModel: ObservableObject {
             }.store(in: &bindings)
     }
     
-    func bindSections(_ sections: [PaymentsTransfersSectionViewModel]) {
+    private func bindSections(_ sections: [PaymentsTransfersSectionViewModel]) {
         for section in sections {
             
             section.action
@@ -152,7 +151,7 @@ class PaymentsTransfersViewModel: ObservableObject {
                             })))
                         
                         case (.country, let paymentData as PaymentCountryData):
-                            bottomSheet = .init(type: .country(paymentData))
+                            link = .init(.country(paymentData))
                             
                         case (.service, let paymentData as PaymentServiceData):
                             link = .service(.init(model: model, closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
@@ -167,7 +166,8 @@ class PaymentsTransfersViewModel: ObservableObject {
                             }, paymentServiceData: paymentData))
                             
                         case (.mobile, let paymentData as PaymentServiceData):
-                            link = .mobile(.init(paymentServiceData: paymentData))
+                            link = .mobile(.init(paymentServiceData: paymentData, closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            }))
                             
                         case (.taxAndStateService, let paymentData as PaymentServiceData):
                             bottomSheet = .init(type: .exampleDetail(paymentData.type.rawValue)) //TODO:
@@ -188,10 +188,11 @@ class PaymentsTransfersViewModel: ObservableObject {
                         switch payload.type {
                         case .abroad:
                             link = .chooseCountry(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
-                            }))
+                            }, template: nil))
                             
                         case .anotherCard:
-                            bottomSheet = .init(type: .anotherCard(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
+                            bottomSheet = .init(type: .anotherCard(.init(closeAction: { [weak self] in
+                                self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
                             })))
                             
                         case .betweenSelf:
@@ -204,8 +205,7 @@ class PaymentsTransfersViewModel: ObservableObject {
                             }, paymentTemplate: nil))
                             
                         case .byPhoneNumber:
-                            sheet = .init(type: .transferByPhone(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
-                            })))
+                            sheet = .init(type: .transferByPhone(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Sheet())})))
                         }
                         
                     //Payments Section
@@ -258,6 +258,20 @@ class PaymentsTransfersViewModel: ObservableObject {
         }
     }
     
+    private func createNavButtonsRight() -> [NavigationBarButtonViewModel] {
+        
+        [.init(icon: .ic24BarcodeScanner2,
+              action: { [weak self] in
+                        self?.action.send(PaymentsTransfersViewModelAction
+                                            .ButtonTapped.Scanner())})
+        ]
+    }
+}
+
+//MARK: - Types
+
+extension PaymentsTransfersViewModel {
+    
     struct BottomSheet: Identifiable {
         
         let id = UUID()
@@ -267,7 +281,6 @@ class PaymentsTransfersViewModel: ObservableObject {
             
             case exampleDetail(String)
             case anotherCard(AnotherCardViewModel)
-            case country(PaymentCountryData)
             case meToMe(MeToMeViewModel)
         }
     }
@@ -288,7 +301,7 @@ class PaymentsTransfersViewModel: ObservableObject {
         case exampleDetail(String)
         case userAccount(UserAccountViewModel)
         case mobile(MobilePayViewModel)
-        case chooseCountry(ChooseCountryViewModel)
+        case chooseCountry(OperatorsViewModel)
         case transferByRequisites(TransferByRequisitesViewModel)
         case phone(PaymentByPhoneViewModel)
         case taxAndStateService(PaymentsViewModel)
@@ -300,8 +313,11 @@ class PaymentsTransfersViewModel: ObservableObject {
         case transport(OperatorsViewModel)
         case template(TemplatesListViewModel)
         case qrScanner(QrViewModel)
+        case country(PaymentCountryData)
     }
+    
 }
+
 
 enum PaymentsTransfersViewModelAction {
     

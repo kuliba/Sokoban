@@ -31,6 +31,14 @@ extension ModelAction {
             let image: ImageData
         }
     }
+    
+    enum ClientName {
+        
+        struct Save: Action {
+            
+            let name: String?
+        }
+    }
 }
 
 //MARK: - Handlers
@@ -93,6 +101,32 @@ extension Model {
         } catch {
             
             print("Model: store: ClientPhotoData error: \(error.localizedDescription)")
+        }
+    }
+    
+    func handleClientNameSave(_ payload: ModelAction.ClientName.Save) {
+        
+        clientName.value = payload.name
+        
+        if let name = payload.name {
+            do {
+                
+                try localAgent.store(name, serial: nil)
+                
+            } catch {
+                
+                print("Model: store: ClientNameData error: \(error.localizedDescription)")
+            }
+        } else {
+            
+            do {
+                
+                try localAgent.clear(type: String.self)
+                
+            } catch {
+                
+                print("Model: store: ClientNameData error: \(error.localizedDescription)")
+            }
         }
     }
 }

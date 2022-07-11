@@ -52,12 +52,7 @@ class BiometricAgent: BiometricAgentProtocol {
         // Check if the user is able to use the policy we've selected previously
         var error: NSError? = nil
         guard context.canEvaluatePolicy(policy, error: &error) == true else {
-            completion(.failure(.unableUsePolicy))
-            return
-        }
-        
-        if let error = error {
-            completion(.failure(.failedCheckPolicyWithError(error)))
+            completion(.failure(.unableUsePolicy(error)))
             return
         }
    

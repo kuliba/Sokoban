@@ -22,7 +22,7 @@ extension ModelAction {
             
             enum Response: Action {
                 
-                case success(data: ServerCommands.TransferController.CreateInterestDepositTransfer.Response.CreateTransferResponseData)
+                case success(data: CreateTransferResponseData)
                 case failure(message: String)
             }
         }

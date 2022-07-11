@@ -333,8 +333,10 @@ class MeToMeViewController: UIViewController {
             
             let cards = ReturnAllCardList.cards()
             var filterProduct: [UserAllCardsModel] = []
+            let clientId = Model.shared.clientInfo.value?.id
+
             cards.forEach({ card in
-                if (card.productType == "CARD" || card.productType == "ACCOUNT") {
+                if (card.productType == "CARD" || card.productType == "ACCOUNT") && card.ownerID == clientId {
                     if (card.productType == "CARD" || card.productType == "ACCOUNT" || card.productType == "DEPOSIT") && card.currency == "RUB" {
                         filterProduct.append(card)
                     }

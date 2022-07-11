@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ChooseCountryView: UIViewControllerRepresentable {
     
-    let viewModel: ChooseCountryViewModel
+    let viewModel: OperatorsViewModel
     
     func makeUIViewController(context: Context) -> ChooseCountryTableViewController {
         
@@ -35,9 +35,4 @@ struct ChooseCountryView: UIViewControllerRepresentable {
     }
     
     func makeCoordinator() -> Self.Coordinator { Coordinator() }
-}
-
-struct ChooseCountryViewModel {
-    
-    var closeAction: () -> Void
 }

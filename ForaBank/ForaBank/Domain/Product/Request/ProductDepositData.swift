@@ -92,3 +92,17 @@ class ProductDepositData: ProductData {
         lhs.minimumBalance == rhs.minimumBalance
     }
 }
+
+//MARK: - Helpers
+
+extension ProductDepositData {
+    
+    var isTransferEnabled: Bool {
+        
+        guard let endDate = endDate else {
+            return false
+        }
+        
+        return endDate <= Date()
+    }
+}

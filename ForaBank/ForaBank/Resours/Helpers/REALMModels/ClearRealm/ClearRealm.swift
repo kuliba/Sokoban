@@ -30,6 +30,6 @@ struct ClearRealm {
             timeOut.first?.mustCheckTimeOut = true
             realm.add(timeOut)
         }
-        AppDelegate.shared.isAuth = false
+//        AppDelegate.shared.isAuth = false
     }
 }

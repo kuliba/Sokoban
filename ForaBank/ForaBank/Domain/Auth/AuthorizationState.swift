@@ -10,7 +10,7 @@ import Foundation
 enum AuthorizationState {
     
     case registerRequired
-    case signInRequired(pincode: String)
-    case unlockRequired(pincode: String)
+    case signInRequired
+    case unlockRequired
     case authorized
 }

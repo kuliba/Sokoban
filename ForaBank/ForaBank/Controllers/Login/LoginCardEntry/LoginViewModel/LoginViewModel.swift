@@ -12,9 +12,11 @@ class LoginViewModel {
     var encription = Encription()
 
     func csrf(){
+        /*
         AppDelegate.shared.getCSRF() { errorMessage in
             print(errorMessage ?? "")
         }
+         */
     }
     
     func checkCardNumber(with number: String, completion: @escaping(_ model: String?, _ error: String?) -> ()) {

@@ -69,7 +69,7 @@ class PaymentsDetailsSuccessViewController: UIViewController {
             self.model.action.send(ModelAction.PaymentTemplate.Save.Requested(name: name, paymentOperationDetailId: paymentOperationDetailId))
         }
         
-       bind()
+        bind()
     }
     
     func bind() {
@@ -93,8 +93,9 @@ class PaymentsDetailsSuccessViewController: UIViewController {
     
     fileprivate func setupUI() {
         navigationController?.navigationBar.isHidden = true
+        navigationController?.isNavigationBarHidden = true
         view.backgroundColor = .white
-
+        
         view.addSubview(button)
         button.anchor(
             left: view.leftAnchor,
@@ -119,8 +120,13 @@ class PaymentsDetailsSuccessViewController: UIViewController {
     }
     
     @objc func doneButtonTapped() {
-            self.view.window?.rootViewController?.dismiss(animated: true)
-            operatorsViewModel?.closeAction()
+        self.view.window?.rootViewController?.dismiss(animated: true)
+        operatorsViewModel?.closeAction()
+        guard let closeAction = closeAction else {
+            return
+        }
+        
+        closeAction()
     }
     
     func openDetailVC() {

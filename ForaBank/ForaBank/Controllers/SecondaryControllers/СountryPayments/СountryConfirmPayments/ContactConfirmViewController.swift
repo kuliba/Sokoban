@@ -9,6 +9,7 @@ import UIKit
 import RealmSwift
 import SwiftUI
 import Combine
+import IQKeyboardManagerSwift
 
 //TODO: отрефакторить под сетевые запросы, вынести в отдельный файл
 class ConfirmViewControllerModel {
@@ -296,6 +297,20 @@ class ContactConfurmViewController: UIViewController {
     var fromTitle = "От куда"
     var toTitle = "Куда"
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        IQKeyboardManager.shared.enable = false
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+        IQKeyboardManager.shared.enableAutoToolbar = false
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.enableAutoToolbar = true
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -333,7 +348,7 @@ class ContactConfurmViewController: UIViewController {
                 vc.confurmView.infoLabel.text = ""
             }
 
-            self.present(vc, animated: true, completion: nil)
+            self.navigationController?.pushViewController(vc, animated: true)
         }
     }
     
@@ -838,6 +853,11 @@ class ContactConfurmViewController: UIViewController {
                             print("Не известный статус документа")
                         }
                         
+                        if let closeAction = self.confurmVCModel?.closeAction {
+                            
+                            vc.closeAction = closeAction
+                        }
+                        
                         self.confurmVCModel?.paymentOperationDetailId = model.data?.paymentOperationDetailId ?? 0
                         
                         switch self.confurmVCModel?.type {
@@ -895,9 +915,7 @@ class ContactConfurmViewController: UIViewController {
                         
                         vc.confurmVCModel = self.confurmVCModel
                         vc.operatorsViewModel = self.operatorsViewModel
-                        let nav = UINavigationController(rootViewController: vc)
-                        nav.modalPresentationStyle = .fullScreen
-                        self.present(nav, animated: true, completion: nil)
+                        self.navigationController?.pushViewController(vc, animated: true)
                         
                     }
                 } else {
@@ -974,9 +992,7 @@ class ContactConfurmViewController: UIViewController {
                         
                         vc.confurmVCModel = self.confurmVCModel
                         vc.operatorsViewModel = self.operatorsViewModel
-                        let nav = UINavigationController(rootViewController: vc)
-                        nav.modalPresentationStyle = .fullScreen
-                        self.present(nav, animated: true, completion: nil)
+                        self.navigationController?.pushViewController(vc, animated: true)
                     }
                 } else if model.statusCode == 102 {
                     self.doneButtonIsEnabled(false)
@@ -1028,9 +1044,7 @@ class ContactConfurmViewController: UIViewController {
                 let vc = PaymentsDetailsSuccessViewController()
                 self.confurmVCModel?.status = .timeOut
                 vc.confurmVCModel = self.confurmVCModel
-                let nav = UINavigationController(rootViewController: vc)
-                nav.modalPresentationStyle = .fullScreen
-                self.present(nav, animated: true, completion: nil)
+                self.navigationController?.pushViewController(vc, animated: true)
                 complition()
             }
         }

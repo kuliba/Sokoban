@@ -13,23 +13,6 @@ extension ModelAction {
     
     enum Notification {
         
-        enum ChangeNotificationStatus {
-            
-            struct Requested: Action {
-                
-                let eventId: String
-                let cloudId: String
-                let status: ServerCommands.NotificationController.ChangeNotificationStatus.CodingKeys
-            }
-            
-            struct Complete: Action {}
-            
-            struct Failed: Action {
-                
-                let error: Error
-            }
-        }
-        
         enum Fetch {
             
             enum New {
@@ -53,6 +36,22 @@ extension ModelAction {
             }
         }
         
+        enum ChangeNotificationStatus {
+            
+            struct Request: Action {
+                
+                let eventId: String
+                let cloudId: String
+                let status: NotificationStatus
+            }
+            
+            enum Response: Action {
+                
+                case sussesed
+                case failed(Error)
+            }
+        }
+        
         enum Transition {
             
             struct Set: Action {
@@ -61,9 +60,7 @@ extension ModelAction {
             }
             
             struct Clear: Action {}
-            
         }
-        
     }
 }
 
@@ -86,14 +83,11 @@ extension Model {
 
         notificationsTransition.value = nil
     }
-
     
     func handleNotificationsFetchNewRequest() {
         
         guard let token = token else {
-            
             handledUnauthorizedCommandAttempt()
-            
             return
         }
         
@@ -106,7 +100,6 @@ extension Model {
             case .success(let response):
                 
                 switch response.statusCode {
-                    
                 case .ok:
                     
                     guard let notifications = response.data else {
@@ -198,12 +191,13 @@ extension Model {
         }
     }
     
-    func handleNotificationsChangeNotificationStatusRequest(payload: ModelAction.Notification.ChangeNotificationStatus.Requested) {
+    func handleNotificationsChangeNotificationStatusRequest(payload: ModelAction.Notification.ChangeNotificationStatus.Request) {
         
         guard let token = token else {
-            //TODO: handle not authoried server request attempt
+            handledUnauthorizedCommandAttempt()
             return
         }
+        
         let command = ServerCommands.NotificationController.ChangeNotificationStatus (token: token, payload: .init(eventId: payload.eventId, cloudId: payload.cloudId, status: payload.status))
         serverAgent.executeCommand(command: command) { result in
             
@@ -211,13 +205,13 @@ extension Model {
             case .success(let response):
                 switch response.statusCode {
                 case .ok:
-                    self.action.send(ModelAction.Notification.ChangeNotificationStatus.Complete())
+                    self.action.send(ModelAction.Notification.ChangeNotificationStatus.Response.sussesed)
                 default:
                     //TODO: handle not ok server status
                     return
                 }
             case .failure(let error):
-                self.action.send(ModelAction.Notification.ChangeNotificationStatus.Failed(error: error))
+                self.action.send(ModelAction.Notification.ChangeNotificationStatus.Response.failed(error))
             }
         }
     }

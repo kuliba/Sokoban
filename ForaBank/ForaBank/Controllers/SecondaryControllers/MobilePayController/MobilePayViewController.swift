@@ -73,6 +73,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.enableAutoToolbar = true
         IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+        
         if let template = paymentTemplate {
             runBlockAfterDelay(0.2) {
                 
@@ -234,7 +235,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(bottomView)
         bottomView.anchor(
             left: view.leftAnchor,
-            bottom: view.safeAreaLayoutGuide.bottomAnchor,
+            bottom: view.bottomAnchor,
             right: view.rightAnchor)
         bottomView.currencySymbol = "₽"
         
@@ -314,6 +315,10 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                         model.operatorImage = svgImage ?? ""
                         model.cardFromRealm = self?.cardField.model
                         
+                        if let closeAction = self?.viewModel?.closeAction {
+                            
+                            model.closeAction = closeAction
+                        }
                         let a = data?.data?.additionalList
                         
                         a?.forEach{ list in
@@ -332,6 +337,7 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                             vc.addCloseButton()
                             vc.title = "Подтвердите реквизиты"
                             vc.operatorsViewModel = self?.operatorsViewModel
+                            vc.operatorsViewModel?.closeAction = self?.viewModel?.closeAction ?? {print("123")}
                             let navController = UINavigationController(rootViewController: vc)
                             navController.modalPresentationStyle = .fullScreen
                             self?.present(navController, animated: true, completion: nil)

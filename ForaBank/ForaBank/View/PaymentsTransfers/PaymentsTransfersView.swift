@@ -72,6 +72,11 @@ struct PaymentsTransfersView: View {
                             .navigationBarBackButtonHidden(true)
                             .edgesIgnoringSafeArea(.all)
                         
+                    case let .country(countryData):
+                        CountryPaymentView(viewModel: .init(countryData: countryData))
+                            .navigationBarTitle("", displayMode: .inline)
+                            .edgesIgnoringSafeArea(.all)
+                        
                     case let .taxAndStateService(taxAndStateServiceVM):
                         PaymentsView(viewModel: taxAndStateServiceVM)
                             .edgesIgnoringSafeArea(.all)
@@ -142,10 +147,7 @@ struct PaymentsTransfersView: View {
             switch sheet.type {
             case let .exampleDetail(title):
                 ExampleDetailMock(title: title)
-                
-            case let .country(countryData):
-                CountryPaymentView(viewModel: .init(countryData: countryData))
-
+            
             case let .meToMe(viewModel):
                 MeToMeView(viewModel: viewModel)
                     .edgesIgnoringSafeArea(.bottom)
