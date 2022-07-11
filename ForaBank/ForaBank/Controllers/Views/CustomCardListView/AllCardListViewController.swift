@@ -72,7 +72,9 @@ class AllCardListViewController: UITableViewController {
         types.forEach { type in
             products.append(contentsOf: self.model.products.value[type]?.map({ $0.getProductListDatum()}) ?? [])
         }
-        cardModel = products
+        
+        let clientId = Model.shared.clientInfo.value?.id
+        cardModel = products.filter({$0.ownerID == clientId})
         
         if withTemplate {
             getProductTemplate()
