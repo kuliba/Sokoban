@@ -24,12 +24,17 @@ class ProductProfileViewModel: ObservableObject {
     @Published var bottomSheet: BottomSheet?
     @Published var link: Link? { didSet { isLinkActive = link != nil } }
     @Published var isLinkActive: Bool = false
+    @Published var sheet: Sheet?
 
     var rootActions: RootViewModel.RootActions?
     
     private var historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel]
     private let model: Model
     private var bindings = Set<AnyCancellable>()
+    
+    private var productData: ProductData? {
+        model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId })
+    }
     
     init(statusBar: StatusBarViewModel, product: ProductProfileCardView.ViewModel, buttons: ProductProfileButtonsView.ViewModel, detail: ProductProfileDetailView.ViewModel?, history: ProductProfileHistoryView.ViewModel?, alert: Alert.ViewModel? = nil, operationDetail: OperationDetailViewModel? = nil, accentColor: Color = .purple, historyPool: [ProductData.ID : ProductProfileHistoryView.ViewModel] = [:] , model: Model = .emptyMock) {
         
@@ -92,9 +97,6 @@ class ProductProfileViewModel: ObservableObject {
                     
                 case _ as ProductProfileViewModelAction.OptionsPannel.Close:
                     bottomSheet = nil
-                    
-                case let payload as ProductProfileViewModelAction.Link.ShowProductInfo:
-                    link = .productInfo(payload.viewModel)
                     
                 case _ as ProductProfileViewModelAction.Link.Close:
                     link = nil
@@ -242,15 +244,8 @@ class ProductProfileViewModel: ObservableObject {
                     
                     switch payload.buttonType {
                     case .topLeft:
-                        switch product.productType {
-                        case .loan:
-                            let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(title: "Пополнить", buttonsTypes: [.refillFromOtherBank, .refillFromOtherProduct, .refillFromCardOtherBank], productType: product.productType)
-                            self.action.send(ProductProfileViewModelAction.OptionsPannel.Show(viewModel: optionsPannelViewModel))
-                            
-                        default:
-                            let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(title: "Пополнить", buttonsTypes: [.refillFromOtherBank, .refillFromOtherProduct], productType: product.productType)
-                            self.action.send(ProductProfileViewModelAction.OptionsPannel.Show(viewModel: optionsPannelViewModel))
-                        }
+                        let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(title: "Пополнить", buttonsTypes: [.refillFromOtherBank, .refillFromOtherProduct], productType: product.productType)
+                        self.action.send(ProductProfileViewModelAction.OptionsPannel.Show(viewModel: optionsPannelViewModel))
                         
                     case .topRight:
                         switch product.productType {
@@ -259,7 +254,13 @@ class ProductProfileViewModel: ObservableObject {
                             rootActions?.switchTab(.payments)
                             
                         case .deposit:
-                            print("transfer meToMe")
+                            guard let depositProduct = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId }) as? ProductDepositData,
+                                    let balance = depositProduct.balance else {
+                                return
+                            }
+                            
+                            let meToMeViewModel = MeToMeViewModel(type: .transferDeposit(depositProduct, balance), closeAction: {})
+                            self.bottomSheet = .init(type: .meToMe(meToMeViewModel))
                             
                         default:
                             break
@@ -292,7 +293,7 @@ class ProductProfileViewModel: ObservableObject {
                             self.action.send(ProductProfileViewModelAction.OptionsPannel.Show(viewModel: optionsPannelViewModel))
                             
                         case .loan:
-                            let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.refillFromOtherBank, .refillFromOtherProduct, .refillFromCardOtherBank], productType: product.productType)
+                            let optionsPannelViewModel = ProductProfileOptionsPannelView.ViewModel(buttonsTypes: [.refillFromOtherBank, .refillFromOtherProduct], productType: product.productType)
                             self.action.send(ProductProfileViewModelAction.OptionsPannel.Show(viewModel: optionsPannelViewModel))
                         }
                     }
@@ -314,30 +315,36 @@ class ProductProfileViewModel: ObservableObject {
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                     
+                    guard let productData = self.productData else {
+                        return
+                    }
+                    
                     switch action {
                     case let payload as ProductProfileOptionsPannelViewModelAction.ButtonTapped:
                         switch payload.buttonType {
                         case .requisites:
-                            guard let productData = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId }) else {
-                                return
-                            }
                             let productInfoViewModel = InfoProductViewModel(model: self.model, product: productData, info: false)
-                            self.action.send(ProductProfileViewModelAction.Link.ShowProductInfo(viewModel: productInfoViewModel))
+                            self.link = .productInfo(productInfoViewModel)
+                            
+                        case .info:
+                            let productInfoViewModel = InfoProductViewModel(model: self.model, product: productData, info: true)
+                            self.link = .productInfo(productInfoViewModel)
                             
                         case .statement:
-                            guard let productData = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId }) else {
-                                return
-                            }
                             let productStatementViewModel = ProductStatementViewModel(product: productData, closeAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Link.Close())})
                             self.link = .productStatement(productStatementViewModel)
                             
                         case .refillFromOtherProduct:
-                            guard let productData = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId }) else {
-                                return
-                            }
-                            
-                            let meToMeViewModel = MeToMeViewModel(closeAction: {}, productTo: productData)
+                            let meToMeViewModel = MeToMeViewModel(type: .refill(productData), closeAction: {})
                             self.bottomSheet = .init(type: .meToMe(meToMeViewModel))
+                            
+                        case .refillFromOtherBank:
+                            let meToMeExternalViewModel = MeToMeExternalViewModel(productTo: productData, closeAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Link.Close())})
+                            self.link = .meToMeExternal(meToMeExternalViewModel)
+                            
+                        case .conditions:
+                            let printFormViewModel = PrintFormView.ViewModel(type: .deposit(depositId: productData.id), model: self.model)
+                            self.sheet = .init(type: .printForm(printFormViewModel))
                             
                         default:
                             break
@@ -351,20 +358,6 @@ class ProductProfileViewModel: ObservableObject {
                 
             }.store(in: &bindings)
     }
-    
-    /*
-     enum ButtonType {
-         
-         case refillFromOtherBank
-         case refillFromOtherProduct
-         case refillFromCardOtherBank
-         case requisites
-         case statement
-         case info
-         case conditions
-         case closeDeposit
-     }
-     */
     
     func makeHistoryViewModel(productType: ProductType, productId: ProductData.ID, model: Model) -> ProductProfileHistoryView.ViewModel? {
     
@@ -491,6 +484,18 @@ extension ProductProfileViewModel {
         
         case productInfo(InfoProductViewModel)
         case productStatement(ProductStatementViewModel)
+        case meToMeExternal(MeToMeExternalViewModel)
+    }
+    
+    struct Sheet: Identifiable {
+        
+        let id = UUID()
+        let type: Kind
+        
+        enum Kind {
+            
+            case printForm(PrintFormView.ViewModel)
+        }
     }
 }
 

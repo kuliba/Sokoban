@@ -57,12 +57,8 @@ extension ProductProfileButtonsView {
             
             switch buttonType {
             case .topLeft:
-                switch product.productType {
-                case .card:
-                    guard let cardProduct = product as? ProductCardData else {
-                        return true
-                    }
-                    
+                switch product {
+                case let cardProduct as ProductCardData:
                     return cardProduct.isBlocked ? false : true
                     
                 default: return true
@@ -71,34 +67,23 @@ extension ProductProfileButtonsView {
             case .bottomLeft: return true
                 
             case .topRight:
-                switch product.productType {
-                case .card:
-                    guard let cardProduct = product as? ProductCardData else {
-                        return true
-                    }
-                    
+                switch product {
+                case let cardProduct as ProductCardData:
                     return cardProduct.isBlocked ? false : true
                     
-                case .deposit:
-                    guard let depositProduct = product as? ProductDepositData else {
-                        return false
-                    }
-                    
+                case let depositProduct as ProductDepositData:
                     return depositProduct.isTransferEnabled
                     
-                case .loan: return false
+                case _ as ProductLoanData: return false
                 default: return true
                 }
                 
             case .bottomRight:
-                switch product.productType {
-                case .card:
-                    guard let cardProduct = product as? ProductCardData else {
-                        return false
-                    }
-                    
+                switch product {
+                case let cardProduct as ProductCardData:
                     return cardProduct.isCanBeUnblocked ? true : false
-                case .account: return false
+                    
+                case _ as ProductAccountData: return false
                 default: return true
                 }
             }
@@ -122,17 +107,13 @@ extension ProductProfileButtonsView {
                 }
                 
             case .bottomRight:
-                switch product.productType {
-                case .card:
-                    guard let cardProduct = product as? ProductCardData else {
-                        return "Блокировать"
-                    }
-                    
+                switch product {
+                case let cardProduct as ProductCardData:
                     return cardProduct.isBlocked ? "Разблокировать" : "Блокировать"
                     
-                case .account: return "Закрыть"
-                case .deposit: return "Управление"
-                case .loan: return "Погасить досрочно"
+                case _ as ProductAccountData: return "Закрыть"
+                case _ as ProductDepositData: return "Управление"
+                default: return "Погасить досрочно"
                 }
             }
         }
@@ -155,17 +136,13 @@ extension ProductProfileButtonsView {
                 }
                 
             case .bottomRight:
-                switch product.productType {
-                case .card:
-                    guard let cardProduct = product as? ProductCardData else {
-                        return .ic24Lock
-                    }
-                    
+                switch product {
+                case let cardProduct as ProductCardData:
                     return cardProduct.isBlocked ? .ic24Unlock : .ic24Lock
                     
-                case .account: return .ic24Lock
-                case .deposit: return .ic24Server
-                case .loan: return .ic24Clock
+                case _ as ProductAccountData: return .ic24Lock
+                case _ as ProductDepositData: return .ic24Server
+                default: return .ic24Clock
                 }
             }
         }

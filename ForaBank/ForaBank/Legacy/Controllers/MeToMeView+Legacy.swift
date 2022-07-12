@@ -16,41 +16,44 @@ struct MeToMeView: UIViewControllerRepresentable {
         
         let model = ConfirmViewControllerModel(type: .card2card)
         
-        if let paymentTemplate = viewModel.paymentTemplate {
+        switch viewModel.type {
+        case .general:
+            let controller = CustomPopUpWithRateView()
+            controller.viewModel = model
+            controller.viewModel.closeAction = viewModel.closeAction
+            controller.modalPresentationStyle = .custom
             
-            let popView = CustomPopUpWithRateView(paymentTemplate: paymentTemplate)
-            popView.viewModel = model
-            popView.viewModel.closeAction = viewModel.closeAction
-            popView.modalPresentationStyle = .fullScreen
+            return controller
             
-            context.coordinator.parentObserver = popView.observe(\.parent, changeHandler: { vc, _ in
+        case let .template(paymentTemplateData):
+            let controller = CustomPopUpWithRateView(paymentTemplate: paymentTemplateData)
+            controller.viewModel = model
+            controller.viewModel.closeAction = viewModel.closeAction
+            controller.modalPresentationStyle = .fullScreen
+            
+            context.coordinator.parentObserver = controller.observe(\.parent, changeHandler: { vc, _ in
                 vc.parent?.navigationItem.title = vc.navigationItem.title
                 vc.parent?.navigationItem.leftBarButtonItem = vc.navigationItem.leftBarButtonItem
                 vc.parent?.navigationItem.rightBarButtonItems = vc.navigationItem.rightBarButtonItems
             })
             
+            return controller
+            
+        case let .refill(productData):
+            let controller = CustomPopUpWithRateView(cardTo: productData.userAllProducts())
+            controller.viewModel = model
+            controller.viewModel.closeAction = viewModel.closeAction
+            controller.modalPresentationStyle = .custom
+            
+            return controller
+            
+        case let .transferDeposit(productData, amount):
+            let popView = CustomPopUpWithRateView(cardFrom: productData.userAllProducts(), totalAmount: amount)
+            popView.viewModel = model
+            popView.viewModel.closeAction = viewModel.closeAction
+            popView.modalPresentationStyle = .custom
+            
             return popView
-            
-        } else {
-            
-            if let productTo = viewModel.productTo {
-                
-                let popView = CustomPopUpWithRateView(cardTo: productTo.userAllProducts())
-                popView.viewModel = model
-                popView.viewModel.closeAction = viewModel.closeAction
-                popView.modalPresentationStyle = .custom
-                
-                return popView
-                
-            } else {
-                
-                let popView = CustomPopUpWithRateView()
-                popView.viewModel = model
-                popView.viewModel.closeAction = viewModel.closeAction
-                popView.modalPresentationStyle = .custom
-                
-                return popView
-            }
         }
     }
     
@@ -67,15 +70,20 @@ struct MeToMeView: UIViewControllerRepresentable {
 
 struct MeToMeViewModel {
     
+    let type: Kind
     let closeAction: () -> Void
-    let paymentTemplate: PaymentTemplateData?
-    let productTo: ProductData?
-    
-    init(closeAction: @escaping () -> Void, paymentTemplate: PaymentTemplateData? = nil, productTo: ProductData? = nil) {
+ 
+    init(type: Kind = .general, closeAction: @escaping () -> Void) {
         
+        self.type = type
         self.closeAction = closeAction
-        self.paymentTemplate = paymentTemplate
-        self.productTo = productTo
+    }
+    
+    enum Kind {
+        case general
+        case template(PaymentTemplateData)
+        case refill(ProductData)
+        case transferDeposit(ProductData, Double)
     }
 }
 

@@ -11,7 +11,6 @@ import RealmSwift
 class MeToMeViewController: UIViewController {
     
     var meToMeContract: [FastPaymentContractFindListDatum]?
-    lazy var realm = try? Realm()
     var selectedBank: BankFullInfoList? {
         didSet {
             guard let bank = selectedBank else { return }
@@ -44,9 +43,9 @@ class MeToMeViewController: UIViewController {
     var stackView = UIStackView(arrangedSubviews: [])
     
     //MARK: - Viewlifecicle
-    init(card: UserAllCardsModel?) {
+    init(cardFrom: UserAllCardsModel?) {
         super.init(nibName: nil, bundle: nil)
-        cardFromField.model = card
+        cardFromField.model = cardFrom
     }
     
     required init?(coder: NSCoder) {
@@ -273,7 +272,7 @@ class MeToMeViewController: UIViewController {
         
         cardListView.didCardTapped = { cardId in
             DispatchQueue.main.async {
-                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap { $0 } ?? []
+                let cardList = ReturnAllCardList.cards()
                 cardList.forEach({ card in
                     if card.id == cardId {
                         self.cardFromField.model = card
@@ -380,24 +379,6 @@ class MeToMeViewController: UIViewController {
     
     
     //MARK: - API
-    func getCardList(completion: @escaping (_ cardList: [GetProductListDatum]?, _ error: String?)->()) {
-        let param = ["isCard": "true", "isAccount": "true", "isDeposit": "true", "isLoan": "false"]
-        
-        NetworkManager<GetProductListDecodableModel>.addRequest(.getProductListByFilter, param, [:]) { model, error in
-            if error != nil {
-                completion(nil, error)
-            }
-            guard let model = model else { return }
-            if model.statusCode == 0 {
-                guard let cardList = model.data else { return }
-                completion(cardList, nil)
-            } else {
-                guard let error = model.errorMessage else { return }
-                completion(nil, error)
-            }
-        }
-    }
-    
     func suggestBank(_ bic: String, completion: @escaping (_ bankList: [BankFullInfoList]?, _ error: String?) -> Void ) {
         showActivity()
         

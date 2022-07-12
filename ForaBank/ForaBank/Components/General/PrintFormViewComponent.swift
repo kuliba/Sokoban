@@ -26,6 +26,7 @@ extension PrintFormView {
             
             case operation(paymentOperationDetailId: Int, printFormType: PrintFormType)
             case product(productId: ProductData.ID, startDate: Date, endDate: Date)
+            case deposit(depositId: ProductData.ID)
         }
         
         enum State {
@@ -68,6 +69,9 @@ extension PrintFormView {
                 
             case let .product(productId, startDate, endDate):
                 model.action.send(ModelAction.Products.StatementPrintForm.Request(productId: productId, startDate: startDate, endDate: endDate))
+                
+            case let .deposit(depositId: depositId):
+                model.action.send(ModelAction.Products.DepositConditionsPrintForm.Request(depositId: depositId))
             }
         }
         
@@ -104,6 +108,31 @@ extension PrintFormView {
                         }
                         
                     case let payload as ModelAction.Products.StatementPrintForm.Response:
+                        switch payload.result {
+                        case .success(let data):
+                            if let document = PDFDocument(data: data) {
+                                
+                                let activityViewModel = ActivityView.ViewModel(activityItems: [document.dataRepresentation() as Any])
+                                let button = ButtonSimpleView.ViewModel(title: "Сохранить или отправить", style: .red, action: {[weak self] in self?.action.send(PrintFormViewModelAction.ShowActivity(activityViewModel: activityViewModel))})
+                                withAnimation {
+                                    self.state = .document(document, button)
+                                }
+      
+                            } else {
+                                
+                                withAnimation {
+                                    self.state = .failed
+                                }
+                            }
+                            
+                        case .failure(let error):
+                            withAnimation {
+                                self.state = .failed
+                            }
+                            //TODO: show alert with error message
+                        }
+                        
+                    case let payload as ModelAction.Products.DepositConditionsPrintForm.Response:
                         switch payload.result {
                         case .success(let data):
                             if let document = PDFDocument(data: data) {

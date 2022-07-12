@@ -108,6 +108,43 @@ class CustomPopUpWithRateView: UIViewController {
         self.bottomView.currencySymbol = currency
     }
     
+    init(cardFrom: UserAllCardsModel, totalAmount: Double) {
+        super.init(nibName: nil, bundle: nil)
+        self.cardFrom = cardFrom
+        self.cardFromField.model = cardFrom
+        self.cardFromField.choseButton?.isHidden = true
+        self.cardFromField.choseButton?.isHidden = true
+        self.cardFromField.didChooseButtonTapped = nil
+        
+        self.bottomView.isEnable = false
+        self.withProducts = false
+        
+        self.bottomView.buttomLabel.text = "Условия снятия"
+        self.bottomView.buttomLabel.isHidden = false
+        self.bottomView.buttomLabel.alpha = 1
+        
+        self.bottomView.infoButton.isHidden = false
+        self.bottomView.infoButton.addTarget(self, action: #selector(buttonActionTotal), for: .touchUpInside)
+        self.bottomView.infoButton.setTitle("", for: .normal)
+        self.bottomView.infoButton.isHidden = false
+        
+        self.bottomView.topLabel.alpha = 1
+        
+        self.bottomView.doneButton.isEnabled = true
+        self.bottomView.doneButtonIsEnabled(false)
+        
+        bind()
+        
+        guard let currency = cardFrom.currency?.getSymbol() else {
+            return
+        }
+        
+        self.bottomView.amountTextField.text = String(totalAmount)
+        self.bottomView.setupMoneyController(amount: String(totalAmount), currency: currency)
+        self.bottomView.amountTextField.isUserInteractionEnabled = false
+        self.bottomView.currencySymbol = currency
+    }
+    
     func bind() {
         model.action
             .receive(on: DispatchQueue.main)
@@ -213,6 +250,17 @@ class CustomPopUpWithRateView: UIViewController {
         nav.transitioningDelegate = self
         self.present(nav, animated: true, completion: nil)
         
+    }
+    
+    @objc func buttonActionTotal(sender: UIButton) {
+        
+        let vc = InfoViewController()
+        vc.infoTitle = "Вы можете снять полную сумму вклада и  выплаченных процентов"
+        
+        let nav = UINavigationController(rootViewController: vc)
+        nav.modalPresentationStyle = .custom
+        nav.transitioningDelegate = self
+        self.present(nav, animated: true, completion: nil)
     }
     
     init(paymentTemplate: PaymentTemplateData) {

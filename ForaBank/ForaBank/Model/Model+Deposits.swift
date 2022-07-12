@@ -158,6 +158,7 @@ extension Model {
                 }
             case .failure(let error):
                 self.handleServerCommandError(error: error, command: command)
+                self.action.send(ModelAction.Deposits.Info.Response.failure(message: error.localizedDescription))
             }
         }
     }
