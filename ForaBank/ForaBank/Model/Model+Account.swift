@@ -177,7 +177,7 @@ extension Model {
 
         case .failed(error: let error):
             
-            let time = handleRawResponse(error: error)
+            let time = accountInformerDismissTime(error: error)
             
             // Скрыть уведомление об открытии счета:
             // - некорректный код - через 2 сек
@@ -187,7 +187,7 @@ extension Model {
         }
     }
     
-    func handleRawResponse(error: Model.ProductsListError) -> TimeInterval {
+    func accountInformerDismissTime(error: Model.ProductsListError) -> TimeInterval {
         
         var messageError = ""
         

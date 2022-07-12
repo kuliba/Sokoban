@@ -269,6 +269,7 @@
 		503069D8286A5BE700308CC1 /* BottomSheetTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503069D4286A5BE700308CC1 /* BottomSheetTransitioningDelegate.swift */; };
 		503069D9286A5BE700308CC1 /* BottomSheetHostingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503069D5286A5BE700308CC1 /* BottomSheetHostingController.swift */; };
 		503069DA286A5BE700308CC1 /* BottomSheetPresentedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503069D6286A5BE700308CC1 /* BottomSheetPresentedView.swift */; };
+		503566C3287D56470077BF8B /* Int+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503566C2287D56470077BF8B /* Int+Extensions.swift */; };
 		503CF6AD282BE12B0069253E /* TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503CF6AC282BE12B0069253E /* TextField.swift */; };
 		503F073328252B7900E84A77 /* DepositToggleViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503F073128252B7900E84A77 /* DepositToggleViewComponent.swift */; };
 		503F073428252B7900E84A77 /* DepositSliderViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 503F073228252B7900E84A77 /* DepositSliderViewComponent.swift */; };
@@ -1643,6 +1644,7 @@
 		503069D4286A5BE700308CC1 /* BottomSheetTransitioningDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomSheetTransitioningDelegate.swift; sourceTree = "<group>"; };
 		503069D5286A5BE700308CC1 /* BottomSheetHostingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomSheetHostingController.swift; sourceTree = "<group>"; };
 		503069D6286A5BE700308CC1 /* BottomSheetPresentedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomSheetPresentedView.swift; sourceTree = "<group>"; };
+		503566C2287D56470077BF8B /* Int+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Extensions.swift"; sourceTree = "<group>"; };
 		503CF6AC282BE12B0069253E /* TextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextField.swift; sourceTree = "<group>"; };
 		503F073128252B7900E84A77 /* DepositToggleViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositToggleViewComponent.swift; sourceTree = "<group>"; };
 		503F073228252B7900E84A77 /* DepositSliderViewComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DepositSliderViewComponent.swift; sourceTree = "<group>"; };
@@ -5321,6 +5323,7 @@
 			isa = PBXGroup;
 			children = (
 				509EE0DE285F84AB002281BF /* UIApplication+Extension.swift */,
+				503566C2287D56470077BF8B /* Int+Extensions.swift */,
 				ED0AF88E286B68B900F86B68 /* UIImage+Extensions.swift */,
 				509EE0E3285F8599002281BF /* Publishers+Extension.swift */,
 				509EE0DA285F820E002281BF /* View+Extension.swift */,
@@ -7701,6 +7704,7 @@
 				7772978927C39EF70099EF91 /* String+Extensions.swift in Sources */,
 				6830A02227D37821003CA4F1 /* DepositProductData.swift in Sources */,
 				0B37F97C2678EC69007728FC /* AnywayPaymentDecodableModel.swift in Sources */,
+				503566C3287D56470077BF8B /* Int+Extensions.swift in Sources */,
 				0BDCF00A2749A5A900AAA1C3 /* GKHInputModel.swift in Sources */,
 				0B2B29252808E833001C6380 /* DocumentInfoViewController.swift in Sources */,
 				77F5CE0928049E3500611B66 /* LocationAgentProtocol.swift in Sources */,
