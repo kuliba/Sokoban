@@ -15,14 +15,14 @@ extension AlertTextFieldView {
         let id = UUID()
         let title: String
         let message: String?
-        let maxLength: Int
+        let maxLength: Int?
         var text: String?
         let primary: ButtonViewModel
         var secondary: ButtonViewModel? = nil
         
         var binding: AnyCancellable?
         
-        internal init(title: String, message: String?, text: String? = nil, maxLength: Int = 15, primary: AlertTextFieldView.ViewModel.ButtonViewModel, secondary: AlertTextFieldView.ViewModel.ButtonViewModel? = nil) {
+        internal init(title: String, message: String?, text: String? = nil, maxLength: Int? = nil, primary: AlertTextFieldView.ViewModel.ButtonViewModel, secondary: AlertTextFieldView.ViewModel.ButtonViewModel? = nil) {
             
             self.title = title
             self.message = message
@@ -111,8 +111,9 @@ struct AlertTextFieldView: UIViewControllerRepresentable {
         
         func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
             
-            let maxLength = viewModel.maxLength
-            let currentString: NSString = textField.text! as NSString
+            
+            guard let maxLength = viewModel.maxLength else { return true }
+            guard let currentString: NSString = textField.text as? NSString else { return true }
             let newString: NSString =
             currentString.replacingCharacters(in: range, with: string) as NSString
             return newString.length <= maxLength

@@ -218,7 +218,7 @@ class UserAccountViewModel: ObservableObject {
                     case _ as UserAccountViewModelAction.ChangeUserName:
                         
                         textFieldAlert = .init(
-                            title: "Имя", message: "Как к вам обращаться?\n* Имя не должно превышать 15 символов",
+                            title: "Имя", message: "Как к вам обращаться?\n* Имя не должно превышать 15 символов", maxLength: 15,
                             primary: .init(type: .default, title: "ОК", action: { [weak self] text in
                                 
                                 self?.action.send(UserAccountViewModelAction.CloseFieldAlert())
