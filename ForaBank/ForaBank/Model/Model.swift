@@ -403,6 +403,9 @@ class Model {
                 case let payload as ModelAction.Products.Update.ForProductType:
                     handleProductsUpdateTotalProduct(payload)
                     
+                case let payload as ModelAction.Products.StatementPrintForm.Request:
+                    handleProductsStatementPrintFormRequest(payload)
+                    
                     //MARK: - Statement
                     
                 case let payload as ModelAction.Statement.List.Request:

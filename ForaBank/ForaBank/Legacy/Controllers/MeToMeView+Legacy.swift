@@ -33,12 +33,24 @@ struct MeToMeView: UIViewControllerRepresentable {
             
         } else {
             
-            let popView = CustomPopUpWithRateView()
-            popView.viewModel = model
-            popView.viewModel.closeAction = viewModel.closeAction
-            popView.modalPresentationStyle = .custom
-            
-            return popView
+            if let productTo = viewModel.productTo {
+                
+                let popView = CustomPopUpWithRateView(cardTo: productTo.userAllProducts())
+                popView.viewModel = model
+                popView.viewModel.closeAction = viewModel.closeAction
+                popView.modalPresentationStyle = .custom
+                
+                return popView
+                
+            } else {
+                
+                let popView = CustomPopUpWithRateView()
+                popView.viewModel = model
+                popView.viewModel.closeAction = viewModel.closeAction
+                popView.modalPresentationStyle = .custom
+                
+                return popView
+            }
         }
     }
     
@@ -57,11 +69,13 @@ struct MeToMeViewModel {
     
     let closeAction: () -> Void
     let paymentTemplate: PaymentTemplateData?
+    let productTo: ProductData?
     
-    init(closeAction: @escaping () -> Void, paymentTemplate: PaymentTemplateData? = nil) {
+    init(closeAction: @escaping () -> Void, paymentTemplate: PaymentTemplateData? = nil, productTo: ProductData? = nil) {
         
         self.closeAction = closeAction
         self.paymentTemplate = paymentTemplate
+        self.productTo = productTo
     }
 }
 

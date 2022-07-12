@@ -324,6 +324,21 @@ class ProductProfileViewModel: ObservableObject {
                             let productInfoViewModel = InfoProductViewModel(model: self.model, product: productData, info: false)
                             self.action.send(ProductProfileViewModelAction.Link.ShowProductInfo(viewModel: productInfoViewModel))
                             
+                        case .statement:
+                            guard let productData = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId }) else {
+                                return
+                            }
+                            let productStatementViewModel = ProductStatementViewModel(product: productData, closeAction: { [weak self] in self?.action.send(ProductProfileViewModelAction.Link.Close())})
+                            self.link = .productStatement(productStatementViewModel)
+                            
+                        case .refillFromOtherProduct:
+                            guard let productData = self.model.products.value.values.flatMap({ $0 }).first(where: { $0.id == self.product.activeProductId }) else {
+                                return
+                            }
+                            
+                            let meToMeViewModel = MeToMeViewModel(closeAction: {}, productTo: productData)
+                            self.bottomSheet = .init(type: .meToMe(meToMeViewModel))
+                            
                         default:
                             break
                         }
@@ -468,12 +483,14 @@ extension ProductProfileViewModel {
             
             case operationDetail(OperationDetailViewModel)
             case optionsPannel(ProductProfileOptionsPannelView.ViewModel)
+            case meToMe(MeToMeViewModel)
         }
     }
     
     enum Link {
         
         case productInfo(InfoProductViewModel)
+        case productStatement(ProductStatementViewModel)
     }
 }
 

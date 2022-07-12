@@ -21,6 +21,13 @@ extension PrintFormView {
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
+        
+        enum Kind {
+            
+            case operation(paymentOperationDetailId: Int, printFormType: PrintFormType)
+            case product(productId: ProductData.ID, startDate: Date, endDate: Date)
+        }
+        
         enum State {
             
             case document(PDFDocument, ButtonSimpleView.ViewModel)
@@ -48,13 +55,20 @@ extension PrintFormView {
             self.model = model
         }
         
-        init(paymentOperationDetailId: Int, printFormType: PrintFormType, model: Model) {
+        init(type: Kind, model: Model) {
             
             self.state = .loading
             self.model = model
             
             bind()
-            model.action.send(ModelAction.PrintForm.Request(paymentOperationDetailId: paymentOperationDetailId, printFormType: printFormType))
+            
+            switch type {
+            case let .operation(paymentOperationDetailId, printFormType):
+                model.action.send(ModelAction.PrintForm.Request(paymentOperationDetailId: paymentOperationDetailId, printFormType: printFormType))
+                
+            case let .product(productId, startDate, endDate):
+                model.action.send(ModelAction.Products.StatementPrintForm.Request(productId: productId, startDate: startDate, endDate: endDate))
+            }
         }
         
         func bind() {
@@ -88,6 +102,32 @@ extension PrintFormView {
                             }
                             //TODO: show alert with error message
                         }
+                        
+                    case let payload as ModelAction.Products.StatementPrintForm.Response:
+                        switch payload.result {
+                        case .success(let data):
+                            if let document = PDFDocument(data: data) {
+                                
+                                let activityViewModel = ActivityView.ViewModel(activityItems: [document.dataRepresentation() as Any])
+                                let button = ButtonSimpleView.ViewModel(title: "Сохранить или отправить", style: .red, action: {[weak self] in self?.action.send(PrintFormViewModelAction.ShowActivity(activityViewModel: activityViewModel))})
+                                withAnimation {
+                                    self.state = .document(document, button)
+                                }
+      
+                            } else {
+                                
+                                withAnimation {
+                                    self.state = .failed
+                                }
+                            }
+                            
+                        case .failure(let error):
+                            withAnimation {
+                                self.state = .failed
+                            }
+                            //TODO: show alert with error message
+                        }
+                        
                     default:
                         break
                     }
