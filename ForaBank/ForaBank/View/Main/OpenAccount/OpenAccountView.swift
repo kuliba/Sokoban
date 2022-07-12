@@ -15,13 +15,15 @@ struct OpenAccountView: View {
 
     var body: some View {
 
-        VStack {
+        VStack(spacing: 0) {
 
-            PagerContentView(viewModel: viewModel.pagerViewModel) {
+            PagerScrollView(viewModel: viewModel.pagerViewModel) {
                 ForEach(viewModel.items) { item in
                     OpenAccountItemView(viewModel: item)
                 }
-            }.padding(.top, 8)
+            }
+            .padding(.top, 12)
+            .frame(height: 235)
 
             OpenAccountPerformView(
                 viewModel: .init(
