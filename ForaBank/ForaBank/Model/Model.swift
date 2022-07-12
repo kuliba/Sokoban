@@ -462,6 +462,9 @@ class Model {
                 case let payload as ModelAction.ClientPhoto.Save:
                     handleClientPhotoRequest(payload)
                     
+                case _ as ModelAction.ClientPhoto.Delete:
+                    handleMediaDeleteAvatarRequest()
+                    
                 case let payload as ModelAction.ClientName.Save:
                     handleClientNameSave(payload)
                     
