@@ -220,7 +220,7 @@ class MainViewModel: ObservableObject, Resetable {
                         print("mdy: Buy-\(payload.itemData)") // -> USD, GBR, EUR
                         
                         link = .currencyWallet(.init(listViewModel: .sample, swapViewModel: .sample) { [weak self] in
-                            self?.action.send(MainViewModelAction.CloseLink())
+                            self?.action.send(MainViewModelAction.CloseAction.Link())
                         })
                         
                     case let payload as MainSectionViewModelAction.CurrencyMetall.ItemDashboardDidTapped.Sell :
@@ -228,7 +228,7 @@ class MainViewModel: ObservableObject, Resetable {
                         print("mdy: Sell-\(payload.itemData)") // -> USD, GBR, EUR
                         
                         link = .currencyWallet(.init(listViewModel: .sample, swapViewModel: .sample) { [weak self] in
-                            self?.action.send(MainViewModelAction.CloseLink())
+                            self?.action.send(MainViewModelAction.CloseAction.Link())
                         })
                         
                         // atm section
