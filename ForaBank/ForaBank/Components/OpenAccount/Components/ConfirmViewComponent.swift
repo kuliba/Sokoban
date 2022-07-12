@@ -158,7 +158,7 @@ struct ConfirmView: View {
 
                     Spacer()
 
-                    if viewModel.confirmCode.isEmpty == false {
+                    if viewModel.confirmCode.isEmpty == true {
 
                         if viewModel.isResendCode == false {
 
@@ -170,15 +170,12 @@ struct ConfirmView: View {
                         }
                     } else {
                         
-                        if viewModel.isResendCode == false {
-                            
-                            TimerView(viewModel: viewModel.timer)
-                            
-                        } else {
+                        if viewModel.isResendCode == true {
                             
                             ResendButton(viewModel: viewModel.resendButton)
                         }
                     }
+                    
                 }.frame(height: 12)
 
                 TextFieldToolbarView(viewModel: viewModel.textFieldToolbar)

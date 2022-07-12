@@ -63,6 +63,10 @@ struct PagerScrollView<Content: View>: View {
                 .gesture(DragGesture()
                     .onChanged { value in
                         
+                        guard viewModel.isUserInteractionEnabled else {
+                            return
+                        }
+                        
                         let isFirsGesture = 0..<proxy.size.width / 2 ~= offset
                         let isLastGesture = offset < proxy.size.width + offset
                         let isLastIndex = currentIndex == viewModel.pagesCount - 1
@@ -74,16 +78,17 @@ struct PagerScrollView<Content: View>: View {
                     }
                     .onEnded { value in
                         
-                        if viewModel.isUserInteractionEnabled {
+                        guard viewModel.isUserInteractionEnabled else {
+                            return
+                        }
+                        
+                        if abs(value.predictedEndTranslation.width) >= proxy.size.width / 2 {
                             
-                            if abs(value.predictedEndTranslation.width) >= proxy.size.width / 2 {
-                                
-                                var nextIndex: Int = value.predictedEndTranslation.width < 0 ? 1 : -1
-                                nextIndex += currentIndex
-                                
-                                withAnimation {
-                                    viewModel.currentIndex = nextIndex.indexInRange(min: 0, max: viewModel.pagesCount - 1)
-                                }
+                            var nextIndex: Int = value.predictedEndTranslation.width < 0 ? 1 : -1
+                            nextIndex += currentIndex
+                            
+                            withAnimation {
+                                viewModel.currentIndex = nextIndex.indexInRange(min: 0, max: viewModel.pagesCount - 1)
                             }
                         }
                         
