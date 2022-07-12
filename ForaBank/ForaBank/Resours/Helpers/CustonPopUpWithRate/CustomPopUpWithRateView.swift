@@ -68,6 +68,7 @@ class CustomPopUpWithRateView: UIViewController {
     init(cardTo: UserAllCardsModel) {
         super.init(nibName: nil, bundle: nil)
         self.cardTo = cardTo
+        self.cardToField.model = cardTo
     }
     
     init(cardFrom: UserAllCardsModel, maxSum: Double?) {

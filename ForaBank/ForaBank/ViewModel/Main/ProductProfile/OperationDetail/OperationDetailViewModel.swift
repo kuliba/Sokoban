@@ -122,7 +122,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                     sheet = .init(type: .info(payload.viewModel))
                 
                 case let payload as OperationDetailViewModelAction.ShowDocument:
-                    let printFormViewModel = PrintFormView.ViewModel(paymentOperationDetailId: payload.paymentOperationDetailID, printFormType: payload.printFormType, model: model)
+                    let printFormViewModel = PrintFormView.ViewModel(type: .operation(paymentOperationDetailId: payload.paymentOperationDetailID, printFormType: payload.printFormType), model: model)
                     sheet = .init(type: .printForm(printFormViewModel))
                     
                 case let payload as OperationDetailViewModelAction.ShowChangeReturn:
