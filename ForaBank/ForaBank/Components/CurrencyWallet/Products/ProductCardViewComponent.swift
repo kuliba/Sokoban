@@ -23,6 +23,8 @@ extension ProductCardView {
         @Published var numberCard: NumberCardViewModel
         @Published var state: State
         
+        var bindings = Set<AnyCancellable>()
+        
         let title: String
         
         var isExpanded: Bool {
@@ -48,32 +50,61 @@ extension ProductCardView {
             self.balance = balance
             self.numberCard = numberCard
             self.state = state
+            
+            bind()
+        }
+        
+        private func bind() {
+            
+            action
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] action in
+                    
+                    switch action {
+                        
+                    case _ as ProductCardView.ProductAction.Toggle:
+                        
+                        withAnimation(.easeOut) {
+                            
+                            switch state {
+                            case .normal:
+                                state = .expanded(.sample)
+                            case .expanded:
+                                state = .normal
+                            }
+                        }
+                        
+                    default:
+                        break
+                    }
+                    
+                }.store(in: &bindings)
+        }
+        
+        enum State {
+            
+            case normal
+            case expanded(ProductsListView.ViewModel)
         }
     }
 }
 
 extension ProductCardView.ViewModel {
     
-    enum State {
-        
-        case normal
-        case expanded(ProductsListView.ViewModel)
-    }
-    
     // MARK: - NumberCard
     
     class NumberCardViewModel: ObservableObject {
         
-        let title: String
+        let numberCard: String
         let description: String
         
-        var numberLastTitle: String {
-            "\(title.suffix(4))"
+        var numberCardLast: String {
+            "\(numberCard.suffix(4))"
         }
         
-        init(title: String, description: String) {
+        init(numberCard: String, description: String) {
             
-            self.title = title
+            self.numberCard = numberCard
             self.description = description
         }
     }
@@ -87,18 +118,18 @@ struct ProductCardView: View {
     
     var body: some View {
         
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 12) {
             
             Text(viewModel.title)
                     .font(.textBodySR12160())
                     .foregroundColor(.textPlaceholder)
-                    .padding(.leading, 48)
             
             HStack(alignment: .top, spacing: 16) {
                
                 viewModel.cardIcon
                     .resizable()
                     .frame(width: 32, height: 32)
+                    .offset(y: -3)
                 
                 VStack(alignment: .leading, spacing: 0) {
                     
@@ -129,22 +160,33 @@ struct ProductCardView: View {
                         NumberCardView(viewModel: viewModel.numberCard)
                     }
                 }
-            }.onTapGesture {}
+            }.onTapGesture {
+                
+                viewModel.action.send(ProductAction.Toggle())
+            }
+            
+            Divider()
+                .padding(.top, 2)
             
             switch viewModel.state {
             case .normal:
                 EmptyView()
                 
             case .expanded(let model):
-                
                 ProductsListView(viewModel: model)
                     .padding(.top, 8)
             }
-        }
+            
+        }.background(Color.mainColorsGrayLightest)
     }
 }
 
 extension ProductCardView {
+    
+    enum ProductAction {
+    
+        struct Toggle: Action {}
+    }
     
     // MARK: - NumberCard
     
@@ -156,17 +198,20 @@ extension ProductCardView {
             
             HStack {
                 
-                Circle()
-                    .frame(width: 4, height: 4)
-                    .foregroundColor(.mainColorsGray)
-                
-                Text(viewModel.numberLastTitle)
-                    .font(.textBodySR12160())
-                    .foregroundColor(.mainColorsGray)
-                
-                Circle()
-                    .frame(width: 2, height: 2)
-                    .foregroundColor(.mainColorsGray)
+                if viewModel.numberCard.isEmpty == false {
+                    
+                    Circle()
+                        .frame(width: 3, height: 3)
+                        .foregroundColor(.mainColorsGray)
+                    
+                    Text(viewModel.numberCardLast)
+                        .font(.textBodySR12160())
+                        .foregroundColor(.mainColorsGray)
+                    
+                    Circle()
+                        .frame(width: 3, height: 3)
+                        .foregroundColor(.mainColorsGray)
+                }
                 
                 Text(viewModel.description)
                     .font(.textBodySR12160())
@@ -180,15 +225,37 @@ extension ProductCardView {
 
 extension ProductCardView.ViewModel {
     
-    static let sample = ProductCardView.ViewModel(
+    static let sample1 = ProductCardView.ViewModel(
         title: "Откуда",
-        cardIcon: Image("Platinume Card"),
-        logoIcon: Image("card_mastercard_logo"),
+        cardIcon: Image("Platinum Card"),
+        logoIcon: Image("Platinum Logo"),
         name: "Platinum",
         balance: "2,71 млн ₽",
         numberCard: .init(
-            title: "4444555566662953",
+            numberCard: "4444555566662953",
             description: "Все включено"),
+        state: .normal)
+    
+    static let sample2 = ProductCardView.ViewModel(
+        title: "Откуда",
+        cardIcon: Image("Platinum Card"),
+        logoIcon: Image("Platinum Logo"),
+        name: "Platinum",
+        balance: "2,71 млн ₽",
+        numberCard: .init(
+            numberCard: "4444555566662953",
+            description: "Все включено"),
+        state: .expanded(.sample))
+    
+    static let sample3 = ProductCardView.ViewModel(
+        title: "Куда",
+        cardIcon: Image("Platinum Card"),
+        logoIcon: nil,
+        name: "Текущий счет",
+        balance: "0 $",
+        numberCard: .init(
+            numberCard: "",
+            description: "Валютный"),
         state: .normal)
 }
 
@@ -196,9 +263,21 @@ extension ProductCardView.ViewModel {
 
 struct ProductCardViewComponent_Previews: PreviewProvider {
     static var previews: some View {
-        ProductCardView(viewModel: .sample)
-            .frame(height: 70)
-            .previewLayout(.sizeThatFits)
-            .padding()
+        
+        Group {
+            
+            ProductCardView(viewModel: .sample1)
+                .previewLayout(.sizeThatFits)
+                .padding()
+            
+            ProductCardView(viewModel: .sample2)
+                .previewLayout(.sizeThatFits)
+                .padding()
+            
+            ProductCardView(viewModel: .sample3)
+                .previewLayout(.sizeThatFits)
+                .padding()
+            
+        }.background(Color.mainColorsGrayLightest)
     }
 }

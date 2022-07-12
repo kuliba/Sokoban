@@ -19,6 +19,20 @@ struct CurrencyWalletView: View {
 
             CurrencyListView(viewModel: viewModel.listViewModel)
             CurrencySwapView(viewModel: viewModel.swapViewModel)
+            
+            ZStack {
+                
+                RoundedRectangle(cornerRadius: 12)
+                    .foregroundColor(.mainColorsGrayLightest)
+                
+                VStack(spacing: 20) {
+                    
+                    ProductCardView(viewModel: .sample1)
+                    ProductCardView(viewModel: .sample3)
+                    
+                }.padding(20)
+                
+            }.padding(20)
         }
         .navigationBarTitle(Text(viewModel.title), displayMode: .inline)
         .navigationBarBackButtonHidden(true)
