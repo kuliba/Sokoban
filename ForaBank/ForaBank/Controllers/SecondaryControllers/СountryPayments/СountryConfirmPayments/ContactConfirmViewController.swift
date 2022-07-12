@@ -332,7 +332,6 @@ class ContactConfurmViewController: UIViewController {
         NotificationCenter.default.addObserver(forName: NSNotification.Name("dismissSwiftUI"), object: nil, queue: nil) { data in
             
             let vc = PaymentsDetailsSuccessViewController()
-            vc.modalPresentationStyle = .fullScreen
             vc.confurmView.statusImageView.image = UIImage(named: "waiting")
             vc.confurmView.summLabel.text = self.summTransctionField.text
             vc.confurmView.statusLabel.text = "Перевод отменен!"
@@ -1044,6 +1043,7 @@ class ContactConfurmViewController: UIViewController {
                 let vc = PaymentsDetailsSuccessViewController()
                 self.confurmVCModel?.status = .timeOut
                 vc.confurmVCModel = self.confurmVCModel
+                vc.operatorsViewModel = self.operatorsViewModel
                 self.navigationController?.pushViewController(vc, animated: true)
                 complition()
             }

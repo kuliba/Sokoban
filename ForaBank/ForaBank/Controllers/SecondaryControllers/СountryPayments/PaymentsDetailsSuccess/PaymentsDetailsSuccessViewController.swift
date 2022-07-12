@@ -44,13 +44,13 @@ class PaymentsDetailsSuccessViewController: UIViewController {
         }
         
         confurmView.changeTapped = { [weak self] () in
-            let controller = ChangeReturnCountryController(type: .changePay, closeAction: {})
+            let controller = ChangeReturnCountryController(type: .changePay, operatorsViewModel: self?.operatorsViewModel)
             controller.confurmVCModel = self?.confurmVCModel
             self?.navigationController?.pushViewController(controller, animated: true)
         }
         
         confurmView.returnTapped = { [weak self] () in
-            let controller = ChangeReturnCountryController(type: .returnPay, closeAction: {})
+            let controller = ChangeReturnCountryController(type: .returnPay, operatorsViewModel: self?.operatorsViewModel)
             controller.confurmVCModel = self?.confurmVCModel
             self?.navigationController?.pushViewController(controller, animated: true)
         }
@@ -121,6 +121,7 @@ class PaymentsDetailsSuccessViewController: UIViewController {
     
     @objc func doneButtonTapped() {
         self.view.window?.rootViewController?.dismiss(animated: true)
+        self.navigationController?.popToRootViewController(animated: true)
         operatorsViewModel?.closeAction()
         guard let closeAction = closeAction else {
             return

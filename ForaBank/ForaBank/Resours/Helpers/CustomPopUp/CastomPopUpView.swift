@@ -58,7 +58,7 @@ class MemeDetailVC: UIViewController {
         setupConstraint()
         setupActions()
         setupCardViewActions()
-        
+        hideKeyboardWhenTappedAround()
         if let template = paymentTemplate {
             addBackButton()
             updateObjectWithTamplate(paymentTemplate: template)

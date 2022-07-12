@@ -151,7 +151,8 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                             })))
                         
                         case (.country, let paymentData as PaymentCountryData):
-                            link = .init(.country(paymentData))
+                            link = .init(.country(.init(countryData: paymentData, operatorsViewModel: .init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
+                            }, template: nil))))
                             
                         case (.service, let paymentData as PaymentServiceData):
                             link = .service(.init(model: model, closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
@@ -313,7 +314,7 @@ extension PaymentsTransfersViewModel {
         case transport(OperatorsViewModel)
         case template(TemplatesListViewModel)
         case qrScanner(QrViewModel)
-        case country(PaymentCountryData)
+        case country(CountryPaymentView.ViewModel)
     }
     
 }
