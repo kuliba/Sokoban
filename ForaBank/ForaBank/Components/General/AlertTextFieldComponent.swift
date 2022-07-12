@@ -15,15 +15,18 @@ extension AlertTextFieldView {
         let id = UUID()
         let title: String
         let message: String?
+        let maxLength: Int
         var text: String?
         let primary: ButtonViewModel
         var secondary: ButtonViewModel? = nil
         
         var binding: AnyCancellable?
         
-        internal init(title: String, message: String?, text: String? = nil, primary: AlertTextFieldView.ViewModel.ButtonViewModel, secondary: AlertTextFieldView.ViewModel.ButtonViewModel? = nil) {
+        internal init(title: String, message: String?, text: String? = nil, maxLength: Int = 15, primary: AlertTextFieldView.ViewModel.ButtonViewModel, secondary: AlertTextFieldView.ViewModel.ButtonViewModel? = nil) {
+            
             self.title = title
             self.message = message
+            self.maxLength = maxLength
             self.text = text
             self.primary = primary
             self.secondary = secondary
@@ -71,6 +74,8 @@ struct AlertTextFieldView: UIViewControllerRepresentable {
                     .publisher(for: UITextField.textDidChangeNotification, object: textField)
                     .map { ($0.object as? UITextField)?.text }
                     .assign(to: \.viewModel.text, on: self)
+                
+                textField.delegate = context.coordinator
             }
             
             if let secondary = viewModel.secondary {
@@ -94,12 +99,28 @@ struct AlertTextFieldView: UIViewControllerRepresentable {
     
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
     
-    class Coordinator {
+    class Coordinator: NSObject, UITextFieldDelegate {
         
         var parentObserver: NSKeyValueObservation?
+        
+        var viewModel: AlertTextFieldView.ViewModel
+            
+        init(_ viewModel: AlertTextFieldView.ViewModel) {
+            self.viewModel = viewModel
+        }
+        
+        func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+            
+            let maxLength = viewModel.maxLength
+            let currentString: NSString = textField.text! as NSString
+            let newString: NSString =
+            currentString.replacingCharacters(in: range, with: string) as NSString
+            return newString.length <= maxLength
+        }
+        
     }
     
-    func makeCoordinator() -> Self.Coordinator { Coordinator() }
+    func makeCoordinator() -> Self.Coordinator { Coordinator(viewModel) }
 }
 
 struct AlertTextFieldViewModifier: ViewModifier {

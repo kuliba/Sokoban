@@ -218,20 +218,12 @@ class UserAccountViewModel: ObservableObject {
                     case _ as UserAccountViewModelAction.ChangeUserName:
                         
                         textFieldAlert = .init(
-                            title: "Имя", message: "Как к вам обращаться?",
+                            title: "Имя", message: "Как к вам обращаться?\n* Имя не должно превышать 15 символов",
                             primary: .init(type: .default, title: "ОК", action: { [weak self] text in
                                 
-                                if text?.count ?? 0 > 15 {
-                                    
-                                    self?.alert = .init(title: "Внимание", message: "Имя не должно превышать 15 символов", primary: .init(type: .cancel, title: "ОК", action: {
-                                        self?.action.send(UserAccountViewModelAction.CloseFieldAlert())
-                                    }))
-                                    
-                                } else {
-                                    
-                                    self?.action.send(UserAccountViewModelAction.CloseFieldAlert())
-                                    self?.model.action.send(ModelAction.ClientName.Save(name: text))
-                                }
+                                self?.action.send(UserAccountViewModelAction.CloseFieldAlert())
+                                self?.model.action.send(ModelAction.ClientName.Save(name: text))
+                                
                             }),
                             secondary: .init(type: .cancel, title: "Отмена", action: { [weak self] _ in
                                 self?.action.send(UserAccountViewModelAction.CloseFieldAlert())

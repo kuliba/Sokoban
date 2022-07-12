@@ -109,6 +109,15 @@ extension Model {
     
     func handleMediaDeleteAvatarRequest() {
         self.clientPhoto.value = nil
+        
+        do {
+            
+            try localAgent.clear(type: ImageData.self)
+            
+        } catch {
+            
+            print("Model: store: ClientNameData error: \(error.localizedDescription)")
+        }
     }
     
     func handleClientNameSave(_ payload: ModelAction.ClientName.Save) {
