@@ -49,13 +49,12 @@ struct MessagesHistorySectionView: View {
     
     var body: some View {
         
-        VStack(alignment: .leading)  {
+        VStack(alignment: .leading, spacing: 24)  {
             
             Text(viewModel.title)
                 .font(.textBodyMSB14200())
                 .foregroundColor(.textSecondary)
                 .padding(.top, 28)
-                .padding(.bottom, 24)
                 .padding(.leading, 5)
                 .lineLimit(2)
             
