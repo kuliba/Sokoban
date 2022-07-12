@@ -139,10 +139,10 @@ private extension TemplatesListViewModel {
                         print("Скорее всего не будет сделано в ближайшее время")
                         
                     case .betweenTheir:
-                        link = .betweenTheir(.init(closeAction: {[weak self] in self?.link = nil }, paymentTemplate: temp))
+                        link = .betweenTheir(.init(type: .template(temp), closeAction: {[weak self] in self?.link = nil }))
                         
                     case .insideBank:
-                        link = .betweenTheir(.init(closeAction: {[weak self] in self?.link = nil }, paymentTemplate: temp))
+                        link = .betweenTheir(.init(type: .template(temp), closeAction: {[weak self] in self?.link = nil }))
                         
                     case .byPhone:
                         link = .byPhone(.init(insideByPhone: temp))

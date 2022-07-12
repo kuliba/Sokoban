@@ -11,7 +11,7 @@ import Foundation
 class DepositInfoDataItem: Decodable, Equatable {
 
 	let balance: Double
-	let dateEnd: Date
+	let dateEnd: Date?
 	let dateNext: Date
 	let dateOpen: Date
 	let id: Int
@@ -21,10 +21,10 @@ class DepositInfoDataItem: Decodable, Equatable {
 	let sumCredit: Double?
 	let sumDebit: Double?
 	let sumPayInt: Double
-	let termDay: String
+	let termDay: String?
     let sumPayPrc: Double?
     
-    internal init(balance: Double, dateEnd: Date, dateNext: Date, dateOpen: Date, id: Int, initialAmount: Double, interestRate: Double, sumAccInt: Double, sumCredit: Double?, sumDebit: Double?, sumPayInt: Double, termDay: String, sumPayPrc: Double?) {
+    internal init(balance: Double, dateEnd: Date?, dateNext: Date, dateOpen: Date, id: Int, initialAmount: Double, interestRate: Double, sumAccInt: Double, sumCredit: Double?, sumDebit: Double?, sumPayInt: Double, termDay: String?, sumPayPrc: Double?) {
         
         self.id = id
         self.balance = balance
@@ -51,9 +51,15 @@ class DepositInfoDataItem: Decodable, Equatable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         balance = try container.decode(Double.self, forKey: .balance)
         
-        let dateEnd = try container.decode(Int.self, forKey: .dateEnd)
-        self.dateEnd = Date(timeIntervalSince1970: TimeInterval(dateEnd / 1000))
-        
+        if let dateEnd = try container.decodeIfPresent(Int.self, forKey: .dateEnd) {
+            
+            self.dateEnd = Date(timeIntervalSince1970: TimeInterval(dateEnd / 1000))
+            
+        } else {
+            
+            self.dateEnd = nil
+        }
+
         let dateNext = try container.decode(Int.self, forKey: .dateNext)
         self.dateNext = Date(timeIntervalSince1970: TimeInterval(dateNext / 1000))
         
@@ -67,7 +73,7 @@ class DepositInfoDataItem: Decodable, Equatable {
         sumCredit = try container.decodeIfPresent(Double.self, forKey: .sumCredit)
         sumDebit = try container.decodeIfPresent(Double.self, forKey: .sumDebit)
         sumPayInt = try container.decode(Double.self, forKey: .sumPayInt)
-        termDay = try container.decode(String.self, forKey: .termDay)
+        termDay = try container.decodeIfPresent(String.self, forKey: .termDay)
         sumPayPrc = try container.decodeIfPresent(Double.self, forKey: .sumPayPrc)
     }
     

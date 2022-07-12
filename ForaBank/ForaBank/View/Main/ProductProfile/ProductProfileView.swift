@@ -100,6 +100,11 @@ struct ProductProfileView: View {
                         ProductStatementView(viewModel: productStatementViewModel)
                             .navigationBarTitle("", displayMode: .inline)
                             .navigationBarBackButtonHidden(true)
+                        
+                    case let .meToMeExternal(meToMeExternalViewModel):
+                        MeToMeExternalView(viewModel: meToMeExternalViewModel)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .edgesIgnoringSafeArea(.bottom)
                     }
                 }
             }
@@ -124,6 +129,12 @@ struct ProductProfileView: View {
                 MeToMeView(viewModel: meToMeViewModel)
                     .edgesIgnoringSafeArea(.bottom)
                     .frame(height: 540)
+            }
+        })
+        .sheet(item: $viewModel.sheet, content: { sheet in
+            switch sheet.type {
+            case let .printForm(printFormViewModel):
+                PrintFormView(viewModel: printFormViewModel)
             }
         })
     }

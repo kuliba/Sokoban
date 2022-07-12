@@ -199,7 +199,7 @@ class PaymentsTransfersViewModel: ObservableObject, Resetable {
                         case .betweenSelf:
                             
                             bottomSheet = .init(type: .meToMe(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.BottomSheet())
-                            }, paymentTemplate: nil)))
+                            })))
                             
                         case .byBankDetails:
                             link = .transferByRequisites(.init(closeAction: { [weak self] in self?.action.send(PaymentsTransfersViewModelAction.Close.Link())
