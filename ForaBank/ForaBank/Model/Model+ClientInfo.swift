@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CloudKit
 
 //MARK: - Actions
 
@@ -30,6 +31,8 @@ extension ModelAction {
             
             let image: ImageData
         }
+        
+        struct Delete: Action { }
     }
     
     enum ClientName {
@@ -102,6 +105,10 @@ extension Model {
             
             print("Model: store: ClientPhotoData error: \(error.localizedDescription)")
         }
+    }
+    
+    func handleMediaDeleteAvatarRequest() {
+        self.clientPhoto.value = nil
     }
     
     func handleClientNameSave(_ payload: ModelAction.ClientName.Save) {

@@ -159,6 +159,12 @@ class UserAccountViewModel: ObservableObject {
                         })
                     }
                     
+                    if model.clientPhoto.value != nil {
+                        buttons.append(Alert.Button.default(Text("Удалить")) {
+                            self.model.action.send(ModelAction.ClientPhoto.Delete())
+                        })
+                    }
+                    
                     buttons.append(Alert.Button.cancel(Text("Отмена")))
                     if buttons.count > 1 {
                         camSheet = .init(buttons: buttons)
