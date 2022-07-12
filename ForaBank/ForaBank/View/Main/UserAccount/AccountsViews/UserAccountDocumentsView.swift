@@ -39,15 +39,14 @@ extension UserAccountDocumentsView {
                     })
             ]
             
-            if let userInn = userData.INN {
-                accountDocuments.append(DocumentCellView.ViewModel(
-                    itemType: .inn,
-                    content: userInn.addMask(for: .inn),
-                    action: { [weak self] in
-                        self?.action.send(UserAccountViewModelAction.OpenDocument(type: .inn))
-                    })
-                )
-            }
+            let userInn = userData.INN ?? ""
+            accountDocuments.append(DocumentCellView.ViewModel(
+                itemType: .inn,
+                content: userInn.addMask(for: .inn),
+                action: { [weak self] in
+                    self?.action.send(UserAccountViewModelAction.OpenDocument(type: .inn))
+                })
+            )
             
             accountDocuments.append(DocumentCellView.ViewModel(
                 itemType: .adressPass,

@@ -180,8 +180,9 @@ extension Model {
             let time = accountInformerDismissTime(error: error)
             
             // Скрыть уведомление об открытии счета:
-            // - некорректный код - через 2 сек
+            // - некорректный код - через 0 сек
             // - исчерпали все попытки - 0 сек
+            // - время для ввода истекло - 0 сек
             
             action.send(ModelAction.Account.Informer.Dismiss(after: time))
         }
@@ -210,6 +211,7 @@ extension Model {
 
         case .serverCommandError(error: let error):
             messageError = error
+            
         default:
             break
         }
@@ -219,9 +221,7 @@ extension Model {
         }
         
         switch rawValue {
-        case .incorrect:
-            return 2
-        case .exhaust:
+        default:
             return 0
         }
     }

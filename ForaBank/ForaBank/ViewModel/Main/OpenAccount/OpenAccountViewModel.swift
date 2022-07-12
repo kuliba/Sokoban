@@ -52,7 +52,8 @@ class OpenAccountViewModel: ObservableObject {
 
                 switch action {
                 case _ as ModelAction.Account.PrepareOpenAccount.Request,
-                     _ as ModelAction.Account.MakeOpenAccount.Request:
+                     _ as ModelAction.Account.MakeOpenAccount.Request,
+                     _ as OpenAccountPerformAction.CurrencyEdit:
                     pagerViewModel.isUserInteractionEnabled = false
 
                 case _ as ModelAction.Account.PrepareOpenAccount.Response,

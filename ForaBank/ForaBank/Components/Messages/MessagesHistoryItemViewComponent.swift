@@ -32,7 +32,7 @@ extension MessagesHistoryItemView {
             
             self.id = notification.id
             self.icon = Image.ic24MoreHorizontal
-            self.title = notification.title
+            self.title = notification.type.rawValue + " " + notification.title
             self.content = notification.text
             self.time = DateFormatter.minutsAndSecond.string(from: notification.date)
         }
@@ -51,38 +51,45 @@ struct MessagesHistoryItemView: View {
     
     var body: some View {
         
-        HStack(alignment: .top) {
+        HStack(alignment: .top, spacing: 20) {
             
             VStack(alignment: .center) {
                 
-                viewModel.icon
-                    .resizable()
-                    .frame(width: 24, height: 24)
-                    .foregroundColor(.iconWhite)
-                    .background(Circle().frame(width: 40, height: 40).foregroundColor(.bGIconRedLight))
-                    .padding(.init(top: 12, leading: 16, bottom: 0, trailing: 12))
+                ZStack {
+                    
+                    Circle()
+                        .frame(width: 40, height: 40)
+                        .foregroundColor(.bGIconRedLight)
+                    
+                    viewModel.icon
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                        .foregroundColor(.iconWhite)
+                }
+                
                 Spacer()
             }
             
             VStack(alignment: .leading, spacing: 6)  {
                 
+                Text(viewModel.title)
+                    .font(.textH4M16240())
+                    .foregroundColor(.textSecondary)
+                
                 VStack(alignment: .leading) {
-                    
-                    Text(viewModel.title)
-                        .font(.textH4M16240())
-                        .foregroundColor(.textSecondary)
                     
                     Text(viewModel.content)
                         .font(.textBodySR12160())
                         .foregroundColor(.gray)
                         .lineLimit(2)
+                    
+                    Text(viewModel.time)
+                        .font(.textBodySR12160())
+                        .foregroundColor(.gray)
                 }
-                Text(viewModel.time)
-                    .font(.textBodySR12160())
-                    .foregroundColor(.gray)
             }
             Spacer()
-        } .padding(.trailing, 19)
+        }
     }
 }
 

@@ -23,7 +23,7 @@ struct MessagesHistoryDetailViewModel: Identifiable {
     
     init(notificationData: NotificationData) {
         
-        self.title = notificationData.title
+        self.title = notificationData.type.rawValue + " " + notificationData.title
         self.content = notificationData.text
         self.icon = Image.ic24MoreHorizontal
         self.id = notificationData.id
