@@ -236,6 +236,31 @@ extension ServerCommands {
             }
         }
         
+        /*
+         http://10.1.206.21:8080/swagger-ui/index.html#/DepositController/getPrintFormForDepositConditions
+         */
+        struct GetPrintFormForDepositConditions: ServerDownloadCommand {
+
+            let token: String?
+            let endpoint = "/rest/getPrintFormForDepositConditions"
+            let method: ServerCommandMethod = .post
+            let parameters: [ServerCommandParameter]? = nil
+            let payload: BasePayload?
+            let timeout: TimeInterval? = nil
+            let cachePolicy: URLRequest.CachePolicy = .returnCacheDataElseLoad
+            
+            init(token: String, payload: BasePayload) {
+                
+                self.token = token
+                self.payload = payload
+            }
+            
+            init(token: String, depositId: ProductData.ID) {
+                
+                self.init(token: token, payload: .init(id: depositId))
+            }
+        }
+        
         struct BasePayload: Encodable {
 
             let id: Int

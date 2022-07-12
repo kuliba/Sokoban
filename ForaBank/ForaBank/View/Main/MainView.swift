@@ -129,7 +129,6 @@ struct MainView: View {
                     let viewModel: OpenAccountViewModel = .init(model: model, items: OpenAccountViewModel.reduce(products: productsList))
 
                     OpenAccountView(viewModel: viewModel)
-                        .frame(height: 454)
                 }
             }
         }

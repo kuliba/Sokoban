@@ -38,19 +38,26 @@ extension OpenAccountPerformView {
         }
 
         var infoTitle: String {
-
-            switch operationType {
-            case .opened:
+            
+            if item.header.isAccountOpened == true {
+                
                 return "Счет добавлен в “Мои продукты” на главном экране. Все детали и документацию вы можете найти в профиле продукта"
-            default:
-                return "Откройте \(currencyTitle) в один клик и проводите банковские операции без ограничений"
             }
+
+            return "Откройте \(currencyTitle) в один клик и проводите банковские операции без ограничений"
         }
-
-        var resendOTPCount: Int {
-
-            get { prepareData.resendOTPCount }
-            set { prepareData.resendOTPCount = newValue }
+        
+        private var openAccountTitle: String {
+            "\(item.currencyType.rawValue) счет открыт "
+        }
+        
+        private var currentOperationType: OpenAccountPerformType {
+            
+            if item.isAccountOpen {
+                return .opened
+            }
+            
+            return .open
         }
 
         lazy var agreement: AgreementView.ViewModel = {
@@ -119,24 +126,11 @@ extension OpenAccountPerformView {
                         case let .complete(data):
 
                             prepareData = OpenAccountPrepareViewModel.reduce(data: data)
-
-                            guard resendOTPCount > 0 else {
-
-                                self.action.send(OpenAccountPerformAction.Alert.Reset())
-                                return
-                            }
-
                             operationType = .edit
 
                         case let .failed(error: error):
-
-                            if resendOTPCount == 0 {
-
-                                withAnimation {
-                                    operationType = .open
-                                }
-                            }
-
+                            
+                            operationType = currentOperationType
                             self.action.send(OpenAccountPerformAction.Alert.Error(error: error))
                         }
 
@@ -147,8 +141,9 @@ extension OpenAccountPerformView {
 
                             operationType = .opened
 
+                            item.isAccountOpen = true
                             item.header.isAccountOpened = true
-                            item.header.title = "\(item.header.title) открыт "
+                            item.header.title = openAccountTitle
 
                             let accountNumber = data.accountNumber
 
@@ -159,21 +154,14 @@ extension OpenAccountPerformView {
                             item.card.numberCard = accountNumber
 
                         case let .failed(error: error):
-
-                            resendOTPCount -= 1
-
-                            guard resendOTPCount > 0 else {
-
-                                self.action.send(OpenAccountPerformAction.Alert.Reset())
-                                return
-                            }
-
-                            operationType = .edit
+                            
+                            handleRawResponse(error: error)
                             self.action.send(OpenAccountPerformAction.Alert.Error(error: error))
                         }
 
                     case let payload as ModelAction.Auth.VerificationCode.PushRecieved:
 
+                        confirm.enterCode = payload.code
                         confirmCode = payload.code
 
                     default:
@@ -190,7 +178,7 @@ extension OpenAccountPerformView {
                     switch action {
                     case _ as OpenAccountPerformAction.Button.Tapped:
 
-                        if item.header.isAccountOpened == true || resendOTPCount == 0 {
+                        if item.header.isAccountOpened == true {
                             self.action.send(OpenAccountPerformAction.ResetData())
                         }
 
@@ -200,8 +188,11 @@ extension OpenAccountPerformView {
                     case _ as OpenAccountPerformAction.Button.Confirm:
 
                         operationType = .confirm
+                        
+                        let verificationCode = confirmCode.isEmpty == true ? confirm.enterCode : confirmCode
+                        
                         model.action.send(ModelAction.Account.MakeOpenAccount.Request(
-                            verificationCode: confirmCode,
+                            verificationCode: verificationCode,
                             currencyName: currencyName,
                             currencyCode: item.currencyCode)
                         )
@@ -218,16 +209,6 @@ extension OpenAccountPerformView {
 
                     case let payload as OpenAccountPerformAction.Alert.Error:
                         makeAlert(error: payload.error)
-
-                    case _ as OpenAccountPerformAction.Alert.Reset:
-
-                        withAnimation {
-                            operationType = .open
-                        }
-
-                        self.action.send(OpenAccountPerformAction.Alert.Error(error: .statusError(
-                            status: .serverError,
-                            message: "Вы исчерпали все попытки :(")))
 
                     case _ as OpenAccountPerformAction.ResetData:
 
@@ -247,14 +228,13 @@ extension OpenAccountPerformView {
                     switch action {
 
                     case _ as ConfirmViewModelAction.Button.Done:
-
-                        confirmCode = confirm.enterCode
                         endEditing()
 
                     case _ as ConfirmViewModelAction.Button.Close:
                         endEditing()
 
                     case _ as ConfirmViewModelAction.Button.ResendCode:
+                        
                         model.action.send(ModelAction.Account.PrepareOpenAccount.Request())
 
                     default:
@@ -339,7 +319,42 @@ extension OpenAccountPerformView {
 
         private func endEditing() {
 
+            operationType = .edit
             UIApplication.shared.endEditing()
+        }
+        
+        private func handleRawResponse(error: Model.ProductsListError) {
+            
+            var messageError = ""
+            
+            switch error {
+            case .emptyData(message: let message):
+                
+                guard let message = message else { return }
+                messageError = message
+                
+            case let .statusError(_, message: message):
+                
+                guard let message = message else { return }
+                messageError = message
+
+            case .serverCommandError(error: let error):
+                messageError = error
+            default:
+                break
+            }
+            
+            guard let rawValue = OpenAccountRawResponse(rawValue: messageError) else {
+                return
+            }
+            
+            switch rawValue {
+            case .incorrect:
+                operationType = .edit
+            case .exhaust:
+                operationType = currentOperationType
+                self.action.send(OpenAccountPerformAction.ResetData())
+            }
         }
     }
 }
@@ -370,6 +385,33 @@ extension OpenAccountPrepareViewModel {
     }
 }
 
+// MARK: - RawResponse
+
+enum OpenAccountRawResponse: RawRepresentable {
+    
+    case incorrect
+    case exhaust
+    
+    var rawValue: String {
+        switch self {
+        case .incorrect:
+            return "Вы исчерпали все попытки"
+        case .exhaust:
+            return "Введен некорректный код. Попробуйте еще раз"
+        }
+    }
+    
+    init?(rawValue: String) {
+        
+        if rawValue.contains("исчерпали") {
+            self = .exhaust
+            return
+        }
+        
+        self = .incorrect
+    }
+}
+
 // MARK: - View
 
 struct OpenAccountPerformView: View {
@@ -378,65 +420,64 @@ struct OpenAccountPerformView: View {
 
     var body: some View {
 
-        VStack {
+        VStack(alignment: .leading, spacing: 12) {
 
             switch viewModel.operationType {
             case .open, .opened:
 
-                HStack {
-
-                    Text(viewModel.infoTitle)
-                        .font(.textBodyMR14200())
-                        .foregroundColor(.mainColorsBlack)
-
-                    Spacer()
-
-                }.padding(.bottom, 20)
+                Text(viewModel.infoTitle)
+                    .font(.textBodyMR14200())
+                    .foregroundColor(.mainColorsBlack)
+                    .frame(height: 56, alignment: .top)
+                    .padding(.trailing)
 
                 OpenAccountButtonView(viewModel: viewModel.button)
                     .frame(height: 48)
 
-                HStack {
-
-                    AgreementView(viewModel: viewModel.agreement)
-
-                    Spacer()
-
-                }.padding(.top, 10)
+                AgreementView(viewModel: viewModel.agreement)
+                    .padding([.top, .bottom], 8)
 
             case .opening:
 
                 SpinnerRefreshView(icon: viewModel.spinnerIcon)
-                    .padding(.top, 56)
+                    .padding(.top)
 
             case .edit:
 
                 ConfirmView(viewModel: viewModel.confirm)
-                    .padding(.top, 4)
+                    .padding(.top)
 
-                if viewModel.confirmCode.isEmpty == false {
+                if viewModel.confirm.enterCode.isEmpty == false {
 
                     OpenAccountButtonView(viewModel: viewModel.button)
                         .frame(height: 48)
-                        .padding(.top, 46)
+                        .padding(.top, 40)
                 }
+                
+                Spacer()
 
             case .confirm:
 
                 ConfirmView(viewModel: viewModel.confirm)
                     .padding(.top, 4)
 
-                SpinnerRefreshView(icon: viewModel.spinnerIcon)
-                    .padding(.top, 46)
+                HStack(alignment: .center) {
+    
+                    Spacer()
+                    
+                    SpinnerRefreshView(icon: viewModel.spinnerIcon)
+                        .padding(.top, 36)
+                    
+                    Spacer()
+                }
             }
-
-            Spacer()
         }
         .alert(item: $viewModel.alert) { alert in
             Alert(with: alert)
         }
-        .padding([.leading, .trailing, .bottom], 20)
-        .padding(.top, 12)
+        .frame(height: 190)
+        .padding([.leading, .trailing], 20)
+        .padding(.bottom, 8)
     }
 }
 
@@ -463,8 +504,6 @@ enum OpenAccountPerformAction {
 
             let error: Model.ProductsListError
         }
-
-        struct Reset: Action {}
     }
 
     struct ResetData: Action {}

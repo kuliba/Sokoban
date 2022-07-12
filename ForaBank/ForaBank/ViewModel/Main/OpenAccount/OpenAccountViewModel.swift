@@ -24,7 +24,7 @@ class OpenAccountViewModel: ObservableObject {
         items[safe: pagerViewModel.currentIndex]
     }
 
-    let pagerViewModel: PagerContentViewModel
+    let pagerViewModel: PagerScrollViewModel
 
     init(model: Model,
          items: [OpenAccountItemViewModel],
@@ -35,7 +35,7 @@ class OpenAccountViewModel: ObservableObject {
         self.items = items
         self.currencyName = currencyName
 
-        pagerViewModel = .init(pageCount: items.count)
+        pagerViewModel = .init(pagesCount: items.count)
 
         if let currentItem = currentItem {
             self.item = currentItem
@@ -51,10 +51,12 @@ class OpenAccountViewModel: ObservableObject {
             .sink { [unowned self] action in
 
                 switch action {
-                case _ as ModelAction.Account.MakeOpenAccount.Request:
+                case _ as ModelAction.Account.PrepareOpenAccount.Request,
+                     _ as ModelAction.Account.MakeOpenAccount.Request:
                     pagerViewModel.isUserInteractionEnabled = false
 
-                case _ as ModelAction.Account.MakeOpenAccount.Response:
+                case _ as ModelAction.Account.PrepareOpenAccount.Response,
+                     _ as ModelAction.Account.MakeOpenAccount.Response:
                     pagerViewModel.isUserInteractionEnabled = true
 
                 default:

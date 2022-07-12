@@ -122,7 +122,7 @@ class OperationDetailViewModel: ObservableObject, Identifiable {
                     sheet = .init(type: .info(payload.viewModel))
                 
                 case let payload as OperationDetailViewModelAction.ShowDocument:
-                    let printFormViewModel = PrintFormView.ViewModel(paymentOperationDetailId: payload.paymentOperationDetailID, printFormType: payload.printFormType, model: model)
+                    let printFormViewModel = PrintFormView.ViewModel(type: .operation(paymentOperationDetailId: payload.paymentOperationDetailID, printFormType: payload.printFormType), model: model)
                     sheet = .init(type: .printForm(printFormViewModel))
                     
                 case let payload as OperationDetailViewModelAction.ShowChangeReturn:
@@ -300,14 +300,16 @@ private extension OperationDetailViewModel {
         
         let amountFormatted = model.amountFormatted(amount: operationDetail.amount, currencyCode: operationDetail.currencyAmount, style: .normal) ?? String(operationDetail.amount)
         
-        let changeViewModel = ChangeReturnViewModel(amount: amountFormatted,
-                                                          name: operationDetail.payeeFirstName ?? "",
-                                                          surname: operationDetail.payeeSurName ?? "",
-                                                          secondName: operationDetail.payeeMiddleName ?? "",
-                                                          paymentOperationDetailId: operationDetail.paymentOperationDetailId,
-                                                          transferReference: operationDetail.transferReference ?? "",
-                                                          product: product,
-                                                          type: .changePay, closeAction: dismissAction)
+        let changeViewModel = ChangeReturnViewModel(
+            amount: amountFormatted,
+            name: operationDetail.payeeFirstName ?? "",
+            surname: operationDetail.payeeSurName ?? "",
+            secondName: operationDetail.payeeMiddleName ?? "",
+            paymentOperationDetailId: operationDetail.paymentOperationDetailId,
+            transferReference: operationDetail.transferReference ?? "",
+            product: product,
+            type: .changePay,
+            operatorsViewModel: .init(closeAction: dismissAction, template: nil))
         
         let changeButton = ActionButtonViewModel(name: "Изменить",
                                                  action: { [weak self] in
@@ -316,14 +318,16 @@ private extension OperationDetailViewModel {
         actionButtons.append(changeButton)
         
         
-        let returnViewModel = ChangeReturnViewModel(amount: amountFormatted,
-                                                          name: operationDetail.payeeFirstName ?? "",
-                                                          surname: operationDetail.payeeSurName ?? "",
-                                                          secondName: operationDetail.payeeMiddleName ?? "",
-                                                          paymentOperationDetailId: operationDetail.paymentOperationDetailId,
-                                                          transferReference: operationDetail.transferReference ?? "",
-                                                          product: product,
-                                                          type: .returnPay, closeAction: dismissAction)
+        let returnViewModel = ChangeReturnViewModel(
+            amount: amountFormatted,
+            name: operationDetail.payeeFirstName ?? "",
+            surname: operationDetail.payeeSurName ?? "",
+            secondName: operationDetail.payeeMiddleName ?? "",
+            paymentOperationDetailId: operationDetail.paymentOperationDetailId,
+            transferReference: operationDetail.transferReference ?? "",
+            product: product,
+            type: .returnPay,
+            operatorsViewModel: .init(closeAction: dismissAction, template: nil))
         let returnButton = ActionButtonViewModel(name: "Вернуть",
                                                  action: { [weak self] in
             self?.action.send(OperationDetailViewModelAction.ShowChangeReturn(viewModel: returnViewModel))

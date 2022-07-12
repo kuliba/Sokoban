@@ -37,14 +37,6 @@ extension OpenAccountButtonView {
                 switch operationType {
                 case .opened:
                     return .mainColorsBlack
-                case .edit:
-
-                    if confirmCode.isEmpty {
-                        return .mainColorsGrayMedium
-                    }
-
-                    return .mainColorsWhite
-
                 default:
                     return .mainColorsWhite
                 }
@@ -57,14 +49,6 @@ extension OpenAccountButtonView {
                 switch operationType {
                 case .opened:
                     return .mainColorsGrayLightest
-                case .edit:
-
-                    if confirmCode.isEmpty {
-                        return .mainColorsGrayLightest
-                    }
-
-                    return .mainColorsRed
-
                 default:
                     return .mainColorsRed
                 }

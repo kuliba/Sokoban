@@ -62,11 +62,11 @@ class ChangeReturnCountryController: UIViewController {
     
     let doneButton = UIButton(title: "Продолжить")
     
-    let closeAction: () -> Void
+    var operatorsViewModel: OperatorsViewModel?
     
-    init(type: ChangeReturnType, closeAction: @escaping () -> Void) {
+    init(type: ChangeReturnType, operatorsViewModel: OperatorsViewModel?) {
         self.type = type
-        self.closeAction = closeAction
+        self.operatorsViewModel = operatorsViewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -83,12 +83,14 @@ class ChangeReturnCountryController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = false
+        navigationController?.isNavigationBarHidden = false
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.enableAutoToolbar = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
+        navigationController?.isNavigationBarHidden = true
         IQKeyboardManager.shared.enable = false
         IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
         IQKeyboardManager.shared.enableAutoToolbar = false
@@ -193,9 +195,8 @@ class ChangeReturnCountryController: UIViewController {
                     model.paymentOperationDetailId = modelResp?.data?.paymentOperationDetailId ?? 0
                     controller.confurmVCModel = model
                     controller.printFormType = "returnOutgoing"
-                    controller.modalPresentationStyle = .fullScreen
-                    controller.closeAction = self.closeAction
-                    self.present(controller, animated: true, completion: nil)
+                    controller.operatorsViewModel = self.operatorsViewModel
+                    self.navigationController?.pushViewController(controller, animated: true)
                 } else {
                     self.showAlert(with: "Ошибка", and: modelResp?.errorMessage ?? "")
                 }
@@ -222,8 +223,8 @@ class ChangeReturnCountryController: UIViewController {
                     model.paymentOperationDetailId = modelResp?.data?.paymentOperationDetailId ?? 0
                     controller.confurmVCModel = model
                     controller.printFormType = "changeOutgoing"
-                    controller.modalPresentationStyle = .fullScreen
-                    self.present(controller, animated: true, completion: nil)
+                    controller.operatorsViewModel = self.operatorsViewModel
+                    self.navigationController?.pushViewController(controller, animated: true)
                 } else {
                     self.showAlert(with: "Ошибка", and: modelResp?.errorMessage ?? "")
                 }

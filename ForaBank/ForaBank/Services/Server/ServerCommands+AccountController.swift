@@ -94,9 +94,9 @@ extension ServerCommands {
                 self.payload = payload
 			}
             
-            init(token: String, productId: ProductData.ID) {
+            init(token: String, accountId: ProductData.ID) {
                 
-                self.init(token: token, payload: .init(id: productId))
+                self.init(token: token, payload: .init(id: accountId))
             }
 		}
         

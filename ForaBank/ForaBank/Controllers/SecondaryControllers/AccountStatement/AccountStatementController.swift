@@ -7,10 +7,13 @@
 
 import UIKit
 import RealmSwift
+import SwiftUI
 
 class AccountStatementController: UIViewController {
+    
+    var viewModel: ProductStatementViewModel?
+    
     var startProduct: UserAllCardsModel?
-    lazy var realm = try? Realm()
     
     var toolBar: UIToolbar?
     var datePicker: UIDatePicker?
@@ -57,7 +60,8 @@ class AccountStatementController: UIViewController {
         super.viewDidLoad()
         title = "Выписка по счету"
         view.backgroundColor = .white
-        addCloseButton()
+        cardFromField.model = startProduct
+        setupCloseButton()
         setupUI()
         setupActions()
         
@@ -78,6 +82,22 @@ class AccountStatementController: UIViewController {
         button.setTitleColor(!isEnabled
                              ? UIColor(red: 0.827, green: 0.827, blue: 0.827, alpha: 1)
                              : UIColor.white, for: .normal)
+    }
+    
+    func setupCloseButton() {
+        let button = UIBarButtonItem(image: UIImage(systemName: "xmark"),
+                                     landscapeImagePhone: nil,
+                                     style: .done,
+                                     target: self,
+                                     action: #selector(onCloseButtonAction))
+        button.tintColor = .black
+        navigationItem.leftBarButtonItem = button
+    }
+    
+    @objc func onCloseButtonAction() {
+        
+        viewModel?.closeAction()
+        navigationController?.popViewController(animated: true)
     }
     
     private func setupUI() {
@@ -195,7 +215,7 @@ class AccountStatementController: UIViewController {
         
         cardListView.didCardTapped = { cardId in
             DispatchQueue.main.async {
-                let cardList = self.realm?.objects(UserAllCardsModel.self).compactMap {$0} ?? []
+                let cardList = ReturnAllCardList.cards()
                 cardList.forEach({ card in
                         if card.id == cardId {
                         self.cardFromField.model = card
@@ -298,16 +318,19 @@ class AccountStatementController: UIViewController {
         self.dateField.text = "\(start) - \(end)"
         
         self.setButtonEnabled(button: self.generateButton, isEnabled: true)
-        
     }
     
     @objc private func generateButtonTapped() {
         print(#function)
         guard let card = cardFromField.model else { return }
         
-        guard let model = ResultAccountStatementModel(product: card, statTime: self.startDate ?? Date(), endTime: self.endDate ?? Date()) else { return }
-        guard let vc = AccountStatementPDFController(model: model) else { return }
-        self.navigationController?.pushViewController(vc, animated: true)
+        let startDate = self.startDate ?? Date()
+        let endDate = self.endDate ?? Date()
+        let printFormViewModel = PrintFormView.ViewModel(type: .product(productId: card.id, startDate: startDate, endDate: endDate), model: Model.shared)
+        let printFormView = PrintFormView(viewModel: printFormViewModel)
+        let printFormviewController = UIHostingController(rootView: printFormView)
+        
+        present(printFormviewController, animated: true)
     }
     
     //MARK: - Animation

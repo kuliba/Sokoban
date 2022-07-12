@@ -95,6 +95,11 @@ struct ProductProfileView: View {
                     switch link {
                     case .productInfo(let productInfoViewModel):
                         InfoProductView(viewModel: productInfoViewModel)
+                        
+                    case let .productStatement(productStatementViewModel):
+                        ProductStatementView(viewModel: productStatementViewModel)
+                            .navigationBarTitle("", displayMode: .inline)
+                            .navigationBarBackButtonHidden(true)
                     }
                 }
             }
@@ -114,6 +119,11 @@ struct ProductProfileView: View {
                     .padding(.horizontal, 20)
                     .padding(.top, 26)
                     .padding(.bottom, 72)
+                
+            case let .meToMe(meToMeViewModel):
+                MeToMeView(viewModel: meToMeViewModel)
+                    .edgesIgnoringSafeArea(.bottom)
+                    .frame(height: 540)
             }
         })
     }

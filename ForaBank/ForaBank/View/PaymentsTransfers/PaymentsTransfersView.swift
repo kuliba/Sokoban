@@ -73,7 +73,7 @@ struct PaymentsTransfersView: View {
                             .edgesIgnoringSafeArea(.all)
                         
                     case let .country(countryData):
-                        CountryPaymentView(viewModel: .init(countryData: countryData))
+                        CountryPaymentView(viewModel: countryData)
                             .navigationBarTitle("", displayMode: .inline)
                             .edgesIgnoringSafeArea(.all)
                         

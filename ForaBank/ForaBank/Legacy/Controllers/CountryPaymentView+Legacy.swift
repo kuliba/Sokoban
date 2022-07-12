@@ -17,7 +17,8 @@ extension CountryPaymentView {
         let paymentType: PaymentType
         let bank: BanksList?
         var paymentTemplate: PaymentTemplateData? = nil
-
+        var operatorsViewModel: OperatorsViewModel? = nil
+        
         struct AddressViewModel {
             
             let firstName: String
@@ -37,8 +38,8 @@ extension CountryPaymentView {
             case template(templateViewModel: PaymentTemplateData)
         }
         
-        init(countryData: PaymentCountryData) {
-            
+        init(countryData: PaymentCountryData, operatorsViewModel: OperatorsViewModel) {
+            self.operatorsViewModel = operatorsViewModel
             if let phoneNumber = countryData.phoneNumber {
                 
                 paymentType = .withOutAddress(withOutViewModel: .init(phoneNumber: phoneNumber))

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CloudKit
 
 //MARK: - Actions
 
@@ -106,6 +107,21 @@ extension ModelAction {
                 
                 case success(productDetails: ProductDetailsData)
                 case failure(message: String)
+            }
+        }
+        
+        enum StatementPrintForm {
+            
+            struct Request: Action {
+                
+                let productId: ProductData.ID
+                let startDate: Date
+                let endDate: Date
+            }
+            
+            struct Response: Action {
+                
+                let result: Result<Data, Error>
             }
         }
     }
@@ -596,6 +612,75 @@ extension Model {
             case .failure(let error):
                 self.handleServerCommandError(error: error, command: command)
             }
+        }
+    }
+    
+    func handleProductsStatementPrintFormRequest(_ payload: ModelAction.Products.StatementPrintForm.Request) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        guard let product = products.value.values.flatMap({ $0 }).first(where: { $0.id == payload.productId}) else {
+            return
+        }
+        
+        switch product {
+        case let cardProduct as ProductCardData:
+            let command = ServerCommands.CardController.GetPrintFormForCardStatement(token: token, payload: .init(id: cardProduct.id, startDate: payload.startDate, endDate: payload.endDate))
+            serverAgent.executeDownloadCommand(command: command) {[unowned self] result in
+                
+                switch result {
+                case .success(let data):
+                    action.send(ModelAction.Products.StatementPrintForm.Response(result: .success(data)))
+                    
+                case .failure(let error):
+                    action.send(ModelAction.Products.StatementPrintForm.Response(result: .failure(error)))
+                }
+            }
+            
+        case let accountProduct as ProductAccountData:
+            let command = ServerCommands.AccountController.GetPrintFormForAccountStatement(token: token, payload: .init(id: accountProduct.id, startDate: payload.startDate, endDate: payload.endDate))
+            serverAgent.executeDownloadCommand(command: command) {[unowned self] result in
+                
+                switch result {
+                case .success(let data):
+                    action.send(ModelAction.Products.StatementPrintForm.Response(result: .success(data)))
+                    
+                case .failure(let error):
+                    action.send(ModelAction.Products.StatementPrintForm.Response(result: .failure(error)))
+                }
+            }
+            
+        case let depositProduct as ProductDepositData:
+            let command = ServerCommands.AccountController.GetPrintFormForAccountStatement(token: token, payload: .init(id: depositProduct.accountId, startDate: payload.startDate, endDate: payload.endDate))
+            serverAgent.executeDownloadCommand(command: command) {[unowned self] result in
+                
+                switch result {
+                case .success(let data):
+                    action.send(ModelAction.Products.StatementPrintForm.Response(result: .success(data)))
+                    
+                case .failure(let error):
+                    action.send(ModelAction.Products.StatementPrintForm.Response(result: .failure(error)))
+                }
+            }
+            
+        case let loanProduct as ProductLoanData:
+            let command = ServerCommands.AccountController.GetPrintFormForAccountStatement(token: token, payload: .init(id: loanProduct.settlementAccountId, startDate: payload.startDate, endDate: payload.endDate))
+            serverAgent.executeDownloadCommand(command: command) {[unowned self] result in
+                
+                switch result {
+                case .success(let data):
+                    action.send(ModelAction.Products.StatementPrintForm.Response(result: .success(data)))
+                    
+                case .failure(let error):
+                    action.send(ModelAction.Products.StatementPrintForm.Response(result: .failure(error)))
+                }
+            }
+            
+        default:
+            return
         }
     }
 }
