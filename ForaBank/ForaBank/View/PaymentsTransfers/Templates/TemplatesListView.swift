@@ -136,7 +136,7 @@ struct TemplatesListView: View {
                                 ProductProfileView(viewModel: productProfileViewModel)
                                 
                             case .betweenTheir(let meToMeViewModel):
-                                MeToMeView(viewModel: .init(closeAction: {}, paymentTemplate: meToMeViewModel.paymentTemplate))
+                                MeToMeView(viewModel: meToMeViewModel)
                                     .navigationBarHidden(false)
                                     .edgesIgnoringSafeArea(.bottom)
                             }
@@ -187,7 +187,7 @@ struct TemplatesListView: View {
             switch sheet.type {
             case .betweenTheir(let meToMeViewModel):
                 NavigationView {
-                    MeToMeView(viewModel: .init(closeAction: {}, paymentTemplate: meToMeViewModel.paymentTemplate))
+                    MeToMeView(viewModel: meToMeViewModel)
                         .navigationBarTitle("", displayMode: .inline)
                         .navigationBarBackButtonHidden(true)
                         .edgesIgnoringSafeArea(.all)

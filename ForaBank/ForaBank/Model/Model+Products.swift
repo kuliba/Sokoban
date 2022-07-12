@@ -124,6 +124,19 @@ extension ModelAction {
                 let result: Result<Data, Error>
             }
         }
+        
+        enum DepositConditionsPrintForm {
+       
+            struct Request: Action {
+                
+                let depositId: ProductData.ID
+            }
+            
+            struct Response: Action {
+                
+                let result: Result<Data, Error>
+            }
+        }
     }
     
     enum Loans {
@@ -681,6 +694,26 @@ extension Model {
             
         default:
             return
+        }
+    }
+    
+    func handleProductsDepositConditionPrintFormRequest(_ payload: ModelAction.Products.DepositConditionsPrintForm.Request) {
+        
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.DepositController.GetPrintFormForDepositConditions(token: token, depositId: payload.depositId)
+        serverAgent.executeDownloadCommand(command: command) {[unowned self] result in
+            
+            switch result {
+            case .success(let data):
+                action.send(ModelAction.Products.DepositConditionsPrintForm.Response(result: .success(data)))
+                
+            case .failure(let error):
+                action.send(ModelAction.Products.DepositConditionsPrintForm.Response(result: .failure(error)))
+            }
         }
     }
 }

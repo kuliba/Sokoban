@@ -45,9 +45,6 @@ extension ProductProfileOptionsPannelView {
                 
             case .refillFromOtherProduct:
                 return .init(icon: .init(image: .ic24Between, background: .circle), title: .init(text: "Со своего счета", style: .bold), orientation: .horizontal, action: action)
-                
-            case .refillFromCardOtherBank:
-                return .init(icon: .init(image: .ic24CreditCard, background: .circle), title: .init(text: "С карты другого банка", style: .bold), orientation: .horizontal, action: action)
 
             case .requisites:
                 switch productType {
@@ -118,7 +115,6 @@ extension ProductProfileOptionsPannelView {
             
             case refillFromOtherBank
             case refillFromOtherProduct
-            case refillFromCardOtherBank
             case requisites
             case statement
             case info

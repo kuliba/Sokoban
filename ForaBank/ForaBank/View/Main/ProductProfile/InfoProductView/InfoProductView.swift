@@ -92,6 +92,9 @@ struct InfoProductView: View {
         }, content: {
             ActivityViewController(itemsToShare: viewModel.list)
         })
+        .alert(item: $viewModel.alert, content: { alertViewModel in
+            Alert(with: alertViewModel)
+        })
     }
 }
 

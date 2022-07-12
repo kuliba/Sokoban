@@ -641,6 +641,7 @@
 		770DCE9827BC0475004099C1 /* AuthPinCodeViewModel+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770DCE9727BC0475004099C1 /* AuthPinCodeViewModel+Preview.swift */; };
 		77178A6F27C1F07F0095CF8C /* PaymentsDataModel+Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77178A6E27C1F07F0095CF8C /* PaymentsDataModel+Service.swift */; };
 		77178A7127C1F32E0095CF8C /* PaymentsDataModel+Operator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77178A7027C1F32E0095CF8C /* PaymentsDataModel+Operator.swift */; };
+		77246B3B287DAB5E00219F17 /* MeToMeExternalView+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77246B3A287DAB5E00219F17 /* MeToMeExternalView+Legacy.swift */; };
 		7728A1792835004600EE4CA6 /* MainSectionProductsGroupViewComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7728A1782835004600EE4CA6 /* MainSectionProductsGroupViewComponent.swift */; };
 		7728A17D283632D600EE4CA6 /* MainProductsGroupSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7728A17C283632D600EE4CA6 /* MainProductsGroupSettings.swift */; };
 		77333DA1283E9CEA00C3036F /* Model+Rates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77333DA0283E9CEA00C3036F /* Model+Rates.swift */; };
@@ -2013,6 +2014,7 @@
 		770DCE9727BC0475004099C1 /* AuthPinCodeViewModel+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthPinCodeViewModel+Preview.swift"; sourceTree = "<group>"; };
 		77178A6E27C1F07F0095CF8C /* PaymentsDataModel+Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsDataModel+Service.swift"; sourceTree = "<group>"; };
 		77178A7027C1F32E0095CF8C /* PaymentsDataModel+Operator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentsDataModel+Operator.swift"; sourceTree = "<group>"; };
+		77246B3A287DAB5E00219F17 /* MeToMeExternalView+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MeToMeExternalView+Legacy.swift"; sourceTree = "<group>"; };
 		7728A1782835004600EE4CA6 /* MainSectionProductsGroupViewComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSectionProductsGroupViewComponent.swift; sourceTree = "<group>"; };
 		7728A17C283632D600EE4CA6 /* MainProductsGroupSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainProductsGroupSettings.swift; sourceTree = "<group>"; };
 		77333DA0283E9CEA00C3036F /* Model+Rates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Model+Rates.swift"; sourceTree = "<group>"; };
@@ -4776,6 +4778,7 @@
 				0BB673A62858850100C54E15 /* MobilePayView.swift */,
 				68629334284E558D00B25EB6 /* TransferByPhoneView+Legacy.swift */,
 				77DA206328453ADB00D7E005 /* MeToMeView+Legacy.swift */,
+				77246B3A287DAB5E00219F17 /* MeToMeExternalView+Legacy.swift */,
 				68ECC2B9285C580900A95CE8 /* PhonePaymentView+Legacy.swift */,
 				68ECC2BD285C693500A95CE8 /* CountryPaymentView+Legacy.swift */,
 				68F5E1232858F1B0003018E5 /* TransferByRequisitsView+Legacy.swift */,
@@ -8382,6 +8385,7 @@
 				0B931B1E26DCD83B00CA8017 /* GKHAdditionalListModel.swift in Sources */,
 				A5C7A1B1275BF0B9003BEF6D /* InternetTVApiRequests.swift in Sources */,
 				0BF34866269444D9005138A8 /* AllCardCell.swift in Sources */,
+				77246B3B287DAB5E00219F17 /* MeToMeExternalView+Legacy.swift in Sources */,
 				77A6A9D927F473CB00CE7E28 /* PlacesView.swift in Sources */,
 				7784D2A8285B73F600E81005 /* LineProgressView.swift in Sources */,
 				774A8B662865FDAF00B81140 /* PaymentsInfoViewComponent.swift in Sources */,

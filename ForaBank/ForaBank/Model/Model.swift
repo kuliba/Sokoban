@@ -406,6 +406,9 @@ class Model {
                 case let payload as ModelAction.Products.StatementPrintForm.Request:
                     handleProductsStatementPrintFormRequest(payload)
                     
+                case let payload as ModelAction.Products.DepositConditionsPrintForm.Request:
+                    handleProductsDepositConditionPrintFormRequest(payload)
+                    
                     //MARK: - Statement
                     
                 case let payload as ModelAction.Statement.List.Request:
