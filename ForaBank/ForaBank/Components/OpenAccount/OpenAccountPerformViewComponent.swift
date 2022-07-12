@@ -127,6 +127,8 @@ extension OpenAccountPerformView {
 
                             prepareData = OpenAccountPrepareViewModel.reduce(data: data)
                             operationType = .edit
+                            
+                            model.action.send(OpenAccountPerformAction.CurrencyEdit())
 
                         case let .failed(error: error):
                             
@@ -155,12 +157,14 @@ extension OpenAccountPerformView {
 
                         case let .failed(error: error):
                             
+                            confirm.isResendCode = true
+                            
                             handleRawResponse(error: error)
                             self.action.send(OpenAccountPerformAction.Alert.Error(error: error))
                         }
 
                     case let payload as ModelAction.Auth.VerificationCode.PushRecieved:
-
+                        
                         confirm.enterCode = payload.code
                         confirmCode = payload.code
 
@@ -189,7 +193,7 @@ extension OpenAccountPerformView {
 
                         operationType = .confirm
                         
-                        let verificationCode = confirmCode.isEmpty == true ? confirm.enterCode : confirmCode
+                        let verificationCode = confirm.enterCode.isEmpty == true ? confirmCode : confirm.enterCode
                         
                         model.action.send(ModelAction.Account.MakeOpenAccount.Request(
                             verificationCode: verificationCode,
@@ -497,6 +501,8 @@ enum OpenAccountPerformAction {
 
         let code: String
     }
+    
+    struct CurrencyEdit: Action {}
 
     enum Alert {
 
