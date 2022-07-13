@@ -190,13 +190,23 @@ extension Model {
     
     func accountInformerDismissTime(error: Model.ProductsListError) -> TimeInterval {
         
+        let rawValue = accountRawResponse(error: error)
+        
+        switch rawValue {
+        default:
+            return 0
+        }
+    }
+    
+    func messageError(error: Model.ProductsListError) -> String {
+        
         var messageError = ""
         
         switch error {
         case .emptyData(message: let message):
             
             guard let message = message else {
-                return 0
+                return ""
             }
             
             messageError = message
@@ -204,7 +214,7 @@ extension Model {
         case let .statusError(_, message: message):
             
             guard let message = message else {
-                return 0
+                return ""
             }
             
             messageError = message
@@ -216,14 +226,16 @@ extension Model {
             break
         }
         
-        guard let rawValue = OpenAccountRawResponse(rawValue: messageError) else {
-            return 0
+        return messageError
+    }
+    
+    func accountRawResponse(error: Model.ProductsListError) -> OpenAccountRawResponse {
+        
+        guard let rawValue = OpenAccountRawResponse(rawValue: messageError(error: error)) else {
+            return .none
         }
         
-        switch rawValue {
-        default:
-            return 0
-        }
+        return rawValue
     }
 }
 

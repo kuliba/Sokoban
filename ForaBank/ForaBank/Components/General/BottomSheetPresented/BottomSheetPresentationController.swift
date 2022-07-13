@@ -74,19 +74,17 @@ final class BottomSheetPresentationController: UIPresentationController {
 
     override var frameOfPresentedViewInContainerView: CGRect {
 
-        guard let containerView = containerView,
-              let window = UIApplication.shared.windows.filter({ $0.isKeyWindow }).first else {
-                  return .zero
-              }
+        guard let containerView = containerView else {
+            return .zero
+        }
 
         let height = min(sizeThatFits.height, containerView.frame.height * multiplier)
         let contentHeight: CGFloat = containerView.bounds.height - height
-        let topDragOffset: CGFloat = 42
 
         return CGRect(x: 0,
-                      y: contentHeight - topDragOffset + window.safeAreaInsets.bottom,
+                      y: contentHeight,
                       width: containerView.bounds.width,
-                      height: height + topDragOffset)
+                      height: height)
     }
     
     private func configure() {
@@ -120,7 +118,7 @@ final class BottomSheetPresentationController: UIPresentationController {
             topContainerView.topAnchor.constraint(equalTo: presentedView.topAnchor),
             topContainerView.leadingAnchor.constraint(equalTo: presentedView.leadingAnchor),
             topContainerView.trailingAnchor.constraint(equalTo: presentedView.trailingAnchor),
-            topContainerView.heightAnchor.constraint(equalToConstant: 21)
+            topContainerView.heightAnchor.constraint(equalToConstant: 29)
         ])
 
         NSLayoutConstraint.activate([
