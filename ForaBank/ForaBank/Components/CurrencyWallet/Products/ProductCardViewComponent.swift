@@ -26,6 +26,7 @@ extension ProductCardView {
         var bindings = Set<AnyCancellable>()
         
         let title: String
+        let isDividerHiddable: Bool
         
         var isExpanded: Bool {
             
@@ -41,7 +42,8 @@ extension ProductCardView {
              name: String,
              balance: String,
              numberCard: NumberCardViewModel,
-             state: State) {
+             state: State,
+             isDividerHiddable: Bool = false) {
             
             self.title = title
             self.cardIcon = cardIcon
@@ -50,6 +52,7 @@ extension ProductCardView {
             self.balance = balance
             self.numberCard = numberCard
             self.state = state
+            self.isDividerHiddable = isDividerHiddable
             
             bind()
         }
@@ -120,59 +123,72 @@ struct ProductCardView: View {
         
         VStack(alignment: .leading, spacing: 12) {
             
-            Text(viewModel.title)
+            Group {
+                
+                Text(viewModel.title)
                     .font(.textBodySR12160())
                     .foregroundColor(.textPlaceholder)
-            
-            HStack(alignment: .top, spacing: 16) {
-               
-                viewModel.cardIcon
-                    .resizable()
-                    .frame(width: 32, height: 32)
-                    .offset(y: -3)
                 
-                VStack(alignment: .leading, spacing: 0) {
+                HStack(alignment: .top, spacing: 16) {
                     
-                    HStack(alignment: .center, spacing: 10) {
-                        
-                        viewModel.logoIcon
-                            .frame(width: 24, height: 24)
-                        
-                        Text(viewModel.name)
-                            .font(.textBodyMM14200())
-                            .foregroundColor(.textSecondary)
-                        
-                        Spacer()
-                        
-                        Text(viewModel.balance)
-                            .font(.textBodyMM14200())
-                            .foregroundColor(.textSecondary)
-                        
-                        Image.ic24ChevronDown
-                            .renderingMode(.template)
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                            .foregroundColor(.mainColorsGray)
-                            .rotationEffect(viewModel.isExpanded ? .degrees(0) : .degrees(-90))
-                    }
+                    viewModel.cardIcon
+                        .resizable()
+                        .frame(width: 32, height: 32)
+                        .offset(y: -3)
                     
-                    HStack {
-                        NumberCardView(viewModel: viewModel.numberCard)
+                    VStack(alignment: .leading, spacing: 0) {
+                        
+                        HStack(alignment: .center, spacing: 10) {
+                            
+                            viewModel.logoIcon
+                                .frame(width: 24, height: 24)
+                            
+                            Text(viewModel.name)
+                                .font(.textBodyMM14200())
+                                .foregroundColor(.textSecondary)
+                            
+                            Spacer()
+                            
+                            Text(viewModel.balance)
+                                .font(.textBodyMM14200())
+                                .foregroundColor(.textSecondary)
+                            
+                            Image.ic24ChevronDown
+                                .renderingMode(.template)
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .foregroundColor(.mainColorsGray)
+                                .rotationEffect(viewModel.isExpanded ? .degrees(0) : .degrees(-90))
+                        }
+                        
+                        HStack {
+                            NumberCardView(viewModel: viewModel.numberCard)
+                        }
                     }
+                }.onTapGesture {
+                    
+                    viewModel.action.send(ProductAction.Toggle())
                 }
-            }.onTapGesture {
-                
-                viewModel.action.send(ProductAction.Toggle())
-            }
-            
-            Divider()
-                .padding(.top, 2)
+            }.padding(.horizontal, 20)
             
             switch viewModel.state {
             case .normal:
+                
+                if viewModel.isDividerHiddable == false {
+                    
+                    Divider()
+                        .padding(.top, 2)
+                        .padding(.horizontal, 20)
+                }
+                
                 EmptyView()
                 
             case .expanded(let model):
+                
+                Divider()
+                    .padding(.top, 2)
+                    .padding(.horizontal, 20)
+                
                 ProductsListView(viewModel: model)
                     .padding(.top, 8)
             }
@@ -256,7 +272,8 @@ extension ProductCardView.ViewModel {
         numberCard: .init(
             numberCard: "",
             description: "Валютный"),
-        state: .normal)
+        state: .normal,
+        isDividerHiddable: true)
 }
 
 // MARK: - Previews

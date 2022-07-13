@@ -30,7 +30,7 @@ struct CurrencyWalletView: View {
                     ProductCardView(viewModel: .sample1)
                     ProductCardView(viewModel: .sample3)
                     
-                }.padding(20)
+                }.padding(.vertical, 20)
                 
             }.padding(20)
         }

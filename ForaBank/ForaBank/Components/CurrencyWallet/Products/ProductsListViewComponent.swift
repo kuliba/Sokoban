@@ -46,7 +46,7 @@ struct ProductsListView: View {
                                     productId: product.id))
                         }
                 }
-            }
+            }.padding(.horizontal, 20)
         }
     }
 }
