@@ -57,19 +57,36 @@ class OpenAccountViewModel: ObservableObject {
                 case let payload as ModelAction.Account.PrepareOpenAccount.Response:
                     
                     switch payload {
+                    case .complete:
+                        
+                        setItemsHidden(true)
+                        
                     case .failed:
+                        
+                        setItemsHidden(false)
                         pagerViewModel.isUserInteractionEnabled = true
-                    default:
-                        break
                     }
                     
                 case let payload as ModelAction.Account.MakeOpenAccount.Response:
                     
                     switch payload {
                     case .complete:
+                        
+                        setItemsHidden(false)
                         pagerViewModel.isUserInteractionEnabled = true
-                    default:
-                        break
+                        
+                    case .failed(error: let error):
+                        
+                        let rawValue = model.accountRawResponse(error: error)
+                        
+                        switch rawValue {
+                        case .exhaust:
+                            setItemsHidden(false)
+                            pagerViewModel.isUserInteractionEnabled = true
+                            
+                        default:
+                            break
+                        }
                     }
 
                 default:
@@ -95,6 +112,19 @@ class OpenAccountViewModel: ObservableObject {
                 currencyName = currencyType.rawValue
 
             }.store(in: &bindings)
+    }
+    
+    private func setItemsHidden(_ isHidden: Bool) {
+        
+        guard let currentItem = currentItem else {
+            return
+        }
+        
+        items
+            .filter { $0.id != currentItem.id }
+            .forEach { item in
+                item.isHidden = isHidden
+            }
     }
 }
 

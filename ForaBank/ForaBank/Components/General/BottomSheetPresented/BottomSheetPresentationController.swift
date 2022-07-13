@@ -118,7 +118,7 @@ final class BottomSheetPresentationController: UIPresentationController {
             topContainerView.topAnchor.constraint(equalTo: presentedView.topAnchor),
             topContainerView.leadingAnchor.constraint(equalTo: presentedView.leadingAnchor),
             topContainerView.trailingAnchor.constraint(equalTo: presentedView.trailingAnchor),
-            topContainerView.heightAnchor.constraint(equalToConstant: 21)
+            topContainerView.heightAnchor.constraint(equalToConstant: 29)
         ])
 
         NSLayoutConstraint.activate([

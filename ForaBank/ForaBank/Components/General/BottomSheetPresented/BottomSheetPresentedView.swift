@@ -38,7 +38,7 @@ extension View {
 
             if let unwrapedItem = item.wrappedValue {
                 content(unwrapedItem)
-                    .padding(.top, 21)
+                    .padding(.top, 29)
             }
         }
     }
