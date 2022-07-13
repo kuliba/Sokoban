@@ -127,8 +127,6 @@ extension OpenAccountPerformView {
 
                             prepareData = OpenAccountPrepareViewModel.reduce(data: data)
                             operationType = .edit
-                            
-                            model.action.send(OpenAccountPerformAction.CurrencyEdit())
 
                         case let .failed(error: error):
                             
@@ -165,8 +163,9 @@ extension OpenAccountPerformView {
 
                     case let payload as ModelAction.Auth.VerificationCode.PushRecieved:
                         
+                        confirm.confirmCode = payload.code
                         confirm.enterCode = payload.code
-                        confirmCode = payload.code
+                        confirm.textFieldToolbar.text = payload.code
 
                     default:
                         break
@@ -251,14 +250,6 @@ extension OpenAccountPerformView {
                 .sink { [unowned self] prepareData in
 
                     confirm.prepareData = prepareData
-
-                }.store(in: &bindings)
-
-            $confirmCode
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] confirmCode in
-
-                    confirm.confirmCode = confirmCode
 
                 }.store(in: &bindings)
 
@@ -501,8 +492,6 @@ enum OpenAccountPerformAction {
 
         let code: String
     }
-    
-    struct CurrencyEdit: Action {}
 
     enum Alert {
 

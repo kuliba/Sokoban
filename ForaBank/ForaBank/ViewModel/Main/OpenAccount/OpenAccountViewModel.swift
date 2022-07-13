@@ -51,14 +51,26 @@ class OpenAccountViewModel: ObservableObject {
             .sink { [unowned self] action in
 
                 switch action {
-                case _ as ModelAction.Account.PrepareOpenAccount.Request,
-                     _ as ModelAction.Account.MakeOpenAccount.Request,
-                     _ as OpenAccountPerformAction.CurrencyEdit:
+                case _ as ModelAction.Account.PrepareOpenAccount.Request:
                     pagerViewModel.isUserInteractionEnabled = false
 
-                case _ as ModelAction.Account.PrepareOpenAccount.Response,
-                     _ as ModelAction.Account.MakeOpenAccount.Response:
-                    pagerViewModel.isUserInteractionEnabled = true
+                case let payload as ModelAction.Account.PrepareOpenAccount.Response:
+                    
+                    switch payload {
+                    case .failed:
+                        pagerViewModel.isUserInteractionEnabled = true
+                    default:
+                        break
+                    }
+                    
+                case let payload as ModelAction.Account.MakeOpenAccount.Response:
+                    
+                    switch payload {
+                    case .complete:
+                        pagerViewModel.isUserInteractionEnabled = true
+                    default:
+                        break
+                    }
 
                 default:
                     break

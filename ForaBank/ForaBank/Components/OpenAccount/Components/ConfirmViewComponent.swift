@@ -52,7 +52,7 @@ extension ConfirmView {
             }
         }()
 
-        lazy var timer: TimerView.ViewModel = makeTimer(delay: TimeInterval(prepareData.otpResendTime))
+        var timerViewModel: TimerView.ViewModel?
 
         var color: Color {
 
@@ -84,14 +84,30 @@ extension ConfirmView {
                     let confirmCode = data.0
                     let prepareData = data.1
 
-                    let equalityOTPLength = confirmCode.count == prepareData.otpLength
-
-                    timer = makeTimer(delay: TimeInterval(prepareData.otpResendTime))
+                    textFieldToolbar.doneButton.isEnabled = confirmCode.count == prepareData.otpLength
+                    
                     isResendCode = false
-
-                    textFieldToolbar.text = confirmCode
-                    textFieldToolbar.doneButton.isEnabled = equalityOTPLength
-
+                    
+                    if confirmCode.isEmpty == false {
+                        timerViewModel = nil
+                    }
+                    
+                }.store(in: &bindings)
+            
+            $isResendCode
+                .combineLatest($prepareData)
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] data in
+                    
+                    let isResendCode = data.0
+                    let prepareData = data.1
+                    
+                    guard confirmCode.isEmpty == true, isResendCode == false, prepareData.otpResendTime > 0 else {
+                        return
+                    }
+                    
+                    timerViewModel = makeTimer(delay: TimeInterval(prepareData.otpResendTime))
+                    
                 }.store(in: &bindings)
 
             textFieldToolbar.$text
@@ -162,7 +178,9 @@ struct ConfirmView: View {
 
                         if viewModel.isResendCode == false {
 
-                            TimerView(viewModel: viewModel.timer)
+                            if let timer = viewModel.timerViewModel {
+                                TimerView(viewModel: timer)
+                            }
 
                         } else {
 
