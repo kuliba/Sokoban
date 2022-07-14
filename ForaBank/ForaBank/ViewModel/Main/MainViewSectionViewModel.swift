@@ -102,16 +102,21 @@ enum MainSectionViewModelAction {
     
     enum CurrencyMetall {
  
-        enum ItemDashboardDidTapped  {
+        enum DidTapped  {
+            
+            struct Item: Action {
+                
+                let code: Currency
+            }
             
             struct Buy: Action {
                 
-                let itemData: String
+                let code: Currency
             }
             
             struct Sell: Action  {
                 
-                let itemData: String
+                let code: Currency
             }
         }
     }

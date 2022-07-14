@@ -20,21 +20,24 @@ extension MainSectionCurrencyMetallView {
         
         @Published var content: Content
         @Published var selector: OptionSelectorView.ViewModel?
+        @Published var items: [ItemViewModel]
         
         enum Content {
             
             case placeholders
-            case items([CurrencyMetallItemView.ViewModel])
+            case items([ItemViewModel])
         }
-        
-        private var items: [CurrencyMetallItemView.ViewModel] = []
 
         private let model: Model
         private var bindings = Set<AnyCancellable>()
         
-        internal init(content: Content, selector: OptionSelectorView.ViewModel?, model: Model = .emptyMock, isCollapsed: Bool) {
+        internal init(content: Content, items: [ItemViewModel] = [],
+                      selector: OptionSelectorView.ViewModel?,
+                      model: Model = .emptyMock,
+                      isCollapsed: Bool) {
             
             self.content = content
+            self.items = items
             self.selector = selector
             self.model = model
             super.init(isCollapsed: isCollapsed)
@@ -45,61 +48,129 @@ extension MainSectionCurrencyMetallView {
             self.content = .placeholders
             self.selector = nil
             self.model = model
+            self.items = []
             super.init(isCollapsed: false)
             
             bind()
         }
         
-        convenience init() {
-            
-            self.init(content: .items([]), selector: nil, isCollapsed: false)
-            self.content = .items(self.sampleItems)
-        }
-        
-        
-        lazy var sampleItems: [CurrencyMetallItemView.ViewModel] =
-           
-            [.init(type: .currency,
-                   mainImg: Image("Flag USD"),
-                   title: "USD",
-                   subtitle: "Доллар",
-                   topDashboard: .init(kindImage: .down, valueText: "68,19", type: .buy, action: { [weak self] in
-                                    self?.action.send(MainSectionViewModelAction
-                                                        .CurrencyMetall
-                                                        .ItemDashboardDidTapped.Buy(itemData: "USD"))}),
-                   bottomDashboard: .init(kindImage: .up, valueText: "69,45", type: .sell, action: { [weak self] in
-                                    self?.action.send(MainSectionViewModelAction
-                                                        .CurrencyMetall
-                                                        .ItemDashboardDidTapped.Sell(itemData: "USD"))} )),
-             .init(type: .currency,
-                   mainImg: Image("Flag EUR"),
-                   title: "EUR",
-                   subtitle: "Евро",
-                   topDashboard: .init(kindImage: .up, valueText: "69,23", type: .buy, action: { [weak self] in
-                                    self?.action.send(MainSectionViewModelAction
-                                                        .CurrencyMetall
-                                                        .ItemDashboardDidTapped.Buy(itemData: "EUR"))}),
-                   bottomDashboard: .init(kindImage: .up, valueText: "70,01", type: .sell, action: { [weak self] in
-                                    self?.action.send(MainSectionViewModelAction
-                                                        .CurrencyMetall
-                                                        .ItemDashboardDidTapped.Sell(itemData: "EUR"))})),
-             .init(type: .currency,
-                   mainImg: Image("Flag CHF"),
-                   title: "CHF",
-                   subtitle: "Франк",
-                   topDashboard: .init(kindImage: .down, valueText: "64,89", type: .buy, action: { [weak self] in
-                                    self?.action.send(MainSectionViewModelAction
-                                                        .CurrencyMetall
-                                                        .ItemDashboardDidTapped.Buy(itemData: "CHF"))}),
-                   bottomDashboard: .init(kindImage: .up, valueText: "65,09", type: .sell, action: { [weak self] in
-                                    self?.action.send(MainSectionViewModelAction
-                                                        .CurrencyMetall
-                                                        .ItemDashboardDidTapped.Sell(itemData: "CHF"))}))]
-        
 //MARK: Bindings
         
         private func bind() {
-            //TODO:
+            
+            model.dictionariesUpdating
+                .receive(on: DispatchQueue.main)
+                .sink { dictUpdatingSet in
+                
+                    updateContent(dictUpdatingSet)
+            }
+            .store(in: &bindings)
+            
+            model.currencyWalletList
+                .combineLatest(model.currencyList)
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] data in
+                
+                    let list = data.0
+                    let dict = data.1
+                
+                    let result = reduce(list: list,
+                                        dict: dict,
+                                        itemAction: { [weak self] currency in
+                                            return { self?.action.send(
+                                                            MainSectionViewModelAction
+                                                            .CurrencyMetall
+                                                            .DidTapped
+                                                            .Item(code: currency))} },
+                                        buyAction: { [weak self] currency in
+                                            return { self?.action.send(
+                                                            MainSectionViewModelAction
+                                                            .CurrencyMetall
+                                                            .DidTapped
+                                                            .Buy(code: currency)) } },
+                                        sellAction: { [weak self] currency in
+                                            return  { self?.action.send(
+                                                            MainSectionViewModelAction
+                                                            .CurrencyMetall
+                                                            .DidTapped
+                                                            .Sell(code: currency)) }})
+                    self.items = result.items
+                
+                    if !result.imagesMd5ToUpload.isEmpty {
+                        model.action.send(ModelAction.Dictionary.DownloadImages
+                                        .Request(imagesIds: result.imagesMd5ToUpload))
+                    }
+            }
+            .store(in: &bindings)
+        
+            $items
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self] items in
+
+                    updateContent(model.dictionariesUpdating.value)
+
+                }.store(in: &bindings)
+
+            model.images
+                .receive(on: DispatchQueue.main)
+                .sink { [unowned self ] images in
+                    let emptyImg = self.items.filter { $0.mainImg.img == nil }
+                
+                    guard !emptyImg.isEmpty else { return }
+                    withAnimation {
+                        self.items.forEach { $0.mainImg.img = images[$0.mainImg.md5]?.image }
+                    }
+            }
+            .store(in: &bindings)
+            
+            func updateContent(_ dictUpdatingSet: Set<DictionaryType>) {
+                
+                if dictUpdatingSet.contains(.currencyWalletList) || self.items.isEmpty {
+
+                    withAnimation {
+                        self.content = .placeholders
+                    }
+
+                } else {
+                    
+                    withAnimation {
+                        self.content = .items(self.items)
+                    }
+                }
+            }
+        }
+        
+//MARK: Reduce Items
+        private func reduce(list: [CurrencyWalletData],
+                            dict: [CurrencyData],
+                            itemAction: @escaping (Currency) -> (() -> Void),
+                            buyAction: @escaping (Currency) -> (() -> Void),
+                            sellAction: @escaping (Currency) -> (() -> Void)) ->
+                                                                   (items: [ItemViewModel],
+                                                                    imagesMd5ToUpload: [String]) {
+                    
+            let items = list.map { item in
+                ItemViewModel(type: .currency,
+                              mainImg: (item.md5hash, model.images.value[item.md5hash]?.image),
+                              title: item.code,
+                              subtitle: dict.first(where: { $0.code == item.code })?.shortName ?? "",
+                              action: itemAction(Currency(description: item.code)),
+                              topDashboard: .init(kindImage: item.rateBuyDelta > 0 ? .up
+                                                           : item.rateBuyDelta == 0 ? .no : .down,
+                                                  valueText: String(item.rateBuy),
+                                                  type: .buy,
+                                                  action: buyAction(Currency(description: item.code)) ),
+                              bottomDashboard: .init(kindImage: item.rateSellDelta > 0 ? .up
+                                                              : item.rateSellDelta == 0 ? .no : .down,
+                                                     valueText: String(item.rateSell),
+                                                     type: .sell,
+                                                     action: sellAction(Currency(description: item.code)) ))
+            }
+                    
+            let imagesMd5ToUpload = items.filter { $0.mainImg.img == nil }
+                                         .map { $0.mainImg.md5 }
+                    
+            return (items, imagesMd5ToUpload)
         }
         
     }
@@ -129,7 +200,7 @@ struct MainSectionCurrencyMetallView: View {
                     switch viewModel.content {
                     case .placeholders:
                         
-                        PlaceholdersView()
+                        PlaceholderItemView()
                             .padding(.horizontal, 20)
                         
                     case let .items(items):
@@ -151,19 +222,24 @@ struct MainSectionCurrencyMetallView: View {
     }
 }
 
-extension MainSectionCurrencyMetallView.CurrencyMetallItemView {
+extension MainSectionCurrencyMetallView.ViewModel {
         
-    class ViewModel: ObservableObject, Identifiable {
+    class ItemViewModel: ObservableObject, Identifiable {
         
         let id = UUID()
         let type: ItemType
-        let mainImg: Image
+        @Published
+        var mainImg: (md5: String, img: Image?)
         let title: String
         let subtitle: String
+        let action: () -> Void
         let topDashboard: DashboardViewModel
         let bottomDashboard: DashboardViewModel
         
-        init(type: ItemType, mainImg: Image, title: String, subtitle: String,
+        init(type: ItemType,
+             mainImg: (md5: String, img: Image?),
+             title: String, subtitle: String,
+             action: @escaping () -> Void,
              topDashboard: DashboardViewModel,
              bottomDashboard: DashboardViewModel) {
             
@@ -171,6 +247,7 @@ extension MainSectionCurrencyMetallView.CurrencyMetallItemView {
             self.mainImg = mainImg
             self.title = title
             self.subtitle = subtitle
+            self.action = action
             self.topDashboard = topDashboard
             self.bottomDashboard = bottomDashboard
             
@@ -191,6 +268,7 @@ extension MainSectionCurrencyMetallView.CurrencyMetallItemView {
         enum KindImage {
             case up
             case down
+            case no
         }
         
         enum DashboardType: String {
@@ -207,7 +285,7 @@ extension MainSectionCurrencyMetallView {
     
     struct CurrencyMetallItemView: View {
         
-        @ObservedObject var viewModel: ViewModel
+        @ObservedObject var viewModel: ViewModel.ItemViewModel
         
         var body: some View {
             
@@ -217,25 +295,36 @@ extension MainSectionCurrencyMetallView {
                     .frame(height: 124)
                 
                 HStack(spacing: 14) {
-                    
-                    VStack(spacing: 15) {
+                    Button(action: viewModel.action, label: {
+                        VStack(spacing: 15) {
                         
-                        viewModel.mainImg
-                            .resizable()
-                            .frame(width: 40, height: 40)
-                        
-                        VStack(spacing: 2) {
-                        
-                            Text(viewModel.title)
-                                .font(.textBodyMM14200())
-                                .foregroundColor(.textSecondary)
+                            if let mainImage = viewModel.mainImg.img {
                             
-                            Text(viewModel.subtitle)
-                                .font(.textBodySR12160())
-                                .foregroundColor(.textPlaceholder)
+                                mainImage
+                                    .resizable()
+                                    .frame(width: 40, height: 40)
+                            
+                            } else {
+                            
+                                Circle()
+                                    .fill(Color.mainColorsGrayMedium)
+                                    .frame(width: 40, height: 40)
+                                    .shimmering(active: true, bounce: false)
+                            }
+                        
+                            VStack(spacing: 2) {
+                        
+                                Text(viewModel.title)
+                                    .font(.textBodyMM14200())
+                                    .foregroundColor(.textSecondary)
+                            
+                                Text(viewModel.subtitle)
+                                    .font(.textBodySR12160())
+                                    .foregroundColor(.textPlaceholder)
                                 
-                        }.lineLimit(1)
-                    }
+                            }.lineLimit(1)
+                        }
+                    })
                     .frame(width: 65)
                     .padding(.leading, 15)
                     
@@ -251,47 +340,10 @@ extension MainSectionCurrencyMetallView {
             
         }
     }
-        
-    //MARK: DashboardView
-        
-    struct DashboardView: View {
-        
-        var viewModel: CurrencyMetallItemView.ViewModel.DashboardViewModel
-        
-        var body: some View {
-            
-            Button(action: viewModel.action) {
-                    
-                HStack(spacing: 8) {
-                        
-                    switch viewModel.kindImage {
-                    case .up: Image.ic16ArrowUp
-                                .resizable()
-                                .frame(width: 12, height: 12)
-                                .foregroundColor(.systemColorActive)
-                    
-                    case.down: Image.ic16ArrowDown
-                                .resizable()
-                                .frame(width: 12, height: 12)
-                                .foregroundColor(.iconRed)
-                    }
-                        
-                    VStack(alignment: .leading, spacing: 2) {
-                    
-                        Text(viewModel.valueText)
-                            .font(.textBodyMM14200())
-                            .foregroundColor(.textSecondary)
-                            
-                        Text(viewModel.type.rawValue)
-                            .font(.textBodySR12160())
-                            .foregroundColor(.textPlaceholder)
-                    }
-                }
-            }
-        }
-    }
     
-    struct PlaceholdersView: View {
+//PaceholderItemView
+    
+    struct PlaceholderItemView: View {
         
         var body: some View {
             
@@ -310,6 +362,51 @@ extension MainSectionCurrencyMetallView {
     
 }
 
+extension MainSectionCurrencyMetallView.CurrencyMetallItemView {
+
+    //MARK: DashboardView
+        
+    struct DashboardView: View {
+        
+        var viewModel: MainSectionCurrencyMetallView.ViewModel.ItemViewModel.DashboardViewModel
+        
+        var body: some View {
+            
+            Button(action: viewModel.action) {
+                    
+                HStack(spacing: 8) {
+                        
+                    switch viewModel.kindImage {
+                    case .up: Image.ic16ArrowUp
+                                .resizable()
+                                .frame(width: 12, height: 12)
+                                .foregroundColor(.systemColorActive)
+                    
+                    case .down: Image.ic16ArrowDown
+                                .resizable()
+                                .frame(width: 12, height: 12)
+                                .foregroundColor(.iconRed)
+                    
+                    case .no: Spacer().frame(width: 12, height: 12)
+                    }
+                        
+                    VStack(alignment: .leading, spacing: 2) {
+                    
+                        Text(viewModel.valueText)
+                            .font(.textBodyMM14200())
+                            .foregroundColor(.textSecondary)
+                            
+                        Text(viewModel.type.rawValue)
+                            .font(.textBodySR12160())
+                            .foregroundColor(.textPlaceholder)
+                    }
+                }
+            }
+        }
+    }
+}
+    
+
 //MARK: - Preview
 
 struct CurrencyMetallView_Previews: PreviewProvider {
@@ -318,45 +415,14 @@ struct CurrencyMetallView_Previews: PreviewProvider {
         
         Group {
             
-            MainSectionCurrencyMetallView(viewModel: .sample )
+            MainSectionCurrencyMetallView(viewModel: .sample)
                 .previewLayout(.fixed(width: 375, height: 300))
 
-            MainSectionCurrencyMetallView.PlaceholdersView()
+            MainSectionCurrencyMetallView.PlaceholderItemView()
                 .previewLayout(.fixed(width: 375, height: 300))
         }
     }
 }
-
-//MARK: - Preview Content
-
-extension MainSectionCurrencyMetallView.ViewModel {
-
-    static let sample = MainSectionCurrencyMetallView.ViewModel
-        .init(
-           content: .items(
-               [.init(type: .currency,
-                      mainImg: Image("Flag USD"),
-                      title: "USD",
-                      subtitle: "Доллар",
-                      topDashboard: .init(kindImage: .down, valueText: "68,19", type: .buy, action: {}),
-                      bottomDashboard: .init(kindImage: .up, valueText: "69,45", type: .sell, action: {} )),
-               .init(type: .currency,
-                     mainImg: Image("Flag EUR"),
-                     title: "EUR",
-                     subtitle: "Евро",
-                     topDashboard: .init(kindImage: .up, valueText: "69,23", type: .buy, action: {}),
-                     bottomDashboard: .init(kindImage: .up, valueText: "70,01", type: .sell, action: {})),
-               .init(type: .currency,
-                     mainImg: Image("Flag CHF"),
-                     title: "CHF",
-                     subtitle: "Франк",
-                     topDashboard: .init(kindImage: .down, valueText: "64,89", type: .buy, action: {}),
-                     bottomDashboard: .init(kindImage: .up, valueText: "65,09", type: .sell, action: {}))]),
-           selector: nil,
-           isCollapsed: false)
-
-}
-
 
 
 

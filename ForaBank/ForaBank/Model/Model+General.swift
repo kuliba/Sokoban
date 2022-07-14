@@ -53,18 +53,18 @@ extension Model {
     
     func handledUnauthorizedCommandAttempt(_ method: String = #function) {
         
-        print("Unauthorized Request Attempt, method: \(method)")
+        print("log: Unauthorized Request Attempt, method: \(method)")
     }
     
     func handleServerCommandStatus<Command: ServerCommand>(command: Command, serverStatusCode: ServerStatusCode, errorMessage: String?) {
         
         //TODO: handle unexpected server status
-        print("Unexpected status code: \(serverStatusCode), errorMessage: \(String(describing: errorMessage)), endpoint: \(command.endpoint)")
+        print("log: Unexpected status code: \(serverStatusCode), errorMessage: \(String(describing: errorMessage)), endpoint: \(command.endpoint)")
     }
 
     func handleServerCommandError<Command: ServerCommand>(error: Error, command: Command) {
         
-        print("DownloadError: \(error.localizedDescription), command: \(command)")
+        print("log: DownloadError: \(error.localizedDescription), command: \(command)")
         
     }
     
@@ -75,7 +75,7 @@ extension Model {
     
     func handleServerCommandEmptyData<Command: ServerCommand>(command: Command){
         
-        print("DownloadEmptyData command: \(command)")
+        print("log: DownloadEmptyData command: \(command)")
     }
 
     func handleSettingsCachingError(error: Error) {

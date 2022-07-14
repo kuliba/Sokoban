@@ -16,6 +16,7 @@ struct CurrencyData: Codable, Equatable {
     let htmlCode: String?
     let id: String
     let name: String
+    let shortName: String?
     let unicode: String?
 }
 
