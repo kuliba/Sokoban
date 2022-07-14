@@ -131,6 +131,7 @@ extension ContactInputViewController {
         
         let customViewItem = UIBarButtonItem(customView: UIImageView(image: navImage))
         self.navigationItem.rightBarButtonItem = customViewItem
+        self.parent?.navigationItem.rightBarButtonItem = customViewItem
         setupCurrencyButton(system: system)
     }
     

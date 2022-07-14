@@ -78,19 +78,11 @@ final class CardsScrollView: UIView {
         self.onlyMy = onlyMy
         self.onlyCard = onlyCard
         
-        let clientId = Model.shared.clientInfo.value?.id
-        
         if loadProducts {
+
+            let products = ReturnAllCardList.cards()
             
-            var products: [UserAllCardsModel] = []
-            let types: [ProductType] = [.card, .account, .deposit, .loan]
-            types.forEach { type in
-                products.append(contentsOf: self.model.products.value[type]?.map({ $0.userAllProducts()}) ?? [])
-            }
-            
-            let filteredProducts = products.filter({$0.ownerID == clientId})
-            
-            filteredProducts.forEach({ op in
+            products.forEach({ op in
                 if onlyCard {
                     if op.productType == "CARD" {
                         
@@ -102,10 +94,8 @@ final class CardsScrollView: UIView {
                             cardList.append(op)
                         }
                     } else {
-                        if (op.ownerID == clientId) {
                             
                             cardList.append(op)
-                        }
                     }
                 }
             })

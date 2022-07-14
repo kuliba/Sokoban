@@ -16,7 +16,6 @@ struct PaymentPhoneView: UIViewControllerRepresentable {
         
         let controller = PaymentByPhoneViewController(viewModel: viewModel)
         controller.modalPresentationStyle = .fullScreen
-        controller.viewModel.setBackAction = true
         
         context.coordinator.parentObserver = controller.observe(\.parent, changeHandler: { vc, _ in
             vc.parent?.navigationItem.title = vc.navigationItem.title

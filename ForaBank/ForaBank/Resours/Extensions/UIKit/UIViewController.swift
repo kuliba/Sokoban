@@ -145,7 +145,7 @@ extension UIViewController {
         navigationItem.rightBarButtonItem = button
     }
     func addCloseButton_3() {
-        let button = UIBarButtonItem(image: UIImage(systemName: "back_button"),
+        let button = UIBarButtonItem(image: UIImage(named: "back_button"),
                                      landscapeImagePhone: nil,
                                      style: .plain,
                                      target: self,
@@ -178,6 +178,7 @@ extension UIViewController {
     
     @objc func onClose(){
         self.dismiss(animated: true, completion: nil)
+        self.navigationController?.popViewController(animated: true)
     }
     
     static func loadFromNib() -> Self {

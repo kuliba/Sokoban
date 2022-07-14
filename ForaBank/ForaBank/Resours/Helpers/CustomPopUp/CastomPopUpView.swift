@@ -198,8 +198,8 @@ class MemeDetailVC: UIViewController {
                     paymentTemplateId: templateId))
                     
                 // FIXME: В рефактре нужно слушатель на обновление title
-                self.title = text
-                
+                    self.parent?.title = text
+
                 } else {
                     self.showAlert(with: "Ошибка", and: "В названии шаблона не должно быть более 20 символов")
                 }

@@ -109,7 +109,7 @@ struct CountryPaymentView: UIViewControllerRepresentable {
 
             case .contactAdressless:
                 vc = .init(paymentTemplate: templateViewModel)
-                
+
             default :
                 break
             }

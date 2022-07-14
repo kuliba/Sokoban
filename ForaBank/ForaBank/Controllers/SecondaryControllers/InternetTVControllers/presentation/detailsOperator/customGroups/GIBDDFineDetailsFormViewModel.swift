@@ -12,7 +12,7 @@ class GIBDDFineDetailsFormViewModel {
     var puref = ""
     var cardNumber = ""
     var product: GetProductListDatum?
-
+    var closeAction: () -> Void = {}
 
     func setupNextStep(_ answer: CreateTransferAnswerModel) {
         fillRequisites(answer: answer)

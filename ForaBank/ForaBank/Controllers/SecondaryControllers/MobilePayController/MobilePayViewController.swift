@@ -213,6 +213,11 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
     fileprivate func setupUI() {
         title = "Мобильная связь"
         
+        if let paymentTemplate = paymentTemplate {
+            
+            title = paymentTemplate.name
+        }
+        
         phoneField.textField.delegate = self
         phoneField.rightButton.setImage(UIImage(imageLiteralResourceName: "user-plus"), for: .normal)
         if selectNumber != nil {
@@ -337,7 +342,10 @@ class MobilePayViewController: UIViewController, UITextFieldDelegate {
                             vc.addCloseButton()
                             vc.title = "Подтвердите реквизиты"
                             vc.operatorsViewModel = self?.operatorsViewModel
-                            vc.operatorsViewModel?.closeAction = self?.viewModel?.closeAction ?? {print("123")}
+                            if let viewModel = self?.viewModel {
+                                
+                                vc.operatorsViewModel?.closeAction = viewModel.closeAction
+                            }
                             let navController = UINavigationController(rootViewController: vc)
                             navController.modalPresentationStyle = .fullScreen
                             self?.present(navController, animated: true, completion: nil)

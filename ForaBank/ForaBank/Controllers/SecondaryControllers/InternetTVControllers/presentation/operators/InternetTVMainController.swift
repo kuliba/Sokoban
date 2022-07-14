@@ -154,6 +154,7 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
         navigationController?.isNavigationBarHidden = false
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.enableAutoToolbar = true
+        navigationItem.searchController = searchController
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -304,6 +305,7 @@ class InternetTVMainController: UIViewController, UITableViewDelegate, UITableVi
         super.viewWillDisappear(true)
         IQKeyboardManager.shared.enable = false
         IQKeyboardManager.shared.enableAutoToolbar = false
+        navigationItem.searchController = nil
     }
 }
 
