@@ -1,5 +1,5 @@
 //
-//  ServerCommands+ConsentController.swift
+//  ServerCommands+Consent.swift
 //  ForaBank
 //
 //  Created by Дмитрий on 20.01.2022.
@@ -16,13 +16,11 @@ extension ServerCommands {
          */
         struct ChangeClientConsentMe2MePull: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/rest/changeClientConsentMe2MePull"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
-            let timeout: TimeInterval? = nil
-
+            
             struct Payload: Encodable {
                 let bankList: [String]
             }
@@ -46,13 +44,11 @@ extension ServerCommands {
          */
         struct CreateIsOneTimeConsentMe2MePull: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/rest/createIsOneTimeConsentMe2MePull"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
-            let timeout: TimeInterval? = nil
-
+            
             struct Payload: Encodable {
                 let bankId: String
             }
@@ -76,13 +72,11 @@ extension ServerCommands {
          */
         struct CreatePermanentConsentMe2MePull: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/rest/createPermanentConsentMe2MePull"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
-            let timeout: TimeInterval? = nil
-
+            
             struct Payload: Encodable {
                 let bankId: String
             }
@@ -106,13 +100,10 @@ extension ServerCommands {
          */
         struct GetClientConsentMe2MePull: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/rest/getClientConsentMe2MePull"
             let method: ServerCommandMethod = .get
-            let parameters: [ServerCommandParameter]? = nil
-            let payload: Payload? = nil
-            let timeout: TimeInterval? = nil
-
+            
             struct Payload: Encodable {}
             
             struct Response: ServerResponse {
@@ -138,13 +129,11 @@ extension ServerCommands {
          */
         struct GetMe2MeDebitConsent: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/rest/getMe2MeDebitConsent"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
-            let timeout: TimeInterval? = nil
-
+            
             struct Payload: Encodable {
                 let bankId: String
             }

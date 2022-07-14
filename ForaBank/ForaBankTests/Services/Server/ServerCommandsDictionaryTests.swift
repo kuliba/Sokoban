@@ -76,7 +76,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.DictionaryController.GetAnywayOperatorsList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetAnywayOperatorsList(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -146,7 +146,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.DictionaryController.GetBanks(serial: serial)
+        let command = ServerCommands.DictionaryController.GetBanks(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -211,7 +211,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.DictionaryController.GetCountries(serial: serial)
+        let command = ServerCommands.DictionaryController.GetCountries(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -281,7 +281,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.DictionaryController.GetCurrencyList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetCurrencyList(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -323,7 +323,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.DictionaryController.GetFMSList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetFMSList(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -365,7 +365,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.DictionaryController.GetFSSPDebtList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetFSSPDebtList(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -407,7 +407,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.DictionaryController.GetFSSPDocumentList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetFSSPDocumentList(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -449,7 +449,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.DictionaryController.GetFTSList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetFTSList(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -515,7 +515,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.DictionaryController.GetFullBankInfoList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetFullBankInfoList(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -565,7 +565,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.DictionaryController.GetMobileList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetMobileList(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -631,7 +631,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.DictionaryController.GetMosParkingList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetMosParkingList(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -681,7 +681,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.DictionaryController.GetPaymentSystemList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetPaymentSystemList(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -720,7 +720,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let serial = UUID().uuidString
         
         // when
-        let command = ServerCommands.DictionaryController.GetProductCatalogList(serial: serial)
+        let command = ServerCommands.DictionaryController.GetProductCatalogList(token: "", serial: serial)
         
         // then
         XCTAssertNotNil(command.parameters)
@@ -738,7 +738,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         let imageEndpoint = "dict/getProductCatalogImage?image=1"
         
         // when
-        let command = ServerCommands.DictionaryController.GetProductCatalogImage(endpoint: imageEndpoint)
+        let command = ServerCommands.DictionaryController.GetProductCatalogImage(token: "", endpoint: imageEndpoint)
        
         // then
         XCTAssertEqual(command.endpoint, "/\(imageEndpoint)")
@@ -775,7 +775,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
     func testGetBannerCatalogImage_Response_Encoding() throws {
         // given
         
-        let command = ServerCommands.DictionaryController.GetBannerCatalogImage.init(imageEndpoint: "Ic128Icon")
+        let command = ServerCommands.DictionaryController.GetBannerCatalogImage(token: "", imageEndpoint: "Ic128Icon")
         // then
         XCTAssertNotNil(command.parameters)
         XCTAssertEqual(command.parameters?.count, 1)

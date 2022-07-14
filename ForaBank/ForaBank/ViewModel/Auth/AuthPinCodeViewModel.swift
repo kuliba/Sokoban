@@ -102,7 +102,7 @@ class AuthPinCodeViewModel: ObservableObject {
                         
                         // taptic feedback
                         feedbackGenerator.notificationOccurred(.success)
-                        self.model.action.send(ModelAction.Auth.Login.Request(type: .pin))
+                        self.model.action.send(ModelAction.Auth.Login.Request(type: .pin, isFreshSessionRequired: false))
                         
                     case .incorrect(remain: let remainAttempts):
                         guard case .unlock(attempt: let lastAttempt, auto: let auto) = mode else {
@@ -159,10 +159,10 @@ class AuthPinCodeViewModel: ObservableObject {
                         
                         switch sensorType {
                         case .face:
-                            self.model.action.send(ModelAction.Auth.Login.Request(type: .faceId))
+                            self.model.action.send(ModelAction.Auth.Login.Request(type: .faceId, isFreshSessionRequired: false))
                             
                         case .touch:
-                            self.model.action.send(ModelAction.Auth.Login.Request(type: .touchId))
+                            self.model.action.send(ModelAction.Auth.Login.Request(type: .touchId, isFreshSessionRequired: false))
                         }
 
                     case .failure(message: let message):
@@ -200,9 +200,10 @@ class AuthPinCodeViewModel: ObservableObject {
                 case let payload as ModelAction.Auth.SetDeviceSettings.Response:
                     switch payload {
                     case .success:
-                        model.action.send(ModelAction.Auth.Login.Request(type: .pin))
+                        model.action.send(ModelAction.Auth.Login.Request(type: .pin, isFreshSessionRequired: true))
                         
                     case .failure:
+                        rootActions.spinner.hide()
                         alert = Alert.ViewModel(title: "Ошибка", message: model.authDefaultErrorMessage, primary: .init(type: .default, title: "Ok", action: {[weak self] in
                             self?.alert = nil
                             self?.action.send(AuthPinCodeViewModelAction.Unlock.Attempt())
@@ -210,6 +211,7 @@ class AuthPinCodeViewModel: ObservableObject {
                     }
                     
                 case let payload as ModelAction.Auth.Login.Response:
+                    rootActions.spinner.hide()
                     switch payload {
                     case .failure(message: let message):
                         print("SessionAgent: LOGIN FAILED")
@@ -414,7 +416,7 @@ class AuthPinCodeViewModel: ObservableObject {
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(300)) {
                         
-                        model.action.send(ModelAction.Auth.Sensor.Evaluate.Request(sensor: sensor))
+                        self.model.action.send(ModelAction.Auth.Sensor.Evaluate.Request(sensor: sensor))
                     }
                     
                 case let payload as AuthPinCodeViewModelAction.Continue:
@@ -460,7 +462,12 @@ class AuthPinCodeViewModel: ObservableObject {
                 
                 switch action {
                 case let payload as AuthPermissionsViewModelAction.Confirm:
+                    self.rootActions.spinner.show()
                     self.model.action.send(ModelAction.Auth.SetDeviceSettings.Request(sensorType: payload.sensorType))
+                    
+                case _ as AuthPermissionsViewModelAction.Skip:
+                    self.rootActions.spinner.show()
+                    self.model.action.send(ModelAction.Auth.SetDeviceSettings.Request(sensorType: nil))
                     
                 default:
                     break

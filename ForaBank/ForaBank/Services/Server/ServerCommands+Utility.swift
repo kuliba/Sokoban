@@ -1,5 +1,5 @@
 //
-//  ServerCommands+UtilityController.swift
+//  ServerCommands+Utility.swift
 //  ForaBank
 //
 //  Created by Дмитрий on 19.01.2022.
@@ -16,14 +16,11 @@ extension ServerCommands {
          */
         struct Csrf: ServerCommand {
             
-            let token: String? = nil
+            let token: String = ""
             let endpoint = "/csrf/"
             let method: ServerCommandMethod = .get
-            let parameters: [ServerCommandParameter]? = nil
-            let payload: Payload? = nil
-            let timeout: TimeInterval? = nil
-            var cookiesProvider: Bool { true }
-
+            let cookiesProvider: Bool = true
+            
             struct Payload: Encodable {}
             
             struct Response: ServerResponse {
@@ -39,12 +36,9 @@ extension ServerCommands {
          */
         struct GetSessionTimeout: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/getSessionTimeout"
             let method: ServerCommandMethod = .get
-            let parameters: [ServerCommandParameter]? = nil
-            let payload: Payload? = nil
-            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -66,12 +60,10 @@ extension ServerCommands {
          */
         struct KeyExchange: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/keyExchange"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
-            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {
                 
@@ -99,13 +91,10 @@ extension ServerCommands {
          */
         struct IsLogin: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/rest/isLogin"
             let method: ServerCommandMethod = .get
-            let parameters: [ServerCommandParameter]? = nil
-            let payload: Payload? = nil
-            let timeout: TimeInterval? = nil
-
+            
             struct Payload: Encodable {}
             
             struct Response: ServerResponse {

@@ -15,13 +15,11 @@ extension ServerCommands {
          https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/PrintFormController/getPrintFormUsingPOST
          */
         struct GetPrintForm: ServerDownloadCommand {
-
-            let token: String?
+            
+            let token: String
             let endpoint = "/rest/getPrintForm"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
-            let timeout: TimeInterval? = nil
             let cachePolicy: URLRequest.CachePolicy = .returnCacheDataElseLoad
             
             struct Payload: Encodable {
@@ -29,7 +27,7 @@ extension ServerCommands {
                 let paymentOperationDetailId: Int
                 let printFormType: PrintFormType
             }
-
+            
             internal init(token: String, payload: Payload) {
                 
                 self.token = token

@@ -33,7 +33,12 @@ extension Model {
     
     func handleGeneralDownloadImageRequest(_ payload: ModelAction.General.DownloadImage.Request) {
         
-        let command = ServerCommands.DictionaryController.GetProductCatalogImage(endpoint: payload.endpoint)
+        guard let token = token else {
+            handledUnauthorizedCommandAttempt()
+            return
+        }
+        
+        let command = ServerCommands.DictionaryController.GetProductCatalogImage(token: token, endpoint: payload.endpoint)
         serverAgent.executeDownloadCommand(command: command) {[unowned self] result in
             
             switch result {

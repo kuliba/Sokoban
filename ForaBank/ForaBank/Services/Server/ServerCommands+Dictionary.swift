@@ -11,19 +11,17 @@ import SwiftUI
 extension ServerCommands {
     
     enum DictionaryController {
- 
+        
         /*
          https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/dict/getAnywayOperatorsList
          */
         struct GetAnywayOperatorsList: ServerCommand {
             
-            let token: String? = nil
+            let token: String
             let endpoint = "/dict/getAnywayOperatorsList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
-            let payload: Payload? = nil
-            let timeout: TimeInterval? = nil
-
+            
             struct Payload: Encodable {}
             
             struct Response: ServerResponse {
@@ -39,7 +37,9 @@ extension ServerCommands {
                 }
             }
             
-            internal init(serial: String?) {
+            init(token: String, serial: String?) {
+                
+                self.token = token
                 
                 if let serial = serial{
                     
@@ -59,12 +59,10 @@ extension ServerCommands {
          */
         struct GetBanks: ServerCommand {
             
-            let token: String? = nil
+            let token: String
             let endpoint = "/dict/getBanks"
             let method: ServerCommandMethod = .get
-            var parameters: [ServerCommandParameter]?
-            let payload: Payload? = nil
-            let timeout: TimeInterval? = nil
+            let parameters: [ServerCommandParameter]?
             
             struct Payload: Encodable {}
             
@@ -81,7 +79,9 @@ extension ServerCommands {
                 }
             }
             
-            internal init(serial: String?) {
+            init(token: String, serial: String?) {
+                
+                self.token = token
                 
                 if let serial = serial{
                     
@@ -101,12 +101,10 @@ extension ServerCommands {
          */
         struct GetCountries: ServerCommand {
             
-            let token: String? = nil
+            let token: String
             let endpoint = "/dict/getCountries"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
-            let payload: Payload? = nil
-            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -122,8 +120,10 @@ extension ServerCommands {
                     let serial: String
                 }
             }
-                    
-            internal init(serial: String?) {
+            
+            init(token: String, serial: String?) {
+                
+                self.token = token
                 
                 if let serial = serial{
                     
@@ -143,12 +143,10 @@ extension ServerCommands {
          */
         struct GetCurrencyWalletList: ServerCommand {
             
-            let token: String? = nil
+            let token: String
             let endpoint = "/dict/getCurrencyWalletList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
-            let payload: Payload? = nil
-            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -165,7 +163,9 @@ extension ServerCommands {
                 }
             }
             
-            internal init(serial: String?) {
+            init(token: String, serial: String?) {
+                
+                self.token = token
                 
                 if let serial = serial {
                     
@@ -185,12 +185,10 @@ extension ServerCommands {
          */
         struct GetCurrencyList: ServerCommand {
             
-            let token: String? = nil
+            let token: String
             let endpoint = "/dict/getCurrencyList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
-            let payload: Payload? = nil
-            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -207,7 +205,9 @@ extension ServerCommands {
                 }
             }
             
-            internal init(serial: String?) {
+            init(token: String, serial: String?) {
+                
+                self.token = token
                 
                 if let serial = serial{
                     
@@ -227,12 +227,10 @@ extension ServerCommands {
          */
         struct GetFMSList: ServerCommand {
             
-            let token: String? = nil
+            let token: String
             let endpoint = "/dict/getFMSList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
-            let payload: Payload? = nil
-            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -259,7 +257,9 @@ extension ServerCommands {
                 }
             }
             
-            internal init(serial: String?) {
+            init(token: String, serial: String?) {
+                
+                self.token = token
                 
                 if let serial = serial{
                     
@@ -279,12 +279,10 @@ extension ServerCommands {
          */
         struct GetFSSPDebtList: ServerCommand {
             
-            let token: String? = nil
+            let token: String
             let endpoint = "/dict/getFSSPDebtList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
-            let payload: Payload? = nil
-            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -311,7 +309,9 @@ extension ServerCommands {
                 }
             }
             
-            internal init(serial: String?) {
+            init(token: String, serial: String?) {
+                
+                self.token = token
                 
                 if let serial = serial{
                     
@@ -331,12 +331,10 @@ extension ServerCommands {
          */
         struct GetFSSPDocumentList: ServerCommand {
             
-            let token: String? = nil
+            let token: String
             let endpoint = "/dict/getFSSPDocumentList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
-            let payload: Payload? = nil
-            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -363,7 +361,9 @@ extension ServerCommands {
                 }
             }
             
-            internal init(serial: String?) {
+            init(token: String, serial: String?) {
+                
+                self.token = token
                 
                 if let serial = serial{
                     
@@ -377,18 +377,16 @@ extension ServerCommands {
                 }
             }
         }
-                
+        
         /*
          https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getFTSListUsingGET
          */
         struct GetFTSList: ServerCommand {
             
-            let token: String? = nil
+            let token: String
             let endpoint = "/dict/getFTSList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
-            let payload: Payload? = nil
-            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -415,7 +413,9 @@ extension ServerCommands {
                 }
             }
             
-            internal init(serial: String?) {
+            init(token: String, serial: String?) {
+                
+                self.token = token
                 
                 if let serial = serial{
                     
@@ -435,12 +435,10 @@ extension ServerCommands {
          */
         struct GetFullBankInfoList: ServerCommand {
             
-            let token: String? = nil
+            let token: String
             let endpoint = "/dict/getFullBankInfoList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
-            let payload: Payload? = nil
-            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -457,7 +455,9 @@ extension ServerCommands {
                 }
             }
             
-            internal init(bic: String = "", name: String? = nil, engName: String? = nil, type: String? = nil, account: String? = nil, swift: String? = nil, serviceType: String? = nil, serial: String?) {
+            internal init(token: String, bic: String = "", name: String? = nil, engName: String? = nil, type: String? = nil, account: String? = nil, swift: String? = nil, serviceType: String? = nil, serial: String?) {
+                
+                self.token = token
                 
                 var parameters = [ServerCommandParameter]()
                 parameters.append(.init(name: "bic", value: bic))
@@ -505,12 +505,10 @@ extension ServerCommands {
          */
         struct GetMobileList: ServerCommand {
             
-            let token: String? = nil
+            let token: String
             let endpoint = "/dict/getMobileList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
-            let payload: Payload? = nil
-            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -527,8 +525,10 @@ extension ServerCommands {
                 }
             }
             
-            internal init(serial: String?) {
-
+            init(token: String, serial: String?) {
+                
+                self.token = token
+                
                 if let serial = serial {
                     
                     var parameters = [ServerCommandParameter]()
@@ -547,12 +547,10 @@ extension ServerCommands {
          */
         struct GetMosParkingList: ServerCommand {
             
-            let token: String? = nil
+            let token: String
             let endpoint = "/dict/getMosParkingList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
-            let payload: Payload? = nil
-            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -569,7 +567,9 @@ extension ServerCommands {
                 }
             }
             
-            internal init(serial: String?) {
+            init(token: String, serial: String?) {
+                
+                self.token = token
                 
                 if let serial = serial {
                     
@@ -589,12 +589,10 @@ extension ServerCommands {
          */
         struct GetPaymentSystemList: ServerCommand {
             
-            let token: String? = nil
+            let token: String
             let endpoint = "/dict/getPaymentSystemList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
-            let payload: Payload? = nil
-            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -611,7 +609,9 @@ extension ServerCommands {
                 }
             }
             
-            internal init(serial: String?) {
+            init(token: String, serial: String?) {
+                
+                self.token = token
                 
                 if let serial = serial {
                     
@@ -625,87 +625,83 @@ extension ServerCommands {
             }
         }
         
-         /*
-          https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getProductCatalogListUsingGET
-          */
-         struct GetProductCatalogList: ServerCommand {
-
-             var token: String? = nil
-             let endpoint = "/dict/getProductCatalogList"
-             let method: ServerCommandMethod = .get
-             let parameters: [ServerCommandParameter]?
-             var payload: Payload? = nil
-             let timeout: TimeInterval? = nil
-
-             struct Payload: Encodable {}
-
-             struct Response: ServerResponse {
-                 
-                 let statusCode: ServerStatusCode
-                 let data: ProductCatalog?
-                 let errorMessage: String?
-                 
-                 struct ProductCatalog: Decodable, Equatable {
-                     
-                     let productCatalogList: [CatalogProductData]
-                     let serial: String
-                     
-                     enum CodingKeys : String, CodingKey {
-                         
-                         case productCatalogList = "ProductCatalogList"
-                         case serial
-                     }
-                 }
-             }
-             
-             internal init(serial: String?) {
-                 
-                 if let serial = serial {
-                     
-                     self.parameters = [.init(name: "serial", value: serial)]
-                     
-                 } else {
-                     
-                     self.parameters = nil
-                 }
-             }
-         }
-         
-         /*
-          https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getProductCatalogImageUsingGET
-          */
-         struct GetProductCatalogImage: ServerDownloadCommand {
-
-             var token: String? = nil
-             let endpoint: String
-             let method: ServerCommandMethod = .get
-             let parameters: [ServerCommandParameter]? = nil
-             var payload: Payload? = nil
-             let timeout: TimeInterval? = nil
-             let cachePolicy: URLRequest.CachePolicy = .returnCacheDataElseLoad
-
-             struct Payload: Encodable {}
-
-             internal init(endpoint: String) {
-
-                 self.endpoint = "/" + endpoint
-             }
-         }
+        /*
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getProductCatalogListUsingGET
+         */
+        struct GetProductCatalogList: ServerCommand {
+            
+            let token: String
+            let endpoint = "/dict/getProductCatalogList"
+            let method: ServerCommandMethod = .get
+            let parameters: [ServerCommandParameter]?
+            
+            struct Payload: Encodable {}
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let data: ProductCatalog?
+                let errorMessage: String?
+                
+                struct ProductCatalog: Decodable, Equatable {
+                    
+                    let productCatalogList: [CatalogProductData]
+                    let serial: String
+                    
+                    enum CodingKeys : String, CodingKey {
+                        
+                        case productCatalogList = "ProductCatalogList"
+                        case serial
+                    }
+                }
+            }
+            
+            init(token: String, serial: String?) {
+                
+                self.token = token
+                
+                if let serial = serial {
+                    
+                    self.parameters = [.init(name: "serial", value: serial)]
+                    
+                } else {
+                    
+                    self.parameters = nil
+                }
+            }
+        }
+        
+        /*
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getProductCatalogImageUsingGET
+         */
+        struct GetProductCatalogImage: ServerDownloadCommand {
+            
+            let token: String
+            let endpoint: String
+            let method: ServerCommandMethod = .get
+            let cachePolicy: URLRequest.CachePolicy = .returnCacheDataElseLoad
+            
+            struct Payload: Encodable {}
+            
+            init(token: String, endpoint: String) {
+                
+                self.token = token
+                self.endpoint = "/" + endpoint
+            }
+        }
         
         /*
          https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/getBannerCatalogListUsingGet
          */
         struct GetBannerCatalogList: ServerCommand {
-
-            var token: String? = nil
+            
+            let token: String
             let endpoint = "/dict/getBannerCatalogList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
-            var payload: Payload? = nil
-            let timeout: TimeInterval? = nil
-
+            
             struct Payload: Encodable {}
-
+            
             struct Response: ServerResponse {
                 
                 let statusCode: ServerStatusCode
@@ -719,7 +715,9 @@ extension ServerCommands {
                 }
             }
             
-            internal init(serial: String?) {
+            init(token: String, serial: String?) {
+                
+                self.token = token
                 
                 if let serial = serial{
                     
@@ -738,21 +736,21 @@ extension ServerCommands {
          https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController//dict/getBannerCatalogImageUsingGet
          */
         struct GetBannerCatalogImage: ServerDownloadCommand {
-
-            var token: String? = nil
+            
+            let token: String
             let endpoint = "/dict/getBannerCatalogImage"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
-            var payload: Payload? = nil
-            let timeout: TimeInterval? = nil
             let cachePolicy: URLRequest.CachePolicy = .returnCacheDataElseLoad
-
+            
             struct Payload: Encodable {}
-
-            internal init(imageEndpoint: String) {
-
+            
+            init(token: String, imageEndpoint: String) {
+                
+                self.token = token
+                
                 var parameters = [ServerCommandParameter]()
-
+                
                 parameters.append(.init(name: "image", value: imageEndpoint))
                 self.parameters = parameters
             }
@@ -763,19 +761,17 @@ extension ServerCommands {
          */
         //TODO: - tests
         struct GetSvgImageList: ServerCommand {
-
-            var token: String?
+            
+            let token: String
             let endpoint = "/dict/getSvgImageList"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
-            let timeout: TimeInterval? = nil
-
+            
             struct Payload: Encodable {
                 
                 let md5HashList: [String]
             }
-
+            
             struct Response: ServerResponse {
                 
                 let statusCode: ServerStatusCode
@@ -800,5 +796,5 @@ extension ServerCommands {
                 self.payload = payload
             }
         }
-     }
- }
+    }
+}

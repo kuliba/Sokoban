@@ -8,59 +8,55 @@
 import Foundation
 
 extension ServerCommands {
-
-	enum DepositController {
-
-		/*
-		 https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/DepositController/getDepositInfoUsingPOST
-		 */
-		struct GetDepositInfo: ServerCommand {
-
-			let token: String?
-			let endpoint = "/rest/getDepositInfo"
-			let method: ServerCommandMethod = .post
-			let parameters: [ServerCommandParameter]? = nil
+    
+    enum DepositController {
+        
+        /*
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/DepositController/getDepositInfoUsingPOST
+         */
+        struct GetDepositInfo: ServerCommand {
+            
+            let token: String
+            let endpoint = "/rest/getDepositInfo"
+            let method: ServerCommandMethod = .post
             let payload: Payload?
-            let timeout: TimeInterval? = nil
-
+            
             struct Payload: Encodable {
                 
                 let id: Int
             }
             
-			struct Response: ServerResponse {
-
-				let statusCode: ServerStatusCode
-				let errorMessage: String?
-				let data: DepositInfoDataItem?
-			}
-
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: DepositInfoDataItem?
+            }
+            
             internal init(token: String, payload: Payload) {
-
-				self.token = token
-				self.payload = payload
-			}
-		}
-
-		/*
-		 https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/DepositController/getDepositStatementUsingPOST
-		 */
-		struct GetDepositStatement: ServerCommand {
-
-			let token: String?
-			let endpoint = "/rest/getDepositStatement_V2"
-			let method: ServerCommandMethod = .post
-			let parameters: [ServerCommandParameter]? = nil
-			let payload: BasePayload?
-            let timeout: TimeInterval? = nil
-
-			struct Response: ServerResponse {
-
-				let statusCode: ServerStatusCode
-				let errorMessage: String?
-				let data: [ProductStatementData]?
-			}
-
+                
+                self.token = token
+                self.payload = payload
+            }
+        }
+        
+        /*
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/DepositController/getDepositStatementUsingPOST
+         */
+        struct GetDepositStatement: ServerCommand {
+            
+            let token: String
+            let endpoint = "/rest/getDepositStatement_V2"
+            let method: ServerCommandMethod = .post
+            let payload: BasePayload?
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: [ProductStatementData]?
+            }
+            
             internal init(token: String, payload: BasePayload) {
                 
                 self.token = token
@@ -71,7 +67,7 @@ extension ServerCommands {
                 
                 self.init(token: token, payload: .init(id: productId))
             }
-		}
+        }
         
         /*
          http://10.1.206.21:8080/swagger-ui/index.html#/DepositController/getDepositStatementForPeriod_V2
@@ -79,21 +75,19 @@ extension ServerCommands {
         
         //TODO: - tests
         struct GetDepositStatementForPeriod: ServerCommand {
-
-            let token: String?
+            
+            let token: String
             let endpoint = "/rest/getDepositStatementForPeriod_V2"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: BasePayload?
-            let timeout: TimeInterval? = nil
-
+            
             struct Response: ServerResponse {
-
+                
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: [ProductStatementData]?
             }
-
+            
             internal init(token: String, payload: BasePayload) {
                 
                 self.token = token
@@ -105,40 +99,37 @@ extension ServerCommands {
                 self.init(token: token, payload: .init(id: productId, startDate: period.start, endDate: period.end))
             }
         }
-
-		/*
-		 https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/DepositController/openDepositUsingPOST
-		 */
-		struct OpenDeposit: ServerCommand {
-
-			let token: String?
-			let endpoint = "/rest/openDeposit"
-			let method: ServerCommandMethod = .post
-			let parameters: [ServerCommandParameter]? = nil
-			let payload: Payload? = nil
-            let timeout: TimeInterval? = nil
-
-			struct Payload: Encodable { }
-
-			struct Response: ServerResponse {
-
-				let statusCode: ServerStatusCode
-				let errorMessage: String?
-				let data: EmptyData?
-			}
-
-			internal init(token: String) {
-
-				self.token = token
-			}
-		}
+        
+        /*
+         https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/DepositController/openDepositUsingPOST
+         */
+        struct OpenDeposit: ServerCommand {
+            
+            let token: String
+            let endpoint = "/rest/openDeposit"
+            let method: ServerCommandMethod = .post
+            
+            struct Payload: Encodable { }
+            
+            struct Response: ServerResponse {
+                
+                let statusCode: ServerStatusCode
+                let errorMessage: String?
+                let data: EmptyData?
+            }
+            
+            internal init(token: String) {
+                
+                self.token = token
+            }
+        }
         
         /*
          http://192.168.50.113:8080/swagger-ui/index.html#/DepositController/saveDepositCustomName
          */
         struct SaveDepositName: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/rest/saveDepositName"
             let method: ServerCommandMethod = .post
             let payload: BasePayload?
@@ -166,16 +157,13 @@ extension ServerCommands {
          https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController//dict//rest/getDepositProductListUsingGet
          */
         struct GetDepositProductList: ServerCommand {
-
-            let token: String?
+            
+            let token: String
             let endpoint = "/rest/getDepositProductList"
             let method: ServerCommandMethod = .get
-            let parameters: [ServerCommandParameter]? = nil
-            var payload: Payload? = nil
-            let timeout: TimeInterval? = nil
-
+            
             struct Payload: Encodable {}
-
+            
             struct Response: ServerResponse {
                 
                 let statusCode: ServerStatusCode
@@ -184,7 +172,7 @@ extension ServerCommands {
             }
             
             internal init(token: String) {
-
+                
                 self.token = token
             }
         }
@@ -193,25 +181,23 @@ extension ServerCommands {
          https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/DictionaryController/dict//rest/closeDeposit
          */
         struct CloseDeposit: ServerCommand {
-
-            let token: String?
+            
+            let token: String
             let endpoint = "/rest/closeDeposit"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
-            let timeout: TimeInterval? = nil
-
+            
             struct Payload: Encodable {
-                    
-                    let id: Int
-                    let name: String?
-                    let startDate: String?
-                    let endDate: String?
-                    let statementFormat: StatementFormat?
-                    let accountId: Int?
-                    let cardId: Int?
+                
+                let id: Int
+                let name: String?
+                let startDate: String?
+                let endDate: String?
+                let statementFormat: StatementFormat?
+                let accountId: Int?
+                let cardId: Int?
             }
-
+            
             struct Response: ServerResponse {
                 
                 let statusCode: ServerStatusCode
@@ -230,7 +216,7 @@ extension ServerCommands {
             }
             
             internal init(token: String, payload: Payload) {
-
+                
                 self.token = token
                 self.payload = payload
             }
@@ -240,13 +226,11 @@ extension ServerCommands {
          http://10.1.206.21:8080/swagger-ui/index.html#/DepositController/getPrintFormForDepositConditions
          */
         struct GetPrintFormForDepositConditions: ServerDownloadCommand {
-
-            let token: String?
+            
+            let token: String
             let endpoint = "/rest/getPrintFormForDepositConditions"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: BasePayload?
-            let timeout: TimeInterval? = nil
             let cachePolicy: URLRequest.CachePolicy = .returnCacheDataElseLoad
             
             init(token: String, payload: BasePayload) {
@@ -262,12 +246,12 @@ extension ServerCommands {
         }
         
         struct BasePayload: Encodable {
-
+            
             let id: Int
             var name: String? = nil
             var startDate: Date? = nil
             var endDate: Date? = nil
             var statementFormat: StatementFormat? = nil
         }
-	}
+    }
 }

@@ -178,10 +178,7 @@ internal extension ServerAgent {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         // token
-        if let token = command.token {
-            
-            request.setValue(token, forHTTPHeaderField: "X-XSRF-TOKEN")
-        }
+        request.setValue(command.token , forHTTPHeaderField: "X-XSRF-TOKEN")
         
         // parameters
         if let parameters = command.parameters, parameters.isEmpty == false {
@@ -237,10 +234,7 @@ internal extension ServerAgent {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         // token
-        if let token = command.token {
-            
-            request.setValue(token, forHTTPHeaderField: "X-XSRF-TOKEN")
-        }
+        request.setValue(command.token, forHTTPHeaderField: "X-XSRF-TOKEN")
 
         // parameters
         if let parameters = command.parameters, parameters.isEmpty == false {
