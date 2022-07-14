@@ -44,7 +44,7 @@ class MainViewModel: ObservableObject, Resetable {
         self.sections = [MainSectionProductsView.ViewModel(model),
                          MainSectionFastOperationView.ViewModel(),
                          MainSectionPromoView.ViewModel(model),
-                         MainSectionCurrencyView.ViewModel(model),
+                         MainSectionCurrencyMetallView.ViewModel(model),
                          MainSectionOpenProductView.ViewModel(model),
                          MainSectionAtmView.ViewModel.initial]
         
@@ -83,6 +83,8 @@ class MainViewModel: ObservableObject, Resetable {
                     
                 case _ as MainViewModelAction.PullToRefresh:
                     model.action.send(ModelAction.Products.Update.Total.All())
+                    model.action.send(ModelAction.Dictionary.UpdateCache.Request(type: .currencyList, serial: nil))
+                    model.action.send(ModelAction.Dictionary.UpdateCache.Request(type: .currencyWalletList, serial: nil))
                 
                 case _ as MainViewModelAction.CloseAction.Link:
                     self.link = nil
@@ -215,13 +217,18 @@ class MainViewModel: ObservableObject, Resetable {
                         sheet = .init(type: .myProducts(myProductsViewModel))
                         
                         // CurrencyMetall section
-                    case let payload as MainSectionViewModelAction.CurrencyMetall.ItemDashboardDidTapped.Buy :
-                    
-                        print("mdy: Buy-\(payload.itemData)") // -> USD, GBR, EUR
                         
-                    case let payload as MainSectionViewModelAction.CurrencyMetall.ItemDashboardDidTapped.Sell :
+                    case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Item :
                     
-                        print("mdy: Sell-\(payload.itemData)") // -> USD, GBR, EUR
+                        print("mdy: Item-\(payload.code.description)") // -> USD, GBR, EUR
+                        
+                    case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Buy :
+                    
+                        print("mdy: Buy-\(payload.code.description)") // -> USD, GBR, EUR
+                        
+                    case let payload as MainSectionViewModelAction.CurrencyMetall.DidTapped.Sell :
+                    
+                        print("mdy: Sell-\(payload.code.description)") // -> USD, GBR, EUR
                         
                         // atm section
                     case _ as MainSectionViewModelAction.Atm.ButtonTapped:

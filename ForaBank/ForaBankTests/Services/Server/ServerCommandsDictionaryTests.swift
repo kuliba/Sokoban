@@ -232,7 +232,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         }
         
         let json = try Data(contentsOf: url)
-        let currencyData = ServerCommands.DictionaryController.GetCurrencyList.Response.CurrencyListData(currencyList: [.init(code: "USD", codeISO: 840, codeNumeric: 840, cssCode: "\\062F\\002E\\0625", htmlCode: "&#1583;.&#1573;", id: "1", name: "Доллар США", unicode: "U+062F\\U+002E\\U+0625")], serial: "bea36075a58954199a6b8980549f6b69")
+        let currencyData = ServerCommands.DictionaryController.GetCurrencyList.Response.CurrencyListData(currencyList: [.init(code: "USD", codeISO: 840, codeNumeric: 840, cssCode: "\\062F\\002E\\0625", htmlCode: "&#1583;.&#1573;", id: "1", name: "Доллар США", shortName: "Доллар", unicode: "U+062F\\U+002E\\U+0625")], serial: "bea36075a58954199a6b8980549f6b69")
         
         let expected = ServerCommands.DictionaryController.GetCurrencyList.Response(statusCode: .ok, errorMessage: "string", data: currencyData)
         
@@ -252,7 +252,7 @@ class ServerCommandsDictionaryTests: XCTestCase {
         }
         
         let json = try Data(contentsOf: url)
-        let currencyData = ServerCommands.DictionaryController.GetCurrencyList.Response.CurrencyListData(currencyList: [.init(code: "USD", codeISO: 840, codeNumeric: 840, cssCode: nil, htmlCode: nil, id: "1", name: "Доллар США", unicode: nil)], serial: "bea36075a58954199a6b8980549f6b69")
+        let currencyData = ServerCommands.DictionaryController.GetCurrencyList.Response.CurrencyListData(currencyList: [.init(code: "USD", codeISO: 840, codeNumeric: 840, cssCode: nil, htmlCode: nil, id: "1", name: "Доллар США", shortName: nil, unicode: nil)], serial: "bea36075a58954199a6b8980549f6b69")
         
         let expected = ServerCommands.DictionaryController.GetCurrencyList.Response(statusCode: .ok, errorMessage: "string", data: currencyData)
         
