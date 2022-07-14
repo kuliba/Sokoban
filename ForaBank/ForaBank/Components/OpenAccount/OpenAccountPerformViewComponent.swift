@@ -127,8 +127,6 @@ extension OpenAccountPerformView {
 
                             prepareData = OpenAccountPrepareViewModel.reduce(data: data)
                             operationType = .edit
-                            
-                            model.action.send(OpenAccountPerformAction.CurrencyEdit())
 
                         case let .failed(error: error):
                             
@@ -157,6 +155,19 @@ extension OpenAccountPerformView {
 
                         case let .failed(error: error):
                             
+                            let rawValue = model.accountRawResponse(error: error)
+                            
+                            switch rawValue {
+                            case .exhaust:
+                                
+                                confirm.confirmCode = ""
+                                confirm.enterCode = ""
+                                confirm.textFieldToolbar.text = ""
+                                
+                            default:
+                                break
+                            }
+                            
                             confirm.isResendCode = true
                             
                             handleRawResponse(error: error)
@@ -165,8 +176,9 @@ extension OpenAccountPerformView {
 
                     case let payload as ModelAction.Auth.VerificationCode.PushRecieved:
                         
+                        confirm.confirmCode = payload.code
                         confirm.enterCode = payload.code
-                        confirmCode = payload.code
+                        confirm.textFieldToolbar.text = payload.code
 
                     default:
                         break
@@ -254,14 +266,6 @@ extension OpenAccountPerformView {
 
                 }.store(in: &bindings)
 
-            $confirmCode
-                .receive(on: DispatchQueue.main)
-                .sink { [unowned self] confirmCode in
-
-                    confirm.confirmCode = confirmCode
-
-                }.store(in: &bindings)
-
             $operationType
                 .combineLatest($currencyName, $confirmCode)
                 .receive(on: DispatchQueue.main)
@@ -329,28 +333,7 @@ extension OpenAccountPerformView {
         
         private func handleRawResponse(error: Model.ProductsListError) {
             
-            var messageError = ""
-            
-            switch error {
-            case .emptyData(message: let message):
-                
-                guard let message = message else { return }
-                messageError = message
-                
-            case let .statusError(_, message: message):
-                
-                guard let message = message else { return }
-                messageError = message
-
-            case .serverCommandError(error: let error):
-                messageError = error
-            default:
-                break
-            }
-            
-            guard let rawValue = OpenAccountRawResponse(rawValue: messageError) else {
-                return
-            }
+            let rawValue = model.accountRawResponse(error: error)
             
             switch rawValue {
             case .incorrect:
@@ -358,6 +341,8 @@ extension OpenAccountPerformView {
             case .exhaust:
                 operationType = currentOperationType
                 self.action.send(OpenAccountPerformAction.ResetData())
+            case .none:
+                break
             }
         }
     }
@@ -395,6 +380,7 @@ enum OpenAccountRawResponse: RawRepresentable {
     
     case incorrect
     case exhaust
+    case none
     
     var rawValue: String {
         switch self {
@@ -402,6 +388,8 @@ enum OpenAccountRawResponse: RawRepresentable {
             return "Вы исчерпали все попытки"
         case .exhaust:
             return "Введен некорректный код. Попробуйте еще раз"
+        case .none:
+            return ""
         }
     }
     
@@ -501,8 +489,6 @@ enum OpenAccountPerformAction {
 
         let code: String
     }
-    
-    struct CurrencyEdit: Action {}
 
     enum Alert {
 

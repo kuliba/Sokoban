@@ -17,6 +17,7 @@ extension OpenAccountItemView {
     class ViewModel: ObservableObject, Identifiable {
 
         @Published var isAccountOpen: Bool
+        @Published var isHidden: Bool = false
 
         let id: String
         let currencyCode: Int
@@ -139,7 +140,9 @@ struct OpenAccountItemView: View {
 
                 Spacer()
             }
-        }.frame(width: UIScreen.main.bounds.width - 40, height: 200)
+        }
+        .frame(width: UIScreen.main.bounds.width - 40, height: 200)
+        .hidden(viewModel.isHidden)
     }
 }
 

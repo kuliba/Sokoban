@@ -17,4 +17,13 @@ extension View {
             self
         }
     }
+    
+    @ViewBuilder
+    func hidden(_ isHidden: Bool) -> some View {
+        
+        switch isHidden {
+        case true: self.hidden()
+        case false: self
+        }
+    }
 }
