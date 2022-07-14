@@ -3646,13 +3646,6 @@
 			path = ProductProfile;
 			sourceTree = "<group>";
 		};
-		681E073A273D3F3E00551FAD /* DetailOperation */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = DetailOperation;
-			sourceTree = "<group>";
-		};
 		6820927927AB0D82003DCAFD /* Dictionary */ = {
 			isa = PBXGroup;
 			children = (
@@ -3957,7 +3950,6 @@
 		688B9BAA26DE7D6300407A75 /* ProductViewController */ = {
 			isa = PBXGroup;
 			children = (
-				681E073A273D3F3E00551FAD /* DetailOperation */,
 				6833E0B32732B749004C070F /* DetailOperationCell */,
 				68C8D57526F1FEE30076246B /* RequisitsViewController */,
 				687FB23426F016FF004A479F /* Cells */,
