@@ -47,4 +47,11 @@ enum SessionAgentAction {
         
         struct UserInteraction: Action {}
     }
+    
+    enum Timer {
+        
+        struct Start: Action {}
+        
+        struct Stop: Action {}
+    }
 }

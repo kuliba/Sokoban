@@ -17,12 +17,10 @@ extension ServerCommands {
          */
         struct CreateFastPaymentContract: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/rest/createFastPaymentContract"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: BasePayload?
-            let timeout: TimeInterval? = nil
             
             struct Response: ServerResponse {
                 
@@ -43,13 +41,10 @@ extension ServerCommands {
          */
         struct FastPaymentContractFindList: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/rest/fastPaymentContractFindList"
             let method: ServerCommandMethod = .get
-            let parameters: [ServerCommandParameter]? = nil
-            let payload: Payload? = nil
-            let timeout: TimeInterval? = nil
-
+            
             struct Payload: Encodable {}
             
             struct Response: ServerResponse {
@@ -70,12 +65,10 @@ extension ServerCommands {
          */
         struct UpdateFastPaymentContract: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/rest/updateFastPaymentContract"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: BasePayload?
-            let timeout: TimeInterval? = nil
             
             struct Response: ServerResponse {
                 

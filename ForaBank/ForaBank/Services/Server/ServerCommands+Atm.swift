@@ -1,5 +1,5 @@
 //
-//  ServerCommands+AtmController.swift
+//  ServerCommands+Atm.swift
 //  ForaBank
 //
 //  Created by Max Gribov on 04.04.2022.
@@ -10,20 +10,21 @@ import Foundation
 extension ServerCommands {
     
     enum AtmController {
-
+        
         /*
          https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/AtmController/getAtmList
          */
         struct GetAtmList: ServerCommand {
-
+            
+            let token: String
             let endpoint = "/atm/v2/getAtmList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
             
             struct Payload: Encodable {}
-                        
+            
             struct Response: ServerResponse {
-
+                
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: AtmListData?
@@ -35,22 +36,23 @@ extension ServerCommands {
                 }
             }
             
-            internal init(version: Int) {
-
+            init(token: String, version: Int) {
+                
+                self.token = token
                 var parameters = [ServerCommandParameter]()
                 parameters.append(.init(name: "version", value: "\(version)"))
                 self.parameters = parameters
             }
             
-            internal init(serial: String?) {
-
+            init(token: String, serial: String?) {
+                
                 if let serial = serial, let version = Int(serial) {
                     
-                    self.init(version: version)
+                    self.init(token: token, version: version)
                     
                 } else {
                     
-                    self.init(version: 0)
+                    self.init(token: token, version: 0)
                 }
             }
         }
@@ -59,15 +61,16 @@ extension ServerCommands {
          https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/AtmController/getAtmServiceList
          */
         struct GetAtmServiceList: ServerCommand {
-
+            
+            let token: String
             let endpoint = "/atm/v2/getAtmServiceList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
             
             struct Payload: Encodable {}
-                        
+            
             struct Response: ServerResponse {
-
+                
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: AtmServiceListData?
@@ -79,8 +82,10 @@ extension ServerCommands {
                 }
             }
             
-            internal init(serial: String?) {
-
+            init(token: String, serial: String?) {
+                
+                self.token = token
+                
                 if let serial = serial {
                     
                     var parameters = [ServerCommandParameter]()
@@ -98,15 +103,16 @@ extension ServerCommands {
          https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/AtmController/getAtmTypeList
          */
         struct GetAtmTypeList: ServerCommand {
-
+            
+            let token: String
             let endpoint = "/atm/v2/getAtmTypeList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
             
             struct Payload: Encodable {}
-                        
+            
             struct Response: ServerResponse {
-
+                
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: AtmTypeListData?
@@ -118,8 +124,10 @@ extension ServerCommands {
                 }
             }
             
-            internal init(serial: String?) {
-
+            init(token: String, serial: String?) {
+                
+                self.token = token
+                
                 if let serial = serial {
                     
                     var parameters = [ServerCommandParameter]()
@@ -137,15 +145,16 @@ extension ServerCommands {
          https://git.briginvest.ru/dbo/api/v3/swagger-ui/index.html#/AtmController/getMetroStationList
          */
         struct GetMetroStationList: ServerCommand {
-
+            
+            let token: String
             let endpoint = "/atm/v2/getMetroStationList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
             
             struct Payload: Encodable {}
-                        
+            
             struct Response: ServerResponse {
-
+                
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: AtmMetroStationListData?
@@ -157,8 +166,10 @@ extension ServerCommands {
                 }
             }
             
-            internal init(serial: String?) {
-
+            init(token: String, serial: String?) {
+                
+                self.token = token
+                
                 if let serial = serial {
                     
                     var parameters = [ServerCommandParameter]()
@@ -177,15 +188,16 @@ extension ServerCommands {
          */
         
         struct GetCityList: ServerCommand {
-
+            
+            let token: String
             let endpoint = "/atm/v2/getCityList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
             
             struct Payload: Encodable {}
-                        
+            
             struct Response: ServerResponse {
-
+                
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: AtmCityListData?
@@ -197,8 +209,10 @@ extension ServerCommands {
                 }
             }
             
-            internal init(serial: String?) {
-
+            init(token: String, serial: String?) {
+                
+                self.token = token
+                
                 if let serial = serial {
                     
                     var parameters = [ServerCommandParameter]()
@@ -217,15 +231,16 @@ extension ServerCommands {
          */
         
         struct GetRegionList: ServerCommand {
-
+            
+            let token: String
             let endpoint = "/atm/v2/getRegionList"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
             
             struct Payload: Encodable {}
-                        
+            
             struct Response: ServerResponse {
-
+                
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: AtmRegionListData?
@@ -237,8 +252,10 @@ extension ServerCommands {
                 }
             }
             
-            internal init(serial: String?) {
-
+            init(token: String, serial: String?) {
+                
+                self.token = token
+                
                 if let serial = serial {
                     
                     var parameters = [ServerCommandParameter]()

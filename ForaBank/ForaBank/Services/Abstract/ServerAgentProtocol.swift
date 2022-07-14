@@ -23,7 +23,7 @@ protocol ServerCommand: CustomDebugStringConvertible {
     associatedtype Payload: Encodable
     associatedtype Response: ServerResponse
     
-    var token: String? { get }
+    var token: String { get }
     var endpoint: String { get }
     var method: ServerCommandMethod { get }
     var parameters: [ServerCommandParameter]? { get }
@@ -32,51 +32,13 @@ protocol ServerCommand: CustomDebugStringConvertible {
     var cookiesProvider: Bool { get }
 }
 
-extension ServerCommand {
-    
-    var token: String? { nil }
-    var parameters: [ServerCommandParameter]? { nil }
-    var payload: Payload? { nil }
-    var timeout: TimeInterval? { nil }
-    var cookiesProvider: Bool { false }
-    var debugDescription: String {
-        
-        func parametersDescription() -> String {
-            
-            guard let parameters = parameters else {
-                return ""
-            }
-            
-            var result = ""
-            for parameter in parameters {
-                
-                result += parameter.debugDescription
-                result += " | "
-            }
-            
-            return result
-        }
-        
-        func payloadDescription() -> String {
-            
-            guard let payload = payload, let descriptable = payload as? CustomDebugStringConvertible else {
-                return ""
-            }
-            
-            return descriptable.debugDescription
-        }
-        
-        return "\(endpoint)" + " | " + parametersDescription() + payloadDescription()
-    }
-}
-
 /// Multipart download server request
 protocol ServerDownloadCommand {
     
     associatedtype Payload: Encodable
     typealias Response = Data
     
-    var token: String? { get }
+    var token: String { get }
     var endpoint: String { get }
     var method: ServerCommandMethod { get }
     var parameters: [ServerCommandParameter]? { get }
@@ -131,4 +93,51 @@ struct ServerCommandParameter: CustomDebugStringConvertible {
 enum ServerAgentAction {
     
     struct NetworkActivityEvent: Action {}
+}
+
+//MARK: - Default Implementation
+
+extension ServerCommand {
+    
+    var parameters: [ServerCommandParameter]? { nil }
+    var payload: Payload? { nil }
+    var timeout: TimeInterval? { nil }
+    var cookiesProvider: Bool { false }
+    var debugDescription: String {
+        
+        func parametersDescription() -> String {
+            
+            guard let parameters = parameters else {
+                return ""
+            }
+            
+            var result = ""
+            for parameter in parameters {
+                
+                result += parameter.debugDescription
+                result += " | "
+            }
+            
+            return result
+        }
+        
+        func payloadDescription() -> String {
+            
+            guard let payload = payload, let descriptable = payload as? CustomDebugStringConvertible else {
+                return ""
+            }
+            
+            return descriptable.debugDescription
+        }
+        
+        return "\(endpoint)" + " | " + parametersDescription() + payloadDescription()
+    }
+}
+
+extension ServerDownloadCommand {
+    
+    var parameters: [ServerCommandParameter]? { nil }
+    var payload: Payload? { nil }
+    var timeout: TimeInterval? { nil }
+    var cachePolicy: URLRequest.CachePolicy { .useProtocolCachePolicy }
 }

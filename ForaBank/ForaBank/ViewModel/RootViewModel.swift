@@ -14,16 +14,16 @@ class RootViewModel: ObservableObject, Resetable {
     let action: PassthroughSubject<Action, Never> = .init()
     
     @Published var selected: TabType
-
+    
     let mainViewModel: MainViewModel
     let paymentsViewModel: PaymentsTransfersViewModel
     let chatViewModel: ChatViewModel
     let informerViewModel: InformerView.ViewModel
     @Published var alert: Alert.ViewModel?
-
+    
     private let model: Model
     private var bindings = Set<AnyCancellable>()
-
+    
     init(_ model: Model) {
         
         self.selected = .main
@@ -34,7 +34,7 @@ class RootViewModel: ObservableObject, Resetable {
         self.model = model
         
         mainViewModel.rootActions = rootActions
-    
+        
         bind()
     }
     
@@ -71,11 +71,11 @@ class RootViewModel: ObservableObject, Resetable {
                 }
                 
             }.store(in: &bindings)
-
+        
         model.informer
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] data in
-
+                
                 withAnimation {
                     informerViewModel.message = data?.message
                 }
@@ -93,7 +93,7 @@ class RootViewModel: ObservableObject, Resetable {
                     
                 case _ as RootViewModelAction.DismissAll:
                     reset()
-
+                    
                 default:
                     break
                 }
@@ -106,14 +106,14 @@ class RootViewModel: ObservableObject, Resetable {
                 
                 switch action {
                 case let payload as ModelAction.AppVersion.Response:
-                 
+                    
                     withAnimation {
                         
                         switch payload.result {
                         case let .success(appInfo):
                             
                             if let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String, appInfo.version > appVersion {
-
+                                
                                 self.alert = .init(title: "Новая версия", message: "Доступна новая версия \(appInfo.version).", primary: .init(type: .default, title: "Не сейчас", action: {}), secondary: .init(type: .default, title: "Обновить", action: {
                                     guard let url = URL(string: "\(appInfo.trackViewUrl)") else {
                                         return
@@ -133,7 +133,7 @@ class RootViewModel: ObservableObject, Resetable {
                 }
             }.store(in: &bindings)
     }
-            
+    
     lazy var rootActions: RootViewModel.RootActions = {
         
         let dismissCover: (() -> Void) = { [weak self] in
@@ -180,29 +180,6 @@ extension RootViewModel {
             case .chat: return "Чат"
             }
         }
-        
-        //TODO: load images from figma style guide
-        func image(for selected: TabType) -> Image {
-            
-            if self == selected {
-                
-                switch self {
-                case .main: return Image("tabBar-main-fill")
-                case .payments: return Image("tabBar-card-fill")
-                case .history: return Image("tabBar-history-fill")
-                case .chat: return Image("tabBar-chat-fill")
-                }
-                
-            } else {
-                
-                switch self {
-                case .main: return Image("tabBar-main")
-                case .payments: return Image("tabBar-card")
-                case .history: return Image("tabBar-history")
-                case .chat: return Image("tabBar-chat")
-                }
-            }
-        }
     }
     
     struct RootActions {
@@ -224,7 +201,7 @@ extension RootViewModel {
 enum RootViewModelAction {
     
     enum Cover {
-    
+        
         struct ShowLogin: Action {
             
             let viewModel: AuthLoginViewModel
@@ -235,12 +212,12 @@ enum RootViewModelAction {
             let viewModel: AuthPinCodeViewModel
             let animated: Bool
         }
-
+        
         struct Hide: Action {}
     }
     
     enum Spinner {
-    
+        
         struct Show: Action {
             
             let viewModel: SpinnerView.ViewModel

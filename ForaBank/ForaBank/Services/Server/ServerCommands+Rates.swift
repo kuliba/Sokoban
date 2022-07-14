@@ -15,13 +15,11 @@ extension ServerCommands {
          https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/RatesController/getExchangeCurrencyRatesUsingPOST
          */
         struct GetExchangeCurrencyRates: ServerCommand {
-
-            let token: String?
+            
+            let token: String
             let endpoint = "/rest/getExchangeCurrencyRates"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
-            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {
                 
@@ -35,7 +33,7 @@ extension ServerCommands {
             }
             
             struct Response: ServerResponse {
-
+                
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: ExchangeRateData?

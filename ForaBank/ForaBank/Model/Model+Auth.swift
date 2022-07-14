@@ -36,6 +36,8 @@ extension ModelAction {
                     let result: Result<TimeInterval, Error>
                 }
             }
+            
+            struct Terminate: Action {}
         }
         
         enum CheckClient {
@@ -193,6 +195,7 @@ extension ModelAction {
             struct Request: Action {
                 
                 let type: Kind
+                let isFreshSessionRequired: Bool
                 
                 enum Kind: String {
                     
@@ -485,7 +488,7 @@ internal extension Model {
     
     func handleAuthRegisterRequest() {
         
-        print("SessionAgent: REGISTER REQUESTED")
+        print("log: model: REGISTER REQUESTED")
         
         Task {
             
@@ -704,7 +707,7 @@ internal extension Model {
                     return
                 }
                
-                try await authSetDeviceSettingsNotEncrypted(credentials: credentials, sensorType: payload.sensorType)
+                try await authSetDeviceSettings(credentials: credentials, sensorType: payload.sensorType)
                 action.send(ModelAction.Auth.SetDeviceSettings.Response.success)
                 
             } catch {
@@ -716,14 +719,14 @@ internal extension Model {
     
     func handleAuthLoginRequest(payload: ModelAction.Auth.Login.Request) {
         
-        print("SessionAgent: LOGIN REQUESTED")
+        print("log: model: LOGIN REQUESTED")
         
         Task {
             
             do {
                
-                let credentials = try await authCSRF()
-        
+                let credentials = try await authGetOrStartSession(isFreshSessionRequired: payload.isFreshSessionRequired)
+
                 let appId = authOperationSystem
                 let pushDeviceId = try await authPushDeviceId()
                 let pushFcmToken = try await authPushFcmToken()
@@ -752,7 +755,6 @@ internal extension Model {
                         switch response.statusCode {
                         case .ok:
                             self.action.send(ModelAction.Auth.Login.Response.success)
-                            self.action.send(ModelAction.Auth.Session.Start.Response(result: .success(credentials)))
 
                         default:
                             
@@ -839,18 +841,28 @@ extension Model {
         })
     }
     
-    func authGetOrStartSession() async throws -> SessionCredentials {
+    func authGetOrStartSession(isFreshSessionRequired: Bool = false) async throws -> SessionCredentials {
         
-        if let credentials = credentials {
-            
-            return credentials
-            
-        } else {
+        if isFreshSessionRequired == true {
             
             let credentials = try await authCSRF()
             action.send(ModelAction.Auth.Session.Start.Response(result: .success(credentials)))
             
             return credentials
+            
+        } else {
+           
+            if let credentials = credentials {
+                
+                return credentials
+                
+            } else {
+                
+                let credentials = try await authCSRF()
+                action.send(ModelAction.Auth.Session.Start.Response(result: .success(credentials)))
+                
+                return credentials
+            }
         }
     }
 
@@ -923,7 +935,7 @@ extension Model {
         })
     }
     
-    func authSetDeviceSettingsNotEncrypted(credentials: SessionCredentials, sensorType: BiometricSensorType?) async throws {
+    func authSetDeviceSettings(credentials: SessionCredentials, sensorType: BiometricSensorType?) async throws {
         
         print("SessionAgent: SET DEVICE SETTINGS: REQUESTED")
         
@@ -933,9 +945,7 @@ extension Model {
         let pincode = try authStoredPincode()
         let loginValue = try pincode.sha256String()
         
-        let payload = ServerCommands.RegistrationContoller.SetDeviceSettings.Payload(cryptoVersion: nil, pushDeviceId: pushDeviceId, pushFcmToken: pushFcmToken, serverDeviceGUID: serverDeviceGUID, settings: [.init(type: "pin", value: loginValue, isActive: true), .init(type: "touchId", value: sensorType == .touch ? loginValue : nil, isActive: sensorType == .touch ? true : false), .init(type: "faceId", value: sensorType == .face ? loginValue : nil, isActive: sensorType == .face ? true : false)])
-        
-        let command = ServerCommands.RegistrationContoller.SetDeviceSettings(token: credentials.token, payload: payload)
+        let command = try ServerCommands.RegistrationContoller.SetDeviceSettings(credentials: credentials, pushDeviceId: pushDeviceId, pushFcmToken: pushFcmToken, serverDeviceGUID: serverDeviceGUID, loginValue: loginValue, availableSensorType: sensorType, isSensorEnabled: authIsBiometricSensorEnabled)
         
         print("SessionAgent: SET DEVICE SETTINGS: COMMAND OK")
         

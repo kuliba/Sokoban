@@ -213,24 +213,23 @@ class Model {
         
         sessionAgent.sessionState
             .receive(on: queue)
-            .sink { [unowned self] auth in
+            .sink { [unowned self] sessionState in
                 
-                switch auth {
-                case .active:
-                    // during the registration process, a technical session opens, which closes immediately after registration complete and another one opens for login
-                    // we get the authorized status only when the session is open and the credentials are stored in the keychain
-                    if authIsCredentialsStored {
-                        self.auth.value = .authorized
-                    }
-                    
+                print("log: session state: \(sessionState)")
+                
+                switch sessionState {
                 case .inactive:
-                    self.auth.value = authIsCredentialsStored ? .signInRequired : .registerRequired
-                   
-                case .expired:
-                    self.auth.value = authIsCredentialsStored ? .unlockRequired : .registerRequired
+                    auth.value = authIsCredentialsStored ? .signInRequired : .registerRequired
+                    action.send(ModelAction.Auth.Session.Start.Request())
                     
-                case .failed:
-                    self.auth.value = authIsCredentialsStored ? .unlockRequired : .registerRequired
+                case .active:
+                    action.send(ModelAction.Dictionary.UpdateCache.All())
+
+                case .expired, .failed:
+                    guard auth.value == .authorized else {
+                        return
+                    }
+                    auth.value = authIsCredentialsStored ? .unlockRequired : .registerRequired
                 }
                 
             }.store(in: &bindings)
@@ -268,9 +267,6 @@ class Model {
             .sink { [unowned self] action in
                 
                 switch action {
-                case _ as SessionAgentAction.Session.Start.Request:
-                    self.action.send(ModelAction.Auth.Session.Start.Request())
-                    
                 case _ as SessionAgentAction.Session.Extend.Request:
                     self.action.send(ModelAction.Auth.Session.Extend.Request())
                     
@@ -305,16 +301,13 @@ class Model {
                 case _ as ModelAction.App.Launched:
                     handleAppFirstLaunch()
                     bind(sessionAgent: sessionAgent)
-                    queue.async {
-                        
-                        self.loadCachedPublicData()
-                    }
+                    loadCachedPublicData()
 
                 case _ as ModelAction.App.Activated:
-                    self.action.send(ModelAction.Dictionary.UpdateCache.All())
+                    sessionAgent.action.send(SessionAgentAction.Timer.Start())
                     
                 case _ as ModelAction.App.Inactivated:
-                    break
+                    sessionAgent.action.send(SessionAgentAction.Timer.Stop())
                     
                     //MARK: - General
                     
@@ -334,6 +327,9 @@ class Model {
                     
                 case let payload as ModelAction.Auth.Session.Extend.Response:
                     sessionAgent.action.send(SessionAgentAction.Session.Extend.Response(result: payload.result))
+                 
+                case _ as ModelAction.Auth.Session.Terminate:
+                    sessionAgent.action.send(SessionAgentAction.Session.Terminate())
                     
                 case let payload as ModelAction.Auth.CheckClient.Request:
                     handleAuthCheckClientRequest(payload: payload)
@@ -367,6 +363,15 @@ class Model {
                     
                 case let payload as ModelAction.Auth.Login.Request:
                     handleAuthLoginRequest(payload: payload)
+                    
+                case let payload as ModelAction.Auth.Login.Response:
+                    switch payload {
+                    case .success:
+                        auth.value = .authorized
+                    
+                    default:
+                        break
+                    }
                     
                 case _ as ModelAction.Auth.Logout:
                     clearKeychainData()
@@ -675,7 +680,7 @@ private extension Model {
                let legacyKeychainAgent = LegacyKeychainAgent(),
                let pincode = legacyKeychainAgent.pinCode {
                 
-                // user authorized in legacy version
+                // user is authorized in legacy version
                 
                 do {
                     
@@ -686,6 +691,17 @@ private extension Model {
                 } catch {
                     
                     print("logger: legacy auth update error: \(error)")
+                }
+                
+                do {
+                    
+                    // update is sensor enabled
+                    let isSensorEnabled = UserDefaults.standard.bool(forKey: "isSensorsEnabled")
+                    try settingsAgent.store(isSensorEnabled, type: .security(.sensor))
+                    
+                } catch {
+                    
+                    print("logger: is sensor enabled setting update error: \(error)")
                 }
                 
                 do {
@@ -703,6 +719,7 @@ private extension Model {
                     // clean up legacy auth
                     try legacyKeychainAgent.clearPincode()
                     UserDefaults.standard.removeObject(forKey: "serverDeviceGUID")
+                    UserDefaults.standard.removeObject(forKey: "isSensorsEnabled")
                     
                 } catch {
                     

@@ -16,12 +16,10 @@ extension ServerCommands {
          */
         struct GetProductDetails: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/rest/getProductDetails"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
-            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {
                 
@@ -49,12 +47,9 @@ extension ServerCommands {
          */
         struct GetProductList: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/rest/getProductList"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
-            let payload: Payload? = nil
-            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -76,12 +71,10 @@ extension ServerCommands {
          */
         struct GetProductListByFilter: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/rest/getProductListByFilter"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
-            let payload: Payload? = nil
-            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -161,12 +154,10 @@ extension ServerCommands {
          */
         struct GetProductListByType: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/rest/getProductListByType"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
-            let payload: Payload? = nil
-            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
@@ -181,67 +172,67 @@ extension ServerCommands {
                     let serial: String
                     let productList: [ProductData]
                 }
-
+                
                 private enum CodingKeys : String, CodingKey {
-
+                    
                     case statusCode
                     case errorMessage
                     case data
                 }
-
+                
                 private enum ListCodingKeys : String, CodingKey {
-
+                    
                     case serial
                     case productList
                 }
-
+                
                 init(statusCode: ServerStatusCode, errorMessage: String?, data: List?) {
-
+                    
                     self.statusCode = statusCode
                     self.errorMessage = errorMessage
                     self.data = data
                 }
-
+                
                 init(from decoder: Decoder) throws {
-
+                    
                     let container = try decoder.container(keyedBy: CodingKeys.self)
                     statusCode = try container.decode(ServerStatusCode.self, forKey: .statusCode)
                     errorMessage = try container.decodeIfPresent(String.self, forKey: .errorMessage)
-
+                    
                     let nestedContainer = try container.nestedContainer(keyedBy: ListCodingKeys.self, forKey: .data)
                     let serial = try nestedContainer.decode(String.self, forKey: .serial)
                     var listContainer = try nestedContainer.nestedUnkeyedContainer(forKey: .productList)
-
+                    
                     var data: [ProductData] = []
                     var items = listContainer
-
+                    
                     while listContainer.isAtEnd == false {
-
+                        
                         let productData = try listContainer.decode(ProductData.self)
-
+                        
                         switch productData.productType {
                         case .card:
-
+                            
                             let productData = try items.decode(ProductCardData.self)
                             data.append(productData)
-
+                            
                         case .account:
-
+                            
                             let productData = try items.decode(ProductAccountData.self)
                             data.append(productData)
-
+                            
                         case .deposit:
-
+                            
                             let productData = try items.decode(ProductDepositData.self)
                             data.append(productData)
-
+                            
                         case .loan:
-
+                            
                             let productData = try items.decode(ProductLoanData.self)
                             data.append(productData)
                         }
                     }
-
+                    
                     self.data = .init(serial: serial, productList: data)
                 }
             }
@@ -266,12 +257,10 @@ extension ServerCommands {
          */
         struct GetProductDynamicParams: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/rest/getProductDynamicParams"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
-            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {
                 
@@ -299,12 +288,10 @@ extension ServerCommands {
          */
         struct GetProductDynamicParamsList: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/rest/getProductDynamicParamsList"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
-            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {
                 
@@ -322,7 +309,7 @@ extension ServerCommands {
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: List?
-
+                
                 struct List: Codable, Equatable {
                     
                     let dynamicProductParamsList: [DynamicListParams]
@@ -339,7 +326,6 @@ extension ServerCommands {
                     }
                 }
             }
-
             
             internal init(token: String, payload: Payload) {
                 

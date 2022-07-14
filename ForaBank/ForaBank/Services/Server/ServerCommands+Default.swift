@@ -15,13 +15,11 @@ extension ServerCommands {
          https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/default/login.doUsingPOST
          */
         struct Login: ServerCommand {
-
-            let token: String?
+            
+            let token: String
             let endpoint = "/login.do"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
-            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {
                 
@@ -37,7 +35,7 @@ extension ServerCommands {
             }
             
             struct Response: ServerResponse {
-
+                
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: EmptyData?

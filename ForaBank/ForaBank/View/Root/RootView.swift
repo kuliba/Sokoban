@@ -12,55 +12,46 @@ struct RootView: View {
     @ObservedObject var viewModel: RootViewModel
     
     var body: some View {
-
+        
         ZStack(alignment: .top) {
-
+            
             TabView(selection: $viewModel.selected) {
-
+                
                 NavigationView {
-
+                    
                     MainView(viewModel: viewModel.mainViewModel)
                 }
                 .tabItem {
-
-                    RootViewModel.TabType.main.image(for: viewModel.selected)
+                    
+                    tabIcon(type: .main, selected: viewModel.selected)
                     Text(RootViewModel.TabType.main.name)
                         .foregroundColor(.black)
                 }
                 .tag(RootViewModel.TabType.main)
-
+                
                 NavigationView {
-
+                    
                     PaymentsTransfersView(viewModel: viewModel.paymentsViewModel)
                 }
                 .tabItem {
-
-                    RootViewModel.TabType.payments.image(for: viewModel.selected)
+                    
+                    tabIcon(type: .payments, selected: viewModel.selected)
                     Text(RootViewModel.TabType.payments.name)
                         .foregroundColor(.black)
                 }
                 .tag(RootViewModel.TabType.payments)
-
-                Color.white
-                    .tabItem {
-
-                        RootViewModel.TabType.history.image(for: viewModel.selected)
-                        Text(RootViewModel.TabType.history.name)
-                            .foregroundColor(.black)
-                    }
-                    .tag(RootViewModel.TabType.history)
-
+                
                 ChatView(viewModel: viewModel.chatViewModel)
                     .tabItem {
-
-                        RootViewModel.TabType.chat.image(for: viewModel.selected)
+                        
+                        tabIcon(type: .chat, selected: viewModel.selected)
                         Text(RootViewModel.TabType.chat.name)
                             .foregroundColor(.black)
                     }
                     .tag(RootViewModel.TabType.chat)
-
+                
             }.accentColor(.black)
-
+            
             InformerView(viewModel: viewModel.informerViewModel)
                 .zIndex(1)
                 .padding(.top, 64)
@@ -68,6 +59,73 @@ struct RootView: View {
         }.alert(item: $viewModel.alert, content: { alertViewModel in
             Alert(with: alertViewModel)
         })
+    }
+}
+
+extension RootView {
+    
+    private func tabIcon(type: RootViewModel.TabType, selected: RootViewModel.TabType) -> AnyView {
+        
+        if type == selected {
+            
+            switch type {
+            case .main:
+                return AnyView(
+                    Image.ic24LogoForaColor
+                        .renderingMode(.original)
+                )
+                
+            case .payments:
+                return AnyView(
+                    Image.ic24PaymentsActive
+                        .renderingMode(.original)
+                )
+                
+            case .history:
+                return AnyView(
+                    Image.ic24HistoryActive
+                        .renderingMode(.original)
+                )
+                
+            case .chat:
+                return AnyView(
+                    Image.ic24ChatActive
+                        .renderingMode(.original)
+                )
+            }
+            
+        } else {
+            
+            switch type {
+            case .main:
+                return AnyView(
+                    Image.ic24LogoForaLine
+                        .renderingMode(.template)
+                        .foregroundColor(.iconGray)
+                )
+                
+            case .payments:
+                return AnyView(
+                    Image.ic24PaymentsInactive
+                        .renderingMode(.template)
+                        .foregroundColor(.iconGray)
+                )
+                
+            case .history:
+                return AnyView(
+                    Image.ic24HistoryInactive
+                        .renderingMode(.template)
+                        .foregroundColor(.iconGray)
+                )
+                
+            case .chat:
+                return AnyView(
+                    Image.ic24ChatInactive
+                        .renderingMode(.template)
+                        .foregroundColor(.iconGray)
+                )
+            }
+        }
     }
 }
 
