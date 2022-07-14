@@ -10,19 +10,17 @@ import Foundation
 extension ServerCommands {
     
     enum NotificationController {
-
+        
         /*
          https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/NotificationController/changeNotificationStatus
          */
         struct ChangeNotificationStatus: ServerCommand {
-
-            let token: String?
+            
+            let token: String
             let endpoint = "/notification/changeNotificationStatus"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
-            let timeout: TimeInterval? = nil
-
+            
             struct Payload: Encodable {
                 
                 let eventId: String
@@ -31,7 +29,7 @@ extension ServerCommands {
             }
             
             struct Response: ServerResponse {
-
+                
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: EmptyData?
@@ -48,18 +46,16 @@ extension ServerCommands {
          https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/NotificationController/getNotificationsUsingGET
          */
         struct GetNotifications: ServerCommand {
-
-            let token: String?
+            
+            let token: String
             let endpoint = "/rest/getNotifications"
             let method: ServerCommandMethod = .get
             let parameters: [ServerCommandParameter]?
-            let payload: Payload? = nil
-            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {}
             
             struct Response: ServerResponse {
-
+                
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: [NotificationData]?

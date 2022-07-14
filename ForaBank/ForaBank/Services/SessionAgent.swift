@@ -10,8 +10,6 @@ import Combine
 
 class SessionAgent: SessionAgentProtocol {
     
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    
     let action: PassthroughSubject<Action, Never>
     let sessionState: CurrentValueSubject<SessionState, Never>
     
@@ -20,6 +18,9 @@ class SessionAgent: SessionAgentProtocol {
     private var lastUserActivityTime: TimeInterval
     private var sessionExtentThreshold: Double
     
+    private let timer = Timer.publish(every: 1, on: .main, in: .common)
+    
+    private var timerBindings = Set<AnyCancellable>()
     private var bindings = Set<AnyCancellable>()
 
     init(sessionDuration: TimeInterval = 300, sessionExtentThreshold: Double = 0.7) {
@@ -35,31 +36,7 @@ class SessionAgent: SessionAgentProtocol {
     }
     
     func bind() {
-        
-        timer
-            .map{ date in date.timeIntervalSinceReferenceDate }
-            .sink {[unowned self] time in
-                
-                guard case .active(_, _) = sessionState.value else {
-                    return
-                }
-                
-                let sessionTimeRemain = sessionTimeRemain(for: time)
-                guard sessionTimeRemain > 0 else {
-                    
-                    sessionState.send(.expired)
-                    return
-                }
-                
-                if isSessionExtendRequired(for: sessionTimeRemain) == true {
-                    
-                    action.send(SessionAgentAction.Session.Extend.Request())
-                }
-                
-                print("SessionAgent: remain time: \(sessionTimeRemain)")
-  
-            }.store(in: &bindings)
-        
+
         action
             .sink { [unowned self] action in
             
@@ -95,11 +72,63 @@ class SessionAgent: SessionAgentProtocol {
                 case _ as SessionAgentAction.Session.Terminate:
                     sessionState.value = .inactive
                     
+                case _ as SessionAgentAction.Timer.Start:
+                    updateState(with: Date().timeIntervalSinceReferenceDate)
+                    timerStart()
+                    
+                case _ as SessionAgentAction.Timer.Stop:
+                    timerStop()
+                    
                 default:
                     break
                 }
                 
             }.store(in: &bindings)
+    }
+    
+    private func timerStart() {
+        
+        timer
+            .autoconnect()
+            .map{ date in date.timeIntervalSinceReferenceDate }
+            .sink {[unowned self] time in
+                
+               updateState(with: time)
+                
+            }.store(in: &timerBindings)
+        
+        print("log: SessionAgent: timer: STARTED")
+    }
+    
+    private func timerStop() {
+        
+        for binding in timerBindings {
+            binding.cancel()
+        }
+        
+        timerBindings = Set<AnyCancellable>()
+        print("log: SessionAgent: timer: STOPPED")
+    }
+    
+    private func updateState(with time: TimeInterval) {
+        
+        guard case .active(_, _) = sessionState.value else {
+            return
+        }
+        
+        let sessionTimeRemain = sessionTimeRemain(for: time)
+        guard sessionTimeRemain > 0 else {
+            
+            sessionState.send(.expired)
+            return
+        }
+        
+        if isSessionExtendRequired(for: sessionTimeRemain) == true {
+            
+            action.send(SessionAgentAction.Session.Extend.Request())
+        }
+        
+//        print("log: SessionAgent: remain time: \(sessionTimeRemain)")
     }
     
     func sessionTimeRemain(for time: TimeInterval) -> TimeInterval {

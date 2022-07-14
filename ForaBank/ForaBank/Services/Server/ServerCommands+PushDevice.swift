@@ -15,16 +15,14 @@ extension ServerCommands {
          https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/PushDeviceController/registerPushDeviceForUserUsingPOST
          */
         struct RegisterPushDeviceForUser: ServerCommand {
-
-            let token: String?
+            
+            let token: String
             let endpoint = "/push_device_user/registerPushDeviceForUser"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: BasePayload?
-            let timeout: TimeInterval? = nil
-  
+            
             struct Response: ServerResponse {
-
+                
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: EmptyData?
@@ -41,13 +39,11 @@ extension ServerCommands {
          https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/PushDeviceController/installPushDeviceUsingPOST
          */
         struct InstallPushDevice: ServerCommand {
-
-            let token: String?
+            
+            let token: String
             let endpoint = "/push_device/installPushDevice"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
-            let timeout: TimeInterval? = nil
             
             struct Payload: Encodable {
                 
@@ -61,7 +57,7 @@ extension ServerCommands {
             }
             
             struct Response: ServerResponse {
-
+                
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: EmptyData?
@@ -78,16 +74,14 @@ extension ServerCommands {
          https://test.inn4b.ru/dbo/api/v3/swagger-ui/index.html#/PushDeviceController/uninstallPushDeviceUsingPOST
          */
         struct UninstallPushDevice: ServerCommand {
-
-            let token: String?
+            
+            let token: String
             let endpoint = "/push_device/uninstallPushDevice"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: BasePayload?
-            let timeout: TimeInterval? = nil
             
             struct Response: ServerResponse {
-
+                
                 let statusCode: ServerStatusCode
                 let errorMessage: String?
                 let data: EmptyData?

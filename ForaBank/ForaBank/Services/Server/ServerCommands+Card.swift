@@ -1,5 +1,5 @@
 //
-//  ServerCommands+CardController.swift
+//  ServerCommands+Card.swift
 //  ForaBank
 //
 //  Created by Дмитрий on 20.01.2022.
@@ -16,13 +16,11 @@ extension ServerCommands {
          */
         struct BlockCard: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/rest/blockCard"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
-            let timeout: TimeInterval? = nil
-
+            
             struct Payload: Encodable {
                 
                 let cardId: Int
@@ -48,12 +46,10 @@ extension ServerCommands {
          */
         struct GetCardStatement: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/rest/getCardStatement_V2"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: BasePayload?
-            let timeout: TimeInterval? = nil
             
             struct Response: ServerResponse {
                 
@@ -81,12 +77,10 @@ extension ServerCommands {
         //TODO: - tests
         struct GetCardStatementForPeriod: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/rest/getCardStatementForPeriod_V2"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: BasePayload?
-            let timeout: TimeInterval? = nil
             
             struct Response: ServerResponse {
                 
@@ -112,13 +106,11 @@ extension ServerCommands {
          */
         struct GetOwnerPhoneNumber: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/rest/getOwnerPhoneNumber"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
-            let timeout: TimeInterval? = nil
-
+            
             struct Payload: Encodable {
                 
                 let phoneNumber: String
@@ -143,12 +135,10 @@ extension ServerCommands {
          */
         struct SaveCardName: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/rest/saveCardName"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: BasePayload?
-            let timeout: TimeInterval? = nil
             
             struct Response: ServerResponse {
                 
@@ -174,13 +164,11 @@ extension ServerCommands {
          */
         struct UnblockCard: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/rest/unblockCard"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: Payload?
-            let timeout: TimeInterval? = nil
-
+            
             struct Payload: Encodable {
                 
                 let cardID: Int
@@ -206,13 +194,11 @@ extension ServerCommands {
          http://10.1.206.21:8080/swagger-ui/index.html#/CardController/getPrintFormForCardStatement
          */
         struct GetPrintFormForCardStatement: ServerDownloadCommand {
-
-            let token: String?
+            
+            let token: String
             let endpoint = "/rest/getPrintFormForCardStatement"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: BasePayload?
-            let timeout: TimeInterval? = nil
             let cachePolicy: URLRequest.CachePolicy = .returnCacheDataElseLoad
             
             init(token: String, payload: BasePayload) {

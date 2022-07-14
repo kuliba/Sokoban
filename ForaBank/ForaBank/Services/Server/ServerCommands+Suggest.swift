@@ -16,12 +16,10 @@ extension ServerCommands {
          */
         struct SuggestBank: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/rest/suggestBank"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: SuggestPayload?
-            let timeout: TimeInterval? = nil
             
             struct Response: ServerResponse {
                 
@@ -49,12 +47,10 @@ extension ServerCommands {
          */
         struct SuggestCompany: ServerCommand {
             
-            let token: String?
+            let token: String
             let endpoint = "/rest/suggestCompany"
             let method: ServerCommandMethod = .post
-            let parameters: [ServerCommandParameter]? = nil
             let payload: SuggestPayload?
-            let timeout: TimeInterval? = nil
             
             struct Response: ServerResponse {
                 

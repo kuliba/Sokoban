@@ -14,3 +14,16 @@ enum SessionState {
     case expired
     case failed(Error)
 }
+
+extension SessionState: CustomDebugStringConvertible {
+    
+    var debugDescription: String {
+        
+        switch self {
+        case .inactive: return "INACTIVE"
+        case .active: return "ACTIVE"
+        case .expired: return "EXPIRED"
+        case .failed: return "FAILED"
+        }
+    }
+}
