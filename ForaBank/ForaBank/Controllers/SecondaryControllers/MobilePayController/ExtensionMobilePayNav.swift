@@ -11,8 +11,7 @@ extension MobilePayViewController {
     
     func setupNavBar() {
         
-        if let template = paymentTemplate {
-            title = template.name
+        if paymentTemplate != nil {
             let button = UIBarButtonItem(image: UIImage(named: "edit-2"),
                                          landscapeImagePhone: nil,
                                          style: .done,
@@ -37,14 +36,8 @@ extension MobilePayViewController {
     
     @objc func backAction() {
         
-        if let model = viewModel {
-            
-            model.closeAction()
-            
-        } else {
-            
-            navigationController?.popViewController(animated: true)
-        }
+        viewModel?.closeAction()
+        navigationController?.popViewController(animated: true)
     }
     
     @objc private func updateNameTemplate() {
@@ -66,8 +59,8 @@ extension MobilePayViewController {
                     paymentTemplateId: templateId))
                     
                 // FIXME: В рефактре нужно слушатель на обновление title
-                self.title = text
-                
+                    self.parent?.title = text
+
                 } else {
                     self.showAlert(with: "Ошибка", and: "В названии шаблона не должно быть более 20 символов")
                 }

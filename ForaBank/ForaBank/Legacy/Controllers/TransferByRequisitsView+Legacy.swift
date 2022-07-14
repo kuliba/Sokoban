@@ -17,38 +17,55 @@ struct TransferByRequisitesView: UIViewControllerRepresentable {
         var controller = TransferByRequisitesViewController()
         controller.viewModel.closeAction = viewModel.closeAction
 
-        if let paymentTemplate = viewModel.paymentTemplate, let parameter = paymentTemplate.parameterList.first as? TransferGeneralData {
+        if let paymentTemplate = viewModel.paymentTemplate {
+        
+            switch paymentTemplate.type {
+            case .externalEntity:
+                
+                if let paymentTemplate = viewModel.paymentTemplate {
                     
-                controller = .init(paymentTemplate: paymentTemplate)
-            
-                if let bik = parameter.payeeExternal?.bankBIC {
-                    controller.bikBankField.textField.text = bik
-                }
-                
-                if let account = parameter.payeeExternal?.accountNumber {
-                    let mask = StringMask(mask: "00000 000 0 0000 0000000")
-                    controller.accountNumber.textField.text = mask.mask(string: account)
-                }
-                
-                if let fullName = parameter.payeeExternal?.name {
-                    let full = fullName.components(separatedBy: " ")
-                    controller.fio.surname = full[0]
-                    controller.fioField.textField.text = full[0]
+                    controller = .init(orgPaymentTemplate: paymentTemplate)
+                    controller.viewModel.closeAction = viewModel.closeAction
                     
-                    controller.fio.name = full[1]
-                    controller.nameField.textField.text = full[1]
+                }
+
+            default:
+             
+                if let paymentTemplate = viewModel.paymentTemplate, let parameter = paymentTemplate.parameterList.first as? TransferGeneralData {
+                            
+                        controller = .init(paymentTemplate: paymentTemplate)
+                        controller.viewModel.closeAction = viewModel.closeAction
                     
-                    controller.fio.patronymic = full[2]
-                    controller.surField.textField.text = full[2]
+                        if let bik = parameter.payeeExternal?.bankBIC {
+                            controller.bikBankField.textField.text = bik
+                        }
+                        
+                        if let account = parameter.payeeExternal?.accountNumber {
+                            let mask = StringMask(mask: "00000 000 0 0000 0000000")
+                            controller.accountNumber.textField.text = mask.mask(string: account)
+                        }
+                        
+                        if let fullName = parameter.payeeExternal?.name {
+                            let full = fullName.components(separatedBy: " ")
+                            controller.fio.surname = full[0]
+                            controller.fioField.textField.text = full[0]
+                            
+                            controller.fio.name = full[1]
+                            controller.nameField.textField.text = full[1]
+                            
+                            controller.fio.patronymic = full[2]
+                            controller.surField.textField.text = full[2]
+                        }
+                        
+                        if let inn = parameter.payeeExternal?.inn {
+                            controller.innField.textField.text = inn
+                        }
+                        
+                        if let kpp = parameter.payeeExternal?.kpp {
+                            controller.kppField.textField.text = kpp
+                        }
                 }
-                
-                if let inn = parameter.payeeExternal?.inn {
-                    controller.innField.textField.text = inn
-                }
-                
-                if let kpp = parameter.payeeExternal?.kpp {
-                    controller.kppField.textField.text = kpp
-                }
+            }
         }
         
         context.coordinator.parentObserver = controller.observe(\.parent, changeHandler: { vc, _ in

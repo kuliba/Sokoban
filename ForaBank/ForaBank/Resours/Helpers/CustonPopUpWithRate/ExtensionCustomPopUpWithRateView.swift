@@ -100,14 +100,6 @@ extension CustomPopUpWithRateView {
             left: view.leftAnchor,
             bottom: view.bottomAnchor,
             right: view.rightAnchor)
-        let saveAreaView = UIView()
-        saveAreaView.backgroundColor = #colorLiteral(red: 0.2392156863, green: 0.2392156863, blue: 0.2705882353, alpha: 1)
-        view.addSubview(saveAreaView)
-        saveAreaView.anchor(
-            top: view.safeAreaLayoutGuide.bottomAnchor,
-            left: view.leftAnchor,
-            bottom: view.bottomAnchor,
-            right: view.rightAnchor)
         
         stackView.anchor(
             top: titleLabel.bottomAnchor,
@@ -184,7 +176,7 @@ extension CustomPopUpWithRateView {
                         paymentTemplateId: templateId))
                     
                     // FIXME: В рефактре нужно слушатель на обновление title
-                    self.title = text
+                    self.parent?.title = text
                     
                 } else {
                     self.showAlert(with: "Ошибка", and: "В названии шаблона не должно быть более 20 символов")

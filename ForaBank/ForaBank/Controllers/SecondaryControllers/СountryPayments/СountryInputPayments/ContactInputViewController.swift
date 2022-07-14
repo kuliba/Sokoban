@@ -170,6 +170,18 @@ class ContactInputViewController: UIViewController {
             break
         }
         
+        let backButton = UIBarButtonItem(image: UIImage(named: "back_button"),
+                                         landscapeImagePhone: nil,
+                                         style: .done,
+                                         target: self,
+                                         action: #selector(onTouchBackButton))
+        backButton.tintColor = .black
+        navigationItem.leftBarButtonItem = backButton
+        
+    }
+    
+    @objc func onTouchBackButton() {
+        navigationController?.popToRootViewController(animated: true)
     }
     
     required init?(coder: NSCoder) {

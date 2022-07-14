@@ -555,7 +555,7 @@ class TransferByRequisitesViewController: UIViewController, UITextFieldDelegate,
         
         if paymentTemplate != nil {
             
-            let button = UIBarButtonItem(image: UIImage(systemName: "xmark"),
+            let button = UIBarButtonItem(image: UIImage(named: "back_button"),
                                          landscapeImagePhone: nil,
                                          style: .done,
                                          target: self,

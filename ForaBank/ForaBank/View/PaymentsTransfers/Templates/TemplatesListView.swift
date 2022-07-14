@@ -92,35 +92,43 @@ struct TemplatesListView: View {
                             switch link {
                             case .byPhone(let paymentPhoneView):
                                 PaymentPhoneView(viewModel: paymentPhoneView)
+                                    .navigationBarBackButtonHidden(true)
                                     .edgesIgnoringSafeArea(.all)
 
                             case .sfp(let paymentPhoneView):
                                 PaymentPhoneView(viewModel: paymentPhoneView)
                                     .edgesIgnoringSafeArea(.all)
+                                    .navigationBarBackButtonHidden(true)
 
                             case .direct(let paymentTemplateData):
                                 CountryPaymentView(viewModel: .init(paymentTemplate: paymentTemplateData))
                                     .edgesIgnoringSafeArea(.bottom)
+                                    .navigationBarBackButtonHidden(true)
 
                             case .contactAdressless(let paymentTemplateData):
                                 CountryPaymentView(viewModel: .init(paymentTemplate: paymentTemplateData))
                                     .edgesIgnoringSafeArea(.bottom)
+                                    .navigationBarBackButtonHidden(true)
 
                             case .housingAndCommunalService(let internetTVDetailsViewModel):
                                 InternetTVDetailsView(viewModel: internetTVDetailsViewModel)
                                     .edgesIgnoringSafeArea(.bottom)
+                                    .navigationBarBackButtonHidden(true)
 
-                            case .mobile(let paymentTemplateData):
-                                MobilePayView(viewModel: .init(paymentTemplate: paymentTemplateData))
+                            case .mobile(let mobileViewModel):
+                                MobilePayView(viewModel: mobileViewModel)
                                     .edgesIgnoringSafeArea(.bottom)
+                                    .navigationBarBackButtonHidden(true)
 
                             case .internet(let internetTVDetailsViewModel):
                                 InternetTVDetailsView(viewModel: internetTVDetailsViewModel)
                                     .edgesIgnoringSafeArea(.bottom)
+                                    .navigationBarBackButtonHidden(true)
 
                             case .transport(let avtodorDetailsViewModel):
                                 OperatorsView(viewModel: avtodorDetailsViewModel)
                                     .edgesIgnoringSafeArea(.bottom)
+                                    .navigationBarBackButtonHidden(true)
 
                             case .externalEntity(let transferByRequisitesView):
                                 TransferByRequisitesView(viewModel: transferByRequisitesView)
@@ -137,6 +145,7 @@ struct TemplatesListView: View {
                                 
                             case .betweenTheir(let meToMeViewModel):
                                 MeToMeView(viewModel: meToMeViewModel)
+                                    .navigationBarBackButtonHidden(true)
                                     .navigationBarHidden(false)
                                     .edgesIgnoringSafeArea(.bottom)
                             }
